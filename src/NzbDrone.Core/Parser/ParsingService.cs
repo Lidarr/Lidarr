@@ -565,6 +565,7 @@ namespace NzbDrone.Core.Parser
         {
             ParsedTrackInfo parsedTrackInfo;
 
+
             if (folderInfo != null)
             {
                 parsedTrackInfo = folderInfo.JsonClone();
@@ -664,7 +665,7 @@ namespace NzbDrone.Core.Parser
 
             foreach (var trackNumber in parsedTrackInfo.TrackNumbers)
             {
-                
+
 
                 Track trackInfo = null;
 
