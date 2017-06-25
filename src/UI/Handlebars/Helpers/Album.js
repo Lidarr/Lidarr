@@ -35,7 +35,7 @@ Handlebars.registerHelper('discogsAlbumUrl', function() {
 });
 
 Handlebars.registerHelper('allMusicAlbumUrl', function() {
-    return 'http://www.allmusic.com/album/' + this.amId;
+    return 'http://www.allmusic.com/album/' + this.allMusicId;
 });
 
 Handlebars.registerHelper('albumYear', function() {

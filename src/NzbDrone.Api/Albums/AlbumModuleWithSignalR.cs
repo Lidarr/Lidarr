@@ -94,6 +94,8 @@ namespace NzbDrone.Api.Albums
             return result;
         }
 
+        //TODO: Implement Track or Album Grabbed/Dowloaded Events
+
         //public void Handle(TrackGrabbedEvent message)
         //{
         //    foreach (var track in message.Track.Tracks)

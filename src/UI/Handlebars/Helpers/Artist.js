@@ -34,7 +34,7 @@ Handlebars.registerHelper('discogsUrl', function() {
 });
 
 Handlebars.registerHelper('allMusicUrl', function() {
-    return 'http://www.allmusic.com/artist/' + this.amId;
+    return 'http://www.allmusic.com/artist/' + this.allMusicId;
 });
 
 Handlebars.registerHelper('route', function() {

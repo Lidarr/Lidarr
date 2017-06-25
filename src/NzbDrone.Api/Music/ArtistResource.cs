@@ -24,7 +24,7 @@ namespace NzbDrone.Api.Music
         public string MBId { get; set; }
         public int TADBId { get; set; }
         public int DiscogsId { get; set; }
-        public string AMId { get; set; }
+        public string AllMusicId { get; set; }
         public string Overview { get; set; }
 
         public int? AlbumCount{ get; set; }
@@ -71,7 +71,7 @@ namespace NzbDrone.Api.Music
                 MBId = model.MBId,
                 TADBId = model.TADBId,
                 DiscogsId = model.DiscogsId,
-                AMId = model.AMId,
+                AllMusicId = model.AMId,
                 Name = model.Name,
                 //AlternateTitles
                 //SortTitle = resource.SortTitle,
@@ -131,7 +131,7 @@ namespace NzbDrone.Api.Music
                 MBId = resource.MBId,
                 TADBId = resource.TADBId,
                 DiscogsId = resource.DiscogsId,
-                AMId = resource.AMId,
+                AMId = resource.AllMusicId, //TODO change model and DB to AllMusic instead of AM
                 //TotalEpisodeCount
                 //TrackCount
                 //TrackFileCount
