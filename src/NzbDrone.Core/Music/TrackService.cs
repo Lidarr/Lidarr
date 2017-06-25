@@ -62,6 +62,7 @@ namespace NzbDrone.Core.Music
 
         public List<Track> GetTracksByArtist(int artistId)
         {
+            _logger.Debug("Getting Tracks for ArtistId {0}", artistId);
             return _trackRepository.GetTracks(artistId).ToList();
         }
 
