@@ -27,8 +27,9 @@ namespace NzbDrone.Core.MediaFiles
 
         public List<TrackFile> GetFilesByArtist(int artistId)
         {
-            var list = Query.QueryText("SELECT ArtistId from TrackFiles").ToList();
-            return list;
+            // TODO: Fix this code, it might not return correctly
+            /*var list = Query.QueryText("SELECT ArtistId from TrackFiles").ToList();
+            return list;*/
             // Joe: Temp return a custom query, below is thowing sql error as no rows. 
             return Query.Where(c => c.ArtistId == artistId).ToList();
         }

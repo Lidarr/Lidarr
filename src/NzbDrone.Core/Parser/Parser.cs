@@ -694,6 +694,7 @@ namespace NzbDrone.Core.Parser
 
         private static ParsedTrackInfo ParseMatchMusicCollection(MatchCollection matchCollection)
         {
+            // TODO: Fix this code, the regex is off. 
             var artistName = matchCollection[0].Groups["artist"].Value.Replace('.', ' ').Replace('_', ' ');
             artistName = RequestInfoRegex.Replace(artistName, "").Trim(' ');
 

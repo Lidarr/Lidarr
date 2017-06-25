@@ -67,11 +67,12 @@ namespace NzbDrone.Core.Music
                     albumToUpdate.CleanTitle = album.CleanTitle;
                     //albumToUpdate.TrackNumber = album.TrackNumber;
                     albumToUpdate.Title = album.Title ?? "Unknown";
+                    albumToUpdate.CleanTitle = Parser.Parser.CleanArtistTitle(albumToUpdate.Title);
                     //albumToUpdate.AlbumId = album.AlbumId;
                     //albumToUpdate.Album = album.Album;
                     //albumToUpdate.Explicit = album.Explicit;
                     albumToUpdate.ArtistId = artist.Id;
-                    albumToUpdate.Path = artist.Path + album.Title;
+                    albumToUpdate.Path = artist.Path + "\\" + album.Title;
                     albumToUpdate.AlbumType = album.AlbumType;
                     //albumToUpdate.Compilation = album.Compilation;
 
