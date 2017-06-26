@@ -40,17 +40,49 @@ namespace NzbDrone.Core.Parser
                                                                 RegexOptions.Compiled);
 
         private static readonly Regex BitRateRegex = new Regex(@"(?:
-                                                                  (?<B192>192[ ]?kbps)|(?<B192>192$)|(?<B192>[\[\(].*192.*[\]\)])|
+                                                                  (?<B192>192[ ]?kbps)|(?<B192>192$)|(?<B192>[\[\(].*192.*[\]\)])|(?<MP3>MPEG Version \d+ Audio, Layer 3$)|
                                                                   (?<B256>256[ ]?kbps)|(?<B256>256$)|(?<B256>[\[\(].*256.*[\]\)])|
                                                                   (?<B320>320[ ]?kbps)|(?<B320>320$)|(?<B320>[\[\(].*320.*[\]\)])|
                                                                   (?<B512>512[ ]?kbps)|(?<B512>512$)|(?<B512>[\[\(].*512.*[\]\)])|
                                                                   (?<Flac>flac[-_.\]\b)} ])|(?<Flac>flac$)|
-                                                                  (?<VBR>VBR[ ]?kbps)|(?<VBR>VBR$)|(?<VBR>[\[\(].*VBR.*[\]\)])
+                                                                  (?<VBR>VBR[ ]?kbps)|(?<VBR>VBR$)|(?<VBR>[\[\(].*VBR.*[\]\)])|(?<VBR>MPEG Version \d+ Audio, Layer 3 VBR$)
                                                                   )",
                                                                   RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
 
-        private static readonly Regex CodecRegex = new Regex(@"\b(?:(?<x264>x264)|(?<h264>h264)|(?<xvidhd>XvidHD)|(?<xvid>Xvid)|(?<divx>divx))\b",
-                                                                RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex CodecRegex = new Regex(@"(?:
+                                                                  (?<MP3>MPEG Version \d+ Audio, Layer 3$)|
+                                                                  (?<Flac>flac[-_.\]\b)} ])|(?<Flac>Flac$)|
+                                                                  (?<VBR>[\[\(].*VBR.*[\]\)])|(?<VBR>MPEG Version \d Audio, Layer 3 VBR$)
+                                                                  )",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
+
+
+        public static QualityModel ParseQuality(string desc, int bitrate, int sampleRate)
+        {
+            var result = new QualityModel { Quality = Quality.Unknown };
+
+            switch (bitrate)
+            {
+                case 192:
+                    result.Quality = Quality.MP3192;
+                    break;
+                case 256:
+                    result.Quality = Quality.MP3256;
+                    break;
+                case 320:
+                    result.Quality = Quality.MP3320;
+                    break;
+                default:
+                    var match = CodecRegex.Match(desc); //TODO: Figure out why this always fails
+                    if (!match.Success) result.Quality = Quality.Unknown;
+                    if (match.Groups["VBR"].Success) result.Quality =  Quality.MP3VBR;
+                    if (match.Groups["FLAC"].Success) result.Quality =  Quality.FLAC;
+                    break;
+            }
+
+
+            return result;
+        }
 
         public static QualityModel ParseQuality(string name)
         {
@@ -98,6 +130,17 @@ namespace NzbDrone.Core.Parser
             }
 
             return result;
+        }
+
+        private static BitRate ParseCodec(string name)
+        {
+            var match = BitRateRegex.Match(name);
+
+            if (!match.Success) return BitRate.Unknown;
+            if (match.Groups["Flac"].Success) return BitRate.Flac;
+            if (match.Groups["VBR"].Success) return BitRate.VBR;
+
+            return BitRate.Unknown;
         }
 
         private static BitRate ParseBitRate(string name)

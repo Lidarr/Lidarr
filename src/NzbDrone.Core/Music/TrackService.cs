@@ -16,6 +16,7 @@ namespace NzbDrone.Core.Music
         Track GetTrack(int id);
         List<Track> GetTracks(IEnumerable<int> ids);
         Track FindTrack(int artistId, int albumId, int trackNumber);
+        Track FindTrack(int artistId, int trackNumber);
         Track FindTrackByTitle(int artistId, int albumId, string releaseTitle);
         List<Track> GetTracksByArtist(int artistId);
         List<Track> GetTracksByAlbum(int artistId, int albumId);
@@ -58,6 +59,11 @@ namespace NzbDrone.Core.Music
         public Track FindTrack(int artistId, int albumId, int trackNumber)
         {
             return _trackRepository.Find(artistId, albumId, trackNumber);
+        }
+
+        public Track FindTrack(int artistId, int trackNumber)
+        {
+            return _trackRepository.GetTrackByArtist(artistId, trackNumber);
         }
 
         public List<Track> GetTracksByArtist(int artistId)

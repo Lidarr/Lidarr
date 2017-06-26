@@ -304,11 +304,54 @@ namespace NzbDrone.Core.Parser
         public static ParsedTrackInfo ParseMusicPath(string path)
         {
             var fileInfo = new FileInfo(path);
-            var fileTags = new MediaInfo();
-            fileTags.Open(path);
-            Logger.Debug("Media Info of {0}: {1}", path, fileTags.ToString());
+            var file = TagLib.File.Create(path);;
+            var albumArtists = file.Tag.AlbumArtists;
+            var album = file.Tag.Album;
+            var trackName = file.Tag.Title;
+            var trackNumber = file.Tag.Track;
 
-            var result = ParseMusicTitle(fileInfo.Name);
+            var artistTitleInfo = new ArtistTitleInfo
+            {
+                Title = file.Tag.Title,
+                Year = (int) file.Tag.Year
+            };
+
+            var temp = new int[1];
+            temp[0] = (int) trackNumber;
+            var result = new ParsedTrackInfo
+            {
+                AlbumTitle = file.Tag.Album,
+                ArtistTitle = file.Tag.FirstAlbumArtist, 
+                Quality = QualityParser.ParseQuality(trackName),
+                TrackNumbers = temp,
+                ArtistTitleInfo = artistTitleInfo,
+                Title = file.Tag.Title
+            };
+
+
+            Logger.Info("Quality parsed: {0}", file.Tag.BeatsPerMinute);
+
+            foreach (TagLib.ICodec codec in file.Properties.Codecs)
+            {
+                TagLib.IAudioCodec acodec = codec as TagLib.IAudioCodec;
+                TagLib.IVideoCodec vcodec = codec as TagLib.IVideoCodec;
+
+                if (acodec != null && (acodec.MediaTypes & TagLib.MediaTypes.Audio) != TagLib.MediaTypes.None)
+                {
+                    Logger.Info("Audio Properties : " + acodec.Description);
+                    Logger.Info("Bitrate:    " + acodec.AudioBitrate);
+                    Logger.Info("SampleRate: " + acodec.AudioSampleRate);
+                    Logger.Info("Channels:   " + acodec.AudioChannels + "\n");
+
+                    result.Quality = QualityParser.ParseQuality(acodec.Description, acodec.AudioBitrate, acodec.AudioSampleRate);
+                }
+
+
+            }
+
+
+
+            //var result = ParseMusicTitle(fileInfo.Name);
 
             if (result == null)
             {
@@ -694,7 +737,6 @@ namespace NzbDrone.Core.Parser
 
         private static ParsedTrackInfo ParseMatchMusicCollection(MatchCollection matchCollection)
         {
-            // TODO: Fix this code, the regex is off. 
             var artistName = matchCollection[0].Groups["artist"].Value.Replace('.', ' ').Replace('_', ' ');
             artistName = RequestInfoRegex.Replace(artistName, "").Trim(' ');
 
