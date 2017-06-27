@@ -403,7 +403,7 @@ namespace NzbDrone.Core.Organizer
         {
             tokenHandlers["{Album Title}"] = m => album.Title;
             tokenHandlers["{Album CleanTitle}"] = m => CleanTitle(album.Title);
-            tokenHandlers["{Release Year}"] = m => album.ReleaseDate.Year.ToString();
+            tokenHandlers["{Release Year}"] = m => album.ReleaseDate.Value.Year.ToString();
         }
 
         private string AddSeasonEpisodeNumberingTokens(string pattern, Dictionary<string, Func<TokenMatch, string>> tokenHandlers, List<Episode> episodes, NamingConfig namingConfig)
