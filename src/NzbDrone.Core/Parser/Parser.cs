@@ -16,14 +16,9 @@ namespace NzbDrone.Core.Parser
     {
         private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(Parser));
 
-        private static readonly Regex[] ReportTitleRegex = new[]
-            {
-                //Anime - Absolute Episode Number + Title + Season+Episode
-                //Todo: This currently breaks series that start with numbers
-//                new Regex(@"^(?:(?<absoluteepisode>\d{2,3})(?:_|-|\s|\.)+)+(?<title>.+?)(?:\W|_)+(?:S?(?<season>(?<!\d+)\d{1,2}(?!\d+))(?:(?:\-|[ex]|\W[ex]){1,2}(?<episode>\d{2}(?!\d+)))+)",
-//                          RegexOptions.IgnoreCase | RegexOptions.Compiled),
-
-                // Track with artist (01 - artist - trackName)
+        private static readonly Regex[] ReportMusicTitleRegex = new[]
+        {
+             // Track with artist (01 - artist - trackName)
                 new Regex(@"(?<trackNumber>\d*){0,1}([-| ]{0,1})(?<artist>[a-zA-Z0-9, ().&_]*)[-| ]{0,1}(?<trackName>[a-zA-Z0-9, ().&_]+)",
                           RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
@@ -42,8 +37,14 @@ namespace NzbDrone.Core.Parser
                 // Track with artist and starting title (01 - artist - trackName)
                 new Regex(@"(?<trackNumber>\d*){0,1}[-| ]{0,1}(?<artist>[a-zA-Z0-9, ().&_]*)[-| ]{0,1}(?<trackName>[a-zA-Z0-9, ().&_]+)",
                     RegexOptions.IgnoreCase | RegexOptions.Compiled),
+        };
 
-
+        private static readonly Regex[] ReportTitleRegex = new[]
+            {
+                //Anime - Absolute Episode Number + Title + Season+Episode
+                //Todo: This currently breaks series that start with numbers
+//                new Regex(@"^(?:(?<absoluteepisode>\d{2,3})(?:_|-|\s|\.)+)+(?<title>.+?)(?:\W|_)+(?:S?(?<season>(?<!\d+)\d{1,2}(?!\d+))(?:(?:\-|[ex]|\W[ex]){1,2}(?<episode>\d{2}(?!\d+)))+)",
+//                          RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
 
                 //Multi-Part episodes without a title (S01E05.S01E06)
@@ -304,9 +305,7 @@ namespace NzbDrone.Core.Parser
         public static ParsedTrackInfo ParseMusicPath(string path)
         {
             var fileInfo = new FileInfo(path);
-            var file = TagLib.File.Create(path);;
-            var albumArtists = file.Tag.AlbumArtists;
-            var album = file.Tag.Album;
+            var file = TagLib.File.Create(path);
             var trackName = file.Tag.Title;
             var trackNumber = file.Tag.Track;
 
@@ -329,7 +328,7 @@ namespace NzbDrone.Core.Parser
             };
 
 
-            Logger.Info("Quality parsed: {0}", file.Tag.BeatsPerMinute);
+            Logger.Debug("Quality parsed: {0}", file.Tag.BeatsPerMinute);
 
             foreach (TagLib.ICodec codec in file.Properties.Codecs)
             {
@@ -338,10 +337,10 @@ namespace NzbDrone.Core.Parser
 
                 if (acodec != null && (acodec.MediaTypes & TagLib.MediaTypes.Audio) != TagLib.MediaTypes.None)
                 {
-                    Logger.Info("Audio Properties : " + acodec.Description);
-                    Logger.Info("Bitrate:    " + acodec.AudioBitrate);
-                    Logger.Info("SampleRate: " + acodec.AudioSampleRate);
-                    Logger.Info("Channels:   " + acodec.AudioChannels + "\n");
+                    Logger.Debug("Audio Properties : " + acodec.Description);
+                    Logger.Debug("Bitrate:    " + acodec.AudioBitrate);
+                    Logger.Debug("SampleRate: " + acodec.AudioSampleRate);
+                    Logger.Debug("Channels:   " + acodec.AudioChannels + "\n");
 
                     result.Quality = QualityParser.ParseQuality(acodec.Description, acodec.AudioBitrate, acodec.AudioSampleRate);
                 }
@@ -350,7 +349,7 @@ namespace NzbDrone.Core.Parser
             }
 
 
-
+            // TODO: Check if it is common that we might need to fallback to parser to gather details
             //var result = ParseMusicTitle(fileInfo.Name);
 
             if (result == null)
@@ -437,7 +436,7 @@ namespace NzbDrone.Core.Parser
                     }
                 }
 
-                foreach (var regex in ReportTitleRegex)
+                foreach (var regex in ReportMusicTitleRegex)
                 {
                     var match = regex.Matches(simpleTitle);
 
@@ -737,8 +736,45 @@ namespace NzbDrone.Core.Parser
 
         private static ParsedTrackInfo ParseMatchMusicCollection(MatchCollection matchCollection)
         {
-            var artistName = matchCollection[0].Groups["artist"].Value.Replace('.', ' ').Replace('_', ' ');
+            var artistName = matchCollection[0].Groups["artist"].Value./*Removed for cases like Will.I.Am Replace('.', ' ').*/Replace('_', ' ');
             artistName = RequestInfoRegex.Replace(artistName, "").Trim(' ');
+
+            // Coppied from Radarr (https://github.com/Radarr/Radarr/blob/develop/src/NzbDrone.Core/Parser/Parser.cs)
+            // TODO: Split into separate method and write unit tests for. 
+            var parts = artistName.Split('.'); 
+            artistName = "";
+            int n = 0;
+            bool previousAcronym = false;
+            string nextPart = "";
+            foreach (var part in parts)
+            {
+                if (parts.Length >= n + 2)
+                {
+                    nextPart = parts[n + 1];
+                }
+                if (part.Length == 1 && part.ToLower() != "a" && !int.TryParse(part, out n))
+                {
+                    artistName += part + ".";
+                    previousAcronym = true;
+                }
+                else if (part.ToLower() == "a" && (previousAcronym == true || nextPart.Length == 1))
+                {
+                    artistName += part + ".";
+                    previousAcronym = true;
+                }
+                else
+                {
+                    if (previousAcronym)
+                    {
+                        artistName += " ";
+                        previousAcronym = false;
+                    }
+                    artistName += part + " ";
+                }
+                n++;
+            }
+
+            artistName = artistName.Trim(' ');
 
             int trackNumber;
             int.TryParse(matchCollection[0].Groups["trackNumber"].Value, out trackNumber);

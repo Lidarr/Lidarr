@@ -16,7 +16,7 @@ namespace NzbDrone.Core.Test.MediaFiles
             var files = Builder<EpisodeFile>.CreateListOfSize(10)
                 .All()
                 .With(c => c.Id = 0)
-                .With(c => c.Quality =new QualityModel(Quality.MP3192))
+                .With(c => c.Quality =new QualityModel(Quality.MP3_192))
                 .Random(4)
                 .With(s => s.SeriesId = 12)
                 .BuildListOfNew();

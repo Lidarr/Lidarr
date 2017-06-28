@@ -2,6 +2,7 @@
 using NzbDrone.Core.Datastore;
 using System.Collections.Generic;
 using NzbDrone.Core.Messaging.Events;
+using Marr.Data.QGen;
 
 namespace NzbDrone.Core.Music
 {
@@ -10,6 +11,7 @@ namespace NzbDrone.Core.Music
         bool AlbumPathExists(string path);
         List<Album> GetAlbums(int artistId);
         Album FindByName(string cleanTitle);
+        Album FindByArtistAndName(string artistName, string cleanTitle);
         Album FindById(string spotifyId);
         void SetMonitoredFlat(Album album, bool monitored);
     }
@@ -47,6 +49,15 @@ namespace NzbDrone.Core.Music
             cleanTitle = cleanTitle.ToLowerInvariant();
 
             return Query.Where(s => s.CleanTitle == cleanTitle)
+                        .SingleOrDefault();
+        }
+
+        public Album FindByArtistAndName(string artistName, string cleanTitle)
+        {
+            cleanTitle = cleanTitle.ToLowerInvariant();
+            return Query.Join<Album, Artist>(JoinType.Inner, e => e.Artist, (e, ef) => e.ArtistId == ef.Id)
+                        .Where(e => e.CleanTitle == Parser.Parser.CleanArtistTitle(artistName))
+                        .AndWhere(ef => ef.CleanTitle == cleanTitle)
                         .SingleOrDefault();
         }
     }

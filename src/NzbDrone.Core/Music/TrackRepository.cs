@@ -16,7 +16,6 @@ namespace NzbDrone.Core.Music
         Track Find(int artistId, int albumId, int trackNumber);
         List<Track> GetTracks(int artistId);
         List<Track> GetTracks(int artistId, int albumId);
-        Track GetTrackByArtist(int artistId, int trackNumber);
         List<Track> GetTracksByFileId(int fileId);
         List<Track> TracksWithFiles(int artistId);
         PagingSpec<Track> TracksWithoutFiles(PagingSpec<Track> pagingSpec);
@@ -44,19 +43,6 @@ namespace NzbDrone.Core.Music
                                .AndWhere(s => s.AlbumId == albumId)
                                .AndWhere(s => s.TrackNumber == trackNumber)
                                .SingleOrDefault();
-        }
-
-        public Track GetTrackByArtist(int artistId, int trackNumber)
-        {
-            string sql =  Query.Where(s => s.ArtistId == artistId)
-                .AndWhere(s => s.TrackNumber == trackNumber).BuildQuery();
-
-            _logger.Debug("Query {0}", sql);
-
-            var result =  Query.Where(s => s.ArtistId == artistId)
-                .AndWhere(s => s.TrackNumber == trackNumber)
-                .SingleOrDefault();
-            return result;
         }
 
 

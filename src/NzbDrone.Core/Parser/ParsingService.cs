@@ -34,6 +34,7 @@ namespace NzbDrone.Core.Parser
         private readonly IEpisodeService _episodeService;
         private readonly ISeriesService _seriesService;
 
+        private readonly IAlbumRepository _albumRepository;
         private readonly IArtistService _artistService;
         private readonly ITrackService _trackService;
         private readonly Logger _logger;
@@ -41,11 +42,13 @@ namespace NzbDrone.Core.Parser
         public ParsingService(IEpisodeService episodeService,
                               ISeriesService seriesService,
                               ITrackService trackService,
+                              IAlbumRepository albumRepository,
                               // ISceneMappingService sceneMappingService,
                               Logger logger)
         {
             _episodeService = episodeService;
             _seriesService = seriesService;
+            _albumRepository = albumRepository;
             // _sceneMappingService = sceneMappingService;
             _trackService = trackService;
             _logger = logger;
@@ -604,7 +607,8 @@ namespace NzbDrone.Core.Parser
 
                 if (trackInfo == null)
                 {
-                    trackInfo = _trackService.FindTrack(artist.Id, trackNumber);
+                    var album = _albumRepository.FindByArtistAndName(parsedTrackInfo.ArtistTitle, Parser.CleanArtistTitle(parsedTrackInfo.AlbumTitle));
+                    trackInfo = _trackService.FindTrack(artist.Id, album.Id, trackNumber);
                 }
 
                 if (trackInfo != null)
