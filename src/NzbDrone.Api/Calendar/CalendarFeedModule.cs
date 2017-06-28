@@ -115,16 +115,7 @@ namespace NzbDrone.Api.Calendar
                 //occurrence.Description = album.Overview;
                 //occurrence.Categories = new List<string>() { album.Artist. };
 
-                if (asAllDay)
-                {
-                    occurrence.Start = new CalDateTime(album.ReleaseDate.Value) { HasTime = false };
-                }
-                else
-                {
-                    occurrence.Start = new CalDateTime(album.ReleaseDate.Value) { HasTime = true };
-                    occurrence.End = new CalDateTime(album.ReleaseDate.Value.AddMinutes(30)) { HasTime = true };
-                }
-
+                occurrence.Start = new CalDateTime(album.ReleaseDate.Value) { HasTime = false };
                 
                 occurrence.Summary =$"{album.Artist.Name} - {album.Title}";
                 
