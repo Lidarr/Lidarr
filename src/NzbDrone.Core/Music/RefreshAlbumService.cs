@@ -58,25 +58,29 @@ namespace NzbDrone.Core.Music
                     {
                         albumToUpdate = new Album();
                         albumToUpdate.Monitored = artist.Monitored;
+                        albumToUpdate.Id = album.Id;
+                        // This is a hack due to the fact that album Id is initialized to 0 but SQLite defaults at Id 1.
+                        if (albumToUpdate.Id == 0)
+                        {
+                            albumToUpdate.Id = 1;
+                        }
                         newList.Add(albumToUpdate);
                         //var folderName = _fileNameBuilder.GetAlbumFolder(albumToUpdate); //This likely does not belong here, need to create AddAlbumService
                         //albumToUpdate.Path = Path.Combine(newArtist.RootFolderPath, folderName);
                     }
 
+
                     albumToUpdate.ForeignAlbumId = album.ForeignAlbumId;
                     albumToUpdate.CleanTitle = album.CleanTitle;
-                    //albumToUpdate.TrackNumber = album.TrackNumber;
                     albumToUpdate.Title = album.Title ?? "Unknown";
                     albumToUpdate.CleanTitle = Parser.Parser.CleanArtistTitle(albumToUpdate.Title);
-                    //albumToUpdate.AlbumId = album.AlbumId;
-                    //albumToUpdate.Album = album.Album;
-                    //albumToUpdate.Explicit = album.Explicit;
                     albumToUpdate.ArtistId = artist.Id;
                     albumToUpdate.Path = artist.Path + "\\" + album.Title;
                     albumToUpdate.AlbumType = album.AlbumType;
-                    //albumToUpdate.Compilation = album.Compilation;
+                    albumToUpdate.Genres = album.Genres;
+                    albumToUpdate.Images = album.Images;
 
-                    _refreshTrackService.RefreshTrackInfo(album, album.Tracks);
+                    _refreshTrackService.RefreshTrackInfo(albumToUpdate, album.Tracks); // We must call with new info, as album has an Id of 0, which is invalid for SQL
 
 
                     successCount++;
@@ -122,7 +126,7 @@ namespace NzbDrone.Core.Music
 
         private Album GetAlbumToUpdate(Artist artist, Album album, List<Album> existingAlbums)
         {
-            return existingAlbums.FirstOrDefault(e => e.ForeignAlbumId == album.ForeignAlbumId && e.ReleaseDate == album.ReleaseDate);
+            return existingAlbums.FirstOrDefault(e => e.ForeignAlbumId == album.ForeignAlbumId/* && e.ReleaseDate == album.ReleaseDate*/);
         }
 
         private IEnumerable<Album> OrderAlbums(Artist artist, List<Album> albums)

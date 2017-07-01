@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Music
             var successCount = 0;
             var failCount = 0;
 
-            var existingTracks = _trackService.GetTracksByAlbum(album.ArtistId, album.Id); // TODO: JOE: I believe this should be string, string
+            var existingTracks = _trackService.GetTracksByAlbum(album.ArtistId, album.Id); 
 
             var updateList = new List<Track>();
             var newList = new List<Track>();
@@ -54,20 +54,19 @@ namespace NzbDrone.Core.Music
                     {
                         trackToUpdate = new Track();
                         trackToUpdate.Monitored = album.Monitored;
+                        trackToUpdate.Id = track.Id;
                         newList.Add(trackToUpdate);
                     }
 
+                    // TODO: Use object mapper to automatically handle this
                     trackToUpdate.ForeignTrackId = track.ForeignTrackId;
                     trackToUpdate.TrackNumber = track.TrackNumber;
                     trackToUpdate.Title = track.Title ?? "Unknown";
                     trackToUpdate.AlbumId = album.Id;
-                    trackToUpdate.Album = track.Album;
+                    trackToUpdate.Album = track.Album ?? album;
                     trackToUpdate.Explicit = track.Explicit;
                     trackToUpdate.ArtistId = album.ArtistId;
                     trackToUpdate.Compilation = track.Compilation;
-
-                    // TODO: Implement rest of [RefreshTrackService] fields
-
 
 
                     successCount++;
@@ -118,7 +117,8 @@ namespace NzbDrone.Core.Music
 
         private Track GetTrackToUpdate(Album album, Track track, List<Track> existingTracks)
         {
-            return existingTracks.FirstOrDefault(e => e.AlbumId == track.AlbumId && e.TrackNumber == track.TrackNumber);
+            var result = existingTracks.FirstOrDefault(e => e.AlbumId == track.AlbumId && e.TrackNumber == track.TrackNumber);
+            return result;
         }
 
         private IEnumerable<Track> OrderTracks(Album album, List<Track> tracks)

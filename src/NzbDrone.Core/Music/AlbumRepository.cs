@@ -54,10 +54,14 @@ namespace NzbDrone.Core.Music
 
         public Album FindByArtistAndName(string artistName, string cleanTitle)
         {
+            var cleanArtistName = Parser.Parser.CleanArtistTitle(artistName);
             cleanTitle = cleanTitle.ToLowerInvariant();
-            return Query.Join<Album, Artist>(JoinType.Inner, e => e.Artist, (e, ef) => e.ArtistId == ef.Id)
-                        .Where(e => e.CleanTitle == Parser.Parser.CleanArtistTitle(artistName))
-                        .AndWhere(ef => ef.CleanTitle == cleanTitle)
+            var query = Query.Join<Album, Artist>(JoinType.Inner, album => album.Artist, (album, artist) => album.ArtistId == artist.Id)
+                        .Where<Artist>(artist => artist.CleanName == cleanArtistName)
+                        .Where<Album>(album => album.CleanTitle == cleanTitle);
+            return Query.Join<Album, Artist>(JoinType.Inner, album => album.Artist, (album, artist) => album.ArtistId == artist.Id )
+                        .Where<Artist>(artist => artist.CleanName == cleanArtistName)
+                        .Where<Album>(album => album.CleanTitle == cleanTitle)
                         .SingleOrDefault();
         }
     }

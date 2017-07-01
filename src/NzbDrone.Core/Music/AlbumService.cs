@@ -32,7 +32,8 @@ namespace NzbDrone.Core.Music
         void RemoveAddOptions(Album album);
     }
 
-    public class AlbumService : IAlbumService
+    public class AlbumService : IAlbumService,
+                                IHandleAsync<ArtistDeletedEvent>
     {
         private readonly IAlbumRepository _albumRepository;
         private readonly IEventAggregator _eventAggregator;
@@ -151,6 +152,17 @@ namespace NzbDrone.Core.Music
             _logger.Debug("{0} albums updated", album.Count);
 
             return album;
+        }
+
+        public void HandleAsync(ArtistDeletedEvent message)
+        {
+            var albums = GetAlbumsByArtist(message.Artist.Id);
+            _albumRepository.DeleteMany(albums);
+        }
+
+        public void Handle(ArtistDeletedEvent message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

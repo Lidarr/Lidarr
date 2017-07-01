@@ -608,6 +608,10 @@ namespace NzbDrone.Core.Parser
                 if (trackInfo == null)
                 {
                     var album = _albumRepository.FindByArtistAndName(parsedTrackInfo.ArtistTitle, Parser.CleanArtistTitle(parsedTrackInfo.AlbumTitle));
+                    if (album == null)
+                    {
+                        return new List<Track>();
+                    }
                     trackInfo = _trackService.FindTrack(artist.Id, album.Id, trackNumber);
                 }
 

@@ -3,6 +3,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Events;
+using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music.Events;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,8 @@ namespace NzbDrone.Core.Music
         void SetTrackMonitoredByAlbum(int artistId, int albumId, bool monitored);
     }
 
-    public class TrackService : ITrackService
+    public class TrackService : ITrackService,
+                                IHandleAsync<ArtistDeletedEvent>
     {
         private readonly ITrackRepository _trackRepository;
         private readonly IConfigService _configService;
