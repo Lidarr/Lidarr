@@ -89,11 +89,12 @@ namespace NzbDrone.Core.Music
                 _logger.Warn(e, "Couldn't update artist path for " + artist.Path);
             }
 
-            artist.Albums = UpdateAlbums(artist, artistInfo);
+            //artist.Albums = UpdateAlbums(artist, artistInfo); # We don't need this since we don't store albums in artist table.
 
             _artistService.UpdateArtist(artist);
+
             _refreshAlbumService.RefreshAlbumInfo(artist, tuple.Item2);
-            foreach (var album in artist.Albums)
+            foreach (var album in tuple.Item2)
             {
                 _refreshTrackService.RefreshTrackInfo(album, album.Tracks);
             }

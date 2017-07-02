@@ -17,12 +17,14 @@ namespace NzbDrone.Core.Music
     public class RefreshTrackService : IRefreshTrackService
     {
         private readonly ITrackService _trackService;
+        private readonly IAlbumService _albumService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
-        public RefreshTrackService(ITrackService trackService, IEventAggregator eventAggregator, Logger logger)
+        public RefreshTrackService(ITrackService trackService, IAlbumService albumService, IEventAggregator eventAggregator, Logger logger)
         {
             _trackService = trackService;
+            _albumService = albumService;
             _eventAggregator = eventAggregator;
             _logger = logger;
         }
@@ -33,11 +35,13 @@ namespace NzbDrone.Core.Music
             var successCount = 0;
             var failCount = 0;
 
-            var existingTracks = _trackService.GetTracksByAlbum(album.ArtistId, album.Id); 
+            album = _albumService.FindById(album.ForeignAlbumId);
+
+            var existingTracks = _trackService.GetTracksByAlbum(album.ArtistId, album.Id);
 
             var updateList = new List<Track>();
             var newList = new List<Track>();
-            var dupeFreeRemoteTracks = remoteTracks.DistinctBy(m => new { m.AlbumId, m.TrackNumber }).ToList();
+            var dupeFreeRemoteTracks = remoteTracks.DistinctBy(m => new { m.ForeignTrackId, m.TrackNumber }).ToList();
 
             foreach (var track in OrderTracks(album, dupeFreeRemoteTracks))
             {
@@ -117,7 +121,7 @@ namespace NzbDrone.Core.Music
 
         private Track GetTrackToUpdate(Album album, Track track, List<Track> existingTracks)
         {
-            var result = existingTracks.FirstOrDefault(e => e.AlbumId == track.AlbumId && e.TrackNumber == track.TrackNumber);
+            var result = existingTracks.FirstOrDefault(e => e.ForeignTrackId == track.ForeignTrackId && e.TrackNumber == track.TrackNumber);
             return result;
         }
 

@@ -77,9 +77,9 @@ namespace NzbDrone.Core.Music
             _eventAggregator.PublishEvent(new AlbumDeletedEvent(album, deleteFiles));
         }
 
-        public Album FindById(string spotifyId)
+        public Album FindById(string lidarrId)
         {
-            return _albumRepository.FindById(spotifyId);
+            return _albumRepository.FindById(lidarrId);
         }
 
 

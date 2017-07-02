@@ -33,6 +33,7 @@ namespace NzbDrone.Core.Music
         {
             return Query.Where(c => c.Path == path).Any();
         }
+
         public List<Album> GetAlbums(int artistId)
         {
             return Query.Where(s => s.ArtistId == artistId).ToList();

@@ -19,12 +19,14 @@ namespace NzbDrone.Core.Music
     {
         private readonly IAlbumService _albumService;
         private readonly IRefreshTrackService _refreshTrackService;
+        private readonly IBuildFileNames _fileNameBuilder;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
-        public RefreshAlbumService(IAlbumService albumService, IRefreshTrackService refreshTrackService, IEventAggregator eventAggregator, Logger logger)
+        public RefreshAlbumService(IAlbumService albumService, IBuildFileNames fileNameBuilder, IRefreshTrackService refreshTrackService, IEventAggregator eventAggregator, Logger logger)
         {
             _albumService = albumService;
+            _fileNameBuilder = fileNameBuilder;
             _refreshTrackService = refreshTrackService;
             _eventAggregator = eventAggregator;
             _logger = logger;
@@ -58,29 +60,28 @@ namespace NzbDrone.Core.Music
                     {
                         albumToUpdate = new Album();
                         albumToUpdate.Monitored = artist.Monitored;
-                        albumToUpdate.Id = album.Id;
-                        // This is a hack due to the fact that album Id is initialized to 0 but SQLite defaults at Id 1.
-                        if (albumToUpdate.Id == 0)
+                        albumToUpdate.ProfileId = artist.ProfileId;
+                        albumToUpdate.Added = DateTime.UtcNow;
+
+                        if (string.IsNullOrWhiteSpace(albumToUpdate.Path))
                         {
-                            albumToUpdate.Id = 1;
+                            albumToUpdate.Path = _fileNameBuilder.BuildAlbumPath(artist, album);
                         }
+
                         newList.Add(albumToUpdate);
-                        //var folderName = _fileNameBuilder.GetAlbumFolder(albumToUpdate); //This likely does not belong here, need to create AddAlbumService
-                        //albumToUpdate.Path = Path.Combine(newArtist.RootFolderPath, folderName);
                     }
 
 
                     albumToUpdate.ForeignAlbumId = album.ForeignAlbumId;
+                    albumToUpdate.LastInfoSync = DateTime.UtcNow;
                     albumToUpdate.CleanTitle = album.CleanTitle;
                     albumToUpdate.Title = album.Title ?? "Unknown";
                     albumToUpdate.CleanTitle = Parser.Parser.CleanArtistTitle(albumToUpdate.Title);
                     albumToUpdate.ArtistId = artist.Id;
-                    albumToUpdate.Path = artist.Path + "\\" + album.Title;
                     albumToUpdate.AlbumType = album.AlbumType;
                     albumToUpdate.Genres = album.Genres;
                     albumToUpdate.Images = album.Images;
-
-                    _refreshTrackService.RefreshTrackInfo(albumToUpdate, album.Tracks); // We must call with new info, as album has an Id of 0, which is invalid for SQL
+                    albumToUpdate.ReleaseDate = album.ReleaseDate;
 
 
                     successCount++;
