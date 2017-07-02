@@ -5,6 +5,7 @@ using NzbDrone.Core.Organizer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Parser;
 using System.Text;
 using System.IO;
@@ -25,6 +26,8 @@ namespace NzbDrone.Core.Music
         Album UpdateAlbum(Album album);
         List<Album> UpdateAlbums(List<Album> album);
         void SetAlbumMonitored(int albumId, bool monitored);
+        PagingSpec<Album> AlbumsWithoutFiles(PagingSpec<Album> pagingSpec);
+        List<Album> AlbumsBetweenDates(DateTime start, DateTime end, bool includeUnmonitored);
         void InsertMany(List<Album> albums);
         void UpdateMany(List<Album> albums);
         void DeleteMany(List<Album> albums);
@@ -109,6 +112,20 @@ namespace NzbDrone.Core.Music
         public void RemoveAddOptions(Album album)
         {
             _albumRepository.SetFields(album, s => s.AddOptions);
+        }
+
+        public PagingSpec<Album> AlbumsWithoutFiles(PagingSpec<Album> pagingSpec)
+        {
+            var albumResult = _albumRepository.AlbumsWithoutFiles(pagingSpec);
+
+            return albumResult;
+        }
+
+        public List<Album> AlbumsBetweenDates(DateTime start, DateTime end, bool includeUnmonitored)
+        {
+            var albums = _albumRepository.AlbumsBetweenDates(start.ToUniversalTime(), end.ToUniversalTime(), includeUnmonitored);
+
+            return albums;
         }
 
         public void InsertMany(List<Album> albums)
