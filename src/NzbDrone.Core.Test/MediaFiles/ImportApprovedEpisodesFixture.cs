@@ -57,7 +57,7 @@ namespace NzbDrone.Core.Test.MediaFiles
                                                    Artist = artist,
                                                    Tracks = new List<Track> { track },
                                                    Path = Path.Combine(artist.Path, "30 Rock - S01E01 - Pilot.avi"),
-                                                   Quality = new QualityModel(Quality.MP3256),
+                                                   Quality = new QualityModel(Quality.MP3_256),
                                                    ParsedTrackInfo = new ParsedTrackInfo
                                                                        {
                                                                            ReleaseGroup = "DRONE"
@@ -207,7 +207,7 @@ namespace NzbDrone.Core.Test.MediaFiles
                      Artist = fileDecision.LocalTrack.Artist,
                      Tracks = new List<Track> { fileDecision.LocalTrack.Tracks.First() },
                      Path = @"C:\Test\TV\30 Rock\30 Rock - S01E01 - Pilot.avi".AsOsAgnostic(),
-                     Quality = new QualityModel(Quality.MP3256),
+                     Quality = new QualityModel(Quality.MP3_256),
                      Size = 80.Megabytes()
                  });
 
@@ -223,14 +223,11 @@ namespace NzbDrone.Core.Test.MediaFiles
             results.Should().ContainSingle(d => d.Result == ImportResultType.Imported && d.ImportDecision.LocalTrack.Size == fileDecision.LocalTrack.Size);
         }
 
-    //    [Test]
-    //    public void should_copy_readonly_downloads()
-    //    {
-    //        Subject.Import(new List<ImportDecision> { _approvedDecisions.First() }, true, new DownloadClientItem { Title = "30.Rock.S01E01", IsReadOnly = true });
+        [Test]
+        public void should_copy_readonly_downloads()
+        {
+            Subject.Import(new List<ImportDecision> { _approvedDecisions.First() }, true, new DownloadClientItem { Title = "30.Rock.S01E01", IsReadOnly = true });
 
-            Mocker.GetMock<IUpgradeMediaFiles>()
-                  .Verify(v => v.UpgradeEpisodeFile(It.IsAny<EpisodeFile>(), _approvedDecisions.First().LocalEpisode, true), Times.Once());
-        }
             Mocker.GetMock<IUpgradeMediaFiles>()
                   .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().LocalTrack, true), Times.Once());
         }

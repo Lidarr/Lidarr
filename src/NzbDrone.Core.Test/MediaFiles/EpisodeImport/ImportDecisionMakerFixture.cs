@@ -184,7 +184,7 @@ namespace NzbDrone.Core.Test.MediaFiles.EpisodeImport
             GivenSpecifications(_pass1, _pass2, _pass3);
             var expectedQuality = QualityParser.ParseQuality(_audioFiles.Single());
 
-            var result = Subject.GetImportDecisions(_videoFiles, _series, new ParsedEpisodeInfo{Quality = new QualityModel(Quality.MP3_256) });
+            var result = Subject.GetImportDecisions(_audioFiles, _artist, new ParsedTrackInfo{Quality = new QualityModel(Quality.MP3_256) });
 
             result.Single().LocalTrack.Quality.Should().Be(expectedQuality);
         }
@@ -195,9 +195,9 @@ namespace NzbDrone.Core.Test.MediaFiles.EpisodeImport
             GivenSpecifications(_pass1, _pass2, _pass3);
             GivenVideoFiles(new string[] { @"C:\Test\Unsorted\The.Office.S03E115.mkv".AsOsAgnostic() });
 
-            _localEpisode.Path = _videoFiles.Single();
-            _localEpisode.Quality.QualitySource = QualitySource.Extension;
-            _localEpisode.Quality.Quality = Quality.MP3_256;
+            _localTrack.Path = _audioFiles.Single();
+            _localTrack.Quality.QualitySource = QualitySource.Extension;
+            _localTrack.Quality.Quality = Quality.MP3_256;
 
             var expectedQuality = new QualityModel(Quality.MP3_256);
 
@@ -212,8 +212,8 @@ namespace NzbDrone.Core.Test.MediaFiles.EpisodeImport
             GivenSpecifications(_pass1, _pass2, _pass3);
             GivenVideoFiles(new string[] { @"C:\Test\Unsorted\The.Office.S03E115.mkv".AsOsAgnostic() });
 
-            _localEpisode.Path = _videoFiles.Single();
-            _localEpisode.Quality.Quality = Quality.MP3_256;
+            _localTrack.Path = _audioFiles.Single();
+            _localTrack.Quality.Quality = Quality.MP3_256;
 
             var expectedQuality = new QualityModel(Quality.MP3_256);
 
