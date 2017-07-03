@@ -34,7 +34,9 @@ namespace NzbDrone.Core.Music
     }
 
     public class TrackService : ITrackService,
-                                IHandleAsync<ArtistDeletedEvent>
+                                IHandleAsync<ArtistDeletedEvent>,
+                                IHandle<TrackFileDeletedEvent>,
+                                IHandle<TrackFileAddedEvent>
     {
         private readonly ITrackRepository _trackRepository;
         private readonly IConfigService _configService;

@@ -6,6 +6,7 @@ using NzbDrone.Core.MediaFiles.EpisodeImport;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Qualities;
+using NzbDrone.Core.Parser;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,8 +83,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                     trackFile.Size = _diskProvider.GetFileSize(localTrack.Path);
                     trackFile.Quality = localTrack.Quality;
                     trackFile.MediaInfo = localTrack.MediaInfo;
-                    trackFile.AlbumId = _albumRepository.FindByName(localTrack.ParsedTrackInfo.AlbumTitle).Id;
+                    trackFile.AlbumId = _albumRepository.FindByArtistAndName(localTrack.Artist.Name, Parser.Parser.CleanArtistTitle(localTrack.ParsedTrackInfo.AlbumTitle)).Id;
                     trackFile.ReleaseGroup = localTrack.ParsedTrackInfo.ReleaseGroup;
+                    trackFile.Tracks = localTrack.Tracks;
 
                     bool copyOnly;
                     switch (importMode)
