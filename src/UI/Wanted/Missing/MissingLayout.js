@@ -126,9 +126,9 @@ module.exports = Marionette.Layout.extend({
                     className    : 'x-unmonitor-selected'
                 },
                 {
-                    title : 'Season Pass',
+                    title : 'Album Pass',
                     icon  : 'icon-lidarr-monitored',
-                    route : 'seasonpass'
+                    route : 'albumpass'
                 },
                 {
                     title      : 'Rescan Drone Factory Folder',

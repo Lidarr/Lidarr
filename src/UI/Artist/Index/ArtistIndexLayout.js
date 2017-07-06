@@ -86,9 +86,9 @@ module.exports = Marionette.Layout.extend({
                 route : 'addartist'
             },
             {
-                title : 'Season Pass',
+                title : 'Album Pass',
                 icon  : 'icon-lidarr-monitored',
-                route : 'seasonpass'
+                route : 'albumpass'
             },
             {
                 title : 'Artist Editor',

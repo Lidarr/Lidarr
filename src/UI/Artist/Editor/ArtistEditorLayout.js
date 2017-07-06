@@ -72,9 +72,9 @@ module.exports = Marionette.Layout.extend({
         storeState : false,
         items      : [
             {
-                title : 'Season Pass',
+                title : 'Album Pass',
                 icon  : 'icon-lidarr-monitored',
-                route : 'seasonpass'
+                route : 'albumpass'
             },
             {
                 title          : 'Update Library',

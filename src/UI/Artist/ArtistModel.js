@@ -11,10 +11,10 @@ module.exports = Backbone.Model.extend({
         status           : 0
     },
 
-    setAlbumsMonitored : function(albumName) {
+    setAlbumsMonitored : function(albumId) {
         _.each(this.get('albums'), function(album) {
             console.log(album);
-            if (album.albumName === albumName) {
+            if (album.albumId === albumId) {
                 album.monitored = !album.monitored;
             }
         });

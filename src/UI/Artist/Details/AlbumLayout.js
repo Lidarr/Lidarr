@@ -203,18 +203,14 @@ module.exports = Marionette.Layout.extend({
         if (!this.artist.get('monitored')) {
 
             Messenger.show({
-                message : 'Unable to change monitored state when series is not monitored',
+                message : 'Unable to change monitored state when artist is not monitored',
                 type    : 'error'
             });
 
             return;
         }
 
-        var name = 'monitored';
-        this.model.set(name, !this.model.get(name));
-        this.artist.setSeasonMonitored(this.model.get('albumId'));
-
-        var savePromise = this.artist.save().always(this._afterSeasonMonitored.bind(this));
+        var savePromise = this.model.save('monitored', !this.model.get('monitored'), { wait : true });
 
         this.ui.albumMonitored.spinForPromise(savePromise);
     },

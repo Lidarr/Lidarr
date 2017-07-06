@@ -5,13 +5,13 @@ var vent = require('vent');
 var RootFolders = require('../AddArtist/RootFolders/RootFolderCollection');
 
 module.exports = Marionette.ItemView.extend({
-    template : 'SeasonPass/SeasonPassFooterViewTemplate',
+    template : 'AlbumPass/AlbumPassFooterViewTemplate',
 
     ui : {
-        seriesMonitored : '.x-series-monitored',
+        artistMonitored : '.x-artist-monitored',
         monitor         : '.x-monitor',
         selectedCount   : '.x-selected-count',
-        container       : '.series-editor-footer',
+        container       : '.artist-editor-footer',
         actions         : '.x-action',
         indicator       : '.x-indicator',
         indicatorIcon   : '.x-indicator-icon'
@@ -22,14 +22,14 @@ module.exports = Marionette.ItemView.extend({
     },
 
     initialize : function(options) {
-        this.seriesCollection = options.collection;
+        this.artistCollection = options.collection;
 
         RootFolders.fetch().done(function() {
             RootFolders.synced = true;
         });
 
         this.editorGrid = options.editorGrid;
-        this.listenTo(this.seriesCollection, 'backgrid:selected', this._updateInfo);
+        this.listenTo(this.artistCollection, 'backgrid:selected', this._updateInfo);
     },
 
     onRender : function() {
@@ -39,13 +39,13 @@ module.exports = Marionette.ItemView.extend({
     _update : function() {
         var self = this;
         var selected = this.editorGrid.getSelectedModels();
-        var seriesMonitored = this.ui.seriesMonitored.val();
+        var artistMonitored = this.ui.artistMonitored.val();
         var monitoringOptions;
 
         _.each(selected, function(model) {
-            if (seriesMonitored === 'true') {
+            if (artistMonitored === 'true') {
                 model.set('monitored', true);
-            } else if (seriesMonitored === 'false') {
+            } else if (artistMonitored === 'false') {
                 model.set('monitored', false);
             }
 
@@ -54,7 +54,7 @@ module.exports = Marionette.ItemView.extend({
         });
 
         var promise = $.ajax({
-            url  : window.NzbDrone.ApiRoot + '/seasonpass',
+            url  : window.NzbDrone.ApiRoot + '/albumpass',
             type : 'POST',
             data : JSON.stringify({
                 series            : _.map(selected, function (model) {
@@ -71,7 +71,7 @@ module.exports = Marionette.ItemView.extend({
         });
 
         promise.done(function () {
-            self.seriesCollection.trigger('seasonpass:saved');
+            self.artistCollection.trigger('seasonpass:saved');
         });
     },
 
@@ -79,7 +79,7 @@ module.exports = Marionette.ItemView.extend({
         var selected = this.editorGrid.getSelectedModels();
         var selectedCount = selected.length;
 
-        this.ui.selectedCount.html('{0} series selected'.format(selectedCount));
+        this.ui.selectedCount.html('{0} artists selected'.format(selectedCount));
 
         if (selectedCount === 0) {
             this.ui.actions.attr('disabled', 'disabled');
