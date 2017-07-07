@@ -3,7 +3,7 @@ using NzbDrone.Core.Music;
 
 namespace NzbDrone.Api.AlbumPass
 {
-    public class AlbumPassResource
+    public class AlbumStudioResource
     {
         public List<Core.Music.Artist> Artist { get; set; }
         public MonitoringOptions MonitoringOptions { get; set; }
