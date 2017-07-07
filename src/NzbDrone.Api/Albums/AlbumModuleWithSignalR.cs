@@ -123,8 +123,6 @@ namespace NzbDrone.Api.Albums
             {
                 var dictAlbumStats = artistStatistics.AlbumStatistics.ToDictionary(v => v.AlbumId);
 
-
-                var alstats = dictAlbumStats.GetValueOrDefault(resource.Id);
                 resource.Statistics = dictAlbumStats.GetValueOrDefault(resource.Id).ToResource();
                 
             }

@@ -56,42 +56,6 @@ namespace NzbDrone.Core.Music
                     ToggleTracksMonitoredState(tracks.Where(e => !e.HasFile), true);
                 }
 
-                //var lastSeason = album.Seasons.Select(s => s.SeasonNumber).MaxOrDefault();
-
-                //foreach (var s in album.Seasons)
-                //{
-                //    var season = s;
-
-                //    if (season.Monitored)
-                //    {
-                //        if (!monitoringOptions.IgnoreEpisodesWithFiles && !monitoringOptions.IgnoreEpisodesWithoutFiles)
-                //        {
-                //            ToggleEpisodesMonitoredState(tracks.Where(e => e.SeasonNumber == season.SeasonNumber), true);
-                //        }
-                //    }
-
-                //    else
-                //    {
-                //        if (!monitoringOptions.IgnoreEpisodesWithFiles && !monitoringOptions.IgnoreEpisodesWithoutFiles)
-                //        {
-                //            ToggleEpisodesMonitoredState(tracks.Where(e => e.SeasonNumber == season.SeasonNumber), false);
-                //        }
-
-                //        else if (season.SeasonNumber == 0)
-                //        {
-                //            ToggleEpisodesMonitoredState(tracks.Where(e => e.SeasonNumber == season.SeasonNumber), false);
-                //        }
-                //    }
-
-                //    if (season.SeasonNumber < lastSeason)
-                //    {
-                //        if (tracks.Where(e => e.SeasonNumber == season.SeasonNumber).All(e => !e.Monitored))
-                //        {
-                //            season.Monitored = false;
-                //        }
-                //    }
-                //}
-
                 _trackService.UpdateTracks(tracks);
             }
 
