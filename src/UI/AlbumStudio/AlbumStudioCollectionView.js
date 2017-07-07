@@ -10,7 +10,6 @@ var view = Marionette.CollectionView.extend({
     initialize : function(options) {
         this.albumCollection = options.collection;
         this.artist = options.artist;
-        console.log(this);
     },
 
     itemViewOptions : function() {
