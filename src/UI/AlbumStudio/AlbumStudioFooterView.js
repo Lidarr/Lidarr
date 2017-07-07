@@ -57,7 +57,7 @@ module.exports = Marionette.ItemView.extend({
             url  : window.NzbDrone.ApiRoot + '/albumstudio',
             type : 'POST',
             data : JSON.stringify({
-                series            : _.map(selected, function (model) {
+                artist            : _.map(selected, function (model) {
                     return model.toJSON();
                 }),
                 monitoringOptions : monitoringOptions
@@ -90,48 +90,25 @@ module.exports = Marionette.ItemView.extend({
 
     _getMonitoringOptions : function(model) {
         var monitor = this.ui.monitor.val();
-        var lastSeason = _.max(model.get('seasons'), 'seasonNumber');
-        var firstSeason = _.min(_.reject(model.get('seasons'), { seasonNumber : 0 }), 'seasonNumber');
 
         if (monitor === 'noChange') {
             return null;
         }
 
-        model.setSeasonPass(firstSeason.seasonNumber);
+        model.setAlbumPass(0);
 
         var options = {
-            ignoreEpisodesWithFiles    : false,
-            ignoreEpisodesWithoutFiles : false
+            ignoreTracksWithFiles    : false,
+            ignoreTracksWithoutFiles : false,
+            monitored                : true
         };
 
         if (monitor === 'all') {
             return options;
         }
 
-        else if (monitor === 'future') {
-            options.ignoreEpisodesWithFiles = true;
-            options.ignoreEpisodesWithoutFiles = true;
-        }
-
-        else if (monitor === 'latest') {
-            model.setSeasonPass(lastSeason.seasonNumber);
-        }
-
-        else if (monitor === 'first') {
-            model.setSeasonPass(lastSeason.seasonNumber + 1);
-            model.setSeasonMonitored(firstSeason.seasonNumber);
-        }
-
-        else if (monitor === 'missing') {
-            options.ignoreEpisodesWithFiles = true;
-        }
-
-        else if (monitor === 'existing') {
-            options.ignoreEpisodesWithoutFiles = true;
-        }
-
         else if (monitor === 'none') {
-            model.setSeasonPass(lastSeason.seasonNumber + 1);
+            options.monitored = false;
         }
 
         return options;

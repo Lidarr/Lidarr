@@ -47,13 +47,13 @@ namespace NzbDrone.Core.Music
                 if (monitoringOptions.IgnoreTracksWithoutFiles)
                 {
                     _logger.Debug("Ignoring Tracks without Files");
-                    ToggleTracksMonitoredState(tracks.Where(e => !e.HasFile && e.Album.ReleaseDate.HasValue && e.Album.ReleaseDate.Value.Before(DateTime.UtcNow)), false);
+                    ToggleTracksMonitoredState(tracks.Where(e => !e.HasFile), false);
                 }
 
                 else
                 {
                     _logger.Debug("Monitoring Episodes without Files");
-                    ToggleTracksMonitoredState(tracks.Where(e => !e.HasFile && e.Album.ReleaseDate.HasValue && e.Album.ReleaseDate.Value.Before(DateTime.UtcNow)), true);
+                    ToggleTracksMonitoredState(tracks.Where(e => !e.HasFile), true);
                 }
 
                 //var lastSeason = album.Seasons.Select(s => s.SeasonNumber).MaxOrDefault();

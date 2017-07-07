@@ -866,6 +866,7 @@
     <Compile Include="MetadataSource\IProvideSeriesInfo.cs" />
     <Compile Include="MetadataSource\ISearchForNewSeries.cs" />
     <Compile Include="Music\MonitoringOptions.cs" />
+    <Compile Include="Music\AlbumMonitoredService.cs" />
     <Compile Include="Music\TrackMonitoredService.cs" />
     <Compile Include="Music\Member.cs" />
     <Compile Include="Music\AddArtistOptions.cs" />

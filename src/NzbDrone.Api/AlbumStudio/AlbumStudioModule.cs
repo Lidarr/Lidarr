@@ -6,12 +6,12 @@ namespace NzbDrone.Api.AlbumPass
 {
     public class AlbumStudioModule : NzbDroneApiModule
     {
-        private readonly ITrackMonitoredService _trackMonitoredService;
+        private readonly IAlbumMonitoredService _albumMonitoredService;
 
-        public AlbumStudioModule(ITrackMonitoredService trackMonitoredService)
+        public AlbumStudioModule(IAlbumMonitoredService albumMonitoredService)
             : base("/albumstudio")
         {
-            _trackMonitoredService = trackMonitoredService;
+            _albumMonitoredService = albumMonitoredService;
             Post["/"] = artist => UpdateAll();
         }
 
@@ -22,7 +22,7 @@ namespace NzbDrone.Api.AlbumPass
 
             foreach (var s in request.Artist)
             {
-                _trackMonitoredService.SetTrackMonitoredStatus(s, request.MonitoringOptions);
+                _albumMonitoredService.SetAlbumMonitoredStatus(s, request.MonitoringOptions);
             }
 
             return "ok".AsResponse(HttpStatusCode.Accepted);

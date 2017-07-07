@@ -61,8 +61,8 @@ module.exports = Marionette.Layout.extend({
 
         this.artistCollection.shadowCollection.bindSignalR();
 
-//        this.listenTo(this.artistCollection, 'sync', this.render);
-        this.listenTo(this.artistCollection, 'seasonpass:saved', this.render);
+        this.listenTo(this.artistCollection, 'sync', this.render);
+        this.listenTo(this.artistCollection, 'albumstudio:saved', this.render);
 
         this.filteringOptions = {
             type          : 'radio',

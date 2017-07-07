@@ -6,5 +6,6 @@ namespace NzbDrone.Core.Music
     {
         public bool IgnoreTracksWithFiles { get; set; }
         public bool IgnoreTracksWithoutFiles { get; set; }
+        public bool Monitored { get; set; }
     }
 }
