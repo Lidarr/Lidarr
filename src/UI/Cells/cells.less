@@ -15,7 +15,32 @@
   }
 }
 
-.episode-title-cell {
+.track-title-cell {
+  .text-overflow();
+
+  color: #428bca;
+  text-decoration: none;
+
+  &:focus, &:hover {
+    color: #2a6496;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  @media @lg {
+    max-width: 350px;
+  }
+
+  @media @md {
+    max-width: 250px;
+  }
+
+  @media @sm {
+    max-width: 200px;
+  }
+}
+
+.album-title-cell {
   .text-overflow();
 
   color: #428bca;
@@ -89,7 +114,7 @@
   }
 }
 
-td.episode-status-cell, td.quality-cell, td.history-quality-cell, td.progress-cell {
+td.track-status-cell, td.quality-cell, td.history-quality-cell, td.progress-cell {
   text-align: center;
   width: 80px;
 
@@ -118,7 +143,7 @@ td.episode-status-cell, td.quality-cell, td.history-quality-cell, td.progress-ce
   word-wrap: break-word;
 }
 
-.episode-actions-cell {
+.track-actions-cell {
   width: 55px;
 
   i {
@@ -131,12 +156,12 @@ td.episode-status-cell, td.quality-cell, td.history-quality-cell, td.progress-ce
   }
 }
 
-.episode-history-details-cell {
+.track-history-details-cell {
   width : 18px;
 }
 
-.episode-detail-modal {
-  .episode-actions-cell {
+.track-detail-modal {
+  .track-actions-cell {
     width : 18px;
   }
 }
@@ -173,7 +198,7 @@ td.episode-status-cell, td.quality-cell, td.history-quality-cell, td.progress-ce
   width : 80px;
 }
 
-td.delete-episode-file-cell {
+td.delete-track-file-cell {
   .clickable();
 
   text-align : center;
@@ -188,7 +213,7 @@ td.delete-episode-file-cell {
   width: 16px;
 }
 
-.episode-number-cell {
+.track-number-cell {
   cursor : default;
 }
 
@@ -198,7 +223,7 @@ td.delete-episode-file-cell {
 
 .table>tbody>tr>td, .table>thead>tr>th {
 
-  &.episode-warning-cell {
+  &.track-warning-cell {
     width         : 1px;
     padding-left  : 0px;
     padding-right : 0px;

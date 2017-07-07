@@ -90,6 +90,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\xmlrpcnet.2.5.0\lib\net20\CookComputing.XmlRpcV2.dll</HintPath>
     </Reference>
+    <Reference Include="policy.2.0.taglib-sharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
+      <HintPath>..\packages\taglib.2.1.0.0\lib\policy.2.0.taglib-sharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net4\RestSharp.dll</HintPath>
       <Private>True</Private>
@@ -109,6 +113,10 @@
     </Reference>
     <Reference Include="System.Data.SQLite">
       <HintPath>..\Libraries\Sqlite\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="taglib-sharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
+      <HintPath>..\packages\taglib.2.1.0.0\lib\taglib-sharp.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -288,7 +296,6 @@
     </Compile>
     <Compile Include="Datastore\Migration\105_rename_torrent_downloadstation.cs" />
     <Compile Include="Datastore\Migration\111_setup_music.cs" />
-    <Compile Include="Datastore\Migration\112_add_music_fields_to_namingconfig.cs" />
     <Compile Include="Datastore\Migration\Framework\MigrationContext.cs" />
     <Compile Include="Datastore\Migration\Framework\MigrationController.cs" />
     <Compile Include="Datastore\Migration\Framework\MigrationDbFactory.cs" />
@@ -317,6 +324,7 @@
     <Compile Include="DecisionEngine\Rejection.cs" />
     <Compile Include="DecisionEngine\RejectionType.cs" />
     <Compile Include="DecisionEngine\SameEpisodesSpecification.cs" />
+    <Compile Include="DecisionEngine\SameTracksSpecification.cs" />
     <Compile Include="DecisionEngine\Specifications\AcceptableSizeSpecification.cs" />
     <Compile Include="DecisionEngine\Specifications\BlacklistSpecification.cs" />
     <Compile Include="DecisionEngine\Specifications\AnimeVersionUpgradeSpecification.cs" />
@@ -725,7 +733,13 @@
     <Compile Include="MediaFiles\Commands\BackendCommandAttribute.cs" />
     <Compile Include="MediaFiles\Commands\CleanUpRecycleBinCommand.cs" />
     <Compile Include="MediaFiles\Commands\DownloadedEpisodesScanCommand.cs" />
-    <Compile Include="MediaFiles\EpisodeImport\ImportMode.cs" />
+    <Compile Include="MediaFiles\Commands\RenameArtistCommand.cs" />
+    <Compile Include="MediaFiles\Events\TrackDownloadedEvent.cs" />
+    <Compile Include="MediaFiles\RenameTrackFilePreview.cs" />
+    <Compile Include="MediaFiles\RenameTrackFileService.cs" />
+    <Compile Include="MediaFiles\TrackFileMovingService.cs" />
+    <Compile Include="MediaFiles\TrackFileMoveResult.cs" />
+    <Compile Include="MediaFiles\TrackImport\ImportMode.cs" />
     <Compile Include="MediaFiles\Commands\RenameFilesCommand.cs" />
     <Compile Include="MediaFiles\Commands\RenameSeriesCommand.cs" />
     <Compile Include="MediaFiles\Commands\RescanSeriesCommand.cs" />
@@ -740,12 +754,10 @@
     <Compile Include="MediaFiles\EpisodeFile.cs" />
     <Compile Include="MediaFiles\EpisodeFileMoveResult.cs" />
     <Compile Include="MediaFiles\EpisodeFileMovingService.cs" />
-    <Compile Include="MediaFiles\EpisodeImport\ImportResult.cs" />
     <Compile Include="MediaFiles\EpisodeImport\IImportDecisionEngineSpecification.cs" />
     <Compile Include="MediaFiles\EpisodeImport\ImportApprovedEpisodes.cs" />
-    <Compile Include="MediaFiles\EpisodeImport\ImportDecision.cs" />
     <Compile Include="MediaFiles\EpisodeImport\ImportDecisionMaker.cs" />
-    <Compile Include="MediaFiles\EpisodeImport\ImportResultType.cs" />
+    <Compile Include="MediaFiles\TrackImport\ImportResultType.cs" />
     <Compile Include="MediaFiles\EpisodeImport\Manual\ManualImportFile.cs" />
     <Compile Include="MediaFiles\EpisodeImport\Manual\ManualImportCommand.cs" />
     <Compile Include="MediaFiles\EpisodeImport\Manual\ManualImportItem.cs" />
@@ -753,19 +765,18 @@
     <Compile Include="MediaFiles\EpisodeImport\DetectSample.cs" />
     <Compile Include="MediaFiles\EpisodeImport\Manual\ManuallyImportedFile.cs" />
     <Compile Include="MediaFiles\EpisodeImport\Specifications\FreeSpaceSpecification.cs" />
-    <Compile Include="MediaFiles\EpisodeImport\Specifications\MatchesFolderSpecification.cs" />
-    <Compile Include="MediaFiles\EpisodeImport\Specifications\FullSeasonSpecification.cs" />
-    <Compile Include="MediaFiles\EpisodeImport\Specifications\NotSampleSpecification.cs" />
     <Compile Include="MediaFiles\EpisodeImport\Specifications\NotUnpackingSpecification.cs" />
     <Compile Include="MediaFiles\EpisodeImport\Specifications\SameEpisodesImportSpecification.cs" />
-    <Compile Include="MediaFiles\EpisodeImport\Specifications\UnverifiedSceneNumberingSpecification.cs" />
     <Compile Include="MediaFiles\EpisodeImport\Specifications\UpgradeSpecification.cs" />
     <Compile Include="MediaFiles\Events\ArtistRenamedEvent.cs" />
+    <Compile Include="MediaFiles\Events\ArtistScannedEvent.cs" />
+    <Compile Include="MediaFiles\Events\ArtistScanSkippedEvent.cs" />
     <Compile Include="MediaFiles\Events\EpisodeDownloadedEvent.cs" />
     <Compile Include="MediaFiles\Events\EpisodeFileAddedEvent.cs" />
     <Compile Include="MediaFiles\Events\EpisodeFileDeletedEvent.cs" />
     <Compile Include="MediaFiles\Events\EpisodeFolderCreatedEvent.cs" />
     <Compile Include="MediaFiles\Events\EpisodeImportedEvent.cs" />
+    <Compile Include="MediaFiles\Commands\RescanArtistCommand.cs" />
     <Compile Include="MediaFiles\Events\SeriesRenamedEvent.cs" />
     <Compile Include="MediaFiles\Events\SeriesScanSkippedEvent.cs" />
     <Compile Include="MediaFiles\Events\SeriesScannedEvent.cs" />
@@ -789,6 +800,10 @@
     <Compile Include="MediaFiles\RenameEpisodeFileService.cs" />
     <Compile Include="MediaFiles\SameFilenameException.cs" />
     <Compile Include="MediaFiles\TrackFile.cs" />
+    <Compile Include="MediaFiles\TrackImport\ImportApprovedTracks.cs" />
+    <Compile Include="MediaFiles\TrackImport\ImportDecision.cs" />
+    <Compile Include="MediaFiles\TrackImport\ImportResult.cs" />
+    <Compile Include="MediaFiles\TrackImport\Specifications\SameTracksImportSpecification.cs" />
     <Compile Include="MediaFiles\UpdateEpisodeFileService.cs" />
     <Compile Include="MediaFiles\UpgradeMediaFileService.cs" />
     <Compile Include="Messaging\Commands\BackendCommandAttribute.cs" />
@@ -816,7 +831,7 @@
     <Compile Include="Messaging\IProcessMessage.cs" />
     <Compile Include="MetadataSource\IProvideArtistInfo.cs" />
     <Compile Include="MetadataSource\SkyHook\Resource\ActorResource.cs" />
-    <Compile Include="MetadataSource\SkyHook\Resource\AlbumInfoResource.cs" />
+    <Compile Include="MetadataSource\SkyHook\Resource\AlbumResource.cs" />
     <Compile Include="MetadataSource\SkyHook\Resource\ArtistInfoResource.cs" />
     <Compile Include="MetadataSource\SkyHook\Resource\ArtistResource.cs" />
     <Compile Include="MetadataSource\SkyHook\Resource\EpisodeResource.cs" />
@@ -825,7 +840,7 @@
     <Compile Include="MetadataSource\SkyHook\Resource\SeasonResource.cs" />
     <Compile Include="MetadataSource\SkyHook\Resource\ShowResource.cs" />
     <Compile Include="MetadataSource\SkyHook\Resource\TimeOfDayResource.cs" />
-    <Compile Include="MetadataSource\SkyHook\Resource\TrackInfoResource.cs" />
+    <Compile Include="MetadataSource\SkyHook\Resource\TrackResource.cs" />
     <Compile Include="MetadataSource\SkyHook\SkyHookProxy.cs" />
     <Compile Include="MetadataSource\SearchSeriesComparer.cs" />
     <Compile Include="MetadataSource\SkyHook\SkyHookException.cs" />
@@ -850,6 +865,7 @@
     <Compile Include="Extras\Metadata\MetadataType.cs" />
     <Compile Include="MetadataSource\IProvideSeriesInfo.cs" />
     <Compile Include="MetadataSource\ISearchForNewSeries.cs" />
+    <Compile Include="Music\Member.cs" />
     <Compile Include="Music\AddArtistOptions.cs" />
     <Compile Include="Music\AddArtistService.cs" />
     <Compile Include="Music\AddArtistValidator.cs" />
@@ -857,17 +873,25 @@
     <Compile Include="Music\Artist.cs" />
     <Compile Include="Music\ArtistAddedHandler.cs" />
     <Compile Include="Music\ArtistNameNormalizer.cs" />
+    <Compile Include="Music\AlbumService.cs" />
+    <Compile Include="Music\AlbumRepository.cs" />
     <Compile Include="Music\ArtistSlugValidator.cs" />
     <Compile Include="Music\ArtistRepository.cs" />
     <Compile Include="Music\ArtistService.cs" />
     <Compile Include="Music\Commands\RefreshArtistCommand.cs" />
+    <Compile Include="Music\Events\AlbumAddedEvent.cs" />
     <Compile Include="Music\Events\ArtistAddedEvent.cs" />
+    <Compile Include="Music\Events\AlbumDeletedEvent.cs" />
     <Compile Include="Music\Events\ArtistDeletedEvent.cs" />
+    <Compile Include="Music\Events\AlbumEditedEvent.cs" />
     <Compile Include="Music\Events\ArtistEditedEvent.cs" />
     <Compile Include="Music\Events\ArtistRefreshStartingEvent.cs" />
     <Compile Include="Music\Events\ArtistUpdatedEvent.cs" />
+    <Compile Include="Music\Events\AlbumInfoRefreshedEvent.cs" />
     <Compile Include="Music\Events\TrackInfoRefreshedEvent.cs" />
+    <Compile Include="Music\Ratings.cs" />
     <Compile Include="Music\RefreshArtistService.cs" />
+    <Compile Include="Music\RefreshAlbumService.cs" />
     <Compile Include="Music\RefreshTrackService.cs" />
     <Compile Include="Music\ShouldRefreshArtist.cs" />
     <Compile Include="Music\Track.cs" />
@@ -928,6 +952,7 @@
     <Compile Include="Parser\IsoLanguage.cs" />
     <Compile Include="Parser\IsoLanguages.cs" />
     <Compile Include="Parser\LanguageParser.cs" />
+    <Compile Include="Parser\Model\ArtistTitleInfo.cs" />
     <Compile Include="Parser\Model\LocalTrack.cs" />
     <Compile Include="Parser\Model\ParsedTrackInfo.cs" />
     <Compile Include="Profiles\Delay\DelayProfile.cs" />
@@ -1087,6 +1112,10 @@
     </Compile>
     <Compile Include="RootFolders\UnmappedFolder.cs" />
     <Compile Include="Security.cs" />
+    <Compile Include="ArtistStats\AlbumStatistics.cs" />
+    <Compile Include="ArtistStats\ArtistStatistics.cs" />
+    <Compile Include="ArtistStats\ArtistStatisticsRepository.cs" />
+    <Compile Include="ArtistStats\ArtistStatisticsService.cs" />
     <Compile Include="SeriesStats\SeasonStatistics.cs" />
     <Compile Include="SeriesStats\SeriesStatistics.cs" />
     <Compile Include="SeriesStats\SeriesStatisticsRepository.cs" />

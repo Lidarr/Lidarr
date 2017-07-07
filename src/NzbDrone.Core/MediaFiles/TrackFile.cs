@@ -12,8 +12,10 @@ namespace NzbDrone.Core.MediaFiles
 {
     public class TrackFile : ModelBase
     {
-        public int ItunesTrackId { get; set; }
+        //public string ForeignTrackId { get; set; }
+        //public string ForeignArtistId { get; set; }
         public int AlbumId { get; set; }
+        public int ArtistId { get; set; }
         public string RelativePath { get; set; }
         public string Path { get; set; }
         public long Size { get; set; }
@@ -22,7 +24,7 @@ namespace NzbDrone.Core.MediaFiles
         public string ReleaseGroup { get; set; }
         public QualityModel Quality { get; set; }
         public MediaInfoModel MediaInfo { get; set; }
-        public LazyLoaded<List<Track>> Episodes { get; set; }
+        //public LazyLoaded<List<Track>> Episodes { get; set; }
         public LazyLoaded<Artist> Artist { get; set; }
         public LazyLoaded<List<Track>> Tracks { get; set; }
 

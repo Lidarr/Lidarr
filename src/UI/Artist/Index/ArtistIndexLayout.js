@@ -9,7 +9,7 @@ var RelativeDateCell = require('../../Cells/RelativeDateCell');
 var ArtistTitleCell = require('../../Cells/ArtistTitleCell');
 var TemplatedCell = require('../../Cells/TemplatedCell');
 var ProfileCell = require('../../Cells/ProfileCell');
-var EpisodeProgressCell = require('../../Cells/EpisodeProgressCell');
+var TrackProgressCell = require('../../Cells/TrackProgressCell');
 var ArtistActionsCell = require('../../Cells/ArtistActionsCell');
 var ArtistStatusCell = require('../../Cells/ArtistStatusCell');
 var FooterView = require('./FooterView');
@@ -62,10 +62,10 @@ module.exports = Marionette.Layout.extend({
             cell  : RelativeDateCell
         },
         {
-            name      : 'percentOfEpisodes',
+            name      : 'percentOfTracks',
             label     : 'Tracks',
-            cell      : EpisodeProgressCell,
-            className : 'episode-progress-cell'
+            cell      : TrackProgressCell,
+            className : 'track-progress-cell'
         },
         {
             name     : 'this',
@@ -157,7 +157,7 @@ module.exports = Marionette.Layout.extend({
                 },
                 {
                     title : 'Tracks',
-                    name  : 'percentOfEpisodes'
+                    name  : 'percentOfTracks'
                 }
             ]
         };
@@ -321,15 +321,17 @@ module.exports = Marionette.Layout.extend({
     _showFooter : function() {
         var footerModel = new FooterModel();
         var artist = this.artistCollection.models.length;
-        var episodes = 0;
-        var episodeFiles = 0;
+        var albums = 0;
+        var tracks = 0;
+        var trackFiles = 0;
         var ended = 0;
         var continuing = 0;
         var monitored = 0;
 
         _.each(this.artistCollection.models, function(model) {
-            episodes += model.get('episodeCount'); // TODO: Refactor to Seasons and Tracks
-            episodeFiles += model.get('episodeFileCount');
+            albums += model.get('albumCount');
+            tracks += model.get('trackCount'); // TODO: Refactor to Seasons and Tracks
+            trackFiles += model.get('trackFileCount');
 
             /*if (model.get('status').toLowerCase() === 'ended') {
                 ended++;
@@ -348,8 +350,9 @@ module.exports = Marionette.Layout.extend({
             continuing   : continuing,
             monitored    : monitored,
             unmonitored  : artist - monitored,
-            episodes     : episodes,
-            episodeFiles : episodeFiles
+            albums       : albums,
+            tracks       : tracks,
+            trackFiles   : trackFiles
         });
 
         this.footer.show(new FooterView({ model : footerModel }));

@@ -23,6 +23,7 @@ using NzbDrone.Core.Profiles;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Restrictions;
 using NzbDrone.Core.RootFolders;
+using NzbDrone.Core.ArtistStats;
 using NzbDrone.Core.SeriesStats;
 using NzbDrone.Core.Tags;
 using NzbDrone.Core.ThingiProvider;
@@ -92,10 +93,12 @@ namespace NzbDrone.Core.Datastore
                   .Relationship()
                   .HasOne(episode => episode.EpisodeFile, episode => episode.EpisodeFileId);
 
-            Mapper.Entity<Artist>().RegisterModel("Artist")
+            Mapper.Entity<Artist>().RegisterModel("Artists")
                   .Ignore(s => s.RootFolderPath)
                   .Relationship()
                   .HasOne(a => a.Profile, a => a.ProfileId);
+
+            Mapper.Entity<Album>().RegisterModel("Albums");
 
             Mapper.Entity<TrackFile>().RegisterModel("TrackFiles")
                   .Ignore(f => f.Path)
@@ -119,7 +122,7 @@ namespace NzbDrone.Core.Datastore
             Mapper.Entity<Profile>().RegisterModel("Profiles");
             Mapper.Entity<Log>().RegisterModel("Logs");
             Mapper.Entity<NamingConfig>().RegisterModel("NamingConfig");
-            Mapper.Entity<SeasonStatistics>().MapResultSet();
+            Mapper.Entity<AlbumStatistics>().MapResultSet();
             Mapper.Entity<Blacklist>().RegisterModel("Blacklist");
             Mapper.Entity<MetadataFile>().RegisterModel("MetadataFiles");
             Mapper.Entity<SubtitleFile>().RegisterModel("SubtitleFiles");

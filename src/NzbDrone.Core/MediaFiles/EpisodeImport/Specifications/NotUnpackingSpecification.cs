@@ -56,5 +56,11 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport.Specifications
 
             return Decision.Accept();
         }
+
+        public Decision IsSatisfiedBy(LocalTrack localTrack)
+        {
+            return Decision.Accept();
+            throw new NotImplementedException();
+        }
     }
 }

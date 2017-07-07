@@ -6,6 +6,7 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Tv;
+using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.Profiles
 {
@@ -22,13 +23,13 @@ namespace NzbDrone.Core.Profiles
     public class ProfileService : IProfileService, IHandle<ApplicationStartedEvent>
     {
         private readonly IProfileRepository _profileRepository;
-        private readonly ISeriesService _seriesService;
+        private readonly IArtistService _artistService;
         private readonly Logger _logger;
 
-        public ProfileService(IProfileRepository profileRepository, ISeriesService seriesService, Logger logger)
+        public ProfileService(IProfileRepository profileRepository, IArtistService artistService, Logger logger)
         {
             _profileRepository = profileRepository;
-            _seriesService = seriesService;
+            _artistService = artistService;
             _logger = logger;
         }
 
@@ -44,7 +45,7 @@ namespace NzbDrone.Core.Profiles
 
         public void Delete(int id)
         {
-            if (_seriesService.GetAllSeries().Any(c => c.ProfileId == id))
+            if (_artistService.GetAllArtists().Any(c => c.ProfileId == id))
             {
                 throw new ProfileInUseException(id);
             }
@@ -86,20 +87,20 @@ namespace NzbDrone.Core.Profiles
             _logger.Info("Setting up default quality profiles");
 
             AddDefaultProfile("Any", 
-                Quality.MP3192,
-                Quality.MP3256,
-                Quality.MP3320,
-                Quality.MP3512,
-                Quality.MP3VBR,
+                Quality.MP3_192,
+                Quality.MP3_256,
+                Quality.MP3_320,
+                Quality.MP3_512,
+                Quality.MP3_VBR,
                 Quality.FLAC);
 
             AddDefaultProfile("Lossless",
                 Quality.FLAC);
 
             AddDefaultProfile("Standard",
-                Quality.MP3192,
-                Quality.MP3256,
-                Quality.MP3320);
+                Quality.MP3_192,
+                Quality.MP3_256,
+                Quality.MP3_320);
         }
     }
 }

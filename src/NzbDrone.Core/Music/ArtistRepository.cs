@@ -8,6 +8,7 @@ namespace NzbDrone.Core.Music
     {
         bool ArtistPathExists(string path);
         Artist FindByName(string cleanTitle);
+        Artist FindById(int dbId);
         Artist FindById(string spotifyId);
     }
 
@@ -24,16 +25,21 @@ namespace NzbDrone.Core.Music
             return Query.Where(c => c.Path == path).Any();
         }
 
-        public Artist FindById(string spotifyId)
+        public Artist FindById(string foreignArtistId)
         {
-            return Query.Where(s => s.SpotifyId == spotifyId).SingleOrDefault();
+            return Query.Where(s => s.ForeignArtistId == foreignArtistId).SingleOrDefault();
+        }
+
+        public Artist FindById(int dbId)
+        {
+            return Query.Where(s => s.Id == dbId).SingleOrDefault();
         }
 
         public Artist FindByName(string cleanName)
         {
             cleanName = cleanName.ToLowerInvariant();
 
-            return Query.Where(s => s.CleanTitle == cleanName)
+            return Query.Where(s => s.CleanName == cleanName)
                         .SingleOrDefault();
         }
     }

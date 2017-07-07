@@ -1,4 +1,6 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/37d89txts2vt5j83?svg=true)](https://ci.appveyor.com/project/mattman86/lidarr)
+[![Build status](https://ci.appveyor.com/api/projects/status/pu08kh1avj2gl1av?svg=true)](https://ci.appveyor.com/project/majora2007/lidarr)
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/43c18ff049df442fab086cea020c4642)](https://www.codacy.com/app/majora2007/Lidarr?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lidarr/Lidarr&amp;utm_campaign=Badge_Grade)
 
 ## Lidarr
 
@@ -28,7 +30,7 @@ Lidarr is a music collection manager for Usenet and BitTorrent users. It can mon
 
 * Visual Studio 2015 or higher (https://www.visualstudio.com/vs/).  The community version is free and works (https://www.visualstudio.com/downloads/).
 * [Git](https://git-scm.com/downloads)
-* [NodeJS](https://nodejs.org/en/download/)
+* [NodeJS](https://nodejs.org/en/download/) (Node 6.X.X, NPM 3.X.X Recommended)
 
 ### Setup
 
