@@ -1,11 +1,11 @@
 var _ = require('underscore');
 var Marionette = require('marionette');
-var AlbumLayout = require('./SingleAlbumCell');
+var SingleAlbumCell = require('./SingleAlbumCell');
 var AsSortedCollectionView = require('../Mixins/AsSortedCollectionView');
 
 var view = Marionette.CollectionView.extend({
 
-    itemView : AlbumLayout,
+    itemView : SingleAlbumCell,
 
     initialize : function(options) {
         this.albumCollection = options.collection;

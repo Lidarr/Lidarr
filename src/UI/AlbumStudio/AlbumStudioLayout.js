@@ -5,7 +5,7 @@ var Marionette = require('marionette');
 var EmptyView = require('../Artist/Index/EmptyView');
 var ArtistCollection = require('../Artist/ArtistCollection');
 var ToolbarLayout = require('../Shared/Toolbar/ToolbarLayout');
-var FooterView = require('./AlbumPassFooterView');
+var FooterView = require('./AlbumStudioFooterView');
 var SelectAllCell = require('../Cells/SelectAllCell');
 var ArtistStatusCell = require('../Cells/ArtistStatusCell');
 var ArtistTitleCell = require('../Cells/ArtistTitleCell');
@@ -14,7 +14,7 @@ var AlbumsCell = require('./AlbumsCell');
 require('../Mixins/backbone.signalr.mixin');
 
 module.exports = Marionette.Layout.extend({
-    template : 'AlbumPass/AlbumPassLayoutTemplate',
+    template : 'AlbumStudio/AlbumStudioLayoutTemplate',
 
     regions : {
         toolbar : '#x-toolbar',
@@ -67,7 +67,7 @@ module.exports = Marionette.Layout.extend({
         this.filteringOptions = {
             type          : 'radio',
             storeState    : true,
-            menuKey       : 'seasonpass.filterMode',
+            menuKey       : 'albumstudio.filterMode',
             defaultAction : 'all',
             items         : [
                 {

@@ -126,9 +126,9 @@ module.exports = Marionette.Layout.extend({
                     className    : 'x-unmonitor-selected'
                 },
                 {
-                    title : 'Album Pass',
+                    title : 'Album Studio',
                     icon  : 'icon-lidarr-monitored',
-                    route : 'albumpass'
+                    route : 'albumstudio'
                 },
                 {
                     title      : 'Rescan Drone Factory Folder',

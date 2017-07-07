@@ -72,9 +72,9 @@ module.exports = Marionette.Layout.extend({
         storeState : false,
         items      : [
             {
-                title : 'Album Pass',
+                title : 'Album Studio',
                 icon  : 'icon-lidarr-monitored',
-                route : 'albumpass'
+                route : 'albumstudio'
             },
             {
                 title          : 'Update Library',

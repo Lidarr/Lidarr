@@ -8,7 +8,7 @@ var _ = require('underscore');
 var Messenger = require('../Shared/Messenger');
 
 module.exports = Marionette.Layout.extend({
-    template : 'AlbumPass/SingleAlbumCellTemplate',
+    template : 'AlbumStudio/SingleAlbumCellTemplate',
 
     ui : {
         albumMonitored : '.x-album-monitored'
@@ -20,9 +20,8 @@ module.exports = Marionette.Layout.extend({
 
 
     initialize : function(options) {
-        console.log(options);
         this.artist = options.artist;
-        this.listenTo(this.model, 'sync', this._afterSeasonMonitored);
+        this.listenTo(this.model, 'sync', this._afterAlbumMonitored);
 
     },
 
@@ -46,7 +45,7 @@ module.exports = Marionette.Layout.extend({
         this.ui.albumMonitored.spinForPromise(savePromise);
     },
 
-    _afterSeasonMonitored : function() {
+    _afterAlbumMonitored : function() {
         this.render();
     },
 

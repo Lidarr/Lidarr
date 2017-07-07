@@ -39,6 +39,7 @@ namespace NzbDrone.Api.Albums
         }
 
         protected AlbumModuleWithSignalR(IAlbumService albumService,
+                                           IArtistStatisticsService artistStatisticsService,
                                            IArtistService artistService,
                                            IQualityUpgradableSpecification qualityUpgradableSpecification,
                                            IBroadcastSignalRMessage signalRBroadcaster,
@@ -46,6 +47,7 @@ namespace NzbDrone.Api.Albums
             : base(signalRBroadcaster, resource)
         {
             _albumService = albumService;
+            _artistStatisticsService = artistStatisticsService;
             _artistService = artistService;
             _qualityUpgradableSpecification = qualityUpgradableSpecification;
 

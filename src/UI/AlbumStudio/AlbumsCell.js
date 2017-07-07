@@ -6,11 +6,11 @@ var TemplatedCell = require('../Cells/TemplatedCell');
 var AlbumCollection = require('../Artist/AlbumCollection');
 var LoadingView = require('../Shared/LoadingView');
 var ArtistCollection = require('../Artist/ArtistCollection');
-var AlbumCollectionView = require('./AlbumPassCollectionView');
+var AlbumCollectionView = require('./AlbumStudioCollectionView');
 //require('../Handlebars/Helpers/Numbers');
 
 module.exports = Marionette.Layout.extend({
-    template  : 'AlbumPass/AlbumsCellTemplate',
+    template  : 'AlbumStudio/AlbumsCellTemplate',
 
     regions : {
         albums : '#albums'
@@ -31,13 +31,7 @@ module.exports = Marionette.Layout.extend({
         });
     },
 
-    onShow : function() {
-        console.log(this);
-        this._showAlbums();
-    },
-
     onRender : function(){
-        console.log(this);
         this._showAlbums();
     },
 

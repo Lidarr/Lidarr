@@ -5,7 +5,7 @@ var vent = require('vent');
 var RootFolders = require('../AddArtist/RootFolders/RootFolderCollection');
 
 module.exports = Marionette.ItemView.extend({
-    template : 'AlbumPass/AlbumPassFooterViewTemplate',
+    template : 'AlbumStudio/AlbumStudioFooterViewTemplate',
 
     ui : {
         artistMonitored : '.x-artist-monitored',
@@ -54,7 +54,7 @@ module.exports = Marionette.ItemView.extend({
         });
 
         var promise = $.ajax({
-            url  : window.NzbDrone.ApiRoot + '/albumpass',
+            url  : window.NzbDrone.ApiRoot + '/albumstudio',
             type : 'POST',
             data : JSON.stringify({
                 series            : _.map(selected, function (model) {
@@ -71,7 +71,7 @@ module.exports = Marionette.ItemView.extend({
         });
 
         promise.done(function () {
-            self.artistCollection.trigger('seasonpass:saved');
+            self.artistCollection.trigger('albumstudio:saved');
         });
     },
 
