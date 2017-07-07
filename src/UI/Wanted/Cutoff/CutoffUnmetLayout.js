@@ -107,9 +107,9 @@ module.exports = Marionette.Layout.extend({
                     className    : 'x-search-selected'
                 },
                 {
-                    title : 'Album Pass',
+                    title : 'Album Studio',
                     icon  : 'icon-lidarr-monitored',
-                    route : 'albumpass'
+                    route : 'albumstudio'
                 }
             ]
         };
