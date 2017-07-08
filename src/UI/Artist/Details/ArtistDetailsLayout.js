@@ -172,8 +172,6 @@ module.exports = Marionette.Layout.extend({
         this.trackCollection = new TrackCollection({ artistId : this.model.id }).bindSignalR();
         this.trackFileCollection = new TrackFileCollection({ artistId : this.model.id }).bindSignalR();
 
-        console.log (this.trackCollection);
-
         reqres.setHandler(reqres.Requests.GetEpisodeFileById, function(trackFileId) {
             return self.trackFileCollection.get(trackFileId);
         });

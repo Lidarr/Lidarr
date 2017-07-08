@@ -9,7 +9,7 @@ var FooterView = require('./AlbumStudioFooterView');
 var SelectAllCell = require('../Cells/SelectAllCell');
 var ArtistStatusCell = require('../Cells/ArtistStatusCell');
 var ArtistTitleCell = require('../Cells/ArtistTitleCell');
-var ArtistMonitoredCell = require('../Cells/ToggleCell');
+var ArtistMonitoredCell = require('../Cells/ArtistMonitoredCell');
 var AlbumsCell = require('./AlbumsCell');
 require('../Mixins/backbone.signalr.mixin');
 
@@ -34,20 +34,15 @@ module.exports = Marionette.Layout.extend({
             cell  : ArtistStatusCell
         },
         {
-            name      : 'title',
-            label     : 'Title',
-            cell      : ArtistTitleCell,
-            cellValue : 'this'
-        },
-        {
             name       : 'monitored',
-            label      : '',
+            label      : 'Artist',
             cell       : ArtistMonitoredCell,
             trueClass  : 'icon-lidarr-monitored',
             falseClass : 'icon-lidarr-unmonitored',
             tooltip    : 'Toggle artist monitored status',
             sortable   : false
         },
+
         {
             name      : 'albums',
             label     : 'Albums',
