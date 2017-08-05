@@ -25,8 +25,8 @@ namespace NzbDrone.Core.DecisionEngine
             {
                 CompareQuality,
                 CompareProtocol,
-                CompareEpisodeCount,
-                CompareEpisodeNumber,
+                //CompareEpisodeCount,
+                //CompareEpisodeNumber,
                 ComparePeersIfTorrent,
                 CompareAgeIfUsenet,
                 CompareSize
@@ -57,17 +57,17 @@ namespace NzbDrone.Core.DecisionEngine
 
         private int CompareQuality(DownloadDecision x, DownloadDecision y)
         {
-            return CompareAll(CompareBy(x.RemoteEpisode, y.RemoteEpisode, remoteEpisode => remoteEpisode.Series.Profile.Value.Items.FindIndex(v => v.Quality == remoteEpisode.ParsedEpisodeInfo.Quality.Quality)),
-                           CompareBy(x.RemoteEpisode, y.RemoteEpisode, remoteEpisode => remoteEpisode.ParsedEpisodeInfo.Quality.Revision.Real),
-                           CompareBy(x.RemoteEpisode, y.RemoteEpisode, remoteEpisode => remoteEpisode.ParsedEpisodeInfo.Quality.Revision.Version));
+            return CompareAll(CompareBy(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum => remoteAlbum.Artist.Profile.Value.Items.FindIndex(v => v.Quality == remoteAlbum.ParsedAlbumInfo.Quality.Quality)),
+                           CompareBy(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum => remoteAlbum.ParsedAlbumInfo.Quality.Revision.Real),
+                           CompareBy(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum => remoteAlbum.ParsedAlbumInfo.Quality.Revision.Version));
         }
 
         private int CompareProtocol(DownloadDecision x, DownloadDecision y)
         {
-            var result = CompareBy(x.RemoteEpisode, y.RemoteEpisode, remoteEpisode =>
+            var result = CompareBy(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum =>
             {
-                var delayProfile = _delayProfileService.BestForTags(remoteEpisode.Series.Tags);
-                var downloadProtocol = remoteEpisode.Release.DownloadProtocol;
+                var delayProfile = _delayProfileService.BestForTags(remoteAlbum.Artist.Tags);
+                var downloadProtocol = remoteAlbum.Release.DownloadProtocol;
                 return downloadProtocol == delayProfile.PreferredProtocol;
             });
 
@@ -102,22 +102,22 @@ namespace NzbDrone.Core.DecisionEngine
         {
             // Different protocols should get caught when checking the preferred protocol,
             // since we're dealing with the same series in our comparisions
-            if (x.RemoteEpisode.Release.DownloadProtocol != DownloadProtocol.Torrent ||
-                y.RemoteEpisode.Release.DownloadProtocol != DownloadProtocol.Torrent)
+            if (x.RemoteAlbum.Release.DownloadProtocol != DownloadProtocol.Torrent ||
+                y.RemoteAlbum.Release.DownloadProtocol != DownloadProtocol.Torrent)
             {
                 return 0;
             }
 
             return CompareAll(
-                CompareBy(x.RemoteEpisode, y.RemoteEpisode, remoteEpisode =>
+                CompareBy(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum =>
                 {
-                    var seeders = TorrentInfo.GetSeeders(remoteEpisode.Release);
+                    var seeders = TorrentInfo.GetSeeders(remoteAlbum.Release);
 
                     return seeders.HasValue && seeders.Value > 0 ? Math.Round(Math.Log10(seeders.Value)) : 0;
                 }),
-                CompareBy(x.RemoteEpisode, y.RemoteEpisode, remoteEpisode =>
+                CompareBy(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum =>
                 {
-                    var peers = TorrentInfo.GetPeers(remoteEpisode.Release);
+                    var peers = TorrentInfo.GetPeers(remoteAlbum.Release);
 
                     return peers.HasValue && peers.Value > 0 ? Math.Round(Math.Log10(peers.Value)) : 0;
                 }));
@@ -125,16 +125,16 @@ namespace NzbDrone.Core.DecisionEngine
 
         private int CompareAgeIfUsenet(DownloadDecision x, DownloadDecision y)
         {
-            if (x.RemoteEpisode.Release.DownloadProtocol != DownloadProtocol.Usenet ||
-                y.RemoteEpisode.Release.DownloadProtocol != DownloadProtocol.Usenet)
+            if (x.RemoteAlbum.Release.DownloadProtocol != DownloadProtocol.Usenet ||
+                y.RemoteAlbum.Release.DownloadProtocol != DownloadProtocol.Usenet)
             {
                 return 0;
             }
 
-            return CompareBy(x.RemoteEpisode, y.RemoteEpisode, remoteEpisode =>
+            return CompareBy(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum =>
             {
-                var ageHours = remoteEpisode.Release.AgeHours;
-                var age = remoteEpisode.Release.Age;
+                var ageHours = remoteAlbum.Release.AgeHours;
+                var age = remoteAlbum.Release.Age;
 
                 if (ageHours < 1)
                 {
@@ -159,7 +159,7 @@ namespace NzbDrone.Core.DecisionEngine
         {
             // TODO: Is smaller better? Smaller for usenet could mean no par2 files.
 
-            return CompareBy(x.RemoteEpisode, y.RemoteEpisode, remoteEpisode => remoteEpisode.Release.Size.Round(200.Megabytes()));
+            return CompareBy(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum => remoteAlbum.Release.Size.Round(200.Megabytes()));
         }
     }
 }

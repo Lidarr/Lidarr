@@ -295,6 +295,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Datastore\Migration\105_rename_torrent_downloadstation.cs" />
+    <Compile Include="Datastore\Migration\112_music_history.cs" />
     <Compile Include="Datastore\Migration\111_setup_music.cs" />
     <Compile Include="Datastore\Migration\Framework\MigrationContext.cs" />
     <Compile Include="Datastore\Migration\Framework\MigrationController.cs" />
@@ -353,6 +354,7 @@
     <Compile Include="DecisionEngine\Specifications\UpgradeDiskSpecification.cs" />
     <Compile Include="DiskSpace\DiskSpace.cs" />
     <Compile Include="DiskSpace\DiskSpaceService.cs" />
+    <Compile Include="Download\AlbumGrabbedEvent.cs" />
     <Compile Include="Download\CheckForFinishedDownloadCommand.cs" />
     <Compile Include="Download\Clients\Blackhole\ScanWatchFolder.cs" />
     <Compile Include="Download\Clients\Blackhole\WatchFolderItem.cs" />
@@ -967,7 +969,9 @@
     <Compile Include="Parser\LanguageParser.cs" />
     <Compile Include="Parser\Model\ArtistTitleInfo.cs" />
     <Compile Include="Parser\Model\LocalTrack.cs" />
+    <Compile Include="Parser\Model\ParsedAlbumInfo.cs" />
     <Compile Include="Parser\Model\ParsedTrackInfo.cs" />
+    <Compile Include="Parser\Model\RemoteAlbum.cs" />
     <Compile Include="Profiles\Delay\DelayProfile.cs" />
     <Compile Include="Profiles\Delay\DelayProfileService.cs" />
     <Compile Include="Profiles\Delay\DelayProfileTagInUseValidator.cs" />

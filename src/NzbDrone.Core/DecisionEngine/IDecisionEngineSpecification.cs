@@ -1,4 +1,4 @@
-using NzbDrone.Core.IndexerSearch.Definitions;
+﻿using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.DecisionEngine
@@ -8,5 +8,6 @@ namespace NzbDrone.Core.DecisionEngine
         RejectionType Type { get; }
 
         Decision IsSatisfiedBy(RemoteEpisode subject, SearchCriteriaBase searchCriteria);
+        Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria);
     }
 }

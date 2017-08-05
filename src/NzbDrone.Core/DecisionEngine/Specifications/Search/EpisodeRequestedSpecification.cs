@@ -2,6 +2,7 @@
 using NLog;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.Music;
 
 
 namespace NzbDrone.Core.DecisionEngine.Specifications.Search
@@ -30,6 +31,25 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
             if (!criteriaEpisodes.Intersect(remoteEpisodes).Any())
             {
                 _logger.Debug("Release rejected since the episode wasn't requested: {0}", remoteEpisode.ParsedEpisodeInfo);
+                return Decision.Reject("Episode wasn't requested");
+            }
+
+            return Decision.Accept();
+        }
+
+        public Decision IsSatisfiedBy(RemoteAlbum remoteAlbum, SearchCriteriaBase searchCriteria)
+        {
+            if (searchCriteria == null)
+            {
+                return Decision.Accept();
+            }
+
+            var criteriaAlbum = searchCriteria.Album.Id;
+            var remoteAlbums = remoteAlbum.Albums.Select(v => v.Id).ToList();
+
+            if (!remoteAlbums.Contains(criteriaAlbum))
+            {
+                _logger.Debug("Release rejected since the episode wasn't requested: {0}", remoteAlbum.ParsedAlbumInfo);
                 return Decision.Reject("Episode wasn't requested");
             }
 

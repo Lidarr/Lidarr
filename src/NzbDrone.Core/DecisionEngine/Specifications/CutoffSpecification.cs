@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NLog;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
@@ -36,6 +37,15 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                     return Decision.Reject("Existing file meets cutoff: {0}", subject.Series.Profile.Value.Cutoff);
                 }
             }
+
+            return Decision.Accept();
+        }
+
+        public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
+        {
+            //TODO: Implement Cutoff checks for albums, require us to check tracks in album
+
+            throw new NotImplementedException();
 
             return Decision.Accept();
         }

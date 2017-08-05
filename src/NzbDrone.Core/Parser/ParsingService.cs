@@ -20,7 +20,9 @@ namespace NzbDrone.Core.Parser
         Series GetSeries(string title);
         RemoteEpisode Map(ParsedEpisodeInfo parsedEpisodeInfo, int tvdbId, int tvRageId, SearchCriteriaBase searchCriteria = null);
         RemoteEpisode Map(ParsedEpisodeInfo parsedEpisodeInfo, int seriesId, IEnumerable<int> episodeIds);
+        RemoteAlbum Map(ParsedAlbumInfo parsedEpisodeInfo, SearchCriteriaBase searchCriteria = null);
         List<Episode> GetEpisodes(ParsedEpisodeInfo parsedEpisodeInfo, Series series, bool sceneSource, SearchCriteriaBase searchCriteria = null);
+        List<Album> GetAlbums(ParsedAlbumInfo parsedAlbumInfo, Artist artist, SearchCriteriaBase searchCriteria = null);
         ParsedEpisodeInfo ParseSpecialEpisodeTitle(string title, int tvdbId, int tvRageId, SearchCriteriaBase searchCriteria = null);
 
         // Music stuff here
@@ -36,19 +38,24 @@ namespace NzbDrone.Core.Parser
 
         private readonly IAlbumRepository _albumRepository;
         private readonly IArtistService _artistService;
+        private readonly IAlbumService _albumService;
         private readonly ITrackService _trackService;
         private readonly Logger _logger;
 
         public ParsingService(IEpisodeService episodeService,
                               ISeriesService seriesService,
                               ITrackService trackService,
+                              IArtistService artistService,
                               IAlbumRepository albumRepository,
+                              IAlbumService albumService,
                               // ISceneMappingService sceneMappingService,
                               Logger logger)
         {
             _episodeService = episodeService;
             _seriesService = seriesService;
             _albumRepository = albumRepository;
+            _albumService = albumService;
+            _artistService = artistService;
             // _sceneMappingService = sceneMappingService;
             _trackService = trackService;
             _logger = logger;
@@ -147,6 +154,62 @@ namespace NzbDrone.Core.Parser
 
             return remoteEpisode;
         }
+
+        public RemoteAlbum Map(ParsedAlbumInfo parsedAlbumInfo, SearchCriteriaBase searchCriteria = null)
+        {
+            var remoteAlbum = new RemoteAlbum
+            {
+                ParsedAlbumInfo = parsedAlbumInfo,
+            };
+
+            var artist = GetArtist(parsedAlbumInfo, searchCriteria);
+
+            if (artist == null)
+            {
+                return remoteAlbum;
+            }
+
+            remoteAlbum.Artist = artist;
+            remoteAlbum.Albums = GetAlbums(parsedAlbumInfo, artist, searchCriteria);
+
+            return remoteAlbum;
+        }
+
+        public List<Album> GetAlbums(ParsedAlbumInfo parsedAlbumInfo, Artist artist, SearchCriteriaBase searchCriteria = null)
+        {
+            var result = new List<Album>();
+            if (parsedAlbumInfo.AlbumTitle == null)
+            {
+                return new List<Album>();
+            }
+
+            Album albumInfo = null;
+
+            if (searchCriteria != null)
+            {
+                albumInfo = searchCriteria.Album;
+            }
+
+            if (albumInfo == null)
+            {
+                albumInfo = _albumService.FindByTitle(artist.Id, parsedAlbumInfo.AlbumTitle);
+            }
+
+            if (albumInfo != null)
+            {
+                result.Add(albumInfo);
+            }
+
+            else
+            {
+                _logger.Debug("Unable to find {0}", parsedAlbumInfo);
+            }
+
+
+            return result;
+
+        }
+
 
         public RemoteEpisode Map(ParsedEpisodeInfo parsedEpisodeInfo, int seriesId, IEnumerable<int> episodeIds)
         {
@@ -261,6 +324,30 @@ namespace NzbDrone.Core.Parser
 
             return null;
         }
+
+        private Artist GetArtist(ParsedAlbumInfo parsedAlbumInfo, SearchCriteriaBase searchCriteria)
+        {
+            Artist artist = null;
+
+            if (searchCriteria != null)
+            {
+                if (searchCriteria.Artist.CleanName == parsedAlbumInfo.ArtistName.CleanSeriesTitle())
+                {
+                    return searchCriteria.Artist;
+                }
+            }
+
+            artist = _artistService.FindByName(parsedAlbumInfo.ArtistName);
+
+            if (artist == null)
+            {
+                _logger.Debug("No matching series {0}", parsedAlbumInfo.ArtistName);
+                return null;
+            }
+
+            return artist;
+        }
+
 
         private Series GetSeries(ParsedEpisodeInfo parsedEpisodeInfo, int tvdbId, int tvRageId, SearchCriteriaBase searchCriteria)
         {
