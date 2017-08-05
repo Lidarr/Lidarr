@@ -20,7 +20,8 @@ namespace NzbDrone.Core.Parser
         Series GetSeries(string title);
         RemoteEpisode Map(ParsedEpisodeInfo parsedEpisodeInfo, int tvdbId, int tvRageId, SearchCriteriaBase searchCriteria = null);
         RemoteEpisode Map(ParsedEpisodeInfo parsedEpisodeInfo, int seriesId, IEnumerable<int> episodeIds);
-        RemoteAlbum Map(ParsedAlbumInfo parsedEpisodeInfo, SearchCriteriaBase searchCriteria = null);
+        RemoteAlbum Map(ParsedAlbumInfo parsedAlbumInfo, SearchCriteriaBase searchCriteria = null);
+        RemoteAlbum Map(ParsedAlbumInfo parsedAlbumInfo, int artistId, IEnumerable<int> albumIds);
         List<Episode> GetEpisodes(ParsedEpisodeInfo parsedEpisodeInfo, Series series, bool sceneSource, SearchCriteriaBase searchCriteria = null);
         List<Album> GetAlbums(ParsedAlbumInfo parsedAlbumInfo, Artist artist, SearchCriteriaBase searchCriteria = null);
         ParsedEpisodeInfo ParseSpecialEpisodeTitle(string title, int tvdbId, int tvRageId, SearchCriteriaBase searchCriteria = null);
@@ -219,6 +220,16 @@ namespace NzbDrone.Core.Parser
                        Series = _seriesService.GetSeries(seriesId),
                        Episodes = _episodeService.GetEpisodes(episodeIds)
                    };
+        }
+
+        public RemoteAlbum Map(ParsedAlbumInfo parsedAlbumInfo, int artistId, IEnumerable<int> albumIds)
+        {
+            return new RemoteAlbum
+            {
+                ParsedAlbumInfo = parsedAlbumInfo,
+                Artist = _artistService.GetArtist(artistId),
+                Albums = _albumService.GetAlbums(albumIds)
+            };
         }
 
         public List<Episode> GetEpisodes(ParsedEpisodeInfo parsedEpisodeInfo, Series series, bool sceneSource, SearchCriteriaBase searchCriteria = null)

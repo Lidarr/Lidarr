@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -74,19 +74,19 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
                 .Returns(1000000);
         }
 
-        protected override RemoteEpisode CreateRemoteEpisode()
+        protected override RemoteAlbum CreateRemoteAlbum()
         {
-            var remoteEpisode = base.CreateRemoteEpisode();
+            var remoteAlbum = base.CreateRemoteAlbum();
             var torrentInfo = new TorrentInfo();
 
-            torrentInfo.Title = remoteEpisode.Release.Title;
-            torrentInfo.DownloadUrl = remoteEpisode.Release.DownloadUrl;
-            torrentInfo.DownloadProtocol = remoteEpisode.Release.DownloadProtocol;
+            torrentInfo.Title = remoteAlbum.Release.Title;
+            torrentInfo.DownloadUrl = remoteAlbum.Release.DownloadUrl;
+            torrentInfo.DownloadProtocol = remoteAlbum.Release.DownloadProtocol;
             torrentInfo.MagnetUrl = "magnet:?xt=urn:btih:755248817d32b00cc853e633ecdc48e4c21bff15&dn=Series.S05E10.PROPER.HDTV.x264-DEFiNE%5Brartv%5D&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710&tr=udp%3A%2F%2F9.rarbg.to%3A2710";
 
-            remoteEpisode.Release = torrentInfo;
+            remoteAlbum.Release = torrentInfo;
 
-            return remoteEpisode;
+            return remoteAlbum;
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
         [Test]
         public void Download_should_download_file_if_it_doesnt_exist()
         {
-            var remoteEpisode = CreateRemoteEpisode();
+            var remoteEpisode = CreateRemoteAlbum();
 
             Subject.Download(remoteEpisode);
 
@@ -139,7 +139,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
         {
             Subject.Definition.Settings.As<TorrentBlackholeSettings>().SaveMagnetFiles = true;
 
-            var remoteEpisode = CreateRemoteEpisode();
+            var remoteEpisode = CreateRemoteAlbum();
             remoteEpisode.Release.DownloadUrl = null;
 
             Subject.Download(remoteEpisode);
@@ -153,7 +153,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
         [Test]
         public void Download_should_not_save_magnet_if_disabled()
         {
-            var remoteEpisode = CreateRemoteEpisode();
+            var remoteEpisode = CreateRemoteAlbum();
             remoteEpisode.Release.DownloadUrl = null;
 
             Assert.Throws<ReleaseDownloadException>(() => Subject.Download(remoteEpisode));
@@ -169,7 +169,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
         {
             Subject.Definition.Settings.As<TorrentBlackholeSettings>().SaveMagnetFiles = true;
 
-            var remoteEpisode = CreateRemoteEpisode();
+            var remoteEpisode = CreateRemoteAlbum();
 
             Subject.Download(remoteEpisode);
 
@@ -185,7 +185,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
             var illegalTitle = "Saturday Night Live - S38E08 - Jeremy Renner/Maroon 5 [SDTV]";
             var expectedFilename = Path.Combine(_blackholeFolder, "Saturday Night Live - S38E08 - Jeremy Renner+Maroon 5 [SDTV]" + Path.GetExtension(_filePath));
 
-            var remoteEpisode = CreateRemoteEpisode();
+            var remoteEpisode = CreateRemoteAlbum();
             remoteEpisode.Release.Title = illegalTitle;
 
             Subject.Download(remoteEpisode);
@@ -198,7 +198,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
         [Test]
         public void Download_should_throw_if_magnet_and_torrent_url_does_not_exist()
         {
-            var remoteEpisode = CreateRemoteEpisode();
+            var remoteEpisode = CreateRemoteAlbum();
             remoteEpisode.Release.DownloadUrl = null;
 
             Assert.Throws<ReleaseDownloadException>(() => Subject.Download(remoteEpisode));
@@ -273,7 +273,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
         [Test]
         public void should_return_null_hash()
         {
-            var remoteEpisode = CreateRemoteEpisode();
+            var remoteEpisode = CreateRemoteAlbum();
 
             Subject.Download(remoteEpisode).Should().BeNull();
         }

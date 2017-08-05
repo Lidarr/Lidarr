@@ -92,7 +92,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
             }
             catch (Exception e)
             {
-                _logger.Debug(e, "Failed to find episode for " + downloadItem.Title);
+                _logger.Debug(e, "Failed to find album for " + downloadItem.Title);
                 return null;
             }
 

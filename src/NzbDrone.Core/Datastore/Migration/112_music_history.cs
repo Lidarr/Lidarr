@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Datastore.Migration
 
             Alter.Table("PendingReleases")
                   .AddColumn("ArtistId").AsInt32().WithDefaultValue(0)
-                  .AddColumn("ParsedAlbumInfo").AsString();
+                  .AddColumn("ParsedAlbumInfo").AsString().WithDefaultValue("");
 
             Delete.Column("SeriesId").FromTable("History");
             Delete.Column("EpisodeId").FromTable("History");
