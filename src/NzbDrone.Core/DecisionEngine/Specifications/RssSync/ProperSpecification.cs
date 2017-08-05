@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using NLog;
 using NzbDrone.Core.Configuration;
@@ -48,6 +48,10 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
             }
 
             return Decision.Accept();
+        }
+        public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
+        {
+            throw new NotImplementedException();
         }
     }
 }

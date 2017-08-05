@@ -36,5 +36,10 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
             return Decision.Accept();
         }
+
+        public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

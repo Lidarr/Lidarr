@@ -1,3 +1,4 @@
+﻿using System;
 using System.Linq;
 using NLog;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -49,6 +50,13 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             }
 
             return Decision.Accept();
+        }
+
+        public Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
+        {
+            //TODO: Refactor QueueService to get this working
+            throw new NotImplementedException();
+                
         }
     }
 }

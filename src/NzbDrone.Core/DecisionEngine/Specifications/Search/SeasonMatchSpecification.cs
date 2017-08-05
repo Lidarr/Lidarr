@@ -1,3 +1,4 @@
+﻿using System;
 using NLog;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
@@ -32,6 +33,10 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
             }
 
             return Decision.Accept();
+        }
+        public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
+        {
+            throw new NotImplementedException();
         }
     }
 }

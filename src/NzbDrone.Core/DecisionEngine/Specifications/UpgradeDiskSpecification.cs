@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NLog;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
@@ -37,6 +38,12 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             }
 
             return Decision.Accept();
+        }
+
+        public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
+        {
+            //TODO Refactor for Albums, once we have a way to check track quality by album. 
+            throw new NotImplementedException();
         }
     }
 }

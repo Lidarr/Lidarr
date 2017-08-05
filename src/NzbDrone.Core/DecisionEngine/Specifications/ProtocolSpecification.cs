@@ -1,4 +1,4 @@
-using NLog;
+﻿using NLog;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
@@ -23,6 +23,25 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
         public virtual Decision IsSatisfiedBy(RemoteEpisode subject, SearchCriteriaBase searchCriteria)
         {
             var delayProfile = _delayProfileService.BestForTags(subject.Series.Tags);
+
+            if (subject.Release.DownloadProtocol == DownloadProtocol.Usenet && !delayProfile.EnableUsenet)
+            {
+                _logger.Debug("[{0}] Usenet is not enabled for this series", subject.Release.Title);
+                return Decision.Reject("Usenet is not enabled for this series");
+            }
+
+            if (subject.Release.DownloadProtocol == DownloadProtocol.Torrent && !delayProfile.EnableTorrent)
+            {
+                _logger.Debug("[{0}] Torrent is not enabled for this series", subject.Release.Title);
+                return Decision.Reject("Torrent is not enabled for this series");
+            }
+
+            return Decision.Accept();
+        }
+
+        public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
+        {
+            var delayProfile = _delayProfileService.BestForTags(subject.Artist.Tags);
 
             if (subject.Release.DownloadProtocol == DownloadProtocol.Usenet && !delayProfile.EnableUsenet)
             {

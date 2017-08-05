@@ -127,7 +127,7 @@ namespace NzbDrone.Core.Test.MediaFiles
             Subject.Import(new List<ImportDecision> { _approvedDecisions.First() }, true);
 
             Mocker.GetMock<IEventAggregator>()
-                .Verify(v => v.PublishEvent(It.IsAny<EpisodeImportedEvent>()), Times.Once());
+                .Verify(v => v.PublishEvent(It.IsAny<AlbumImportedEvent>()), Times.Once());
         }
 
         [Test]

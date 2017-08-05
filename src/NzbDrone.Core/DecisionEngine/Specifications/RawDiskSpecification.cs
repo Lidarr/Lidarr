@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -21,6 +21,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
         public RejectionType Type => RejectionType.Permanent;
 
+        
         public virtual Decision IsSatisfiedBy(RemoteEpisode subject, SearchCriteriaBase searchCriteria)
         {
             if (subject.Release == null || subject.Release.Container.IsNullOrWhiteSpace())
@@ -39,6 +40,18 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                 _logger.Debug("Release contains raw Bluray, rejecting.");
                 return Decision.Reject("Raw Bluray release");
             }
+
+            return Decision.Accept();
+        }
+
+        public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
+        {
+            if (subject.Release == null || subject.Release.Container.IsNullOrWhiteSpace())
+            {
+                return Decision.Accept();
+            }
+
+            //TODO Implement for Music Releases if applicable.
 
             return Decision.Accept();
         }

@@ -6,12 +6,15 @@ using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Tv;
+using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.Queue
 {
     public class Queue : ModelBase
     {
         public Series Series { get; set; }
+        public Artist Artist { get; set; }
+        public Album Album { get; set; }
         public Episode Episode { get; set; }
         public QualityModel Quality { get; set; }
         public decimal Size { get; set; }
@@ -24,6 +27,7 @@ namespace NzbDrone.Core.Queue
         public List<TrackedDownloadStatusMessage> StatusMessages { get; set; }
         public string DownloadId { get; set; }
         public RemoteEpisode RemoteEpisode { get; set; }
+        public RemoteAlbum RemoteAlbum { get; set; }
         public DownloadProtocol Protocol { get; set; }
     }
 }

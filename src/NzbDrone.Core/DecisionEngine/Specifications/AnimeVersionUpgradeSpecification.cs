@@ -1,3 +1,4 @@
+﻿using System;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -54,6 +55,10 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             }
 
             return Decision.Accept();
+        }
+        public Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
+        {
+            throw new NotImplementedException();
         }
     }
 }

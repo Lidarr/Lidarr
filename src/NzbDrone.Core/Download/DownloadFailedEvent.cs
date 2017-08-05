@@ -13,7 +13,9 @@ namespace NzbDrone.Core.Download
         }
 
         public int SeriesId { get; set; }
+        public int ArtistId { get; set; }
         public List<int> EpisodeIds { get; set; }
+        public List<int> AlbumIds { get; set; }
         public QualityModel Quality { get; set; }
         public string SourceTitle { get; set; }
         public string DownloadClient { get; set; }
