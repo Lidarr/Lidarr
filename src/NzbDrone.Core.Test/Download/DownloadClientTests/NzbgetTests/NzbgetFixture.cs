@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using FluentAssertions;
@@ -30,7 +30,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.NzbgetTests
                                               Port = 2222,
                                               Username = "admin",
                                               Password = "pass",
-                                              TvCategory = "tv",
+                                              TvCategory = "Music",
                                               RecentTvPriority = (int)NzbgetPriority.High
                                           };
 
@@ -303,7 +303,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.NzbgetTests
         {
             GivenSuccessfulDownload();
 
-            var remoteEpisode = CreateRemoteEpisode();
+            var remoteEpisode = CreateRemoteAlbum();
 
             var id = Subject.Download(remoteEpisode);
 
@@ -315,7 +315,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.NzbgetTests
         {
             GivenFailedDownload();
 
-            var remoteEpisode = CreateRemoteEpisode();
+            var remoteEpisode = CreateRemoteAlbum();
 
             Assert.Throws<DownloadClientException>(() => Subject.Download(remoteEpisode));
         }

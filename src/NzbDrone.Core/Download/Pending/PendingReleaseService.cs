@@ -229,8 +229,8 @@ namespace NzbDrone.Core.Download.Pending
             {
                 ArtistId = decision.RemoteAlbum.Artist.Id,
                 ParsedAlbumInfo = decision.RemoteAlbum.ParsedAlbumInfo,
-                Release = decision.RemoteEpisode.Release,
-                Title = decision.RemoteEpisode.Release.Title,
+                Release = decision.RemoteAlbum.Release,
+                Title = decision.RemoteAlbum.Release.Title,
                 Added = DateTime.UtcNow
             });
 
@@ -315,7 +315,7 @@ namespace NzbDrone.Core.Download.Pending
 
         private int GetQueueId(PendingRelease pendingRelease, Album album)
         {
-            return HashConverter.GetHashInt31(string.Format("pending-{0}-ep{1}", pendingRelease.Id, album.Id));
+            return HashConverter.GetHashInt31(string.Format("pending-{0}-album{1}", pendingRelease.Id, album.Id));
         }
 
         private int PrioritizeDownloadProtocol(Artist artist, DownloadProtocol downloadProtocol)

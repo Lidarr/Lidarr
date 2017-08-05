@@ -18,6 +18,7 @@ using NzbDrone.Core.Profiles.Delay;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Core.Tv;
+using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
 {
@@ -65,8 +66,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
                   .Returns(_delayProfile);
 
             Mocker.GetMock<IPendingReleaseService>()
-                  .Setup(s => s.GetPendingRemoteEpisodes(It.IsAny<int>()))
-                  .Returns(new List<RemoteEpisode>());
+                  .Setup(s => s.GetPendingRemoteAlbums(It.IsAny<int>()))
+                  .Returns(new List<RemoteAlbum>());
         }
 
         private void GivenExistingFile(QualityModel quality)

@@ -30,8 +30,8 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.UTorrentTests
                                               Port = 2222,
                                               Username = "admin",
                                               Password = "pass",
-                                              TvCategory = "tv"
-                                          };
+                                              TvCategory = "lidarr"
+            };
 
             _queued = new UTorrentTorrent
                     {
@@ -229,7 +229,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.UTorrentTests
         {
             GivenSuccessfulDownload();
 
-            var remoteEpisode = CreateRemoteEpisode();
+            var remoteEpisode = CreateRemoteAlbum();
 
             var id = Subject.Download(remoteEpisode);
 
@@ -253,7 +253,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.UTorrentTests
         {
             GivenSuccessfulDownload();
 
-            var remoteEpisode = CreateRemoteEpisode();
+            var remoteEpisode = CreateRemoteAlbum();
             remoteEpisode.Release.DownloadUrl = magnetUrl;
 
             var id = Subject.Download(remoteEpisode);
@@ -351,7 +351,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.UTorrentTests
             GivenRedirectToMagnet();
             GivenSuccessfulDownload();
 
-            var remoteEpisode = CreateRemoteEpisode();
+            var remoteEpisode = CreateRemoteAlbum();
 
             var id = Subject.Download(remoteEpisode);
 
@@ -364,7 +364,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.UTorrentTests
             GivenRedirectToTorrent();
             GivenSuccessfulDownload();
 
-            var remoteEpisode = CreateRemoteEpisode();
+            var remoteEpisode = CreateRemoteAlbum();
 
             var id = Subject.Download(remoteEpisode);
 
