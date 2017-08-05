@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Indexers.Waffles
                 throw new RequestLimitReachedException("API limit reached");
             }
 
-            throw new WafflesException("Waffles error detected: {0}", errorMessage);
+            throw new IndexerException(indexerResponse, errorMessage);
         }
 
         protected override ReleaseInfo ProcessItem(XElement item, ReleaseInfo releaseInfo)

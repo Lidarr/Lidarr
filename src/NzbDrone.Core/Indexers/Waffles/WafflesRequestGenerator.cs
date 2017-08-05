@@ -2,6 +2,7 @@
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using System.Text;
+using System;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
 namespace NzbDrone.Core.Indexers.Waffles
@@ -22,31 +23,31 @@ namespace NzbDrone.Core.Indexers.Waffles
         [System.Obsolete("Sonarr TV Stuff -- Shouldn't be needed for Lidarr")]
         public virtual IndexerPageableRequestChain GetSearchRequests(SingleEpisodeSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            throw new NotImplementedException ();
         }
 
         [System.Obsolete("Sonarr TV Stuff -- Shouldn't be needed for Lidarr")]
         public virtual IndexerPageableRequestChain GetSearchRequests(SeasonSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            throw new NotImplementedException();
         }
 
         [System.Obsolete("Sonarr TV Stuff -- Shouldn't be needed for Lidarr")]
         public virtual IndexerPageableRequestChain GetSearchRequests(DailyEpisodeSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            throw new NotImplementedException();
         }
 
         [System.Obsolete("Sonarr TV Stuff -- Shouldn't be needed for Lidarr")]
         public virtual IndexerPageableRequestChain GetSearchRequests(AnimeEpisodeSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            throw new NotImplementedException();
         }
 
         [System.Obsolete("Sonarr TV Stuff -- Shouldn't be needed for Lidarr")]
         public virtual IndexerPageableRequestChain GetSearchRequests(SpecialEpisodeSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            throw new NotImplementedException();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
