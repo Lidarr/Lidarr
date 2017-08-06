@@ -8,7 +8,6 @@ using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
 using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.Test.DecisionEngineTests
@@ -50,7 +49,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
                                         Artist = artist,
                                         Release = new ReleaseInfo(),
                                         ParsedAlbumInfo = new ParsedAlbumInfo { Quality = new QualityModel(Quality.MP3_192, new Revision(version: 2)) },
-                                        Albums = new List<Album> { new Album() { Id = 2 } }
+                                        Albums = new List<Album> { new Album { Id = 2 } }
 
                                     };
 
@@ -70,17 +69,19 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
                 s => s.GetAlbumsByArtist(It.IsAny<int>()))
                 .Returns(new List<Album>() {
                     new Album(), new Album(), new Album(), new Album(), new Album(),
-                    new Album(), new Album(), new Album(), new Album() { Id = 2 }, new Album() });
+                    new Album(), new Album(), new Album(), new Album { Id = 2 }, new Album() });
         }
 
         private void GivenLastAlbum()
         {
             Mocker.GetMock<IAlbumService>().Setup(
                 s => s.GetAlbumsByArtist(It.IsAny<int>()))
-                .Returns(new List<Album>() {
+                .Returns(new List<Album> {
                     new Album(), new Album(), new Album(), new Album(), new Album(),
-                    new Album(), new Album(), new Album(), new Album(), new Album() { Id = 2 } });
+                    new Album(), new Album(), new Album(), new Album(), new Album { Id = 2 } });
         }
+
+        // TODO Add Album duraction to Test methods
 
         [TestCase(30, 50, false)]
         [TestCase(30, 250, true)]
@@ -90,7 +91,6 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [TestCase(60, 1000, false)]
         public void single_album(int runtime, int sizeInMegaBytes, bool expectedResult)
         {           
-            //artist.Runtime = runtime;
             parseResultSingle.Artist = artist;
             parseResultSingle.Release.Size = sizeInMegaBytes.Megabytes();
 
@@ -105,7 +105,6 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         {
             GivenLastAlbum();
 
-            //artist.Runtime = runtime;
             parseResultSingle.Artist = artist;
             parseResultSingle.Release.Size = sizeInMegaBytes.Megabytes();
 
@@ -120,7 +119,6 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [TestCase(60, 1000 * 2, false)]
         public void multi_album(int runtime, int sizeInMegaBytes, bool expectedResult)
         {
-            //artist.Runtime = runtime;
             parseResultMulti.Artist = artist;
             parseResultMulti.Release.Size = sizeInMegaBytes.Megabytes();
 
@@ -135,7 +133,6 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [TestCase(60, 1000 * 6, false)]
         public void multiset_album(int runtime, int sizeInMegaBytes, bool expectedResult)
         {
-            //artist.Runtime = runtime;
             parseResultMultiSet.Artist = artist;
             parseResultMultiSet.Release.Size = sizeInMegaBytes.Megabytes();
 
@@ -147,7 +144,6 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         {
             GivenLastAlbum();
 
-            //artist.Runtime = 30;
             parseResultSingle.Artist = artist;
             parseResultSingle.Release.Size = 0;
             qualityType.MinSize = 10;
@@ -161,7 +157,6 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         {
             GivenLastAlbum();
 
-            //artist.Runtime = 30;
             parseResultSingle.Artist = artist;
             parseResultSingle.Release.Size = 18457280000;
             qualityType.MaxSize = null;
@@ -174,7 +169,6 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         {
             GivenLastAlbum();
 
-            //artist.Runtime = 60;
             parseResultSingle.Artist = artist;
             parseResultSingle.Release.Size = 36857280000;
             qualityType.MaxSize = null;
@@ -187,9 +181,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         {
             parseResultSingle.ParsedAlbumInfo.Quality = new QualityModel(Quality.FLAC);
             
-            //artist.Runtime = 45;
             parseResultSingle.Artist = artist;
-            //parseResultSingle.Artist.SeriesType = SeriesTypes.Daily;
             parseResultSingle.Release.Size = 8000.Megabytes();
 
             Subject.IsSatisfiedBy(parseResultSingle, null).Accepted.Should().BeTrue();

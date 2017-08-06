@@ -3,7 +3,7 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.MediaFiles.Events
 {
-    public class AlbumImportedEvent : IEvent
+    public class EpisodeImportedEvent : IEvent
     {
         public LocalEpisode EpisodeInfo { get; private set; }
         public EpisodeFile ImportedEpisode { get; private set; }
@@ -12,14 +12,14 @@ namespace NzbDrone.Core.MediaFiles.Events
         public string DownloadId { get; private set; }
         public bool IsReadOnly { get; set; }
 
-        public AlbumImportedEvent(LocalEpisode episodeInfo, EpisodeFile importedEpisode, bool newDownload)
+        public EpisodeImportedEvent(LocalEpisode episodeInfo, EpisodeFile importedEpisode, bool newDownload)
         {
             EpisodeInfo = episodeInfo;
             ImportedEpisode = importedEpisode;
             NewDownload = newDownload;
         }
 
-        public AlbumImportedEvent(LocalEpisode episodeInfo, EpisodeFile importedEpisode, bool newDownload, string downloadClient, string downloadId, bool isReadOnly)
+        public EpisodeImportedEvent(LocalEpisode episodeInfo, EpisodeFile importedEpisode, bool newDownload, string downloadClient, string downloadId, bool isReadOnly)
         {
             EpisodeInfo = episodeInfo;
             ImportedEpisode = importedEpisode;

@@ -19,7 +19,7 @@ using NzbDrone.SignalR;
 namespace NzbDrone.Api.Series
 {
     public class SeriesModule : NzbDroneRestModuleWithSignalR<SeriesResource, Core.Tv.Series>, 
-                                IHandle<AlbumImportedEvent>, 
+                                IHandle<EpisodeImportedEvent>, 
                                 IHandle<EpisodeFileDeletedEvent>,
                                 IHandle<SeriesUpdatedEvent>,       
                                 IHandle<SeriesEditedEvent>,  
@@ -204,7 +204,7 @@ namespace NzbDrone.Api.Series
             // resource.AlternateTitles = mappings.Select(v => new AlternateTitleResource { Title = v.Title, SeasonNumber = v.SeasonNumber, SceneSeasonNumber = v.SceneSeasonNumber }).ToList();
         }
 
-        public void Handle(AlbumImportedEvent message)
+        public void Handle(EpisodeImportedEvent message)
         {
             BroadcastResourceChange(ModelAction.Updated, message.ImportedEpisode.SeriesId);
         }

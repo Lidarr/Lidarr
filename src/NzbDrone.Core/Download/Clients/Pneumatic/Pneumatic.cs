@@ -37,9 +37,10 @@ namespace NzbDrone.Core.Download.Clients.Pneumatic
             var url = remoteAlbum.Release.DownloadUrl;
             var title = remoteAlbum.Release.Title;
 
-            //if (remoteAlbum.ParsedEpisodeInfo.FullSeason)
+            // TODO Implement discographies
+            //if (remoteAlbum.ParsedAlbumInfo.Discography)
             //{
-            //    throw new NotSupportedException("Full season releases are not supported with Pneumatic.");
+            //    throw new NotSupportedException("Discography releases are not supported with Pneumatic.");
             //}
 
             title = FileNameBuilder.CleanFileName(title);

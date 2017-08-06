@@ -25,9 +25,6 @@ namespace NzbDrone.Api.History
 
         public Dictionary<string, string> Data { get; set; }
 
-        //public EpisodeResource Episode { get; set; }
-        //public SeriesResource Series { get; set; }
-
         public AlbumResource Album { get; set; }
         public ArtistResource Artist { get; set; }
     }

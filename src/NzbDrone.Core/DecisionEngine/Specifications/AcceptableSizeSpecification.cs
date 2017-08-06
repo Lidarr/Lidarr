@@ -42,7 +42,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             {
                 var minSize = qualityDefinition.MinSize.Value.Megabytes();
 
-                //TODO: implement if we can get album runtimes from metadata
+                //TODO: implement if we can get album duractions from metadata
                 //Multiply maxSize by Series.Runtime
                 //minSize = minSize * subject.Series.Runtime * subject.Episodes.Count;
 
@@ -63,7 +63,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             {
                 var maxSize = qualityDefinition.MaxSize.Value.Megabytes();
 
-                //TODO: implement if we can get album runtimes from metadata
+                //TODO: implement if we can get album duration from metadata
                 //Multiply maxSize by Series.Runtime
                 //maxSize = maxSize * subject.Series.Runtime * subject.Episodes.Count;
 

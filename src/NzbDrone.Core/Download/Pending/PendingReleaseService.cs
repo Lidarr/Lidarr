@@ -195,7 +195,10 @@ namespace NzbDrone.Core.Download.Pending
             {
                 var remoteAlbum = GetRemoteAlbum(release);
 
-                if (remoteAlbum == null) continue;
+                if (remoteAlbum == null)
+                {
+                    continue;
+                }
 
                 release.RemoteAlbum = remoteAlbum;
 
@@ -210,7 +213,10 @@ namespace NzbDrone.Core.Download.Pending
             var artist = _artistService.GetArtist(release.ArtistId);
 
             //Just in case the series was removed, but wasn't cleaned up yet (housekeeper will clean it up)
-            if (artist == null) return null;
+            if (artist == null)
+            {
+                return null;
+            }
 
             var album = _parsingService.GetAlbums(release.ParsedAlbumInfo, artist);
 

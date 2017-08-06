@@ -30,7 +30,7 @@ namespace NzbDrone.Core.History
 
     public class HistoryService : IHistoryService,
                                   IHandle<AlbumGrabbedEvent>,
-                                  IHandle<AlbumImportedEvent>,
+                                  IHandle<EpisodeImportedEvent>,
                                   IHandle<DownloadFailedEvent>,
                                   IHandle<EpisodeFileDeletedEvent>,
                                   IHandle<ArtistDeletedEvent>
@@ -82,7 +82,7 @@ namespace NzbDrone.Core.History
                 .FirstOrDefault();
         }
 
-        private string FindDownloadId(AlbumImportedEvent trackedDownload)
+        private string FindDownloadId(EpisodeImportedEvent trackedDownload)
         {
             _logger.Debug("Trying to find downloadId for {0} from history", trackedDownload.ImportedEpisode.Path);
 
@@ -173,7 +173,7 @@ namespace NzbDrone.Core.History
             }
         }
 
-        public void Handle(AlbumImportedEvent message)
+        public void Handle(EpisodeImportedEvent message)
         {
             if (!message.NewDownload)
             {

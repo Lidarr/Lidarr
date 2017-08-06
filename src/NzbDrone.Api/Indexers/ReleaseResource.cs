@@ -25,13 +25,10 @@ namespace NzbDrone.Api.Indexers
         public string ReleaseGroup { get; set; }
         public string ReleaseHash { get; set; }
         public string Title { get; set; }
-        //public bool FullSeason { get; set; }
         public Language Language { get; set; }
         public string AirDate { get; set; }
         public string ArtistName { get; set; }
         public string AlbumTitle { get; set; }
-        //public int[] EpisodeNumbers { get; set; }
-        //public int[] AbsoluteEpisodeNumbers { get; set; }
         public bool Approved { get; set; }
         public bool TemporarilyRejected { get; set; }
         public bool Rejected { get; set; }
@@ -102,13 +99,10 @@ namespace NzbDrone.Api.Indexers
                 ReleaseGroup = parsedAlbumInfo.ReleaseGroup,
                 ReleaseHash = parsedAlbumInfo.ReleaseHash,
                 Title = releaseInfo.Title,
-                //FullSeason = parsedAlbumInfo.FullSeason,
                 Language = parsedAlbumInfo.Language,
                 //AirDate = parsedAlbumInfo.AirDate,
                 ArtistName = parsedAlbumInfo.ArtistName,
                 AlbumTitle = parsedAlbumInfo.AlbumTitle,
-                //EpisodeNumbers = parsedAlbumInfo.EpisodeNumbers,
-                //AbsoluteEpisodeNumbers = parsedAlbumInfo.AbsoluteEpisodeNumbers,
                 Approved = model.Approved,
                 TemporarilyRejected = model.TemporarilyRejected,
                 Rejected = model.Rejected,

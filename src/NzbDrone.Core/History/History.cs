@@ -15,17 +15,13 @@ namespace NzbDrone.Core.History
         {
             Data = new Dictionary<string, string>();
         }
-
-        //public int EpisodeId { get; set; }
+        
         public int AlbumId { get; set; }
-        //public int SeriesId { get; set; }
         public int ArtistId { get; set; }
         public string SourceTitle { get; set; }
         public QualityModel Quality { get; set; }
         public DateTime Date { get; set; }
-        //public Episode Episode { get; set; }
         public Album Album { get; set; }
-        //public Series Series { get; set; }
         public Artist Artist { get; set; }
         public HistoryEventType EventType { get; set; }
         public Dictionary<string, string> Data { get; set; }

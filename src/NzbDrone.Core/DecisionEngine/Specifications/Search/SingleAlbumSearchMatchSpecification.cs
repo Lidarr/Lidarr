@@ -25,7 +25,10 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
             }
 
             var singleEpisodeSpec = searchCriteria as AlbumSearchCriteria;
-            if (singleEpisodeSpec == null) return Decision.Accept();
+            if (singleEpisodeSpec == null)
+            {
+                return Decision.Accept();
+            }
                 
             if (Parser.Parser.CleanArtistTitle(singleEpisodeSpec.AlbumTitle) != Parser.Parser.CleanArtistTitle(remoteAlbum.ParsedAlbumInfo.AlbumTitle))
             {

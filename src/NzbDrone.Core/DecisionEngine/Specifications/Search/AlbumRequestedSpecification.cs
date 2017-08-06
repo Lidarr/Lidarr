@@ -25,7 +25,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
                 return Decision.Accept();
             }
 
-            var criteriaAlbum = searchCriteria.Albums.Select(v => v.Id).ToList(); //s.Select(v => v.Id).ToList();
+            var criteriaAlbum = searchCriteria.Albums.Select(v => v.Id).ToList();
             var remoteAlbums = remoteAlbum.Albums.Select(v => v.Id).ToList();
 
             if (!criteriaAlbum.Intersect(remoteAlbums).Any())

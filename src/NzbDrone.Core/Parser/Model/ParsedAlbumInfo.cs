@@ -9,10 +9,8 @@ namespace NzbDrone.Core.Parser.Model
 {
     public class ParsedAlbumInfo
     {
-        //public int TrackNumber { get; set; }
         public string AlbumTitle { get; set; }
         public string ArtistName { get; set; }
-        //public string AlbumTitle { get; set; }
         public ArtistTitleInfo ArtistTitleInfo { get; set; }
         public QualityModel Quality { get; set; }
         public string ReleaseDate { get; set; }
