@@ -328,7 +328,7 @@
     <Compile Include="DecisionEngine\SameTracksSpecification.cs" />
     <Compile Include="DecisionEngine\Specifications\AcceptableSizeSpecification.cs" />
     <Compile Include="DecisionEngine\Specifications\BlacklistSpecification.cs" />
-    <Compile Include="DecisionEngine\Specifications\FullSeasonSpecification.cs" />
+    <Compile Include="DecisionEngine\Specifications\DiscographySpecification.cs" />
     <Compile Include="DecisionEngine\Specifications\CutoffSpecification.cs" />
     <Compile Include="DecisionEngine\Specifications\ProtocolSpecification.cs" />
     <Compile Include="DecisionEngine\Specifications\LanguageSpecification.cs" />

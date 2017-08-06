@@ -14,9 +14,7 @@ namespace NzbDrone.Api.Queue
 {
     public class QueueResource : RestResource
     {
-        //public SeriesResource Series { get; set; }
         public ArtistResource Artist { get; set; }
-        //public EpisodeResource Episode { get; set; }
         public AlbumResource Album { get; set; }
         public QualityModel Quality { get; set; }
         public decimal Size { get; set; }

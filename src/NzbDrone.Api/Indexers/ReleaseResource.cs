@@ -26,10 +26,8 @@ namespace NzbDrone.Api.Indexers
         public string ReleaseHash { get; set; }
         public string Title { get; set; }
         //public bool FullSeason { get; set; }
-        //public int SeasonNumber { get; set; }
         public Language Language { get; set; }
         public string AirDate { get; set; }
-        //public string SeriesTitle { get; set; }
         public string ArtistName { get; set; }
         public string AlbumTitle { get; set; }
         //public int[] EpisodeNumbers { get; set; }
@@ -105,7 +103,6 @@ namespace NzbDrone.Api.Indexers
                 ReleaseHash = parsedAlbumInfo.ReleaseHash,
                 Title = releaseInfo.Title,
                 //FullSeason = parsedAlbumInfo.FullSeason,
-                //SeasonNumber = parsedAlbumInfo.SeasonNumber,
                 Language = parsedAlbumInfo.Language,
                 //AirDate = parsedAlbumInfo.AirDate,
                 ArtistName = parsedAlbumInfo.ArtistName,
@@ -130,11 +127,6 @@ namespace NzbDrone.Api.Indexers
                 Seeders = torrentInfo.Seeders,
                 Leechers = (torrentInfo.Peers.HasValue && torrentInfo.Seeders.HasValue) ? (torrentInfo.Peers.Value - torrentInfo.Seeders.Value) : (int?)null,
                 Protocol = releaseInfo.DownloadProtocol,
-
-                //IsDaily = parsedAlbumInfo.IsDaily,
-                //IsAbsoluteNumbering = parsedAlbumInfo.IsAbsoluteNumbering,
-                //IsPossibleSpecialEpisode = parsedAlbumInfo.IsPossibleSpecialEpisode,
-                //Special = parsedAlbumInfo.Special,
             };
 
         }
