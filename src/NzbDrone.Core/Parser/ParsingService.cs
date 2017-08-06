@@ -178,7 +178,9 @@ namespace NzbDrone.Core.Parser
 
         public List<Album> GetAlbums(ParsedAlbumInfo parsedAlbumInfo, Artist artist, SearchCriteriaBase searchCriteria = null)
         {
+            var albumTitle = parsedAlbumInfo.AlbumTitle;
             var result = new List<Album>();
+
             if (parsedAlbumInfo.AlbumTitle == null)
             {
                 return new List<Album>();
@@ -188,7 +190,7 @@ namespace NzbDrone.Core.Parser
 
             if (searchCriteria != null)
             {
-                albumInfo = searchCriteria.Album;
+                albumInfo = searchCriteria.Albums.SingleOrDefault(e => e.Title == albumTitle);
             }
 
             if (albumInfo == null)

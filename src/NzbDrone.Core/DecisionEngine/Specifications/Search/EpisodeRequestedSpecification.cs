@@ -44,13 +44,13 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
                 return Decision.Accept();
             }
 
-            var criteriaAlbum = searchCriteria.Album.Id; //s.Select(v => v.Id).ToList();
+            var criteriaAlbum = searchCriteria.Albums.Select(v => v.Id).ToList(); //s.Select(v => v.Id).ToList();
             var remoteAlbums = remoteAlbum.Albums.Select(v => v.Id).ToList();
 
-            if (!remoteAlbums.Contains(criteriaAlbum))
+            if (!criteriaAlbum.Intersect(remoteAlbums).Any())
             {
                 _logger.Debug("Release rejected since the album wasn't requested: {0}", remoteAlbum.ParsedAlbumInfo);
-                return Decision.Reject("Episode wasn't requested");
+                return Decision.Reject("Album wasn't requested");
             }
 
             return Decision.Accept();

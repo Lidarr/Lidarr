@@ -210,7 +210,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
                 .With(v => v.Artist, artist)
                 .BuildList();
 
-            var criteria = new ArtistSearchCriteria { Album = albums.First()};
+            var criteria = new ArtistSearchCriteria { Albums = albums};
 
             var reports = albums.Select(v => 
                 new ReleaseInfo() 
