@@ -30,7 +30,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.NzbgetTests
                                               Port = 2222,
                                               Username = "admin",
                                               Password = "pass",
-                                              TvCategory = "Music",
+                                              TvCategory = "music",
                                               RecentTvPriority = (int)NzbgetPriority.High
                                           };
 
@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.NzbgetTests
                 {
                     FileSizeLo = 1000,
                     RemainingSizeLo = 10,
-                    Category = "tv",
+                    Category = "music",
                     NzbName = "Droned.S01E01.Pilot.1080p.WEB-DL-DRONE",
                     Parameters = new List<NzbgetParameter> { new NzbgetParameter { Name = "drone", Value = "id" } }
                 };
@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.NzbgetTests
             _failed = new NzbgetHistoryItem
                 {
                     FileSizeLo = 1000,
-                    Category = "tv",
+                    Category = "music",
                     Name = "Droned.S01E01.Pilot.1080p.WEB-DL-DRONE",
                     DestDir = "somedirectory",
                     Parameters = new List<NzbgetParameter> { new NzbgetParameter { Name = "drone", Value = "id" } },
@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.NzbgetTests
             _completed = new NzbgetHistoryItem
                 {
                     FileSizeLo = 1000,
-                    Category = "tv",
+                    Category = "music",
                     Name = "Droned.S01E01.Pilot.1080p.WEB-DL-DRONE",
                     DestDir = "/remote/mount/tv/Droned.S01E01.Pilot.1080p.WEB-DL-DRONE",
                     Parameters = new List<NzbgetParameter> { new NzbgetParameter { Name = "drone", Value = "id" } },
@@ -81,8 +81,8 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.NzbgetTests
                 });
 
             var configItems = new Dictionary<string, string>();
-            configItems.Add("Category1.Name", "tv");
-            configItems.Add("Category1.DestDir", @"/remote/mount/tv");
+            configItems.Add("Category1.Name", "music");
+            configItems.Add("Category1.DestDir", @"/remote/mount/music");
 
             Mocker.GetMock<INzbgetProxy>()
                 .Setup(v => v.GetConfig(It.IsAny<NzbgetSettings>()))
@@ -340,7 +340,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.NzbgetTests
 
             result.IsLocalhost.Should().BeTrue();
             result.OutputRootFolders.Should().NotBeNull();
-            result.OutputRootFolders.First().Should().Be(@"/remote/mount/tv");
+            result.OutputRootFolders.First().Should().Be(@"/remote/mount/music");
         }
 
         [Test]
