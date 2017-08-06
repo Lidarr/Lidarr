@@ -15,24 +15,6 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
 
         public RejectionType Type => RejectionType.Permanent;
 
-        //public Decision IsSatisfiedBy(RemoteEpisode remoteEpisode, SearchCriteriaBase searchCriteria)
-        //{
-        //    if (searchCriteria == null)
-        //    {
-        //        return Decision.Accept();
-        //    }
-
-        //    _logger.Debug("Checking if series matches searched series");
-
-        //    if (remoteEpisode.Series.Id != searchCriteria.Series.Id)
-        //    {
-        //        _logger.Debug("Series {0} does not match {1}", remoteEpisode.Series, searchCriteria.Series);
-        //        return Decision.Reject("Wrong series");
-        //    }
-
-        //    return Decision.Accept();
-        //}
-
         public Decision IsSatisfiedBy(RemoteAlbum remoteAlbum, SearchCriteriaBase searchCriteria)
         {
             if (searchCriteria == null)

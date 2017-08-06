@@ -16,20 +16,15 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             _logger = logger;
         }
 
-        //public Decision IsSatisfiedBy(RemoteEpisode subject, SearchCriteriaBase searchCriteria)
-        //{
-        //    if (subject.Release.Title.ToLower().Contains("sample") && subject.Release.Size < 70.Megabytes())
-        //    {
-        //        _logger.Debug("Sample release, rejecting.");
-        //        return Decision.Reject("Sample");
-        //    }
-
-        //    return Decision.Accept();
-        //}
-
         public Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
         {
-            throw new NotImplementedException();
+                if (subject.Release.Title.ToLower().Contains("sample") && subject.Release.Size < 20.Megabytes())
+                {
+                    _logger.Debug("Sample release, rejecting.");
+                    return Decision.Reject("Sample");
+                }
+
+                return Decision.Accept();
         }
 
     }

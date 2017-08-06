@@ -21,29 +21,6 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
         public RejectionType Type => RejectionType.Permanent;
 
-        
-        //public virtual Decision IsSatisfiedBy(RemoteEpisode subject, SearchCriteriaBase searchCriteria)
-        //{
-        //    if (subject.Release == null || subject.Release.Container.IsNullOrWhiteSpace())
-        //    {
-        //        return Decision.Accept();
-        //    }
-
-        //    if (_dvdContainerTypes.Contains(subject.Release.Container.ToLower()))
-        //    {
-        //        _logger.Debug("Release contains raw DVD, rejecting.");
-        //        return Decision.Reject("Raw DVD release");
-        //    }
-
-        //    if (_blurayContainerTypes.Contains(subject.Release.Container.ToLower()))
-        //    {
-        //        _logger.Debug("Release contains raw Bluray, rejecting.");
-        //        return Decision.Reject("Raw Bluray release");
-        //    }
-
-        //    return Decision.Accept();
-        //}
-
         public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
         {
             if (subject.Release == null || subject.Release.Container.IsNullOrWhiteSpace())
@@ -51,7 +28,19 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                 return Decision.Accept();
             }
 
-            //TODO Implement for Music Releases if applicable.
+            // TODO Implement for Music Releases if applicable.
+
+            //    if (_dvdContainerTypes.Contains(subject.Release.Container.ToLower()))
+            //    {
+            //        _logger.Debug("Release contains raw DVD, rejecting.");
+            //        return Decision.Reject("Raw DVD release");
+            //    }
+
+            //    if (_blurayContainerTypes.Contains(subject.Release.Container.ToLower()))
+            //    {
+            //        _logger.Debug("Release contains raw Bluray, rejecting.");
+            //        return Decision.Reject("Raw Bluray release");
+            //    }
 
             return Decision.Accept();
         }

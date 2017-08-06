@@ -16,28 +16,25 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
 
         public RejectionType Type => RejectionType.Permanent;
 
-        //public Decision IsSatisfiedBy(RemoteEpisode remoteEpisode, SearchCriteriaBase searchCriteria)
-        //{
-        //    if (searchCriteria == null)
-        //    {
-        //        return Decision.Accept();
-        //    }
-
-        //    var singleEpisodeSpec = searchCriteria as SeasonSearchCriteria;
-        //    if (singleEpisodeSpec == null) return Decision.Accept();
-
-        //    if (singleEpisodeSpec.SeasonNumber != remoteEpisode.ParsedEpisodeInfo.SeasonNumber)
-        //    {
-        //        _logger.Debug("Season number does not match searched season number, skipping.");
-        //        return Decision.Reject("Wrong season");
-        //    }
-
-        //    return Decision.Accept();
-        //}
-
         public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
         {
             throw new NotImplementedException();
+
+            //    if (searchCriteria == null)
+            //    {
+            //        return Decision.Accept();
+            //    }
+
+            //    var singleEpisodeSpec = searchCriteria as SeasonSearchCriteria;
+            //    if (singleEpisodeSpec == null) return Decision.Accept();
+
+            //    if (singleEpisodeSpec.SeasonNumber != remoteEpisode.ParsedEpisodeInfo.SeasonNumber)
+            //    {
+            //        _logger.Debug("Season number does not match searched season number, skipping.");
+            //        return Decision.Reject("Wrong season");
+            //    }
+
+            //    return Decision.Accept();
         }
     }
 }

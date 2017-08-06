@@ -156,7 +156,7 @@
     <Compile Include="DecisionEngineTests\DownloadDecisionMakerFixture.cs" />
     <Compile Include="DecisionEngineTests\HistorySpecificationFixture.cs" />
     <Compile Include="DecisionEngineTests\LanguageSpecificationFixture.cs" />
-    <Compile Include="DecisionEngineTests\MonitoredEpisodeSpecificationFixture.cs" />
+    <Compile Include="DecisionEngineTests\MonitoredAlbumSpecificationFixture.cs" />
     <Compile Include="DecisionEngineTests\QueueSpecificationFixture.cs" />
     <Compile Include="DecisionEngineTests\ReleaseRestrictionsSpecificationFixture.cs" />
     <Compile Include="DecisionEngineTests\PrioritizeDownloadDecisionFixture.cs" />

@@ -28,12 +28,6 @@ namespace NzbDrone.Core.DecisionEngine
             }
         }
 
-        public DownloadDecision(RemoteEpisode episode, params Rejection[] rejections)
-        {
-            RemoteEpisode = episode;
-            Rejections = rejections.ToList();
-        }
-
         public DownloadDecision(RemoteAlbum album, params Rejection[] rejections)
         {
             RemoteAlbum = album;

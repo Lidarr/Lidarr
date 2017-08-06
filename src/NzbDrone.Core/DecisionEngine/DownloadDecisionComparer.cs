@@ -4,7 +4,6 @@ using System.Linq;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Profiles.Delay;
-using NzbDrone.Core.Tv;
 
 namespace NzbDrone.Core.DecisionEngine
 {
@@ -25,8 +24,6 @@ namespace NzbDrone.Core.DecisionEngine
             {
                 CompareQuality,
                 CompareProtocol,
-                //CompareEpisodeCount,
-                //CompareEpisodeNumber,
                 ComparePeersIfTorrent,
                 CompareAgeIfUsenet,
                 CompareSize
@@ -74,29 +71,7 @@ namespace NzbDrone.Core.DecisionEngine
             return result;
         }
 
-        private int CompareEpisodeCount(DownloadDecision x, DownloadDecision y)
-        {
-            var seasonPackCompare = CompareBy(x.RemoteEpisode, y.RemoteEpisode,
-                remoteEpisode => remoteEpisode.ParsedEpisodeInfo.FullSeason);
-
-            if (seasonPackCompare != 0)
-            {
-                return seasonPackCompare;
-            }
-
-            if (x.RemoteEpisode.Series.SeriesType == SeriesTypes.Anime &
-                y.RemoteEpisode.Series.SeriesType == SeriesTypes.Anime)
-            {
-                return CompareBy(x.RemoteEpisode, y.RemoteEpisode, remoteEpisode => remoteEpisode.Episodes.Count);
-            }
-
-            return CompareByReverse(x.RemoteEpisode, y.RemoteEpisode, remoteEpisode => remoteEpisode.Episodes.Count);
-        }
-
-        private int CompareEpisodeNumber(DownloadDecision x, DownloadDecision y)
-        {
-            return CompareByReverse(x.RemoteEpisode, y.RemoteEpisode, remoteEpisode => remoteEpisode.Episodes.Select(e => e.EpisodeNumber).MinOrDefault());
-        }
+        // TODO Add compare track count if we can get the information from parsing release. 
 
         private int ComparePeersIfTorrent(DownloadDecision x, DownloadDecision y)
         {

@@ -19,30 +19,28 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
 
         public RejectionType Type => RejectionType.Permanent;
 
-        //public Decision IsSatisfiedBy(RemoteEpisode remoteEpisode, SearchCriteriaBase searchCriteria)
-        //{
-        //    if (searchCriteria == null)
-        //    {
-        //        return Decision.Accept();
-        //    }
-
-        //    var dailySearchSpec = searchCriteria as DailyEpisodeSearchCriteria;
-
-        //    if (dailySearchSpec == null) return Decision.Accept();
-
-        //    var episode = _episodeService.GetEpisode(dailySearchSpec.Series.Id, dailySearchSpec.AirDate.ToString(Episode.AIR_DATE_FORMAT));
-
-        //    if (!remoteEpisode.ParsedEpisodeInfo.IsDaily || remoteEpisode.ParsedEpisodeInfo.AirDate != episode.AirDate)
-        //    {
-        //        _logger.Debug("Episode AirDate does not match searched episode number, skipping.");
-        //        return Decision.Reject("Episode does not match");
-        //    }
-
-        //    return Decision.Accept();
-        //}
         public Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
         {
             throw new NotImplementedException();
+
+            //    if (searchCriteria == null)
+            //    {
+            //        return Decision.Accept();
+            //    }
+
+            //    var dailySearchSpec = searchCriteria as DailyEpisodeSearchCriteria;
+
+            //    if (dailySearchSpec == null) return Decision.Accept();
+
+            //    var episode = _episodeService.GetEpisode(dailySearchSpec.Series.Id, dailySearchSpec.AirDate.ToString(Episode.AIR_DATE_FORMAT));
+
+            //    if (!remoteEpisode.ParsedEpisodeInfo.IsDaily || remoteEpisode.ParsedEpisodeInfo.AirDate != episode.AirDate)
+            //    {
+            //        _logger.Debug("Episode AirDate does not match searched episode number, skipping.");
+            //        return Decision.Reject("Episode does not match");
+            //    }
+
+            //    return Decision.Accept();
         }
     }
 }

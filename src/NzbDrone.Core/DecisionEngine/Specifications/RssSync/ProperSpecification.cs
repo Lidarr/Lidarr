@@ -22,36 +22,36 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
 
         public RejectionType Type => RejectionType.Permanent;
 
-        public virtual Decision IsSatisfiedBy(RemoteEpisode subject, SearchCriteriaBase searchCriteria)
-        {
-            if (searchCriteria != null)
-            {
-                return Decision.Accept();
-            }
-
-            foreach (var file in subject.Episodes.Where(c => c.EpisodeFileId != 0).Select(c => c.EpisodeFile.Value))
-            {
-                if (_qualityUpgradableSpecification.IsRevisionUpgrade(file.Quality, subject.ParsedEpisodeInfo.Quality))
-                {
-                    if (file.DateAdded < DateTime.Today.AddDays(-7))
-                    {
-                        _logger.Debug("Proper for old file, rejecting: {0}", subject);
-                        return Decision.Reject("Proper for old file");
-                    }
-
-                    if (!_configService.AutoDownloadPropers)
-                    {
-                        _logger.Debug("Auto downloading of propers is disabled");
-                        return Decision.Reject("Proper downloading is disabled");
-                    }
-                }
-            }
-
-            return Decision.Accept();
-        }
         public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
         {
             throw new NotImplementedException();
+
+            // TODO Rework to associate TrackFiles to Album
+
+            //if (searchCriteria != null)
+            //{
+            //    return Decision.Accept();
+            //}
+
+            //foreach (var file in subject.Episodes.Where(c => c.EpisodeFileId != 0).Select(c => c.EpisodeFile.Value))
+            //{
+            //    if (_qualityUpgradableSpecification.IsRevisionUpgrade(file.Quality, subject.ParsedEpisodeInfo.Quality))
+            //    {
+            //        if (file.DateAdded < DateTime.Today.AddDays(-7))
+            //        {
+            //            _logger.Debug("Proper for old file, rejecting: {0}", subject);
+            //            return Decision.Reject("Proper for old file");
+            //        }
+
+            //        if (!_configService.AutoDownloadPropers)
+            //        {
+            //            _logger.Debug("Auto downloading of propers is disabled");
+            //            return Decision.Reject("Proper downloading is disabled");
+            //        }
+            //    }
+            //}
+
+            //return Decision.Accept();
         }
     }
 }

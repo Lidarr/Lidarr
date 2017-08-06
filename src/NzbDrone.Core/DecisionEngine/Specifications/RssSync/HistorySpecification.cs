@@ -28,58 +28,6 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
 
         public RejectionType Type => RejectionType.Permanent;
 
-        public virtual Decision IsSatisfiedBy(RemoteEpisode subject, SearchCriteriaBase searchCriteria)
-        {
-            if (searchCriteria != null)
-            {
-                _logger.Debug("Skipping history check during search");
-                return Decision.Accept();
-            }
-
-            var cdhEnabled = _configService.EnableCompletedDownloadHandling;
-
-            _logger.Debug("Performing history status check on report");
-            foreach (var episode in subject.Episodes)
-            {
-                _logger.Debug("Checking current status of episode [{0}] in history", episode.Id);
-                var mostRecent = _historyService.MostRecentForAlbum(episode.Id);
-
-                if (mostRecent != null && mostRecent.EventType == HistoryEventType.Grabbed)
-                {
-                    var recent = mostRecent.Date.After(DateTime.UtcNow.AddHours(-12));
-                    var cutoffUnmet = _qualityUpgradableSpecification.CutoffNotMet(subject.Series.Profile, mostRecent.Quality, subject.ParsedEpisodeInfo.Quality);
-                    var upgradeable = _qualityUpgradableSpecification.IsUpgradable(subject.Series.Profile, mostRecent.Quality, subject.ParsedEpisodeInfo.Quality);
-
-                    if (!recent && cdhEnabled)
-                    {
-                        continue;
-                    }
-
-                    if (!cutoffUnmet)
-                    {
-                        if (recent)
-                        {
-                            return Decision.Reject("Recent grab event in history already meets cutoff: {0}", mostRecent.Quality);  
-                        }
-
-                        return Decision.Reject("CDH is disabled and grab event in history already meets cutoff: {0}", mostRecent.Quality);
-                    }
-
-                    if (!upgradeable)
-                    {
-                        if (recent)
-                        {
-                            return Decision.Reject("Recent grab event in history is of equal or higher quality: {0}", mostRecent.Quality);
-                        }
-
-                        return Decision.Reject("CDH is disabled and grab event in history is of equal or higher quality: {0}", mostRecent.Quality);
-                    }
-                }
-            }
-
-            return Decision.Accept();
-        }
-
         public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
         {
             if (searchCriteria != null)
@@ -93,7 +41,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
             _logger.Debug("Performing history status check on report");
             foreach (var album in subject.Albums)
             {
-                _logger.Debug("Checking current status of episode [{0}] in history", album.Id);
+                _logger.Debug("Checking current status of album [{0}] in history", album.Id);
                 var mostRecent = _historyService.MostRecentForAlbum(album.Id);
 
                 if (mostRecent != null && mostRecent.EventType == HistoryEventType.Grabbed)
