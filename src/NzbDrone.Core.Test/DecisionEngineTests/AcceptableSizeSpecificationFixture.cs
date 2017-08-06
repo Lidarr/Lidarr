@@ -9,6 +9,7 @@ using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Core.Tv;
+using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.Test.DecisionEngineTests
 {
@@ -16,40 +17,40 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
 
     public class AcceptableSizeSpecificationFixture : CoreTest<AcceptableSizeSpecification>
     {
-        private RemoteEpisode parseResultMultiSet;
-        private RemoteEpisode parseResultMulti;
-        private RemoteEpisode parseResultSingle;
-        private Series series;
+        private RemoteAlbum parseResultMultiSet;
+        private RemoteAlbum parseResultMulti;
+        private RemoteAlbum parseResultSingle;
+        private Artist artist;
         private QualityDefinition qualityType;
 
         [SetUp]
         public void Setup()
         {
-            series = Builder<Series>.CreateNew()
+            artist = Builder<Artist>.CreateNew()
                 .Build();
 
-            parseResultMultiSet = new RemoteEpisode
-                                    {
-                                        Series = series,
+            parseResultMultiSet = new RemoteAlbum
+            {
+                                        Artist = artist,
                                         Release = new ReleaseInfo(),
-                                        ParsedEpisodeInfo = new ParsedEpisodeInfo { Quality = new QualityModel(Quality.MP3_192, new Revision(version: 2)) },
-                                        Episodes = new List<Episode> { new Episode(), new Episode(), new Episode(), new Episode(), new Episode(), new Episode() }
+                                        ParsedAlbumInfo = new ParsedAlbumInfo { Quality = new QualityModel(Quality.MP3_192, new Revision(version: 2)) },
+                                        Albums = new List<Album> { new Album(), new Album(), new Album(), new Album(), new Album(), new Album() }
                                     };
 
-            parseResultMulti = new RemoteEpisode
-                                    {
-                                        Series = series,
+            parseResultMulti = new RemoteAlbum
+            {
+                                        Artist = artist,
                                         Release = new ReleaseInfo(),
-                                        ParsedEpisodeInfo = new ParsedEpisodeInfo { Quality = new QualityModel(Quality.MP3_192, new Revision(version: 2)) },
-                                        Episodes = new List<Episode> { new Episode(), new Episode() }
+                                        ParsedAlbumInfo = new ParsedAlbumInfo { Quality = new QualityModel(Quality.MP3_192, new Revision(version: 2)) },
+                                        Albums = new List<Album> { new Album(), new Album() }
                                     };
 
-            parseResultSingle = new RemoteEpisode
-                                    {
-                                        Series = series,
+            parseResultSingle = new RemoteAlbum
+            {
+                                        Artist = artist,
                                         Release = new ReleaseInfo(),
-                                        ParsedEpisodeInfo = new ParsedEpisodeInfo { Quality = new QualityModel(Quality.MP3_192, new Revision(version: 2)) },
-                                        Episodes = new List<Episode> { new Episode() { Id = 2 } }
+                                        ParsedAlbumInfo = new ParsedAlbumInfo { Quality = new QualityModel(Quality.MP3_192, new Revision(version: 2)) },
+                                        Albums = new List<Album> { new Album() { Id = 2 } }
 
                                     };
 
@@ -65,20 +66,20 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
 
             Mocker.GetMock<IQualityDefinitionService>().Setup(s => s.Get(Quality.MP3_192)).Returns(qualityType);
 
-            Mocker.GetMock<IEpisodeService>().Setup(
-                s => s.GetEpisodesBySeason(It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new List<Episode>() {
-                    new Episode(), new Episode(), new Episode(), new Episode(), new Episode(),
-                    new Episode(), new Episode(), new Episode(), new Episode() { Id = 2 }, new Episode() });
+            Mocker.GetMock<IAlbumService>().Setup(
+                s => s.GetAlbumsByArtist(It.IsAny<int>()))
+                .Returns(new List<Album>() {
+                    new Album(), new Album(), new Album(), new Album(), new Album(),
+                    new Album(), new Album(), new Album(), new Album() { Id = 2 }, new Album() });
         }
 
-        private void GivenLastEpisode()
+        private void GivenLastAlbum()
         {
-            Mocker.GetMock<IEpisodeService>().Setup(
-                s => s.GetEpisodesBySeason(It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new List<Episode>() {
-                    new Episode(), new Episode(), new Episode(), new Episode(), new Episode(),
-                    new Episode(), new Episode(), new Episode(), new Episode(), new Episode() { Id = 2 } });
+            Mocker.GetMock<IAlbumService>().Setup(
+                s => s.GetAlbumsByArtist(It.IsAny<int>()))
+                .Returns(new List<Album>() {
+                    new Album(), new Album(), new Album(), new Album(), new Album(),
+                    new Album(), new Album(), new Album(), new Album(), new Album() { Id = 2 } });
         }
 
         [TestCase(30, 50, false)]
@@ -87,10 +88,10 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [TestCase(60, 100, false)]
         [TestCase(60, 500, true)]
         [TestCase(60, 1000, false)]
-        public void single_episode(int runtime, int sizeInMegaBytes, bool expectedResult)
+        public void single_album(int runtime, int sizeInMegaBytes, bool expectedResult)
         {           
-            series.Runtime = runtime;
-            parseResultSingle.Series = series;
+            //artist.Runtime = runtime;
+            parseResultSingle.Artist = artist;
             parseResultSingle.Release.Size = sizeInMegaBytes.Megabytes();
 
             Subject.IsSatisfiedBy(parseResultSingle, null).Accepted.Should().Be(expectedResult);
@@ -100,12 +101,12 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [TestCase(30, 1000, false)]
         [TestCase(60, 1000, true)]
         [TestCase(60, 2000, false)]
-        public void single_episode_first_or_last(int runtime, int sizeInMegaBytes, bool expectedResult)
+        public void single_album_first_or_last(int runtime, int sizeInMegaBytes, bool expectedResult)
         {
-            GivenLastEpisode();
+            GivenLastAlbum();
 
-            series.Runtime = runtime;
-            parseResultSingle.Series = series;
+            //artist.Runtime = runtime;
+            parseResultSingle.Artist = artist;
             parseResultSingle.Release.Size = sizeInMegaBytes.Megabytes();
 
             Subject.IsSatisfiedBy(parseResultSingle, null).Accepted.Should().Be(expectedResult);
@@ -117,10 +118,10 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [TestCase(60, 100 * 2, false)]
         [TestCase(60, 500 * 2, true)]
         [TestCase(60, 1000 * 2, false)]
-        public void multi_episode(int runtime, int sizeInMegaBytes, bool expectedResult)
+        public void multi_album(int runtime, int sizeInMegaBytes, bool expectedResult)
         {
-            series.Runtime = runtime;
-            parseResultMulti.Series = series;
+            //artist.Runtime = runtime;
+            parseResultMulti.Artist = artist;
             parseResultMulti.Release.Size = sizeInMegaBytes.Megabytes();
 
             Subject.IsSatisfiedBy(parseResultMulti, null).Accepted.Should().Be(expectedResult);
@@ -132,10 +133,10 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [TestCase(60, 100 * 6, false)]
         [TestCase(60, 500 * 6, true)]
         [TestCase(60, 1000 * 6, false)]
-        public void multiset_episode(int runtime, int sizeInMegaBytes, bool expectedResult)
+        public void multiset_album(int runtime, int sizeInMegaBytes, bool expectedResult)
         {
-            series.Runtime = runtime;
-            parseResultMultiSet.Series = series;
+            //artist.Runtime = runtime;
+            parseResultMultiSet.Artist = artist;
             parseResultMultiSet.Release.Size = sizeInMegaBytes.Megabytes();
 
             Subject.IsSatisfiedBy(parseResultMultiSet, null).Accepted.Should().Be(expectedResult);
@@ -144,10 +145,10 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [Test]
         public void should_return_true_if_size_is_zero()
         {
-            GivenLastEpisode();
+            GivenLastAlbum();
 
-            series.Runtime = 30;
-            parseResultSingle.Series = series;
+            //artist.Runtime = 30;
+            parseResultSingle.Artist = artist;
             parseResultSingle.Release.Size = 0;
             qualityType.MinSize = 10;
             qualityType.MaxSize = 20;
@@ -158,10 +159,10 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [Test]
         public void should_return_true_if_unlimited_30_minute()
         {
-            GivenLastEpisode();
+            GivenLastAlbum();
 
-            series.Runtime = 30;
-            parseResultSingle.Series = series;
+            //artist.Runtime = 30;
+            parseResultSingle.Artist = artist;
             parseResultSingle.Release.Size = 18457280000;
             qualityType.MaxSize = null;
 
@@ -171,10 +172,10 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [Test]
         public void should_return_true_if_unlimited_60_minute()
         {
-            GivenLastEpisode();
+            GivenLastAlbum();
 
-            series.Runtime = 60;
-            parseResultSingle.Series = series;
+            //artist.Runtime = 60;
+            parseResultSingle.Artist = artist;
             parseResultSingle.Release.Size = 36857280000;
             qualityType.MaxSize = null;
 
@@ -182,39 +183,17 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         }
 
         [Test]
-        public void should_treat_daily_series_as_single_episode()
-        {
-            GivenLastEpisode();
-
-            series.Runtime = 60;
-            parseResultSingle.Series = series;
-            parseResultSingle.Series.SeriesType = SeriesTypes.Daily;
-            parseResultSingle.Release.Size = 300.Megabytes();
-
-            qualityType.MaxSize = 10;
-
-            Subject.IsSatisfiedBy(parseResultSingle, null).Accepted.Should().BeTrue();
-        }
-
-        [Test]
         public void should_return_true_if_RAWHD()
         {
-            parseResultSingle.ParsedEpisodeInfo.Quality = new QualityModel(Quality.FLAC);
+            parseResultSingle.ParsedAlbumInfo.Quality = new QualityModel(Quality.FLAC);
             
-            series.Runtime = 45;
-            parseResultSingle.Series = series;
-            parseResultSingle.Series.SeriesType = SeriesTypes.Daily;
+            //artist.Runtime = 45;
+            parseResultSingle.Artist = artist;
+            //parseResultSingle.Artist.SeriesType = SeriesTypes.Daily;
             parseResultSingle.Release.Size = 8000.Megabytes();
 
             Subject.IsSatisfiedBy(parseResultSingle, null).Accepted.Should().BeTrue();
         }
 
-        [Test]
-        public void should_return_true_for_special()
-        {
-            parseResultSingle.ParsedEpisodeInfo.Special = true;
-
-            Subject.IsSatisfiedBy(parseResultSingle, null).Accepted.Should().BeTrue();
-        }
     }
 }

@@ -18,24 +18,24 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
 
         public RejectionType Type => RejectionType.Permanent;
 
-        public Decision IsSatisfiedBy(RemoteEpisode remoteEpisode, SearchCriteriaBase searchCriteria)
-        {
-            if (searchCriteria == null)
-            {
-                return Decision.Accept();
-            }
+        //public Decision IsSatisfiedBy(RemoteEpisode remoteEpisode, SearchCriteriaBase searchCriteria)
+        //{
+        //    if (searchCriteria == null)
+        //    {
+        //        return Decision.Accept();
+        //    }
 
-            var criteriaEpisodes = searchCriteria.Episodes.Select(v => v.Id).ToList();
-            var remoteEpisodes = remoteEpisode.Episodes.Select(v => v.Id).ToList();
+        //    var criteriaEpisodes = searchCriteria.Episodes.Select(v => v.Id).ToList();
+        //    var remoteEpisodes = remoteEpisode.Episodes.Select(v => v.Id).ToList();
 
-            if (!criteriaEpisodes.Intersect(remoteEpisodes).Any())
-            {
-                _logger.Debug("Release rejected since the episode wasn't requested: {0}", remoteEpisode.ParsedEpisodeInfo);
-                return Decision.Reject("Episode wasn't requested");
-            }
+        //    if (!criteriaEpisodes.Intersect(remoteEpisodes).Any())
+        //    {
+        //        _logger.Debug("Release rejected since the episode wasn't requested: {0}", remoteEpisode.ParsedEpisodeInfo);
+        //        return Decision.Reject("Episode wasn't requested");
+        //    }
 
-            return Decision.Accept();
-        }
+        //    return Decision.Accept();
+        //}
 
         public Decision IsSatisfiedBy(RemoteAlbum remoteAlbum, SearchCriteriaBase searchCriteria)
         {
@@ -44,12 +44,12 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
                 return Decision.Accept();
             }
 
-            var criteriaAlbum = searchCriteria.Album.Id;
+            var criteriaAlbum = searchCriteria.Album.Id; //s.Select(v => v.Id).ToList();
             var remoteAlbums = remoteAlbum.Albums.Select(v => v.Id).ToList();
 
             if (!remoteAlbums.Contains(criteriaAlbum))
             {
-                _logger.Debug("Release rejected since the episode wasn't requested: {0}", remoteAlbum.ParsedAlbumInfo);
+                _logger.Debug("Release rejected since the album wasn't requested: {0}", remoteAlbum.ParsedAlbumInfo);
                 return Decision.Reject("Episode wasn't requested");
             }
 

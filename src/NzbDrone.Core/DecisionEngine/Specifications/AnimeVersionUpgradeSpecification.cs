@@ -21,41 +21,42 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
         public RejectionType Type => RejectionType.Permanent;
 
-        public virtual Decision IsSatisfiedBy(RemoteEpisode subject, SearchCriteriaBase searchCriteria)
-        {
-            var releaseGroup = subject.ParsedEpisodeInfo.ReleaseGroup;
+        //public virtual Decision IsSatisfiedBy(RemoteEpisode subject, SearchCriteriaBase searchCriteria)
+        //{
+        //    var releaseGroup = subject.ParsedEpisodeInfo.ReleaseGroup;
 
-            if (subject.Series.SeriesType != SeriesTypes.Anime)
-            {
-                return Decision.Accept();
-            }
+        //    if (subject.Series.SeriesType != SeriesTypes.Anime)
+        //    {
+        //        return Decision.Accept();
+        //    }
 
-            foreach (var file in subject.Episodes.Where(c => c.EpisodeFileId != 0).Select(c => c.EpisodeFile.Value))
-            {
-                if (_qualityUpgradableSpecification.IsRevisionUpgrade(file.Quality, subject.ParsedEpisodeInfo.Quality))
-                {
-                    if (file.ReleaseGroup.IsNullOrWhiteSpace())
-                    {
-                        _logger.Debug("Unable to compare release group, existing file's release group is unknown");
-                        return Decision.Reject("Existing release group is unknown");
-                    }
+        //    foreach (var file in subject.Episodes.Where(c => c.EpisodeFileId != 0).Select(c => c.EpisodeFile.Value))
+        //    {
+        //        if (_qualityUpgradableSpecification.IsRevisionUpgrade(file.Quality, subject.ParsedEpisodeInfo.Quality))
+        //        {
+        //            if (file.ReleaseGroup.IsNullOrWhiteSpace())
+        //            {
+        //                _logger.Debug("Unable to compare release group, existing file's release group is unknown");
+        //                return Decision.Reject("Existing release group is unknown");
+        //            }
 
-                    if (releaseGroup.IsNullOrWhiteSpace())
-                    {
-                        _logger.Debug("Unable to compare release group, release's release group is unknown");
-                        return Decision.Reject("Release group is unknown");
-                    }
+        //            if (releaseGroup.IsNullOrWhiteSpace())
+        //            {
+        //                _logger.Debug("Unable to compare release group, release's release group is unknown");
+        //                return Decision.Reject("Release group is unknown");
+        //            }
 
-                    if (file.ReleaseGroup != releaseGroup)
-                    {
-                        _logger.Debug("Existing Release group is: {0} - release's release group is: {1}", file.ReleaseGroup, releaseGroup);
-                        return Decision.Reject("{0} does not match existing release group {1}", releaseGroup, file.ReleaseGroup);
-                    }
-                }
-            }
+        //            if (file.ReleaseGroup != releaseGroup)
+        //            {
+        //                _logger.Debug("Existing Release group is: {0} - release's release group is: {1}", file.ReleaseGroup, releaseGroup);
+        //                return Decision.Reject("{0} does not match existing release group {1}", releaseGroup, file.ReleaseGroup);
+        //            }
+        //        }
+        //    }
 
-            return Decision.Accept();
-        }
+        //    return Decision.Accept();
+        //}
+
         public Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
         {
             throw new NotImplementedException();

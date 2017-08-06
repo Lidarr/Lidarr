@@ -16,23 +16,23 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
         public RejectionType Type => RejectionType.Permanent;
 
 
-        public Decision IsSatisfiedBy(RemoteEpisode remoteEpisode, SearchCriteriaBase searchCriteria)
-        {
-            var torrentInfo = remoteEpisode.Release as TorrentInfo;
+        //public Decision IsSatisfiedBy(RemoteEpisode remoteEpisode, SearchCriteriaBase searchCriteria)
+        //{
+        //    var torrentInfo = remoteEpisode.Release as TorrentInfo;
 
-            if (torrentInfo == null)
-            {
-                return Decision.Accept();
-            }
+        //    if (torrentInfo == null)
+        //    {
+        //        return Decision.Accept();
+        //    }
 
-            if (torrentInfo.Seeders != null && torrentInfo.Seeders < 1)
-            {
-                _logger.Debug("Not enough seeders. ({0})", torrentInfo.Seeders);
-                return Decision.Reject("Not enough seeders. ({0})", torrentInfo.Seeders);
-            }
+        //    if (torrentInfo.Seeders != null && torrentInfo.Seeders < 1)
+        //    {
+        //        _logger.Debug("Not enough seeders. ({0})", torrentInfo.Seeders);
+        //        return Decision.Reject("Not enough seeders. ({0})", torrentInfo.Seeders);
+        //    }
 
-            return Decision.Accept();
-        }
+        //    return Decision.Accept();
+        //}
 
         public Decision IsSatisfiedBy(RemoteAlbum remoteAlbum, SearchCriteriaBase searchCriteria)
         {

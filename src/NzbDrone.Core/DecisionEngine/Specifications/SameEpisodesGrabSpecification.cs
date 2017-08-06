@@ -18,16 +18,16 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
         public RejectionType Type => RejectionType.Permanent;
 
-        public virtual Decision IsSatisfiedBy(RemoteEpisode subject, SearchCriteriaBase searchCriteria)
-        {
-            if (_sameEpisodesSpecification.IsSatisfiedBy(subject.Episodes))
-            {
-                return Decision.Accept();
-            }
+        //public virtual Decision IsSatisfiedBy(RemoteEpisode subject, SearchCriteriaBase searchCriteria)
+        //{
+        //    if (_sameEpisodesSpecification.IsSatisfiedBy(subject.Episodes))
+        //    {
+        //        return Decision.Accept();
+        //    }
 
-            _logger.Debug("Episode file on disk contains more episodes than this release contains");
-            return Decision.Reject("Episode file on disk contains more episodes than this release contains");
-        }
+        //    _logger.Debug("Episode file on disk contains more episodes than this release contains");
+        //    return Decision.Reject("Episode file on disk contains more episodes than this release contains");
+        //}
 
         public Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
         {

@@ -17,36 +17,37 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
 
         public RejectionType Type => RejectionType.Permanent;
 
-        public Decision IsSatisfiedBy(RemoteEpisode remoteEpisode, SearchCriteriaBase searchCriteria)
-        {
-            if (searchCriteria == null)
-            {
-                return Decision.Accept();
-            }
+        //public Decision IsSatisfiedBy(RemoteEpisode remoteEpisode, SearchCriteriaBase searchCriteria)
+        //{
+        //    if (searchCriteria == null)
+        //    {
+        //        return Decision.Accept();
+        //    }
 
-            var singleEpisodeSpec = searchCriteria as SingleEpisodeSearchCriteria;
-            if (singleEpisodeSpec == null) return Decision.Accept();
+        //    var singleEpisodeSpec = searchCriteria as SingleEpisodeSearchCriteria;
+        //    if (singleEpisodeSpec == null) return Decision.Accept();
 
-            if (singleEpisodeSpec.SeasonNumber != remoteEpisode.ParsedEpisodeInfo.SeasonNumber)
-            {
-                _logger.Debug("Season number does not match searched season number, skipping.");
-                return Decision.Reject("Wrong season");
-            }
+        //    if (singleEpisodeSpec.SeasonNumber != remoteEpisode.ParsedEpisodeInfo.SeasonNumber)
+        //    {
+        //        _logger.Debug("Season number does not match searched season number, skipping.");
+        //        return Decision.Reject("Wrong season");
+        //    }
 
-            if (!remoteEpisode.ParsedEpisodeInfo.EpisodeNumbers.Any())
-            {
-                _logger.Debug("Full season result during single episode search, skipping.");
-                return Decision.Reject("Full season pack");
-            }
+        //    if (!remoteEpisode.ParsedEpisodeInfo.EpisodeNumbers.Any())
+        //    {
+        //        _logger.Debug("Full season result during single episode search, skipping.");
+        //        return Decision.Reject("Full season pack");
+        //    }
 
-            if (!remoteEpisode.ParsedEpisodeInfo.EpisodeNumbers.Contains(singleEpisodeSpec.EpisodeNumber))
-            {
-                _logger.Debug("Episode number does not match searched episode number, skipping.");
-                return Decision.Reject("Wrong episode");
-            }
+        //    if (!remoteEpisode.ParsedEpisodeInfo.EpisodeNumbers.Contains(singleEpisodeSpec.EpisodeNumber))
+        //    {
+        //        _logger.Debug("Episode number does not match searched episode number, skipping.");
+        //        return Decision.Reject("Wrong episode");
+        //    }
 
-            return Decision.Accept();
-        }
+        //    return Decision.Accept();
+        //}
+
         public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
         {
             //TODO Implement for Discographies. 
