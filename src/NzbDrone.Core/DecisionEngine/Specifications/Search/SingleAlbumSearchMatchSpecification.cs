@@ -36,11 +36,11 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
                 return Decision.Reject("Wrong album");
             }
 
-            //if (!remoteAlbum.ParsedAlbumInfo.AlbumTitles.Any())
-            //{
-            //    _logger.Debug("Full discography result during single album search, skipping.");
-            //    return Decision.Reject("Full artist pack");
-            //}
+            if (!remoteAlbum.ParsedAlbumInfo.AlbumTitle.Any())
+            {
+                _logger.Debug("Full discography result during single album search, skipping.");
+                return Decision.Reject("Full artist pack");
+            }
 
             return Decision.Accept();
         }

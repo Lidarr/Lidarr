@@ -6,7 +6,6 @@ namespace NzbDrone.Core.DecisionEngine
 {
     public class DownloadDecision
     {
-        public RemoteEpisode RemoteEpisode { get; private set; }
         public RemoteAlbum RemoteAlbum { get; private set; }
         public IEnumerable<Rejection> Rejections { get; private set; }
 

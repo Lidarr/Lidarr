@@ -130,7 +130,7 @@ namespace NzbDrone.Core.DecisionEngine
             }
             catch (NotImplementedException e)
             {
-                _logger.Trace("Spec " + spec.GetType().Name + " does not care about movies.");
+                _logger.Trace("Spec " + spec.GetType().Name + " not implemented.");
             }
             catch (Exception e)
             {

@@ -136,6 +136,7 @@ namespace NzbDrone.Core.Parser
             return series;
         }
 
+        [System.Obsolete("Used for sonarr, not lidarr")]
         public RemoteEpisode Map(ParsedEpisodeInfo parsedEpisodeInfo, int tvdbId, int tvRageId, SearchCriteriaBase searchCriteria = null)
         {
             var remoteEpisode = new RemoteEpisode
@@ -213,15 +214,15 @@ namespace NzbDrone.Core.Parser
 
         }
 
-
+        [System.Obsolete("Used for sonarr, not lidarr")]
         public RemoteEpisode Map(ParsedEpisodeInfo parsedEpisodeInfo, int seriesId, IEnumerable<int> episodeIds)
         {
             return new RemoteEpisode
-                   {
-                       ParsedEpisodeInfo = parsedEpisodeInfo,
-                       Series = _seriesService.GetSeries(seriesId),
-                       Episodes = _episodeService.GetEpisodes(episodeIds)
-                   };
+                {
+                    ParsedEpisodeInfo = parsedEpisodeInfo,
+                    Series = _seriesService.GetSeries(seriesId),
+                    Episodes = _episodeService.GetEpisodes(episodeIds)
+                };
         }
 
         public RemoteAlbum Map(ParsedAlbumInfo parsedAlbumInfo, int artistId, IEnumerable<int> albumIds)

@@ -34,9 +34,9 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         }
 
         [Test]
-        public void should_return_true_if_mkv()
+        public void should_return_true_if_flac()
         {
-            WithContainer("MKV");
+            WithContainer("FLAC");
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
         }
 
@@ -51,13 +51,6 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         public void should_return_false_if_iso()
         {
             WithContainer("ISO");
-            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
-        }
-
-        [Test]
-        public void should_return_false_if_m2ts()
-        {
-            WithContainer("M2TS");
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
         }
 

@@ -8,9 +8,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 {
     public class RawDiskSpecification : IDecisionEngineSpecification
     {
-        private static readonly string[] _dvdContainerTypes = new[] { "vob", "iso" };
-
-        private static readonly string[] _blurayContainerTypes = new[] { "m2ts" };
+        private static readonly string[] _cdContainerTypes = new[] { "vob", "iso" };
 
         private readonly Logger _logger;
 
@@ -28,19 +26,11 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                 return Decision.Accept();
             }
 
-            // TODO Implement for Music Releases if applicable.
-
-            //    if (_dvdContainerTypes.Contains(subject.Release.Container.ToLower()))
-            //    {
-            //        _logger.Debug("Release contains raw DVD, rejecting.");
-            //        return Decision.Reject("Raw DVD release");
-            //    }
-
-            //    if (_blurayContainerTypes.Contains(subject.Release.Container.ToLower()))
-            //    {
-            //        _logger.Debug("Release contains raw Bluray, rejecting.");
-            //        return Decision.Reject("Raw Bluray release");
-            //    }
+                if (_cdContainerTypes.Contains(subject.Release.Container.ToLower()))
+                {
+                    _logger.Debug("Release contains raw CD, rejecting.");
+                    return Decision.Reject("Raw CD release");
+                }
 
             return Decision.Accept();
         }
