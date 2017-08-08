@@ -112,13 +112,13 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [Test]
         public void should_be_false_when_release_contains_one_restricted_word_and_one_required_word()
         {
-            _remoteAlbum.Release.Title = "[ www.Speed.cd ] -Whose.Line.is.it.Anyway.US.S10E24.720p.HDTV.x264-BAJSKORV";
+            _remoteAlbum.Release.Title = "[ www.Speed.cd ] - Katy Perry - Witness (2017) MP3 [320 kbps] ";
 
             Mocker.GetMock<IRestrictionService>()
                   .Setup(s => s.AllForTags(It.IsAny<HashSet<int>>()))
                   .Returns(new List<Restriction>
                            {
-                               new Restriction { Required = "x264", Ignored = "www.Speed.cd" }
+                               new Restriction { Required = "320", Ignored = "www.Speed.cd" }
                            });
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();

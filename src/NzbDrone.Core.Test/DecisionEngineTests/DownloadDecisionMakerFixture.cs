@@ -47,7 +47,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             _fail2.Setup(c => c.IsSatisfiedBy(It.IsAny<RemoteAlbum>(), null)).Returns(Decision.Reject("fail2"));
             _fail3.Setup(c => c.IsSatisfiedBy(It.IsAny<RemoteAlbum>(), null)).Returns(Decision.Reject("fail3"));
 
-            _reports = new List<ReleaseInfo> { new ReleaseInfo { Title = "The.Office.S03E115.DVDRip.XviD-OSiTV" } };
+            _reports = new List<ReleaseInfo> { new ReleaseInfo { Title = "Coldplay-A Head Full Of Dreams-CD-FLAC-2015-PERFECT" } };
             _remoteAlbum = new RemoteAlbum {
                 Artist = new Artist(),
                 Albums = new List<Album> { new Album() }
@@ -138,7 +138,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         public void should_not_attempt_to_map_album_artist_title_is_blank()
         {
             GivenSpecifications(_pass1, _pass2, _pass3);
-            _reports[0].Title = "1937 - Snow White and the Seven Dwarves";
+            _reports[0].Title = "2013 - Night Visions";
 
             var results = Subject.GetRssDecision(_reports).ToList();
 
@@ -175,9 +175,9 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
 
             _reports = new List<ReleaseInfo>
                 {
-                    new ReleaseInfo{Title = "The.Office.S03E115.DVDRip.XviD-OSiTV"},
-                    new ReleaseInfo{Title = "The.Office.S03E115.DVDRip.XviD-OSiTV"},
-                    new ReleaseInfo{Title = "The.Office.S03E115.DVDRip.XviD-OSiTV"}
+                    new ReleaseInfo{Title = "Coldplay-A Head Full Of Dreams-CD-FLAC-2015-PERFECT"},
+                    new ReleaseInfo{Title = "Coldplay-A Head Full Of Dreams-CD-FLAC-2015-PERFECT"},
+                    new ReleaseInfo{Title = "Coldplay-A Head Full Of Dreams-CD-FLAC-2015-PERFECT"}
                 };
 
             Subject.GetRssDecision(_reports);
@@ -210,12 +210,12 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
                 .With(v => v.Artist, artist)
                 .BuildList();
 
-            var criteria = new ArtistSearchCriteria { Albums = albums};
+            var criteria = new ArtistSearchCriteria { Albums = albums.Take(1).ToList()};
 
             var reports = albums.Select(v => 
                 new ReleaseInfo() 
                 { 
-                    Title = string.Format("{0}.{1}.FLAC.2017-DRONE", artist.Name, v.Title) 
+                    Title = string.Format("{0}-{1}[FLAC][2017][DRONE]", artist.Name, v.Title) 
                 }).ToList();
 
             Mocker.GetMock<IParsingService>()
@@ -226,7 +226,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
                         DownloadAllowed = true,
                         ParsedAlbumInfo = p,
                         Artist = artist,
-                        Albums = albums.ToList()
+                        Albums = albums.Where(v => v.Title == p.AlbumTitle).ToList()
                     });
 
             Mocker.SetConstant<IEnumerable<IDecisionEngineSpecification>>(new List<IDecisionEngineSpecification>

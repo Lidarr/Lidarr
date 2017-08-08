@@ -81,7 +81,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
                     new Album(), new Album(), new Album(), new Album(), new Album { Id = 2 } });
         }
 
-        // TODO Add Album duraction to Test methods
+        // TODO Add Album duration to Test methods
 
         [TestCase(30, 50, false)]
         [TestCase(30, 250, true)]
@@ -172,17 +172,6 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             parseResultSingle.Artist = artist;
             parseResultSingle.Release.Size = 36857280000;
             qualityType.MaxSize = null;
-
-            Subject.IsSatisfiedBy(parseResultSingle, null).Accepted.Should().BeTrue();
-        }
-
-        [Test]
-        public void should_return_true_if_RAWHD()
-        {
-            parseResultSingle.ParsedAlbumInfo.Quality = new QualityModel(Quality.FLAC);
-            
-            parseResultSingle.Artist = artist;
-            parseResultSingle.Release.Size = 8000.Megabytes();
 
             Subject.IsSatisfiedBy(parseResultSingle, null).Accepted.Should().BeTrue();
         }

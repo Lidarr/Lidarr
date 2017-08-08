@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.Search
         }
 
         [Test]
-        public void should_return_false_if_series_doesnt_match()
+        public void should_return_false_if_artist_doesnt_match()
         {
             _searchCriteria.Artist = _artist2;
 
@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.Search
         }
 
         [Test]
-        public void should_return_true_when_series_ids_match()
+        public void should_return_true_when_artist_ids_match()
         {
             _searchCriteria.Artist = _artist1;
 

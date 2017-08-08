@@ -12,7 +12,6 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Profiles;
 using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Tv.Events;
 using NzbDrone.Core.Music.Events;
 
 namespace NzbDrone.Core.History
@@ -153,8 +152,6 @@ namespace NzbDrone.Core.History
                 history.Data.Add("Size", message.Album.Release.Size.ToString());
                 history.Data.Add("DownloadUrl", message.Album.Release.DownloadUrl);
                 history.Data.Add("Guid", message.Album.Release.Guid);
-                history.Data.Add("TvdbId", message.Album.Release.TvdbId.ToString());
-                history.Data.Add("TvRageId", message.Album.Release.TvRageId.ToString());
                 history.Data.Add("Protocol", ((int)message.Album.Release.DownloadProtocol).ToString());
 
                 if (!message.Album.ParsedAlbumInfo.ReleaseHash.IsNullOrWhiteSpace())

@@ -45,16 +45,6 @@ namespace NzbDrone.Core.Indexers.Newznab
             throw new NewznabException(indexerResponse, errorMessage);
         }
 
-        protected override ReleaseInfo ProcessItem(XElement item, ReleaseInfo releaseInfo)
-        {
-            releaseInfo = base.ProcessItem(item, releaseInfo);
-
-            releaseInfo.TvdbId = GetTvdbId(item);
-            releaseInfo.TvRageId = GetTvRageId(item);
-
-            return releaseInfo;
-        }
-
         protected override ReleaseInfo PostProcess(XElement item, ReleaseInfo releaseInfo)
         {
             var enclosureType = GetEnclosure(item).Attribute("type").Value;
@@ -112,32 +102,6 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
 
             return url;
-        }
-
-        protected virtual int GetTvdbId(XElement item)
-        {
-            var tvdbIdString = TryGetNewznabAttribute(item, "tvdbid");
-            int tvdbId;
-
-            if (!tvdbIdString.IsNullOrWhiteSpace() && int.TryParse(tvdbIdString, out tvdbId))
-            {
-                return tvdbId;
-            }
-
-            return 0;
-        }
-
-        protected virtual int GetTvRageId(XElement item)
-        {
-            var tvRageIdString = TryGetNewznabAttribute(item, "rageid");
-            int tvRageId;
-
-            if (!tvRageIdString.IsNullOrWhiteSpace() && int.TryParse(tvRageIdString, out tvRageId))
-            {
-                return tvRageId;
-            }
-
-            return 0;
         }
 
         protected string TryGetNewznabAttribute(XElement item, string key, string defaultValue = "")

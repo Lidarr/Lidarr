@@ -26,14 +26,12 @@ namespace NzbDrone.Api.Indexers
         public string ReleaseHash { get; set; }
         public string Title { get; set; }
         public Language Language { get; set; }
-        public string AirDate { get; set; }
+        public string ReleaseDate { get; set; }
         public string ArtistName { get; set; }
         public string AlbumTitle { get; set; }
         public bool Approved { get; set; }
         public bool TemporarilyRejected { get; set; }
         public bool Rejected { get; set; }
-        public int TvdbId { get; set; }
-        public int TvRageId { get; set; }
         public IEnumerable<string> Rejections { get; set; }
         public DateTime PublishDate { get; set; }
         public string CommentUrl { get; set; }
@@ -100,14 +98,12 @@ namespace NzbDrone.Api.Indexers
                 ReleaseHash = parsedAlbumInfo.ReleaseHash,
                 Title = releaseInfo.Title,
                 Language = parsedAlbumInfo.Language,
-                //AirDate = parsedAlbumInfo.AirDate,
+                ReleaseDate = parsedAlbumInfo.ReleaseDate,
                 ArtistName = parsedAlbumInfo.ArtistName,
                 AlbumTitle = parsedAlbumInfo.AlbumTitle,
                 Approved = model.Approved,
                 TemporarilyRejected = model.TemporarilyRejected,
                 Rejected = model.Rejected,
-                TvdbId = releaseInfo.TvdbId,
-                TvRageId = releaseInfo.TvRageId,
                 Rejections = model.Rejections.Select(r => r.Reason).ToList(),
                 PublishDate = releaseInfo.PublishDate,
                 CommentUrl = releaseInfo.CommentUrl,
@@ -153,8 +149,6 @@ namespace NzbDrone.Api.Indexers
             model.IndexerId = resource.IndexerId;
             model.Indexer = resource.Indexer;
             model.DownloadProtocol = resource.DownloadProtocol;
-            model.TvdbId = resource.TvdbId;
-            model.TvRageId = resource.TvRageId;
             model.PublishDate = resource.PublishDate;
 
             return model;

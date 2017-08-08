@@ -80,7 +80,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
 
                         if (parsedAlbumInfo != null)
                         {
-                            trackedDownload.RemoteAlbum = _parsingService.Map(parsedAlbumInfo);
+                            trackedDownload.RemoteAlbum = _parsingService.Map(parsedAlbumInfo, firstHistoryItem.ArtistId, historyItems.Where(v => v.EventType == HistoryEventType.Grabbed).Select(h => h.AlbumId).Distinct());
                         }
                     }
                 }

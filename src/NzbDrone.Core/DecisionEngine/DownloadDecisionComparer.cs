@@ -25,6 +25,7 @@ namespace NzbDrone.Core.DecisionEngine
                 CompareQuality,
                 CompareProtocol,
                 ComparePeersIfTorrent,
+                CompareAlbumCount,
                 CompareAgeIfUsenet,
                 CompareSize
             };
@@ -71,7 +72,10 @@ namespace NzbDrone.Core.DecisionEngine
             return result;
         }
 
-        // TODO Add compare track count if we can get the information from parsing release. 
+        private int CompareAlbumCount(DownloadDecision x, DownloadDecision y)
+        {
+            return CompareByReverse(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum => remoteAlbum.Albums.Count);
+        }
 
         private int ComparePeersIfTorrent(DownloadDecision x, DownloadDecision y)
         {

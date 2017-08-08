@@ -60,7 +60,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
 
             Mocker.GetMock<IDiskProvider>()
                 .Setup(c => c.GetFiles(targetDir, SearchOption.AllDirectories))
-                .Returns(new[] { Path.Combine(targetDir, "somefile.mkv") });
+                .Returns(new[] { Path.Combine(targetDir, "somefile.flac") });
 
             Mocker.GetMock<IDiskProvider>()
                 .Setup(c => c.GetFileSize(It.IsAny<string>()))
@@ -116,8 +116,8 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
         [Test]
         public void Download_should_replace_illegal_characters_in_title()
         {
-            var illegalTitle = "Saturday Night Live - S38E08 - Jeremy Renner/Maroon 5 [SDTV]";
-            var expectedFilename = Path.Combine(_blackholeFolder, "Saturday Night Live - S38E08 - Jeremy Renner+Maroon 5 [SDTV]" + Path.GetExtension(_filePath));
+            var illegalTitle = "Radiohead - Scotch Mist [2008/FLAC/Lossless]";
+            var expectedFilename = Path.Combine(_blackholeFolder, "Radiohead - Scotch Mist [2008+FLAC+Lossless]" + Path.GetExtension(_filePath));
 
             var remoteEpisode = CreateRemoteAlbum();
             remoteEpisode.Release.Title = illegalTitle;

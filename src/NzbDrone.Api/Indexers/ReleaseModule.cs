@@ -25,7 +25,6 @@ namespace NzbDrone.Api.Indexers
         private readonly IDownloadService _downloadService;
         private readonly Logger _logger;
 
-        private readonly ICached<RemoteEpisode> _remoteEpisodeCache;
         private readonly ICached<RemoteAlbum> _remoteAlbumCache;
 
         public ReleaseModule(IFetchAndParseRss rssFetcherAndParser,
@@ -49,7 +48,6 @@ namespace NzbDrone.Api.Indexers
             PostValidator.RuleFor(s => s.DownloadAllowed).Equal(true);
             PostValidator.RuleFor(s => s.Guid).NotEmpty();
 
-            _remoteEpisodeCache = cacheManager.GetCache<RemoteEpisode>(GetType(), "remoteEpisodes");
             _remoteAlbumCache = cacheManager.GetCache<RemoteAlbum>(GetType(), "remoteAlbums");
         }
 

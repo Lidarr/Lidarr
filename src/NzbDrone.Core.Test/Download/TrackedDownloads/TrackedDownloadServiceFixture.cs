@@ -8,7 +8,6 @@ using NzbDrone.Core.History;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Indexers;
 using System.Linq;
@@ -25,9 +24,9 @@ namespace NzbDrone.Core.Test.Download.TrackedDownloads
                 .Returns(new List<History.History>(){
                  new History.History(){
                      DownloadId = "35238",
-                     SourceTitle = "TV Series S01",
+                     SourceTitle = "Audio Artist - Audio Album",
                      ArtistId = 5,
-                     AlbumId = 4
+                     AlbumId = 4,
                  }
                 });
         }
