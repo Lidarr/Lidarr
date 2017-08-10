@@ -20,6 +20,12 @@ namespace NzbDrone.Core.Datastore.Migration
                   .AddColumn("ArtistId").AsInt32().WithDefaultValue(0)
                   .AddColumn("ParsedAlbumInfo").AsString().WithDefaultValue("");
 
+            Alter.Table("Tracks")
+                  .AddColumn("Duration").AsInt32().WithDefaultValue(0);
+
+            Alter.Table("Albums")
+                  .AddColumn("Duration").AsInt32().WithDefaultValue(0);
+
             Delete.Column("SeriesId").FromTable("History");
             Delete.Column("EpisodeId").FromTable("History");
             Delete.Column("SeriesId").FromTable("PendingReleases");
