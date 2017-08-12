@@ -38,18 +38,19 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             }
 
             var qualityDefinition = _qualityDefinitionService.Get(quality);
+            var albumsDuration = subject.Albums.Sum(album => album.Duration) / 60000;
+
             if (qualityDefinition.MinSize.HasValue)
             {
                 var minSize = qualityDefinition.MinSize.Value.Megabytes();
 
-                //TODO: implement if we can get album duractions from metadata
-                //Multiply maxSize by Series.Runtime
-                //minSize = minSize * subject.Series.Runtime * subject.Episodes.Count;
+                //Multiply minSize by Album.Duration
+                minSize = minSize * albumsDuration;
 
                 //If the parsed size is smaller than minSize we don't want it
                 if (subject.Release.Size < minSize)
                 {
-                    //var runtimeMessage = subject.Albums.Count == 1 ? $"{subject.Series.Runtime}min" : $"{subject.Episodes.Count}x {subject.Series.Runtime}min";
+                    var runtimeMessage = $"{albumsDuration}min";
 
                     _logger.Debug("Item: {0}, Size: {1} is smaller than minimum allowed size ({2} bytes), rejecting.", subject, subject.Release.Size, minSize);
                     return Decision.Reject("{0} is smaller than minimum allowed {1}", subject.Release.Size.SizeSuffix(), minSize.SizeSuffix());
@@ -63,14 +64,13 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             {
                 var maxSize = qualityDefinition.MaxSize.Value.Megabytes();
 
-                //TODO: implement if we can get album duration from metadata
                 //Multiply maxSize by Series.Runtime
-                //maxSize = maxSize * subject.Series.Runtime * subject.Episodes.Count;
+                maxSize = maxSize * albumsDuration;
 
                 //If the parsed size is greater than maxSize we don't want it
                 if (subject.Release.Size > maxSize)
                 {
-                    //var runtimeMessage = subject.Episodes.Count == 1 ? $"{subject.Series.Runtime}min" : $"{subject.Episodes.Count}x {subject.Series.Runtime}min";
+                    var runtimeMessage = $"{albumsDuration}min";
 
                     _logger.Debug("Item: {0}, Size: {1} is greater than maximum allowed size ({2}), rejecting.", subject, subject.Release.Size, maxSize);
                     return Decision.Reject("{0} is larger than maximum allowed {1}", subject.Release.Size.SizeSuffix(), maxSize.SizeSuffix());
