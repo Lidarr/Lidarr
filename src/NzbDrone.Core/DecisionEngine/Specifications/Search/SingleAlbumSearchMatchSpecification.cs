@@ -24,13 +24,13 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
                 return Decision.Accept();
             }
 
-            var singleEpisodeSpec = searchCriteria as AlbumSearchCriteria;
-            if (singleEpisodeSpec == null)
+            var singleAlbumSpec = searchCriteria as AlbumSearchCriteria;
+            if (singleAlbumSpec == null)
             {
                 return Decision.Accept();
             }
                 
-            if (Parser.Parser.CleanArtistTitle(singleEpisodeSpec.AlbumTitle) != Parser.Parser.CleanArtistTitle(remoteAlbum.ParsedAlbumInfo.AlbumTitle))
+            if (Parser.Parser.CleanArtistTitle(singleAlbumSpec.AlbumTitle) != Parser.Parser.CleanArtistTitle(remoteAlbum.ParsedAlbumInfo.AlbumTitle))
             {
                 _logger.Debug("Album does not match searched album title, skipping.");
                 return Decision.Reject("Wrong album");

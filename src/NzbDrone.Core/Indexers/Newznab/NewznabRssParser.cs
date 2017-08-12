@@ -45,6 +45,16 @@ namespace NzbDrone.Core.Indexers.Newznab
             throw new NewznabException(indexerResponse, errorMessage);
         }
 
+        protected override ReleaseInfo ProcessItem(XElement item, ReleaseInfo releaseInfo)
+        {
+            releaseInfo = base.ProcessItem(item, releaseInfo);
+ 
+            releaseInfo.Artist = GetArtist(item);
+            releaseInfo.Album = GetAlbum(item);
+ 
+            return releaseInfo;
+        }
+
         protected override ReleaseInfo PostProcess(XElement item, ReleaseInfo releaseInfo)
         {
             var enclosureType = GetEnclosure(item).Attribute("type").Value;
@@ -102,6 +112,30 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
 
             return url;
+        }
+
+        protected virtual string GetArtist(XElement item)
+        {
+            var artistString = TryGetNewznabAttribute(item, "artist");
+
+            if (!artistString.IsNullOrWhiteSpace())
+            {
+                return artistString;
+            }
+
+            return "";
+        }
+ 
+        protected virtual string GetAlbum(XElement item)
+        {
+            var albumString = TryGetNewznabAttribute(item, "album");
+
+            if (!albumString.IsNullOrWhiteSpace())
+            {
+                return albumString;
+            }
+
+            return "";
         }
 
         protected string TryGetNewznabAttribute(XElement item, string key, string defaultValue = "")
