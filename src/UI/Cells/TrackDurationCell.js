@@ -6,7 +6,7 @@ module.exports = Backgrid.Cell.extend({
 
     render : function() {
         var duration = this.model.get(this.column.get('name'));
-        this.$el.html(FormatHelpers.timeMinSec(duration));
+        this.$el.html(FormatHelpers.timeMinSec(duration,'ms'));
         this.delegateEvents();
         return this;
     }

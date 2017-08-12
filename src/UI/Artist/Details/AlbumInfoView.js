@@ -10,8 +10,9 @@ module.exports = Marionette.ItemView.extend({
     },
 
     templateHelpers : function() {
+        console.log(this.model);
         return {
-            durationMin : FormatHelpers.timeMin(this.model.get('duration'))
+            durationMin : FormatHelpers.timeMinSec(this.model.get('duration'))
         };
     }
 

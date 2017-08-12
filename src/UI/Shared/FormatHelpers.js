@@ -69,7 +69,7 @@ module.exports = {
         return unit + 's';
     },
 
-    timeMinSec : function (s) {
+    timeMinSec : function (s, format) {
 
         function pad(n, z) {
             z = z || 2;
@@ -80,13 +80,13 @@ module.exports = {
         s = (s - ms) / 1000;
         var secs = s % 60;
         s = (s - secs) / 60;
-        var mins = s % 60;
-        return pad(mins) + ':' + pad(secs) + '.' + pad(ms,3);
-    },
-    
-    timeMin : function (s) {
-        var mins = s % 60;
-        return mins;
+        var mins = s;
+
+        if (format === 'ms') {
+            return pad(mins) + ':' + pad(secs) + '.' + pad(ms,3);
+        } else {
+            return pad(mins)
+        }
     },
 
 
