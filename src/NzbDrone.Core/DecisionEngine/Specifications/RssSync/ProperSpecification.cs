@@ -4,6 +4,7 @@ using NLog;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.MediaFiles;
 
 namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
 {
@@ -11,12 +12,14 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
     {
         private readonly QualityUpgradableSpecification _qualityUpgradableSpecification;
         private readonly IConfigService _configService;
+        private readonly IMediaFileService _mediaFileService;
         private readonly Logger _logger;
 
-        public ProperSpecification(QualityUpgradableSpecification qualityUpgradableSpecification, IConfigService configService, Logger logger)
+        public ProperSpecification(QualityUpgradableSpecification qualityUpgradableSpecification, IConfigService configService, IMediaFileService mediaFileService, Logger logger)
         {
             _qualityUpgradableSpecification = qualityUpgradableSpecification;
             _configService = configService;
+            _mediaFileService = mediaFileService;
             _logger = logger;
         }
 
@@ -24,34 +27,41 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
 
         public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
         {
-            throw new NotImplementedException();
+            if (searchCriteria != null)
+            {
+                return Decision.Accept();
+            }
 
-            // TODO Rework to associate TrackFiles to Album
+            foreach (var album in subject.Albums)
+            {
+                var trackFiles = _mediaFileService.GetFilesByAlbum(album.ArtistId, album.Id);
 
-            //if (searchCriteria != null)
-            //{
-            //    return Decision.Accept();
-            //}
+                if (trackFiles.Any())
+                {
+                    var lowestQuality = trackFiles.Select(c => c.Quality).OrderBy(c => c.Quality.Id).First();
+                    var dateAdded = trackFiles[0].DateAdded;
 
-            //foreach (var file in subject.Episodes.Where(c => c.EpisodeFileId != 0).Select(c => c.EpisodeFile.Value))
-            //{
-            //    if (_qualityUpgradableSpecification.IsRevisionUpgrade(file.Quality, subject.ParsedEpisodeInfo.Quality))
-            //    {
-            //        if (file.DateAdded < DateTime.Today.AddDays(-7))
-            //        {
-            //            _logger.Debug("Proper for old file, rejecting: {0}", subject);
-            //            return Decision.Reject("Proper for old file");
-            //        }
+                    _logger.Debug("Comparing file quality with report. Existing file is {0}", lowestQuality);
 
-            //        if (!_configService.AutoDownloadPropers)
-            //        {
-            //            _logger.Debug("Auto downloading of propers is disabled");
-            //            return Decision.Reject("Proper downloading is disabled");
-            //        }
-            //    }
-            //}
+                    if (_qualityUpgradableSpecification.IsRevisionUpgrade(lowestQuality, subject.ParsedAlbumInfo.Quality))
+                    {
+                        if (dateAdded < DateTime.Today.AddDays(-7))
+                        {
+                            _logger.Debug("Proper for old file, rejecting: {0}", subject);
+                            return Decision.Reject("Proper for old file");
+                        }
 
-            //return Decision.Accept();
+                        if (!_configService.AutoDownloadPropers)
+                        {
+                            _logger.Debug("Auto downloading of propers is disabled");
+                            return Decision.Reject("Proper downloading is disabled");
+                        }
+                    }
+
+                }
+            }
+
+            return Decision.Accept();
         }
     }
 }
