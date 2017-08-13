@@ -37,12 +37,6 @@ namespace NzbDrone.Core.Download.Clients.Pneumatic
             var url = remoteAlbum.Release.DownloadUrl;
             var title = remoteAlbum.Release.Title;
 
-            // TODO Implement discographies
-            //if (remoteAlbum.ParsedAlbumInfo.Discography)
-            //{
-            //    throw new NotSupportedException("Discography releases are not supported with Pneumatic.");
-            //}
-
             title = FileNameBuilder.CleanFileName(title);
 
             //Save to the Pneumatic directory (The user will need to ensure its accessible by XBMC)

@@ -41,13 +41,24 @@ namespace NzbDrone.Core.Parser
 
         private static readonly Regex[] ReportAlbumTitleRegex = new[]
         {
-                //TODO Make more robust
-                // album with artist (artist - album)
-                new Regex(@"(?<artist>[a-zA-Z0-9, ().&_]*)[-| ]{0,1}(?<album>[a-zA-Z0-9, ().&_]+)",
-                          RegexOptions.IgnoreCase | RegexOptions.Compiled),
+                //Artist - Album (Year) Strict
+                new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?:\(|\[).+?(?<airyear>\d{4})",
+                    RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
-                // album without artist (album)
-                new Regex(@"(?<album>[a-zA-Z0-9, ().&_]+)",
+                //Artist - Album (Year)
+                new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?:\(|\[)(?<airyear>\d{4})",
+                    RegexOptions.IgnoreCase | RegexOptions.Compiled),
+
+                //Artist - Album
+                new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?:\(|\[)",
+                    RegexOptions.IgnoreCase | RegexOptions.Compiled),
+
+                //Artist - Album Year
+                new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(\d{4}|\d{3})",
+                    RegexOptions.IgnoreCase | RegexOptions.Compiled),
+
+                //Artist Discography
+                new Regex(@"^(?<artist>.+?)\W*(?<discograghy>Discograghy|Discografia).+(?<startyear>\d{4}).+(?<endyear>\d{4})",
                     RegexOptions.IgnoreCase | RegexOptions.Compiled),
         };
 

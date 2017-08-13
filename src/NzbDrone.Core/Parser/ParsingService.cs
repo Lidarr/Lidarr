@@ -697,8 +697,6 @@ namespace NzbDrone.Core.Parser
 
             foreach (var trackNumber in parsedTrackInfo.TrackNumbers)
             {
-
-
                 Track trackInfo = null;
 
                 //if (searchCriteria != null)
