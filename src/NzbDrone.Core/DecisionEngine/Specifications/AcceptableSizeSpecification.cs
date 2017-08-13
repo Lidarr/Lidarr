@@ -4,8 +4,6 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Music;
 using System.Collections.Generic;
 
 namespace NzbDrone.Core.DecisionEngine.Specifications
@@ -13,13 +11,11 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
     public class AcceptableSizeSpecification : IDecisionEngineSpecification
     {
         private readonly IQualityDefinitionService _qualityDefinitionService;
-        private readonly IEpisodeService _episodeService;
         private readonly Logger _logger;
 
-        public AcceptableSizeSpecification(IQualityDefinitionService qualityDefinitionService, IEpisodeService episodeService, Logger logger)
+        public AcceptableSizeSpecification(IQualityDefinitionService qualityDefinitionService, Logger logger)
         {
             _qualityDefinitionService = qualityDefinitionService;
-            _episodeService = episodeService;
             _logger = logger;
         }
 
@@ -64,7 +60,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             {
                 var maxSize = qualityDefinition.MaxSize.Value.Megabytes();
 
-                //Multiply maxSize by Series.Runtime
+                //Multiply maxSize by Album.Duration
                 maxSize = maxSize * albumsDuration;
 
                 //If the parsed size is greater than maxSize we don't want it
