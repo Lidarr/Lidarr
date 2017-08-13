@@ -5,6 +5,7 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Profiles.Delay;
 using NzbDrone.Core.Qualities;
+using NzbDrone.Core.MediaFiles;
 
 namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
 {
@@ -13,16 +14,19 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
         private readonly IPendingReleaseService _pendingReleaseService;
         private readonly IQualityUpgradableSpecification _qualityUpgradableSpecification;
         private readonly IDelayProfileService _delayProfileService;
+        private readonly IMediaFileService _mediaFileService;
         private readonly Logger _logger;
 
         public DelaySpecification(IPendingReleaseService pendingReleaseService,
                                   IQualityUpgradableSpecification qualityUpgradableSpecification,
                                   IDelayProfileService delayProfileService,
+                                  IMediaFileService mediaFileService,
                                   Logger logger)
         {
             _pendingReleaseService = pendingReleaseService;
             _qualityUpgradableSpecification = qualityUpgradableSpecification;
             _delayProfileService = delayProfileService;
+            _mediaFileService = mediaFileService;
             _logger = logger;
         }
 
@@ -49,25 +53,30 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
 
             var comparer = new QualityModelComparer(profile);
 
-            //TODO Rework for Albums
-            //if (isPreferredProtocol)
-            //{
-            //    foreach (var file in subject.Episodes.Where(c => c.EpisodeFileId != 0).Select(c => c.EpisodeFile.Value))
-            //    {
-            //        var upgradable = _qualityUpgradableSpecification.IsUpgradable(profile, file.Quality, subject.ParsedEpisodeInfo.Quality);
-            //
-            //        if (upgradable)
-            //        {
-            //            var revisionUpgrade = _qualityUpgradableSpecification.IsRevisionUpgrade(file.Quality, subject.ParsedEpisodeInfo.Quality);
-            //
-            //            if (revisionUpgrade)
-            //            {
-            //                _logger.Debug("New quality is a better revision for existing quality, skipping delay");
-            //                return Decision.Accept();
-            //            }
-            //        }
-            //    }
-            //}
+            if (isPreferredProtocol)
+            {
+                foreach (var album in subject.Albums)
+                {
+                    var trackFiles = _mediaFileService.GetFilesByAlbum(album.ArtistId, album.Id);
+
+                    if (trackFiles.Any())
+                    {
+                        var lowestQuality = trackFiles.Select(c => c.Quality).OrderBy(c => c.Quality.Id).First();
+                        var upgradable = _qualityUpgradableSpecification.IsUpgradable(profile, lowestQuality, subject.ParsedAlbumInfo.Quality);
+
+                        if (upgradable)
+                        {
+                            var revisionUpgrade = _qualityUpgradableSpecification.IsRevisionUpgrade(lowestQuality, subject.ParsedAlbumInfo.Quality);
+
+                            if (revisionUpgrade)
+                            {
+                                _logger.Debug("New quality is a better revision for existing quality, skipping delay");
+                                return Decision.Accept();
+                            }
+                        }
+                    }
+                }
+            }
 
             // If quality meets or exceeds the best allowed quality in the profile accept it immediately
             var bestQualityInProfile = new QualityModel(profile.LastAllowedQuality());

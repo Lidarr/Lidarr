@@ -59,8 +59,9 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
 
             _remoteAlbum.Albums = Builder<Album>.CreateListOfSize(1).Build().ToList();
 
-            // TODO Rework album for track files
-            //_remoteAlbum.Albums.First().EpisodeFileId = 0;
+            Mocker.GetMock<IMediaFileService>()
+                .Setup(s => s.GetFilesByAlbum(It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(new List<TrackFile> {});
 
             Mocker.GetMock<IDelayProfileService>()
                   .Setup(s => s.BestForTags(It.IsAny<HashSet<int>>()))
@@ -73,12 +74,9 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
 
         private void GivenExistingFile(QualityModel quality)
         {
-            //_remoteAlbum.Albums.First().EpisodeFileId = 1;
-
-            //_remoteAlbum.Albums.First().EpisodeFile = new LazyLoaded<EpisodeFile>(new EpisodeFile
-            //                                                                     {
-            //                                                                         Quality = quality
-            //                                                                     });
+            Mocker.GetMock<IMediaFileService>()
+                .Setup(s => s.GetFilesByAlbum(It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(new List<TrackFile> { new TrackFile { Quality = quality } });
         }
 
         private void GivenUpgradeForExistingFile()
