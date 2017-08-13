@@ -85,7 +85,7 @@ module.exports = {
         if (format === 'ms') {
             return pad(mins) + ':' + pad(secs) + '.' + pad(ms,3);
         } else {
-            return pad(mins)
+            return pad(mins);
         }
     },
 
