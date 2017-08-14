@@ -80,7 +80,10 @@ namespace NzbDrone.Core.Indexers.Waffles
                 url.AppendFormat(query);
             }
 
-            yield return new IndexerRequest(url.ToString(), HttpAccept.Rss);
+            for (var page = 0; page < 5; page++)
+            {
+                yield return new IndexerRequest(string.Format("{0}&p={1}", url, page), HttpAccept.Rss);
+            }
         }
     }
 }
