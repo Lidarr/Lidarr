@@ -1,5 +1,5 @@
 var NzbDroneCell = require('../../Cells/NzbDroneCell');
-var BulkImportCollection = require("./BulkImportCollection");
+var BulkImportCollection = require('./BulkImportCollection');
 
 module.exports = NzbDroneCell.extend({
 		className : 'artist-title-cell',

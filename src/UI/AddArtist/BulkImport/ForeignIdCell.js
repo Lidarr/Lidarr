@@ -45,7 +45,6 @@ module.exports = NzbDroneCell.extend({
             var cacheRoot = this.model.get('rootFolderPath');
 
             promise.success(function(response) {
-                console.log(_self.model);
                 _self.model.set(response[0]);
                 _self.model.set('monitored', cacheMonitored);
                 _self.model.set('profileId', cacheProfile);

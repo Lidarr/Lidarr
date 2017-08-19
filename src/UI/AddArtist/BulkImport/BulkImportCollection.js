@@ -22,13 +22,12 @@ var BulkImportCollection = PageableCollection.extend({
 
 			var data = options.data || {};
 
-			if (data.id === undefined || data.folder === undefined) {
+			if (!data.id || !data.folder) {
 				data.id = this.folderId;
 				data.folder = this.folder;
 			}
 
 			options.data = data;
-			console.log(this);
 			return PageableCollection.prototype.fetch.call(this, options);
 		},
 

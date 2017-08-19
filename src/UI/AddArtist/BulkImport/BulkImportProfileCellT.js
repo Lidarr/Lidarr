@@ -2,9 +2,9 @@ var Backgrid = require('backgrid');
 var ProfileCollection = require('../../Profile/ProfileCollection');
 var Config = require('../../Config');
 var _ = require('underscore');
-var vent = require("vent");
+var vent = require('vent');
 var TemplatedCell = require('../../Cells/TemplatedCell');
-var NzbDroneCell = require("../../Cells/NzbDroneCell");
+var NzbDroneCell = require('../../Cells/NzbDroneCell');
 var Marionette = require('marionette');
 
 module.exports = TemplatedCell.extend({

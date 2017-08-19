@@ -6,7 +6,7 @@ var ExistingArtistCollectionView = require('./Existing/AddExistingArtistCollecti
 var AddArtistView = require('./AddArtistView');
 var ProfileCollection = require('../Profile/ProfileCollection');
 var RootFolderCollection = require('./RootFolders/RootFolderCollection');
-var BulkImportView = require("./BulkImport/BulkImportView");
+var BulkImportView = require('./BulkImport/BulkImportView');
 require('../Artist/ArtistCollection');
 
 module.exports = Marionette.Layout.extend({

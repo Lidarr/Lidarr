@@ -84,7 +84,7 @@ module.exports = Marionette.Layout.extend({
 					name : 'profileId',
 					label : 'Profile',
 					cell  : ProfileCell,
-					cellValue : "this",
+					cellValue : 'this',
 				}
 		],
 
@@ -123,7 +123,6 @@ module.exports = Marionette.Layout.extend({
 		},
 
 		_addSelected : function() {
-			console.log(this.bulkImportCollection);
 			var selected = _.filter(this.bulkImportCollection.models, function(elem){
 				return elem.selected;
 			});
@@ -144,7 +143,7 @@ module.exports = Marionette.Layout.extend({
 				message : 'Importing {0} artists. This can take multiple minutes depending on how many artists should be imported. Don\'t close this browser window until it is finished!'.format(selected.length),
 				hideOnNavigate : false,
 				hideAfter : 30,
-				type : "error"
+				type : 'error'
 			});
 
 			var _this = this;
@@ -163,8 +162,8 @@ module.exports = Marionette.Layout.extend({
 			});
 		},
 
-		_handleEvent : function(event_name, data) {
-			if (event_name === 'sync' || event_name === 'content') {
+		_handleEvent : function(eventName, data) {
+			if (eventName === 'sync' || eventName === 'content') {
 				this._showContent();
 			}
 		},
