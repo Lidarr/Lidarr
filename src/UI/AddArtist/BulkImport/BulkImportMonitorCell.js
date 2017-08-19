@@ -1,9 +1,9 @@
 var Backgrid = require('backgrid');
 var Config = require('../../Config');
 var _ = require('underscore');
-var vent = require("vent");
+var vent = require('vent');
 var TemplatedCell = require('../../Cells/TemplatedCell');
-var NzbDroneCell = require("../../Cells/NzbDroneCell");
+var NzbDroneCell = require('../../Cells/NzbDroneCell');
 var Marionette = require('marionette');
 
 module.exports = TemplatedCell.extend({
@@ -14,10 +14,10 @@ module.exports = TemplatedCell.extend({
     _origRender : TemplatedCell.prototype.initialize,
 
     ui : {
-      monitor : ".x-monitor",
+      monitor : '.x-monitor',
     },
 
-    events: { "change .x-monitor" : "_monitorChanged" },
+    events: { 'change .x-monitor' : '_monitorChanged' },
 
     initialize : function () {
         this._orig.apply(this, arguments);
@@ -39,7 +39,7 @@ module.exports = TemplatedCell.extend({
     _monitorChanged : function() {
       Config.setValue(Config.Keys.MonitorEpisodes, this.$el.find('.x-monitor').val());
       this.defaultMonitor = this.$el.find('.x-monitor').val();
-      this.model.set("monitored", this._convertMonitorToBool(this.$el.find('.x-monitor').val()));
+      this.model.set('monitored', this._convertMonitorToBool(this.$el.find('.x-monitor').val()));
     },
 
     _onConfigUpdated : function(options) {

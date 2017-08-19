@@ -15,10 +15,10 @@ module.exports = TemplatedCell.extend({
     _origRender : TemplatedCell.prototype.initialize,
 
     ui : {
-      profile : ".x-profile",
+      profile : '.x-profile',
     },
 
-    events: { "change .x-profile" : "_profileChanged" },
+    events: { 'change .x-profile' : '_profileChanged' },
 
     initialize : function () {
         this._orig.apply(this, arguments);
@@ -29,12 +29,12 @@ module.exports = TemplatedCell.extend({
         if(ProfileCollection.get(this.defaultProfile))
         {
             this.profile = this.defaultProfile;
-            this.$(".x-profile").val(this.defaultProfile);
-            this.model.set("profileId", this.defaultProfile);
+            this.$('.x-profile').val(this.defaultProfile);
+            this.model.set('profileId', this.defaultProfile);
         } else {
             this.profile = 1;
-            this.$(".x-profile").val(1);
-            this.model.set("profileId", 1);
+            this.$('.x-profile').val(1);
+            this.model.set('profileId', 1);
         }
 
         this.cellValue = ProfileCollection;
@@ -42,14 +42,14 @@ module.exports = TemplatedCell.extend({
     },
 
     _profileChanged : function() {
-      Config.setValue(Config.Keys.DefaultProfileId, this.$(".x-profile").val());
-      this.model.set("profileId", this.$(".x-profile").val());
+      Config.setValue(Config.Keys.DefaultProfileId, this.$('.x-profile').val());
+      this.model.set('profileId', this.$('.x-profile').val());
     },
 
     _onConfigUpdated : function(options) {
       if (options.key === Config.Keys.DefaultProfileId) {
         this.defaultProfile = options.value;
-        this.$(".x-profile").val(this.defaultProfile);
+        this.$('.x-profile').val(this.defaultProfile);
       }
     },
 
@@ -68,7 +68,7 @@ module.exports = TemplatedCell.extend({
       }
 
       this.delegateEvents();
-      this.$(".x-profile").val(this.defaultProfile);
+      this.$('.x-profile').val(this.defaultProfile);
       return this;
     }
 

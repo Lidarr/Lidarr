@@ -31,18 +31,18 @@ module.exports = NzbDroneCell.extend({
 
 						//field.spinForPromise(promise);
 
-            field.prop("disabled", true);
+            field.prop('disabled', true);
 
-            var icon = this.$(".icon-lidarr-info");
+            var icon = this.$('.icon-lidarr-info');
 
-            icon.removeClass("hidden");
+            icon.removeClass('hidden');
 
             icon.spinForPromise(promise);
             var _self = this;
             var cacheMonitored = this.model.get('monitored');
-            var cacheProfile = this.model.get("profileId");
-            var cachePath = this.model.get("path");
-            var cacheRoot = this.model.get("rootFolderPath");
+            var cacheProfile = this.model.get('profileId');
+            var cachePath = this.model.get('path');
+            var cacheRoot = this.model.get('rootFolderPath');
 
             promise.success(function(response) {
                 console.log(_self.model);
@@ -50,12 +50,12 @@ module.exports = NzbDroneCell.extend({
                 _self.model.set('monitored', cacheMonitored);
                 _self.model.set('profileId', cacheProfile);
                 _self.model.set('path', cachePath);
-                field.prop("disabled", false);
+                field.prop('disabled', false);
             });
 
             promise.error(function(request, status, error) {
-                console.error("Status: " + status, "Error: " + error);
-                field.prop("disabled", false);
+                console.error('Status: ' + status, 'Error: ' + error);
+                field.prop('disabled', false);
             });
         }
 });

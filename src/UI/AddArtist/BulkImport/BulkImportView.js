@@ -3,15 +3,15 @@ var _ = require('underscore');
 var Marionette = require('marionette');
 var Backgrid = require('backgrid');
 var ArtistNameCell = require('./BulkImportArtistNameCell');
-var BulkImportCollection = require("./BulkImportCollection");
+var BulkImportCollection = require('./BulkImportCollection');
 var ForeignIdCell = require('./ForeignIdCell');
 var GridPager = require('../../Shared/Grid/Pager');
 var SelectAllCell = require('./BulkImportSelectAllCell');
 var ProfileCell = require('./BulkImportProfileCellT');
 var MonitorCell = require('./BulkImportMonitorCell');
-var ArtistPathCell = require("./ArtistPathCell");
+var ArtistPathCell = require('./ArtistPathCell');
 var LoadingView = require('../../Shared/LoadingView');
-var EmptyView = require("./EmptyView");
+var EmptyView = require('./EmptyView');
 var ToolbarLayout = require('../../Shared/Toolbar/ToolbarLayout');
 var CommandController = require('../../Commands/CommandController');
 var Messenger = require('../../Shared/Messenger');
@@ -37,12 +37,12 @@ module.exports = Marionette.Layout.extend({
 				ProfileCollection.fetch();
 				this.bulkImportCollection = new BulkImportCollection().bindSignalR({ updateOnly : true });
 				this.model = options.model;
-				this.folder = this.model.get("path");
-				this.folderId = this.model.get("id");
+				this.folder = this.model.get('path');
+				this.folderId = this.model.get('id');
 				this.bulkImportCollection.folderId = this.folderId;
 				this.bulkImportCollection.folder = this.folder;
 				this.bulkImportCollection.fetch();
-				this.listenTo(this.bulkImportCollection, {"sync" : this._showContent, "error" : this._showContent, "backgrid:selected" : this._select});
+				this.listenTo(this.bulkImportCollection, {'sync' : this._showContent, 'error' : this._showContent, 'backgrid:selected' : this._select});
 		},
 
 		columns : [
@@ -61,8 +61,8 @@ module.exports = Marionette.Layout.extend({
 					sortable : false,
 				},
 				{
-					name : "path",
-					label : "Path",
+					name : 'path',
+					label : 'Path',
 					cell : ArtistPathCell,
 					cellValue : 'this',
 					sortable : false,
@@ -141,7 +141,7 @@ module.exports = Marionette.Layout.extend({
 			}
 
 			Messenger.show({
-				message : "Importing {0} artists. This can take multiple minutes depending on how many artists should be imported. Don't close this browser window until it is finished!".format(selected.length),
+				message : 'Importing {0} artists. This can take multiple minutes depending on how many artists should be imported. Don\'t close this browser window until it is finished!'.format(selected.length),
 				hideOnNavigate : false,
 				hideAfter : 30,
 				type : "error"
@@ -151,7 +151,7 @@ module.exports = Marionette.Layout.extend({
 
 			promise.done(function() {
 				Messenger.show({
-					message        : "Imported artists from folder.",
+					message        : 'Imported artists from folder.',
 					hideAfter      : 8,
 					hideOnNavigate : true
 				});
@@ -164,7 +164,7 @@ module.exports = Marionette.Layout.extend({
 		},
 
 		_handleEvent : function(event_name, data) {
-			if (event_name === "sync" || event_name === "content") {
+			if (event_name === 'sync' || event_name === 'content') {
 				this._showContent();
 			}
 		},
