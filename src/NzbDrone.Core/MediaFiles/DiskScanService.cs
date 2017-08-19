@@ -26,6 +26,7 @@ namespace NzbDrone.Core.MediaFiles
     {
         void Scan(Artist artist);
         string[] GetVideoFiles(string path, bool allDirectories = true);
+        string[] GetMusicFiles(string path, bool allDirectories = true);
         string[] GetNonVideoFiles(string path, bool allDirectories = true);
         List<string> FilterFiles(Series series, IEnumerable<string> files);
     }
