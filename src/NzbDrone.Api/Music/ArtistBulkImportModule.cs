@@ -108,7 +108,7 @@ namespace NzbDrone.Api.Music
                     return null;
                 };
 
-                mappedArtist = _searchProxy.SearchForNewArtist(m.Name)[0];
+                mappedArtist = searchResults.First();
 
 				if (mappedArtist != null)
 				{
