@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Nancy;
+using NzbDrone.Api.REST;
 using NzbDrone.Api.Extensions;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.MetadataSource;
@@ -54,7 +55,7 @@ namespace NzbDrone.Api.Music
         {
             if (Request.Query.Id == 0)
             {
-                //Todo error handling
+                throw new BadRequestException("Invalid Query");
             }
 
             RootFolder rootFolder = _rootFolderService.Get(Request.Query.Id);
@@ -63,10 +64,7 @@ namespace NzbDrone.Api.Music
 
             var paged = unmapped;
 
-            List<Artist> mapped = new List<Artist> { };
-
-            //var mapped = paged.Select(f =>
-			foreach (var page in paged)
+            var mapped = paged.Select(page =>
             {
 				Artist m = null;
 
@@ -74,7 +72,7 @@ namespace NzbDrone.Api.Music
 
 				if (mappedArtist != null)
 				{
-                    mapped.Add(mappedArtist);
+                    return mappedArtist;
 				}
 
                 var files = _diskScanService.GetMusicFiles(page.Path);
@@ -82,7 +80,7 @@ namespace NzbDrone.Api.Music
                 // Check for music files in directory
                 if (files.Count() == 0)
                 {
-                    continue;
+                    return null;
                 }
 
                 var parsedTitle = Parser.ParseMusicPath(files.FirstOrDefault());
@@ -112,11 +110,11 @@ namespace NzbDrone.Api.Music
 
                     _mappedArtists.Set(page.Name, mappedArtist, TimeSpan.FromDays(2));
 
-                    mapped.Add(mappedArtist);
-				}
+                    return mappedArtist;
+                }
 
-                continue;
-            };
+                return null;
+            });
             
             var mapping = MapToResource(mapped.Where(m => m != null)).ToList().AsResponse();
 
