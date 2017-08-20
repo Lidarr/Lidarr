@@ -16,6 +16,6 @@ module.exports = NzbDroneCell.extend({
         _renderCell : function() {
             this.$el.empty();
 
-            this.$el.html('<a href="https://www.musicbrainz.org/artist/' + this.cellValue.get('foreignArtistId') +'">' + this.cellValue.get('name') +'</a>');
+            this.$el.html('<a href="https://www.musicbrainz.org/artist/' + this.cellValue.get('foreignArtistId') +'">' + this.cellValue.get('name') +'</a><br><span class="hint">' + this.cellValue.get('overview') + '</span>');
         }
 });
