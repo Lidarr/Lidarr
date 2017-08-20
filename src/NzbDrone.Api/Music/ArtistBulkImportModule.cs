@@ -27,7 +27,7 @@ namespace NzbDrone.Api.Music
         }
     }
 
-    public class MovieBulkImportModule : NzbDroneRestModule<ArtistResource>
+    public class MusicBulkImportModule : NzbDroneRestModule<ArtistResource>
     {
         private readonly ISearchForNewSeries _searchProxy;
         private readonly IRootFolderService _rootFolderService;
@@ -36,7 +36,7 @@ namespace NzbDrone.Api.Music
 		private readonly ICached<Core.Music.Artist> _mappedArtists;
         private readonly IArtistService _artistService;
 
-        public MovieBulkImportModule(ISearchForNewSeries searchProxy, IRootFolderService rootFolderService, IMakeImportDecision importDecisionMaker,
+        public MusicBulkImportModule(ISearchForNewSeries searchProxy, IRootFolderService rootFolderService, IMakeImportDecision importDecisionMaker,
 		                             IDiskScanService diskScanService, ICacheManager cacheManager, IArtistService artistService)
             : base("/artist/bulkimport")
         {
