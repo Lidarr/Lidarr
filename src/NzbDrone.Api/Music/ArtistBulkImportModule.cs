@@ -63,23 +63,26 @@ namespace NzbDrone.Api.Music
 
             var paged = unmapped;
 
-            var mapped = paged.Select(f =>
-			{
+            List<Artist> mapped = new List<Artist> { };
+
+            //var mapped = paged.Select(f =>
+			foreach (var page in paged)
+            {
 				Artist m = null;
 
-				var mappedArtist = _mappedArtists.Find(f.Name);
+				var mappedArtist = _mappedArtists.Find(page.Name);
 
 				if (mappedArtist != null)
 				{
-					return mappedArtist;
+                    mapped.Add(mappedArtist);
 				}
 
-                var files = _diskScanService.GetMusicFiles(f.Path);
+                var files = _diskScanService.GetMusicFiles(page.Path);
 
                 // Check for music files in directory
                 if (files.Count() == 0)
                 {
-                    return null;
+                    continue;
                 }
 
                 var parsedTitle = Parser.ParseMusicPath(files.FirstOrDefault());
@@ -87,8 +90,8 @@ namespace NzbDrone.Api.Music
 				{
 					m = new Artist
 					{
-						Name = f.Name.Replace(".", " ").Replace("-", " "),
-						Path = f.Path,
+						Name = page.Name.Replace(".", " ").Replace("-", " "),
+						Path = page.Path,
 					};
 				}
 				else
@@ -96,24 +99,24 @@ namespace NzbDrone.Api.Music
 					m = new Artist
                     {
 						Name = parsedTitle.ArtistTitle,
-						Path = f.Path
+						Path = page.Path
 					};
 				}
 
-				mappedArtist = _searchProxy.SearchForNewArtist(parsedTitle.ArtistTitle.ToString())[0];
+				mappedArtist = _searchProxy.SearchForNewArtist(m.Name)[0];
 
 				if (mappedArtist != null)
 				{
 					mappedArtist.Monitored = true;
-                    mappedArtist.Path = f.Path;
+                    mappedArtist.Path = page.Path;
 
-                    _mappedArtists.Set(f.Name, mappedArtist, TimeSpan.FromDays(2));
+                    _mappedArtists.Set(page.Name, mappedArtist, TimeSpan.FromDays(2));
 
-					return mappedArtist;
+                    mapped.Add(mappedArtist);
 				}
 
-				return null;
-            });
+                continue;
+            };
             
             var mapping = MapToResource(mapped.Where(m => m != null)).ToList().AsResponse();
 
