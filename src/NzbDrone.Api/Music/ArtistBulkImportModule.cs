@@ -101,7 +101,14 @@ namespace NzbDrone.Api.Music
 					};
 				}
 
-				mappedArtist = _searchProxy.SearchForNewArtist(m.Name)[0];
+                var searchResults = _searchProxy.SearchForNewArtist(m.Name);
+                
+                if (searchResults == null || searchResults.Count == 0)
+                {
+                    return null;
+                };
+
+                mappedArtist = _searchProxy.SearchForNewArtist(m.Name)[0];
 
 				if (mappedArtist != null)
 				{
