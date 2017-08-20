@@ -100,12 +100,6 @@ namespace NzbDrone.Api.Music
 					};
 				}
 
-				var files1 = _diskScanService.GetMusicFiles(f.Path);
-
-				var decisions = _importDecisionMaker.GetImportDecisions(files1.ToList(), m);
-
-				var decision = decisions.Where(d => d.Approved && !d.Rejections.Any()).FirstOrDefault();
-
 				mappedArtist = _searchProxy.SearchForNewArtist(parsedTitle.ArtistTitle.ToString())[0];
 
 				if (mappedArtist != null)
