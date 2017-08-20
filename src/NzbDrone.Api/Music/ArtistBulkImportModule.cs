@@ -86,7 +86,7 @@ namespace NzbDrone.Api.Music
                 }
 
                 var parsedTitle = Parser.ParseMusicPath(files.FirstOrDefault());
-				if (parsedTitle == null)
+				if (parsedTitle == null || parsedTitle.ArtistTitle == null)
 				{
 					m = new Artist
 					{
