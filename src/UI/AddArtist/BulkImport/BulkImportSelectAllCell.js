@@ -33,17 +33,22 @@ module.exports = SelectAllCell.extend({
 
         this.$el.children(':first').prop('disabled', this.isDuplicate);
 
+        if (!this.isDuplicate) {
+            this.$el.children(':first').prop('checked', this.isChecked);
+        }
+
         return this;
     },
 
     _refresh: function() {
+        this.isChecked = this.$el.children(':first').prop('checked');
         this._refreshIsDuplicate();
         this.render();
     },
 
     _refreshIsDuplicate: function() {
         var foreignArtistId = this.model.get('foreignArtistId');
-        var existingMovie = FullArtistCollection.where({ foreignArtistId: foreignArtistId });
-        this.isDuplicate = existingMovie.length > 0 ? true : false;
+        var existingArtist = FullArtistCollection.where({ foreignArtistId: foreignArtistId });
+        this.isDuplicate = existingArtist.length > 0 ? true : false;
     }
 });
