@@ -2,7 +2,7 @@ var $ = require('jquery');
 var _ = require('underscore');
 var SelectAllCell = require('../../Cells/SelectAllCell');
 var Backgrid = require('backgrid');
-var FullMovieCollection = require('../../Artist/ArtistCollection');
+var FullArtistCollection = require('../../Artist/ArtistCollection');
 
 
 module.exports = SelectAllCell.extend({
@@ -43,7 +43,7 @@ module.exports = SelectAllCell.extend({
 
     _refreshIsDuplicate: function() {
         var foreignArtistId = this.model.get('foreignArtistId');
-        var existingMovie = FullMovieCollection.where({ foreignArtistId: foreignArtistId });
+        var existingMovie = FullArtistCollection.where({ foreignArtistId: foreignArtistId });
         this.isDuplicate = existingMovie.length > 0 ? true : false;
     }
 });

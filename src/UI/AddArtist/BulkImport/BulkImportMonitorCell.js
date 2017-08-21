@@ -28,12 +28,15 @@ module.exports = TemplatedCell.extend({
 
         this.model.set('monitored', this._convertMonitorToBool(this.defaultMonitor));
 
-        this.$el.find('.x-monitor').val(this.defaultMonitor);
-
+        this.$el.find('.x-monitor').val(this._convertBooltoMonitor(this.model.get('monitored')));
     },
 
     _convertMonitorToBool : function(monitorString) {
         return monitorString === 'all' ? true : false;
+    },
+
+    _convertBooltoMonitor : function(monitorBool) {
+        return monitorBool === true ? 'all' : 'none';
     },
 
     _monitorChanged : function() {
@@ -44,7 +47,7 @@ module.exports = TemplatedCell.extend({
 
     _onConfigUpdated : function(options) {
       if (options.key === Config.Keys.MonitorEpisodes) {
-        this.$el.find('.x-monitor').val(options.value);
+        //this.$el.find('.x-monitor').val(options.value);
       }
     },
 
@@ -62,7 +65,7 @@ module.exports = TemplatedCell.extend({
 
       this.delegateEvents();
 
-      this.$el.find('.x-monitor').val(this.defaultMonitor);
+      this.$el.find('.x-monitor').val(this._convertBooltoMonitor(this.model.get('monitored')));
 
       return this;
     }

@@ -26,16 +26,19 @@ module.exports = TemplatedCell.extend({
         this.listenTo(vent, Config.Events.ConfigUpdatedEvent, this._onConfigUpdated);
 
         this.defaultProfile = Config.getValue(Config.Keys.DefaultProfileId);
+
+        this.profile = this.defaultProfile;
+
         if(ProfileCollection.get(this.defaultProfile))
         {
             this.profile = this.defaultProfile;
-            this.$('.x-profile').val(this.defaultProfile);
             this.model.set('profileId', this.defaultProfile);
         } else {
             this.profile = 1;
-            this.$('.x-profile').val(1);
             this.model.set('profileId', 1);
         }
+
+        this.$('.x-profile').val(this.model.get('profileId'));
 
         this.cellValue = ProfileCollection;
 
@@ -49,7 +52,7 @@ module.exports = TemplatedCell.extend({
     _onConfigUpdated : function(options) {
       if (options.key === Config.Keys.DefaultProfileId) {
         this.defaultProfile = options.value;
-        this.$('.x-profile').val(this.defaultProfile);
+        //this.$('.x-profile').val(this.defaultProfile);
       }
     },
 
@@ -59,7 +62,7 @@ module.exports = TemplatedCell.extend({
       this.cellValue = ProfileCollection;
 
       this.templateFunction = Marionette.TemplateCache.get(templateName);
-      this.$el.empty();
+      //this.$el.empty();
 
       if (this.cellValue) {
           var data = this.cellValue.toJSON();
@@ -68,7 +71,7 @@ module.exports = TemplatedCell.extend({
       }
 
       this.delegateEvents();
-      this.$('.x-profile').val(this.defaultProfile);
+      this.$('.x-profile').val(this.model.get('profileId'));
       return this;
     }
 
