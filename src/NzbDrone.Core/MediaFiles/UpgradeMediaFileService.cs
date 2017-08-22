@@ -9,7 +9,6 @@ namespace NzbDrone.Core.MediaFiles
 {
     public interface IUpgradeMediaFiles
     {
-        //EpisodeFileMoveResult UpgradeEpisodeFile(EpisodeFile episodeFile, LocalEpisode localEpisode, bool copyOnly = false);
         TrackFileMoveResult UpgradeTrackFile(TrackFile trackFile, LocalTrack localTrack, bool copyOnly = false);
     }
 
@@ -17,7 +16,6 @@ namespace NzbDrone.Core.MediaFiles
     {
         private readonly IRecycleBinProvider _recycleBinProvider;
         private readonly IMediaFileService _mediaFileService;
-        private readonly IMoveEpisodeFiles _episodeFileMover;
         private readonly IMoveTrackFiles _trackFileMover;
         private readonly IDiskProvider _diskProvider;
         private readonly Logger _logger;

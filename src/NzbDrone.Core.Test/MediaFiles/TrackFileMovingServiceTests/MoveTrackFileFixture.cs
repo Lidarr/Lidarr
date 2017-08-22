@@ -12,45 +12,45 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Organizer;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using NzbDrone.Core.Music;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Core.Test.MediaFiles.EpisodeFileMovingServiceTests
+namespace NzbDrone.Core.Test.MediaFiles.TrackFileMovingServiceTests
 {
     [TestFixture]
-    public class MoveEpisodeFileFixture : CoreTest<EpisodeFileMovingService>
+    public class MoveTrackFileFixture : CoreTest<TrackFileMovingService>
     {
-        private Series _series;
-        private EpisodeFile _episodeFile;
-        private LocalEpisode _localEpisode;
+        private Artist _artist;
+        private TrackFile _trackFile;
+        private LocalTrack _localtrack;
 
         [SetUp]
         public void Setup()
         {
-            _series = Builder<Series>.CreateNew()
+            _artist = Builder<Artist>.CreateNew()
                                      .With(s => s.Path = @"C:\Test\TV\Series".AsOsAgnostic())
                                      .Build();
 
-            _episodeFile = Builder<EpisodeFile>.CreateNew()
+            _trackFile = Builder<TrackFile>.CreateNew()
                                                .With(f => f.Path = null)
                                                .With(f => f.RelativePath = @"Season 1\File.avi")
                                                .Build();
 
-            _localEpisode = Builder<LocalEpisode>.CreateNew()
-                                                 .With(l => l.Series = _series)
-                                                 .With(l => l.Episodes = Builder<Episode>.CreateListOfSize(1).Build().ToList())
+            _localtrack = Builder<LocalTrack>.CreateNew()
+                                                 .With(l => l.Artist = _artist)
+                                                 .With(l => l.Tracks = Builder<Track>.CreateListOfSize(1).Build().ToList())
                                                  .Build();
 
             Mocker.GetMock<IBuildFileNames>()
-                  .Setup(s => s.BuildFileName(It.IsAny<List<Episode>>(), It.IsAny<Series>(), It.IsAny<EpisodeFile>(), null))
+                  .Setup(s => s.BuildTrackFileName(It.IsAny<List<Track>>(), It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<TrackFile>(), null))
                   .Returns("File Name");
 
             Mocker.GetMock<IBuildFileNames>()
-                  .Setup(s => s.BuildFilePath(It.IsAny<Series>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+                  .Setup(s => s.BuildTrackFilePath(It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<string>(), It.IsAny<string>()))
                   .Returns(@"C:\Test\TV\Series\Season 01\File Name.avi".AsOsAgnostic());
 
             Mocker.GetMock<IBuildFileNames>()
-                  .Setup(s => s.BuildSeasonPath(It.IsAny<Series>(), It.IsAny<int>()))
+                  .Setup(s => s.BuildAlbumPath(It.IsAny<Artist>(), It.IsAny<Album>()))
                   .Returns(@"C:\Test\TV\Series\Season 01".AsOsAgnostic());
 
             var rootFolder = @"C:\Test\TV\".AsOsAgnostic();
@@ -72,7 +72,7 @@ namespace NzbDrone.Core.Test.MediaFiles.EpisodeFileMovingServiceTests
                   .Setup(s => s.InheritFolderPermissions(It.IsAny<string>()))
                   .Throws<UnauthorizedAccessException>();
 
-            Subject.MoveEpisodeFile(_episodeFile, _localEpisode);
+            Subject.MoveTrackFile(_trackFile, _localtrack);
         }
 
         [Test]
@@ -84,41 +84,41 @@ namespace NzbDrone.Core.Test.MediaFiles.EpisodeFileMovingServiceTests
                   .Setup(s => s.InheritFolderPermissions(It.IsAny<string>()))
                   .Throws<InvalidOperationException>();
 
-            Subject.MoveEpisodeFile(_episodeFile, _localEpisode);
+            Subject.MoveTrackFile(_trackFile, _localtrack);
         }
 
         [Test]
-        public void should_notify_on_series_folder_creation()
+        public void should_notify_on_artist_folder_creation()
         {
-            Subject.MoveEpisodeFile(_episodeFile, _localEpisode);
+            Subject.MoveTrackFile(_trackFile, _localtrack);
 
             Mocker.GetMock<IEventAggregator>()
-                  .Verify(s => s.PublishEvent<EpisodeFolderCreatedEvent>(It.Is<EpisodeFolderCreatedEvent>(p =>
-                      p.SeriesFolder.IsNotNullOrWhiteSpace())), Times.Once());
+                  .Verify(s => s.PublishEvent<TrackFolderCreatedEvent>(It.Is<TrackFolderCreatedEvent>(p =>
+                      p.ArtistFolder.IsNotNullOrWhiteSpace())), Times.Once());
         }
 
         [Test]
-        public void should_notify_on_season_folder_creation()
+        public void should_notify_on_album_folder_creation()
         {
-            Subject.MoveEpisodeFile(_episodeFile, _localEpisode);
+            Subject.MoveTrackFile(_trackFile, _localtrack);
 
             Mocker.GetMock<IEventAggregator>()
-                  .Verify(s => s.PublishEvent<EpisodeFolderCreatedEvent>(It.Is<EpisodeFolderCreatedEvent>(p =>
-                      p.SeasonFolder.IsNotNullOrWhiteSpace())), Times.Once());
+                  .Verify(s => s.PublishEvent<TrackFolderCreatedEvent>(It.Is<TrackFolderCreatedEvent>(p =>
+                      p.AlbumFolder.IsNotNullOrWhiteSpace())), Times.Once());
         }
 
         [Test]
-        public void should_not_notify_if_series_folder_already_exists()
+        public void should_not_notify_if_artist_folder_already_exists()
         {
             Mocker.GetMock<IDiskProvider>()
-                  .Setup(s => s.FolderExists(_series.Path))
+                  .Setup(s => s.FolderExists(_artist.Path))
                   .Returns(true);
 
-            Subject.MoveEpisodeFile(_episodeFile, _localEpisode);
+            Subject.MoveTrackFile(_trackFile, _localtrack);
 
             Mocker.GetMock<IEventAggregator>()
-                  .Verify(s => s.PublishEvent<EpisodeFolderCreatedEvent>(It.Is<EpisodeFolderCreatedEvent>(p =>
-                      p.SeriesFolder.IsNotNullOrWhiteSpace())), Times.Never());
+                  .Verify(s => s.PublishEvent<TrackFolderCreatedEvent>(It.Is<TrackFolderCreatedEvent>(p =>
+                      p.ArtistFolder.IsNotNullOrWhiteSpace())), Times.Never());
         }
     }
 }

@@ -282,7 +282,7 @@
     <Compile Include="MediaFiles\DiskScanServiceTests\ScanFixture.cs" />
     <Compile Include="MediaFiles\DownloadedEpisodesCommandServiceFixture.cs" />
     <Compile Include="MediaFiles\DownloadedEpisodesImportServiceFixture.cs" />
-    <Compile Include="MediaFiles\EpisodeFileMovingServiceTests\MoveEpisodeFileFixture.cs" />
+    <Compile Include="MediaFiles\TrackFileMovingServiceTests\MoveTrackFileFixture.cs" />
     <Compile Include="MediaFiles\EpisodeImport\ImportDecisionMakerFixture.cs" />
     <Compile Include="MediaFiles\EpisodeImport\SampleServiceFixture.cs" />
     <Compile Include="MediaFiles\EpisodeImport\Specifications\FreeSpaceSpecificationFixture.cs" />
@@ -311,7 +311,7 @@
     <Compile Include="MediaFiles\MediaFileTableCleanupServiceFixture.cs" />
     <Compile Include="MediaFiles\MediaInfo\UpdateMediaInfoServiceFixture.cs" />
     <Compile Include="MediaFiles\MediaInfo\VideoFileInfoReaderFixture.cs" />
-    <Compile Include="MediaFiles\RenameEpisodeFileServiceFixture.cs" />
+    <Compile Include="MediaFiles\RenameTrackFileServiceFixture.cs" />
     <Compile Include="MediaFiles\UpgradeMediaFileServiceFixture.cs" />
     <Compile Include="Messaging\Commands\CommandEqualityComparerFixture.cs" />
     <Compile Include="Messaging\Commands\CommandExecutorFixture.cs" />

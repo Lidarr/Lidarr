@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,107 +9,107 @@ using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Tv;
+using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.MediaFiles
 {
-    public interface IUpdateEpisodeFileService
+    public interface IUpdateTrackFileService
     {
-        void ChangeFileDateForFile(EpisodeFile episodeFile, Series series, List<Episode> episodes);
+        void ChangeFileDateForFile(TrackFile trackFile, Artist artist, List<Track> tracks);
     }
 
-    public class UpdateEpisodeFileService : IUpdateEpisodeFileService,
-                                            IHandle<SeriesScannedEvent>
+    public class UpdateTrackFileService : IUpdateTrackFileService,
+                                            IHandle<ArtistScannedEvent>
     {
         private readonly IDiskProvider _diskProvider;
         private readonly IConfigService _configService;
-        private readonly IEpisodeService _episodeService;
+        private readonly ITrackService _trackService;
         private readonly Logger _logger;
 
-        public UpdateEpisodeFileService(IDiskProvider diskProvider,
+        public UpdateTrackFileService(IDiskProvider diskProvider,
                                         IConfigService configService,
-                                        IEpisodeService episodeService,
+                                        ITrackService trackService,
                                         Logger logger)
         {
             _diskProvider = diskProvider;
             _configService = configService;
-            _episodeService = episodeService;
+            _trackService = trackService;
             _logger = logger;
         }
 
-        public void ChangeFileDateForFile(EpisodeFile episodeFile, Series series, List<Episode> episodes)
+        public void ChangeFileDateForFile(TrackFile trackFile, Artist artist, List<Track> tracks)
         {
-            ChangeFileDate(episodeFile, series, episodes);
+            ChangeFileDate(trackFile, artist, tracks);
         }
 
-        private bool ChangeFileDate(EpisodeFile episodeFile, Series series, List<Episode> episodes)
+        private bool ChangeFileDate(TrackFile trackFile, Artist artist, List<Track> tracks)
         {
-            var episodeFilePath = Path.Combine(series.Path, episodeFile.RelativePath);
+            var episodeFilePath = Path.Combine(artist.Path, trackFile.RelativePath);
 
             switch (_configService.FileDate)
             {
                 case FileDateType.LocalAirDate:
                     {
-                        var airDate = episodes.First().AirDate;
-                        var airTime = series.AirTime;
+                        //var airDate = tracks.First().Re;
+                        //var airTime = artist.AirTime;
 
-                        if (airDate.IsNullOrWhiteSpace() || airTime.IsNullOrWhiteSpace())
-                        {
+                        //if (airDate.IsNullOrWhiteSpace() || airTime.IsNullOrWhiteSpace())
+                        //{
                             return false;
-                        }
+                        //}
 
-                        return ChangeFileDateToLocalAirDate(episodeFilePath, airDate, airTime);
+                        //return ChangeFileDateToLocalAirDate(episodeFilePath, airDate, airTime);
                     }
 
                 case FileDateType.UtcAirDate:
                     {
-                        var airDateUtc = episodes.First().AirDateUtc;
+                        //var airDateUtc = tracks.First().AirDateUtc;
 
-                        if (!airDateUtc.HasValue)
-                        {
+                        //if (!airDateUtc.HasValue)
+                        //{
                             return false;
-                        }
+                        //}
 
-                        return ChangeFileDateToUtcAirDate(episodeFilePath, airDateUtc.Value);
+                        //return ChangeFileDateToUtcAirDate(episodeFilePath, airDateUtc.Value);
                     }
             }
 
             return false;
         }
 
-        public void Handle(SeriesScannedEvent message)
+        public void Handle(ArtistScannedEvent message)
         {
             if (_configService.FileDate == FileDateType.None)
             {
                 return;
             }
 
-            var episodes = _episodeService.EpisodesWithFiles(message.Series.Id);
+            var episodes = _trackService.TracksWithFiles(message.Artist.Id);
 
-            var episodeFiles = new List<EpisodeFile>();
-            var updated = new List<EpisodeFile>();
+            var trackFiles = new List<TrackFile>();
+            var updated = new List<TrackFile>();
 
-            foreach (var group in episodes.GroupBy(e => e.EpisodeFileId))
+            foreach (var group in episodes.GroupBy(e => e.TrackFileId))
             {
-                var episodesInFile = group.Select(e => e).ToList();
-                var episodeFile = episodesInFile.First().EpisodeFile;
+                var tracksInFile = group.Select(e => e).ToList();
+                var trackFile = tracksInFile.First().TrackFile;
 
-                episodeFiles.Add(episodeFile);
+                trackFiles.Add(trackFile);
 
-                if (ChangeFileDate(episodeFile, message.Series, episodesInFile))
+                if (ChangeFileDate(trackFile, message.Artist, tracksInFile))
                 {
-                    updated.Add(episodeFile);
+                    updated.Add(trackFile);
                 }
             }
 
             if (updated.Any())
             {
-                _logger.ProgressDebug("Changed file date for {0} files of {1} in {2}", updated.Count, episodeFiles.Count, message.Series.Title);
+                _logger.ProgressDebug("Changed file date for {0} files of {1} in {2}", updated.Count, trackFiles.Count, message.Artist.Name);
             }
 
             else
             {
-                _logger.ProgressDebug("No file dates changed for {0}", message.Series.Title);
+                _logger.ProgressDebug("No file dates changed for {0}", message.Artist.Name);
             }
         }
 
