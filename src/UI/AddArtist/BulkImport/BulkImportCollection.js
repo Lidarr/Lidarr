@@ -1,44 +1,44 @@
 var _ = require('underscore');
 var PageableCollection = require('backbone.pageable');
-var MovieModel = require('../../Artist/ArtistModel');
+var ArtistModel = require('../../Artist/ArtistModel');
 var AsSortedCollection = require('../../Mixins/AsSortedCollection');
 var AsPageableCollection = require('../../Mixins/AsPageableCollection');
 var AsPersistedStateCollection = require('../../Mixins/AsPersistedStateCollection');
 
 var BulkImportCollection = PageableCollection.extend({
-		url   : window.NzbDrone.ApiRoot + '/artist/bulkimport',
-		model : MovieModel,
-		tableName : 'bulkimport',
+    url   : window.NzbDrone.ApiRoot + '/artist/bulkimport',
+    model : ArtistModel,
+    tableName : 'bulkimport',
 
-		state : {
-			pageSize : 100000,
-			sortKey: 'sortName',
-			firstPage: 1
-		},
+    state : {
+        pageSize : 100000,
+        sortKey: 'sortName',
+        firstPage: 1
+    },
 
-		fetch : function(options) {
+    fetch : function(options) {
 
-			options = options || {};
+        options = options || {};
 
-			var data = options.data || {};
+        var data = options.data || {};
 
-			if (!data.id || !data.folder) {
-				data.id = this.folderId;
-				data.folder = this.folder;
-			}
+        if (!data.id || !data.folder) {
+            data.id = this.folderId;
+            data.folder = this.folder;
+        }
 
-			options.data = data;
-			return PageableCollection.prototype.fetch.call(this, options);
-		},
+        options.data = data;
+        return PageableCollection.prototype.fetch.call(this, options);
+    },
 
-		parseLinks : function(options) {
-			
-			return {
-				first : this.url,
-				next: this.url,
-				last : this.url
-			};
-		}
+    parseLinks : function(options) {
+
+        return {
+            first : this.url,
+            next: this.url,
+            last : this.url
+        };
+    }
 });
 
 

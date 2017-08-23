@@ -15,7 +15,7 @@ module.exports = TemplatedCell.extend({
     _origRender : TemplatedCell.prototype.initialize,
 
     ui : {
-      profile : '.x-profile',
+        profile : '.x-profile',
     },
 
     events: { 'change .x-profile' : '_profileChanged' },
@@ -45,34 +45,33 @@ module.exports = TemplatedCell.extend({
     },
 
     _profileChanged : function() {
-      Config.setValue(Config.Keys.DefaultProfileId, this.$('.x-profile').val());
-      this.model.set('profileId', this.$('.x-profile').val());
+        Config.setValue(Config.Keys.DefaultProfileId, this.$('.x-profile').val());
+        this.model.set('profileId', this.$('.x-profile').val());
     },
 
     _onConfigUpdated : function(options) {
-      if (options.key === Config.Keys.DefaultProfileId) {
-        this.defaultProfile = options.value;
-        //this.$('.x-profile').val(this.defaultProfile);
-      }
+        if (options.key === Config.Keys.DefaultProfileId) {
+            this.defaultProfile = options.value;
+        }
     },
 
     render : function() {
-      var templateName = this.column.get('template') || this.template;
+        var templateName = this.column.get('template') || this.template;
 
-      this.cellValue = ProfileCollection;
+        this.cellValue = ProfileCollection;
 
-      this.templateFunction = Marionette.TemplateCache.get(templateName);
-      //this.$el.empty();
+        this.templateFunction = Marionette.TemplateCache.get(templateName);
+        this.$el.empty();
 
-      if (this.cellValue) {
-          var data = this.cellValue.toJSON();
-          var html = this.templateFunction(data);
-          this.$el.html(html);
-      }
+        if (this.cellValue) {
+            var data = this.cellValue.toJSON();
+            var html = this.templateFunction(data);
+            this.$el.html(html);
+        }
 
-      this.delegateEvents();
-      this.$('.x-profile').val(this.model.get('profileId'));
-      return this;
+        this.delegateEvents();
+        this.$('.x-profile').val(this.model.get('profileId'));
+        return this;
     }
 
 });

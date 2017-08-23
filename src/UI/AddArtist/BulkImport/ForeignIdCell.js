@@ -5,9 +5,8 @@ var NzbDroneCell = require('../../Cells/NzbDroneCell');
 var CommandController = require('../../Commands/CommandController');
 
 module.exports = NzbDroneCell.extend({
-		className : 'foreignId-cell',
+        className : 'foreignId-cell',
 
-        // would like to use change with a _.debounce eventually
         events : {
             'blur input.foreignId-input' : '_updateId'
         },
@@ -28,8 +27,6 @@ module.exports = NzbDroneCell.extend({
                 url  : window.NzbDrone.ApiRoot + '/artist/lookup?term=lidarrid:' + data,
                 type : 'GET',
             });
-
-						//field.spinForPromise(promise);
 
             field.prop('disabled', true);
 

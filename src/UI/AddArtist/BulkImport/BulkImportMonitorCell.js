@@ -14,15 +14,13 @@ module.exports = TemplatedCell.extend({
     _origRender : TemplatedCell.prototype.initialize,
 
     ui : {
-      monitor : '.x-monitor',
+        monitor : '.x-monitor',
     },
 
     events: { 'change .x-monitor' : '_monitorChanged' },
 
     initialize : function () {
         this._orig.apply(this, arguments);
-
-        this.listenTo(vent, Config.Events.ConfigUpdatedEvent, this._onConfigUpdated);
 
         this.defaultMonitor = Config.getValue(Config.Keys.MonitorEpisodes, 'all');
 
@@ -40,34 +38,28 @@ module.exports = TemplatedCell.extend({
     },
 
     _monitorChanged : function() {
-      Config.setValue(Config.Keys.MonitorEpisodes, this.$el.find('.x-monitor').val());
-      this.defaultMonitor = this.$el.find('.x-monitor').val();
-      this.model.set('monitored', this._convertMonitorToBool(this.$el.find('.x-monitor').val()));
-    },
-
-    _onConfigUpdated : function(options) {
-      if (options.key === Config.Keys.MonitorEpisodes) {
-        //this.$el.find('.x-monitor').val(options.value);
-      }
+        Config.setValue(Config.Keys.MonitorEpisodes, this.$el.find('.x-monitor').val());
+        this.defaultMonitor = this.$el.find('.x-monitor').val();
+        this.model.set('monitored', this._convertMonitorToBool(this.$el.find('.x-monitor').val()));
     },
 
     render : function() {
-      var templateName = this.column.get('template') || this.template;
+        var templateName = this.column.get('template') || this.template;
 
-      this.templateFunction = Marionette.TemplateCache.get(templateName);
-      this.$el.empty();
+        this.templateFunction = Marionette.TemplateCache.get(templateName);
+        this.$el.empty();
 
-      if (this.cellValue) {
-          var data = this.cellValue.toJSON();
-          var html = this.templateFunction(data);
-          this.$el.html(html);
-      }
+        if (this.cellValue) {
+            var data = this.cellValue.toJSON();
+            var html = this.templateFunction(data);
+            this.$el.html(html);
+        }
 
-      this.delegateEvents();
+        this.delegateEvents();
 
-      this.$el.find('.x-monitor').val(this._convertBooltoMonitor(this.model.get('monitored')));
+        this.$el.find('.x-monitor').val(this._convertBooltoMonitor(this.model.get('monitored')));
 
-      return this;
+        return this;
     }
 
 });

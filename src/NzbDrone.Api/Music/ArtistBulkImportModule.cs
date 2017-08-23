@@ -37,8 +37,13 @@ namespace NzbDrone.Api.Music
 		private readonly ICached<Core.Music.Artist> _mappedArtists;
         private readonly IArtistService _artistService;
 
-        public MusicBulkImportModule(ISearchForNewSeries searchProxy, IRootFolderService rootFolderService, IMakeImportDecision importDecisionMaker,
-		                             IDiskScanService diskScanService, ICacheManager cacheManager, IArtistService artistService)
+        public MusicBulkImportModule(ISearchForNewSeries searchProxy, 
+                                     IRootFolderService rootFolderService, 
+                                     IMakeImportDecision importDecisionMaker,
+                                     IDiskScanService diskScanService, 
+                                     ICacheManager cacheManager, 
+                                     IArtistService artistService
+            )
             : base("/artist/bulkimport")
         {
             _searchProxy = searchProxy;
@@ -102,7 +107,7 @@ namespace NzbDrone.Api.Music
 				}
 
                 var searchResults = _searchProxy.SearchForNewArtist(m.Name);
-                
+
                 if (searchResults == null || searchResults.Count == 0)
                 {
                     return null;
@@ -110,7 +115,7 @@ namespace NzbDrone.Api.Music
 
                 mappedArtist = searchResults.First();
 
-				if (mappedArtist != null)
+                if (mappedArtist != null)
 				{
 					mappedArtist.Monitored = true;
                     mappedArtist.Path = page.Path;
