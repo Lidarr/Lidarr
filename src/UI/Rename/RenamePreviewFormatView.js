@@ -17,7 +17,6 @@ module.exports = Marionette.ItemView.extend({
     initialize : function() {
         this.naming = new NamingModel();
         this.naming.fetch();
-        console.log(this.naming);
         this.listenTo(this.naming, 'sync', this.render);
     }
 });

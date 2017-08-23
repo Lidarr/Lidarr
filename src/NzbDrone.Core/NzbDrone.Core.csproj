@@ -734,6 +734,7 @@
     <Compile Include="MediaFiles\Events\EpisodeFolderCreatedEvent.cs" />
     <Compile Include="MediaFiles\Events\TrackFolderCreatedEvent.cs" />
     <Compile Include="MediaFiles\Events\TrackDownloadedEvent.cs" />
+    <Compile Include="MediaFiles\MediaInfo\MediaInfoFormatter.cs" />
     <Compile Include="MediaFiles\RenameTrackFilePreview.cs" />
     <Compile Include="MediaFiles\RenameTrackFileService.cs" />
     <Compile Include="MediaFiles\TrackFileMovingService.cs" />
@@ -860,8 +861,11 @@
     <Compile Include="Extras\Metadata\MetadataType.cs" />
     <Compile Include="MetadataSource\IProvideSeriesInfo.cs" />
     <Compile Include="MetadataSource\ISearchForNewSeries.cs" />
+    <Compile Include="Music\Commands\MoveArtistCommand.cs" />
+    <Compile Include="Music\Events\ArtistMovedEvent.cs" />
     <Compile Include="Music\MonitoringOptions.cs" />
     <Compile Include="Music\AlbumMonitoredService.cs" />
+    <Compile Include="Music\MoveArtistService.cs" />
     <Compile Include="Music\TrackMonitoredService.cs" />
     <Compile Include="Music\Member.cs" />
     <Compile Include="Music\AddArtistOptions.cs" />
@@ -943,6 +947,8 @@
     <Compile Include="Notifications\Webhook\WebhookService.cs" />
     <Compile Include="Notifications\Webhook\WebhookSettings.cs" />
     <Compile Include="Notifications\Webhook\Webhook.cs" />
+    <Compile Include="Organizer\AbsoluteTrackFormat.cs" />
+    <Compile Include="Organizer\TrackFormat.cs" />
     <Compile Include="Organizer\NamingConfigRepository.cs" />
     <Compile Include="Notifications\Twitter\Twitter.cs" />
     <Compile Include="Notifications\Twitter\TwitterService.cs" />
@@ -1141,7 +1147,6 @@
     <Compile Include="Tv\AddSeriesOptions.cs" />
     <Compile Include="Tv\AddSeriesService.cs" />
     <Compile Include="Tv\AddSeriesValidator.cs" />
-    <Compile Include="Tv\Commands\MoveSeriesCommand.cs" />
     <Compile Include="Tv\Commands\RefreshSeriesCommand.cs" />
     <Compile Include="Tv\Episode.cs" />
     <Compile Include="Tv\EpisodeAddedService.cs" />
@@ -1155,11 +1160,9 @@
     <Compile Include="Tv\Events\SeriesAddedEvent.cs" />
     <Compile Include="Tv\Events\SeriesDeletedEvent.cs" />
     <Compile Include="Tv\Events\SeriesEditedEvent.cs" />
-    <Compile Include="Tv\Events\SeriesMovedEvent.cs" />
     <Compile Include="Tv\Events\SeriesRefreshStartingEvent.cs" />
     <Compile Include="Tv\Events\SeriesUpdatedEvent.cs" />
     <Compile Include="Tv\MonitoringOptions.cs" />
-    <Compile Include="Tv\MoveSeriesService.cs" />
     <Compile Include="Tv\Ratings.cs" />
     <Compile Include="Tv\RefreshEpisodeService.cs" />
     <Compile Include="Tv\RefreshSeriesService.cs" />

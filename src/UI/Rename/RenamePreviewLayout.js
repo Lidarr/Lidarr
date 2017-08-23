@@ -29,7 +29,6 @@ module.exports = Marionette.Layout.extend({
     },
 
     initialize : function(options) {
-        console.log(options);
         this.model = options.artist;
         this.albumId = options.albumId;
 
