@@ -827,6 +827,7 @@
     <Compile Include="Messaging\IProcessMessage.cs" />
     <Compile Include="MetadataSource\IProvideArtistInfo.cs" />
     <Compile Include="MetadataSource\IProvideSeriesInfo.cs" />
+    <Compile Include="MetadataSource\ISearchForNewArtist.cs" />
     <Compile Include="MetadataSource\SkyHook\Resource\ActorResource.cs" />
     <Compile Include="MetadataSource\SkyHook\Resource\AlbumResource.cs" />
     <Compile Include="MetadataSource\SkyHook\Resource\ArtistInfoResource.cs" />
@@ -860,11 +861,8 @@
     <Compile Include="Extras\Metadata\MetadataRepository.cs" />
     <Compile Include="Extras\Metadata\MetadataService.cs" />
     <Compile Include="Extras\Metadata\MetadataType.cs" />
-    <Compile Include="MetadataSource\IProvideSeriesInfo.cs" />
-    <Compile Include="MetadataSource\ISearchForNewSeries.cs" />
     <Compile Include="Music\Commands\MoveArtistCommand.cs" />
     <Compile Include="Music\Events\ArtistMovedEvent.cs" />
-    <Compile Include="MetadataSource\ISearchForNewArtist.cs" />
     <Compile Include="Music\MonitoringOptions.cs" />
     <Compile Include="Music\AlbumMonitoredService.cs" />
     <Compile Include="Music\MoveArtistService.cs" />
