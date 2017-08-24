@@ -30,14 +30,14 @@ namespace NzbDrone.Api.Music
 
     public class MusicBulkImportModule : NzbDroneRestModule<ArtistResource>
     {
-        private readonly ISearchForNewSeries _searchProxy;
+        private readonly ISearchForNewArtist _searchProxy;
         private readonly IRootFolderService _rootFolderService;
         private readonly IMakeImportDecision _importDecisionMaker;
         private readonly IDiskScanService _diskScanService;
-		private readonly ICached<Core.Music.Artist> _mappedArtists;
+        private readonly ICached<Core.Music.Artist> _mappedArtists;
         private readonly IArtistService _artistService;
 
-        public MusicBulkImportModule(ISearchForNewSeries searchProxy, 
+        public MusicBulkImportModule(ISearchForNewArtist searchProxy, 
                                      IRootFolderService rootFolderService, 
                                      IMakeImportDecision importDecisionMaker,
                                      IDiskScanService diskScanService, 
@@ -50,7 +50,7 @@ namespace NzbDrone.Api.Music
             _rootFolderService = rootFolderService;
             _importDecisionMaker = importDecisionMaker;
             _diskScanService = diskScanService;
-			_mappedArtists = cacheManager.GetCache<Artist>(GetType(), "mappedArtistsCache");
+            _mappedArtists = cacheManager.GetCache<Artist>(GetType(), "mappedArtistsCache");
             _artistService = artistService;
             Get["/"] = x => Search();
         }
@@ -71,14 +71,14 @@ namespace NzbDrone.Api.Music
 
             var mapped = paged.Select(page =>
             {
-				Artist m = null;
+                Artist m = null;
 
-				var mappedArtist = _mappedArtists.Find(page.Name);
+                var mappedArtist = _mappedArtists.Find(page.Name);
 
-				if (mappedArtist != null)
-				{
+                if (mappedArtist != null)
+                {
                     return mappedArtist;
-				}
+                }
 
                 var files = _diskScanService.GetMusicFiles(page.Path);
 
@@ -89,22 +89,22 @@ namespace NzbDrone.Api.Music
                 }
 
                 var parsedTitle = Parser.ParseMusicPath(files.FirstOrDefault());
-				if (parsedTitle == null || parsedTitle.ArtistTitle == null)
-				{
-					m = new Artist
-					{
-						Name = page.Name.Replace(".", " ").Replace("-", " "),
-						Path = page.Path,
-					};
-				}
-				else
-				{
-					m = new Artist
+                if (parsedTitle == null || parsedTitle.ArtistTitle == null)
+                {
+                    m = new Artist
                     {
-						Name = parsedTitle.ArtistTitle,
-						Path = page.Path
-					};
-				}
+                        Name = page.Name.Replace(".", " ").Replace("-", " "),
+                        Path = page.Path,
+                    };
+                }
+                else
+                {
+                    m = new Artist
+                    {
+                        Name = parsedTitle.ArtistTitle,
+                        Path = page.Path
+                    };
+                }
 
                 var searchResults = _searchProxy.SearchForNewArtist(m.Name);
 
@@ -116,8 +116,8 @@ namespace NzbDrone.Api.Music
                 mappedArtist = searchResults.First();
 
                 if (mappedArtist != null)
-				{
-					mappedArtist.Monitored = true;
+                {
+                    mappedArtist.Monitored = true;
                     mappedArtist.Path = page.Path;
 
                     _mappedArtists.Set(page.Name, mappedArtist, TimeSpan.FromDays(2));
