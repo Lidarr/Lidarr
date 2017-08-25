@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FizzWare.NBuilder;
@@ -28,12 +28,12 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackFileMovingServiceTests
         public void Setup()
         {
             _artist = Builder<Artist>.CreateNew()
-                                     .With(s => s.Path = @"C:\Test\TV\Series".AsOsAgnostic())
+                                     .With(s => s.Path = @"C:\Test\Music\Artist".AsOsAgnostic())
                                      .Build();
 
             _trackFile = Builder<TrackFile>.CreateNew()
                                                .With(f => f.Path = null)
-                                               .With(f => f.RelativePath = @"Season 1\File.avi")
+                                               .With(f => f.RelativePath = @"Album\File.mp3")
                                                .Build();
 
             _localtrack = Builder<LocalTrack>.CreateNew()
@@ -47,13 +47,13 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackFileMovingServiceTests
 
             Mocker.GetMock<IBuildFileNames>()
                   .Setup(s => s.BuildTrackFilePath(It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<string>(), It.IsAny<string>()))
-                  .Returns(@"C:\Test\TV\Series\Season 01\File Name.avi".AsOsAgnostic());
+                  .Returns(@"C:\Test\Music\Artist\Album\File Name.mp3".AsOsAgnostic());
 
             Mocker.GetMock<IBuildFileNames>()
                   .Setup(s => s.BuildAlbumPath(It.IsAny<Artist>(), It.IsAny<Album>()))
-                  .Returns(@"C:\Test\TV\Series\Season 01".AsOsAgnostic());
+                  .Returns(@"C:\Test\Music\Artist\Album".AsOsAgnostic());
 
-            var rootFolder = @"C:\Test\TV\".AsOsAgnostic();
+            var rootFolder = @"C:\Test\Music\".AsOsAgnostic();
             Mocker.GetMock<IDiskProvider>()
                   .Setup(s => s.FolderExists(rootFolder))
                   .Returns(true);

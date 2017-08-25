@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FizzWare.NBuilder;
@@ -324,38 +324,6 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
         }
 
         [Test]
-        public void should_trim_periods_from_end_of_track_title()
-        {
-            _namingConfig.StandardTrackFormat = "{Artist Name} - {track:00} - {Track Title}";
-            _namingConfig.MultiEpisodeStyle = 3;
-
-            var track = Builder<Track>.CreateNew()
-                            .With(e => e.Title = "Part 1.")
-                            .With(e => e.TrackNumber = 6)
-                            .Build();
-
-
-            Subject.BuildTrackFileName(new List<Track> { track }, new Artist { Name = "30 Rock" }, new Album { Title = "30 Rock" }, _trackFile)
-                   .Should().Be("30 Rock - 06 - Part 1");
-        }
-
-        [Test]
-        public void should_trim_question_marks_from_end_of_track_title()
-        {
-            _namingConfig.StandardTrackFormat = "{Artist Name} - {track:00} - {Track Title}";
-            _namingConfig.MultiEpisodeStyle = 3;
-
-            var track = Builder<Track>.CreateNew()
-                            .With(e => e.Title = "Part 1?")
-                            .With(e => e.TrackNumber = 6)
-                            .Build();
-
-
-            Subject.BuildTrackFileName(new List<Track> { track }, new Artist { Name = "Linkin Park" }, new Album { Title = "Meteora" }, _trackFile)
-                   .Should().Be("Linkin Park - 06 - Part 1");
-        }
-
-        [Test]
         public void should_replace_double_period_with_single_period()
         {
             _namingConfig.StandardTrackFormat = "{Artist.Name}.{track:00}.{Track.Title}";
@@ -424,7 +392,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
         {
             _namingConfig.StandardTrackFormat = "{Artist.Name}.{track:00}.{Track.Title}.{MEDIAINFO.FULL}";
 
-            _trackFile.MediaInfo = new Core.MediaFiles.MediaInfo.MediaInfoModel()
+            _trackFile.MediaInfo = new Core.MediaFiles.MediaInfo.MediaInfoModel
             {
                 AudioFormat = "FLAC",
                 AudioLanguages = "English",

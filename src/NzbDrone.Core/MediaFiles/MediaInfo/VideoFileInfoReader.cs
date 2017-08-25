@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using NLog;
@@ -105,20 +105,20 @@ namespace NzbDrone.Core.MediaFiles.MediaInfo
                     int.TryParse(mediaInfo.Get(StreamKind.General, 0, "PlayTime"), out generalRuntime);
 
                     string audioBitRateMode = mediaInfo.Get(StreamKind.Audio, 0, "BitRate_Mode");
-                    string aBitRate = mediaInfo.Get(StreamKind.Audio, 0, "BitRate").Split(new string[] { " /" }, StringSplitOptions.None)[0].Trim();
+                    string aBitRate = mediaInfo.Get(StreamKind.Audio, 0, "BitRate").Split(new [] { " /" }, StringSplitOptions.None)[0].Trim();
 
                     int.TryParse(aBitRate, out audioBitRate);
                     int.TryParse(mediaInfo.Get(StreamKind.Audio, 0, "StreamCount"), out streamCount);
 
 
-                    string audioChannelsStr = mediaInfo.Get(StreamKind.Audio, 0, "Channel(s)").Split(new string[] { " /" }, StringSplitOptions.None)[0].Trim();
+                    string audioChannelsStr = mediaInfo.Get(StreamKind.Audio, 0, "Channel(s)").Split(new [] { " /" }, StringSplitOptions.None)[0].Trim();
 
                     var audioChannelPositions = mediaInfo.Get(StreamKind.Audio, 0, "ChannelPositions/String2");
                     var audioChannelPositionsText = mediaInfo.Get(StreamKind.Audio, 0, "ChannelPositions");
 
                     string audioLanguages = mediaInfo.Get(StreamKind.General, 0, "Audio_Language_List");
-                    string videoProfile = mediaInfo.Get(StreamKind.Video, 0, "Format_Profile").Split(new string[] { " /" }, StringSplitOptions.None)[0].Trim();
-                    string audioProfile = mediaInfo.Get(StreamKind.Audio, 0, "Format_Profile").Split(new string[] { " /" }, StringSplitOptions.None)[0].Trim();
+                    string videoProfile = mediaInfo.Get(StreamKind.Video, 0, "Format_Profile").Split(new [] { " /" }, StringSplitOptions.None)[0].Trim();
+                    string audioProfile = mediaInfo.Get(StreamKind.Audio, 0, "Format_Profile").Split(new [] { " /" }, StringSplitOptions.None)[0].Trim();
 
                     int.TryParse(audioChannelsStr, out audioChannels);
                     var mediaInfoModel = new MediaInfoModel

@@ -1,4 +1,4 @@
-﻿using NzbDrone.Core.Datastore;
+using NzbDrone.Core.Datastore;
 
 namespace NzbDrone.Core.Organizer
 {
@@ -8,7 +8,6 @@ namespace NzbDrone.Core.Organizer
         {
             RenameTracks = false,
             ReplaceIllegalCharacters = true,
-            MultiEpisodeStyle = 0,
             StandardTrackFormat = "{Artist Name} - {track:00} - {Album Title} - {Track Title}",
             ArtistFolderFormat = "{Artist Name}",
             AlbumFolderFormat = "{Album Title} ({Release Year})"
@@ -16,7 +15,6 @@ namespace NzbDrone.Core.Organizer
 
         public bool RenameTracks { get; set; }
         public bool ReplaceIllegalCharacters { get; set; }
-        public int MultiEpisodeStyle { get; set; }
         public string StandardTrackFormat { get; set; }
         public string ArtistFolderFormat { get; set; }
         public string AlbumFolderFormat { get; set; }

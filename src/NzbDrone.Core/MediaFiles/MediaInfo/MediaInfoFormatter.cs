@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -36,7 +36,7 @@ namespace NzbDrone.Core.MediaFiles.MediaInfo
             }
 
             return audioChannelPositions.Replace("Object Based / ", "")
-                                        .Split(new string[] { " / " }, StringSplitOptions.None)
+                                        .Split(new [] { " / " }, StringSplitOptions.None)
                                         .First()
                                         .Split('/')
                                         .Sum(s => decimal.Parse(s, CultureInfo.InvariantCulture));

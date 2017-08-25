@@ -29,7 +29,7 @@ var view = Marionette.ItemView.extend({
         var includeArtistName = standardFormat.match(/\{Artist[-_. ]Name\}/i);
         var includeAlbumTitle = standardFormat.match(/\{Album[-_. ]Title\}/i);
         var includeQuality = standardFormat.match(/\{Quality[-_. ]Title\}/i);
-        var numberStyle = standardFormat.match(/s?\{track(?:\:0+)?\}/i);
+        var numberStyle = standardFormat.match(/\{track(?:\:0+)?\}/i);
         var replaceSpaces = standardFormat.indexOf(' ') === -1;
         var separator = standardFormat.match(/\}( - |\.-\.|\.| )|( - |\.-\.|\.| )\{/i);
 

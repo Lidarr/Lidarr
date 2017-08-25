@@ -1,4 +1,4 @@
-﻿using NzbDrone.Api.REST;
+using NzbDrone.Api.REST;
 using NzbDrone.Core.Organizer;
 
 namespace NzbDrone.Api.Config
@@ -29,7 +29,6 @@ namespace NzbDrone.Api.Config
 
                 RenameTracks = model.RenameTracks,
                 ReplaceIllegalCharacters = model.ReplaceIllegalCharacters,
-                MultiEpisodeStyle = model.MultiEpisodeStyle,
                 StandardTrackFormat = model.StandardTrackFormat,
                 ArtistFolderFormat = model.ArtistFolderFormat,
                 AlbumFolderFormat = model.AlbumFolderFormat
@@ -60,7 +59,6 @@ namespace NzbDrone.Api.Config
 
                 RenameTracks = resource.RenameTracks,
                 ReplaceIllegalCharacters = resource.ReplaceIllegalCharacters,
-                MultiEpisodeStyle = resource.MultiEpisodeStyle,
                 StandardTrackFormat = resource.StandardTrackFormat,
                 ArtistFolderFormat = resource.ArtistFolderFormat,
                 AlbumFolderFormat = resource.AlbumFolderFormat

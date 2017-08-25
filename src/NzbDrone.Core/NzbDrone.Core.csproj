@@ -295,6 +295,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Datastore\Migration\105_rename_torrent_downloadstation.cs" />
+    <Compile Include="Datastore\Migration\114_remove_tv_naming.cs" />
     <Compile Include="Datastore\Migration\113_music_blacklist.cs" />
     <Compile Include="Datastore\Migration\112_music_history.cs" />
     <Compile Include="Datastore\Migration\111_setup_music.cs" />
@@ -793,7 +794,6 @@
     <Compile Include="MediaFiles\MediaInfo\UpdateMediaInfoService.cs" />
     <Compile Include="MediaFiles\MediaInfo\VideoFileInfoReader.cs" />
     <Compile Include="MediaFiles\RecycleBinProvider.cs" />
-    <Compile Include="MediaFiles\RenameEpisodeFilePreview.cs" />
     <Compile Include="MediaFiles\SameFilenameException.cs" />
     <Compile Include="MediaFiles\TrackFile.cs" />
     <Compile Include="MediaFiles\TrackImport\ImportApprovedTracks.cs" />
@@ -1059,9 +1059,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Notifications\Xbmc\XbmcSettings.cs" />
-    <Compile Include="Organizer\AbsoluteEpisodeFormat.cs" />
     <Compile Include="Organizer\BasicNamingConfig.cs" />
-    <Compile Include="Organizer\EpisodeFormat.cs" />
     <Compile Include="Organizer\EpisodeSortingType.cs" />
     <Compile Include="Organizer\Exception.cs" />
     <Compile Include="Organizer\FileNameBuilder.cs" />

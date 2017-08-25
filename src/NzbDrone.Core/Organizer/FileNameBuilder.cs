@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -30,9 +30,7 @@ namespace NzbDrone.Core.Organizer
     {
         private readonly INamingConfigService _namingConfigService;
         private readonly IQualityDefinitionService _qualityDefinitionService;
-        private readonly ICached<EpisodeFormat[]> _episodeFormatCache;
         private readonly ICached<TrackFormat[]> _trackFormatCache;
-        private readonly ICached<AbsoluteEpisodeFormat[]> _absoluteEpisodeFormatCache;
         private readonly ICached<AbsoluteTrackFormat[]> _absoluteTrackFormatCache;
         private readonly Logger _logger;
 
@@ -86,9 +84,7 @@ namespace NzbDrone.Core.Organizer
         {
             _namingConfigService = namingConfigService;
             _qualityDefinitionService = qualityDefinitionService;
-            _episodeFormatCache = cacheManager.GetCache<EpisodeFormat[]>(GetType(), "episodeFormat");
             _trackFormatCache = cacheManager.GetCache<TrackFormat[]>(GetType(), "trackFormat");
-            _absoluteEpisodeFormatCache = cacheManager.GetCache<AbsoluteEpisodeFormat[]>(GetType(), "absoluteEpisodeFormat");
             _absoluteTrackFormatCache = cacheManager.GetCache<AbsoluteTrackFormat[]>(GetType(), "absoluteTrackFormat");
             _logger = logger;
         }
@@ -114,8 +110,6 @@ namespace NzbDrone.Core.Organizer
             var tokenHandlers = new Dictionary<string, Func<TokenMatch, string>>(FileNameBuilderTokenEqualityComparer.Instance);
 
             tracks = tracks.OrderBy(e => e.AlbumId).ThenBy(e => e.TrackNumber).ToList();
-
-            //pattern = AddSeasonEpisodeNumberingTokens(pattern, tokenHandlers, episodes, namingConfig);
             
             pattern = FormatTrackNumberTokens(pattern, "", tracks);
             //pattern = AddAbsoluteNumberingTokens(pattern, tokenHandlers, series, episodes, namingConfig);
@@ -323,7 +317,10 @@ namespace NzbDrone.Core.Organizer
 
         private void AddMediaInfoTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, TrackFile trackFile)
         {
-            if (trackFile.MediaInfo == null) return;
+            if (trackFile.MediaInfo == null)
+            {
+                return;
+            }
             
             var audioCodec = MediaInfoFormatter.FormatAudioCodec(trackFile.MediaInfo);
             var audioChannels = MediaInfoFormatter.FormatAudioChannels(trackFile.MediaInfo);

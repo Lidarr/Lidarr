@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Common.Extensions;
@@ -128,7 +128,7 @@ namespace NzbDrone.Core.MediaFiles
 
             trackFile.RelativePath = artist.Path.GetRelativePath(destinationFilePath);
 
-            //_updateTrackFileService.ChangeFileDateForFile(trackFile, artist, tracks);
+            _updateTrackFileService.ChangeFileDateForFile(trackFile, artist, tracks);
 
             try
             {
