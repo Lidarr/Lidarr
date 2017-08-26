@@ -53,14 +53,36 @@ namespace NzbDrone.Core.MediaFiles
             {
                 case FileDateType.AlbumReleaseDate:
                     {
-                        var relDate = _albumService.GetAlbum(trackFile.AlbumId).ReleaseDate.ToString();
+                        var album = _albumService.GetAlbum(trackFile.AlbumId);
 
-                        if (relDate.IsNullOrWhiteSpace())
+                        if (!album.ReleaseDate.HasValue)
                         {
+                            _logger.Debug("Could not create valid date to change file [{0}]", trackFilePath);
                             return false;
                         }
 
-                        return ChangeFileDateToLocalAirDate(trackFilePath, relDate);
+                        var relDate = album.ReleaseDate.Value;
+
+                        // avoiding false +ve checks and set date skewing by not using UTC (Windows)
+                        DateTime oldDateTime = _diskProvider.FileGetLastWrite(trackFilePath);
+
+                        if (!DateTime.Equals(relDate, oldDateTime))
+                        {
+                            try
+                            {
+                                _diskProvider.FileSetLastWriteTime(trackFilePath, relDate);
+                                _logger.Debug("Date of file [{0}] changed from '{1}' to '{2}'", trackFilePath, oldDateTime, relDate);
+
+                                return true;
+                            }
+
+                            catch (Exception ex)
+                            {
+                                _logger.Warn(ex, "Unable to set date of file [" + trackFilePath + "]");
+                            }
+                        }
+
+                        return false;
                     }
             }
 
@@ -101,40 +123,6 @@ namespace NzbDrone.Core.MediaFiles
             {
                 _logger.ProgressDebug("No file dates changed for {0}", message.Artist.Name);
             }
-        }
-
-        private bool ChangeFileDateToLocalAirDate(string filePath, string fileDate)
-        {
-            DateTime airDate;
-
-            if (DateTime.TryParse(fileDate, out airDate))
-            {
-                // avoiding false +ve checks and set date skewing by not using UTC (Windows)
-                DateTime oldDateTime = _diskProvider.FileGetLastWrite(filePath);
-
-                if (!DateTime.Equals(airDate, oldDateTime))
-                {
-                    try
-                    {
-                        _diskProvider.FileSetLastWriteTime(filePath, airDate);
-                        _logger.Debug("Date of file [{0}] changed from '{1}' to '{2}'", filePath, oldDateTime, airDate);
-
-                        return true;
-                    }
-
-                    catch (Exception ex)
-                    {
-                        _logger.Warn(ex, "Unable to set date of file [" + filePath + "]");
-                    }
-                }
-            }
-
-            else
-            {
-                _logger.Debug("Could not create valid date to change file [{0}]", filePath);
-            }
-
-            return false;
         }
     }
 }
