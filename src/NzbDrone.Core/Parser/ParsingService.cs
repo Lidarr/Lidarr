@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
@@ -18,6 +18,8 @@ namespace NzbDrone.Core.Parser
         LocalEpisode GetLocalEpisode(string filename, Series series);
         LocalEpisode GetLocalEpisode(string filename, Series series, ParsedEpisodeInfo folderInfo, bool sceneSource);
         Series GetSeries(string title);
+        Artist GetArtist(string path);
+        Album GetAlbum(string path, Artist artist);
         RemoteEpisode Map(ParsedEpisodeInfo parsedEpisodeInfo, int tvdbId, int tvRageId, SearchCriteriaBase searchCriteria = null);
         RemoteEpisode Map(ParsedEpisodeInfo parsedEpisodeInfo, int seriesId, IEnumerable<int> episodeIds);
         RemoteAlbum Map(ParsedAlbumInfo parsedAlbumInfo, SearchCriteriaBase searchCriteria = null);
@@ -134,6 +136,29 @@ namespace NzbDrone.Core.Parser
             }
 
             return series;
+        }
+
+        public Artist GetArtist(string path)
+        {
+            var parsedTrackInfo = Parser.ParseMusicPath(path);
+
+            if (parsedTrackInfo == null)
+            {
+                 return _artistService.FindByName(path);
+            }
+
+            var artist = _artistService.FindByName(parsedTrackInfo.ArtistTitle);
+
+            return artist;
+        }
+
+        public Album GetAlbum(string path, Artist artist)
+        {
+            var parsedTrackInfo = Parser.ParseMusicPath(path);
+
+            var album = _albumService.FindByTitle(artist.Id,parsedTrackInfo.AlbumTitle);
+
+            return album;
         }
 
         [System.Obsolete("Used for sonarr, not lidarr")]
@@ -667,12 +692,14 @@ namespace NzbDrone.Core.Parser
 
                 return null;
             }
-
+            var cleanAlbum = Parser.CleanAlbumTitle(parsedTrackInfo.AlbumTitle);
             var tracks = GetTracks(parsedTrackInfo, artist);
+            var album = _albumService.FindByTitle(artist.Id, cleanAlbum);
 
             return new LocalTrack
             {
                 Artist = artist,
+                Album = album,
                 Quality = parsedTrackInfo.Quality,
                 Tracks = tracks,
                 Path = filename,
@@ -706,12 +733,16 @@ namespace NzbDrone.Core.Parser
 
                 if (trackInfo == null)
                 {
-                    var album = _albumRepository.FindByArtistAndName(parsedTrackInfo.ArtistTitle, Parser.CleanArtistTitle(parsedTrackInfo.AlbumTitle));
+                    var album = _albumRepository.FindByArtistAndName(parsedTrackInfo.ArtistTitle, Parser.CleanAlbumTitle(parsedTrackInfo.AlbumTitle));
                     if (album == null)
                     {
                         return new List<Track>();
                     }
                     trackInfo = _trackService.FindTrack(artist.Id, album.Id, trackNumber);
+                    if (trackInfo == null)
+                    {
+                        trackInfo = _trackService.FindTrackByTitle(artist.Id, album.Id, parsedTrackInfo.Title);
+                    }
                 }
 
                 if (trackInfo != null)
@@ -723,7 +754,7 @@ namespace NzbDrone.Core.Parser
                 {
                     _logger.Debug("Unable to find {0}", parsedTrackInfo);
                 }
-            }
+            }          
 
             return result;
         }

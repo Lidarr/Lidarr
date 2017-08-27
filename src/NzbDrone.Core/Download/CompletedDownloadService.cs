@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using NLog;
@@ -12,7 +12,7 @@ using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.EpisodeImport;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
-using NzbDrone.Core.Tv;
+using NzbDrone.Core.Music;
 using NzbDrone.Core.MediaFiles.TrackImport;
 
 namespace NzbDrone.Core.Download
@@ -27,26 +27,26 @@ namespace NzbDrone.Core.Download
         private readonly IConfigService _configService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IHistoryService _historyService;
-        private readonly IDownloadedEpisodesImportService _downloadedEpisodesImportService;
+        private readonly IDownloadedTracksImportService _downloadedTracksImportService;
         private readonly IParsingService _parsingService;
         private readonly Logger _logger;
-        private readonly ISeriesService _seriesService;
+        private readonly IArtistService _artistService;
 
         public CompletedDownloadService(IConfigService configService,
                                         IEventAggregator eventAggregator,
                                         IHistoryService historyService,
-                                        IDownloadedEpisodesImportService downloadedEpisodesImportService,
+                                        IDownloadedTracksImportService downloadedEpisodesImportService,
                                         IParsingService parsingService,
-                                        ISeriesService seriesService,
+                                        IArtistService artistService,
                                         Logger logger)
         {
             _configService = configService;
             _eventAggregator = eventAggregator;
             _historyService = historyService;
-            _downloadedEpisodesImportService = downloadedEpisodesImportService;
+            _downloadedTracksImportService = downloadedEpisodesImportService;
             _parsingService = parsingService;
             _logger = logger;
-            _seriesService = seriesService;
+            _artistService = artistService;
         }
 
         public void Process(TrackedDownload trackedDownload, bool ignoreWarnings = false)
@@ -81,26 +81,26 @@ namespace NzbDrone.Core.Download
                     return;
                 }
 
-                var downloadedEpisodesFolder = new OsPath(_configService.DownloadedEpisodesFolder);
+                var downloadedAlbumsFolder = new OsPath(_configService.DownloadedAlbumsFolder);
 
-                if (downloadedEpisodesFolder.Contains(downloadItemOutputPath))
+                if (downloadedAlbumsFolder.Contains(downloadItemOutputPath))
                 {
                     trackedDownload.Warn("Intermediate Download path inside drone factory, Skipping.");
                     return;
                 }
 
-                var series = _parsingService.GetSeries(trackedDownload.DownloadItem.Title);
+                var artist = trackedDownload.RemoteAlbum.Artist;
 
-                if (series == null)
+                if (artist == null)
                 {
                     if (historyItem != null)
                     {
-                        series = _seriesService.GetSeries(historyItem.ArtistId);
+                        artist = _artistService.GetArtist(historyItem.ArtistId);
                     }
 
-                    if (series == null)
+                    if (artist == null)
                     {
-                        trackedDownload.Warn("Series title mismatch, automatic import is not possible.");
+                        trackedDownload.Warn("Artist name mismatch, automatic import is not possible.");
                         return;
                     }
                 }
@@ -112,7 +112,8 @@ namespace NzbDrone.Core.Download
         private void Import(TrackedDownload trackedDownload)
         {
             var outputPath = trackedDownload.DownloadItem.OutputPath.FullPath;
-            var importResults = _downloadedEpisodesImportService.ProcessPath(outputPath, ImportMode.Auto, trackedDownload.RemoteEpisode.Series, trackedDownload.DownloadItem);
+
+            var importResults = _downloadedTracksImportService.ProcessPath(outputPath, ImportMode.Auto, trackedDownload.RemoteAlbum.Artist, trackedDownload.DownloadItem);
 
             if (importResults.Empty())
             {
@@ -120,7 +121,7 @@ namespace NzbDrone.Core.Download
                 return;
             }
 
-            if (importResults.Count(c => c.Result == ImportResultType.Imported) >= Math.Max(1, trackedDownload.RemoteEpisode.Episodes.Count))
+            if (importResults.Count(c => c.Result == ImportResultType.Imported) >= Math.Max(1, trackedDownload.RemoteAlbum.Albums.Count))
             {
                 trackedDownload.State = TrackedDownloadStage.Imported;
                 _eventAggregator.PublishEvent(new DownloadCompletedEvent(trackedDownload));

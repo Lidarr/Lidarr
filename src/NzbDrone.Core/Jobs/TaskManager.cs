@@ -80,8 +80,8 @@ namespace NzbDrone.Core.Jobs
 
                     new ScheduledTask
                     { 
-                        Interval = _configService.DownloadedEpisodesScanInterval,
-                        TypeName = typeof(DownloadedEpisodesScanCommand).FullName
+                        Interval = _configService.DownloadedAlbumsScanInterval,
+                        TypeName = typeof(DownloadedTracksScanCommand).FullName
                     },
                 };
 
@@ -146,8 +146,8 @@ namespace NzbDrone.Core.Jobs
             var rss = _scheduledTaskRepository.GetDefinition(typeof(RssSyncCommand));
             rss.Interval = _configService.RssSyncInterval;
 
-            var downloadedEpisodes = _scheduledTaskRepository.GetDefinition(typeof(DownloadedEpisodesScanCommand));
-            downloadedEpisodes.Interval = _configService.DownloadedEpisodesScanInterval;
+            var downloadedEpisodes = _scheduledTaskRepository.GetDefinition(typeof(DownloadedTracksScanCommand));
+            downloadedEpisodes.Interval = _configService.DownloadedAlbumsScanInterval;
 
             _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { rss, downloadedEpisodes });
         }
