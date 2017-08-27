@@ -36,7 +36,7 @@ namespace NzbDrone.Core.MediaFiles
 
         private List<ImportResult> ProcessDroneFactoryFolder()
         {
-            var downloadedEpisodesFolder = _configService.DownloadedEpisodesFolder;
+            var downloadedEpisodesFolder = _configService.DownloadedAlbumsFolder;
 
             if (string.IsNullOrEmpty(downloadedEpisodesFolder))
             {
