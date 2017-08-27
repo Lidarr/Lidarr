@@ -1,4 +1,4 @@
-using NLog;
+﻿using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Crypto;
 using NzbDrone.Common.Disk;

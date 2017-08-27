@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FizzWare.NBuilder;
@@ -349,7 +349,8 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
 
             GivenFiles(new List<string>
                        {
-                           Path.Combine(_artist.Path, "._24 The Status Quo Combustion.mp4").AsOsAgnostic(),
+                           Path.Combine(_artist.Path, ".DS_STORE").AsOsAgnostic(),
+                           Path.Combine(_artist.Path, "._24 The Status Quo Combustion.flac").AsOsAgnostic(),
                            Path.Combine(_artist.Path, "24 The Status Quo Combustion.flac").AsOsAgnostic()
                        });
 
