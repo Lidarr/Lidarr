@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -118,78 +118,6 @@ namespace NzbDrone.Core.Indexers.Newznab
             if (capabilities.SupportedAudioSearchParameters != null)
             {
                 pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "music", ""));
-            }
-
-            return pageableRequests;
-        }
-
-        public virtual IndexerPageableRequestChain GetSearchRequests(SingleEpisodeSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            AddTvIdPageableRequests(pageableRequests, MaxPages, Settings.Categories, searchCriteria,
-                string.Format("&season={0}&ep={1}",
-                    searchCriteria.SeasonNumber,
-                    searchCriteria.EpisodeNumber));
-
-            return pageableRequests;
-        }
-
-        public virtual IndexerPageableRequestChain GetSearchRequests(SeasonSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            AddTvIdPageableRequests(pageableRequests, MaxPages, Settings.Categories, searchCriteria,
-                string.Format("&season={0}",
-                    searchCriteria.SeasonNumber));
-
-            return pageableRequests;
-        }
-
-        public virtual IndexerPageableRequestChain GetSearchRequests(DailyEpisodeSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            AddTvIdPageableRequests(pageableRequests, MaxPages, Settings.Categories, searchCriteria,
-                string.Format("&season={0:yyyy}&ep={0:MM}/{0:dd}",
-                searchCriteria.AirDate));
-
-            return pageableRequests;
-        }
-
-        public virtual IndexerPageableRequestChain GetSearchRequests(AnimeEpisodeSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            if (SupportsSearch)
-            {
-                foreach (var queryTitle in searchCriteria.QueryTitles)
-                {
-                    pageableRequests.Add(GetPagedRequests(MaxPages, Settings.AnimeCategories, "search",
-                        string.Format("&q={0}+{1:00}",
-                        NewsnabifyTitle(queryTitle),
-                        searchCriteria.AbsoluteEpisodeNumber)));
-                }
-            }
-
-            return pageableRequests;
-        }
-
-        public virtual IndexerPageableRequestChain GetSearchRequests(SpecialEpisodeSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            if (SupportsSearch)
-            {
-                foreach (var queryTitle in searchCriteria.EpisodeQueryTitles)
-                {
-                    var query = queryTitle.Replace('+', ' ');
-                    query = System.Web.HttpUtility.UrlEncode(query);
-
-                    pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories.Concat(Settings.AnimeCategories), "search",
-                        string.Format("&q={0}",
-                        query)));
-                }
             }
 
             return pageableRequests;
