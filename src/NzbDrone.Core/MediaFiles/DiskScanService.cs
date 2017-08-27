@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -26,8 +26,8 @@ namespace NzbDrone.Core.MediaFiles
     {
         void Scan(Artist artist);
         string[] GetVideoFiles(string path, bool allDirectories = true);
-        string[] GetMusicFiles(string path, bool allDirectories = true);
-        string[] GetNonVideoFiles(string path, bool allDirectories = true);
+        string[] GetAudioFiles(string path, bool allDirectories = true);
+        string[] GetNonAudioFiles(string path, bool allDirectories = true);
         List<string> FilterFiles(Series series, IEnumerable<string> files);
     }
 
@@ -108,14 +108,14 @@ namespace NzbDrone.Core.MediaFiles
             }
 
             var musicFilesStopwatch = Stopwatch.StartNew();
-            var mediaFileList = FilterFiles(artist, GetMusicFiles(artist.Path)).ToList();
+            var mediaFileList = FilterFiles(artist, GetAudioFiles(artist.Path)).ToList();
             musicFilesStopwatch.Stop();
             _logger.Trace("Finished getting track files for: {0} [{1}]", artist, musicFilesStopwatch.Elapsed);
 
             CleanMediaFiles(artist, mediaFileList);
 
             var decisionsStopwatch = Stopwatch.StartNew();
-            var decisions = _importDecisionMaker.GetImportDecisions(mediaFileList, artist);
+            var decisions = _importDecisionMaker.GetImportDecisions(mediaFileList, artist, null);
             decisionsStopwatch.Stop();
             _logger.Trace("Import decisions complete for: {0} [{1}]", artist, decisionsStopwatch.Elapsed);
             _importApprovedTracks.Import(decisions, false);
@@ -156,7 +156,7 @@ namespace NzbDrone.Core.MediaFiles
             return mediaFileList.ToArray();
         }
 
-        public string[] GetMusicFiles(string path, bool allDirectories = true)
+        public string[] GetAudioFiles(string path, bool allDirectories = true)
         {
             _logger.Debug("Scanning '{0}' for music files", path);
 
@@ -171,7 +171,7 @@ namespace NzbDrone.Core.MediaFiles
             return mediaFileList.ToArray();
         }
 
-        public string[] GetNonVideoFiles(string path, bool allDirectories = true)
+        public string[] GetNonAudioFiles(string path, bool allDirectories = true)
         {
             _logger.Debug("Scanning '{0}' for non-music files", path);
 

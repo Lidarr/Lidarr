@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using FizzWare.NBuilder;
 using Moq;
@@ -9,36 +9,35 @@ using NzbDrone.Core.Download;
 using NzbDrone.Core.Download.TrackedDownloads;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Commands;
-using NzbDrone.Core.MediaFiles.EpisodeImport;
 using NzbDrone.Core.MediaFiles.TrackImport;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.Tv;
+using NzbDrone.Core.Music;
 using NzbDrone.Test.Common;
 
 namespace NzbDrone.Core.Test.MediaFiles
 {
     [TestFixture]
-    public class DownloadedEpisodesCommandServiceFixture : CoreTest<DownloadedEpisodesCommandService>
+    public class DownloadedTracksCommandServiceFixture : CoreTest<DownloadedTracksCommandService>
     {
         private string _droneFactory = "c:\\drop\\".AsOsAgnostic();
-        private string _downloadFolder = "c:\\drop_other\\Show.S01E01\\".AsOsAgnostic();
-        private string _downloadFile = "c:\\drop_other\\Show.S01E01.mkv".AsOsAgnostic();
+        private string _downloadFolder = "c:\\drop_other\\Artist.Album\\".AsOsAgnostic();
+        private string _downloadFile = "c:\\drop_other\\Artist.Album.mp3".AsOsAgnostic();
 
         private TrackedDownload _trackedDownload;
 
         [SetUp]
         public void Setup()
         {
-            Mocker.GetMock<IConfigService>().SetupGet(c => c.DownloadedEpisodesFolder)
+            Mocker.GetMock<IConfigService>().SetupGet(c => c.DownloadedAlbumsFolder)
                   .Returns(_droneFactory);
 
-            Mocker.GetMock<IDownloadedEpisodesImportService>()
+            Mocker.GetMock<IDownloadedTracksImportService>()
                 .Setup(v => v.ProcessRootFolder(It.IsAny<DirectoryInfo>()))
                 .Returns(new List<ImportResult>());
 
-            Mocker.GetMock<IDownloadedEpisodesImportService>()
-                .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Series>(), It.IsAny<DownloadClientItem>()))
+            Mocker.GetMock<IDownloadedTracksImportService>()
+                .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()))
                 .Returns(new List<ImportResult>());
 
             var downloadItem = Builder<DownloadClientItem>.CreateNew()
@@ -46,14 +45,14 @@ namespace NzbDrone.Core.Test.MediaFiles
                 .With(v => v.Status = DownloadItemStatus.Downloading)
                 .Build();
 
-            var remoteEpisode = Builder<RemoteEpisode>.CreateNew()
-                .With(v => v.Series = new Series())
+            var remoteAlbum = Builder<RemoteAlbum>.CreateNew()
+                .With(v => v.Artist = new Artist())
                 .Build();
 
             _trackedDownload = new TrackedDownload
                     {
                         DownloadItem = downloadItem,
-                        RemoteEpisode = remoteEpisode,
+                        RemoteAlbum = remoteAlbum,
                         State = TrackedDownloadStage.Downloading
                     };
         }
@@ -82,17 +81,17 @@ namespace NzbDrone.Core.Test.MediaFiles
         {
             GivenExistingFolder(_droneFactory);
 
-            Subject.Execute(new DownloadedEpisodesScanCommand());
+            Subject.Execute(new DownloadedTracksScanCommand());
 
-            Mocker.GetMock<IDownloadedEpisodesImportService>().Verify(c => c.ProcessRootFolder(It.IsAny<DirectoryInfo>()), Times.Once());
+            Mocker.GetMock<IDownloadedTracksImportService>().Verify(c => c.ProcessRootFolder(It.IsAny<DirectoryInfo>()), Times.Once());
         }
 
         [Test]
         public void should_skip_import_if_dronefactory_doesnt_exist()
         {
-            Subject.Execute(new DownloadedEpisodesScanCommand());
+            Subject.Execute(new DownloadedTracksScanCommand());
 
-            Mocker.GetMock<IDownloadedEpisodesImportService>().Verify(c => c.ProcessRootFolder(It.IsAny<DirectoryInfo>()), Times.Never());
+            Mocker.GetMock<IDownloadedTracksImportService>().Verify(c => c.ProcessRootFolder(It.IsAny<DirectoryInfo>()), Times.Never());
 
             ExceptionVerification.ExpectedWarns(1);
         }
@@ -102,9 +101,9 @@ namespace NzbDrone.Core.Test.MediaFiles
         {
             GivenExistingFolder(_droneFactory);
 
-            Subject.Execute(new DownloadedEpisodesScanCommand() { DownloadClientId = "sab1" });
+            Subject.Execute(new DownloadedTracksScanCommand() { DownloadClientId = "sab1" });
 
-            Mocker.GetMock<IDownloadedEpisodesImportService>().Verify(c => c.ProcessRootFolder(It.IsAny<DirectoryInfo>()), Times.Once());
+            Mocker.GetMock<IDownloadedTracksImportService>().Verify(c => c.ProcessRootFolder(It.IsAny<DirectoryInfo>()), Times.Once());
         }
 
         [Test]
@@ -112,9 +111,9 @@ namespace NzbDrone.Core.Test.MediaFiles
         {
             GivenExistingFolder(_downloadFolder);
 
-            Subject.Execute(new DownloadedEpisodesScanCommand() { Path = _downloadFolder });
+            Subject.Execute(new DownloadedTracksScanCommand() { Path = _downloadFolder });
 
-            Mocker.GetMock<IDownloadedEpisodesImportService>().Verify(c => c.ProcessPath(It.IsAny<string>(), ImportMode.Auto, null, null), Times.Once());
+            Mocker.GetMock<IDownloadedTracksImportService>().Verify(c => c.ProcessPath(It.IsAny<string>(), ImportMode.Auto, null, null), Times.Once());
         }
 
         [Test]
@@ -122,9 +121,9 @@ namespace NzbDrone.Core.Test.MediaFiles
         {
             GivenExistingFile(_downloadFile);
 
-            Subject.Execute(new DownloadedEpisodesScanCommand() { Path = _downloadFile });
+            Subject.Execute(new DownloadedTracksScanCommand() { Path = _downloadFile });
 
-            Mocker.GetMock<IDownloadedEpisodesImportService>().Verify(c => c.ProcessPath(It.IsAny<string>(), ImportMode.Auto, null, null), Times.Once());
+            Mocker.GetMock<IDownloadedTracksImportService>().Verify(c => c.ProcessPath(It.IsAny<string>(), ImportMode.Auto, null, null), Times.Once());
         }
 
         [Test]
@@ -133,9 +132,9 @@ namespace NzbDrone.Core.Test.MediaFiles
             GivenExistingFolder(_downloadFolder);
             GivenValidQueueItem();
 
-            Subject.Execute(new DownloadedEpisodesScanCommand() { Path = _downloadFolder, DownloadClientId = "sab1" });
+            Subject.Execute(new DownloadedTracksScanCommand() { Path = _downloadFolder, DownloadClientId = "sab1" });
 
-            Mocker.GetMock<IDownloadedEpisodesImportService>().Verify(c => c.ProcessPath(_downloadFolder, ImportMode.Auto, _trackedDownload.RemoteEpisode.Series, _trackedDownload.DownloadItem), Times.Once());
+            Mocker.GetMock<IDownloadedTracksImportService>().Verify(c => c.ProcessPath(_downloadFolder, ImportMode.Auto, _trackedDownload.RemoteAlbum.Artist, _trackedDownload.DownloadItem), Times.Once());
         }
 
         [Test]
@@ -143,9 +142,9 @@ namespace NzbDrone.Core.Test.MediaFiles
         {
             GivenExistingFolder(_downloadFolder);
 
-            Subject.Execute(new DownloadedEpisodesScanCommand() { Path = _downloadFolder, DownloadClientId = "sab1" });
+            Subject.Execute(new DownloadedTracksScanCommand() { Path = _downloadFolder, DownloadClientId = "sab1" });
 
-            Mocker.GetMock<IDownloadedEpisodesImportService>().Verify(c => c.ProcessPath(_downloadFolder, ImportMode.Auto, null, null), Times.Once());
+            Mocker.GetMock<IDownloadedTracksImportService>().Verify(c => c.ProcessPath(_downloadFolder, ImportMode.Auto, null, null), Times.Once());
 
             ExceptionVerification.ExpectedWarns(1);
         }
@@ -153,9 +152,9 @@ namespace NzbDrone.Core.Test.MediaFiles
         [Test]
         public void should_warn_if_neither_folder_or_file_exists()
         {
-            Subject.Execute(new DownloadedEpisodesScanCommand() { Path = _downloadFolder });
+            Subject.Execute(new DownloadedTracksScanCommand() { Path = _downloadFolder });
 
-            Mocker.GetMock<IDownloadedEpisodesImportService>().Verify(c => c.ProcessPath(It.IsAny<string>(), ImportMode.Auto, null, null), Times.Never());
+            Mocker.GetMock<IDownloadedTracksImportService>().Verify(c => c.ProcessPath(It.IsAny<string>(), ImportMode.Auto, null, null), Times.Never());
 
             ExceptionVerification.ExpectedWarns(1);
         }
@@ -165,9 +164,9 @@ namespace NzbDrone.Core.Test.MediaFiles
         {
             GivenExistingFile(_downloadFile);
 
-            Subject.Execute(new DownloadedEpisodesScanCommand() { Path = _downloadFile, ImportMode = ImportMode.Copy });
+            Subject.Execute(new DownloadedTracksScanCommand() { Path = _downloadFile, ImportMode = ImportMode.Copy });
 
-            Mocker.GetMock<IDownloadedEpisodesImportService>().Verify(c => c.ProcessPath(It.IsAny<string>(), ImportMode.Copy, null, null), Times.Once());
+            Mocker.GetMock<IDownloadedTracksImportService>().Verify(c => c.ProcessPath(It.IsAny<string>(), ImportMode.Copy, null, null), Times.Once());
         }
     }
 }

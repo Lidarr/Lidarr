@@ -719,8 +719,10 @@
     <Compile Include="MediaCover\MediaCoversUpdatedEvent.cs" />
     <Compile Include="MediaFiles\Commands\BackendCommandAttribute.cs" />
     <Compile Include="MediaFiles\Commands\CleanUpRecycleBinCommand.cs" />
-    <Compile Include="MediaFiles\Commands\DownloadedEpisodesScanCommand.cs" />
+    <Compile Include="MediaFiles\Commands\DownloadedTracksScanCommand.cs" />
     <Compile Include="MediaFiles\Commands\RenameArtistCommand.cs" />
+    <Compile Include="MediaFiles\DownloadedTracksCommandService.cs" />
+    <Compile Include="MediaFiles\DownloadedTracksImportService.cs" />
     <Compile Include="MediaFiles\Events\EpisodeFolderCreatedEvent.cs" />
     <Compile Include="MediaFiles\Events\TrackFolderCreatedEvent.cs" />
     <Compile Include="MediaFiles\Events\TrackDownloadedEvent.cs" />
@@ -737,10 +739,6 @@
     <Compile Include="MediaFiles\DiskScanService.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MediaFiles\DownloadedEpisodesImportService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MediaFiles\DownloadedEpisodesCommandService.cs" />
     <Compile Include="MediaFiles\EpisodeFile.cs" />
     <Compile Include="MediaFiles\EpisodeImport\IImportDecisionEngineSpecification.cs" />
     <Compile Include="MediaFiles\EpisodeImport\ImportApprovedEpisodes.cs" />

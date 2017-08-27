@@ -35,7 +35,7 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport.Manual
         private readonly IVideoFileInfoReader _videoFileInfoReader;
         private readonly IImportApprovedEpisodes _importApprovedEpisodes;
         private readonly ITrackedDownloadService _trackedDownloadService;
-        private readonly IDownloadedEpisodesImportService _downloadedEpisodesImportService;
+        private readonly IDownloadedTracksImportService _downloadedEpisodesImportService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
@@ -48,7 +48,7 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport.Manual
                                    IVideoFileInfoReader videoFileInfoReader,
                                    IImportApprovedEpisodes importApprovedEpisodes,
                                    ITrackedDownloadService trackedDownloadService,
-                                   IDownloadedEpisodesImportService downloadedEpisodesImportService,
+                                   IDownloadedTracksImportService downloadedEpisodesImportService,
                                    IEventAggregator eventAggregator,
                                    Logger logger)
         {

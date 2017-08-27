@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +9,6 @@ using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Qualities;
-using NzbDrone.Core.Tv;
 using NzbDrone.Core.MediaFiles.MediaInfo;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.MediaFiles.TrackImport;
@@ -18,10 +17,8 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport
 {
     public interface IMakeImportDecision
     {
-        //List<ImportDecision> GetImportDecisions(List<string> videoFiles, Series series);
-        List<ImportDecision> GetImportDecisions(List<string> musicFiles, Artist artist);
-        //List<ImportDecision> GetImportDecisions(List<string> videoFiles, Series series, ParsedEpisodeInfo folderInfo, bool sceneSource);
-        List<ImportDecision> GetImportDecisions(List<string> musicFiles, Artist artist, ParsedTrackInfo folderInfo);
+        List<ImportDecision> GetImportDecisions(List<string> audioFiles, Artist artist);
+        List<ImportDecision> GetImportDecisions(List<string> audioFiles, Artist artist, ParsedTrackInfo folderInfo);
     }
 
     public class ImportDecisionMaker : IMakeImportDecision
@@ -51,40 +48,18 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport
             _logger = logger;
         }
 
-        //public List<ImportDecision> GetImportDecisions(List<string> videoFiles, Series series)
-        //{
-        //    return GetImportDecisions(videoFiles, series, null, false);
-        //}
-
-        //public List<ImportDecision> GetImportDecisions(List<string> videoFiles, Artist series, ParsedEpisodeInfo folderInfo, bool sceneSource)
-        //{
-        //    var newFiles = _mediaFileService.FilterExistingFiles(videoFiles.ToList(), series);
-
-        //    _logger.Debug("Analyzing {0}/{1} files.", newFiles.Count, videoFiles.Count());
-
-        //    var shouldUseFolderName = ShouldUseFolderName(videoFiles, series, folderInfo);
-        //    var decisions = new List<ImportDecision>();
-
-        //    foreach (var file in newFiles)
-        //    {
-        //        decisions.AddIfNotNull(GetDecision(file, series, folderInfo, sceneSource, shouldUseFolderName));
-        //    }
-
-        //    return decisions;
-        //}
-
-        public List<ImportDecision> GetImportDecisions(List<string> musicFiles, Artist artist)
+        public List<ImportDecision> GetImportDecisions(List<string> audioFiles, Artist artist)
         {
-            return GetImportDecisions(musicFiles, artist, null);
+            return GetImportDecisions(audioFiles, artist, null);
         }
 
-        public List<ImportDecision> GetImportDecisions(List<string> musicFiles, Artist artist, ParsedTrackInfo folderInfo)
+        public List<ImportDecision> GetImportDecisions(List<string> audioFiles, Artist artist, ParsedTrackInfo folderInfo)
         {
-            var newFiles = _mediaFileService.FilterExistingFiles(musicFiles.ToList(), artist);
+            var newFiles = _mediaFileService.FilterExistingFiles(audioFiles.ToList(), artist);
 
-            _logger.Debug("Analyzing {0}/{1} files.", newFiles.Count, musicFiles.Count());
+            _logger.Debug("Analyzing {0}/{1} files.", newFiles.Count, audioFiles.Count());
 
-            var shouldUseFolderName = ShouldUseFolderName(musicFiles, artist, folderInfo);
+            var shouldUseFolderName = ShouldUseFolderName(audioFiles, artist, folderInfo);
             var decisions = new List<ImportDecision>();
 
             foreach (var file in newFiles)
@@ -162,8 +137,6 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport
             }
             catch (Exception e)
             {
-                //e.Data.Add("report", remoteEpisode.Report.ToJson());
-                //e.Data.Add("parsed", remoteEpisode.ParsedEpisodeInfo.ToJson());
                 _logger.Error(e, "Couldn't evaluate decision on {0}", localTrack.Path);
                 return new Rejection($"{spec.GetType().Name}: {e.Message}");
             }
@@ -216,10 +189,10 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport
                 //    return false;
                 //}
 
-                if (SceneChecker.IsSceneTitle(Path.GetFileName(file)))
-                {
-                    return false;
-                }
+                //if (SceneChecker.IsSceneTitle(Path.GetFileName(file)))
+                //{
+                //    return false;
+               // }
 
                 return true;
             }) == 1;

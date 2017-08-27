@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,15 +42,15 @@ namespace NzbDrone.Core.Parser
         private static readonly Regex[] ReportAlbumTitleRegex = new[]
         {
                 //Artist - Album (Year) Strict
-                new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?:\(|\[).+?(?<airyear>\d{4})",
+                new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?:\(|\[| -).+?(?<airyear>\d{4})",
                     RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
                 //Artist - Album (Year)
-                new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?:\(|\[)(?<airyear>\d{4})",
+                new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?:\(|\[| -)(?<airyear>\d{4})",
                     RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
                 //Artist - Album
-                new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?:\(|\[)",
+                new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?:\(|\[| -)",
                     RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
                 //Artist - Album Year
@@ -59,6 +59,22 @@ namespace NzbDrone.Core.Parser
 
                 //Artist Discography
                 new Regex(@"^(?<artist>.+?)\W*(?<discograghy>Discograghy|Discografia).+(?<startyear>\d{4}).+(?<endyear>\d{4})",
+                    RegexOptions.IgnoreCase | RegexOptions.Compiled),
+
+                //Artist - Album (Year) Strict
+                new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)(?:\(|\[|-).+?(?<airyear>\d{4})",
+                    RegexOptions.IgnoreCase | RegexOptions.Compiled),
+
+                //Artist - Album (Year)
+                new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)(?:\(|\[|-)(?<airyear>\d{4})",
+                    RegexOptions.IgnoreCase | RegexOptions.Compiled),
+
+                //Artist - Album
+                new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)(?:\(|\[|-)",
+                    RegexOptions.IgnoreCase | RegexOptions.Compiled),
+
+                //Artist - Album Year
+                new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)(\d{4}|\d{3})",
                     RegexOptions.IgnoreCase | RegexOptions.Compiled),
         };
 
@@ -332,6 +348,12 @@ namespace NzbDrone.Core.Parser
             var trackName = file.Tag.Title;
             var trackNumber = file.Tag.Track;
 
+            var artist = file.Tag.FirstAlbumArtist;
+            if (artist.IsNullOrWhiteSpace())
+            {
+                artist = file.Tag.FirstPerformer;
+            }
+
             var artistTitleInfo = new ArtistTitleInfo
             {
                 Title = file.Tag.Title,
@@ -343,7 +365,7 @@ namespace NzbDrone.Core.Parser
             var result = new ParsedTrackInfo
             {
                 AlbumTitle = file.Tag.Album,
-                ArtistTitle = file.Tag.FirstAlbumArtist, 
+                ArtistTitle = artist, 
                 Quality = QualityParser.ParseQuality(trackName),
                 TrackNumbers = temp,
                 ArtistTitleInfo = artistTitleInfo,
@@ -370,7 +392,6 @@ namespace NzbDrone.Core.Parser
 
 
             }
-
 
             // TODO: Check if it is common that we might need to fallback to parser to gather details
             //var result = ParseMusicTitle(fileInfo.Name);
@@ -459,7 +480,7 @@ namespace NzbDrone.Core.Parser
                     }
                 }
 
-                foreach (var regex in ReportMusicTitleRegex)
+                foreach (var regex in ReportAlbumTitleRegex)
                 {
                     var match = regex.Matches(simpleTitle);
 
@@ -768,6 +789,19 @@ namespace NzbDrone.Core.Parser
             //If Title only contains numbers return it as is.
             if (long.TryParse(title, out number))
                 return title;
+
+            return NormalizeRegex.Replace(title, string.Empty).ToLower().RemoveAccent();
+        }
+
+        public static string CleanAlbumTitle(this string title)
+        {
+            long number = 0;
+
+            //If Title only contains numbers return it as is.
+            if (long.TryParse(title, out number))
+                return title;
+
+            title = title.Replace("CD", "").Replace("(Deluxe)", "");
 
             return NormalizeRegex.Replace(title, string.Empty).ToLower().RemoveAccent();
         }
