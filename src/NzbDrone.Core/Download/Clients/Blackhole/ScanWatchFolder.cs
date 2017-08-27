@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Crypto;
 using NzbDrone.Common.Disk;
@@ -86,7 +86,7 @@ namespace NzbDrone.Core.Download.Clients.Blackhole
                 yield return newWatchItem;
             }
 
-            foreach (var videoFile in _diskScanService.GetVideoFiles(watchFolder, false))
+            foreach (var videoFile in _diskScanService.GetAudioFiles(watchFolder, false))
             {
                 var title = FileNameBuilder.CleanFileName(Path.GetFileName(videoFile));
 

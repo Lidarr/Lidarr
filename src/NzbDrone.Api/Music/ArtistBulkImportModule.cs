@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using Nancy;
 using NzbDrone.Api.REST;
@@ -80,7 +80,7 @@ namespace NzbDrone.Api.Music
                     return mappedArtist;
                 }
 
-                var files = _diskScanService.GetMusicFiles(page.Path);
+                var files = _diskScanService.GetAudioFiles(page.Path);
 
                 // Check for music files in directory
                 if (files.Count() == 0)
