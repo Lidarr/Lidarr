@@ -32,19 +32,6 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
         }
 
-        private bool SupportsTvSearch
-        {
-            get
-            {
-                var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
-
-                return capabilities.SupportedTvSearchParameters != null &&
-                       capabilities.SupportedTvSearchParameters.Contains("q") &&
-                       capabilities.SupportedTvSearchParameters.Contains("season") &&
-                       capabilities.SupportedTvSearchParameters.Contains("ep");
-            }
-        }
-
         private bool SupportsAudioSearch
         {
             get
@@ -55,57 +42,6 @@ namespace NzbDrone.Core.Indexers.Newznab
                        capabilities.SupportedAudioSearchParameters.Contains("q") &&
                        capabilities.SupportedAudioSearchParameters.Contains("artist") &&
                        capabilities.SupportedAudioSearchParameters.Contains("album");
-            }
-        }
-
-
-
-        private bool SupportsTvdbSearch
-        {
-            get
-            {
-                var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
-
-                return capabilities.SupportedTvSearchParameters != null &&
-                       capabilities.SupportedTvSearchParameters.Contains("tvdbid") &&
-                       capabilities.SupportedTvSearchParameters.Contains("season") &&
-                       capabilities.SupportedTvSearchParameters.Contains("ep");
-            }
-        }
-
-        private bool SupportsTvRageSearch
-        {
-            get
-            {
-                var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
-
-                return capabilities.SupportedTvSearchParameters != null &&
-                       capabilities.SupportedTvSearchParameters.Contains("rid") &&
-                       capabilities.SupportedTvSearchParameters.Contains("season") &&
-                       capabilities.SupportedTvSearchParameters.Contains("ep");
-            }
-        }
-
-        private bool SupportsTvMazeSearch
-        {
-            get
-            {
-                var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
-
-                return capabilities.SupportedTvSearchParameters != null &&
-                       capabilities.SupportedTvSearchParameters.Contains("tvmazeid") &&
-                       capabilities.SupportedTvSearchParameters.Contains("season") &&
-                       capabilities.SupportedTvSearchParameters.Contains("ep");
-            }
-        }
-
-        private bool SupportsAggregatedIdSearch
-        {
-            get
-            {
-                var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
-
-                return capabilities.SupportsAggregateIdSearch;
             }
         }
 
@@ -144,66 +80,6 @@ namespace NzbDrone.Core.Indexers.Newznab
                     searchCriteria.Artist.Name));
 
             return pageableRequests;
-        }
-
-        private void AddTvIdPageableRequests(IndexerPageableRequestChain chain, int maxPages, IEnumerable<int> categories, SearchCriteriaBase searchCriteria, string parameters)
-        {
-            var includeTvdbSearch = SupportsTvdbSearch && searchCriteria.Series.TvdbId > 0;
-            var includeTvRageSearch = SupportsTvRageSearch && searchCriteria.Series.TvRageId > 0;
-            var includeTvMazeSearch = SupportsTvMazeSearch && searchCriteria.Series.TvMazeId > 0;
-
-            if (SupportsAggregatedIdSearch && (includeTvdbSearch || includeTvRageSearch || includeTvMazeSearch))
-            {
-                var ids = "";
-
-                if (includeTvdbSearch)
-                {
-                    ids += "&tvdbid=" + searchCriteria.Series.TvdbId;
-                }
-
-                if (includeTvRageSearch)
-                {
-                    ids += "&rid=" + searchCriteria.Series.TvRageId;
-                }
-
-                if (includeTvMazeSearch)
-                {
-                    ids += "&tvmazeid=" + searchCriteria.Series.TvMazeId;
-                }
-
-                chain.Add(GetPagedRequests(maxPages, categories, "tvsearch", ids + parameters));
-            }
-            else
-            {
-                if (includeTvdbSearch)
-                {
-                    chain.Add(GetPagedRequests(maxPages, categories, "tvsearch",
-                        string.Format("&tvdbid={0}{1}", searchCriteria.Series.TvdbId, parameters)));
-                }
-                else if (includeTvRageSearch)
-                {
-                    chain.Add(GetPagedRequests(maxPages, categories, "tvsearch",
-                        string.Format("&rid={0}{1}", searchCriteria.Series.TvRageId, parameters)));
-                }
-
-                else if (includeTvMazeSearch)
-                {
-                    chain.Add(GetPagedRequests(maxPages, categories, "tvsearch",
-                        string.Format("&tvmazeid={0}{1}", searchCriteria.Series.TvMazeId, parameters)));
-                }
-            }
-
-            if (SupportsTvSearch)
-            {
-                chain.AddTier();
-                foreach (var queryTitle in searchCriteria.QueryTitles)
-                {
-                    chain.Add(GetPagedRequests(MaxPages, Settings.Categories, "tvsearch",
-                        string.Format("&q={0}{1}",
-                        NewsnabifyTitle(queryTitle),
-                        parameters)));
-                }
-            }
         }
 
         private void AddAudioPageableRequests(IndexerPageableRequestChain chain, string parameters)

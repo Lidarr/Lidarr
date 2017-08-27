@@ -16,14 +16,14 @@ namespace NzbDrone.Core.Test.IndexerTests.IntegrationTests
     [IntegrationTest]
     public class IndexerIntegrationTests : CoreTest
     {
-        private AlbumSearchCriteria _singleSearchCriteria;
+        private AlbumSearchCriteria _albumSearchCriteria;
 
         [SetUp]
         public void SetUp()
         {
             UseRealHttp();
 
-            _singleSearchCriteria = new AlbumSearchCriteria()
+            _albumSearchCriteria = new AlbumSearchCriteria()
                 {
                 };
         }
@@ -55,7 +55,7 @@ namespace NzbDrone.Core.Test.IndexerTests.IntegrationTests
                 Settings = new NyaaSettings()
             };
 
-            var result = indexer.Fetch(_singleSearchCriteria);
+            var result = indexer.Fetch(_albumSearchCriteria);
 
             ValidateTorrentResult(result, hasSize: true);
         }
