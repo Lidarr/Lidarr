@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
@@ -7,13 +7,12 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download.TrackedDownloads;
 using NzbDrone.Core.MediaFiles.Commands;
-using NzbDrone.Core.MediaFiles.EpisodeImport;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.MediaFiles.TrackImport;
 
 namespace NzbDrone.Core.MediaFiles
 {
-    public class DownloadedEpisodesCommandService : IExecute<DownloadedAlbumsScanCommand>
+    public class DownloadedAlbumsCommandService : IExecute<DownloadedAlbumsScanCommand>
     {
         private readonly IDownloadedEpisodesImportService _downloadedEpisodesImportService;
         private readonly ITrackedDownloadService _trackedDownloadService;
@@ -21,7 +20,7 @@ namespace NzbDrone.Core.MediaFiles
         private readonly IConfigService _configService;
         private readonly Logger _logger;
 
-        public DownloadedEpisodesCommandService(IDownloadedEpisodesImportService downloadedEpisodesImportService,
+        public DownloadedAlbumsCommandService(IDownloadedEpisodesImportService downloadedEpisodesImportService,
                                                 ITrackedDownloadService trackedDownloadService,
                                                 IDiskProvider diskProvider,
                                                 IConfigService configService,
