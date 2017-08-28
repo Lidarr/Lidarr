@@ -42,7 +42,12 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
         private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
         {
-            Authenticate();
+            var cookies = AuthCookieCache.Find(Settings.BaseUrl.Trim().TrimEnd('/'));
+
+            if (cookies == null || GetIndex(cookies) == null)
+            {
+                Authenticate();
+            }
 
             var filter = "";
             if (searchParameters == null)
@@ -55,7 +60,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                     $"{Settings.BaseUrl.Trim().TrimEnd('/')}/ajax.php?action=browse&searchstr={searchParameters}{filter}",
                     HttpAccept.Json);
 
-            var cookies = AuthCookieCache.Find(Settings.BaseUrl.Trim().TrimEnd('/'));
+            cookies = AuthCookieCache.Find(Settings.BaseUrl.Trim().TrimEnd('/'));
             foreach (var cookie in cookies)
             {
                 request.HttpRequest.Cookies[cookie.Key] = cookie.Value;
@@ -63,6 +68,8 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
             yield return request;
         }
+
+
 
         private GazelleAuthResponse GetIndex(Dictionary<string,string> cookies)
         {
@@ -79,16 +86,26 @@ namespace NzbDrone.Core.Indexers.Gazelle
                 .Accept(HttpAccept.Json)
                 .Build();
 
+            
             var indexResponse = HttpClient.Execute(authIndexRequest);
 
-            var result = Json.Deserialize<GazelleAuthResponse>(indexResponse.Content);
+            GazelleAuthResponse result;
+
+            if (indexResponse.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                result = Json.Deserialize<GazelleAuthResponse>(indexResponse.Content);
+            }
+            else
+            {
+                return null;
+            }
+
 
             return result;
         }
 
         private void Authenticate()
         {
-
             var requestBuilder = new HttpRequestBuilder($"{Settings.BaseUrl.Trim().TrimEnd('/')}")
             {
                 LogResponseContent = true
@@ -99,29 +116,27 @@ namespace NzbDrone.Core.Indexers.Gazelle
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
             var authKey = Settings.BaseUrl.Trim().TrimEnd('/');
-            var cookies = AuthCookieCache.Find(authKey);
 
-            if (cookies == null)
+            AuthCookieCache.Remove(authKey);
+            var authLoginRequest = requestBuilder
+                .AddFormParameter("username", Settings.Username)
+                .AddFormParameter("password", Settings.Password)
+                .AddFormParameter("keeplogged", "1")
+                .SetHeader("Content-Type", "multipart/form-data")
+                .Accept(HttpAccept.Json)
+                .Build();
+
+            var response = HttpClient.Execute(authLoginRequest);
+
+            var cookies = response.GetCookies();
+
+            if (!cookies.ContainsKey("session"))
             {
-                AuthCookieCache.Remove(authKey);
-                var authLoginRequest = requestBuilder
-                    .AddFormParameter("username", Settings.Username)
-                    .AddFormParameter("password", Settings.Password)
-                    .AddFormParameter("keeplogged", "1")
-                    .SetHeader("Content-Type", "multipart/form-data")
-                    .Accept(HttpAccept.Json)
-                    .Build();
-
-                var response = HttpClient.Execute(authLoginRequest);
-
-                cookies = response.GetCookies();
-                AuthCookieCache.Set(authKey, cookies, new TimeSpan(7, 0, 0, 0, 0)); // re-auth every 7 days
-                requestBuilder.SetCookies(cookies);
+                throw new Exception("Failed to authenticate with Gazelle.");
             }
-            else
-            {
-                requestBuilder.SetCookies(cookies);
-            }
+
+            AuthCookieCache.Set(authKey, cookies, new TimeSpan(7, 0, 0, 0, 0)); // re-auth every 7 days
+            requestBuilder.SetCookies(cookies);
 
             var index = GetIndex(cookies);
 
@@ -135,6 +150,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
             Settings.AuthKey = index.Response.Authkey;
             Settings.PassKey = index.Response.Passkey;
+            Settings.LoggedInUser = index.Response.Username;
 
         }        
     }
