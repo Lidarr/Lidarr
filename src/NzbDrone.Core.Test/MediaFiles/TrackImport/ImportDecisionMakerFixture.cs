@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MediaFiles.EpisodeImport;
+using NzbDrone.Core.MediaFiles.TrackImport;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Profiles;
@@ -15,7 +15,7 @@ using NzbDrone.Core.Music;
 using NzbDrone.Test.Common;
 using FizzWare.NBuilder;
 
-namespace NzbDrone.Core.Test.MediaFiles.EpisodeImport
+namespace NzbDrone.Core.Test.MediaFiles.TrackImport
 {
     [TestFixture]
     public class ImportDecisionMakerFixture : CoreTest<ImportDecisionMaker>
