@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using System.Text;
@@ -10,51 +10,27 @@ namespace NzbDrone.Core.Indexers.Waffles
     public class WafflesRequestGenerator : IIndexerRequestGenerator
     {
         public WafflesSettings Settings { get; set; }
-        
+        public int MaxPages { get; set; }
+
+        public WafflesRequestGenerator()
+        {
+            MaxPages = 5;
+        }
+
         public virtual IndexerPageableRequestChain GetRecentRequests()
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(null));
+            pageableRequests.Add(GetPagedRequests(MaxPages, null));
 
             return pageableRequests;
-        }
-
-        [System.Obsolete("Sonarr TV Stuff -- Shouldn't be needed for Lidarr")]
-        public virtual IndexerPageableRequestChain GetSearchRequests(SingleEpisodeSearchCriteria searchCriteria)
-        {
-            throw new NotImplementedException ();
-        }
-
-        [System.Obsolete("Sonarr TV Stuff -- Shouldn't be needed for Lidarr")]
-        public virtual IndexerPageableRequestChain GetSearchRequests(SeasonSearchCriteria searchCriteria)
-        {
-            throw new NotImplementedException();
-        }
-
-        [System.Obsolete("Sonarr TV Stuff -- Shouldn't be needed for Lidarr")]
-        public virtual IndexerPageableRequestChain GetSearchRequests(DailyEpisodeSearchCriteria searchCriteria)
-        {
-            throw new NotImplementedException();
-        }
-
-        [System.Obsolete("Sonarr TV Stuff -- Shouldn't be needed for Lidarr")]
-        public virtual IndexerPageableRequestChain GetSearchRequests(AnimeEpisodeSearchCriteria searchCriteria)
-        {
-            throw new NotImplementedException();
-        }
-
-        [System.Obsolete("Sonarr TV Stuff -- Shouldn't be needed for Lidarr")]
-        public virtual IndexerPageableRequestChain GetSearchRequests(SpecialEpisodeSearchCriteria searchCriteria)
-        {
-            throw new NotImplementedException();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("&q=artist:{0} album:{1}",searchCriteria.Artist.Name,searchCriteria.AlbumTitle)));
+            pageableRequests.Add(GetPagedRequests(MaxPages, string.Format("&q=artist:{0} album:{1}",searchCriteria.Artist.Name,searchCriteria.AlbumTitle)));
 
             return pageableRequests;
         }
@@ -63,12 +39,12 @@ namespace NzbDrone.Core.Indexers.Waffles
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("&q=artist:{0}", searchCriteria.Artist.Name)));
+            pageableRequests.Add(GetPagedRequests(MaxPages, string.Format("&q=artist:{0}", searchCriteria.Artist.Name)));
 
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string query)
+        private IEnumerable<IndexerRequest> GetPagedRequests(int maxPages, string query)
         { 
 
             var url = new StringBuilder();
@@ -80,7 +56,10 @@ namespace NzbDrone.Core.Indexers.Waffles
                 url.AppendFormat(query);
             }
 
-            yield return new IndexerRequest(url.ToString(), HttpAccept.Rss);
+            for (var page = 0; page < maxPages; page++)
+            {
+                yield return new IndexerRequest(string.Format("{0}&p={1}", url, page), HttpAccept.Rss);
+            }
         }
     }
 }
