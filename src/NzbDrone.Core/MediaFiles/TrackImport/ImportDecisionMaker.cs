@@ -47,28 +47,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             _logger = logger;
         }
 
-        //public List<ImportDecision> GetImportDecisions(List<string> videoFiles, Series series)
-        //{
-        //    return GetImportDecisions(videoFiles, series, null, false);
-        //}
-
-        //public List<ImportDecision> GetImportDecisions(List<string> videoFiles, Artist series, ParsedEpisodeInfo folderInfo, bool sceneSource)
-        //{
-        //    var newFiles = _mediaFileService.FilterExistingFiles(videoFiles.ToList(), series);
-
-        //    _logger.Debug("Analyzing {0}/{1} files.", newFiles.Count, videoFiles.Count());
-
-        //    var shouldUseFolderName = ShouldUseFolderName(videoFiles, series, folderInfo);
-        //    var decisions = new List<ImportDecision>();
-
-        //    foreach (var file in newFiles)
-        //    {
-        //        decisions.AddIfNotNull(GetDecision(file, series, folderInfo, sceneSource, shouldUseFolderName));
-        //    }
-
-        //    return decisions;
-        //}
-
         public List<ImportDecision> GetImportDecisions(List<string> musicFiles, Artist artist)
         {
             return GetImportDecisions(musicFiles, artist, null);

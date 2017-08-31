@@ -318,33 +318,6 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
                   .Verify(c => c.GetLocalTrack(It.IsAny<string>(), It.IsAny<Artist>(), null), Times.Never());
         }
 
-        //[Test]
-        //public void should_use_folder_when_only_one_video_file_and_a_sample() /// WE DONT HAVE SAMPLES IN MUSIC
-        //{
-        //    var audioFiles = new[]
-        //                     {
-        //                         @"C:\Test\Unsorted\Artist.Name.S01E01\S01E01.mkv".AsOsAgnostic(),
-        //                         @"C:\Test\Unsorted\Artist.Name.S01E01\S01E01.sample.mkv".AsOsAgnostic()
-        //                     };
-
-        //    GivenSpecifications(_pass1);
-        //    GivenVideoFiles(audioFiles.ToList());
-
-        //    Mocker.GetMock<IDetectSample>()
-        //          .Setup(s => s.IsSample(_artist, It.IsAny<QualityModel>(), It.Is<string>(c => c.Contains("sample")), It.IsAny<long>(), It.IsAny<bool>()))
-        //          .Returns(true);
-
-        //    var folderInfo = Parser.Parser.ParseMusicTitle("Artist.Name.S01E01");
-
-        //    Subject.GetImportDecisions(_audioFiles, _artist, folderInfo);
-
-        //    Mocker.GetMock<IParsingService>()
-        //          .Verify(c => c.GetLocalTrack(It.IsAny<string>(), It.IsAny<Artist>(), It.IsAny<ParsedTrackInfo>()), Times.Exactly(2));
-
-        //    Mocker.GetMock<IParsingService>()
-        //          .Verify(c => c.GetLocalTrack(It.IsAny<string>(), It.IsAny<Artist>(), null), Times.Never());
-        //}
-
         [Test]
         public void should_not_use_folder_name_if_file_name_is_scene_name()
         {
