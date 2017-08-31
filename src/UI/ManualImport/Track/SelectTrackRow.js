@@ -1,7 +1,7 @@
 var Backgrid = require('backgrid');
 
 module.exports = Backgrid.Row.extend({
-    className : 'select-episode-row',
+    className : 'select-track-row',
 
     events : {
         'click' : '_toggle'

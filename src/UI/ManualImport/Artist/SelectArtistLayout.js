@@ -2,14 +2,14 @@ var _ = require('underscore');
 var vent = require('vent');
 var Marionette = require('marionette');
 var Backgrid = require('backgrid');
-var SeriesCollection = require('../../Series/SeriesCollection');
-var SelectRow = require('./SelectSeriesRow');
+var ArtistCollection = require('../../Artist/ArtistCollection');
+var SelectRow = require('./SelectArtistRow');
 
 module.exports = Marionette.Layout.extend({
-    template  : 'ManualImport/Series/SelectSeriesLayoutTemplate',
+    template  : 'ManualImport/Artist/SelectArtistLayoutTemplate',
 
     regions : {
-        series : '.x-series'
+        artist : '.x-artist'
     },
 
     ui : {
@@ -18,30 +18,30 @@ module.exports = Marionette.Layout.extend({
 
     columns : [
         {
-            name      : 'title',
-            label     : 'Title',
+            name      : 'name',
+            label     : 'Name',
             cell      : 'String',
-            sortValue : 'sortTitle'
+            sortValue : 'sortName'
         }
     ],
 
     initialize : function() {
-        this.seriesCollection = SeriesCollection.clone();
+        this.artistCollection = ArtistCollection.clone();
         this._setModelCollection();
 
-        this.listenTo(this.seriesCollection, 'row:selected', this._onSelected);
+        this.listenTo(this.artistCollection, 'row:selected', this._onSelected);
         this.listenTo(this, 'modal:afterShow', this._setFocus);
     },
 
     onRender : function() {
-        this.seriesView = new Backgrid.Grid({
+        this.artistView = new Backgrid.Grid({
             columns    : this.columns,
-            collection : this.seriesCollection,
+            collection : this.artistCollection,
             className  : 'table table-hover season-grid',
             row        : SelectRow
         });
 
-        this.series.show(this.seriesView);
+        this.artist.show(this.artistView);
         this._setupFilter();
     },
 
@@ -77,12 +77,12 @@ module.exports = Marionette.Layout.extend({
     },
 
     _filter : function (term) {
-        this.seriesCollection.setFilter(['title', term, 'contains']);
+        this.artistCollection.setFilter(['name', term, 'contains']);
         this._setModelCollection();
     },
 
     _onSelected : function (e) {
-        this.trigger('manualimport:selected:series', { model: e.model });
+        this.trigger('manualimport:selected:artist', { model: e.model });
 
         vent.trigger(vent.Commands.CloseModal2Command);
     },
@@ -94,8 +94,8 @@ module.exports = Marionette.Layout.extend({
     _setModelCollection: function () {
         var self = this;
         
-        _.each(this.seriesCollection.models, function (model) {
-            model.collection = self.seriesCollection;
+        _.each(this.artistCollection.models, function (model) {
+            model.collection = self.artistCollection;
         });
     }
 });

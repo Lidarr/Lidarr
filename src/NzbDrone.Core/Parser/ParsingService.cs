@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
@@ -18,6 +18,8 @@ namespace NzbDrone.Core.Parser
         LocalEpisode GetLocalEpisode(string filename, Series series);
         LocalEpisode GetLocalEpisode(string filename, Series series, ParsedEpisodeInfo folderInfo, bool sceneSource);
         Series GetSeries(string title);
+        Artist GetArtist(string title);
+        Artist GetArtistFromTag(string file);
         RemoteEpisode Map(ParsedEpisodeInfo parsedEpisodeInfo, int tvdbId, int tvRageId, SearchCriteriaBase searchCriteria = null);
         RemoteEpisode Map(ParsedEpisodeInfo parsedEpisodeInfo, int seriesId, IEnumerable<int> episodeIds);
         RemoteAlbum Map(ParsedAlbumInfo parsedAlbumInfo, SearchCriteriaBase searchCriteria = null);
@@ -134,6 +136,34 @@ namespace NzbDrone.Core.Parser
             }
 
             return series;
+        }
+
+        public Artist GetArtist(string title)
+        {
+            //TODO Make this more robust??
+
+            var parsedAlbumInfo = Parser.ParseAlbumTitle(title);
+            
+            if (parsedAlbumInfo == null)
+            {
+                return _artistService.FindByName(title);
+            }
+
+            return _artistService.FindByName(parsedAlbumInfo.AlbumTitle);
+            
+        }
+
+        public Artist GetArtistFromTag(string file)
+        {
+            var parsedTrackInfo = Parser.ParseMusicPath(file);
+
+            if (parsedTrackInfo == null)
+            {
+                return _artistService.FindByName(file);
+            }
+
+            return _artistService.FindByName(parsedTrackInfo.ArtistTitle);
+
         }
 
         [System.Obsolete("Used for sonarr, not lidarr")]
@@ -669,10 +699,12 @@ namespace NzbDrone.Core.Parser
             }
 
             var tracks = GetTracks(parsedTrackInfo, artist);
+            var album = _albumService.FindByTitle(artist.Id, parsedTrackInfo.AlbumTitle);
 
             return new LocalTrack
             {
                 Artist = artist,
+                Album = album,
                 Quality = parsedTrackInfo.Quality,
                 Tracks = tracks,
                 Path = filename,

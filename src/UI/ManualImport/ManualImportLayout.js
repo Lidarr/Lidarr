@@ -9,9 +9,9 @@ var LoadingView = require('../Shared/LoadingView');
 var ManualImportRow = require('./ManualImportRow');
 var SelectAllCell = require('../Cells/SelectAllCell');
 var PathCell = require('./Cells/PathCell');
-var SeriesCell = require('./Cells/SeriesCell');
-var SeasonCell = require('./Cells/SeasonCell');
-var EpisodesCell = require('./Cells/EpisodesCell');
+var ArtistCell = require('./Cells/ArtistCell');
+var AlbumCell = require('./Cells/AlbumCell');
+var TracksCell = require('./Cells/TracksCell');
 var QualityCell = require('./Cells/QualityCell');
 var FileSizeCell = require('../Cells/FileSizeCell');
 var ApprovalStatusCell = require('../Cells/ApprovalStatusCell');
@@ -49,21 +49,21 @@ module.exports = Marionette.Layout.extend({
             sortable   : true
         },
         {
-            name       : 'series',
-            label      : 'Series',
-            cell       : SeriesCell,
+            name       : 'artist',
+            label      : 'Artist',
+            cell       : ArtistCell,
             sortable   : true
         },
         {
-            name       : 'seasonNumber',
-            label      : 'Season',
-            cell       : SeasonCell,
+            name       : 'album',
+            label      : 'Album',
+            cell       : AlbumCell,
             sortable   : true
         },
         {
-            name       : 'episodes',
-            label      : 'Episode(s)',
-            cell       : EpisodesCell,
+            name       : 'tracks',
+            label      : 'Track(s)',
+            cell       : TracksCell,
             sortable   : false
         },
         {
@@ -177,26 +177,26 @@ module.exports = Marionette.Layout.extend({
         }
 
         if (_.any(selected, function (model) {
-                return !model.has('series');
+                return !model.has('artist');
             })) {
 
-            this._showErrorMessage('Series must be chosen for each selected file');
+            this._showErrorMessage('Artist must be chosen for each selected file');
             return;
         }
 
         if (_.any(selected, function (model) {
-                return !model.has('seasonNumber');
+                return !model.has('album');
             })) {
 
-            this._showErrorMessage('Season must be chosen for each selected file');
+            this._showErrorMessage('Album must be chosen for each selected file');
             return;
         }
 
         if (_.any(selected, function (model) {
-                return !model.has('episodes') || model.get('episodes').length === 0;
+                return !model.has('tracks') || model.get('tracks').length === 0;
             })) {
 
-            this._showErrorMessage('One or more episodes must be chosen for each selected file');
+            this._showErrorMessage('One or more tracks must be chosen for each selected file');
             return;
         }
 
@@ -207,8 +207,9 @@ module.exports = Marionette.Layout.extend({
             files : _.map(selected, function (file) {
                 return {
                     path       : file.get('path'),
-                    seriesId   : file.get('series').id,
-                    episodeIds : _.map(file.get('episodes'), 'id'),
+                    artistId   : file.get('artist').id,
+                    albumId    : file.get('album').id,
+                    trackIds : _.map(file.get('tracks'), 'id'),
                     quality    : file.get('quality'),
                     downloadId : file.get('downloadId')
                 };

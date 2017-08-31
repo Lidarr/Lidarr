@@ -19,6 +19,9 @@ module.exports = PageableCollection.extend({
 
     initialize : function(options) {
         this.artistId = options.artistId;
+        if (options.albumId){
+            this.albumId = options.albumId;
+        }
     },
 
     byAlbum : function(album) {
@@ -55,7 +58,12 @@ module.exports = PageableCollection.extend({
             options = {};
         }
 
-        options.data = { artistId : this.artistId };
+        if (!this.albumId){
+            options.data = { artistId : this.artistId };
+        } else {
+            options.data = { artistId : this.artistId, albumId : this.albumId };
+        }
+        
 
         return this.originalFetch.call(this, options);
     }

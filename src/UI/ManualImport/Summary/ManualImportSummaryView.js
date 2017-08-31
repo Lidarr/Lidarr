@@ -5,15 +5,15 @@ module.exports = Marionette.ItemView.extend({
     template  : 'ManualImport/Summary/ManualImportSummaryViewTemplate',
 
     initialize : function (options) {
-        var episodes = _.map(options.episodes, function (episode) {
-                return episode.toJSON();
+        var tracks = _.map(options.tracks, function (track) {
+                return track.toJSON();
             });
 
         this.templateHelpers = {
             file     : options.file,
-            series   : options.series,
-            season   : options.season,
-            episodes : episodes,
+            artist   : options.artist,
+            album    : options.album,
+            tracks   : tracks,
             quality  : options.quality
         };
     }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NzbDrone.Api.REST;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.DecisionEngine;
@@ -26,6 +26,14 @@ namespace NzbDrone.Api.Tracks
             }
 
             var artistId = (int)Request.Query.ArtistId;
+
+            if (Request.Query.AlbumId.HasValue)
+            {
+                var albumId = (int)Request.Query.AlbumId;
+                var albumResources = MapToResource(_trackService.GetTracksByAlbum(artistId, albumId), false, true);
+
+                return albumResources;
+            }
 
             var resources = MapToResource(_trackService.GetTracksByArtist(artistId), false, true);
 
