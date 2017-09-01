@@ -945,7 +945,7 @@
     <Compile Include="Parser\IsoLanguage.cs" />
     <Compile Include="Parser\IsoLanguages.cs" />
     <Compile Include="Parser\LanguageParser.cs" />
-    <Compile Include="Parser\Model\ArtistTitleInfo.cs" />
+    <Compile Include="Parser\Model\ArtistNameInfo.cs" />
     <Compile Include="Parser\Model\LocalTrack.cs" />
     <Compile Include="Parser\Model\ParsedAlbumInfo.cs" />
     <Compile Include="Parser\Model\ParsedTrackInfo.cs" />

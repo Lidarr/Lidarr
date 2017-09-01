@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace NzbDrone.Core.Parser.Model
 {
-    public class ArtistTitleInfo
+    public class ArtistNameInfo
     {
-        public string Title { get; set; }
-        public string TitleWithoutYear { get; set; }
+        public string Name { get; set; }
+        public string NameWithoutYear { get; set; }
         public int Year { get; set; }
     }
 }

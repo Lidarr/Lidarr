@@ -14,7 +14,6 @@ using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Tv;
 using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
@@ -159,9 +158,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             return importDecisions.Any() ? MapItem(importDecisions.First(), folder, downloadId) : null;
         }
 
-        private bool SceneSource(Series series, string folder)
+        private bool SceneSource(Artist artist, string folder)
         {
-            return !(series.Path.PathEquals(folder) || series.Path.IsParentPath(folder));
+            return !(artist.Path.PathEquals(folder) || artist.Path.IsParentPath(folder));
         }
 
         private ManualImportItem MapItem(ImportDecision decision, string folder, string downloadId)

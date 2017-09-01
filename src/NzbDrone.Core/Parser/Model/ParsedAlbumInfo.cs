@@ -1,4 +1,4 @@
-﻿using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Qualities;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace NzbDrone.Core.Parser.Model
     {
         public string AlbumTitle { get; set; }
         public string ArtistName { get; set; }
-        public ArtistTitleInfo ArtistTitleInfo { get; set; }
+        public ArtistNameInfo ArtistNameInfo { get; set; }
         public QualityModel Quality { get; set; }
         public string ReleaseDate { get; set; }
         public Language Language { get; set; }

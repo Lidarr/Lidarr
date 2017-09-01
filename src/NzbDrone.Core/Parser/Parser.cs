@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -331,25 +331,35 @@ namespace NzbDrone.Core.Parser
             var file = TagLib.File.Create(path);
             var trackName = file.Tag.Title;
             var trackNumber = file.Tag.Track;
+            
+            var artist = file.Tag.FirstAlbumArtist;
 
-            var artistTitleInfo = new ArtistTitleInfo
+            if (artist.IsNotNullOrWhiteSpace())
             {
-                Title = file.Tag.Title,
+                artist = file.Tag.FirstPerformer;
+            }
+
+            var artistTitleInfo = new ArtistNameInfo
+            {
+                Name = artist,
                 Year = (int) file.Tag.Year
             };
 
             var temp = new int[1];
             temp[0] = (int) trackNumber;
+
             var result = new ParsedTrackInfo
             {
                 AlbumTitle = file.Tag.Album,
-                ArtistTitle = file.Tag.FirstAlbumArtist, 
+                ArtistTitle = artist,
+                ArtistMBId = file.Tag.MusicBrainzArtistId,
+                AlbumMBId = file.Tag.MusicBrainzReleaseId,
+                TrackMBId = file.Tag.MusicBrainzReleaseType,
                 Quality = QualityParser.ParseQuality(trackName),
                 TrackNumbers = temp,
-                ArtistTitleInfo = artistTitleInfo,
+                ArtistNameInfo = artistTitleInfo,
                 Title = file.Tag.Title
             };
-
 
             Logger.Debug("Quality parsed: {0}", file.Tag.BeatsPerMinute);
 
@@ -368,9 +378,7 @@ namespace NzbDrone.Core.Parser
                     result.Quality = QualityParser.ParseQuality(acodec.Description, acodec.AudioBitrate, acodec.AudioSampleRate);
                 }
 
-
             }
-
 
             // TODO: Check if it is common that we might need to fallback to parser to gather details
             //var result = ParseMusicTitle(fileInfo.Name);
@@ -909,16 +917,16 @@ namespace NzbDrone.Core.Parser
             ParsedTrackInfo result = new ParsedTrackInfo();
 
             result.ArtistTitle = artistName;
-            result.ArtistTitleInfo = GetArtistTitleInfo(result.ArtistTitle);
+            result.ArtistNameInfo = GetArtistTitleInfo(result.ArtistTitle);
 
             Logger.Debug("Episode Parsed. {0}", result);
             return result;
         }
 
-        private static ArtistTitleInfo GetArtistTitleInfo(string title)
+        private static ArtistNameInfo GetArtistTitleInfo(string title)
         {
-            var artistTitleInfo = new ArtistTitleInfo();
-            artistTitleInfo.Title = title;
+            var artistTitleInfo = new ArtistNameInfo();
+            artistTitleInfo.Name = title;
 
             //var match = YearInTitleRegex.Match(title);
 
@@ -952,7 +960,7 @@ namespace NzbDrone.Core.Parser
 
             result.ArtistName = artistName;
             result.AlbumTitle = albumTitle;
-            result.ArtistTitleInfo = GetArtistTitleInfo(result.ArtistName);
+            result.ArtistNameInfo = GetArtistTitleInfo(result.ArtistName);
 
             Logger.Debug("Album Parsed. {0}", result);
 

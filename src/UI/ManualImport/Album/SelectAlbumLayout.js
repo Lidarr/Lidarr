@@ -47,8 +47,6 @@ module.exports = Marionette.Layout.extend({
         });
 
         this.album.show(this.albumView);
-
-        //this._setupFilter();
     },
 
     _onSelected : function (e) {

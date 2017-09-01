@@ -140,16 +140,14 @@ namespace NzbDrone.Core.Parser
 
         public Artist GetArtist(string title)
         {
-            //TODO Make this more robust??
-
             var parsedAlbumInfo = Parser.ParseAlbumTitle(title);
             
-            if (parsedAlbumInfo == null)
+            if (parsedAlbumInfo == null || parsedAlbumInfo.ArtistName.IsNullOrWhiteSpace())
             {
                 return _artistService.FindByName(title);
             }
 
-            return _artistService.FindByName(parsedAlbumInfo.AlbumTitle);
+            return _artistService.FindByName(parsedAlbumInfo.ArtistName);
             
         }
 
@@ -157,9 +155,21 @@ namespace NzbDrone.Core.Parser
         {
             var parsedTrackInfo = Parser.ParseMusicPath(file);
 
-            if (parsedTrackInfo == null)
+            var artist = new Artist();
+
+            if (parsedTrackInfo.ArtistMBId.IsNotNullOrWhiteSpace())
             {
-                return _artistService.FindByName(file);
+                artist = _artistService.FindById(parsedTrackInfo.ArtistMBId);
+
+                if (artist != null)
+                {
+                    return artist;
+                }
+            }
+
+            if (parsedTrackInfo == null || parsedTrackInfo.ArtistTitle.IsNullOrWhiteSpace())
+            {
+                return null;
             }
 
             return _artistService.FindByName(parsedTrackInfo.ArtistTitle);
