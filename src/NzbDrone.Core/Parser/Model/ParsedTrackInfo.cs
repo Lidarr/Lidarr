@@ -1,4 +1,4 @@
-﻿using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Qualities;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,10 @@ namespace NzbDrone.Core.Parser.Model
         public string Title { get; set; }
         public string ArtistTitle { get; set; }
         public string AlbumTitle { get; set; }
-        public ArtistTitleInfo ArtistTitleInfo { get; set; }
+        public string ArtistMBId { get; set; }
+        public string AlbumMBId { get; set; }
+        public string TrackMBId { get; set; }
+        public ArtistNameInfo ArtistNameInfo { get; set; }
         public QualityModel Quality { get; set; }
         public int[] TrackNumbers { get; set; }
         //public Language Language { get; set; }
@@ -25,21 +28,18 @@ namespace NzbDrone.Core.Parser.Model
             TrackNumbers = new int[0];
         }
 
-
-
-
         public override string ToString()
         {
-            string episodeString = "[Unknown Track]";
+            string trackString = "[Unknown Track]";
 
             
             if (TrackNumbers != null && TrackNumbers.Any())
             {
-                episodeString = string.Format("T{0}", string.Join("-", TrackNumbers.Select(c => c.ToString("00"))));
+                trackString = string.Format("T{0}", string.Join("-", TrackNumbers.Select(c => c.ToString("00"))));
             }
             
 
-            return string.Format("{0} - {1} {2}", ArtistTitle, episodeString, Quality);
+            return string.Format("{0} - {1} {2}", ArtistTitle, trackString, Quality);
         }
     }
 }

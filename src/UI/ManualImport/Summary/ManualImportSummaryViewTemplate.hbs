@@ -3,15 +3,15 @@
     <dt>Path:</dt>
     <dd>{{file}}</dd>
 
-    <dt>Series:</dt>
-    <dd>{{series.title}}</dd>
+    <dt>Artist:</dt>
+    <dd>{{artist.name}}</dd>
 
-    <dt>Season:</dt>
-    <dd>{{season.seasonNumber}}</dd>
+    <dt>Album:</dt>
+    <dd>{{album.title}}</dd>
 
-    {{#each episodes}}
-        <dt>Episode:</dt>
-        <dd>{{episodeNumber}} - {{title}}</dd>
+    {{#each tracks}}
+        <dt>Track:</dt>
+        <dd>{{trackNumber}} - {{title}}</dd>
     {{/each}}
 
     <dt>Quality:</dt>
