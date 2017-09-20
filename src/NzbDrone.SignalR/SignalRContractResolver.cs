@@ -17,7 +17,7 @@ namespace NzbDrone.SignalR
         public JsonContract ResolveContract(Type type)
         {
             var fullName = type.FullName;
-            if (fullName.StartsWith("NzbDrone") || fullName.StartsWith("Sonarr"))
+            if (fullName.StartsWith("NzbDrone") || fullName.StartsWith("Lidarr"))
             {
                 return _camelCaseContractResolver.ResolveContract(type);
             }
