@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Extras.Files;
 using NzbDrone.Core.Parser;
-using NzbDrone.Core.Tv;
+using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.Extras.Others
 {
@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Extras.Others
 
         public override int Order => 2;
 
-        public override IEnumerable<ExtraFile> ProcessFiles(Series series, List<string> filesOnDisk, List<string> importedFiles)
+        public override IEnumerable<ExtraFile> ProcessFiles(Artist series, List<string> filesOnDisk, List<string> importedFiles)
         {
             _logger.Debug("Looking for existing extra files in {0}", series.Path);
 
@@ -44,7 +44,7 @@ namespace NzbDrone.Core.Extras.Others
                     continue;
                 }
 
-                var localEpisode = _parsingService.GetLocalEpisode(possibleExtraFile, series);
+                var localEpisode = _parsingService.GetLocalTrack(possibleExtraFile, series);
 
                 if (localEpisode == null)
                 {
@@ -52,13 +52,13 @@ namespace NzbDrone.Core.Extras.Others
                     continue;
                 }
 
-                if (localEpisode.Episodes.Empty())
+                if (localEpisode.Tracks.Empty())
                 {
                     _logger.Debug("Cannot find related episodes for: {0}", possibleExtraFile);
                     continue;
                 }
 
-                if (localEpisode.Episodes.DistinctBy(e => e.EpisodeFileId).Count() > 1)
+                if (localEpisode.Tracks.DistinctBy(e => e.TrackFileId).Count() > 1)
                 {
                     _logger.Debug("Extra file: {0} does not match existing files.", possibleExtraFile);
                     continue;
@@ -66,9 +66,9 @@ namespace NzbDrone.Core.Extras.Others
 
                 var extraFile = new OtherExtraFile
                 {
-                    SeriesId = series.Id,
-                    SeasonNumber = localEpisode.SeasonNumber,
-                    EpisodeFileId = localEpisode.Episodes.First().EpisodeFileId,
+                    ArtistId = series.Id,
+                    AlbumId = localEpisode.Album.Id,
+                    TrackFileId = localEpisode.Tracks.First().TrackFileId,
                     RelativePath = series.Path.GetRelativePath(possibleExtraFile),
                     Extension = extension
                 };

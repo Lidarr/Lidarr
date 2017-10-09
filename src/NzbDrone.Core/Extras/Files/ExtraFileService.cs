@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,8 +8,8 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Tv;
-using NzbDrone.Core.Tv.Events;
+using NzbDrone.Core.Music;
+using NzbDrone.Core.Music.Events;
 
 namespace NzbDrone.Core.Extras.Files
 {
@@ -26,18 +26,18 @@ namespace NzbDrone.Core.Extras.Files
     }
 
     public abstract class ExtraFileService<TExtraFile> : IExtraFileService<TExtraFile>,
-                                                         IHandleAsync<SeriesDeletedEvent>,
-                                                         IHandleAsync<EpisodeFileDeletedEvent>
+                                                         IHandleAsync<ArtistDeletedEvent>,
+                                                         IHandleAsync<TrackFileDeletedEvent>
         where TExtraFile : ExtraFile, new()
     {
         private readonly IExtraFileRepository<TExtraFile> _repository;
-        private readonly ISeriesService _seriesService;
+        private readonly IArtistService _seriesService;
         private readonly IDiskProvider _diskProvider;
         private readonly IRecycleBinProvider _recycleBinProvider;
         private readonly Logger _logger;
 
         public ExtraFileService(IExtraFileRepository<TExtraFile> repository,
-                                ISeriesService seriesService,
+                                IArtistService seriesService,
                                 IDiskProvider diskProvider,
                                 IRecycleBinProvider recycleBinProvider,
                                 Logger logger)
@@ -97,15 +97,15 @@ namespace NzbDrone.Core.Extras.Files
             _repository.DeleteMany(ids);
         }
 
-        public void HandleAsync(SeriesDeletedEvent message)
+        public void HandleAsync(ArtistDeletedEvent message)
         {
-            _logger.Debug("Deleting Extra from database for series: {0}", message.Series);
-            _repository.DeleteForSeries(message.Series.Id);
+            _logger.Debug("Deleting Extra from database for series: {0}", message.Artist);
+            _repository.DeleteForSeries(message.Artist.Id);
         }
 
-        public void HandleAsync(EpisodeFileDeletedEvent message)
+        public void HandleAsync(TrackFileDeletedEvent message)
         {
-            var episodeFile = message.EpisodeFile;
+            var episodeFile = message.TrackFile;
 
             if (message.Reason == DeleteMediaFileReason.NoLinkedEpisodes)
             {
@@ -114,7 +114,7 @@ namespace NzbDrone.Core.Extras.Files
 
             else
             {
-                var series = _seriesService.GetSeries(message.EpisodeFile.SeriesId);
+                var series = _seriesService.GetArtist(message.TrackFile.ArtistId);
 
                 foreach (var extra in _repository.GetFilesByEpisodeFile(episodeFile.Id))
                 {

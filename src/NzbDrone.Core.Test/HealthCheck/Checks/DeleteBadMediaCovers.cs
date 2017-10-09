@@ -52,7 +52,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         public void should_not_process_non_image_files()
         {
             _metadata.First().RelativePath = "season\\file.xml".AsOsAgnostic();
-            _metadata.First().Type = MetadataType.EpisodeMetadata;
+            _metadata.First().Type = MetadataType.TrackMetadata;
 
             Subject.Clean();
 
@@ -104,7 +104,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
             var imagePath = "C:\\TV\\Season\\image.jpg".AsOsAgnostic();
             _metadata.First().LastUpdated = new DateTime(2014, 12, 29);
             _metadata.First().RelativePath = "Season\\image.jpg".AsOsAgnostic();
-            _metadata.First().Type = MetadataType.SeriesImage;
+            _metadata.First().Type = MetadataType.ArtistImage;
 
             Mocker.GetMock<IDiskProvider>()
                 .Setup(c => c.OpenReadStream(imagePath))
@@ -125,7 +125,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
 
             var imagePath = "C:\\TV\\Season\\image.jpg".AsOsAgnostic();
             _metadata.First().LastUpdated = new DateTime(2014, 12, 29);
-            _metadata.First().Type = MetadataType.SeasonImage;
+            _metadata.First().Type = MetadataType.AlbumImage;
             _metadata.First().RelativePath = "Season\\image.jpg".AsOsAgnostic();
 
             Mocker.GetMock<IDiskProvider>()

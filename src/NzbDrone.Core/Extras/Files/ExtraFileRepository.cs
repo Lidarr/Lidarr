@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Messaging.Events;
@@ -7,7 +7,7 @@ namespace NzbDrone.Core.Extras.Files
 {
     public interface IExtraFileRepository<TExtraFile> : IBasicRepository<TExtraFile> where TExtraFile : ExtraFile, new()
     {
-        void DeleteForSeries(int seriesId);
+        void DeleteForSeries(int artistId);
         void DeleteForSeason(int seriesId, int seasonNumber);
         void DeleteForEpisodeFile(int episodeFileId);
         List<TExtraFile> GetFilesBySeries(int seriesId);
@@ -24,34 +24,34 @@ namespace NzbDrone.Core.Extras.Files
         {
         }
 
-        public void DeleteForSeries(int seriesId)
+        public void DeleteForSeries(int artistId)
         {
-            Delete(c => c.SeriesId == seriesId);
+            Delete(c => c.ArtistId == artistId);
         }
 
         public void DeleteForSeason(int seriesId, int seasonNumber)
         {
-            Delete(c => c.SeriesId == seriesId && c.SeasonNumber == seasonNumber);
+            Delete(c => c.ArtistId == seriesId && c.AlbumId == seasonNumber);
         }
 
         public void DeleteForEpisodeFile(int episodeFileId)
         {
-            Delete(c => c.EpisodeFileId == episodeFileId);
+            Delete(c => c.TrackFileId == episodeFileId);
         }
 
         public List<TExtraFile> GetFilesBySeries(int seriesId)
         {
-            return Query.Where(c => c.SeriesId == seriesId);
+            return Query.Where(c => c.ArtistId == seriesId);
         }
 
         public List<TExtraFile> GetFilesBySeason(int seriesId, int seasonNumber)
         {
-            return Query.Where(c => c.SeriesId == seriesId && c.SeasonNumber == seasonNumber);
+            return Query.Where(c => c.ArtistId == seriesId && c.AlbumId == seasonNumber);
         }
 
         public List<TExtraFile> GetFilesByEpisodeFile(int episodeFileId)
         {
-            return Query.Where(c => c.EpisodeFileId == episodeFileId);
+            return Query.Where(c => c.TrackFileId == episodeFileId);
         }
 
         public TExtraFile FindByPath(string path)

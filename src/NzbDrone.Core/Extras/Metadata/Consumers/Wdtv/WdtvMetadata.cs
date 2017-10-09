@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,7 +12,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Extras.Metadata.Files;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.Tv;
+using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
 {
@@ -35,16 +35,16 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
 
         public override string Name => "WDTV";
 
-        public override string GetFilenameAfterMove(Series series, EpisodeFile episodeFile, MetadataFile metadataFile)
+        public override string GetFilenameAfterMove(Artist series, TrackFile episodeFile, MetadataFile metadataFile)
         {
             var episodeFilePath = Path.Combine(series.Path, episodeFile.RelativePath);
 
-            if (metadataFile.Type == MetadataType.EpisodeImage)
+            if (metadataFile.Type == MetadataType.TrackImage)
             {
                 return GetEpisodeImageFilename(episodeFilePath);
             }
 
-            if (metadataFile.Type == MetadataType.EpisodeMetadata)
+            if (metadataFile.Type == MetadataType.TrackMetadata)
             {
                 return GetEpisodeMetadataFilename(episodeFilePath);
             }
@@ -54,7 +54,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
 
         }
 
-        public override MetadataFile FindMetadataFile(Series series, string path)
+        public override MetadataFile FindMetadataFile(Artist series, string path)
         {
             var filename = Path.GetFileName(path);
 
@@ -62,7 +62,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
 
             var metadata = new MetadataFile
                            {
-                               SeriesId = series.Id,
+                               ArtistId = series.Id,
                                Consumer = GetType().Name,
                                RelativePath = series.Path.GetRelativePath(path)
                            };
@@ -74,22 +74,22 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
                 var seasonMatch = SeasonImagesRegex.Match(parentdir.Name);
                 if (seasonMatch.Success)
                 {
-                    metadata.Type = MetadataType.SeasonImage;
+                    metadata.Type = MetadataType.AlbumImage;
 
                     if (seasonMatch.Groups["specials"].Success)
                     {
-                        metadata.SeasonNumber = 0;
+                        metadata.AlbumId = 0;
                     }
 
                     else
                     {
-                        metadata.SeasonNumber = Convert.ToInt32(seasonMatch.Groups["season"].Value);
+                        metadata.AlbumId = Convert.ToInt32(seasonMatch.Groups["season"].Value);
                     }
 
                     return metadata;
                 }
 
-                metadata.Type = MetadataType.SeriesImage;
+                metadata.Type = MetadataType.ArtistImage;
                 return metadata;
             }
 
@@ -101,10 +101,10 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
                 switch (Path.GetExtension(filename).ToLowerInvariant())
                 {
                     case ".xml":
-                        metadata.Type = MetadataType.EpisodeMetadata;
+                        metadata.Type = MetadataType.TrackMetadata;
                         return metadata;
                     case ".metathumb":
-                        metadata.Type = MetadataType.EpisodeImage;
+                        metadata.Type = MetadataType.TrackImage;
                         return metadata;
                 }
                 
@@ -113,13 +113,13 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
             return null;
         }
 
-        public override MetadataFileResult SeriesMetadata(Series series)
+        public override MetadataFileResult SeriesMetadata(Artist series)
         {
             //Series metadata is not supported
             return null;
         }
 
-        public override MetadataFileResult EpisodeMetadata(Series series, EpisodeFile episodeFile)
+        public override MetadataFileResult EpisodeMetadata(Artist series, TrackFile episodeFile)
         {
             if (!Settings.EpisodeMetadata)
             {
@@ -129,7 +129,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
             _logger.Debug("Generating Episode Metadata for: {0}", Path.Combine(series.Path, episodeFile.RelativePath));
 
             var xmlResult = string.Empty;
-            foreach (var episode in episodeFile.Episodes.Value)
+            foreach (var episode in episodeFile.Tracks.Value)
             {
                 var sb = new StringBuilder();
                 var xws = new XmlWriterSettings();
@@ -142,15 +142,12 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
 
                     var details = new XElement("details");
                     details.Add(new XElement("id", series.Id));
-                    details.Add(new XElement("title", string.Format("{0} - {1}x{2:00} - {3}", series.Title, episode.SeasonNumber, episode.EpisodeNumber, episode.Title)));
-                    details.Add(new XElement("series_name", series.Title));
+                    details.Add(new XElement("title", string.Format("{0} - {1} - {2}", series.Name, episode.TrackNumber, episode.Title)));
+                    details.Add(new XElement("series_name", series.Name));
                     details.Add(new XElement("episode_name", episode.Title));
-                    details.Add(new XElement("season_number", episode.SeasonNumber.ToString("00")));
-                    details.Add(new XElement("episode_number", episode.EpisodeNumber.ToString("00")));
-                    details.Add(new XElement("firstaired", episode.AirDate));
+                    details.Add(new XElement("episode_number", episode.TrackNumber.ToString("00")));
                     details.Add(new XElement("genre", string.Join(" / ", series.Genres)));
-                    details.Add(new XElement("actor", string.Join(" / ", series.Actors.ConvertAll(c => c.Name + " - " + c.Character))));
-                    details.Add(new XElement("overview", episode.Overview));
+                    details.Add(new XElement("actor", string.Join(" / ", series.Members.ConvertAll(c => c.Name + " - " + c.Instrument))));
 
 
                     //Todo: get guest stars, writer and director
@@ -170,7 +167,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
             return new MetadataFileResult(filename, xmlResult.Trim(Environment.NewLine.ToCharArray()));
         }
 
-        public override List<ImageFileResult> SeriesImages(Series series)
+        public override List<ImageFileResult> SeriesImages(Artist series)
         {
             if (!Settings.SeriesImages)
             {
@@ -181,7 +178,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
             var image = series.Images.SingleOrDefault(c => c.CoverType == MediaCoverTypes.Poster) ?? series.Images.FirstOrDefault();
             if (image == null)
             {
-                _logger.Trace("Failed to find suitable Series image for series {0}.", series.Title);
+                _logger.Trace("Failed to find suitable Series image for series {0}.", series.Name);
                 return new List<ImageFileResult>();
             }
 
@@ -194,7 +191,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
                    };
         }
 
-        public override List<ImageFileResult> SeasonImages(Series series, Season season)
+        public override List<ImageFileResult> SeasonImages(Artist series, Album season)
         {
             if (!Settings.SeasonImages)
             {
@@ -205,9 +202,9 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
 
             //Work out the path to this season - if we don't have a matching path then skip this season.
             string seasonFolder;
-            if (!seasonFolders.TryGetValue(season.SeasonNumber, out seasonFolder))
+            if (!seasonFolders.TryGetValue(season.Id, out seasonFolder))
             {
-                _logger.Trace("Failed to find season folder for series {0}, season {1}.", series.Title, season.SeasonNumber);
+                _logger.Trace("Failed to find season folder for series {0}, season {1}.", series.Name, season.Title);
                 return new List<ImageFileResult>();
             }
 
@@ -215,7 +212,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
             var image = season.Images.SingleOrDefault(c => c.CoverType == MediaCoverTypes.Poster) ?? season.Images.FirstOrDefault();
             if (image == null)
             {
-                _logger.Trace("Failed to find suitable season image for series {0}, season {1}.", series.Title, season.SeasonNumber);
+                _logger.Trace("Failed to find suitable season image for series {0}, season {1}.", series.Name, season.Title);
                 return new List<ImageFileResult>();
             }
 
@@ -224,22 +221,23 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
             return new List<ImageFileResult>{ new ImageFileResult(path, image.Url) };
         }
 
-        public override List<ImageFileResult> EpisodeImages(Series series, EpisodeFile episodeFile)
+        public override List<ImageFileResult> EpisodeImages(Artist series, TrackFile episodeFile)
         {
-            if (!Settings.EpisodeImages)
-            {
-                return new List<ImageFileResult>();
-            }
+            //if (!Settings.EpisodeImages)
+            //{
+            //    return new List<ImageFileResult>();
+            //}
 
-            var screenshot = episodeFile.Episodes.Value.First().Images.SingleOrDefault(i => i.CoverType == MediaCoverTypes.Screenshot);
+            //var screenshot = episodeFile.Tracks.Value.First().Images.SingleOrDefault(i => i.CoverType == MediaCoverTypes.Screenshot);
 
-            if (screenshot == null)
-            {
-                _logger.Trace("Episode screenshot not available");
-                return new List<ImageFileResult>();
-            }
+            //if (screenshot == null)
+            //{
+            //    _logger.Trace("Episode screenshot not available");
+            //    return new List<ImageFileResult>();
+            //}
 
-            return new List<ImageFileResult>{ new ImageFileResult(GetEpisodeImageFilename(episodeFile.RelativePath), screenshot.Url) };
+            // return new List<ImageFileResult>{ new ImageFileResult(GetEpisodeImageFilename(episodeFile.RelativePath), screenshot.Url) };
+            return new List<ImageFileResult>();
         }
 
         private string GetEpisodeMetadataFilename(string episodeFilePath)
@@ -252,7 +250,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
             return Path.ChangeExtension(episodeFilePath, "metathumb");
         }
 
-        private Dictionary<int, string> GetSeasonFolders(Series series)
+        private Dictionary<int, string> GetSeasonFolders(Artist series)
         {
             var seasonFolderMap = new Dictionary<int, string>();
 
@@ -278,14 +276,14 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
                         }
                         else
                         {
-                            _logger.Debug("Failed to parse season number from {0} for series {1}.", folder, series.Title);
+                            _logger.Debug("Failed to parse season number from {0} for series {1}.", folder, series.Name);
                         }
                     }
                 }
 
                 else
                 {
-                    _logger.Debug("Rejecting folder {0} for series {1}.", Path.GetDirectoryName(folder), series.Title);
+                    _logger.Debug("Rejecting folder {0} for series {1}.", Path.GetDirectoryName(folder), series.Name);
                 }
             }
 

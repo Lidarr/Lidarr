@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
@@ -7,7 +7,7 @@ using NzbDrone.Core.Extras.Files;
 using NzbDrone.Core.Extras.Metadata.Files;
 using NzbDrone.Core.Extras.Subtitles;
 using NzbDrone.Core.Parser;
-using NzbDrone.Core.Tv;
+using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.Extras.Metadata
 {
@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Extras.Metadata
 
         public override int Order => 0;
 
-        public override IEnumerable<ExtraFile> ProcessFiles(Series series, List<string> filesOnDisk, List<string> importedFiles)
+        public override IEnumerable<ExtraFile> ProcessFiles(Artist series, List<string> filesOnDisk, List<string> importedFiles)
         {
             _logger.Debug("Looking for existing metadata in {0}", series.Path);
 
@@ -57,10 +57,10 @@ namespace NzbDrone.Core.Extras.Metadata
                         continue;
                     }
 
-                    if (metadata.Type == MetadataType.EpisodeImage ||
-                        metadata.Type == MetadataType.EpisodeMetadata)
+                    if (metadata.Type == MetadataType.TrackImage ||
+                        metadata.Type == MetadataType.TrackMetadata)
                     {
-                        var localEpisode = _parsingService.GetLocalEpisode(possibleMetadataFile, series);
+                        var localEpisode = _parsingService.GetLocalTrack(possibleMetadataFile, series);
 
                         if (localEpisode == null)
                         {
@@ -68,20 +68,20 @@ namespace NzbDrone.Core.Extras.Metadata
                             continue;
                         }
 
-                        if (localEpisode.Episodes.Empty())
+                        if (localEpisode.Tracks.Empty())
                         {
                             _logger.Debug("Cannot find related episodes for: {0}", possibleMetadataFile);
                             continue;
                         }
 
-                        if (localEpisode.Episodes.DistinctBy(e => e.EpisodeFileId).Count() > 1)
+                        if (localEpisode.Tracks.DistinctBy(e => e.TrackFileId).Count() > 1)
                         {
                             _logger.Debug("Extra file: {0} does not match existing files.", possibleMetadataFile);
                             continue;
                         }
 
-                        metadata.SeasonNumber = localEpisode.SeasonNumber;
-                        metadata.EpisodeFileId = localEpisode.Episodes.First().EpisodeFileId;
+                        metadata.AlbumId = localEpisode.Album.Id;
+                        metadata.TrackFileId = localEpisode.Tracks.First().TrackFileId;
                     }
 
                     metadata.Extension = Path.GetExtension(possibleMetadataFile);

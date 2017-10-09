@@ -9,7 +9,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Extras.Files;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Parser;
-using NzbDrone.Core.Tv;
+using NzbDrone.Core.Music;
 using NzbDrone.Core.Languages;
 
 namespace NzbDrone.Core.Extras.Subtitles
@@ -32,22 +32,22 @@ namespace NzbDrone.Core.Extras.Subtitles
 
         public override int Order => 1;
 
-        public override IEnumerable<ExtraFile> CreateAfterSeriesScan(Series series, List<EpisodeFile> episodeFiles)
+        public override IEnumerable<ExtraFile> CreateAfterArtistScan(Artist series, List<TrackFile> episodeFiles)
         {
             return Enumerable.Empty<SubtitleFile>();
         }
 
-        public override IEnumerable<ExtraFile> CreateAfterEpisodeImport(Series series, EpisodeFile episodeFile)
+        public override IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist series, TrackFile episodeFile)
         {
             return Enumerable.Empty<SubtitleFile>();
         }
 
-        public override IEnumerable<ExtraFile> CreateAfterEpisodeImport(Series series, string seriesFolder, string seasonFolder)
+        public override IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist series, string seriesFolder, string seasonFolder)
         {
             return Enumerable.Empty<SubtitleFile>();
         }
 
-        public override IEnumerable<ExtraFile> MoveFilesAfterRename(Series series, List<EpisodeFile> episodeFiles)
+        public override IEnumerable<ExtraFile> MoveFilesAfterRename(Artist series, List<TrackFile> episodeFiles)
         {
             var subtitleFiles = _subtitleFileService.GetFilesBySeries(series.Id);
 
@@ -55,7 +55,7 @@ namespace NzbDrone.Core.Extras.Subtitles
 
             foreach (var episodeFile in episodeFiles)
             {
-                var groupedExtraFilesForEpisodeFile = subtitleFiles.Where(m => m.EpisodeFileId == episodeFile.Id)
+                var groupedExtraFilesForEpisodeFile = subtitleFiles.Where(m => m.TrackFileId == episodeFile.Id)
                                                             .GroupBy(s => s.Language + s.Extension).ToList();
 
                 foreach (var group in groupedExtraFilesForEpisodeFile)
@@ -83,7 +83,7 @@ namespace NzbDrone.Core.Extras.Subtitles
             return movedFiles;
         }
 
-        public override ExtraFile Import(Series series, EpisodeFile episodeFile, string path, string extension, bool readOnly)
+        public override ExtraFile Import(Artist series, TrackFile episodeFile, string path, string extension, bool readOnly)
         {
             if (SubtitleFileExtensions.Extensions.Contains(Path.GetExtension(path)))
             {

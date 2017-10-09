@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
@@ -50,9 +50,9 @@ namespace NzbDrone.Core.Extras
             {
                 // TODO Implement existingExtraFileImporter for Audio Files
 
-                //var imported = existingExtraFileImporter.ProcessFiles(artist, filteredFiles, importedFiles);
+                var imported = existingExtraFileImporter.ProcessFiles(artist, filteredFiles, importedFiles);
 
-                //importedFiles.AddRange(imported.Select(f => Path.Combine(artist.Path, f.RelativePath)));
+                importedFiles.AddRange(imported.Select(f => Path.Combine(artist.Path, f.RelativePath)));
             }
 
             _logger.Info("Found {0} extra files", extraFiles.Count);
