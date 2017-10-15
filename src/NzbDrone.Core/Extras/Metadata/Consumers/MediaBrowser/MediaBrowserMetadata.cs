@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.MediaBrowser
                                RelativePath = series.Path.GetRelativePath(path)
                            };
 
-            if (filename.Equals("series.xml", StringComparison.InvariantCultureIgnoreCase))
+            if (filename.Equals("artist.xml", StringComparison.InvariantCultureIgnoreCase))
             {
                 metadata.Type = MetadataType.ArtistMetadata;
                 return metadata;
@@ -47,14 +47,14 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.MediaBrowser
             return null;
         }
 
-        public override MetadataFileResult SeriesMetadata(Artist series)
+        public override MetadataFileResult ArtistMetadata(Artist series)
         {
-            if (!Settings.SeriesMetadata)
+            if (!Settings.ArtistMetadata)
             {
                 return null;
             }
 
-            _logger.Debug("Generating series.xml for: {0}", series.Name);
+            _logger.Debug("Generating artist.xml for: {0}", series.Name);
             var sb = new StringBuilder();
             var xws = new XmlWriterSettings();
             xws.OmitXmlDeclaration = true;
@@ -92,9 +92,9 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.MediaBrowser
                 var doc = new XDocument(tvShow);
                 doc.Save(xw);
 
-                _logger.Debug("Saving series.xml for {0}", series.Name);
+                _logger.Debug("Saving artist.xml for {0}", series.Name);
 
-                return new MetadataFileResult("series.xml", doc.ToString());
+                return new MetadataFileResult("artist.xml", doc.ToString());
             }
         }
  
@@ -103,12 +103,12 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.MediaBrowser
             return null;
         }
             
-        public override List<ImageFileResult> SeriesImages(Artist series)
+        public override List<ImageFileResult> ArtistImages(Artist series)
         {
             return new List<ImageFileResult>();
         }
 
-        public override List<ImageFileResult> SeasonImages(Artist series, Album season)
+        public override List<ImageFileResult> AlbumImages(Artist series, Album season)
         {
             return new List<ImageFileResult>();
         }

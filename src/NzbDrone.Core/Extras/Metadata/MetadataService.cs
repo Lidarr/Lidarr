@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Extras.Metadata
 
         public override IEnumerable<ExtraFile> CreateAfterArtistScan(Artist series, List<TrackFile> episodeFiles)
         {
-            var metadataFiles = _metadataFileService.GetFilesBySeries(series.Id);
+            var metadataFiles = _metadataFileService.GetFilesByArtist(series.Id);
             _cleanMetadataService.Clean(series);
 
             if (!_diskProvider.FolderExists(series.Path))
@@ -100,7 +100,7 @@ namespace NzbDrone.Core.Extras.Metadata
 
         public override IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist series, string seriesFolder, string seasonFolder)
         {
-            var metadataFiles = _metadataFileService.GetFilesBySeries(series.Id);
+            var metadataFiles = _metadataFileService.GetFilesByArtist(series.Id);
 
             if (seriesFolder.IsNullOrWhiteSpace() && seasonFolder.IsNullOrWhiteSpace())
             {
@@ -132,7 +132,7 @@ namespace NzbDrone.Core.Extras.Metadata
 
         public override IEnumerable<ExtraFile> MoveFilesAfterRename(Artist series, List<TrackFile> episodeFiles)
         {
-            var metadataFiles = _metadataFileService.GetFilesBySeries(series.Id);
+            var metadataFiles = _metadataFileService.GetFilesByArtist(series.Id);
             var movedFiles = new List<MetadataFile>();
 
             // TODO: Move EpisodeImage and EpisodeMetadata metadata files, instead of relying on consumers to do it
@@ -183,7 +183,7 @@ namespace NzbDrone.Core.Extras.Metadata
 
         private MetadataFile ProcessSeriesMetadata(IMetadata consumer, Artist series, List<MetadataFile> existingMetadataFiles)
         {
-            var seriesMetadata = consumer.SeriesMetadata(series);
+            var seriesMetadata = consumer.ArtistMetadata(series);
 
             if (seriesMetadata == null)
             {
@@ -279,7 +279,7 @@ namespace NzbDrone.Core.Extras.Metadata
         {
             var result = new List<MetadataFile>();
 
-            foreach (var image in consumer.SeriesImages(series))
+            foreach (var image in consumer.ArtistImages(series))
             {
                 var fullPath = Path.Combine(series.Path, image.RelativePath);
 
@@ -314,7 +314,7 @@ namespace NzbDrone.Core.Extras.Metadata
 
             foreach (var season in series.Albums)
             {
-                foreach (var image in consumer.SeasonImages(series, season))
+                foreach (var image in consumer.AlbumImages(series, season))
                 {
                     var fullPath = Path.Combine(series.Path, image.RelativePath);
 

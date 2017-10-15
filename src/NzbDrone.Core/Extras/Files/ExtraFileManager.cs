@@ -14,11 +14,11 @@ namespace NzbDrone.Core.Extras.Files
     public interface IManageExtraFiles
     {
         int Order { get; }
-        IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<TrackFile> episodeFiles);
-        IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist artist, TrackFile episodeFile);
-        IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist artist, string seriesFolder, string seasonFolder);
-        IEnumerable<ExtraFile> MoveFilesAfterRename(Artist artist, List<TrackFile> episodeFiles);
-        ExtraFile Import(Artist artist, TrackFile episodeFile, string path, string extension, bool readOnly);
+        IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<TrackFile> trackFiles);
+        IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist artist, TrackFile trackFile);
+        IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist artist, string artistFolder, string albumFolder);
+        IEnumerable<ExtraFile> MoveFilesAfterRename(Artist artist, List<TrackFile> trackFiles);
+        ExtraFile Import(Artist artist, TrackFile trackFile, string path, string extension, bool readOnly);
     }
 
     public abstract class ExtraFileManager<TExtraFile> : IManageExtraFiles
@@ -44,9 +44,9 @@ namespace NzbDrone.Core.Extras.Files
         public abstract int Order { get; }
         public abstract IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<TrackFile> trackFiles);
         public abstract IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist artist, TrackFile trackFile);
-        public abstract IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist artist, string seriesFolder, string seasonFolder);
+        public abstract IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist artist, string artistFolder, string albumFolder);
         public abstract IEnumerable<ExtraFile> MoveFilesAfterRename(Artist artist, List<TrackFile> trackFiles);
-        public abstract ExtraFile Import(Artist artist, TrackFile episodeFile, string path, string extension, bool readOnly);
+        public abstract ExtraFile Import(Artist artist, TrackFile trackFile, string path, string extension, bool readOnly);
 
         protected TExtraFile ImportFile(Artist artist, TrackFile trackFile, string path, bool readOnly, string extension, string fileNameSuffix = null)
         {

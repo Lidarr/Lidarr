@@ -37,10 +37,10 @@ namespace NzbDrone.Core.Extras.Metadata
 
         public abstract MetadataFile FindMetadataFile(Artist series, string path);
 
-        public abstract MetadataFileResult SeriesMetadata(Artist series);
+        public abstract MetadataFileResult ArtistMetadata(Artist series);
         public abstract MetadataFileResult EpisodeMetadata(Artist series, TrackFile episodeFile);
-        public abstract List<ImageFileResult> SeriesImages(Artist series);
-        public abstract List<ImageFileResult> SeasonImages(Artist series, Album season);
+        public abstract List<ImageFileResult> ArtistImages(Artist series);
+        public abstract List<ImageFileResult> AlbumImages(Artist series, Album season);
         public abstract List<ImageFileResult> EpisodeImages(Artist series, TrackFile episodeFile);
 
         public virtual object RequestAction(string action, IDictionary<string, string> query) { return null; }

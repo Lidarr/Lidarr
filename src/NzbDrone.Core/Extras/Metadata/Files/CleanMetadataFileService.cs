@@ -29,7 +29,7 @@ namespace NzbDrone.Core.Extras.Metadata.Files
         {
             _logger.Debug("Cleaning missing metadata files for series: {0}", series.Name);
 
-            var metadataFiles = _metadataFileService.GetFilesBySeries(series.Id);
+            var metadataFiles = _metadataFileService.GetFilesByArtist(series.Id);
 
             foreach (var metadataFile in metadataFiles)
             {

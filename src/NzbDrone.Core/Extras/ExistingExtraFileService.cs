@@ -48,8 +48,6 @@ namespace NzbDrone.Core.Extras
 
             foreach (var existingExtraFileImporter in _existingExtraFileImporters)
             {
-                // TODO Implement existingExtraFileImporter for Audio Files
-
                 var imported = existingExtraFileImporter.ProcessFiles(artist, filteredFiles, importedFiles);
 
                 importedFiles.AddRange(imported.Select(f => Path.Combine(artist.Path, f.RelativePath)));

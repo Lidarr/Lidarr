@@ -32,46 +32,46 @@ namespace NzbDrone.Core.Extras.Subtitles
 
         public override int Order => 1;
 
-        public override IEnumerable<ExtraFile> CreateAfterArtistScan(Artist series, List<TrackFile> episodeFiles)
+        public override IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<TrackFile> trackFiles)
         {
             return Enumerable.Empty<SubtitleFile>();
         }
 
-        public override IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist series, TrackFile episodeFile)
+        public override IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist artist, TrackFile trackFile)
         {
             return Enumerable.Empty<SubtitleFile>();
         }
 
-        public override IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist series, string seriesFolder, string seasonFolder)
+        public override IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist artist, string artistFolder, string albumFolder)
         {
             return Enumerable.Empty<SubtitleFile>();
         }
 
-        public override IEnumerable<ExtraFile> MoveFilesAfterRename(Artist series, List<TrackFile> episodeFiles)
+        public override IEnumerable<ExtraFile> MoveFilesAfterRename(Artist artist, List<TrackFile> trackFiles)
         {
-            var subtitleFiles = _subtitleFileService.GetFilesBySeries(series.Id);
+            var subtitleFiles = _subtitleFileService.GetFilesByArtist(artist.Id);
 
             var movedFiles = new List<SubtitleFile>();
 
-            foreach (var episodeFile in episodeFiles)
+            foreach (var trackFile in trackFiles)
             {
-                var groupedExtraFilesForEpisodeFile = subtitleFiles.Where(m => m.TrackFileId == episodeFile.Id)
+                var groupedExtraFilesForTrackFile = subtitleFiles.Where(m => m.TrackFileId == trackFile.Id)
                                                             .GroupBy(s => s.Language + s.Extension).ToList();
 
-                foreach (var group in groupedExtraFilesForEpisodeFile)
+                foreach (var group in groupedExtraFilesForTrackFile)
                 {
                     var groupCount = group.Count();
                     var copy = 1;
 
                     if (groupCount > 1)
                     {
-                        _logger.Warn("Multiple subtitle files found with the same language and extension for {0}", Path.Combine(series.Path, episodeFile.RelativePath));
+                        _logger.Warn("Multiple subtitle files found with the same language and extension for {0}", Path.Combine(artist.Path, trackFile.RelativePath));
                     }
 
                     foreach (var subtitleFile in group)
                     {
                         var suffix = GetSuffix(subtitleFile.Language, copy, groupCount > 1);
-                        movedFiles.AddIfNotNull(MoveFile(series, episodeFile, subtitleFile, suffix));
+                        movedFiles.AddIfNotNull(MoveFile(artist, trackFile, subtitleFile, suffix));
 
                         copy++;
                     }
@@ -83,13 +83,13 @@ namespace NzbDrone.Core.Extras.Subtitles
             return movedFiles;
         }
 
-        public override ExtraFile Import(Artist series, TrackFile episodeFile, string path, string extension, bool readOnly)
+        public override ExtraFile Import(Artist artist, TrackFile trackFile, string path, string extension, bool readOnly)
         {
             if (SubtitleFileExtensions.Extensions.Contains(Path.GetExtension(path)))
             {
                 var language = LanguageParser.ParseSubtitleLanguage(path);
                 var suffix = GetSuffix(language, 1, false);
-                var subtitleFile = ImportFile(series, episodeFile, path, readOnly, extension, suffix);
+                var subtitleFile = ImportFile(artist, trackFile, path, readOnly, extension, suffix);
                 subtitleFile.Language = language;
 
                 _subtitleFileService.Upsert(subtitleFile);

@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
 
 
             Mocker.GetMock<IMetadataFileService>()
-                .Setup(c => c.GetFilesBySeries(_series.First().Id))
+                .Setup(c => c.GetFilesByArtist(_series.First().Id))
                 .Returns(_metadata);
 
 

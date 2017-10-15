@@ -113,7 +113,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
             return null;
         }
 
-        public override MetadataFileResult SeriesMetadata(Artist series)
+        public override MetadataFileResult ArtistMetadata(Artist series)
         {
             //Series metadata is not supported
             return null;
@@ -167,9 +167,9 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
             return new MetadataFileResult(filename, xmlResult.Trim(Environment.NewLine.ToCharArray()));
         }
 
-        public override List<ImageFileResult> SeriesImages(Artist series)
+        public override List<ImageFileResult> ArtistImages(Artist series)
         {
-            if (!Settings.SeriesImages)
+            if (!Settings.ArtistImages)
             {
                 return new List<ImageFileResult>();
             }
@@ -191,9 +191,9 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
                    };
         }
 
-        public override List<ImageFileResult> SeasonImages(Artist series, Album season)
+        public override List<ImageFileResult> AlbumImages(Artist series, Album season)
         {
-            if (!Settings.SeasonImages)
+            if (!Settings.AlbumImages)
             {
                 return new List<ImageFileResult>();
             }

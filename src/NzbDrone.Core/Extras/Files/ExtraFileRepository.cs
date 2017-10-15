@@ -7,12 +7,12 @@ namespace NzbDrone.Core.Extras.Files
 {
     public interface IExtraFileRepository<TExtraFile> : IBasicRepository<TExtraFile> where TExtraFile : ExtraFile, new()
     {
-        void DeleteForSeries(int artistId);
+        void DeleteForArtist(int artistId);
         void DeleteForSeason(int seriesId, int seasonNumber);
-        void DeleteForEpisodeFile(int episodeFileId);
-        List<TExtraFile> GetFilesBySeries(int seriesId);
+        void DeleteForTrackFile(int episodeFileId);
+        List<TExtraFile> GetFilesByArtist(int seriesId);
         List<TExtraFile> GetFilesBySeason(int seriesId, int seasonNumber);
-        List<TExtraFile> GetFilesByEpisodeFile(int episodeFileId);
+        List<TExtraFile> GetFilesByTrackFile(int episodeFileId);
         TExtraFile FindByPath(string path);
     }
 
@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Extras.Files
         {
         }
 
-        public void DeleteForSeries(int artistId)
+        public void DeleteForArtist(int artistId)
         {
             Delete(c => c.ArtistId == artistId);
         }
@@ -34,12 +34,12 @@ namespace NzbDrone.Core.Extras.Files
             Delete(c => c.ArtistId == seriesId && c.AlbumId == seasonNumber);
         }
 
-        public void DeleteForEpisodeFile(int episodeFileId)
+        public void DeleteForTrackFile(int episodeFileId)
         {
             Delete(c => c.TrackFileId == episodeFileId);
         }
 
-        public List<TExtraFile> GetFilesBySeries(int seriesId)
+        public List<TExtraFile> GetFilesByArtist(int seriesId)
         {
             return Query.Where(c => c.ArtistId == seriesId);
         }
@@ -49,7 +49,7 @@ namespace NzbDrone.Core.Extras.Files
             return Query.Where(c => c.ArtistId == seriesId && c.AlbumId == seasonNumber);
         }
 
-        public List<TExtraFile> GetFilesByEpisodeFile(int episodeFileId)
+        public List<TExtraFile> GetFilesByTrackFile(int episodeFileId)
         {
             return Query.Where(c => c.TrackFileId == episodeFileId);
         }

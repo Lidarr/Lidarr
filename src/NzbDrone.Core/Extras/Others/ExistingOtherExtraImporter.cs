@@ -27,12 +27,12 @@ namespace NzbDrone.Core.Extras.Others
 
         public override int Order => 2;
 
-        public override IEnumerable<ExtraFile> ProcessFiles(Artist series, List<string> filesOnDisk, List<string> importedFiles)
+        public override IEnumerable<ExtraFile> ProcessFiles(Artist artist, List<string> filesOnDisk, List<string> importedFiles)
         {
-            _logger.Debug("Looking for existing extra files in {0}", series.Path);
+            _logger.Debug("Looking for existing extra files in {0}", artist.Path);
 
             var extraFiles = new List<OtherExtraFile>();
-            var filterResult = FilterAndClean(series, filesOnDisk, importedFiles);
+            var filterResult = FilterAndClean(artist, filesOnDisk, importedFiles);
 
             foreach (var possibleExtraFile in filterResult.FilesOnDisk)
             {
@@ -44,21 +44,21 @@ namespace NzbDrone.Core.Extras.Others
                     continue;
                 }
 
-                var localEpisode = _parsingService.GetLocalTrack(possibleExtraFile, series);
+                var localTrack = _parsingService.GetLocalTrack(possibleExtraFile, artist);
 
-                if (localEpisode == null)
+                if (localTrack == null)
                 {
                     _logger.Debug("Unable to parse extra file: {0}", possibleExtraFile);
                     continue;
                 }
 
-                if (localEpisode.Tracks.Empty())
+                if (localTrack.Tracks.Empty())
                 {
-                    _logger.Debug("Cannot find related episodes for: {0}", possibleExtraFile);
+                    _logger.Debug("Cannot find related tracks for: {0}", possibleExtraFile);
                     continue;
                 }
 
-                if (localEpisode.Tracks.DistinctBy(e => e.TrackFileId).Count() > 1)
+                if (localTrack.Tracks.DistinctBy(e => e.TrackFileId).Count() > 1)
                 {
                     _logger.Debug("Extra file: {0} does not match existing files.", possibleExtraFile);
                     continue;
@@ -66,10 +66,10 @@ namespace NzbDrone.Core.Extras.Others
 
                 var extraFile = new OtherExtraFile
                 {
-                    ArtistId = series.Id,
-                    AlbumId = localEpisode.Album.Id,
-                    TrackFileId = localEpisode.Tracks.First().TrackFileId,
-                    RelativePath = series.Path.GetRelativePath(possibleExtraFile),
+                    ArtistId = artist.Id,
+                    AlbumId = localTrack.Album.Id,
+                    TrackFileId = localTrack.Tracks.First().TrackFileId,
+                    RelativePath = artist.Path.GetRelativePath(possibleExtraFile),
                     Extension = extension
                 };
 

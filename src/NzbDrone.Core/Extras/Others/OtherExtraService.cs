@@ -44,7 +44,7 @@ namespace NzbDrone.Core.Extras.Others
 
         public override IEnumerable<ExtraFile> MoveFilesAfterRename(Artist series, List<TrackFile> episodeFiles)
         {
-            var extraFiles = _otherExtraFileService.GetFilesBySeries(series.Id);
+            var extraFiles = _otherExtraFileService.GetFilesByArtist(series.Id);
             var movedFiles = new List<OtherExtraFile>();
 
             foreach (var episodeFile in episodeFiles)
