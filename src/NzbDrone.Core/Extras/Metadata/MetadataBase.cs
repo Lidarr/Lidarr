@@ -26,22 +26,23 @@ namespace NzbDrone.Core.Extras.Metadata
             return new ValidationResult();
         }
 
-        public virtual string GetFilenameAfterMove(Artist series, TrackFile episodeFile, MetadataFile metadataFile)
+        public virtual string GetFilenameAfterMove(Artist artist, TrackFile trackFile, MetadataFile metadataFile)
         {
-            var existingFilename = Path.Combine(series.Path, metadataFile.RelativePath);
+            var existingFilename = Path.Combine(artist.Path, metadataFile.RelativePath);
             var extension = Path.GetExtension(existingFilename).TrimStart('.');
-            var newFileName = Path.ChangeExtension(Path.Combine(series.Path, episodeFile.RelativePath), extension);
+            var newFileName = Path.ChangeExtension(Path.Combine(artist.Path, trackFile.RelativePath), extension);
 
             return newFileName;
         }
 
-        public abstract MetadataFile FindMetadataFile(Artist series, string path);
+        public abstract MetadataFile FindMetadataFile(Artist artist, string path);
 
-        public abstract MetadataFileResult ArtistMetadata(Artist series);
-        public abstract MetadataFileResult EpisodeMetadata(Artist series, TrackFile episodeFile);
-        public abstract List<ImageFileResult> ArtistImages(Artist series);
-        public abstract List<ImageFileResult> AlbumImages(Artist series, Album season);
-        public abstract List<ImageFileResult> EpisodeImages(Artist series, TrackFile episodeFile);
+        public abstract MetadataFileResult ArtistMetadata(Artist artist);
+        public abstract MetadataFileResult AlbumMetadata(Artist artist, Album album);
+        public abstract MetadataFileResult TrackMetadata(Artist artist, TrackFile trackFile);
+        public abstract List<ImageFileResult> ArtistImages(Artist artist);
+        public abstract List<ImageFileResult> AlbumImages(Artist artist, Album album);
+        public abstract List<ImageFileResult> TrackImages(Artist artist, TrackFile trackFile);
 
         public virtual object RequestAction(string action, IDictionary<string, string> query) { return null; }
 

@@ -141,45 +141,44 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
             xws.OmitXmlDeclaration = true;
             xws.Indent = false;
 
-            var episodeGuideUrl = string.Format("http://www.thetvdb.com/api/1D62F2F90030C444/series/{0}/all/en.zip", artist.ForeignArtistId);
-
             using (var xw = XmlWriter.Create(sb, xws))
             {
-                var tvShow = new XElement("artist");
+                var artistElement = new XElement("artist");
 
-                tvShow.Add(new XElement("title", artist.Name));
+                artistElement.Add(new XElement("title", artist.Name));
 
                 if (artist.Ratings != null && artist.Ratings.Votes > 0)
                 {
-                    tvShow.Add(new XElement("rating", artist.Ratings.Value));
+                    artistElement.Add(new XElement("rating", artist.Ratings.Value));
                 }
 
-                tvShow.Add(new XElement("plot", artist.Overview));
-                tvShow.Add(new XElement("episodeguide", new XElement("url", episodeGuideUrl)));
-                tvShow.Add(new XElement("episodeguideurl", episodeGuideUrl));
-                tvShow.Add(new XElement("id", artist.ForeignArtistId));
+                artistElement.Add(new XElement("musicbrainzartistid", artist.ForeignArtistId));
+                artistElement.Add(new XElement("biography", artist.Overview));
+                artistElement.Add(new XElement("outline", artist.Overview));
+                //tvShow.Add(new XElement("episodeguide", new XElement("url", episodeGuideUrl)));
+                //tvShow.Add(new XElement("episodeguideurl", episodeGuideUrl));
 
-                foreach (var genre in artist.Genres)
-                {
-                    tvShow.Add(new XElement("genre", genre));
-                }
+                //foreach (var genre in artist.Genres)
+                //{
+                //    tvShow.Add(new XElement("genre", genre));
+                //}
                 
 
-                foreach (var actor in artist.Members)
-                {
-                    var xmlActor = new XElement("actor",
-                        new XElement("name", actor.Name),
-                        new XElement("role", actor.Instrument));
+                //foreach (var actor in artist.Members)
+                //{
+                //    var xmlActor = new XElement("actor",
+                //        new XElement("name", actor.Name),
+                //        new XElement("role", actor.Instrument));
 
-                    if (actor.Images.Any())
-                    {
-                        xmlActor.Add(new XElement("thumb", actor.Images.First().Url));
-                    }
+                //    if (actor.Images.Any())
+                //    {
+                //        xmlActor.Add(new XElement("thumb", actor.Images.First().Url));
+                //    }
 
-                    tvShow.Add(xmlActor);
-                }
+                //    tvShow.Add(xmlActor);
+                //}
 
-                var doc = new XDocument(tvShow);
+                var doc = new XDocument(artistElement);
                 doc.Save(xw);
 
                 _logger.Debug("Saving artist.nfo for {0}", artist.Name);
@@ -188,14 +187,51 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
             }
         }
 
-        public override MetadataFileResult EpisodeMetadata(Artist artist, TrackFile trackFile)
+        public override MetadataFileResult AlbumMetadata(Artist artist, Album album)
         {
             if (!Settings.AlbumMetadata)
             {
                 return null;
             }
 
-            _logger.Debug("Generating Episode Metadata for: {0}", Path.Combine(artist.Path, trackFile.RelativePath));
+            _logger.Debug("Generating album.nfo for: {0}", album.Title);
+            var sb = new StringBuilder();
+            var xws = new XmlWriterSettings();
+            xws.OmitXmlDeclaration = true;
+            xws.Indent = false;
+
+            using (var xw = XmlWriter.Create(sb, xws))
+            {
+                var albumElement = new XElement("album");
+
+                albumElement.Add(new XElement("title", album.Title));
+
+                if (album.Ratings != null && album.Ratings.Votes > 0)
+                {
+                    albumElement.Add(new XElement("rating", album.Ratings.Value));
+                }
+
+                albumElement.Add(new XElement("musicbrainzalbumid", album.ForeignAlbumId));
+                albumElement.Add(new XElement("artistdesc", artist.Overview));
+                albumElement.Add(new XElement("releasedate", album.ReleaseDate.Value.ToShortDateString()));
+
+                var doc = new XDocument(albumElement);
+                doc.Save(xw);
+
+                _logger.Debug("Saving album.nfo for {0}", artist.Name);
+
+                return new MetadataFileResult("album.nfo", doc.ToString());
+            }
+        }
+
+        public override MetadataFileResult TrackMetadata(Artist artist, TrackFile trackFile)
+        {
+            if (!Settings.TrackMetadata)
+            {
+                return null;
+            }
+
+            _logger.Debug("Generating Track Metadata for: {0}", Path.Combine(artist.Path, trackFile.RelativePath));
 
             var xmlResult = string.Empty;
             foreach (var episode in trackFile.Tracks.Value)
@@ -279,27 +315,27 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
             return new MetadataFileResult(GetEpisodeMetadataFilename(trackFile.RelativePath), xmlResult.Trim(Environment.NewLine.ToCharArray()));
         }
 
-        public override List<ImageFileResult> ArtistImages(Artist series)
+        public override List<ImageFileResult> ArtistImages(Artist artist)
         {
             if (!Settings.ArtistImages)
             {
                 return new List<ImageFileResult>();
             }
 
-            return ProcessArtistImages(series).ToList();
+            return ProcessArtistImages(artist).ToList();
         }
 
-        public override List<ImageFileResult> AlbumImages(Artist series, Album season)
+        public override List<ImageFileResult> AlbumImages(Artist artist, Album album)
         {
             if (!Settings.AlbumImages)
             {
                 return new List<ImageFileResult>();
             }
 
-            return ProcessAlbumImages(series, season).ToList();
+            return ProcessAlbumImages(artist, album).ToList();
         }
 
-        public override List<ImageFileResult> EpisodeImages(Artist series, TrackFile episodeFile)
+        public override List<ImageFileResult> TrackImages(Artist series, TrackFile episodeFile)
         {
             //if (!Settings.EpisodeImages)
             //{
@@ -346,7 +382,8 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
         {
             foreach (var image in album.Images)
             {
-                var filename = string.Format("{0}-{1}.jpg", album.Title, image.CoverType.ToString().ToLower());
+                var destination = Path.GetFileName(album.Path);
+                var filename = string.Format("{0}\\{1}{2}", destination, image.CoverType.ToString().ToLower(), Path.GetExtension(image.Url));
 
                 yield return new ImageFileResult(filename, image.Url);
             }

@@ -27,24 +27,24 @@ namespace NzbDrone.Core.Extras.Others
 
         public override int Order => 2;
 
-        public override IEnumerable<ExtraFile> CreateAfterArtistScan(Artist series, List<TrackFile> episodeFiles)
+        public override IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<Album> albums, List<TrackFile> trackFiles)
         {
             return Enumerable.Empty<ExtraFile>();
         }
 
-        public override IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist series, TrackFile episodeFile)
+        public override IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist artist, TrackFile trackFile)
         {
             return Enumerable.Empty<ExtraFile>();
         }
 
-        public override IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist series, string seriesFolder, string seasonFolder)
+        public override IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, string artistFolder, string albumFolder)
         {
             return Enumerable.Empty<ExtraFile>();
         }
 
-        public override IEnumerable<ExtraFile> MoveFilesAfterRename(Artist series, List<TrackFile> episodeFiles)
+        public override IEnumerable<ExtraFile> MoveFilesAfterRename(Artist artist, List<TrackFile> episodeFiles)
         {
-            var extraFiles = _otherExtraFileService.GetFilesByArtist(series.Id);
+            var extraFiles = _otherExtraFileService.GetFilesByArtist(artist.Id);
             var movedFiles = new List<OtherExtraFile>();
 
             foreach (var episodeFile in episodeFiles)
@@ -53,7 +53,7 @@ namespace NzbDrone.Core.Extras.Others
 
                 foreach (var extraFile in extraFilesForEpisodeFile)
                 {
-                    movedFiles.AddIfNotNull(MoveFile(series, episodeFile, extraFile));
+                    movedFiles.AddIfNotNull(MoveFile(artist, episodeFile, extraFile));
                 }
             }
 
@@ -62,7 +62,7 @@ namespace NzbDrone.Core.Extras.Others
             return movedFiles;
         }
 
-        public override ExtraFile Import(Artist series, TrackFile episodeFile, string path, string extension, bool readOnly)
+        public override ExtraFile Import(Artist artist, TrackFile trackFile, string path, string extension, bool readOnly)
         {
             // If the extension is .nfo we need to change it to .nfo-orig
             if (Path.GetExtension(path).Equals(".nfo"))
@@ -70,7 +70,7 @@ namespace NzbDrone.Core.Extras.Others
                 extension += "-orig";
             }
 
-            var extraFile = ImportFile(series, episodeFile, path, readOnly, extension, null);
+            var extraFile = ImportFile(artist, trackFile, path, readOnly, extension, null);
 
             _otherExtraFileService.Upsert(extraFile);
 

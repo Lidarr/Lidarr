@@ -8,12 +8,13 @@ namespace NzbDrone.Core.Extras.Metadata
 {
     public interface IMetadata : IProvider
     {
-        string GetFilenameAfterMove(Artist series, TrackFile episodeFile, MetadataFile metadataFile);
-        MetadataFile FindMetadataFile(Artist series, string path);
-        MetadataFileResult ArtistMetadata(Artist series);
-        MetadataFileResult EpisodeMetadata(Artist series, TrackFile episodeFile);
-        List<ImageFileResult> ArtistImages(Artist series);
-        List<ImageFileResult> AlbumImages(Artist series, Album season);
-        List<ImageFileResult> EpisodeImages(Artist series, TrackFile episodeFile);
+        string GetFilenameAfterMove(Artist artist, TrackFile trackFile, MetadataFile metadataFile);
+        MetadataFile FindMetadataFile(Artist artist, string path);
+        MetadataFileResult ArtistMetadata(Artist artist);
+        MetadataFileResult AlbumMetadata(Artist artist, Album album);
+        MetadataFileResult TrackMetadata(Artist artist, TrackFile trackFile);
+        List<ImageFileResult> ArtistImages(Artist artist);
+        List<ImageFileResult> AlbumImages(Artist artist, Album album);
+        List<ImageFileResult> TrackImages(Artist artist, TrackFile trackFile);
     }
 }

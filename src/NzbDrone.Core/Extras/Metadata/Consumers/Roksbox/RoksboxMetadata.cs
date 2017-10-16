@@ -42,12 +42,12 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
 
             if (metadataFile.Type == MetadataType.TrackImage)
             {
-                return GetEpisodeImageFilename(episodeFilePath);
+                return GetTrackImageFilename(episodeFilePath);
             }
 
             if (metadataFile.Type == MetadataType.TrackMetadata)
             {
-                return GetEpisodeMetadataFilename(episodeFilePath);
+                return GetTrackMetadataFilename(episodeFilePath);
             }
 
             _logger.Debug("Unknown episode file metadata: {0}", metadataFile.RelativePath);
@@ -122,21 +122,26 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
 
         public override MetadataFileResult ArtistMetadata(Artist artist)
         {
-            //Series metadata is not supported
+            //Artist metadata is not supported
             return null;
         }
 
-        public override MetadataFileResult EpisodeMetadata(Artist artist, TrackFile trackFile)
+        public override MetadataFileResult AlbumMetadata(Artist artist, Album album)
+        {
+            return null;
+        }
+
+        public override MetadataFileResult TrackMetadata(Artist artist, TrackFile trackFile)
         {
             if (!Settings.EpisodeMetadata)
             {
                 return null;
             }
             
-            _logger.Debug("Generating Episode Metadata for: {0}", trackFile.RelativePath);
+            _logger.Debug("Generating Track Metadata for: {0}", trackFile.RelativePath);
 
             var xmlResult = string.Empty;
-            foreach (var episode in trackFile.Tracks.Value)
+            foreach (var track in trackFile.Tracks.Value)
             {
                 var sb = new StringBuilder();
                 var xws = new XmlWriterSettings();
@@ -148,7 +153,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
                     var doc = new XDocument();
 
                     var details = new XElement("video");
-                    details.Add(new XElement("title", string.Format("{0} - {1} - {2}", artist.Name, episode.TrackNumber, episode.Title)));
+                    details.Add(new XElement("title", string.Format("{0} - {1} - {2}", artist.Name, track.TrackNumber, track.Title)));
                     details.Add(new XElement("genre", string.Join(" / ", artist.Genres)));
                     var actors = string.Join(" , ", artist.Members.ConvertAll(c => c.Name + " - " + c.Instrument).GetRange(0, Math.Min(3, artist.Members.Count)));
                     details.Add(new XElement("actors", actors));
@@ -161,7 +166,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
                 }
             }
 
-            return new MetadataFileResult(GetEpisodeMetadataFilename(trackFile.RelativePath), xmlResult.Trim(Environment.NewLine.ToCharArray()));
+            return new MetadataFileResult(GetTrackMetadataFilename(trackFile.RelativePath), xmlResult.Trim(Environment.NewLine.ToCharArray()));
         }
 
         public override List<ImageFileResult> ArtistImages(Artist artist)
@@ -181,7 +186,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
 
         public override List<ImageFileResult> AlbumImages(Artist artist, Album album)
         {
-            var seasonFolders = GetSeasonFolders(artist);
+            var seasonFolders = GetAlbumFolders(artist);
 
             string seasonFolder;
             if (!seasonFolders.TryGetValue(album.ArtistId, out seasonFolder))
@@ -204,7 +209,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
             return new List<ImageFileResult> { new ImageFileResult(path, image.Url) };
         }
 
-        public override List<ImageFileResult> EpisodeImages(Artist series, TrackFile trackFile)
+        public override List<ImageFileResult> TrackImages(Artist artist, TrackFile trackFile)
         {
             //var screenshot = episodeFile.Tracks.Value.First().Images.SingleOrDefault(i => i.CoverType == MediaCoverTypes.Screenshot);
 
@@ -218,17 +223,17 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
             return new List<ImageFileResult>();
         }
 
-        private string GetEpisodeMetadataFilename(string episodeFilePath)
+        private string GetTrackMetadataFilename(string trackFilePath)
         {
-            return Path.ChangeExtension(episodeFilePath, "xml");
+            return Path.ChangeExtension(trackFilePath, "xml");
         }
 
-        private string GetEpisodeImageFilename(string episodeFilePath)
+        private string GetTrackImageFilename(string trackFilePath)
         {
-            return Path.ChangeExtension(episodeFilePath, "jpg");
+            return Path.ChangeExtension(trackFilePath, "jpg");
         }
 
-        private Dictionary<int, string> GetSeasonFolders(Artist artist)
+        private Dictionary<int, string> GetAlbumFolders(Artist artist)
         {
             var seasonFolderMap = new Dictionary<int, string>();
 

@@ -28,6 +28,7 @@ namespace NzbDrone.Core.Extras
     {
         private readonly IMediaFileService _mediaFileService;
         //private readonly IEpisodeService _episodeService;
+        private readonly IAlbumService _albumService;
         private readonly ITrackService _trackService;
         private readonly IDiskProvider _diskProvider;
         private readonly IConfigService _configService;
@@ -36,6 +37,7 @@ namespace NzbDrone.Core.Extras
 
         public ExtraService(IMediaFileService mediaFileService,
                             //IEpisodeService episodeService,
+                            IAlbumService albumService,
                             ITrackService trackService,
                             IDiskProvider diskProvider,
                             IConfigService configService,
@@ -44,6 +46,7 @@ namespace NzbDrone.Core.Extras
         {
             _mediaFileService = mediaFileService;
             //_episodeService = episodeService;
+            _albumService = albumService;
             _trackService = trackService;
             _diskProvider = diskProvider;
             _configService = configService;
@@ -108,11 +111,12 @@ namespace NzbDrone.Core.Extras
         public void Handle(MediaCoversUpdatedEvent message)
         {
             var artist = message.Artist;
+            var albums = _albumService.GetAlbumsByArtist(artist.Id);
             var trackFiles = GetTrackFiles(artist.Id);
 
             foreach (var extraFileManager in _extraFileManagers)
             {
-                extraFileManager.CreateAfterArtistScan(artist, trackFiles);
+                extraFileManager.CreateAfterArtistScan(artist, albums, trackFiles);
             }
         }
 
@@ -122,18 +126,18 @@ namespace NzbDrone.Core.Extras
 
             foreach (var extraFileManager in _extraFileManagers)
             {
-                extraFileManager.CreateAfterEpisodeImport(artist, message.ArtistFolder, message.AlbumFolder);
+                extraFileManager.CreateAfterTrackImport(artist, message.ArtistFolder, message.AlbumFolder);
             }
         }
 
         public void Handle(ArtistRenamedEvent message)
         {
             var artist = message.Artist;
-            var episodeFiles = GetTrackFiles(artist.Id);
+            var trackFiles = GetTrackFiles(artist.Id);
 
             foreach (var extraFileManager in _extraFileManagers)
             {
-                extraFileManager.MoveFilesAfterRename(artist, episodeFiles);
+                extraFileManager.MoveFilesAfterRename(artist, trackFiles);
             }
         }
 
