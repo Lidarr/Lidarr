@@ -1,4 +1,4 @@
-﻿using FizzWare.NBuilder;
+using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
 using NzbDrone.Core.Extras.Metadata;
@@ -12,7 +12,7 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
     public class CleanupDuplicateMetadataFilesFixture : DbTest<CleanupDuplicateMetadataFiles, MetadataFile>
     {
         [Test]
-        public void should_not_delete_metadata_files_when_they_are_for_the_same_series_but_different_consumers()
+        public void should_not_delete_metadata_files_when_they_are_for_the_same_artist_but_different_consumers()
         {
             var files = Builder<MetadataFile>.CreateListOfSize(2)
                                              .All()
@@ -26,7 +26,7 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
         }
 
         [Test]
-        public void should_not_delete_metadata_files_for_different_series()
+        public void should_not_delete_metadata_files_for_different_artist()
         {
             var files = Builder<MetadataFile>.CreateListOfSize(2)
                                              .All()
@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
         }
 
         [Test]
-        public void should_delete_metadata_files_when_they_are_for_the_same_series_and_consumer()
+        public void should_delete_metadata_files_when_they_are_for_the_same_artist_and_consumer()
         {
             var files = Builder<MetadataFile>.CreateListOfSize(2)
                                              .All()
@@ -55,7 +55,7 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
         }
 
         [Test]
-        public void should_not_delete_metadata_files_when_there_is_only_one_for_that_series_and_consumer()
+        public void should_not_delete_metadata_files_when_there_is_only_one_for_that_artist_and_consumer()
         {
             var file = Builder<MetadataFile>.CreateNew()
                                          .BuildNew();
@@ -66,7 +66,7 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
         }
 
         [Test]
-        public void should_not_delete_metadata_files_when_they_are_for_the_same_episode_but_different_consumers()
+        public void should_not_delete_metadata_files_when_they_are_for_the_same_track_but_different_consumers()
         {
             var files = Builder<MetadataFile>.CreateListOfSize(2)
                                              .All()
@@ -80,7 +80,7 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
         }
 
         [Test]
-        public void should_not_delete_metadata_files_for_different_episode()
+        public void should_not_delete_metadata_files_for_different_track()
         {
             var files = Builder<MetadataFile>.CreateListOfSize(2)
                                              .All()
@@ -94,7 +94,7 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
         }
 
         [Test]
-        public void should_delete_metadata_files_when_they_are_for_the_same_episode_and_consumer()
+        public void should_delete_metadata_files_when_they_are_for_the_same_track_and_consumer()
         {
             var files = Builder<MetadataFile>.CreateListOfSize(2)
                                              .All()
@@ -109,7 +109,7 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
         }
 
         [Test]
-        public void should_not_delete_metadata_files_when_there_is_only_one_for_that_episode_and_consumer()
+        public void should_not_delete_metadata_files_when_there_is_only_one_for_that_track_and_consumer()
         {
             var file = Builder<MetadataFile>.CreateNew()
                                             .BuildNew();
@@ -120,7 +120,7 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
         }
 
         [Test]
-        public void should_not_delete_image_when_they_are_for_the_same_episode_but_different_consumers()
+        public void should_not_delete_image_when_they_are_for_the_same_track_but_different_consumers()
         {
             var files = Builder<MetadataFile>.CreateListOfSize(2)
                                              .All()
@@ -134,7 +134,7 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
         }
 
         [Test]
-        public void should_not_delete_image_for_different_episode()
+        public void should_not_delete_image_for_different_track()
         {
             var files = Builder<MetadataFile>.CreateListOfSize(2)
                                              .All()
@@ -148,7 +148,7 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
         }
 
         [Test]
-        public void should_delete_image_when_they_are_for_the_same_episode_and_consumer()
+        public void should_delete_image_when_they_are_for_the_same_track_and_consumer()
         {
             var files = Builder<MetadataFile>.CreateListOfSize(2)
                                              .All()
@@ -163,7 +163,7 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
         }
 
         [Test]
-        public void should_not_delete_image_when_there_is_only_one_for_that_episode_and_consumer()
+        public void should_not_delete_image_when_there_is_only_one_for_that_track_and_consumer()
         {
             var file = Builder<MetadataFile>.CreateNew()
                                             .BuildNew();

@@ -40,7 +40,8 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
                                      SELECT MetadataFiles.Id FROM MetadataFiles
                                      LEFT OUTER JOIN Albums
                                      ON MetadataFiles.AlbumId = Albums.Id
-                                     WHERE Albums.Id IS NULL)");
+                                     WHERE MetadataFiles.AlbumId > 0
+                                     AND Albums.Id IS NULL)");
         }
 
         private void DeleteOrphanedByTrackFile()
