@@ -335,34 +335,8 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
             return ProcessAlbumImages(artist, album).ToList();
         }
 
-        public override List<ImageFileResult> TrackImages(Artist series, TrackFile episodeFile)
+        public override List<ImageFileResult> TrackImages(Artist artist, TrackFile trackFile)
         {
-            //if (!Settings.EpisodeImages)
-            //{
-            //    return new List<ImageFileResult>();
-            //}
-
-            //try
-            //{
-            //    var screenshot = episodeFile.Tracks.Value.First().Images.SingleOrDefault(i => i.CoverType == MediaCoverTypes.Screenshot);
-
-            //    if (screenshot == null)
-            //    {
-            //        _logger.Debug("Episode screenshot not available");
-            //        return new List<ImageFileResult>();
-            //    }
-
-            //    return new List<ImageFileResult>
-            //       {
-            //           new ImageFileResult(GetEpisodeImageFilename(episodeFile.RelativePath), screenshot.Url)
-            //       };
-            //}
-            //catch (Exception ex)
-            //{
-            //    _logger.Error(ex, "Unable to process episode image for file: {0}", Path.Combine(series.Path, episodeFile.RelativePath));
-
-            //    return new List<ImageFileResult>();
-            //}
 
             return new List<ImageFileResult>();
         }

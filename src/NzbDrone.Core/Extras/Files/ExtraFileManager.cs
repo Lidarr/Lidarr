@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Extras.Files
     {
         int Order { get; }
         IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<Album> albums, List<TrackFile> trackFiles);
-        IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist artist, TrackFile trackFile);
+        IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, TrackFile trackFile);
         IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, string artistFolder, string albumFolder);
         IEnumerable<ExtraFile> MoveFilesAfterRename(Artist artist, List<TrackFile> trackFiles);
         ExtraFile Import(Artist artist, TrackFile trackFile, string path, string extension, bool readOnly);
@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Extras.Files
 
         public abstract int Order { get; }
         public abstract IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<Album> albums, List<TrackFile> trackFiles);
-        public abstract IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist artist, TrackFile trackFile);
+        public abstract IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, TrackFile trackFile);
         public abstract IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, string artistFolder, string albumFolder);
         public abstract IEnumerable<ExtraFile> MoveFilesAfterRename(Artist artist, List<TrackFile> trackFiles);
         public abstract ExtraFile Import(Artist artist, TrackFile trackFile, string path, string extension, bool readOnly);

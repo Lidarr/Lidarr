@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Extras.Subtitles
             return Enumerable.Empty<SubtitleFile>();
         }
 
-        public override IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist artist, TrackFile trackFile)
+        public override IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, TrackFile trackFile)
         {
             return Enumerable.Empty<SubtitleFile>();
         }

@@ -38,19 +38,19 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
 
         public override string GetFilenameAfterMove(Artist artist, TrackFile trackFile, MetadataFile metadataFile)
         {
-            var episodeFilePath = Path.Combine(artist.Path, trackFile.RelativePath);
+            var trackFilePath = Path.Combine(artist.Path, trackFile.RelativePath);
 
             if (metadataFile.Type == MetadataType.TrackImage)
             {
-                return GetTrackImageFilename(episodeFilePath);
+                return GetTrackImageFilename(trackFilePath);
             }
 
             if (metadataFile.Type == MetadataType.TrackMetadata)
             {
-                return GetTrackMetadataFilename(episodeFilePath);
+                return GetTrackMetadataFilename(trackFilePath);
             }
 
-            _logger.Debug("Unknown episode file metadata: {0}", metadataFile.RelativePath);
+            _logger.Debug("Unknown track file metadata: {0}", metadataFile.RelativePath);
             return Path.Combine(artist.Path, metadataFile.RelativePath);
         }
 
@@ -259,13 +259,13 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
                         }
                         else
                         {
-                            _logger.Debug("Failed to parse season number from {0} for series {1}.", folder, artist.Name);
+                            _logger.Debug("Failed to parse season number from {0} for artist {1}.", folder, artist.Name);
                         }
                     }
                 }
                 else
                 {
-                    _logger.Debug("Rejecting folder {0} for series {1}.", Path.GetDirectoryName(folder), artist.Name);
+                    _logger.Debug("Rejecting folder {0} for artist {1}.", Path.GetDirectoryName(folder), artist.Name);
                 }
             }
 

@@ -8,11 +8,11 @@ namespace NzbDrone.Core.Extras.Files
     public interface IExtraFileRepository<TExtraFile> : IBasicRepository<TExtraFile> where TExtraFile : ExtraFile, new()
     {
         void DeleteForArtist(int artistId);
-        void DeleteForSeason(int seriesId, int seasonNumber);
-        void DeleteForTrackFile(int episodeFileId);
-        List<TExtraFile> GetFilesByArtist(int seriesId);
-        List<TExtraFile> GetFilesBySeason(int seriesId, int seasonNumber);
-        List<TExtraFile> GetFilesByTrackFile(int episodeFileId);
+        void DeleteForAlbum(int artistId, int albumId);
+        void DeleteForTrackFile(int trackFileId);
+        List<TExtraFile> GetFilesByArtist(int artistId);
+        List<TExtraFile> GetFilesByAlbum(int artistId, int albumId);
+        List<TExtraFile> GetFilesByTrackFile(int trackFileId);
         TExtraFile FindByPath(string path);
     }
 
@@ -29,29 +29,29 @@ namespace NzbDrone.Core.Extras.Files
             Delete(c => c.ArtistId == artistId);
         }
 
-        public void DeleteForSeason(int seriesId, int seasonNumber)
+        public void DeleteForAlbum(int artistId, int albumId)
         {
-            Delete(c => c.ArtistId == seriesId && c.AlbumId == seasonNumber);
+            Delete(c => c.ArtistId == artistId && c.AlbumId == albumId);
         }
 
-        public void DeleteForTrackFile(int episodeFileId)
+        public void DeleteForTrackFile(int trackFileId)
         {
-            Delete(c => c.TrackFileId == episodeFileId);
+            Delete(c => c.TrackFileId == trackFileId);
         }
 
-        public List<TExtraFile> GetFilesByArtist(int seriesId)
+        public List<TExtraFile> GetFilesByArtist(int artistId)
         {
-            return Query.Where(c => c.ArtistId == seriesId);
+            return Query.Where(c => c.ArtistId == artistId);
         }
 
-        public List<TExtraFile> GetFilesBySeason(int seriesId, int seasonNumber)
+        public List<TExtraFile> GetFilesByAlbum(int artistId, int albumId)
         {
-            return Query.Where(c => c.ArtistId == seriesId && c.AlbumId == seasonNumber);
+            return Query.Where(c => c.ArtistId == artistId && c.AlbumId == albumId);
         }
 
-        public List<TExtraFile> GetFilesByTrackFile(int episodeFileId)
+        public List<TExtraFile> GetFilesByTrackFile(int trackFileId)
         {
-            return Query.Where(c => c.TrackFileId == episodeFileId);
+            return Query.Where(c => c.TrackFileId == trackFileId);
         }
 
         public TExtraFile FindByPath(string path)

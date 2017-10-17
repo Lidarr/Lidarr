@@ -60,7 +60,7 @@ namespace NzbDrone.Core.Extras
 
             foreach (var extraFileManager in _extraFileManagers)
             {
-                extraFileManager.CreateAfterEpisodeImport(artist, trackFile);
+                extraFileManager.CreateAfterTrackImport(artist, trackFile);
             }
 
             if (!_configService.ImportExtraFiles)

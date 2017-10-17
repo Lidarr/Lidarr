@@ -37,19 +37,19 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
 
         public override string GetFilenameAfterMove(Artist artist, TrackFile trackFile, MetadataFile metadataFile)
         {
-            var episodeFilePath = Path.Combine(artist.Path, trackFile.RelativePath);
+            var trackFilePath = Path.Combine(artist.Path, trackFile.RelativePath);
 
             if (metadataFile.Type == MetadataType.TrackImage)
             {
-                return GetTrackImageFilename(episodeFilePath);
+                return GetTrackImageFilename(trackFilePath);
             }
 
             if (metadataFile.Type == MetadataType.TrackMetadata)
             {
-                return GetTrackMetadataFilename(episodeFilePath);
+                return GetTrackMetadataFilename(trackFilePath);
             }
 
-            _logger.Debug("Unknown episode file metadata: {0}", metadataFile.RelativePath);
+            _logger.Debug("Unknown track file metadata: {0}", metadataFile.RelativePath);
             return Path.Combine(artist.Path, metadataFile.RelativePath);
 
         }
@@ -226,33 +226,20 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
             return new List<ImageFileResult>{ new ImageFileResult(path, image.Url) };
         }
 
-        public override List<ImageFileResult> TrackImages(Artist series, TrackFile episodeFile)
+        public override List<ImageFileResult> TrackImages(Artist artist, TrackFile trackFile)
         {
-            //if (!Settings.EpisodeImages)
-            //{
-            //    return new List<ImageFileResult>();
-            //}
 
-            //var screenshot = episodeFile.Tracks.Value.First().Images.SingleOrDefault(i => i.CoverType == MediaCoverTypes.Screenshot);
-
-            //if (screenshot == null)
-            //{
-            //    _logger.Trace("Episode screenshot not available");
-            //    return new List<ImageFileResult>();
-            //}
-
-            // return new List<ImageFileResult>{ new ImageFileResult(GetEpisodeImageFilename(episodeFile.RelativePath), screenshot.Url) };
             return new List<ImageFileResult>();
         }
 
-        private string GetTrackMetadataFilename(string episodeFilePath)
+        private string GetTrackMetadataFilename(string trackFilePath)
         {
-            return Path.ChangeExtension(episodeFilePath, "xml");
+            return Path.ChangeExtension(trackFilePath, "xml");
         }
 
-        private string GetTrackImageFilename(string episodeFilePath)
+        private string GetTrackImageFilename(string trackFilePath)
         {
-            return Path.ChangeExtension(episodeFilePath, "metathumb");
+            return Path.ChangeExtension(trackFilePath, "metathumb");
         }
 
         private Dictionary<int, string> GetAlbumFolders(Artist artist)
@@ -281,14 +268,14 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
                         }
                         else
                         {
-                            _logger.Debug("Failed to parse season number from {0} for series {1}.", folder, artist.Name);
+                            _logger.Debug("Failed to parse season number from {0} for artist {1}.", folder, artist.Name);
                         }
                     }
                 }
 
                 else
                 {
-                    _logger.Debug("Rejecting folder {0} for series {1}.", Path.GetDirectoryName(folder), artist.Name);
+                    _logger.Debug("Rejecting folder {0} for artist {1}.", Path.GetDirectoryName(folder), artist.Name);
                 }
             }
 

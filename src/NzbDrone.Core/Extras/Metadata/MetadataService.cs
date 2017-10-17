@@ -91,7 +91,7 @@ namespace NzbDrone.Core.Extras.Metadata
             return files;
         }
 
-        public override IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist artist, TrackFile trackFile)
+        public override IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, TrackFile trackFile)
         {
             var files = new List<MetadataFile>();
 
@@ -185,21 +185,21 @@ namespace NzbDrone.Core.Extras.Metadata
             return null;
         }
 
-        private List<MetadataFile> GetMetadataFilesForConsumer(IMetadata consumer, List<MetadataFile> seriesMetadata)
+        private List<MetadataFile> GetMetadataFilesForConsumer(IMetadata consumer, List<MetadataFile> artistMetadata)
         {
-            return seriesMetadata.Where(c => c.Consumer == consumer.GetType().Name).ToList();
+            return artistMetadata.Where(c => c.Consumer == consumer.GetType().Name).ToList();
         }
 
         private MetadataFile ProcessArtistMetadata(IMetadata consumer, Artist artist, List<MetadataFile> existingMetadataFiles)
         {
-            var seriesMetadata = consumer.ArtistMetadata(artist);
+            var artistMetadata = consumer.ArtistMetadata(artist);
 
-            if (seriesMetadata == null)
+            if (artistMetadata == null)
             {
                 return null;
             }
 
-            var hash = seriesMetadata.Contents.SHA256Hash();
+            var hash = artistMetadata.Contents.SHA256Hash();
 
             var metadata = GetMetadataFile(artist, existingMetadataFiles, e => e.Type == MetadataType.ArtistMetadata) ??
                                new MetadataFile
@@ -211,9 +211,9 @@ namespace NzbDrone.Core.Extras.Metadata
 
             if (hash == metadata.Hash)
             {
-                if (seriesMetadata.RelativePath != metadata.RelativePath)
+                if (artistMetadata.RelativePath != metadata.RelativePath)
                 {
-                    metadata.RelativePath = seriesMetadata.RelativePath;
+                    metadata.RelativePath = artistMetadata.RelativePath;
 
                     return metadata;
                 }
@@ -221,13 +221,13 @@ namespace NzbDrone.Core.Extras.Metadata
                 return null;
             }
 
-            var fullPath = Path.Combine(artist.Path, seriesMetadata.RelativePath);
+            var fullPath = Path.Combine(artist.Path, artistMetadata.RelativePath);
 
             _logger.Debug("Writing Artist Metadata to: {0}", fullPath);
-            SaveMetadataFile(fullPath, seriesMetadata.Contents);
+            SaveMetadataFile(fullPath, artistMetadata.Contents);
 
             metadata.Hash = hash;
-            metadata.RelativePath = seriesMetadata.RelativePath;
+            metadata.RelativePath = artistMetadata.RelativePath;
             metadata.Extension = Path.GetExtension(fullPath);
 
             return metadata;
@@ -320,7 +320,7 @@ namespace NzbDrone.Core.Extras.Metadata
                 return null;
             }
 
-            _logger.Debug("Writing Episode Metadata to: {0}", fullPath);
+            _logger.Debug("Writing Track Metadata to: {0}", fullPath);
             SaveMetadataFile(fullPath, episodeMetadata.Contents);
 
             metadata.Hash = hash;

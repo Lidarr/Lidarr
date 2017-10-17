@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Extras.Others
             return Enumerable.Empty<ExtraFile>();
         }
 
-        public override IEnumerable<ExtraFile> CreateAfterEpisodeImport(Artist artist, TrackFile trackFile)
+        public override IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, TrackFile trackFile)
         {
             return Enumerable.Empty<ExtraFile>();
         }
