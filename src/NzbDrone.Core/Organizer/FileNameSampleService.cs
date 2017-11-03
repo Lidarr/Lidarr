@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Organizer
 
             _track1 = new Track
             {
-                TrackNumber = 3,
+                AbsoluteTrackNumber = 3,
                 
                 Title = "Track Title (1)",
                 

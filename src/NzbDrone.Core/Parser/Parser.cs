@@ -484,6 +484,7 @@ namespace NzbDrone.Core.Parser
             var file = TagLib.File.Create(path);
             var trackNumber = file.Tag.Track;
             var trackTitle = file.Tag.Title;
+            var discNumber = file.Tag.Disc;
 
             var artist = file.Tag.FirstAlbumArtist;
 
@@ -507,6 +508,7 @@ namespace NzbDrone.Core.Parser
                 ArtistTitle = artist,
                 ArtistMBId = file.Tag.MusicBrainzArtistId,
                 AlbumMBId = file.Tag.MusicBrainzReleaseId,
+                DiscNumber = Convert.ToInt32(discNumber),
                 TrackMBId = file.Tag.MusicBrainzReleaseType,
                 TrackNumbers = temp,
                 ArtistTitleInfo = artistTitleInfo,

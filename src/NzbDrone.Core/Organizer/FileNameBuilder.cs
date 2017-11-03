@@ -431,7 +431,7 @@ namespace NzbDrone.Core.Organizer
             {
                 var patternToReplace = i == 0 ? basePattern : formatPattern;
 
-                pattern += TrackRegex.Replace(patternToReplace, match => ReplaceNumberToken(match.Groups["track"].Value, tracks[i].TrackNumber));
+                pattern += TrackRegex.Replace(patternToReplace, match => ReplaceNumberToken(match.Groups["track"].Value, tracks[i].AbsoluteTrackNumber));
             }
 
             return pattern;

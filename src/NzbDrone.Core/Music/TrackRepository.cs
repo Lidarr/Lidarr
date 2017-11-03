@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Music
         {
             return Query.Where(s => s.ArtistId == artistId)
                                .AndWhere(s => s.AlbumId == albumId)
-                               .AndWhere(s => s.TrackNumber == trackNumber)
+                               .AndWhere(s => s.AbsoluteTrackNumber == trackNumber)
                                .SingleOrDefault();
         }
 

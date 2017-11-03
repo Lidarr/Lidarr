@@ -23,6 +23,7 @@ namespace Lidarr.Api.V1.Albums
         public Ratings Ratings { get; set; }
         public DateTime? ReleaseDate { get; set; }
         public List<string> Genres { get; set; }
+        public List<MediumResource> Media { get; set; }
         public ArtistResource Artist { get; set; }
         public List<MediaCover> Images { get; set; }
         public AlbumStatisticsResource Statistics { get; set; }
@@ -32,7 +33,7 @@ namespace Lidarr.Api.V1.Albums
         public bool Grabbed { get; set; }
     }
 
-    public static class EpisodeResourceMapper
+    public static class AlbumResourceMapper
     {
         public static AlbumResource ToResource(this Album model)
         {
@@ -53,7 +54,8 @@ namespace Lidarr.Api.V1.Albums
                 Images = model.Images,
                 Ratings = model.Ratings,
                 Duration = model.Duration,
-                AlbumType = model.AlbumType
+                AlbumType = model.AlbumType,
+                Media = model.Media.ToResource(),
             };
         }
 

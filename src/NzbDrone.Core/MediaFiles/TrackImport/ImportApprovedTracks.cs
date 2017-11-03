@@ -59,7 +59,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
             var importResults = new List<ImportResult>();
 
-            foreach (var importDecision in qualifiedImports.OrderBy(e => e.LocalTrack.Tracks.Select(track => track.TrackNumber).MinOrDefault())
+            foreach (var importDecision in qualifiedImports.OrderBy(e => e.LocalTrack.Tracks.Select(track => track.AbsoluteTrackNumber).MinOrDefault())
                                                            .ThenByDescending(e => e.LocalTrack.Size))
             {
                 var localTrack = importDecision.LocalTrack;
