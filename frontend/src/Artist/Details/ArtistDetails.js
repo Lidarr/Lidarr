@@ -32,34 +32,6 @@ import ArtistTagsConnector from './ArtistTagsConnector';
 import ArtistDetailsLinks from './ArtistDetailsLinks';
 import styles from './ArtistDetails.css';
 
-const albumTypes = [
-  {
-    name: 'album',
-    label: 'Album',
-    isVisible: true
-  },
-  {
-    name: 'ep',
-    label: 'EP',
-    isVisible: true
-  },
-  {
-    name: 'single',
-    label: 'Single',
-    isVisible: true
-  },
-  {
-    name: 'broadcast',
-    label: 'Broadcast',
-    isVisible: true
-  },
-  {
-    name: 'other',
-    label: 'Other',
-    isVisible: true
-  }
-];
-
 const defaultFontSize = parseInt(fonts.defaultFontSize);
 const lineHeight = parseFloat(fonts.lineHeight);
 
@@ -178,6 +150,7 @@ class ArtistDetails extends Component {
       links,
       images,
       albums,
+      primaryAlbumTypes,
       alternateTitles,
       tags,
       isRefreshing,
@@ -506,17 +479,18 @@ class ArtistDetails extends Component {
             }
 
             {
-              isPopulated && !!albumTypes.length &&
+              isPopulated && !!primaryAlbumTypes.length &&
                 <div>
                   {
-                    albumTypes.slice(0).map((season) => {
+                    primaryAlbumTypes.slice(0).map((albumType) => {
                       return (
                         <ArtistDetailsSeasonConnector
-                          key={season.name}
+                          key={albumType}
                           artistId={id}
-                          label={season.label}
-                          {...season}
-                          isExpanded={expandedState[season.name]}
+                          name={albumType}
+                          label={albumType}
+                          {...albumType}
+                          isExpanded={expandedState[albumType]}
                           onExpandPress={this.onExpandPress}
                         />
                       );
@@ -572,6 +546,7 @@ ArtistDetails.propTypes = {
   links: PropTypes.arrayOf(PropTypes.object).isRequired,
   images: PropTypes.arrayOf(PropTypes.object).isRequired,
   albums: PropTypes.arrayOf(PropTypes.object).isRequired,
+  primaryAlbumTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
   alternateTitles: PropTypes.arrayOf(PropTypes.string).isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
   isRefreshing: PropTypes.bool.isRequired,
