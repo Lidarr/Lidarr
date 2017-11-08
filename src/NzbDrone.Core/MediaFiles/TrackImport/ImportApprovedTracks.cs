@@ -1,5 +1,6 @@
 using NLog;
 using NzbDrone.Common.Disk;
+using NzbDrone.Common.Exceptions;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.MediaFiles.Events;

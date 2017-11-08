@@ -6,6 +6,7 @@ import formatBytes from 'Utilities/Number/formatBytes';
 import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
 import { align, icons, kinds, sizes, tooltipPositions } from 'Helpers/Props';
+import fonts from 'Styles/Variables/fonts';
 import HeartRating from 'Components/HeartRating';
 import Icon from 'Components/Icon';
 import IconButton from 'Components/Link/IconButton';
@@ -58,6 +59,9 @@ const albumTypes = [
     isVisible: true
   }
 ];
+
+const defaultFontSize = parseInt(fonts.defaultFontSize);
+const lineHeight = parseFloat(fonts.lineHeight);
 
 function getFanartUrl(images) {
   const fanartImage = _.find(images, { coverType: 'fanart' });
@@ -475,11 +479,9 @@ class ArtistDetails extends Component {
 
                   }
                 </div>
-
-                <div>
+                <div className={styles.overview}>
                   <TextTruncate
-                    truncateText="…"
-                    line={8}
+                    line={Math.floor(200 / (defaultFontSize * lineHeight))}
                     text={overview}
                   />
                 </div>
@@ -495,12 +497,12 @@ class ArtistDetails extends Component {
 
             {
               !isFetching && episodesError &&
-                <div>Loading episodes failed</div>
+                <div>Loading albums failed</div>
             }
 
             {
               !isFetching && trackFilesError &&
-                <div>Loading episode files failed</div>
+                <div>Loading track files failed</div>
             }
 
             {

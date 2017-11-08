@@ -117,7 +117,7 @@ TrackDetailRow.propTypes = {
   duration: PropTypes.number.isRequired,
   trackFileId: PropTypes.number.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  trackNumber: PropTypes.number.isRequired
+  trackNumber: PropTypes.string.isRequired
 };
 
 export default TrackDetailRow;
