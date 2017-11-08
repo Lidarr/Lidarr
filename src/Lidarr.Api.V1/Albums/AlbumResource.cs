@@ -20,6 +20,15 @@ namespace Lidarr.Api.V1.Albums
         public int ProfileId { get; set; }
         public int Duration { get; set; }
         public string AlbumType { get; set; }
+        public int MediumCount
+        {
+            get
+            {
+                if (Media == null) return 0;
+
+                return Media.Where(s => s.MediumNumber > 0).Count();
+            }
+        }
         public Ratings Ratings { get; set; }
         public DateTime? ReleaseDate { get; set; }
         public List<string> Genres { get; set; }
