@@ -74,6 +74,16 @@ BuildWithXbuild()
     CheckExitCode xbuild /p:Configuration=Release /p:Platform=x86 /t:Build /p:AllowedReferenceRelatedFileExtensions=.pdb $slnFile
 }
 
+ProgressStart()
+{
+    echo "##teamcity[progressStart '$1']"
+}
+
+ProgressEnd()
+{
+    echo "##teamcity[progressEnd '$1']"
+}
+
 LintUI()
 {
     ProgressStart 'ESLint'
