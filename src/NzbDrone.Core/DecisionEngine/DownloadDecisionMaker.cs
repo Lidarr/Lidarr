@@ -64,10 +64,14 @@ namespace NzbDrone.Core.DecisionEngine
 
                     if (parsedAlbumInfo != null)
                     {
-                        if (!report.Artist.IsNullOrWhiteSpace())
-                        {
-                            parsedAlbumInfo.ArtistName = report.Artist;
-                        }
+                        // TODO: Artist Data Augment without calling to parse title again
+                        //if (!report.Artist.IsNullOrWhiteSpace())
+                        //{
+                        //    if (parsedAlbumInfo.ArtistName.IsNullOrWhiteSpace() || _parsingService.GetArtist(parsedAlbumInfo.ArtistName) == null)
+                        //    {
+                        //        parsedAlbumInfo.ArtistName = report.Artist;
+                        //    }
+                        //}
 
                         // TODO: Replace Parsed AlbumTitle with metadata Title if Parsed AlbumTitle not a valid match
                         //if (!report.Album.IsNullOrWhiteSpace())
