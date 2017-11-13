@@ -122,6 +122,7 @@ namespace NzbDrone.Core.Parser
 
             if (albumInfo == null)
             {
+                // TODO: Search by Title and Year instead of just Title when matching
                 albumInfo = _albumService.FindByTitle(artist.Id, parsedAlbumInfo.AlbumTitle);
             }
 

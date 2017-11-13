@@ -69,10 +69,11 @@ namespace NzbDrone.Core.DecisionEngine
                             parsedAlbumInfo.ArtistName = report.Artist;
                         }
 
-                        if (!report.Album.IsNullOrWhiteSpace())
-                        {
-                            parsedAlbumInfo.AlbumTitle = report.Album;
-                        }
+                        // TODO: Replace Parsed AlbumTitle with metadata Title if Parsed AlbumTitle not a valid match
+                        //if (!report.Album.IsNullOrWhiteSpace())
+                        //{
+                        //    parsedAlbumInfo.AlbumTitle = report.Album;
+                        //}
 
                         if (!parsedAlbumInfo.ArtistName.IsNullOrWhiteSpace())
                         {
