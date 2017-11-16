@@ -15,7 +15,10 @@ namespace Lidarr.Api.V1.Albums
     {
         public static MediumResource ToResource(this Medium model)
         {
-            if (model == null) return null;
+            if (model == null)
+            {
+                return null;
+            }
 
             return new MediumResource
             {
@@ -27,7 +30,10 @@ namespace Lidarr.Api.V1.Albums
 
         public static Medium ToModel(this MediumResource resource)
         {
-            if (resource == null) return null;
+            if (resource == null)
+            {
+                return null;
+            }
 
             return new Medium
             {

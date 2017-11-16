@@ -66,7 +66,6 @@ namespace NzbDrone.Core.Music
                     trackToUpdate.ForeignTrackId = track.ForeignTrackId;
                     trackToUpdate.TrackNumber = track.TrackNumber;
                     trackToUpdate.AbsoluteTrackNumber = track.AbsoluteTrackNumber;
-                    trackToUpdate.RelativeTrackNumber = track.RelativeTrackNumber;
                     trackToUpdate.Title = track.Title ?? "Unknown";
                     trackToUpdate.AlbumId = album.Id;
                     trackToUpdate.Album = track.Album ?? album;

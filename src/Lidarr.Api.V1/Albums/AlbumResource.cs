@@ -24,7 +24,10 @@ namespace Lidarr.Api.V1.Albums
         {
             get
             {
-                if (Media == null) return 0;
+                if (Media == null)
+                {
+                    return 0;
+                }
 
                 return Media.Where(s => s.MediumNumber > 0).Count();
             }

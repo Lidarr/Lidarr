@@ -11,7 +11,6 @@ namespace NzbDrone.Core.Datastore.Migration
             Alter.Table("Albums").AddColumn("Media").AsString().WithDefaultValue("");
             Alter.Table("Tracks").AddColumn("MediumNumber").AsInt32().WithDefaultValue(0);
             Alter.Table("Tracks").AddColumn("AbsoluteTrackNumber").AsInt32().WithDefaultValue(0);
-            Alter.Table("Tracks").AddColumn("RelativeTrackNumber").AsInt32().WithDefaultValue(0);
 
             Execute.Sql("UPDATE Tracks SET AbsoluteTrackNumber = TrackNumber");
             

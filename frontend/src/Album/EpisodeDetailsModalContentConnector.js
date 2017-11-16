@@ -8,7 +8,6 @@ import createEpisodeSelector from 'Store/Selectors/createEpisodeSelector';
 import createArtistSelector from 'Store/Selectors/createArtistSelector';
 import episodeEntities from 'Album/episodeEntities';
 import { fetchTracks, clearTracks } from 'Store/Actions/trackActions';
-// import { fetchTrackFiles, clearTrackFiles } from 'Store/Actions/trackFileActions';
 import EpisodeDetailsModalContent from './EpisodeDetailsModalContent';
 
 function createMapStateToProps() {
@@ -88,12 +87,10 @@ class EpisodeDetailsModalContentConnector extends Component {
     const artistId = this.props.artistId;
     const albumId = this.props.albumId;
     this.props.dispatchFetchTracks({ artistId, albumId });
-    // this.props.fetchTrackFiles({ artistId, albumId });
   }
 
   _unpopulate() {
     this.props.dispatchClearTracks();
-    // this.props.clearTrackFiles();
   }
 
   //

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace NzbDrone.Core.Profiles.Qualities
 {
@@ -49,7 +49,7 @@ namespace NzbDrone.Core.Profiles.Qualities
                 return GroupIndex.CompareTo(right.GroupIndex);
             }
 
-            return indexCompare;;
+            return indexCompare;
         }
     }
 }

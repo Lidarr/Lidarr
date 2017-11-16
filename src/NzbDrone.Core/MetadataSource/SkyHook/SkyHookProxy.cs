@@ -184,15 +184,6 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             track.AbsoluteTrackNumber = resource.TrackPosition;
             track.Duration = resource.DurationMs;
             track.MediumNumber = resource.MediumNumber;
-            var relativeTrackNumber = Regex.Replace(resource.TrackNumber.Split('-').Last(), "[^0-9.]", "");
-            try
-            {
-                track.RelativeTrackNumber = Convert.ToInt32(relativeTrackNumber);
-            }
-            catch
-            {
-                track.RelativeTrackNumber = 0;
-            }
             
             return track;
         }

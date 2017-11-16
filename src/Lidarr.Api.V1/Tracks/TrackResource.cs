@@ -16,7 +16,6 @@ namespace Lidarr.Api.V1.Tracks
         public int AlbumId { get; set; }
         public bool Explicit { get; set; }
         public int AbsoluteTrackNumber { get; set; }
-        public int RelativeTrackNumber { get; set; }
         public string TrackNumber { get; set; }
         public string Title { get; set; }
         public int Duration { get; set; }
@@ -48,7 +47,6 @@ namespace Lidarr.Api.V1.Tracks
                 AlbumId = model.AlbumId,
                 Explicit = model.Explicit,
                 AbsoluteTrackNumber = model.AbsoluteTrackNumber,
-                RelativeTrackNumber = model.RelativeTrackNumber,
                 TrackNumber = model.TrackNumber,
                 Title = model.Title,
                 Duration = model.Duration,

@@ -29,9 +29,15 @@ namespace Lidarr.Api.V1.Profiles.Quality
 
             var cutoffItem = items.SingleOrDefault(i => i.Id == cutoff || (i.Quality != null && i.Quality.Id == cutoff));
 
-            if (cutoffItem == null) return false;
+            if (cutoffItem == null)
+            {
+                return false;
+            }
 
-            if (!cutoffItem.Allowed) return false;
+            if (!cutoffItem.Allowed)
+            {
+                return false;
+            }
 
             return true;
         }
