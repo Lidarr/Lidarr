@@ -114,8 +114,6 @@ EpisodeDetailsModalContentConnector.propTypes = {
   artistId: PropTypes.number.isRequired,
   dispatchFetchTracks: PropTypes.func.isRequired,
   dispatchClearTracks: PropTypes.func.isRequired,
-  // fetchTrackFiles: PropTypes.func.isRequired,
-  // clearTrackFiles: PropTypes.func.isRequired,
   dispatchCancelFetchReleases: PropTypes.func.isRequired,
   dispatchClearReleases: PropTypes.func.isRequired
 };
