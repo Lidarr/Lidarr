@@ -111,8 +111,8 @@ namespace NzbDrone.Core.MediaFiles
                     return false;
                 }
 
-                var size = _diskProvider.GetFileSize(audioFile);
-                var quality = QualityParser.ParseQuality(audioFile);
+                //var size = _diskProvider.GetFileSize(audioFile);
+                //var quality = QualityParser.ParseQuality(audioFile);
 
                 //if (!_detectSample.IsSample(artist, quality, audioFile, size, albumParseResult.IsPossibleSpecialEpisode))
                 //{

@@ -27,7 +27,7 @@ namespace Lidarr.Api.V1.Profiles.Quality
             dynamic instance = context.ParentContext.InstanceToValidate;
             var items = instance.Items as IList<QualityProfileQualityItemResource>;
 
-            var cutoffItem = items.SingleOrDefault(i => i.Id == cutoff || (i.Quality != null && i.Quality.Id == cutoff));
+            var cutoffItem = items.SingleOrDefault(i => (i.Quality == null && i.Id == cutoff) || i.Quality?.Id == cutoff);
 
             if (cutoffItem == null)
             {

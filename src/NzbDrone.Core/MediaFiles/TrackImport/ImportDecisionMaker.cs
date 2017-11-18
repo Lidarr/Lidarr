@@ -171,8 +171,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
             return musicFiles.Count(file =>
             {
-                var size = _diskProvider.GetFileSize(file);
-                var fileQuality = QualityParser.ParseQuality(file);
+                //var size = _diskProvider.GetFileSize(file);
+                //var fileQuality = QualityParser.ParseQuality(file);
                 //var sample = _detectSample.IsSample(artist, GetQuality(folderInfo, fileQuality, artist), file, size, folderInfo.IsPossibleSpecialEpisode);
 
                 //if (sample)
