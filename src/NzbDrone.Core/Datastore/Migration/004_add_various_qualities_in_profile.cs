@@ -247,7 +247,6 @@ namespace NzbDrone.Core.Datastore.Migration
             foreach (var profile in _profiles)
             {
                 var findIndex = profile.Items.FindIndex(v => v.Quality == (int)createafter) + 1;
-                var allowed = profile.Name == "Any" ? true : false;
 
                 if (findIndex > -1)
                 {

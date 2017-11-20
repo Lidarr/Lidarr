@@ -70,7 +70,7 @@ namespace NzbDrone.Core.Parser
 
                 result.Quality = FindQuality(descCodec, fileBitrate, fileSampleSize);
 
-                if (result.Quality != Quality.Unknown) return result;
+                if (result.Quality != Quality.Unknown) { return result; }
             }
 
             var codec = ParseCodec(normalizedName);
@@ -129,6 +129,9 @@ namespace NzbDrone.Core.Parser
                     else if (bitrate == BitRate.B320) { result.Quality = Quality.MP3_320; }
                     else if (bitrate == BitRate.VBR) { result.Quality = Quality.MP3_VBR_V2; }
                     else { result.Quality = Quality.Unknown; }
+                    break;
+                default:
+                    result.Quality = Quality.Unknown;
                     break;
             }
 
@@ -246,6 +249,8 @@ namespace NzbDrone.Core.Parser
                     if (bitrate == 500) { return Quality.VORBIS_Q10; }
                     return  Quality.Unknown;
                 case Codec.Unknown:
+                    return Quality.Unknown;
+                default:
                     return Quality.Unknown;
             }
 
