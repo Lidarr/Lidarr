@@ -248,13 +248,9 @@ namespace NzbDrone.Core.Parser
                     if (bitrate == 320) { return Quality.VORBIS_Q9; }
                     if (bitrate == 500) { return Quality.VORBIS_Q10; }
                     return  Quality.Unknown;
-                case Codec.Unknown:
-                    return Quality.Unknown;
                 default:
                     return Quality.Unknown;
             }
-
-            return Quality.Unknown;
         }
 
         private static QualityModel ParseQualityModifiers(string name, string normalizedName)
