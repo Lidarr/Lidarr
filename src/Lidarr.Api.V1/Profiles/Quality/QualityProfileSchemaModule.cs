@@ -16,7 +16,7 @@ namespace Lidarr.Api.V1.Profiles.Quality
 
         private QualityProfileResource GetSchema()
         {
-            var qualityProfile = _profileService.GetDefaultProfile(string.Empty);
+            Profile qualityProfile = _profileService.GetDefaultProfile(string.Empty);
 
 
             return qualityProfile.ToResource();

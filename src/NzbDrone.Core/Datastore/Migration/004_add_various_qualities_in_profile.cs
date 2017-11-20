@@ -21,15 +21,49 @@ namespace NzbDrone.Core.Datastore.Migration
         {
             var updater = new ProfileUpdater3(conn, tran);
 
-            updater.AddQuality(13);
-            updater.MoveQuality(5, 0);
-            updater.CreateNewGroup(0, 1000, "Trash Quality Lossy", new[] { 24, 25, 26, 27, 28, 29, 30, 31, 32 });
-            updater.CreateGroupAt(5, 1001, "Poor Quality Lossy", new[] { 5, 19, 22, 23, 33 }); // Group Vorbis-Q5 with MP3-160
-            updater.CreateGroupAt(1, 1002, "Low Quality Lossy", new[] { 1, 9, 18, 20, 34 }); // Group Vorbis-Q6, AAC 192, WMA with MP3-190
-            updater.CreateGroupAt(3, 1003, "Mid Quality Lossy", new[] { 3, 8, 16, 17, 10 }); // Group Mp3-VBR-V2, Vorbis-Q7, Q8, AAC-256 with MP3-256
-            updater.CreateGroupAt(4, 1004, "High Quality Lossy", new[] { 2, 4, 11, 12, 14, 15 }); // Group MP3-VBR-V0, AAC-VBR, Vorbis-Q10, Q9, AAC-320 with MP3-320
-            updater.CreateGroupAt(6, 1005, "Lossless", new[] { 6, 7, 21 }); // Group ALAC with FLAC
-            
+            updater.AddQuality(Qualities4.WAV);
+
+            updater.MoveQuality(Qualities4.MP3_160, Qualities4.Unknown);
+
+            updater.CreateNewGroup(Qualities4.Unknown, 1000, "Trash Quality Lossy", new[] { Qualities4.MP3_080,
+                                                                                            Qualities4.MP3_064,
+                                                                                            Qualities4.MP3_056,
+                                                                                            Qualities4.MP3_048,
+                                                                                            Qualities4.MP3_040,
+                                                                                            Qualities4.MP3_032,
+                                                                                            Qualities4.MP3_024,
+                                                                                            Qualities4.MP3_016,
+                                                                                            Qualities4.MP3_008 });
+
+            updater.CreateGroupAt(Qualities4.MP3_160, 1001, "Poor Quality Lossy", new[] { Qualities4.MP3_160,
+                                                                                          Qualities4.VORBIS_Q5,
+                                                                                          Qualities4.MP3_128,
+                                                                                          Qualities4.MP3_096,
+                                                                                          Qualities4.MP3_112 }); // Group Vorbis-Q5 with MP3-160
+
+            updater.CreateGroupAt(Qualities4.MP3_192, 1002, "Low Quality Lossy", new[] { Qualities4.MP3_192,
+                                                                                         Qualities4.AAC_192,
+                                                                                         Qualities4.VORBIS_Q6,
+                                                                                         Qualities4.WMA,
+                                                                                         Qualities4.MP3_224 }); // Group Vorbis-Q6, AAC 192, WMA with MP3-190
+
+            updater.CreateGroupAt(Qualities4.MP3_256, 1003, "Mid Quality Lossy", new[] { Qualities4.MP3_256,
+                                                                                         Qualities4.MP3_VBR_V2,
+                                                                                         Qualities4.VORBIS_Q8,
+                                                                                         Qualities4.VORBIS_Q7,
+                                                                                         Qualities4.AAC_256 }); // Group Mp3-VBR-V2, Vorbis-Q7, Q8, AAC-256 with MP3-256
+
+            updater.CreateGroupAt(Qualities4.MP3_320, 1004, "High Quality Lossy", new[] { Qualities4.MP3_VBR,
+                                                                                          Qualities4.MP3_320,
+                                                                                          Qualities4.AAC_320,
+                                                                                          Qualities4.AAC_VBR,
+                                                                                          Qualities4.VORBIS_Q10,
+                                                                                          Qualities4.VORBIS_Q9 }); // Group MP3-VBR-V0, AAC-VBR, Vorbis-Q10, Q9, AAC-320 with MP3-320
+
+            updater.CreateGroupAt(Qualities4.FLAC, 1005, "Lossless", new[] { Qualities4.FLAC,
+                                                                             Qualities4.ALAC,
+                                                                             Qualities4.FLAC_24 }); // Group ALAC with FLAC
+
 
             updater.Commit();
         }
@@ -57,6 +91,45 @@ namespace NzbDrone.Core.Datastore.Migration
         {
             Items = new List<ProfileItem4>();
         }
+    }
+
+    public enum Qualities4
+    {
+        Unknown,
+        MP3_192,
+        MP3_VBR,
+        MP3_256,
+        MP3_320,
+        MP3_160,
+        FLAC,
+        ALAC,
+        MP3_VBR_V2,
+        AAC_192,
+        AAC_256,
+        AAC_320,
+        AAC_VBR,
+        WAV,
+        VORBIS_Q10,
+        VORBIS_Q9,
+        VORBIS_Q8,
+        VORBIS_Q7,
+        VORBIS_Q6,
+        VORBIS_Q5,
+        WMA,
+        FLAC_24,
+        MP3_128,
+        MP3_096,
+        MP3_080,
+        MP3_064,
+        MP3_056,
+        MP3_048,
+        MP3_040,
+        MP3_032,
+        MP3_024,
+        MP3_016,
+        MP3_008,
+        MP3_112,
+        MP3_224
     }
 
     public class ProfileUpdater3
@@ -96,24 +169,24 @@ namespace NzbDrone.Core.Datastore.Migration
             _changedProfiles.Clear();
         }
 
-        public void AddQuality(int quality)
+        public void AddQuality(Qualities4 quality)
         {
             foreach (var profile in _profiles)
             {
                 profile.Items.Add(new ProfileItem4
                 {
-                    Quality = quality,
+                    Quality = (int)quality,
                     Allowed = false
                 });
             }
-            
+
         }
 
-        public void CreateGroupAt(int find, int groupId, string name, int[] qualities)
+        public void CreateGroupAt(Qualities4 find, int groupId, string name, Qualities4[] qualities)
         {
             foreach (var profile in _profiles)
             {
-                var findIndex = profile.Items.FindIndex(v => v.Quality == find);
+                var findIndex = profile.Items.FindIndex(v => v.Quality == (int)find);
 
                 if (findIndex > -1)
                 {
@@ -126,7 +199,7 @@ namespace NzbDrone.Core.Datastore.Migration
                         Quality = null,
                         Items = qualities.Select(q => new ProfileItem4
                         {
-                            Quality = q,
+                            Quality = (int)q,
                             Allowed = findQuality.Allowed
                         }).ToList(),
                         Allowed = findQuality.Allowed
@@ -143,7 +216,7 @@ namespace NzbDrone.Core.Datastore.Migration
                         Quality = null,
                         Items = qualities.Select(q => new ProfileItem4
                         {
-                            Quality = q,
+                            Quality = (int)q,
                             Allowed = false
                         }).ToList(),
                         Allowed = false
@@ -152,14 +225,14 @@ namespace NzbDrone.Core.Datastore.Migration
 
                 foreach (var quality in qualities)
                 {
-                    var index = profile.Items.FindIndex(v => v.Quality == quality);
+                    var index = profile.Items.FindIndex(v => v.Quality == (int)quality);
 
                     if (index > -1)
                     {
                         profile.Items.RemoveAt(index);
                     }
 
-                    if (profile.Cutoff == quality)
+                    if (profile.Cutoff == (int)quality)
                     {
                         profile.Cutoff = groupId;
                     }
@@ -169,11 +242,11 @@ namespace NzbDrone.Core.Datastore.Migration
             }
         }
 
-        public void CreateNewGroup(int createafter, int groupId, string name, int[] qualities)
+        public void CreateNewGroup(Qualities4 createafter, int groupId, string name, Qualities4[] qualities)
         {
             foreach (var profile in _profiles)
             {
-                var findIndex = profile.Items.FindIndex(v => v.Quality == createafter) + 1;
+                var findIndex = profile.Items.FindIndex(v => v.Quality == (int)createafter) + 1;
                 var allowed = profile.Name == "Any" ? true : false;
 
                 if (findIndex > -1)
@@ -186,7 +259,7 @@ namespace NzbDrone.Core.Datastore.Migration
                         Quality = null,
                         Items = qualities.Select(q => new ProfileItem4
                         {
-                            Quality = q,
+                            Quality = (int)q,
                             Allowed = false
                         }).ToList(),
                         Allowed = false
@@ -202,7 +275,7 @@ namespace NzbDrone.Core.Datastore.Migration
                         Quality = null,
                         Items = qualities.Select(q => new ProfileItem4
                         {
-                            Quality = q,
+                            Quality = (int)q,
                             Allowed = false
                         }).ToList(),
                         Allowed = false
@@ -211,25 +284,25 @@ namespace NzbDrone.Core.Datastore.Migration
             }
         }
 
-        public void MoveQuality(int quality, int moveafter)
+        public void MoveQuality(Qualities4 quality, Qualities4 moveafter)
         {
             foreach (var profile in _profiles)
             {
-                var findIndex = profile.Items.FindIndex(v => v.Quality == quality);
+                var findIndex = profile.Items.FindIndex(v => v.Quality == (int)quality);
 
                 if (findIndex > -1)
                 {
                     var allowed = profile.Items[findIndex].Allowed;
                     profile.Items.RemoveAt(findIndex);
-                    var findMoveIndex = profile.Items.FindIndex(v => v.Quality == moveafter) + 1;
+                    var findMoveIndex = profile.Items.FindIndex(v => v.Quality == (int)moveafter) + 1;
                     profile.Items.Insert(findMoveIndex, new ProfileItem4
                     {
-                        Quality = quality,
+                        Quality = (int)quality,
                         Allowed = allowed
                     });
                 }
 
-                
+
             }
         }
 

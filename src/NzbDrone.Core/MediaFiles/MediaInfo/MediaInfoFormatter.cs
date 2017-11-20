@@ -17,7 +17,7 @@ namespace NzbDrone.Core.MediaFiles.MediaInfo
 
         public static string FormatAudioBitrate(MediaInfoModel mediaInfo)
         {
-            var audioBitrate = mediaInfo.AudioBitrate / 1000;
+            int audioBitrate = mediaInfo.AudioBitrate / 1000;
 
             return audioBitrate + " kbps";
         }

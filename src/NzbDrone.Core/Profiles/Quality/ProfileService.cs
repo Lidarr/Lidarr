@@ -156,7 +156,7 @@ namespace NzbDrone.Core.Profiles.Qualities
                 if (group.Any(s => s.Quality.Id == profileCutoff))
                 {
                     profileCutoff = groupId;
-                };
+                }
 
                 groupId++;
             }

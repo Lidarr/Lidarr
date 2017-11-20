@@ -30,7 +30,7 @@ function MediaInfo(props) {
         }
 
         {
-          !!audioCodec && !!audioChannels && !!audioBitRate &&
+          ((!!audioCodec && !!audioBitRate) || (!!audioChannels && !!audioBitRate)) &&
           ' - '
         }
 
