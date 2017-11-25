@@ -43,7 +43,7 @@ namespace Lidarr.Api.V1.Profiles.Metadata
         {
             if (model == null) return null;
 
-            return new ProfilePrimaryAlbumTypeItemResource()
+            return new ProfilePrimaryAlbumTypeItemResource
             {
                 AlbumType = model.PrimaryAlbumType,
                 Allowed = model.Allowed
@@ -52,9 +52,12 @@ namespace Lidarr.Api.V1.Profiles.Metadata
 
         public static ProfileSecondaryAlbumTypeItemResource ToResource(this ProfileSecondaryAlbumTypeItem model)
         {
-            if (model == null) return null;
+            if (model == null)
+            {
+                return null;
+            }
 
-            return new ProfileSecondaryAlbumTypeItemResource()
+            return new ProfileSecondaryAlbumTypeItemResource
             {
                 AlbumType = model.SecondaryAlbumType,
                 Allowed = model.Allowed
@@ -63,7 +66,10 @@ namespace Lidarr.Api.V1.Profiles.Metadata
 
         public static MetadataProfile ToModel(this MetadataProfileResource resource)
         {
-            if (resource == null) return null;
+            if (resource == null)
+            {
+                return null;
+            }
 
             return new MetadataProfile
             {

@@ -1,10 +1,9 @@
-using System.Collections.Generic;
-using System.Linq;
 using NLog;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Languages;
 using NzbDrone.Core.Music;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NzbDrone.Core.Profiles.Metadata
 {
@@ -66,7 +65,7 @@ namespace NzbDrone.Core.Profiles.Metadata
             return _profileRepository.Exists(id);
         }
 
-        private MetadataProfile AddDefaultProfile(string name, List<PrimaryAlbumType> primAllowed, List<SecondaryAlbumType> secAllowed)
+        private void AddDefaultProfile(string name, List<PrimaryAlbumType> primAllowed, List<SecondaryAlbumType> secAllowed)
         {
             var primaryTypes = PrimaryAlbumType.All
                                     .OrderByDescending(l => l.Name)
@@ -85,12 +84,15 @@ namespace NzbDrone.Core.Profiles.Metadata
                 SecondaryAlbumTypes = secondaryTypes
             };
 
-            return Add(profile);
+            Add(profile);
         }
 
         public void Handle(ApplicationStartedEvent message)
         {
-            if (All().Any()) return;
+            if (All().Any())
+            {
+                return;
+            }
 
             _logger.Info("Setting up default metadata profile");
 

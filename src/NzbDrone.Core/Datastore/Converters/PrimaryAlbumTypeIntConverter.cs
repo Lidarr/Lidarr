@@ -1,8 +1,8 @@
-using System;
 using Marr.Data.Converters;
 using Marr.Data.Mapping;
 using Newtonsoft.Json;
 using NzbDrone.Core.Music;
+using System;
 
 namespace NzbDrone.Core.Datastore.Converters
 {
@@ -17,44 +17,42 @@ namespace NzbDrone.Core.Datastore.Converters
 
             var val = Convert.ToInt32(context.DbValue);
 
-            return (PrimaryAlbumType)val;
+            return (PrimaryAlbumType) val;
         }
 
         public object FromDB(ColumnMap map, object dbValue)
         {
-            return FromDB(new ConverterContext { ColumnMap = map, DbValue = dbValue });
+            return FromDB(new ConverterContext {ColumnMap = map, DbValue = dbValue});
         }
 
         public object ToDB(object clrValue)
         {
-            if (clrValue == DBNull.Value) return 0;
+            if (clrValue == DBNull.Value)
+            {
+                return 0;
+            }
 
             if (clrValue as PrimaryAlbumType == null)
             {
                 throw new InvalidOperationException("Attempted to save a albumtype that isn't really a albumtype");
             }
 
-            var language = clrValue as PrimaryAlbumType;
-            return (int)language;
+            var language = (PrimaryAlbumType) clrValue;
+            return (int) language;
         }
 
-        public Type DbType
-        {
-            get
-            {
-                return typeof(int);
-            }
-        }
+        public Type DbType => typeof(int);
 
         public override bool CanConvert(Type objectType)
         {
             return objectType == typeof(PrimaryAlbumType);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+            JsonSerializer serializer)
         {
             var item = reader.Value;
-            return (PrimaryAlbumType)Convert.ToInt32(item);
+            return (PrimaryAlbumType) Convert.ToInt32(item);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

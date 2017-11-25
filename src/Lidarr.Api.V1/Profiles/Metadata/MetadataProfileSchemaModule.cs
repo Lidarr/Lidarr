@@ -29,7 +29,7 @@ namespace Lidarr.Api.V1.Profiles.Metadata
             var secTypes = orderedSecTypes.Select(v => new ProfileSecondaryAlbumTypeItem { SecondaryAlbumType = v, Allowed = false })
                                             .ToList();
 
-            var profile = new MetadataProfile()
+            var profile = new MetadataProfile
                           {
                               PrimaryAlbumTypes = primTypes,
                               SecondaryAlbumTypes = secTypes

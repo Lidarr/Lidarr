@@ -17,44 +17,42 @@ namespace NzbDrone.Core.Datastore.Converters
 
             var val = Convert.ToInt32(context.DbValue);
 
-            return (SecondaryAlbumType)val;
+            return (SecondaryAlbumType) val;
         }
 
         public object FromDB(ColumnMap map, object dbValue)
         {
-            return FromDB(new ConverterContext { ColumnMap = map, DbValue = dbValue });
+            return FromDB(new ConverterContext {ColumnMap = map, DbValue = dbValue});
         }
 
         public object ToDB(object clrValue)
         {
-            if (clrValue == DBNull.Value) return 0;
+            if (clrValue == DBNull.Value)
+            {
+                return 0;
+            }
 
             if (clrValue as SecondaryAlbumType == null)
             {
                 throw new InvalidOperationException("Attempted to save a albumtype that isn't really a albumtype");
             }
 
-            var language = clrValue as SecondaryAlbumType;
-            return (int)language;
+            var language = (SecondaryAlbumType) clrValue;
+            return (int) language;
         }
 
-        public Type DbType
-        {
-            get
-            {
-                return typeof(int);
-            }
-        }
+        public Type DbType => typeof(int);
 
         public override bool CanConvert(Type objectType)
         {
             return objectType == typeof(SecondaryAlbumType);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+            JsonSerializer serializer)
         {
             var item = reader.Value;
-            return (SecondaryAlbumType)Convert.ToInt32(item);
+            return (SecondaryAlbumType) Convert.ToInt32(item);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

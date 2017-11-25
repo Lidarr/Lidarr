@@ -15,8 +15,18 @@ namespace NzbDrone.Core.Test.Profiles.Metadata
         {
             var profile = new MetadataProfile
             {
-                PrimaryAlbumTypes = PrimaryAlbumType.All.OrderByDescending(l => l.Name).Select(l => new ProfilePrimaryAlbumTypeItem() { PrimaryAlbumType = l, Allowed = l == PrimaryAlbumType.Album }).ToList(),
-                SecondaryAlbumTypes = SecondaryAlbumType.All.OrderByDescending(l => l.Name).Select(l => new ProfileSecondaryAlbumTypeItem() { SecondaryAlbumType = l, Allowed = l == SecondaryAlbumType.Studio }).ToList(),
+                PrimaryAlbumTypes = PrimaryAlbumType.All.OrderByDescending(l => l.Name).Select(l => new ProfilePrimaryAlbumTypeItem
+                {
+                    PrimaryAlbumType = l,
+                    Allowed = l == PrimaryAlbumType.Album
+                }).ToList(),
+
+                SecondaryAlbumTypes = SecondaryAlbumType.All.OrderByDescending(l => l.Name).Select(l => new ProfileSecondaryAlbumTypeItem
+                {
+                    SecondaryAlbumType = l,
+                    Allowed = l == SecondaryAlbumType.Studio
+                }).ToList(),
+
                 Name = "TestProfile"
             };
 

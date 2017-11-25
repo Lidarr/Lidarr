@@ -299,7 +299,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
         private static SecondaryAlbumType MapSecondaryTypes(string albumType)
         {
-            switch (albumType.ToLower())
+            switch (albumType.ToLowerInvariant())
             {
                 case "compilation":
                     return SecondaryAlbumType.Compilation;

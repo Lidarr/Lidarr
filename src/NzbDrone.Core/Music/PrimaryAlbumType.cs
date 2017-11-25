@@ -32,17 +32,24 @@ namespace NzbDrone.Core.Music
 
         public bool Equals(PrimaryAlbumType other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
             return Id.Equals(other.Id);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-
-            return Equals(obj as PrimaryAlbumType);
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            return ReferenceEquals(this, obj) || Equals(obj as PrimaryAlbumType);
         }
 
         public static bool operator ==(PrimaryAlbumType left, PrimaryAlbumType right)
@@ -55,33 +62,35 @@ namespace NzbDrone.Core.Music
             return !Equals(left, right);
         }
 
-        public static PrimaryAlbumType Album => new PrimaryAlbumType(0, "Album"); 
-        public static PrimaryAlbumType EP => new PrimaryAlbumType(1, "EP"); 
+        public static PrimaryAlbumType Album => new PrimaryAlbumType(0, "Album");
+        public static PrimaryAlbumType EP => new PrimaryAlbumType(1, "EP");
         public static PrimaryAlbumType Single => new PrimaryAlbumType(2, "Single");
         public static PrimaryAlbumType Broadcast => new PrimaryAlbumType(3, "Broadcast");
         public static PrimaryAlbumType Other => new PrimaryAlbumType(4, "Other");
 
 
-        
-        public static List<PrimaryAlbumType> All = new List<PrimaryAlbumType>
-                {
-                    Album,
-                    EP,
-                    Single,
-                    Broadcast,
-                    Other
-                };
+        public static readonly List<PrimaryAlbumType> All = new List<PrimaryAlbumType>
+        {
+            Album,
+            EP,
+            Single,
+            Broadcast,
+            Other
+        };
 
 
         public static PrimaryAlbumType FindById(int id)
         {
-            if (id == 0) return Album;
+            if (id == 0)
+            {
+                return Album;
+            }
 
             PrimaryAlbumType albumType = All.FirstOrDefault(v => v.Id == id);
 
             if (albumType == null)
             {
-                throw new ArgumentException("ID does not match a known album type", nameof(id));
+                throw new ArgumentException(@"ID does not match a known album type", nameof(id));
             }
 
             return albumType;
@@ -103,7 +112,7 @@ namespace NzbDrone.Core.Music
 
             if (albumType == null)
             {
-                throw new ArgumentException("Type does not match a known album type", nameof(type));
+                throw new ArgumentException(@"Type does not match a known album type", nameof(type));
             }
 
             return albumType;
