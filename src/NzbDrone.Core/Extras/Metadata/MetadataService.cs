@@ -12,6 +12,7 @@ using NzbDrone.Core.Extras.Files;
 using NzbDrone.Core.Extras.Metadata.Files;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.Organizer;
 
 namespace NzbDrone.Core.Extras.Metadata
 {
@@ -52,7 +53,7 @@ namespace NzbDrone.Core.Extras.Metadata
 
         public override int Order => 0;
 
-        public override IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<Album> albums, List<TrackFile> trackFiles)
+        public override IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<TrackFile> trackFiles)
         {
             var metadataFiles = _metadataFileService.GetFilesByArtist(artist.Id);
             _cleanMetadataService.Clean(artist);
@@ -71,18 +72,18 @@ namespace NzbDrone.Core.Extras.Metadata
 
                 files.AddIfNotNull(ProcessArtistMetadata(consumer, artist, consumerFiles));
                 files.AddRange(ProcessArtistImages(consumer, artist, consumerFiles));
-                files.AddRange(ProcessAlbumImages(consumer, artist, consumerFiles));
 
-                foreach (var album in albums)
+                var distinctAlbums = trackFiles.DistinctBy(s => s.AlbumId).Select(s => _albumService.GetAlbum(s.AlbumId)).ToList();
+
+                foreach (var album in distinctAlbums)
                 {
-                    album.Artist = artist;
-                    files.AddIfNotNull(ProcessAlbumMetadata(consumer, album, consumerFiles));
+                    files.AddIfNotNull(ProcessAlbumMetadata(consumer, artist, album, consumerFiles));
+                    files.AddRange(ProcessAlbumImages(consumer, artist, album, consumerFiles));
                 }
 
                 foreach (var trackFile in trackFiles)
                 {
-                    files.AddIfNotNull(ProcessEpisodeMetadata(consumer, artist, trackFile, consumerFiles));
-                    files.AddRange(ProcessEpisodeImages(consumer, artist, trackFile, consumerFiles));
+                    files.AddIfNotNull(ProcessTrackMetadata(consumer, artist, trackFile, consumerFiles));
                 }
             }
 
@@ -98,8 +99,7 @@ namespace NzbDrone.Core.Extras.Metadata
             foreach (var consumer in _metadataFactory.Enabled())
             {
 
-                files.AddIfNotNull(ProcessEpisodeMetadata(consumer, artist, trackFile, new List<MetadataFile>()));
-                files.AddRange(ProcessEpisodeImages(consumer, artist, trackFile, new List<MetadataFile>()));
+                files.AddIfNotNull(ProcessTrackMetadata(consumer, artist, trackFile, new List<MetadataFile>()));
             }
 
             _metadataFileService.Upsert(files);
@@ -107,7 +107,7 @@ namespace NzbDrone.Core.Extras.Metadata
             return files;
         }
 
-        public override IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, string artistFolder, string albumFolder)
+        public override IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, Album album, string artistFolder, string albumFolder)
         {
             var metadataFiles = _metadataFileService.GetFilesByArtist(artist.Id);
 
@@ -128,10 +128,11 @@ namespace NzbDrone.Core.Extras.Metadata
                     files.AddRange(ProcessArtistImages(consumer, artist, consumerFiles));
                 }
 
-                if (albumFolder.IsNotNullOrWhiteSpace())
-                {
-                    files.AddRange(ProcessAlbumImages(consumer, artist, consumerFiles));
-                }
+                //if (albumFolder.IsNotNullOrWhiteSpace())
+                //{
+                //    files.AddIfNotNull(ProcessAlbumMetadata(consumer, artist, album, consumerFiles));
+                //    files.AddRange(ProcessAlbumImages(consumer, artist, album, consumerFiles));
+                //}
             }
 
             _metadataFileService.Upsert(files);
@@ -143,12 +144,43 @@ namespace NzbDrone.Core.Extras.Metadata
         {
             var metadataFiles = _metadataFileService.GetFilesByArtist(artist.Id);
             var movedFiles = new List<MetadataFile>();
+            var albums = _albumService.GetAlbumsByArtist(artist.Id);
 
             // TODO: Move EpisodeImage and EpisodeMetadata metadata files, instead of relying on consumers to do it
+            // TODO: Move AlbumImages and AlbumMetadata files
             // (Xbmc's EpisodeImage is more than just the extension)
 
             foreach (var consumer in _metadataFactory.GetAvailableProviders())
             {
+                foreach (var album in albums)
+                {
+                    var metadataFilesForConsumer = GetMetadataFilesForConsumer(consumer, metadataFiles)
+                        .Where(m => m.AlbumId == album.Id)
+                        .Where(m => m.Type == MetadataType.AlbumImage || m.Type == MetadataType.AlbumMetadata)
+                        .ToList();
+
+                    foreach (var metadataFile in metadataFilesForConsumer)
+                    {
+                        var newFileName = consumer.GetFilenameAfterMove(artist, album, metadataFile);
+                        var existingFileName = Path.Combine(artist.Path, metadataFile.RelativePath);
+
+                        if (newFileName.PathNotEquals(existingFileName))
+                        {
+                            try
+                            {
+                                _diskProvider.MoveFile(existingFileName, newFileName);
+                                metadataFile.RelativePath = artist.Path.GetRelativePath(newFileName);
+                                movedFiles.Add(metadataFile);
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.Warn(ex, "Unable to move metadata file after rename: {0}", existingFileName);
+                            }
+                        }
+                    }
+                }
+
+
                 foreach (var trackFile in trackFiles)
                 {
                     var metadataFilesForConsumer = GetMetadataFilesForConsumer(consumer, metadataFiles).Where(m => m.TrackFileId == trackFile.Id).ToList();
@@ -233,9 +265,9 @@ namespace NzbDrone.Core.Extras.Metadata
             return metadata;
         }
 
-        private MetadataFile ProcessAlbumMetadata(IMetadata consumer, Album album, List<MetadataFile> existingMetadataFiles)
+        private MetadataFile ProcessAlbumMetadata(IMetadata consumer, Artist artist, Album album, List<MetadataFile> existingMetadataFiles)
         {
-            var albumMetadata = consumer.AlbumMetadata(album.Artist, album);
+            var albumMetadata = consumer.AlbumMetadata(artist, album);
 
             if (albumMetadata == null)
             {
@@ -244,10 +276,10 @@ namespace NzbDrone.Core.Extras.Metadata
 
             var hash = albumMetadata.Contents.SHA256Hash();
 
-            var metadata = GetMetadataFile(album.Artist, existingMetadataFiles, e => e.Type == MetadataType.AlbumMetadata && e.AlbumId == album.Id) ??
+            var metadata = GetMetadataFile(artist, existingMetadataFiles, e => e.Type == MetadataType.AlbumMetadata && e.AlbumId == album.Id) ??
                                new MetadataFile
                                {
-                                   ArtistId = album.ArtistId,
+                                   ArtistId = artist.Id,
                                    AlbumId = album.Id,
                                    Consumer = consumer.GetType().Name,
                                    Type = MetadataType.AlbumMetadata
@@ -265,7 +297,7 @@ namespace NzbDrone.Core.Extras.Metadata
                 return null;
             }
 
-            var fullPath = Path.Combine(album.Path, albumMetadata.RelativePath);
+            var fullPath = Path.Combine(artist.Path, albumMetadata.RelativePath);
 
             _logger.Debug("Writing Album Metadata to: {0}", fullPath);
             SaveMetadataFile(fullPath, albumMetadata.Contents);
@@ -277,16 +309,16 @@ namespace NzbDrone.Core.Extras.Metadata
             return metadata;
         }
 
-        private MetadataFile ProcessEpisodeMetadata(IMetadata consumer, Artist artist, TrackFile trackFile, List<MetadataFile> existingMetadataFiles)
+        private MetadataFile ProcessTrackMetadata(IMetadata consumer, Artist artist, TrackFile trackFile, List<MetadataFile> existingMetadataFiles)
         {
-            var episodeMetadata = consumer.TrackMetadata(artist, trackFile);
+            var trackMetadata = consumer.TrackMetadata(artist, trackFile);
 
-            if (episodeMetadata == null)
+            if (trackMetadata == null)
             {
                 return null;
             }
 
-            var fullPath = Path.Combine(artist.Path, episodeMetadata.RelativePath);
+            var fullPath = Path.Combine(artist.Path, trackMetadata.RelativePath);
 
             var existingMetadata = GetMetadataFile(artist, existingMetadataFiles, c => c.Type == MetadataType.TrackMetadata &&
                                                                                   c.TrackFileId == trackFile.Id);
@@ -297,11 +329,11 @@ namespace NzbDrone.Core.Extras.Metadata
                 if (fullPath.PathNotEquals(existingFullPath))
                 {
                     _diskTransferService.TransferFile(existingFullPath, fullPath, TransferMode.Move);
-                    existingMetadata.RelativePath = episodeMetadata.RelativePath;
+                    existingMetadata.RelativePath = trackMetadata.RelativePath;
                 }
             }
 
-            var hash = episodeMetadata.Contents.SHA256Hash();
+            var hash = trackMetadata.Contents.SHA256Hash();
 
             var metadata = existingMetadata ??
                            new MetadataFile
@@ -311,7 +343,7 @@ namespace NzbDrone.Core.Extras.Metadata
                                TrackFileId = trackFile.Id,
                                Consumer = consumer.GetType().Name,
                                Type = MetadataType.TrackMetadata,
-                               RelativePath = episodeMetadata.RelativePath,
+                               RelativePath = trackMetadata.RelativePath,
                                Extension = Path.GetExtension(fullPath)
                            };
 
@@ -321,7 +353,7 @@ namespace NzbDrone.Core.Extras.Metadata
             }
 
             _logger.Debug("Writing Track Metadata to: {0}", fullPath);
-            SaveMetadataFile(fullPath, episodeMetadata.Contents);
+            SaveMetadataFile(fullPath, trackMetadata.Contents);
 
             metadata.Hash = hash;
 
@@ -361,91 +393,38 @@ namespace NzbDrone.Core.Extras.Metadata
             return result;
         }
 
-        private List<MetadataFile> ProcessAlbumImages(IMetadata consumer, Artist artist, List<MetadataFile> existingMetadataFiles)
+        private List<MetadataFile> ProcessAlbumImages(IMetadata consumer, Artist artist, Album album, List<MetadataFile> existingMetadataFiles)
         {
             var result = new List<MetadataFile>();
 
-            var albums = _albumService.GetAlbumsByArtist(artist.Id);
-
-            foreach (var album in albums)
-            {
-                foreach (var image in consumer.AlbumImages(artist, album))
-                {
-                    var fullPath = Path.Combine(artist.Path, image.RelativePath);
-
-                    if (_diskProvider.FileExists(fullPath))
-                    {
-                        _logger.Debug("Album image already exists: {0}", fullPath);
-                        continue;
-                    }
-
-                    var metadata = GetMetadataFile(artist, existingMetadataFiles, c => c.Type == MetadataType.AlbumImage &&
-                                                                                  c.AlbumId == album.Id &&
-                                                                                  c.RelativePath == image.RelativePath) ??
-                                new MetadataFile
-                                {
-                                    ArtistId = artist.Id,
-                                    AlbumId = album.Id,
-                                    Consumer = consumer.GetType().Name,
-                                    Type = MetadataType.AlbumImage,
-                                    RelativePath = image.RelativePath,
-                                    Extension = Path.GetExtension(fullPath)
-                                };
-
-                    DownloadImage(album, image);
-
-                    result.Add(metadata);
-                }
-            }
-
-            return result;
-        }
-
-        private List<MetadataFile> ProcessEpisodeImages(IMetadata consumer, Artist artist, TrackFile trackFile, List<MetadataFile> existingMetadataFiles)
-        {
-            var result = new List<MetadataFile>();
-
-            foreach (var image in consumer.TrackImages(artist, trackFile))
+            foreach (var image in consumer.AlbumImages(artist, album))
             {
                 var fullPath = Path.Combine(artist.Path, image.RelativePath);
 
                 if (_diskProvider.FileExists(fullPath))
                 {
-                    _logger.Debug("Track image already exists: {0}", fullPath);
+                    _logger.Debug("Album image already exists: {0}", fullPath);
                     continue;
                 }
 
-                var existingMetadata = GetMetadataFile(artist, existingMetadataFiles, c => c.Type == MetadataType.TrackImage &&
-                                                                                      c.TrackFileId == trackFile.Id);
-
-                if (existingMetadata != null)
-                {
-                    var existingFullPath = Path.Combine(artist.Path, existingMetadata.RelativePath);
-                    if (fullPath.PathNotEquals(existingFullPath))
-                    {
-                        _diskTransferService.TransferFile(existingFullPath, fullPath, TransferMode.Move);
-                        existingMetadata.RelativePath = image.RelativePath;
-
-                        return new List<MetadataFile>{ existingMetadata };
-                    }
-                }
-
-                var metadata = existingMetadata ??
-                               new MetadataFile
-                               {
-                                   ArtistId = artist.Id,
-                                   AlbumId = trackFile.AlbumId,
-                                   TrackFileId = trackFile.Id,
-                                   Consumer = consumer.GetType().Name,
-                                   Type = MetadataType.TrackImage,
-                                   RelativePath = image.RelativePath,
-                                   Extension = Path.GetExtension(fullPath)
-                               };
+                var metadata = GetMetadataFile(artist, existingMetadataFiles, c => c.Type == MetadataType.AlbumImage &&
+                                                                                c.AlbumId == album.Id &&
+                                                                                c.RelativePath == image.RelativePath) ??
+                            new MetadataFile
+                            {
+                                ArtistId = artist.Id,
+                                AlbumId = album.Id,
+                                Consumer = consumer.GetType().Name,
+                                Type = MetadataType.AlbumImage,
+                                RelativePath = image.RelativePath,
+                                Extension = Path.GetExtension(fullPath)
+                            };
 
                 DownloadImage(artist, image);
 
                 result.Add(metadata);
             }
+
 
             return result;
         }
@@ -473,32 +452,6 @@ namespace NzbDrone.Core.Extras.Metadata
             catch (Exception ex)
             {
                 _logger.Error(ex, "Couldn't download image {0} for {1}. {2}", image.Url, artist, ex.Message);
-            }
-        }
-
-        private void DownloadImage(Album album, ImageFileResult image)
-        {
-            var fullPath = Path.Combine(album.Path, image.RelativePath);
-
-            try
-            {
-                if (image.Url.StartsWith("http"))
-                {
-                    _httpClient.DownloadFile(image.Url, fullPath);
-                }
-                else
-                {
-                    _diskProvider.CopyFile(image.Url, fullPath);
-                }
-                _mediaFileAttributeService.SetFilePermissions(fullPath);
-            }
-            catch (WebException ex)
-            {
-                _logger.Warn(ex, "Couldn't download image {0} for {1}. {2}", image.Url, album, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Couldn't download image {0} for {1}. {2}", image.Url, album, ex.Message);
             }
         }
 

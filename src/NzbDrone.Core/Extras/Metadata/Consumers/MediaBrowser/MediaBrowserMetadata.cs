@@ -113,7 +113,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.MediaBrowser
             return new List<ImageFileResult>();
         }
 
-        public override List<ImageFileResult> AlbumImages(Artist artist, Album season)
+        public override List<ImageFileResult> AlbumImages(Artist artist, Album album)
         {
             return new List<ImageFileResult>();
         }

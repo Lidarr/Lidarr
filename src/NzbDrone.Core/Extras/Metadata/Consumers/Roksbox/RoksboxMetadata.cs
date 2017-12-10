@@ -40,11 +40,6 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
         {
             var trackFilePath = Path.Combine(artist.Path, trackFile.RelativePath);
 
-            if (metadataFile.Type == MetadataType.TrackImage)
-            {
-                return GetTrackImageFilename(trackFilePath);
-            }
-
             if (metadataFile.Type == MetadataType.TrackMetadata)
             {
                 return GetTrackMetadataFilename(trackFilePath);
@@ -104,16 +99,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
                 {
                     metadata.Type = MetadataType.TrackMetadata;
                     return metadata;
-                }
-
-                if (extension == ".jpg")
-                {
-                    if (!Path.GetFileNameWithoutExtension(filename).EndsWith("-thumb"))
-                    {
-                        metadata.Type = MetadataType.TrackImage;
-                        return metadata;
-                    }
-                }                
+                }             
             }
 
             return null;
@@ -132,7 +118,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
 
         public override MetadataFileResult TrackMetadata(Artist artist, TrackFile trackFile)
         {
-            if (!Settings.EpisodeMetadata)
+            if (!Settings.TrackMetadata)
             {
                 return null;
             }

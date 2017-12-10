@@ -62,9 +62,9 @@ namespace NzbDrone.Core.Music
                         albumToUpdate.ProfileId = artist.ProfileId;
                         albumToUpdate.Added = DateTime.UtcNow;
 
-                        if (string.IsNullOrWhiteSpace(albumToUpdate.Path))
+                        if (string.IsNullOrWhiteSpace(albumToUpdate.RelativePath))
                         {
-                            albumToUpdate.Path = _fileNameBuilder.BuildAlbumPath(artist, album);
+                            albumToUpdate.RelativePath = artist.Path.GetRelativePath(_fileNameBuilder.BuildAlbumPath(artist, album));
                         }
 
                         newList.Add(albumToUpdate);

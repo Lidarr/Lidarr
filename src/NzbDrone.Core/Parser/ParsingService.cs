@@ -20,6 +20,7 @@ namespace NzbDrone.Core.Parser
         List<Album> GetAlbums(ParsedAlbumInfo parsedAlbumInfo, Artist artist, SearchCriteriaBase searchCriteria = null);
 
         // Music stuff here
+        Album GetLocalAlbum(string filename, Artist artist);
         LocalTrack GetLocalTrack(string filename, Artist artist);
         LocalTrack GetLocalTrack(string filename, Artist artist, ParsedTrackInfo folderInfo);
 
@@ -172,6 +173,17 @@ namespace NzbDrone.Core.Parser
             }
 
             return artist;
+        }
+
+        public Album GetLocalAlbum(string filename, Artist artist)
+        {
+            if (Path.HasExtension(filename))
+            {
+                var folderPath = Path.GetDirectoryName(filename);
+                return _albumService.FindByPath(folderPath, artist);
+            }
+
+            return _albumService.FindByPath(filename, artist);
         }
 
         public LocalTrack GetLocalTrack(string filename, Artist artist)

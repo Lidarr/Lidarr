@@ -35,6 +35,14 @@ namespace NzbDrone.Core.Extras.Metadata
             return newFileName;
         }
 
+        public virtual string GetFilenameAfterMove(Artist artist, Album album, MetadataFile metadataFile)
+        {
+            var existingFilename = Path.GetFileName(metadataFile.RelativePath);
+            var newFileName = Path.Combine(artist.Path, album.RelativePath, existingFilename);
+
+            return newFileName;
+        }
+
         public abstract MetadataFile FindMetadataFile(Artist artist, string path);
 
         public abstract MetadataFileResult ArtistMetadata(Artist artist);

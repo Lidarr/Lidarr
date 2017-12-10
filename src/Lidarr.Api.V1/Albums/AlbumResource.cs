@@ -57,7 +57,7 @@ namespace Lidarr.Api.V1.Albums
                 ArtistId = model.ArtistId,
                 AlbumLabel = model.Label,
                 ForeignAlbumId = model.ForeignAlbumId,
-                Path = model.Path,
+                Path = model.RelativePath,
                 ProfileId = model.ProfileId,
                 Monitored = model.Monitored,
                 ReleaseDate = model.ReleaseDate,

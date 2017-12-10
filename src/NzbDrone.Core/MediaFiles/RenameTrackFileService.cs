@@ -116,6 +116,16 @@ namespace NzbDrone.Core.MediaFiles
         {
             var renamed = new List<TrackFile>();
 
+            var albums = trackFiles.DistinctBy(s => s.AlbumId).Select(s => _albumService.GetAlbum(s.AlbumId)).ToList();
+
+            foreach (var album in albums)
+            {
+                var newPath = _filenameBuilder.BuildAlbumPath(artist, album);
+                album.RelativePath = artist.Path.GetRelativePath(newPath);
+            }
+
+            _albumService.UpdateAlbums(albums);
+
             foreach (var trackFile in trackFiles)
             {
                 var trackFilePath = Path.Combine(artist.Path, trackFile.RelativePath);

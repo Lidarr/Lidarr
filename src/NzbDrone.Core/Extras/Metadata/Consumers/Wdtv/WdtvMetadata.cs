@@ -39,11 +39,6 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
         {
             var trackFilePath = Path.Combine(artist.Path, trackFile.RelativePath);
 
-            if (metadataFile.Type == MetadataType.TrackImage)
-            {
-                return GetTrackImageFilename(trackFilePath);
-            }
-
             if (metadataFile.Type == MetadataType.TrackMetadata)
             {
                 return GetTrackMetadataFilename(trackFilePath);
@@ -102,9 +97,6 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
                     case ".xml":
                         metadata.Type = MetadataType.TrackMetadata;
                         return metadata;
-                    case ".metathumb":
-                        metadata.Type = MetadataType.TrackImage;
-                        return metadata;
                 }
                 
             }
@@ -125,7 +117,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
 
         public override MetadataFileResult TrackMetadata(Artist artist, TrackFile trackFile)
         {
-            if (!Settings.EpisodeMetadata)
+            if (!Settings.TrackMetadata)
             {
                 return null;
             }
