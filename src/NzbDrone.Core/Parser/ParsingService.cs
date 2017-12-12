@@ -31,11 +31,13 @@ namespace NzbDrone.Core.Parser
         private readonly IArtistService _artistService;
         private readonly IAlbumService _albumService;
         private readonly ITrackService _trackService;
+        private readonly IMediaFileService _mediaFileService;
         private readonly Logger _logger;
 
         public ParsingService(ITrackService trackService,
                               IArtistService artistService,
                               IAlbumService albumService,
+                              IMediaFileService mediaFileService,
                               // ISceneMappingService sceneMappingService,
                               Logger logger)
         {
@@ -43,6 +45,7 @@ namespace NzbDrone.Core.Parser
             _artistService = artistService;
             // _sceneMappingService = sceneMappingService;
             _trackService = trackService;
+            _mediaFileService = mediaFileService;
             _logger = logger;
         }
 
@@ -177,13 +180,20 @@ namespace NzbDrone.Core.Parser
 
         public Album GetLocalAlbum(string filename, Artist artist)
         {
+            
             if (Path.HasExtension(filename))
             {
-                var folderPath = Path.GetDirectoryName(filename);
-                return _albumService.FindByPath(folderPath, artist);
+                filename = Path.GetDirectoryName(filename);
             }
 
-            return _albumService.FindByPath(filename, artist);
+            filename = artist.Path.GetRelativePath(filename);
+
+            var tracksInAlbum = _mediaFileService.GetFilesByArtist(artist.Id)
+                .FindAll(s => Path.GetDirectoryName(s.RelativePath) == filename)
+                .DistinctBy(s => s.AlbumId)
+                .ToList();
+
+            return tracksInAlbum.Count == 1 ? _albumService.GetAlbum(tracksInAlbum.First().AlbumId) : null;
         }
 
         public LocalTrack GetLocalTrack(string filename, Artist artist)

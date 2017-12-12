@@ -155,7 +155,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
             }
         }
 
-        public override MetadataFileResult AlbumMetadata(Artist artist, Album album)
+        public override MetadataFileResult AlbumMetadata(Artist artist, Album album, string albumPath)
         {
             if (!Settings.AlbumMetadata)
             {
@@ -188,7 +188,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
 
                 _logger.Debug("Saving album.nfo for {0}", album.Title);
                 
-                var fileName = Path.Combine(album.RelativePath, "album.nfo");
+                var fileName = Path.Combine(albumPath, "album.nfo");
 
                 return new MetadataFileResult(fileName, doc.ToString());
             }
@@ -295,14 +295,14 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
             return ProcessArtistImages(artist).ToList();
         }
 
-        public override List<ImageFileResult> AlbumImages(Artist artist, Album album)
+        public override List<ImageFileResult> AlbumImages(Artist artist, Album album, string albumPath)
         {
             if (!Settings.AlbumImages)
             {
                 return new List<ImageFileResult>();
             }
 
-            return ProcessAlbumImages(artist, album).ToList();
+            return ProcessAlbumImages(artist, album, albumPath).ToList();
         }
 
         public override List<ImageFileResult> TrackImages(Artist artist, TrackFile trackFile)
@@ -322,13 +322,13 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
             }
         }
 
-        private IEnumerable<ImageFileResult> ProcessAlbumImages(Artist artist, Album album)
+        private IEnumerable<ImageFileResult> ProcessAlbumImages(Artist artist, Album album, string albumPath)
         {
             foreach (var image in album.Images)
             {
                 // TODO: Make Source fallback to URL if local does not exist
                 // var source = _mediaCoverService.GetCoverPath(album.ArtistId, image.CoverType, null, album.Id);
-                var destination = Path.Combine(album.RelativePath, image.CoverType.ToString().ToLowerInvariant() + Path.GetExtension(image.Url));
+                var destination = Path.Combine(albumPath, image.CoverType.ToString().ToLowerInvariant() + Path.GetExtension(image.Url));
 
                 yield return new ImageFileResult(destination, image.Url);
             }

@@ -14,13 +14,11 @@ namespace NzbDrone.Core.Music
 {
     public interface IAlbumRepository : IBasicRepository<Album>
     {
-        bool AlbumPathExists(string path);
         List<Album> GetAlbums(int artistId);
         Album FindByName(string cleanTitle);
         Album FindByTitle(int artistId, string title);
         Album FindByArtistAndName(string artistName, string cleanTitle);
         Album FindById(string spotifyId);
-        Album FindByPath(string filename, Artist artist);
         PagingSpec<Album> AlbumsWithoutFiles(PagingSpec<Album> pagingSpec);
         PagingSpec<Album> AlbumsWhereCutoffUnmet(PagingSpec<Album> pagingSpec, List<QualitiesBelowCutoff> qualitiesBelowCutoff, List<LanguagesBelowCutoff> languagesBelowCutoff);
         List<Album> AlbumsBetweenDates(DateTime startDate, DateTime endDate, bool includeUnmonitored);
@@ -39,11 +37,6 @@ namespace NzbDrone.Core.Music
         }
 
 
-        public bool AlbumPathExists(string path)
-        {
-            return Query.Where(c => c.RelativePath == path).Any();
-        }
-
         public List<Album> GetAlbums(int artistId)
         {
             return Query.Where(s => s.ArtistId == artistId).ToList();
@@ -52,14 +45,6 @@ namespace NzbDrone.Core.Music
         public Album FindById(string foreignAlbumId)
         {
             return Query.Where(s => s.ForeignAlbumId == foreignAlbumId).SingleOrDefault();
-        }
-
-        public Album FindByPath(string path, Artist artist)
-        {
-            var fileRelativePath = artist.Path.GetRelativePath(path);
-            var albums = Query.Where(s => s.ArtistId == artist.Id);
-
-            return albums.SingleOrDefault(s => s.RelativePath == fileRelativePath);
         }
 
         public PagingSpec<Album> AlbumsWithoutFiles(PagingSpec<Album> pagingSpec)

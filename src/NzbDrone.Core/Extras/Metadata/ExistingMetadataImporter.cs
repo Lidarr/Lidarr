@@ -63,7 +63,7 @@ namespace NzbDrone.Core.Extras.Metadata
 
                         if (localAlbum == null)
                         {
-                            _logger.Debug("Unable to parse extra file: {0}", possibleMetadataFile);
+                            _logger.Debug("Extra file folder has multiple Albums: {0}", possibleMetadataFile);
                             continue;
                         }
 

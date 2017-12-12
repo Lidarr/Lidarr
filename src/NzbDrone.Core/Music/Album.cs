@@ -22,7 +22,6 @@ namespace NzbDrone.Core.Music
         public string CleanTitle { get; set; }
         public DateTime? ReleaseDate { get; set; }
         public List<string> Label { get; set; }
-        public string RelativePath { get; set; }
         public int ProfileId { get; set; }
         public int Duration { get; set; }
         public List<Track> Tracks { get; set; }

@@ -72,18 +72,20 @@ namespace NzbDrone.Core.Extras.Metadata
 
                 files.AddIfNotNull(ProcessArtistMetadata(consumer, artist, consumerFiles));
                 files.AddRange(ProcessArtistImages(consumer, artist, consumerFiles));
+                
+                var albumGroups = trackFiles.GroupBy(s => Path.GetDirectoryName(s.RelativePath)).ToList();
 
-                var distinctAlbums = trackFiles.DistinctBy(s => s.AlbumId).Select(s => _albumService.GetAlbum(s.AlbumId)).ToList();
-
-                foreach (var album in distinctAlbums)
+                foreach (var group in albumGroups)
                 {
-                    files.AddIfNotNull(ProcessAlbumMetadata(consumer, artist, album, consumerFiles));
-                    files.AddRange(ProcessAlbumImages(consumer, artist, album, consumerFiles));
-                }
+                    var album = _albumService.GetAlbum(group.First().AlbumId);
+                    var albumFolder = group.Key;
+                    files.AddIfNotNull(ProcessAlbumMetadata(consumer, artist, album, albumFolder, consumerFiles));
+                    files.AddRange(ProcessAlbumImages(consumer, artist, album, albumFolder, consumerFiles));
 
-                foreach (var trackFile in trackFiles)
-                {
-                    files.AddIfNotNull(ProcessTrackMetadata(consumer, artist, trackFile, consumerFiles));
+                    foreach (var trackFile in group)
+                    {
+                        files.AddIfNotNull(ProcessTrackMetadata(consumer, artist, trackFile, consumerFiles));
+                    }
                 }
             }
 
@@ -145,6 +147,7 @@ namespace NzbDrone.Core.Extras.Metadata
             var metadataFiles = _metadataFileService.GetFilesByArtist(artist.Id);
             var movedFiles = new List<MetadataFile>();
             var albums = _albumService.GetAlbumsByArtist(artist.Id);
+            var distinctTrackFilePaths = trackFiles.DistinctBy(s => Path.GetDirectoryName(s.RelativePath)).ToList();
 
             // TODO: Move EpisodeImage and EpisodeMetadata metadata files, instead of relying on consumers to do it
             // TODO: Move AlbumImages and AlbumMetadata files
@@ -152,16 +155,16 @@ namespace NzbDrone.Core.Extras.Metadata
 
             foreach (var consumer in _metadataFactory.GetAvailableProviders())
             {
-                foreach (var album in albums)
+                foreach (var filePath in distinctTrackFilePaths)
                 {
                     var metadataFilesForConsumer = GetMetadataFilesForConsumer(consumer, metadataFiles)
-                        .Where(m => m.AlbumId == album.Id)
+                        .Where(m => m.AlbumId == filePath.AlbumId)
                         .Where(m => m.Type == MetadataType.AlbumImage || m.Type == MetadataType.AlbumMetadata)
                         .ToList();
 
                     foreach (var metadataFile in metadataFilesForConsumer)
                     {
-                        var newFileName = consumer.GetFilenameAfterMove(artist, album, metadataFile);
+                        var newFileName = consumer.GetFilenameAfterMove(artist, Path.GetDirectoryName(filePath.RelativePath), metadataFile);
                         var existingFileName = Path.Combine(artist.Path, metadataFile.RelativePath);
 
                         if (newFileName.PathNotEquals(existingFileName))
@@ -265,9 +268,9 @@ namespace NzbDrone.Core.Extras.Metadata
             return metadata;
         }
 
-        private MetadataFile ProcessAlbumMetadata(IMetadata consumer, Artist artist, Album album, List<MetadataFile> existingMetadataFiles)
+        private MetadataFile ProcessAlbumMetadata(IMetadata consumer, Artist artist, Album album, string albumPath, List<MetadataFile> existingMetadataFiles)
         {
-            var albumMetadata = consumer.AlbumMetadata(artist, album);
+            var albumMetadata = consumer.AlbumMetadata(artist, album, albumPath);
 
             if (albumMetadata == null)
             {
@@ -393,11 +396,11 @@ namespace NzbDrone.Core.Extras.Metadata
             return result;
         }
 
-        private List<MetadataFile> ProcessAlbumImages(IMetadata consumer, Artist artist, Album album, List<MetadataFile> existingMetadataFiles)
+        private List<MetadataFile> ProcessAlbumImages(IMetadata consumer, Artist artist, Album album, string albumFolder, List<MetadataFile> existingMetadataFiles)
         {
             var result = new List<MetadataFile>();
 
-            foreach (var image in consumer.AlbumImages(artist, album))
+            foreach (var image in consumer.AlbumImages(artist, album, albumFolder))
             {
                 var fullPath = Path.Combine(artist.Path, image.RelativePath);
 
