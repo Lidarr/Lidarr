@@ -100,7 +100,6 @@ namespace NzbDrone.Core.Extras.Metadata
 
             foreach (var consumer in _metadataFactory.Enabled())
             {
-
                 files.AddIfNotNull(ProcessTrackMetadata(consumer, artist, trackFile, new List<MetadataFile>()));
             }
 
@@ -129,12 +128,6 @@ namespace NzbDrone.Core.Extras.Metadata
                     files.AddIfNotNull(ProcessArtistMetadata(consumer, artist, consumerFiles));
                     files.AddRange(ProcessArtistImages(consumer, artist, consumerFiles));
                 }
-
-                //if (albumFolder.IsNotNullOrWhiteSpace())
-                //{
-                //    files.AddIfNotNull(ProcessAlbumMetadata(consumer, artist, album, consumerFiles));
-                //    files.AddRange(ProcessAlbumImages(consumer, artist, album, consumerFiles));
-                //}
             }
 
             _metadataFileService.Upsert(files);
@@ -146,11 +139,9 @@ namespace NzbDrone.Core.Extras.Metadata
         {
             var metadataFiles = _metadataFileService.GetFilesByArtist(artist.Id);
             var movedFiles = new List<MetadataFile>();
-            var albums = _albumService.GetAlbumsByArtist(artist.Id);
             var distinctTrackFilePaths = trackFiles.DistinctBy(s => Path.GetDirectoryName(s.RelativePath)).ToList();
 
             // TODO: Move EpisodeImage and EpisodeMetadata metadata files, instead of relying on consumers to do it
-            // TODO: Move AlbumImages and AlbumMetadata files
             // (Xbmc's EpisodeImage is more than just the extension)
 
             foreach (var consumer in _metadataFactory.GetAvailableProviders())
