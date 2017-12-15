@@ -39,7 +39,7 @@ namespace NzbDrone.Core.Indexers.Headphones
 
                 pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search",
                         string.Format("&q={0}",
-                        NewsnabifyTitle(string.Format("{0} - {1}",
+                        NewsnabifyTitle(string.Format("{0} {1}",
                                          searchCriteria.Artist.Name,
                                          searchCriteria.AlbumTitle)))));
 
@@ -65,7 +65,6 @@ namespace NzbDrone.Core.Indexers.Headphones
             {
                 yield break;
             }
-
 
             var categoriesQuery = string.Join(",", categories.Distinct());
 
