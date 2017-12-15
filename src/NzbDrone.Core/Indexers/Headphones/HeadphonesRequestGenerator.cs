@@ -66,9 +66,10 @@ namespace NzbDrone.Core.Indexers.Headphones
                 yield break;
             }
 
+
             var categoriesQuery = string.Join(",", categories.Distinct());
 
-            var baseUrl = string.Format("{0}{1}?t={2}&cat={3}&extended=1{4}", Settings.BaseUrl.TrimEnd('/'), Settings.ApiPath.TrimEnd('/'), searchType, categoriesQuery);
+            var baseUrl = string.Format("{0}{1}?t={2}&cat={3}&extended=1", Settings.BaseUrl.TrimEnd('/'), Settings.ApiPath.TrimEnd('/'), searchType, categoriesQuery);
 
             if (Settings.ApiKey.IsNotNullOrWhiteSpace())
             {
