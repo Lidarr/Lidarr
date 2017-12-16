@@ -25,7 +25,9 @@ class AddNotificationPresetMenuItem extends Component {
   render() {
     const {
       name,
+      /* eslint-disable no-unused-vars */
       implementation,
+      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

@@ -40,9 +40,11 @@ class EditNotificationModalConnector extends Component {
 
   render() {
     const {
+      /* eslint-disable no-unused-vars */
       dispatchClearPendingChanges,
       dispatchCancelTestNotification,
       dispatchCancelSaveNotification,
+      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

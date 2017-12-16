@@ -50,9 +50,11 @@ class VirtualTableHeaderCell extends Component {
       isSortable,
       sortKey,
       sortDirection,
+      /* eslint-disable no-unused-vars */
       fixedSortDirection,
       children,
       onSortPress,
+      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

@@ -54,7 +54,7 @@ function createMapStateToProps() {
 
       const languages = _.map(languageProfilesSchema.languages, 'language');
       const qualities = getQualities(qualityProfileSchema.items);
-      
+
       return {
         items,
         artistType: artist.artistType,
@@ -139,11 +139,13 @@ class TrackFileEditorModalContentConnector extends Component {
 
   render() {
     const {
+      /* eslint-disable no-unused-vars */
       dispatchFetchLanguageProfileSchema,
       dispatchFetchQualityProfileSchema,
       dispatchUpdateTrackFiles,
       dispatchFetchTracks,
       dispatchClearTracks,
+      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

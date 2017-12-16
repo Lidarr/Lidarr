@@ -187,7 +187,9 @@ class ArtistDetails extends Component {
       overview,
       links,
       images,
+      /* eslint-disable no-unused-vars */
       albums,
+      /* eslint-enable no-unused-vars */
       alternateTitles,
       tags,
       isRefreshing,

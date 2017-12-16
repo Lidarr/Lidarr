@@ -153,7 +153,9 @@ TableOptionsColumnDragSource.propTypes = {
   onColumnDragEnd: PropTypes.func.isRequired
 };
 
+/* eslint-disable new-cap */
 export default DropTarget(
+/* eslint-enable no-unused-vars */
   TABLE_COLUMN,
   columnDropTarget,
   collectDropTarget

@@ -22,8 +22,10 @@ function EditMetadataProfileModalContent(props) {
     error,
     isSaving,
     saveError,
+    /* eslint-disable no-unused-vars */
     primaryAlbumTypes,
     secondaryAlbumTypes,
+    /* eslint-enable no-unused-vars */
     item,
     isInUse,
     onInputChange,

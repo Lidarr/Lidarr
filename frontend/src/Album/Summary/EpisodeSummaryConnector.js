@@ -4,7 +4,6 @@ import { createSelector } from 'reselect';
 import { deleteTrackFile } from 'Store/Actions/trackFileActions';
 import createEpisodeSelector from 'Store/Selectors/createEpisodeSelector';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
-import createArtistSelector from 'Store/Selectors/createArtistSelector';
 import createCommandsSelector from 'Store/Selectors/createCommandsSelector';
 import EpisodeSummary from './EpisodeSummary';
 

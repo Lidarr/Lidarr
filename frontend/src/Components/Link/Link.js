@@ -31,7 +31,9 @@ class Link extends Component {
       target,
       isDisabled,
       noRouter,
+      /* eslint-disable no-unused-vars */
       onPress,
+      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

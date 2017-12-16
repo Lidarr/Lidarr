@@ -16,7 +16,9 @@ class PageContentBody extends Component {
       innerClassName,
       isSmallScreen,
       children,
+      /* eslint-disable no-unused-vars */
       dispatch,
+      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

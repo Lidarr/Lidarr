@@ -84,7 +84,9 @@ function FormInputGroup(props) {
     helpTexts,
     helpTextWarning,
     helpLink,
+    /* eslint-disable no-unused-vars */
     pending,
+    /* eslint-enable no-unused-vars */
     errors,
     warnings,
     ...otherProps

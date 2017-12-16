@@ -98,7 +98,9 @@ class SpinnerErrorButton extends Component {
   render() {
     const {
       isSpinning,
+      /* eslint-disable no-unused-vars */
       error,
+      /* eslint-enable no-unused-vars */
       children,
       ...otherProps
     } = this.props;

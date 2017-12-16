@@ -311,9 +311,11 @@ export const reducers = createHandleActions({
 
   [CLEAR_CALENDAR]: (state) => {
     const {
+      /* eslint-disable no-unused-vars */
       view,
       unmonitored,
       showUpcoming,
+      /* eslint-enable no-unused-vars */
       ...otherDefaultState
     } = defaultState;
 

@@ -25,7 +25,9 @@ export default function artistIndexCellRenderers(cellProps) {
     nameSlug,
     qualityProfileId,
     nextAiring,
+    /* eslint-disable no-unused-vars */
     previousAiring,
+    /* eslint-enable no-unused-vars */
     albumCount,
     trackCount,
     trackFileCount

@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import padNumber from 'Utilities/Number/padNumber';
 import MonitorToggleButton from 'Components/MonitorToggleButton';
 import styles from './AlbumStudioAlbum.css';
 
@@ -24,7 +23,9 @@ class AlbumStudioAlbum extends Component {
 
   render() {
     const {
+      /* eslint-disable no-unused-vars */
       id,
+      /* eslint-enable no-unused-vars */
       title,
       monitored,
       statistics,

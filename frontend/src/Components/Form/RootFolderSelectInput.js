@@ -66,8 +66,10 @@ class RootFolderSelectInput extends Component {
 
   render() {
     const {
+      /* eslint-disable no-unused-vars */
       includeNoChange,
       onNewRootFolderSelect,
+      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

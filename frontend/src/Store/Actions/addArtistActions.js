@@ -170,7 +170,9 @@ export const reducers = createHandleActions({
 
   [CLEAR_ADD_ARTIST]: function(state) {
     const {
+      /* eslint-disable no-unused-vars */
       defaults,
+      /* eslint-enable no-unused-vars */
       ...otherDefaultState
     } = defaultState;
 

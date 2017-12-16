@@ -108,7 +108,9 @@ class RootFolderSelectInputConnector extends Component {
 
   render() {
     const {
+      /* eslint-disable no-unused-vars */
       dispatchAddRootFolder,
+      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

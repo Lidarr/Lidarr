@@ -79,7 +79,9 @@ class ClipboardButton extends Component {
 
   render() {
     const {
+      /* eslint-disable no-unused-vars */
       value,
+      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

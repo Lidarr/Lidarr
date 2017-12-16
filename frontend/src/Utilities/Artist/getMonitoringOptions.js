@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 import _ from 'lodash';
+/* eslint-enable no-unused-vars */
 
 function getMonitoringOptions(monitor) {
   const monitoringOptions = {

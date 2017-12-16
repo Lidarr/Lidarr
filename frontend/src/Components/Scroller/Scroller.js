@@ -41,8 +41,10 @@ class Scroller extends Component {
       scrollDirection,
       autoScroll,
       children,
+      /* eslint-disable no-unused-vars */
       scrollTop,
       onScroll,
+      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

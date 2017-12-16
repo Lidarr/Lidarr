@@ -69,7 +69,9 @@ export const actionHandlers = handleThunks({
     const allArtists = getState().artist.items;
 
     artistIds.forEach((id) => {
+      /* eslint-disable no-unused-vars */
       const s = _.find(allArtists, { id });
+      /* eslint-enable no-unused-vars */
       const artistToUpdate = { id };
 
       if (payload.hasOwnProperty('monitored')) {
