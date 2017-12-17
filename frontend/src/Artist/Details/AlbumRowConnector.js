@@ -14,15 +14,11 @@ function createMapStateToProps() {
     createTrackFileSelector(),
     createCommandsSelector(),
     (id, sceneSeasonNumber, artist, trackFile, commands) => {
-      /* eslint-disable no-undef */
-      const alternateTitles = sceneSeasonNumber ? _.filter(artist.alternateTitles, { sceneSeasonNumber }) : [];
-      /* eslint-enable no-undef */
-
       return {
         artistMonitored: artist.monitored,
         trackFilePath: trackFile ? trackFile.path : null,
         trackFileRelativePath: trackFile ? trackFile.relativePath : null,
-        alternateTitles
+        alternateTitles: artist.alternateTitles
       };
     }
   );

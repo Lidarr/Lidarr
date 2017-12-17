@@ -5,6 +5,7 @@ import { deleteTrackFile } from 'Store/Actions/trackFileActions';
 import createEpisodeSelector from 'Store/Selectors/createEpisodeSelector';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
 import createCommandsSelector from 'Store/Selectors/createCommandsSelector';
+import createArtistSelector from 'Store/Selectors/createArtistSelector';
 import EpisodeSummary from './EpisodeSummary';
 
 function createMapStateToProps() {
@@ -13,14 +14,15 @@ function createMapStateToProps() {
     createEpisodeSelector(),
     createCommandsSelector(),
     createDimensionsSelector(),
-    (tracks, episode, commands, dimensions) => {
+    createArtistSelector(),
+    (tracks, episode, commands, dimensions, artists) => {
       const filteredItems = _.filter(tracks.items, { albumId: episode.id });
       const mediumSortedItems = _.orderBy(filteredItems, 'absoluteTrackNumber');
       const items = _.orderBy(mediumSortedItems, 'mediumNumber');
 
       return {
         network: episode.label,
-        qualityProfileId: episode.profileId,
+        qualityProfileId: artist.qualityProfileId,
         releaseDate: episode.releaseDate,
         overview: episode.overview,
         items,

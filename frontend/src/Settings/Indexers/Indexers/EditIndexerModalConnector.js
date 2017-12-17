@@ -40,11 +40,9 @@ class EditIndexerModalConnector extends Component {
 
   render() {
     const {
-      /* eslint-disable no-unused-vars */
       dispatchClearPendingChanges,
       dispatchCancelTestIndexer,
       dispatchCancelSaveIndexer,
-      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

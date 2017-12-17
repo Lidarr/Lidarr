@@ -98,9 +98,7 @@ class EpisodeDetailsModalContentConnector extends Component {
 
   render() {
     const {
-      /* eslint-disable no-unused-vars */
       dispatchClearReleases,
-      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

@@ -139,13 +139,11 @@ class TrackFileEditorModalContentConnector extends Component {
 
   render() {
     const {
-      /* eslint-disable no-unused-vars */
       dispatchFetchLanguageProfileSchema,
       dispatchFetchQualityProfileSchema,
       dispatchUpdateTrackFiles,
       dispatchFetchTracks,
       dispatchClearTracks,
-      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

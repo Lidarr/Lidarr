@@ -70,9 +70,7 @@ class TaskRowConnector extends Component {
 
   render() {
     const {
-      /* eslint-disable no-unused-vars */
       dispatchFetchTask,
-      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

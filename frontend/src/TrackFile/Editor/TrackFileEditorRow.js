@@ -6,9 +6,7 @@ import TableRow from 'Components/Table/TableRow';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
 import EpisodeQuality from 'Album/EpisodeQuality';
-/* eslint-disable no-unused-vars */
 import styles from './TrackFileEditorRow';
-/* eslint-enable no-unused-vars */
 
 function TrackFileEditorRow(props) {
   const {

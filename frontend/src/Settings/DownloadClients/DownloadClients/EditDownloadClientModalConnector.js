@@ -40,11 +40,9 @@ class EditDownloadClientModalConnector extends Component {
 
   render() {
     const {
-      /* eslint-disable no-unused-vars */
       dispatchClearPendingChanges,
       dispatchCancelTestDownloadClient,
       dispatchCancelSaveDownloadClient,
-      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

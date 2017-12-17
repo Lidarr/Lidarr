@@ -8,9 +8,7 @@ import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellCo
 import TableRow from 'Components/Table/TableRow';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
-/* eslint-disable no-unused-vars */
 import styles from './MissingRow.css';
-/* eslint-enable no-unused-vars */
 
 function MissingRow(props) {
   const {

@@ -58,9 +58,7 @@ class AppUpdatedModalContentConnector extends Component {
 
   render() {
     const {
-      /* eslint-disable no-unused-vars */
       dispatchFetchUpdates,
-      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

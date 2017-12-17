@@ -15,9 +15,7 @@ function RelativeDateCell(props) {
     longDateFormat,
     timeFormat,
     component: Component,
-    /* eslint-disable no-unused-vars */
     dispatch,
-    /* eslint-enable no-unused-vars */
     ...otherProps
   } = props;
 

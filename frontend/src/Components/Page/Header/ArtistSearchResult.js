@@ -4,9 +4,7 @@ import React from 'react';
 import ArtistPoster from 'Artist/ArtistPoster';
 import styles from './ArtistSearchResult.css';
 
-/* eslint-disable no-unused-vars */
 function getMatchingAlternateTile(alternateTitles, query) {
-/* eslint-enable no-unused-vars */
   return _.first(alternateTitles, (alternateTitle) => {
     return alternateTitle.title.toLowerCase().contains(query.toLowerCase());
   });
@@ -20,9 +18,7 @@ function ArtistSearchResult(props) {
     images
   } = props;
 
-  /* eslint-disable no-unused-vars */
   const index = artistName.toLowerCase().indexOf(query.toLowerCase());
-  /* eslint-enable no-unused-vars */
   // const alternateTitle = index === -1 ?
   //   getMatchingAlternateTile(alternateTitles, query) :
   //   null;

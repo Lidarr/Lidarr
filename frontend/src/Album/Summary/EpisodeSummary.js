@@ -50,11 +50,9 @@ class EpisodeSummary extends Component {
       albumLabel,
       path,
       items,
-      /* eslint-disable no-unused-vars */
       size,
       quality,
       qualityCutoffNotMet,
-      /* eslint-enable no-unused-vars */
       columns
     } = this.props;
 

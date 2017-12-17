@@ -187,9 +187,6 @@ class ArtistDetails extends Component {
       overview,
       links,
       images,
-      /* eslint-disable no-unused-vars */
-      albums,
-      /* eslint-enable no-unused-vars */
       alternateTitles,
       tags,
       isRefreshing,
@@ -597,7 +594,6 @@ ArtistDetails.propTypes = {
   overview: PropTypes.string.isRequired,
   links: PropTypes.arrayOf(PropTypes.object).isRequired,
   images: PropTypes.arrayOf(PropTypes.object).isRequired,
-  albums: PropTypes.arrayOf(PropTypes.object).isRequired,
   alternateTitles: PropTypes.arrayOf(PropTypes.string).isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
   isRefreshing: PropTypes.bool.isRequired,

@@ -31,7 +31,6 @@ class TableHeaderCell extends Component {
       className,
       name,
       isSortable,
-      /* eslint-disable no-unused-vars */
       isVisible,
       isModifiable,
       sortKey,
@@ -39,7 +38,6 @@ class TableHeaderCell extends Component {
       fixedSortDirection,
       children,
       onSortPress,
-      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 

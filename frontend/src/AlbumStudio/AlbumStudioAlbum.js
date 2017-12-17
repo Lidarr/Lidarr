@@ -23,9 +23,7 @@ class AlbumStudioAlbum extends Component {
 
   render() {
     const {
-      /* eslint-disable no-unused-vars */
       id,
-      /* eslint-enable no-unused-vars */
       title,
       monitored,
       statistics,

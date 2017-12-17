@@ -112,15 +112,10 @@ class ArtistDetailsSeason extends Component {
       label,
       items,
       columns,
-      /* eslint-disable no-unused-vars */
-      isSaving,
       isExpanded,
-      isSearching,
       artistMonitored,
       isSmallScreen,
       onTableOptionChange,
-      onSearchPress
-      /* eslint-enable no-unused-vars */
     } = this.props;
 
     const {

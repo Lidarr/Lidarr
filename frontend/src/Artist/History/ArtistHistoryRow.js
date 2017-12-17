@@ -65,10 +65,8 @@ class ArtistHistoryRow extends Component {
       qualityCutoffNotMet,
       date,
       data,
-      /* eslint-disable no-unused-vars */
       fullArtist,
       artist,
-      /* eslint-enable no-unused-vars */
       album
     } = this.props;
 

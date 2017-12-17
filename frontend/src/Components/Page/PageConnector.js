@@ -133,7 +133,6 @@ class PageConnector extends Component {
     const {
       isPopulated,
       hasError,
-      /* eslint-disable no-unused-vars */
       dispatchFetchSeries,
       dispatchFetchTags,
       dispatchFetchQualityProfiles,
@@ -141,7 +140,6 @@ class PageConnector extends Component {
       dispatchFetchMetadataProfiles,
       dispatchFetchUISettings,
       dispatchFetchStatus,
-      /* eslint-enable no-unused-vars */
       ...otherProps
     } = this.props;
 
