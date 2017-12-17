@@ -155,7 +155,7 @@ TableOptionsColumnDragSource.propTypes = {
 
 /* eslint-disable new-cap */
 export default DropTarget(
-/* eslint-enable no-unused-vars */
+/* eslint-enable new-cap */
   TABLE_COLUMN,
   columnDropTarget,
   collectDropTarget
