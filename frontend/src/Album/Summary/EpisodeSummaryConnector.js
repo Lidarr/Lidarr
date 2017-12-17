@@ -15,7 +15,7 @@ function createMapStateToProps() {
     createCommandsSelector(),
     createDimensionsSelector(),
     createArtistSelector(),
-    (tracks, episode, commands, dimensions, artists) => {
+    (tracks, episode, commands, dimensions, artist) => {
       const filteredItems = _.filter(tracks.items, { albumId: episode.id });
       const mediumSortedItems = _.orderBy(filteredItems, 'absoluteTrackNumber');
       const items = _.orderBy(mediumSortedItems, 'mediumNumber');

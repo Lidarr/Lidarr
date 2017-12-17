@@ -115,7 +115,7 @@ class ArtistDetailsSeason extends Component {
       isExpanded,
       artistMonitored,
       isSmallScreen,
-      onTableOptionChange,
+      onTableOptionChange
     } = this.props;
 
     const {

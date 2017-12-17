@@ -177,7 +177,7 @@
     "no-undef": "error",
     "no-undef-init": "off",
     "no-undefined": "off",
-    "no-unused-vars": ["error", { "args": "none" }],
+    "no-unused-vars": ["warn", { "args": "none" }],
     "no-use-before-define": "error",
 
     # Node.js and CommonJS
