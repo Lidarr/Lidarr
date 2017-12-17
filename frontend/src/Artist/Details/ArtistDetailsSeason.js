@@ -227,15 +227,12 @@ ArtistDetailsSeason.propTypes = {
   label: PropTypes.string.isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  isSaving: PropTypes.bool,
   isExpanded: PropTypes.bool,
-  isSearching: PropTypes.bool.isRequired,
   artistMonitored: PropTypes.bool.isRequired,
   isSmallScreen: PropTypes.bool.isRequired,
   onTableOptionChange: PropTypes.func.isRequired,
   onExpandPress: PropTypes.func.isRequired,
   onMonitorAlbumPress: PropTypes.func.isRequired,
-  onSearchPress: PropTypes.func.isRequired
 };
 
 export default ArtistDetailsSeason;

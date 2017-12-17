@@ -18,7 +18,6 @@ function createMapStateToProps() {
         artistMonitored: artist.monitored,
         trackFilePath: trackFile ? trackFile.path : null,
         trackFileRelativePath: trackFile ? trackFile.relativePath : null,
-        alternateTitles: artist.alternateTitles
       };
     }
   );
