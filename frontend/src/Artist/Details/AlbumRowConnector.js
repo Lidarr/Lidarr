@@ -17,7 +17,7 @@ function createMapStateToProps() {
       return {
         artistMonitored: artist.monitored,
         trackFilePath: trackFile ? trackFile.path : null,
-        trackFileRelativePath: trackFile ? trackFile.relativePath : null,
+        trackFileRelativePath: trackFile ? trackFile.relativePath : null
       };
     }
   );

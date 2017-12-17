@@ -232,7 +232,7 @@ ArtistDetailsSeason.propTypes = {
   isSmallScreen: PropTypes.bool.isRequired,
   onTableOptionChange: PropTypes.func.isRequired,
   onExpandPress: PropTypes.func.isRequired,
-  onMonitorAlbumPress: PropTypes.func.isRequired,
+  onMonitorAlbumPress: PropTypes.func.isRequired
 };
 
 export default ArtistDetailsSeason;
