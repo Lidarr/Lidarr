@@ -4,9 +4,10 @@ import { createSelector } from 'reselect';
 import { deleteTrackFile } from 'Store/Actions/trackFileActions';
 import createEpisodeSelector from 'Store/Selectors/createEpisodeSelector';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
+import EpisodeSummary from './EpisodeSummary';
 import createCommandsSelector from 'Store/Selectors/createCommandsSelector';
 import createArtistSelector from 'Store/Selectors/createArtistSelector';
-import EpisodeSummary from './EpisodeSummary';
+
 
 function createMapStateToProps() {
   return createSelector(
