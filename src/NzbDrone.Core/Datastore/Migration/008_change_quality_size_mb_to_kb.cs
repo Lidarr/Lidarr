@@ -10,7 +10,7 @@ namespace NzbDrone.Core.Datastore.Migration
         {
             Execute.Sql("UPDATE QualityDefinitions SET MaxSize = CASE " +
                         "WHEN (CAST(MaxSize AS FLOAT) / 60) * 8 * 1024 < 1500 THEN " +
-                        "ROUND((CAST(MaxSize AS FLOAT) / 60) * 8 * 1024, 0)" +
+                        "ROUND((CAST(MaxSize AS FLOAT) / 60) * 8 * 1024, 0) " +
                         "ELSE NULL " +
                         "END");
         }
