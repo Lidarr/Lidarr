@@ -11,8 +11,8 @@ namespace NzbDrone.Core.Test.NotificationTests.Xbmc.Http
     public class UpdateFixture : CoreTest<HttpApiProvider>
     {
         private XbmcSettings _settings;
-        private string _seriesQueryUrl = "http://localhost:8080/xbmcCmds/xbmcHttp?command=QueryVideoDatabase(select path.strPath from path, tvshow, tvshowlinkpath where tvshow.c12 = 79488 and tvshowlinkpath.idShow = tvshow.idShow and tvshowlinkpath.idPath = path.idPath)";
-        private Artist _fakeSeries;
+        private string _artistQueryUrl = "http://localhost:8080/xbmcCmds/xbmcHttp?command=QueryMusicDatabase(select path.strPath from path, artist, artistlinkpath where artist.c12 = 123d45d-d154f5d-1f5d1-5df18d5 and artistlinkpath.idArtist = artist.idArtist and artistlinkpath.idPath = path.idPath)";
+        private Artist _fakeArtist;
 
         [SetUp]
         public void Setup()
@@ -28,8 +28,8 @@ namespace NzbDrone.Core.Test.NotificationTests.Xbmc.Http
                 UpdateLibrary = true
             };
 
-            _fakeSeries = Builder<Artist>.CreateNew()
-                                         .With(s => s.ForeignArtistId = "79488")
+            _fakeArtist = Builder<Artist>.CreateNew()
+                                         .With(s => s.ForeignArtistId = "123d45d-d154f5d-1f5d1-5df18d5")
                                          .With(s => s.Name = "30 Rock")
                                          .Build();
         }
@@ -37,38 +37,38 @@ namespace NzbDrone.Core.Test.NotificationTests.Xbmc.Http
         private void WithSeriesPath()
         {
             Mocker.GetMock<IHttpProvider>()
-                  .Setup(s => s.DownloadString(_seriesQueryUrl, _settings.Username, _settings.Password))
-                  .Returns("<xml><record><field>smb://xbmc:xbmc@HOMESERVER/TV/30 Rock/</field></record></xml>");
+                  .Setup(s => s.DownloadString(_artistQueryUrl, _settings.Username, _settings.Password))
+                  .Returns("<xml><record><field>smb://xbmc:xbmc@HOMESERVER/Music/30 Rock/</field></record></xml>");
         }
 
         private void WithoutSeriesPath()
         {
             Mocker.GetMock<IHttpProvider>()
-                  .Setup(s => s.DownloadString(_seriesQueryUrl, _settings.Username, _settings.Password))
+                  .Setup(s => s.DownloadString(_artistQueryUrl, _settings.Username, _settings.Password))
                   .Returns("<xml></xml>");
         }
 
         [Test]
-        public void should_update_using_series_path()
+        public void should_update_using_artist_path()
         {
             WithSeriesPath();
-            const string url = "http://localhost:8080/xbmcCmds/xbmcHttp?command=ExecBuiltIn(UpdateLibrary(video,smb://xbmc:xbmc@HOMESERVER/TV/30 Rock/))";
+            const string url = "http://localhost:8080/xbmcCmds/xbmcHttp?command=ExecBuiltIn(UpdateLibrary(music,smb://xbmc:xbmc@HOMESERVER/Music/30 Rock/))";
 
             Mocker.GetMock<IHttpProvider>().Setup(s => s.DownloadString(url, _settings.Username, _settings.Password));
 
-            Subject.Update(_settings, _fakeSeries);
+            Subject.Update(_settings, _fakeArtist);
             Mocker.VerifyAllMocks();
         }
 
         [Test]
-        public void should_update_all_paths_when_series_path_not_found()
+        public void should_update_all_paths_when_artist_path_not_found()
         {
             WithoutSeriesPath();
-            const string url = "http://localhost:8080/xbmcCmds/xbmcHttp?command=ExecBuiltIn(UpdateLibrary(video))";
+            const string url = "http://localhost:8080/xbmcCmds/xbmcHttp?command=ExecBuiltIn(UpdateLibrary(music))";
 
             Mocker.GetMock<IHttpProvider>().Setup(s => s.DownloadString(url, _settings.Username, _settings.Password));
 
-            Subject.Update(_settings, _fakeSeries);
+            Subject.Update(_settings, _fakeArtist);
             Mocker.VerifyAllMocks();
         }
     }
