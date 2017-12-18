@@ -142,7 +142,7 @@ class QualityDefinition extends Component {
 
                 <NumberInput
                   className={styles.sizeInput}
-                  name={`${id}.min`}
+                  name={`${id}.max`}
                   value={maxSize || slider.max}
                   isFloat={true}
                   onChange={this.onMaxSizeChange}
