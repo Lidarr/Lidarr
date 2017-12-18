@@ -170,7 +170,7 @@ namespace NzbDrone.Core.Qualities
                 new QualityDefinition(Quality.MP3_320)     { Weight = 20, MinSize = 0, MaxSize = 350, GroupName = "High Quality Lossy", GroupWeight = 6 },
                 new QualityDefinition(Quality.VORBIS_Q9)   { Weight = 20, MinSize = 0, MaxSize = 350, GroupName = "High Quality Lossy", GroupWeight = 6 },
                 new QualityDefinition(Quality.AAC_320)     { Weight = 20, MinSize = 0, MaxSize = 350, GroupName = "High Quality Lossy", GroupWeight = 6 },
-                new QualityDefinition(Quality.VORBIS_Q10)  { Weight = 12, MinSize = 0, MaxSize = 550, GroupName = "High Quality Lossy", GroupWeight = 6 },
+                new QualityDefinition(Quality.VORBIS_Q10)  { Weight = 21, MinSize = 0, MaxSize = 550, GroupName = "High Quality Lossy", GroupWeight = 6 },
                 new QualityDefinition(Quality.ALAC)        { Weight = 22, MinSize = 0, MaxSize = null, GroupName = "Lossless", GroupWeight = 7 },
                 new QualityDefinition(Quality.FLAC)        { Weight = 22, MinSize = 0, MaxSize = null, GroupName = "Lossless", GroupWeight = 7 },
                 new QualityDefinition(Quality.FLAC_24)     { Weight = 23, MinSize = 0, MaxSize = null, GroupName = "Lossless", GroupWeight = 7 },
