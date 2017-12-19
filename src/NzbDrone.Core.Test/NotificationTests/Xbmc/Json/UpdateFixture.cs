@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Test.NotificationTests.Xbmc.Json
     [TestFixture]
     public class UpdateFixture : CoreTest<JsonApiProvider>
     {
-        private const string MB_ID = "5";
+        private const string MB_ID = "9f4e41c3-2648-428e-b8c7-dc10465b49ac";
         private XbmcSettings _settings;
         private List<KodiArtist> _xbmcArtist;
 
@@ -54,9 +54,9 @@ namespace NzbDrone.Core.Test.NotificationTests.Xbmc.Json
         [Test]
         public void should_update_all_paths_when_artist_path_not_found()
         {
-            var fakeArtist = Builder<Music.Artist>.CreateNew()
-                                            .With(s => s.ForeignArtistId = "1000")
-                                            .With(s => s.Name = "Not 30 Rock")
+            var fakeArtist = Builder<Artist>.CreateNew()
+                                            .With(s => s.ForeignArtistId = "9f4e41c3-2648-428e-b8c7-dc10465b49ad")
+                                            .With(s => s.Name = "Not Shawn Desman")
                                             .Build();
 
              Subject.Update(_settings, fakeArtist);

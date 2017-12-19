@@ -67,15 +67,12 @@ namespace NzbDrone.Core.Notifications.Xbmc
 
             var matchingArtist = allArtists.FirstOrDefault(s =>
             {
-                var musicBrainzId = "0";
-                musicBrainzId = s.MusicbrainzArtistId.FirstOrDefault();
+                var musicBrainzId = s.MusicbrainzArtistId.FirstOrDefault();
 
                 return musicBrainzId == artist.ForeignArtistId || s.Label == artist.Name;
             });
 
-            if (matchingArtist != null) return matchingArtist.File;
-
-            return null;
+            return matchingArtist?.File;
         }
 
         private void UpdateLibrary(XbmcSettings settings, Artist artist)

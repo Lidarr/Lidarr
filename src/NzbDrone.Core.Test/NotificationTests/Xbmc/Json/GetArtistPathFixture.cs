@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Test.NotificationTests.Xbmc.Json
     [TestFixture]
     public class GetArtistPathFixture : CoreTest<JsonApiProvider>
     {
-        private const string MB_ID = "123d45d-d154f5d-1f5d1-5df18d5";
+        private const string MB_ID = "9f4e41c3-2648-428e-b8c7-dc10465b49ac";
         private XbmcSettings _settings;
         private Music.Artist _artist;
         private List<KodiArtist> _xbmcArtist;
