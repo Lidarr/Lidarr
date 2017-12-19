@@ -11,7 +11,7 @@ import styles from './QualityDefinition.css';
 const slider = {
   min: 0,
   max: 1500,
-  step: 0.1
+  step: 1
 };
 
 function getValue(value) {
