@@ -39,7 +39,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
             if (qualityDefinition.MinSize.HasValue)
             {
-                var minSize = qualityDefinition.MinSize.Value.Megabytes();
+                var minSize = qualityDefinition.MinSize.Value.Kilobits();
 
                 //Multiply minSize by Album.Duration
                 minSize = minSize * albumsDuration;
@@ -47,9 +47,9 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                 //If the parsed size is smaller than minSize we don't want it
                 if (subject.Release.Size < minSize)
                 {
-                    var runtimeMessage = $"{albumsDuration}min";
+                    var runtimeMessage = $"{albumsDuration}sec";
 
-                    _logger.Debug("Item: {0}, Size: {1} is smaller than minimum allowed size ({2} bytes), rejecting.", subject, subject.Release.Size, minSize);
+                    _logger.Debug("Item: {0}, Size: {1} is smaller than minimum allowed size ({2} bytes for {3}), rejecting.", subject, subject.Release.Size, minSize, runtimeMessage);
                     return Decision.Reject("{0} is smaller than minimum allowed {1}", subject.Release.Size.SizeSuffix(), minSize.SizeSuffix());
                 }
             }
@@ -69,7 +69,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                 {
                     var runtimeMessage = $"{albumsDuration}sec";
 
-                    _logger.Debug("Item: {0}, Size: {1} is greater than maximum allowed size ({2}), rejecting.", subject, subject.Release.Size, maxSize);
+                    _logger.Debug("Item: {0}, Size: {1} is greater than maximum allowed size ({2} bytes for {3}), rejecting.", subject, subject.Release.Size, maxSize, runtimeMessage);
                     return Decision.Reject("{0} is larger than maximum allowed {1}", subject.Release.Size.SizeSuffix(), maxSize.SizeSuffix());
                 }
             }
