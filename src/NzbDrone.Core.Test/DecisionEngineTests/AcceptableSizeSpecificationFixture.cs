@@ -158,7 +158,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         public void should_return_true_if_unlimited_45_minute()
         {
             GivenLastAlbum();
-            parseResultSingle.Albums.Select(c => { c.Duration = 45 * 60 * 1000; return c; }).ToList();
+            parseResultSingle.Albums.Select(c => { c.Duration = FORTY_FIVE_MINUTE_LP_MILLIS; return c; }).ToList();
             parseResultSingle.Artist = artist;
             parseResultSingle.Release.Size = (HIGH_KBPS_BITRATE * 128) * (FORTY_FIVE_MINUTE_LP_MILLIS / 1000);
             qualityType.MaxSize = null;
