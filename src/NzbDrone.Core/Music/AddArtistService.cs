@@ -75,7 +75,17 @@ namespace NzbDrone.Core.Music
         {
             newArtists.ForEach(artist =>
             {
-                AddArtist(artist);
+                try
+                {
+                    _logger.Info("Attempting to import id: {1} - {2}", artist.ForeignArtistId, artist.Name);
+                    AddArtist(artist);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Debug("Failed to import id: {1} - {2}", artist.ForeignArtistId, artist.Name);
+                    _logger.Error(ex, ex.Message);
+                }
+
             });
 
             return newArtists;
