@@ -21,7 +21,7 @@ PublishArtifacts()
     rm -f $artifactsFolder/Lidarr.${APPVEYOR_REPO_BRANCH}.${APPVEYOR_BUILD_VERSION}.linux.tar
     
     ./setup/inno/ISCC.exe "./setup/lidarr.iss"
-    cp ./setup/output/Lidarr.*installer.exe $artifactsFolder/Lidarr.${APPVEYOR_REPO_BRANCH}.${APPVEYOR_BUILD_VERSION}.windows.exe
+    cp ./setup/output/Lidarr.*windows.exe $artifactsFolder/Lidarr.${APPVEYOR_REPO_BRANCH}.${APPVEYOR_BUILD_VERSION}.windows.exe
 }
 
 PublishArtifacts
