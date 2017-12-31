@@ -13,7 +13,7 @@ fi
 rm -f "$TEST_LOG_FILE"
 
 # Uncomment to log test output to a file instead of the console
-# export LIDARR_TESTS_LOG_OUTPUT="File"
+export LIDARR_TESTS_LOG_OUTPUT="File"
 
 if [[ -z "${APPVEYOR}" ]]; then
   NUNIT="$TEST_DIR/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe"
