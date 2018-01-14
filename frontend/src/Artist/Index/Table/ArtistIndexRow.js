@@ -66,6 +66,7 @@ class ArtistIndexRow extends Component {
       status,
       artistName,
       nameSlug,
+      foreignArtistId,
       artistType,
       qualityProfile,
       languageProfile,
@@ -124,7 +125,7 @@ class ArtistIndexRow extends Component {
                   className={styles[name]}
                 >
                   <ArtistNameLink
-                    nameSlug={nameSlug}
+                    foreignArtistId={foreignArtistId}
                     artistName={artistName}
                   />
                 </VirtualTableRowCell>
@@ -356,6 +357,7 @@ ArtistIndexRow.propTypes = {
   status: PropTypes.string.isRequired,
   artistName: PropTypes.string.isRequired,
   nameSlug: PropTypes.string.isRequired,
+  foreignArtistId: PropTypes.string.isRequired,
   artistType: PropTypes.string,
   qualityProfile: PropTypes.object.isRequired,
   languageProfile: PropTypes.object.isRequired,

@@ -2,14 +2,13 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import MonitorToggleButton from 'Components/MonitorToggleButton';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
-import { kinds, sizes } from 'Helpers/Props';
+import { icons, kinds, sizes } from 'Helpers/Props';
 import TableRow from 'Components/Table/TableRow';
 import Label from 'Components/Label';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import formatTimeSpan from 'Utilities/Date/formatTimeSpan';
 import AlbumSearchCellConnector from 'Album/AlbumSearchCellConnector';
-import AlbumTitleLink from 'Album/AlbumTitleLink';
-
+import AlbumTitleDetailLink from 'Album/AlbumTitleDetailLink';
 import styles from './AlbumRow.css';
 
 function getTrackCountKind(monitored, trackFileCount, trackCount) {
@@ -33,7 +32,8 @@ class AlbumRow extends Component {
     super(props, context);
 
     this.state = {
-      isDetailsModalOpen: false
+      isDetailsModalOpen: false,
+      isEditAlbumModalOpen: false
     };
   }
 
@@ -46,6 +46,14 @@ class AlbumRow extends Component {
 
   onDetailsModalClose = () => {
     this.setState({ isDetailsModalOpen: false });
+  }
+
+  onEditAlbumPress = () => {
+    this.setState({ isEditAlbumModalOpen: true });
+  }
+
+  onEditAlbumModalClose = () => {
+    this.setState({ isEditAlbumModalOpen: false });
   }
 
   onMonitorAlbumPress = (monitored, options) => {
@@ -64,9 +72,12 @@ class AlbumRow extends Component {
       duration,
       releaseDate,
       mediumCount,
+      secondaryTypes,
       title,
       isSaving,
       artistMonitored,
+      foreignArtistId,
+      foreignAlbumId,
       columns
     } = this.props;
 
@@ -111,9 +122,11 @@ class AlbumRow extends Component {
                   key={name}
                   className={styles.title}
                 >
-                  <AlbumTitleLink
+                  <AlbumTitleDetailLink
+                    title={title}
                     albumId={id}
-                    artistId={artistId}
+                    foreignArtistId={foreignArtistId}
+                    foreignAlbumId={foreignAlbumId}
                     albumTitle={title}
                     showOpenArtistButton={false}
                   />
@@ -126,6 +139,16 @@ class AlbumRow extends Component {
                 <TableRowCell key={name}>
                   {
                     mediumCount
+                  }
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'secondaryTypes') {
+              return (
+                <TableRowCell key={name}>
+                  {
+                    secondaryTypes
                   }
                 </TableRowCell>
               );
@@ -189,7 +212,6 @@ class AlbumRow extends Component {
                 />
               );
             }
-
             return null;
           })
         }
@@ -206,6 +228,9 @@ AlbumRow.propTypes = {
   mediumCount: PropTypes.number.isRequired,
   duration: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
+  secondaryTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
+  foreignAlbumId: PropTypes.string.isRequired,
+  foreignArtistId: PropTypes.string.isRequired,
   isSaving: PropTypes.bool,
   unverifiedSceneNumbering: PropTypes.bool,
   artistMonitored: PropTypes.bool.isRequired,

@@ -8,13 +8,12 @@ import ModalHeader from 'Components/Modal/ModalHeader';
 import ModalBody from 'Components/Modal/ModalBody';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import MonitorToggleButton from 'Components/MonitorToggleButton';
-import AlbumSummaryConnector from './Summary/AlbumSummaryConnector';
 import AlbumHistoryConnector from './History/AlbumHistoryConnector';
 import AlbumSearchConnector from './Search/AlbumSearchConnector';
 import styles from './AlbumDetailsModalContent.css';
 
 const tabs = [
-  'details',
+  // 'details',
   'history',
   'search'
 ];
@@ -45,14 +44,10 @@ class AlbumDetailsModalContent extends Component {
   render() {
     const {
       albumId,
-      albumEntity,
-      artistId,
       artistName,
       nameSlug,
-      albumLabel,
       artistMonitored,
       albumTitle,
-      releaseDate,
       monitored,
       isSaving,
       showOpenArtistButton,
@@ -100,13 +95,6 @@ class AlbumDetailsModalContent extends Component {
                 className={styles.tab}
                 selectedClassName={styles.selectedTab}
               >
-                Details
-              </Tab>
-
-              <Tab
-                className={styles.tab}
-                selectedClassName={styles.selectedTab}
-              >
                 History
               </Tab>
 
@@ -117,16 +105,6 @@ class AlbumDetailsModalContent extends Component {
                 Search
               </Tab>
             </TabList>
-
-            <TabPanel className={styles.tabPanel}>
-              <AlbumSummaryConnector
-                albumId={albumId}
-                albumEntity={albumEntity}
-                releaseDate={releaseDate}
-                albumLabel={albumLabel}
-                artistId={artistId}
-              />
-            </TabPanel>
 
             <TabPanel className={styles.tabPanel}>
               <AlbumHistoryConnector
@@ -148,7 +126,7 @@ class AlbumDetailsModalContent extends Component {
           {
             showOpenArtistButton &&
               <Button
-                className={styles.openSeriesButton}
+                className={styles.openArtistButton}
                 to={artistLink}
                 onPress={onModalClose}
               >
@@ -187,7 +165,7 @@ AlbumDetailsModalContent.propTypes = {
 };
 
 AlbumDetailsModalContent.defaultProps = {
-  selectedTab: 'details',
+  selectedTab: 'history',
   albumLabel: ['Unknown'],
   albumEntity: albumEntities.ALBUMS,
   startInteractiveSearch: false

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nancy;
+using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Music;
 using NzbDrone.SignalR;
@@ -21,7 +22,8 @@ namespace Lidarr.Api.V1.Albums
             : base(albumService, artistStatisticsService, artistService, upgradableSpecification, signalRBroadcaster)
         {
             GetResourceAll = GetAlbums;
-            Put[@"/(?<id>[\d]{1,10})"] = x => SetAlbumMonitored(x.Id);
+            UpdateResource = UpdateAlbum;
+            //Put[@"/(?<id>[\d]{1,10})"] = x => SetAlbumMonitored(x.Id);
             Put["/monitor"] = x => SetAlbumsMonitored();
         }
 
@@ -29,6 +31,7 @@ namespace Lidarr.Api.V1.Albums
         {
             var artistIdQuery = Request.Query.ArtistId;
             var albumIdsQuery = Request.Query.AlbumIds;
+            var foreignIdQuery = Request.Query.ForeignAlbumId;
 
             if (!Request.Query.ArtistId.HasValue && !albumIdsQuery.HasValue)
             {
@@ -42,6 +45,13 @@ namespace Lidarr.Api.V1.Albums
                 return MapToResource(_albumService.GetAlbumsByArtist(artistId), false);
             }
 
+            if (foreignIdQuery.HasValue)
+            {
+                int artistId = _albumService.FindById(foreignIdQuery.Value).ArtistId;
+
+                return MapToResource(_albumService.GetAlbumsByArtist(artistId), false);
+            }
+
             string albumIdsValue = albumIdsQuery.Value.ToString();
 
             var albumIds = albumIdsValue.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
@@ -51,13 +61,24 @@ namespace Lidarr.Api.V1.Albums
             return MapToResource(_albumService.GetAlbums(albumIds), false);
         }
 
-        private Response SetAlbumMonitored(int id)
+        private void UpdateAlbum(AlbumResource albumResource)
         {
-            var resource = Request.Body.FromJson<AlbumResource>();
-            _albumService.SetAlbumMonitored(id, resource.Monitored);
+            var album = _albumService.GetAlbum(albumResource.Id);
 
-            return MapToResource(_albumService.GetAlbum(id), false).AsResponse(HttpStatusCode.Accepted);
+            var model = albumResource.ToModel(album);
+
+            _albumService.UpdateAlbum(model);
+
+            BroadcastResourceChange(ModelAction.Updated, albumResource);
         }
+
+        //private Response SetAlbumMonitored(int id)
+        //{
+        //    var resource = Request.Body.FromJson<AlbumResource>();
+        //    _albumService.SetAlbumMonitored(id, resource.Monitored);
+
+        //    return MapToResource(_albumService.GetAlbum(id), false).AsResponse(HttpStatusCode.Accepted);
+        //}
 
         private Response SetAlbumsMonitored()
         {
