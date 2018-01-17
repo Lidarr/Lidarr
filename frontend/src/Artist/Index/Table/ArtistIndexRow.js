@@ -12,6 +12,7 @@ import VirtualTableRow from 'Components/Table/VirtualTableRow';
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
 import ArtistNameLink from 'Artist/ArtistNameLink';
+import AlbumTitleDetailLink from 'Album/AlbumTitleDetailLink';
 import EditArtistModalConnector from 'Artist/Edit/EditArtistModalConnector';
 import DeleteArtistModal from 'Artist/Delete/DeleteArtistModal';
 import ArtistStatusCell from './ArtistStatusCell';
@@ -71,8 +72,8 @@ class ArtistIndexRow extends Component {
       qualityProfile,
       languageProfile,
       metadataProfile,
-      nextAiring,
-      previousAiring,
+      nextAlbum,
+      lastAlbum,
       added,
       albumCount,
       trackCount,
@@ -82,7 +83,6 @@ class ArtistIndexRow extends Component {
       path,
       sizeOnDisk,
       tags,
-      // useSceneNumbering,
       columns,
       isRefreshingArtist,
       onRefreshArtistPress
@@ -176,26 +176,54 @@ class ArtistIndexRow extends Component {
               );
             }
 
-            if (name === 'nextAiring') {
-              return (
-                <RelativeDateCellConnector
-                  key={name}
-                  className={styles[name]}
-                  date={nextAiring}
-                  component={VirtualTableRowCell}
-                />
-              );
+            if (name === 'nextAlbum') {
+              if (nextAlbum) {
+                return (
+                  <VirtualTableRowCell
+                    key={name}
+                    className={styles[name]}
+                  >
+                    <AlbumTitleDetailLink
+                      title={nextAlbum.title}
+                      foreignAlbumId={nextAlbum.foreignAlbumId}
+                    />
+                  </VirtualTableRowCell>
+                );
+              } else {
+                return (
+                  <VirtualTableRowCell
+                    key={name}
+                    className={styles[name]}
+                  >
+                    None
+                  </VirtualTableRowCell>
+                );
+              }
             }
 
-            if (name === 'previousAiring') {
-              return (
-                <RelativeDateCellConnector
-                  key={name}
-                  className={styles[name]}
-                  date={previousAiring}
-                  component={VirtualTableRowCell}
-                />
-              );
+            if (name === 'lastAlbum') {
+              if (lastAlbum) {
+                return (
+                  <VirtualTableRowCell
+                    key={name}
+                    className={styles[name]}
+                  >
+                    <AlbumTitleDetailLink
+                      title={lastAlbum.title}
+                      foreignAlbumId={lastAlbum.foreignAlbumId}
+                    />
+                  </VirtualTableRowCell>
+                );
+              } else {
+                return (
+                  <VirtualTableRowCell
+                    key={name}
+                    className={styles[name]}
+                  >
+                    None
+                  </VirtualTableRowCell>
+                );
+              }
             }
 
             if (name === 'added') {
@@ -234,27 +262,6 @@ class ArtistIndexRow extends Component {
                     showText={true}
                     text={`${trackFileCount} / ${trackCount}`}
                     title={`${trackFileCount} / ${trackCount} (Total: ${totalTrackCount})`}
-                    width={125}
-                  />
-                </VirtualTableRowCell>
-              );
-            }
-
-            if (name === 'latestAlbum') {
-              const albumStatistics = latestAlbum.statistics;
-              const progress = albumStatistics.trackCount ? albumStatistics.trackFileCount / albumStatistics.trackCount * 100 : 100;
-
-              return (
-                <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
-                >
-                  <ProgressBar
-                    progress={progress}
-                    kind={getProgressBarKind(status, monitored, progress)}
-                    showText={true}
-                    text={`${albumStatistics.trackFileCount} / ${albumStatistics.trackCount}`}
-                    title={`${albumStatistics.trackFileCount} / ${albumStatistics.trackCount} (Total: ${albumStatistics.totalTrackCount})`}
                     width={125}
                   />
                 </VirtualTableRowCell>
@@ -362,10 +369,10 @@ ArtistIndexRow.propTypes = {
   qualityProfile: PropTypes.object.isRequired,
   languageProfile: PropTypes.object.isRequired,
   metadataProfile: PropTypes.object.isRequired,
-  nextAiring: PropTypes.string,
-  previousAiring: PropTypes.string,
+  nextAlbum: PropTypes.object,
+  lastAlbum: PropTypes.object,
   added: PropTypes.string,
-  albumCount: PropTypes.number.isRequired,
+  albumCount: PropTypes.number,
   trackCount: PropTypes.number,
   trackFileCount: PropTypes.number,
   totalTrackCount: PropTypes.number,

@@ -13,7 +13,6 @@ import AlbumSearchConnector from './Search/AlbumSearchConnector';
 import styles from './AlbumDetailsModalContent.css';
 
 const tabs = [
-  // 'details',
   'history',
   'search'
 ];
@@ -45,7 +44,7 @@ class AlbumDetailsModalContent extends Component {
     const {
       albumId,
       artistName,
-      nameSlug,
+      foreignArtistId,
       artistMonitored,
       albumTitle,
       monitored,
@@ -56,7 +55,7 @@ class AlbumDetailsModalContent extends Component {
       onModalClose
     } = this.props;
 
-    const artistLink = `/artist/${nameSlug}`;
+    const artistLink = `/artist/${foreignArtistId}`;
 
     return (
       <ModalContent
@@ -150,7 +149,7 @@ AlbumDetailsModalContent.propTypes = {
   albumEntity: PropTypes.string.isRequired,
   artistId: PropTypes.number.isRequired,
   artistName: PropTypes.string.isRequired,
-  nameSlug: PropTypes.string.isRequired,
+  foreignArtistId: PropTypes.string.isRequired,
   artistMonitored: PropTypes.bool.isRequired,
   releaseDate: PropTypes.string.isRequired,
   albumLabel: PropTypes.arrayOf(PropTypes.string).isRequired,

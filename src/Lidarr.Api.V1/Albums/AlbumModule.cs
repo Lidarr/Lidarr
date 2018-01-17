@@ -23,7 +23,6 @@ namespace Lidarr.Api.V1.Albums
         {
             GetResourceAll = GetAlbums;
             UpdateResource = UpdateAlbum;
-            //Put[@"/(?<id>[\d]{1,10})"] = x => SetAlbumMonitored(x.Id);
             Put["/monitor"] = x => SetAlbumsMonitored();
         }
 
@@ -33,7 +32,7 @@ namespace Lidarr.Api.V1.Albums
             var albumIdsQuery = Request.Query.AlbumIds;
             var foreignIdQuery = Request.Query.ForeignAlbumId;
 
-            if (!Request.Query.ArtistId.HasValue && !albumIdsQuery.HasValue)
+            if (!Request.Query.ArtistId.HasValue && !albumIdsQuery.HasValue && !foreignIdQuery.HasValue)
             {
                 return MapToResource(_albumService.GetAllAlbums(), false);
             }
@@ -71,14 +70,6 @@ namespace Lidarr.Api.V1.Albums
 
             BroadcastResourceChange(ModelAction.Updated, albumResource);
         }
-
-        //private Response SetAlbumMonitored(int id)
-        //{
-        //    var resource = Request.Body.FromJson<AlbumResource>();
-        //    _albumService.SetAlbumMonitored(id, resource.Monitored);
-
-        //    return MapToResource(_albumService.GetAlbum(id), false).AsResponse(HttpStatusCode.Accepted);
-        //}
 
         private Response SetAlbumsMonitored()
         {

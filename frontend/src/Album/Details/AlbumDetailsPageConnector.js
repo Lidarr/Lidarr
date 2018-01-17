@@ -23,9 +23,6 @@ function createMapStateToProps() {
         isAlbumsFetching,
         isAlbumsPopulated
       };
-      // }
-
-      // return {};
     }
   );
 }

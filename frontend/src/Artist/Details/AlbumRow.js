@@ -124,11 +124,7 @@ class AlbumRow extends Component {
                 >
                   <AlbumTitleDetailLink
                     title={title}
-                    albumId={id}
-                    foreignArtistId={foreignArtistId}
                     foreignAlbumId={foreignAlbumId}
-                    albumTitle={title}
-                    showOpenArtistButton={false}
                   />
                 </TableRowCell>
               );

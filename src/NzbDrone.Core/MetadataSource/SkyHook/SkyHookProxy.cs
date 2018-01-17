@@ -131,7 +131,6 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             try
             {
                 var lowerTitle = title.ToLowerInvariant();
-                Console.WriteLine(@"Searching for " + lowerTitle);
 
                 if (lowerTitle.StartsWith("lidarr:") || lowerTitle.StartsWith("lidarrid:"))
                 {
