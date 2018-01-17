@@ -189,16 +189,15 @@ class ArtistIndexRow extends Component {
                     />
                   </VirtualTableRowCell>
                 );
-              } else {
-                return (
-                  <VirtualTableRowCell
-                    key={name}
-                    className={styles[name]}
-                  >
-                    None
-                  </VirtualTableRowCell>
-                );
               }
+              return (
+                <VirtualTableRowCell
+                  key={name}
+                  className={styles[name]}
+                >
+                  None
+                </VirtualTableRowCell>
+              );
             }
 
             if (name === 'lastAlbum') {
@@ -214,16 +213,15 @@ class ArtistIndexRow extends Component {
                     />
                   </VirtualTableRowCell>
                 );
-              } else {
-                return (
-                  <VirtualTableRowCell
-                    key={name}
-                    className={styles[name]}
-                  >
-                    None
-                  </VirtualTableRowCell>
-                );
               }
+              return (
+                <VirtualTableRowCell
+                  key={name}
+                  className={styles[name]}
+                >
+                  None
+                </VirtualTableRowCell>
+              );
             }
 
             if (name === 'added') {

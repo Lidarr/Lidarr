@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import MonitorToggleButton from 'Components/MonitorToggleButton';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
-import { icons, kinds, sizes } from 'Helpers/Props';
+import { kinds, sizes } from 'Helpers/Props';
 import TableRow from 'Components/Table/TableRow';
 import Label from 'Components/Label';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
@@ -76,7 +76,6 @@ class AlbumRow extends Component {
       title,
       isSaving,
       artistMonitored,
-      foreignArtistId,
       foreignAlbumId,
       columns
     } = this.props;
@@ -226,7 +225,6 @@ AlbumRow.propTypes = {
   title: PropTypes.string.isRequired,
   secondaryTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
   foreignAlbumId: PropTypes.string.isRequired,
-  foreignArtistId: PropTypes.string.isRequired,
   isSaving: PropTypes.bool,
   unverifiedSceneNumbering: PropTypes.bool,
   artistMonitored: PropTypes.bool.isRequired,

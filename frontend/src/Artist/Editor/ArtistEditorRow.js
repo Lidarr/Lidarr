@@ -27,7 +27,6 @@ class ArtistEditorRow extends Component {
     const {
       id,
       status,
-      nameSlug,
       foreignArtistId,
       artistName,
       monitored,
@@ -106,7 +105,6 @@ class ArtistEditorRow extends Component {
 ArtistEditorRow.propTypes = {
   id: PropTypes.number.isRequired,
   status: PropTypes.string.isRequired,
-  nameSlug: PropTypes.string.isRequired,
   foreignArtistId: PropTypes.string.isRequired,
   artistName: PropTypes.string.isRequired,
   monitored: PropTypes.bool.isRequired,
