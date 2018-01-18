@@ -124,17 +124,21 @@ namespace NzbDrone.Core.Music
                 {
                     var albumToUpdate = GetAlbumToUpdate(artist, album, existingAlbums);
 
-                    var tuple = _albumInfo.GetAlbumInfo(album.ForeignAlbumId, album.CurrentRelease.Id);
-
-                    var albumInfo = tuple.Item1;
+                    Tuple<Album, List<Track>> tuple;
+                    var albumInfo = new Album();
 
                     if (albumToUpdate != null)
                     {
+
+                        tuple = _albumInfo.GetAlbumInfo(album.ForeignAlbumId, albumToUpdate.CurrentRelease.Id);
+                        albumInfo = tuple.Item1;
                         existingAlbums.Remove(albumToUpdate);
                         updateList.Add(albumToUpdate);
                     }
                     else
                     {
+                        tuple = _albumInfo.GetAlbumInfo(album.ForeignAlbumId, null);
+                        albumInfo = tuple.Item1;
                         albumToUpdate = new Album
                         {
                             Monitored = artist.Monitored,
@@ -180,20 +184,6 @@ namespace NzbDrone.Core.Music
                     failCount++;
                 }
             }
-
-            var allAlbums = new List<Album>();
-            allAlbums.AddRange(newList);
-            allAlbums.AddRange(updateList);
-
-            // TODO: See if anything needs to be done here
-            //AdjustMultiEpisodeAirTime(artist, allTracks);
-            //AdjustDirectToDvdAirDate(artist, allTracks);
-
-            //foreach (var album in existingAlbums)
-            //{
-            //    var tracksToRemove = _trackService.GetTracksByAlbum(album.Id);
-            //    _trackService.DeleteMany(tracksToRemove);
-            //}
 
             _albumService.DeleteMany(existingAlbums);
             _albumService.UpdateMany(updateList);
