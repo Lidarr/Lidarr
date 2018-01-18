@@ -6,6 +6,6 @@ namespace NzbDrone.Core.MetadataSource
 {
     public interface IProvideAlbumInfo
     {
-        Tuple<Album, List<Track>> GetAlbumInfo(string lidarrId, string releaseId = null);
+        Tuple<Album, List<Track>> GetAlbumInfo(string lidarrId, string releaseId);
     }
 }

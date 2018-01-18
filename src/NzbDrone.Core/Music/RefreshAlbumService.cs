@@ -124,7 +124,7 @@ namespace NzbDrone.Core.Music
                 {
                     var albumToUpdate = GetAlbumToUpdate(artist, album, existingAlbums);
 
-                    var tuple = _albumInfo.GetAlbumInfo(album.ForeignAlbumId);
+                    var tuple = _albumInfo.GetAlbumInfo(album.ForeignAlbumId, album.CurrentRelease.Id);
 
                     var albumInfo = tuple.Item1;
 

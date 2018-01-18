@@ -765,8 +765,6 @@
     <Compile Include="Extras\Metadata\MetadataRepository.cs" />
     <Compile Include="Extras\Metadata\MetadataService.cs" />
     <Compile Include="Extras\Metadata\MetadataType.cs" />
-    <Compile Include="Music\AddAlbumService.cs" />
-    <Compile Include="Music\AlbumAddedHandler.cs" />
     <Compile Include="Music\AlbumEditedService.cs" />
     <Compile Include="Music\AlbumRelease.cs" />
     <Compile Include="Music\ArtistStatusType.cs" />

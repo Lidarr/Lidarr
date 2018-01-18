@@ -87,7 +87,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             return new Tuple<Artist, List<Album>>(artist, albums.ToList());
         }
 
-        public Tuple<Album, List<Track>> GetAlbumInfo(string foreignAlbumId, string releaseId = null)
+        public Tuple<Album, List<Track>> GetAlbumInfo(string foreignAlbumId, string releaseId)
         {
             _logger.Debug("Getting Album with LidarrAPI.MetadataID of {0}", foreignAlbumId);
 
