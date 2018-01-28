@@ -94,6 +94,24 @@ namespace NzbDrone.Core.Test.MetadataSource.SkyHook
             Assert.Throws<ArtistNotFoundException>(() => Subject.GetArtistInfo("66c66aaa-6e2f-4930-8610-912e24c63ed1", 1));
         }
 
+        [Test]
+        public void getting_details_of_invalid_guid_for_artist()
+        {
+            Assert.Throws<BadRequestException>(() => Subject.GetArtistInfo("66c66aaa-6e2f-4930-aaaaaa", 1));
+        }
+
+        [Test]
+        public void getting_details_of_invalid_album()
+        {
+            Assert.Throws<AlbumNotFoundException>(() => Subject.GetAlbumInfo("66c66aaa-6e2f-4930-8610-912e24c63ed1",null));
+        }
+
+        [Test]
+        public void getting_details_of_invalid_guid_for_album()
+        {
+            Assert.Throws<BadRequestException>(() => Subject.GetAlbumInfo("66c66aaa-6e2f-4930-aaaaaa", null));
+        }
+
         private void ValidateArtist(Artist artist)
         {
             artist.Should().NotBeNull();
