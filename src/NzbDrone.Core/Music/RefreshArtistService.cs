@@ -119,9 +119,6 @@ namespace NzbDrone.Core.Music
                 }
                 else
                 {
-                    album.Monitored = artist.Monitored;
-                    album.ProfileId = artist.ProfileId;
-                    album.ArtistId = artist.Id;
                     newAlbumsList.Add(album);
                 }
             }
@@ -143,31 +140,14 @@ namespace NzbDrone.Core.Music
 
         private List<Album> UpdateAlbums(Artist artist, List<Album> albumsToUpdate)
         {
-            var albums = albumsToUpdate.DistinctBy(s => s.ForeignAlbumId).ToList();
-
-            foreach (var album in albums)
+            foreach (var album in albumsToUpdate)
             {
                 album.ArtistId = artist.Id;
                 album.ProfileId = artist.ProfileId;
-
-                // if we dont pass any albums with the artist add then just use artist monitored state
-                if (!artist.Albums.Any())
-                {
-                    album.Monitored = artist.Monitored;
-                    continue;
-                }
-
-                // if we pass albums, set those albums to true. This will allow us to add artists from lists and only monitor the relevant albums
-                if (artist.Albums.Any(s => s.ForeignAlbumId == album.ForeignAlbumId) && artist.Monitored)
-                {
-                    album.Monitored = true;
-                    continue;
-                }
-                
-                album.Monitored = false;
+                album.Monitored = artist.Monitored;
             }
 
-            return albums;
+            return albumsToUpdate;
         }
 
         public void Execute(RefreshArtistCommand message)

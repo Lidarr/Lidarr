@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
@@ -8,8 +7,6 @@ using NLog;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.MetadataSource;
-using NzbDrone.Core.Organizer;
-using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Music
 {
@@ -77,7 +74,7 @@ namespace NzbDrone.Core.Music
             {
                 tuple = _albumInfo.GetAlbumInfo(newAlbum.ForeignAlbumId, null);
             }
-            catch (ArtistNotFoundException)
+            catch (AlbumNotFoundException)
             {
                 _logger.Error("LidarrId {1} was not found, it may have been removed from Lidarr.", newAlbum.ForeignAlbumId);
 
