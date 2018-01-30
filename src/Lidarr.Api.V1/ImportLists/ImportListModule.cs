@@ -13,7 +13,10 @@ namespace Lidarr.Api.V1.ImportLists
 
         protected override void Validate(ImportListDefinition definition, bool includeWarnings)
         {
-            if (!definition.Enable) return;
+            if (!definition.Enable)
+            {
+                return;
+            }
             base.Validate(definition, includeWarnings);
         }
     }

@@ -30,6 +30,8 @@ function EditImportListModalContent(props) {
     onSavePress,
     onTestPress,
     onDeleteImportListPress,
+    showLanguageProfile,
+    showMetadataProfile,
     ...otherProps
   } = props;
 
@@ -42,8 +44,6 @@ function EditImportListModalContent(props) {
     profileId,
     languageProfileId,
     metadataProfileId,
-    showLanguageProfile,
-    showMetadataProfile,
     fields
   } = item;
 

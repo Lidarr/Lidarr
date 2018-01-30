@@ -3,6 +3,7 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
 using NzbDrone.Core.ImportLists;
+using NzbDrone.Core.ImportLists.LidarrLists;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Test.Framework;
 
@@ -17,8 +18,7 @@ namespace NzbDrone.Core.Test.ImportListTests
         {
             _importLists = new List<IImportList>();
 
-            //_importLists.Add(Mocker.Resolve<Newznab>()); //TODO Uncomment when a we add lists
-            //_importLists.Add(Mocker.Resolve<Omgwtfnzbs>());
+            _importLists.Add(Mocker.Resolve<LidarrLists>());
 
             Mocker.SetConstant<IEnumerable<IImportList>>(_importLists);
         }
@@ -31,7 +31,7 @@ namespace NzbDrone.Core.Test.ImportListTests
             Mocker.SetConstant<IImportListRepository>(repo);
 
             var existingImportLists = Builder<ImportListDefinition>.CreateNew().BuildNew();
-            //existingImportLists.ConfigContract = typeof (NewznabSettings).Name; //TODO Uncomment when a we add lists
+            existingImportLists.ConfigContract = typeof (LidarrListsSettings).Name;
 
             repo.Insert(existingImportLists);
 

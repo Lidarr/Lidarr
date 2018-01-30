@@ -16,7 +16,10 @@ namespace Lidarr.Api.V1.ImportLists
     {
         public override ImportListResource ToResource(ImportListDefinition definition)
         {
-            if (definition == null) return null;
+            if (definition == null)
+            {
+                return null;
+            }
 
             var resource = base.ToResource(definition);
             
@@ -32,7 +35,10 @@ namespace Lidarr.Api.V1.ImportLists
 
         public override ImportListDefinition ToModel(ImportListResource resource)
         {
-            if (resource == null) return null;
+            if (resource == null)
+            {
+                return null;
+            }
 
             var definition = base.ToModel(resource);
             

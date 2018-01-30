@@ -521,6 +521,11 @@
     <Compile Include="Http\TorcacheHttpInterceptor.cs" />
     <Compile Include="ImportLists\Exceptions\ImportListException.cs" />
     <Compile Include="ImportLists\FetchAndParseImportListService.cs" />
+    <Compile Include="ImportLists\HeadphonesImport\HeadphonesImport.cs" />
+    <Compile Include="ImportLists\HeadphonesImport\HeadphonesImportApi.cs" />
+    <Compile Include="ImportLists\HeadphonesImport\HeadphonesImportParser.cs" />
+    <Compile Include="ImportLists\HeadphonesImport\HeadphonesImportRequestGenerator.cs" />
+    <Compile Include="ImportLists\HeadphonesImport\HeadphonesImportSettings.cs" />
     <Compile Include="ImportLists\HttpImportListBase.cs" />
     <Compile Include="ImportLists\IImportList.cs" />
     <Compile Include="ImportLists\IImportListSettings.cs" />

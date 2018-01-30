@@ -41,7 +41,7 @@ class AddImportListItem extends Component {
       >
         <Link
           className={styles.underlay}
-          onPress={this.onListSelect}
+          onPress={this.onImportListSelect}
         />
 
         <div className={styles.overlay}>

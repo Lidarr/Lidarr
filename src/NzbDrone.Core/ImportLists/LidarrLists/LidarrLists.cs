@@ -13,8 +13,8 @@ namespace NzbDrone.Core.ImportLists.LidarrLists
 
         public override int PageSize => 10;
 
-        public LidarrLists(IHttpClient httpClient, IImportListStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
-            : base(httpClient, indexerStatusService, configService, parsingService, logger)
+        public LidarrLists(IHttpClient httpClient, IImportListStatusService importListStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
+            : base(httpClient, importListStatusService, configService, parsingService, logger)
         {
 
         }
@@ -51,7 +51,7 @@ namespace NzbDrone.Core.ImportLists.LidarrLists
 
         public override IImportListRequestGenerator GetRequestGenerator()
         {
-            return new LidarrListsRequestGenerator() { Settings = Settings, PageSize = PageSize };
+            return new LidarrListsRequestGenerator { Settings = Settings, PageSize = PageSize };
         }
 
         public override IParseImportListResponse GetParser()

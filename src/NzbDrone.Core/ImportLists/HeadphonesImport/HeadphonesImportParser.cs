@@ -6,18 +6,12 @@ using System.Net;
 using NLog;
 using NzbDrone.Common.Extensions;
 
-namespace NzbDrone.Core.ImportLists.LidarrLists
+namespace NzbDrone.Core.ImportLists.HeadphonesImport
 {
-    public class LidarrListsParser : IParseImportListResponse
+    public class HeadphonesImportParser : IParseImportListResponse
     {
-        private readonly LidarrListsSettings _settings;
         private ImportListResponse _importListResponse;
         private readonly Logger _logger;
-
-        public LidarrListsParser(LidarrListsSettings settings)
-        {
-            _settings = settings;
-        }
 
         public IList<ImportListItemInfo> ParseResponse(ImportListResponse importListResponse)
         {
@@ -30,7 +24,7 @@ namespace NzbDrone.Core.ImportLists.LidarrLists
                 return items;
             }
 
-            var jsonResponse = JsonConvert.DeserializeObject<List<LidarrListsAlbum>>(_importListResponse.Content);
+            var jsonResponse = JsonConvert.DeserializeObject<List<HeadphonesImportArtist>>(_importListResponse.Content);
 
             // no albums were return
             if (jsonResponse == null)
@@ -43,10 +37,7 @@ namespace NzbDrone.Core.ImportLists.LidarrLists
                 items.AddIfNotNull(new ImportListItemInfo
                 {
                     Artist = item.ArtistName,
-                    Album = item.AlbumTitle,
-                    ArtistMusicBrainzId = item.ArtistId,
-                    AlbumMusicBrainzId = item.AlbumId,
-                    ReleaseDate = item.ReleaseDate.GetValueOrDefault()
+                    ArtistMusicBrainzId = item.ArtistId
                 });
             }
 

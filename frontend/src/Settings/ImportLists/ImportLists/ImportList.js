@@ -66,8 +66,7 @@ class ImportList extends Component {
     const {
       id,
       name,
-      enableAutomaticAdd,
-      enableInteractiveAdd
+      enableAutomaticAdd
     } = this.props;
 
     return (
@@ -114,7 +113,6 @@ ImportList.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   enableAutomaticAdd: PropTypes.bool.isRequired,
-  enableInteractiveAdd: PropTypes.bool.isRequired,
   onConfirmDeleteImportList: PropTypes.func.isRequired
 };
 

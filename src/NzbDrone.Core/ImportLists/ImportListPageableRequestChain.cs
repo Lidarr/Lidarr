@@ -27,7 +27,10 @@ namespace NzbDrone.Core.ImportLists
 
         public void Add(IEnumerable<ImportListRequest> request)
         {
-            if (request == null) return;
+            if (request == null)
+            {
+                return;
+            }
 
             _chains.Last().Add(new ImportListPageableRequest(request));
         }
@@ -40,7 +43,10 @@ namespace NzbDrone.Core.ImportLists
 
         public void AddTier()
         {
-            if (_chains.Last().Count == 0) return;
+            if (_chains.Last().Count == 0)
+            {
+                return;
+            }
 
             _chains.Add(new List<ImportListPageableRequest>());
         }
