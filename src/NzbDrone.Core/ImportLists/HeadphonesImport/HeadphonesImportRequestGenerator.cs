@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Text;
 using NzbDrone.Common.Http;
 
 namespace NzbDrone.Core.ImportLists.HeadphonesImport

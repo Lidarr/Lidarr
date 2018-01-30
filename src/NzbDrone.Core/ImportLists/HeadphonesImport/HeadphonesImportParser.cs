@@ -44,17 +44,17 @@ namespace NzbDrone.Core.ImportLists.HeadphonesImport
             return items;
         }
 
-        protected virtual bool PreProcess(ImportListResponse indexerResponse)
+        protected virtual bool PreProcess(ImportListResponse importListResponse)
         {
-            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            if (importListResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                throw new ImportListException(indexerResponse, "Import List API call resulted in an unexpected StatusCode [{0}]", indexerResponse.HttpResponse.StatusCode);
+                throw new ImportListException(importListResponse, "Import List API call resulted in an unexpected StatusCode [{0}]", importListResponse.HttpResponse.StatusCode);
             }
 
-            if (indexerResponse.HttpResponse.Headers.ContentType != null && indexerResponse.HttpResponse.Headers.ContentType.Contains("text/json") &&
-                indexerResponse.HttpRequest.Headers.Accept != null && !indexerResponse.HttpRequest.Headers.Accept.Contains("text/json"))
+            if (importListResponse.HttpResponse.Headers.ContentType != null && importListResponse.HttpResponse.Headers.ContentType.Contains("text/json") &&
+                importListResponse.HttpRequest.Headers.Accept != null && !importListResponse.HttpRequest.Headers.Accept.Contains("text/json"))
             {
-                throw new ImportListException(indexerResponse, "Import List responded with html content. Site is likely blocked or unavailable.");
+                throw new ImportListException(importListResponse, "Import List responded with html content. Site is likely blocked or unavailable.");
             }
 
             return true;
