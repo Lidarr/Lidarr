@@ -9,7 +9,10 @@ import ArtistIndexRow from './ArtistIndexRow';
 import styles from './ArtistIndexTable.css';
 
 class ArtistIndexTable extends Component {
-
+  constructor(props, context) {
+    super(props, context);
+    this._table = null;
+  }
   //
   // Control
 
@@ -74,6 +77,7 @@ class ArtistIndexTable extends Component {
 
     return (
       <VirtualTable
+        ref={(table) => this._table = table}
         className={styles.tableContainer}
         items={items}
         scrollTop={scrollTop}

@@ -134,3 +134,7 @@ _start
 _temp_*/**/*
 
 src/.idea/
+
+frontend/\.idea/
+
+*.iml
