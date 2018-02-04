@@ -111,7 +111,7 @@ namespace NzbDrone.Core.ImportLists
                 }
 
                 // Add Album so we know what to monitor
-                if (report.AlbumMusicBrainzId.IsNotNullOrWhiteSpace() && artistsToAdd.Any(s=>s.ForeignArtistId == report.ArtistMusicBrainzId))
+                if (report.AlbumMusicBrainzId.IsNotNullOrWhiteSpace() && artistsToAdd.Any(s=>s.ForeignArtistId == report.ArtistMusicBrainzId) && importList.ShouldMonitor)
                 {
                     artistsToAdd.Find(s => s.ForeignArtistId == report.ArtistMusicBrainzId).AddOptions.AlbumsToMonitor.Add(report.AlbumMusicBrainzId);
                 }
