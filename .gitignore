@@ -133,8 +133,6 @@ output/*
 _start
 _temp_*/**/*
 
-src/.idea/
-
-frontend/\.idea/
-
+## Merge any idea folder
+*/**/.idea
 *.iml

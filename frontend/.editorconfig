@@ -1,5 +1,3 @@
-root = true
-
 [*]
 insert_final_newline = true
 
