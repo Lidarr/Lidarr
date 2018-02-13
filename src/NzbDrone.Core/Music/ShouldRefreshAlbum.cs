@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Music
                 return true;
             }
 
-            _logger.Trace("Album {0} released long ago, should not be refreshed.", album.Title);
+            _logger.Trace("Album {0} released long ago and recently refreshed, should not be refreshed.", album.Title);
             return false;
         }
     }
