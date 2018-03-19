@@ -23,6 +23,9 @@ namespace NzbDrone.Core.Test.ParserTests
             _artist = Builder<Artist>
                 .CreateNew()
                 .Build();
+            _albums = Builder<List<Album>>
+                .CreateNew()
+                .Build();
         }
 
         private void GivenSearchCriteria(string artistName, string albumTitle)
