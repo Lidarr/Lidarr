@@ -169,5 +169,13 @@ namespace NzbDrone.Core.Test.ParserTests
             var parseResult = Parser.Parser.ParseAlbumTitleWithSearchCriteria("Black Sabbath  Black Sabbath FLAC", _artist, _albums);
             parseResult.Should().BeNull();
         }
+
+        [TestCase("Ed Sheeran", "I See Fire", "Ed Sheeran I See Fire[Mimp3.eu].mp3")]
+        public void should_escape_albums(string artist, string album, string releaseTitle)
+        {
+            GivenSearchCriteria(artist, album);
+            var parseResult = Parser.Parser.ParseAlbumTitleWithSearchCriteria(releaseTitle, _artist, _albums);
+            parseResult.AlbumTitle.Should().Be("I See Fire");
+        }
     }
 }
