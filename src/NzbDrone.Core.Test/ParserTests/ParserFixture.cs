@@ -180,5 +180,16 @@ namespace NzbDrone.Core.Test.ParserTests
             var parseResult = Parser.Parser.ParseAlbumTitleWithSearchCriteria(releaseTitle, _artist, _albums);
             parseResult.AlbumTitle.Should().Be(album);
         }
+
+        [TestCase("???", "Album", "??? Album")]
+        [TestCase("+", "Album", "+ Album")]
+        [TestCase(@"/\", "Album", @"/\ Album")]
+        [TestCase("+44", "When Your Heart Stops Beating", "+44 When Your Heart Stops Beating")]
+        public void should_escape_artists(string artist, string album, string releaseTitle)
+        {
+            GivenSearchCriteria(artist, album);
+            var parseResult = Parser.Parser.ParseAlbumTitleWithSearchCriteria(releaseTitle, _artist, _albums);
+            parseResult.ArtistName.Should().Be(artist);
+        }
     }
 }
