@@ -338,7 +338,7 @@ namespace NzbDrone.Core.Parser
 
                 simpleTitle = CleanTorrentSuffixRegex.Replace(simpleTitle, string.Empty);
 
-                var releaseRegex = new Regex(@"\b(?<artist>" + artist.Name + @")\b.*\b(?<album>"+ string.Join("|",album.Select(s=>Regex.Escape(s.Title)).ToList()) + @")\b",
+                var releaseRegex = new Regex(@"\b(?<artist>" + Regex.Escape(artist.Name) + @")\b.*\b(?<album>"+ string.Join("|",album.Select(s=>Regex.Escape(s.Title)).ToList()) + @")\b",
                     RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
                 var match = releaseRegex.Matches(simpleTitle);
