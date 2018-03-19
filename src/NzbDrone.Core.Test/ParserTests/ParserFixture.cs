@@ -31,19 +31,6 @@ namespace NzbDrone.Core.Test.ParserTests
             _albums.First().Title = albumTitle;
         }
 
-        private void GivenSearchCriteria(string artistName, string[] albumTitles)
-        {
-            _artist.Name = artistName;
-            _albums = new List<Album>();
-            foreach (var title in albumTitles)
-            {
-                _albums.Add(new Album
-                {
-                    Title = title
-                });
-            }
-        }
-
         [TestCase("Bad Format", "badformat")]
         public void should_parse_artist_name(string postTitle, string title)
         {
@@ -183,12 +170,15 @@ namespace NzbDrone.Core.Test.ParserTests
             parseResult.Should().BeNull();
         }
 
-        [TestCase("Ed Sheeran", new []{"I See Fire", "+"}, "Ed Sheeran I See Fire[Mimp3.eu].mp3")]
-        public void should_escape_albums(string artist, string[] albums, string releaseTitle)
+        [TestCase("Ed Sheeran", "I See Fire", "Ed Sheeran I See Fire[Mimp3.eu].mp3")]
+        [TestCase("Ed Sheeran", "Divide", "Ed Sheeran   ? Devide")]
+        [TestCase("Ed Sheeran", "+", "Ed Sheeran +")]
+        [TestCase("Glasvegas", @"EUPHORIC /// HEARTBREAK \\\", @"EUPHORIC /// HEARTBREAK \\\")]
+        public void should_escape_albums(string artist, string album, string releaseTitle)
         {
-            GivenSearchCriteria(artist, albums);
+            GivenSearchCriteria(artist, album);
             var parseResult = Parser.Parser.ParseAlbumTitleWithSearchCriteria(releaseTitle, _artist, _albums);
-            parseResult.AlbumTitle.Should().Be("I See Fire");
+            parseResult.AlbumTitle.Should().Be(album);
         }
     }
 }
