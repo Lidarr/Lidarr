@@ -170,10 +170,10 @@ namespace NzbDrone.Core.Test.ParserTests
             parseResult.Should().BeNull();
         }
 
-        [TestCase("Ed Sheeran", "I See Fire", "Ed Sheeran I See Fire[Mimp3.eu].mp3")]
-        [TestCase("Ed Sheeran", "Divide", "Ed Sheeran   ? Devide")]
-        [TestCase("Ed Sheeran", "+", "Ed Sheeran +")]
-        [TestCase("Glasvegas", @"EUPHORIC /// HEARTBREAK \\\", @"EUPHORIC /// HEARTBREAK \\\")]
+        [TestCase("Ed Sheeran", "I See Fire", "Ed Sheeran I See Fire[Mimp3.eu].mp3 FLAC")]
+        [TestCase("Ed Sheeran", "Divide", "Ed Sheeran   ? Divide FLAC")]
+        [TestCase("Ed Sheeran", "+", "Ed Sheeran + FLAC")]
+        [TestCase("Glasvegas", @"EUPHORIC /// HEARTBREAK \\\", @"EUPHORIC /// HEARTBREAK \\\ FLAC")]
         public void should_escape_albums(string artist, string album, string releaseTitle)
         {
             GivenSearchCriteria(artist, album);
@@ -181,10 +181,10 @@ namespace NzbDrone.Core.Test.ParserTests
             parseResult.AlbumTitle.Should().Be(album);
         }
 
-        [TestCase("???", "Album", "??? Album")]
-        [TestCase("+", "Album", "+ Album")]
-        [TestCase(@"/\", "Album", @"/\ Album")]
-        [TestCase("+44", "When Your Heart Stops Beating", "+44 When Your Heart Stops Beating")]
+        [TestCase("???", "Album", "??? Album FLAC")]
+        [TestCase("+", "Album", "+ Album FLAC")]
+        [TestCase(@"/\", "Album", @"/\ Album FLAC")]
+        [TestCase("+44", "When Your Heart Stops Beating", "+44 When Your Heart Stops Beating FLAC")]
         public void should_escape_artists(string artist, string album, string releaseTitle)
         {
             GivenSearchCriteria(artist, album);
