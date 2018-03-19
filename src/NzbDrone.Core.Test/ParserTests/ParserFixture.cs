@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Test.ParserTests
     public class ParserFixture : CoreTest
     {
         Artist _artist = new Artist();
-        private List<Album> _albums = new List<Album>{new Album()};
+        private List<Album> _albums = new List<Album> { new Album() };
 
         [SetUp]
         public void Setup()
@@ -31,6 +31,19 @@ namespace NzbDrone.Core.Test.ParserTests
             _albums.First().Title = albumTitle;
         }
 
+        private void GivenSearchCriteria(string artistName, string[] albumTitles)
+        {
+            _artist.Name = artistName;
+            _albums = new List<Album>();
+            foreach (var title in albumTitles)
+            {
+                _albums.Add(new Album
+                {
+                    Title = title
+                });
+            }
+        }
+
         [TestCase("Bad Format", "badformat")]
         public void should_parse_artist_name(string postTitle, string title)
         {
@@ -42,7 +55,7 @@ namespace NzbDrone.Core.Test.ParserTests
         public void should_remove_accents_from_title()
         {
             const string title = "Carniv\u00E0le";
-            
+
             title.CleanArtistName().Should().Be("carnivale");
         }
 
@@ -170,10 +183,10 @@ namespace NzbDrone.Core.Test.ParserTests
             parseResult.Should().BeNull();
         }
 
-        [TestCase("Ed Sheeran", "I See Fire", "Ed Sheeran I See Fire[Mimp3.eu].mp3")]
-        public void should_escape_albums(string artist, string album, string releaseTitle)
+        [TestCase("Ed Sheeran", new []{"I See Fire", "+"}, "Ed Sheeran I See Fire[Mimp3.eu].mp3")]
+        public void should_escape_albums(string artist, string[] albums, string releaseTitle)
         {
-            GivenSearchCriteria(artist, album);
+            GivenSearchCriteria(artist, albums);
             var parseResult = Parser.Parser.ParseAlbumTitleWithSearchCriteria(releaseTitle, _artist, _albums);
             parseResult.AlbumTitle.Should().Be("I See Fire");
         }
