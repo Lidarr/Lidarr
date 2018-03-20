@@ -49,7 +49,7 @@ namespace NzbDrone.Core.Music
             {
                 return false;
             }
-            return ReferenceEquals(this, obj) || Equals(obj as PrimaryAlbumType);
+            return ReferenceEquals(this, obj) || Equals(obj as ReleaseStatus);
         }
 
         public static bool operator ==(ReleaseStatus left, ReleaseStatus right)
