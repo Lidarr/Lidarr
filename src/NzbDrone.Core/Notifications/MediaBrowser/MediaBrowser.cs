@@ -26,7 +26,7 @@ namespace NzbDrone.Core.Notifications.Emby
             }
         }
 
-        public override void OnDownload(DownloadMessage message)
+        public override void OnDownload(TrackDownloadMessage message)
         {
             if (Settings.Notify)
             {

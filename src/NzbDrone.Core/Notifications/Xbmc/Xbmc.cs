@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Notifications.Xbmc
             Notify(Settings, header, grabMessage.Message);
         }
 
-        public override void OnDownload(DownloadMessage message)
+        public override void OnDownload(TrackDownloadMessage message)
         {
             const string header = "Lidarr - Downloaded";
 
