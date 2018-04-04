@@ -205,6 +205,10 @@ namespace NzbDrone.Core.Parser
 
             filename = artist.Path.GetRelativePath(filename);
 
+            // Joe: We can clean here
+            filename = Parser.CleanAlbumTitle(filename);
+            _logger.Debug("GetLocalAlbum, cleaned album title: {0}", filename);
+
             var tracksInAlbum = _mediaFileService.GetFilesByArtist(artist.Id)
                 .FindAll(s => Path.GetDirectoryName(s.RelativePath) == filename)
                 .DistinctBy(s => s.AlbumId)
@@ -270,6 +274,9 @@ namespace NzbDrone.Core.Parser
                 return new List<Track>();
             }
 
+            parsedTrackInfo.AlbumTitle = Parser.CleanAlbumTitle(parsedTrackInfo.AlbumTitle);
+            _logger.Debug("Cleaning Album title of common matching issues. Cleaned album title is '{0}'", parsedTrackInfo.AlbumTitle);
+
             var album = _albumService.FindByTitle(artist.Id, parsedTrackInfo.AlbumTitle);
             _logger.Debug("Album {0} selected for {1}", album, parsedTrackInfo);
 
@@ -283,6 +290,9 @@ namespace NzbDrone.Core.Parser
 
             if (parsedTrackInfo.Title.IsNotNullOrWhiteSpace())
             {
+                parsedTrackInfo.Title = Parser.CleanTrackTitle(parsedTrackInfo.Title);
+                _logger.Debug("Cleaning Track title of common matching issues. Cleaned track title is '{0}'", parsedTrackInfo.Title);
+
                 trackInfo = _trackService.FindTrackByTitle(artist.Id, album.Id, parsedTrackInfo.DiscNumber, parsedTrackInfo.Title);
                 
                 if (trackInfo != null)
