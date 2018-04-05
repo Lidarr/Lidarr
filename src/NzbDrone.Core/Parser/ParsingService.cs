@@ -221,6 +221,7 @@ namespace NzbDrone.Core.Parser
         public LocalTrack GetLocalTrack(string filename, Artist artist, ParsedTrackInfo folderInfo)
         {
             ParsedTrackInfo parsedTrackInfo;
+            Album album = null;
 
 
             if (folderInfo != null)
@@ -234,7 +235,10 @@ namespace NzbDrone.Core.Parser
                 parsedTrackInfo = Parser.ParseMusicPath(filename);
             }
 
-            if (parsedTrackInfo == null || parsedTrackInfo.AlbumTitle.IsNullOrWhiteSpace())
+            if (parsedTrackInfo != null && parsedTrackInfo.ReleaseMBId.IsNotNullOrWhiteSpace())
+            {
+                album = _albumService.FindAlbumByRelease(parsedTrackInfo.ReleaseMBId);
+            } else if (parsedTrackInfo == null || parsedTrackInfo.AlbumTitle.IsNullOrWhiteSpace())
             {
                 if (MediaFileExtensions.Extensions.Contains(Path.GetExtension(filename)))
                 {
@@ -245,7 +249,11 @@ namespace NzbDrone.Core.Parser
             }
 
             var tracks = GetTracks(artist, parsedTrackInfo);
-            var album = _albumService.FindByTitle(artist.Id, parsedTrackInfo.AlbumTitle);
+            if (album == null)
+            {
+                album = _albumService.FindByTitle(artist.Id, parsedTrackInfo.AlbumTitle);
+            }
+            
 
             return new LocalTrack
             {
