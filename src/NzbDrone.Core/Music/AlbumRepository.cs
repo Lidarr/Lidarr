@@ -308,11 +308,7 @@ namespace NzbDrone.Core.Music
             string query = "SELECT * FROM Albums " +
                          "WHERE Releases LIKE '%" + releaseId + "%'";
 
-            
-
             return Query.QueryText(query).FirstOrDefault();
-            //return Query.Where<Album>(album => album.Releases.Contains(release => release.Id == releaseId) != null)
-            //        .SingleOrDefault();
         }
     }
 }
