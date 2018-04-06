@@ -249,7 +249,7 @@ namespace NzbDrone.Core.Parser
             }
 
             var tracks = GetTracks(artist, parsedTrackInfo);
-            var album = tracks.FirstOrDefault()?.Album;
+            album = tracks.FirstOrDefault()?.Album;
 
             return new LocalTrack
             {
