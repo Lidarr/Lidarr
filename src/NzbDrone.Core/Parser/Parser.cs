@@ -200,9 +200,10 @@ namespace NzbDrone.Core.Parser
 
         private static readonly string[] Numbers = new[] { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
 
+        private static readonly Regex CommonTagRegex = new Regex(@"(\[|\(){1}(version|deluxe|single|clean|album|special|bonus)+\s*.*(\]|\)){1}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        
         public static ParsedTrackInfo ParseMusicPath(string path)
         {
-
             var fileInfo = new FileInfo(path);
 
             var result = new ParsedTrackInfo { };
@@ -210,6 +211,12 @@ namespace NzbDrone.Core.Parser
             if (MediaFiles.MediaFileExtensions.Extensions.Contains(fileInfo.Extension))
             {
                 result = ParseAudioTags(path);
+
+                if (CommonTagRegex.IsMatch(result.AlbumTitle))
+                {
+                    result.AlbumTitle = CleanAlbumTitle(result.AlbumTitle);
+                    Logger.Debug("Cleaning Album title of common matching issues. Cleaned album title is '{0}'", result.AlbumTitle);
+                }
             }
             else
             {
@@ -328,6 +335,7 @@ namespace NzbDrone.Core.Parser
 
                 Logger.Debug("Parsing string '{0}'", title);
 
+
                 if (ReversedTitleRegex.IsMatch(title))
                 {
                     var titleWithoutExtension = RemoveFileExtension(title).ToCharArray();
@@ -407,6 +415,7 @@ namespace NzbDrone.Core.Parser
                 if (!ValidateBeforeParsing(title)) return null;
 
                 Logger.Debug("Parsing string '{0}'", title);
+
 
                 if (ReversedTitleRegex.IsMatch(title))
                 {
@@ -581,6 +590,16 @@ namespace NzbDrone.Core.Parser
                 });
 
             return title;
+        }
+
+        public static string CleanAlbumTitle(string album)
+        {
+            return CommonTagRegex.Replace(album, string.Empty).Trim();
+        }
+
+        public static string CleanTrackTitle(string title)
+        {
+            return CommonTagRegex.Replace(title, string.Empty).Trim();
         }
 
         private static ParsedTrackInfo ParseAudioTags(string path)
