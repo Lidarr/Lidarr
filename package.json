@@ -7,7 +7,8 @@
     "start": "gulp watch",
     "eslint": "esprint check",
     "eslint-fix": "eslint start --fix",
-    "stylelint": "stylelint frontend/**/*.css --config frontend/.stylelintrc"
+    "stylelint": "stylelint frontend/**/*.css --config frontend/.stylelintrc",
+    "postinstall": "opencollective postinstall"
   },
   "repository": {
     "type": "git",
@@ -67,6 +68,7 @@
     "moment": "2.20.1",
     "mousetrap": "1.6.1",
     "normalize.css": "7.0.0",
+    "opencollective": "1.0.3",
     "postcss-loader": "2.0.10",
     "postcss-mixins": "6.2.0",
     "postcss-nested": "3.0.0",
@@ -114,5 +116,9 @@
     "webpack": "3.10.0",
     "webpack-stream": "^4.0.0"
   },
-  "main": "index.js"
+  "main": "index.js",
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/lidarr"
+  }
 }
