@@ -206,26 +206,11 @@ namespace NzbDrone.Core.Parser
         {
             var fileInfo = new FileInfo(path);
 
-            var result = new ParsedTrackInfo { };
+            ParsedTrackInfo result;
 
             if (MediaFiles.MediaFileExtensions.Extensions.Contains(fileInfo.Extension))
             {
                 result = ParseAudioTags(path);
-
-                // Joe: We need to check if we have an AlbumTitle or not here, if tag is empty, it crashes. 
-
-                if (result.AlbumTitle.IsNullOrWhiteSpace())
-                {
-                    Logger.Debug("Album title is empty.");
-                    return result;
-                }
-
-
-                if (CommonTagRegex.IsMatch(result?.AlbumTitle))
-                {
-                    result.AlbumTitle = CleanAlbumTitle(result.AlbumTitle);
-                    Logger.Debug("Cleaning Album title of common matching issues. Cleaned album title is '{0}'", result.AlbumTitle);
-                }
             }
             else
             {

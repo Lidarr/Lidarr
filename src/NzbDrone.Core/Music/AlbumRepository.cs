@@ -305,10 +305,7 @@ namespace NzbDrone.Core.Music
 
         public Album FindAlbumByRelease(string releaseId)
         {
-            string query = "SELECT * FROM Albums " +
-                         "WHERE Releases LIKE '%" + releaseId + "%'";
-
-            return Query.QueryText(query).FirstOrDefault();
+            return Query.FirstOrDefault(e => e.Releases.Any(r => r.Id == releaseId));
         }
     }
 }

@@ -8,6 +8,7 @@ using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Music;
 using System;
+using System.Drawing.Text;
 
 namespace NzbDrone.Core.Parser
 {
@@ -221,7 +222,6 @@ namespace NzbDrone.Core.Parser
         public LocalTrack GetLocalTrack(string filename, Artist artist, ParsedTrackInfo folderInfo)
         {
             ParsedTrackInfo parsedTrackInfo;
-            Album album = null;
 
 
             if (folderInfo != null)
@@ -233,7 +233,7 @@ namespace NzbDrone.Core.Parser
                 parsedTrackInfo = Parser.ParseMusicPath(filename);
             }
 
-            if ((parsedTrackInfo == null || parsedTrackInfo.AlbumTitle.IsNullOrWhiteSpace()) && parsedTrackInfo.ReleaseMBId.IsNullOrWhiteSpace())
+            if (parsedTrackInfo == null || (parsedTrackInfo.AlbumTitle.IsNullOrWhiteSpace()) && parsedTrackInfo.ReleaseMBId.IsNullOrWhiteSpace())
             {
                 if (MediaFileExtensions.Extensions.Contains(Path.GetExtension(filename)))
                 {
@@ -243,17 +243,13 @@ namespace NzbDrone.Core.Parser
                 return null;
             }
 
-            /*if (parsedTrackInfo.ReleaseMBId.IsNotNullOrWhiteSpace())
+            var album = GetAlbum(artist, parsedTrackInfo);
+            var tracks = new List<Track>();
+            if (album != null)
             {
-                album = _albumService.FindAlbumByRelease(parsedTrackInfo.ReleaseMBId);
-                parsedTrackInfo.AlbumTitle = album.Title;
-            }*/
-
-            var tracks = GetTracks(artist, parsedTrackInfo);
-            album = tracks.FirstOrDefault()?.Album;
-
+                tracks = GetTracks(artist, album, parsedTrackInfo);
+            }
             
-
             return new LocalTrack
             {
                 Artist = artist,
@@ -267,51 +263,53 @@ namespace NzbDrone.Core.Parser
             };
         }
 
-        private List<Track> GetTracks(Artist artist, ParsedTrackInfo parsedTrackInfo)
+        private Album GetAlbum(Artist artist, ParsedTrackInfo parsedTrackInfo)
         {
-            var result = new List<Track>();
             Album album = null;
 
             if (parsedTrackInfo != null && parsedTrackInfo.ReleaseMBId.IsNotNullOrWhiteSpace())
             {
                 album = _albumService.FindAlbumByRelease(parsedTrackInfo.ReleaseMBId);
-                parsedTrackInfo.AlbumTitle = album.Title;
             }
 
-            if (parsedTrackInfo.AlbumTitle.IsNullOrWhiteSpace())
+            if (album == null && parsedTrackInfo.AlbumTitle.IsNullOrWhiteSpace())
             {
                 _logger.Debug("Album title could not be parsed for {0}", parsedTrackInfo);
-                return new List<Track>();
+                return null;
             }
 
-            parsedTrackInfo.AlbumTitle = Parser.CleanAlbumTitle(parsedTrackInfo.AlbumTitle);
-            _logger.Debug("Cleaning Album title of common matching issues. Cleaned album title is '{0}'", parsedTrackInfo.AlbumTitle);
+            var cleanAlbumTitle = Parser.CleanAlbumTitle(parsedTrackInfo.AlbumTitle);
+            _logger.Debug("Cleaning Album title of common matching issues. Cleaned album title is '{0}'", cleanAlbumTitle);
 
             if (album == null)
             {
-                album = _albumService.FindByTitle(artist.Id, parsedTrackInfo.AlbumTitle);
+                album = _albumService.FindByTitle(artist.Id, cleanAlbumTitle);
             }
-
-            _logger.Debug("Album {0} selected for {1}", album, parsedTrackInfo);
 
             if (album == null)
             {
                 _logger.Debug("Parsed album title not found in Db for {0}", parsedTrackInfo);
-                return new List<Track>();
+                return null;
             }
 
-            Track trackInfo = null;
+            _logger.Debug("Album {0} selected for {1}", album, parsedTrackInfo);
+
+            return album;
+        }
+
+        private List<Track> GetTracks(Artist artist, Album album, ParsedTrackInfo parsedTrackInfo)
+        {
+            var result = new List<Track>();
 
             if (parsedTrackInfo.Title.IsNotNullOrWhiteSpace())
             {
-                parsedTrackInfo.Title = Parser.CleanTrackTitle(parsedTrackInfo.Title);
-                _logger.Debug("Cleaning Track title of common matching issues. Cleaned track title is '{0}'", parsedTrackInfo.Title);
+                var cleanTrackTitle = Parser.CleanTrackTitle(parsedTrackInfo.Title);
+                _logger.Debug("Cleaning Track title of common matching issues. Cleaned track title is '{0}'", cleanTrackTitle);
 
-                trackInfo = _trackService.FindTrackByTitle(artist.Id, album.Id, parsedTrackInfo.DiscNumber, parsedTrackInfo.Title);
+                var trackInfo = _trackService.FindTrackByTitle(artist.Id, album.Id, parsedTrackInfo.DiscNumber, cleanTrackTitle);
 
                 if (trackInfo != null)
                 {
-                    trackInfo.Album = album;
                     _logger.Debug("Track {0} selected for {1}", trackInfo, parsedTrackInfo);
                     result.Add(trackInfo);
                 }
