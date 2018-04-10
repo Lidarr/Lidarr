@@ -312,11 +312,11 @@ namespace NzbDrone.Core.Parser
                 var cleanTrackTitle = Parser.CleanTrackTitle(parsedTrackInfo.Title);
                 _logger.Debug("Cleaning Track title of common matching issues. Cleaned track title is '{0}'", cleanTrackTitle);
 
-                trackInfo = _trackService.FindTrackByTitle(artist.Id, album.Id, parsedTrackInfo.DiscNumber, cleanTrackTitle);
+                trackInfo = _trackService.FindTrackByTitle(artist.Id, album.Id, parsedTrackInfo.DiscNumber, parsedTrackInfo.TrackNumbers.FirstOrDefault(), cleanTrackTitle);
 
                 if (trackInfo == null)
                 {
-                    trackInfo = _trackService.FindTrackByTitle(artist.Id, album.Id, parsedTrackInfo.DiscNumber, parsedTrackInfo.Title);
+                    trackInfo = _trackService.FindTrackByTitle(artist.Id, album.Id, parsedTrackInfo.DiscNumber, parsedTrackInfo.TrackNumbers.FirstOrDefault(), parsedTrackInfo.Title);
                 }
 
                 if (trackInfo != null)

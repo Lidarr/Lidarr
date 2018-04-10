@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Music
         Track GetTrack(int id);
         List<Track> GetTracks(IEnumerable<int> ids);
         Track FindTrack(int artistId, int albumId, int mediumNumber, int trackNumber);
-        Track FindTrackByTitle(int artistId, int albumId, int mediumNumber, string releaseTitle);
+        Track FindTrackByTitle(int artistId, int albumId, int mediumNumber, int trackNumber, string releaseTitle);
         List<Track> GetTracksByArtist(int artistId);
         List<Track> GetTracksByAlbum(int albumId);
         //List<Track> GetTracksByAlbumTitle(string artistId, string albumTitle);
@@ -76,7 +76,7 @@ namespace NzbDrone.Core.Music
             return _trackRepository.GetTracksByAlbum(albumId);
         }
 
-        public Track FindTrackByTitle(int artistId, int albumId, int mediumNumber, string releaseTitle)
+        public Track FindTrackByTitle(int artistId, int albumId, int mediumNumber, int trackNumber, string releaseTitle)
         {
             // TODO: can replace this search mechanism with something smarter/faster/better
             var normalizedReleaseTitle = Parser.Parser.NormalizeEpisodeTitle(releaseTitle).Replace(".", " ");
@@ -89,7 +89,7 @@ namespace NzbDrone.Core.Music
                     Length = Parser.Parser.NormalizeEpisodeTitle(track.Title).Length,
                     Track = track
                 })
-                                .Where(e => e.Track.Title.Length > 0 && e.Position >= 0)
+                                .Where(e => e.Track.Title.Length > 0 && e.Position >= 0 && e.Track.AbsoluteTrackNumber == trackNumber)
                                 .OrderBy(e => e.Position)
                                 .ThenByDescending(e => e.Length)
                                 .ToList();
