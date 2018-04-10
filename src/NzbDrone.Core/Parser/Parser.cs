@@ -591,7 +591,7 @@ namespace NzbDrone.Core.Parser
 
         public static string CleanAlbumTitle(string album)
         {
-            return CommonTagRegex[1].Replace(album, string.Empty).Trim(); ;
+            return CommonTagRegex[1].Replace(album, string.Empty).Trim();
         }
 
         public static string CleanTrackTitle(string title)
