@@ -88,11 +88,19 @@ namespace NzbDrone.Core.Music
                     Position = normalizedReleaseTitle.IndexOf(Parser.Parser.NormalizeEpisodeTitle(track.Title), StringComparison.CurrentCultureIgnoreCase),
                     Length = Parser.Parser.NormalizeEpisodeTitle(track.Title).Length,
                     Track = track
-                })
-                                .Where(e => e.Track.Title.Length > 0 && e.Position >= 0 && e.Track.AbsoluteTrackNumber == trackNumber)
-                                .OrderBy(e => e.Position)
-                                .ThenByDescending(e => e.Length)
-                                .ToList();
+                });
+
+            if (trackNumber == 0)
+            {
+                matches =  matches.Where(e => e.Track.Title.Length > 0 && e.Position >= 0);
+            } else
+            {
+                matches = matches.Where(e => e.Track.Title.Length > 0 && e.Position >= 0 && e.Track.AbsoluteTrackNumber == trackNumber);
+            }
+ 
+            matches.OrderBy(e => e.Position)
+                    .ThenByDescending(e => e.Length)
+                    .ToList();
 
             if (matches.Any())
             {
