@@ -64,10 +64,9 @@ class AlbumCover extends Component {
       this.setState({
         cover: nextcover,
         coverUrl: getCoverUrl(nextcover, pixelRatio * size),
-        hasError: false
-        // Don't reset isLoaded, as we want to immediately try to
-        // show the new image, whether an image was shown previously
-        // or the placeholder was shown.
+        hasError: false,
+        isLoaded: true,
+        lazy: true
       });
     }
   }
