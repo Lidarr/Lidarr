@@ -58,15 +58,23 @@ class AlbumCover extends Component {
       pixelRatio
     } = this.state;
 
-    const nextcover = findCover(images);
+    const nextCover = findCover(images);
 
-    if (nextcover && (!cover || nextcover.url !== cover.url)) {
+    if (nextCover && (!cover || nextCover.url !== cover.url)) {
       this.setState({
-        cover: nextcover,
-        coverUrl: getCoverUrl(nextcover, pixelRatio * size),
+        cover: nextCover,
+        coverUrl: getCoverUrl(nextCover, pixelRatio * size),
         hasError: false,
-        isLoaded: true,
-        lazy: true
+        isLoaded: true
+      });
+    }
+
+    // The cover could not be loaded..
+    if (!nextCover && (this.props !== prevProps)) {
+      this.setState({
+        cover: undefined,
+        coverUrl: coverPlaceholder,
+        hasError: true
       });
     }
   }
