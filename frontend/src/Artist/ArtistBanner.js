@@ -67,15 +67,15 @@ class ArtistBanner extends Component {
         hasError: false,
         isLoaded: true
       });
+    }
 
-      // The poster could not be loaded..
-      if (!nextBanner && (this.props !== prevProps)) {
-        this.setState({
-          banner: undefined,
-          bannerUrl: bannerPlaceholder,
-          hasError: true
-        });
-      }
+    // The banner could not be loaded..
+    if (!nextBanner && (this.props !== prevProps)) {
+      this.setState({
+        banner: undefined,
+        bannerUrl: bannerPlaceholder,
+        hasError: true
+      });
     }
   }
 
