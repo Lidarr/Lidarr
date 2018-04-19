@@ -10,7 +10,6 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Languages;
 using TagLib;
-using System.Text;
 
 namespace NzbDrone.Core.Parser
 {
@@ -350,24 +349,8 @@ namespace NzbDrone.Core.Parser
                 }
                 var escapedArtist = Regex.Escape(artist.Name);
                 var escapedAlbums = Regex.Escape(albums);
-                StringBuilder albumBuilder = new StringBuilder();
-                foreach(char c in albums)
-                {
-                    if (c == '\\')
-                    {
-                        albumBuilder.Append(@"\\");
-                    } else if (c == '/')
-                    {
-                        albumBuilder.Append(@"\/");
-                    } else
-                    {
-                        albumBuilder.Append(Regex.Escape(c + ""));
-                    }
-                    
-                }
-                escapedAlbums = albumBuilder.ToString();
 
-                var releaseRegex = new Regex(@"(\W|\b)(?<artist>" + escapedArtist + @")(\W|\b).*(\W|\b)(?<album>" + escapedAlbums + @")(\W|\b)", RegexOptions.IgnoreCase);
+                var releaseRegex = new Regex(@"(\W*|\b)(?<artist>" + escapedArtist + @")(\W*|\b).*(\W*|\b)(?<album>" + escapedAlbums + @")(\W*|\b)", RegexOptions.IgnoreCase);
 
 
                 var match = releaseRegex.Matches(simpleTitle);
