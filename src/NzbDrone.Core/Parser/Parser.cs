@@ -350,7 +350,7 @@ namespace NzbDrone.Core.Parser
                 var escapedArtist = Regex.Escape(artist.Name);
                 var escapedAlbums = Regex.Escape(albums);
 
-                var releaseRegex = new Regex(@"(\W*|\b)(?<artist>" + escapedArtist + @")(\W*|\b).*(\W*|\b)(?<album>" + escapedAlbums + @")(\W*|\b)", RegexOptions.IgnoreCase);
+                var releaseRegex = new Regex(@"^(\W*|\b)(?<artist>" + escapedArtist + @")(\W*|\b).*(\W*|\b)(?<album>" + escapedAlbums + @")(\W*|\b)", RegexOptions.IgnoreCase);
 
 
                 var match = releaseRegex.Matches(simpleTitle);
