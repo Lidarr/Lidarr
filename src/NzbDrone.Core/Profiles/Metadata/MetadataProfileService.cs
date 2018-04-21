@@ -4,6 +4,7 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using System.Collections.Generic;
 using System.Linq;
+using NzbDrone.Core.ImportLists;
 
 namespace NzbDrone.Core.Profiles.Metadata
 {
@@ -21,12 +22,17 @@ namespace NzbDrone.Core.Profiles.Metadata
     {
         private readonly IMetadataProfileRepository _profileRepository;
         private readonly IArtistService _artistService;
+        private readonly IImportListFactory _importListFactory;
         private readonly Logger _logger;
 
-        public MetadataProfileService(IMetadataProfileRepository profileRepository, IArtistService artistService, Logger logger)
+        public MetadataProfileService(IMetadataProfileRepository profileRepository,
+                                      IArtistService artistService,
+                                      IImportListFactory importListFactory,
+                                      Logger logger)
         {
             _profileRepository = profileRepository;
             _artistService = artistService;
+            _importListFactory = importListFactory;
             _logger = logger;
         }
 
@@ -42,7 +48,7 @@ namespace NzbDrone.Core.Profiles.Metadata
 
         public void Delete(int id)
         {
-            if (_artistService.GetAllArtists().Any(c => c.MetadataProfileId == id))
+            if (_artistService.GetAllArtists().Any(c => c.MetadataProfileId == id) || _importListFactory.All().Any(c => c.MetadataProfileId == id))
             {
                 var profile = _profileRepository.Get(id);
                 throw new MetadataProfileInUseException(profile.Name);
@@ -66,23 +72,29 @@ namespace NzbDrone.Core.Profiles.Metadata
             return _profileRepository.Exists(id);
         }
 
-        private void AddDefaultProfile(string name, List<PrimaryAlbumType> primAllowed, List<SecondaryAlbumType> secAllowed)
+        private void AddDefaultProfile(string name, List<PrimaryAlbumType> primAllowed, List<SecondaryAlbumType> secAllowed, List<ReleaseStatus> relAllowed)
         {
             var primaryTypes = PrimaryAlbumType.All
-                                    .OrderByDescending(l => l.Name)
-                                    .Select(v => new ProfilePrimaryAlbumTypeItem { PrimaryAlbumType = v, Allowed = primAllowed.Contains(v) })
-                                    .ToList();
+                .OrderByDescending(l => l.Name)
+                .Select(v => new ProfilePrimaryAlbumTypeItem {PrimaryAlbumType = v, Allowed = primAllowed.Contains(v)})
+                .ToList();
 
             var secondaryTypes = SecondaryAlbumType.All
-                                    .OrderByDescending(l => l.Name)
-                                    .Select(v => new ProfileSecondaryAlbumTypeItem { SecondaryAlbumType = v, Allowed = secAllowed.Contains(v) })
-                                    .ToList();
+                .OrderByDescending(l => l.Name)
+                .Select(v => new ProfileSecondaryAlbumTypeItem {SecondaryAlbumType = v, Allowed = secAllowed.Contains(v)})
+                .ToList();
+
+            var releaseStatues = ReleaseStatus.All
+                .OrderByDescending(l => l.Name)
+                .Select(v => new ProfileReleaseStatusItem {ReleaseStatus = v, Allowed = relAllowed.Contains(v)})
+                .ToList();
 
             var profile = new MetadataProfile
             {
                 Name = name,
                 PrimaryAlbumTypes = primaryTypes,
-                SecondaryAlbumTypes = secondaryTypes
+                SecondaryAlbumTypes = secondaryTypes,
+                ReleaseStatuses = releaseStatues
             };
 
             Add(profile);
@@ -97,7 +109,7 @@ namespace NzbDrone.Core.Profiles.Metadata
 
             _logger.Info("Setting up default metadata profile");
 
-            AddDefaultProfile("Standard", new List<PrimaryAlbumType>{PrimaryAlbumType.Album}, new List<SecondaryAlbumType>{ SecondaryAlbumType.Studio });
+            AddDefaultProfile("Standard", new List<PrimaryAlbumType>{PrimaryAlbumType.Album}, new List<SecondaryAlbumType>{ SecondaryAlbumType.Studio }, new List<ReleaseStatus>{ReleaseStatus.Official});
         }
     }
 }

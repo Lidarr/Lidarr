@@ -71,6 +71,7 @@ namespace NzbDrone.Core.Datastore
             Mapper.Entity<NotificationDefinition>().RegisterDefinition("Notifications")
                   .Ignore(i => i.SupportsOnGrab)
                   .Ignore(i => i.SupportsOnDownload)
+                  .Ignore(i => i.SupportsOnAlbumDownload)
                   .Ignore(i => i.SupportsOnUpgrade)
                   .Ignore(i => i.SupportsOnRename);
             
@@ -162,6 +163,7 @@ namespace NzbDrone.Core.Datastore
             MapRepository.Instance.RegisterTypeConverter(typeof(List<ProfileLanguageItem>), new EmbeddedDocumentConverter(new LanguageIntConverter()));
             MapRepository.Instance.RegisterTypeConverter(typeof(List<ProfilePrimaryAlbumTypeItem>), new EmbeddedDocumentConverter(new PrimaryAlbumTypeIntConverter()));
             MapRepository.Instance.RegisterTypeConverter(typeof(List<ProfileSecondaryAlbumTypeItem>), new EmbeddedDocumentConverter(new SecondaryAlbumTypeIntConverter()));
+            MapRepository.Instance.RegisterTypeConverter(typeof(List<ProfileReleaseStatusItem>), new EmbeddedDocumentConverter(new ReleaseStatusIntConverter()));
             MapRepository.Instance.RegisterTypeConverter(typeof(ParsedAlbumInfo), new EmbeddedDocumentConverter());
             MapRepository.Instance.RegisterTypeConverter(typeof(ParsedTrackInfo), new EmbeddedDocumentConverter());
             MapRepository.Instance.RegisterTypeConverter(typeof(ReleaseInfo), new EmbeddedDocumentConverter());

@@ -101,12 +101,15 @@ namespace NzbDrone.Core.Music
             album.ReleaseDate = albumInfo.ReleaseDate;
             album.Duration = tuple.Item2.Sum(track => track.Duration);
             album.Releases = albumInfo.Releases;
+            album.Ratings = albumInfo.Ratings;
             album.CurrentRelease = albumInfo.CurrentRelease;
 
             _refreshTrackService.RefreshTrackInfo(album, tuple.Item2);
 
             _albumService.UpdateMany(new List<Album>{album});
-            
+
+            _logger.Debug("Finished album refresh for {0}", album.Title);
+
         }
 
         public void Execute(RefreshAlbumCommand message)

@@ -194,6 +194,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="Download\TrackedDownloads\TrackedDownloadServiceFixture.cs" />
+    <Compile Include="Extras\Metadata\Consumers\Xbmc\FindMetadataFileFixture.cs" />
     <Compile Include="FluentTest.cs" />
     <Compile Include="Framework\CoreTest.cs" />
     <Compile Include="Framework\DbTest.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="HealthCheck\Checks\IndexerSearchCheckFixture.cs" />
     <Compile Include="HealthCheck\Checks\IndexerRssCheckFixture.cs" />
     <Compile Include="HealthCheck\Checks\ImportListStatusCheckFixture.cs" />
+    <Compile Include="HealthCheck\Checks\MonoDebugCheckFixture.cs" />
     <Compile Include="HealthCheck\Checks\MonoVersionCheckFixture.cs" />
     <Compile Include="HealthCheck\Checks\IndexerStatusCheckFixture.cs" />
     <Compile Include="HealthCheck\Checks\RootFolderCheckFixture.cs" />
@@ -256,7 +258,6 @@
     <Compile Include="IndexerTests\NewznabTests\NewznabFixture.cs" />
     <Compile Include="IndexerTests\NewznabTests\NewznabRequestGeneratorFixture.cs" />
     <Compile Include="IndexerTests\NewznabTests\NewznabSettingFixture.cs" />
-    <Compile Include="IndexerTests\FanzubTests\FanzubFixture.cs" />
     <Compile Include="IndexerTests\OmgwtfnzbsTests\OmgwtfnzbsFixture.cs" />
     <Compile Include="IndexerTests\TestIndexer.cs" />
     <Compile Include="IndexerTests\TestIndexerSettings.cs" />
@@ -297,6 +298,7 @@
     <Compile Include="MusicTests\AddAlbumFixture.cs" />
     <Compile Include="MusicTests\AddArtistFixture.cs" />
     <Compile Include="MusicTests\AlbumMonitoredServiceTests\AlbumMonitoredServiceFixture.cs" />
+    <Compile Include="MusicTests\AlbumRepositoryTests\AlbumRepositoryFixture.cs" />
     <Compile Include="MusicTests\ArtistRepositoryTests\ArtistRepositoryFixture.cs" />
     <Compile Include="MusicTests\ArtistServiceTests\AddArtistFixture.cs" />
     <Compile Include="MusicTests\ArtistServiceTests\UpdateMultipleArtistFixture.cs" />
@@ -307,6 +309,7 @@
     <Compile Include="OrganizerTests\FileNameBuilderTests\CleanTitleFixture.cs" />
     <Compile Include="OrganizerTests\FileNameBuilderTests\TitleTheFixture.cs" />
     <Compile Include="ParserTests\MusicParserFixture.cs" />
+    <Compile Include="ParserTests\ParsingServiceTests\GetLocalTrackFixture.cs" />
     <Compile Include="Profiles\Delay\DelayProfileServiceFixture.cs" />
     <Compile Include="Profiles\Metadata\MetadataProfileServiceFixture.cs" />
     <Compile Include="Profiles\Metadata\MetadataProfileRepositoryFixture.cs" />
@@ -324,8 +327,8 @@
     <Compile Include="Messaging\Commands\CommandEqualityComparerFixture.cs" />
     <Compile Include="Messaging\Commands\CommandExecutorFixture.cs" />
     <Compile Include="Messaging\Events\EventAggregatorFixture.cs" />
-    <Compile Include="Metadata\Consumers\Roksbox\FindMetadataFileFixture.cs" />
-    <Compile Include="Metadata\Consumers\Wdtv\FindMetadataFileFixture.cs" />
+    <Compile Include="Extras\Metadata\Consumers\Roksbox\FindMetadataFileFixture.cs" />
+    <Compile Include="Extras\Metadata\Consumers\Wdtv\FindMetadataFileFixture.cs" />
     <Compile Include="NotificationTests\PlexClientServiceTest.cs" />
     <Compile Include="NotificationTests\ProwlProviderTest.cs" />
     <Compile Include="NotificationTests\Xbmc\Http\ActivePlayersFixture.cs" />
@@ -437,15 +440,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="License.txt" />
-    <None Include="Files\Indexers\BroadcastheNet\RecentFeed.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Files\Indexers\HdBits\RecentFeedLongIDs.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Files\Indexers\HdBits\RecentFeedStringIDs.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Content Include="Files\html_image.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -469,9 +463,6 @@
     </Content>
     <Content Include="Files\Indexers\TorrentRss\invalid\Eztv_InvalidSize.xml">
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Files\Indexers\Fanzub\fanzub.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Files\Indexers\TorrentRss\Ezrss.xml">
@@ -546,9 +537,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Files\Indexers\Torznab\torznab_tpb.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Files\Indexers\BitMeTv\BitMeTv.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Files\Indexers\IPTorrents\IPTorrents.xml">

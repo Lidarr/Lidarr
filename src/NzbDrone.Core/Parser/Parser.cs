@@ -115,10 +115,17 @@ namespace NzbDrone.Core.Parser
             new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)(?:-.+?)(?<releaseyear>\d{4})",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
+            //Artist - Year - Album
+            // Hypen with no or more spaces between artist/album/year (must be before Artist-Album Year as that catches this case)
+            new Regex(@"^(?:(?<artist>.+?)\s*(?:-)+)\s*(?<releaseyear>\d{4})\s*(?:-+)\s*(?<album>.+)",
+                RegexOptions.IgnoreCase | RegexOptions.Compiled),
+
             //Artist-Album Year
             //Hyphen no space between artist and album
             new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)\W*(?<releaseyear>\d{4})",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
+
+            
         };
 
         private static readonly Regex[] RejectHashedReleasesRegex = new Regex[]
@@ -193,12 +200,16 @@ namespace NzbDrone.Core.Parser
 
         private static readonly string[] Numbers = new[] { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
 
+        private static readonly Regex[] CommonTagRegex = new Regex[] {
+            new Regex(@"(\[|\()*\b((featuring|feat.|feat|ft|ft.)\s{1}){1}\s*.*(\]|\))*", RegexOptions.IgnoreCase | RegexOptions.Compiled),
+            new Regex(@"(\[|\(){1}(version|limited|deluxe|single|clean|album|special|bonus)+\s*.*(\]|\)){1}", RegexOptions.IgnoreCase | RegexOptions.Compiled),
+        };
+        
         public static ParsedTrackInfo ParseMusicPath(string path)
         {
-
             var fileInfo = new FileInfo(path);
 
-            var result = new ParsedTrackInfo { };
+            ParsedTrackInfo result;
 
             if (MediaFiles.MediaFileExtensions.Extensions.Contains(fileInfo.Extension))
             {
@@ -211,6 +222,7 @@ namespace NzbDrone.Core.Parser
 
             // TODO: Check if it is common that we might need to fallback to parser to gather details
             //var result = ParseMusicTitle(fileInfo.Name);
+
 
             if (result == null)
             {
@@ -320,6 +332,7 @@ namespace NzbDrone.Core.Parser
 
                 Logger.Debug("Parsing string '{0}'", title);
 
+
                 if (ReversedTitleRegex.IsMatch(title))
                 {
                     var titleWithoutExtension = RemoveFileExtension(title).ToCharArray();
@@ -402,6 +415,7 @@ namespace NzbDrone.Core.Parser
                 if (!ValidateBeforeParsing(title)) return null;
 
                 Logger.Debug("Parsing string '{0}'", title);
+
 
                 if (ReversedTitleRegex.IsMatch(title))
                 {
@@ -576,6 +590,22 @@ namespace NzbDrone.Core.Parser
                 });
 
             return title;
+        }
+
+        public static string CleanAlbumTitle(string album)
+        {
+            return CommonTagRegex[1].Replace(album, string.Empty).Trim();
+        }
+
+        public static string CleanTrackTitle(string title)
+        {
+            var intermediateTitle = title;
+            foreach (var regex in CommonTagRegex)
+            {
+                intermediateTitle = regex.Replace(intermediateTitle, string.Empty).Trim();
+            }
+
+            return intermediateTitle;
         }
 
         private static ParsedTrackInfo ParseAudioTags(string path)

@@ -148,6 +148,7 @@
     <Compile Include="Datastore\Converters\DoubleConverter.cs" />
     <Compile Include="Datastore\Converters\EmbeddedDocumentConverter.cs" />
     <Compile Include="Datastore\Converters\EnumIntConverter.cs" />
+    <Compile Include="Datastore\Converters\ReleaseStatusIntConverter.cs" />
     <Compile Include="Datastore\Converters\SecondaryAlbumTypeIntConverter.cs" />
     <Compile Include="Datastore\Converters\PrimaryAlbumTypeIntConverter.cs" />
     <Compile Include="Datastore\Converters\LanguageIntConverter.cs" />
@@ -178,9 +179,13 @@
     <Compile Include="Datastore\Migration\003_add_medium_support.cs" />
     <Compile Include="Datastore\Migration\006_separate_automatic_and_interactive_search.cs" />
     <Compile Include="Datastore\Migration\007_change_album_path_to_relative.cs" />
+    <Compile Include="Datastore\Migration\014_fix_language_metadata_profiles.cs" />
+    <Compile Include="Datastore\Migration\013_album_download_notification.cs" />
     <Compile Include="Datastore\Migration\009_album_releases.cs" />
     <Compile Include="Datastore\Migration\010_album_releases_fix.cs" />
     <Compile Include="Datastore\Migration\011_import_lists.cs" />
+    <Compile Include="Datastore\Migration\012_add_release_status.cs" />
+    <Compile Include="Datastore\Migration\015_remove_fanzub.cs" />
     <Compile Include="Datastore\Migration\Framework\MigrationContext.cs" />
     <Compile Include="Datastore\Migration\Framework\MigrationController.cs" />
     <Compile Include="Datastore\Migration\Framework\MigrationDbFactory.cs" />
@@ -440,10 +445,12 @@
     <Compile Include="Extras\IImportExistingExtraFiles.cs" />
     <Compile Include="Extras\ImportExistingExtraFileFilterResult.cs" />
     <Compile Include="Extras\ImportExistingExtraFilesBase.cs" />
+    <Compile Include="Extras\Metadata\Consumers\Xbmc\XbmcNfoDetector.cs" />
     <Compile Include="Extras\Metadata\Files\MetadataFile.cs" />
     <Compile Include="Extras\Metadata\Files\MetadataFileRepository.cs" />
     <Compile Include="Extras\Metadata\Files\MetadataFileService.cs" />
     <Compile Include="Extras\Others\ExistingOtherExtraImporter.cs" />
+    <Compile Include="Extras\Others\OtherExtraFileRenamer.cs" />
     <Compile Include="Extras\Others\OtherExtraFileRepository.cs" />
     <Compile Include="Extras\Others\OtherExtraFileService.cs" />
     <Compile Include="Extras\Others\OtherExtraFile.cs" />
@@ -462,6 +469,7 @@
     <Compile Include="HealthCheck\Checks\DownloadClientCheck.cs" />
     <Compile Include="HealthCheck\Checks\DownloadClientStatusCheck.cs" />
     <Compile Include="HealthCheck\Checks\ImportListStatusCheck.cs" />
+    <Compile Include="HealthCheck\Checks\MonoDebugCheck.cs" />
     <Compile Include="HealthCheck\Checks\MonoTlsCheck.cs" />
     <Compile Include="HealthCheck\Checks\MountCheck.cs" />
     <Compile Include="HealthCheck\Checks\ImportMechanismCheck.cs" />
@@ -579,9 +587,6 @@
     <Compile Include="Indexers\Exceptions\RequestLimitReachedException.cs" />
     <Compile Include="Indexers\Exceptions\UnsupportedFeedException.cs" />
     <Compile Include="Indexers\EzrssTorrentRssParser.cs" />
-    <Compile Include="Indexers\Fanzub\Fanzub.cs" />
-    <Compile Include="Indexers\Fanzub\FanzubRequestGenerator.cs" />
-    <Compile Include="Indexers\Fanzub\FanzubSettings.cs" />
     <Compile Include="Indexers\FetchAndParseRssService.cs" />
     <Compile Include="Indexers\IIndexer.cs" />
     <Compile Include="Indexers\IIndexerRequestGenerator.cs" />
@@ -679,6 +684,7 @@
     <Compile Include="MediaFiles\Commands\CleanUpRecycleBinCommand.cs" />
     <Compile Include="MediaFiles\Commands\DownloadedAlbumsScanCommand.cs" />
     <Compile Include="MediaFiles\Commands\RenameArtistCommand.cs" />
+    <Compile Include="MediaFiles\Events\AlbumImportedEvent.cs" />
     <Compile Include="MediaFiles\Events\TrackFileRenamedEvent.cs" />
     <Compile Include="MediaFiles\Events\TrackFolderCreatedEvent.cs" />
     <Compile Include="MediaFiles\Events\TrackImportFailedEvent.cs" />
@@ -801,6 +807,7 @@
     <Compile Include="Extras\Metadata\MetadataService.cs" />
     <Compile Include="Extras\Metadata\MetadataType.cs" />
     <Compile Include="Music\AddAlbumService.cs" />
+    <Compile Include="Music\AlbumAddedService.cs" />
     <Compile Include="Music\AlbumEditedService.cs" />
     <Compile Include="Music\AlbumRelease.cs" />
     <Compile Include="Music\ArtistStatusType.cs" />
@@ -808,8 +815,9 @@
     <Compile Include="Music\Commands\BulkMoveArtistCommand.cs" />
     <Compile Include="Music\Commands\RefreshAlbumCommand.cs" />
     <Compile Include="Music\Events\ArtistsImportedEvent.cs" />
-    <Compile Include="Music\SecondaryAlbumType.cs" />
     <Compile Include="Music\PrimaryAlbumType.cs" />
+    <Compile Include="Music\SecondaryAlbumType.cs" />
+    <Compile Include="Music\ReleaseStatus.cs" />
     <Compile Include="Music\Links.cs" />
     <Compile Include="Music\Commands\MoveArtistCommand.cs" />
     <Compile Include="Music\Events\ArtistMovedEvent.cs" />
@@ -820,7 +828,6 @@
     <Compile Include="Music\ArtistScannedHandler.cs" />
     <Compile Include="Music\ArtistEditedService.cs" />
     <Compile Include="Music\ShouldRefreshAlbum.cs" />
-    <Compile Include="Music\TrackMonitoredService.cs" />
     <Compile Include="Music\Member.cs" />
     <Compile Include="Music\AddArtistOptions.cs" />
     <Compile Include="Music\AddArtistService.cs" />
@@ -843,7 +850,6 @@
     <Compile Include="Music\Events\ArtistRefreshStartingEvent.cs" />
     <Compile Include="Music\Events\ArtistUpdatedEvent.cs" />
     <Compile Include="Music\Events\AlbumInfoRefreshedEvent.cs" />
-    <Compile Include="Music\Events\TrackInfoRefreshedEvent.cs" />
     <Compile Include="Music\Ratings.cs" />
     <Compile Include="Music\RefreshArtistService.cs" />
     <Compile Include="Music\RefreshAlbumService.cs" />
@@ -852,6 +858,7 @@
     <Compile Include="Music\Track.cs" />
     <Compile Include="Music\TrackRepository.cs" />
     <Compile Include="Music\TrackService.cs" />
+    <Compile Include="Notifications\AlbumDownloadMessage.cs" />
     <Compile Include="Notifications\Join\JoinAuthException.cs" />
     <Compile Include="Notifications\Join\JoinInvalidDeviceException.cs" />
     <Compile Include="Notifications\Join\JoinResponseModel.cs" />
@@ -864,6 +871,9 @@
     <Compile Include="Notifications\Boxcar\BoxcarProxy.cs" />
     <Compile Include="Notifications\Boxcar\BoxcarSettings.cs" />
     <Compile Include="Notifications\GrabMessage.cs" />
+    <Compile Include="Notifications\MediaBrowser\Model\EmbyMediaFolder.cs" />
+    <Compile Include="Notifications\MediaBrowser\Model\EmbyMediaFoldersResponse.cs" />
+    <Compile Include="Notifications\MediaBrowser\Model\EmbyMediaUpdateInfo.cs" />
     <Compile Include="Notifications\Plex\Models\PlexIdentity.cs" />
     <Compile Include="Notifications\Plex\Models\PlexResponse.cs" />
     <Compile Include="Notifications\Plex\Models\PlexPreferences.cs" />
@@ -933,6 +943,7 @@
     <Compile Include="Profiles\Metadata\MetadataProfileInUseException.cs" />
     <Compile Include="Profiles\Metadata\MetadataProfile.cs" />
     <Compile Include="Profiles\Metadata\MetadataProfileRepository.cs" />
+    <Compile Include="Profiles\Metadata\ProfileReleaseStatusTypeItem.cs" />
     <Compile Include="Profiles\Metadata\ProfileSecondaryAlbumTypeItem.cs" />
     <Compile Include="Profiles\Metadata\ProfilePrimaryAlbumTypeItem.cs" />
     <Compile Include="Profiles\Qualities\ProfileRepository.cs" />
@@ -946,7 +957,7 @@
     <Compile Include="RemotePathMappings\RemotePathMappingRepository.cs" />
     <Compile Include="RemotePathMappings\RemotePathMappingService.cs" />
     <Compile Include="MediaFiles\TorrentInfo\TorrentFileInfoReader.cs" />
-    <Compile Include="Notifications\DownloadMessage.cs" />
+    <Compile Include="Notifications\TrackDownloadMessage.cs" />
     <Compile Include="Notifications\Email\Email.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -85,6 +85,7 @@ namespace NzbDrone.Core.Music
             artist.Images = artistInfo.Images;
             artist.Genres = artistInfo.Genres;
             artist.Links = artistInfo.Links;
+            artist.Ratings = artistInfo.Ratings;
             artist.Disambiguation = artistInfo.Disambiguation;
             artist.ArtistType = artistInfo.ArtistType;
 
@@ -133,6 +134,8 @@ namespace NzbDrone.Core.Music
             _refreshAlbumService.RefreshAlbumInfo(updateAlbumsList);
 
             _albumService.DeleteMany(existingAlbums);
+
+            _eventAggregator.PublishEvent(new AlbumInfoRefreshedEvent(artist, newAlbumsList, updateAlbumsList));
 
             _logger.Debug("Finished artist refresh for {0}", artist.Name);
             _eventAggregator.PublishEvent(new ArtistUpdatedEvent(artist));

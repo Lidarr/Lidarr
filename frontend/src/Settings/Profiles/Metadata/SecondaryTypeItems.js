@@ -63,7 +63,7 @@ class SecondaryTypeItems extends Component {
                     {...otherProps}
                   />
                 );
-              }).reverse()
+              })
             }
           </div>
         </div>

@@ -127,7 +127,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
                     if (newDownload)
                     {
-                        _extraService.ImportExtraFiles(localTrack, trackFile, copyOnly);
+                        _extraService.ImportTrack(localTrack, trackFile, copyOnly);
                     }
 
                     _eventAggregator.PublishEvent(new TrackImportedEvent(localTrack, trackFile, oldFiles, newDownload, downloadClientItem));
@@ -154,6 +154,20 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 {
                     _logger.Warn(e, "Couldn't import track " + localTrack);
                     importResults.Add(new ImportResult(importDecision, "Failed to import track"));
+                }
+            }
+
+            var albumImports = importResults.Where(e =>e.ImportDecision.LocalTrack.Album != null)
+                .GroupBy(e => e.ImportDecision.LocalTrack.Album.Id).ToList();
+
+            foreach (var albumImport in albumImports)
+            {
+                var album = albumImport.First().ImportDecision.LocalTrack.Album;
+                var artist = albumImport.First().ImportDecision.LocalTrack.Artist;
+
+                if (albumImport.Where(e => e.Errors.Count == 0).ToList().Count > 0 && artist != null && album != null)
+                {
+                    _eventAggregator.PublishEvent(new AlbumImportedEvent(artist, album, albumImport.Select(e => e.ImportDecision.LocalTrack).ToList(), newDownload, downloadClientItem));
                 }
             }
 

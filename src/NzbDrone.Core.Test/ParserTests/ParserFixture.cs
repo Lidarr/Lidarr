@@ -7,6 +7,7 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
+using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Test.ParserTests
 {
@@ -51,6 +52,29 @@ namespace NzbDrone.Core.Test.ParserTests
             title.CleanArtistName().Should().Be("carnivale");
         }
 
+        [TestCase("Songs of Experience (Deluxe Edition)", "Songs of Experience")]
+        [TestCase("Mr. Bad Guy [Special Edition]", "Mr. Bad Guy")]
+        [TestCase("Sweet Dreams (Album)", "Sweet Dreams")]
+        [TestCase("Now What?! (Limited Edition)", "Now What?!")]
+        public void should_remove_common_tags_from_album_title(string title, string correct)
+        {
+            var result = Parser.Parser.CleanAlbumTitle(title);
+            result.Should().Be(correct);
+        }
+
+        [TestCase("Songs of Experience (Deluxe Edition)", "Songs of Experience")]
+        [TestCase("Mr. Bad Guy [Special Edition]", "Mr. Bad Guy")]
+        [TestCase("Smooth Criminal (single)", "Smooth Criminal")]
+        [TestCase("Wie Maak Die Jol Vol (Ft. Isaac Mutant, Knoffel, Jaak Paarl & Scallywag)", "Wie Maak Die Jol Vol")]
+        [TestCase("Alles Schon Gesehen (Feat. Deichkind)", "Alles Schon Gesehen")]
+        [TestCase("Science Fiction/Double Feature", "Science Fiction/Double Feature")]
+        [TestCase("Dancing Feathers", "Dancing Feathers")]
+        public void should_remove_common_tags_from_track_title(string title, string correct)
+        {
+            var result = Parser.Parser.CleanTrackTitle(title);
+            result.Should().Be(correct);
+        }
+
         [TestCase("Discovery TV - Gold Rush : 02 Road From Hell [S04].mp4")]
         public void should_clean_up_invalid_path_characters(string postTitle)
         {
@@ -69,6 +93,16 @@ namespace NzbDrone.Core.Test.ParserTests
         {
             Parser.Parser.ParseAlbumTitle(title).Quality.Quality.Should().NotBe(Quality.Unknown);
             Parser.Parser.ParseAlbumTitle(title).Quality.QualitySource.Should().Be(QualitySource.Extension);
+        }
+
+        [TestCase("of Montreal-Hissing Fauna, Are You The Destroyer? 2007", "Hissing Fauna, Are You The Destroyer", "of Montreal", "2007")]
+        [TestCase("of Montreal - 2007 - Hissing Fauna, Are You The Destroyer?", "Hissing Fauna, Are You The Destroyer", "of Montreal", "2007")]
+        public void should_parse_album(string title, string correctAlbum, string correctArtist, string correctYear)
+        {
+            ParsedAlbumInfo result = Parser.Parser.ParseAlbumTitle(title);
+            result.AlbumTitle.Should().Be(correctAlbum);
+            result.ArtistName.Should().Be(correctArtist);
+            result.ReleaseDate.Should().Be(correctYear);
         }
 
         [TestCase("VA - The Best 101 Love Ballads (2017) MP3 [192 kbps]", "VA", "The Best 101 Love Ballads")]
