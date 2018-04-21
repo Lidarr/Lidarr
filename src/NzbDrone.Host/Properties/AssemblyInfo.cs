@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -6,5 +6,5 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("Lidarr.exe")]
-[assembly: Guid("C2172AF4-F9A6-4D91-BAEE-C2E4EE680613")]
+[assembly: Guid("C2172AF4-F9A6-4D91-BAEE-C2E4EE680615")]
 
