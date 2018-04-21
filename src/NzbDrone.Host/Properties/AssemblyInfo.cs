@@ -6,5 +6,5 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("Lidarr.exe")]
-[assembly: Guid("C2172AF4-F9A6-4D91-BAEE-C2E4EE680615")]
+[assembly: Guid("87CAF14C-6750-42DB-B6A0-3BB826315E91")]
 

@@ -12,7 +12,7 @@ namespace NzbDrone.Host.AccessControl
 
     public class SslAdapter : ISslAdapter
     {
-        private const string APP_ID = "C2172AF4-F9A6-4D91-BAEE-C2E4EE680615";
+        private const string APP_ID = "87CAF14C-6750-42DB-B6A0-3BB826315E91";
         private static readonly Regex CertificateHashRegex = new Regex(@"^\s+(?:Certificate Hash\s+:\s+)(?<hash>\w+)", RegexOptions.Compiled);
 
         private readonly INetshProvider _netshProvider;
