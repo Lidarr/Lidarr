@@ -95,8 +95,8 @@ namespace NzbDrone.Core.Test.ParserTests
             Parser.Parser.ParseAlbumTitle(title).Quality.QualitySource.Should().Be(QualitySource.Extension);
         }
 
-        [TestCase("of Montreal-Hissing Fauna, Are You The Destroyer? 2007", "Hissing Fauna, Are You The Destroyer", "of Montreal", "2007")]
-        [TestCase("of Montreal - 2007 - Hissing Fauna, Are You The Destroyer?", "Hissing Fauna, Are You The Destroyer", "of Montreal", "2007")]
+        [TestCase("of Montreal-Hissing Fauna, Are You The Destroyer? 2007", "Hissing Fauna, Are You The Destroyer?", "of Montreal", "2007")]
+        [TestCase("of Montreal - 2007 - Hissing Fauna, Are You The Destroyer?", "Hissing Fauna, Are You The Destroyer?", "of Montreal", "2007")]
         public void should_parse_album(string title, string correctAlbum, string correctArtist, string correctYear)
         {
             ParsedAlbumInfo result = Parser.Parser.ParseAlbumTitle(title);

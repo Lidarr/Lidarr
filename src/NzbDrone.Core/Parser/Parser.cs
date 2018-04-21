@@ -122,7 +122,7 @@ namespace NzbDrone.Core.Parser
 
             //Artist-Album Year
             //Hyphen no space between artist and album
-            new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)\W*(?<releaseyear>\d{4})",
+            new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)\b(?<releaseyear>\d{4})",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             
