@@ -338,17 +338,8 @@ namespace NzbDrone.Core.Parser
 
                 simpleTitle = CleanTorrentSuffixRegex.Replace(simpleTitle, string.Empty);
 
-                var albums = "";
-                Logger.Debug(album);
-                if (album.Count == 1)
-                {
-                    albums = string.Join(" ", album.Select(s => s.Title).ToList());
-                } else
-                {
-                    albums = string.Join("|", album.Select(s => s.Title).ToList());
-                }
                 var escapedArtist = Regex.Escape(artist.Name);
-                var escapedAlbums = Regex.Escape(albums);
+                var escapedAlbums = Regex.Escape(string.Join("|", album.Select(s => s.Title).ToList()));
 
                 var releaseRegex = new Regex(@"^(\W*|\b)(?<artist>" + escapedArtist + @")(\W*|\b).*(\W*|\b)(?<album>" + escapedAlbums + @")(\W*|\b)", RegexOptions.IgnoreCase);
 
