@@ -100,8 +100,7 @@ class DiskSpace extends Component {
                             kind={diskUsageKind}
                             size={sizes.MEDIUM}
                             progressText={diskUsage}
-                            showText=true
-
+                            showText={true}
                           />
                         </TableRowCell>
                       </TableRow>
