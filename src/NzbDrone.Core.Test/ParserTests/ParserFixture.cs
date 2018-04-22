@@ -87,12 +87,12 @@ namespace NzbDrone.Core.Test.ParserTests
             Parser.Parser.ParseAlbumTitle(postTitle).ArtistName.Should().Be(title);
         }
 
-        [TestCase("02 Unchained.flac")] // This isn't valid on any regex we have. We must always have an artist
-        [TestCase("Fall Out Boy - 02 - Title.wav")] // This isn't valid on any regex we have. We don't support Artist - Track - TrackName
+        [TestCase("02 Unchained.flac")]
+        [TestCase("Fall Out Boy - 02 - Title.wav")]
         public void should_parse_quality_from_extension(string title)
         {
-            Parser.Parser.ParseAlbumTitle(title).Quality.Quality.Should().NotBe(Quality.Unknown);
-            Parser.Parser.ParseAlbumTitle(title).Quality.QualitySource.Should().Be(QualitySource.Extension);
+            Parser.Parser.ParseMusicTitle(title).Quality.Should().NotBe(Quality.Unknown);
+            Parser.Parser.ParseMusicTitle(title).Quality.QualitySource.Should().Be(QualitySource.Extension);
         }
 
         [TestCase("of Montreal-Hissing Fauna, Are You The Destroyer? 2007", "Hissing Fauna, Are You The Destroyer?", "of Montreal", "2007")]

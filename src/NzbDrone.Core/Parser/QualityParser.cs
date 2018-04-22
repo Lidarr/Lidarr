@@ -137,18 +137,27 @@ namespace NzbDrone.Core.Parser
             }
 
             //Based on extension
-            if (result.Quality == Quality.Unknown && !name.ContainsInvalidPathChars())
+
+            if (!name.ContainsInvalidPathChars())
             {
-                try
+                if (result.Quality == Quality.Unknown)
                 {
-                    result.Quality = MediaFileExtensions.GetQualityForExtension(Path.GetExtension(name));
+                    try
+                    {
+                        result.Quality = MediaFileExtensions.GetQualityForExtension(Path.GetExtension(name));
+                        result.QualitySource = QualitySource.Extension;
+                    }
+                    catch (ArgumentException)
+                    {
+                        //Swallow exception for cases where string contains illegal
+                        //path characters.
+                    }
+                }
+                else
+                {
                     result.QualitySource = QualitySource.Extension;
                 }
-                catch (ArgumentException)
-                {
-                    //Swallow exception for cases where string contains illegal
-                    //path characters.
-                }
+                
             }
 
             return result;
