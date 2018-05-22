@@ -180,7 +180,15 @@ namespace NzbDrone.Core.MediaCover
 
             _logger.Info("Downloading {0} for {1} {2}", cover.CoverType, artist, cover.Url);
             _httpClient.DownloadFile(cover.Url, fileName);
-            _diskProvider.FileSetLastWriteTime(fileName, lastModified);
+
+            try
+            {
+                _diskProvider.FileSetLastWriteTime(fileName, lastModified);
+            }
+            catch (Exception ex)
+            {
+                _logger.Debug(ex, "Unable to set modified date for {0} image for artist {1}", cover.CoverType, artist);
+            }
         }
 
         private void DownloadAlbumCover(Album album, MediaCover cover)
