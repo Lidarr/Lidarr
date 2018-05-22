@@ -109,12 +109,29 @@ namespace NzbDrone.Core.MediaCover
             {
                 var fileName = GetCoverPath(artist.Id, cover.CoverType);
                 var alreadyExists = false;
+                var lastModifiedServer = DateTime.Now;
                 try
                 {
-                    alreadyExists = _coverExistsSpecification.AlreadyExists(cover.Url, fileName);
+                    //alreadyExists = _coverExistsSpecification.AlreadyExists(cover.Url, fileName);
+
+                    if (_diskProvider.FileExists(fileName))
+                    {
+                        var headers = _httpClient.Head(new HttpRequest(cover.Url)).Headers;
+                        DateTime? lastModifiedLocal = _diskProvider.FileGetLastWrite(fileName);
+
+                        if (headers.LastModified.HasValue)
+                        {
+                            lastModifiedServer = headers.LastModified.Value;
+                            if (lastModifiedLocal.Value.ToUniversalTime() == lastModifiedServer.ToUniversalTime())
+                            {
+                                alreadyExists = true;
+                            }
+                        }
+                    }
+
                     if (!alreadyExists)
                     {
-                        DownloadCover(artist, cover);
+                        DownloadCover(artist, cover, lastModifiedServer);
                     }
                 }
                 catch (WebException e)
@@ -157,12 +174,13 @@ namespace NzbDrone.Core.MediaCover
             }
         }
 
-        private void DownloadCover(Artist artist, MediaCover cover)
+        private void DownloadCover(Artist artist, MediaCover cover, DateTime lastModified)
         {
             var fileName = GetCoverPath(artist.Id, cover.CoverType);
 
             _logger.Info("Downloading {0} for {1} {2}", cover.CoverType, artist, cover.Url);
             _httpClient.DownloadFile(cover.Url, fileName);
+            _diskProvider.FileSetLastWriteTime(fileName, lastModified);
         }
 
         private void DownloadAlbumCover(Album album, MediaCover cover)
