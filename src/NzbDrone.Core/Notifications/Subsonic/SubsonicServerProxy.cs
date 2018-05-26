@@ -68,7 +68,7 @@ namespace NzbDrone.Core.Notifications.Subsonic
 
         private RestClient GetSubsonicServerClient(SubsonicSettings settings)
         {
-            var protocol = "http";
+            var protocol = settings.UseSsl ? "https" : "http";
 
             return RestClientFactory.BuildClient(string.Format("{0}://{1}:{2}/rest", protocol, settings.Host, settings.Port));
         }

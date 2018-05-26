@@ -41,6 +41,9 @@ namespace NzbDrone.Core.Notifications.Subsonic
         [FieldDefinition(5, Label = "Update Library", HelpText = "Update Library on Download & Rename?", Type = FieldType.Checkbox)]
         public bool UpdateLibrary { get; set; }
 
+        [FieldDefinition(6, Label = "Use SSL", Type = FieldType.Checkbox, HelpText = "Connect to Subsonic over HTTPS instead of HTTP")]
+        public bool UseSsl { get; set; }
+
         [JsonIgnore]
         public string Address => string.Format("{0}:{1}", Host, Port);
 
