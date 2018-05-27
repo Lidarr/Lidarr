@@ -27,14 +27,14 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
-        public ImportApprovedTracks(IUpgradeMediaFiles episodeFileUpgrader,
+        public ImportApprovedTracks(IUpgradeMediaFiles trackFileUpgrader,
                                       IMediaFileService mediaFileService,
                                       IExtraService extraService,
                                       IDiskProvider diskProvider,
                                       IEventAggregator eventAggregator,
                                       Logger logger)
         {
-            _trackFileUpgrader = episodeFileUpgrader;
+            _trackFileUpgrader = trackFileUpgrader;
             _mediaFileService = mediaFileService;
             _extraService = extraService;
             _diskProvider = diskProvider;
