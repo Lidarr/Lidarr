@@ -160,7 +160,7 @@ namespace NzbDrone.Core.Music
             if (message.ArtistId.HasValue)
             {
                 var artist = _artistService.GetArtist(message.ArtistId.Value);
-                RefreshArtistInfo(artist, false);
+                RefreshArtistInfo(artist, true);
             }
             else
             {
