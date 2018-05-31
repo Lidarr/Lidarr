@@ -135,10 +135,10 @@ namespace NzbDrone.Core.Download.Clients.Transmission
             _proxy.AddTorrentFromUrl(magnetLink, GetDownloadDirectory(), Settings);
             _proxy.SetTorrentSeedingConfiguration(hash, remoteAlbum.SeedConfiguration, Settings);
 
-            var isRecentEpisode = remoteAlbum.IsRecentAlbum();
+            var isRecentAlbum = remoteAlbum.IsRecentAlbum();
 
-            if (isRecentEpisode && Settings.RecentTvPriority == (int)TransmissionPriority.First ||
-                !isRecentEpisode && Settings.OlderTvPriority == (int)TransmissionPriority.First)
+            if (isRecentAlbum && Settings.RecentTvPriority == (int)TransmissionPriority.First ||
+                !isRecentAlbum && Settings.OlderTvPriority == (int)TransmissionPriority.First)
             {
                 _proxy.MoveTorrentToTopInQueue(hash, Settings);
             }
@@ -151,10 +151,10 @@ namespace NzbDrone.Core.Download.Clients.Transmission
             _proxy.AddTorrentFromData(fileContent, GetDownloadDirectory(), Settings);
             _proxy.SetTorrentSeedingConfiguration(hash, remoteAlbum.SeedConfiguration, Settings);
 
-            var isRecentEpisode = remoteAlbum.IsRecentAlbum();
+            var isRecentAlbum = remoteAlbum.IsRecentAlbum();
 
-            if (isRecentEpisode && Settings.RecentTvPriority == (int)TransmissionPriority.First ||
-                !isRecentEpisode && Settings.OlderTvPriority == (int)TransmissionPriority.First)
+            if (isRecentAlbum && Settings.RecentTvPriority == (int)TransmissionPriority.First ||
+                !isRecentAlbum && Settings.OlderTvPriority == (int)TransmissionPriority.First)
             {
                 _proxy.MoveTorrentToTopInQueue(hash, Settings);
             }

@@ -40,10 +40,10 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                 _proxy.SetTorrentLabel(hash.ToLower(), Settings.MusicCategory, Settings);
             }
 
-            var isRecentEpisode = remoteAlbum.IsRecentAlbum();
+            var isRecentAlbum = remoteAlbum.IsRecentAlbum();
 
-            if (isRecentEpisode && Settings.RecentTvPriority == (int)QBittorrentPriority.First ||
-                !isRecentEpisode && Settings.OlderTvPriority == (int)QBittorrentPriority.First)
+            if (isRecentAlbum && Settings.RecentTvPriority == (int)QBittorrentPriority.First ||
+                !isRecentAlbum && Settings.OlderTvPriority == (int)QBittorrentPriority.First)
             {
                 _proxy.MoveTorrentToTopInQueue(hash.ToLower(), Settings);
             }

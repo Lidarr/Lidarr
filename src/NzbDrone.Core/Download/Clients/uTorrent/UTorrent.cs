@@ -42,10 +42,10 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
             _proxy.SetTorrentLabel(hash, Settings.MusicCategory, Settings);
             _proxy.SetTorrentSeedingConfiguration(hash, remoteAlbum.SeedConfiguration, Settings);
 
-            var isRecentEpisode = remoteAlbum.IsRecentAlbum();
+            var isRecentAlbum = remoteAlbum.IsRecentAlbum();
 
-            if (isRecentEpisode && Settings.RecentTvPriority == (int)UTorrentPriority.First ||
-                !isRecentEpisode && Settings.OlderTvPriority == (int)UTorrentPriority.First)
+            if (isRecentAlbum && Settings.RecentTvPriority == (int)UTorrentPriority.First ||
+                !isRecentAlbum && Settings.OlderTvPriority == (int)UTorrentPriority.First)
             {
                 _proxy.MoveTorrentToTopInQueue(hash, Settings);
             }
@@ -61,10 +61,10 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
             _proxy.SetTorrentLabel(hash, Settings.MusicCategory, Settings);
             _proxy.SetTorrentSeedingConfiguration(hash, remoteAlbum.SeedConfiguration, Settings);
 
-            var isRecentEpisode = remoteAlbum.IsRecentAlbum();
+            var isRecentAlbum = remoteAlbum.IsRecentAlbum();
 
-            if (isRecentEpisode && Settings.RecentTvPriority == (int)UTorrentPriority.First ||
-                !isRecentEpisode && Settings.OlderTvPriority == (int)UTorrentPriority.First)
+            if (isRecentAlbum && Settings.RecentTvPriority == (int)UTorrentPriority.First ||
+                !isRecentAlbum && Settings.OlderTvPriority == (int)UTorrentPriority.First)
             {
                 _proxy.MoveTorrentToTopInQueue(hash, Settings);
             }
