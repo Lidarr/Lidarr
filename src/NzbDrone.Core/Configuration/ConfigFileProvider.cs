@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,7 +35,8 @@ namespace NzbDrone.Core.Configuration
         string LogLevel { get; }
         string Branch { get; }
         string ApiKey { get; }
-        string SslCertHash { get; }
+        string SslCertPath { get; }
+        string SslCertPassword { get; }
         string UrlBase { get; }
         string UiFolder { get; }
         bool UpdateAutomatically { get; }
@@ -94,12 +95,6 @@ namespace NzbDrone.Core.Configuration
             {
                 if (configValue.Key.Equals("ApiKey", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    continue;
-                }
-
-                if (configValue.Key.Equals("SslCertHash", StringComparison.InvariantCultureIgnoreCase) && configValue.Value.ToString().IsNotNullOrWhiteSpace())
-                {
-                    SetValue(configValue.Key.FirstCharToUpper(), HiddenCharacterRegex.Replace(configValue.Value.ToString(), string.Empty));
                     continue;
                 }
 
@@ -180,7 +175,9 @@ namespace NzbDrone.Core.Configuration
 
         public string LogLevel => GetValue("LogLevel", "Info");
 
-        public string SslCertHash => GetValue("SslCertHash", "");
+        public string SslCertPath => GetValue("SslCertPath", "");
+
+        public string SslCertPassword => GetValue("SslCertPassword", "");
 
         public string UrlBase
         {

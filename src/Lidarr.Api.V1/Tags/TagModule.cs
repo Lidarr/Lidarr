@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Tags;
-using NzbDrone.SignalR;
+using Lidarr.SignalR;
 using Lidarr.Http;
 
 namespace Lidarr.Api.V1.Tags

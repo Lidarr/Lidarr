@@ -217,6 +217,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Lidarr.SignalR\Lidarr.SignalR.csproj">
+      <Project>{0a698fc9-5d7e-4e49-9cae-b8ff30547792}</Project>
+      <Name>Lidarr.SignalR</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Marr.Data\Marr.Data.csproj">
       <Project>{F6FC6BE7-0847-4817-A1ED-223DC647C3D7}</Project>
       <Name>Marr.Data</Name>
@@ -232,10 +236,6 @@
     <ProjectReference Include="..\NzbDrone.Core\NzbDrone.Core.csproj">
       <Project>{ff5ee3b6-913b-47ce-9ceb-11c51b4e1205}</Project>
       <Name>NzbDrone.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NzbDrone.SignalR\NzbDrone.SignalR.csproj">
-      <Project>{7c2cc69f-5ca0-4e5c-85cb-983f9f6c3b36}</Project>
-      <Name>NzbDrone.SignalR</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

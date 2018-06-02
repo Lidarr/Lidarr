@@ -7,7 +7,6 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Host.Owin;
 
 namespace NzbDrone.Host
 {

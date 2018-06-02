@@ -48,7 +48,8 @@ class GeneralSettings extends Component {
       'urlBase',
       'enableSsl',
       'sslPort',
-      'sslCertHash',
+      'sslCertPath',
+      'sslCertPassword',
       'authenticationMethod',
       'username',
       'password',
@@ -97,7 +98,6 @@ class GeneralSettings extends Component {
       hasSettings,
       isResettingApiKey,
       isMono,
-      isWindows,
       mode,
       onInputChange,
       onConfirmResetApiKey,
@@ -130,7 +130,6 @@ class GeneralSettings extends Component {
                 <HostSettings
                   advancedSettings={advancedSettings}
                   settings={settings}
-                  isWindows={isWindows}
                   mode={mode}
                   onInputChange={onInputChange}
                 />
@@ -201,7 +200,6 @@ GeneralSettings.propTypes = {
   isResettingApiKey: PropTypes.bool.isRequired,
   hasSettings: PropTypes.bool.isRequired,
   isMono: PropTypes.bool.isRequired,
-  isWindows: PropTypes.bool.isRequired,
   mode: PropTypes.string.isRequired,
   onInputChange: PropTypes.func.isRequired,
   onConfirmResetApiKey: PropTypes.func.isRequired,

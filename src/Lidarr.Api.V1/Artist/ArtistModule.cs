@@ -16,7 +16,7 @@ using NzbDrone.Core.Music.Events;
 using NzbDrone.Core.Validation;
 using NzbDrone.Core.Validation.Paths;
 using Lidarr.Api.V1.Albums;
-using NzbDrone.SignalR;
+using Lidarr.SignalR;
 using Lidarr.Http;
 using Lidarr.Http.Extensions;
 using Lidarr.Http.Mapping;

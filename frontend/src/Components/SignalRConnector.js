@@ -1,30 +1,14 @@
-import $ from 'jquery';
-import 'signalr';
 import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import * as signalR from '@aspnet/signalr/dist/browser/signalr.js';
 import { repopulatePage } from 'Utilities/pagePopulator';
 import { updateCommand, finishCommand } from 'Store/Actions/commandActions';
 import { setAppValue, setVersion } from 'Store/Actions/appActions';
 import { update, updateItem, removeItem } from 'Store/Actions/baseActions';
 import { fetchHealth } from 'Store/Actions/systemActions';
 import { fetchQueue, fetchQueueDetails } from 'Store/Actions/queueActions';
-
-function getState(status) {
-  switch (status) {
-    case 0:
-      return 'connecting';
-    case 1:
-      return 'connected';
-    case 2:
-      return 'reconnecting';
-    case 4:
-      return 'disconnected';
-    default:
-      throw new Error(`invalid status ${status}`);
-  }
-}
 
 function isAppDisconnected(disconnectedTime) {
   if (!disconnectedTime) {
@@ -71,42 +55,60 @@ class SignalRConnector extends Component {
     super(props, context);
 
     this.signalRconnectionOptions = { transport: ['webSockets', 'longPolling'] };
-    this.signalRconnection = null;
+    this.connection = null;
     this.retryInterval = 1;
     this.retryTimeoutId = null;
     this.disconnectedTime = null;
   }
 
   componentDidMount() {
-    console.log('Starting signalR');
+    console.log('[signalR] starting');
 
-    this.signalRconnection = $.connection('/signalr', { apiKey: window.Lidarr.apiKey });
+    const url = `${window.Lidarr.urlBase}/signalr/messages`;
 
-    this.signalRconnection.stateChanged(this.onStateChanged);
-    this.signalRconnection.received(this.onReceived);
-    this.signalRconnection.reconnecting(this.onReconnecting);
-    this.signalRconnection.disconnected(this.onDisconnected);
+    this.connection = new signalR.HubConnectionBuilder()
+      .withUrl(url, {
+        accessTokenFactory: () => {
+          return window.Lidarr.apiKey;
+        }
+      })
+      .build();
 
-    this.signalRconnection.start(this.signalRconnectionOptions);
+    this.connection.onclose(this.onClose);
+    this.connection.on('receiveVersion', this.onReceiveVersion);
+    this.connection.on('receiveMessage', this.onReceiveMessage);
+
+    this.startConnection();
   }
 
   componentWillUnmount() {
-    this.signalRconnection.stop();
-    this.signalRconnection = null;
+    this.connection.stop();
+    this.connection = null;
   }
 
   //
   // Control
 
+  startConnection() {
+    this.connection.start()
+      .then(this.onConnected)
+      .catch(this.onError);
+  }
+
   retryConnection = () => {
+    const attrs = {
+      isReconnecting: true
+    };
+
     if (isAppDisconnected(this.disconnectedTime)) {
-      this.setState({
-        isDisconnected: true
-      });
+      attrs.isConnected = false;
+      attrs.isDisconnected = true;
     }
 
+    setAppValue(attrs);
+
     this.retryTimeoutId = setTimeout(() => {
-      this.signalRconnection.start(this.signalRconnectionOptions);
+      this.startConnection();
       this.retryInterval = Math.min(this.retryInterval + 1, 10);
     }, this.retryInterval * 1000);
   }
@@ -164,11 +166,6 @@ class SignalRConnector extends Component {
 
     if (name === 'queue/status') {
       this.handleQueueStatus(body);
-      return;
-    }
-
-    if (name === 'version') {
-      this.handleVersion(body);
       return;
     }
 
@@ -266,12 +263,6 @@ class SignalRConnector extends Component {
     this.props.update({ section: 'queue.status', data: body.resource });
   }
 
-  handleVersion = (body) => {
-    const version = body.Version;
-
-    this.props.setVersion({ version });
-  }
-
   handleWantedCutoff = (body) => {
     if (body.action === 'updated') {
       this.props.updateItem({
@@ -295,43 +286,48 @@ class SignalRConnector extends Component {
   //
   // Listeners
 
-  onStateChanged = (change) => {
-    const state = getState(change.newState);
-    console.log(`SignalR: ${state}`);
+  onConnected = () => {
+    console.debug('[signalR] connected');
 
-    if (state === 'connected') {
-      // Clear disconnected time
-      this.disconnectedTime = null;
+    // Clear disconnected time
+    this.disconnectedTime = null;
 
-      // Repopulate the page (if a repopulator is set) to ensure things
-      // are in sync after reconnecting.
+    // Repopulate the page (if a repopulator is set) to ensure things
+    // are in sync after reconnecting.
 
-      if (this.props.isReconnecting || this.props.isDisconnected) {
-        repopulatePage();
-      }
+    if (this.props.isReconnecting || this.props.isDisconnected) {
+      repopulatePage();
+    }
 
-      this.props.setAppValue({
-        isConnected: true,
-        isReconnecting: false,
-        isDisconnected: false,
-        isRestarting: false
-      });
+    this.props.setAppValue({
+      isConnected: true,
+      isReconnecting: false,
+      isDisconnected: false,
+      isRestarting: false
+    });
 
-      this.retryInterval = 5;
+    this.retryInterval = 5;
 
-      if (this.retryTimeoutId) {
-        clearTimeout(this.retryTimeoutId);
-      }
+    if (this.retryTimeoutId) {
+      this.retryTimeoutId = clearTimeout(this.retryTimeoutId);
     }
   }
 
-  onReceived = (message) => {
-    console.debug('SignalR: received', message.name, message.body);
+  onReceiveVersion = (message) => {
+    const version = message.body.version;
+
+    this.props.setVersion({ version });
+  }
+
+  onReceiveMessage = (message) => {
+    console.debug('[signalR] received', message.name, message.body);
 
     this.handleMessage(message);
   }
 
-  onReconnecting = () => {
+  onClose = () => {
+    console.debug('[signalR] connection closed');
+
     if (window.Lidarr.unloading) {
       return;
     }
@@ -340,12 +336,12 @@ class SignalRConnector extends Component {
       this.disconnectedTime = Math.floor(new Date().getTime() / 1000);
     }
 
-    this.props.setAppValue({
-      isReconnecting: true
-    });
+    this.retryConnection();
   }
 
-  onDisconnected = () => {
+  onError = () => {
+    console.debug('[signalR] connection error');
+
     if (window.Lidarr.unloading) {
       return;
     }
@@ -353,12 +349,6 @@ class SignalRConnector extends Component {
     if (!this.disconnectedTime) {
       this.disconnectedTime = Math.floor(new Date().getTime() / 1000);
     }
-
-    this.props.setAppValue({
-      isConnected: false,
-      isReconnecting: true,
-      isDisconnected: isAppDisconnected(this.disconnectedTime)
-    });
 
     this.retryConnection();
   }

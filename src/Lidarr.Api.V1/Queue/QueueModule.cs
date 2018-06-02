@@ -6,7 +6,7 @@ using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.Download.Pending;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Queue;
-using NzbDrone.SignalR;
+using Lidarr.SignalR;
 using Lidarr.Http;
 using Lidarr.Http.Extensions;
 

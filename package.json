@@ -17,6 +17,7 @@
   "license": "GPL-3.0",
   "readmeFilename": "readme.md",
   "dependencies": {
+    "@aspnet/signalr": "1.0.0",
     "@fortawesome/fontawesome": "1.1.4",
     "@fortawesome/fontawesome-free-regular": "5.0.8",
     "@fortawesome/fontawesome-free-solid": "5.0.8",
@@ -104,7 +105,6 @@
     "require-nocache": "1.0.0",
     "reselect": "3.0.1",
     "run-sequence": "2.2.1",
-    "signalr": "2.2.3",
     "streamqueue": "1.1.2",
     "style-loader": "0.19.1",
     "stylelint": "8.4.0",

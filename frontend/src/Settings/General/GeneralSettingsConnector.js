@@ -26,7 +26,6 @@ function createMapStateToProps() {
         advancedSettings,
         isResettingApiKey,
         isMono: systemStatus.isMono,
-        isWindows: systemStatus.isWindows,
         mode: systemStatus.mode,
         ...sectionSettings
       };

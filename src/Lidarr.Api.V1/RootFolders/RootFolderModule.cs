@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using FluentValidation;
 using NzbDrone.Core.RootFolders;
 using NzbDrone.Core.Validation.Paths;
-using NzbDrone.SignalR;
+using Lidarr.SignalR;
 using Lidarr.Http;
 
 namespace Lidarr.Api.V1.RootFolders
