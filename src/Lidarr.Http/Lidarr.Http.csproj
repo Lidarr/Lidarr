@@ -62,7 +62,6 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.IO.Compression" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientSchema\FieldMapping.cs" />
@@ -134,6 +133,10 @@
     <ProjectReference Include="..\Lidarr.SignalR\Lidarr.SignalR.csproj">
       <Project>{0a698fc9-5d7e-4e49-9cae-b8ff30547792}</Project>
       <Name>Lidarr.SignalR</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marr.Data\Marr.Data.csproj">
+      <Project>{f6fc6be7-0847-4817-a1ed-223dc647c3d7}</Project>
+      <Name>Marr.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\NzbDrone.Common\NzbDrone.Common.csproj">
       <Project>{F2BE0FDF-6E47-4827-A420-DD4EF82407F8}</Project>
