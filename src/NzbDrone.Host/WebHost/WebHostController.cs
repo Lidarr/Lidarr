@@ -95,7 +95,7 @@ namespace NzbDrone.Host.WebHost
                 .Configure(app =>
                 {
                     app.UsePathBase(_configFileProvider.UrlBase);
-                    app.Properties["host.AppName"] = "Sonarr";
+                    app.Properties["host.AppName"] = "Lidarr";
 
                     foreach (var middleWare in _middlewares.OrderBy(c => c.Order))
                     {
@@ -120,7 +120,7 @@ namespace NzbDrone.Host.WebHost
         {
             _logger.Info("Attempting to stop OWIN host");
 
-            await _host.StopAsync(TimeSpan.FromSeconds(5));
+            await _host.StopAsync();
             _host.Dispose();
             _host = null;
 
