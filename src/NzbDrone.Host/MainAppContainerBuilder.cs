@@ -4,7 +4,7 @@ using Lidarr.Http;
 using NzbDrone.Common.Composition;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Http.Dispatchers;
-using NzbDrone.SignalR;
+using Lidarr.SignalR;
 
 namespace NzbDrone.Host
 {
@@ -27,7 +27,7 @@ namespace NzbDrone.Host
         private MainAppContainerBuilder(StartupContext args, List<string> assemblies)
             : base(args, assemblies)
         {
-            AutoRegisterImplementations<NzbDronePersistentConnection>();
+            AutoRegisterImplementations<MessageHub>();
 
             Container.Register<INancyBootstrapper, LidarrBootstrapper>();
             Container.Register<IHttpDispatcher, FallbackHttpDispatcher>();

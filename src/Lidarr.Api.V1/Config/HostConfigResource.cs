@@ -20,7 +20,8 @@ namespace Lidarr.Api.V1.Config
         public string LogLevel { get; set; }
         public string Branch { get; set; }
         public string ApiKey { get; set; }
-        public string SslCertHash { get; set; }
+        public string SslCertPath { get; set; }
+        public string SslCertPassword { get; set; }
         public string UrlBase { get; set; }
         public bool UpdateAutomatically { get; set; }
         public UpdateMechanism UpdateMechanism { get; set; }
@@ -57,7 +58,8 @@ namespace Lidarr.Api.V1.Config
                 LogLevel = model.LogLevel,
                 Branch = model.Branch,
                 ApiKey = model.ApiKey,
-                SslCertHash = model.SslCertHash,
+                SslCertPath = model.SslCertPath,
+                SslCertPassword = model.SslCertPassword,
                 UrlBase = model.UrlBase,
                 UpdateAutomatically = model.UpdateAutomatically,
                 UpdateMechanism = model.UpdateMechanism,

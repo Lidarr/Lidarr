@@ -7,7 +7,7 @@ using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ProgressMessaging;
-using NzbDrone.SignalR;
+using Lidarr.SignalR;
 using Lidarr.Http;
 using Lidarr.Http.Extensions;
 using Lidarr.Http.Validation;

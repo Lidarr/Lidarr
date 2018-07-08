@@ -1,7 +1,7 @@
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.SignalR;
+using Lidarr.SignalR;
 using Lidarr.Http.REST;
 
 namespace Lidarr.Http

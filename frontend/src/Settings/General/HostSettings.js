@@ -10,7 +10,6 @@ function HostSettings(props) {
   const {
     advancedSettings,
     settings,
-    isWindows,
     mode,
     onInputChange
   } = props;
@@ -21,7 +20,8 @@ function HostSettings(props) {
     urlBase,
     enableSsl,
     sslPort,
-    sslCertHash,
+    sslCertPath,
+    sslCertPassword,
     launchBrowser
   } = settings;
 
@@ -88,55 +88,75 @@ function HostSettings(props) {
 
       {
         enableSsl.value &&
-        <FormGroup
-          advancedSettings={advancedSettings}
-          isAdvanced={true}
-        >
-          <FormLabel>SSL Port</FormLabel>
+          <FormGroup
+            advancedSettings={advancedSettings}
+            isAdvanced={true}
+          >
+            <FormLabel>SSL Port</FormLabel>
 
-          <FormInputGroup
-            type={inputTypes.NUMBER}
-            name="sslPort"
-            min={1}
-            max={65535}
-            helpTextWarning="Requires restart to take effect"
-            onChange={onInputChange}
-            {...sslPort}
-          />
-        </FormGroup>
+            <FormInputGroup
+              type={inputTypes.NUMBER}
+              name="sslPort"
+              min={1}
+              max={65535}
+              helpTextWarning="Requires restart to take effect"
+              onChange={onInputChange}
+              {...sslPort}
+            />
+          </FormGroup>
       }
 
       {
-        isWindows && enableSsl.value &&
-        <FormGroup
-          advancedSettings={advancedSettings}
-          isAdvanced={true}
-        >
-          <FormLabel>SSL Cert Hash</FormLabel>
+        enableSsl.value &&
+          <FormGroup
+            advancedSettings={advancedSettings}
+            isAdvanced={true}
+          >
+            <FormLabel>SSL Cert Path</FormLabel>
 
-          <FormInputGroup
-            type={inputTypes.TEXT}
-            name="sslCertHash"
-            helpTextWarning="Requires restart to take effect"
-            onChange={onInputChange}
-            {...sslCertHash}
-          />
-        </FormGroup>
+            <FormInputGroup
+              type={inputTypes.TEXT}
+              name="sslCertPath"
+              helpText="Path to pfx file"
+              helpTextWarning="Requires restart to take effect"
+              onChange={onInputChange}
+              {...sslCertPath}
+            />
+          </FormGroup>
+      }
+
+      {
+        enableSsl.value &&
+          <FormGroup
+            advancedSettings={advancedSettings}
+            isAdvanced={true}
+          >
+            <FormLabel>SSL Cert Password</FormLabel>
+
+            <FormInputGroup
+              type={inputTypes.PASSWORD}
+              name="sslCertPassword"
+              helpText="Password for pfx file"
+              helpTextWarning="Requires restart to take effect"
+              onChange={onInputChange}
+              {...sslCertPassword}
+            />
+          </FormGroup>
       }
 
       {
         mode !== 'service' &&
-        <FormGroup size={sizes.MEDIUM}>
-          <FormLabel>Open browser on start</FormLabel>
+          <FormGroup size={sizes.MEDIUM}>
+            <FormLabel>Open browser on start</FormLabel>
 
-          <FormInputGroup
-            type={inputTypes.CHECK}
-            name="launchBrowser"
-            helpText=" Open a web browser and navigate to Lidarr homepage on app start."
-            onChange={onInputChange}
-            {...launchBrowser}
-          />
-        </FormGroup>
+            <FormInputGroup
+              type={inputTypes.CHECK}
+              name="launchBrowser"
+              helpText=" Open a web browser and navigate to Lidarr homepage on app start."
+              onChange={onInputChange}
+              {...launchBrowser}
+            />
+          </FormGroup>
       }
 
     </FieldSet>
@@ -146,7 +166,6 @@ function HostSettings(props) {
 HostSettings.propTypes = {
   advancedSettings: PropTypes.bool.isRequired,
   settings: PropTypes.object.isRequired,
-  isWindows: PropTypes.bool.isRequired,
   mode: PropTypes.string.isRequired,
   onInputChange: PropTypes.func.isRequired
 };

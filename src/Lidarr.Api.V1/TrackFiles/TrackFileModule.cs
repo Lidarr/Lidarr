@@ -9,7 +9,7 @@ using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
-using NzbDrone.SignalR;
+using Lidarr.SignalR;
 using Lidarr.Http;
 using Lidarr.Http.Extensions;
 using NzbDrone.Core.Exceptions;

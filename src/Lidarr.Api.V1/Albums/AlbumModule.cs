@@ -5,7 +5,7 @@ using Nancy;
 using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Music;
-using NzbDrone.SignalR;
+using Lidarr.SignalR;
 using Lidarr.Http.Extensions;
 using Lidarr.Http.REST;
 using NzbDrone.Core.ArtistStats;

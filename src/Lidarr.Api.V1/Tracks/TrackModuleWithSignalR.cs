@@ -5,7 +5,7 @@ using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
-using NzbDrone.SignalR;
+using Lidarr.SignalR;
 using Lidarr.Api.V1.TrackFiles;
 using Lidarr.Api.V1.Artist;
 using Lidarr.Http;

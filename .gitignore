@@ -125,7 +125,6 @@ bin
 obj
 output/*
 
-
 #OS X metadata files
 ._*
 .DS_Store
@@ -133,6 +132,4 @@ output/*
 _start
 _temp_*/**/*
 
-## Merge any idea folder
-*/**/.idea
-*.iml
+src/.idea/

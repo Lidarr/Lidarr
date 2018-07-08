@@ -9,7 +9,7 @@ using Lidarr.Api.V1.Artist;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.ArtistStats;
-using NzbDrone.SignalR;
+using Lidarr.SignalR;
 using Lidarr.Http;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.MediaFiles.Events;

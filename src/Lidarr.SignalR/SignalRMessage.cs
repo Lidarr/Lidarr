@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using NzbDrone.Core.Datastore.Events;
 
-namespace NzbDrone.SignalR
+namespace Lidarr.SignalR
 {
     public class SignalRMessage
     {

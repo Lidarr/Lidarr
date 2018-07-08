@@ -55,8 +55,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NzbDrone.Host", "NzbDrone.H
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NzbDrone", "NzbDrone\NzbDrone.csproj", "{D12F7F2F-8A3C-415F-88FA-6DD061A84869}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NzbDrone.SignalR", "NzbDrone.SignalR\NzbDrone.SignalR.csproj", "{7C2CC69F-5CA0-4E5C-85CB-983F9F6C3B36}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{F6E3A728-AE77-4D02-BAC8-82FBC1402DDA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marr.Data", "Marr.Data\Marr.Data.csproj", "{F6FC6BE7-0847-4817-A1ED-223DC647C3D7}"
@@ -87,6 +85,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidarr.Http", "Lidarr.Http\Lidarr.Http.csproj", "{5370BFF7-1BD7-46BC-AF06-7D9EA5CDA1D6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidarr.Api.V1", "Lidarr.Api.V1\Lidarr.Api.V1.csproj", "{7140FF1F-79BE-492F-9188-B21A050BF708}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidarr.SignalR", "Lidarr.SignalR\Lidarr.SignalR.csproj", "{0A698FC9-5D7E-4E49-9CAE-B8FF30547792}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -200,12 +200,6 @@ Global
 		{D12F7F2F-8A3C-415F-88FA-6DD061A84869}.Mono|x86.ActiveCfg = Release|x86
 		{D12F7F2F-8A3C-415F-88FA-6DD061A84869}.Release|x86.ActiveCfg = Release|x86
 		{D12F7F2F-8A3C-415F-88FA-6DD061A84869}.Release|x86.Build.0 = Release|x86
-		{7C2CC69F-5CA0-4E5C-85CB-983F9F6C3B36}.Debug|x86.ActiveCfg = Debug|x86
-		{7C2CC69F-5CA0-4E5C-85CB-983F9F6C3B36}.Debug|x86.Build.0 = Debug|x86
-		{7C2CC69F-5CA0-4E5C-85CB-983F9F6C3B36}.Mono|x86.ActiveCfg = Debug|x86
-		{7C2CC69F-5CA0-4E5C-85CB-983F9F6C3B36}.Mono|x86.Build.0 = Debug|x86
-		{7C2CC69F-5CA0-4E5C-85CB-983F9F6C3B36}.Release|x86.ActiveCfg = Release|x86
-		{7C2CC69F-5CA0-4E5C-85CB-983F9F6C3B36}.Release|x86.Build.0 = Release|x86
 		{F6FC6BE7-0847-4817-A1ED-223DC647C3D7}.Debug|x86.ActiveCfg = Debug|x86
 		{F6FC6BE7-0847-4817-A1ED-223DC647C3D7}.Debug|x86.Build.0 = Debug|x86
 		{F6FC6BE7-0847-4817-A1ED-223DC647C3D7}.Mono|x86.ActiveCfg = Release|x86
@@ -268,6 +262,12 @@ Global
 		{7140FF1F-79BE-492F-9188-B21A050BF708}.Mono|x86.Build.0 = Release|x86
 		{7140FF1F-79BE-492F-9188-B21A050BF708}.Release|x86.ActiveCfg = Release|x86
 		{7140FF1F-79BE-492F-9188-B21A050BF708}.Release|x86.Build.0 = Release|x86
+		{0A698FC9-5D7E-4E49-9CAE-B8FF30547792}.Debug|x86.ActiveCfg = Debug|x86
+		{0A698FC9-5D7E-4E49-9CAE-B8FF30547792}.Debug|x86.Build.0 = Debug|x86
+		{0A698FC9-5D7E-4E49-9CAE-B8FF30547792}.Mono|x86.ActiveCfg = Release|x86
+		{0A698FC9-5D7E-4E49-9CAE-B8FF30547792}.Mono|x86.Build.0 = Release|x86
+		{0A698FC9-5D7E-4E49-9CAE-B8FF30547792}.Release|x86.ActiveCfg = Release|x86
+		{0A698FC9-5D7E-4E49-9CAE-B8FF30547792}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

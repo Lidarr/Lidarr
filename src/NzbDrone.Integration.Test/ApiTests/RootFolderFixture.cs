@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using Lidarr.Api.V1.RootFolders;
@@ -16,9 +17,9 @@ namespace NzbDrone.Integration.Test.ApiTests
 
         [Test]
         [Ignore("SignalR on CI seems unstable")]
-        public void should_add_and_delete_root_folders()
+        public async Task should_add_and_delete_root_folders()
         {
-            ConnectSignalR();
+            await ConnectSignalR();
 
             var rootFolder = new RootFolderResource
             {
