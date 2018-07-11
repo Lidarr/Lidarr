@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Mono.Unix;
 using Mono.Unix.Native;
 using NLog;
@@ -14,6 +15,10 @@ namespace NzbDrone.Mono.Disk
 {
     public class DiskProvider : DiskProviderBase
     {
+        private static int FICLONE = 1074041865;
+        [DllImport("libc", EntryPoint = "ioctl", SetLastError = true)]
+        private extern static int FiCloneIoCtl(int fd1, int request, int fd2);
+
         private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(DiskProvider));
 
         private readonly IProcMountProvider _procMountProvider;
@@ -210,6 +215,41 @@ namespace NzbDrone.Mono.Disk
 
         public override bool TryCreateRefLink(string source, string destination)
         {
+            var source_fd = Syscall.open(source, OpenFlags.O_RDONLY);
+            if (source_fd == -1) {
+                Logger.Trace("RefLink: Cannot open source file '{0}'", source);
+                return false;
+            }
+
+            var dest_fd = Syscall.open(destination, OpenFlags.O_WRONLY | OpenFlags.O_CREAT, FilePermissions.S_IRUSR | FilePermissions.S_IWUSR);
+            if (dest_fd == -1) {
+                Syscall.close(source_fd);
+                Logger.Trace("RefLink: Cannot open dest file '{0}'", destination);
+                return false;
+            }
+
+            try
+            {
+                var result = FiCloneIoCtl(dest_fd, FICLONE, source_fd);
+                if (result == 0) {
+                    Syscall.close(source_fd);
+                    Syscall.close(dest_fd);
+                    return true;
+                }
+                var error = Stdlib.GetLastError();
+                Logger.Debug("Cannot issue FICLONE ('{0}' -> '{1}') due to '{2}'", Stdlib.strerror(error));
+            }
+            catch (EntryPointNotFoundException e)
+            {
+                Logger.Debug(e, "Platform does not support FICLONE");
+            }
+            catch (DllNotFoundException e)
+            {
+                Logger.Debug(e, "No libc.so on this platform; macOS currently unsupported for reflink");
+            }
+
+            Syscall.close(source_fd);
+            Syscall.close(dest_fd);
             return false;
         }
 
