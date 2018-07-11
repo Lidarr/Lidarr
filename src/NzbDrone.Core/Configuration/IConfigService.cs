@@ -30,6 +30,8 @@ namespace NzbDrone.Core.Configuration
         FileDateType FileDate { get; set; }
         bool SkipFreeSpaceCheckWhenImporting { get; set; }
         bool CopyUsingHardlinks { get; set; }
+        bool CopyUsingReflinks { get; set; }
+        bool EnableMediaInfo { get; set; }
         bool ImportExtraFiles { get; set; }
         string ExtraFileExtensions { get; set; }
         RescanAfterRefreshType RescanAfterRefresh { get; set; }

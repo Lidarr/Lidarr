@@ -23,6 +23,7 @@ namespace Lidarr.Api.V1.Config
 
         public bool SkipFreeSpaceCheckWhenImporting { get; set; }
         public bool CopyUsingHardlinks { get; set; }
+        public bool CopyUsingReflinks { get; set; }
         public bool ImportExtraFiles { get; set; }
         public string ExtraFileExtensions { get; set; }
     }
@@ -50,6 +51,7 @@ namespace Lidarr.Api.V1.Config
 
                 SkipFreeSpaceCheckWhenImporting = model.SkipFreeSpaceCheckWhenImporting,
                 CopyUsingHardlinks = model.CopyUsingHardlinks,
+                CopyUsingReflinks = model.CopyUsingReflinks,
                 ImportExtraFiles = model.ImportExtraFiles,
                 ExtraFileExtensions = model.ExtraFileExtensions,
             };

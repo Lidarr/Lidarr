@@ -145,6 +145,16 @@ class MediaManagement extends Component {
                         isAdvanced={true}
                         size={sizes.MEDIUM}
                       >
+                        <FormLabel>Use Reflinks instead of Copy</FormLabel>
+
+                        <FormInputGroup
+                          type={inputTypes.CHECK}
+                          name="copyUsingReflinks"
+                          helpText="Use Reflinks when trying to copy files from torrents that are still being seeded"
+                          onChange={onInputChange}
+                          {...settings.copyUsingReflinks}
+                        />
+
                         <FormLabel>Use Hardlinks instead of Copy</FormLabel>
 
                         <FormInputGroup

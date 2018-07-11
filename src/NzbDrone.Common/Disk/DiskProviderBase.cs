@@ -241,6 +241,7 @@ namespace NzbDrone.Common.Disk
         }
 
         public abstract bool TryCreateHardLink(string source, string destination);
+        public abstract bool TryCreateRefLink(string source, string destination);
 
         public void DeleteFolder(string path, bool recursive)
         {

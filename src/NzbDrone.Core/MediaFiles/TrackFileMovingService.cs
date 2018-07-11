@@ -95,7 +95,12 @@ namespace NzbDrone.Core.MediaFiles
 
             EnsureTrackFolder(trackFile, localTrack, filePath);
 
-            if (_configService.CopyUsingHardlinks)
+            if (_configService.CopyUsingReflinks)
+            {
+                _logger.Debug("Reflinking track file: {0} to {1}", trackFile.Path, filePath);
+                return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.RefLinkOrCopy);
+            }
+            else if (_configService.CopyUsingHardlinks)
             {
                 _logger.Debug("Hardlinking track file: {0} to {1}", trackFile.Path, filePath);
                 return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.HardLinkOrCopy);

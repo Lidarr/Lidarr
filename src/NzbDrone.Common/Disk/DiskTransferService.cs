@@ -272,6 +272,14 @@ namespace NzbDrone.Common.Disk
 
             ClearTargetPath(sourcePath, targetPath, overwrite);
 
+            if (mode.HasFlag(TransferMode.RefLink))
+            {
+                var createdRefLink = _diskProvider.TryCreateRefLink(sourcePath, targetPath);
+                if (createdRefLink) {
+                    return TransferMode.RefLink;
+                }
+            }
+
             if (mode.HasFlag(TransferMode.HardLink))
             {
                 var createdHardlink = _diskProvider.TryCreateHardLink(sourcePath, targetPath);

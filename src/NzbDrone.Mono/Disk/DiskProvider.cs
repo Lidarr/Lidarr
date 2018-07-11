@@ -208,6 +208,11 @@ namespace NzbDrone.Mono.Disk
             }
         }
 
+        public override bool TryCreateRefLink(string source, string destination)
+        {
+            return false;
+        }
+
         private void SetPermissions(string path, string mask)
         {
             Logger.Debug("Setting permissions: {0} on {1}", mask, path);

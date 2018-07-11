@@ -195,6 +195,20 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("CopyUsingHardlinks", value); }
         }
 
+        public bool CopyUsingReflinks
+        {
+            get { return GetValueBoolean("CopyUsingReflinks", true); }
+
+            set { SetValue("CopyUsingReflinks", value); }
+        }
+
+        public bool EnableMediaInfo
+        {
+            get { return GetValueBoolean("EnableMediaInfo", true); }
+
+            set { SetValue("EnableMediaInfo", value); }
+        }
+
         public bool ImportExtraFiles
         {
             get { return GetValueBoolean("ImportExtraFiles", false); }

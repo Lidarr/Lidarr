@@ -103,7 +103,6 @@ namespace NzbDrone.Windows.Disk
             return 0;
         }
 
-        
         public override bool TryCreateHardLink(string source, string destination)
         {
             try
@@ -115,6 +114,11 @@ namespace NzbDrone.Windows.Disk
                 Logger.Debug(ex, string.Format("Hardlink '{0}' to '{1}' failed.", source, destination));
                 return false;
             }
+        }
+
+        public override bool TryCreateRefLink(string source, string destination)
+        {
+            return false;
         }
     }
 }
