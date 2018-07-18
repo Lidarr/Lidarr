@@ -50,9 +50,6 @@ namespace NzbDrone.Core.Notifications.Subsonic
         [FieldDefinition(7, Label = "Use SSL", Type = FieldType.Checkbox, HelpText = "Connect to Subsonic over HTTPS instead of HTTP")]
         public bool UseSsl { get; set; }
 
-        //[JsonIgnore]
-        //public string Address => string.Format("{0}:{1}", Host, Port);
-
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
