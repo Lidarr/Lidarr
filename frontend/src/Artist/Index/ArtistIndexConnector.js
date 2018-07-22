@@ -56,7 +56,8 @@ function createMapStateToProps() {
         isRssSyncExecuting,
         isSmallScreen: dimensionsState.isSmallScreen,
         ...artist,
-        ...artistIndex
+        ...artistIndex,
+        totalItems: artist.items.length
       };
     }
   );

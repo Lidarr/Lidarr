@@ -125,8 +125,19 @@ class InteractiveImportModalContentConnector extends Component {
           return false;
         }
 
+        if (!quality) {
+          this.setState({ interactiveImportErrorMessage: 'Quality must be chosen for each selected file' });
+          return false;
+        }
+
+        if (!language) {
+          this.setState({ interactiveImportErrorMessage: 'Language must be chosen for each selected file' });
+          return false;
+        }
+
         files.push({
           path: item.path,
+          folderName: item.folderName,
           artistId: artist.id,
           albumId: album.id,
           trackIds: _.map(tracks, 'id'),

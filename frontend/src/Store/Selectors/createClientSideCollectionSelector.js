@@ -1,37 +1,7 @@
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import findSelectedFilters from 'Utilities/Filter/findSelectedFilters';
-import { filterTypes, sortDirections } from 'Helpers/Props';
-
-const filterTypePredicates = {
-  [filterTypes.CONTAINS]: function(value, filterValue) {
-    return value.toLowerCase().contains(filterValue.toLowerCase());
-  },
-
-  [filterTypes.EQUAL]: function(value, filterValue) {
-    return value === filterValue;
-  },
-
-  [filterTypes.GREATER_THAN]: function(value, filterValue) {
-    return value > filterValue;
-  },
-
-  [filterTypes.GREATER_THAN_OR_EQUAL]: function(value, filterValue) {
-    return value >= filterValue;
-  },
-
-  [filterTypes.LESS_THAN]: function(value, filterValue) {
-    return value < filterValue;
-  },
-
-  [filterTypes.LESS_THAN_OR_EQUAL]: function(value, filterValue) {
-    return value <= filterValue;
-  },
-
-  [filterTypes.NOT_EQUAL]: function(value, filterValue) {
-    return value !== filterValue;
-  }
-};
+import { filterTypePredicates, filterTypes, sortDirections } from 'Helpers/Props';
 
 function getSortClause(sortKey, sortDirection, sortPredicates) {
   if (sortPredicates && sortPredicates.hasOwnProperty(sortKey)) {
@@ -137,7 +107,8 @@ function createClientSideCollectionSelector() {
       return {
         ...sectionState,
         ...uiSectionState,
-        items: sorted
+        items: sorted,
+        totalItems: state.items.length
       };
     }
   );

@@ -91,6 +91,10 @@ class SignalRConnector extends Component {
   }
 
   componentWillUnmount() {
+    if (this.retryTimeoutId) {
+      this.retryTimeoutId = clearTimeout(this.retryTimeoutId);
+    }
+
     this.signalRconnection.stop();
     this.signalRconnection = null;
   }
