@@ -58,6 +58,12 @@ export const defaultState = {
       valueType: filterBuilderValueTypes.LANGUAGE_PROFILE
     },
     {
+      name: 'metadataProfileId',
+      label: 'Metadata Profile',
+      type: filterBuilderTypes.EXACT,
+      valueType: filterBuilderValueTypes.METADATA_PROFILE
+    },
+    {
       name: 'path',
       label: 'Path',
       type: filterBuilderTypes.STRING
