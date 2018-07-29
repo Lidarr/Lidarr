@@ -14,5 +14,9 @@
 .details {
   composes: cell from 'Components/Table/Cells/TableRowCell.css';
 
-  width: 30px;
+  width: 60px;
+}
+
+.blacklistIcon {
+  width: 20px !important;
 }

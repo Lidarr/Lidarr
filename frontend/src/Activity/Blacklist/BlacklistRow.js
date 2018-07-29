@@ -35,6 +35,10 @@ class BlacklistRow extends Component {
     this.setState({ isDetailsModalOpen: false });
   }
 
+  onDeletePress = () => {
+    this.props.onDeletePress({ id: this.props.id });
+  }
+
   //
   // Render
 
@@ -136,8 +140,14 @@ class BlacklistRow extends Component {
                   className={styles.details}
                 >
                   <IconButton
+                    className={styles.blacklistIcon}
                     name={icons.INFO}
                     onPress={this.onDetailsPress}
+                  />
+                  <IconButton
+                    className={styles.blacklistIcon}
+                    name={icons.DELETE}
+                    onPress={this.onDeletePress}
                   />
                 </TableRowCell>
               );
@@ -171,7 +181,8 @@ BlacklistRow.propTypes = {
   protocol: PropTypes.string.isRequired,
   indexer: PropTypes.string,
   message: PropTypes.string,
-  columns: PropTypes.arrayOf(PropTypes.object).isRequired
+  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onDeletePress: PropTypes.func.isRequired
 };
 
 export default BlacklistRow;

@@ -27,8 +27,8 @@ export const defaultState = {
   secondarySortKey: 'sortName',
   secondarySortDirection: sortDirections.ASCENDING,
   selectedFilterKey: 'all',
-  // filters,
-  // filterPredicates,
+  filters,
+  filterPredicates,
   customFilters: []
 };
 

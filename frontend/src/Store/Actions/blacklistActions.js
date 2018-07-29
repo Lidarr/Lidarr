@@ -5,6 +5,7 @@ import { sortDirections } from 'Helpers/Props';
 import createSetTableOptionReducer from './Creators/Reducers/createSetTableOptionReducer';
 import createHandleActions from './Creators/createHandleActions';
 import createServerSideCollectionHandlers from './Creators/createServerSideCollectionHandlers';
+import createRemoveItemHandler from './Creators/createRemoveItemHandler';
 
 //
 // Variables
@@ -77,6 +78,7 @@ export const persistState = [
 //
 // Action Types
 
+export const DELETE_BLACKLIST = 'blacklist/deleteBlacklist';
 export const FETCH_BLACKLIST = 'blacklist/fetchBlacklist';
 export const GOTO_FIRST_BLACKLIST_PAGE = 'blacklist/gotoBlacklistFirstPage';
 export const GOTO_PREVIOUS_BLACKLIST_PAGE = 'blacklist/gotoBlacklistPreviousPage';
@@ -89,6 +91,7 @@ export const SET_BLACKLIST_TABLE_OPTION = 'blacklist/setBlacklistTableOption';
 //
 // Action Creators
 
+export const deleteBlacklist = createThunk(DELETE_BLACKLIST);
 export const fetchBlacklist = createThunk(FETCH_BLACKLIST);
 export const gotoBlacklistFirstPage = createThunk(GOTO_FIRST_BLACKLIST_PAGE);
 export const gotoBlacklistPreviousPage = createThunk(GOTO_PREVIOUS_BLACKLIST_PAGE);
@@ -114,7 +117,9 @@ export const actionHandlers = handleThunks({
       [serverSideCollectionHandlers.LAST_PAGE]: GOTO_LAST_BLACKLIST_PAGE,
       [serverSideCollectionHandlers.EXACT_PAGE]: GOTO_BLACKLIST_PAGE,
       [serverSideCollectionHandlers.SORT]: SET_BLACKLIST_SORT
-    })
+    }),
+
+  [DELETE_BLACKLIST]: createRemoveItemHandler(section, '/blacklist')
 });
 
 //

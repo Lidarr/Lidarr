@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import createArtistSelector from 'Store/Selectors/createArtistSelector';
+import { deleteBlacklist } from 'Store/Actions/blacklistActions';
 import BlacklistRow from './BlacklistRow';
 
 function createMapStateToProps() {
@@ -14,4 +15,8 @@ function createMapStateToProps() {
   );
 }
 
-export default connect(createMapStateToProps)(BlacklistRow);
+const mapStateToProps = {
+  onDeletePress: deleteBlacklist
+};
+
+export default connect(createMapStateToProps, mapStateToProps)(BlacklistRow);
