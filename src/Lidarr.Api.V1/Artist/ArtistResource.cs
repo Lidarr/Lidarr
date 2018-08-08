@@ -96,7 +96,7 @@ namespace Lidarr.Api.V1.Artist
 
                 CleanName = model.CleanName,
                 ForeignArtistId = model.ForeignArtistId,
-                // Root folder path needs to be calculated from the series path
+                // Root folder path is now calculated from the artist path
                 // RootFolderPath = model.RootFolderPath,
                 Genres = model.Genres,
                 Tags = model.Tags,
