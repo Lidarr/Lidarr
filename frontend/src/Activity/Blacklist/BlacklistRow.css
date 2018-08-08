@@ -11,12 +11,8 @@
   width: 80px;
 }
 
-.details {
+.actions {
   composes: cell from 'Components/Table/Cells/TableRowCell.css';
 
-  width: 60px;
-}
-
-.blacklistIcon {
-  width: 20px !important;
+  width: 70px;
 }

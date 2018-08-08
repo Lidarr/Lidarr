@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { icons } from 'Helpers/Props';
+import { icons, kinds } from 'Helpers/Props';
 import IconButton from 'Components/Link/IconButton';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
 import TableRow from 'Components/Table/TableRow';
@@ -35,10 +35,6 @@ class BlacklistRow extends Component {
     this.setState({ isDetailsModalOpen: false });
   }
 
-  onDeletePress = () => {
-    this.props.onDeletePress({ id: this.props.id });
-  }
-
   //
   // Render
 
@@ -52,7 +48,8 @@ class BlacklistRow extends Component {
       protocol,
       indexer,
       message,
-      columns
+      columns,
+      onRemovePress
     } = this.props;
 
     return (
@@ -133,21 +130,20 @@ class BlacklistRow extends Component {
               );
             }
 
-            if (name === 'details') {
+            if (name === 'actions') {
               return (
                 <TableRowCell
                   key={name}
-                  className={styles.details}
+                  className={styles.actions}
                 >
                   <IconButton
-                    className={styles.blacklistIcon}
                     name={icons.INFO}
                     onPress={this.onDetailsPress}
                   />
                   <IconButton
-                    className={styles.blacklistIcon}
-                    name={icons.DELETE}
-                    onPress={this.onDeletePress}
+                    name={icons.REMOVE}
+                    kind={kinds.DANGER}
+                    onPress={onRemovePress}
                   />
                 </TableRowCell>
               );
@@ -182,7 +178,7 @@ BlacklistRow.propTypes = {
   indexer: PropTypes.string,
   message: PropTypes.string,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onDeletePress: PropTypes.func.isRequired
+  onRemovePress: PropTypes.func.isRequired
 };
 
 export default BlacklistRow;

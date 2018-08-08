@@ -341,7 +341,7 @@ class ArtistIndex extends Component {
             }
 
             {
-              !error && isPopulated && !totalItems &&
+              !error && isPopulated && !items.length &&
                 <NoArtist totalItems={totalItems} />
             }
           </PageContentBodyConnector>

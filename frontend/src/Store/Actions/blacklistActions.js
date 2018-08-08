@@ -4,8 +4,8 @@ import { createThunk, handleThunks } from 'Store/thunks';
 import { sortDirections } from 'Helpers/Props';
 import createSetTableOptionReducer from './Creators/Reducers/createSetTableOptionReducer';
 import createHandleActions from './Creators/createHandleActions';
-import createServerSideCollectionHandlers from './Creators/createServerSideCollectionHandlers';
 import createRemoveItemHandler from './Creators/createRemoveItemHandler';
+import createServerSideCollectionHandlers from './Creators/createServerSideCollectionHandlers';
 
 //
 // Variables
@@ -60,8 +60,8 @@ export const defaultState = {
       isVisible: false
     },
     {
-      name: 'details',
-      columnLabel: 'Details',
+      name: 'actions',
+      columnLabel: 'Actions',
       isVisible: true,
       isModifiable: false
     }
@@ -78,7 +78,6 @@ export const persistState = [
 //
 // Action Types
 
-export const DELETE_BLACKLIST = 'blacklist/deleteBlacklist';
 export const FETCH_BLACKLIST = 'blacklist/fetchBlacklist';
 export const GOTO_FIRST_BLACKLIST_PAGE = 'blacklist/gotoBlacklistFirstPage';
 export const GOTO_PREVIOUS_BLACKLIST_PAGE = 'blacklist/gotoBlacklistPreviousPage';
@@ -87,11 +86,11 @@ export const GOTO_LAST_BLACKLIST_PAGE = 'blacklist/gotoBlacklistLastPage';
 export const GOTO_BLACKLIST_PAGE = 'blacklist/gotoBlacklistPage';
 export const SET_BLACKLIST_SORT = 'blacklist/setBlacklistSort';
 export const SET_BLACKLIST_TABLE_OPTION = 'blacklist/setBlacklistTableOption';
+export const REMOVE_FROM_BLACKLIST = 'blacklist/removeFromBlacklist';
 
 //
 // Action Creators
 
-export const deleteBlacklist = createThunk(DELETE_BLACKLIST);
 export const fetchBlacklist = createThunk(FETCH_BLACKLIST);
 export const gotoBlacklistFirstPage = createThunk(GOTO_FIRST_BLACKLIST_PAGE);
 export const gotoBlacklistPreviousPage = createThunk(GOTO_PREVIOUS_BLACKLIST_PAGE);
@@ -100,6 +99,7 @@ export const gotoBlacklistLastPage = createThunk(GOTO_LAST_BLACKLIST_PAGE);
 export const gotoBlacklistPage = createThunk(GOTO_BLACKLIST_PAGE);
 export const setBlacklistSort = createThunk(SET_BLACKLIST_SORT);
 export const setBlacklistTableOption = createAction(SET_BLACKLIST_TABLE_OPTION);
+export const removeFromBlacklist = createThunk(REMOVE_FROM_BLACKLIST);
 
 //
 // Action Handlers
@@ -119,7 +119,7 @@ export const actionHandlers = handleThunks({
       [serverSideCollectionHandlers.SORT]: SET_BLACKLIST_SORT
     }),
 
-  [DELETE_BLACKLIST]: createRemoveItemHandler(section, '/blacklist')
+  [REMOVE_FROM_BLACKLIST]: createRemoveItemHandler(section, '/blacklist')
 });
 
 //

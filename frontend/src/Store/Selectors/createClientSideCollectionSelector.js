@@ -94,10 +94,10 @@ function sort(items, state) {
   return _.orderBy(items, clauses, orders);
 }
 
-function createClientSideCollectionSelector() {
+function createClientSideCollectionSelector(section, uiSection) {
   return createSelector(
-    (state, { section }) => _.get(state, section),
-    (state, { uiSection }) => _.get(state, uiSection),
+    (state) => _.get(state, section),
+    (state) => _.get(state, uiSection),
     (sectionState, uiSectionState = {}) => {
       const state = Object.assign({}, sectionState, uiSectionState);
 

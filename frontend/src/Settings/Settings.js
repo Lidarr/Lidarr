@@ -109,7 +109,7 @@ function Settings() {
         </Link>
 
         <div className={styles.summary}>
-          Manage profile, restriction, and notification tags
+          Manage artist, profile, restriction, and notification tags
         </div>
 
         <Link
