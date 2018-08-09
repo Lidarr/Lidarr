@@ -6496,9 +6496,9 @@ react-tabs@2.2.2:
     classnames "^2.2.0"
     prop-types "^15.5.0"
 
-react-tether@0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/react-tether/-/react-tether-0.6.1.tgz#de64dd81a5e40053a9f275c4fef0beb0877b3e4e"
+react-tether@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-tether/-/react-tether-1.0.1.tgz#6e5173764d4f9b8bef6d1b20ff51972909674942"
   dependencies:
     prop-types "^15.5.8"
     tether "^1.4.3"

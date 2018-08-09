@@ -93,7 +93,7 @@
     "react-router-redux": "5.0.0-alpha.9",
     "react-slider": "0.11.2",
     "react-tabs": "2.2.2",
-    "react-tether": "0.6.1",
+    "react-tether": "1.0.1",
     "react-text-truncate": "0.12.1",
     "react-virtualized": "9.18.0",
     "redux": "4.0.0",
