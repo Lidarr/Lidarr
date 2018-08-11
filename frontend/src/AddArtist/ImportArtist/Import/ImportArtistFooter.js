@@ -24,16 +24,14 @@ class ImportArtistFooter extends Component {
       defaultMonitor,
       defaultQualityProfileId,
       defaultLanguageProfileId,
-      defaultMetadataProfileId,
-      defaultAlbumFolder
+      defaultMetadataProfileId
     } = props;
 
     this.state = {
       monitor: defaultMonitor,
       qualityProfileId: defaultQualityProfileId,
       languageProfileId: defaultLanguageProfileId,
-      metadataProfileId: defaultMetadataProfileId,
-      albumFolder: defaultAlbumFolder
+      metadataProfileId: defaultMetadataProfileId
     };
   }
 
@@ -43,20 +41,17 @@ class ImportArtistFooter extends Component {
       defaultQualityProfileId,
       defaultLanguageProfileId,
       defaultMetadataProfileId,
-      defaultAlbumFolder,
       isMonitorMixed,
       isQualityProfileIdMixed,
       isLanguageProfileIdMixed,
-      isMetadataProfileIdMixed,
-      isAlbumFolderMixed
+      isMetadataProfileIdMixed
     } = this.props;
 
     const {
       monitor,
       qualityProfileId,
       languageProfileId,
-      metadataProfileId,
-      albumFolder
+      metadataProfileId
     } = this.state;
 
     const newState = {};
@@ -83,12 +78,6 @@ class ImportArtistFooter extends Component {
       newState.metadataProfileId = MIXED;
     } else if (!isMetadataProfileIdMixed && metadataProfileId !== defaultMetadataProfileId) {
       newState.metadataProfileId = defaultMetadataProfileId;
-    }
-
-    if (isAlbumFolderMixed && albumFolder != null) {
-      newState.albumFolder = null;
-    } else if (!isAlbumFolderMixed && albumFolder !== defaultAlbumFolder) {
-      newState.albumFolder = defaultAlbumFolder;
     }
 
     if (!_.isEmpty(newState)) {
@@ -126,8 +115,7 @@ class ImportArtistFooter extends Component {
       monitor,
       qualityProfileId,
       languageProfileId,
-      metadataProfileId,
-      albumFolder
+      metadataProfileId
     } = this.state;
 
     return (
@@ -198,19 +186,6 @@ class ImportArtistFooter extends Component {
             </div>
         }
 
-        <div className={styles.inputContainer}>
-          <div className={styles.label}>
-            Album Folder
-          </div>
-
-          <CheckInput
-            name="albumFolder"
-            value={albumFolder}
-            isDisabled={!selectedCount}
-            onChange={this.onInputChange}
-          />
-        </div>
-
         <div>
           <div className={styles.label}>
             &nbsp;
@@ -265,12 +240,10 @@ ImportArtistFooter.propTypes = {
   defaultQualityProfileId: PropTypes.number,
   defaultLanguageProfileId: PropTypes.number,
   defaultMetadataProfileId: PropTypes.number,
-  defaultAlbumFolder: PropTypes.bool.isRequired,
   isMonitorMixed: PropTypes.bool.isRequired,
   isQualityProfileIdMixed: PropTypes.bool.isRequired,
   isLanguageProfileIdMixed: PropTypes.bool.isRequired,
   isMetadataProfileIdMixed: PropTypes.bool.isRequired,
-  isAlbumFolderMixed: PropTypes.bool.isRequired,
   showLanguageProfile: PropTypes.bool.isRequired,
   showMetadataProfile: PropTypes.bool.isRequired,
   onInputChange: PropTypes.func.isRequired,

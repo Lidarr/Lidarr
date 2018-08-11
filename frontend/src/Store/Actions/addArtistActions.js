@@ -35,7 +35,6 @@ export const defaultState = {
     qualityProfileId: 0,
     languageProfileId: 0,
     metadataProfileId: 0,
-    albumFolder: true,
     tags: []
   }
 };

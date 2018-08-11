@@ -81,13 +81,6 @@ function ImportArtistHeader(props) {
       }
 
       <VirtualTableHeaderCell
-        className={styles.albumFolder}
-        name="albumFolder"
-      >
-        Album Folder
-      </VirtualTableHeaderCell>
-
-      <VirtualTableHeaderCell
         className={styles.artist}
         name="artist"
       >

@@ -68,7 +68,6 @@ class AddNewArtistModalContent extends Component {
       qualityProfileId,
       languageProfileId,
       metadataProfileId,
-      albumFolder,
       tags,
       showLanguageProfile,
       showMetadataProfile,
@@ -176,17 +175,6 @@ class AddNewArtistModalContent extends Component {
                 </FormGroup>
 
                 <FormGroup>
-                  <FormLabel>Album Folder</FormLabel>
-
-                  <FormInputGroup
-                    type={inputTypes.CHECK}
-                    name="albumFolder"
-                    onChange={onInputChange}
-                    {...albumFolder}
-                  />
-                </FormGroup>
-
-                <FormGroup>
                   <FormLabel>Tags</FormLabel>
 
                   <FormInputGroup
@@ -241,7 +229,6 @@ AddNewArtistModalContent.propTypes = {
   qualityProfileId: PropTypes.object,
   languageProfileId: PropTypes.object,
   metadataProfileId: PropTypes.object,
-  albumFolder: PropTypes.object.isRequired,
   tags: PropTypes.object.isRequired,
   showLanguageProfile: PropTypes.bool.isRequired,
   showMetadataProfile: PropTypes.bool.isRequired,

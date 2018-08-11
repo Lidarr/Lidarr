@@ -58,11 +58,10 @@ class ImportArtistRowConnector extends Component {
 
     const {
       items,
-      monitor,
-      albumFolder
+      monitor
     } = this.props;
 
-    if (!items || !monitor || !albumFolder == null) {
+    if (!items || !monitor) {
       return null;
     }
 
@@ -80,7 +79,6 @@ ImportArtistRowConnector.propTypes = {
   rootFolderId: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired,
   monitor: PropTypes.string,
-  albumFolder: PropTypes.bool,
   items: PropTypes.arrayOf(PropTypes.object),
   queueLookupArtist: PropTypes.func.isRequired,
   setImportArtistValue: PropTypes.func.isRequired

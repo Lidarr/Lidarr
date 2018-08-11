@@ -70,7 +70,6 @@ class EditArtistModalContent extends Component {
 
     const {
       monitored,
-      albumFolder,
       qualityProfileId,
       languageProfileId,
       metadataProfileId,
@@ -96,18 +95,6 @@ class EditArtistModalContent extends Component {
                 name="monitored"
                 helpText="Download monitored albums from this artist"
                 {...monitored}
-                onChange={onInputChange}
-              />
-            </FormGroup>
-
-            <FormGroup>
-              <FormLabel>Use Album Folder</FormLabel>
-
-              <FormInputGroup
-                type={inputTypes.CHECK}
-                name="albumFolder"
-                helpText="Sort tracks into album folders"
-                {...albumFolder}
                 onChange={onInputChange}
               />
             </FormGroup>

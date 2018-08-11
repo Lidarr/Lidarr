@@ -49,10 +49,6 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackFileMovingServiceTests
                   .Setup(s => s.BuildTrackFilePath(It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<string>(), It.IsAny<string>()))
                   .Returns(@"C:\Test\Music\Artist\Album\File Name.mp3".AsOsAgnostic());
 
-            Mocker.GetMock<IBuildFileNames>()
-                  .Setup(s => s.BuildAlbumPath(It.IsAny<Artist>(), It.IsAny<Album>()))
-                  .Returns(@"C:\Test\Music\Artist\Album".AsOsAgnostic());
-
             var rootFolder = @"C:\Test\Music\".AsOsAgnostic();
             Mocker.GetMock<IDiskProvider>()
                   .Setup(s => s.FolderExists(rootFolder))

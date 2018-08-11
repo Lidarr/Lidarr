@@ -20,13 +20,6 @@ namespace NzbDrone.Core.Organizer
             ruleBuilder.SetValidator(new NotEmptyValidator(null));
             return ruleBuilder.SetValidator(new RegularExpressionValidator(FileNameBuilder.ArtistNameRegex)).WithMessage("Must contain Artist name");
         }
-
-        public static IRuleBuilderOptions<T, string> ValidAlbumFolderFormat<T>(this IRuleBuilder<T, string> ruleBuilder)
-        {
-            ruleBuilder.SetValidator(new NotEmptyValidator(null));
-            return ruleBuilder.SetValidator(new RegularExpressionValidator(FileNameBuilder.AlbumTitleRegex)).WithMessage("Must contain Album title");
-                              //.SetValidator(new RegularExpressionValidator(FileNameBuilder.ReleaseDateRegex)).WithMessage("Must contain Release year");
-        }
     }
 
     public class ValidStandardTrackFormatValidator : PropertyValidator

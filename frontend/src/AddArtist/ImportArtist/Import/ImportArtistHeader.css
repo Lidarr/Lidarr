@@ -20,13 +20,6 @@
   min-width: 170px;
 }
 
-.albumFolder {
-  composes: headerCell from 'Components/Table/VirtualTableHeaderCell.css';
-
-  flex: 0 1 150px;
-  min-width: 120px;
-}
-
 .artist {
   composes: headerCell from 'Components/Table/VirtualTableHeaderCell.css';
 

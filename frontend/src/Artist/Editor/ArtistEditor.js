@@ -49,12 +49,6 @@ function getColumns(showLanguageProfile, showMetadataProfile) {
       isVisible: showMetadataProfile
     },
     {
-      name: 'albumFolder',
-      label: 'Album Folder',
-      isSortable: true,
-      isVisible: true
-    },
-    {
       name: 'path',
       label: 'Path',
       isSortable: true,

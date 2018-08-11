@@ -16,7 +16,6 @@ function ImportArtistRow(props) {
     qualityProfileId,
     languageProfileId,
     metadataProfileId,
-    albumFolder,
     selectedArtist,
     isExistingArtist,
     showLanguageProfile,
@@ -80,15 +79,6 @@ function ImportArtistRow(props) {
         />
       </VirtualTableRowCell>
 
-      <VirtualTableRowCell className={styles.albumFolder}>
-        <FormInputGroup
-          type={inputTypes.CHECK}
-          name="albumFolder"
-          value={albumFolder}
-          onChange={onInputChange}
-        />
-      </VirtualTableRowCell>
-
       <VirtualTableRowCell className={styles.artist}>
         <ImportArtistSelectArtistConnector
           id={id}
@@ -106,7 +96,6 @@ ImportArtistRow.propTypes = {
   qualityProfileId: PropTypes.number.isRequired,
   languageProfileId: PropTypes.number.isRequired,
   metadataProfileId: PropTypes.number.isRequired,
-  albumFolder: PropTypes.bool.isRequired,
   selectedArtist: PropTypes.object,
   isExistingArtist: PropTypes.bool.isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,

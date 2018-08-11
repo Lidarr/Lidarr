@@ -1054,7 +1054,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Notifications\Xbmc\XbmcSettings.cs" />
-    <Compile Include="Organizer\BasicNamingConfig.cs" />
     <Compile Include="Organizer\EpisodeSortingType.cs" />
     <Compile Include="Organizer\Exception.cs" />
     <Compile Include="Organizer\FileNameBuilder.cs" />

@@ -16,7 +16,6 @@ function createImportArtistItemSelector() {
       return {
         defaultMonitor: addArtist.defaults.monitor,
         defaultQualityProfileId: addArtist.defaults.qualityProfileId,
-        defaultAlbumFolder: addArtist.defaults.albumFolder,
         ...item,
         isExistingArtist
       };

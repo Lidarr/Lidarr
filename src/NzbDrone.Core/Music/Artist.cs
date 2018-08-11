@@ -36,7 +36,6 @@ namespace NzbDrone.Core.Music
         public string Disambiguation { get; set; }
         public string ArtistType { get; set; }
         public bool Monitored { get; set; }
-        public bool AlbumFolder { get; set; }
         public DateTime? LastInfoSync { get; set; }
         public DateTime? LastDiskSync { get; set; }
         public ArtistStatusType Status { get; set; }
@@ -81,7 +80,6 @@ namespace NzbDrone.Core.Music
             AddOptions = otherArtist.AddOptions;
             RootFolderPath = otherArtist.RootFolderPath;
             Monitored = otherArtist.Monitored;
-            AlbumFolder = otherArtist.AlbumFolder;
 
         }
     }

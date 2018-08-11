@@ -88,8 +88,7 @@ namespace Lidarr.Api.V1.Artist
                 LanguageProfileId = model.LanguageProfileId,
                 MetadataProfileId = model.MetadataProfileId,
                 Links = model.Links,
-
-                AlbumFolder = model.AlbumFolder,
+                
                 Monitored = model.Monitored,
 
                 LastInfoSync = model.LastInfoSync,
@@ -130,8 +129,7 @@ namespace Lidarr.Api.V1.Artist
                 LanguageProfileId = resource.LanguageProfileId,
                 MetadataProfileId = resource.MetadataProfileId,
                 Links = resource.Links,
-
-                AlbumFolder = resource.AlbumFolder,
+                
                 Monitored = resource.Monitored,
 
                 LastInfoSync = resource.LastInfoSync,

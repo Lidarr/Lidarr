@@ -13,14 +13,6 @@ import styles from './ArtistEditorRow.css';
 class ArtistEditorRow extends Component {
 
   //
-  // Listeners
-
-  onAlbumFolderChange = () => {
-    // Mock handler to satisfy `onChange` being required for `CheckInput`.
-    //
-  }
-
-  //
   // Render
 
   render() {
@@ -33,7 +25,6 @@ class ArtistEditorRow extends Component {
       languageProfile,
       metadataProfile,
       qualityProfile,
-      albumFolder,
       path,
       tags,
       columns,
@@ -79,15 +70,6 @@ class ArtistEditorRow extends Component {
             </TableRowCell>
         }
 
-        <TableRowCell className={styles.albumFolder}>
-          <CheckInput
-            name="albumFolder"
-            value={albumFolder}
-            isDisabled={true}
-            onChange={this.onAlbumFolderChange}
-          />
-        </TableRowCell>
-
         <TableRowCell>
           {path}
         </TableRowCell>
@@ -111,7 +93,6 @@ ArtistEditorRow.propTypes = {
   languageProfile: PropTypes.object.isRequired,
   metadataProfile: PropTypes.object.isRequired,
   qualityProfile: PropTypes.object.isRequired,
-  albumFolder: PropTypes.bool.isRequired,
   path: PropTypes.string.isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,

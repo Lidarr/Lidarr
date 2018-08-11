@@ -8,15 +8,13 @@ namespace NzbDrone.Core.Organizer
         {
             RenameTracks = false,
             ReplaceIllegalCharacters = true,
-            StandardTrackFormat = "{Artist Name} - {Album Title} - {track:00} - {Track Title}",
-            ArtistFolderFormat = "{Artist Name}",
-            AlbumFolderFormat = "{Album Title} ({Release Year})"
+            StandardTrackFormat = "{Album Title} [{Release Year}]/Disc {medium:00}/{Artist Name} - {Album Title} - {track:00} - {Track Title}",
+            ArtistFolderFormat = "{Artist Name}"
         };
 
         public bool RenameTracks { get; set; }
         public bool ReplaceIllegalCharacters { get; set; }
         public string StandardTrackFormat { get; set; }
         public string ArtistFolderFormat { get; set; }
-        public string AlbumFolderFormat { get; set; }
     }
 }

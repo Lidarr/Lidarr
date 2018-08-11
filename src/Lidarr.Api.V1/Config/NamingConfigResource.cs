@@ -8,7 +8,6 @@ namespace Lidarr.Api.V1.Config
         public bool ReplaceIllegalCharacters { get; set; }
         public string StandardTrackFormat { get; set; }
         public string ArtistFolderFormat { get; set; }
-        public string AlbumFolderFormat { get; set; }
         public bool IncludeArtistName { get; set; }
         public bool IncludeAlbumTitle { get; set; }
         public bool IncludeQuality { get; set; }

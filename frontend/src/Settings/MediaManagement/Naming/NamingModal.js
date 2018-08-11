@@ -46,6 +46,10 @@ class NamingModal extends Component {
     this._selectionEnd = selectionEnd;
   }
 
+  onSubDirPress = () => {
+    this.onOptionPress({ isFullFilename: false, tokenValue: '/' });
+  }
+
   onOptionPress = ({ isFullFilename, tokenValue }) => {
     const {
       name,
@@ -134,6 +138,8 @@ class NamingModal extends Component {
 
       { token: '{Album CleanTitle}', example: 'Album Title' },
 
+      { token: '{Album PrimaryType}', example: 'Primary Album Type' },
+
       { token: '{Album Type}', example: 'Album Type' },
 
       { token: '{Album Disambiguation}', example: 'Disambiguation' }
@@ -196,6 +202,15 @@ class NamingModal extends Component {
 
           <ModalBody>
             <div className={styles.namingSelectContainer}>
+              {
+                track &&
+                  <Button
+                    onPress={this.onSubDirPress}
+                  >
+                    Add Sub Directory
+                  </Button>
+              }
+
               <SelectInput
                 className={styles.namingSelect}
                 name="separator"

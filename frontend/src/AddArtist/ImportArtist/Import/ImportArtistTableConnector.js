@@ -16,7 +16,6 @@ function createMapStateToProps() {
         defaultQualityProfileId: addArtist.defaults.qualityProfileId,
         defaultLanguageProfileId: addArtist.defaults.languageProfileId,
         defaultMetadataProfileId: addArtist.defaults.metadataProfileId,
-        defaultAlbumFolder: addArtist.defaults.albumFolder,
         items: importArtist.items,
         isSmallScreen: dimensions.isSmallScreen,
         allArtists

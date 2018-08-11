@@ -341,7 +341,6 @@
     <Compile Include="NotificationTests\Xbmc\Json\UpdateFixture.cs" />
     <Compile Include="NotificationTests\Xbmc\OnDownloadFixture.cs" />
     <Compile Include="OrganizerTests\BuildFilePathFixture.cs" />
-    <Compile Include="OrganizerTests\GetAlbumFolderFixture.cs" />
     <Compile Include="OrganizerTests\FileNameBuilderTests\FileNameBuilderFixture.cs" />
     <Compile Include="OrganizerTests\GetArtistFolderFixture.cs" />
     <Compile Include="ParserTests\ExtendedQualityParserRegex.cs" />

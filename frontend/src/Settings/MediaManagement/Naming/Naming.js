@@ -49,16 +49,6 @@ class Naming extends Component {
     });
   }
 
-  onAlbumFolderNamingModalOpenClick = () => {
-    this.setState({
-      isNamingModalOpen: true,
-      namingModalOptions: {
-        name: 'albumFolderFormat',
-        album: true
-      }
-    });
-  }
-
   onNamingModalClose = () => {
     this.setState({ isNamingModalOpen: false });
   }
@@ -89,8 +79,6 @@ class Naming extends Component {
     const standardTrackFormatErrors = [];
     const artistFolderFormatHelpTexts = [];
     const artistFolderFormatErrors = [];
-    const albumFolderFormatHelpTexts = [];
-    const albumFolderFormatErrors = [];
 
     if (examplesPopulated) {
       if (examples.singleTrackExample) {
@@ -103,12 +91,6 @@ class Naming extends Component {
         artistFolderFormatHelpTexts.push(`Example: ${examples.artistFolderExample}`);
       } else {
         artistFolderFormatErrors.push({ message: 'Invalid Format' });
-      }
-
-      if (examples.albumFolderExample) {
-        albumFolderFormatHelpTexts.push(`Example: ${examples.albumFolderExample}`);
-      } else {
-        albumFolderFormatErrors.push({ message: 'Invalid Format' });
       }
     }
 
@@ -187,21 +169,6 @@ class Naming extends Component {
                   {...settings.artistFolderFormat}
                   helpTexts={['Only used when adding a new artist', ...artistFolderFormatHelpTexts]}
                   errors={[...artistFolderFormatErrors, ...settings.artistFolderFormat.errors]}
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <FormLabel>Album Folder Format</FormLabel>
-
-                <FormInputGroup
-                  inputClassName={styles.namingInput}
-                  type={inputTypes.TEXT}
-                  name="albumFolderFormat"
-                  buttons={<FormInputButton onPress={this.onAlbumFolderNamingModalOpenClick}>?</FormInputButton>}
-                  onChange={onInputChange}
-                  {...settings.albumFolderFormat}
-                  helpTexts={albumFolderFormatHelpTexts}
-                  errors={[...albumFolderFormatErrors, ...settings.albumFolderFormat.errors]}
                 />
               </FormGroup>
 

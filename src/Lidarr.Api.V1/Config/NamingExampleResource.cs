@@ -20,8 +20,7 @@ namespace Lidarr.Api.V1.Config
                 RenameTracks = model.RenameTracks,
                 ReplaceIllegalCharacters = model.ReplaceIllegalCharacters,
                 StandardTrackFormat = model.StandardTrackFormat,
-                ArtistFolderFormat = model.ArtistFolderFormat,
-                AlbumFolderFormat = model.AlbumFolderFormat
+                ArtistFolderFormat = model.ArtistFolderFormat
                 //IncludeSeriesTitle
                 //IncludeEpisodeTitle
                 //IncludeQuality
@@ -29,16 +28,6 @@ namespace Lidarr.Api.V1.Config
                 //Separator
                 //NumberStyle
             };
-        }
-
-        public static void AddToResource(this BasicNamingConfig basicNamingConfig, NamingConfigResource resource)
-        {
-            resource.IncludeArtistName = basicNamingConfig.IncludeArtistName;
-            resource.IncludeAlbumTitle = basicNamingConfig.IncludeAlbumTitle;
-            resource.IncludeQuality = basicNamingConfig.IncludeQuality;
-            resource.ReplaceSpaces = basicNamingConfig.ReplaceSpaces;
-            resource.Separator = basicNamingConfig.Separator;
-            resource.NumberStyle = basicNamingConfig.NumberStyle;
         }
 
         public static NamingConfig ToModel(this NamingConfigResource resource)
@@ -51,8 +40,7 @@ namespace Lidarr.Api.V1.Config
                 ReplaceIllegalCharacters = resource.ReplaceIllegalCharacters,
                 StandardTrackFormat = resource.StandardTrackFormat,
 
-                ArtistFolderFormat = resource.ArtistFolderFormat,
-                AlbumFolderFormat = resource.AlbumFolderFormat
+                ArtistFolderFormat = resource.ArtistFolderFormat
             };
         }
     }
