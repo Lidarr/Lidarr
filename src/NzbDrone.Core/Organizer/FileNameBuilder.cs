@@ -245,6 +245,7 @@ namespace NzbDrone.Core.Organizer
 
             var audioCodec = MediaInfoFormatter.FormatAudioCodec(trackFile.MediaInfo);
             var audioChannels = MediaInfoFormatter.FormatAudioChannels(trackFile.MediaInfo);
+            var audioBitrate = MediaInfoFormatter.FormatAudioBitrate(trackFile.MediaInfo);
 
             var mediaInfoAudioLanguages = GetLanguagesToken(trackFile.MediaInfo.AudioLanguages);
             if (!mediaInfoAudioLanguages.IsNullOrWhiteSpace())
@@ -270,6 +271,8 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{MediaInfo Audio}"] = m => audioCodec;
             tokenHandlers["{MediaInfo AudioCodec}"] = m => audioCodec;
             tokenHandlers["{MediaInfo AudioChannels}"] = m => audioChannelsFormatted;
+            tokenHandlers["{MediaInfo AudioLanguages}"] = m => mediaInfoAudioLanguages;
+            tokenHandlers["{MediaInfo AudioBitrate}"] = m => audioBitrate;
 
             tokenHandlers["{MediaInfo Simple}"] = m => $"{audioCodec}";
 

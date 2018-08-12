@@ -69,9 +69,10 @@ namespace NzbDrone.Core.Organizer
                 VideoCodec = "AVC",
                 VideoBitDepth = 8,
                 AudioFormat = "FLAC",
-                AudioChannels = 6,
+                AudioChannels = 2,
                 AudioChannelPositions = "3/2/0.1",
                 AudioLanguages = "English",
+                AudioBitrate = 1141000,
                 Subtitles = "English/German"
             };
 
