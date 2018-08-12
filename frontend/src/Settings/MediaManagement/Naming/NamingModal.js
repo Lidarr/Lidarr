@@ -138,8 +138,6 @@ class NamingModal extends Component {
 
       { token: '{Album CleanTitle}', example: 'Album Title' },
 
-      { token: '{Album PrimaryType}', example: 'Primary Album Type' },
-
       { token: '{Album Type}', example: 'Album Type' },
 
       { token: '{Album Disambiguation}', example: 'Disambiguation' }

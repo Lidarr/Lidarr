@@ -189,16 +189,7 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{Album Title}"] = m => album.Title;
             tokenHandlers["{Album CleanTitle}"] = m => CleanTitle(album.Title);
             tokenHandlers["{Album TitleThe}"] = m => TitleThe(album.Title);
-            tokenHandlers["{Album PrimaryType}"] = m => album.AlbumType;
-
-            if (album.SecondaryTypes.Any())
-            {
-                tokenHandlers["{Album Type}"] = m => album.SecondaryTypes.First().Name;
-            }
-            else
-            {
-                tokenHandlers["{Album Type}"] = m => album.AlbumType;
-            }
+            tokenHandlers["{Album Type}"] = m => album.AlbumType;
 
             if (album.Disambiguation != null)
             {

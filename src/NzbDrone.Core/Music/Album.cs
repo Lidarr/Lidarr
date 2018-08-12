@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Music
             Media = new List<Medium>();
             Releases = new List<AlbumRelease>();
             CurrentRelease = new AlbumRelease();
+            SecondaryTypes = new List<SecondaryAlbumType>();
             Ratings = new Ratings();
         }
 
