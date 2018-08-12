@@ -82,9 +82,9 @@ class Naming extends Component {
 
     if (examplesPopulated) {
       if (examples.singleTrackExample) {
-        standardTrackFormatHelpTexts.push(`Single Track: ${examples.singleTrackExample}`);
+        standardTrackFormatHelpTexts.push(`Single Track Example: ${examples.singleTrackExample}.flac`);
       } else {
-        standardTrackFormatErrors.push({ message: 'Single Track: Invalid Format' });
+        standardTrackFormatErrors.push({ message: 'Single Track Example: Invalid Format' });
       }
 
       if (examples.artistFolderExample) {
