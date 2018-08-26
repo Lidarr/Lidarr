@@ -146,6 +146,7 @@ namespace NzbDrone.Core.Test.ParserTests
         }
         
         [TestCase("Stevie Ray Vaughan Discography (1981-1987) [APE]", null, 0)]
+        [TestCase("Brain Ape - Rig it [2014][ape]", null, 0)]
         [TestCase("", "Monkey's Audio", 0)]
         public void should_parse_ape_quality(string title, string desc, int bitrate)
         {
