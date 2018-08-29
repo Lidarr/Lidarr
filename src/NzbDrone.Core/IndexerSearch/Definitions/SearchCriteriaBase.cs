@@ -13,9 +13,6 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         private static readonly Regex NonWord = new Regex(@"[\W]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex BeginningThe = new Regex(@"^the\s", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        [System.Obsolete("Sonarr TV Stuff -- Shouldn't be needed for Lidarr")]
-        public List<string> SceneTitles { get; set; }
-
         public virtual bool MonitoredEpisodesOnly { get; set; }
         public virtual bool UserInvokedSearch { get; set; }
         public virtual bool InteractiveSearch { get; set; }
@@ -24,7 +21,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public List<Album> Albums { get; set; }
         public List<Track> Tracks { get; set; }
 
-        public List<string> QueryTitles => SceneTitles.Select(GetQueryTitle).ToList();
+        public string ArtistQuery => GetQueryTitle(Artist.Name);
 
         public static string GetQueryTitle(string title)
         {
@@ -39,7 +36,9 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
             //remove any repeating +s
             cleanTitle = Regex.Replace(cleanTitle, @"\+{2,}", "+");
             cleanTitle = cleanTitle.RemoveAccent();
-            return cleanTitle.Trim('+', ' ');
+            cleanTitle = cleanTitle.Trim('+', ' ');
+
+            return cleanTitle.Length == 0 ? title : cleanTitle;
         }
     }
 }
