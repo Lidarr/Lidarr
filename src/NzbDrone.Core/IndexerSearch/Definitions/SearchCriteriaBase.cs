@@ -29,7 +29,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
 
             var cleanTitle = BeginningThe.Replace(title, string.Empty);
 
-            cleanTitle = cleanTitle.Replace("&", "and");
+            cleanTitle = cleanTitle.Replace(" & ", " ");
             cleanTitle = SpecialCharacter.Replace(cleanTitle, "");
             cleanTitle = NonWord.Replace(cleanTitle, "+");
 
