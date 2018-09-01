@@ -11,6 +11,7 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
     public class AlbumSearchDefinitionFixture : CoreTest<AlbumSearchCriteria>
     {
         [TestCase("Mötley Crüe", "Motley+Crue")]
+        [TestCase("방탄소년단", "방탄소년단")]
         public void should_replace_some_special_characters_artist(string artist, string expected)
         {
             Subject.Artist = new Artist { Name = artist };
@@ -19,6 +20,7 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
 
         [TestCase("…and Justice for All", "and+Justice+for+All")]
         [TestCase("American III: Solitary Man", "American+III+Solitary+Man")]
+        [TestCase("Sad Clowns & Hillbillies", "Sad+Clowns+Hillbillies")]
         public void should_replace_some_special_characters(string album, string expected)
         {
             Subject.AlbumTitle = album;
