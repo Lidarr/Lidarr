@@ -21,6 +21,7 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
         [TestCase("…and Justice for All", "and+Justice+for+All")]
         [TestCase("American III: Solitary Man", "American+III+Solitary+Man")]
         [TestCase("Sad Clowns & Hillbillies", "Sad+Clowns+Hillbillies")]
+        [TestCase("¿Quién sabe?", "Quien+sabe")]
         public void should_replace_some_special_characters(string album, string expected)
         {
             Subject.AlbumTitle = album;
