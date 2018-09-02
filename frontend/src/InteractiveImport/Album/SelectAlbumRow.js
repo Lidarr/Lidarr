@@ -6,6 +6,7 @@ import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
 import Label from 'Components/Label';
 import Link from 'Components/Link/Link';
+import styles from './SelectAlbumRow.css'
 
 function getTrackCountKind(monitored, trackFileCount, trackCount) {
   if (trackFileCount === trackCount && trackCount > 0) {
@@ -48,8 +49,9 @@ class SelectAlbumRow extends Component {
     } = statistics;
 
     return (
-
-      <TableRow>
+      <TableRow
+        onClick={this.onPress}
+        className={styles.albumRow}>
         {
           columns.map((column) => {
             const {
@@ -64,11 +66,7 @@ class SelectAlbumRow extends Component {
             if (name === 'title') {
               return (
                 <TableRowCell key={name}>
-                  <Link
-                    onPress={this.onPress}
-                  >
-                    {title}
-                  </Link>
+                  {title}
                 </TableRowCell>
               );
             }
