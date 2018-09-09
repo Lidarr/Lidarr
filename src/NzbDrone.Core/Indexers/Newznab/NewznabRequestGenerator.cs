@@ -52,13 +52,9 @@ namespace NzbDrone.Core.Indexers.Newznab
             var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
 
             if (capabilities.SupportedAudioSearchParameters != null)
-            {
                 pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "music", ""));
-            }
             else if (capabilities.SupportedSearchParameters != null)
-            {
                 pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search", ""));
-            }
 
             return pageableRequests;
         }
@@ -68,24 +64,14 @@ namespace NzbDrone.Core.Indexers.Newznab
             var pageableRequests = new IndexerPageableRequestChain();
 
             if (SupportsAudioSearch)
-            {
                 AddAudioPageableRequests(pageableRequests, searchCriteria,
-                                         string.Format("&artist={0}&album={1}",
-                                         NewsnabifyTitle(searchCriteria.ArtistQuery),
-                                         NewsnabifyTitle(searchCriteria.AlbumQuery)));
-            }
+                    NewsnabifyTitle($"&artist={searchCriteria.ArtistQuery}&album={searchCriteria.AlbumQuery}"));
 
-            if (SupportsSearch)
-            {
-                pageableRequests.AddTier();
+            if (!SupportsSearch) return pageableRequests;
 
-                pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search",
-                        string.Format("&q={0}",
-                        NewsnabifyTitle(string.Format("{0}+{1}",
-                                         searchCriteria.ArtistQuery,
-                                         searchCriteria.AlbumQuery)))));
-
-            }
+            pageableRequests.AddTier();
+            pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search",
+                NewsnabifyTitle($"&q={searchCriteria.ArtistQuery}+{searchCriteria.AlbumQuery}")));
 
             return pageableRequests;
         }
@@ -94,64 +80,44 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-
-
             if (SupportsAudioSearch)
-            {
                 AddAudioPageableRequests(pageableRequests, searchCriteria,
-                                         string.Format("&artist={0}",
-                                         NewsnabifyTitle(searchCriteria.Artist.Name)));
-            }
+                    NewsnabifyTitle($"&artist={searchCriteria.ArtistQuery}"));
 
-            if (SupportsSearch)
-            {
-                pageableRequests.AddTier();
+            if (!SupportsSearch) return pageableRequests;
 
-                pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search",
-                        string.Format("&q={0}",
-                        NewsnabifyTitle(searchCriteria.Artist.Name))));
-
-            }
+            pageableRequests.AddTier();
+            pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search",
+                NewsnabifyTitle($"&q={searchCriteria.ArtistQuery}")));
 
             return pageableRequests;
         }
 
-        private void AddAudioPageableRequests(IndexerPageableRequestChain chain, SearchCriteriaBase searchCriteria, string parameters)
+        private void AddAudioPageableRequests(IndexerPageableRequestChain chain, SearchCriteriaBase searchCriteria,
+            string parameters)
         {
-                chain.AddTier();
-
-                chain.Add(GetPagedRequests(MaxPages, Settings.Categories, "music",
-                    string.Format("&q={0}",
-                    parameters)));
+            chain.AddTier();
+            chain.Add(GetPagedRequests(MaxPages, Settings.Categories, "music", $"&q={parameters}"));
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(int maxPages, IEnumerable<int> categories, string searchType, string parameters)
+        private IEnumerable<IndexerRequest> GetPagedRequests(int maxPages, IEnumerable<int> categories,
+            string searchType, string parameters)
         {
-            if (categories.Empty())
-            {
-                yield break;
-            }
+            if (categories.Empty()) yield break;
 
             var categoriesQuery = string.Join(",", categories.Distinct());
 
-            var baseUrl = string.Format("{0}{1}?t={2}&cat={3}&extended=1{4}", Settings.BaseUrl.TrimEnd('/'), Settings.ApiPath.TrimEnd('/'), searchType, categoriesQuery, Settings.AdditionalParameters);
+            var baseUrl =
+                $"{Settings.BaseUrl.TrimEnd('/')}{Settings.ApiPath.TrimEnd('/')}?t={searchType}&cat={categoriesQuery}&extended=1{Settings.AdditionalParameters}";
 
-            if (Settings.ApiKey.IsNotNullOrWhiteSpace())
-            {
-                baseUrl += "&apikey=" + Settings.ApiKey;
-            }
+            if (Settings.ApiKey.IsNotNullOrWhiteSpace()) baseUrl += "&apikey=" + Settings.ApiKey;
 
             if (PageSize == 0)
-            {
-                yield return new IndexerRequest(string.Format("{0}{1}", baseUrl, parameters), HttpAccept.Rss);
-            }
+                yield return new IndexerRequest($"{baseUrl}{parameters}", HttpAccept.Rss);
             else
-            {
                 for (var page = 0; page < maxPages; page++)
-                {
-                    yield return new IndexerRequest(string.Format("{0}&offset={1}&limit={2}{3}", baseUrl, page * PageSize, PageSize, parameters), HttpAccept.Rss);
-                }
-            }
+                    yield return new IndexerRequest($"{baseUrl}&offset={page * PageSize}&limit={PageSize}{parameters}",
+                        HttpAccept.Rss);
         }
 
         private static string NewsnabifyTitle(string title)
