@@ -37,6 +37,9 @@ namespace NzbDrone.Core.Indexers.Torrentleech
         [FieldDefinition(3)]
         public SeedCriteriaSettings SeedCriteria { get; } = new SeedCriteriaSettings();
 
+        [FieldDefinition(4, Type = FieldType.Number, Label = "Early Release Limit", Unit = "days", HelpText = "Time before album release date a release will be grabbed by Lidarr, empty is no limit.", Advanced = true)]
+        public int? EarlyReleaseLimit { get; set; }
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

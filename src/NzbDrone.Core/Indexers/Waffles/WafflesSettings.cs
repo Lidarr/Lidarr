@@ -40,6 +40,9 @@ namespace NzbDrone.Core.Indexers.Waffles
         [FieldDefinition(4)]
         public SeedCriteriaSettings SeedCriteria { get; } = new SeedCriteriaSettings();
 
+        [FieldDefinition(5, Type = FieldType.Number, Label = "Early Release Limit", Unit = "days", HelpText = "Time before album release date a release will be grabbed by Lidarr, empty is no limit.", Advanced = true)]
+        public int? EarlyReleaseLimit { get; set; }
+
 
         public NzbDroneValidationResult Validate()
         {

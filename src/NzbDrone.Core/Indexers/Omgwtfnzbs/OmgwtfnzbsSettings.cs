@@ -36,6 +36,9 @@ namespace NzbDrone.Core.Indexers.Omgwtfnzbs
         [FieldDefinition(2, Label = "Delay", HelpText = "Time in minutes to delay new nzbs before they appear on the RSS feed", Advanced = true)]
         public int Delay { get; set; }
 
+        [FieldDefinition(3, Type = FieldType.Number, Label = "Early Release Limit", Unit = "days", HelpText = "Time before album release date a release will be grabbed by Lidarr, empty is no limit.", Advanced = true)]
+        public int? EarlyReleaseLimit { get; set; }
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

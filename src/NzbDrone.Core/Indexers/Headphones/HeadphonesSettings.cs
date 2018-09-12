@@ -53,6 +53,9 @@ namespace NzbDrone.Core.Indexers.Headphones
         [FieldDefinition(2, Label = "Password", Type = FieldType.Password)]
         public string Password { get; set; }
 
+        [FieldDefinition(3, Type = FieldType.Number, Label = "Early Release Limit", Unit = "days", HelpText = "Time before album release date a release will be grabbed by Lidarr, empty is no limit.", Advanced = true)]
+        public int? EarlyReleaseLimit { get; set; }
+
         public virtual NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
