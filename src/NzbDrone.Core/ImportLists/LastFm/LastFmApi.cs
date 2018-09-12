@@ -10,7 +10,7 @@ namespace NzbDrone.Core.ImportLists.LastFm
 
     public class LastFmArtistResponse
     {
-        public LastFmArtistList Topartists { get; set; }
+        public LastFmArtistList TopArtists { get; set; }
     }
 
     public class LastFmArtist

@@ -30,7 +30,7 @@ namespace NzbDrone.Core.ImportLists.LastFm
                 return items;
             }
 
-            foreach (var item in jsonResponse.Topartists.Artist)
+            foreach (var item in jsonResponse.TopArtists.Artist)
             {
                 items.AddIfNotNull(new ImportListItemInfo
                 {
