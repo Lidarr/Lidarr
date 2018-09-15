@@ -78,8 +78,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 pageableRequests.AddTier();
 
                 pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search",
-                    NewsnabifyTitle($"&q={searchCriteria.ArtistQuery}+{searchCriteria.AlbumQuery}" +
-                                    (searchCriteria.DisambiguationQuery.IsNullOrWhiteSpace() ? string.Empty : $"+{searchCriteria.DisambiguationQuery}"))));
+                    NewsnabifyTitle($"&q={searchCriteria.ArtistQuery}+{searchCriteria.AlbumQuery}")));
             }
 
             return pageableRequests;
