@@ -79,21 +79,21 @@ namespace NzbDrone.Core.Music
         public Track FindTrackByTitle(int artistId, int albumId, int mediumNumber, int trackNumber, string releaseTitle)
         {
             // TODO: can replace this search mechanism with something smarter/faster/better
-            var normalizedReleaseTitle = Parser.Parser.NormalizeEpisodeTitle(releaseTitle).Replace(".", " ");
+            var normalizedReleaseTitle = Parser.Parser.NormalizeTrackTitle(releaseTitle).Replace(".", " ");
             var tracks = _trackRepository.GetTracksByMedium(albumId, mediumNumber);
 
             var matches = from track in tracks
                 //if we have a trackNumber use it
                 let trackNumCheck = (trackNumber == 0 || track.AbsoluteTrackNumber == trackNumber)
                 //if release title is longer than track title
-                let posReleaseTitle = normalizedReleaseTitle.IndexOf(Parser.Parser.NormalizeEpisodeTitle(track.Title), StringComparison.CurrentCultureIgnoreCase)
+                let posReleaseTitle = normalizedReleaseTitle.IndexOf(Parser.Parser.NormalizeTrackTitle(track.Title), StringComparison.CurrentCultureIgnoreCase)
                 //if track title is longer than release title 
-                let posTrackTitle = Parser.Parser.NormalizeEpisodeTitle(track.Title).IndexOf(normalizedReleaseTitle, StringComparison.CurrentCultureIgnoreCase)
+                let posTrackTitle = Parser.Parser.NormalizeTrackTitle(track.Title).IndexOf(normalizedReleaseTitle, StringComparison.CurrentCultureIgnoreCase)
                 where track.Title.Length > 0 && trackNumCheck && (posReleaseTitle >= 0 || posTrackTitle >= 0)
                 orderby posReleaseTitle, posTrackTitle
                 select new
                 {
-                    NormalizedLength = Parser.Parser.NormalizeEpisodeTitle(track.Title).Length,
+                    NormalizedLength = Parser.Parser.NormalizeTrackTitle(track.Title).Length,
                     Track = track
                 };
 
