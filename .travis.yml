@@ -1,8 +1,8 @@
 language: csharp
 solution: src/Lidarr.sln
 install:
-  - nvm install 8.0.0
-  - nvm use 8.0.0
+  - nvm install 8
+  - nvm use 8
 script:
   - node --version
   - ./build.sh
