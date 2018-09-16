@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Test.MusicTests.TitleMatchingTests
         [Test]
         public void should_not_find_track_in_db_by_wrong_title()
         {
-            var track = _trackService.FindTrackByTitle(1234, 43212, 1, 1, "the short title");
+            var track = _trackService.FindTrackByTitle(1234, 4321, 1, 1, "the short title");
 
             track.Should().BeNull();
         }
