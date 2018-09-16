@@ -53,6 +53,8 @@ namespace NzbDrone.Core.Test.ParserTests
         }
 
         [TestCase("Songs of Experience (Deluxe Edition)", "Songs of Experience")]
+        [TestCase("Songs of Experience (iTunes Deluxe Edition)", "Songs of Experience")]
+        [TestCase("Songs of Experience [Super Special Edition]", "Songs of Experience")]
         [TestCase("Mr. Bad Guy [Special Edition]", "Mr. Bad Guy")]
         [TestCase("Sweet Dreams (Album)", "Sweet Dreams")]
         [TestCase("Now What?! (Limited Edition)", "Now What?!")]
