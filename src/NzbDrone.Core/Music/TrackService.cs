@@ -97,7 +97,7 @@ namespace NzbDrone.Core.Music
                     Track = track
                 };
 
-            return matches.OrderByDescending(e => e.NormalizedLength).First().Track;
+            return matches.OrderByDescending(e => e.NormalizedLength).FirstOrDefault()?.Track;
         }
 
         public List<Track> TracksWithFiles(int artistId)
