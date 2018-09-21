@@ -85,7 +85,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         }
 
         [TestCase(-2)]
-        [TestCase(-2)]
+        [TestCase(-5)]
         public void should_return_true_if_publish_date_above_or_equal_to_limit(int days)
         {
             GivenPublishDateFromToday(days);
