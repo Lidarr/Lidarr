@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using FluentValidation;
 using FluentValidation.Results;
 using NLog;
@@ -68,13 +69,13 @@ namespace NzbDrone.Core.Music
             return albumsToAdd;
         }
 
-        private Tuple<Album, List<Track>> AddSkyhookData(Album newAlbum)
+        private Tuple<Album, List<Track>> AddSkyhookData(Album newAlbum, string releaseId)
         {
             Tuple<Album, List<Track>> tuple;
 
             try
             {
-                tuple = _albumInfo.GetAlbumInfo(newAlbum.ForeignAlbumId, null);
+                tuple = _albumInfo.GetAlbumInfo(newAlbum.ForeignAlbumId, releaseId);
             }
             catch (AlbumNotFoundException)
             {
@@ -93,5 +94,58 @@ namespace NzbDrone.Core.Music
 
             return tuple;
         }
+
+        private Tuple<Album, List<Track>> AddSkyhookData(Album newAlbum)
+        {
+            Tuple<Album, List<Track>> tuple = AddSkyhookData(newAlbum, null);
+
+            _logger.Debug("Current release: {0}, {1}, {2}.  Checking for preferred version.",
+                          string.Join(", ", tuple.Item1.CurrentRelease.Country),
+                          tuple.Item1.CurrentRelease.Format,
+                          tuple.Item1.CurrentRelease.Id);
+
+            // Now that we have release info, update to preferred type
+            var countryPref = new List<string> { "United Kingdom", "United States", "[Worldwide]", "Europe" };
+            var formatPref = new List<string> { @"^(\d+x)?CD$", @"^(\d+x)?Digital Media$" };
+
+            var countryPrefRegex = countryPref.Select(x => new Regex(x, RegexOptions.IgnoreCase)).ToList();
+            var formatPrefRegex = formatPref.Select(x => new Regex(x, RegexOptions.IgnoreCase)).ToList();
+
+            var betterRelease = tuple.Item1.Releases
+                .OrderBy(r => OrderPreferenceHelper(r.Country, countryPrefRegex))
+                .ThenBy(r => OrderPreferenceHelper(r.Format, formatPrefRegex))
+                .ThenByDescending(r => r.TrackCount)
+                .FirstOrDefault();
+
+            if (betterRelease == null || betterRelease.Id == tuple.Item1.CurrentRelease.Id)
+            {
+                _logger.Debug("No better release found.");
+            }
+            else
+            {
+                _logger.Debug("Using better release: {0}, {1}, {2}.",
+                          string.Join(", ", betterRelease.Country),
+                          betterRelease.Format,
+                          betterRelease.Id);
+                tuple = AddSkyhookData(newAlbum, betterRelease.Id);
+            }
+
+            return tuple;
+        }
+
+        private int OrderPreferenceHelper(string input, List<Regex> pref)
+        {
+            for (int i = 0; i < pref.Count; i++)
+                if (pref[i].IsMatch(input))
+                    return i;
+
+            return int.MaxValue;
+        }
+
+        private int OrderPreferenceHelper(List<string> input, List<Regex> pref)
+        {
+            return input.Select(x => OrderPreferenceHelper(x, pref)).DefaultIfEmpty(int.MaxValue).Min();
+        }
+
     }
 }
