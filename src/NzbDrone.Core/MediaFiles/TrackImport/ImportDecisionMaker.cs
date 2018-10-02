@@ -28,6 +28,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         private readonly IEnumerable<IImportDecisionEngineSpecification> _specifications;
         private readonly IParsingService _parsingService;
         private readonly IMediaFileService _mediaFileService;
+        private readonly IRefreshAlbumService _refreshAlbumService;
         private readonly IDiskProvider _diskProvider;
         private readonly IVideoFileInfoReader _videoFileInfoReader;
         private readonly Logger _logger;
@@ -35,6 +36,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         public ImportDecisionMaker(IEnumerable<IImportDecisionEngineSpecification> specifications,
                                    IParsingService parsingService,
                                    IMediaFileService mediaFileService,
+                                   IRefreshAlbumService refreshAlbumService,
                                    IDiskProvider diskProvider,
                                    IVideoFileInfoReader videoFileInfoReader,
                                    Logger logger)
@@ -42,6 +44,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             _specifications = specifications;
             _parsingService = parsingService;
             _mediaFileService = mediaFileService;
+            _refreshAlbumService = refreshAlbumService;
             _diskProvider = diskProvider;
             _videoFileInfoReader = videoFileInfoReader;
             _logger = logger;
@@ -64,6 +67,34 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             _logger.Debug("Analyzing {0}/{1} files.", files.Count, musicFiles.Count);
 
             var shouldUseFolderName = ShouldUseFolderName(musicFiles, artist, folderInfo);
+
+            // We have to do this once to match against albums
+            var decisions = GetImportDecisionsForCurrentRelease(files, artist, folderInfo, shouldUseFolderName);
+
+            // if everything that matched an album matched the same album, then try to make sure we are importing against
+            // the most appropriate release
+            var albums = decisions.Where(x => x.LocalTrack.Album != null)
+                .Select(x => x.LocalTrack.Album)
+                .GroupBy(x => x.Id)
+                .Select(x => x.FirstOrDefault())
+                .ToList();
+            _logger.Debug("Importing {0}", string.Join(", ", albums));
+            if (albums.Count == 1 && albums[0] != null
+                && (!decisions.All(x => x.Approved) || files.Count != albums[0].CurrentRelease.TrackCount))
+            {
+                _logger.Debug("Importing {0}: {1}/{2} files approved for {3} track album",
+                              albums[0],
+                              decisions.Count(x => x.Approved),
+                              files.Count,
+                              albums[0].CurrentRelease.TrackCount);
+                decisions = GetImportDecisionsForBestRelease(files, artist, albums[0], folderInfo, shouldUseFolderName);
+            }
+            
+            return decisions;
+        }
+
+        private List<ImportDecision> GetImportDecisionsForCurrentRelease(List<string> files, Artist artist, ParsedTrackInfo folderInfo, bool shouldUseFolderName)
+        {
             var decisions = new List<ImportDecision>();
 
             foreach (var file in files)
@@ -72,6 +103,37 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             }
 
             return decisions;
+        }
+
+        private List<ImportDecision> GetImportDecisionsForBestRelease(List<string> files, Artist artist, Album album, ParsedTrackInfo folderInfo, bool shouldUseFolderName)
+        {
+            var originalRelease = album.CurrentRelease;
+            var candidateReleases = album.Releases.Where(x => x.TrackCount == files.Count);
+
+            foreach (var release in candidateReleases)
+            {
+                _logger.Debug("Trying Release {0}", release.Id);
+                album.CurrentRelease = release;
+                _refreshAlbumService.RefreshAlbumInfo(album);
+                var decisions = GetImportDecisionsForCurrentRelease(files, artist, folderInfo, shouldUseFolderName);
+
+                _logger.Debug("Importing {0}: {1}/{2} tracks approved",
+                              album,
+                              decisions.Count(x => x.Approved),
+                              files.Count);
+
+                if (decisions.All(x => x.Approved))
+                {
+                    _logger.Debug("Found release matching all files {0}", release.Id);
+                    return decisions;
+                }
+            }
+
+            //We didn't manage to find a better release so reinstate original
+            _logger.Debug("Reinstating original release");
+            album.CurrentRelease = originalRelease;
+            _refreshAlbumService.RefreshAlbumInfo(album);
+            return GetImportDecisionsForCurrentRelease(files, artist, folderInfo, shouldUseFolderName);
         }
 
         private ImportDecision GetDecision(string file, Artist artist, ParsedTrackInfo folderInfo, bool shouldUseFolderName)
