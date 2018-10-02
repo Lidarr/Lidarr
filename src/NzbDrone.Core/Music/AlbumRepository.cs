@@ -287,9 +287,12 @@ namespace NzbDrone.Core.Music
 
         public Album FindByTitle(int artistId, string title)
         {
-            title = Parser.Parser.CleanArtistName(title);
-
-            return Query.Where(s => s.CleanTitle == title)
+            var cleanTitle = Parser.Parser.CleanArtistName(title);
+            
+            if (string.IsNullOrEmpty(cleanTitle))
+                cleanTitle = title;
+            
+            return Query.Where(s => s.CleanTitle == cleanTitle || s.Title == title)
                         .AndWhere(s => s.ArtistId == artistId)
                         .FirstOrDefault();
         }
