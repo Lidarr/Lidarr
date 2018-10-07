@@ -154,7 +154,7 @@ function EditImportListModalContent(props) {
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>Tags</FormLabel>
+                <FormLabel>Lidarr Tags</FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.TAG}
