@@ -87,9 +87,9 @@ class Missing extends Component {
     const albumIds = this.getSelectedIds();
 
     this.props.batchToggleMissingAlbums({
-	  albumIds,
-	  monitored: !getMonitoredValue(this.props)
-	});
+      albumIds,
+      monitored: !getMonitoredValue(this.props)
+    });
   }
 
   onSearchAllMissingPress = () => {

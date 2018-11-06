@@ -9,7 +9,7 @@ export function registerPagePopulator(populator, reasons = []) {
 export function unregisterPagePopulator(populator) {
   if (currentPopulator === populator) {
     currentPopulator = null;
-	currentReasons = [];
+    currentReasons = [];
   }
 }
 

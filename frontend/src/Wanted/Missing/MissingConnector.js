@@ -110,7 +110,7 @@ class MissingConnector extends Component {
       albumIds: selected
     });
   }
-  
+
   onSearchAllMissingPress = () => {
     this.props.executeCommand({
       name: commandNames.MISSING_ALBUM_SEARCH

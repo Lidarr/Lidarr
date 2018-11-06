@@ -26,7 +26,7 @@ function getMonitoredValue(props) {
     filters,
     selectedFilterKey
   } = props;
-   return getFilterValue(filters, selectedFilterKey, 'monitored', false);
+  return getFilterValue(filters, selectedFilterKey, 'monitored', false);
 }
 
 class CutoffUnmet extends Component {
@@ -85,9 +85,9 @@ class CutoffUnmet extends Component {
     const albumIds = this.getSelectedIds();
 
     this.props.batchToggleCutoffUnmetAlbums({
-	  albumIds,
-	  monitored: !getMonitoredValue(this.props)
-	});
+      albumIds,
+      monitored: !getMonitoredValue(this.props)
+    });
   }
 
   onSearchAllCutoffUnmetPress = () => {
