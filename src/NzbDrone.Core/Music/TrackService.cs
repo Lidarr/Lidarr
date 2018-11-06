@@ -99,7 +99,7 @@ namespace NzbDrone.Core.Music
                     Track = track
                 };
 
-            return matches.OrderByDescending(e => e.NormalizedLength).FirstOrDefault()?.Track;
+            return matches.OrderByDescending(e => e.NormalizedLength).ThenBy(e => e.Track.MediumNumber).FirstOrDefault()?.Track;
         }
 
         public Track FindTrackByTitleInexact(int artistId, int albumId, int mediumNumber, int trackNumber, string releaseTitle)
@@ -114,7 +114,7 @@ namespace NzbDrone.Core.Music
                 let normalizedTitle = Parser.Parser.NormalizeTrackTitle(track.Title).Replace(".", " ")
                 let matchProb = normalizedTitle.FuzzyMatch(normalizedReleaseTitle)
                 where track.Title.Length > 0
-                orderby matchProb descending
+                orderby matchProb descending, track.MediumNumber
                 select new
                 {
                     MatchProb = matchProb,

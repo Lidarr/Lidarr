@@ -619,7 +619,7 @@ namespace NzbDrone.Core.Parser
 
             var trackNumber = file.Tag.Track;
             var trackTitle = file.Tag.Title;
-            var discNumber = (file.Tag.Disc > 0) ? Convert.ToInt32(file.Tag.Disc) : 1;
+            var discNumber = (file.Tag.Disc > 0) ? Convert.ToInt32(file.Tag.Disc) : 0;
 
             var artist = file.Tag.FirstAlbumArtist;
 
