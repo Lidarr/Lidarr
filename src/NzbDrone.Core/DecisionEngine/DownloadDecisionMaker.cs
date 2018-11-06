@@ -100,7 +100,6 @@ namespace NzbDrone.Core.DecisionEngine
                                     remoteAlbum.Artist = searchCriteria.Artist;
                                     remoteAlbum.Albums = searchCriteria.Albums;
                                 }
-                                remoteAlbum.DownloadAllowed = false;
                             }
                             else if (remoteAlbum.Albums.Empty())
                             {
@@ -109,7 +108,6 @@ namespace NzbDrone.Core.DecisionEngine
                                 {
                                     remoteAlbum.Albums = searchCriteria.Albums;
                                 }
-                                remoteAlbum.DownloadAllowed = false;
                             }
                             else
                             {
