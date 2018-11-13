@@ -13,6 +13,7 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.MediaFiles.TrackImport;
+using NzbDrone.Core.MediaFiles.Events;
 
 namespace NzbDrone.Core.Download
 {
@@ -107,11 +108,13 @@ namespace NzbDrone.Core.Download
 
             if (importResults.Empty())
             {
+                trackedDownload.State = TrackedDownloadStage.ImportFailed;
                 trackedDownload.Warn("No files found are eligible for import in {0}", outputPath);
+                _eventAggregator.PublishEvent(new AlbumImportIncompleteEvent(trackedDownload));
                 return;
             }
 
-            if (importResults.Count(c => c.Result == ImportResultType.Imported) >= Math.Max(1, trackedDownload.RemoteAlbum.Albums.Count))
+            if (importResults.Count(c => c.Result == ImportResultType.Imported) >= Math.Max(1, trackedDownload.RemoteAlbum.Albums.Sum(x => x.CurrentRelease.TrackCount)))
             {
                 trackedDownload.State = TrackedDownloadStage.Imported;
                 _eventAggregator.PublishEvent(new DownloadCompletedEvent(trackedDownload));
@@ -120,12 +123,14 @@ namespace NzbDrone.Core.Download
 
             if (importResults.Any(c => c.Result != ImportResultType.Imported))
             {
+                trackedDownload.State = TrackedDownloadStage.ImportFailed;
                 var statusMessages = importResults
                     .Where(v => v.Result != ImportResultType.Imported)
                     .Select(v => new TrackedDownloadStatusMessage(Path.GetFileName(v.ImportDecision.LocalTrack.Path), v.Errors))
                     .ToArray();
 
                 trackedDownload.Warn(statusMessages);
+                _eventAggregator.PublishEvent(new AlbumImportIncompleteEvent(trackedDownload));
             }
 
         }

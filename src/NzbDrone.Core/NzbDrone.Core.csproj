@@ -709,6 +709,7 @@
     <Compile Include="MediaFiles\Commands\DownloadedAlbumsScanCommand.cs" />
     <Compile Include="MediaFiles\Commands\RenameArtistCommand.cs" />
     <Compile Include="MediaFiles\Events\AlbumImportedEvent.cs" />
+    <Compile Include="MediaFiles\Events\AlbumImportIncompleteEvent.cs" />
     <Compile Include="MediaFiles\Events\TrackFileRenamedEvent.cs" />
     <Compile Include="MediaFiles\Events\TrackFolderCreatedEvent.cs" />
     <Compile Include="MediaFiles\Events\TrackImportFailedEvent.cs" />

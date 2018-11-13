@@ -8,6 +8,33 @@ import DescriptionListItem from 'Components/DescriptionList/DescriptionListItem'
 import DescriptionListItemTitle from 'Components/DescriptionList/DescriptionListItemTitle';
 import DescriptionListItemDescription from 'Components/DescriptionList/DescriptionListItemDescription';
 
+function getDetailedPopoverBody(statusMessages) {
+  return (
+    <div>
+      {
+        statusMessages.map(({ title, messages }) => {
+          return (
+            <div key={title}>
+              {title}
+              <ul>
+                {
+                  messages.map((message) => {
+                    return (
+                      <li key={message}>
+                        {message}
+                      </li>
+                    );
+                  })
+                }
+              </ul>
+            </div>
+          );
+        })
+      }
+    </div>
+  );
+}
+
 function HistoryDetails(props) {
   const {
     eventType,
@@ -221,6 +248,28 @@ function HistoryDetails(props) {
           title="Destination Relative Path"
           data={relativePath}
         />
+      </DescriptionList>
+    );
+  }
+  if (eventType === 'albumImportIncomplete') {
+    const {
+      statusMessages
+    } = data;
+
+    return (
+      <DescriptionList>
+        <DescriptionListItem
+          title="Name"
+          data={sourceTitle}
+        />
+
+        {
+          !!statusMessages &&
+            <DescriptionListItem
+              title="Import failures"
+              data={getDetailedPopoverBody(JSON.parse(statusMessages))}
+            />
+        }
       </DescriptionList>
     );
   }

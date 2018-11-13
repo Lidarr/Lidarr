@@ -16,6 +16,8 @@ using NzbDrone.Core.Profiles.Languages;
 using NzbDrone.Core.Languages;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Music.Events;
+using NzbDrone.Core.Qualities;
+using NzbDrone.Common.Serializer;
 
 namespace NzbDrone.Core.History
 {
@@ -34,6 +36,7 @@ namespace NzbDrone.Core.History
 
     public class HistoryService : IHistoryService,
                                   IHandle<AlbumGrabbedEvent>,
+                                  IHandle<AlbumImportIncompleteEvent>,
                                   IHandle<TrackImportedEvent>,
                                   IHandle<DownloadFailedEvent>,
                                   IHandle<TrackFileDeletedEvent>,
@@ -176,6 +179,27 @@ namespace NzbDrone.Core.History
                     history.Data.Add("TorrentInfoHash", torrentRelease.InfoHash);
                 }
 
+                _historyRepository.Insert(history);
+            }
+        }
+
+        public void Handle(AlbumImportIncompleteEvent message)
+        {
+            foreach (var album in message.TrackedDownload.RemoteAlbum.Albums)
+            {
+                var history = new History
+                {
+                    EventType = HistoryEventType.AlbumImportIncomplete,
+                    Date = DateTime.UtcNow,
+                    Quality = message.TrackedDownload.RemoteAlbum.ParsedAlbumInfo?.Quality ?? new QualityModel(),
+                    SourceTitle = message.TrackedDownload.DownloadItem.Title,
+                    ArtistId = album.ArtistId,
+                    AlbumId = album.Id,
+                    DownloadId = message.TrackedDownload.DownloadItem.DownloadId,
+                    Language = message.TrackedDownload.RemoteAlbum.ParsedAlbumInfo?.Language ?? Language.English
+                };
+
+                history.Data.Add("StatusMessages", message.TrackedDownload.StatusMessages.ToJson());
                 _historyRepository.Insert(history);
             }
         }

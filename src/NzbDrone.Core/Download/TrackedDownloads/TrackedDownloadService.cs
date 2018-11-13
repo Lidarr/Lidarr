@@ -8,6 +8,7 @@ using NzbDrone.Core.History;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser;
+using NzbDrone.Common.Serializer;
 
 namespace NzbDrone.Core.Download.TrackedDownloads
 {
@@ -105,6 +106,11 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                 {
                     var firstHistoryItem = historyItems.OrderByDescending(h => h.Date).First();
                     trackedDownload.State = GetStateFromHistory(firstHistoryItem.EventType);
+                    if (firstHistoryItem.EventType == HistoryEventType.AlbumImportIncomplete)
+                    {
+                        var messages = Json.Deserialize<List<TrackedDownloadStatusMessage>>(firstHistoryItem?.Data["statusMessages"]).ToArray();
+                        trackedDownload.Warn(messages);
+                    }
 
                     var grabbedEvent = historyItems.FirstOrDefault(v => v.EventType == HistoryEventType.Grabbed);
                     trackedDownload.Indexer = grabbedEvent?.Data["indexer"];
@@ -186,7 +192,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                 existingItem.CanBeRemoved != downloadItem.CanBeRemoved ||
                 existingItem.CanMoveFiles != downloadItem.CanMoveFiles)
             {
-                _logger.Debug("Tracking '{0}:{1}': ClientState={2}{3} SonarrStage={4} Episode='{5}' OutputPath={6}.",
+                _logger.Debug("Tracking '{0}:{1}': ClientState={2}{3} SonarrStage={4} Album='{5}' OutputPath={6}.",
                     downloadItem.DownloadClient, downloadItem.Title,
                     downloadItem.Status, downloadItem.CanBeRemoved ? "" :
                                          downloadItem.CanMoveFiles ? " (busy)" : " (readonly)",
@@ -201,6 +207,8 @@ namespace NzbDrone.Core.Download.TrackedDownloads
         {
             switch (eventType)
             {
+                case HistoryEventType.AlbumImportIncomplete:
+                    return TrackedDownloadStage.ImportFailed;
                 case HistoryEventType.DownloadFolderImported:
                     return TrackedDownloadStage.Imported;
                 case HistoryEventType.DownloadFailed:
