@@ -143,7 +143,9 @@ namespace NzbDrone.Core.Music
 
             if (sortedTracks[0].MatchProb > fuzzThreshold
                 && (sortedTracks.Count == 1 || sortedTracks[0].MatchProb - sortedTracks[1].MatchProb > fuzzGap)
-                && (trackNumber == 0 || sortedTracks[0].Track.AbsoluteTrackNumber == trackNumber))
+                && (trackNumber == 0
+                    || sortedTracks[0].Track.AbsoluteTrackNumber == trackNumber
+                    || sortedTracks[0].Track.AbsoluteTrackNumber + tracks.Count(t => t.MediumNumber < sortedTracks[0].Track.MediumNumber) == trackNumber))
             {
                 return sortedTracks[0].Track;
             }
