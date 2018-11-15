@@ -37,8 +37,9 @@ namespace NzbDrone.Core.Download.TrackedDownloads
     {
         Downloading,
         DownloadFailed,
-        Imported,
-        ImportFailed
+        Importing,
+        ImportFailed,
+        Imported
     }
 
     public enum TrackedDownloadStatus

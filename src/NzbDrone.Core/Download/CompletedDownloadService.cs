@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using NLog;
-using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
@@ -114,7 +113,8 @@ namespace NzbDrone.Core.Download
                 return;
             }
 
-            if (importResults.Count(c => c.Result == ImportResultType.Imported) >= Math.Max(1, trackedDownload.RemoteAlbum.Albums.Sum(x => x.CurrentRelease.TrackCount)))
+            if (importResults.All(c => c.Result == ImportResultType.Imported)
+                || importResults.Count(c => c.Result == ImportResultType.Imported) >= Math.Max(1, trackedDownload.RemoteAlbum.Albums.Sum(x => x.CurrentRelease.TrackCount)))
             {
                 trackedDownload.State = TrackedDownloadStage.Imported;
                 _eventAggregator.PublishEvent(new DownloadCompletedEvent(trackedDownload));
@@ -132,7 +132,6 @@ namespace NzbDrone.Core.Download
                 trackedDownload.Warn(statusMessages);
                 _eventAggregator.PublishEvent(new AlbumImportIncompleteEvent(trackedDownload));
             }
-
         }
     }
 }

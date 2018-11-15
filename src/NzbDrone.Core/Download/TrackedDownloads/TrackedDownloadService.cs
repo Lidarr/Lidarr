@@ -105,7 +105,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                 if (historyItems.Any())
                 {
                     var firstHistoryItem = historyItems.OrderByDescending(h => h.Date).First();
-                    trackedDownload.State = GetStateFromHistory(firstHistoryItem.EventType);
+                    trackedDownload.State = GetStateFromHistory(firstHistoryItem);
                     if (firstHistoryItem.EventType == HistoryEventType.AlbumImportIncomplete)
                     {
                         var messages = Json.Deserialize<List<TrackedDownloadStatusMessage>>(firstHistoryItem?.Data["statusMessages"]).ToArray();
@@ -203,19 +203,25 @@ namespace NzbDrone.Core.Download.TrackedDownloads
         }
 
 
-        private static TrackedDownloadStage GetStateFromHistory(HistoryEventType eventType)
+        private static TrackedDownloadStage GetStateFromHistory(NzbDrone.Core.History.History history)
         {
-            switch (eventType)
+            switch (history.EventType)
             {
                 case HistoryEventType.AlbumImportIncomplete:
                     return TrackedDownloadStage.ImportFailed;
-                case HistoryEventType.DownloadFolderImported:
+                case HistoryEventType.DownloadComplete:
                     return TrackedDownloadStage.Imported;
                 case HistoryEventType.DownloadFailed:
                     return TrackedDownloadStage.DownloadFailed;
-                default:
-                    return TrackedDownloadStage.Downloading;
             }
+
+            // Since DownloadComplete is a new event type, we can't assume it exists for old downloads
+            if (history.EventType == HistoryEventType.DownloadFolderImported)
+            {
+                return DateTime.UtcNow.Subtract(history.Date).TotalSeconds < 60 ? TrackedDownloadStage.Importing : TrackedDownloadStage.Imported;
+            }
+
+            return TrackedDownloadStage.Downloading;
         }
     }
 }

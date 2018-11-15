@@ -17,6 +17,7 @@ using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Core.Music;
 using NzbDrone.Test.Common;
+using NzbDrone.Core.MediaFiles.Events;
 
 namespace NzbDrone.Core.Test.Download
 {
@@ -174,8 +175,39 @@ namespace NzbDrone.Core.Test.Download
         }
 
         [Test]
-        public void should_mark_as_imported_if_all_episodes_were_imported()
+        public void should_mark_as_imported_if_all_tracks_were_imported()
         {
+            _trackedDownload.RemoteAlbum.Albums = new List<Album>
+            {
+                CreateAlbum(1, 2)
+            };
+
+            Mocker.GetMock<IDownloadedTracksImportService>()
+                  .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()))
+                  .Returns(new List<ImportResult>
+                           {
+                               new ImportResult(
+                                   new ImportDecision(
+                                       new LocalTrack {Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic()})),
+
+                                new ImportResult(
+                                   new ImportDecision(
+                                       new LocalTrack {Path = @"C:\TestPath\Droned.S01E02.mkv".AsOsAgnostic()}))
+                           });
+
+            Subject.Process(_trackedDownload);
+
+            AssertCompletedDownload();
+        }
+
+        [Test]
+        public void should_mark_as_imported_if_all_tracks_were_imported_but_album_incomplete()
+        {
+            _trackedDownload.RemoteAlbum.Albums = new List<Album>
+            {
+                CreateAlbum(1, 3)
+            };
+
             Mocker.GetMock<IDownloadedTracksImportService>()
                   .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()))
                   .Returns(new List<ImportResult>
@@ -215,11 +247,11 @@ namespace NzbDrone.Core.Test.Download
             Mocker.GetMock<IEventAggregator>()
                 .Verify(v => v.PublishEvent<DownloadCompletedEvent>(It.IsAny<DownloadCompletedEvent>()), Times.Never());
 
-            AssertNoCompletedDownload();
+            AssertImportIncomplete();
         }
 
         [Test]
-        public void should_not_mark_as_imported_if_no_episodes_were_parsed()
+        public void should_not_mark_as_imported_if_no_tracks_were_parsed()
         {
             Mocker.GetMock<IDownloadedTracksImportService>()
                   .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()))
@@ -238,7 +270,7 @@ namespace NzbDrone.Core.Test.Download
 
             Subject.Process(_trackedDownload);
 
-            AssertNoCompletedDownload();
+            AssertImportIncomplete();
         }
 
         [Test]
@@ -255,11 +287,11 @@ namespace NzbDrone.Core.Test.Download
 
             Subject.Process(_trackedDownload);
 
-            AssertNoCompletedDownload();
+            AssertImportIncomplete();
         }
 
         [Test]
-        public void should_mark_as_imported_if_all_episodes_were_imported_but_extra_files_were_not()
+        public void should_mark_as_imported_if_all_tracks_were_imported_but_extra_files_were_not()
         {
             GivenArtistMatch();
 
@@ -284,7 +316,7 @@ namespace NzbDrone.Core.Test.Download
         }
 
         [Test]
-        public void should_mark_as_failed_if_some_of_episodes_were_not_imported()
+        public void should_mark_as_failed_if_some_tracks_were_not_imported()
         {
             _trackedDownload.RemoteAlbum.Albums = new List<Album>
             {
@@ -307,7 +339,7 @@ namespace NzbDrone.Core.Test.Download
 
             Subject.Process(_trackedDownload);
 
-            AssertNoCompletedDownload();
+            AssertImportIncomplete();
         }
 
         [Test]
@@ -412,6 +444,14 @@ namespace NzbDrone.Core.Test.Download
         {
             Mocker.GetMock<IDownloadedTracksImportService>()
                 .Verify(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()), Times.Never());
+
+            AssertNoCompletedDownload();
+        }
+
+        private void AssertImportIncomplete()
+        {
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<AlbumImportIncompleteEvent>()), Times.Once());
 
             AssertNoCompletedDownload();
         }

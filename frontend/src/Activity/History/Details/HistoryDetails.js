@@ -251,6 +251,7 @@ function HistoryDetails(props) {
       </DescriptionList>
     );
   }
+
   if (eventType === 'albumImportIncomplete') {
     const {
       statusMessages
@@ -268,6 +269,90 @@ function HistoryDetails(props) {
             <DescriptionListItem
               title="Import failures"
               data={getDetailedPopoverBody(JSON.parse(statusMessages))}
+            />
+        }
+      </DescriptionList>
+    );
+  }
+
+  if (eventType === 'downloadComplete') {
+    const {
+      indexer,
+      releaseGroup,
+      nzbInfoUrl,
+      downloadClient,
+      downloadId,
+      age,
+      ageHours,
+      ageMinutes,
+      publishedDate
+    } = data;
+
+    return (
+      <DescriptionList>
+        <DescriptionListItem
+          title="Name"
+          data={sourceTitle}
+        />
+
+        {
+          !!indexer &&
+            <DescriptionListItem
+              title="Indexer"
+              data={indexer}
+            />
+        }
+
+        {
+          !!releaseGroup &&
+            <DescriptionListItem
+              title="Release Group"
+              data={releaseGroup}
+            />
+        }
+
+        {
+          !!nzbInfoUrl &&
+            <span>
+              <DescriptionListItemTitle>
+                Info URL
+              </DescriptionListItemTitle>
+
+              <DescriptionListItemDescription>
+                <Link to={nzbInfoUrl}>{nzbInfoUrl}</Link>
+              </DescriptionListItemDescription>
+            </span>
+        }
+
+        {
+          !!downloadClient &&
+            <DescriptionListItem
+              title="Download Client"
+              data={downloadClient}
+            />
+        }
+
+        {
+          !!downloadId &&
+            <DescriptionListItem
+              title="Grab ID"
+              data={downloadId}
+            />
+        }
+
+        {
+          !!indexer &&
+            <DescriptionListItem
+              title="Age (when grabbed)"
+              data={formatAge(age, ageHours, ageMinutes)}
+            />
+        }
+
+        {
+          !!publishedDate &&
+            <DescriptionListItem
+              title="Published Date"
+              data={formatDateTime(publishedDate, shortDateFormat, timeFormat, { includeSeconds: true })}
             />
         }
       </DescriptionList>

@@ -42,6 +42,7 @@ namespace NzbDrone.Core.History
         DownloadFailed = 4,
         TrackFileDeleted = 5,
         TrackFileRenamed = 6,
-        AlbumImportIncomplete = 7
+        AlbumImportIncomplete = 7,
+        DownloadComplete = 8
     }
 }

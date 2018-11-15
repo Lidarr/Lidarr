@@ -142,6 +142,17 @@ export const defaultState = {
       ]
     },
     {
+      key: 'downloadComplete',
+      label: 'Download Completed',
+      filters: [
+        {
+          key: 'eventType',
+          value: '8',
+          type: filterTypes.EQUAL
+        }
+      ]
+    },
+    {
       key: 'deleted',
       label: 'Deleted',
       filters: [

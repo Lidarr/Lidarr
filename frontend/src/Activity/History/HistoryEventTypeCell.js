@@ -21,6 +21,8 @@ function getIconName(eventType) {
       return icons.ORGANIZE;
     case 'albumImportIncomplete':
       return icons.DOWNLOADED;
+    case 'downloadComplete':
+      return icons.DOWNLOADED;
     default:
       return icons.UNKNOWN;
   }
@@ -53,6 +55,8 @@ function getTooltip(eventType, data) {
       return 'Track file renamed';
     case 'albumImportIncomplete':
       return 'Files downloaded but not all could be imported';
+    case 'downloadComplete':
+      return 'Download completed and successfully imported';
     default:
       return 'Unknown event';
   }
