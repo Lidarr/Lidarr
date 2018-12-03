@@ -31,17 +31,6 @@ namespace NzbDrone.SignalR
 
         public void BroadcastMessage(SignalRMessage message)
         {
-            string lastMessage;
-            if (_messageHistory.TryGetValue(message.Name, out lastMessage))
-            {
-                if (message.Action == ModelAction.Updated && message.Body.ToJson() == lastMessage)
-                {
-                    return;
-                }
-            }
-
-            _messageHistory[message.Name] = message.Body.ToJson();
-
             Context.Connection.Broadcast(message);
         }
         

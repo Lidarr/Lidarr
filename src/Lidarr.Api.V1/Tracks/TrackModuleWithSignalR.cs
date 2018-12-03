@@ -61,7 +61,7 @@ namespace Lidarr.Api.V1.Tracks
 
             if (includeArtist || includeTrackFile)
             {
-                var artist = track.Artist ?? _artistService.GetArtist(track.ArtistId);
+                var artist = track.Artist.Value;
 
                 if (includeArtist)
                 {
@@ -87,9 +87,7 @@ namespace Lidarr.Api.V1.Tracks
                 {
                     var track = tracks[i];
                     var resource = result[i];
-
-                    var series = track.Artist ?? artistDict.GetValueOrDefault(tracks[i].ArtistId) ?? _artistService.GetArtist(tracks[i].ArtistId);
-                    artistDict[series.Id] = series;
+                    var series = track.Artist.Value;
 
                     if (includeArtist)
                     {
