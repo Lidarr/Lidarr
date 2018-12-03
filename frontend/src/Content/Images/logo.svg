@@ -1,1 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024"><style>.a{fill:#989898;stroke-width:24;}.b{fill:none;stroke-width:16;stroke:#009252;}</style><defs><clipPath><circle cx="512" cy="512" r="505" style="fill:#989898;stroke-width:3.6"/></clipPath><clipPath><path d="m512 636l0-565 -330 565 330 0z" class="a"/><path d="m512 388l0 565 330-565 -330 0z" class="a"/></clipPath></defs><g><title>  background</title><rect x="-1" y="-1" width="1026" height="1026" fill="none"/></g><g><title>  Layer 1</title><circle cx="512" cy="512" r="410" stroke-width="1.8"/><ellipse cx="512" cy="512" rx="460" ry="460" style="fill:none;stroke-width:99;stroke:#e5e5e5"/><ellipse cx="512" cy="512" rx="270" ry="270" style="fill:#e5e5e5;stroke-width:76;stroke:#e5e5e5"/><ellipse ry="410" rx="410" cy="512" cx="512" style="fill-opacity:null;fill:none;stroke-width:12;stroke:#009252"/><path d="m512 636l0-565 -330 565 330 0z"/><path d="m512 388l0 565 330-565 -330 0z" fill="#000"/><path d="m512 636l0-565 -330 565 330 0z" class="b"/><path d="m512 388l0 565 330-565 -330 0z" class="b"/><ellipse cx="512" cy="512" rx="150" ry="150" style="fill-opacity:null;fill:#009252;stroke-opacity:null;stroke-width:null;stroke:null"/></g></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="1024" height="1024" version="1.1" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <g id="lidarr-group-logo">
+    <circle id="lidarr-black-circle" cx="512" cy="512" r="410" stroke-width="1.8"/>
+    <g id="lidarr-group-details">
+      <circle id="lidarr-outline" cx="512" cy="512" r="460" style="fill:none;stroke-width:99;stroke:#e5e5e5"/>
+      <circle id="lidarr-inline" cx="512" cy="512" r="270" style="fill:#e5e5e5;stroke-width:76;stroke:#e5e5e5"/>
+      <circle id="lidarr-inline-detail" cx="512" cy="512" r="410" style="fill:none;stroke-width:12;stroke:#009252"/>
+      <g id="lidarr-black-triangles" fill="#000">
+        <path d="M 512 636.267 L 512 71.267 L 182 636.267 L 512 636.267 Z"/>
+        <path d="M 512 388.267 L 512 953.267 L 842 388.267 L 512 388.267 Z"/>
+      </g>
+      <g id="lidarr-group-shapes">
+        <path id="lidarr-group-top" d="M 512 636.267 L 512 71.267 L 182 636.267 L 512 636.267 Z" style="fill:none; stroke-width:16; stroke:#009252"/>
+        <path id="lidarr-group-bottem" d="M 512 388.267 L 512 953.267 L 842 388.267 L 512 388.267 Z" style="fill:none; stroke-width:16; stroke:#009252"/>
+        <ellipse id="lidarr-group-center" cx="512" cy="512" rx="150" ry="150" style="fill:#009252"/>
+      </g>
+    </g>
+  </g>
+</svg>

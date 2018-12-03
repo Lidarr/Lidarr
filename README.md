@@ -1,12 +1,14 @@
-# Lidarr
+<p align="center">
+<img src="/Logo/text256.png" alt="Lidarr">
+</p>
+
+Lidarr is a music collection manager for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new tracks from your favorite artists and will grab, sort and rename them. It can also be configured to automatically upgrade the quality of files already downloaded when a better quality format becomes available.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/tpm5mj5milne88nc?svg=true)](https://ci.appveyor.com/project/lidarr/lidarr)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4e6d014aee9542189b4abb0b1439980f)](https://www.codacy.com/app/Lidarr/Lidarr?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lidarr/Lidarr&amp;utm_campaign=Badge_Grade)
 [![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/lidarr.svg)](https://github.com/lidarr/Lidarr/wiki/Docker)
 ![Github Downloads](https://img.shields.io/github/downloads/lidarr/lidarr/total.svg)
 [![Backers on Open Collective](https://opencollective.com/lidarr/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/lidarr/sponsors/badge.svg)](#sponsors)
-
-Lidarr is a music collection manager for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new tracks from your favorite artists and will grab, sort and rename them. It can also be configured to automatically upgrade the quality of files already downloaded when a better quality format becomes available.
 
 ## Major Features Include:
 

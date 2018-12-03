@@ -28,7 +28,7 @@ namespace Lidarr.Http.Frontend.Mappers
 
         public override bool CanHandle(string resourceUrl)
         {
-            return resourceUrl.StartsWith("/Content/Images/Icons/manifest");
+            return resourceUrl.StartsWith("/Content/Images/favicon/manifest");
         }
     }
 }

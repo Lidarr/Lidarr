@@ -27,7 +27,7 @@ namespace Lidarr.Http.Frontend.Mappers
                 fileName = "favicon-debug.ico";
             }
 
-            var path = Path.Combine("Content", "Images", "Icons", fileName);
+            var path = Path.Combine("Content", "Images", fileName);
 
             return Path.Combine(_appFolderInfo.StartUpFolder, _configFileProvider.UiFolder, path);
         }

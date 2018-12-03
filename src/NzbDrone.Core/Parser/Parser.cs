@@ -128,7 +128,7 @@ namespace NzbDrone.Core.Parser
             // Hypen with no or more spaces between artist/album/year
             new Regex(@"^(?:(?<artist>.+?)(?:-))(?<releaseyear>\d{4})(?:-)(?<album>[^-]+)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
-            
+
         };
 
         private static readonly Regex[] RejectHashedReleasesRegex = new Regex[]
@@ -216,7 +216,7 @@ namespace NzbDrone.Core.Parser
         };
 
         private static readonly Regex AfterDashRegex = new Regex(@"[-:].*", RegexOptions.Compiled);
-        
+
         public static ParsedTrackInfo ParseMusicPath(string path)
         {
             var fileInfo = new FileInfo(path);
@@ -615,7 +615,7 @@ namespace NzbDrone.Core.Parser
             {
                 intermediate = regex.Replace(intermediate, string.Empty).Trim();
             }
-            
+
             return intermediate;
         }
 
@@ -673,7 +673,7 @@ namespace NzbDrone.Core.Parser
                 ArtistTitleInfo = artistTitleInfo,
                 Title = trackTitle
             };
-            
+
             Logger.Trace("File Tags Parsed: Artist: {0}, Album: {1}, Disc: {2}, Track Numbers(s): {3}, TrackTitle: {4}", result.ArtistTitle, result.AlbumTitle, result.DiscNumber, trackNumber, result.Title);
 
             foreach (ICodec codec in file.Properties.Codecs)
@@ -700,7 +700,7 @@ namespace NzbDrone.Core.Parser
             artistName = RequestInfoRegex.Replace(artistName, "").Trim(' ');
 
             // Coppied from Radarr (https://github.com/Radarr/Radarr/blob/develop/src/NzbDrone.Core/Parser/Parser.cs)
-            // TODO: Split into separate method and write unit tests for. 
+            // TODO: Split into separate method and write unit tests for.
             var parts = artistName.Split('.');
             artistName = "";
             int n = 0;

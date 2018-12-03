@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="1024" height="1024" version="1.1" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <g id="lidarr-group-logo">
+    <circle id="lidarr-black-circle" cx="512" cy="512" r="410" stroke-width="1.8" style="fill: rgba(0, 0, 0, 0);"/>
+    <g id="lidarr-group-details">
+      <circle id="lidarr-outline" cx="512" cy="512" r="460" style="fill: none; stroke-width: 99; stroke: rgb(255, 255, 255);"/>
+      <g id="lidarr-group-shapes">
+        <path id="lidarr-group-top" d="M 512 636.267 L 512 71.267 L 182 636.267 L 512 636.267 Z" style="stroke-width: 16; paint-order: stroke; fill: rgb(255, 255, 255); stroke: rgb(255, 255, 255);"/>
+        <path id="lidarr-group-bottem" d="M 512 388.267 L 512 953.267 L 842 388.267 L 512 388.267 Z" style="stroke-width: 16; stroke: rgb(255, 255, 255); fill: rgb(255, 255, 255);"/>
+        <ellipse id="lidarr-group-center" cx="512" cy="512" rx="150" ry="150" style="fill: rgb(255, 255, 255);"/>
+      </g>
+    </g>
+  </g>
+</svg>
