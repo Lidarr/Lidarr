@@ -95,19 +95,24 @@ namespace NzbDrone.Core.MediaFiles
 
             EnsureTrackFolder(trackFile, localTrack, filePath);
 
+            var transferMode = TransferMode.Copy;
+
             if (_configService.CopyUsingReflinks)
             {
+                transferMode |= TransferMode.RefLink;
                 _logger.Debug("Reflinking track file: {0} to {1}", trackFile.Path, filePath);
-                return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.RefLinkOrCopy);
             }
             else if (_configService.CopyUsingHardlinks)
             {
+                transferMode |= TransferMode.HardLink;
                 _logger.Debug("Hardlinking track file: {0} to {1}", trackFile.Path, filePath);
-                return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.HardLinkOrCopy);
+            }
+            else
+            {
+                _logger.Debug("Copying track file: {0} to {1}", trackFile.Path, filePath);
             }
 
-            _logger.Debug("Copying track file: {0} to {1}", trackFile.Path, filePath);
-            return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.Copy);
+            return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, transferMode);
         }
 
         private TrackFile TransferFile(TrackFile trackFile, Artist artist, List<Track> tracks, string destinationFilePath, TransferMode mode)
