@@ -151,6 +151,7 @@ class MediaManagement extends Component {
                           type={inputTypes.CHECK}
                           name="copyUsingReflinks"
                           helpText="Use Reflinks when trying to copy files from torrents that are still being seeded"
+                          helpTextWarning="Reflinks are currently only implemented for Linux."
                           onChange={onInputChange}
                           {...settings.copyUsingReflinks}
                         />
