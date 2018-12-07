@@ -30,6 +30,7 @@ namespace NzbDrone.Core.Music
         Album UpdateAlbum(Album album);
         void SetAlbumMonitored(int albumId, bool monitored);
         void SetMonitored(IEnumerable<int> ids, bool monitored);
+        void UpdateLastSearchTime(List<Album> albums);
         PagingSpec<Album> AlbumsWithoutFiles(PagingSpec<Album> pagingSpec);
         List<Album> AlbumsBetweenDates(DateTime start, DateTime end, bool includeUnmonitored);
         List<Album> ArtistAlbumsBetweenDates(Artist artist, DateTime start, DateTime end, bool includeUnmonitored);
@@ -299,6 +300,11 @@ namespace NzbDrone.Core.Music
             {
                 _eventAggregator.PublishEvent(new AlbumEditedEvent(album, album));
             }
+        }
+
+        public void UpdateLastSearchTime(List<Album> albums)
+        {
+            _albumRepository.SetFields(albums, a => a.LastSearchTime);
         }
 
         public void Handle(ArtistsDeletedEvent message)
