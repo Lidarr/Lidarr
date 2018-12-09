@@ -118,6 +118,10 @@ namespace NzbDrone.Core.Music
                 }
             }
 
+            // Delete old albums first - this avoids errors if albums have been merged and we'll
+            // end up trying to duplicate an existing release under a new album
+            _albumService.DeleteMany(existingAlbums);
+            
             // Update new albums with artist info and correct monitored status
             newAlbumsList = UpdateAlbums(artist, newAlbumsList);
 
@@ -128,8 +132,6 @@ namespace NzbDrone.Core.Music
             _addAlbumService.AddAlbums(newAlbumsList);
 
             _refreshAlbumService.RefreshAlbumInfo(updateAlbumsList, forceAlbumRefresh);
-
-            _albumService.DeleteMany(existingAlbums);
 
             _eventAggregator.PublishEvent(new AlbumInfoRefreshedEvent(artist, newAlbumsList, updateAlbumsList));
 

@@ -11,6 +11,7 @@ namespace NzbDrone.Core.Music
         void UpdateMany(List<AlbumRelease> releases);
         void DeleteMany(List<AlbumRelease> releases);
         List<AlbumRelease> GetReleasesByAlbum(int releaseGroupId);
+        List<AlbumRelease> GetReleasesByForeignReleaseId(List<string> foreignReleaseIds);
         List<AlbumRelease> SetMonitored(AlbumRelease release);
     }
 
@@ -54,6 +55,11 @@ namespace NzbDrone.Core.Music
         public List<AlbumRelease> GetReleasesByAlbum(int releaseGroupId)
         {
             return _releaseRepository.FindByAlbum(releaseGroupId);
+        }
+
+        public List<AlbumRelease> GetReleasesByForeignReleaseId(List<string> foreignReleaseIds)
+        {
+            return _releaseRepository.FindByForeignReleaseId(foreignReleaseIds);
         }
 
         public List<AlbumRelease> SetMonitored(AlbumRelease release)

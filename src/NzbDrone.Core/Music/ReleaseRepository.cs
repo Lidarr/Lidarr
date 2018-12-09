@@ -10,6 +10,7 @@ namespace NzbDrone.Core.Music
     {
         List<AlbumRelease> FindByAlbum(int id);
         List<AlbumRelease> SetMonitored(AlbumRelease release);
+        List<AlbumRelease> FindByForeignReleaseId(List<string> foreignReleaseIds);
     }
 
     public class ReleaseRepository : BasicRepository<AlbumRelease>, IReleaseRepository
@@ -22,6 +23,15 @@ namespace NzbDrone.Core.Music
         public List<AlbumRelease> FindByAlbum(int id)
         {
             return Query.Where(r => r.AlbumId == id).ToList();
+        }
+
+        public List<AlbumRelease> FindByForeignReleaseId(List<string> foreignReleaseIds)
+        {
+            var query = "SELECT AlbumReleases.*" +
+                "FROM AlbumReleases " +
+                $"WHERE AlbumReleases.ForeignReleaseId IN ('{string.Join("', '", foreignReleaseIds)}')";
+
+            return Query.QueryText(query).ToList();
         }
 
         public List<AlbumRelease> SetMonitored(AlbumRelease release)
