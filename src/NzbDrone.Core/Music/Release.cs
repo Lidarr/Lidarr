@@ -18,6 +18,7 @@ namespace NzbDrone.Core.Music
         public List<string> Label { get; set; }
         public string Disambiguation { get; set; }
         public List<string> Country { get; set; }
+        public DateTime? ReleaseDate { get; set; }
         public List<Medium> Media { get; set; }
         public int TrackCount { get; set; }
         public bool Monitored { get; set; }

@@ -291,6 +291,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             Album album = new Album();
             album.ForeignAlbumId = resource.Id;
             album.Title = resource.Title;
+            album.Overview = resource.Overview;
             album.Disambiguation = resource.Disambiguation;
             album.ReleaseDate = resource.ReleaseDate;
 
@@ -302,6 +303,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             album.AlbumType = resource.Type;
             album.SecondaryTypes = resource.SecondaryTypes.Select(MapSecondaryTypes).ToList();
             album.Ratings = MapRatings(resource.Rating);
+            album.Links = resource.Links?.Select(MapLink).ToList();
             album.CleanTitle = Parser.Parser.CleanArtistName(album.Title);
 
             if (resource.Releases != null)
@@ -324,6 +326,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             release.Label = resource.Label;
             release.Disambiguation = resource.Disambiguation;
             release.Country = resource.Country;
+            release.ReleaseDate = resource.ReleaseDate;
             release.TrackCount = resource.TrackCount;
             release.Tracks = resource.Tracks.Select(x => MapTrack(x, artistDict)).ToList();
             release.Media = resource.Media.Select(MapMedium).ToList();

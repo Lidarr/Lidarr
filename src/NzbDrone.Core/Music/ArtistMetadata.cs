@@ -19,7 +19,6 @@ namespace NzbDrone.Core.Music
             Genres = new List<string>();
             Members = new List<Member>();
             Links = new List<Links>();
-
         }
 
         public string ForeignArtistId { get; set; }

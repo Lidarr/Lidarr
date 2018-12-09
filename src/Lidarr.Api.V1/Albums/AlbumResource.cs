@@ -13,6 +13,7 @@ namespace Lidarr.Api.V1.Albums
     {
         public string Title { get; set; }
         public string Disambiguation { get; set; }
+        public string Overview { get; set; }
         public int ArtistId { get; set; }
         public string ForeignAlbumId { get; set; }
         public bool Monitored { get; set; }
@@ -40,6 +41,7 @@ namespace Lidarr.Api.V1.Albums
         public List<MediumResource> Media { get; set; }
         public ArtistResource Artist { get; set; }
         public List<MediaCover> Images { get; set; }
+        public List<Links> Links { get; set; }
         public AlbumStatisticsResource Statistics { get; set; }
 
         public string RemoteCover { get; set; }
@@ -69,7 +71,9 @@ namespace Lidarr.Api.V1.Albums
                 Genres = model.Genres,
                 Title = model.Title,
                 Disambiguation = model.Disambiguation,
+                Overview = model.Overview,
                 Images = model.Images,
+                Links = model.Links,
                 Ratings = model.Ratings,
                 Duration = selectedRelease.Duration,
                 AlbumType = model.AlbumType,
@@ -90,6 +94,7 @@ namespace Lidarr.Api.V1.Albums
                 ForeignAlbumId = resource.ForeignAlbumId,
                 Title = resource.Title,
                 Disambiguation = resource.Disambiguation,
+                Overview = resource.Overview,
                 Images = resource.Images,
                 Monitored = resource.Monitored,
                 AnyReleaseOk = resource.AnyReleaseOk,

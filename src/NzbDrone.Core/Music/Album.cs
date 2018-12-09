@@ -13,6 +13,7 @@ namespace NzbDrone.Core.Music
         {
             Genres = new List<string>();
             Images = new List<MediaCover.MediaCover>();
+            Links = new List<Links>();
             Ratings = new Ratings();
             Artist = new Artist();
         }
@@ -24,9 +25,11 @@ namespace NzbDrone.Core.Music
         public int ArtistMetadataId { get; set; }
         public string ForeignAlbumId { get; set; }
         public string Title { get; set; }
+        public string Overview { get; set; }
         public string Disambiguation { get; set; }
         public DateTime? ReleaseDate { get; set; }
         public List<MediaCover.MediaCover> Images { get; set; }
+        public List<Links> Links { get; set; }
         public List<string> Genres { get; set; }
         public String AlbumType { get; set; }
         public List<SecondaryAlbumType> SecondaryTypes { get; set; }
