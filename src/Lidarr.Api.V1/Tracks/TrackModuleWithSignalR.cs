@@ -87,15 +87,15 @@ namespace Lidarr.Api.V1.Tracks
                 {
                     var track = tracks[i];
                     var resource = result[i];
-                    var series = track.Artist.Value;
+                    var artist = track.Artist.Value;
 
                     if (includeArtist)
                     {
-                        resource.Artist = series.ToResource();
+                        resource.Artist = artist.ToResource();
                     }
                     if (includeTrackFile && tracks[i].TrackFileId != 0)
                     {
-                        resource.TrackFile = tracks[i].TrackFile.Value.ToResource(series, _upgradableSpecification);
+                        resource.TrackFile = tracks[i].TrackFile.Value.ToResource(artist, _upgradableSpecification);
                     }
                 }
             }
