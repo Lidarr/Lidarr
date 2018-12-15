@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using NzbDrone.Core.Music;
 using System.Data;
 using System;
+using System.Data.SQLite;
+using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Core.Datastore.Migration
 {
@@ -221,6 +223,12 @@ namespace NzbDrone.Core.Datastore.Migration
         {
             foreach (var release in releases)
             {
+                if (release.Title.IsNullOrWhiteSpace())
+                {
+                    _logger.Warn("Skipping malformed AlbumRelease [{0}] '{1}'", release.ForeignReleaseId, release.Title);
+                    continue;
+                }
+                
                 using (var writeReleaseCmd = conn.CreateCommand())
                 {
                     writeReleaseCmd.Transaction = tran;
@@ -239,7 +247,15 @@ namespace NzbDrone.Core.Datastore.Migration
                     writeReleaseCmd.AddParameter(release.TrackCount);
                     writeReleaseCmd.AddParameter(release.Monitored);
 
-                    writeReleaseCmd.ExecuteNonQuery();
+                    try
+                    {
+                        writeReleaseCmd.ExecuteNonQuery();
+                    }
+                    catch(SQLiteException e)
+                    {
+                        _logger.Warn("Caught SQLiteException {0}", e);
+                        _logger.Warn("Skipping malformed AlbumRelease [{0}] '{1}'", release.ForeignReleaseId, release.Title);
+                    }
                 }
             }
         }
