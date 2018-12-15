@@ -80,6 +80,14 @@ namespace NzbDrone.Core.Datastore.Migration
             Alter.Table("Tracks").AddColumn("ForeignRecordingId").AsString().WithDefaultValue("0");
             Alter.Table("Tracks").AddColumn("AlbumReleaseId").AsInt32().WithDefaultValue(0);
             Alter.Table("Tracks").AddColumn("ArtistMetadataId").AsInt32().WithDefaultValue(0);
+
+            // delete tracks where they were linked to a duff album release
+            Execute.Sql(@"DELETE FROM Tracks
+                          WHERE Id IN (
+                          SELECT Tracks.Id FROM Tracks
+                          JOIN Albums ON Tracks.AlbumId = Albums.Id
+                          LEFT OUTER JOIN AlbumReleases ON AlbumReleases.AlbumId = Albums.Id
+                          WHERE AlbumReleases.Id IS NULL)");
             
             // Set track release to the only release we've bothered populating
             Execute.Sql(@"UPDATE Tracks
