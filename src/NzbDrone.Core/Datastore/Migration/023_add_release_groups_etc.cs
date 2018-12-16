@@ -80,14 +80,6 @@ namespace NzbDrone.Core.Datastore.Migration
             Alter.Table("Tracks").AddColumn("ForeignRecordingId").AsString().WithDefaultValue("0");
             Alter.Table("Tracks").AddColumn("AlbumReleaseId").AsInt32().WithDefaultValue(0);
             Alter.Table("Tracks").AddColumn("ArtistMetadataId").AsInt32().WithDefaultValue(0);
-
-            // delete tracks where they were linked to a duff album release
-            Execute.Sql(@"DELETE FROM Tracks
-                          WHERE Id IN (
-                          SELECT Tracks.Id FROM Tracks
-                          JOIN Albums ON Tracks.AlbumId = Albums.Id
-                          LEFT OUTER JOIN AlbumReleases ON AlbumReleases.AlbumId = Albums.Id
-                          WHERE AlbumReleases.Id IS NULL)");
             
             // Set track release to the only release we've bothered populating
             Execute.Sql(@"UPDATE Tracks
@@ -168,8 +160,8 @@ namespace NzbDrone.Core.Datastore.Migration
         private void PopulateReleases(IDbConnection conn, IDbTransaction tran)
         {
             var releases = ReadReleasesFromAlbums(conn, tran);
-            var goodReleases = releases.Where(x => x.Title.IsNotNullOrWhiteSpace()).DistinctBy(x => x.ForeignReleaseId).ToList();
-            WriteReleasesToReleases(goodReleases,conn, tran);
+            var dupeFreeReleases = releases.DistinctBy(x => x.ForeignReleaseId).ToList();
+            WriteReleasesToReleases(dupeFreeReleases, conn, tran);
         }
 
         public class LegacyAlbumRelease : IEmbeddedDocument
@@ -211,7 +203,7 @@ namespace NzbDrone.Core.Datastore.Migration
                         releases.Add(new AlbumRelease {
                                 AlbumId = rgId,
                                 ForeignReleaseId = albumRelease.Id,
-                                Title = albumRelease.Title,
+                                Title = albumRelease.Title.IsNotNullOrWhiteSpace() ? albumRelease.Title : "",
                                 Status = "",
                                 Duration = 0,
                                 Label = albumRelease.Label,
