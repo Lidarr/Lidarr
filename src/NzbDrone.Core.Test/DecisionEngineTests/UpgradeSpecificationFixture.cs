@@ -3,7 +3,7 @@ using NUnit.Framework;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Profiles.Qualities;
 using NzbDrone.Core.Qualities;
-using NzbDrone.Core.DecisionEngine;
+using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Core.Languages;
 using NzbDrone.Core.Profiles.Languages;
@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
 {
     [TestFixture]
 
-    public class QualityUpgradeSpecificationFixture : CoreTest<UpgradableSpecification>
+    public class UpgradeSpecificationFixture : CoreTest<UpgradableSpecification>
     {
         public static object[] IsUpgradeTestCases =
         {
@@ -35,11 +35,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             new object[] { Quality.MP3_320, 1, Language.Spanish, Quality.MP3_256, 2, Language.French, Quality.MP3_320, Language.Spanish, false }
         };
 
-        [SetUp]
-        public void Setup()
-        {
-
-        }
+        private static readonly int NoPreferredWordScore = 0;
 
         private void GivenAutoDownloadPropers(bool autoDownloadPropers)
         {
@@ -53,21 +49,29 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         {
             GivenAutoDownloadPropers(true);
 
-            var profile = new Profile
-
+            var profile = new QualityProfile
             {
+                UpgradeAllowed = true,
                 Items = Qualities.QualityFixture.GetDefaultQualities()
             };
 
             var langProfile = new LanguageProfile
-
             {
+                UpgradeAllowed = true,
                 Languages = LanguageFixture.GetDefaultLanguages(),
                 Cutoff = Language.English
             };
 
-            Subject.IsUpgradable(profile, langProfile, new QualityModel(current, new Revision(version: currentVersion)), Language.English, new QualityModel(newQuality, new Revision(version: newVersion)), Language.English)
-                                .Should().Be(expected);
+            Subject.IsUpgradable(
+                        profile,
+                        langProfile,
+                        new QualityModel(current, new Revision(version: currentVersion)),
+                        Language.English,
+                        NoPreferredWordScore,
+                        new QualityModel(newQuality, new Revision(version: newVersion)),
+                        Language.English,
+                        NoPreferredWordScore)
+                   .Should().Be(expected);
         }
 
         [Test, TestCaseSource(nameof(IsUpgradeTestCasesLanguages))]
@@ -75,19 +79,30 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         {
             GivenAutoDownloadPropers(true);
 
-            var profile = new Profile
+            var profile = new QualityProfile
             {
+                UpgradeAllowed = true,
                 Items = Qualities.QualityFixture.GetDefaultQualities(),
                 Cutoff = cutoff.Id,
             };
 
             var langProfile = new LanguageProfile
             {
+                UpgradeAllowed = true,
                 Languages = LanguageFixture.GetDefaultLanguages(),
                 Cutoff = languageCutoff
             };
 
-            Subject.IsUpgradable(profile, langProfile, new QualityModel(current, new Revision(version: currentVersion)), currentLanguage, new QualityModel(newQuality, new Revision(version: newVersion)), newLanguage).Should().Be(expected);
+            Subject.IsUpgradable(
+                        profile,
+                        langProfile,
+                        new QualityModel(current, new Revision(version: currentVersion)),
+                        currentLanguage,
+                        NoPreferredWordScore,
+                        new QualityModel(newQuality, new Revision(version: newVersion)),
+                        newLanguage,
+                        NoPreferredWordScore)
+                   .Should().Be(expected);
         }
 
         [Test]
@@ -95,7 +110,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         {
             GivenAutoDownloadPropers(false);
 
-            var profile = new Profile
+            var profile = new QualityProfile
             {
                 Items = Qualities.QualityFixture.GetDefaultQualities(),
             };
@@ -107,7 +122,15 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
                 Cutoff = Language.English
             };
 
-            Subject.IsUpgradable(profile, langProfile, new QualityModel(Quality.MP3_256, new Revision(version: 2)), Language.English, new QualityModel(Quality.MP3_256, new Revision(version: 1)), Language.English)
+            Subject.IsUpgradable(
+                        profile,
+                        langProfile,
+                        new QualityModel(Quality.MP3_256, new Revision(version: 2)),
+                        Language.English,
+                        NoPreferredWordScore,
+                        new QualityModel(Quality.MP3_256, new Revision(version: 1)),
+                        Language.English,
+                        NoPreferredWordScore)
                 .Should().BeFalse();
         }
     }

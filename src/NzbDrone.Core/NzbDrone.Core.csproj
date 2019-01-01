@@ -247,7 +247,6 @@
     <Compile Include="DecisionEngine\Specifications\RssSync\MonitoredAlbumSpecification.cs" />
     <Compile Include="DecisionEngine\Specifications\RssSync\ProperSpecification.cs" />
     <Compile Include="DecisionEngine\Specifications\Search\AlbumRequestedSpecification.cs" />
-    <Compile Include="DecisionEngine\Specifications\Search\SeasonMatchSpecification.cs" />
     <Compile Include="DecisionEngine\Specifications\Search\ArtistSpecification.cs" />
     <Compile Include="DecisionEngine\Specifications\Search\SingleAlbumSearchMatchSpecification.cs" />
     <Compile Include="DecisionEngine\Specifications\TorrentSeedingSpecification.cs" />
