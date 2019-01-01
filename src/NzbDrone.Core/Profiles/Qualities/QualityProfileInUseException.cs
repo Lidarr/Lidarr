@@ -3,9 +3,9 @@ using NzbDrone.Core.Exceptions;
 
 namespace NzbDrone.Core.Profiles.Qualities
 {
-    public class ProfileInUseException : NzbDroneClientException
+    public class QualityProfileInUseException : NzbDroneClientException
     {
-        public ProfileInUseException(string name)
+        public QualityProfileInUseException(string name)
             : base(HttpStatusCode.BadRequest, "Profile [{0}] is in use.", name)
         {
 

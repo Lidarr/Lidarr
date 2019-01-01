@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Music;
 
-namespace NzbDrone.Core.DecisionEngine
+namespace NzbDrone.Core.DecisionEngine.Specifications
 {
     public class SameTracksSpecification
     {

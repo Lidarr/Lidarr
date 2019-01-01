@@ -13,24 +13,24 @@ namespace NzbDrone.Core.Profiles.Qualities
 {
     public interface IProfileService
     {
-        Profile Add(Profile profile);
-        void Update(Profile profile);
+        QualityProfile Add(QualityProfile profile);
+        void Update(QualityProfile profile);
         void Delete(int id);
-        List<Profile> All();
-        Profile Get(int id);
+        List<QualityProfile> All();
+        QualityProfile Get(int id);
         bool Exists(int id);
-        Profile GetDefaultProfile(string name, Quality cutoff = null, params Quality[] allowed);
+        QualityProfile GetDefaultProfile(string name, Quality cutoff = null, params Quality[] allowed);
 
     }
 
-    public class ProfileService : IProfileService, IHandle<ApplicationStartedEvent>
+    public class QualityProfileService : IProfileService, IHandle<ApplicationStartedEvent>
     {
         private readonly IProfileRepository _profileRepository;
         private readonly IArtistService _artistService;
         private readonly IImportListFactory _importListFactory;
         private readonly Logger _logger;
 
-        public ProfileService(IProfileRepository profileRepository, IArtistService artistService, IImportListFactory importListFactory, Logger logger)
+        public QualityProfileService(IProfileRepository profileRepository, IArtistService artistService, IImportListFactory importListFactory, Logger logger)
         {
             _profileRepository = profileRepository;
             _artistService = artistService;
@@ -38,33 +38,33 @@ namespace NzbDrone.Core.Profiles.Qualities
             _logger = logger;
         }
 
-        public Profile Add(Profile profile)
+        public QualityProfile Add(QualityProfile profile)
         {
             return _profileRepository.Insert(profile);
         }
 
-        public void Update(Profile profile)
+        public void Update(QualityProfile profile)
         {
             _profileRepository.Update(profile);
         }
 
         public void Delete(int id)
         {
-            if (_artistService.GetAllArtists().Any(c => c.ProfileId == id) || _importListFactory.All().Any(c => c.ProfileId == id))
+            if (_artistService.GetAllArtists().Any(c => c.QualityProfileId == id) || _importListFactory.All().Any(c => c.ProfileId == id))
             {
                 var profile = _profileRepository.Get(id);
-                throw new ProfileInUseException(profile.Name);
+                throw new QualityProfileInUseException(profile.Name);
             }
 
             _profileRepository.Delete(id);
         }
 
-        public List<Profile> All()
+        public List<QualityProfile> All()
         {
             return _profileRepository.All().ToList();
         }
 
-        public Profile Get(int id)
+        public QualityProfile Get(int id)
         {
             return _profileRepository.Get(id);
         }
@@ -127,10 +127,10 @@ namespace NzbDrone.Core.Profiles.Qualities
                 Quality.MP3_320);
         }
 
-        public Profile GetDefaultProfile(string name, Quality cutoff = null, params Quality[] allowed)
+        public QualityProfile GetDefaultProfile(string name, Quality cutoff = null, params Quality[] allowed)
         {
             var groupedQualites = Quality.DefaultQualityDefinitions.GroupBy(q => q.GroupWeight);
-            var items = new List<ProfileQualityItem>();
+            var items = new List<QualityProfileQualityItem>();
             var groupId = 1000;
             var profileCutoff = cutoff == null ? Quality.Unknown.Id : cutoff.Id;
 
@@ -139,17 +139,17 @@ namespace NzbDrone.Core.Profiles.Qualities
                 if (group.Count() == 1)
                 {
                     var quality = group.First().Quality;
-                    items.Add(new ProfileQualityItem { Quality = quality, Allowed = allowed.Contains(quality) });
+                    items.Add(new QualityProfileQualityItem { Quality = quality, Allowed = allowed.Contains(quality) });
                     continue;
                 }
 
                 var groupAllowed = group.Any(g => allowed.Contains(g.Quality));
 
-                items.Add(new ProfileQualityItem
+                items.Add(new QualityProfileQualityItem
                 {
                     Id = groupId,
                     Name = group.First().GroupName,
-                    Items = group.Select(g => new ProfileQualityItem
+                    Items = group.Select(g => new QualityProfileQualityItem
                     {
                         Quality = g.Quality,
                         Allowed = groupAllowed
@@ -165,7 +165,7 @@ namespace NzbDrone.Core.Profiles.Qualities
                 groupId++;
             }
 
-            var qualityProfile = new Profile
+            var qualityProfile = new QualityProfile
             {
                 Name = name,
                 Cutoff = profileCutoff,
@@ -175,7 +175,7 @@ namespace NzbDrone.Core.Profiles.Qualities
             return qualityProfile;
         }
 
-        private Profile AddDefaultProfile(string name, Quality cutoff, params Quality[] allowed)
+        private QualityProfile AddDefaultProfile(string name, Quality cutoff, params Quality[] allowed)
         {
             var profile = GetDefaultProfile(name, cutoff, allowed);
 

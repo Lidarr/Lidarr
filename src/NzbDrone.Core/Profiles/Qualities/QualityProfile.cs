@@ -5,11 +5,12 @@ using NzbDrone.Core.Qualities;
 
 namespace NzbDrone.Core.Profiles.Qualities
 {
-    public class Profile : ModelBase
+    public class QualityProfile : ModelBase
     {
         public string Name { get; set; }
+        public bool UpgradeAllowed { get; set; }
         public int Cutoff { get; set; }
-        public List<ProfileQualityItem> Items { get; set; }
+        public List<QualityProfileQualityItem> Items { get; set; }
 
         public Quality LastAllowedQuality()
         {
@@ -25,12 +26,12 @@ namespace NzbDrone.Core.Profiles.Qualities
             return lastAllowed.Items.Last().Quality;
         }
 
-        public QualityIndex GetIndex(Quality quality)
+        public QualityIndex GetIndex(Quality quality, bool respectGroupOrder = false)
         {
-            return GetIndex(quality.Id);
+            return GetIndex(quality.Id, respectGroupOrder);
         }
 
-        public QualityIndex GetIndex(int id)
+        public QualityIndex GetIndex(int id, bool respectGroupOrder = false)
         {
             for (var i = 0; i < Items.Count; i++)
             {
@@ -55,7 +56,7 @@ namespace NzbDrone.Core.Profiles.Qualities
 
                     if (groupItem.Quality.Id == id)
                     {
-                        return new QualityIndex(i, g);
+                        return respectGroupOrder ? new QualityIndex(i, g) : new QualityIndex(i);
                     }
                 }
             }
