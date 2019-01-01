@@ -11,7 +11,6 @@ import HeartRating from 'Components/HeartRating';
 import Icon from 'Components/Icon';
 import IconButton from 'Components/Link/IconButton';
 import Label from 'Components/Label';
-import Measure from 'Components/Measure';
 import MonitorToggleButton from 'Components/MonitorToggleButton';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
@@ -181,7 +180,9 @@ class ArtistDetails extends Component {
       isPopulated,
       albumsError,
       trackFilesError,
+      hasAlbums,
       hasMonitoredAlbums,
+      hasTrackFiles,
       previousArtist,
       nextArtist,
       onMonitorTogglePress,
@@ -240,7 +241,7 @@ class ArtistDetails extends Component {
             <PageToolbarButton
               label="Search Monitored"
               iconName={icons.SEARCH}
-              isDisabled={!monitored || !hasMonitoredAlbums}
+              isDisabled={!monitored || !hasMonitoredAlbums || !hasAlbums}
               isSpinning={isSearching}
               title={hasMonitoredAlbums ? undefined : 'No monitored albums for this artist'}
               onPress={onSearchPress}
@@ -251,18 +252,21 @@ class ArtistDetails extends Component {
             <PageToolbarButton
               label="Preview Rename"
               iconName={icons.ORGANIZE}
+              isDisabled={!hasTrackFiles}
               onPress={this.onOrganizePress}
             />
 
             <PageToolbarButton
               label="Manage Tracks"
               iconName={icons.TRACK_FILE}
+              isDisabled={!hasTrackFiles}
               onPress={this.onManageTracksPress}
             />
 
             <PageToolbarButton
               label="History"
               iconName={icons.HISTORY}
+              isDisabled={!hasAlbums}
               onPress={this.onArtistHistoryPress}
             />
 
@@ -638,7 +642,9 @@ ArtistDetails.propTypes = {
   isPopulated: PropTypes.bool.isRequired,
   albumsError: PropTypes.object,
   trackFilesError: PropTypes.object,
+  hasAlbums: PropTypes.bool.isRequired,
   hasMonitoredAlbums: PropTypes.bool.isRequired,
+  hasTrackFiles: PropTypes.bool.isRequired,
   previousArtist: PropTypes.object.isRequired,
   nextArtist: PropTypes.object.isRequired,
   onMonitorTogglePress: PropTypes.func.isRequired,

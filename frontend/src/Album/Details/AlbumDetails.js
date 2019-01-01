@@ -25,7 +25,7 @@ import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
 import PageToolbarButton from 'Components/Page/Toolbar/PageToolbarButton';
 import AlbumDetailsMediumConnector from './AlbumDetailsMediumConnector';
 import ArtistHistoryModal from 'Artist/History/ArtistHistoryModal';
-import InteractiveSearchModal from 'InteractiveSearch/InteractiveSearchModal';
+import AlbumInteractiveSearchModalConnector from 'Album/Search/AlbumInteractiveSearchModalConnector';
 import TrackFileEditorModal from 'TrackFile/Editor/TrackFileEditorModal';
 import AlbumDetailsLinks from './AlbumDetailsLinks';
 import styles from './AlbumDetails.css';
@@ -456,9 +456,10 @@ class AlbumDetails extends Component {
             onModalClose={this.onManageTracksModalClose}
           />
 
-          <InteractiveSearchModal
+          <AlbumInteractiveSearchModalConnector
             isOpen={isInteractiveSearchModalOpen}
             albumId={id}
+            albumTitle={title}
             onModalClose={this.onInteractiveSearchModalClose}
           />
 

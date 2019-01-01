@@ -34,8 +34,13 @@ class ArtistDetailsSeason extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.artistId !== this.props.artistId) {
+    const {
+      artistId
+    } = this.props;
+
+    if (prevProps.artistId !== artistId) {
       this._expandByDefault();
+      return;
     }
   }
 
@@ -113,7 +118,6 @@ class ArtistDetailsSeason extends Component {
       items,
       columns,
       isExpanded,
-      artistMonitored,
       sortKey,
       sortDirection,
       onSortPress,
@@ -235,7 +239,6 @@ ArtistDetailsSeason.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   isExpanded: PropTypes.bool,
-  artistMonitored: PropTypes.bool.isRequired,
   isSmallScreen: PropTypes.bool.isRequired,
   onTableOptionChange: PropTypes.func.isRequired,
   onExpandPress: PropTypes.func.isRequired,
