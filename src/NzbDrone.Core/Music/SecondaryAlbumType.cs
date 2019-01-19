@@ -86,8 +86,7 @@ namespace NzbDrone.Core.Music
             Remix,
             DJMix,
             Mixtape,
-            Demo,
-            Audiobook
+            Demo
         };
 
 
