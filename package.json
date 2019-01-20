@@ -7,7 +7,8 @@
     "start": "gulp watch",
     "eslint": "esprint check",
     "eslint-fix": "eslint --fix frontend/** ",
-    "stylelint": "stylelint frontend/**/*.css --config frontend/.stylelintrc"
+    "stylelint-linux": "stylelint $(find frontend -name '*.css') --config frontend/.stylelintrc",
+    "stylelint-windows": "stylelint frontend/**/*.css --config frontend/.stylelintrc"
   },
   "repository": {
     "type": "git",

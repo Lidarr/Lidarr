@@ -97,7 +97,11 @@ LintUI()
     ProgressEnd 'ESLint'
 
     ProgressStart 'Stylelint'
-    CheckExitCode yarn stylelint
+    if [ $runtime = "dotnet" ] ; then
+        CheckExitCode yarn stylelint-windows
+    else
+        CheckExitCode yarn stylelint-linux
+    fi
     ProgressEnd 'Stylelint'
 }
 
