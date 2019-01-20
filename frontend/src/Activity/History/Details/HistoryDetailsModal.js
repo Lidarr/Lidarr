@@ -23,6 +23,10 @@ function getHeaderTitle(eventType) {
       return 'Track File Deleted';
     case 'trackFileRenamed':
       return 'Track File Renamed';
+    case 'albumImportIncomplete':
+      return 'Album Import Incomplete';
+    case 'downloadComplete':
+      return 'Download Completed';
     default:
       return 'Unknown';
   }

@@ -19,6 +19,10 @@ function getIconName(eventType) {
       return icons.DELETE;
     case 'trackFileRenamed':
       return icons.ORGANIZE;
+    case 'albumImportIncomplete':
+      return icons.DOWNLOADED;
+    case 'downloadComplete':
+      return icons.DOWNLOADED;
     default:
       return icons.UNKNOWN;
   }
@@ -28,6 +32,8 @@ function getIconKind(eventType) {
   switch (eventType) {
     case 'downloadFailed':
       return kinds.DANGER;
+    case 'albumImportIncomplete':
+      return kinds.WARNING;
     default:
       return kinds.DEFAULT;
   }
@@ -47,6 +53,10 @@ function getTooltip(eventType, data) {
       return 'Track file deleted';
     case 'trackFileRenamed':
       return 'Track file renamed';
+    case 'albumImportIncomplete':
+      return 'Files downloaded but not all could be imported';
+    case 'downloadComplete':
+      return 'Download completed and successfully imported';
     default:
       return 'Unknown event';
   }
