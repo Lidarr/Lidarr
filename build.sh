@@ -259,7 +259,7 @@ PackageTests()
     if [ $runtime = "dotnet" ] ; then
         $nuget install NUnit.ConsoleRunner -Version 3.7.0 -Output $testPackageFolder
     else
-        mono $nuget install NUnit.ConsoleRunner -Version 3.7.0 -Output $testPackageFolder
+        nuget install NUnit.ConsoleRunner -Version 3.7.0 -Output $testPackageFolder
     fi
 
     cp $outputFolder/*.dll $testPackageFolder
@@ -280,6 +280,9 @@ PackageTests()
 
     echo "Copying CurlSharp libraries"
     cp $sourceFolder/ExternalModules/CurlSharp/libs/i386/* $testPackageFolder
+
+    echo "Copying dylibs"
+    cp -r $outputFolderMacOS/*.dylib $testPackageFolder
 
     ProgressEnd 'Creating Test Package'
 }
