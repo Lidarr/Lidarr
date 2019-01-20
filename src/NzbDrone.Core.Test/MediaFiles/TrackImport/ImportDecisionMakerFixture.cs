@@ -104,7 +104,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
             GivenVideoFiles(new List<string> { @"C:\Test\Unsorted\The.Office.S03E115.DVDRip.XviD-OSiTV.avi".AsOsAgnostic() });
 
             Mocker.GetMock<IIdentificationService>()
-                .Setup(s => s.Identify(It.IsAny<List<LocalTrack>>(), It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<AlbumRelease>()))
+                .Setup(s => s.Identify(It.IsAny<List<LocalTrack>>(), It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<AlbumRelease>(), It.IsAny<bool>()))
                 .Returns((List<LocalTrack> tracks, Artist artist, Album album, AlbumRelease release) => {
                         var ret = new LocalAlbumRelease(tracks);
                         ret.AlbumRelease = _albumRelease;
@@ -297,7 +297,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
             GivenVideoFiles(_audioFiles);
 
             Mocker.GetMock<IIdentificationService>()
-                .Setup(s => s.Identify(It.IsAny<List<LocalTrack>>(), It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<AlbumRelease>()))
+                .Setup(s => s.Identify(It.IsAny<List<LocalTrack>>(), It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<AlbumRelease>(), It.IsAny<bool>()))
                 .Returns((List<LocalTrack> tracks, Artist artist, Album album, AlbumRelease release) => {
                         return new List<LocalAlbumRelease> { new LocalAlbumRelease(tracks) };
                     });

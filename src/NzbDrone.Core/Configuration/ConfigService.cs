@@ -223,6 +223,13 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("RescanAfterRefresh", value); }
         }
 
+        public AllowFingerprinting AllowFingerprinting
+        {
+            get { return GetValueEnum("AllowFingerprinting", AllowFingerprinting.NewFiles); }
+
+            set { SetValue("AllowFingerprinting", value); }
+        }
+
         public bool SetPermissionsLinux
         {
             get { return GetValueBoolean("SetPermissionsLinux", false); }

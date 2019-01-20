@@ -19,7 +19,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
     {
         List<ImportDecision<LocalTrack>> GetImportDecisions(List<string> musicFiles, Artist artist);
         List<ImportDecision<LocalTrack>> GetImportDecisions(List<string> musicFiles, Artist artist, ParsedTrackInfo folderInfo);
-        List<ImportDecision<LocalTrack>> GetImportDecisions(List<string> musicFiles, Artist artist, Album album, DownloadClientItem downloadClientItem, ParsedTrackInfo folderInfo, bool filterExistingFiles, bool strict);
+        List<ImportDecision<LocalTrack>> GetImportDecisions(List<string> musicFiles, Artist artist, Album album, DownloadClientItem downloadClientItem, ParsedTrackInfo folderInfo, bool filterExistingFiles, bool newDownload);
     }
 
     public class ImportDecisionMaker : IMakeImportDecision
@@ -71,7 +71,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             return GetImportDecisions(musicFiles, artist, null, null, folderInfo, false, true);
         }
 
-        public List<ImportDecision<LocalTrack>> GetImportDecisions(List<string> musicFiles, Artist artist, Album album, DownloadClientItem downloadClientItem, ParsedTrackInfo folderInfo, bool filterExistingFiles, bool strict)
+        public List<ImportDecision<LocalTrack>> GetImportDecisions(List<string> musicFiles, Artist artist, Album album, DownloadClientItem downloadClientItem, ParsedTrackInfo folderInfo, bool filterExistingFiles, bool newDownload)
         {
             var files = filterExistingFiles && (artist != null) ? _mediaFileService.FilterExistingFiles(musicFiles.ToList(), artist) : musicFiles.ToList();
 
@@ -117,11 +117,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 }
             }
 
-            var releases = _identificationService.Identify(localTracks, artist, album, null);
+            var releases = _identificationService.Identify(localTracks, artist, album, null, newDownload);
 
             foreach (var release in releases)
             {
-                release.StrictDecision = strict;
+                release.NewDownload = newDownload;
                 var releaseDecision = GetDecision(release);
 
                 foreach (var localTrack in release.LocalTracks)

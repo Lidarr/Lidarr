@@ -144,6 +144,7 @@
     <Compile Include="Configuration\AccessDeniedConfigFileException.cs" />
     <Compile Include="Configuration\InvalidConfigFileException.cs" />
     <Compile Include="Configuration\RescanAfterRefreshType.cs" />
+    <Compile Include="Configuration\AllowFingerprinting.cs" />
     <Compile Include="Configuration\ResetApiKeyCommand.cs" />
     <Compile Include="CustomFilters\CustomFilter.cs" />
     <Compile Include="CustomFilters\CustomFilterRepository.cs" />

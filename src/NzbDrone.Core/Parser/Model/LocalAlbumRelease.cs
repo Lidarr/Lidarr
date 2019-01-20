@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Parser.Model
         public TrackMapping TrackMapping;
         public Distance Distance;
         public AlbumRelease AlbumRelease;
-        public bool StrictDecision;
+        public bool NewDownload;
 
         public void PopulateMatch()
         {

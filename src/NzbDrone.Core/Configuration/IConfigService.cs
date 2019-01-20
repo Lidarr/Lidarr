@@ -34,6 +34,7 @@ namespace NzbDrone.Core.Configuration
         bool ImportExtraFiles { get; set; }
         string ExtraFileExtensions { get; set; }
         RescanAfterRefreshType RescanAfterRefresh { get; set; }
+        AllowFingerprinting AllowFingerprinting { get; set; }
 
         //Permissions (Media Management)
         bool SetPermissionsLinux { get; set; }

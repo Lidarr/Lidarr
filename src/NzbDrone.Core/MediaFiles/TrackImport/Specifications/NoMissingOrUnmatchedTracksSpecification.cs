@@ -16,13 +16,13 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
 
         public Decision IsSatisfiedBy(LocalAlbumRelease localAlbumRelease)
         {
-            if (localAlbumRelease.StrictDecision && localAlbumRelease.TrackMapping.LocalExtra.Count > 0)
+            if (localAlbumRelease.NewDownload && localAlbumRelease.TrackMapping.LocalExtra.Count > 0)
             {
                 _logger.Debug("This release has track files that have not been matched. Skipping {0}", localAlbumRelease);
                 return Decision.Reject("Has unmatched tracks");
             }
 
-            if (localAlbumRelease.StrictDecision && localAlbumRelease.TrackMapping.MBExtra.Count > 0)
+            if (localAlbumRelease.NewDownload && localAlbumRelease.TrackMapping.MBExtra.Count > 0)
             {
                 _logger.Debug("This release is missing tracks. Skipping {0}", localAlbumRelease);
                 return Decision.Reject("Has missing tracks");

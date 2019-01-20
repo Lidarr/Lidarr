@@ -23,7 +23,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
             string reasons;
             
             // strict when a new download
-            if (localAlbumRelease.StrictDecision)
+            if (localAlbumRelease.NewDownload)
             {
                 dist = localAlbumRelease.Distance.NormalizedDistance();
                 reasons = localAlbumRelease.Distance.Reasons;

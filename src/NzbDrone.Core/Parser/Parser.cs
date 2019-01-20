@@ -12,6 +12,7 @@ using NzbDrone.Core.Languages;
 using TagLib;
 using TagLib.Id3v2;
 using System.Globalization;
+using NzbDrone.Common.Serializer;
 
 namespace NzbDrone.Core.Parser
 {
@@ -710,7 +711,7 @@ namespace NzbDrone.Core.Parser
                 result.TrackMBId = tag.GetField("MUSICBRAINZ_RELEASETRACKID").SingleOrDefault();
             }
             
-            Logger.Trace("File Tags Parsed: Artist: {0}, Album: {1}, Disc: {2}, Track Numbers(s): {3}, TrackTitle: {4}", result.ArtistTitle, result.AlbumTitle, result.DiscNumber, trackNumber, result.Title);
+            Logger.Debug("File Tags Parsed: {0}", result.ToJson().Replace(System.Environment.NewLine, string.Empty));
 
             foreach (ICodec codec in file.Properties.Codecs)
             {

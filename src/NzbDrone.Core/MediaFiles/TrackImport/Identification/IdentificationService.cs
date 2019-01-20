@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using NLog;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles.TrackImport.Aggregation;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser;
@@ -15,7 +16,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 {
     public interface IIdentificationService
     {
-        List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, Artist artist, Album album, AlbumRelease release);
+        List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, Artist artist, Album album, AlbumRelease release, bool newDownload);
     }
 
     public class IdentificationService : IIdentificationService
@@ -26,6 +27,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private readonly ITrackGroupingService _trackGroupingService;
         private readonly IFingerprintingService _fingerprintingService;
         private readonly IAugmentingService _augmentingService;
+        private readonly IConfigService _configService;
         private readonly Logger _logger;
 
         public IdentificationService(IArtistService artistService,
@@ -34,6 +36,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                                      ITrackGroupingService trackGroupingService,
                                      IFingerprintingService fingerprintingService,
                                      IAugmentingService augmentingService,
+                                     IConfigService configService,
                                      Logger logger)
         {
             _artistService = artistService;
@@ -42,6 +45,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             _trackGroupingService = trackGroupingService;
             _fingerprintingService = fingerprintingService;
             _augmentingService = augmentingService;
+            _configService = configService;
             _logger = logger;
         }
 
@@ -55,7 +59,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private readonly List<string> VariousArtistNames = new List<string> { "various artists", "various", "va", "unknown" };
         private readonly List<string> VariousArtistIds = new List<string> { "89ad4ac3-39f7-470e-963a-56509c546377" };
 
-        public List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, Artist artist, Album album, AlbumRelease release)
+        public List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, Artist artist, Album album, AlbumRelease release, bool newDownload)
         {
             // 1 group localTracks so that we think they represent a single release
             // 2 get candidates given specified artist, album and release
@@ -78,15 +82,25 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 {
                     _logger.Warn($"Augmentation failed for {localRelease}");
                 }
-                IdentifyRelease(localRelease, artist, album, release);
+                IdentifyRelease(localRelease, artist, album, release, newDownload);
             }
 
             return releases;
         }
 
+        private bool FingerprintingAllowed(bool newDownload)
+        {
+            if (_configService.AllowFingerprinting == AllowFingerprinting.Never ||
+                (_configService.AllowFingerprinting == AllowFingerprinting.NewFiles && !newDownload))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         private bool ShouldFingerprint(LocalAlbumRelease localAlbumRelease)
         {
-
             var worstTrackMatchDist = localAlbumRelease.TrackMapping?.Mapping
                 .OrderByDescending(x => x.Value.Item2.NormalizedDistance())
                 .First()
@@ -103,12 +117,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             return false;
         }
 
-        private void IdentifyRelease(LocalAlbumRelease localAlbumRelease, Artist artist, Album album, AlbumRelease release)
+        private void IdentifyRelease(LocalAlbumRelease localAlbumRelease, Artist artist, Album album, AlbumRelease release, bool newDownload)
         {
             bool fingerprinted = false;
             
             var candidateReleases = GetCandidatesFromTags(localAlbumRelease, artist, album, release);
-            if (candidateReleases.Count == 0)
+            if (candidateReleases.Count == 0 && FingerprintingAllowed(newDownload))
             {
                 _logger.Debug("No candidates found, fingerprinting");
                 _fingerprintingService.Lookup(localAlbumRelease.LocalTracks, 0.5);
@@ -126,7 +140,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
             // If result isn't great and we haven't fingerprinted, try that
             // Note that this can improve the match even if we try the same candidates
-            if (!fingerprinted && ShouldFingerprint(localAlbumRelease))
+            if (!fingerprinted && FingerprintingAllowed(newDownload) && ShouldFingerprint(localAlbumRelease))
             {
                 _fingerprintingService.Lookup(localAlbumRelease.LocalTracks, 0.5);
 
