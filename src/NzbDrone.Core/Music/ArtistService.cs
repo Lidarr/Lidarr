@@ -1,14 +1,12 @@
 using NLog;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music.Events;
-using NzbDrone.Core.Organizer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Core.Parser;
-using System.Text;
-using System.IO;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Cache;
 
 namespace NzbDrone.Core.Music
 {
@@ -39,12 +37,14 @@ namespace NzbDrone.Core.Music
         private readonly ITrackService _trackService;
         private readonly IBuildArtistPaths _artistPathBuilder;
         private readonly Logger _logger;
+        private readonly ICached<List<Artist>> _cache;
 
         public ArtistService(IArtistRepository artistRepository,
                              IArtistMetadataRepository artistMetadataRepository,
                              IEventAggregator eventAggregator,
                              ITrackService trackService,
                              IBuildArtistPaths artistPathBuilder,
+                             ICacheManager cacheManager,
                              Logger logger)
         {
             _artistRepository = artistRepository;
@@ -52,11 +52,13 @@ namespace NzbDrone.Core.Music
             _eventAggregator = eventAggregator;
             _trackService = trackService;
             _artistPathBuilder = artistPathBuilder;
+            _cache = cacheManager.GetCache<List<Artist>>(GetType());
             _logger = logger;
         }
 
         public Artist AddArtist(Artist newArtist)
         {
+            _cache.Clear();
             _artistMetadataRepository.Upsert(newArtist);
             _artistRepository.Insert(newArtist);
             _eventAggregator.PublishEvent(new ArtistAddedEvent(GetArtist(newArtist.Id)));
@@ -66,6 +68,7 @@ namespace NzbDrone.Core.Music
 
         public List<Artist> AddArtists(List<Artist> newArtists)
         {
+            _cache.Clear();
             _artistMetadataRepository.UpsertMany(newArtists);
             _artistRepository.InsertMany(newArtists);
             _eventAggregator.PublishEvent(new ArtistsImportedEvent(newArtists.Select(s => s.Id).ToList()));
@@ -80,6 +83,7 @@ namespace NzbDrone.Core.Music
 
         public void DeleteArtist(int artistId, bool deleteFiles)
         {
+            _cache.Clear();
             var artist = _artistRepository.Get(artistId);
             _artistRepository.Delete(artistId);
             _eventAggregator.PublishEvent(new ArtistDeletedEvent(artist, deleteFiles));
@@ -136,7 +140,7 @@ namespace NzbDrone.Core.Music
 
         public List<Artist> GetAllArtists()
         {
-            return _artistRepository.All().ToList();
+            return _cache.Get("GetAllArtists", () => _artistRepository.All().ToList(), TimeSpan.FromSeconds(30));
         }
 
         public List<Artist> AllForTag(int tagId)
@@ -167,6 +171,7 @@ namespace NzbDrone.Core.Music
 
         public Artist UpdateArtist(Artist artist)
         {
+            _cache.Clear();
             var storedArtist = GetArtist(artist.Id); // Is it Id or iTunesId?
             var updatedArtist = _artistMetadataRepository.Update(artist);
             updatedArtist = _artistRepository.Update(updatedArtist);
@@ -177,6 +182,7 @@ namespace NzbDrone.Core.Music
 
         public List<Artist> UpdateArtists(List<Artist> artist, bool useExistingRelativeFolder)
         {
+            _cache.Clear();
             _logger.Debug("Updating {0} artist", artist.Count);
 
             foreach (var s in artist)
