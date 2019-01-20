@@ -11,8 +11,19 @@ import SelectTrackModalContent from './SelectTrackModalContent';
 function createMapStateToProps() {
   return createSelector(
     createClientSideCollectionSelector('tracks'),
-    (tracks) => {
-      return tracks;
+    createClientSideCollectionSelector('interactiveImport'),
+    (tracks, interactiveImport) => {
+
+      const selectedTracksByItem = _.map(interactiveImport.items, (item) => {
+        return { id: item.id, tracks: _.map(item.tracks, (track) => {
+          return track.id;
+        }) };
+      });
+
+      return {
+        ...tracks,
+        selectedTracksByItem
+      };
     }
   );
 }
@@ -86,6 +97,8 @@ SelectTrackModalContentConnector.propTypes = {
   id: PropTypes.number.isRequired,
   artistId: PropTypes.number.isRequired,
   albumId: PropTypes.number.isRequired,
+  rejections: PropTypes.arrayOf(PropTypes.object).isRequired,
+  tags: PropTypes.object.isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   fetchTracks: PropTypes.func.isRequired,
   setTracksSort: PropTypes.func.isRequired,

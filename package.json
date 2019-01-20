@@ -6,7 +6,7 @@
     "build": "gulp build",
     "start": "gulp watch",
     "eslint": "esprint check",
-    "eslint-fix": "eslint start --fix",
+    "eslint-fix": "eslint --fix frontend/** ",
     "stylelint": "stylelint frontend/**/*.css --config frontend/.stylelintrc"
   },
   "repository": {

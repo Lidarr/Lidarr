@@ -256,6 +256,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             item.Language = decision.LocalTrack.Language;
             item.Size = _diskProvider.GetFileSize(decision.LocalTrack.Path);
             item.Rejections = decision.Rejections;
+            item.Tags = decision.LocalTrack.ParsedTrackInfo;
 
             return item;
         }
