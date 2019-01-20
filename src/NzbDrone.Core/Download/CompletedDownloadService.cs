@@ -126,7 +126,7 @@ namespace NzbDrone.Core.Download
                 trackedDownload.State = TrackedDownloadStage.ImportFailed;
                 var statusMessages = importResults
                     .Where(v => v.Result != ImportResultType.Imported)
-                    .Select(v => new TrackedDownloadStatusMessage(Path.GetFileName(v.ImportDecision.LocalTrack.Path), v.Errors))
+                    .Select(v => new TrackedDownloadStatusMessage(Path.GetFileName(v.ImportDecision.Item.Path), v.Errors))
                     .ToArray();
 
                 trackedDownload.Warn(statusMessages);

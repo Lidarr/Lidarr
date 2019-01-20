@@ -43,10 +43,11 @@ class SelectTrackModalContentConnector extends Component {
   componentDidMount() {
     const {
       artistId,
-      albumId
+      albumId,
+      albumReleaseId
     } = this.props;
 
-    this.props.fetchTracks({ artistId, albumId });
+    this.props.fetchTracks({ artistId, albumId, albumReleaseId });
   }
 
   componentWillUnmount() {
@@ -97,6 +98,7 @@ SelectTrackModalContentConnector.propTypes = {
   id: PropTypes.number.isRequired,
   artistId: PropTypes.number.isRequired,
   albumId: PropTypes.number.isRequired,
+  albumReleaseId: PropTypes.number.isRequired,
   rejections: PropTypes.arrayOf(PropTypes.object).isRequired,
   tags: PropTypes.object.isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,

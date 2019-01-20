@@ -167,6 +167,7 @@ class InteractiveImportRow extends Component {
       relativePath,
       artist,
       album,
+      albumReleaseId,
       tracks,
       quality,
       language,
@@ -328,6 +329,7 @@ class InteractiveImportRow extends Component {
           id={id}
           artistId={artist && artist.id}
           albumId={album && album.id}
+          albumReleaseId={albumReleaseId}
           rejections={rejections}
           tags={tags}
           sortKey='mediumNumber'
@@ -363,6 +365,7 @@ InteractiveImportRow.propTypes = {
   relativePath: PropTypes.string.isRequired,
   artist: PropTypes.object,
   album: PropTypes.object,
+  albumReleaseId: PropTypes.number,
   tracks: PropTypes.arrayOf(PropTypes.object).isRequired,
   quality: PropTypes.object,
   language: PropTypes.object,

@@ -142,13 +142,18 @@ namespace NzbDrone.Core.Parser
                     break;
             }
 
+            if (result.Quality != Quality.Unknown)
+            {
+                result.QualityDetectionSource = QualityDetectionSource.TagLib;
+            }
+
             //Based on extension
             if (result.Quality == Quality.Unknown && !name.ContainsInvalidPathChars())
             {
                 try
                 {
                     result.Quality = MediaFileExtensions.GetQualityForExtension(Path.GetExtension(name));
-                    result.QualitySource = QualitySource.Extension;
+                    result.QualityDetectionSource = QualityDetectionSource.Extension;
                 }
                 catch (ArgumentException)
                 {

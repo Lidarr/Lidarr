@@ -1,0 +1,254 @@
+using NUnit.Framework;
+using NzbDrone.Core.MediaFiles.TrackImport.Identification;
+using NzbDrone.Test.Common;
+using FluentAssertions;
+using NzbDrone.Core.Test.Framework;
+using FizzWare.NBuilder;
+using NzbDrone.Core.Parser.Model;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;
+
+namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
+{
+    [TestFixture]
+    public class TrackGroupingServiceFixture : CoreTest<TrackGroupingService>
+    {
+        private List<LocalTrack> GivenTracks(string root, string artist, string album, int count)
+        {
+            var fileInfos = Builder<ParsedTrackInfo>
+                .CreateListOfSize(count)
+                .All()
+                .With(f => f.ArtistTitle = artist)
+                .With(f => f.AlbumTitle = album)
+                .With(f => f.AlbumMBId = null)
+                .With(f => f.ReleaseMBId = null)
+                .Build();
+
+            var tracks = fileInfos.Select(x => Builder<LocalTrack>
+                                          .CreateNew()
+                                          .With(y => y.FileTrackInfo = x)
+                                          .With(y => y.Path = Path.Combine(root, x.Title))
+                                          .Build()).ToList();
+
+            return tracks;
+        }
+
+        private List<LocalTrack> GivenVaTracks(string root, string album, int count)
+        {
+            var fileInfos = Builder<ParsedTrackInfo>
+                .CreateListOfSize(10)
+                .All()
+                .With(f => f.AlbumTitle = "album")
+                .With(f => f.AlbumMBId = null)
+                .With(f => f.ReleaseMBId = null)
+                .Build();
+
+            var tracks = fileInfos.Select(x => Builder<LocalTrack>
+                                          .CreateNew()
+                                          .With(y => y.FileTrackInfo = x)
+                                          .With(y => y.Path = Path.Combine(@"C:\music\incoming".AsOsAgnostic(), x.Title))
+                                          .Build()).ToList();
+
+            return tracks;
+        }
+
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(10)]
+        public void single_artist_is_not_various_artists(int count)
+        {
+            var tracks = GivenTracks(@"C:\music\incoming".AsOsAgnostic(), "artist", "album", count);
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(false);
+        }
+
+        [Test]
+        public void all_different_artists_is_various_artists()
+        {
+            var tracks = GivenVaTracks(@"C:\music\incoming".AsOsAgnostic(), "album", 10);
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(true);
+        }
+
+        [Test]
+        public void two_artists_is_not_various_artists()
+        {
+            var dir = @"C:\music\incoming".AsOsAgnostic();
+            var tracks = GivenTracks(dir, "artist1", "album", 10);
+            tracks.AddRange(GivenTracks(dir, "artist2", "album", 10));
+
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(false);
+        }
+
+        [Test]
+        public void mostly_different_artists_is_various_artists()
+        {
+            var dir = @"C:\music\incoming".AsOsAgnostic();
+            var tracks = GivenVaTracks(dir, "album", 10);
+            tracks.AddRange(GivenTracks(dir, "single_artist", "album", 2));
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(true);
+        }
+
+        [TestCase("")]
+        [TestCase("Various Artists")]
+        [TestCase("Various")]
+        [TestCase("VA")]
+        [TestCase("Unknown")]
+        public void va_artist_title_is_various_artists(string artist)
+        {
+            var tracks = GivenTracks(@"C:\music\incoming".AsOsAgnostic(), artist, "album", 10);
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(true);
+        }
+
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(10)]
+        public void should_group_single_artist_album(int count)
+        {
+            var tracks = GivenTracks(@"C:\music\incoming".AsOsAgnostic(), "artist", "album", count);
+            var output = Subject.GroupTracks(tracks);
+
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(false);
+            TrackGroupingService.LooksLikeSingleRelease(tracks).Should().Be(true);
+                        
+            output.Count.Should().Be(1);
+            output[0].LocalTracks.Count.Should().Be(count);
+        }
+
+        [TestCase("cd")]
+        [TestCase("disc")]
+        [TestCase("disk")]
+        public void should_group_multi_disc_release(string mediaName)
+        {
+            var tracks = GivenTracks($"C:\\music\\incoming\\artist - album\\{mediaName} 1".AsOsAgnostic(),
+                                    "artist", "album", 10);
+            tracks.AddRange(GivenTracks($"C:\\music\\incoming\\artist - album\\{mediaName} 2".AsOsAgnostic(),
+                                        "artist", "album", 5));
+
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(false);
+            TrackGroupingService.LooksLikeSingleRelease(tracks).Should().Be(true);
+
+            var output = Subject.GroupTracks(tracks);
+            output.Count.Should().Be(1);
+            output[0].LocalTracks.Count.Should().Be(15);
+        }
+
+        [Test]
+        public void should_not_group_two_different_albums_by_same_artist()
+        {
+            var tracks = GivenTracks($"C:\\music\\incoming\\artist - album1".AsOsAgnostic(),
+                                     "artist", "album1", 10);
+            tracks.AddRange(GivenTracks($"C:\\music\\incoming\\artist - album2".AsOsAgnostic(),
+                                        "artist", "album2", 5));
+
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(false);
+            TrackGroupingService.LooksLikeSingleRelease(tracks).Should().Be(false);
+            
+            var output = Subject.GroupTracks(tracks);
+            output.Count.Should().Be(2);
+            output[0].LocalTracks.Count.Should().Be(10);
+            output[1].LocalTracks.Count.Should().Be(5);
+        }
+
+        [Test]
+        public void should_not_group_two_different_tracks_in_same_directory()
+        {
+            var tracks = GivenTracks($"C:\\music\\incoming".AsOsAgnostic(),
+                                     "artist", "album1", 1);
+            tracks.AddRange(GivenTracks($"C:\\music\\incoming".AsOsAgnostic(),
+                                        "artist", "album2", 1));
+
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(false);
+            TrackGroupingService.LooksLikeSingleRelease(tracks).Should().Be(false);
+            
+            var output = Subject.GroupTracks(tracks);
+            output.Count.Should().Be(2);
+            output[0].LocalTracks.Count.Should().Be(1);
+            output[1].LocalTracks.Count.Should().Be(1);
+        }
+
+        
+        [Test]
+        public void should_separate_two_albums_in_same_directory()
+        {
+            var tracks = GivenTracks($"C:\\music\\incoming\\artist discog".AsOsAgnostic(),
+                                     "artist", "album1", 10);
+            tracks.AddRange(GivenTracks($"C:\\music\\incoming\\artist disog".AsOsAgnostic(),
+                                        "artist", "album2", 5));
+
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(false);
+            TrackGroupingService.LooksLikeSingleRelease(tracks).Should().Be(false);
+                        
+            var output = Subject.GroupTracks(tracks);
+            output.Count.Should().Be(2);
+            output[0].LocalTracks.Count.Should().Be(10);
+            output[1].LocalTracks.Count.Should().Be(5);
+        }
+
+        [Test]
+        public void should_separate_many_albums_in_same_directory()
+        {
+            var tracks = new List<LocalTrack>();
+            for (int i = 0; i < 100; i++)
+            {
+                tracks.AddRange(GivenTracks($"C:\\music".AsOsAgnostic(),
+                                            "artist" + i, "album" + i, 10));
+            }
+
+            // don't test various artists here because it's designed to only work if there's a common album
+            TrackGroupingService.LooksLikeSingleRelease(tracks).Should().Be(false);
+                        
+            var output = Subject.GroupTracks(tracks);
+            output.Count.Should().Be(100);
+            output.Select(x => x.LocalTracks.Count).Distinct().ShouldBeEquivalentTo(new List<int> { 10 });
+        }
+
+        [Test]
+        public void should_separate_two_albums_by_different_artists_in_same_directory()
+        {
+            var tracks = GivenTracks($"C:\\music\\incoming".AsOsAgnostic(),
+                                     "artist1", "album1", 10);
+            tracks.AddRange(GivenTracks($"C:\\music\\incoming".AsOsAgnostic(),
+                                        "artist2", "album2", 5));
+
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(false);
+            TrackGroupingService.LooksLikeSingleRelease(tracks).Should().Be(false);
+                        
+            var output = Subject.GroupTracks(tracks);
+            output.Count.Should().Be(2);
+            output[0].LocalTracks.Count.Should().Be(10);
+            output[1].LocalTracks.Count.Should().Be(5);
+        }
+
+        [Test]
+        public void should_group_va_release()
+        {
+            var tracks = GivenVaTracks(@"C:\music\incoming".AsOsAgnostic(), "album", 10);
+
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(true);
+            TrackGroupingService.LooksLikeSingleRelease(tracks).Should().Be(true);
+            
+            var output = Subject.GroupTracks(tracks);
+            output.Count.Should().Be(1);
+            output[0].LocalTracks.Count.Should().Be(10);
+        }
+
+        [Test]
+        public void should_not_group_two_albums_by_different_artists_with_same_title()
+        {
+            var tracks = GivenTracks($"C:\\music\\incoming\\album".AsOsAgnostic(),
+                                     "artist1", "album", 10);
+            tracks.AddRange(GivenTracks($"C:\\music\\incoming\\album".AsOsAgnostic(),
+                                        "artist2", "album", 5));
+
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(false);
+            TrackGroupingService.LooksLikeSingleRelease(tracks).Should().Be(false);
+            
+            var output = Subject.GroupTracks(tracks);
+
+            output.Count.Should().Be(2);
+            output[0].LocalTracks.Count.Should().Be(10);
+            output[1].LocalTracks.Count.Should().Be(5);
+        }
+
+    }
+}

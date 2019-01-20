@@ -1,9 +1,6 @@
-using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Qualities;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NzbDrone.Core.Languages;
 
 namespace NzbDrone.Core.Parser.Model
@@ -18,8 +15,16 @@ namespace NzbDrone.Core.Parser.Model
         public string ArtistMBId { get; set; }
         public string AlbumMBId { get; set; }
         public string ReleaseMBId { get; set; }
+        public string RecordingMBId { get; set; }
         public string TrackMBId { get; set; }
         public int DiscNumber { get; set; }
+        public int DiscCount { get; set; }
+        public IsoCountry Country { get; set; }
+        public uint Year { get; set; }
+        public string Label { get; set; }
+        public string CatalogNumber { get; set; }
+        public string Disambiguation { get; set; }
+        public TimeSpan Duration { get; set; }
         public QualityModel Quality { get; set; }
         public int[] TrackNumbers { get; set; }
         public Language Language { get; set; }

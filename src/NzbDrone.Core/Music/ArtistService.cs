@@ -20,6 +20,7 @@ namespace NzbDrone.Core.Music
         Artist FindById(string spotifyId);
         Artist FindByName(string title);
         Artist FindByNameInexact(string title);
+        List<Artist> GetCandidates(string title);
         void DeleteArtist(int artistId, bool deleteFiles);
         List<Artist> GetAllArtists();
         List<Artist> AllForTag(int tagId);
@@ -99,12 +100,8 @@ namespace NzbDrone.Core.Music
             return _artistRepository.FindByName(title.CleanArtistName());
         }
 
-        public Artist FindByNameInexact(string title)
+        public List<Tuple<Func<Artist, string, double>, string>> ArtistScoringFunctions(string title, string cleanTitle)
         {
-            var cleanTitle = title.CleanArtistName();
-
-            var artists = GetAllArtists();
-
             Func< Func<Artist, string, double>, string, Tuple<Func<Artist, string, double>, string>> tc = Tuple.Create;
             var scoringFunctions = new List<Tuple<Func<Artist, string, double>, string>> {
                 tc((a, t) => a.CleanName.FuzzyMatch(t), cleanTitle),
@@ -120,19 +117,39 @@ namespace NzbDrone.Core.Music
                 scoringFunctions.Add(tc((a, t) => a.CleanName.FuzzyMatch(t), "the" + cleanTitle));
             }
 
-            foreach (var func in scoringFunctions)
+            return scoringFunctions;
+        }
+
+        public Artist FindByNameInexact(string title)
+        {
+            var artists = GetAllArtists();
+
+            foreach (var func in ArtistScoringFunctions(title, title.CleanArtistName()))
             {
-                var artist = FindByStringInexact(artists, func.Item1, func.Item2);
-                if (artist != null)
+                var results = FindByStringInexact(artists, func.Item1, func.Item2);
+                if (results.Count == 1)
                 {
-                    return artist;
+                    return results[0];
                 }
             }
 
             return null;
         }
 
-        private Artist FindByStringInexact(List<Artist> artists, Func<Artist, string, double> scoreFunction, string title)
+        public List<Artist> GetCandidates(string title)
+        {
+            var artists = GetAllArtists();
+            var output = new List<Artist>();
+            
+            foreach (var func in ArtistScoringFunctions(title, title.CleanArtistName()))
+            {
+                output.AddRange(FindByStringInexact(artists, func.Item1, func.Item2));
+            }
+
+            return output.DistinctBy(x => x.Id).ToList();
+        }
+
+        private List<Artist> FindByStringInexact(List<Artist> artists, Func<Artist, string, double> scoreFunction, string title)
         {
             const double fuzzThreshold = 0.8;
             const double fuzzGap = 0.2;
@@ -146,22 +163,13 @@ namespace NzbDrone.Core.Music
                 .OrderByDescending(s => s.MatchProb)
                 .ToList();
 
-            if (!sortedArtists.Any())
-            {
-                return null;
-            }
-
             _logger.Trace("\nFuzzy artist match on '{0}':\n{1}",
                           title,
                           string.Join("\n", sortedArtists.Select(x => $"[{x.Artist.Name}] {x.Artist.CleanName}: {x.MatchProb}")));
 
-            if (sortedArtists[0].MatchProb > fuzzThreshold
-                && (sortedArtists.Count == 1 || sortedArtists[0].MatchProb - sortedArtists[1].MatchProb > fuzzGap))
-            {
-                return sortedArtists[0].Artist;
-            }
-
-            return null;
+            return sortedArtists.Where((x, i) => x.MatchProb > fuzzThreshold && (i == 0 ? true : x.MatchProb - sortedArtists[i - 1].MatchProb < fuzzGap))
+                .Select(x => x.Artist)
+                .ToList();
         }
 
         public List<Artist> GetAllArtists()

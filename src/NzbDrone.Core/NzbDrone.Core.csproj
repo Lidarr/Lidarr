@@ -724,6 +724,12 @@
     <Compile Include="MediaFiles\TrackFileMovingService.cs" />
     <Compile Include="MediaFiles\TrackFileMoveResult.cs" />
     <Compile Include="MediaFiles\TrackImport\ImportMode.cs" />
+    <Compile Include="MediaFiles\TrackImport\Aggregation\Aggregators\AggregateQuality.cs" />
+    <Compile Include="MediaFiles\TrackImport\Aggregation\Aggregators\AggregateReleaseGroup.cs" />
+    <Compile Include="MediaFiles\TrackImport\Aggregation\Aggregators\AggregateFilenameInfo.cs" />
+    <Compile Include="MediaFiles\TrackImport\Aggregation\Aggregators\IAggregateLocalTrack.cs" />
+    <Compile Include="MediaFiles\TrackImport\Aggregation\AggregationService.cs" />
+    <Compile Include="MediaFiles\TrackImport\Aggregation\AggregationFailedException.cs" />
     <Compile Include="MediaFiles\Commands\RenameFilesCommand.cs" />
     <Compile Include="MediaFiles\DeleteMediaFileReason.cs" />
     <Compile Include="MediaFiles\DiskScanService.cs">
@@ -746,6 +752,16 @@
     <Compile Include="MediaFiles\TrackImport\Specifications\NotUnpackingSpecification.cs" />
     <Compile Include="MediaFiles\TrackImport\Specifications\SameFileSpecification.cs" />
     <Compile Include="MediaFiles\TrackImport\Specifications\UpgradeSpecification.cs" />
+    <Compile Include="MediaFiles\TrackImport\Specifications\CloseAlbumMatchSpecification.cs" />
+    <Compile Include="MediaFiles\TrackImport\Specifications\CloseTrackMatchSpecification.cs" />
+    <Compile Include="MediaFiles\TrackImport\Specifications\AlbumUpgradeSpecification.cs" />
+    <Compile Include="MediaFiles\TrackImport\Specifications\MoreTracksSpecification.cs" />
+    <Compile Include="MediaFiles\TrackImport\Specifications\NoMissingOrUnmatchedTracksSpecification.cs" />
+    <Compile Include="MediaFiles\TrackImport\Specifications\ReleaseWantedSpecification.cs" />
+    <Compile Include="MediaFiles\TrackImport\Identification\TrackGroupingService.cs" />
+    <Compile Include="MediaFiles\TrackImport\Identification\IdentificationService.cs" />
+    <Compile Include="MediaFiles\TrackImport\Identification\Distance.cs" />
+    <Compile Include="MediaFiles\TrackImport\Identification\Munkres.cs" />
     <Compile Include="MediaFiles\Events\ArtistRenamedEvent.cs" />
     <Compile Include="MediaFiles\Events\ArtistScannedEvent.cs" />
     <Compile Include="MediaFiles\Events\ArtistScanSkippedEvent.cs" />
@@ -971,9 +987,12 @@
     <Compile Include="Notifications\Twitter\TwitterSettings.cs" />
     <Compile Include="Parser\IsoLanguage.cs" />
     <Compile Include="Parser\IsoLanguages.cs" />
+    <Compile Include="Parser\IsoCountry.cs" />
+    <Compile Include="Parser\IsoCountries.cs" />
     <Compile Include="Parser\LanguageParser.cs" />
     <Compile Include="Parser\Model\ArtistTitleInfo.cs" />
     <Compile Include="Parser\Model\ImportListItemInfo.cs" />
+    <Compile Include="Parser\Model\LocalAlbumRelease.cs" />
     <Compile Include="Parser\Model\LocalTrack.cs" />
     <Compile Include="Parser\Model\ParsedAlbumInfo.cs" />
     <Compile Include="Parser\Model\ParsedTrackInfo.cs" />
@@ -996,7 +1015,7 @@
     <Compile Include="Profiles\Qualities\ProfileRepository.cs" />
     <Compile Include="Profiles\Qualities\QualityIndex.cs" />
     <Compile Include="ProgressMessaging\ProgressMessageContext.cs" />
-    <Compile Include="Qualities\QualitySource.cs" />
+    <Compile Include="Qualities\QualityDetectionSource.cs" />
     <Compile Include="Qualities\Revision.cs" />
     <Compile Include="Queue\EstimatedCompletionTimeComparer.cs" />
     <Compile Include="Queue\TimeleftComparer.cs" />
@@ -1094,6 +1113,7 @@
     <Compile Include="Parser\Model\TorrentInfo.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\ParsingService.cs" />
+    <Compile Include="Parser\FingerprintingService.cs" />
     <Compile Include="Parser\SceneChecker.cs" />
     <Compile Include="Parser\QualityParser.cs" />
     <Compile Include="Profiles\Qualities\Profile.cs" />
@@ -1263,6 +1283,14 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Include="Notifications\Telegram\TelegramError.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Libraries\Fpcalc\chromaprint-fpcalc-1.4.3-windows-x86_64\fpcalc.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Libraries\Fpcalc\chromaprint-fpcalc-1.4.3-macos-x86_64\fpcalc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

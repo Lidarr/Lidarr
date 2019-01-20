@@ -175,9 +175,10 @@ PackageMono()
     rm -f $outputFolderLinux/ServiceUninstall.*
     rm -f $outputFolderLinux/ServiceInstall.*
 
-    echo "Removing native windows binaries Sqlite, MediaInfo"
+    echo "Removing native windows binaries Sqlite, MediaInfo, fpcalc"
     rm -f $outputFolderLinux/sqlite3.*
     rm -f $outputFolderLinux/MediaInfo.*
+    rm -f $outputFolderLinux/fpcalc*
 
     echo "Adding Lidarr.Core.dll.config (for dllmap)"
     cp $sourceFolder/NzbDrone.Core/Lidarr.Core.dll.config $outputFolderLinux
@@ -213,6 +214,7 @@ PackageMacOS()
 
     echo "Copying Binaries"
     cp -r $outputFolderLinux/* $outputFolderMacOS
+    cp $outputFolder/fpcalc $outputFolderMacOS
 
     echo "Adding sqlite dylibs"
     cp $sourceFolder/Libraries/Sqlite/*.dylib $outputFolderMacOS
@@ -238,6 +240,7 @@ PackageMacOSApp()
 
     echo "Copying Binaries"
     cp -r $outputFolderLinux/* $outputFolderMacOSApp/Lidarr.app/Contents/MacOS
+    cp $outputFolder/fpcalc $outputFolderMacOSApp/Lidarr.app/Contents/MacOS
 
     echo "Adding sqlite dylibs"
     cp $sourceFolder/Libraries/Sqlite/*.dylib $outputFolderMacOSApp/Lidarr.app/Contents/MacOS
@@ -267,6 +270,8 @@ PackageTests()
     fi
 
     cp $outputFolder/*.dll $testPackageFolder
+    cp $outputFolder/*.exe $testPackageFolder
+    cp $outputFolder/fpcalc $testPackageFolder
     cp ./*.sh $testPackageFolder
 
     echo "Creating MDBs for tests"
@@ -300,6 +305,9 @@ CleanupWindowsPackage()
 
     echo "Adding Lidarr.Windows to UpdatePackage"
     cp $outputFolder/Lidarr.Windows.* $updateFolder
+
+    echo "Removing MacOS fpcalc"
+    rm $outputFolder/fpcalc
 
     ProgressEnd 'Cleaning Windows Package'
 }

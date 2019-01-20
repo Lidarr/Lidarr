@@ -7,6 +7,7 @@ addons:
     packages:
       - dos2unix
       - nuget
+      - libchromaprint-tools
     update: true
   homebrew:
     packages:

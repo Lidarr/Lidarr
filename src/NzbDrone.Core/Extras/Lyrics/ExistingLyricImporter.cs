@@ -6,22 +6,24 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Extras.Files;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.MediaFiles.TrackImport.Aggregation;
 
 namespace NzbDrone.Core.Extras.Lyrics
 {
     public class ExistingLyricImporter : ImportExistingExtraFilesBase<LyricFile>
     {
         private readonly IExtraFileService<LyricFile> _lyricFileService;
-        private readonly IParsingService _parsingService;
+        private readonly IAugmentingService _augmentingService;
         private readonly Logger _logger;
 
         public ExistingLyricImporter(IExtraFileService<LyricFile> lyricFileService,
-                                        IParsingService parsingService,
-                                        Logger logger)
+                                     IAugmentingService augmentingService,
+                                     Logger logger)
             : base (lyricFileService)
         {
             _lyricFileService = lyricFileService;
-            _parsingService = parsingService;
+            _augmentingService = augmentingService;
             _logger = logger;
         }
 
@@ -40,9 +42,18 @@ namespace NzbDrone.Core.Extras.Lyrics
 
                 if (LyricFileExtensions.Extensions.Contains(extension))
                 {
-                    var localTrack = _parsingService.GetLocalTrack(possibleSubtitleFile, artist);
+                    var localTrack = new LocalTrack
+                    {
+                        FileTrackInfo = Parser.Parser.ParseMusicPath(possibleSubtitleFile),
+                        Artist = artist,
+                        Path = possibleSubtitleFile
+                    };
 
-                    if (localTrack == null)
+                    try
+                    {
+                        _augmentingService.Augment(localTrack, false);
+                    }
+                    catch (AugmentingFailedException)
                     {
                         _logger.Debug("Unable to parse lyric file: {0}", possibleSubtitleFile);
                         continue;

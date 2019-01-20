@@ -1,9 +1,9 @@
 ﻿namespace NzbDrone.Core.Qualities
 {
-    public enum QualitySource
+    public enum QualityDetectionSource
     {
         Name,
         Extension,
-        MediaInfo
+        TagLib
     }
 }
