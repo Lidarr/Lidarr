@@ -687,6 +687,7 @@ namespace NzbDrone.Core.Parser
                 TrackNumbers = temp,
                 ArtistTitleInfo = artistTitleInfo,
                 Title = trackTitle,
+                CleanTitle = trackTitle.CleanTrackTitle(),
                 Country = IsoCountries.Find(file.Tag.MusicBrainzReleaseCountry)
             };
 

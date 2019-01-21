@@ -15,6 +15,7 @@ namespace NzbDrone.Core.Music
         List<Track> GetTracksByArtist(int artistId);
         List<Track> GetTracksByAlbum(int albumId);
         List<Track> GetTracksByRelease(int albumReleaseId);
+        List<Track> GetTracksByReleases(List<int> albumReleaseIds);
         List<Track> GetTracksByForeignReleaseId(string foreignReleaseId);
         List<Track> GetTracksByForeignTrackIds(List<string> ids);
         List<Track> TracksWithFiles(int artistId);
@@ -66,6 +67,11 @@ namespace NzbDrone.Core.Music
         public List<Track> GetTracksByRelease(int albumReleaseId)
         {
             return _trackRepository.GetTracksByRelease(albumReleaseId);
+        }
+
+        public List<Track> GetTracksByReleases(List<int> albumReleaseIds)
+        {
+            return _trackRepository.GetTracksByReleases(albumReleaseIds);
         }
 
         public List<Track> GetTracksByForeignReleaseId(string foreignReleaseId)

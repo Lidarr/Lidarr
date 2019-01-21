@@ -9,6 +9,7 @@ namespace NzbDrone.Core.Parser.Model
     {
         //public int TrackNumber { get; set; }
         public string Title { get; set; }
+        public string CleanTitle { get; set; }
         public string ArtistTitle { get; set; }
         public string AlbumTitle { get; set; }
         public ArtistTitleInfo ArtistTitleInfo { get; set; }

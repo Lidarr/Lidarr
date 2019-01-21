@@ -32,13 +32,13 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
         }
 
         [Test]
-        public void test_add_expr()
+        public void test_add_bool()
         {
             var dist = new Distance();
-            dist.AddExpr("expr", () => true);
+            dist.AddBool("expr", true);
             dist.Penalties.ShouldBeEquivalentTo(new Dictionary<string, List<double>> { {"expr", new List<double> { 1.0 }}} );
 
-            dist.AddExpr("expr", () => false);
+            dist.AddBool("expr", false);
             dist.Penalties.ShouldBeEquivalentTo(new Dictionary<string, List<double>> { {"expr", new List<double> { 1.0, 0.0 }}} );
         }
 

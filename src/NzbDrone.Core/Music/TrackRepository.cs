@@ -2,6 +2,7 @@ using NzbDrone.Core.Datastore;
 using System.Collections.Generic;
 using NLog;
 using NzbDrone.Core.Messaging.Events;
+using Marr.Data;
 
 namespace NzbDrone.Core.Music
 {
@@ -10,6 +11,7 @@ namespace NzbDrone.Core.Music
         List<Track> GetTracks(int artistId);
         List<Track> GetTracksByAlbum(int albumId);
         List<Track> GetTracksByRelease(int albumReleaseId);
+        List<Track> GetTracksByReleases(List<int> albumReleaseId);
         List<Track> GetTracksByForeignReleaseId(string foreignReleaseId);
         List<Track> GetTracksByForeignTrackIds(List<string> foreignTrackId);
         List<Track> GetTracksByFileId(int fileId);
@@ -28,6 +30,9 @@ namespace NzbDrone.Core.Music
         {
             _database = database;
             _logger = logger;
+
+            MapRepository.Instance.EnableTraceLogging = true;
+            System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.ConsoleTraceListener());
         }
 
         public List<Track> GetTracks(int artistId)
@@ -60,6 +65,15 @@ namespace NzbDrone.Core.Music
         public List<Track> GetTracksByRelease(int albumReleaseId)
         {
             return Query.Where(t => t.AlbumReleaseId == albumReleaseId).ToList();
+        }
+
+        public List<Track> GetTracksByReleases(List<int> albumReleaseIds)
+        {
+            // this will populate the artist metadata also
+            return Query
+                .Join<Track, ArtistMetadata>(Marr.Data.QGen.JoinType.Inner, t => t.ArtistMetadata, (l, r) => l.ArtistMetadataId == r.Id)
+                .Where($"[AlbumReleaseId] IN ({string.Join(", ", albumReleaseIds)})")
+                .ToList();
         }
 
         public List<Track> GetTracksByForeignReleaseId(string foreignReleaseId)

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using NzbDrone.Common.EnsureThat;
 using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
@@ -37,7 +35,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         public Distance()
         {
-            penalties = new Dictionary<string, List<double>>();
+            penalties = new Dictionary<string, List<double>>(15);
         }
 
         public Dictionary<string, List<double>> Penalties => penalties;
@@ -81,7 +79,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         public void Add(string key, double dist)
         {
-            Ensure.That(dist, () => dist).IsInRange(0, 1);
+            // Ensure.That(dist, () => dist).IsInRange(0, 1);
             if (penalties.ContainsKey(key))
             {
                 penalties[key].Add(dist);                    
@@ -116,11 +114,13 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             }
         }
 
-        private static readonly Regex NonWordRegex = new Regex(@"[^a-z0-9]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-
         private static string Clean(string input)
         {
-            return NonWordRegex.Replace(input.ToLower().RemoveAccent(), string.Empty).Trim();
+            char[] arr = input.ToLower().RemoveAccent().ToCharArray();
+
+            arr = Array.FindAll<char>(arr, c => (char.IsLetterOrDigit(c)));
+
+            return new string(arr);
         }
 
         public void AddString(string key, string value, string target)
@@ -143,9 +143,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             }
         }
 
-        public void AddExpr(string key, Func<bool> expr)
+        public void AddBool(string key, bool expr)
         {
-            Add(key, expr() ? 1.0 : 0.0);
+            Add(key, expr ? 1.0 : 0.0);
         }
 
         public void AddEquality<T>(string key, T value, List<T> options) where T : IEquatable<T>
