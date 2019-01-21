@@ -16,7 +16,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 {
     public interface IIdentificationService
     {
-        List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, Artist artist, Album album, AlbumRelease release, bool newDownload);
+        List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, Artist artist, Album album, AlbumRelease release, bool newDownload, bool singleRelease);
     }
 
     public class IdentificationService : IIdentificationService
@@ -59,7 +59,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private readonly List<string> VariousArtistNames = new List<string> { "various artists", "various", "va", "unknown" };
         private readonly List<string> VariousArtistIds = new List<string> { "89ad4ac3-39f7-470e-963a-56509c546377" };
 
-        public List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, Artist artist, Album album, AlbumRelease release, bool newDownload)
+        public List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, Artist artist, Album album, AlbumRelease release, bool newDownload, bool singleRelease)
         {
             // 1 group localTracks so that we think they represent a single release
             // 2 get candidates given specified artist, album and release
@@ -70,7 +70,15 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             _logger.Debug("Specified artist {0}, album {1}, release {2}", artist.NullSafe(), album.NullSafe(), release.NullSafe());
             _logger.Trace("Processing files:\n{0}", string.Join("\n", localTracks.Select(x => x.Path)));
 
-            var releases = _trackGroupingService.GroupTracks(localTracks);
+            List<LocalAlbumRelease> releases = null;
+            if (singleRelease)
+            {
+                releases = new List<LocalAlbumRelease>{ new LocalAlbumRelease(localTracks) };
+            }
+            else
+            {
+                releases = _trackGroupingService.GroupTracks(localTracks);
+            }
             
             foreach (var localRelease in releases)
             {

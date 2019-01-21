@@ -104,7 +104,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
             GivenVideoFiles(new List<string> { @"C:\Test\Unsorted\The.Office.S03E115.DVDRip.XviD-OSiTV.avi".AsOsAgnostic() });
 
             Mocker.GetMock<IIdentificationService>()
-                .Setup(s => s.Identify(It.IsAny<List<LocalTrack>>(), It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<AlbumRelease>(), It.IsAny<bool>()))
+                .Setup(s => s.Identify(It.IsAny<List<LocalTrack>>(), It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<AlbumRelease>(), It.IsAny<bool>(), It.IsAny<bool>()))
                 .Returns((List<LocalTrack> tracks, Artist artist, Album album, AlbumRelease release) => {
                         var ret = new LocalAlbumRelease(tracks);
                         ret.AlbumRelease = _albumRelease;
@@ -145,7 +145,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
             GivenAugmentationSuccess();
             GivenSpecifications(_albumpass1, _albumpass2, _albumpass3, _albumfail1, _albumfail2, _albumfail3);
 
-            Subject.GetImportDecisions(_audioFiles, new Artist(), null, downloadClientItem, null, false, false);
+            Subject.GetImportDecisions(_audioFiles, new Artist(), null, downloadClientItem, null, false, false, false);
 
             _albumfail1.Verify(c => c.IsSatisfiedBy(It.IsAny<LocalAlbumRelease>()), Times.Once());
             _albumfail2.Verify(c => c.IsSatisfiedBy(It.IsAny<LocalAlbumRelease>()), Times.Once());
@@ -162,7 +162,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
             GivenAugmentationSuccess();
             GivenSpecifications(_pass1, _pass2, _pass3, _fail1, _fail2, _fail3);
 
-            Subject.GetImportDecisions(_audioFiles, new Artist(), null, downloadClientItem, null, false, false);
+            Subject.GetImportDecisions(_audioFiles, new Artist(), null, downloadClientItem, null, false, false, false);
 
             _fail1.Verify(c => c.IsSatisfiedBy(It.IsAny<LocalTrack>()), Times.Once());
             _fail2.Verify(c => c.IsSatisfiedBy(It.IsAny<LocalTrack>()), Times.Once());
@@ -180,7 +180,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
             GivenSpecifications(_albumpass1, _albumpass2, _albumpass3, _albumfail1, _albumfail2, _albumfail3);
             GivenSpecifications(_pass1, _pass2, _pass3, _fail1, _fail2, _fail3);
 
-            Subject.GetImportDecisions(_audioFiles, new Artist(), null, downloadClientItem, null, false, false);
+            Subject.GetImportDecisions(_audioFiles, new Artist(), null, downloadClientItem, null, false, false, false);
 
             _fail1.Verify(c => c.IsSatisfiedBy(It.IsAny<LocalTrack>()), Times.Never());
             _fail2.Verify(c => c.IsSatisfiedBy(It.IsAny<LocalTrack>()), Times.Never());
@@ -297,7 +297,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
             GivenVideoFiles(_audioFiles);
 
             Mocker.GetMock<IIdentificationService>()
-                .Setup(s => s.Identify(It.IsAny<List<LocalTrack>>(), It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<AlbumRelease>(), It.IsAny<bool>()))
+                .Setup(s => s.Identify(It.IsAny<List<LocalTrack>>(), It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<AlbumRelease>(), It.IsAny<bool>(), It.IsAny<bool>()))
                 .Returns((List<LocalTrack> tracks, Artist artist, Album album, AlbumRelease release) => {
                         return new List<LocalAlbumRelease> { new LocalAlbumRelease(tracks) };
                     });
