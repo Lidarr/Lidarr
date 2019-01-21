@@ -724,6 +724,13 @@ namespace NzbDrone.Core.Parser
 
                     result.Quality = QualityParser.ParseQuality(file.Name, acodec.Description, acodec.AudioBitrate, file.Properties.BitsPerSample);
                     Logger.Debug("Quality parsed: {0}", result.Quality);
+
+                    result.MediaInfo = new MediaInfoModel {
+                        AudioFormat = acodec.Description,
+                        AudioBitrate = acodec.AudioBitrate,
+                        AudioChannels = acodec.AudioChannels,
+                        SchemaRevision = -1
+                    };
                 }
             }
 

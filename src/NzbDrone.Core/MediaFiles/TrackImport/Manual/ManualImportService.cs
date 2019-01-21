@@ -8,7 +8,6 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Download.TrackedDownloads;
-using NzbDrone.Core.MediaFiles.MediaInfo;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -36,7 +35,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
         private readonly IAlbumService _albumService;
         private readonly IReleaseService _releaseService;
         private readonly ITrackService _trackService;
-        private readonly IVideoFileInfoReader _videoFileInfoReader;
         private readonly IImportApprovedTracks _importApprovedTracks;
         private readonly ITrackedDownloadService _trackedDownloadService;
         private readonly IDownloadedTracksImportService _downloadedTracksImportService;
@@ -52,7 +50,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                                    IAlbumService albumService,
                                    IReleaseService releaseService,
                                    ITrackService trackService,
-                                   IVideoFileInfoReader videoFileInfoReader,
                                    IImportApprovedTracks importApprovedTracks,
                                    ITrackedDownloadService trackedDownloadService,
                                    IDownloadedTracksImportService downloadedTracksImportService,
@@ -68,7 +65,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             _albumService = albumService;
             _releaseService = releaseService;
             _trackService = trackService;
-            _videoFileInfoReader = videoFileInfoReader;
             _importApprovedTracks = importApprovedTracks;
             _trackedDownloadService = trackedDownloadService;
             _downloadedTracksImportService = downloadedTracksImportService;
@@ -234,14 +230,13 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     var release = _releaseService.GetRelease(file.AlbumReleaseId);
                     var tracks = _trackService.GetTracks(file.TrackIds);
                     var fileTrackInfo = Parser.Parser.ParseMusicPath(file.Path) ?? new ParsedTrackInfo();
-                    var mediaInfo = _videoFileInfoReader.GetMediaInfo(file.Path);
                     //var existingFile = artist.Path.IsParentPath(file.Path);
 
                     var localTrack = new LocalTrack
                     {
                         ExistingFile = false,
                         Tracks = tracks,
-                        MediaInfo = mediaInfo,
+                        MediaInfo = null,
                         FileTrackInfo = fileTrackInfo,
                         Path = file.Path,
                         Quality = file.Quality,

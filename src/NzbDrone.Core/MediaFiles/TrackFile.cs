@@ -1,6 +1,5 @@
 using Marr.Data;
 using NzbDrone.Core.Datastore;
-using NzbDrone.Core.MediaFiles.MediaInfo;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Qualities;
 using System;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NzbDrone.Core.Languages;
+using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.MediaFiles
 {

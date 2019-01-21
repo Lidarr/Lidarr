@@ -1,4 +1,3 @@
-using NzbDrone.Core.MediaFiles.MediaInfo;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Qualities;
 using System.Collections.Generic;

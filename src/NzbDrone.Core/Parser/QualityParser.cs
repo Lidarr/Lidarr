@@ -165,7 +165,7 @@ namespace NzbDrone.Core.Parser
             return result;
         }
 
-        private static Codec ParseCodec(string name, string origName)
+        public static Codec ParseCodec(string name, string origName)
         {
             var match = CodecRegex.Match(name);
 

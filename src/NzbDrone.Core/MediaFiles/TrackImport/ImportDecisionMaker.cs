@@ -6,7 +6,6 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.MediaFiles.MediaInfo;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Download;
@@ -33,7 +32,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         private readonly IReleaseService _releaseService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IDiskProvider _diskProvider;
-        private readonly IVideoFileInfoReader _videoFileInfoReader;
         private readonly Logger _logger;
 
         public ImportDecisionMaker(IEnumerable<IImportDecisionEngineSpecification<LocalTrack>> trackSpecifications,
@@ -45,7 +43,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                                    IReleaseService releaseService,
                                    IEventAggregator eventAggregator,
                                    IDiskProvider diskProvider,
-                                   IVideoFileInfoReader videoFileInfoReader,
                                    Logger logger)
         {
             _trackSpecifications = trackSpecifications;
@@ -57,7 +54,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             _releaseService = releaseService;
             _eventAggregator = eventAggregator;
             _diskProvider = diskProvider;
-            _videoFileInfoReader = videoFileInfoReader;
             _logger = logger;
         }
 

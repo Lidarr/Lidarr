@@ -26,6 +26,7 @@ namespace NzbDrone.Core.Parser.Model
         public string Disambiguation { get; set; }
         public TimeSpan Duration { get; set; }
         public QualityModel Quality { get; set; }
+        public MediaInfoModel MediaInfo { get; set; }
         public int[] TrackNumbers { get; set; }
         public Language Language { get; set; }
         public string ReleaseGroup { get; set; }

@@ -218,22 +218,6 @@ class MediaManagement extends Component {
                   <FormGroup
                     advancedSettings={advancedSettings}
                     isAdvanced={true}
-                    size={sizes.MEDIUM}
-                  >
-                    <FormLabel>Analyse audio files</FormLabel>
-
-                    <FormInputGroup
-                      type={inputTypes.CHECK}
-                      name="enableMediaInfo"
-                      helpText="Extract audio information such as bitrate, runtime and codec information from files. This requires Lidarr to read parts of the file which may cause high disk or network activity during scans."
-                      onChange={onInputChange}
-                      {...settings.enableMediaInfo}
-                    />
-                  </FormGroup>
-
-                  <FormGroup
-                    advancedSettings={advancedSettings}
-                    isAdvanced={true}
                   >
                     <FormLabel>Rescan Artist Folder after Refresh</FormLabel>
 

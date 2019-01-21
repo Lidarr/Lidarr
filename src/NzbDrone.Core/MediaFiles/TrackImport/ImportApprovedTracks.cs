@@ -9,7 +9,6 @@ using NzbDrone.Core.Download;
 using NzbDrone.Core.Extras;
 using NzbDrone.Core.Languages;
 using NzbDrone.Core.MediaFiles.Events;
-using NzbDrone.Core.MediaFiles.MediaInfo;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Music.Events;
@@ -32,7 +31,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         private readonly IDiskProvider _diskProvider;
         private readonly IReleaseService _releaseService;
         private readonly IEventAggregator _eventAggregator;
-        private readonly IVideoFileInfoReader _videoFileInfoReader;
         private readonly Logger _logger;
 
         public ImportApprovedTracks(IUpgradeMediaFiles trackFileUpgrader,
@@ -42,7 +40,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                                     IDiskProvider diskProvider,
                                     IReleaseService releaseService,
                                     IEventAggregator eventAggregator,
-                                    IVideoFileInfoReader videoFileInfoReader,
                                     Logger logger)
         {
             _trackFileUpgrader = trackFileUpgrader;
@@ -52,7 +49,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             _diskProvider = diskProvider;
             _releaseService = releaseService;
             _eventAggregator = eventAggregator;
-            _videoFileInfoReader = videoFileInfoReader;
             _logger = logger;
         }
 
@@ -139,7 +135,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                         DateAdded = DateTime.UtcNow,
                         ReleaseGroup = localTrack.ReleaseGroup,
                         Quality = localTrack.Quality,
-                        MediaInfo = _videoFileInfoReader.GetMediaInfo(localTrack.Path),
+                        MediaInfo = localTrack.FileTrackInfo.MediaInfo,
                         Language = localTrack.Language,
                         AlbumId = localTrack.Album.Id,
                         Tracks = localTrack.Tracks

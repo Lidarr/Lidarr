@@ -175,9 +175,8 @@ PackageMono()
     rm -f $outputFolderLinux/ServiceUninstall.*
     rm -f $outputFolderLinux/ServiceInstall.*
 
-    echo "Removing native windows binaries Sqlite, MediaInfo, fpcalc"
+    echo "Removing native windows binaries Sqlite, fpcalc"
     rm -f $outputFolderLinux/sqlite3.*
-    rm -f $outputFolderLinux/MediaInfo.*
     rm -f $outputFolderLinux/fpcalc*
 
     echo "Adding Lidarr.Core.dll.config (for dllmap)"
@@ -219,9 +218,6 @@ PackageMacOS()
     echo "Adding sqlite dylibs"
     cp $sourceFolder/Libraries/Sqlite/*.dylib $outputFolderMacOS
 
-    echo "Adding MediaInfo dylib"
-    cp $sourceFolder/Libraries/MediaInfo/*.dylib $outputFolderMacOS
-
     ProgressEnd 'Creating MacOS Package'
 }
 
@@ -244,9 +240,6 @@ PackageMacOSApp()
 
     echo "Adding sqlite dylibs"
     cp $sourceFolder/Libraries/Sqlite/*.dylib $outputFolderMacOSApp/Lidarr.app/Contents/MacOS
-
-    echo "Adding MediaInfo dylib"
-    cp $sourceFolder/Libraries/MediaInfo/*.dylib $outputFolderMacOSApp/Lidarr.app/Contents/MacOS
 
     echo "Removing Update Folder"
     rm -r $outputFolderMacOSApp/Lidarr.app/Contents/MacOS/Lidarr.Update

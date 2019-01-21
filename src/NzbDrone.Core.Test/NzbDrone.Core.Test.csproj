@@ -292,8 +292,6 @@
     <Compile Include="MediaFiles\TrackImport\Identification\AlbumDistanceFixture.cs" />
     <Compile Include="MediaFiles\TrackImport\Identification\TrackMappingFixture.cs" />
     <Compile Include="MediaFiles\TrackImport\Identification\GetCandidatesFixture.cs" />
-    <Compile Include="MediaFiles\MediaInfo\MediaInfoFormatterTests\FormatAudioChannelsFixture.cs" />
-    <Compile Include="MediaFiles\MediaInfo\MediaInfoFormatterTests\FormatAudioCodecFixture.cs" />
     <Compile Include="MediaFiles\TrackFileMovingServiceTests\MoveTrackFileFixture.cs" />
     <Compile Include="MediaFiles\TrackImport\ImportDecisionMakerFixture.cs" />
     <Compile Include="MediaFiles\TrackImport\Specifications\FreeSpaceSpecificationFixture.cs" />
@@ -333,8 +331,6 @@
     <Compile Include="OrganizerTests\CleanFixture.cs" />
     <Compile Include="MediaFiles\MediaFileServiceTests\FilterFixture.cs" />
     <Compile Include="MediaFiles\MediaFileTableCleanupServiceFixture.cs" />
-    <Compile Include="MediaFiles\MediaInfo\UpdateMediaInfoServiceFixture.cs" />
-    <Compile Include="MediaFiles\MediaInfo\VideoFileInfoReaderFixture.cs" />
     <Compile Include="MediaFiles\RenameTrackFileServiceFixture.cs" />
     <Compile Include="MediaFiles\UpgradeMediaFileServiceFixture.cs" />
     <Compile Include="Messaging\Commands\CommandEqualityComparerFixture.cs" />

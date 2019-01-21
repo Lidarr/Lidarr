@@ -167,14 +167,6 @@ class NamingModal extends Component {
       { token: '{Quality Title}', example: 'FLAC' }
     ];
 
-    const mediaInfoTokens = [
-      { token: '{MediaInfo Simple}', example: 'x264 DTS' },
-      { token: '{MediaInfo Full}', example: 'x264 DTS [EN+DE]' },
-      { token: '{MediaInfo VideoCodec}', example: 'x264' },
-      { token: '{MediaInfo AudioFormat}', example: 'DTS' },
-      { token: '{MediaInfo AudioChannels}', example: '5.1' }
-    ];
-
     const releaseGroupTokens = [
       { token: '{Release Group}', example: 'Rls Grp' }
     ];
@@ -412,28 +404,6 @@ class NamingModal extends Component {
                     <div className={styles.groups}>
                       {
                         qualityTokens.map(({ token, example }) => {
-                          return (
-                            <NamingOption
-                              key={token}
-                              name={name}
-                              value={value}
-                              token={token}
-                              example={example}
-                              tokenSeparator={tokenSeparator}
-                              tokenCase={tokenCase}
-                              onPress={this.onOptionPress}
-                            />
-                          );
-                        }
-                        )
-                      }
-                    </div>
-                  </FieldSet>
-
-                  <FieldSet legend="Media Info">
-                    <div className={styles.groups}>
-                      {
-                        mediaInfoTokens.map(({ token, example }) => {
                           return (
                             <NamingOption
                               key={token}

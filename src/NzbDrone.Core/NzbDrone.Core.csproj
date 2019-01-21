@@ -492,7 +492,6 @@
     <Compile Include="HealthCheck\Checks\IndexerRssCheck.cs" />
     <Compile Include="HealthCheck\Checks\IndexerStatusCheck.cs" />
     <Compile Include="HealthCheck\Checks\IndexerSearchCheck.cs" />
-    <Compile Include="HealthCheck\Checks\MediaInfoDllCheck.cs" />
     <Compile Include="HealthCheck\Checks\MonoVersionCheck.cs" />
     <Compile Include="HealthCheck\Checks\ProxyCheck.cs" />
     <Compile Include="HealthCheck\Checks\RootFolderCheck.cs" />
@@ -719,7 +718,7 @@
     <Compile Include="MediaFiles\Events\TrackFolderCreatedEvent.cs" />
     <Compile Include="MediaFiles\Events\TrackImportFailedEvent.cs" />
     <Compile Include="MediaFiles\MediaFileDeletionService.cs" />
-    <Compile Include="MediaFiles\MediaInfo\MediaInfoFormatter.cs" />
+    <Compile Include="MediaFiles\MediaInfoFormatter.cs" />
     <Compile Include="MediaFiles\RenameTrackFilePreview.cs" />
     <Compile Include="MediaFiles\RenameTrackFileService.cs" />
     <Compile Include="MediaFiles\TrackFileMovingService.cs" />
@@ -778,10 +777,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MediaFiles\MediaFileTableCleanupService.cs" />
-    <Compile Include="MediaFiles\MediaInfo\MediaInfoLib.cs" />
-    <Compile Include="MediaFiles\MediaInfo\MediaInfoModel.cs" />
-    <Compile Include="MediaFiles\MediaInfo\UpdateMediaInfoService.cs" />
-    <Compile Include="MediaFiles\MediaInfo\VideoFileInfoReader.cs" />
     <Compile Include="MediaFiles\RecycleBinProvider.cs" />
     <Compile Include="MediaFiles\SameFilenameException.cs" />
     <Compile Include="MediaFiles\TrackFile.cs" />
@@ -995,6 +990,7 @@
     <Compile Include="Parser\Model\ImportListItemInfo.cs" />
     <Compile Include="Parser\Model\LocalAlbumRelease.cs" />
     <Compile Include="Parser\Model\LocalTrack.cs" />
+    <Compile Include="Parser\Model\MediaInfoModel.cs" />
     <Compile Include="Parser\Model\ParsedAlbumInfo.cs" />
     <Compile Include="Parser\Model\ParsedTrackInfo.cs" />
     <Compile Include="Parser\Model\RemoteAlbum.cs" />
@@ -1242,9 +1238,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Lidarr.Core.dll.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\AnalysisRules.ruleset" />
   </ItemGroup>
@@ -1271,14 +1264,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Libraries\MediaInfo\MediaInfo.dll">
-      <Link>MediaInfo.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Libraries\MediaInfo\libmediainfo.0.dylib">
-      <Link>libmediainfo.0.dylib</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\Libraries\Sqlite\libsqlite3.0.dylib">
       <Link>libsqlite3.0.dylib</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
