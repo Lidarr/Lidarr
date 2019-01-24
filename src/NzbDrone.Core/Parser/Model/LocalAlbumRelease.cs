@@ -49,7 +49,7 @@ namespace NzbDrone.Core.Parser.Model
                         var track = TrackMapping.Mapping[localTrack].Item1;
                         localTrack.Tracks = new List<Track> { track };
                         localTrack.Distance = TrackMapping.Mapping[localTrack].Item2;
-                        localTrack.Artist = track.Artist.Value;
+                        localTrack.Artist = localTrack.Album.Artist.Value;
                     }
                 }
             }

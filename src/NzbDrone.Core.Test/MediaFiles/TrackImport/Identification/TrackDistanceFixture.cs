@@ -5,6 +5,7 @@ using NzbDrone.Core.Test.Framework;
 using FizzWare.NBuilder;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
 {
@@ -32,6 +33,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
             var fileInfo = Builder<ParsedTrackInfo>
                 .CreateNew()
                 .With(x => x.Title = track.Title)
+                .With(x => x.CleanTitle = track.Title.CleanTrackTitle())
                 .With(x => x.ArtistTitle = track.ArtistMetadata.Value.Name)
                 .With(x => x.TrackNumbers = new[] { 1 })
                 .With(x => x.RecordingMBId = track.ForeignRecordingId)
@@ -69,7 +71,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
         {
             var track = GivenTrack("one");
             var localTrack = GivenLocalTrack(track);
-            localTrack.FileTrackInfo.Title = "foo";
+            localTrack.FileTrackInfo.CleanTitle = "foo";
 
             Subject.TrackDistance(localTrack, track, 1, true).NormalizedDistance().Should().NotBe(0.0);
         }

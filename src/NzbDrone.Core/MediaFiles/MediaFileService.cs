@@ -14,13 +14,12 @@ namespace NzbDrone.Core.MediaFiles
     public interface IMediaFileService
     {
         TrackFile Add(TrackFile trackFile);
+        void AddMany(List<TrackFile> trackFiles);
         void Update(TrackFile trackFile);
         void Update(List<TrackFile> trackFile);
         void Delete(TrackFile trackFile, DeleteMediaFileReason reason);
         List<TrackFile> GetFilesByArtist(int artistId);
         List<TrackFile> GetFilesByAlbum(int albumId);
-        List<TrackFile> GetFiles(IEnumerable<int> ids);
-        List<TrackFile> GetFilesWithoutMediaInfo();
         List<string> FilterExistingFiles(List<string> files, Artist artist);
         TrackFile Get(int id);
         List<TrackFile> Get(IEnumerable<int> ids);
@@ -48,6 +47,15 @@ namespace NzbDrone.Core.MediaFiles
             return addedFile;
         }
 
+        public void AddMany(List<TrackFile> trackFiles)
+        {
+            _mediaFileRepository.InsertMany(trackFiles);
+            foreach (var addedFile in trackFiles)
+            {
+                _eventAggregator.PublishEvent(new TrackFileAddedEvent(addedFile));
+            }
+        }
+
         public void Update(TrackFile trackFile)
         {
             _mediaFileRepository.Update(trackFile);
@@ -61,23 +69,10 @@ namespace NzbDrone.Core.MediaFiles
 
         public void Delete(TrackFile trackFile, DeleteMediaFileReason reason)
         {
-            //Little hack so we have the tracks and artist attached for the event consumers
-            trackFile.Tracks.LazyLoad();
             trackFile.Path = Path.Combine(trackFile.Artist.Value.Path, trackFile.RelativePath);
 
             _mediaFileRepository.Delete(trackFile);
             _eventAggregator.PublishEvent(new TrackFileDeletedEvent(trackFile, reason));
-        }
-
-        public List<TrackFile> GetFiles(IEnumerable<int> ids)
-        {
-            return _mediaFileRepository.Get(ids).ToList();
-        }
-
-
-        public List<TrackFile> GetFilesWithoutMediaInfo()
-        {
-            return _mediaFileRepository.GetFilesWithoutMediaInfo();
         }
 
         public List<string> FilterExistingFiles(List<string> files, Artist artist)

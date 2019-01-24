@@ -71,7 +71,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            _logger.Debug("Starting track indentification");
+            _logger.Debug("Starting track identification");
             _logger.Debug("Specified artist {0}, album {1}, release {2}", artist.NullSafe(), album.NullSafe(), release.NullSafe());
             _logger.Trace("Processing files:\n{0}", string.Join("\n", localTracks.Select(x => x.Path)));
 
@@ -102,7 +102,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
             watch.Stop();
 
-            _logger.Debug($"Track indentification for {localTracks.Count} tracks took {watch.ElapsedMilliseconds}ms");
+            _logger.Debug($"Track identification for {localTracks.Count} tracks took {watch.ElapsedMilliseconds}ms");
 
             return releases;
         }
@@ -160,7 +160,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
             var allTracks = _trackService.GetTracksByReleases(candidateReleases.Select(x => x.Id).ToList());
 
-            _logger.Debug($"Got tracks for {watch.ElapsedMilliseconds}ms");
+            _logger.Debug($"Got tracks in {watch.ElapsedMilliseconds}ms");
             
             GetBestRelease(localAlbumRelease, candidateReleases, allTracks);
 
@@ -361,7 +361,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 var totalTrackNumber = GetTotalTrackNumber(mbTracks[col], mbTracks);
                 for (int row = 0; row < localTracks.Count; row++)
                 {
-                    distances[row, col] = TrackDistance(localTracks[row], mbTracks[col], totalTrackNumber, false, row==col);
+                    distances[row, col] = TrackDistance(localTracks[row], mbTracks[col], totalTrackNumber, false);
                     costs[row, col] = distances[row, col].NormalizedDistance();
                 }
             }
@@ -387,11 +387,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 localTrack.FileTrackInfo.TrackNumbers[0] != totalTrackNumber;
         }
 
-        public Distance TrackDistance(LocalTrack localTrack, Track mbTrack, int totalTrackNumber, bool includeArtist = false, bool log = false)
+        public Distance TrackDistance(LocalTrack localTrack, Track mbTrack, int totalTrackNumber, bool includeArtist = false)
         {
-            // var watch = System.Diagnostics.Stopwatch.StartNew();
-            // var timings = new List<long>(10);
-            
             var dist = new Distance();
 
             var localLength = localTrack.FileTrackInfo.Duration.TotalSeconds;
@@ -405,14 +402,10 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 //               localLength, mbLength, diff, dist.NormalizedDistance());
             }
 
-            // timings.Add(watch.ElapsedTicks);
-
             // musicbrainz never has 'featuring' in the track title
             // see https://musicbrainz.org/doc/Style/Artist_Credits
             dist.AddString("track_title", localTrack.FileTrackInfo.CleanTitle ?? "", mbTrack.Title);
             // _logger.Trace("track title: {0} vs {1}; {2}", localTrack.FileTrackInfo.Title, mbTrack.Title, dist.NormalizedDistance());
-
-            // timings.Add(watch.ElapsedTicks);
 
             if (includeArtist && localTrack.FileTrackInfo.ArtistTitle.IsNotNullOrWhiteSpace()
                 && !VariousArtistNames.Any(x => x.Equals(localTrack.FileTrackInfo.ArtistTitle, StringComparison.InvariantCultureIgnoreCase)))
@@ -421,15 +414,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 // _logger.Trace("track artist: {0} vs {1}; {2}", localTrack.FileTrackInfo.ArtistTitle, mbTrack.ArtistMetadata.Value.Name, dist.NormalizedDistance());
             }
 
-            // timings.Add(watch.ElapsedTicks);
-
             if (localTrack.FileTrackInfo.TrackNumbers[0] > 0 && mbTrack.AbsoluteTrackNumber > 0)
             {
                 dist.AddBool("track_index", TrackIndexIncorrect(localTrack, mbTrack, totalTrackNumber));
                 // _logger.Trace("track_index: {0} vs {1}; {2}", localTrack.FileTrackInfo.TrackNumbers[0], mbTrack.AbsoluteTrackNumber, dist.NormalizedDistance());
             }
-
-            // timings.Add(watch.ElapsedTicks);
 
             var recordingId = localTrack.FileTrackInfo.RecordingMBId;
             if (recordingId.IsNotNullOrWhiteSpace())
@@ -438,20 +427,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 // _logger.Trace("recording_id: {0} vs {1}; {2}", localTrack.FileTrackInfo.RecordingMBId, mbTrack.ForeignRecordingId, dist.NormalizedDistance());
             }
 
-            // timings.Add(watch.ElapsedTicks);
-
             // for fingerprinted files
             if (localTrack.AcoustIdResults != null)
             {
                 dist.AddBool("recording_id", !localTrack.AcoustIdResults.Contains(mbTrack.ForeignRecordingId));
                 // _logger.Trace("fingerprinting: {0} vs {1}; {2}", string.Join(", ", localTrack.AcoustIdResults), mbTrack.ForeignRecordingId, dist.NormalizedDistance());
             }
-
-            // timings.Add(watch.ElapsedTicks);
-            // if (log)
-            // {
-            //     _logger.Debug($"TrackDistance timings for {localTrack} vs {mbTrack}:\n{string.Join(", ", timings)}");
-            // }
 
             return dist;
         }
@@ -478,8 +459,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             discCount = discCount != 0 ? discCount : localTracks.Max(x => x.FileTrackInfo.DiscNumber);
             if (discCount > 0)
             {
-                dist.AddNumber("mediums", discCount, release.Media.Count);
-                // _logger.Trace("mediums: {0} vs {1}; {2}", discCount, release.Media.Count, dist.NormalizedDistance());
+                dist.AddNumber("media_count", discCount, release.Media.Count);
+                // _logger.Trace("media_count: {0} vs {1}; {2}", discCount, release.Media.Count, dist.NormalizedDistance());
             }
 
             // Year
@@ -531,8 +512,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             var disambig = MostCommon(localTracks.Select(x => x.FileTrackInfo.Disambiguation));
             if (disambig.IsNotNullOrWhiteSpace())
             {
-                dist.AddString("albumdisambig", disambig, release.Disambiguation);
-                // _logger.Trace("albumdisambig: {0} vs {1}; {2}", disambig, release.Disambiguation, dist.NormalizedDistance());
+                dist.AddString("album_disambiguation", disambig, release.Disambiguation);
+                // _logger.Trace("album_disambiguation: {0} vs {1}; {2}", disambig, release.Disambiguation, dist.NormalizedDistance());
             }
             
             var mbAlbumId = MostCommon(localTracks.Select(x => x.FileTrackInfo.ReleaseMBId));

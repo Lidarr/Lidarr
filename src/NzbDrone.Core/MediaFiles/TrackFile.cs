@@ -30,9 +30,6 @@ namespace NzbDrone.Core.MediaFiles
         public LazyLoaded<Artist> Artist { get; set; }
         public LazyLoaded<Album> Album { get; set; }
 
-        // these are ignored by the database but retained/populated for compatibility
-        public int ArtistId { get { return Artist.Value?.Id ?? 0; } }
-
         public override string ToString()
         {
             return string.Format("[{0}] {1}", Id, RelativePath);

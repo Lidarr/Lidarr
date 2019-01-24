@@ -2,7 +2,6 @@ using NzbDrone.Core.Datastore;
 using System.Collections.Generic;
 using NLog;
 using NzbDrone.Core.Messaging.Events;
-using Marr.Data;
 
 namespace NzbDrone.Core.Music
 {
@@ -17,7 +16,8 @@ namespace NzbDrone.Core.Music
         List<Track> GetTracksByFileId(int fileId);
         List<Track> TracksWithFiles(int artistId);
         List<Track> TracksWithoutFiles(int albumId);
-        void SetFileId(int trackId, int fileId);
+        void SetFileId(List<Track> tracks);
+        void DetachTrackFile(int trackFileId);
     }
 
     public class TrackRepository : BasicRepository<Track>, ITrackRepository
@@ -30,9 +30,6 @@ namespace NzbDrone.Core.Music
         {
             _database = database;
             _logger = logger;
-
-            MapRepository.Instance.EnableTraceLogging = true;
-            System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.ConsoleTraceListener());
         }
 
         public List<Track> GetTracks(int artistId)
@@ -132,9 +129,18 @@ namespace NzbDrone.Core.Music
             return Query.QueryText(query).ToList();
         }
 
-        public void SetFileId(int trackId, int fileId)
+        public void SetFileId(List<Track> tracks)
         {
-            SetFields(new Track { Id = trackId, TrackFileId = fileId }, track => track.TrackFileId);
+            SetFields(tracks, t => t.TrackFileId);
+        }
+
+        public void DetachTrackFile(int trackFileId)
+        {
+            DataMapper.Update<Track>()
+                .Where(x => x.TrackFileId == trackFileId)
+                .ColumnsIncluding(x => x.TrackFileId)
+                .Entity(new Track { TrackFileId = 0 })
+                .Execute();
         }
     }
 }

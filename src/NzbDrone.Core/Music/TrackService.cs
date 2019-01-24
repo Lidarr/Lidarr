@@ -25,12 +25,12 @@ namespace NzbDrone.Core.Music
         void InsertMany(List<Track> tracks);
         void UpdateMany(List<Track> tracks);
         void DeleteMany(List<Track> tracks);
+        void SetFileIds(List<Track> tracks);
     }
 
     public class TrackService : ITrackService,
                                 IHandleAsync<ReleaseDeletedEvent>,
-                                IHandle<TrackFileDeletedEvent>,
-                                IHandle<TrackFileAddedEvent>
+                                IHandle<TrackFileDeletedEvent>
     {
         private readonly ITrackRepository _trackRepository;
         private readonly IConfigService _configService;
@@ -119,6 +119,11 @@ namespace NzbDrone.Core.Music
             _trackRepository.DeleteMany(tracks);
         }
 
+        public void SetFileIds(List<Track> tracks)
+        {
+            _trackRepository.SetFileId(tracks);
+        }
+
         public void HandleAsync(ReleaseDeletedEvent message)
         {
             var tracks = GetTracksByRelease(message.Release.Id);
@@ -127,21 +132,8 @@ namespace NzbDrone.Core.Music
 
         public void Handle(TrackFileDeletedEvent message)
         {
-            foreach (var track in GetTracksByFileId(message.TrackFile.Id))
-            {
-                _logger.Debug("Detaching track {0} from file.", track.Id);
-                track.TrackFileId = 0;
-                UpdateTrack(track);
-            }
-        }
-
-        public void Handle(TrackFileAddedEvent message)
-        {
-            foreach (var track in message.TrackFile.Tracks.Value)
-            {
-                _trackRepository.SetFileId(track.Id, message.TrackFile.Id);
-                _logger.Debug("Linking [{0}] > [{1}]", message.TrackFile.RelativePath, track);
-            }
+            _logger.Debug($"Detaching tracks from file {message.TrackFile}");
+            _trackRepository.DetachTrackFile(message.TrackFile.Id);
         }
     }
 }

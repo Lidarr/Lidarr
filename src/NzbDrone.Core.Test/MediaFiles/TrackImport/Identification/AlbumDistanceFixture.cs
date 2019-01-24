@@ -43,6 +43,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
             var fileInfo = Builder<ParsedTrackInfo>
                 .CreateNew()
                 .With(x => x.Title = track.Title)
+                .With(x => x.CleanTitle = track.Title.CleanTrackTitle())
                 .With(x => x.AlbumTitle = release.Title)
                 .With(x => x.Disambiguation = release.Disambiguation)
                 .With(x => x.ReleaseMBId = release.ForeignReleaseId)

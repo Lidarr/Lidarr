@@ -244,6 +244,32 @@ namespace NzbDrone.Core.Datastore
             ModelUpdated(model);
         }
 
+        public void SetFields(IEnumerable<TModel> models, params Expression<Func<TModel, object>>[] properties)
+        {
+            using (var unitOfWork = new UnitOfWork(() => DataMapper))
+            {
+                unitOfWork.BeginTransaction(IsolationLevel.ReadCommitted);
+
+                foreach (var model in models)
+                {
+                    var localModel = model;
+
+                    if (model.Id == 0)
+                    {
+                        throw new InvalidOperationException("Can't update model with ID 0");
+                    }
+
+                    unitOfWork.DB.Update<TModel>()
+                        .Where(c => c.Id == model.Id)
+                        .ColumnsIncluding(properties)
+                        .Entity(model)
+                        .Execute();
+                }
+
+                unitOfWork.Commit();
+            }
+        }
+
         public virtual PagingSpec<TModel> GetPaged(PagingSpec<TModel> pagingSpec)
         {
             pagingSpec.Records = GetPagedQuery(Query, pagingSpec).ToList();

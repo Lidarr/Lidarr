@@ -23,10 +23,10 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
             if (dist > _threshold)
             {
                 _logger.Debug($"Track match is not close enough: {dist} vs {_threshold} [{reasons}]. Skipping {localTrack}");
-                return Decision.Reject("Track match not close enough");
+                return Decision.Reject($"Track match is not close enough: {1-dist:P1} vs {1-_threshold:P1} {reasons}");
             }
 
-            _logger.Debug($"Track accepted: {dist} vs {_threshold} [{reasons}].");
+            _logger.Debug($"Track accepted: {dist} vs {_threshold} {reasons}.");
             return Decision.Accept();
         }
     }

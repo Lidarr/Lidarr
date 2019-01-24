@@ -136,8 +136,8 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
         {
             var dist = new Distance();
             dist.Add("album", 0.5);
-            dist.Add("media", 0.25);
-            dist.Add("media", 0.75);
+            dist.Add("media_count", 0.25);
+            dist.Add("media_count", 0.75);
 
             dist.NormalizedDistance().Should().Be(0.5);
         }
@@ -147,8 +147,8 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
         {
             var dist = new Distance();
             dist.Add("album", 0.5);
-            dist.Add("media", 0.0);
-            dist.Add("media", 0.0);
+            dist.Add("media_count", 0.0);
+            dist.Add("media_count", 0.0);
 
             dist.MaxDistance().Should().Be(5.0);
         }
@@ -158,8 +158,8 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
         {
             var dist = new Distance();
             dist.Add("album", 0.5);
-            dist.Add("media", 0.25);
-            dist.Add("media", 0.5);
+            dist.Add("media_count", 0.25);
+            dist.Add("media_count", 0.5);
 
             dist.RawDistance().Should().Be(2.25);
         }

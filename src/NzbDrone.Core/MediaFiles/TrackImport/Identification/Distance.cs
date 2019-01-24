@@ -15,13 +15,13 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             { "source", 2.0 },
             { "artist", 3.0 },
             { "album", 3.0 },
-            { "media", 1.0 },
-            { "mediums", 1.0 },
+            { "media_count", 1.0 },
+            { "media_format", 1.0 },
             { "year", 1.0 },
             { "country", 0.5 },
             { "label", 0.5 },
-            { "catalognum", 0.5 },
-            { "albumdisambig", 0.5 },
+            { "catalog_number", 0.5 },
+            { "album_disambiguation", 0.5 },
             { "album_id", 5.0 },
             { "tracks", 2.0 },
             { "missing_tracks", 0.9 },
@@ -39,7 +39,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         }
 
         public Dictionary<string, List<double>> Penalties => penalties;
-        public string Reasons => string.Join(", ", Penalties.Where(x => x.Value.Max() > 0.0).Select(x => x.Key));
+        public string Reasons => penalties.Count(x => x.Value.Max() > 0.0) > 0 ? "[" + string.Join(", ", Penalties.Where(x => x.Value.Max() > 0.0).Select(x => x.Key.Replace('_', ' '))) + "]" : string.Empty;
 
         private double MaxDistance(Dictionary<string, List<double>> penalties)
         {

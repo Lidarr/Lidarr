@@ -8,6 +8,7 @@ using NzbDrone.Core.Parser.Model;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using FizzWare.NBuilder.PropertyNaming;
 
 namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
 {
@@ -36,14 +37,19 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
 
         private List<LocalTrack> GivenVaTracks(string root, string album, int count)
         {
-            var fileInfos = Builder<ParsedTrackInfo>
-                .CreateListOfSize(10)
+            var settings = new BuilderSettings();
+            settings.SetPropertyNamerFor<ParsedTrackInfo>(new RandomValuePropertyNamer(settings));
+
+            var builder = new Builder(settings);
+
+            var fileInfos = builder
+                .CreateListOfSize<ParsedTrackInfo>(10)
                 .All()
                 .With(f => f.AlbumTitle = "album")
                 .With(f => f.AlbumMBId = null)
                 .With(f => f.ReleaseMBId = null)
                 .Build();
-
+            
             var tracks = fileInfos.Select(x => Builder<LocalTrack>
                                           .CreateNew()
                                           .With(y => y.FileTrackInfo = x)
@@ -150,6 +156,22 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
         }
 
         [Test]
+        public void should_group_albums_with_typos()
+        {
+            var tracks = GivenTracks($"C:\\music\\incoming\\artist - album".AsOsAgnostic(),
+                                     "artist", "Rastaman Vibration (Remastered)", 10);
+            tracks.AddRange(GivenTracks($"C:\\music\\incoming\\artist - album".AsOsAgnostic(),
+                                        "artist", "Rastaman Vibration (Remastered", 5));
+
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(false);
+            TrackGroupingService.LooksLikeSingleRelease(tracks).Should().Be(true);
+            
+            var output = Subject.GroupTracks(tracks);
+            output.Count.Should().Be(1);
+            output[0].LocalTracks.Count.Should().Be(15);
+        }
+
+        [Test]
         public void should_not_group_two_different_tracks_in_same_directory()
         {
             var tracks = GivenTracks($"C:\\music\\incoming".AsOsAgnostic(),
@@ -166,7 +188,6 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
             output[1].LocalTracks.Count.Should().Be(1);
         }
 
-        
         [Test]
         public void should_separate_two_albums_in_same_directory()
         {

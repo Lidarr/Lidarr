@@ -68,6 +68,36 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             return releases;
         }
 
+        private static bool HasCommonEntry(IEnumerable<string> values, double threshold, double fuzz)
+        {
+            var groups = values.GroupBy(x => x).OrderByDescending(x => x.Count());
+            var distinctCount = groups.Count();
+            var mostCommonCount = groups.First().Count();
+            var mostCommonEntry = groups.First().Key;
+            var totalCount = values.Count();
+
+            // merge groups that are close to the most common value
+            foreach(var group in groups.Skip(1))
+            {
+                if (mostCommonEntry.LevenshteinCoefficient(group.Key) > fuzz)
+                {
+                    distinctCount--;
+                    mostCommonCount += group.Count();
+                }
+            }
+
+            _logger.Trace($"DistinctCount {distinctCount} MostCommonCount {mostCommonCount} TotalCout {totalCount}");
+
+            if (distinctCount > 1 &&
+                (distinctCount / (double)totalCount > threshold ||
+                 mostCommonCount / (double) totalCount < 1 - threshold))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public static bool LooksLikeSingleRelease(List<LocalTrack> tracks)
         {
             // returns true if we think all the tracks belong to a single release
@@ -77,6 +107,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             
             const double albumTagThreshold = 0.25;
             const double artistTagThreshold = 0.25;
+            const double tagFuzz = 0.9;
             
             // check that any Album/Release MBID is unique
             if (tracks.Select(x => x.FileTrackInfo.AlbumMBId).Distinct().Where(x => x.IsNotNullOrWhiteSpace()).Count() > 1 ||
@@ -87,11 +118,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             }
             
             // check that there's a common album tag.
-            var albumTags = tracks.Select(x => x.FileTrackInfo.AlbumTitle).GroupBy(x => x).OrderByDescending(x => x.Count());
-            _logger.Trace($"TagCount {albumTags.Count()} MostCommonCount {albumTags.First().Count()} TrackCount {tracks.Count}");
-            if (albumTags.Count() > 1 &&
-                (albumTags.Count() / (double) tracks.Count > albumTagThreshold ||
-                 albumTags.First().Count() / (double) tracks.Count < 1 - albumTagThreshold))
+            var albumTags = tracks.Select(x => x.FileTrackInfo.AlbumTitle);
+            if (!HasCommonEntry(albumTags, albumTagThreshold, tagFuzz))
             {
                 _logger.Trace("LooksLikeSingleRelease: No common album tag");
                 return false;
@@ -100,11 +128,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             // If not various artists, make sure artists are sensible
             if (!IsVariousArtists(tracks))
             {
-                var artistTags = tracks.Select(x => x.FileTrackInfo.ArtistTitle).GroupBy(x => x).OrderByDescending(x => x.Count());
-                _logger.Trace($"TagCount {artistTags.Count()} MostCommonCount {artistTags.First().Count()} TrackCount {tracks.Count}");
-                if (artistTags.Count() > 1 &&
-                    (artistTags.Count() / (double) tracks.Count > artistTagThreshold ||
-                     artistTags.First().Count() / (double) tracks.Count < 1 - artistTagThreshold))
+                var artistTags = tracks.Select(x => x.FileTrackInfo.ArtistTitle);
+                if (!HasCommonEntry(artistTags, artistTagThreshold, tagFuzz))
                 {
                     _logger.Trace("LooksLikeSingleRelease: No common artist tag");
                     return false;
@@ -120,16 +145,16 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             // Also checks whether more than 75% of tracks have a distinct artist and that the most common artist
             // is responsible for < 25% of tracks
             const double artistTagThreshold = 0.75;
+            const double tagFuzz = 0.9;
 
-            var artistTags = tracks.Select(x => x.FileTrackInfo.ArtistTitle).GroupBy(x => x).OrderByDescending(x => x.Count());
-            if (artistTags.Count() > 1 &&
-                (artistTags.Count() / (double) tracks.Count > artistTagThreshold ||
-                 artistTags.First().Count() / (double) tracks.Count < 1 - artistTagThreshold))
+            var artistTags = tracks.Select(x => x.FileTrackInfo.ArtistTitle);
+
+            if (!HasCommonEntry(artistTags, artistTagThreshold, tagFuzz))
             {
                 return true;
             }
 
-            if (VariousArtistTitles.Contains(artistTags.First().Key, StringComparer.OrdinalIgnoreCase))
+            if (VariousArtistTitles.Contains(artistTags.GroupBy(x => x).OrderByDescending(x => x.Count()).First().Key, StringComparer.OrdinalIgnoreCase))
             {
                 return true;
             }

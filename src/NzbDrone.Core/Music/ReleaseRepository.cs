@@ -27,19 +27,19 @@ namespace NzbDrone.Core.Music
             // populate the albums and artist metadata also
             // this hopefully speeds up the track matching a lot
             return Query
-                .Join<AlbumRelease, Album>(JoinType.Left, r => r.Album.Value, (r, a) => r.AlbumId == a.Id)
-                .Join<Album, ArtistMetadata>(JoinType.Left, a => a.ArtistMetadata.Value, (a, m) => a.ArtistMetadataId == m.Id)
+                .Join<AlbumRelease, Album>(JoinType.Left, r => r.Album, (r, a) => r.AlbumId == a.Id)
+                .Join<Album, ArtistMetadata>(JoinType.Left, a => a.ArtistMetadata, (a, m) => a.ArtistMetadataId == m.Id)
                 .Where<AlbumRelease>(r => r.AlbumId == id)
                 .ToList();
         }
 
         public List<AlbumRelease> FindByForeignReleaseId(List<string> foreignReleaseIds)
         {
-            var query = "SELECT AlbumReleases.*" +
-                "FROM AlbumReleases " +
-                $"WHERE AlbumReleases.ForeignReleaseId IN ('{string.Join("', '", foreignReleaseIds)}')";
-
-            return Query.QueryText(query).ToList();
+            return Query
+                .Join<AlbumRelease, Album>(JoinType.Left, r => r.Album, (r, a) => r.AlbumId == a.Id)
+                .Join<Album, ArtistMetadata>(JoinType.Left, a => a.ArtistMetadata, (a, m) => a.ArtistMetadataId == m.Id)
+                .Where($"[ForeignReleaseId] IN ('{string.Join("', '", foreignReleaseIds)}')")
+                .ToList();
         }
 
         public List<AlbumRelease> FindByRecordingId(List<string> recordingIds)

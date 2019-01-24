@@ -121,7 +121,7 @@ namespace NzbDrone.Core.MediaFiles
             RemoveEmptyArtistFolder(artist.Path);
             CompletedScanning(artist);
             importStopwatch.Stop();
-            _logger.Debug("Track import complete for: {0} [{1}]", artist, decisionsStopwatch.Elapsed);
+            _logger.Debug("Track import complete for: {0} [{1}]", artist, importStopwatch.Elapsed);
             
         }
         

@@ -26,6 +26,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
     {
         private readonly IUpgradeMediaFiles _trackFileUpgrader;
         private readonly IMediaFileService _mediaFileService;
+        private readonly ITrackService _trackService;
         private readonly IRecycleBinProvider _recycleBinProvider;
         private readonly IExtraService _extraService;
         private readonly IDiskProvider _diskProvider;
@@ -35,6 +36,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
         public ImportApprovedTracks(IUpgradeMediaFiles trackFileUpgrader,
                                     IMediaFileService mediaFileService,
+                                    ITrackService trackService,
                                     IRecycleBinProvider recycleBinProvider,
                                     IExtraService extraService,
                                     IDiskProvider diskProvider,
@@ -44,6 +46,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         {
             _trackFileUpgrader = trackFileUpgrader;
             _mediaFileService = mediaFileService;
+            _trackService = trackService;
             _recycleBinProvider = recycleBinProvider;
             _extraService = extraService;
             _diskProvider = diskProvider;
@@ -73,32 +76,33 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             {
                 var album = albumDecision.First().Item.Album;
                 var currentRelease = album.AlbumReleases.Value.Single(x => x.Monitored);
-                var newRelease = albumDecision.First().Item.Release;
 
-                if (currentRelease.Id != newRelease.Id)
+                if (albumDecision.Any(x => x.Approved))
                 {
-                    // if we are importing a new release, delete all old files and don't attempt to upgrade
-                    if (newDownload && albumDecision.Any(x => x.Approved))
-                    {
-                        var artist = albumDecision.First().Item.Artist;
-                        var rootFolder = _diskProvider.GetParentFolder(artist.Path);
-                        var previousFiles = _mediaFileService.GetFilesByAlbum(album.Id);
+                    var newRelease = albumDecision.First(x => x.Approved).Item.Release;
 
-                        foreach (var previousFile in previousFiles)
+                    if (currentRelease.Id != newRelease.Id)
+                    {
+                        // if we are importing a new release, delete all old files and don't attempt to upgrade
+                        if (newDownload)
                         {
-                            var trackFilePath = Path.Combine(artist.Path, previousFile.RelativePath);
-                            var subfolder = rootFolder.GetRelativePath(_diskProvider.GetParentFolder(trackFilePath));
-                            if (_diskProvider.FileExists(trackFilePath))
-                            {
-                                _logger.Debug("Removing existing track file: {0}", previousFile);
-                                _recycleBinProvider.DeleteFile(trackFilePath, subfolder);
-                            }
-                            _mediaFileService.Delete(previousFile, DeleteMediaFileReason.Upgrade);
-                        }
-                    }
+                            var artist = albumDecision.First().Item.Artist;
+                            var rootFolder = _diskProvider.GetParentFolder(artist.Path);
+                            var previousFiles = _mediaFileService.GetFilesByAlbum(album.Id);
 
-                    if (!newDownload || albumDecision.Any(x => x.Approved))
-                    {
+                            foreach (var previousFile in previousFiles)
+                            {
+                                var trackFilePath = Path.Combine(artist.Path, previousFile.RelativePath);
+                                var subfolder = rootFolder.GetRelativePath(_diskProvider.GetParentFolder(trackFilePath));
+                                if (_diskProvider.FileExists(trackFilePath))
+                                {
+                                    _logger.Debug("Removing existing track file: {0}", previousFile);
+                                    _recycleBinProvider.DeleteFile(trackFilePath, subfolder);
+                                }
+                                _mediaFileService.Delete(previousFile, DeleteMediaFileReason.Upgrade);
+                            }
+                        }
+
                         // set the correct release to be monitored before importing the new files
                         _logger.Debug("Updating release to {0} [{1} tracks]", newRelease, newRelease.TrackCount);
                         _releaseService.SetMonitored(newRelease);
@@ -110,6 +114,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 }
             }
 
+            var filesToAdd = new List<TrackFile>(qualifiedImports.Count);
+            var albumReleasesDict = new Dictionary<int, List<AlbumRelease>>(albumDecisions.Count);
+            
             foreach (var importDecision in qualifiedImports.OrderBy(e => e.Item.Tracks.Select(track => track.AbsoluteTrackNumber).MinOrDefault())
                                                            .ThenByDescending(e => e.Item.Size))
             {
@@ -128,6 +135,24 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                         continue;
                     }
 
+                    // cache album releases and set artist to speed up firing the TrackImported events
+                    // (otherwise they'll be retrieved from the DB for each track)
+                    if (!albumReleasesDict.ContainsKey(localTrack.Album.Id))
+                    {
+                        albumReleasesDict.Add(localTrack.Album.Id, localTrack.Album.AlbumReleases.Value);
+                    }
+                    if (!localTrack.Album.AlbumReleases.IsLoaded)
+                    {
+                        localTrack.Album.AlbumReleases = albumReleasesDict[localTrack.Album.Id];
+                    }
+                    localTrack.Album.Artist = localTrack.Artist;
+
+                    foreach (var track in localTrack.Tracks)
+                    {
+                        track.Artist = localTrack.Artist;
+                        track.AlbumRelease = localTrack.Release;
+                        track.Album = localTrack.Album;
+                    }
                     
                     var trackFile = new TrackFile {
                         Path = localTrack.Path.CleanFilePath(),
@@ -138,6 +163,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                         MediaInfo = localTrack.FileTrackInfo.MediaInfo,
                         Language = localTrack.Language,
                         AlbumId = localTrack.Album.Id,
+                        Artist = localTrack.Artist,
+                        Album = localTrack.Album,
                         Tracks = localTrack.Tracks
                     };
 
@@ -177,7 +204,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
                     }
 
-                    _mediaFileService.Add(trackFile);
+                    filesToAdd.Add(trackFile);
                     importResults.Add(new ImportResult(importDecision));
 
                     if (newDownload)
@@ -189,7 +216,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                     allOldTrackFiles.AddRange(oldFiles);
 
                     _eventAggregator.PublishEvent(new TrackImportedEvent(localTrack, trackFile, oldFiles, newDownload, downloadClientItem));
-
                 }
                 catch (RootFolderNotFoundException e)
                 {
@@ -215,6 +241,14 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 }
             }
 
+            var watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
+            _mediaFileService.AddMany(filesToAdd);
+            _logger.Debug($"Inserted new trackfiles in {watch.ElapsedMilliseconds}ms");
+            filesToAdd.ForEach(f => f.Tracks.Value.ForEach(t => t.TrackFileId = f.Id));
+            _trackService.SetFileIds(filesToAdd.SelectMany(x => x.Tracks.Value).ToList());
+            _logger.Debug($"TrackFileIds updated, total {watch.ElapsedMilliseconds}ms");
+            
             var albumImports = importResults.Where(e => e.ImportDecision.Item.Album != null)
                 .GroupBy(e => e.ImportDecision.Item.Album.Id).ToList();
 

@@ -305,7 +305,7 @@ namespace NzbDrone.Core.History
                     Date = DateTime.UtcNow,
                     Quality = message.TrackFile.Quality,
                     SourceTitle = message.TrackFile.Path,
-                    ArtistId = message.TrackFile.ArtistId,
+                    ArtistId = message.TrackFile.Artist.Value.Id,
                     AlbumId = message.TrackFile.AlbumId,
                     TrackId = track.Id,
                 };
@@ -331,7 +331,7 @@ namespace NzbDrone.Core.History
                     Date = DateTime.UtcNow,
                     Quality = message.TrackFile.Quality,
                     SourceTitle = message.OriginalPath,
-                    ArtistId = message.TrackFile.ArtistId,
+                    ArtistId = message.TrackFile.Artist.Value.Id,
                     AlbumId = message.TrackFile.AlbumId,
                     TrackId = track.Id,
                 };

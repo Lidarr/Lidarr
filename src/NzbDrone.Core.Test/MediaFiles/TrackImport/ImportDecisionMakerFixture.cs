@@ -105,7 +105,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
 
             Mocker.GetMock<IIdentificationService>()
                 .Setup(s => s.Identify(It.IsAny<List<LocalTrack>>(), It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<AlbumRelease>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                .Returns((List<LocalTrack> tracks, Artist artist, Album album, AlbumRelease release) => {
+                .Returns((List<LocalTrack> tracks, Artist artist, Album album, AlbumRelease release, bool newDownload, bool singleRelease) => {
                         var ret = new LocalAlbumRelease(tracks);
                         ret.AlbumRelease = _albumRelease;
                         return new List<LocalAlbumRelease> { ret };
@@ -298,7 +298,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
 
             Mocker.GetMock<IIdentificationService>()
                 .Setup(s => s.Identify(It.IsAny<List<LocalTrack>>(), It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<AlbumRelease>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                .Returns((List<LocalTrack> tracks, Artist artist, Album album, AlbumRelease release) => {
+                .Returns((List<LocalTrack> tracks, Artist artist, Album album, AlbumRelease release, bool newDownload, bool singleRelease) => {
                         return new List<LocalAlbumRelease> { new LocalAlbumRelease(tracks) };
                     });
 

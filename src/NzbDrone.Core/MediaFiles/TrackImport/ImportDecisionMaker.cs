@@ -69,6 +69,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
         public List<ImportDecision<LocalTrack>> GetImportDecisions(List<string> musicFiles, Artist artist, Album album, DownloadClientItem downloadClientItem, ParsedTrackInfo folderInfo, bool filterExistingFiles, bool newDownload, bool singleRelease)
         {
+            var watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
+            
             var files = filterExistingFiles && (artist != null) ? _mediaFileService.FilterExistingFiles(musicFiles.ToList(), artist) : musicFiles.ToList();
 
             _logger.Debug("Analyzing {0}/{1} files.", files.Count, musicFiles.Count);
@@ -112,6 +115,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                     decisions.Add(new ImportDecision<LocalTrack>(localTrack, new Rejection("Unexpected error processing file")));
                 }
             }
+
+            _logger.Debug($"Tags parsed for {files.Count} files in {watch.ElapsedMilliseconds}ms");
 
             var releases = _identificationService.Identify(localTracks, artist, album, null, newDownload, singleRelease);
 
