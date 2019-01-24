@@ -168,6 +168,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             // Note that this can improve the match even if we try the same candidates
             if (!fingerprinted && FingerprintingAllowed(newDownload) && ShouldFingerprint(localAlbumRelease))
             {
+                _logger.Debug($"Match not good enough, fingerprinting");
                 _fingerprintingService.Lookup(localAlbumRelease.LocalTracks, 0.5);
 
                 // Only include extra possible candidates if neither album nor release are specified
@@ -445,14 +446,14 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             {
                 var artist = MostCommon(localTracks.Select(x => x.FileTrackInfo.ArtistTitle)) ?? "";
                 dist.AddString("artist", artist, release.Album.Value.ArtistMetadata.Value.Name);
-                // _logger.Trace("artist: {0} vs {1}; {2}", artist, release.Album.Value.ArtistMetadata.Value.Name, dist.NormalizedDistance());
+                _logger.Trace("artist: {0} vs {1}; {2}", artist, release.Album.Value.ArtistMetadata.Value.Name, dist.NormalizedDistance());
             }
 
             var title = MostCommon(localTracks.Select(x => x.FileTrackInfo.AlbumTitle)) ?? "";
             // Use the album title since the differences in release titles can cause confusion and
             // aren't always correct in the tags
             dist.AddString("album", title, release.Album.Value.Title);
-            // _logger.Trace("album: {0} vs {1}; {2}", title, release.Title, dist.NormalizedDistance());
+            _logger.Trace("album: {0} vs {1}; {2}", title, release.Title, dist.NormalizedDistance());
 
             // Number of discs, either as tagged or the max disc number seen
             var discCount = MostCommon(localTracks.Select(x => x.FileTrackInfo.DiscCount));
@@ -460,7 +461,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             if (discCount > 0)
             {
                 dist.AddNumber("media_count", discCount, release.Media.Count);
-                // _logger.Trace("media_count: {0} vs {1}; {2}", discCount, release.Media.Count, dist.NormalizedDistance());
+                _logger.Trace("media_count: {0} vs {1}; {2}", discCount, release.Media.Count, dist.NormalizedDistance());
             }
 
             // Year
@@ -484,7 +485,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 // full penalty when there is no year
                 dist.Add("year", 1.0);
             }
-            // _logger.Trace("year: {0} vs {1}; {2}", localYear, release.Album.Value.ReleaseDate?.Year, dist.NormalizedDistance());
+            _logger.Trace("year: {0} vs {1}; {2}", localYear, release.Album.Value.ReleaseDate?.Year, dist.NormalizedDistance());
 
             // If we parsed a country from the files use that, otherwise use our preference
             var country = MostCommon(localTracks.Select(x => x.FileTrackInfo.Country));
@@ -493,12 +494,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 if (country != null)
                 {
                     dist.AddEquality("country", country.Name, release.Country);
-                    // _logger.Trace("country: {0} vs {1}; {2}", country, string.Join(", ", release.Country), dist.NormalizedDistance());
+                    _logger.Trace("country: {0} vs {1}; {2}", country, string.Join(", ", release.Country), dist.NormalizedDistance());
                 }
                 else if (preferredCountries.Count > 0)
                 {
                     dist.AddPriority("country", release.Country, preferredCountries.Select(x => x.Name).ToList());
-                    // _logger.Trace("country priority: {0} vs {1}; {2}", string.Join(", ", preferredCountries.Select(x => x.Name)), string.Join(", ", release.Country), dist.NormalizedDistance());
+                    _logger.Trace("country priority: {0} vs {1}; {2}", string.Join(", ", preferredCountries.Select(x => x.Name)), string.Join(", ", release.Country), dist.NormalizedDistance());
                 }
             }
 
@@ -506,21 +507,21 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             if (label.IsNotNullOrWhiteSpace())
             {
                 dist.AddEquality("label", label, release.Label);
-                // _logger.Trace("label: {0} vs {1}; {2}", label, string.Join(", ", release.Label), dist.NormalizedDistance());
+                _logger.Trace("label: {0} vs {1}; {2}", label, string.Join(", ", release.Label), dist.NormalizedDistance());
             }
 
             var disambig = MostCommon(localTracks.Select(x => x.FileTrackInfo.Disambiguation));
             if (disambig.IsNotNullOrWhiteSpace())
             {
                 dist.AddString("album_disambiguation", disambig, release.Disambiguation);
-                // _logger.Trace("album_disambiguation: {0} vs {1}; {2}", disambig, release.Disambiguation, dist.NormalizedDistance());
+                _logger.Trace("album_disambiguation: {0} vs {1}; {2}", disambig, release.Disambiguation, dist.NormalizedDistance());
             }
             
             var mbAlbumId = MostCommon(localTracks.Select(x => x.FileTrackInfo.ReleaseMBId));
             if (mbAlbumId.IsNotNullOrWhiteSpace())
             {
                 dist.AddEquality("album_id", mbAlbumId, new List<string> { release.ForeignReleaseId });
-                // _logger.Trace("album_id: {0} vs {1}; {2}", mbAlbumId, release.ForeignReleaseId, dist.NormalizedDistance());
+                _logger.Trace("album_id: {0} vs {1}; {2}", mbAlbumId, release.ForeignReleaseId, dist.NormalizedDistance());
             }
 
             // tracks
@@ -528,21 +529,21 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             {
                 dist.Add("tracks", pair.Value.Item2.NormalizedDistance());
             }
-            // _logger.Trace("after trackMapping: {0}", dist.NormalizedDistance());
+            _logger.Trace("after trackMapping: {0}", dist.NormalizedDistance());
 
             // missing tracks
             foreach (var track in mapping.MBExtra)
             {
                 dist.Add("missing_tracks", 1.0);
             }
-            // _logger.Trace("after missing tracks: {0}", dist.NormalizedDistance());
+            _logger.Trace("after missing tracks: {0}", dist.NormalizedDistance());
 
             // unmatched tracks
             foreach (var track in mapping.LocalExtra)
             {
                 dist.Add("unmatched_tracks", 1.0);
             }
-            // _logger.Trace("after unmatched tracks: {0}", dist.NormalizedDistance());
+            _logger.Trace("after unmatched tracks: {0}", dist.NormalizedDistance());
 
             return dist;
         }

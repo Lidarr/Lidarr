@@ -30,7 +30,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             { "track_artist", 2.0 },
             { "track_index", 1.0 },
             { "track_length", 2.0 },
-            { "recording_id", 5.0 },
+            { "recording_id", 10.0 },
         };
 
         public Distance()

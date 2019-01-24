@@ -45,8 +45,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
                     var trackReasons = worstTrackMatch.Distance.Reasons;
                     if (maxTrackDist > _trackThreshold)
                     {
-                        _logger.Debug($"Worst track match: {maxTrackDist} vs {_trackThreshold} [{trackReasons}]. Skipping {localAlbumRelease}");
-                        return Decision.Reject($"Worst track match: {1-maxTrackDist:P1} vs {1-_trackThreshold:P1} [{trackReasons}]");
+                        _logger.Debug($"Worst track match: {maxTrackDist} vs {_trackThreshold} {trackReasons}. Skipping {localAlbumRelease}");
+                        return Decision.Reject($"Worst track match: {1-maxTrackDist:P1} vs {1-_trackThreshold:P1} {trackReasons}");
                     }
                 }
             }
