@@ -179,9 +179,6 @@ PackageMono()
     rm -f $outputFolderLinux/sqlite3.*
     rm -f $outputFolderLinux/fpcalc*
 
-    echo "Adding Lidarr.Core.dll.config (for dllmap)"
-    cp $sourceFolder/NzbDrone.Core/Lidarr.Core.dll.config $outputFolderLinux
-
     echo "Adding CurlSharp.dll.config (for dllmap)"
     cp $sourceFolder/NzbDrone.Common/CurlSharp.dll.config $outputFolderLinux
 
