@@ -79,7 +79,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             // merge groups that are close to the most common value
             foreach(var group in groups.Skip(1))
             {
-                if (mostCommonEntry.LevenshteinCoefficient(group.Key) > fuzz)
+                if (mostCommonEntry.IsNotNullOrWhiteSpace() &&
+                    group.Key.IsNotNullOrWhiteSpace() &&
+                    mostCommonEntry.LevenshteinCoefficient(group.Key) > fuzz)
                 {
                     distinctCount--;
                     mostCommonCount += group.Count();
