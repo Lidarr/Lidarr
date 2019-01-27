@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Parser
 {
     public interface IFingerprintingService
     {
+        bool IsSetup();
         AcoustId GetFingerprint(string filename);
         void Lookup(List<LocalTrack> tracks, double threshold);
         Dictionary<int, List<string>> Lookup(List<string> files, double threshold);
@@ -49,7 +50,7 @@ namespace NzbDrone.Core.Parser
             _fpcalcPath = GetFpcalcPath();
         }
 
-        public bool IsSetup => _fpcalcPath.IsNotNullOrWhiteSpace();
+        public bool IsSetup() => _fpcalcPath.IsNotNullOrWhiteSpace();
 
         private string GetFpcalcPath()
         {
@@ -76,8 +77,6 @@ namespace NzbDrone.Core.Parser
                     _logger.Debug("fpcalc not found");
                     return null;
                 }
-
-                _logger.Trace("fpcalc exists on path");
             }
             else
             {
@@ -87,6 +86,12 @@ namespace NzbDrone.Core.Parser
                 {
                     path += ".exe";
                 }
+
+                if (!File.Exists(path))
+                {
+                    _logger.Warn("fpcalc missing from application directory");
+                    return null;
+                }
             }
             
             _logger.Debug($"fpcalc path: {path}");
@@ -95,7 +100,7 @@ namespace NzbDrone.Core.Parser
 
         public AcoustId GetFingerprint(string file)
         {
-            if (IsSetup && File.Exists(file))
+            if (IsSetup() && File.Exists(file))
             {
                 Process p = new Process();
                 p.StartInfo.FileName = _fpcalcPath;
@@ -191,7 +196,7 @@ namespace NzbDrone.Core.Parser
 
         public void Lookup(List<LocalTrack> tracks, double threshold)
         {
-            if (!IsSetup)
+            if (!IsSetup())
             {
                 return;
             }
@@ -208,7 +213,7 @@ namespace NzbDrone.Core.Parser
 
         public Dictionary<int, List<string>> Lookup(List<string> files, double threshold = 0)
         {
-            if (!IsSetup)
+            if (!IsSetup())
             {
                 return null;
             }

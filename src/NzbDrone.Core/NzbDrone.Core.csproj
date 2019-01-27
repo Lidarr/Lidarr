@@ -480,6 +480,7 @@
     <Compile Include="HealthCheck\Checks\AppDataLocationCheck.cs" />
     <Compile Include="HealthCheck\Checks\DownloadClientCheck.cs" />
     <Compile Include="HealthCheck\Checks\DownloadClientStatusCheck.cs" />
+    <Compile Include="HealthCheck\Checks\FpcalcCheck.cs" />
     <Compile Include="HealthCheck\Checks\ImportListStatusCheck.cs" />
     <Compile Include="HealthCheck\Checks\MonoDebugCheck.cs" />
     <Compile Include="HealthCheck\Checks\MonoTlsCheck.cs" />
