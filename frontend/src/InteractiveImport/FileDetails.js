@@ -96,33 +96,48 @@ class FileDetails extends Component {
               <div className={styles.audioTags}>
 
                 <DescriptionList>
-                  <DescriptionListItem
-                    title="Track Title"
-                    data={audioTags.title}
-                  />
-                  <DescriptionListItem
-                    title="Track Number"
-                    data={audioTags.trackNumbers[0]}
-                  />
-                  <DescriptionListItem
-                    title="Disc Number"
-                    data={audioTags.discNumber}
-                  />
                   {
-                    audioTags.discCount !== undefined && audioTags.discCount > 0 &&
+                    audioTags.title !== undefined &&
+                    <DescriptionListItem
+                      title="Track Title"
+                      data={audioTags.title}
+                    />
+                  }
+                  {
+                    audioTags.trackNumbers[0] > 0 &&
+                      <DescriptionListItem
+                        title="Track Number"
+                        data={audioTags.trackNumbers[0]}
+                      />
+                  }
+                  {
+                    audioTags.discNumber > 0 &&
+                      <DescriptionListItem
+                        title="Disc Number"
+                        data={audioTags.discNumber}
+                      />
+                  }
+                  {
+                    audioTags.discCount > 0 &&
                     <DescriptionListItem
                       title="Disc Count"
                       data={audioTags.discCount}
                     />
                   }
-                  <DescriptionListItem
-                    title="Album"
-                    data={audioTags.albumTitle}
-                  />
-                  <DescriptionListItem
-                    title="Artist"
-                    data={audioTags.artistTitle}
-                  />
+                  {
+                    audioTags.albumTitle !== undefined &&
+                      <DescriptionListItem
+                        title="Album"
+                        data={audioTags.albumTitle}
+                      />
+                  }
+                  {
+                    audioTags.artistTitle !== undefined &&
+                      <DescriptionListItem
+                        title="Artist"
+                        data={audioTags.artistTitle}
+                      />
+                  }
                   {
                     audioTags.country !== undefined &&
                     <DescriptionListItem
@@ -131,7 +146,7 @@ class FileDetails extends Component {
                     />
                   }
                   {
-                    audioTags.year !== undefined && audioTags.year > 0 &&
+                    audioTags.year > 0 &&
                     <DescriptionListItem
                       title="Year"
                       data={audioTags.year}
@@ -220,7 +235,10 @@ class FileDetails extends Component {
                       />
                     </Link>
                   }
-                  {rejections.length > 0 && this.renderRejections()}
+                  {
+                    rejections.length > 0 &&
+                      this.renderRejections()
+                  }
                 </DescriptionList>
               </div>
           }

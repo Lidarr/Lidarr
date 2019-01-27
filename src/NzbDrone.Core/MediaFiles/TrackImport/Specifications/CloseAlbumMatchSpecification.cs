@@ -30,7 +30,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
                 if (dist > _albumThreshold)
                 {
                     _logger.Debug($"Album match is not close enough: {dist} vs {_albumThreshold} {reasons}. Skipping {localAlbumRelease}");
-                    return Decision.Reject($"Album match is not close enough: {1-dist:P1} vs {1-_albumThreshold:P1} {reasons}");
+                    return Decision.Reject($"Album match is not close enough: {1-dist:P1} vs {1-_albumThreshold:P0} {reasons}");
                 }
 
                 var worstTrackMatch = localAlbumRelease.LocalTracks.Where(x => x.Distance != null).OrderByDescending(x => x.Distance.NormalizedDistance()).FirstOrDefault();
@@ -46,7 +46,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
                     if (maxTrackDist > _trackThreshold)
                     {
                         _logger.Debug($"Worst track match: {maxTrackDist} vs {_trackThreshold} {trackReasons}. Skipping {localAlbumRelease}");
-                        return Decision.Reject($"Worst track match: {1-maxTrackDist:P1} vs {1-_trackThreshold:P1} {trackReasons}");
+                        return Decision.Reject($"Worst track match: {1-maxTrackDist:P1} vs {1-_trackThreshold:P0} {trackReasons}");
                     }
                 }
             }
@@ -59,7 +59,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
                 if (dist > _albumThreshold)
                 {
                     _logger.Debug($"Album match is not close enough: {dist} vs {_albumThreshold} {reasons}. Skipping {localAlbumRelease}");
-                    return Decision.Reject($"Album match is not close enough: {1-dist:P1} vs {1-_albumThreshold:P1} {reasons}");
+                    return Decision.Reject($"Album match is not close enough: {1-dist:P1} vs {1-_albumThreshold:P0} {reasons}");
                 }
             }
 
