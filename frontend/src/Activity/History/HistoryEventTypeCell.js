@@ -11,7 +11,7 @@ function getIconName(eventType) {
       return icons.DOWNLOADING;
     case 'artistFolderImported':
       return icons.DRIVE;
-    case 'downloadFolderImported':
+    case 'trackFileImported':
       return icons.DOWNLOADED;
     case 'downloadFailed':
       return icons.DOWNLOADING;
@@ -21,7 +21,7 @@ function getIconName(eventType) {
       return icons.ORGANIZE;
     case 'albumImportIncomplete':
       return icons.DOWNLOADED;
-    case 'downloadComplete':
+    case 'downloadImported':
       return icons.DOWNLOADED;
     default:
       return icons.UNKNOWN;
@@ -45,7 +45,7 @@ function getTooltip(eventType, data) {
       return `Album grabbed from ${data.indexer} and sent to ${data.downloadClient}`;
     case 'artistFolderImported':
       return 'Track imported from artist folder';
-    case 'downloadFolderImported':
+    case 'trackFileImported':
       return 'Track downloaded successfully and picked up from download client';
     case 'downloadFailed':
       return 'Album download failed';
@@ -55,7 +55,7 @@ function getTooltip(eventType, data) {
       return 'Track file renamed';
     case 'albumImportIncomplete':
       return 'Files downloaded but not all could be imported';
-    case 'downloadComplete':
+    case 'downloadImported':
       return 'Download completed and successfully imported';
     default:
       return 'Unknown event';

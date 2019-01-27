@@ -8,7 +8,7 @@ import DescriptionListItem from 'Components/DescriptionList/DescriptionListItem'
 import DescriptionListItemTitle from 'Components/DescriptionList/DescriptionListItemTitle';
 import DescriptionListItemDescription from 'Components/DescriptionList/DescriptionListItemDescription';
 
-function getDetailedPopoverBody(statusMessages) {
+function getDetailedList(statusMessages) {
   return (
     <div>
       {
@@ -151,7 +151,7 @@ function HistoryDetails(props) {
     );
   }
 
-  if (eventType === 'downloadFolderImported') {
+  if (eventType === 'trackFileImported') {
     const {
       droppedPath,
       importedPath
@@ -268,14 +268,14 @@ function HistoryDetails(props) {
           !!statusMessages &&
             <DescriptionListItem
               title="Import failures"
-              data={getDetailedPopoverBody(JSON.parse(statusMessages))}
+              data={getDetailedList(JSON.parse(statusMessages))}
             />
         }
       </DescriptionList>
     );
   }
 
-  if (eventType === 'downloadComplete') {
+  if (eventType === 'downloadImported') {
     const {
       indexer,
       releaseGroup,

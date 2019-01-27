@@ -38,11 +38,11 @@ namespace NzbDrone.Core.History
         Unknown = 0,
         Grabbed = 1,
         ArtistFolderImported = 2,
-        DownloadFolderImported = 3,
+        TrackFileImported = 3,
         DownloadFailed = 4,
         TrackFileDeleted = 5,
         TrackFileRenamed = 6,
         AlbumImportIncomplete = 7,
-        DownloadComplete = 8
+        DownloadImported = 8
     }
 }

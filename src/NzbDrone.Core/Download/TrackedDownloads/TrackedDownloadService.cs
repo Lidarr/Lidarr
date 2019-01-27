@@ -192,7 +192,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                 existingItem.CanBeRemoved != downloadItem.CanBeRemoved ||
                 existingItem.CanMoveFiles != downloadItem.CanMoveFiles)
             {
-                _logger.Debug("Tracking '{0}:{1}': ClientState={2}{3} SonarrStage={4} Album='{5}' OutputPath={6}.",
+                _logger.Debug("Tracking '{0}:{1}': ClientState={2}{3} LidarrStage={4} Album='{5}' OutputPath={6}.",
                     downloadItem.DownloadClient, downloadItem.Title,
                     downloadItem.Status, downloadItem.CanBeRemoved ? "" :
                                          downloadItem.CanMoveFiles ? " (busy)" : " (readonly)",
@@ -209,14 +209,14 @@ namespace NzbDrone.Core.Download.TrackedDownloads
             {
                 case HistoryEventType.AlbumImportIncomplete:
                     return TrackedDownloadStage.ImportFailed;
-                case HistoryEventType.DownloadComplete:
+                case HistoryEventType.DownloadImported:
                     return TrackedDownloadStage.Imported;
                 case HistoryEventType.DownloadFailed:
                     return TrackedDownloadStage.DownloadFailed;
             }
 
             // Since DownloadComplete is a new event type, we can't assume it exists for old downloads
-            if (history.EventType == HistoryEventType.DownloadFolderImported)
+            if (history.EventType == HistoryEventType.TrackFileImported)
             {
                 return DateTime.UtcNow.Subtract(history.Date).TotalSeconds < 60 ? TrackedDownloadStage.Importing : TrackedDownloadStage.Imported;
             }

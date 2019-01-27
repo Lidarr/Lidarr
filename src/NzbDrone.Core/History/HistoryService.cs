@@ -219,7 +219,7 @@ namespace NzbDrone.Core.History
             {
                 var history = new History
                     {
-                        EventType = HistoryEventType.DownloadFolderImported,
+                        EventType = HistoryEventType.TrackFileImported,
                         Date = DateTime.UtcNow,
                         Quality = message.TrackInfo.Quality,
                         SourceTitle = message.ImportedTrack.SceneName ?? Path.GetFileNameWithoutExtension(message.TrackInfo.Path),
@@ -269,7 +269,7 @@ namespace NzbDrone.Core.History
             {
                 var history = new History
                 {
-                    EventType = HistoryEventType.DownloadComplete,
+                    EventType = HistoryEventType.DownloadImported,
                     Date = DateTime.UtcNow,
                     Quality = message.TrackedDownload.RemoteAlbum.ParsedAlbumInfo?.Quality ?? new QualityModel(),
                     SourceTitle = message.TrackedDownload.DownloadItem.Title,
