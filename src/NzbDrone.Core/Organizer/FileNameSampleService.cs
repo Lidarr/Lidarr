@@ -73,10 +73,11 @@ namespace NzbDrone.Core.Organizer
 
             var mediaInfo = new MediaInfoModel()
             {
-                AudioFormat = "flac",
+                AudioFormat = "Flac Audio",
                 AudioChannels = 2,
-                AudioBitrate = 320,
-                SchemaRevision = -1
+                AudioBitrate = 875,
+                AudioBits = 24,
+                AudioSampleRate = 44100
             };
 
             _singleTrackFile = new TrackFile

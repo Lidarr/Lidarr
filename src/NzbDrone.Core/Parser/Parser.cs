@@ -721,8 +721,7 @@ namespace NzbDrone.Core.Parser
                         AudioBitrate = acodec.AudioBitrate,
                         AudioChannels = acodec.AudioChannels,
                         AudioBits = file.Properties.BitsPerSample,
-                        AudioSampleRate = acodec.AudioSampleRate,
-                        SchemaRevision = -1
+                        AudioSampleRate = acodec.AudioSampleRate
                     };
                 }
             }

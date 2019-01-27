@@ -111,6 +111,7 @@ namespace NzbDrone.Core.Organizer
             AddTrackTokens(tokenHandlers, tracks);
             AddTrackFileTokens(tokenHandlers, trackFile);
             AddQualityTokens(tokenHandlers, artist, trackFile);
+            AddMediaInfoTokens(tokenHandlers, trackFile);
 
             var fileName = ReplaceTokens(pattern, tokenHandlers, namingConfig).Trim();
             fileName = FileNameCleanupRegex.Replace(fileName, match => match.Captures[0].Value[0].ToString());
@@ -311,6 +312,52 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{Quality Title}"] = m => qualityTitle;
             //tokenHandlers["{Quality Proper}"] = m => qualityProper;
             //tokenHandlers["{Quality Real}"] = m => qualityReal;
+        }
+
+        private void AddMediaInfoTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, TrackFile trackFile)
+        {
+            if (trackFile.MediaInfo == null)
+            {
+                return;
+            }
+
+            var audioCodec = MediaInfoFormatter.FormatAudioCodec(trackFile.MediaInfo);
+            var audioChannels = MediaInfoFormatter.FormatAudioChannels(trackFile.MediaInfo);
+            var audioChannelsFormatted = audioChannels > 0 ?
+                                audioChannels.ToString("F1", CultureInfo.InvariantCulture) :
+                                string.Empty;
+
+            tokenHandlers["{MediaInfo AudioCodec}"] = m => audioCodec;
+            tokenHandlers["{MediaInfo AudioChannels}"] = m => audioChannelsFormatted;
+            tokenHandlers["{MediaInfo AudioBitsPerSample}"] = m => MediaInfoFormatter.FormatAudioBitsPerSample(trackFile.MediaInfo);
+            tokenHandlers["{MediaInfo AudioSampleRate}"] = m => MediaInfoFormatter.FormatAudioSampleRate(trackFile.MediaInfo);
+        }
+
+        private string GetLanguagesToken(string mediaInfoLanguages)
+        {
+            List<string> tokens = new List<string>();
+            foreach (var item in mediaInfoLanguages.Split('/'))
+            {
+                if (!string.IsNullOrWhiteSpace(item))
+                    tokens.Add(item.Trim());
+            }
+
+            var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.NeutralCultures);
+            for (int i = 0; i < tokens.Count; i++)
+            {
+                try
+                {
+                    var cultureInfo = cultures.FirstOrDefault(p => p.EnglishName == tokens[i]);
+
+                    if (cultureInfo != null)
+                        tokens[i] = cultureInfo.TwoLetterISOLanguageName.ToUpper();
+                }
+                catch
+                {
+                }
+            }
+
+            return string.Join("+", tokens.Distinct());
         }
 
         private string ReplaceTokens(string pattern, Dictionary<string, Func<TokenMatch, string>> tokenHandlers, NamingConfig namingConfig)

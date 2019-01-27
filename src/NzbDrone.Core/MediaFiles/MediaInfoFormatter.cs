@@ -1,9 +1,5 @@
-using System;
-using System.Globalization;
-using System.Linq;
 using NLog;
 using NLog.Fluent;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Parser;
@@ -17,9 +13,17 @@ namespace NzbDrone.Core.MediaFiles
 
         public static string FormatAudioBitrate(MediaInfoModel mediaInfo)
         {
-            int audioBitrate = mediaInfo.SchemaRevision == -1 ? mediaInfo.AudioBitrate : (mediaInfo.AudioBitrate / 1000);
+            return mediaInfo.AudioBitrate + " kbps";
+        }
 
-            return audioBitrate + " kbps";
+        public static string FormatAudioBitsPerSample(MediaInfoModel mediaInfo)
+        {
+            return mediaInfo.AudioBits + "bit";
+        }
+
+        public static string FormatAudioSampleRate(MediaInfoModel mediaInfo)
+        {
+            return $"{mediaInfo.AudioSampleRate / 1000:0.#}kHz";
         }
 
         public static decimal FormatAudioChannels(MediaInfoModel mediaInfo)
@@ -28,83 +32,6 @@ namespace NzbDrone.Core.MediaFiles
         }
 
         public static string FormatAudioCodec(MediaInfoModel mediaInfo)
-        {
-            if (mediaInfo.SchemaRevision == -1)
-            {
-                return FormatAudioCodecTaglib(mediaInfo);
-            }
-
-            return FormatAudioCodecLegacy(mediaInfo);
-        }
-
-        public static string FormatAudioCodecLegacy(MediaInfoModel mediaInfo)
-        {
-            var audioFormat = mediaInfo.AudioFormat;
-
-            if (audioFormat.IsNullOrWhiteSpace())
-            {
-                return audioFormat;
-            }
-
-            if (audioFormat.EqualsIgnoreCase("AC-3"))
-            {
-                return "AC3";
-            }
-
-            if (audioFormat.EqualsIgnoreCase("ALAC"))
-            {
-                return "ALAC";
-            }
-
-            if (audioFormat.EqualsIgnoreCase("E-AC-3"))
-            {
-                return "EAC3";
-            }
-
-            if (audioFormat.EqualsIgnoreCase("AAC"))
-            {
-                return "AAC";
-            }
-
-            if (audioFormat.EqualsIgnoreCase("MPEG Audio"))
-            {
-                return "MP3";
-            }
-
-            if (audioFormat.EqualsIgnoreCase("MLP"))
-            {
-                return "MLP";
-            }
-
-            if (audioFormat.EqualsIgnoreCase("DTS"))
-            {
-                return "DTS";
-            }
-
-            if (audioFormat.EqualsIgnoreCase("TrueHD"))
-            {
-                return "TrueHD";
-            }
-
-            if (audioFormat.EqualsIgnoreCase("FLAC"))
-            {
-                return "FLAC";
-            }
-
-            if (audioFormat.EqualsIgnoreCase("Vorbis"))
-            {
-                return "Vorbis";
-            }
-
-            if (audioFormat.EqualsIgnoreCase("Opus"))
-            {
-                return "Opus";
-            }
-
-            return audioFormat;
-        }
-
-        public static string FormatAudioCodecTaglib(MediaInfoModel mediaInfo)
         {
             var codec = QualityParser.ParseCodec(mediaInfo.AudioFormat, null);
 

@@ -197,6 +197,7 @@
     <Compile Include="Datastore\Migration\021_add_custom_filters.cs" />
     <Compile Include="Datastore\Migration\022_import_list_tags.cs" />
     <Compile Include="Datastore\Migration\023_add_release_groups_etc.cs" />
+    <Compile Include="Datastore\Migration\024_clear_media_info.cs" />
     <Compile Include="Datastore\Migration\Framework\MigrationContext.cs" />
     <Compile Include="Datastore\Migration\Framework\MigrationController.cs" />
     <Compile Include="Datastore\Migration\Framework\MigrationDbFactory.cs" />

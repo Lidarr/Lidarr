@@ -24,7 +24,7 @@ namespace NzbDrone.Core.MediaFiles
         TrackFile Get(int id);
         List<TrackFile> Get(IEnumerable<int> ids);
         List<TrackFile> GetFilesWithRelativePath(int artistId, string relativePath);
-
+        void UpdateMediaInfo(List<TrackFile> trackFiles);
     }
 
     public class MediaFileService : IMediaFileService, IHandleAsync<AlbumDeletedEvent>
@@ -113,6 +113,11 @@ namespace NzbDrone.Core.MediaFiles
         public List<TrackFile> GetFilesByAlbum(int albumId)
         {
             return _mediaFileRepository.GetFilesByAlbum(albumId);
+        }
+
+        public void UpdateMediaInfo(List<TrackFile> trackFiles)
+        {
+            _mediaFileRepository.SetFields(trackFiles, t => t.MediaInfo);
         }
     }
 }
