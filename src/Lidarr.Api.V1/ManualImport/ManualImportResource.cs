@@ -30,7 +30,7 @@ namespace Lidarr.Api.V1.ManualImport
         public int QualityWeight { get; set; }
         public string DownloadId { get; set; }
         public IEnumerable<Rejection> Rejections { get; set; }
-        public ParsedTrackInfo Tags { get; set; }
+        public ParsedTrackInfo AudioTags { get; set; }
     }
 
     public static class ManualImportResourceMapper
@@ -56,7 +56,7 @@ namespace Lidarr.Api.V1.ManualImport
                 //QualityWeight
                 DownloadId = model.DownloadId,
                 Rejections = model.Rejections,
-                Tags = model.Tags
+                AudioTags = model.Tags
             };
         }
 

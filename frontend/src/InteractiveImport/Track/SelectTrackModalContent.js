@@ -101,7 +101,7 @@ class SelectTrackModalContent extends Component {
   render() {
     const {
       id,
-      tags,
+      audioTags,
       rejections,
       isFetching,
       isPopulated,
@@ -152,7 +152,7 @@ class SelectTrackModalContent extends Component {
           }
 
           <FileDetails
-            tags={tags}
+            audioTags={audioTags}
             filename={filename}
             rejections={rejections}
             isExpanded={false}
@@ -219,7 +219,7 @@ class SelectTrackModalContent extends Component {
 SelectTrackModalContent.propTypes = {
   id: PropTypes.number.isRequired,
   rejections: PropTypes.arrayOf(PropTypes.object).isRequired,
-  tags: PropTypes.object.isRequired,
+  audioTags: PropTypes.object.isRequired,
   isFetching: PropTypes.bool.isRequired,
   isPopulated: PropTypes.bool.isRequired,
   error: PropTypes.object,

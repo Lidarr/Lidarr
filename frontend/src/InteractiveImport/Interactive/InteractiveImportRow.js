@@ -173,7 +173,7 @@ class InteractiveImportRow extends Component {
       language,
       size,
       rejections,
-      tags,
+      audioTags,
       isSelected,
       onSelectedChange
     } = this.props;
@@ -331,7 +331,7 @@ class InteractiveImportRow extends Component {
           albumId={album && album.id}
           albumReleaseId={albumReleaseId}
           rejections={rejections}
-          tags={tags}
+          audioTags={audioTags}
           sortKey='mediumNumber'
           sortDirection={sortDirections.ASCENDING}
           filename={relativePath}
@@ -371,7 +371,7 @@ InteractiveImportRow.propTypes = {
   language: PropTypes.object,
   size: PropTypes.number.isRequired,
   rejections: PropTypes.arrayOf(PropTypes.object).isRequired,
-  tags: PropTypes.object.isRequired,
+  audioTags: PropTypes.object.isRequired,
   isSelected: PropTypes.bool,
   onSelectedChange: PropTypes.func.isRequired,
   onValidRowChange: PropTypes.func.isRequired

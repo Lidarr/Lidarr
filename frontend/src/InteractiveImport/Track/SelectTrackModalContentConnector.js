@@ -100,7 +100,7 @@ SelectTrackModalContentConnector.propTypes = {
   albumId: PropTypes.number.isRequired,
   albumReleaseId: PropTypes.number.isRequired,
   rejections: PropTypes.arrayOf(PropTypes.object).isRequired,
-  tags: PropTypes.object.isRequired,
+  audioTags: PropTypes.object.isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   fetchTracks: PropTypes.func.isRequired,
   setTracksSort: PropTypes.func.isRequired,

@@ -63,7 +63,7 @@ class FileDetails extends Component {
   render() {
     const {
       filename,
-      tags,
+      audioTags,
       rejections
     } = this.props;
 
@@ -93,130 +93,130 @@ class FileDetails extends Component {
         <div>
           {
             isExpanded &&
-              <div className={styles.tags}>
+              <div className={styles.audioTags}>
 
                 <DescriptionList>
                   <DescriptionListItem
                     title="Track Title"
-                    data={tags.title}
+                    data={audioTags.title}
                   />
                   <DescriptionListItem
                     title="Track Number"
-                    data={tags.trackNumbers[0]}
+                    data={audioTags.trackNumbers[0]}
                   />
                   <DescriptionListItem
                     title="Disc Number"
-                    data={tags.discNumber}
+                    data={audioTags.discNumber}
                   />
                   {
-                    tags.discCount !== undefined && tags.discCount > 0 &&
+                    audioTags.discCount !== undefined && audioTags.discCount > 0 &&
                     <DescriptionListItem
                       title="Disc Count"
-                      data={tags.discCount}
+                      data={audioTags.discCount}
                     />
                   }
                   <DescriptionListItem
                     title="Album"
-                    data={tags.albumTitle}
+                    data={audioTags.albumTitle}
                   />
                   <DescriptionListItem
                     title="Artist"
-                    data={tags.artistTitle}
+                    data={audioTags.artistTitle}
                   />
                   {
-                    tags.country !== undefined &&
+                    audioTags.country !== undefined &&
                     <DescriptionListItem
                       title="Country"
-                      data={tags.country.name}
+                      data={audioTags.country.name}
                     />
                   }
                   {
-                    tags.year !== undefined &&
+                    audioTags.year !== undefined && audioTags.year > 0 &&
                     <DescriptionListItem
                       title="Year"
-                      data={tags.year}
+                      data={audioTags.year}
                     />
                   }
                   {
-                    tags.label !== undefined &&
+                    audioTags.label !== undefined &&
                     <DescriptionListItem
                       title="Label"
-                      data={tags.label}
+                      data={audioTags.label}
                     />
                   }
                   {
-                    tags.catalogNumber !== undefined &&
+                    audioTags.catalogNumber !== undefined &&
                     <DescriptionListItem
                       title="Catalog Number"
-                      data={tags.catalogNumber}
+                      data={audioTags.catalogNumber}
                     />
                   }
                   {
-                    tags.disambiguation !== undefined &&
+                    audioTags.disambiguation !== undefined &&
                     <DescriptionListItem
                       title="Disambiguation"
-                      data={tags.disambiguation}
+                      data={audioTags.disambiguation}
                     />
                   }
                   {
-                    tags.duration !== undefined &&
+                    audioTags.duration !== undefined &&
                     <DescriptionListItem
                       title="Duration"
-                      data={formatTimeSpan(tags.duration)}
+                      data={formatTimeSpan(audioTags.duration)}
                     />
                   }
                   {
-                    tags.artistMBId !== undefined &&
+                    audioTags.artistMBId !== undefined &&
                     <Link
-                      to={`https://musicbrainz.org/artist/${tags.artistMBId}`}
+                      to={`https://musicbrainz.org/artist/${audioTags.artistMBId}`}
                     >
                       <DescriptionListItem
                         title="MusicBrainz Artist ID"
-                        data={tags.artistMBId}
+                        data={audioTags.artistMBId}
                       />
                     </Link>
                   }
                   {
-                    tags.albumMBId !== undefined &&
+                    audioTags.albumMBId !== undefined &&
                     <Link
-                      to={`https://musicbrainz.org/release-group/${tags.albumMBId}`}
+                      to={`https://musicbrainz.org/release-group/${audioTags.albumMBId}`}
                     >
                       <DescriptionListItem
                         title="MusicBrainz Album ID"
-                        data={tags.albumMBId}
+                        data={audioTags.albumMBId}
                       />
                     </Link>
                   }
                   {
-                    tags.releaseMBId !== undefined &&
+                    audioTags.releaseMBId !== undefined &&
                     <Link
-                      to={`https://musicbrainz.org/release/${tags.releaseMBId}`}
+                      to={`https://musicbrainz.org/release/${audioTags.releaseMBId}`}
                     >
                       <DescriptionListItem
                         title="MusicBrainz Release ID"
-                        data={tags.releaseMBId}
+                        data={audioTags.releaseMBId}
                       />
                     </Link>
                   }
                   {
-                    tags.recordingMBId !== undefined &&
+                    audioTags.recordingMBId !== undefined &&
                     <Link
-                      to={`https://musicbrainz.org/recording/${tags.recordingMBId}`}
+                      to={`https://musicbrainz.org/recording/${audioTags.recordingMBId}`}
                     >
                       <DescriptionListItem
                         title="MusicBrainz Recording ID"
-                        data={tags.recordingMBId}
+                        data={audioTags.recordingMBId}
                       />
                     </Link>
                   }
                   {
-                    tags.trackMBId !== undefined &&
+                    audioTags.trackMBId !== undefined &&
                     <Link
-                      to={`https://musicbrainz.org/track/${tags.trackMBId}`}
+                      to={`https://musicbrainz.org/track/${audioTags.trackMBId}`}
                     >
                       <DescriptionListItem
                         title="MusicBrainz Track ID"
-                        data={tags.trackMBId}
+                        data={audioTags.trackMBId}
                       />
                     </Link>
                   }
@@ -231,7 +231,7 @@ class FileDetails extends Component {
 }
 
 FileDetails.propTypes = {
-  tags: PropTypes.object.isRequired,
+  audioTags: PropTypes.object.isRequired,
   filename: PropTypes.string.isRequired,
   rejections: PropTypes.arrayOf(PropTypes.object).isRequired,
   isExpanded: PropTypes.bool
