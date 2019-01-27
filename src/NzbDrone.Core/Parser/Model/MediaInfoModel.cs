@@ -1,5 +1,4 @@
-﻿using System;
-using NzbDrone.Core.Datastore;
+﻿using NzbDrone.Core.Datastore;
 
 namespace NzbDrone.Core.Parser.Model
 {
@@ -8,6 +7,8 @@ namespace NzbDrone.Core.Parser.Model
         public string AudioFormat { get; set; }
         public int AudioBitrate { get; set; }
         public int AudioChannels { get; set; }
+        public int AudioBits { get; set; }
+        public int AudioSampleRate { get; set; }
         public int SchemaRevision { get; set; }
     }
 }

@@ -11,7 +11,6 @@ using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Languages;
 using TagLib;
 using TagLib.Id3v2;
-using System.Globalization;
 using NzbDrone.Common.Serializer;
 
 namespace NzbDrone.Core.Parser
@@ -650,10 +649,6 @@ namespace NzbDrone.Core.Parser
             var file = TagLib.File.Create(path);
             Logger.Debug("Starting Tag Parse for {0}", file.Name);
 
-            var trackNumber = file.Tag.Track;
-            var trackTitle = file.Tag.Title;
-            var discNumber = (int)file.Tag.Disc;
-
             var artist = file.Tag.FirstAlbumArtist;
 
             if (artist.IsNullOrWhiteSpace())
@@ -667,27 +662,26 @@ namespace NzbDrone.Core.Parser
                 Year = (int)file.Tag.Year
             };
 
-            var temp = new int[1];
-            temp[0] = (int)trackNumber;
-
             var result = new ParsedTrackInfo
             {
                 Language = Language.English, //TODO Parse from Tag/Mediainfo
                 AlbumTitle = file.Tag.Album,
                 ArtistTitle = artist,
                 ArtistMBId = file.Tag.MusicBrainzArtistId,
+                AlbumMBId = file.Tag.MusicBrainzReleaseGroupId,
                 ReleaseMBId = file.Tag.MusicBrainzReleaseId,
-                DiscNumber = discNumber,
-                DiscCount = (int) file.Tag.DiscCount,
-                Duration = file.Properties.Duration,
                 // SIC: the recording ID is stored in this field.
                 // See https://picard.musicbrainz.org/docs/mappings/
                 RecordingMBId = file.Tag.MusicBrainzTrackId,
+                DiscNumber = (int) file.Tag.Disc,
+                DiscCount = (int) file.Tag.DiscCount,
+                Duration = file.Properties.Duration,
                 Year = file.Tag.Year,
-                TrackNumbers = temp,
+                Label = file.Tag.Publisher,
+                TrackNumbers = new [] { (int) file.Tag.Track },
                 ArtistTitleInfo = artistTitleInfo,
-                Title = trackTitle,
-                CleanTitle = trackTitle?.CleanTrackTitle(),
+                Title = file.Tag.Title,
+                CleanTitle = file.Tag.Title?.CleanTrackTitle(),
                 Country = IsoCountries.Find(file.Tag.MusicBrainzReleaseCountry)
             };
 
@@ -695,21 +689,17 @@ namespace NzbDrone.Core.Parser
             if ((file.TagTypesOnDisk & TagTypes.Id3v2) == TagTypes.Id3v2)
             {
                 var tag = (TagLib.Id3v2.Tag) file.GetTag(TagTypes.Id3v2);
-                result.CatalogNumber = GetUserTextId3Tag(tag, "CATALOGNUMBER");
-                result.Label = GetTextId3Tag(tag, "TPUB");
+                result.CatalogNumber = UserTextInformationFrame.Get(tag, "CATALOGNUMBER", false)?.Text.ExclusiveOrDefault();
                 // this one was invented for beets
-                result.Disambiguation = GetUserTextId3Tag(tag, "MusicBrainz Album Comment");
-                result.AlbumMBId = GetUserTextId3Tag(tag, "MusicBrainz Release Group Id");
-                result.TrackMBId = GetUserTextId3Tag(tag, "MusicBrainz Release Track Id");
+                result.Disambiguation = UserTextInformationFrame.Get(tag, "MusicBrainz Album Comment", false)?.Text.ExclusiveOrDefault();
+                result.TrackMBId =  UserTextInformationFrame.Get(tag, "MusicBrainz Release Track Id", false)?.Text.ExclusiveOrDefault();
             }
             else if ((file.TagTypesOnDisk & TagTypes.Xiph) == TagTypes.Xiph)
             {
                 var tag = (TagLib.Ogg.XiphComment) file.GetTag(TagLib.TagTypes.Xiph);
-                result.CatalogNumber = tag.GetField("CATALOGNUMBER").SingleOrDefault();
-                result.Label = tag.GetField("LABEL").FirstOrDefault();
-                result.Disambiguation = tag.GetField("MUSICBRAINZ_ALBUMCOMMENT").SingleOrDefault();
-                result.AlbumMBId = tag.GetField("MUSICBRAINZ_RELEASEGROUPID").SingleOrDefault();
-                result.TrackMBId = tag.GetField("MUSICBRAINZ_RELEASETRACKID").SingleOrDefault();
+                result.CatalogNumber = tag.GetField("CATALOGNUMBER").ExclusiveOrDefault();
+                result.Disambiguation = tag.GetField("MUSICBRAINZ_ALBUMCOMMENT").ExclusiveOrDefault();
+                result.TrackMBId = tag.GetField("MUSICBRAINZ_RELEASETRACKID").ExclusiveOrDefault();
             }
             
             Logger.Debug("File Tags Parsed: {0}", result.ToJson().Replace(System.Environment.NewLine, string.Empty));
@@ -730,30 +720,14 @@ namespace NzbDrone.Core.Parser
                         AudioFormat = acodec.Description,
                         AudioBitrate = acodec.AudioBitrate,
                         AudioChannels = acodec.AudioChannels,
+                        AudioBits = file.Properties.BitsPerSample,
+                        AudioSampleRate = acodec.AudioSampleRate,
                         SchemaRevision = -1
                     };
                 }
             }
 
             return result;
-        }
-
-        private static string GetUserTextId3Tag(TagLib.Id3v2.Tag tag, string description)
-        {
-            //Gets the TXXX frame, frame will be null if nonexistant
-			UserTextInformationFrame frame = UserTextInformationFrame.Get(tag, description, false);
-
-			//TXXX frames support multivalue strings, join them up and return
-			//only the text from the frame.
-			string result = frame == null ? null : string.Join (";", frame.Text);
-			return string.IsNullOrEmpty (result) ? null : result;
-        }
-
-        private static string GetTextId3Tag(TagLib.Id3v2.Tag tag, string ident)
-        {
-            Frame frame = TextInformationFrame.Get(tag, new ReadOnlyByteVector(ident), false);
-            string result = frame == null ? null : frame.ToString ();
-			return string.IsNullOrEmpty (result) ? null : result;
         }
 
         private static ParsedTrackInfo ParseMatchMusicCollection(MatchCollection matchCollection)
