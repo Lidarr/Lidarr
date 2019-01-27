@@ -466,26 +466,22 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
             // Year
             var localYear = MostCommon(localTracks.Select(x => x.FileTrackInfo.Year));
-            if (release.Album.Value.ReleaseDate.HasValue)
+            if (localYear > 0 && release.Album.Value.ReleaseDate.HasValue)
             {
-                var mbYear = release.Album.Value.ReleaseDate.Value.Year;
-                if (localYear == mbYear)
+                var albumYear = release.Album.Value.ReleaseDate.Value.Year;
+                var releaseYear = release.ReleaseDate.Value.Year;
+                if (localYear == albumYear || localYear == releaseYear)
                 {
                     dist.Add("year", 0.0);
                 }
                 else
                 {
-                    var diff = Math.Abs(localYear - mbYear);
-                    var diff_max = Math.Abs(DateTime.Now.Year - mbYear);
+                    var diff = Math.Abs(localYear - albumYear);
+                    var diff_max = Math.Abs(DateTime.Now.Year - albumYear);
                     dist.AddRatio("year", diff, diff_max);
                 }
+                _logger.Trace("year: {0} vs {1}; {2}", localYear, release.Album.Value.ReleaseDate?.Year, dist.NormalizedDistance());
             }
-            else
-            {
-                // full penalty when there is no year
-                dist.Add("year", 1.0);
-            }
-            _logger.Trace("year: {0} vs {1}; {2}", localYear, release.Album.Value.ReleaseDate?.Year, dist.NormalizedDistance());
 
             // If we parsed a country from the files use that, otherwise use our preference
             var country = MostCommon(localTracks.Select(x => x.FileTrackInfo.Country));
