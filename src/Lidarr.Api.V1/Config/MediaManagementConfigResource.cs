@@ -25,7 +25,6 @@ namespace Lidarr.Api.V1.Config
         public bool CopyUsingHardlinks { get; set; }
         public bool ImportExtraFiles { get; set; }
         public string ExtraFileExtensions { get; set; }
-        public bool EnableMediaInfo { get; set; }
     }
 
     public static class MediaManagementConfigResourceMapper
