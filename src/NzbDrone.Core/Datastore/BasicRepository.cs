@@ -31,6 +31,7 @@ namespace NzbDrone.Core.Datastore
         bool HasItems();
         void DeleteMany(IEnumerable<int> ids);
         void SetFields(TModel model, params Expression<Func<TModel, object>>[] properties);
+        void SetFields(IEnumerable<TModel> models, params Expression<Func<TModel, object>>[] properties);
         TModel Single();
         PagingSpec<TModel> GetPaged(PagingSpec<TModel> pagingSpec);
     }
