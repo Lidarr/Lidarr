@@ -35,6 +35,23 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
             return tracks;
         }
 
+        private List<LocalTrack> GivenTracksWithNoTags(string root, int count)
+        {
+            var outp = new List<LocalTrack>();
+
+            for (int i = 0; i < count; i++)
+            {
+                var track = Builder<LocalTrack>
+                    .CreateNew()
+                    .With(y => y.FileTrackInfo = new ParsedTrackInfo())
+                    .With(y => y.Path = Path.Combine(root, $"{i}.mp3"))
+                    .Build();
+                outp.Add(track);
+            }
+
+            return outp;
+        }
+
         private List<LocalTrack> GivenVaTracks(string root, string album, int count)
         {
             var settings = new BuilderSettings();
@@ -271,5 +288,32 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
             output[1].LocalTracks.Count.Should().Be(5);
         }
 
+        [Test]
+        public void should_not_fail_if_all_tags_null()
+        {
+            var tracks = GivenTracksWithNoTags($"C:\\music\\incoming\\album".AsOsAgnostic(), 10);
+
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(false);
+            TrackGroupingService.LooksLikeSingleRelease(tracks).Should().Be(true);
+
+            var output = Subject.GroupTracks(tracks);
+            output.Count.Should().Be(1);
+            output[0].LocalTracks.Count.Should().Be(10);
+        }
+
+        [Test]
+        public void should_not_fail_if_some_tags_null()
+        {
+            var tracks = GivenTracks($"C:\\music\\incoming\\album".AsOsAgnostic(),
+                                     "artist1", "album", 10);
+            tracks.AddRange(GivenTracksWithNoTags($"C:\\music\\incoming\\album".AsOsAgnostic(), 2));
+
+            TrackGroupingService.IsVariousArtists(tracks).Should().Be(false);
+            TrackGroupingService.LooksLikeSingleRelease(tracks).Should().Be(true);
+
+            var output = Subject.GroupTracks(tracks);
+            output.Count.Should().Be(1);
+            output[0].LocalTracks.Count.Should().Be(12);
+        }
     }
 }
