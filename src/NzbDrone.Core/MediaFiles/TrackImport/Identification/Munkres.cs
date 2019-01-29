@@ -46,7 +46,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private int path_count;
         private int path_row_0;
         private int path_col_0;
-        private int asgn;
         private int step;
 
         public Munkres(double[,] costMatrix)
