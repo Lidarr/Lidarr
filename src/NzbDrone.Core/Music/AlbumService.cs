@@ -169,7 +169,8 @@ namespace NzbDrone.Core.Music
                           title,
                           string.Join("\n", sortedAlbums.Select(x => $"[{x.Album.Title}] {x.Album.CleanTitle}: {x.MatchProb}")));
 
-            return sortedAlbums.Where((x, i) => x.MatchProb > fuzzThreshold && (i == 0 ? true : x.MatchProb - sortedAlbums[i - 1].MatchProb < fuzzGap))
+            return sortedAlbums.TakeWhile((x, i) => i == 0 ? true : sortedAlbums[i - 1].MatchProb - x.MatchProb < fuzzGap)
+                .TakeWhile((x, i) => x.MatchProb > fuzzThreshold || (i > 0 && sortedAlbums[i - 1].MatchProb > fuzzThreshold))
                 .Select(x => x.Album)
                 .ToList();
         }
