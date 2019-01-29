@@ -12,12 +12,21 @@ using NzbDrone.Core.Languages;
 using TagLib;
 using TagLib.Id3v2;
 using NzbDrone.Common.Serializer;
+using Newtonsoft.Json;
 
 namespace NzbDrone.Core.Parser
 {
     public static class Parser
     {
         private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(Parser));
+
+        private static readonly JsonSerializerSettings SerializerSettings;
+
+        static Parser()
+        {
+            SerializerSettings = Json.GetSerializerSettings();
+            SerializerSettings.Formatting = Formatting.None;
+        }
 
         private static readonly Regex[] ReportMusicTitleRegex = new[]
         {
@@ -703,7 +712,7 @@ namespace NzbDrone.Core.Parser
                     result.TrackMBId = tag.GetField("MUSICBRAINZ_RELEASETRACKID").ExclusiveOrDefault();
                 }
             
-                Logger.Debug("File Tags Parsed: {0}", result.ToJson().Replace(System.Environment.NewLine, string.Empty));
+                Logger.Debug("File Tags Parsed: {0}", JsonConvert.SerializeObject(result, SerializerSettings));
 
                 foreach (ICodec codec in file.Properties.Codecs)
                 {
