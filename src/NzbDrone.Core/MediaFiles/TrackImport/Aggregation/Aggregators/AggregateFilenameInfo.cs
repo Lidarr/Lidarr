@@ -13,19 +13,40 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators
     {
         private readonly Logger _logger;
 
-        private static readonly Regex[] Patterns = new []
-        {
-            new Regex(@"^(?<artist>[^-_\.]+)[-_](?<title>[^-_\.]+)[-_](?<tag>[^-_\.]*)$", RegexOptions.IgnoreCase | RegexOptions.Compiled),
-            new Regex(@"^(?<track>\d+)[\s\.-_]+(?<artist>[^-_\.]+)[-_](?<title>[^-_\.]+)[-_](?<tag>[^-_\.]*)$", RegexOptions.IgnoreCase | RegexOptions.Compiled),
-            new Regex(@"^(?<artist>[^-_\.]+)[\.\s-_]+(?<tag>[^-_\.]*)[-_\.\s]+(?<track>\d+)[\s-_]+(?<title>[^-_\.]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled),
-            new Regex(@"^(?<artist>[^-_\.]+)[-_](?<title>[^-_\.]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled),
-            new Regex(@"^(?<track>\d+)[\s\.-_]+(?<artist>[^-_\.]+)[-_](?<title>[^-_\.]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled),
-            new Regex(@"^(?<title>[^-_\.]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled),
-            new Regex(@"^(?<track>\d+)[\s\.-_]+(?<title>[^-_\.]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled),
-            new Regex(@"^(?<track>\d+)\s+(?<title>[^-_\.]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled),
-            new Regex(@"^(?<title>[^-_\.]+) by (?<artist>[^-_\.]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled),
-            new Regex(@"^(?<track>\d+)[^-_\.]*$", RegexOptions.IgnoreCase | RegexOptions.Compiled)
+        private static readonly List<Tuple<string, string>> charsAndSeps = new List<Tuple<string, string>> {
+            Tuple.Create(@"a-z0-9,\(\)\.&\s", @"\s_-"),
+            Tuple.Create(@"a-z0-9,\(\)\.\&_", @"\s-")
         };
+
+        private static Regex[] Patterns(string chars, string sep)
+        {
+            var sep1 = $@"(?<sep>[{sep}]+)";
+            var sepn = @"\k<sep>";
+            var artist = $@"(?<artist>[{chars}]+)";
+            var track = $@"(?<track>\d+)";
+            var title = $@"(?<title>[{chars}]+)";
+            var tag = $@"(?<tag>[{chars}]+)";
+            
+            return new [] {
+                new Regex($@"^{track}{sep1}{artist}{sepn}{title}{sepn}{tag}$", RegexOptions.IgnoreCase),
+                new Regex($@"^{track}{sep1}{artist}{sepn}{tag}{sepn}{title}$", RegexOptions.IgnoreCase),
+                new Regex($@"^{track}{sep1}{artist}{sepn}{title}$", RegexOptions.IgnoreCase),
+                
+                new Regex($@"^{artist}{sep1}{tag}{sepn}{track}{sepn}{title}$", RegexOptions.IgnoreCase),
+                new Regex($@"^{artist}{sep1}{track}{sepn}{title}{sepn}{tag}$", RegexOptions.IgnoreCase),
+                new Regex($@"^{artist}{sep1}{track}{sepn}{title}$", RegexOptions.IgnoreCase),
+                
+                new Regex($@"^{artist}{sep1}{title}{sepn}{tag}$", RegexOptions.IgnoreCase),
+                new Regex($@"^{artist}{sep1}{tag}{sepn}{title}$", RegexOptions.IgnoreCase),
+                new Regex($@"^{artist}{sep1}{title}$", RegexOptions.IgnoreCase),
+
+                new Regex($@"^{track}{sep1}{title}$", RegexOptions.IgnoreCase),
+                new Regex($@"^{track}{sep1}{tag}{sepn}{title}$", RegexOptions.IgnoreCase),
+                new Regex($@"^{track}{sep1}{title}{sepn}{tag}$", RegexOptions.IgnoreCase),
+                
+                new Regex($@"^{title}$", RegexOptions.IgnoreCase),
+            };
+        }
 
         public AggregateFilenameInfo(Logger logger)
         {
@@ -40,12 +61,15 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators
                 || tracks.Count(x => x.FileTrackInfo.DiscNumber == 0) > 0)
             {
                 _logger.Debug("Missing data in tags, trying filename augmentation");
-                foreach (var pattern in Patterns)
+                foreach (var charSep in charsAndSeps)
                 {
-                    var matches = AllMatches(tracks, pattern);
-                    if (matches != null)
+                    foreach (var pattern in Patterns(charSep.Item1, charSep.Item2))
                     {
-                        ApplyMatches(matches, pattern);
+                        var matches = AllMatches(tracks, pattern);
+                        if (matches != null)
+                        {
+                            ApplyMatches(matches, pattern);
+                        }
                     }
                 }
             }

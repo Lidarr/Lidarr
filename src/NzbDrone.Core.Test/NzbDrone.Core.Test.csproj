@@ -285,6 +285,7 @@
     <Compile Include="MediaFiles\DownloadedAlbumsCommandServiceFixture.cs" />
     <Compile Include="MediaFiles\DownloadedTracksImportServiceFixture.cs" />
     <Compile Include="MediaFiles\MediaFileDeletionService\DeleteTrackFileFixture.cs" />
+    <Compile Include="MediaFiles\TrackImport\Aggregation\AggregateFilenameInfoFixture.cs" />
     <Compile Include="MediaFiles\TrackImport\Identification\MunkresFixture.cs" />
     <Compile Include="MediaFiles\TrackImport\Identification\DistanceFixture.cs" />
     <Compile Include="MediaFiles\TrackImport\Identification\TrackGroupingServiceFixture.cs" />
