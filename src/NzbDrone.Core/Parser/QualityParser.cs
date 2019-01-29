@@ -70,7 +70,11 @@ namespace NzbDrone.Core.Parser
 
                 result.Quality = FindQuality(descCodec, fileBitrate, fileSampleSize);
 
-                if (result.Quality != Quality.Unknown) { return result; }
+                if (result.Quality != Quality.Unknown)
+                {
+                    result.QualityDetectionSource = QualityDetectionSource.TagLib;
+                    return result;
+                }
             }
 
             var codec = ParseCodec(normalizedName,name);
@@ -140,11 +144,6 @@ namespace NzbDrone.Core.Parser
                 default:
                     result.Quality = Quality.Unknown;
                     break;
-            }
-
-            if (result.Quality != Quality.Unknown)
-            {
-                result.QualityDetectionSource = QualityDetectionSource.TagLib;
             }
 
             //Based on extension
