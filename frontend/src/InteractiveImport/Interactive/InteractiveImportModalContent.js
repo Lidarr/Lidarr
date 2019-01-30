@@ -373,8 +373,6 @@ class InteractiveImportModalContent extends Component {
           onModalClose={this.onSelectAlbumModalClose}
         />
 
-        
-        
       </ModalContent>
     );
   }
