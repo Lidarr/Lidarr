@@ -24,7 +24,7 @@ using Lidarr.Http.Extensions;
 namespace Lidarr.Api.V1.Artist
 {
     public class ArtistModule : LidarrRestModuleWithSignalR<ArtistResource, NzbDrone.Core.Music.Artist>, 
-                                IHandle<TrackImportedEvent>, 
+                                IHandle<AlbumImportedEvent>,
                                 IHandle<TrackFileDeletedEvent>,
                                 IHandle<ArtistUpdatedEvent>,       
                                 IHandle<ArtistEditedEvent>,  
@@ -236,9 +236,9 @@ namespace Lidarr.Api.V1.Artist
             resource.RootFolderPath = _rootFolderService.GetBestRootFolderPath(resource.Path);
         }
 
-        public void Handle(TrackImportedEvent message)
+        public void Handle(AlbumImportedEvent message)
         {
-            BroadcastResourceChange(ModelAction.Updated, message.TrackInfo.Artist.ToResource());
+            BroadcastResourceChange(ModelAction.Updated, GetArtistResource(message.Artist));
         }
 
         public void Handle(TrackFileDeletedEvent message)
@@ -270,7 +270,7 @@ namespace Lidarr.Api.V1.Artist
 
         public void Handle(MediaCoversUpdatedEvent message)
         {
-            BroadcastResourceChange(ModelAction.Updated, message.Artist.Id);
+            BroadcastResourceChange(ModelAction.Updated, GetArtistResource(message.Artist));
         }
     }
 }
