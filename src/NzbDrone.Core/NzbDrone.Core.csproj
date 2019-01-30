@@ -107,7 +107,7 @@
       <HintPath>..\Libraries\Sqlite\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="taglib-sharp, Version=2.2.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
-      <HintPath>..\packages\TagLibSharp.2.2.0-beta/lib/netstandard2.0/taglib-sharp.dll</HintPath>
+      <HintPath>..\packages\TagLibSharp.2.2.0-beta\lib\netstandard2.0\taglib-sharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
