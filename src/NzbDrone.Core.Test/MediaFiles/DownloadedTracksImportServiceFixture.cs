@@ -273,56 +273,6 @@ namespace NzbDrone.Core.Test.MediaFiles
         }
 
         [Test]
-        public void should_use_folder_if_folder_import()
-        {
-            GivenValidArtist();
-
-            var folderName = @"C:\media\ba09030e-1234-1234-1234-123456789abc\[HorribleSubs] Maria the Virgin Witch - 09 [720p]".AsOsAgnostic();
-            var fileName = @"C:\media\ba09030e-1234-1234-1234-123456789abc\[HorribleSubs] Maria the Virgin Witch - 09 [720p]\[HorribleSubs] Maria the Virgin Witch - 09 [720p].mkv".AsOsAgnostic();
-
-            Mocker.GetMock<IDiskProvider>().Setup(c => c.FolderExists(folderName))
-                  .Returns(true);
-
-            Mocker.GetMock<IDiskProvider>().Setup(c => c.GetFiles(folderName, SearchOption.TopDirectoryOnly))
-                  .Returns(new[] { fileName });
-
-            var localTrack = new LocalTrack();
-
-            var imported = new List<ImportDecision<LocalTrack>>();
-            imported.Add(new ImportDecision<LocalTrack>(localTrack));
-
-
-            Subject.ProcessPath(fileName);
-
-            Mocker.GetMock<IMakeImportDecision>()
-                  .Verify(s => s.GetImportDecisions(It.IsAny<List<string>>(), It.IsAny<Artist>(), It.Is<ParsedTrackInfo>(v => v.TrackNumbers.First() == 9)), Times.Once());
-        }
-
-        [Test]
-        public void should_not_use_folder_if_file_import()
-        {
-            GivenValidArtist();
-
-            var fileName = @"C:\media\ba09030e-1234-1234-1234-123456789abc\Torrents\[HorribleSubs] Maria the Virgin Witch - 09 [720p].mkv".AsOsAgnostic();
-
-            Mocker.GetMock<IDiskProvider>().Setup(c => c.FolderExists(fileName))
-                  .Returns(false);
-
-            Mocker.GetMock<IDiskProvider>().Setup(c => c.FileExists(fileName))
-                  .Returns(true);
-
-            var localTrack = new LocalTrack();
-
-            var imported = new List<ImportDecision<LocalTrack>>();
-            imported.Add(new ImportDecision<LocalTrack>(localTrack));
-
-            var result = Subject.ProcessPath(fileName);
-
-            Mocker.GetMock<IMakeImportDecision>()
-                  .Verify(s => s.GetImportDecisions(It.IsAny<List<string>>(), It.IsAny<Artist>(), null), Times.Once());
-        }
-
-        [Test]
         public void should_not_process_if_file_and_folder_do_not_exist()
         {
             var folderName = @"C:\media\ba09030e-1234-1234-1234-123456789abc\[HorribleSubs] Maria the Virgin Witch - 09 [720p]".AsOsAgnostic();
