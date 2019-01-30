@@ -138,12 +138,12 @@ namespace Lidarr.Api.V1.Albums
         
         public void Handle(AlbumEditedEvent message)
         {
-            BroadcastResourceChange(ModelAction.Updated, message.Album.ToResource());
+            BroadcastResourceChange(ModelAction.Updated, MapToResource(message.Album, true));
         }
 
         public void Handle(TrackImportedEvent message)
         {
-            BroadcastResourceChange(ModelAction.Updated, message.TrackInfo.Album.ToResource());
+            BroadcastResourceChange(ModelAction.Updated, MapToResource(message.TrackInfo.Album, true));
         }
 
         //public void Handle(TrackDownloadedEvent message)

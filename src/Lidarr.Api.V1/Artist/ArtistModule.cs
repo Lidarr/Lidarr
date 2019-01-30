@@ -245,17 +245,17 @@ namespace Lidarr.Api.V1.Artist
         {
             if (message.Reason == DeleteMediaFileReason.Upgrade) return;
 
-            BroadcastResourceChange(ModelAction.Updated, message.TrackFile.Artist.Value.ToResource());
+            BroadcastResourceChange(ModelAction.Updated, GetArtistResource(message.TrackFile.Artist.Value));
         }
 
         public void Handle(ArtistUpdatedEvent message)
         {
-            BroadcastResourceChange(ModelAction.Updated, message.Artist.ToResource());
+            BroadcastResourceChange(ModelAction.Updated, GetArtistResource(message.Artist));
         }
 
         public void Handle(ArtistEditedEvent message)
         {
-            BroadcastResourceChange(ModelAction.Updated, message.Artist.ToResource());
+            BroadcastResourceChange(ModelAction.Updated, GetArtistResource(message.Artist));
         }
 
         public void Handle(ArtistDeletedEvent message)
