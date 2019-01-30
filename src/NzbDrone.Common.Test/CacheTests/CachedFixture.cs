@@ -124,7 +124,7 @@ namespace NzbDrone.Common.Test.CacheTests
 
             _cachedString.Get("key", testfunc, TimeSpan.FromMilliseconds(300));
 
-            Thread.Sleep(300);
+            Thread.Sleep(1000);
 
             _cachedString.Values.Should().HaveCount(0);
             hitCount.Should().Be(1);
