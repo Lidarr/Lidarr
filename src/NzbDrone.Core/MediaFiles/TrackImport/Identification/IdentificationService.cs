@@ -552,14 +552,14 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             _logger.Trace("after trackMapping: {0}", dist.NormalizedDistance());
 
             // missing tracks
-            foreach (var track in mapping.MBExtra)
+            foreach (var track in mapping.MBExtra.Take(localTracks.Count))
             {
                 dist.Add("missing_tracks", 1.0);
             }
             _logger.Trace("after missing tracks: {0}", dist.NormalizedDistance());
 
             // unmatched tracks
-            foreach (var track in mapping.LocalExtra)
+            foreach (var track in mapping.LocalExtra.Take(localTracks.Count))
             {
                 dist.Add("unmatched_tracks", 1.0);
             }
