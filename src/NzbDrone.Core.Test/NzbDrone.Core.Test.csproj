@@ -293,6 +293,7 @@
     <Compile Include="MediaFiles\TrackImport\Identification\AlbumDistanceFixture.cs" />
     <Compile Include="MediaFiles\TrackImport\Identification\TrackMappingFixture.cs" />
     <Compile Include="MediaFiles\TrackImport\Identification\GetCandidatesFixture.cs" />
+    <Compile Include="MediaFiles\TrackImport\Identification\IdentificationServiceFixture.cs" />
     <Compile Include="MediaFiles\TrackFileMovingServiceTests\MoveTrackFileFixture.cs" />
     <Compile Include="MediaFiles\TrackImport\ImportDecisionMakerFixture.cs" />
     <Compile Include="MediaFiles\TrackImport\Specifications\FreeSpaceSpecificationFixture.cs" />
@@ -603,8 +604,14 @@
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
-  </Target>
+  </Target> -->
   <Target Name="AfterBuild">
+    <ItemGroup>
+      <IdentificationTestCases Include="Files\Identification\*.json" />
+    </ItemGroup>
+    <Copy
+        SourceFiles="@(IdentificationTestCases)"
+        DestinationFolder="$(OutputPath)\Files\Identification\"
+        SkipUnchangedFiles="true"/>
   </Target>
-  -->
 </Project>

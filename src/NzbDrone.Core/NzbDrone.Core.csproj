@@ -758,6 +758,7 @@
     <Compile Include="MediaFiles\TrackImport\Specifications\ReleaseWantedSpecification.cs" />
     <Compile Include="MediaFiles\TrackImport\Identification\TrackGroupingService.cs" />
     <Compile Include="MediaFiles\TrackImport\Identification\IdentificationService.cs" />
+    <Compile Include="MediaFiles\TrackImport\Identification\IdentificationTestCase.cs" />
     <Compile Include="MediaFiles\TrackImport\Identification\Distance.cs" />
     <Compile Include="MediaFiles\TrackImport\Identification\Munkres.cs" />
     <Compile Include="MediaFiles\Events\ArtistRenamedEvent.cs" />

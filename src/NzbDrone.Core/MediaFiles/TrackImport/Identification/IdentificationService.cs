@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles.TrackImport.Aggregation;
 using NzbDrone.Core.Music;
@@ -62,6 +62,31 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private readonly List<string> VariousArtistNames = new List<string> { "various artists", "various", "va", "unknown" };
         private readonly List<string> VariousArtistIds = new List<string> { "89ad4ac3-39f7-470e-963a-56509c546377" };
 
+        private void LogTestCaseOutput(List<LocalTrack> localTracks, Artist artist, Album album, AlbumRelease release, bool newDownload, bool singleRelease)
+        {
+            var trackData = localTracks.Select(x => new BasicLocalTrack {
+                    Path = x.Path,
+                    FileTrackInfo = x.FileTrackInfo
+                });
+            var options = new IdTestCase {
+                ExpectedMusicBrainzReleaseIds = new List<string> {"expected-id-1", "expected-id-2", "..."},
+                MetadataProfile = artist.MetadataProfile.Value,
+                Artist = artist?.Metadata.Value.ForeignArtistId,
+                Album = album?.ForeignAlbumId,
+                Release = release?.ForeignReleaseId,
+                NewDownload = newDownload,
+                SingleRelease = singleRelease,
+                Tracks = trackData.ToList()
+            };
+
+            var SerializerSettings = Json.GetSerializerSettings();
+            SerializerSettings.Formatting = Formatting.None;
+
+            var output = JsonConvert.SerializeObject(options, SerializerSettings);
+
+            _logger.Debug($"*** IdentificationService TestCaseGenerator ***\n{output}");
+        }
+
         public List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, Artist artist, Album album, AlbumRelease release, bool newDownload, bool singleRelease)
         {
             // 1 group localTracks so that we think they represent a single release
@@ -72,8 +97,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
             _logger.Debug("Starting track identification");
-            _logger.Debug("Specified artist {0}, album {1}, release {2}", artist.NullSafe(), album.NullSafe(), release.NullSafe());
-            _logger.Trace("Processing files:\n{0}", string.Join("\n", localTracks.Select(x => x.Path)));
+            LogTestCaseOutput(localTracks, artist, album, release, newDownload, singleRelease);
 
             List<LocalAlbumRelease> releases = null;
             if (singleRelease)
