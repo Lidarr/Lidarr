@@ -104,7 +104,7 @@ namespace NzbDrone.Core.Parser
             {
                 Process p = new Process();
                 p.StartInfo.FileName = _fpcalcPath;
-                p.StartInfo.Arguments = $"-json \"{file}\"";
+                p.StartInfo.Arguments = $"-json -ignore-errors \"{file}\"";
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.RedirectStandardError = true;
@@ -161,7 +161,7 @@ namespace NzbDrone.Core.Parser
                              // Process completed.
                              if (p.ExitCode != 0)
                              {
-                                 throw new Exception("fpcalc failed with error: " + error.ToString());
+                                 return new AcoustId();
                              }
                              else
                              {
@@ -174,7 +174,8 @@ namespace NzbDrone.Core.Parser
                              p.OutputDataReceived -= outputHandler;
                              p.ErrorDataReceived -= errorHandler;
                              
-                             throw new Exception("fpcalc timed out." + error.ToString());
+                             _logger.Debug("fpcalc timed out." + error.ToString());
+                             return new AcoustId();
                          }
                      }
                  }
