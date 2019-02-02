@@ -161,6 +161,7 @@ namespace NzbDrone.Core.Parser
                              // Process completed.
                              if (p.ExitCode != 0)
                              {
+                                 _logger.Warn($"fpcalc error: {error}");
                                  return new AcoustId();
                              }
                              else
@@ -174,7 +175,7 @@ namespace NzbDrone.Core.Parser
                              p.OutputDataReceived -= outputHandler;
                              p.ErrorDataReceived -= errorHandler;
                              
-                             _logger.Debug("fpcalc timed out." + error.ToString());
+                             _logger.Warn($"fpcalc timed out. {error}");
                              return new AcoustId();
                          }
                      }
