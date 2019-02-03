@@ -14,8 +14,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators
         private readonly Logger _logger;
 
         private static readonly List<Tuple<string, string>> charsAndSeps = new List<Tuple<string, string>> {
-            Tuple.Create(@"a-z0-9,\(\)\.&\s", @"\s_-"),
-            Tuple.Create(@"a-z0-9,\(\)\.\&_", @"\s-")
+            Tuple.Create(@"a-z0-9,\(\)\.&'’\s", @"\s_-"),
+            Tuple.Create(@"a-z0-9,\(\)\.\&'’_", @"\s-")
         };
 
         private static Regex[] Patterns(string chars, string sep)
@@ -82,7 +82,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators
             var matches = new Dictionary<LocalTrack, Match>();
             foreach (var track in tracks)
             {
-                var filename = Path.GetFileNameWithoutExtension(track.Path);
+                var filename = Path.GetFileNameWithoutExtension(track.Path).RemoveAccent();
                 var match = pattern.Match(filename);
                 _logger.Trace("Matching '{0}' against regex {1}", filename, pattern);
                 if (match.Success && match.Groups[0].Success)

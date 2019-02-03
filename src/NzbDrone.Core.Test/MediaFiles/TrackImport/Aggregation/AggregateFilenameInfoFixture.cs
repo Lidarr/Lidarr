@@ -42,7 +42,8 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Aggregation.Aggregators
             var release = GivenTracks(new List<string> {
                     "Adele - 19 - 101 - Daydreamer.mp3",
                     "Adele - 19 - 102 - Best for Last.mp3",
-                    "Adele - 19 - 103 - Chasing Pavements.mp3"
+                    "Adele - 19 - 103 - Chasing Pavements.mp3",
+                    "Adele - 19 - 203 - That's It, I Quit, I'm Moving On.mp3"
                 }, @"C:\incoming".AsOsAgnostic());
 
             Subject.Aggregate(release, true);
@@ -50,6 +51,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Aggregation.Aggregators
             VerifyData(release.LocalTracks[0], "Adele", "Daydreamer", 1, 1);
             VerifyData(release.LocalTracks[1], "Adele", "Best for Last", 2, 1);
             VerifyData(release.LocalTracks[2], "Adele", "Chasing Pavements", 3, 1);
+            VerifyData(release.LocalTracks[3], "Adele", "That's It, I Quit, I'm Moving On", 3, 2);
         }
 
         public static class TestCaseFactory
