@@ -488,6 +488,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 _logger.Trace("media_count: {0} vs {1}; {2}", discCount, release.Media.Count, dist.NormalizedDistance());
             }
 
+            // Media format
+            if (release.Media.Select(x => x.Format).Contains("Unknown"))
+            {
+                dist.Add("media_format", 1.0);
+            }
+
             // Year
             var localYear = MostCommon(localTracks.Select(x => x.FileTrackInfo.Year));
             if (localYear > 0 && release.Album.Value.ReleaseDate.HasValue)
@@ -521,6 +527,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                     dist.AddPriority("country", release.Country, preferredCountries.Select(x => x.Name).ToList());
                     _logger.Trace("country priority: {0} vs {1}; {2}", string.Join(", ", preferredCountries.Select(x => x.Name)), string.Join(", ", release.Country), dist.NormalizedDistance());
                 }
+            }
+            else
+            {
+                // full penalty if MusicBrainz release is missing a country
+                dist.Add("country", 1.0);
             }
 
             var label = MostCommon(localTracks.Select(x => x.FileTrackInfo.Label));

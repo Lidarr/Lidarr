@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using System.Collections;
 using FluentAssertions;
 using FluentValidation.Results;
 using Moq;
@@ -91,12 +92,32 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
             return _artistService.FindById(foreignArtistId);
         }
 
+        public static class IdTestCaseFactory
+        {
+            // for some reason using Directory.GetFiles causes nUnit to error
+            public static string[] files = {
+                "FilesWithMBIds.json",
+                "PreferMissingToBadMatch.json",
+                "InconsistentTyposInAlbum.json",
+                "SucceedWhenManyAlbumsHaveSameTitle.json",
+                "PenalizeUnknownMedia.json"
+            };
+
+            public static IEnumerable TestCases
+            {
+                get
+                {
+                    foreach (var file in files)
+                    {
+                        yield return new TestCaseData(file).SetName($"should_match_tracks_{file.Replace(".json", "")}");
+                    }
+                }
+            }
+        }
+
         // these are slow to run so only do so manually
         [Explicit]
-        [TestCase("FilesWithMBIds.json")]
-        [TestCase("PreferMissingToBadMatch.json")]
-        [TestCase("InconsistentTyposInAlbum.json")]
-        [TestCase("SucceedWhenManyAlbumsHaveSameTitle.json")]
+        [Test, TestCaseSource(typeof(IdTestCaseFactory), "TestCases")]
         public void should_match_tracks(string file)
         {
             var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Files", "Identification", file);
