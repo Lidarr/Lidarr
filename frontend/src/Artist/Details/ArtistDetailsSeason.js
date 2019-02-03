@@ -56,7 +56,7 @@ class ArtistDetailsSeason extends Component {
 
     const expand = _.some(items, (item) => {
       return isAfter(item.releaseDate) ||
-             isAfter(item.releaseDate, { days: -30 });
+             isAfter(item.releaseDate, { days: -365 });
     });
 
     onExpandPress(name, expand);

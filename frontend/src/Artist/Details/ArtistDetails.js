@@ -34,6 +34,7 @@ import ArtistTagsConnector from './ArtistTagsConnector';
 import ArtistDetailsLinks from './ArtistDetailsLinks';
 import styles from './ArtistDetails.css';
 import InteractiveImportModal from '../../InteractiveImport/InteractiveImportModal';
+import ArtistInteractiveSearchModalConnector from 'Artist/Search/ArtistInteractiveSearchModalConnector';
 import Link from 'Components/Link/Link';
 
 const defaultFontSize = parseInt(fonts.defaultFontSize);
@@ -70,6 +71,7 @@ class ArtistDetails extends Component {
       isDeleteArtistModalOpen: false,
       isArtistHistoryModalOpen: false,
       isInteractiveImportModalOpen: false,
+      isInteractiveSearchModalOpen: false,
       allExpanded: false,
       allCollapsed: false,
       expandedState: {}
@@ -101,6 +103,14 @@ class ArtistDetails extends Component {
 
   onInteractiveImportModalClose = () => {
     this.setState({ isInteractiveImportModalOpen: false });
+  }
+
+  onInteractiveSearchPress = () => {
+    this.setState({ isInteractiveSearchModalOpen: true });
+  }
+
+  onInteractiveSearchModalClose = () => {
+    this.setState({ isInteractiveSearchModalOpen: false });
   }
 
   onEditArtistPress = () => {
@@ -202,6 +212,7 @@ class ArtistDetails extends Component {
       isDeleteArtistModalOpen,
       isArtistHistoryModalOpen,
       isInteractiveImportModalOpen,
+      isInteractiveSearchModalOpen,
       allExpanded,
       allCollapsed,
       expandedState
@@ -245,6 +256,15 @@ class ArtistDetails extends Component {
               isSpinning={isSearching}
               title={hasMonitoredAlbums ? undefined : 'No monitored albums for this artist'}
               onPress={onSearchPress}
+            />
+
+            <PageToolbarButton
+              label="Interactive Search"
+              iconName={icons.INTERACTIVE}
+              isDisabled={!monitored || !hasMonitoredAlbums || !hasAlbums}
+              isSpinning={isSearching}
+              title={hasMonitoredAlbums ? undefined : 'No monitored albums for this artist'}
+              onPress={this.onInteractiveSearchPress}
             />
 
             <PageToolbarSeparator />
@@ -612,6 +632,12 @@ class ArtistDetails extends Component {
             showFilterExistingFiles={true}
             showImportMode={false}
             onModalClose={this.onInteractiveImportModalClose}
+          />
+
+          <ArtistInteractiveSearchModalConnector
+            isOpen={isInteractiveSearchModalOpen}
+            artistId={id}
+            onModalClose={this.onInteractiveSearchModalClose}
           />
         </PageContentBodyConnector>
       </PageContent>
