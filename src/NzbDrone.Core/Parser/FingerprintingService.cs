@@ -18,9 +18,7 @@ namespace NzbDrone.Core.Parser
     public interface IFingerprintingService
     {
         bool IsSetup();
-        AcoustId GetFingerprint(string filename);
         void Lookup(List<LocalTrack> tracks, double threshold);
-        Dictionary<int, List<string>> Lookup(List<string> files, double threshold);
     }
 
     public class AcoustId
@@ -33,6 +31,7 @@ namespace NzbDrone.Core.Parser
     {
         private const string _acoustIdUrl = "http://api.acoustid.org/v2/lookup";
         private const string _acoustIdApiKey = "QANd68ji1L";
+        private const int _fingerprintingTimeout = 10000;
         
         private readonly Logger _logger;
         private readonly IHttpClient _httpClient;
@@ -109,8 +108,6 @@ namespace NzbDrone.Core.Parser
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.RedirectStandardError = true;
 
-                int timeout = 10000;
-
                 _logger.Trace("Executing {0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
 
                 StringBuilder output = new StringBuilder();
@@ -154,15 +151,15 @@ namespace NzbDrone.Core.Parser
                          p.BeginOutputReadLine();
                          p.BeginErrorReadLine();
 
-                         if (p.WaitForExit(timeout) &&
-                             outputWaitHandle.WaitOne(timeout) &&
-                             errorWaitHandle.WaitOne(timeout))
+                         if (p.WaitForExit(_fingerprintingTimeout) &&
+                             outputWaitHandle.WaitOne(_fingerprintingTimeout) &&
+                             errorWaitHandle.WaitOne(_fingerprintingTimeout))
                          {
                              // Process completed.
                              if (p.ExitCode != 0)
                              {
                                  _logger.Warn($"fpcalc error: {error}");
-                                 return new AcoustId();
+                                 return null;
                              }
                              else
                              {
@@ -176,13 +173,13 @@ namespace NzbDrone.Core.Parser
                              p.ErrorDataReceived -= errorHandler;
                              
                              _logger.Warn($"fpcalc timed out. {error}");
-                             return new AcoustId();
+                             return null;
                          }
                      }
                  }
             }
 
-            return new AcoustId();
+            return null;
         }
 
         private static byte[] Compress(byte[] data)
@@ -203,21 +200,15 @@ namespace NzbDrone.Core.Parser
                 return;
             }
             
-            var results = Lookup(tracks.Select(x => x.Path).ToList(), threshold);
-            if (results != null)
-            {
-                foreach (var result in results)
-                {
-                    tracks[result.Key].AcoustIdResults = result.Value;
-                }
-            }
+            Lookup(tracks.Select(x => Tuple.Create(x, GetFingerprint(x.Path))).ToList(), threshold);
         }
 
-        public Dictionary<int, List<string>> Lookup(List<string> files, double threshold = 0)
+        public void Lookup(List<Tuple<LocalTrack, AcoustId>> files, double threshold)
         {
-            if (!IsSetup())
+            var toLookup = files.Where(x => x.Item2 != null).ToList();
+            if (!toLookup.Any())
             {
-                return null;
+                return;
             }
 
             var httpRequest = _customerRequestBuilder.Create()
@@ -225,11 +216,9 @@ namespace NzbDrone.Core.Parser
                 .Build();
 
             var sb = new StringBuilder($"client={_acoustIdApiKey}&format=json&meta=recordingids&batch=1", 2000);
-            for(int i = 0; i < files.Count; i++)
+            for (int i = 0; i < toLookup.Count; i++)
             {
-                var fingerprint = GetFingerprint(files[i]);
-                sb.AppendFormat("&duration.{0}={1:F0}&fingerprint.{0}={2}",
-                                i, fingerprint.Duration, fingerprint.Fingerprint);
+                sb.Append($"&duration.{i}={toLookup[i].Item2.Duration:F0}&fingerprint.{i}={toLookup[i].Item2.Fingerprint}");
             }
             
             // they prefer a gzipped body
@@ -249,10 +238,9 @@ namespace NzbDrone.Core.Parser
             if (!string.IsNullOrEmpty(response.ErrorMessage))
             {
                 _logger.Debug("Webservice error: {0}", response.ErrorMessage);
-                return null;
+                return;
             }
 
-            var output = new Dictionary<int, List<string>>();
             foreach (var fileResponse in response.Fingerprints)
             {
                 if (fileResponse.Results.Count == 0)
@@ -269,11 +257,10 @@ namespace NzbDrone.Core.Parser
                 var ids = fileResponse.Results.Where(x => x.Score > threshold && x.Recordings != null).SelectMany(y => y.Recordings.Select(z => z.Id)).Distinct().ToList();
                 _logger.Trace("All recordings: {0}", string.Join("\n", ids));
 
-                output.Add(fileResponse.index, ids);
+                toLookup[fileResponse.index].Item1.AcoustIdResults = ids;
             }
 
             _logger.Debug("Fingerprinting complete.");
-            return output;
         }
 
         private class LookupResponse

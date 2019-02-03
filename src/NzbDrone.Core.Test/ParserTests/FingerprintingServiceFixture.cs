@@ -5,6 +5,8 @@ using NzbDrone.Core.Parser;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NzbDrone.Core.Parser.Model;
+using System;
 
 namespace NzbDrone.Core.Test.ParserTests
 {
@@ -29,9 +31,10 @@ namespace NzbDrone.Core.Test.ParserTests
             UseRealHttp();
 
             var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Files", "Media", file);
-            var result = Subject.Lookup(new List<string> { path }, 0.5);
-            result.Should().NotBeNull();
-            result[0].Should().Contain("30f3f33e-8d0c-4e69-8539-cbd701d18f28");
+            var localTrack = new LocalTrack { Path = path };
+            Subject.Lookup(new List<LocalTrack> { localTrack }, 0.5);
+            localTrack.AcoustIdResults.Should().NotBeNull();
+            localTrack.AcoustIdResults.Should().Contain("30f3f33e-8d0c-4e69-8539-cbd701d18f28");
         }
 
         [Test]
@@ -39,18 +42,52 @@ namespace NzbDrone.Core.Test.ParserTests
         {
             UseRealHttp();
 
-            var files = new List<string> {
+            var files = new [] {
                 "nin.mp3",
                 "nin.flac"
-            }.Select(x => Path.Combine(TestContext.CurrentContext.TestDirectory, "Files", "Media", x)).ToList();
-            var result = Subject.Lookup(files);
+            }.Select(x => new LocalTrack { Path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Files", "Media", x) }).ToList();
+            Subject.Lookup(files, 0.5);
 
-            result.Should().NotBeNull();
-            result.Should().HaveCount(2);
-            result[0].Should().Contain("30f3f33e-8d0c-4e69-8539-cbd701d18f28");
-            result[1].Should().Contain("30f3f33e-8d0c-4e69-8539-cbd701d18f28");
+            files[0].AcoustIdResults.Should().Contain("30f3f33e-8d0c-4e69-8539-cbd701d18f28");
+            files[1].AcoustIdResults.Should().Contain("30f3f33e-8d0c-4e69-8539-cbd701d18f28");
         }
 
+        [Test]
+        public void should_lookup_list_when_fpcalc_fails_for_some_files()
+        {
+            UseRealHttp();
 
+            var files = new [] {
+                "nin.mp3",
+                "missing.mp3",
+                "nin.flac"
+            }.Select(x => new LocalTrack { Path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Files", "Media", x) }).ToList();
+
+            var idpairs = files.Select(x => Tuple.Create(x, Subject.GetFingerprint(x.Path))).ToList();
+            
+            Subject.Lookup(idpairs, 0.5);
+
+            files[0].AcoustIdResults.Should().Contain("30f3f33e-8d0c-4e69-8539-cbd701d18f28");
+            files[1].AcoustIdResults.Should().BeNull();
+            files[2].AcoustIdResults.Should().Contain("30f3f33e-8d0c-4e69-8539-cbd701d18f28");
+        }
+
+        [Test]
+        public void should_lookup_list_when_fpcalc_fails_for_all_files()
+        {
+            UseRealHttp();
+
+            var files = new [] {
+                "missing1.mp3",
+                "missing2.mp3"
+            }.Select(x => new LocalTrack { Path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Files", "Media", x) }).ToList();
+
+            var idpairs = files.Select(x => Tuple.Create<LocalTrack, AcoustId>(x, null)).ToList();
+            
+            Subject.Lookup(idpairs, 0.5);
+
+            files[0].AcoustIdResults.Should().BeNull();
+            files[1].AcoustIdResults.Should().BeNull();
+        }
     }
 }
