@@ -94,7 +94,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
                 .With(x => x.Title = title)
                 .With(x => x.Album = album)
                 .With(x => x.Media = media)
-                .With(x => x.Country = new List<string>())
+                .With(x => x.Country = new List<string> { "United States" })
                 .With(x => x.Label = new List<string> { "label" })
                 .Build();
         }

@@ -9,9 +9,53 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using FizzWare.NBuilder.PropertyNaming;
+using System.Reflection;
+using System.Text;
 
 namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
 {
+    // we need to use random strings to test the va (so we don't just get artist1, artist2 etc which are too similar)
+    // but the standard random value namer would give paths that are too long on windows
+    public class RandomValueNamerShortStrings : RandomValuePropertyNamer
+    {
+        private readonly IRandomGenerator generator;
+        private static readonly List<char> allowedChars;
+        
+        public RandomValueNamerShortStrings(BuilderSettings settings) : base(settings)
+        {
+            generator = new RandomGenerator();
+        }
+
+        static RandomValueNamerShortStrings()
+        {
+            allowedChars = new List<char>();
+            for (char c = 'a'; c < 'z'; c++)
+                allowedChars.Add(c);
+
+            for (char c = 'A'; c < 'Z'; c++)
+                allowedChars.Add(c);
+
+            for (char c = '0'; c < '9'; c++)
+                allowedChars.Add(c);
+        }
+
+        protected override string GetString(MemberInfo memberInfo)
+        {
+            int length = generator.Next(0, 100);
+
+            char[] chars = new char[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                int index = generator.Next(0, allowedChars.Count - 1);
+                chars[i] = allowedChars[index];
+            }
+
+            byte[] bytes = Encoding.UTF8.GetBytes(chars);
+            return Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+        }
+    }
+    
     [TestFixture]
     public class TrackGroupingServiceFixture : CoreTest<TrackGroupingService>
     {
@@ -55,7 +99,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
         private List<LocalTrack> GivenVaTracks(string root, string album, int count)
         {
             var settings = new BuilderSettings();
-            settings.SetPropertyNamerFor<ParsedTrackInfo>(new RandomValuePropertyNamer(settings));
+            settings.SetPropertyNamerFor<ParsedTrackInfo>(new RandomValueNamerShortStrings(settings));
 
             var builder = new Builder(settings);
 
