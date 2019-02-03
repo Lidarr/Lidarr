@@ -42,6 +42,28 @@ function getFanartUrl(images) {
   }
 }
 
+function formatDuration(timeSpan) {
+  const duration = moment.duration(timeSpan);
+  const hours = duration.get('hours');
+  const minutes = duration.get('minutes');
+  let hoursText = 'Hours';
+  let minText = 'Minutes';
+
+  if (minutes === 1) {
+    minText = 'Minute';
+  }
+
+  if (hours === 0) {
+    return `${minutes} ${minText}`;
+  }
+
+  if (hours === 1) {
+    hoursText = 'Hour';
+  }
+
+  return `${hours} ${hoursText} ${minutes} ${minText}`;
+}
+
 function getExpandedState(newState) {
   return {
     allExpanded: newState.allSelected,
@@ -145,6 +167,7 @@ class AlbumDetails extends Component {
       foreignAlbumId,
       title,
       disambiguation,
+      duration,
       overview,
       albumType,
       statistics = {},
@@ -309,6 +332,13 @@ class AlbumDetails extends Component {
 
                 <div className={styles.details}>
                   <div>
+                    {
+                      !!duration &&
+                        <span className={styles.duration}>
+                          {formatDuration(duration)}
+                        </span>
+                    }
+
                     <HeartRating
                       rating={ratings.value}
                       iconSize={20}
@@ -504,6 +534,7 @@ AlbumDetails.propTypes = {
   foreignAlbumId: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   disambiguation: PropTypes.string,
+  duration: PropTypes.number,
   overview: PropTypes.string,
   albumType: PropTypes.string.isRequired,
   statistics: PropTypes.object.isRequired,
