@@ -12,6 +12,7 @@ import HeartRating from 'Components/HeartRating';
 import Icon from 'Components/Icon';
 import IconButton from 'Components/Link/IconButton';
 import Label from 'Components/Label';
+import MonitorToggleButton from 'Components/MonitorToggleButton';
 import Tooltip from 'Components/Tooltip/Tooltip';
 import AlbumCover from 'Album/AlbumCover';
 import OrganizePreviewModalConnector from 'Organize/OrganizePreviewModalConnector';
@@ -153,6 +154,7 @@ class AlbumDetails extends Component {
       images,
       links,
       media,
+      isSaving,
       isFetching,
       isPopulated,
       albumsError,
@@ -162,6 +164,7 @@ class AlbumDetails extends Component {
       previousAlbum,
       nextAlbum,
       isSearching,
+      onMonitorTogglePress,
       onSearchPress
     } = this.props;
 
@@ -259,9 +262,22 @@ class AlbumDetails extends Component {
               />
 
               <div className={styles.info}>
-                <div className={styles.titleContainer}>
-                  <div className={styles.title}>
-                    {title}{disambiguation ? ` (${disambiguation})` : ''}
+                <div className={styles.titleRow}>
+                  <div className={styles.titleContainer}>
+
+                    <div className={styles.toggleMonitoredContainer}>
+                      <MonitorToggleButton
+                        className={styles.monitorToggleButton}
+                        monitored={monitored}
+                        isSaving={isSaving}
+                        size={40}
+                        onPress={onMonitorTogglePress}
+                      />
+                    </div>
+
+                    <div className={styles.title}>
+                      {title}{disambiguation ? ` (${disambiguation})` : ''}
+                    </div>
                   </div>
 
                   <div className={styles.albumNavigationButtons}>
@@ -498,6 +514,7 @@ AlbumDetails.propTypes = {
   media: PropTypes.arrayOf(PropTypes.object).isRequired,
   monitored: PropTypes.bool.isRequired,
   shortDateFormat: PropTypes.string.isRequired,
+  isSaving: PropTypes.bool.isRequired,
   isSearching: PropTypes.bool,
   isFetching: PropTypes.bool,
   isPopulated: PropTypes.bool,
@@ -507,6 +524,7 @@ AlbumDetails.propTypes = {
   artist: PropTypes.object,
   previousAlbum: PropTypes.object,
   nextAlbum: PropTypes.object,
+  onMonitorTogglePress: PropTypes.func.isRequired,
   onRefreshPress: PropTypes.func,
   onSearchPress: PropTypes.func.isRequired
 };
