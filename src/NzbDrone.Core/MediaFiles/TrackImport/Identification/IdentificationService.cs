@@ -53,8 +53,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         }
 
         private List<IsoCountry> preferredCountries = new List<string> {
-            "United Kingdom",
             "United States",
+            "United Kingdom",
             "Europe",
             "[Worldwide]"
         }.Select(x => IsoCountries.Find(x)).ToList();
