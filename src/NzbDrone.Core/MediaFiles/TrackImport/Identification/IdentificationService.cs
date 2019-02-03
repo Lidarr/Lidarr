@@ -70,7 +70,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 });
             var options = new IdTestCase {
                 ExpectedMusicBrainzReleaseIds = new List<string> {"expected-id-1", "expected-id-2", "..."},
-                MetadataProfile = artist.MetadataProfile.Value,
+                MetadataProfile = artist?.MetadataProfile.Value,
                 Artist = artist?.Metadata.Value.ForeignArtistId,
                 Album = album?.ForeignAlbumId,
                 Release = release?.ForeignReleaseId,
