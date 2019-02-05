@@ -12,12 +12,14 @@ using NzbDrone.Common.Serializer;
 using System;
 using NzbDrone.Common.EnvironmentInfo;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace NzbDrone.Core.Parser
 {
     public interface IFingerprintingService
     {
         bool IsSetup();
+        Version FpcalcVersion();
         void Lookup(List<LocalTrack> tracks, double threshold);
     }
 
@@ -29,14 +31,17 @@ namespace NzbDrone.Core.Parser
 
     public class FingerprintingService : IFingerprintingService
     {
-        private const string _acoustIdUrl = "http://api.acoustid.org/v2/lookup";
+        private const string _acoustIdUrl = "https://api.acoustid.org/v2/lookup";
         private const string _acoustIdApiKey = "QANd68ji1L";
         private const int _fingerprintingTimeout = 10000;
         
         private readonly Logger _logger;
         private readonly IHttpClient _httpClient;
-        private readonly string _fpcalcPath;
         private readonly IHttpRequestBuilderFactory _customerRequestBuilder;
+        
+        private readonly string _fpcalcPath;
+        private readonly Version _fpcalcVersion;
+        private readonly string _fpcalcArgs;
 
         public FingerprintingService(Logger logger,
                                      IHttpClient httpClient)
@@ -45,10 +50,17 @@ namespace NzbDrone.Core.Parser
             _httpClient = httpClient;
 
             _customerRequestBuilder = new HttpRequestBuilder(_acoustIdUrl).CreateFactory();
+
             _fpcalcPath = GetFpcalcPath();
+            if (_fpcalcPath.IsNotNullOrWhiteSpace())
+            {
+                _fpcalcVersion = GetFpcalcVersion();
+                _fpcalcArgs = GetFpcalcArgs();
+            }
         }
 
         public bool IsSetup() => _fpcalcPath.IsNotNullOrWhiteSpace();
+        public Version FpcalcVersion() => _fpcalcVersion;
 
         private string GetFpcalcPath()
         {
@@ -96,13 +108,114 @@ namespace NzbDrone.Core.Parser
             return path;
         }
 
+        private Version GetFpcalcVersion()
+        {
+            if (_fpcalcPath == null)
+            {
+                return null;
+            }
+
+            Process p = new Process();
+            p.StartInfo.FileName = _fpcalcPath;
+            p.StartInfo.Arguments = $"-version";
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardOutput = true;
+
+            p.Start();
+            // To avoid deadlocks, always read the output stream first and then wait.
+            string output = p.StandardOutput.ReadToEnd();
+            p.WaitForExit(1000);
+
+            if (p.ExitCode != 0)
+            {
+                _logger.Warn("Could not get fpcalc version (may be known issue with fpcalc v1.4)");
+                return null;
+            }
+
+            var versionstring = Regex.Match(output, @"\d\.\d\.\d").Value;
+            if (versionstring.IsNullOrWhiteSpace())
+            {
+                return null;
+            }
+
+            var version = new Version(versionstring);
+            _logger.Debug($"fpcalc version: {version}");
+
+            return version;
+        }
+
+        private string GetFpcalcArgs()
+        {
+            var args = "";
+
+            if (_fpcalcVersion == null)
+            {
+                return args;
+            }
+
+            if (_fpcalcVersion >= new Version("1.4.0"))
+            {
+                args = "-json";
+            }
+            
+            if (_fpcalcVersion >= new Version("1.4.3"))
+            {
+                args += " -ignore-errors";
+            }
+
+            return args;
+        }
+
+        public AcoustId ParseFpcalcJsonOutput(string output)
+        {
+             return Json.Deserialize<AcoustId>(output);
+        }
+
+        public AcoustId ParseFpcalcTextOutput(string output)
+        {
+                var durationstring = Regex.Match(output, @"(?<=DURATION=)[\d\.]+(?=\s)").Value;
+                double duration;
+                if (durationstring.IsNullOrWhiteSpace() || !double.TryParse(durationstring, out duration))
+                {
+                    return null;
+                }
+
+                var fingerprint = Regex.Match(output, @"(?<=FINGERPRINT=)[^\s]+").Value;
+                if (fingerprint.IsNullOrWhiteSpace())
+                {
+                    return null;
+                }
+
+                return new AcoustId {
+                    Duration = duration,
+                    Fingerprint = fingerprint
+                };
+        }
+
+        public AcoustId ParseFpcalcOutput(string output)
+        {
+            if (output.IsNullOrWhiteSpace())
+            {
+                return null;
+            }
+            
+            if (_fpcalcArgs.Contains("-json"))
+            {
+                return ParseFpcalcJsonOutput(output);
+            }
+            else
+            {
+                return ParseFpcalcTextOutput(output);
+            }
+        }
+
         public AcoustId GetFingerprint(string file)
         {
             if (IsSetup() && File.Exists(file))
             {
                 Process p = new Process();
                 p.StartInfo.FileName = _fpcalcPath;
-                p.StartInfo.Arguments = $"-json -ignore-errors \"{file}\"";
+                p.StartInfo.Arguments = $"{_fpcalcArgs} \"{file}\"";
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.RedirectStandardError = true;
@@ -162,7 +275,7 @@ namespace NzbDrone.Core.Parser
                              }
                              else
                              {
-                                 return Json.Deserialize<AcoustId>(output.ToString());
+                                 return ParseFpcalcOutput(output.ToString());
                              }
                          }
                          else
