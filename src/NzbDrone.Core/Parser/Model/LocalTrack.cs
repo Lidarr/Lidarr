@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Parser.Model
         public Album Album { get; set; }
         public AlbumRelease Release { get; set; }
         public List<Track> Tracks { get; set; }
-        public Distance Distance;
+        public Distance Distance { get; set; }
         public QualityModel Quality { get; set; }
         public Language Language { get; set; }
         public MediaInfoModel MediaInfo { get; set; }

@@ -177,7 +177,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators
                         tracknum = tracknum % 100;
                     }
                     _logger.Debug("Got track number from filename: {0}", tracknum);
-                    track.FileTrackInfo.TrackNumbers = new int[] { tracknum };
+                    track.FileTrackInfo.TrackNumbers = new [] { tracknum };
                 }
             }
         }

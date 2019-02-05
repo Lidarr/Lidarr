@@ -23,8 +23,8 @@ namespace NzbDrone.Core.Parser
 
     public class AcoustId
     {
-        public double Duration;
-        public string Fingerprint;
+        public double Duration { get; set; }
+        public string Fingerprint { get; set; }
     }
 
     public class FingerprintingService : IFingerprintingService
@@ -36,8 +36,7 @@ namespace NzbDrone.Core.Parser
         private readonly Logger _logger;
         private readonly IHttpClient _httpClient;
         private readonly string _fpcalcPath;
-
-        private IHttpRequestBuilderFactory _customerRequestBuilder;
+        private readonly IHttpRequestBuilderFactory _customerRequestBuilder;
 
         public FingerprintingService(Logger logger,
                                      IHttpClient httpClient)

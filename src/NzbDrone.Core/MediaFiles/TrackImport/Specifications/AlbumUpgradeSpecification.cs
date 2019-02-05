@@ -21,7 +21,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
         {
             var artist = localAlbumRelease.AlbumRelease.Album.Value.Artist.Value;
             var qualityComparer = new QualityModelComparer(artist.Profile);
-            var languageComparer = new LanguageComparer(artist.LanguageProfile);
 
             // check if we are changing release
             var currentRelease = localAlbumRelease.AlbumRelease.Album.Value.AlbumReleases.Value.Single(x => x.Monitored);

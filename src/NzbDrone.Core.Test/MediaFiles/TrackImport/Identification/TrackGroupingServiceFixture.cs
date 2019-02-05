@@ -30,13 +30,19 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
         {
             allowedChars = new List<char>();
             for (char c = 'a'; c < 'z'; c++)
+            {
                 allowedChars.Add(c);
+            }
 
             for (char c = 'A'; c < 'Z'; c++)
+            {
                 allowedChars.Add(c);
+            }
 
             for (char c = '0'; c < '9'; c++)
+            {
                 allowedChars.Add(c);
+            }
         }
 
         protected override string GetString(MemberInfo memberInfo)
@@ -104,7 +110,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
             var builder = new Builder(settings);
 
             var fileInfos = builder
-                .CreateListOfSize<ParsedTrackInfo>(10)
+                .CreateListOfSize<ParsedTrackInfo>(count)
                 .All()
                 .With(f => f.AlbumTitle = "album")
                 .With(f => f.AlbumMBId = null)

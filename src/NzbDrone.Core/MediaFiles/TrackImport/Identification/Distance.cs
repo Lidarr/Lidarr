@@ -79,7 +79,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         public void Add(string key, double dist)
         {
-            // Ensure.That(dist, () => dist).IsInRange(0, 1);
             if (penalties.ContainsKey(key))
             {
                 penalties[key].Add(dist);                    

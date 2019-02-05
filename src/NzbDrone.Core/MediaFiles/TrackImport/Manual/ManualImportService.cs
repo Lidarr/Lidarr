@@ -224,13 +224,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                 {
                     _logger.ProgressTrace("Processing file {0} of {1}", fileCount + 1, message.Files.Count);
 
-                    //var file = message.Files[i];
                     var artist = _artistService.GetArtist(file.ArtistId);
                     var album = _albumService.GetAlbum(file.AlbumId);
                     var release = _releaseService.GetRelease(file.AlbumReleaseId);
                     var tracks = _trackService.GetTracks(file.TrackIds);
                     var fileTrackInfo = Parser.Parser.ParseMusicPath(file.Path) ?? new ParsedTrackInfo();
-                    //var existingFile = artist.Path.IsParentPath(file.Path);
 
                     var localTrack = new LocalTrack
                     {

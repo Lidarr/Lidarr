@@ -124,10 +124,16 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             {
                 min_in_row = C[r, 0];
                 for (int c = 0; c < n; c++)
+                {
                     if (C[r, c] < min_in_row)
+                    {
                         min_in_row = C[r, c];
+                    }
+                }
                 for (int c = 0; c < n; c++)
+                {
                     C[r, c] -= min_in_row;
+                }
             }
             step = 2;
         }
@@ -138,6 +144,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private void step_two(ref int step)
         {
             for (int r = 0; r < n; r++)
+            {
                 for (int c = 0; c < n; c++)
                 {
                     if (C[r, c] == 0 && RowCover[r] == 0 && ColCover[c] == 0)
@@ -147,10 +154,15 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                         ColCover[c] = 1;
                     }
                 }
+            }
             for (int r = 0; r < n; r++)
+            {
                 RowCover[r] = 0;
+            }
             for (int c = 0; c < n; c++)
+            {
                 ColCover[c] = 0;
+            }
             step = 3;
         }
 
@@ -161,18 +173,32 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         {
             int colcount;
             for (int r = 0; r < n; r++)
+            {
                 for (int c = 0; c < n; c++)
+                {
                     if (M[r, c] == 1)
+                    {
                         ColCover[c] = 1;
+                    }
+                }
+            }
 
             colcount = 0;
             for (int c = 0; c < n; c++)
+            {
                 if (ColCover[c] == 1)
+                {
                     colcount += 1;
-            if (colcount >= n || colcount >=n)
+                }
+            }
+            if (colcount >= n)
+            {
                 step = 7;
+            }
             else
+            {
                 step = 4;
+            }
         }
 
         //methods to support step 4
@@ -197,11 +223,15 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                     }
                     c += 1;
                     if (c >= n || done)
+                    {
                         break;
+                    }
                 }
                 r += 1;
                 if (r >= n)
+                {
                     done = true;
+                }
             }
         }
 
@@ -209,8 +239,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         {
             bool tmp = false;
             for (int c = 0; c < n; c++)
+            {
                 if (M[row, c] == 1)
+                {
                     tmp = true;
+                }
+            }
             return tmp;
         }
 
@@ -218,8 +252,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         {
             col = -1;
             for (int c = 0; c < n; c++)
+            {
                 if (M[row, c] == 1)
+                {
                     col = c;
+                }
+            }
         }
 
         //Find a noncovered zero and prime it.  If there is no starred zero 
@@ -267,40 +305,64 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         {
             r = -1;
             for (int i = 0; i < n; i++)
+            {
                 if (M[i, c] == 1)
+                {
                     r = i;
+                }
+            }
         }
 
         private void find_prime_in_row(int r, ref int c)
         {
             for (int j = 0; j < n; j++)
+            {
                 if (M[r, j] == 2)
+                {
                     c = j;
+                }
+            }
         }
 
         private void augment_path()
         {
             for (int p = 0; p < path_count; p++)
+            {
                 if (M[path[p, 0], path[p, 1]] == 1)
+                {
                     M[path[p, 0], path[p, 1]] = 0;
+                }
                 else
+                {
                     M[path[p, 0], path[p, 1]] = 1;
+                }
+            }
         }
 
         private void clear_covers()
         {
             for (int r = 0; r < n; r++)
+            {
                 RowCover[r] = 0;
+            }
             for (int c = 0; c < n; c++)
+            {
                 ColCover[c] = 0;
+            }
         }
 
         private void erase_primes()
         {
             for (int r = 0; r < n; r++)
+            {
                 for (int c = 0; c < n; c++)
+                {
                     if (M[r, c] == 2)
+                    {
                         M[r, c] = 0;
+                    }
+                }
+            }
         }
 
 
@@ -331,7 +393,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                     path[path_count - 1, 1] = path[path_count - 2, 1];
                 }
                 else
+                {
                     done = true;
+                }
                 if (!done)
                 {
                     find_prime_in_row(path[path_count - 1, 0], ref c);
@@ -350,10 +414,18 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private void find_smallest(ref double minval)
         {
             for (int r = 0; r < n; r++)
+            {
                 for (int c = 0; c < n; c++)
+                {
                     if (RowCover[r] == 0 && ColCover[c] == 0)
+                    {
                         if (minval > C[r, c])
+                        {
                             minval = C[r, c];
+                        }
+                    }
+                }
+            }
         }
 
         //Add the value found in Step 4 to every element of each covered row, and subtract 
@@ -364,13 +436,19 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             double minval = double.MaxValue;
             find_smallest(ref minval);
             for (int r = 0; r < n; r++)
+            {
                 for (int c = 0; c < n; c++)
                 {
                     if (RowCover[r] == 1)
+                    {
                         C[r, c] += minval;
+                    }
                     if (ColCover[c] == 0)
+                    {
                         C[r, c] -= minval;
+                    }
                 }
+            }
             step = 4;
         }
 

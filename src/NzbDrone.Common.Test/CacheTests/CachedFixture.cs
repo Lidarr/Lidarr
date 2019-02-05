@@ -107,7 +107,6 @@ namespace NzbDrone.Common.Test.CacheTests
         public void should_clear_expired_when_they_expire()
         {
             int hitCount = 0;
-            var _mockCachedString = new Cached<string>();
 
             Func<string> testfunc = () => {
                 hitCount++;

@@ -253,8 +253,6 @@ namespace NzbDrone.Core.Datastore
 
                 foreach (var model in models)
                 {
-                    var localModel = model;
-
                     if (model.Id == 0)
                     {
                         throw new InvalidOperationException("Can't update model with ID 0");

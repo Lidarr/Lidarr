@@ -29,17 +29,6 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
                 .Build();
         }
         
-        private Track GivenTrack(string title)
-        {
-            var mbTrack = Builder<Track>
-                .CreateNew()
-                .With(x => x.Title = title)
-                .With(x => x.ArtistMetadata = artist)
-                .Build();
-
-            return mbTrack;
-        }
-
         private List<Track> GivenTracks(int count)
         {
              return Builder<Track>

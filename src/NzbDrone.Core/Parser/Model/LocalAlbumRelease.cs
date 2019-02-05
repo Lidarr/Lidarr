@@ -27,13 +27,13 @@ namespace NzbDrone.Core.Parser.Model
             Distance.Add("album_id", 1.0);
         }
 
-        public List<LocalTrack> LocalTracks;
+        public List<LocalTrack> LocalTracks { get; set; }
         public int TrackCount => LocalTracks.Count;
 
-        public TrackMapping TrackMapping;
-        public Distance Distance;
-        public AlbumRelease AlbumRelease;
-        public bool NewDownload;
+        public TrackMapping TrackMapping { get; set; }
+        public Distance Distance { get; set; }
+        public AlbumRelease AlbumRelease { get; set; }
+        public bool NewDownload { get; set; }
 
         public void PopulateMatch()
         {

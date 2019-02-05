@@ -117,14 +117,5 @@ namespace Lidarr.Api.V1.Albums
         {
             BroadcastResourceChange(ModelAction.Updated, message.TrackInfo.Album.ToResource());
         }
-
-        //public void Handle(TrackDownloadedEvent message)
-        //{
-        //    foreach (var album in message.Album.Albums)
-        //    {
-        //        BroadcastResourceChange(ModelAction.Updated, album.Id);
-        //    }
-        //}
-
     }
 }

@@ -4,7 +4,6 @@ using NzbDrone.Core.MediaFiles.TrackImport.Manual;
 using NzbDrone.Core.Qualities;
 using Lidarr.Http.Extensions;
 using NzbDrone.SignalR;
-using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.Music;
 using NLog;
 using Nancy;
@@ -36,7 +35,6 @@ namespace Lidarr.Api.V1.ManualImport
                     var resource = Request.Body.FromJson<List<ManualImportResource>>();
                     UpdateImportItems(resource);
                     return GetManualImportItems(resource.Select(x => x.Id)).AsResponse(HttpStatusCode.Accepted);
-                    // return new Response{ StatusCode = HttpStatusCode.Accepted };
                 };
         }
 
@@ -84,12 +82,6 @@ namespace Lidarr.Api.V1.ManualImport
             
             //recalculate import and broadcast
             _manualImportService.UpdateItems(items);
-
-            // not actually required - returned by query
-            // foreach (var item in items)
-            // {
-            //     BroadcastResourceChange(ModelAction.Updated, item.Id);
-            // }
         }
     }
 }

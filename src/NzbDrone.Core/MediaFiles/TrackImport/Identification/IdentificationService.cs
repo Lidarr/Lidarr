@@ -52,7 +52,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             _logger = logger;
         }
 
-        private List<IsoCountry> preferredCountries = new List<string> {
+        private readonly List<IsoCountry> preferredCountries = new List<string> {
             "United States",
             "United Kingdom",
             "Europe",
@@ -221,7 +221,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             // Generally artist, album and release are null.  But if they're not then limit candidates appropriately.
             // We've tried to make sure that tracks are all for a single release.
             
-            var candidateReleases = new List<AlbumRelease>();
+            List<AlbumRelease> candidateReleases;
 
             // if we have a release ID, use that
             var releaseIds = localAlbumRelease.LocalTracks.Select(x => x.FileTrackInfo.ReleaseMBId).Distinct().ToList();
@@ -423,40 +423,33 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             if (mbLength > 0)
             {
                 dist.AddRatio("track_length", diff, 30);
-                // _logger.Trace("track_length: {0} vs {1}, diff: {2} grace: 30; {3}",
-                //               localLength, mbLength, diff, dist.NormalizedDistance());
             }
 
             // musicbrainz never has 'featuring' in the track title
             // see https://musicbrainz.org/doc/Style/Artist_Credits
             dist.AddString("track_title", localTrack.FileTrackInfo.CleanTitle ?? "", mbTrack.Title);
-            // _logger.Trace("track title: {0} vs {1}; {2}", localTrack.FileTrackInfo.Title, mbTrack.Title, dist.NormalizedDistance());
 
             if (includeArtist && localTrack.FileTrackInfo.ArtistTitle.IsNotNullOrWhiteSpace()
                 && !VariousArtistNames.Any(x => x.Equals(localTrack.FileTrackInfo.ArtistTitle, StringComparison.InvariantCultureIgnoreCase)))
             {
                 dist.AddString("track_artist", localTrack.FileTrackInfo.ArtistTitle, mbTrack.ArtistMetadata.Value.Name);
-                // _logger.Trace("track artist: {0} vs {1}; {2}", localTrack.FileTrackInfo.ArtistTitle, mbTrack.ArtistMetadata.Value.Name, dist.NormalizedDistance());
             }
 
             if (localTrack.FileTrackInfo.TrackNumbers[0] > 0 && mbTrack.AbsoluteTrackNumber > 0)
             {
                 dist.AddBool("track_index", TrackIndexIncorrect(localTrack, mbTrack, totalTrackNumber));
-                // _logger.Trace("track_index: {0} vs {1}; {2}", localTrack.FileTrackInfo.TrackNumbers[0], mbTrack.AbsoluteTrackNumber, dist.NormalizedDistance());
             }
 
             var recordingId = localTrack.FileTrackInfo.RecordingMBId;
             if (recordingId.IsNotNullOrWhiteSpace())
             {
                 dist.AddBool("recording_id", localTrack.FileTrackInfo.RecordingMBId != mbTrack.ForeignRecordingId);
-                // _logger.Trace("recording_id: {0} vs {1}; {2}", localTrack.FileTrackInfo.RecordingMBId, mbTrack.ForeignRecordingId, dist.NormalizedDistance());
             }
 
             // for fingerprinted files
             if (localTrack.AcoustIdResults != null)
             {
                 dist.AddBool("recording_id", !localTrack.AcoustIdResults.Contains(mbTrack.ForeignRecordingId));
-                // _logger.Trace("fingerprinting: {0} vs {1}; {2}", string.Join(", ", localTrack.AcoustIdResults), mbTrack.ForeignRecordingId, dist.NormalizedDistance());
             }
 
             return dist;

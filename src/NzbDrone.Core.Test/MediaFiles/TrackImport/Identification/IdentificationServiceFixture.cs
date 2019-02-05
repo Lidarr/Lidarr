@@ -62,7 +62,6 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
             Mocker.GetMock<IAddArtistValidator>().Setup(x => x.Validate(It.IsAny<Artist>())).Returns(new ValidationResult());
 
             Mocker.SetConstant<ITrackGroupingService>(Mocker.Resolve<TrackGroupingService>());
-            // Mocker.SetConstant<IAugmentingService>(Mocker.Resolve<AugmentingService>());
             Subject = Mocker.Resolve<IdentificationService>();
 
         }
@@ -95,7 +94,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
         public static class IdTestCaseFactory
         {
             // for some reason using Directory.GetFiles causes nUnit to error
-            public static string[] files = {
+            private static string[] files = {
                 "FilesWithMBIds.json",
                 "PreferMissingToBadMatch.json",
                 "InconsistentTyposInAlbum.json",

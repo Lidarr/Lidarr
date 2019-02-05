@@ -98,7 +98,7 @@ namespace NzbDrone.Core.Test.Download
                 .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()))
                 .Returns(new List<ImportResult>
                     {
-                        new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack() { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic() }))
+                        new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic() }))
                     });
         }
 
