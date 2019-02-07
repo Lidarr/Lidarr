@@ -232,8 +232,7 @@ namespace NzbDrone.Mono.Disk
             {
                 var result = FiCloneIoCtl(dest_fd, FICLONE, source_fd);
                 if (result == 0) {
-                    Syscall.close(source_fd);
-                    Syscall.close(dest_fd);
+                    // Files get closed in the finally block
                     return true;
                 }
                 var error = Stdlib.GetLastError();
@@ -247,9 +246,12 @@ namespace NzbDrone.Mono.Disk
             {
                 Logger.Debug(e, "No libc.so on this platform; macOS currently unsupported for reflink");
             }
+            finally
+            {
+                Syscall.close(source_fd);
+                Syscall.close(dest_fd);
+            }
 
-            Syscall.close(source_fd);
-            Syscall.close(dest_fd);
             return false;
         }
 
