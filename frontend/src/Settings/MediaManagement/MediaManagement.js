@@ -140,22 +140,31 @@ class MediaManagement extends Component {
                           </FormGroup>
                       }
 
+                      {
+                        isMono &&
+                          <FormGroup
+                            advancedSettings={advancedSettings}
+                            isAdvanced={true}
+                            size={sizes.MEDIUM}
+                          >
+                            <FormLabel>Use Reflinks instead of Copy</FormLabel>
+
+                            <FormInputGroup
+                              type={inputTypes.CHECK}
+                              name="copyUsingReflinks"
+                              helpText="Use Reflinks when trying to copy files from torrents that are still being seeded"
+                              helpTextWarning="Reflinks are currently only implemented for Linux."
+                              onChange={onInputChange}
+                              {...settings.copyUsingReflinks}
+                            />
+                          </FormGroup>
+                      }
+
                       <FormGroup
                         advancedSettings={advancedSettings}
                         isAdvanced={true}
                         size={sizes.MEDIUM}
                       >
-                        <FormLabel>Use Reflinks instead of Copy</FormLabel>
-
-                        <FormInputGroup
-                          type={inputTypes.CHECK}
-                          name="copyUsingReflinks"
-                          helpText="Use Reflinks when trying to copy files from torrents that are still being seeded"
-                          helpTextWarning="Reflinks are currently only implemented for Linux."
-                          onChange={onInputChange}
-                          {...settings.copyUsingReflinks}
-                        />
-
                         <FormLabel>Use Hardlinks instead of Copy</FormLabel>
 
                         <FormInputGroup
