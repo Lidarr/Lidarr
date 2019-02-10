@@ -213,6 +213,30 @@ namespace NzbDrone.Core.Test.Datastore
             var DataMapper = db.GetDataMapper();
 
             var files = DataMapper.Query<TrackFile>()
+                .Join<TrackFile, Track>(JoinType.Inner, f => f.Tracks, (f, t) => f.Id == t.TrackFileId)
+                .Join<TrackFile, Album>(JoinType.Inner, t => t.Album, (t, a) => t.AlbumId == a.Id)
+                .Join<TrackFile, Artist>(JoinType.Inner, t => t.Artist, (t, a) => t.Album.Value.ArtistMetadataId == a.ArtistMetadataId)
+                .Join<Artist, ArtistMetadata>(JoinType.Inner, a => a.Metadata, (a, m) => a.ArtistMetadataId == m.Id)
+                .ToList();
+
+            Assert.IsNotEmpty(files);
+            foreach (var file in files)
+            {
+                Assert.IsTrue(file.Tracks.IsLoaded);
+                Assert.IsNotEmpty(file.Tracks.Value);
+                Assert.IsTrue(file.Album.IsLoaded);
+                Assert.IsTrue(file.Artist.IsLoaded);
+                Assert.IsTrue(file.Artist.Value.Metadata.IsLoaded);
+            }
+        }
+
+        [Test]
+        public void should_lazy_load_tracks_if_not_joined_to_trackfile()
+        {
+            var db = Mocker.Resolve<IDatabase>();
+            var DataMapper = db.GetDataMapper();
+
+            var files = DataMapper.Query<TrackFile>()
                 .Join<TrackFile, Album>(JoinType.Inner, t => t.Album, (t, a) => t.AlbumId == a.Id)
                 .Join<TrackFile, Artist>(JoinType.Inner, t => t.Artist, (t, a) => t.Album.Value.ArtistMetadataId == a.ArtistMetadataId)
                 .Join<Artist, ArtistMetadata>(JoinType.Inner, a => a.Metadata, (a, m) => a.ArtistMetadataId == m.Id)
@@ -222,6 +246,9 @@ namespace NzbDrone.Core.Test.Datastore
             foreach (var file in files)
             {
                 Assert.IsFalse(file.Tracks.IsLoaded);
+                Assert.IsNotNull(file.Tracks.Value);
+                Assert.IsNotEmpty(file.Tracks.Value);
+                Assert.IsTrue(file.Tracks.IsLoaded);
                 Assert.IsTrue(file.Album.IsLoaded);
                 Assert.IsTrue(file.Artist.IsLoaded);
                 Assert.IsTrue(file.Artist.Value.Metadata.IsLoaded);

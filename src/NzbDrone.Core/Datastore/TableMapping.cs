@@ -129,6 +129,7 @@ namespace NzbDrone.Core.Datastore
                 .For(track => track.TrackFile)
                 .LazyLoad(condition: track => track.TrackFileId > 0,
                           query: (db, track) => db.Query<TrackFile>()
+                          .Join<TrackFile, Track>(JoinType.Inner, t => t.Tracks, (t, x) => t.Id == x.TrackFileId)
                           .Join<TrackFile, Album>(JoinType.Inner, t => t.Album, (t, a) => t.AlbumId == a.Id)
                           .Join<TrackFile, Artist>(JoinType.Inner, t => t.Artist, (t, a) => t.Album.Value.ArtistMetadataId == a.ArtistMetadataId)
                           .Join<Artist, ArtistMetadata>(JoinType.Inner, a => a.Metadata, (a, m) => a.ArtistMetadataId == m.Id)

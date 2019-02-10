@@ -27,6 +27,7 @@ namespace NzbDrone.Core.MediaFiles
         // needed more often than not so better to load it all now
         protected override QueryBuilder<TrackFile> Query =>
             DataMapper.Query<TrackFile>()
+            .Join<TrackFile, Track>(JoinType.Inner, t => t.Tracks, (t, x) => t.Id == x.TrackFileId)
             .Join<TrackFile, Album>(JoinType.Inner, t => t.Album, (t, a) => t.AlbumId == a.Id)
             .Join<TrackFile, Artist>(JoinType.Inner, t => t.Artist, (t, a) => t.Album.Value.ArtistMetadataId == a.ArtistMetadataId)
             .Join<Artist, ArtistMetadata>(JoinType.Inner, a => a.Metadata, (a, m) => a.ArtistMetadataId == m.Id);
