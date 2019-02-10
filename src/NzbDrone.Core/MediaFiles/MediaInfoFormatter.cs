@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NLog;
 using NLog.Fluent;
 using NzbDrone.Common.Instrumentation;
@@ -31,61 +32,37 @@ namespace NzbDrone.Core.MediaFiles
             return mediaInfo.AudioChannels;
         }
 
+        public static readonly Dictionary<Codec, string> CodecNames = new Dictionary<Codec, string> {
+            {Codec.AAC, "AAC"},
+            {Codec.AACVBR, "AAC"},
+            {Codec.ALAC, "ALAC"},
+            {Codec.APE, "APE"},
+            {Codec.FLAC, "FLAC"},
+            {Codec.MP3CBR, "MP3"},
+            {Codec.MP3VBR, "MP3"},
+            {Codec.OGG, "OGG"},
+            {Codec.WAV, "PCM"},
+            {Codec.WAVPACK, "WavPack"},
+            {Codec.WMA, "WMA"}
+        };
+
         public static string FormatAudioCodec(MediaInfoModel mediaInfo)
         {
             var codec = QualityParser.ParseCodec(mediaInfo.AudioFormat, null);
 
-            if (codec == Codec.AAC || codec == Codec.AACVBR)
+            if (CodecNames.ContainsKey(codec))
             {
-                return "AAC";
+                return CodecNames[codec];
             }
-
-            if (codec == Codec.ALAC)
+            else
             {
-                return "ALAC";
+                Logger.Debug()
+                    .Message("Unknown audio format: '{0}'.", string.Join(", ", mediaInfo.AudioFormat))
+                    .WriteSentryWarn("UnknownAudioFormat", mediaInfo.AudioFormat)
+                    .Write();
+                
+                return "Unknown";
             }
-
-            if (codec == Codec.APE)
-            {
-                return "APE";
-            }
-
-            if (codec == Codec.FLAC)
-            {
-                return "FLAC";
-            }
-
-            if (codec == Codec.MP3CBR || codec == Codec.MP3VBR)
-            {
-                return "MP3";
-            }
-            
-            if (codec == Codec.OGG)
-            {
-                return "OGG";
-            }
-            
-            if (codec == Codec.WAV)
-            {
-                return "PCM";
-            }
-
-            if (codec == Codec.WAVPACK)
-            {
-                return "WavPack";
-            }
-
-            if (codec == Codec.WMA)
-            {
-                return "WMA";
-            }
-
-            Logger.Debug()
-                  .Message("Unknown audio format: '{0}'.", string.Join(", ", mediaInfo.AudioFormat))
-                  .WriteSentryWarn("UnknownAudioFormat", mediaInfo.AudioFormat)
-                  .Write();
-
-            return "Unknown";
         }
     }
 }
