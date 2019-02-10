@@ -36,17 +36,17 @@ namespace NzbDrone.Core.Extras.Lyrics
             var subtitleFiles = new List<LyricFile>();
             var filterResult = FilterAndClean(artist, filesOnDisk, importedFiles);
 
-            foreach (var possibleSubtitleFile in filterResult.FilesOnDisk)
+            foreach (var possibleLyricFile in filterResult.FilesOnDisk)
             {
-                var extension = Path.GetExtension(possibleSubtitleFile);
+                var extension = Path.GetExtension(possibleLyricFile);
 
                 if (LyricFileExtensions.Extensions.Contains(extension))
                 {
                     var localTrack = new LocalTrack
                     {
-                        FileTrackInfo = Parser.Parser.ParseMusicPath(possibleSubtitleFile),
+                        FileTrackInfo = Parser.Parser.ParseMusicPath(possibleLyricFile),
                         Artist = artist,
-                        Path = possibleSubtitleFile
+                        Path = possibleLyricFile
                     };
 
                     try
@@ -55,19 +55,19 @@ namespace NzbDrone.Core.Extras.Lyrics
                     }
                     catch (AugmentingFailedException)
                     {
-                        _logger.Debug("Unable to parse lyric file: {0}", possibleSubtitleFile);
+                        _logger.Debug("Unable to parse lyric file: {0}", possibleLyricFile);
                         continue;
                     }
 
                     if (localTrack.Tracks.Empty())
                     {
-                        _logger.Debug("Cannot find related tracks for: {0}", possibleSubtitleFile);
+                        _logger.Debug("Cannot find related tracks for: {0}", possibleLyricFile);
                         continue;
                     }
 
                     if (localTrack.Tracks.DistinctBy(e => e.TrackFileId).Count() > 1)
                     {
-                        _logger.Debug("Lyric file: {0} does not match existing files.", possibleSubtitleFile);
+                        _logger.Debug("Lyric file: {0} does not match existing files.", possibleLyricFile);
                         continue;
                     }
 
@@ -76,8 +76,8 @@ namespace NzbDrone.Core.Extras.Lyrics
                                            ArtistId = artist.Id,
                                            AlbumId = localTrack.Album.Id,
                                            TrackFileId = localTrack.Tracks.First().TrackFileId,
-                                           RelativePath = artist.Path.GetRelativePath(possibleSubtitleFile),
-                                           Language = LanguageParser.ParseSubtitleLanguage(possibleSubtitleFile),
+                                           RelativePath = artist.Path.GetRelativePath(possibleLyricFile),
+                                           Language = LanguageParser.ParseSubtitleLanguage(possibleLyricFile),
                                            Extension = extension
                                        };
 
