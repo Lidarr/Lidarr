@@ -108,8 +108,10 @@ namespace NzbDrone.Core.Datastore
                 .For(rg => rg.AlbumReleases)
                 .LazyLoad(condition: rg => rg.Id > 0, query: (db, rg) => db.Query<AlbumRelease>().Where(r => r.AlbumId == rg.Id).ToList())
                 .For(rg => rg.Artist)
-                .LazyLoad(condition: rg => rg.ArtistMetadataId > 0, query: (db, rg) => db.Query<Artist>().Where(a => a.ArtistMetadataId == rg.ArtistMetadataId).SingleOrDefault());
-
+                .LazyLoad(condition: rg => rg.ArtistMetadataId > 0,
+                          query: (db, rg) => db.Query<Artist>()
+                          .Join<Artist, ArtistMetadata>(JoinType.Inner, a => a.Metadata, (a, m) => a.ArtistMetadataId == m.Id)
+                          .Where(a => a.ArtistMetadataId == rg.ArtistMetadataId).SingleOrDefault());
 
             Mapper.Entity<AlbumRelease>().RegisterModel("AlbumReleases")
                 .Relationship()
