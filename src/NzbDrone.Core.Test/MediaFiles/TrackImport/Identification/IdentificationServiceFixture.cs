@@ -17,7 +17,6 @@ using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Profiles.Metadata;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
-using NzbDrone.Common.Extensions;
 using System.Collections.Generic;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Parser;
@@ -99,14 +98,14 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
             return outp;
         }
 
-        private Artist GivenArtist(string foreignArtistId, int metadataId)
+        private Artist GivenArtist(string foreignArtistId, int metadataProfileId)
         {
             var artist = _addArtistService.AddArtist(new Artist {
                     Metadata = new ArtistMetadata {
                         ForeignArtistId = foreignArtistId
                     },
                     Path = @"c:\test".AsOsAgnostic(),
-                    MetadataProfileId = metadataId
+                    MetadataProfileId = metadataProfileId
                 });
 
             var command = new RefreshArtistCommand{

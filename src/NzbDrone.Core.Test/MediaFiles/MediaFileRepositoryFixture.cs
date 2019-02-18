@@ -117,6 +117,7 @@ namespace NzbDrone.Core.Test.MediaFiles
             {
                 file.Tracks.IsLoaded.Should().BeTrue();
                 file.Tracks.Value.Should().NotBeNull();
+                file.Tracks.Value.Should().NotBeEmpty();
                 file.Album.IsLoaded.Should().BeTrue();
                 file.Album.Value.Should().NotBeNull();
                 file.Artist.IsLoaded.Should().BeTrue();

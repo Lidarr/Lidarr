@@ -405,8 +405,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 result.Mapping.Add(localTracks[pair.Item1], Tuple.Create(mbTracks[pair.Item2], distances[pair.Item1, pair.Item2]));
                 _logger.Trace("Mapped {0} to {1}, dist: {2}", localTracks[pair.Item1], mbTracks[pair.Item2], costs[pair.Item1, pair.Item2]);
             }
+            
             result.LocalExtra = localTracks.Except(result.Mapping.Keys).ToList();
+            _logger.Trace($"Unmapped files:\n{string.Join("\n", result.LocalExtra)}");
+            
             result.MBExtra = mbTracks.Except(result.Mapping.Values.Select(x => x.Item1)).ToList();
+            _logger.Trace($"Missing tracks:\n{string.Join("\n", result.MBExtra)}");
 
             return result;
         }
@@ -519,7 +523,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 if (country != null)
                 {
                     dist.AddEquality("country", country.Name, release.Country);
-                    _logger.Trace("country: {0} vs {1}; {2}", country, string.Join(", ", release.Country), dist.NormalizedDistance());
+                    _logger.Trace("country: {0} vs {1}; {2}", country.Name, string.Join(", ", release.Country), dist.NormalizedDistance());
                 }
                 else if (preferredCountries.Count > 0)
                 {
