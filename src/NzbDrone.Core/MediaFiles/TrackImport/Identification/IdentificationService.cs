@@ -225,16 +225,17 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
             // if we have a release ID, use that
             var releaseIds = localAlbumRelease.LocalTracks.Select(x => x.FileTrackInfo.ReleaseMBId).Distinct().ToList();
-            if (releaseIds.Count == 1 && releaseIds[0].IsNotNullOrWhiteSpace())
-            {
-                _logger.Debug("Selecting release from consensus ForeignReleaseId [{0}]", releaseIds[0]);
-                return _releaseService.GetReleasesByForeignReleaseId(releaseIds);
-            }
 
+            // if release is set (via manual import) that overrides everything
             if (release != null)
             {
                 _logger.Debug("Release {0} [{1} tracks] was forced", release, release.TrackCount);
-                candidateReleases = new List<AlbumRelease> { release };
+                return new List<AlbumRelease> { release };
+            }
+            else if (releaseIds.Count == 1 && releaseIds[0].IsNotNullOrWhiteSpace())
+            {
+                _logger.Debug("Selecting release from consensus ForeignReleaseId [{0}]", releaseIds[0]);
+                return _releaseService.GetReleasesByForeignReleaseId(releaseIds);
             }
             else if (album != null)
             {

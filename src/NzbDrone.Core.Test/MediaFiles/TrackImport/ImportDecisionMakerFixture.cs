@@ -145,7 +145,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
             GivenAugmentationSuccess();
             GivenSpecifications(_albumpass1, _albumpass2, _albumpass3, _albumfail1, _albumfail2, _albumfail3);
 
-            Subject.GetImportDecisions(_audioFiles, new Artist(), null, downloadClientItem, null, false, false, false);
+            Subject.GetImportDecisions(_audioFiles, new Artist(), null, null, downloadClientItem, null, false, false, false);
 
             _albumfail1.Verify(c => c.IsSatisfiedBy(It.IsAny<LocalAlbumRelease>()), Times.Once());
             _albumfail2.Verify(c => c.IsSatisfiedBy(It.IsAny<LocalAlbumRelease>()), Times.Once());
@@ -162,7 +162,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
             GivenAugmentationSuccess();
             GivenSpecifications(_pass1, _pass2, _pass3, _fail1, _fail2, _fail3);
 
-            Subject.GetImportDecisions(_audioFiles, new Artist(), null, downloadClientItem, null, false, false, false);
+            Subject.GetImportDecisions(_audioFiles, new Artist(), null, null, downloadClientItem, null, false, false, false);
 
             _fail1.Verify(c => c.IsSatisfiedBy(It.IsAny<LocalTrack>()), Times.Once());
             _fail2.Verify(c => c.IsSatisfiedBy(It.IsAny<LocalTrack>()), Times.Once());
@@ -180,7 +180,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
             GivenSpecifications(_albumpass1, _albumpass2, _albumpass3, _albumfail1, _albumfail2, _albumfail3);
             GivenSpecifications(_pass1, _pass2, _pass3, _fail1, _fail2, _fail3);
 
-            Subject.GetImportDecisions(_audioFiles, new Artist(), null, downloadClientItem, null, false, false, false);
+            Subject.GetImportDecisions(_audioFiles, new Artist(), null, null, downloadClientItem, null, false, false, false);
 
             _fail1.Verify(c => c.IsSatisfiedBy(It.IsAny<LocalTrack>()), Times.Never());
             _fail2.Verify(c => c.IsSatisfiedBy(It.IsAny<LocalTrack>()), Times.Never());

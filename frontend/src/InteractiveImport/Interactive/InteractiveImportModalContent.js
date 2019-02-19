@@ -22,6 +22,8 @@ import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import SelectArtistModal from 'InteractiveImport/Artist/SelectArtistModal';
 import SelectAlbumModal from 'InteractiveImport/Album/SelectAlbumModal';
+import SelectAlbumReleaseModal from 'InteractiveImport/AlbumRelease/SelectAlbumReleaseModal';
+import ConfirmImportModal from 'InteractiveImport/Confirmation/ConfirmImportModal';
 import InteractiveImportRow from './InteractiveImportRow';
 import styles from './InteractiveImportModalContent.css';
 
@@ -95,8 +97,34 @@ class InteractiveImportModalContent extends Component {
       selectedState: {},
       invalidRowsSelected: [],
       isSelectArtistModalOpen: false,
-      isSelectAlbumModalOpen: false
+      isSelectAlbumModalOpen: false,
+      isSelectAlbumReleaseModalOpen: false,
+      albumsChangingRelease: [],
+      isConfirmImportModalOpen: false,
+      showClearTracks: false,
+      inconsistentAlbumReleases: false
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    const selectedIds = this.getSelectedIds();
+    const selectedItems = _.filter(this.props.items, (x) => _.includes(selectedIds, x.id));
+    const selectionHasTracks = _.some(selectedItems, (x) => x.tracks.length);
+
+    if (this.state.showClearTracks !== selectionHasTracks) {
+      this.setState({ showClearTracks: selectionHasTracks });
+    }
+
+    const inconsistent = _(selectedItems)
+      .map((x) => ({ albumId: x.album ? x.album.id : 0, releaseId: x.albumReleaseId }))
+      .groupBy('albumId')
+      .mapValues((album) => _(album).groupBy((x) => x.releaseId).values().value().length)
+      .values()
+      .some((x) => x !== undefined && x > 1);
+
+    if (inconsistent !== this.state.inconsistentAlbumReleases) {
+      this.setState({ inconsistentAlbumReleases: inconsistent });
+    }
   }
 
   //
@@ -134,8 +162,29 @@ class InteractiveImportModalContent extends Component {
   }
 
   onImportSelectedPress = () => {
-    const selected = this.getSelectedIds();
+    const selectedIds = this.getSelectedIds();
+    const albumsChangingRelease =
+          _(this.props.items)
+            .filter((x) => _.includes(selectedIds, x.id))
+            .mapValues((x) => ({ album: x.album, matchedReleaseId: x.albumReleaseId, monitoredReleaseId: _.find(x.album.releases, 'monitored').id }))
+            .keyBy((x) => x.album.id)
+            .filter((x) => x.matchedReleaseId !== x.monitoredReleaseId)
+            .value()
+            .map((a) => a.album);
 
+    this.setState({ albumsChangingRelease });
+
+    console.log(albumsChangingRelease);
+
+    if (albumsChangingRelease.length) {
+      this.setState({ isConfirmImportModalOpen: true });
+    } else {
+      this.onConfirmImportPress();
+    }
+  }
+
+  onConfirmImportPress = () => {
+    const selected = this.getSelectedIds();
     this.props.onImportSelectedPress(selected, this.props.importMode);
   }
 
@@ -155,6 +204,10 @@ class InteractiveImportModalContent extends Component {
     this.setState({ isSelectAlbumModalOpen: true });
   }
 
+  onSelectAlbumReleasePress = () => {
+    this.setState({ isSelectAlbumReleaseModalOpen: true });
+  }
+
   onClearTrackMappingPress = () => {
     const selectedIds = this.getSelectedIds();
 
@@ -167,12 +220,24 @@ class InteractiveImportModalContent extends Component {
     });
   }
 
+  onGetTrackMappingPress = () => {
+    this.props.saveInteractiveImportItem({ id: this.getSelectedIds() });
+  }
+
   onSelectArtistModalClose = () => {
     this.setState({ isSelectArtistModalOpen: false });
   }
 
   onSelectAlbumModalClose = () => {
     this.setState({ isSelectAlbumModalOpen: false });
+  }
+
+  onSelectAlbumReleaseModalClose = () => {
+    this.setState({ isSelectAlbumReleaseModalOpen: false });
+  }
+
+  onConfirmImportModalClose = () => {
+    this.setState({ isConfirmImportModalOpen: false });
   }
 
   //
@@ -205,7 +270,12 @@ class InteractiveImportModalContent extends Component {
       selectedState,
       invalidRowsSelected,
       isSelectArtistModalOpen,
-      isSelectAlbumModalOpen
+      isSelectAlbumModalOpen,
+      isSelectAlbumReleaseModalOpen,
+      albumsChangingRelease,
+      isConfirmImportModalOpen,
+      showClearTracks,
+      inconsistentAlbumReleases
     } = this.state;
 
     const selectedIds = this.getSelectedIds();
@@ -226,40 +296,40 @@ class InteractiveImportModalContent extends Component {
         <ModalBody>
           {
             showFilterExistingFiles &&
-            <div className={styles.filterContainer}>
-              <Menu alignMenu={align.RIGHT}>
-                <MenuButton>
-                  <Icon
-                    name={icons.FILTER}
-                    size={22}
-                  />
+              <div className={styles.filterContainer}>
+                <Menu alignMenu={align.RIGHT}>
+                  <MenuButton>
+                    <Icon
+                      name={icons.FILTER}
+                      size={22}
+                    />
 
-                  <div className={styles.filterText}>
-                    {
-                      filterExistingFiles ? 'Unmapped Files Only' : 'All Files'
-                    }
-                  </div>
-                </MenuButton>
+                    <div className={styles.filterText}>
+                      {
+                        filterExistingFiles ? 'Unmapped Files Only' : 'All Files'
+                      }
+                    </div>
+                  </MenuButton>
 
-                <MenuContent>
-                  <SelectedMenuItem
-                    name={filterExistingFilesOptions.ALL}
-                    isSelected={!filterExistingFiles}
-                    onPress={this.onFilterExistingFilesChange}
-                  >
-                    All Files
-                  </SelectedMenuItem>
+                  <MenuContent>
+                    <SelectedMenuItem
+                      name={filterExistingFilesOptions.ALL}
+                      isSelected={!filterExistingFiles}
+                      onPress={this.onFilterExistingFilesChange}
+                    >
+                      All Files
+                    </SelectedMenuItem>
 
-                  <SelectedMenuItem
-                    name={filterExistingFilesOptions.NEW}
-                    isSelected={filterExistingFiles}
-                    onPress={this.onFilterExistingFilesChange}
-                  >
-                    Unmapped Files Only
-                  </SelectedMenuItem>
-                </MenuContent>
-              </Menu>
-            </div>
+                    <SelectedMenuItem
+                      name={filterExistingFilesOptions.NEW}
+                      isSelected={filterExistingFiles}
+                      onPress={this.onFilterExistingFilesChange}
+                    >
+                      Unmapped Files Only
+                    </SelectedMenuItem>
+                  </MenuContent>
+                </Menu>
+              </div>
           }
 
           {
@@ -341,9 +411,30 @@ class InteractiveImportModalContent extends Component {
               Select Album
             </Button>
 
-            <Button onPress={this.onClearTrackMappingPress}>
-              Clear Track Mapping
+            <Button
+              onPress={this.onSelectAlbumReleasePress}
+              isDisabled={!selectedIds.length}
+            >
+              Select Release
             </Button>
+
+            {
+              showClearTracks ? (
+                <Button
+                  onPress={this.onClearTrackMappingPress}
+                  isDisabled={!selectedIds.length}
+                >
+                  Clear Tracks
+                </Button>
+              ) : (
+                <Button
+                  onPress={this.onGetTrackMappingPress}
+                  isDisabled={!selectedIds.length}
+                >
+                  Map Tracks
+                </Button>
+              )
+            }
           </div>
 
           <div className={styles.rightButtons}>
@@ -358,7 +449,7 @@ class InteractiveImportModalContent extends Component {
 
             <Button
               kind={kinds.SUCCESS}
-              isDisabled={!selectedIds.length || !!invalidRowsSelected.length}
+              isDisabled={!selectedIds.length || !!invalidRowsSelected.length || inconsistentAlbumReleases}
               onPress={this.onImportSelectedPress}
             >
               Import
@@ -378,6 +469,23 @@ class InteractiveImportModalContent extends Component {
           artistId={selectedItem && selectedItem.artist && selectedItem.artist.id}
           onModalClose={this.onSelectAlbumModalClose}
         />
+
+        <SelectAlbumReleaseModal
+          isOpen={isSelectAlbumReleaseModalOpen}
+          importIdsByAlbum={_.chain(items).filter((x) => x.album).groupBy((x) => x.album.id).mapValues((x) => x.map((y) => y.id)).value()}
+          albums={_.chain(items).filter((x) => x.album).keyBy((x) => x.album.id).mapValues((x) => ({ matchedReleaseId: x.albumReleaseId, album: x.album })).values().value()}
+          onModalClose={this.onSelectAlbumReleaseModalClose}
+        />
+
+        {
+          albumsChangingRelease.length > 0 &&
+            <ConfirmImportModal
+              isOpen={isConfirmImportModalOpen}
+              albums={albumsChangingRelease}
+              onModalClose={this.onConfirmImportModalClose}
+              onConfirmImportPress={this.onConfirmImportPress}
+            />
+        }
 
       </ModalContent>
     );

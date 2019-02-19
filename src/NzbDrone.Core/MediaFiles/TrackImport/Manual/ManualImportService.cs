@@ -101,7 +101,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     return new List<ManualImportItem>();
                 }
 
-                var decision = _importDecisionMaker.GetImportDecisions(new List<string> { path }, null, null, null, null, false, true, false);
+                var decision = _importDecisionMaker.GetImportDecisions(new List<string> { path }, null, null, null, null, null, false, true, false);
                 var result = MapItem(decision.First(), Path.GetDirectoryName(path), downloadId);
                 _cache.Set(result.Id.ToString(), result);
 
@@ -130,7 +130,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
 
             var folderInfo = Parser.Parser.ParseMusicTitle(directoryInfo.Name);
             var artistFiles = _diskScanService.GetAudioFiles(folder).ToList();
-            var decisions = _importDecisionMaker.GetImportDecisions(artistFiles, artist, null, null, folderInfo, filterExistingFiles, true, false);
+            var decisions = _importDecisionMaker.GetImportDecisions(artistFiles, artist, null, null, null, folderInfo, filterExistingFiles, true, false);
 
             return decisions.Select(decision => MapItem(decision, folder, downloadId)).ToList();
         }
@@ -143,7 +143,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             {
                 // generate dummy decisions that don't match the release
                 _logger.Debug("UpdateItems, group key: {0}", group.Key);
-                var decisions = _importDecisionMaker.GetImportDecisions(group.Select(x => x.Path).ToList(), group.First().Artist, group.First().Album, null, null, false, true, true);
+                var decisions = _importDecisionMaker.GetImportDecisions(group.Select(x => x.Path).ToList(), group.First().Artist, group.First().Album, group.First().Release, null, null, false, true, true);
 
                 foreach (var decision in decisions)
                 {
