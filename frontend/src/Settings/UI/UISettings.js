@@ -173,6 +173,50 @@ class UISettings extends Component {
                       {...settings.enableColorImpairedMode}
                     />
                   </FormGroup>
+
+                  <FormGroup>
+                    <FormLabel>Expand Items by Default </FormLabel>
+                    <FormInputGroup
+                      type={inputTypes.CHECK}
+                      name="expandAlbumByDefault"
+                      helpText="Expand Albums"
+                      onChange={onInputChange}
+                      {...settings.expandAlbumByDefault}
+                    />
+
+                    <FormInputGroup
+                      type={inputTypes.CHECK}
+                      name="expandEPByDefault"
+                      helpText="Expand EPs"
+                      onChange={onInputChange}
+                      {...settings.expandEPByDefault}
+                    />
+
+                    <FormInputGroup
+                      type={inputTypes.CHECK}
+                      name="expandSingleByDefault"
+                      helpText="Expand Singles"
+                      onChange={onInputChange}
+                      {...settings.expandSingleByDefault}
+                    />
+
+                    <FormInputGroup
+                      type={inputTypes.CHECK}
+                      name="expandBroadcastByDefault"
+                      helpText="Expand Broadcast items"
+                      onChange={onInputChange}
+                      {...settings.expandBroadcastByDefault}
+                    />
+
+                    <FormInputGroup
+                      type={inputTypes.CHECK}
+                      name="expandOtherByDefault"
+                      helpText="Expand Other items"
+                      onChange={onInputChange}
+                      {...settings.expandOtherByDefault}
+                    />
+
+                  </FormGroup>
                 </FieldSet>
               </Form>
           }
