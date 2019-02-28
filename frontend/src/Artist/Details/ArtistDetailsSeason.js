@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import isAfter from 'Utilities/Date/isAfter';
 import getToggledRange from 'Utilities/Table/getToggledRange';
 import { icons, sortDirections } from 'Helpers/Props';
 import Icon from 'Components/Icon';
@@ -55,15 +54,12 @@ class ArtistDetailsSeason extends Component {
       uiSettings
     } = this.props;
 
-    const expand = _.some(items, (item) => {
-      return ((item.albumType === 'Album') && uiSettings.expandAlbumByDefault) ||
+    const expand = _.some(items, (item) =>
+      ((item.albumType === 'Album') && uiSettings.expandAlbumByDefault) ||
         ((item.albumType === 'Single') && uiSettings.expandSingleByDefault) ||
         ((item.albumType === 'EP') && uiSettings.expandEPByDefault) ||
         ((item.albumType === 'Broadcast') && uiSettings.expandBroadcastByDefault) ||
-        ((item.albumType === 'Other') && uiSettings.expandOtherByDefault) ||
-        isAfter(item.releaseDate) ||
-        isAfter(item.releaseDate, { days: -365 });
-    });
+        ((item.albumType === 'Other') && uiSettings.expandOtherByDefault));
 
     onExpandPress(name, expand);
   }
