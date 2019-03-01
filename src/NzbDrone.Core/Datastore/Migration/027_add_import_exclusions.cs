@@ -9,7 +9,7 @@ namespace NzbDrone.Core.Datastore.Migration
         protected override void MainDbUpgrade()
         {
             Create.TableForModel("ImportListExclusions")
-                  .WithColumn("ForeignId").AsString().NotNullable()
+                  .WithColumn("ForeignId").AsString().NotNullable().Unique()
                   .WithColumn("Name").AsString().NotNullable();
         }
     }

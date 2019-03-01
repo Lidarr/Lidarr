@@ -24,14 +24,14 @@ namespace NzbDrone.Core.ImportLists.Exclusions
             _repo = repo;
         }
 
-        public ImportListExclusion Add(ImportListExclusion customFilter)
+        public ImportListExclusion Add(ImportListExclusion importListExclusion)
         {
-            return _repo.Insert(customFilter);
+            return _repo.Insert(importListExclusion);
         }
 
-        public ImportListExclusion Update(ImportListExclusion customFilter)
+        public ImportListExclusion Update(ImportListExclusion importListExclusion)
         {
-            return _repo.Update(customFilter);
+            return _repo.Update(importListExclusion);
         }
 
         public void Delete(int id)

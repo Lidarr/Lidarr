@@ -546,6 +546,7 @@
     <Compile Include="Http\HttpProxySettingsProvider.cs" />
     <Compile Include="Http\TorcacheHttpInterceptor.cs" />
     <Compile Include="ImportLists\Exceptions\ImportListException.cs" />
+    <Compile Include="ImportLists\Exclusions\ImportListExclusionExistsValidator.cs" />
     <Compile Include="ImportLists\Exclusions\ImportListExclusionService.cs" />
     <Compile Include="ImportLists\Exclusions\ImportListExclusionRepository.cs" />
     <Compile Include="ImportLists\Exclusions\ImportListExclusion.cs" />
@@ -1204,6 +1205,7 @@
     <Compile Include="Update\UpdateVerification.cs" />
     <Compile Include="Update\UpdateVerificationFailedException.cs" />
     <Compile Include="Validation\FolderValidator.cs" />
+    <Compile Include="Validation\GuidValidator.cs" />
     <Compile Include="Validation\IpValidation.cs" />
     <Compile Include="Validation\LanguageProfileExistsValidator.cs" />
     <Compile Include="Validation\MetadataProfileExistsValidator.cs" />

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using NzbDrone.Core.ImportLists.Exclusions;
 using Lidarr.Http;
 using FluentValidation;
+using NzbDrone.Core.Validation;
 
 namespace Lidarr.Api.V1.ImportLists
 {
@@ -9,7 +10,9 @@ namespace Lidarr.Api.V1.ImportLists
     {
         private readonly IImportListExclusionService _importListExclusionService;
 
-        public ImportListExclusionModule(IImportListExclusionService importListExclusionService)
+        public ImportListExclusionModule(IImportListExclusionService importListExclusionService,
+                                         ImportListExclusionExistsValidator importListExclusionExistsValidator,
+                                         GuidValidator guidValidator)
         {
             _importListExclusionService = importListExclusionService;
 
@@ -19,7 +22,7 @@ namespace Lidarr.Api.V1.ImportLists
             UpdateResource = UpdateImportListExclusion;
             DeleteResource = DeleteImportListExclusionResource;
 
-            SharedValidator.RuleFor(c => c.ForeignId).NotEmpty();
+            SharedValidator.RuleFor(c => c.ForeignId).NotEmpty().SetValidator(guidValidator).SetValidator(importListExclusionExistsValidator);
             SharedValidator.RuleFor(c => c.ArtistName).NotEmpty();
         }
 
