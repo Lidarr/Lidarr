@@ -7,12 +7,12 @@ namespace NzbDrone.Core.ImportLists.Exclusions
 {
     public interface IImportListExclusionService
     {
-        ImportListExclusion Add(ImportListExclusion customFilter);
+        ImportListExclusion Add(ImportListExclusion importListExclusion);
         List<ImportListExclusion> All();
         void Delete(int id);
         ImportListExclusion Get(int id);
         ImportListExclusion FindByForeignId(string foreignId);
-        ImportListExclusion Update(ImportListExclusion customFilter);
+        ImportListExclusion Update(ImportListExclusion importListExclusion);
     }
 
     public class ImportListExclusionService : IImportListExclusionService, IHandleAsync<ArtistDeletedEvent>
