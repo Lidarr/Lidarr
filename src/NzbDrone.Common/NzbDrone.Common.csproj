@@ -69,6 +69,9 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\Libraries\Sqlite\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Numerics" />
@@ -243,6 +246,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Expansive\license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Libraries\Sqlite\libsqlite3.0.dylib">
+      <Link>libsqlite3.0.dylib</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ExternalModules\CurlSharp\CurlSharp\CurlSharp.csproj">

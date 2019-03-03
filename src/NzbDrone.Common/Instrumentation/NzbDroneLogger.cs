@@ -117,7 +117,7 @@ namespace NzbDrone.Common.Instrumentation
             LogManager.Configuration.LoggingRules.Insert(0, loggingRuleSentry);
         }
 
-    private static void RegisterDebugger()
+        private static void RegisterDebugger()
         {
             DebuggerTarget target = new DebuggerTarget();
             target.Name = "debuggerLogger";

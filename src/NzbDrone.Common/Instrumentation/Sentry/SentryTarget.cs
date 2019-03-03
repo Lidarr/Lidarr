@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using System.Data.SQLite;
 using NLog;
 using NLog.Common;
 using NLog.Targets;
 using NzbDrone.Common.EnvironmentInfo;
 using SharpRaven;
 using SharpRaven.Data;
+using System.Globalization;
 
 namespace NzbDrone.Common.Instrumentation.Sentry
 {
@@ -109,6 +111,35 @@ namespace NzbDrone.Common.Instrumentation.Sentry
 
             if (logEvent.Level >= LogLevel.Error && logEvent.Exception != null)
             {
+                // don't report uninformative SQLite exceptions
+                // busy/locked are benign https://forums.sonarr.tv/t/owin-sqlite-error-5-database-is-locked/5423/11
+                // The others will be user configuration problems and silt up Sentry
+                var sqlEx = logEvent.Exception as SQLiteException;
+                if (sqlEx != null && (sqlEx.ResultCode == SQLiteErrorCode.Busy ||
+                                      sqlEx.ResultCode == SQLiteErrorCode.Locked ||
+                                      sqlEx.ResultCode == SQLiteErrorCode.Perm ||
+                                      sqlEx.ResultCode == SQLiteErrorCode.ReadOnly ||
+                                      sqlEx.ResultCode == SQLiteErrorCode.IoErr ||
+                                      sqlEx.ResultCode == SQLiteErrorCode.Corrupt ||
+                                      sqlEx.ResultCode == SQLiteErrorCode.Full ||
+                                      sqlEx.ResultCode == SQLiteErrorCode.CantOpen ||
+                                      sqlEx.ResultCode == SQLiteErrorCode.Auth))
+                {
+                    return false;
+                }
+
+                // Swallow the many, many exceptions flowing through from Jackett
+                if (logEvent.Exception.Message.Contains("Jackett.Common.IndexerException"))
+                {
+                    return false;
+                }
+
+                // UnauthorizedAccessExceptions will just be user configuration issues
+                if (logEvent.Exception is UnauthorizedAccessException)
+                {
+                    return false;
+                }
+
                 return true;
             }
 
@@ -172,9 +203,32 @@ namespace NzbDrone.Common.Instrumentation.Sentry
                     return;
                 }
 
+                // bodge to try to get the exception message in English
+                // https://stackoverflow.com/questions/209133/exception-messages-in-english
+                // There may still be some localization but this is better than nothing.
+                string message = string.Empty;
+
+                // only try to use the exeception message to fingerprint if there's no inner
+                // exception and the message is short, otherwise we're in danger of getting a
+                // stacktrace which will break the grouping
+                if (logEvent.Exception != null && logEvent.Exception.InnerException == null)
+                {
+                    var t = new Thread(() => {
+                            message = logEvent.Exception?.Message;
+                        });
+                    t.CurrentCulture = CultureInfo.InvariantCulture;
+                    t.CurrentUICulture = CultureInfo.InvariantCulture;
+                    t.Start();
+                    t.Join();
+                }
+
+                Console.WriteLine($"Sentry fingerprint message {message}");
+
                 if (logEvent.Exception != null)
                 {
                     sentryEvent.Fingerprint.Add(logEvent.Exception.GetType().FullName);
+                    sentryEvent.Fingerprint.Add(logEvent.Exception.TargetSite.ToString());
+                    sentryEvent.Fingerprint.Add(message.Length < 200 ? message : string.Empty);
                 }
 
                 if (logEvent.Properties.ContainsKey("Sentry"))
