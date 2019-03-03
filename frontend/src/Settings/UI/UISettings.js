@@ -10,6 +10,7 @@ import Form from 'Components/Form/Form';
 import FormGroup from 'Components/Form/FormGroup';
 import FormLabel from 'Components/Form/FormLabel';
 import FormInputGroup from 'Components/Form/FormInputGroup';
+import styles from './UISettings.css';
 
 export const firstDayOfWeekOptions = [
   { key: 0, value: 'Sunday' },
@@ -175,47 +176,48 @@ class UISettings extends Component {
                   </FormGroup>
 
                   <FormGroup>
-                    <FormLabel>Expand Items by Default </FormLabel>
-                    <FormInputGroup
-                      type={inputTypes.CHECK}
-                      name="expandAlbumByDefault"
-                      helpText="Expand Albums"
-                      onChange={onInputChange}
-                      {...settings.expandAlbumByDefault}
-                    />
+                    <FormLabel>Expand Items by Default</FormLabel>
+                    <div className={styles.columnGroup}>
+                      <FormInputGroup
+                        type={inputTypes.CHECK}
+                        name="expandAlbumByDefault"
+                        helpText="Albums"
+                        onChange={onInputChange}
+                        {...settings.expandAlbumByDefault}
+                      />
 
-                    <FormInputGroup
-                      type={inputTypes.CHECK}
-                      name="expandEPByDefault"
-                      helpText="Expand EPs"
-                      onChange={onInputChange}
-                      {...settings.expandEPByDefault}
-                    />
+                      <FormInputGroup
+                        type={inputTypes.CHECK}
+                        name="expandEPByDefault"
+                        helpText="EPs"
+                        onChange={onInputChange}
+                        {...settings.expandEPByDefault}
+                      />
 
-                    <FormInputGroup
-                      type={inputTypes.CHECK}
-                      name="expandSingleByDefault"
-                      helpText="Expand Singles"
-                      onChange={onInputChange}
-                      {...settings.expandSingleByDefault}
-                    />
+                      <FormInputGroup
+                        type={inputTypes.CHECK}
+                        name="expandSingleByDefault"
+                        helpText="Singles"
+                        onChange={onInputChange}
+                        {...settings.expandSingleByDefault}
+                      />
 
-                    <FormInputGroup
-                      type={inputTypes.CHECK}
-                      name="expandBroadcastByDefault"
-                      helpText="Expand Broadcast items"
-                      onChange={onInputChange}
-                      {...settings.expandBroadcastByDefault}
-                    />
+                      <FormInputGroup
+                        type={inputTypes.CHECK}
+                        name="expandBroadcastByDefault"
+                        helpText="Broadcast"
+                        onChange={onInputChange}
+                        {...settings.expandBroadcastByDefault}
+                      />
 
-                    <FormInputGroup
-                      type={inputTypes.CHECK}
-                      name="expandOtherByDefault"
-                      helpText="Expand Other items"
-                      onChange={onInputChange}
-                      {...settings.expandOtherByDefault}
-                    />
-
+                      <FormInputGroup
+                        type={inputTypes.CHECK}
+                        name="expandOtherByDefault"
+                        helpText="Other"
+                        onChange={onInputChange}
+                        {...settings.expandOtherByDefault}
+                      />
+                    </div>
                   </FormGroup>
                 </FieldSet>
               </Form>
