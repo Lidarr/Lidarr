@@ -1,17 +1,17 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using FluentValidation.Results;
+using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles.TorrentInfo;
-using NLog;
-using NzbDrone.Core.Validation;
-using FluentValidation.Results;
-using System.Net;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.RemotePathMappings;
+using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Download.Clients.QBittorrent
 {
@@ -117,7 +117,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
 
             foreach (var torrent in torrents)
             {
-                var item = new DownloadClientItem()
+                var item = new DownloadClientItem
                 {
                     DownloadId = torrent.Hash.ToUpper(),
                     Category = torrent.Category.IsNotNullOrWhiteSpace() ? torrent.Category : torrent.Label,
@@ -133,7 +133,6 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                 // Avoid removing torrents that haven't reached the global max ratio.
                 // Removal also requires the torrent to be paused, in case a higher max ratio was set on the torrent itself (which is not exposed by the api).
                 item.CanMoveFiles = item.CanBeRemoved = (torrent.State == "pausedUP" && HasReachedSeedLimit(torrent, config));
-                
 
                 if (!item.OutputPath.IsEmpty && item.OutputPath.FileName != torrent.Name)
                 {
@@ -216,7 +215,10 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
         protected override void Test(List<ValidationFailure> failures)
         {
             failures.AddIfNotNull(TestConnection());
-            if (failures.Any()) return;
+            if (failures.Any())
+            {
+                return;
+            }
             failures.AddIfNotNull(TestPrioritySupport());
             failures.AddIfNotNull(TestGetTorrents());
         }
@@ -387,22 +389,34 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
         {
             if (torrent.RatioLimit >= 0)
             {
-                if (torrent.Ratio < torrent.RatioLimit) return false;
+                if (torrent.Ratio < torrent.RatioLimit)
+                {
+                    return false;
+                }
             }
             else if (torrent.RatioLimit == -2 && config.MaxRatioEnabled)
             {
-                if (torrent.Ratio < config.MaxRatio) return false;
+                if (torrent.Ratio < config.MaxRatio)
+                {
+                    return false;
+                }
             }
 
             if (torrent.SeedingTimeLimit >= 0)
             {
-                if (torrent.SeedingTime < torrent.SeedingTimeLimit) return false;
+                if (torrent.SeedingTime < torrent.SeedingTimeLimit)
+                {
+                    return false;
+                }
             }
             else if (torrent.RatioLimit == -2 && config.MaxSeedingTimeEnabled)
             {
-                if (torrent.SeedingTime < config.MaxSeedingTime) return false;
+                if (torrent.SeedingTime < config.MaxSeedingTime)
+                {
+                    return false;
+                }
             }
-            
+
             return true;
         }
     }
