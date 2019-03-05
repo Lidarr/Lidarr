@@ -173,17 +173,16 @@ const config = {
 };
 
 gulp.task('webpack', () => {
-  return gulp.src('index.js')
-    .pipe(webpackStream(config, webpack))
-    .pipe(gulp.dest(''));
+  return webpackStream(config, webpack)
+    .pipe(gulp.dest('./'));
 });
 
 gulp.task('webpackWatch', () => {
   config.watch = true;
-  return gulp.src('')
-    .pipe(webpackStream(config, webpack))
+
+  return webpackStream(config, webpack)
     .on('error', errorHandler)
-    .pipe(gulp.dest(''))
+    .pipe(gulp.dest('./'))
     .on('error', errorHandler)
     .pipe(livereload())
     .on('error', errorHandler);
