@@ -78,11 +78,23 @@ namespace Lidarr.Api.V1.TrackFiles
 
             if (albumIdQuery.HasValue)
             {
-                int albumId = Convert.ToInt32(albumIdQuery.Value);
-                var album = _albumService.GetAlbum(albumId);
-                var albumArtist = _artistService.GetArtist(album.ArtistId);
+                Console.WriteLine(albumIdQuery.Value);
 
-                return _mediaFileService.GetFilesByAlbum(album.Id).ConvertAll(f => f.ToResource(albumArtist, _upgradableSpecification));
+                string albumIdValue = albumIdQuery.Value.ToString();
+
+                var albumIds = albumIdValue.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(e => Convert.ToInt32(e))
+                    .ToList();
+
+                var result = new List<TrackFileResource>();
+                foreach (var albumId in albumIds)
+                {
+                    var album = _albumService.GetAlbum(albumId);
+                    var albumArtist = _artistService.GetArtist(album.ArtistId);
+                    result.AddRange(_mediaFileService.GetFilesByAlbum(album.Id).ConvertAll(f => f.ToResource(albumArtist, _upgradableSpecification)));
+                }
+                
+                return result;
             }
 
             else

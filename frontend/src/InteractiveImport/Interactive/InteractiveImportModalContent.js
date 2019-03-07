@@ -22,6 +22,8 @@ import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import SelectArtistModal from 'InteractiveImport/Artist/SelectArtistModal';
 import SelectAlbumModal from 'InteractiveImport/Album/SelectAlbumModal';
+import SelectAlbumReleaseModal from 'InteractiveImport/AlbumRelease/SelectAlbumReleaseModal';
+import ConfirmImportModal from 'InteractiveImport/Confirmation/ConfirmImportModal';
 import InteractiveImportRow from './InteractiveImportRow';
 import styles from './InteractiveImportModalContent.css';
 
@@ -100,8 +102,34 @@ class InteractiveImportModalContent extends Component {
       selectedState: {},
       invalidRowsSelected: [],
       isSelectArtistModalOpen: false,
-      isSelectAlbumModalOpen: false
+      isSelectAlbumModalOpen: false,
+      isSelectAlbumReleaseModalOpen: false,
+      albumsImported: [],
+      isConfirmImportModalOpen: false,
+      showClearTracks: false,
+      inconsistentAlbumReleases: false
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    const selectedIds = this.getSelectedIds();
+    const selectedItems = _.filter(this.props.items, (x) => _.includes(selectedIds, x.id));
+    const selectionHasTracks = _.some(selectedItems, (x) => x.tracks.length);
+
+    if (this.state.showClearTracks !== selectionHasTracks) {
+      this.setState({ showClearTracks: selectionHasTracks });
+    }
+
+    const inconsistent = _(selectedItems)
+      .map((x) => ({ albumId: x.album ? x.album.id : 0, releaseId: x.albumReleaseId }))
+      .groupBy('albumId')
+      .mapValues((album) => _(album).groupBy((x) => x.releaseId).values().value().length)
+      .values()
+      .some((x) => x !== undefined && x > 1);
+
+    if (inconsistent !== this.state.inconsistentAlbumReleases) {
+      this.setState({ inconsistentAlbumReleases: inconsistent });
+    }
   }
 
   //
@@ -135,6 +163,28 @@ class InteractiveImportModalContent extends Component {
   }
 
   onImportSelectedPress = () => {
+    if (!this.props.replaceExistingFiles) {
+      this.onConfirmImportPress();
+      return;
+    }
+
+    // potentially deleting files
+    const selectedIds = this.getSelectedIds();
+    const albumsImported = _(this.props.items)
+      .filter((x) => _.includes(selectedIds, x.id))
+      .keyBy((x) => x.album.id)
+      .map((x) => x.album)
+      .value();
+
+    console.log(albumsImported);
+
+    this.setState({
+      albumsImported,
+      isConfirmImportModalOpen: true
+    });
+  }
+
+  onConfirmImportPress = () => {
     const {
       downloadId,
       showImportMode,
@@ -168,6 +218,10 @@ class InteractiveImportModalContent extends Component {
     this.setState({ isSelectAlbumModalOpen: true });
   }
 
+  onSelectAlbumReleasePress = () => {
+    this.setState({ isSelectAlbumReleaseModalOpen: true });
+  }
+
   onClearTrackMappingPress = () => {
     const selectedIds = this.getSelectedIds();
 
@@ -180,12 +234,24 @@ class InteractiveImportModalContent extends Component {
     });
   }
 
+  onGetTrackMappingPress = () => {
+    this.props.saveInteractiveImportItem({ id: this.getSelectedIds() });
+  }
+
   onSelectArtistModalClose = () => {
     this.setState({ isSelectArtistModalOpen: false });
   }
 
   onSelectAlbumModalClose = () => {
     this.setState({ isSelectAlbumModalOpen: false });
+  }
+
+  onSelectAlbumReleaseModalClose = () => {
+    this.setState({ isSelectAlbumReleaseModalOpen: false });
+  }
+
+  onConfirmImportModalClose = () => {
+    this.setState({ isConfirmImportModalOpen: false });
   }
 
   //
@@ -221,7 +287,12 @@ class InteractiveImportModalContent extends Component {
       selectedState,
       invalidRowsSelected,
       isSelectArtistModalOpen,
-      isSelectAlbumModalOpen
+      isSelectAlbumModalOpen,
+      isSelectAlbumReleaseModalOpen,
+      albumsImported,
+      isConfirmImportModalOpen,
+      showClearTracks,
+      inconsistentAlbumReleases
     } = this.state;
 
     const selectedIds = this.getSelectedIds();
@@ -393,9 +464,30 @@ class InteractiveImportModalContent extends Component {
               Select Album
             </Button>
 
-            <Button onPress={this.onClearTrackMappingPress}>
-              Clear Track Mapping
+            <Button
+              onPress={this.onSelectAlbumReleasePress}
+              isDisabled={!selectedIds.length}
+            >
+              Select Release
             </Button>
+
+            {
+              showClearTracks ? (
+                <Button
+                  onPress={this.onClearTrackMappingPress}
+                  isDisabled={!selectedIds.length}
+                >
+                  Clear Tracks
+                </Button>
+              ) : (
+                <Button
+                  onPress={this.onGetTrackMappingPress}
+                  isDisabled={!selectedIds.length}
+                >
+                  Map Tracks
+                </Button>
+              )
+            }
           </div>
 
           <div className={styles.rightButtons}>
@@ -410,7 +502,7 @@ class InteractiveImportModalContent extends Component {
 
             <Button
               kind={kinds.SUCCESS}
-              isDisabled={!selectedIds.length || !!invalidRowsSelected.length}
+              isDisabled={!selectedIds.length || !!invalidRowsSelected.length || inconsistentAlbumReleases}
               onPress={this.onImportSelectedPress}
             >
               Import
@@ -429,6 +521,20 @@ class InteractiveImportModalContent extends Component {
           ids={selectedIds}
           artistId={selectedItem && selectedItem.artist && selectedItem.artist.id}
           onModalClose={this.onSelectAlbumModalClose}
+        />
+
+        <SelectAlbumReleaseModal
+          isOpen={isSelectAlbumReleaseModalOpen}
+          importIdsByAlbum={_.chain(items).filter((x) => x.album).groupBy((x) => x.album.id).mapValues((x) => x.map((y) => y.id)).value()}
+          albums={_.chain(items).filter((x) => x.album).keyBy((x) => x.album.id).mapValues((x) => ({ matchedReleaseId: x.albumReleaseId, album: x.album })).values().value()}
+          onModalClose={this.onSelectAlbumReleaseModalClose}
+        />
+
+        <ConfirmImportModal
+          isOpen={isConfirmImportModalOpen}
+          albums={albumsImported}
+          onModalClose={this.onConfirmImportModalClose}
+          onConfirmImportPress={this.onConfirmImportPress}
         />
 
       </ModalContent>
@@ -460,6 +566,7 @@ InteractiveImportModalContent.propTypes = {
   onReplaceExistingFilesChange: PropTypes.func.isRequired,
   onImportModeChange: PropTypes.func.isRequired,
   onImportSelectedPress: PropTypes.func.isRequired,
+  saveInteractiveImportItem: PropTypes.func.isRequired,
   updateInteractiveImportItem: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired
 };

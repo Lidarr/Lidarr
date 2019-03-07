@@ -201,7 +201,7 @@ class InteractiveImportRow extends Component {
     const showArtistPlaceholder = isSelected && !artist;
     const showAlbumNumberPlaceholder = isSelected && !!artist && !album;
     const showTrackNumbersPlaceholder = !isSaving && isSelected && !!album && !tracks.length;
-    const showTrackNumbersLoading = isSaving;
+    const showTrackNumbersLoading = isSaving && !tracks.length;
     const showQualityPlaceholder = isSelected && !quality;
     const showLanguagePlaceholder = isSelected && !language;
 

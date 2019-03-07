@@ -91,7 +91,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     return new List<ManualImportItem>();
                 }
 
-                var decision = _importDecisionMaker.GetImportDecisions(new List<FileInfoBase> { _diskProvider.GetFileInfo(path) }, null, null, null, null, false, true, false, !replaceExistingFiles);
+                var decision = _importDecisionMaker.GetImportDecisions(new List<FileInfoBase> { _diskProvider.GetFileInfo(path) }, null, null, null, null, null, false, true, false, !replaceExistingFiles);
                 var result = MapItem(decision.First(), Path.GetDirectoryName(path), downloadId, replaceExistingFiles);
 
                 return new List<ManualImportItem> { result };
@@ -113,7 +113,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
 
             var folderInfo = Parser.Parser.ParseMusicTitle(directoryInfo.Name);
             var artistFiles = _diskScanService.GetAudioFiles(folder).ToList();
-            var decisions = _importDecisionMaker.GetImportDecisions(artistFiles, artist, null, null, folderInfo, filterExistingFiles, true, false, !replaceExistingFiles);
+            var decisions = _importDecisionMaker.GetImportDecisions(artistFiles, artist, null, null, null, folderInfo, filterExistingFiles, true, false, !replaceExistingFiles);
 
             // paths will be different for new and old files which is why we need to map separately
             var newFiles = artistFiles.Join(decisions,
@@ -140,7 +140,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             foreach(var group in groupedItems)
             {
                 _logger.Debug("UpdateItems, group key: {0}", group.Key);
-                var decisions = _importDecisionMaker.GetImportDecisions(group.Select(x => _diskProvider.GetFileInfo(x.Path)).ToList(), group.First().Artist, group.First().Album, null, null, false, true, true, !replaceExistingFiles);
+
+                var decisions = _importDecisionMaker.GetImportDecisions(group.Select(x => _diskProvider.GetFileInfo(x.Path)).ToList(), group.First().Artist, group.First().Album, group.First().Release, null, null, false, true, true, !replaceExistingFiles);
 
                 var existingItems = group.Join(decisions,
                                                i => i.Path,

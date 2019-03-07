@@ -438,7 +438,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
                 var extraTrackPaths = candidateRelease.ExistingTracks.Select(x => x.Path).ToList();
                 var extraTracks = extraTracksOnDisk.Where(x => extraTrackPaths.Contains(x.Path)).ToList();
-                var allLocalTracks = localAlbumRelease.LocalTracks.Concat(extraTracks).ToList();
+                var allLocalTracks = localAlbumRelease.LocalTracks.Concat(extraTracks).DistinctBy(x => x.Path).ToList();
                 
                 var mapping = MapReleaseTracks(allLocalTracks, dbTracks.Where(x => x.AlbumReleaseId == release.Id).ToList());
                 var distance = AlbumReleaseDistance(allLocalTracks, release, mapping);

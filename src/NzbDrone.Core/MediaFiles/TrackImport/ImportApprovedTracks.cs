@@ -69,49 +69,40 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             var allImportedTrackFiles = new List<TrackFile>();
             var allOldTrackFiles = new List<TrackFile>();
 
-            var albumDecisions = decisions.Where(e => e.Item.Album != null)
+            var albumDecisions = decisions.Where(e => e.Item.Album != null && e.Approved)
                 .GroupBy(e => e.Item.Album.Id).ToList();
 
             foreach (var albumDecision in albumDecisions)
             {
                 var album = albumDecision.First().Item.Album;
-                var currentRelease = album.AlbumReleases.Value.Single(x => x.Monitored);
+                var newRelease = albumDecision.First().Item.Release;
 
-                if (albumDecision.Any(x => x.Approved))
+                if (replaceExisting)
                 {
-                    var newRelease = albumDecision.First(x => x.Approved).Item.Release;
+                    var artist = albumDecision.First().Item.Artist;
+                    var rootFolder = _diskProvider.GetParentFolder(artist.Path);
+                    var previousFiles = _mediaFileService.GetFilesByAlbum(album.Id);
 
-                    if (currentRelease.Id != newRelease.Id)
+                    foreach (var previousFile in previousFiles)
                     {
-                        // if we are importing a new release, delete all old files and don't attempt to upgrade
-                        if (replaceExisting)
+                        var trackFilePath = Path.Combine(artist.Path, previousFile.RelativePath);
+                        var subfolder = rootFolder.GetRelativePath(_diskProvider.GetParentFolder(trackFilePath));
+                        if (_diskProvider.FileExists(trackFilePath))
                         {
-                            var artist = albumDecision.First().Item.Artist;
-                            var rootFolder = _diskProvider.GetParentFolder(artist.Path);
-                            var previousFiles = _mediaFileService.GetFilesByAlbum(album.Id);
-
-                            foreach (var previousFile in previousFiles)
-                            {
-                                var trackFilePath = Path.Combine(artist.Path, previousFile.RelativePath);
-                                var subfolder = rootFolder.GetRelativePath(_diskProvider.GetParentFolder(trackFilePath));
-                                if (_diskProvider.FileExists(trackFilePath))
-                                {
-                                    _logger.Debug("Removing existing track file: {0}", previousFile);
-                                    _recycleBinProvider.DeleteFile(trackFilePath, subfolder);
-                                }
-                                _mediaFileService.Delete(previousFile, DeleteMediaFileReason.Upgrade);
-                            }
+                            _logger.Debug("Removing existing track file: {0}", previousFile);
+                            _recycleBinProvider.DeleteFile(trackFilePath, subfolder);
                         }
-
-                        // set the correct release to be monitored before importing the new files
-                        _logger.Debug("Updating release to {0} [{1} tracks]", newRelease, newRelease.TrackCount);
-                        _releaseService.SetMonitored(newRelease);
-
-                        // Publish album edited event.
-                        // Deliberatly don't put in the old album since we don't want to trigger an ArtistScan.
-                        _eventAggregator.PublishEvent(new AlbumEditedEvent(album, album));
+                        _mediaFileService.Delete(previousFile, DeleteMediaFileReason.Upgrade);
                     }
                 }
+
+                // set the correct release to be monitored before importing the new files
+                _logger.Debug("Updating release to {0} [{1} tracks]", newRelease, newRelease.TrackCount);
+                _releaseService.SetMonitored(newRelease);
+
+                // Publish album edited event.
+                // Deliberatly don't put in the old album since we don't want to trigger an ArtistScan.
+                _eventAggregator.PublishEvent(new AlbumEditedEvent(album, album));
             }
 
             var filesToAdd = new List<TrackFile>(qualifiedImports.Count);

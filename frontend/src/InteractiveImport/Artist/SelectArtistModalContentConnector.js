@@ -46,6 +46,7 @@ class SelectArtistModalContentConnector extends Component {
         id,
         artist,
         album: undefined,
+        albumReleaseId: undefined,
         tracks: [],
         rejections: []
       });

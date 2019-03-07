@@ -4,6 +4,8 @@ using System.Linq;
 using NzbDrone.Core.MediaFiles.TrackImport.Identification;
 using System.IO;
 using System;
+using NzbDrone.Common.Extensions;
+using NzbDrone.Common;
 
 namespace NzbDrone.Core.Parser.Model
 {
@@ -40,7 +42,7 @@ namespace NzbDrone.Core.Parser.Model
         {
             if (AlbumRelease != null)
             {
-                LocalTracks.AddRange(ExistingTracks);
+                LocalTracks = LocalTracks.Concat(ExistingTracks).DistinctBy(x => x.Path).ToList();
                 foreach (var localTrack in LocalTracks)
                 {
                     localTrack.Release = AlbumRelease;

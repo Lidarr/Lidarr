@@ -3,7 +3,14 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { fetchInteractiveImportItems, setInteractiveImportSort, clearInteractiveImport, setInteractiveImportMode, updateInteractiveImportItem } from 'Store/Actions/interactiveImportActions';
+import {
+  fetchInteractiveImportItems,
+  setInteractiveImportSort,
+  clearInteractiveImport,
+  setInteractiveImportMode,
+  updateInteractiveImportItem,
+  saveInteractiveImportItem
+} from 'Store/Actions/interactiveImportActions';
 import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
 import { executeCommand } from 'Store/Actions/commandActions';
 import * as commandNames from 'Commands/commandNames';
@@ -24,6 +31,7 @@ const mapDispatchToProps = {
   setInteractiveImportMode,
   clearInteractiveImport,
   updateInteractiveImportItem,
+  saveInteractiveImportItem,
   executeCommand
 };
 
