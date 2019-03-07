@@ -4,13 +4,13 @@ const livereload = require('gulp-livereload');
 const path = require('path');
 const webpack = require('webpack');
 const errorHandler = require('./helpers/errorHandler');
-// const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const browsers = require('../browsers');
 
 const uiFolder = 'UI';
-const srcFolder = path.join(__dirname, '..', 'src');
 const frontendFolder = path.join(__dirname, '..');
+const srcFolder = path.join(frontendFolder, 'src');
 const isProduction = process.argv.indexOf('--production') > -1;
 
 console.log('Source Folder:', srcFolder);
@@ -93,7 +93,19 @@ const config = {
             loader: 'babel-loader',
             options: {
               configFile: `${frontendFolder}/babel.config.js`,
-              envName: isProduction ? 'production' : 'development'
+              envName: isProduction ? 'production' : 'development',
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    modules: false,
+                    loose: true,
+                    debug: false,
+                    useBuiltIns: 'entry',
+                    targets: browsers
+                  }
+                ]
+              ]
             }
           }
         ]
