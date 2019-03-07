@@ -24,6 +24,7 @@ const albumsSection = `${section}.albums`;
 export const defaultState = {
   isFetching: false,
   isPopulated: false,
+  isSaving: false,
   error: null,
   items: [],
   pendingChanges: {},
@@ -135,7 +136,7 @@ export const actionHandlers = handleThunks({
     });
   },
 
-  [SAVE_INTERACTIVE_IMPORT_ITEM]: createSaveProviderHandler(section, '/manualimport'),
+  [SAVE_INTERACTIVE_IMPORT_ITEM]: createSaveProviderHandler(section, '/manualimport', {}, true),
 
   [FETCH_INTERACTIVE_IMPORT_ALBUMS]: createFetchHandler('interactiveImport.albums', '/album')
 });

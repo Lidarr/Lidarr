@@ -87,6 +87,12 @@
     <Reference Include="Prowlin, Version=0.9.4456.26422, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Prowlin.0.9.4456.26422\lib\net40\Prowlin.dll</HintPath>
     </Reference>
+    <Reference Include="System.IO.Abstractions, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Abstractions.3.0.10\lib\net40\System.IO.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Abstractions.TestingHelpers, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Abstractions.TestingHelpers.3.0.10\lib\net40\System.IO.Abstractions.TestingHelpers.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -200,6 +206,7 @@
     <Compile Include="Extras\Metadata\Consumers\Xbmc\FindMetadataFileFixture.cs" />
     <Compile Include="FluentTest.cs" />
     <Compile Include="Framework\CoreTest.cs" />
+    <Compile Include="Framework\FileSystemTest.cs" />
     <Compile Include="Framework\DbTest.cs" />
     <Compile Include="Framework\DirectDataMapper.cs" />
     <Compile Include="Framework\MigrationTest.cs" />
@@ -421,6 +428,14 @@
     <ProjectReference Include="..\NzbDrone.Test.Common\NzbDrone.Test.Common.csproj">
       <Project>{CADDFCE0-7509-4430-8364-2074E1EEFCA2}</Project>
       <Name>NzbDrone.Test.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NzbDrone.Mono\NzbDrone.Mono.csproj">
+      <Project>{15AD7579-A314-4626-B556-663F51D97CD1}</Project>
+      <Name>NzbDrone.Mono</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NzbDrone.Windows\NzbDrone.Windows.csproj">
+      <Project>{911284D3-F130-459E-836C-2430B6FBF21D}</Project>
+      <Name>NzbDrone.Windows</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

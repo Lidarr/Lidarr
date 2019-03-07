@@ -92,6 +92,9 @@
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
     </Reference>
+    <Reference Include="System.IO.Abstractions, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Abstractions.3.0.10\lib\net40\System.IO.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -769,6 +772,7 @@
     <Compile Include="MediaFiles\TrackImport\Specifications\NoMissingOrUnmatchedTracksSpecification.cs" />
     <Compile Include="MediaFiles\TrackImport\Specifications\ReleaseWantedSpecification.cs" />
     <Compile Include="MediaFiles\TrackImport\Identification\TrackGroupingService.cs" />
+    <Compile Include="MediaFiles\TrackImport\Identification\CandidateAlbumRelease.cs" />
     <Compile Include="MediaFiles\TrackImport\Identification\IdentificationService.cs" />
     <Compile Include="MediaFiles\TrackImport\Identification\IdentificationTestCase.cs" />
     <Compile Include="MediaFiles\TrackImport\Identification\Distance.cs" />

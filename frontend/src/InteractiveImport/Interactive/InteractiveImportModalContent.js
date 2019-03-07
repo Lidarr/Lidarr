@@ -80,6 +80,11 @@ const filterExistingFilesOptions = {
   NEW: 'new'
 };
 
+const replaceExistingFilesOptions = {
+  COMBINE: 'combine',
+  DELETE: 'delete'
+};
+
 class InteractiveImportModalContent extends Component {
 
   //
@@ -120,16 +125,12 @@ class InteractiveImportModalContent extends Component {
   }
 
   onValidRowChange = (id, isValid) => {
-    this.setState((state) => {
-      if (isValid) {
-        return {
-          invalidRowsSelected: _.without(state.invalidRowsSelected, id)
-        };
-      }
-
-      return {
-        invalidRowsSelected: [...state.invalidRowsSelected, id]
-      };
+    this.setState((state, props) => {
+      // make sure to exclude any invalidRows that are no longer present in props
+      const diff = _.difference(state.invalidRowsSelected, _.map(props.items, 'id'));
+      const currentInvalid = _.difference(state.invalidRowsSelected, diff);
+      const newstate = isValid ? _.without(currentInvalid, id) : _.union(currentInvalid, [id]);
+      return { invalidRowsSelected: newstate };
     });
   }
 
@@ -149,6 +150,10 @@ class InteractiveImportModalContent extends Component {
 
   onFilterExistingFilesChange = (value) => {
     this.props.onFilterExistingFilesChange(value !== filterExistingFilesOptions.ALL);
+  }
+
+  onReplaceExistingFilesChange = (value) => {
+    this.props.onReplaceExistingFilesChange(value === replaceExistingFilesOptions.DELETE);
   }
 
   onImportModeChange = ({ value }) => {
@@ -191,12 +196,15 @@ class InteractiveImportModalContent extends Component {
       downloadId,
       allowArtistChange,
       showFilterExistingFiles,
+      showReplaceExistingFiles,
       showImportMode,
       filterExistingFiles,
+      replaceExistingFiles,
       title,
       folder,
       isFetching,
       isPopulated,
+      isSaving,
       error,
       items,
       sortKey,
@@ -232,43 +240,78 @@ class InteractiveImportModalContent extends Component {
         </ModalHeader>
 
         <ModalBody>
-          {
-            showFilterExistingFiles &&
-            <div className={styles.filterContainer}>
-              <Menu alignMenu={align.RIGHT}>
-                <MenuButton>
-                  <Icon
-                    name={icons.FILTER}
-                    size={22}
-                  />
+          <div className={styles.filterContainer}>
+            {
+              showFilterExistingFiles &&
+                <Menu alignMenu={align.RIGHT}>
+                  <MenuButton>
+                    <Icon
+                      name={icons.FILTER}
+                      size={22}
+                    />
 
-                  <div className={styles.filterText}>
-                    {
-                      filterExistingFiles ? 'Unmapped Files Only' : 'All Files'
-                    }
-                  </div>
-                </MenuButton>
+                    <div className={styles.filterText}>
+                      {
+                        filterExistingFiles ? 'Unmapped Files Only' : 'All Files'
+                      }
+                    </div>
+                  </MenuButton>
 
-                <MenuContent>
-                  <SelectedMenuItem
-                    name={filterExistingFilesOptions.ALL}
-                    isSelected={!filterExistingFiles}
-                    onPress={this.onFilterExistingFilesChange}
-                  >
-                    All Files
-                  </SelectedMenuItem>
+                  <MenuContent>
+                    <SelectedMenuItem
+                      name={filterExistingFilesOptions.ALL}
+                      isSelected={!filterExistingFiles}
+                      onPress={this.onFilterExistingFilesChange}
+                    >
+                      All Files
+                    </SelectedMenuItem>
 
-                  <SelectedMenuItem
-                    name={filterExistingFilesOptions.NEW}
-                    isSelected={filterExistingFiles}
-                    onPress={this.onFilterExistingFilesChange}
-                  >
-                    Unmapped Files Only
-                  </SelectedMenuItem>
-                </MenuContent>
-              </Menu>
-            </div>
-          }
+                    <SelectedMenuItem
+                      name={filterExistingFilesOptions.NEW}
+                      isSelected={filterExistingFiles}
+                      onPress={this.onFilterExistingFilesChange}
+                    >
+                      Unmapped Files Only
+                    </SelectedMenuItem>
+                  </MenuContent>
+                </Menu>
+            }
+            {
+              showReplaceExistingFiles &&
+                <Menu alignMenu={align.RIGHT}>
+                  <MenuButton>
+                    <Icon
+                      name={icons.CLONE}
+                      size={22}
+                    />
+
+                    <div className={styles.filterText}>
+                      {
+                        replaceExistingFiles ? 'Existing files will be deleted' : 'Combine with existing files'
+                      }
+                    </div>
+                  </MenuButton>
+
+                  <MenuContent>
+                    <SelectedMenuItem
+                      name={replaceExistingFiles.COMBINE}
+                      isSelected={!replaceExistingFiles}
+                      onPress={this.onReplaceExistingFilesChange}
+                    >
+                      Combine With Existing Files
+                    </SelectedMenuItem>
+
+                    <SelectedMenuItem
+                      name={replaceExistingFilesOptions.DELETE}
+                      isSelected={replaceExistingFiles}
+                      onPress={this.onReplaceExistingFilesChange}
+                    >
+                      Replace Existing Files
+                    </SelectedMenuItem>
+                  </MenuContent>
+                </Menu>
+            }
+          </div>
 
           {
             isFetching &&
@@ -299,6 +342,7 @@ class InteractiveImportModalContent extends Component {
                         <InteractiveImportRow
                           key={item.id}
                           isSelected={selectedState[item.id]}
+                          isSaving={isSaving}
                           {...item}
                           allowArtistChange={allowArtistChange}
                           onSelectedChange={this.onSelectedChange}
@@ -397,12 +441,15 @@ InteractiveImportModalContent.propTypes = {
   allowArtistChange: PropTypes.bool.isRequired,
   showImportMode: PropTypes.bool.isRequired,
   showFilterExistingFiles: PropTypes.bool.isRequired,
+  showReplaceExistingFiles: PropTypes.bool.isRequired,
   filterExistingFiles: PropTypes.bool.isRequired,
+  replaceExistingFiles: PropTypes.bool.isRequired,
   importMode: PropTypes.string.isRequired,
   title: PropTypes.string,
   folder: PropTypes.string,
   isFetching: PropTypes.bool.isRequired,
   isPopulated: PropTypes.bool.isRequired,
+  isSaving: PropTypes.bool.isRequired,
   error: PropTypes.object,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   sortKey: PropTypes.string,
@@ -410,6 +457,7 @@ InteractiveImportModalContent.propTypes = {
   interactiveImportErrorMessage: PropTypes.string,
   onSortPress: PropTypes.func.isRequired,
   onFilterExistingFilesChange: PropTypes.func.isRequired,
+  onReplaceExistingFilesChange: PropTypes.func.isRequired,
   onImportModeChange: PropTypes.func.isRequired,
   onImportSelectedPress: PropTypes.func.isRequired,
   updateInteractiveImportItem: PropTypes.func.isRequired,
@@ -419,6 +467,7 @@ InteractiveImportModalContent.propTypes = {
 InteractiveImportModalContent.defaultProps = {
   allowArtistChange: true,
   showFilterExistingFiles: false,
+  showReplaceExistingFiles: false,
   showImportMode: true,
   importMode: 'move'
 };

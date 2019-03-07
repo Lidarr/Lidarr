@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NLog;
@@ -25,8 +26,9 @@ namespace NzbDrone.Core.MediaFiles
     public interface IDiskScanService
     {
         void Scan(Artist artist);
-        string[] GetAudioFiles(string path, bool allDirectories = true);
+        FileInfoBase[] GetAudioFiles(string path, bool allDirectories = true);
         string[] GetNonAudioFiles(string path, bool allDirectories = true);
+        List<FileInfoBase> FilterFiles(string basePath, IEnumerable<FileInfoBase> files);
         List<string> FilterFiles(string basePath, IEnumerable<string> files);
     }
 
@@ -114,10 +116,10 @@ namespace NzbDrone.Core.MediaFiles
             musicFilesStopwatch.Stop();
             _logger.Trace("Finished getting track files for: {0} [{1}]", artist, musicFilesStopwatch.Elapsed);
 
-            CleanMediaFiles(artist, mediaFileList);
+            CleanMediaFiles(artist, mediaFileList.Select(x => x.FullName).ToList());
 
             var decisionsStopwatch = Stopwatch.StartNew();
-            var decisions = _importDecisionMaker.GetImportDecisions(mediaFileList, artist);
+            var decisions = _importDecisionMaker.GetImportDecisions(mediaFileList, artist, null, null, null, true, false, false, true);
             decisionsStopwatch.Stop();
             _logger.Debug("Import decisions complete for: {0} [{1}]", artist, decisionsStopwatch.Elapsed);
             
@@ -163,14 +165,14 @@ namespace NzbDrone.Core.MediaFiles
             _eventAggregator.PublishEvent(new ArtistScannedEvent(artist));
         }
 
-        public string[] GetAudioFiles(string path, bool allDirectories = true)
+        public FileInfoBase[] GetAudioFiles(string path, bool allDirectories = true)
         {
             _logger.Debug("Scanning '{0}' for music files", path);
 
             var searchOption = allDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-            var filesOnDisk = _diskProvider.GetFiles(path, searchOption).ToList();
+            var filesOnDisk = _diskProvider.GetFileInfos(path, searchOption);
 
-            var mediaFileList = filesOnDisk.Where(file => MediaFileExtensions.Extensions.Contains(Path.GetExtension(file)))
+            var mediaFileList = filesOnDisk.Where(file => MediaFileExtensions.Extensions.Contains(file.Extension))
                                            .ToList();
 
             _logger.Trace("{0} files were found in {1}", filesOnDisk.Count, path);
@@ -199,6 +201,13 @@ namespace NzbDrone.Core.MediaFiles
         {
             return files.Where(file => !ExcludedSubFoldersRegex.IsMatch(basePath.GetRelativePath(file)))
                         .Where(file => !ExcludedFilesRegex.IsMatch(Path.GetFileName(file)))
+                        .ToList();
+        }
+
+        public List<FileInfoBase> FilterFiles(string basePath, IEnumerable<FileInfoBase> files)
+        {
+            return files.Where(file => !ExcludedSubFoldersRegex.IsMatch(basePath.GetRelativePath(file.FullName)))
+                        .Where(file => !ExcludedFilesRegex.IsMatch(file.Name))
                         .ToList();
         }
 

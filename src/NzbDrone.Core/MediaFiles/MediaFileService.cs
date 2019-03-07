@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using NLog;
 using NzbDrone.Core.MediaFiles.Events;
@@ -8,6 +9,7 @@ using NzbDrone.Common;
 using NzbDrone.Core.Music;
 using System;
 using NzbDrone.Core.Music.Events;
+using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Core.MediaFiles
 {
@@ -20,7 +22,7 @@ namespace NzbDrone.Core.MediaFiles
         void Delete(TrackFile trackFile, DeleteMediaFileReason reason);
         List<TrackFile> GetFilesByArtist(int artistId);
         List<TrackFile> GetFilesByAlbum(int albumId);
-        List<string> FilterExistingFiles(List<string> files, Artist artist);
+        List<FileInfoBase> FilterExistingFiles(List<FileInfoBase> files, Artist artist);
         TrackFile Get(int id);
         List<TrackFile> Get(IEnumerable<int> ids);
         List<TrackFile> GetFilesWithRelativePath(int artistId, string relativePath);
@@ -75,13 +77,23 @@ namespace NzbDrone.Core.MediaFiles
             _eventAggregator.PublishEvent(new TrackFileDeletedEvent(trackFile, reason));
         }
 
-        public List<string> FilterExistingFiles(List<string> files, Artist artist)
+        public List<FileInfoBase> FilterExistingFiles(List<FileInfoBase> files, Artist artist)
         {
-            var artistFiles = GetFilesByArtist(artist.Id).Select(f => Path.Combine(artist.Path, f.RelativePath)).ToList();
+            var artistFiles = GetFilesByArtist(artist.Id);
+            artistFiles.ForEach(x => x.Path = Path.Combine(artist.Path, x.RelativePath));
 
             if (!artistFiles.Any()) return files;
 
-            return files.Except(artistFiles, PathEqualityComparer.Instance).ToList();
+            var existingFiles = files.Join(artistFiles,
+                                           f => f.FullName,
+                                           af => af.Path,
+                                           (f, af) => new { DiskFile = f, DbFile = af},
+                                           PathEqualityComparer.Instance)
+                .Where(x => x.DiskFile.Length == x.DbFile.Size)
+                .Select(x => x.DiskFile)
+                .ToList();
+
+            return files.Except(existingFiles).ToList();
         }
 
         public TrackFile Get(int id)

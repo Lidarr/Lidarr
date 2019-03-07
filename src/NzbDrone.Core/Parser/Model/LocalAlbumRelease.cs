@@ -33,23 +33,25 @@ namespace NzbDrone.Core.Parser.Model
         public TrackMapping TrackMapping { get; set; }
         public Distance Distance { get; set; }
         public AlbumRelease AlbumRelease { get; set; }
+        public List<LocalTrack> ExistingTracks { get; set; }
         public bool NewDownload { get; set; }
 
         public void PopulateMatch()
         {
             if (AlbumRelease != null)
             {
+                LocalTracks.AddRange(ExistingTracks);
                 foreach (var localTrack in LocalTracks)
                 {
                     localTrack.Release = AlbumRelease;
                     localTrack.Album = AlbumRelease.Album.Value;
-
+                    localTrack.Artist = localTrack.Album.Artist.Value;
+                    
                     if (TrackMapping.Mapping.ContainsKey(localTrack))
                     {
                         var track = TrackMapping.Mapping[localTrack].Item1;
                         localTrack.Tracks = new List<Track> { track };
                         localTrack.Distance = TrackMapping.Mapping[localTrack].Item2;
-                        localTrack.Artist = localTrack.Album.Artist.Value;
                     }
                 }
             }

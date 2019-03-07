@@ -19,7 +19,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 {
     public interface IImportApprovedTracks
     {
-        List<ImportResult> Import(List<ImportDecision<LocalTrack>> decisions, bool newDownload, DownloadClientItem downloadClientItem = null, ImportMode importMode = ImportMode.Auto);
+        List<ImportResult> Import(List<ImportDecision<LocalTrack>> decisions, bool replaceExisting, DownloadClientItem downloadClientItem = null, ImportMode importMode = ImportMode.Auto);
     }
 
     public class ImportApprovedTracks : IImportApprovedTracks
@@ -55,7 +55,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             _logger = logger;
         }
 
-        public List<ImportResult> Import(List<ImportDecision<LocalTrack>> decisions, bool newDownload, DownloadClientItem downloadClientItem = null, ImportMode importMode = ImportMode.Auto)
+        public List<ImportResult> Import(List<ImportDecision<LocalTrack>> decisions, bool replaceExisting, DownloadClientItem downloadClientItem = null, ImportMode importMode = ImportMode.Auto)
         {
             var qualifiedImports = decisions.Where(c => c.Approved)
                .GroupBy(c => c.Item.Artist.Id, (i, s) => s
@@ -84,7 +84,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                     if (currentRelease.Id != newRelease.Id)
                     {
                         // if we are importing a new release, delete all old files and don't attempt to upgrade
-                        if (newDownload)
+                        if (replaceExisting)
                         {
                             var artist = albumDecision.First().Item.Artist;
                             var rootFolder = _diskProvider.GetParentFolder(artist.Path);
@@ -183,7 +183,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                             break;
                     }
 
-                    if (newDownload)
+                    if (!localTrack.ExistingFile)
                     {
                         trackFile.SceneName = GetSceneReleaseName(downloadClientItem, localTrack);
 
@@ -207,7 +207,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                     filesToAdd.Add(trackFile);
                     importResults.Add(new ImportResult(importDecision));
 
-                    if (newDownload)
+                    if (!localTrack.ExistingFile)
                     {
                         _extraService.ImportTrack(localTrack, trackFile, copyOnly);
                     }
@@ -215,12 +215,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                     allImportedTrackFiles.Add(trackFile);
                     allOldTrackFiles.AddRange(oldFiles);
 
-                    _eventAggregator.PublishEvent(new TrackImportedEvent(localTrack, trackFile, oldFiles, newDownload, downloadClientItem));
+                    _eventAggregator.PublishEvent(new TrackImportedEvent(localTrack, trackFile, oldFiles, !localTrack.ExistingFile, downloadClientItem));
                 }
                 catch (RootFolderNotFoundException e)
                 {
                     _logger.Warn(e, "Couldn't import track " + localTrack);
-                    _eventAggregator.PublishEvent(new TrackImportFailedEvent(e, localTrack, newDownload, downloadClientItem));
+                    _eventAggregator.PublishEvent(new TrackImportFailedEvent(e, localTrack, !localTrack.ExistingFile, downloadClientItem));
 
                     importResults.Add(new ImportResult(importDecision, "Failed to import track, Root folder missing."));
                 }
@@ -265,7 +265,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                         album,
                         release,
                         allImportedTrackFiles.Where(s => s.AlbumId == album.Id).ToList(),
-                        allOldTrackFiles.Where(s => s.AlbumId == album.Id).ToList(), newDownload,
+                        allOldTrackFiles.Where(s => s.AlbumId == album.Id).ToList(), replaceExisting,
                         downloadClientItem));
                 }
 
