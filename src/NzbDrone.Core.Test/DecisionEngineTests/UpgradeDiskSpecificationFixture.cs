@@ -34,8 +34,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             _firstFile = new TrackFile { Quality = new QualityModel(Quality.FLAC, new Revision(version: 2)), DateAdded = DateTime.Now, Language = Language.English };
             _secondFile = new TrackFile { Quality = new QualityModel(Quality.FLAC, new Revision(version: 2)), DateAdded = DateTime.Now, Language = Language.English };
 
-            var singleEpisodeList = new List<Album> { new Album {}};
-            var doubleEpisodeList = new List<Album> { new Album {}, new Album {}, new Album {} };
+            var singleAlbumList = new List<Album> { new Album {}};
+            var doubleAlbumList = new List<Album> { new Album {}, new Album {}, new Album {} };
 
             var languages = Languages.LanguageFixture.GetDefaultLanguages(Language.English, Language.Spanish);
 
@@ -66,14 +66,14 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             {
                 Artist = fakeArtist,
                 ParsedAlbumInfo = new ParsedAlbumInfo { Quality = new QualityModel(Quality.MP3_256, new Revision(version: 2)), Language = Language.English },
-                Albums = doubleEpisodeList
+                Albums = doubleAlbumList
             };
 
             _parseResultSingle = new RemoteAlbum
             {
                 Artist = fakeArtist,
                 ParsedAlbumInfo = new ParsedAlbumInfo { Quality = new QualityModel(Quality.MP3_256, new Revision(version: 2)), Language = Language.English },
-                Albums = singleEpisodeList
+                Albums = singleAlbumList
             };
 
         }
@@ -130,6 +130,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         public void should_be_upgradable_if_album_is_upgradable()
         {
             WithFirstFileUpgradable();
+            WithSecondFileUpgradable();
             Subject.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeTrue();
         }
 
