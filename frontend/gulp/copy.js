@@ -32,8 +32,8 @@ gulp.task('copyFonts', () => {
   )
     .pipe(cache('copyFonts'))
     .pipe(print())
-    .pipe(flatten({ subPath: 2 }))
-    .pipe(gulp.dest(paths.dest.root))
+    .pipe(flatten({ subPath: 4 }))
+    .pipe(gulp.dest(paths.dest.fonts))
     .pipe(livereload());
 });
 
@@ -43,7 +43,7 @@ gulp.task('copyImages', () => {
   )
     .pipe(cache('copyImages'))
     .pipe(print())
-    .pipe(flatten({ subPath: 2 }))
-    .pipe(gulp.dest(paths.dest.root))
+    .pipe(flatten({ subPath: 4 }))
+    .pipe(gulp.dest(paths.dest.images))
     .pipe(livereload());
 });

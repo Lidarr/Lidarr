@@ -86,6 +86,7 @@ BuildWithXbuild()
     export MONO_IOMAP=case
     CheckExitCode msbuild /p:Configuration=Debug /t:Clean $slnFile
     CheckExitCode msbuild /p:Configuration=Release /t:Clean $slnFile
+    mono $nuget locals all -clear
     mono $nuget restore $slnFile
     CheckExitCode msbuild /p:Configuration=Release /p:Platform=x86 /t:Build /p:AllowedReferenceRelatedFileExtensions=.pdb $slnFile
 }
@@ -259,7 +260,7 @@ PackageTests()
     if [ $runtime = "dotnet" ] ; then
         $nuget install NUnit.ConsoleRunner -Version 3.7.0 -Output $testPackageFolder
     else
-        nuget install NUnit.ConsoleRunner -Version 3.7.0 -Output $testPackageFolder
+        mono $nuget install NUnit.ConsoleRunner -Version 3.7.0 -Output $testPackageFolder
     fi
 
     cp $outputFolder/*.dll $testPackageFolder
