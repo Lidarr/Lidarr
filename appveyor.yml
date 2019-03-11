@@ -1,7 +1,7 @@
 version: '0.5.0.{build}'
 
 image: 
-  - Visual Studio 2017
+  #- Visual Studio 2017
   - Ubuntu1804
 
 assembly_info:
