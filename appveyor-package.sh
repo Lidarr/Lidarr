@@ -8,9 +8,6 @@ artifactsFolderMacOSApp=$artifactsFolder/macos-app
 
 PublishArtifacts()
 {
-    echo "Start Packaging Artifacts"
-    echo ${CI_WINDOWS}
-
     7z a $artifactsFolder/Lidarr.${APPVEYOR_REPO_BRANCH}.${APPVEYOR_BUILD_VERSION}.windows.zip $artifactsFolderWindows/*
     
     7z a $artifactsFolder/Lidarr.${APPVEYOR_REPO_BRANCH}.${APPVEYOR_BUILD_VERSION}.osx-app.zip $artifactsFolderMacOSApp/*

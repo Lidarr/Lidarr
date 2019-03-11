@@ -28,7 +28,6 @@ build_script:
   
 after_build:
   - cmd: C:\msys64\usr\bin\bash -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && exec ./appveyor-package.sh
-  - sh: chmod +x ./appveyor-package.sh
   - sh: ./appveyor-package.sh
   - ps: Get-ChildItem .\_artifacts\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
   - ps: Get-ChildItem .\_artifacts\*.exe | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
