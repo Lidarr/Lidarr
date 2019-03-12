@@ -142,22 +142,25 @@ namespace NzbDrone.Common.Instrumentation.Sentry
 
             var fingerPrint = new List<string>
             {
-                logEvent.Level.Ordinal.ToString(),
-                logEvent.LoggerName
+                logEvent.Level.ToString(),
+                logEvent.LoggerName,
+                logEvent.Message
             };
 
             var ex = logEvent.Exception;
 
             if (ex != null)
             {
-                var exception = ex.GetType().Name;
-
+                fingerPrint.Add(ex.GetType().FullName);
+                fingerPrint.Add(ex.TargetSite.ToString());
                 if (ex.InnerException != null)
                 {
-                    exception += ex.InnerException.GetType().Name;
+                    fingerPrint.Add(ex.InnerException.GetType().FullName);
                 }
-
-                fingerPrint.Add(exception);
+                else if (IncludeExceptionMessageTypes.Contains(ex.GetType().Name))
+                {
+                    fingerPrint.Add(ex?.Message);
+                }
             }
 
             return fingerPrint;
@@ -239,35 +242,8 @@ namespace NzbDrone.Common.Instrumentation.Sentry
                     Message = logEvent.FormattedMessage,
                 };
 
-                var sentryFingerprint = new List<string> {
-                        logEvent.Level.ToString(),
-                        logEvent.LoggerName,
-                        logEvent.Message
-                };
-                
                 sentryEvent.SetExtras(extras);
-
-                if (logEvent.Exception != null)
-                {
-                    sentryFingerprint.Add(logEvent.Exception.GetType().FullName);
-                    sentryFingerprint.Add(logEvent.Exception.TargetSite.ToString());
-
-                    // only try to use the exeception message to fingerprint if there's no inner
-                    // exception and the message is short, otherwise we're in danger of getting a
-                    // stacktrace which will break the grouping
-                    if (logEvent.Exception.InnerException == null &&
-                        IncludeExceptionMessageTypes.Contains(logEvent.Exception.GetType().Name))
-                    {
-                        sentryFingerprint.Add(logEvent.Exception?.Message);
-                    }
-                }
-
-                if (logEvent.Properties.ContainsKey("Sentry"))
-                {
-                    sentryFingerprint = ((string[])logEvent.Properties["Sentry"]).ToList();
-                }
-                
-                sentryEvent.SetFingerprint(sentryFingerprint);
+                sentryEvent.SetFingerprint(fingerPrint);
 
                 // this can't be in the constructor as at that point OsInfo won't have
                 // populated these values yet
