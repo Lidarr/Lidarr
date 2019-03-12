@@ -9,10 +9,8 @@ using NLog;
 using NLog.Common;
 using NLog.Targets;
 using NzbDrone.Common.EnvironmentInfo;
-using System.Globalization;
 using Sentry;
 using Sentry.Protocol;
-using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Common.Instrumentation.Sentry
 {
@@ -48,6 +46,13 @@ namespace NzbDrone.Common.Instrumentation.Sentry
             "Jackett.Common.IndexerException",
             // Fix openflixr being stupid with permissions
             "openflixr"
+        };
+
+        // exception types in this list will additionally have the exception message added to the
+        // sentry fingerprint.  Make sure that this message doesn't vary by exception
+        // (e.g. containing a path or a url) so that the sentry grouping is sensible
+        private static readonly HashSet<string> IncludeExceptionMessageTypes = new HashSet<string> {
+            "SQLiteException"
         };
         
         private static readonly IDictionary<LogLevel, SentryLevel> LoggingLevelMap = new Dictionary<LogLevel, SentryLevel>
@@ -250,26 +255,10 @@ namespace NzbDrone.Common.Instrumentation.Sentry
                     // only try to use the exeception message to fingerprint if there's no inner
                     // exception and the message is short, otherwise we're in danger of getting a
                     // stacktrace which will break the grouping
-                    if (logEvent.Exception.InnerException == null)
+                    if (logEvent.Exception.InnerException == null &&
+                        IncludeExceptionMessageTypes.Contains(logEvent.Exception.GetType().Name))
                     {
-                        string message = null;
-
-                        // bodge to try to get the exception message in English
-                        // https://stackoverflow.com/questions/209133/exception-messages-in-english
-                        // There may still be some localization but this is better than nothing.
-                        var t = new Thread(() => {
-                                message = logEvent.Exception?.Message;
-                            });
-                        t.CurrentCulture = CultureInfo.InvariantCulture;
-                        t.CurrentUICulture = CultureInfo.InvariantCulture;
-                        t.Start();
-                        t.Join();
-
-                        if (message.IsNotNullOrWhiteSpace() && message.Length < 200)
-                        {
-                            // Windows gives a trailing '.' for NullReferenceException but mono doesn't
-                            sentryFingerprint.Add(message.TrimEnd('.'));
-                        }
+                        sentryFingerprint.Add(logEvent.Exception?.Message);
                     }
                 }
 
