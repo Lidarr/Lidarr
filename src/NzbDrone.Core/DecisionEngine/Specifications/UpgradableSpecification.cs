@@ -33,14 +33,25 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
         {
             if (newLanguage != null)
             {
+                var totalCompare = 0;
+
                 foreach (var language in currentLanguages)
                 {
                     var compare = new LanguageComparer(profile).Compare(newLanguage, language);
+                    
+                    totalCompare += compare;
 
-                    if (compare <= 0)
+                    // Not upgradable if new language is a downgrade for any current lanaguge
+                    if (compare < 0)
                     {
                         return false;
                     }
+                }
+
+                // Not upgradable if new language is equal to all current languages
+                if (totalCompare == 0)
+                {
+                    return false;
                 }
             }
             return true;
@@ -50,14 +61,24 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
         {
             if (newQuality != null)
             {
+                var totalCompare = 0;
+
                 foreach (var quality in currentQualities)
                 {
                     var compare = new QualityModelComparer(profile).Compare(newQuality, quality);
 
-                    if (compare <= 0)
+                    totalCompare += compare;
+
+                    if (compare < 0)
                     {
+                        // Not upgradable if new quality is a downgrade for any current quality
                         return false;
                     }
+                }
+
+                // Not upgradable if new quality is equal to all current qualities
+                if (totalCompare == 0) {
+                    return false;
                 }
             }
 
@@ -116,7 +137,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
         public bool IsUpgradable(QualityProfile qualityProfile, LanguageProfile languageProfile, QualityModel currentQuality, Language currentLanguage, int currentScore, QualityModel newQuality, Language newLanguage, int newScore)
         {
-            if (IsQualityUpgradable(qualityProfile, new List<QualityModel> { currentQuality }, newQuality) && qualityProfile.UpgradeAllowed)
+            if (IsQualityUpgradable(qualityProfile, new List<QualityModel> { currentQuality }, newQuality))
             {
                 return true;
             }
@@ -127,7 +148,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                 return false;
             }
 
-            if (IsLanguageUpgradable(languageProfile, new List<Language> { currentLanguage }, newLanguage) && languageProfile.UpgradeAllowed)
+            if (IsLanguageUpgradable(languageProfile, new List<Language> { currentLanguage }, newLanguage))
             {
                 return true;
             }
