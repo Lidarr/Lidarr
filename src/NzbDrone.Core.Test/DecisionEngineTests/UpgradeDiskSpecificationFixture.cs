@@ -127,7 +127,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         }
 
         [Test]
-        public void should_be_upgradable_if_album_is_upgradable()
+        public void should_be_upgradable_if_all_files_are_upgradable()
         {
             WithFirstFileUpgradable();
             WithSecondFileUpgradable();
@@ -138,6 +138,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         public void should_not_be_upgradable_if_qualities_are_the_same()
         {
             _firstFile.Quality = new QualityModel(Quality.MP3_320);
+            _secondFile.Quality = new QualityModel(Quality.MP3_320);
             _parseResultSingle.ParsedAlbumInfo.Quality = new QualityModel(Quality.MP3_320);
             Subject.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeFalse();
         }
@@ -145,6 +146,22 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [Test]
         public void should_not_be_upgradable_if_all_tracks_are_not_upgradable()
         {
+            Subject.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeFalse();
+        }
+
+        [Test]
+        public void should_be_true_if_some_tracks_are_upgradable_and_none_are_downgrades()
+        {
+            WithFirstFileUpgradable();
+            _parseResultSingle.ParsedAlbumInfo.Quality = _secondFile.Quality;
+            Subject.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeTrue();
+        }
+
+        [Test]
+        public void should_be_false_if_some_tracks_are_upgradable_and_some_are_downgrades()
+        {
+            WithFirstFileUpgradable();
+            _parseResultSingle.ParsedAlbumInfo.Quality = new QualityModel(Quality.MP3_320);
             Subject.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeFalse();
         }
     }
