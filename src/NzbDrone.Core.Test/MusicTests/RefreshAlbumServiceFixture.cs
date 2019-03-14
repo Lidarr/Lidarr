@@ -59,6 +59,10 @@ namespace NzbDrone.Core.Test.MusicTests
                 .Setup(s => s.GetReleasesForRefresh(album1.Id, It.IsAny<IEnumerable<string>>()))
                 .Returns(new List<AlbumRelease> { release });
 
+            Mocker.GetMock<IArtistMetadataRepository>()
+                .Setup(s => s.FindById(It.IsAny<List<string>>()))
+                .Returns(new List<ArtistMetadata>());
+
             Mocker.GetMock<IProvideAlbumInfo>()
                 .Setup(s => s.GetAlbumInfo(It.IsAny<string>()))
                   .Callback(() => { throw new AlbumNotFoundException(album1.ForeignAlbumId); });
