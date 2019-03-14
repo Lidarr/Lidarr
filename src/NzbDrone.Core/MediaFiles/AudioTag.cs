@@ -168,11 +168,7 @@ namespace NzbDrone.Core.MediaFiles
                         if (bitrate == 0)
                         {
                             // Taglib can't read bitrate for Opus.
-                            // Taglib File.Length is unreliable so use System.IO
-                            var size = new System.IO.FileInfo(path).Length;
-                            var duration = file.Properties.Duration.TotalSeconds;
-                            bitrate = (int) ((size * 8L) / (duration * 1024));
-                            Logger.Trace($"Estimating bitrate. Size: {size} Duration: {duration} Bitrate: {bitrate}");
+                            bitrate = EstimateBitrate(file, path);
                         }
                         
                         Logger.Debug("Audio Properties: " + acodec.Description + ", Bitrate: " + bitrate + ", Sample Size: " +
@@ -193,22 +189,46 @@ namespace NzbDrone.Core.MediaFiles
 
                 IsValid = true;
             }
-            catch (CorruptFileException ex)
-            {
-                Logger.Warn(ex, $"Tag reading failed for {path}.  File is corrupt");
-            }
             catch (Exception ex)
             {
-                Logger.Warn()
-                    .Exception(ex)
-                    .Message($"Tag reading failed for {path}")
-                    .WriteSentryWarn("Tag reading failed")
-                    .Write();
+                if (ex is CorruptFileException)
+                {
+                    Logger.Warn(ex, $"Tag reading failed for {path}.  File is corrupt");
+                }
+                else
+                {
+                    // Log as error so it goes to sentry with correct fingerprint
+                    Logger.Error(ex, "Tag reading failed for {0}", path);
+                }
+
+                // make sure these are initialized to avoid errors later on
+                Quality = QualityParser.ParseQuality(path, null, EstimateBitrate(file, path));
+                Logger.Debug($"Quality parsed: {Quality}, Source: {Quality.QualityDetectionSource}");
+                MediaInfo = new MediaInfoModel();
             }
             finally
             {
                 file?.Dispose();
             }
+        }
+
+        private int EstimateBitrate(TagLib.File file, string path)
+        {
+            int bitrate = 0;
+            try
+            {
+                // Taglib File.Length is unreliable so use System.IO
+                var size = new System.IO.FileInfo(path).Length;
+                var duration = file.Properties.Duration.TotalSeconds;
+                bitrate = (int) ((size * 8L) / (duration * 1024));
+
+                Logger.Trace($"Estimating bitrate. Size: {size} Duration: {duration} Bitrate: {bitrate}");
+            }
+            catch
+            {
+            }
+            
+            return bitrate;
         }
 
         private DateTime? ReadId3Date(TagLib.Id3v2.Tag tag, string dateTag)
@@ -544,7 +564,11 @@ namespace NzbDrone.Core.MediaFiles
         {
             if (!tag.IsValid)
             {
-                return new ParsedTrackInfo { Language = Language.English };
+                return new ParsedTrackInfo {
+                    Language = Language.English,
+                    Quality = tag.Quality ?? new QualityModel { Quality = NzbDrone.Core.Qualities.Quality.Unknown },
+                    MediaInfo = tag.MediaInfo ?? new MediaInfoModel()
+                };
             }
 
             var artist = tag.AlbumArtists?.FirstOrDefault();
