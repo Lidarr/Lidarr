@@ -150,7 +150,7 @@ namespace NzbDrone.Core.MediaFiles
                 {
                     var appletag = (TagLib.Mpeg4.AppleTag) file.GetTag(TagTypes.Apple);
                     Media = appletag.GetDashBox("com.apple.iTunes", "MEDIA");
-                    Date = DateTime.TryParse(appletag.DataBoxes(FixAppleId("day")).First().Text, out tempDate) ? tempDate : default(DateTime?);
+                    Date = DateTime.TryParse(appletag.DataBoxes(FixAppleId("day")).FirstOrDefault()?.Text, out tempDate) ? tempDate : default(DateTime?);
                     OriginalReleaseDate = DateTime.TryParse(appletag.GetDashBox("com.apple.iTunes", "Original Date"), out tempDate) ? tempDate : default(DateTime?);
                     MusicBrainzAlbumComment = appletag.GetDashBox("com.apple.iTunes", "MusicBrainz Album Comment");
                     MusicBrainzReleaseTrackId = appletag.GetDashBox("com.apple.iTunes", "MusicBrainz Release Track Id");
