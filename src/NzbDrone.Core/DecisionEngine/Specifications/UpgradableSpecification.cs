@@ -126,12 +126,6 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                 return false;
             }
 
-            if (!IsPreferredWordUpgradable(currentScore, newScore))
-            {
-                _logger.Debug("Existing item has a better preferred word score, skipping");
-                return false;
-            }
-
             return true;
         }
 
@@ -156,12 +150,6 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             if (new LanguageComparer(languageProfile).Compare(newLanguage, currentLanguage) < 0)
             {
                 _logger.Debug("Existing item has better language, skipping");
-                return false;
-            }
-
-            if (!IsPreferredWordUpgradable(currentScore, newScore))
-            {
-                _logger.Debug("Existing item has a better preferred word score, skipping");
                 return false;
             }
 
