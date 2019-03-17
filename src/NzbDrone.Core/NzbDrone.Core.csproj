@@ -533,6 +533,7 @@
     <Compile Include="Housekeeping\Housekeepers\CleanupOrphanedPendingReleases.cs" />
     <Compile Include="Housekeeping\Housekeepers\DeleteBadMediaCovers.cs" />
     <Compile Include="Housekeeping\Housekeepers\EnsureValidLanguageProfileId.cs" />
+    <Compile Include="Housekeeping\Housekeepers\FixMultipleAlbumReleasesMonitored.cs" />
     <Compile Include="Housekeeping\Housekeepers\FixFutureDownloadClientStatusTimes.cs" />
     <Compile Include="Housekeeping\Housekeepers\FixFutureImportListStatusTimes.cs" />
     <Compile Include="Housekeeping\Housekeepers\FixFutureIndexerStatusTimes.cs" />

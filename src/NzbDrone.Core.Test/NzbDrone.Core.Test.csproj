@@ -240,6 +240,7 @@
     <Compile Include="Housekeeping\Housekeepers\CleanupOrphanedMetadataFilesFixture.cs" />
     <Compile Include="Housekeeping\Housekeepers\CleanupUnusedTagsFixture.cs" />
     <Compile Include="Housekeeping\Housekeepers\CleanupOrphanedPendingReleasesFixture.cs" />
+    <Compile Include="Housekeeping\Housekeepers\FixMultipleAlbumReleasesMonitoredFixture.cs" />
     <Compile Include="Housekeeping\Housekeepers\FixFutureDownloadClientStatusTimesFixture.cs" />
     <Compile Include="Housekeeping\Housekeepers\FixFutureImportListStatusTimesFixture.cs" />
     <Compile Include="Housekeeping\Housekeepers\FixFutureIndexerStatusTimesFixture.cs" />
