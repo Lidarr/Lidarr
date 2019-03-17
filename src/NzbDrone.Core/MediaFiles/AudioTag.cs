@@ -320,6 +320,11 @@ namespace NzbDrone.Core.MediaFiles
         public void Write(string path)
         {
             Logger.Debug($"Starting tag write for {path}");
+
+            // patch up any null fields to work around TagLib exception for
+            // WMA with null performers/albumartists
+            Performers = Performers ?? new string[0];
+            AlbumArtists = AlbumArtists ?? new string[0];
             
             TagLib.File file = null;
             try
