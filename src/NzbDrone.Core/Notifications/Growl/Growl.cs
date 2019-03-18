@@ -38,6 +38,16 @@ namespace NzbDrone.Core.Notifications.Growl
             _growlService.SendNotification(HEALTH_ISSUE_TITLE, message.Message, "HEALTHISSUE", Settings.Host, Settings.Port, Settings.Password);
         }
 
+        public override void OnDownloadFailure(DownloadFailedMessage message)
+        {
+            _growlService.SendNotification(DOWNLOAD_FAILURE_TITLE, message.Message, "DOWNLOADFAILURE", Settings.Host, Settings.Port, Settings.Password);
+        }
+
+        public override void OnImportFailure(AlbumDownloadMessage message)
+        {
+            _growlService.SendNotification(IMPORT_FAILURE_TITLE, message.Message, "IMPORTFAILURE", Settings.Host, Settings.Port, Settings.Password);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();

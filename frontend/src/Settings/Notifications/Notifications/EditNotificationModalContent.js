@@ -44,6 +44,8 @@ function EditNotificationModalContent(props) {
     onUpgrade,
     onRename,
     onHealthIssue,
+    onDownloadFailure,
+    onImportFailure,
     supportsOnGrab,
     supportsOnDownload,
     supportsOnAlbumDownload,
@@ -51,6 +53,8 @@ function EditNotificationModalContent(props) {
     supportsOnRename,
     supportsOnHealthIssue,
     includeHealthWarnings,
+    supportsOnDownloadFailure,
+    supportsOnImportFailure,
     tags,
     fields,
     message
@@ -151,6 +155,32 @@ function EditNotificationModalContent(props) {
                     />
                   </FormGroup>
               }
+
+              <FormGroup>
+                <FormLabel>On Download Failure</FormLabel>
+
+                <FormInputGroup
+                  type={inputTypes.CHECK}
+                  name="onDownloadFailure"
+                  helpText="Be notified when downloads fail to complete"
+                  isDisabled={!supportsOnDownloadFailure.value}
+                  {...onDownloadFailure}
+                  onChange={onInputChange}
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <FormLabel>On Album Import Failure</FormLabel>
+
+                <FormInputGroup
+                  type={inputTypes.CHECK}
+                  name="onImportFailure"
+                  helpText="Be notified when albums cannot be fully imported"
+                  isDisabled={!supportsOnImportFailure.value}
+                  {...onImportFailure}
+                  onChange={onInputChange}
+                />
+              </FormGroup>
 
               <FormGroup>
                 <FormLabel>On Rename</FormLabel>

@@ -75,6 +75,16 @@ namespace NzbDrone.Core.Test.NotificationTests
                 TestLogger.Info("OnHealthIssue was called");
             }
 
+            public override void OnDownloadFailure(DownloadFailedMessage message)
+            {
+                TestLogger.Info("OnDownloadFailure was called");
+            }
+
+            public override void OnImportFailure(AlbumDownloadMessage message)
+            {
+                TestLogger.Info("OnImportFailure was called");
+            }
+
         }
 
         class TestNotificationWithNoEvents : NotificationBase<TestSetting>
@@ -114,6 +124,8 @@ namespace NzbDrone.Core.Test.NotificationTests
             notification.SupportsOnUpgrade.Should().BeTrue();
             notification.SupportsOnRename.Should().BeTrue();
             notification.SupportsOnHealthIssue.Should().BeTrue();
+            notification.SupportsOnDownloadFailure.Should().BeTrue();
+            notification.SupportsOnImportFailure.Should().BeTrue();
         }
 
 
@@ -128,6 +140,8 @@ namespace NzbDrone.Core.Test.NotificationTests
             notification.SupportsOnUpgrade.Should().BeFalse();
             notification.SupportsOnRename.Should().BeFalse();
             notification.SupportsOnHealthIssue.Should().BeFalse();
+            notification.SupportsOnDownloadFailure.Should().BeFalse();
+            notification.SupportsOnImportFailure.Should().BeFalse();
         }
     }
 

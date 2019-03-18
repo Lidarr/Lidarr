@@ -111,6 +111,56 @@ namespace NzbDrone.Core.Notifications.Slack
             _proxy.SendPayload(payload, Settings);
         }
 
+        public override void OnTrackRetag(TrackRetagMessage message)
+        {
+            var attachments = new List<Attachment>
+                              {
+                                  new Attachment
+                                  {
+                                      Title = TRACK_RETAGGED_TITLE,
+                                      Text = message.Message
+                                  }
+                              };
+
+            var payload = CreatePayload(TRACK_RETAGGED_TITLE, attachments);
+
+            _proxy.SendPayload(payload, Settings);
+        }
+
+        public override void OnDownloadFailure(DownloadFailedMessage message)
+        {
+            var attachments = new List<Attachment>
+            {
+                new Attachment
+                {
+                    Fallback = message.Message,
+                    Title = message.SourceTitle,
+                    Text = message.Message,
+                    Color = "danger"
+                }
+            };
+            var payload = CreatePayload($"Download Failed: {message.Message}", attachments);
+
+            _proxy.SendPayload(payload, Settings);
+        }
+
+        public override void OnImportFailure(AlbumDownloadMessage message)
+        {
+            var attachments = new List<Attachment>
+            {
+                new Attachment
+                {
+                    Fallback = message.Message,
+                    Title = message.Album.Title,
+                    Text = message.Message,
+                    Color = "warning"
+                }
+            };
+            var payload = CreatePayload($"Import Failed: {message.Message}", attachments);
+
+            _proxy.SendPayload(payload, Settings);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();

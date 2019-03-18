@@ -39,6 +39,16 @@ namespace NzbDrone.Core.Notifications.Twitter
             _twitterService.SendNotification($"Health Issue: {healthCheck.Message}", Settings);
         }
 
+        public override void OnDownloadFailure(DownloadFailedMessage message)
+        {
+            _twitterService.SendNotification($"Download Failed: {message.Message}", Settings);
+        }
+
+        public override void OnImportFailure(AlbumDownloadMessage message)
+        {
+            _twitterService.SendNotification($"Import Failed: {message.Message}", Settings);
+        }
+
         public override object RequestAction(string action, IDictionary<string, string> query)
         {
             if (action == "startOAuth")

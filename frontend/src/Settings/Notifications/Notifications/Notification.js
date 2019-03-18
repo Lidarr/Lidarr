@@ -60,12 +60,16 @@ class Notification extends Component {
       onUpgrade,
       onRename,
       onHealthIssue,
+      onDownloadFailure,
+      onImportFailure,
       supportsOnGrab,
       supportsOnDownload,
       supportsOnAlbumDownload,
       supportsOnUpgrade,
       supportsOnRename,
-      supportsOnHealthIssue
+      supportsOnHealthIssue,
+      supportsOnDownloadFailure,
+      supportsOnImportFailure
     } = this.props;
 
     return (
@@ -130,6 +134,20 @@ class Notification extends Component {
           On Health Issue
         </Label>
 
+        <Label
+          kind={getLabelKind(supportsOnDownloadFailure, onDownloadFailure)}
+          outline={supportsOnDownloadFailure && !onDownloadFailure}
+        >
+          On Download Failure
+        </Label>
+
+        <Label
+          kind={getLabelKind(supportsOnImportFailure, onImportFailure)}
+          outline={supportsOnImportFailure && !onImportFailure}
+        >
+          On Import Failure
+        </Label>
+
         <EditNotificationModalConnector
           id={id}
           isOpen={this.state.isEditNotificationModalOpen}
@@ -160,12 +178,16 @@ Notification.propTypes = {
   onUpgrade: PropTypes.bool.isRequired,
   onRename: PropTypes.bool.isRequired,
   onHealthIssue: PropTypes.bool.isRequired,
+  onDownloadFailure: PropTypes.bool.isRequired,
+  onImportFailure: PropTypes.bool.isRequired,
   supportsOnGrab: PropTypes.bool.isRequired,
   supportsOnDownload: PropTypes.bool.isRequired,
   supportsOnAlbumDownload: PropTypes.bool.isRequired,
   supportsOnUpgrade: PropTypes.bool.isRequired,
   supportsOnRename: PropTypes.bool.isRequired,
   supportsOnHealthIssue: PropTypes.bool.isRequired,
+  supportsOnDownloadFailure: PropTypes.bool.isRequired,
+  supportsOnImportFailure: PropTypes.bool.isRequired,
   onConfirmDeleteNotification: PropTypes.func.isRequired
 };
 

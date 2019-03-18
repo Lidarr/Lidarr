@@ -12,6 +12,7 @@ using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.HealthCheck;
+using NzbDrone.Common.Serializer;
 
 namespace NzbDrone.Core.Notifications
 {
@@ -20,7 +21,9 @@ namespace NzbDrone.Core.Notifications
           IHandle<TrackImportedEvent>,
           IHandle<AlbumImportedEvent>,
           IHandle<ArtistRenamedEvent>,
-          IHandle<HealthCheckFailedEvent>
+          IHandle<HealthCheckFailedEvent>,
+          IHandle<DownloadFailedEvent>,
+          IHandle<AlbumImportIncompleteEvent>
     {
         private readonly INotificationFactory _notificationFactory;
         private readonly Logger _logger;
@@ -73,6 +76,12 @@ namespace NzbDrone.Core.Notifications
                 artist.Name,
                 album.Title,
                 tracks.Count);
+        }
+
+        private string GetAlbumIncompleteImportMessage(string source)
+        {
+            return string.Format("Lidarr failed to Import all tracks for {0}",
+                source);
         }
 
         private bool ShouldHandleArtist(ProviderDefinition definition, Artist artist)
@@ -248,6 +257,45 @@ namespace NzbDrone.Core.Notifications
                 catch (Exception ex)
                 {
                     _logger.Warn(ex, "Unable to send OnHealthIssue notification to: " + notification.Definition.Name);
+                }
+            }
+        }
+
+        public void Handle(DownloadFailedEvent message)
+        {
+            var downloadFailedMessage = new DownloadFailedMessage
+            {
+                DownloadId = message.DownloadId,
+                DownloadClient = message.DownloadClient,
+                Quality = message.Quality,
+                Language = message.Language,
+                SourceTitle = message.SourceTitle,
+                Message = message.Message
+                
+            };
+
+            foreach (var notification in _notificationFactory.OnDownloadFailureEnabled())
+            {
+                if (ShouldHandleArtist(notification.Definition, message.TrackedDownload.RemoteAlbum.Artist))
+                {
+                    notification.OnDownloadFailure(downloadFailedMessage);
+                }
+            }
+        }
+
+        public void Handle(AlbumImportIncompleteEvent message)
+        {
+            // TODO: Build out this message so that we can pass on what failed and what was successful
+            var downloadMessage = new AlbumDownloadMessage
+            {
+                Message = GetAlbumIncompleteImportMessage(message.TrackedDownload.RemoteAlbum.Release.Title),
+            };
+
+            foreach (var notification in _notificationFactory.OnDownloadFailureEnabled())
+            {
+                if (ShouldHandleArtist(notification.Definition, message.TrackedDownload.RemoteAlbum.Artist))
+                {
+                    notification.OnImportFailure(downloadMessage);
                 }
             }
         }

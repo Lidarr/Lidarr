@@ -39,6 +39,16 @@ namespace NzbDrone.Core.Notifications.PushBullet
             _proxy.SendNotification(HEALTH_ISSUE_TITLE_BRANDED, healthCheck.Message, Settings);
         }
 
+        public override void OnDownloadFailure(DownloadFailedMessage message)
+        {
+            _proxy.SendNotification(DOWNLOAD_FAILURE_TITLE_BRANDED, message.Message, Settings);
+        }
+
+        public override void OnImportFailure(AlbumDownloadMessage message)
+        {
+            _proxy.SendNotification(IMPORT_FAILURE_TITLE_BRANDED, message.Message, Settings);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();

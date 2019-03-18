@@ -44,6 +44,16 @@ namespace NzbDrone.Core.Notifications.Email
             _emailService.SendEmail(Settings, HEALTH_ISSUE_TITLE_BRANDED, message.Message);
         }
 
+        public override void OnDownloadFailure(DownloadFailedMessage message)
+        {
+            _emailService.SendEmail(Settings, DOWNLOAD_FAILURE_TITLE_BRANDED, message.Message);
+        }
+
+        public override void OnImportFailure(AlbumDownloadMessage message)
+        {
+            _emailService.SendEmail(Settings, IMPORT_FAILURE_TITLE_BRANDED, message.Message);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();

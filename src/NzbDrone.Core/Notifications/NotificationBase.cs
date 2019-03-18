@@ -12,11 +12,15 @@ namespace NzbDrone.Core.Notifications
         protected const string TRACK_DOWNLOADED_TITLE = "Track Downloaded";
         protected const string ALBUM_DOWNLOADED_TITLE = "Album Downloaded";
         protected const string HEALTH_ISSUE_TITLE = "Health Check Failure";
+        protected const string DOWNLOAD_FAILURE_TITLE = "Download Failed";
+        protected const string IMPORT_FAILURE_TITLE = "Import Failed";
 
         protected const string ALBUM_GRABBED_TITLE_BRANDED = "Lidarr - " + ALBUM_GRABBED_TITLE;
         protected const string TRACK_DOWNLOADED_TITLE_BRANDED = "Lidarr - " + TRACK_DOWNLOADED_TITLE;
         protected const string ALBUM_DOWNLOADED_TITLE_BRANDED = "Lidarr - " + ALBUM_DOWNLOADED_TITLE;
         protected const string HEALTH_ISSUE_TITLE_BRANDED = "Lidarr - " + HEALTH_ISSUE_TITLE;
+        protected const string DOWNLOAD_FAILURE_TITLE_BRANDED = "Lidarr - " + DOWNLOAD_FAILURE_TITLE;
+        protected const string IMPORT_FAILURE_TITLE_BRANDED = "Lidarr - " + IMPORT_FAILURE_TITLE;
 
         public abstract string Name { get; }
 
@@ -56,12 +60,24 @@ namespace NzbDrone.Core.Notifications
 
         }
 
+        public virtual void OnDownloadFailure(DownloadFailedMessage message)
+        {
+
+        }
+
+        public virtual void OnImportFailure(AlbumDownloadMessage message)
+        {
+
+        }
+
         public bool SupportsOnGrab => HasConcreteImplementation("OnGrab");
         public bool SupportsOnRename => HasConcreteImplementation("OnRename");
         public bool SupportsOnDownload => HasConcreteImplementation("OnDownload");
         public bool SupportsOnAlbumDownload => HasConcreteImplementation("OnAlbumDownload");
         public bool SupportsOnUpgrade => SupportsOnDownload;
         public bool SupportsOnHealthIssue => HasConcreteImplementation("OnHealthIssue");
+        public bool SupportsOnDownloadFailure => HasConcreteImplementation("OnDownloadFailure");
+        public bool SupportsOnImportFailure => HasConcreteImplementation("OnImportFailure");
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 

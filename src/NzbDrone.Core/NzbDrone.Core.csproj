@@ -922,6 +922,7 @@
     <Compile Include="Music\TrackRepository.cs" />
     <Compile Include="Music\TrackService.cs" />
     <Compile Include="Notifications\AlbumDownloadMessage.cs" />
+    <Compile Include="Notifications\DownloadFailedMessage.cs" />
     <Compile Include="Notifications\Join\JoinAuthException.cs" />
     <Compile Include="Notifications\Join\JoinInvalidDeviceException.cs" />
     <Compile Include="Notifications\Join\JoinPriority.cs" />
