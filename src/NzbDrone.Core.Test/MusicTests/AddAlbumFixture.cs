@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using FluentValidation;
@@ -34,6 +35,10 @@ namespace NzbDrone.Core.Test.MusicTests
                 .Build();
             _fakeRelease.Tracks = new List<Track>();
             _fakeAlbum.AlbumReleases = new List<AlbumRelease> {_fakeRelease};
+            
+            Mocker.GetMock<IReleaseService>()
+                .Setup(x => x.GetReleasesForRefresh(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
+                .Returns(new List<AlbumRelease>());
         }
 
         private void GivenValidAlbum(string lidarrId)
@@ -73,6 +78,88 @@ namespace NzbDrone.Core.Test.MusicTests
             Assert.Throws<ValidationException>(() => Subject.AddAlbum(newAlbum));
 
             ExceptionVerification.ExpectedErrors(1);
+        }
+
+        [Test]
+        public void should_not_add_duplicate_releases()
+        {
+            var newAlbum = Builder<Album>.CreateNew().Build();
+            var releases = Builder<AlbumRelease>.CreateListOfSize(10)
+                .All()
+                .With(x => x.AlbumId = newAlbum.Id)
+                .TheFirst(4)
+                .With(x => x.ForeignReleaseId = "DuplicateId1")
+                .TheLast(1)
+                .With(x => x.ForeignReleaseId = "DuplicateId2")
+                .Build() as List<AlbumRelease>;
+
+            newAlbum.AlbumReleases = releases;
+            
+            var existingReleases = Builder<AlbumRelease>.CreateListOfSize(1)
+                .All()
+                .With(x => x.ForeignReleaseId = "DuplicateId2")
+                .Build() as List<AlbumRelease>;
+            
+            Mocker.GetMock<IReleaseService>()
+                .Setup(x => x.GetReleasesForRefresh(newAlbum.Id, It.IsAny<IEnumerable<string>>()))
+                .Returns(existingReleases);
+            
+            var updatedReleases = Subject.AddAlbumReleases(newAlbum);
+            
+            updatedReleases.Should().HaveCount(7);
+            
+            Mocker.GetMock<IReleaseService>()
+                .Verify(x => x.UpdateMany(It.Is<List<AlbumRelease>>(l => l.Count == 1 && l.Select(r => r.ForeignReleaseId).Distinct().Count() == 1)), Times.Once());
+            
+            Mocker.GetMock<IReleaseService>()
+                .Verify(x => x.InsertMany(It.Is<List<AlbumRelease>>(l => l.Count == 6 && 
+                                                                    l.Select(r => r.ForeignReleaseId).Distinct().Count() == 6 &&
+                                                                    !l.Select(r => r.ForeignReleaseId).Contains("DuplicateId2"))), 
+                        Times.Once());
+        }
+        
+        [Test]
+        public void should_only_add_one_monitored_release_ignoring_skyhook()
+        {
+            var newAlbum = Builder<Album>.CreateNew().Build();
+            var releases = Builder<AlbumRelease>.CreateListOfSize(10)
+                .All()
+                .With(x => x.Monitored = true)
+                .Build() as List<AlbumRelease>;
+
+            newAlbum.AlbumReleases = releases;
+            
+            var updatedReleases = Subject.AddAlbumReleases(newAlbum);
+            
+            updatedReleases.Count(x => x.Monitored).Should().Be(1);
+        }
+        
+        [Test]
+        public void should_only_add_one_monitored_release_combining_with_existing()
+        {
+            var newAlbum = Builder<Album>.CreateNew().Build();
+            
+            var releases = Builder<AlbumRelease>.CreateListOfSize(10)
+                .All()
+                .With(x => x.Monitored = false)
+                .Build() as List<AlbumRelease>;
+            releases[1].Monitored = true;
+
+            newAlbum.AlbumReleases = releases;
+            
+            var existingReleases = Builder<AlbumRelease>.CreateListOfSize(1)
+                .All()
+                .With(x => x.ForeignReleaseId = releases[0].ForeignReleaseId)
+                .With(x => x.Monitored = true)
+                .Build() as List<AlbumRelease>;
+            
+            Mocker.GetMock<IReleaseService>()
+                .Setup(x => x.GetReleasesForRefresh(newAlbum.Id, It.IsAny<IEnumerable<string>>()))
+                .Returns(existingReleases);
+            
+            var updatedReleases = Subject.AddAlbumReleases(newAlbum);
+            
+            updatedReleases.Count(x => x.Monitored).Should().Be(1);
         }
     }
 }
