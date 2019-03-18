@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Notifications
         List<INotification> OnAlbumDownloadEnabled();
         List<INotification> OnUpgradeEnabled();
         List<INotification> OnRenameEnabled();
+        List<INotification> OnHealthIssueEnabled();
     }
 
     public class NotificationFactory : ProviderFactory<INotification, NotificationDefinition>, INotificationFactory
@@ -48,6 +49,11 @@ namespace NzbDrone.Core.Notifications
             return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnRename).ToList();
         }
 
+        public List<INotification> OnHealthIssueEnabled()
+        {
+            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnHealthIssue).ToList();
+        }
+
         public override void SetProviderCharacteristics(INotification provider, NotificationDefinition definition)
         {
             base.SetProviderCharacteristics(provider, definition);
@@ -57,6 +63,7 @@ namespace NzbDrone.Core.Notifications
             definition.SupportsOnAlbumDownload = provider.SupportsOnAlbumDownload;
             definition.SupportsOnUpgrade = provider.SupportsOnUpgrade;
             definition.SupportsOnRename = provider.SupportsOnRename;
+            definition.SupportsOnHealthIssue = provider.SupportsOnHealthIssue;
         }
     }
 }

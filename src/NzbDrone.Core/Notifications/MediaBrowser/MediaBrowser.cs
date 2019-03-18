@@ -55,6 +55,14 @@ namespace NzbDrone.Core.Notifications.Emby
             }
         }
 
+        public override void OnHealthIssue(HealthCheck.HealthCheck message)
+        {
+            if (Settings.Notify)
+            {
+                _mediaBrowserService.Notify(Settings, HEALTH_ISSUE_TITLE_BRANDED, message.Message);
+            }
+        }
+
 
         public override ValidationResult Test()
         {

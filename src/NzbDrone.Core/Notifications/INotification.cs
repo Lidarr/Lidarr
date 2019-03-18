@@ -11,10 +11,12 @@ namespace NzbDrone.Core.Notifications
         void OnDownload(TrackDownloadMessage message);
         void OnAlbumDownload(AlbumDownloadMessage message);
         void OnRename(Artist artist);
+        void OnHealthIssue(HealthCheck.HealthCheck healthCheck);
         bool SupportsOnGrab { get; }
         bool SupportsOnDownload { get; }
         bool SupportsOnAlbumDownload { get; }
         bool SupportsOnUpgrade { get; }
         bool SupportsOnRename { get; }
+        bool SupportsOnHealthIssue { get; }
     }
 }

@@ -43,11 +43,14 @@ function EditNotificationModalContent(props) {
     onAlbumDownload,
     onUpgrade,
     onRename,
+    onHealthIssue,
     supportsOnGrab,
     supportsOnDownload,
     supportsOnAlbumDownload,
     supportsOnUpgrade,
     supportsOnRename,
+    supportsOnHealthIssue,
+    includeHealthWarnings,
     tags,
     fields,
     message
@@ -161,6 +164,35 @@ function EditNotificationModalContent(props) {
                   onChange={onInputChange}
                 />
               </FormGroup>
+
+              <FormGroup>
+                <FormLabel>On Health Issue</FormLabel>
+
+                <FormInputGroup
+                  type={inputTypes.CHECK}
+                  name="onHealthIssue"
+                  helpText="Be notified on health check failures"
+                  isDisabled={!supportsOnHealthIssue.value}
+                  {...onHealthIssue}
+                  onChange={onInputChange}
+                />
+              </FormGroup>
+
+              {
+                onHealthIssue.value &&
+                  <FormGroup>
+                    <FormLabel>Include Health Warnings</FormLabel>
+
+                    <FormInputGroup
+                      type={inputTypes.CHECK}
+                      name="includeHealthWarnings"
+                      helpText="Be notified on health warnings in addition to errors"
+                      isDisabled={!supportsOnHealthIssue.value}
+                      {...includeHealthWarnings}
+                      onChange={onInputChange}
+                    />
+                  </FormGroup>
+              }
 
               <FormGroup>
                 <FormLabel>Tags</FormLabel>

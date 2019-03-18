@@ -33,6 +33,11 @@ namespace NzbDrone.Core.Notifications.Growl
             _growlService.SendNotification(ALBUM_DOWNLOADED_TITLE, message.Message, "ALBUMDOWNLOAD", Settings.Host, Settings.Port, Settings.Password);
         }
 
+        public override void OnHealthIssue(HealthCheck.HealthCheck message)
+        {
+            _growlService.SendNotification(HEALTH_ISSUE_TITLE, message.Message, "HEALTHISSUE", Settings.Host, Settings.Port, Settings.Password);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();

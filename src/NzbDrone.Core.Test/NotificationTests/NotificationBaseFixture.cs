@@ -70,6 +70,11 @@ namespace NzbDrone.Core.Test.NotificationTests
                 TestLogger.Info("OnRename was called");
             }
 
+            public override void OnHealthIssue(NzbDrone.Core.HealthCheck.HealthCheck artist)
+            {
+                TestLogger.Info("OnHealthIssue was called");
+            }
+
         }
 
         class TestNotificationWithNoEvents : NotificationBase<TestSetting>
@@ -108,6 +113,7 @@ namespace NzbDrone.Core.Test.NotificationTests
             notification.SupportsOnAlbumDownload.Should().BeTrue();
             notification.SupportsOnUpgrade.Should().BeTrue();
             notification.SupportsOnRename.Should().BeTrue();
+            notification.SupportsOnHealthIssue.Should().BeTrue();
         }
 
 
@@ -121,6 +127,7 @@ namespace NzbDrone.Core.Test.NotificationTests
             notification.SupportsOnAlbumDownload.Should().BeFalse();
             notification.SupportsOnUpgrade.Should().BeFalse();
             notification.SupportsOnRename.Should().BeFalse();
+            notification.SupportsOnHealthIssue.Should().BeFalse();
         }
     }
 

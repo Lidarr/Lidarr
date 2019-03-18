@@ -11,10 +11,12 @@ namespace NzbDrone.Core.Notifications
         protected const string ALBUM_GRABBED_TITLE = "Album Grabbed";
         protected const string TRACK_DOWNLOADED_TITLE = "Track Downloaded";
         protected const string ALBUM_DOWNLOADED_TITLE = "Album Downloaded";
+        protected const string HEALTH_ISSUE_TITLE = "Health Check Failure";
 
         protected const string ALBUM_GRABBED_TITLE_BRANDED = "Lidarr - " + ALBUM_GRABBED_TITLE;
         protected const string TRACK_DOWNLOADED_TITLE_BRANDED = "Lidarr - " + TRACK_DOWNLOADED_TITLE;
         protected const string ALBUM_DOWNLOADED_TITLE_BRANDED = "Lidarr - " + ALBUM_DOWNLOADED_TITLE;
+        protected const string HEALTH_ISSUE_TITLE_BRANDED = "Lidarr - " + HEALTH_ISSUE_TITLE;
 
         public abstract string Name { get; }
 
@@ -49,11 +51,17 @@ namespace NzbDrone.Core.Notifications
 
         }
 
+        public virtual void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
+        {
+
+        }
+
         public bool SupportsOnGrab => HasConcreteImplementation("OnGrab");
         public bool SupportsOnRename => HasConcreteImplementation("OnRename");
         public bool SupportsOnDownload => HasConcreteImplementation("OnDownload");
         public bool SupportsOnAlbumDownload => HasConcreteImplementation("OnAlbumDownload");
         public bool SupportsOnUpgrade => SupportsOnDownload;
+        public bool SupportsOnHealthIssue => HasConcreteImplementation("OnHealthIssue");
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 

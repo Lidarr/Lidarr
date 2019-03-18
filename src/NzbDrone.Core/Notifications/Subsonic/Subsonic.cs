@@ -49,6 +49,11 @@ namespace NzbDrone.Core.Notifications.Subsonic
             Update();
         }
 
+        public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
+        {
+            Notify(Settings, HEALTH_ISSUE_TITLE_BRANDED, healthCheck.Message);
+        }
+
         public override string Name => "Subsonic";
 
         public override ValidationResult Test()

@@ -31,6 +31,11 @@ namespace NzbDrone.Core.Notifications.Plex.HomeTheater
             _plexClientService.Notify(Settings, ALBUM_DOWNLOADED_TITLE_BRANDED, message.Message);
         }
 
+        public override void OnHealthIssue(HealthCheck.HealthCheck message)
+        {
+            _plexClientService.Notify(Settings, HEALTH_ISSUE_TITLE_BRANDED, message.Message);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();

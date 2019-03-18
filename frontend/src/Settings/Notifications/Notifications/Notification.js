@@ -59,11 +59,13 @@ class Notification extends Component {
       onAlbumDownload,
       onUpgrade,
       onRename,
+      onHealthIssue,
       supportsOnGrab,
       supportsOnDownload,
       supportsOnAlbumDownload,
       supportsOnUpgrade,
-      supportsOnRename
+      supportsOnRename,
+      supportsOnHealthIssue
     } = this.props;
 
     return (
@@ -121,6 +123,13 @@ class Notification extends Component {
             </Label>
         }
 
+        <Label
+          kind={getLabelKind(supportsOnHealthIssue, onHealthIssue)}
+          outline={supportsOnHealthIssue && !onHealthIssue}
+        >
+          On Health Issue
+        </Label>
+
         <EditNotificationModalConnector
           id={id}
           isOpen={this.state.isEditNotificationModalOpen}
@@ -150,11 +159,13 @@ Notification.propTypes = {
   onAlbumDownload: PropTypes.bool.isRequired,
   onUpgrade: PropTypes.bool.isRequired,
   onRename: PropTypes.bool.isRequired,
+  onHealthIssue: PropTypes.bool.isRequired,
   supportsOnGrab: PropTypes.bool.isRequired,
   supportsOnDownload: PropTypes.bool.isRequired,
   supportsOnAlbumDownload: PropTypes.bool.isRequired,
   supportsOnUpgrade: PropTypes.bool.isRequired,
   supportsOnRename: PropTypes.bool.isRequired,
+  supportsOnHealthIssue: PropTypes.bool.isRequired,
   onConfirmDeleteNotification: PropTypes.func.isRequired
 };
 
