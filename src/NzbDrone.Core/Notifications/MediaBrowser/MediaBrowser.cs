@@ -63,6 +63,13 @@ namespace NzbDrone.Core.Notifications.Emby
             }
         }
 
+        public override void OnTrackRetag(TrackRetagMessage message)
+        {
+            if (Settings.Notify)
+            {
+                _mediaBrowserService.Notify(Settings, TRACK_RETAGGED_TITLE_BRANDED, message.Message);
+            }
+        }
 
         public override ValidationResult Test()
         {

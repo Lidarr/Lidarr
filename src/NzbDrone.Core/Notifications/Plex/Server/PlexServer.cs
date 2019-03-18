@@ -38,6 +38,11 @@ namespace NzbDrone.Core.Notifications.Plex.Server
             UpdateIfEnabled(artist);
         }
 
+        public override void OnTrackRetag(TrackRetagMessage message)
+        {
+            UpdateIfEnabled(message.Artist);
+        }
+
         private void UpdateIfEnabled(Artist artist)
         {
             if (Settings.UpdateLibrary)

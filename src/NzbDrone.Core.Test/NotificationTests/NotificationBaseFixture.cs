@@ -85,6 +85,10 @@ namespace NzbDrone.Core.Test.NotificationTests
                 TestLogger.Info("OnImportFailure was called");
             }
 
+            public override void OnTrackRetag(TrackRetagMessage message)
+            {
+                TestLogger.Info("OnTrackRetag was called");
+            }
         }
 
         class TestNotificationWithNoEvents : NotificationBase<TestSetting>
@@ -126,6 +130,7 @@ namespace NzbDrone.Core.Test.NotificationTests
             notification.SupportsOnHealthIssue.Should().BeTrue();
             notification.SupportsOnDownloadFailure.Should().BeTrue();
             notification.SupportsOnImportFailure.Should().BeTrue();
+            notification.SupportsOnTrackRetag.Should().BeTrue();
         }
 
 
@@ -142,6 +147,7 @@ namespace NzbDrone.Core.Test.NotificationTests
             notification.SupportsOnHealthIssue.Should().BeFalse();
             notification.SupportsOnDownloadFailure.Should().BeFalse();
             notification.SupportsOnImportFailure.Should().BeFalse();
+            notification.SupportsOnTrackRetag.Should().BeFalse();
         }
     }
 

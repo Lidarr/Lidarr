@@ -1052,6 +1052,7 @@
     <Compile Include="RemotePathMappings\RemotePathMappingService.cs" />
     <Compile Include="MediaFiles\TorrentInfo\TorrentFileInfoReader.cs" />
     <Compile Include="Notifications\TrackDownloadMessage.cs" />
+    <Compile Include="Notifications\TrackRetagMessage.cs" />
     <Compile Include="Notifications\Email\Email.cs">
       <SubType>Code</SubType>
     </Compile>

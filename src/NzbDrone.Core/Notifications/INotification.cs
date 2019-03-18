@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Notifications
         void OnHealthIssue(HealthCheck.HealthCheck healthCheck);
         void OnDownloadFailure(DownloadFailedMessage message);
         void OnImportFailure(AlbumDownloadMessage message);
+        void OnTrackRetag(TrackRetagMessage message);
         bool SupportsOnGrab { get; }
         bool SupportsOnDownload { get; }
         bool SupportsOnAlbumDownload { get; }
@@ -22,5 +23,6 @@ namespace NzbDrone.Core.Notifications
         bool SupportsOnHealthIssue { get; }
         bool SupportsOnDownloadFailure { get; }
         bool SupportsOnImportFailure { get; }
+        bool SupportsOnTrackRetag { get; }
     }
 }

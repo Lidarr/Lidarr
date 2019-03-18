@@ -53,6 +53,11 @@ namespace NzbDrone.Core.Notifications.Xbmc
             Notify(Settings, HEALTH_ISSUE_TITLE_BRANDED, healthCheck.Message);
         }
 
+        public override void OnTrackRetag(TrackRetagMessage message)
+        {
+            UpdateAndClean(message.Artist);
+        }
+
         public override string Name => "Kodi (XBMC)";
 
         public override ValidationResult Test()

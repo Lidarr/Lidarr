@@ -49,6 +49,13 @@ namespace NzbDrone.Core.Notifications.Synology
             }
         }
 
+        public override void OnTrackRetag(TrackRetagMessage message)
+        {
+            if (Settings.UpdateLibrary)
+            {
+                _indexerProxy.UpdateFolder(message.Artist.Path);
+            }
+        }
 
         public override ValidationResult Test()
         {

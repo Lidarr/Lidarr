@@ -62,6 +62,7 @@ class Notification extends Component {
       onHealthIssue,
       onDownloadFailure,
       onImportFailure,
+      onTrackRetag,
       supportsOnGrab,
       supportsOnDownload,
       supportsOnAlbumDownload,
@@ -69,7 +70,8 @@ class Notification extends Component {
       supportsOnRename,
       supportsOnHealthIssue,
       supportsOnDownloadFailure,
-      supportsOnImportFailure
+      supportsOnImportFailure,
+      supportsOnTrackRetag
     } = this.props;
 
     return (
@@ -118,7 +120,36 @@ class Notification extends Component {
         }
 
         {
-          !onGrab && !onAlbumDownload && !onDownload && !onRename &&
+          supportsOnTrackRetag && onTrackRetag &&
+            <Label kind={kinds.SUCCESS}>
+              On Track Tag Update
+            </Label>
+        }
+
+        {
+          supportsOnHealthIssue && onHealthIssue &&
+            <Label kind={kinds.SUCCESS}>
+              On Health Issue
+            </Label>
+        }
+
+        {
+          supportsOnDownloadFailure && onDownloadFailure &&
+            <Label kind={kinds.SUCCESS} >
+              On Download Failure
+            </Label>
+        }
+
+        {
+          supportsOnImportFailure && onImportFailure &&
+            <Label kind={kinds.SUCCESS} >
+              On Import Failure
+            </Label>
+        }
+
+        {
+          !onGrab && !onAlbumDownload && !onDownload && !onRename && !onTrackRetag &&
+            !onHealthIssue && !onDownloadFailure && !onImportFailure &&
             <Label
               kind={kinds.DISABLED}
               outline={true}
@@ -126,27 +157,6 @@ class Notification extends Component {
               Disabled
             </Label>
         }
-
-        <Label
-          kind={getLabelKind(supportsOnHealthIssue, onHealthIssue)}
-          outline={supportsOnHealthIssue && !onHealthIssue}
-        >
-          On Health Issue
-        </Label>
-
-        <Label
-          kind={getLabelKind(supportsOnDownloadFailure, onDownloadFailure)}
-          outline={supportsOnDownloadFailure && !onDownloadFailure}
-        >
-          On Download Failure
-        </Label>
-
-        <Label
-          kind={getLabelKind(supportsOnImportFailure, onImportFailure)}
-          outline={supportsOnImportFailure && !onImportFailure}
-        >
-          On Import Failure
-        </Label>
 
         <EditNotificationModalConnector
           id={id}
@@ -180,6 +190,7 @@ Notification.propTypes = {
   onHealthIssue: PropTypes.bool.isRequired,
   onDownloadFailure: PropTypes.bool.isRequired,
   onImportFailure: PropTypes.bool.isRequired,
+  onTrackRetag: PropTypes.bool.isRequired,
   supportsOnGrab: PropTypes.bool.isRequired,
   supportsOnDownload: PropTypes.bool.isRequired,
   supportsOnAlbumDownload: PropTypes.bool.isRequired,
@@ -188,6 +199,7 @@ Notification.propTypes = {
   supportsOnHealthIssue: PropTypes.bool.isRequired,
   supportsOnDownloadFailure: PropTypes.bool.isRequired,
   supportsOnImportFailure: PropTypes.bool.isRequired,
+  supportsOnTrackRetag: PropTypes.bool.isRequired,
   onConfirmDeleteNotification: PropTypes.func.isRequired
 };
 

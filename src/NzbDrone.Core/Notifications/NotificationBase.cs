@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Notifications
         protected const string HEALTH_ISSUE_TITLE = "Health Check Failure";
         protected const string DOWNLOAD_FAILURE_TITLE = "Download Failed";
         protected const string IMPORT_FAILURE_TITLE = "Import Failed";
+        protected const string TRACK_RETAGGED_TITLE = "Track File Tags Updated";
 
         protected const string ALBUM_GRABBED_TITLE_BRANDED = "Lidarr - " + ALBUM_GRABBED_TITLE;
         protected const string TRACK_DOWNLOADED_TITLE_BRANDED = "Lidarr - " + TRACK_DOWNLOADED_TITLE;
@@ -21,6 +22,7 @@ namespace NzbDrone.Core.Notifications
         protected const string HEALTH_ISSUE_TITLE_BRANDED = "Lidarr - " + HEALTH_ISSUE_TITLE;
         protected const string DOWNLOAD_FAILURE_TITLE_BRANDED = "Lidarr - " + DOWNLOAD_FAILURE_TITLE;
         protected const string IMPORT_FAILURE_TITLE_BRANDED = "Lidarr - " + IMPORT_FAILURE_TITLE;
+        protected const string TRACK_RETAGGED_TITLE_BRANDED = "Lidarr - " + TRACK_RETAGGED_TITLE;
 
         public abstract string Name { get; }
 
@@ -70,6 +72,11 @@ namespace NzbDrone.Core.Notifications
 
         }
 
+        public virtual void OnTrackRetag(TrackRetagMessage message)
+        {
+
+        }
+
         public bool SupportsOnGrab => HasConcreteImplementation("OnGrab");
         public bool SupportsOnRename => HasConcreteImplementation("OnRename");
         public bool SupportsOnDownload => HasConcreteImplementation("OnDownload");
@@ -78,6 +85,7 @@ namespace NzbDrone.Core.Notifications
         public bool SupportsOnHealthIssue => HasConcreteImplementation("OnHealthIssue");
         public bool SupportsOnDownloadFailure => HasConcreteImplementation("OnDownloadFailure");
         public bool SupportsOnImportFailure => HasConcreteImplementation("OnImportFailure");
+        public bool SupportsOnTrackRetag => HasConcreteImplementation("OnTrackRetag");
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 

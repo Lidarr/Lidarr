@@ -13,6 +13,7 @@ namespace Lidarr.Api.V1.Notifications
         public bool OnHealthIssue { get; set; }
         public bool OnDownloadFailure { get; set; }
         public bool OnImportFailure { get; set; }
+        public bool OnTrackRetag { get; set; }
         public bool SupportsOnGrab { get; set; }
         public bool SupportsOnDownload { get; set; }
         public bool SupportsOnAlbumDownload { get; set; }
@@ -22,6 +23,7 @@ namespace Lidarr.Api.V1.Notifications
         public bool IncludeHealthWarnings { get; set; }
         public bool SupportsOnDownloadFailure { get; set; }
         public bool SupportsOnImportFailure { get; set; }
+        public bool SupportsOnTrackRetag { get; set; }
         public string TestCommand { get; set; }
     }
 
@@ -41,6 +43,7 @@ namespace Lidarr.Api.V1.Notifications
             resource.OnHealthIssue = definition.OnHealthIssue;
             resource.OnDownloadFailure = definition.OnDownloadFailure;
             resource.OnImportFailure = definition.OnImportFailure;
+            resource.OnTrackRetag = definition.OnTrackRetag;
             resource.SupportsOnGrab = definition.SupportsOnGrab;
             resource.SupportsOnDownload = definition.SupportsOnDownload;
             resource.SupportsOnAlbumDownload = definition.SupportsOnAlbumDownload;
@@ -50,6 +53,7 @@ namespace Lidarr.Api.V1.Notifications
             resource.IncludeHealthWarnings = definition.IncludeHealthWarnings;
             resource.SupportsOnDownloadFailure = definition.SupportsOnDownloadFailure;
             resource.SupportsOnImportFailure = definition.SupportsOnImportFailure;
+            resource.SupportsOnTrackRetag = definition.SupportsOnTrackRetag;
 
             return resource;
         }
@@ -68,6 +72,7 @@ namespace Lidarr.Api.V1.Notifications
             definition.OnHealthIssue = resource.OnHealthIssue;
             definition.OnDownloadFailure = resource.OnDownloadFailure;
             definition.OnImportFailure = resource.OnImportFailure;
+            definition.OnTrackRetag = resource.OnTrackRetag;
             definition.SupportsOnGrab = resource.SupportsOnGrab;
             definition.SupportsOnDownload = resource.SupportsOnDownload;
             definition.SupportsOnAlbumDownload = resource.SupportsOnAlbumDownload;
@@ -77,6 +82,7 @@ namespace Lidarr.Api.V1.Notifications
             definition.IncludeHealthWarnings = resource.IncludeHealthWarnings;
             definition.SupportsOnDownloadFailure = resource.SupportsOnDownloadFailure;
             definition.SupportsOnImportFailure = resource.SupportsOnImportFailure;
+            definition.SupportsOnTrackRetag = resource.SupportsOnTrackRetag;
 
             return definition;
         }

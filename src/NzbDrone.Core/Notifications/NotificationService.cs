@@ -10,9 +10,8 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Music;
-using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.HealthCheck;
-using NzbDrone.Common.Serializer;
+using System.IO;
 
 namespace NzbDrone.Core.Notifications
 {
@@ -23,7 +22,8 @@ namespace NzbDrone.Core.Notifications
           IHandle<ArtistRenamedEvent>,
           IHandle<HealthCheckFailedEvent>,
           IHandle<DownloadFailedEvent>,
-          IHandle<AlbumImportIncompleteEvent>
+          IHandle<AlbumImportIncompleteEvent>,
+          IHandle<TrackFileRetaggedEvent>
     {
         private readonly INotificationFactory _notificationFactory;
         private readonly Logger _logger;
@@ -82,6 +82,19 @@ namespace NzbDrone.Core.Notifications
         {
             return string.Format("Lidarr failed to Import all tracks for {0}",
                 source);
+        }
+
+        private string FormatMissing(object value)
+        {
+            var text = value?.ToString();
+            return text.IsNullOrWhiteSpace() ? "<missing>" : text;
+        }
+
+        private string GetTrackRetagMessage(Artist artist, TrackFile trackFile, Dictionary<string, Tuple<string, string>> diff)
+        {
+            return string.Format("{0}:\n{1}",
+                                 Path.Combine(artist.Path, trackFile.RelativePath),
+                                 string.Join("\n", diff.Select(x => $"{x.Key}: {FormatMissing(x.Value.Item1)} → {FormatMissing(x.Value.Item2)}")));
         }
 
         private bool ShouldHandleArtist(ProviderDefinition definition, Artist artist)
@@ -296,6 +309,28 @@ namespace NzbDrone.Core.Notifications
                 if (ShouldHandleArtist(notification.Definition, message.TrackedDownload.RemoteAlbum.Artist))
                 {
                     notification.OnImportFailure(downloadMessage);
+                }
+            }
+        }
+
+        public void Handle(TrackFileRetaggedEvent message)
+        {
+            var retagMessage = new TrackRetagMessage
+            {
+                Message = GetTrackRetagMessage(message.Artist, message.TrackFile, message.Diff),
+                Artist = message.Artist,
+                Album = message.TrackFile.Album,
+                Release = message.TrackFile.Tracks.Value.First().AlbumRelease.Value,
+                TrackFile = message.TrackFile,
+                Diff = message.Diff,
+                Scrubbed = message.Scrubbed
+            };
+
+            foreach (var notification in _notificationFactory.OnTrackRetagEnabled())
+            {
+                if (ShouldHandleArtist(notification.Definition, message.Artist))
+                {
+                    notification.OnTrackRetag(retagMessage);
                 }
             }
         }

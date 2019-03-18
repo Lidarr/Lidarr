@@ -75,6 +75,17 @@ namespace NzbDrone.Core.Notifications.Webhook
             _proxy.SendWebhook(payload, Settings);
         }
 
+        public override void OnTrackRetag(TrackRetagMessage message)
+        {
+            var payload = new WebhookPayload
+            {
+                EventType = "Retag",
+                Artist = new WebhookArtist(message.Artist)
+            };
+
+            _proxy.SendWebhook(payload, Settings);
+        }
+
         public override string Name => "Webhook";
 
         public override ValidationResult Test()

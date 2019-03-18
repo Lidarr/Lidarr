@@ -46,6 +46,7 @@ function EditNotificationModalContent(props) {
     onHealthIssue,
     onDownloadFailure,
     onImportFailure,
+    onTrackRetag,
     supportsOnGrab,
     supportsOnDownload,
     supportsOnAlbumDownload,
@@ -55,6 +56,7 @@ function EditNotificationModalContent(props) {
     includeHealthWarnings,
     supportsOnDownloadFailure,
     supportsOnImportFailure,
+    supportsOnTrackRetag,
     tags,
     fields,
     message
@@ -191,6 +193,19 @@ function EditNotificationModalContent(props) {
                   helpText="Be notified when tracks are renamed"
                   isDisabled={!supportsOnRename.value}
                   {...onRename}
+                  onChange={onInputChange}
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <FormLabel>On Retag</FormLabel>
+
+                <FormInputGroup
+                  type={inputTypes.CHECK}
+                  name="onTrackRetag"
+                  helpText="Be notified when track file tags are updated"
+                  isDisabled={!supportsOnTrackRetag.value}
+                  {...onTrackRetag}
                   onChange={onInputChange}
                 />
               </FormGroup>

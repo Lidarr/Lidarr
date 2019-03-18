@@ -54,6 +54,11 @@ namespace NzbDrone.Core.Notifications.Subsonic
             Notify(Settings, HEALTH_ISSUE_TITLE_BRANDED, healthCheck.Message);
         }
 
+        public override void OnTrackRetag(TrackRetagMessage message)
+        {
+            Notify(Settings, TRACK_RETAGGED_TITLE_BRANDED, message.Message);
+        }
+
         public override string Name => "Subsonic";
 
         public override ValidationResult Test()
