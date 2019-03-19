@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Test.NotificationTests
             }
         }
 
-        class TestNotificationWithOnDownload : NotificationBase<TestSetting>
+        class TestNotificationWithOnReleaseImport : NotificationBase<TestSetting>
         {
             public override string Name => "TestNotification";
             public override string Link => "";
@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Test.NotificationTests
                 throw new NotImplementedException();
             }
 
-            public override void OnDownload(TrackDownloadMessage trackDownloadMessage)
+            public override void OnReleaseImport(AlbumDownloadMessage message)
             {
                 TestLogger.Info("OnDownload was called");
             }
@@ -55,12 +55,7 @@ namespace NzbDrone.Core.Test.NotificationTests
                 TestLogger.Info("OnGrab was called");
             }
 
-            public override void OnDownload(TrackDownloadMessage message)
-            {
-                TestLogger.Info("OnDownload was called");
-            }
-
-            public override void OnAlbumDownload(AlbumDownloadMessage message)
+            public override void OnReleaseImport(AlbumDownloadMessage message)
             {
                 TestLogger.Info("OnAlbumDownload was called");
             }
@@ -106,11 +101,11 @@ namespace NzbDrone.Core.Test.NotificationTests
         }
 
         [Test]
-        public void should_support_OnUpgrade_should_link_to_OnDownload()
+        public void should_support_OnUpgrade_should_link_to_OnReleaseImport()
         {
-            var notification = new TestNotificationWithOnDownload();
+            var notification = new TestNotificationWithOnReleaseImport();
 
-            notification.SupportsOnDownload.Should().BeTrue();
+            notification.SupportsOnReleaseImport.Should().BeTrue();
             notification.SupportsOnUpgrade.Should().BeTrue();
 
             notification.SupportsOnGrab.Should().BeFalse();
@@ -123,8 +118,7 @@ namespace NzbDrone.Core.Test.NotificationTests
             var notification = new TestNotificationWithAllEvents();
 
             notification.SupportsOnGrab.Should().BeTrue();
-            notification.SupportsOnDownload.Should().BeTrue();
-            notification.SupportsOnAlbumDownload.Should().BeTrue();
+            notification.SupportsOnReleaseImport.Should().BeTrue();
             notification.SupportsOnUpgrade.Should().BeTrue();
             notification.SupportsOnRename.Should().BeTrue();
             notification.SupportsOnHealthIssue.Should().BeTrue();
@@ -140,8 +134,7 @@ namespace NzbDrone.Core.Test.NotificationTests
             var notification = new TestNotificationWithNoEvents();
 
             notification.SupportsOnGrab.Should().BeFalse();
-            notification.SupportsOnDownload.Should().BeFalse();
-            notification.SupportsOnAlbumDownload.Should().BeFalse();
+            notification.SupportsOnReleaseImport.Should().BeFalse();
             notification.SupportsOnUpgrade.Should().BeFalse();
             notification.SupportsOnRename.Should().BeFalse();
             notification.SupportsOnHealthIssue.Should().BeFalse();

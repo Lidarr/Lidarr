@@ -24,12 +24,7 @@ namespace NzbDrone.Core.Notifications.Twitter
             _twitterService.SendNotification($"Grabbed: {message.Message}", Settings);
         }
 
-        public override void OnDownload(TrackDownloadMessage message)
-        {
-            _twitterService.SendNotification($"Imported: {message.Message}", Settings);
-        }
-
-        public override void OnAlbumDownload(AlbumDownloadMessage message)
+        public override void OnReleaseImport(AlbumDownloadMessage message)
         {
             _twitterService.SendNotification($"Imported: {message.Message}", Settings);
         }

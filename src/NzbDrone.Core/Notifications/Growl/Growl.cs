@@ -23,12 +23,7 @@ namespace NzbDrone.Core.Notifications.Growl
             _growlService.SendNotification(ALBUM_GRABBED_TITLE, grabMessage.Message, "GRAB", Settings.Host, Settings.Port, Settings.Password);
         }
 
-        public override void OnDownload(TrackDownloadMessage message)
-        {
-            _growlService.SendNotification(TRACK_DOWNLOADED_TITLE, message.Message, "TRACKDOWNLOAD", Settings.Host, Settings.Port, Settings.Password);
-        }
-
-        public override void OnAlbumDownload(AlbumDownloadMessage message)
+        public override void OnReleaseImport(AlbumDownloadMessage message)
         {
             _growlService.SendNotification(ALBUM_DOWNLOADED_TITLE, message.Message, "ALBUMDOWNLOAD", Settings.Host, Settings.Port, Settings.Password);
         }

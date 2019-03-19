@@ -21,12 +21,7 @@ namespace NzbDrone.Core.Notifications.Plex.HomeTheater
             _plexClientService.Notify(Settings, ALBUM_GRABBED_TITLE_BRANDED, grabMessage.Message);
         }
 
-        public override void OnDownload(TrackDownloadMessage message)
-        {
-            _plexClientService.Notify(Settings, TRACK_DOWNLOADED_TITLE_BRANDED, message.Message);
-        }
-
-        public override void OnAlbumDownload(AlbumDownloadMessage message)
+        public override void OnReleaseImport(AlbumDownloadMessage message)
         {
             _plexClientService.Notify(Settings, ALBUM_DOWNLOADED_TITLE_BRANDED, message.Message);
         }

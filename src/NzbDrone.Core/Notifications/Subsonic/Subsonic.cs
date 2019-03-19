@@ -28,20 +28,12 @@ namespace NzbDrone.Core.Notifications.Subsonic
             Notify(Settings, header, grabMessage.Message);
         }
 
-        public override void OnAlbumDownload(AlbumDownloadMessage message)
+        public override void OnReleaseImport(AlbumDownloadMessage message)
         {
             const string header = "Lidarr - Downloaded";
 
             Notify(Settings, header, message.Message);
             Update();
-        }
-
-        public override void OnDownload(TrackDownloadMessage message)
-        {
-            const string header = "Lidarr - Downloaded";
-
-            Notify(Settings, header, message.Message);
-            
         }
 
         public override void OnRename(Artist artist)

@@ -39,8 +39,7 @@ function EditNotificationModalContent(props) {
     implementationName,
     name,
     onGrab,
-    onDownload,
-    onAlbumDownload,
+    onReleaseImport,
     onUpgrade,
     onRename,
     onHealthIssue,
@@ -48,8 +47,7 @@ function EditNotificationModalContent(props) {
     onImportFailure,
     onTrackRetag,
     supportsOnGrab,
-    supportsOnDownload,
-    supportsOnAlbumDownload,
+    supportsOnReleaseImport,
     supportsOnUpgrade,
     supportsOnRename,
     supportsOnHealthIssue,
@@ -117,33 +115,20 @@ function EditNotificationModalContent(props) {
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>On Album Import</FormLabel>
+                <FormLabel>On Release Import</FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.CHECK}
-                  name="onAlbumDownload"
-                  helpText="Be notified when complete albums are successfully imported"
-                  isDisabled={!supportsOnAlbumDownload.value}
-                  {...onAlbumDownload}
-                  onChange={onInputChange}
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <FormLabel>On Track Import</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.CHECK}
-                  name="onDownload"
-                  helpText="Be notified when track files are successfully imported"
-                  isDisabled={!supportsOnDownload.value}
-                  {...onDownload}
+                  name="onReleaseImport"
+                  helpText="Be notified when complete releases are successfully imported"
+                  isDisabled={!supportsOnReleaseImport.value}
+                  {...onReleaseImport}
                   onChange={onInputChange}
                 />
               </FormGroup>
 
               {
-                onDownload.value &&
+                onReleaseImport.value &&
                   <FormGroup>
                     <FormLabel>On Track Upgrade</FormLabel>
 
@@ -172,12 +157,12 @@ function EditNotificationModalContent(props) {
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>On Album Import Failure</FormLabel>
+                <FormLabel>On Release Import Failure</FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.CHECK}
                   name="onImportFailure"
-                  helpText="Be notified when albums cannot be fully imported"
+                  helpText="Be notified when releases cannot be fully imported"
                   isDisabled={!supportsOnImportFailure.value}
                   {...onImportFailure}
                   onChange={onInputChange}

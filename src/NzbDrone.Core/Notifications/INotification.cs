@@ -8,16 +8,14 @@ namespace NzbDrone.Core.Notifications
         string Link { get; }
 
         void OnGrab(GrabMessage grabMessage);
-        void OnDownload(TrackDownloadMessage message);
-        void OnAlbumDownload(AlbumDownloadMessage message);
+        void OnReleaseImport(AlbumDownloadMessage message);
         void OnRename(Artist artist);
         void OnHealthIssue(HealthCheck.HealthCheck healthCheck);
         void OnDownloadFailure(DownloadFailedMessage message);
         void OnImportFailure(AlbumDownloadMessage message);
         void OnTrackRetag(TrackRetagMessage message);
         bool SupportsOnGrab { get; }
-        bool SupportsOnDownload { get; }
-        bool SupportsOnAlbumDownload { get; }
+        bool SupportsOnReleaseImport { get; }
         bool SupportsOnUpgrade { get; }
         bool SupportsOnRename { get; }
         bool SupportsOnHealthIssue { get; }

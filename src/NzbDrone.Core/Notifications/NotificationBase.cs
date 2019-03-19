@@ -9,7 +9,6 @@ namespace NzbDrone.Core.Notifications
     public abstract class NotificationBase<TSettings> : INotification where TSettings : IProviderConfig, new()
     {
         protected const string ALBUM_GRABBED_TITLE = "Album Grabbed";
-        protected const string TRACK_DOWNLOADED_TITLE = "Track Downloaded";
         protected const string ALBUM_DOWNLOADED_TITLE = "Album Downloaded";
         protected const string HEALTH_ISSUE_TITLE = "Health Check Failure";
         protected const string DOWNLOAD_FAILURE_TITLE = "Download Failed";
@@ -17,7 +16,6 @@ namespace NzbDrone.Core.Notifications
         protected const string TRACK_RETAGGED_TITLE = "Track File Tags Updated";
 
         protected const string ALBUM_GRABBED_TITLE_BRANDED = "Lidarr - " + ALBUM_GRABBED_TITLE;
-        protected const string TRACK_DOWNLOADED_TITLE_BRANDED = "Lidarr - " + TRACK_DOWNLOADED_TITLE;
         protected const string ALBUM_DOWNLOADED_TITLE_BRANDED = "Lidarr - " + ALBUM_DOWNLOADED_TITLE;
         protected const string HEALTH_ISSUE_TITLE_BRANDED = "Lidarr - " + HEALTH_ISSUE_TITLE;
         protected const string DOWNLOAD_FAILURE_TITLE_BRANDED = "Lidarr - " + DOWNLOAD_FAILURE_TITLE;
@@ -42,12 +40,7 @@ namespace NzbDrone.Core.Notifications
 
         }
 
-        public virtual void OnDownload(TrackDownloadMessage message)
-        {
-
-        }
-
-        public virtual void OnAlbumDownload(AlbumDownloadMessage message)
+        public virtual void OnReleaseImport(AlbumDownloadMessage message)
         {
 
         }
@@ -79,9 +72,8 @@ namespace NzbDrone.Core.Notifications
 
         public bool SupportsOnGrab => HasConcreteImplementation("OnGrab");
         public bool SupportsOnRename => HasConcreteImplementation("OnRename");
-        public bool SupportsOnDownload => HasConcreteImplementation("OnDownload");
-        public bool SupportsOnAlbumDownload => HasConcreteImplementation("OnAlbumDownload");
-        public bool SupportsOnUpgrade => SupportsOnDownload;
+        public bool SupportsOnReleaseImport => HasConcreteImplementation("OnReleaseImport");
+        public bool SupportsOnUpgrade => SupportsOnReleaseImport;
         public bool SupportsOnHealthIssue => HasConcreteImplementation("OnHealthIssue");
         public bool SupportsOnDownloadFailure => HasConcreteImplementation("OnDownloadFailure");
         public bool SupportsOnImportFailure => HasConcreteImplementation("OnImportFailure");

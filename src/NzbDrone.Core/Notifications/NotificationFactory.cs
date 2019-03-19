@@ -10,8 +10,7 @@ namespace NzbDrone.Core.Notifications
     public interface INotificationFactory : IProviderFactory<INotification, NotificationDefinition>
     {
         List<INotification> OnGrabEnabled();
-        List<INotification> OnDownloadEnabled();
-        List<INotification> OnAlbumDownloadEnabled();
+        List<INotification> OnReleaseImportEnabled();
         List<INotification> OnUpgradeEnabled();
         List<INotification> OnRenameEnabled();
         List<INotification> OnHealthIssueEnabled();
@@ -32,14 +31,9 @@ namespace NzbDrone.Core.Notifications
             return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnGrab).ToList();
         }
 
-        public List<INotification> OnDownloadEnabled()
+        public List<INotification> OnReleaseImportEnabled()
         {
-            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnDownload).ToList();
-        }
-
-        public List<INotification> OnAlbumDownloadEnabled()
-        {
-            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnAlbumDownload).ToList();
+            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnReleaseImport).ToList();
         }
 
         public List<INotification> OnUpgradeEnabled()
@@ -77,8 +71,7 @@ namespace NzbDrone.Core.Notifications
             base.SetProviderCharacteristics(provider, definition);
 
             definition.SupportsOnGrab = provider.SupportsOnGrab;
-            definition.SupportsOnDownload = provider.SupportsOnDownload;
-            definition.SupportsOnAlbumDownload = provider.SupportsOnAlbumDownload;
+            definition.SupportsOnReleaseImport = provider.SupportsOnReleaseImport;
             definition.SupportsOnUpgrade = provider.SupportsOnUpgrade;
             definition.SupportsOnRename = provider.SupportsOnRename;
             definition.SupportsOnHealthIssue = provider.SupportsOnHealthIssue;

@@ -37,24 +37,7 @@ namespace NzbDrone.Core.Notifications.Discord
             _proxy.SendPayload(payload, Settings);
         }
 
-        public override void OnDownload(TrackDownloadMessage message)
-        {
-            var embeds = new List<Embed>
-                              {
-                                  new Embed
-                                  {
-                                      Description = message.Message,
-                                      Title = message.Artist.Name,
-                                      Text = message.Message,
-                                      Color = (int)DiscordColors.Success
-                                  }
-                              };
-            var payload = CreatePayload($"Imported: {message.Message}", embeds);
-
-            _proxy.SendPayload(payload, Settings);
-        }
-
-        public override void OnAlbumDownload(AlbumDownloadMessage message)
+        public override void OnReleaseImport(AlbumDownloadMessage message)
         {
             var attachments = new List<Embed>
             {

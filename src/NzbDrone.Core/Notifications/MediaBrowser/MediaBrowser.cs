@@ -26,7 +26,7 @@ namespace NzbDrone.Core.Notifications.Emby
             }
         }
 
-        public override void OnAlbumDownload(AlbumDownloadMessage message)
+        public override void OnReleaseImport(AlbumDownloadMessage message)
         {
             if (Settings.Notify)
             {
@@ -36,14 +36,6 @@ namespace NzbDrone.Core.Notifications.Emby
             if (Settings.UpdateLibrary)
             {
                 _mediaBrowserService.Update(Settings, message.Artist);
-            }
-        }
-
-        public override void OnDownload(TrackDownloadMessage message)
-        {
-            if (Settings.Notify)
-            {
-                _mediaBrowserService.Notify(Settings, TRACK_DOWNLOADED_TITLE_BRANDED, message.Message);
             }
         }
 

@@ -25,14 +25,7 @@ namespace NzbDrone.Core.Notifications.Email
             _emailService.SendEmail(Settings, ALBUM_GRABBED_TITLE_BRANDED, body);
         }
 
-        public override void OnDownload(TrackDownloadMessage message)
-        {
-            var body = $"{message.Message} Downloaded and sorted.";
-
-            _emailService.SendEmail(Settings, TRACK_DOWNLOADED_TITLE_BRANDED, body);
-        }
-
-        public override void OnAlbumDownload(AlbumDownloadMessage message)
+        public override void OnReleaseImport(AlbumDownloadMessage message)
         {
             var body = $"{message.Message} Downloaded and sorted.";
 

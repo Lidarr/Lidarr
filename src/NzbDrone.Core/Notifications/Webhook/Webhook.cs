@@ -41,29 +41,6 @@ namespace NzbDrone.Core.Notifications.Webhook
             _proxy.SendWebhook(payload, Settings);
         }
 
-        public override void OnDownload(TrackDownloadMessage message)
-        {
-            var trackFile = message.TrackFile;
-
-            var payload = new WebhookImportPayload
-
-            {
-                EventType = "Download",
-                Artist = new WebhookArtist(message.Artist),
-                Tracks = trackFile.Tracks.Value.ConvertAll(x => new WebhookTrack(x)
-                {
-                    // TODO: Stop passing these parameters inside an episode v3
-                    Quality = trackFile.Quality.Quality.Name,
-                    QualityVersion = trackFile.Quality.Revision.Version,
-                    ReleaseGroup = trackFile.ReleaseGroup
-                }),
-                TrackFile = new WebhookTrackFile(trackFile),
-                IsUpgrade = message.OldFiles.Any()
-            };
-
-            _proxy.SendWebhook(payload, Settings);
-        }
-
         public override void OnRename(Artist artist)
         {
             var payload = new WebhookPayload

@@ -21,12 +21,7 @@ namespace NzbDrone.Core.Notifications.Pushover
             _proxy.SendNotification(ALBUM_GRABBED_TITLE, grabMessage.Message, Settings);
         }
 
-        public override void OnDownload(TrackDownloadMessage message)
-        {
-            _proxy.SendNotification(TRACK_DOWNLOADED_TITLE, message.Message, Settings);
-        }
-
-        public override void OnAlbumDownload(AlbumDownloadMessage message)
+        public override void OnReleaseImport(AlbumDownloadMessage message)
         {
             _proxy.SendNotification(ALBUM_DOWNLOADED_TITLE, message.Message, Settings);
         }

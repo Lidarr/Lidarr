@@ -55,8 +55,7 @@ class Notification extends Component {
       id,
       name,
       onGrab,
-      onDownload,
-      onAlbumDownload,
+      onReleaseImport,
       onUpgrade,
       onRename,
       onHealthIssue,
@@ -64,8 +63,7 @@ class Notification extends Component {
       onImportFailure,
       onTrackRetag,
       supportsOnGrab,
-      supportsOnDownload,
-      supportsOnAlbumDownload,
+      supportsOnReleaseImport,
       supportsOnUpgrade,
       supportsOnRename,
       supportsOnHealthIssue,
@@ -92,21 +90,14 @@ class Notification extends Component {
         }
 
         {
-          supportsOnAlbumDownload && onAlbumDownload &&
+          supportsOnReleaseImport && onReleaseImport &&
             <Label kind={kinds.SUCCESS}>
-              On Album Download
+              On Release Import
             </Label>
         }
 
         {
-          supportsOnDownload && onDownload &&
-            <Label kind={kinds.SUCCESS}>
-              On Import
-            </Label>
-        }
-
-        {
-          supportsOnUpgrade && onDownload && onUpgrade &&
+          supportsOnUpgrade && onReleaseImport && onUpgrade &&
             <Label kind={kinds.SUCCESS}>
               On Upgrade
             </Label>
@@ -148,7 +139,7 @@ class Notification extends Component {
         }
 
         {
-          !onGrab && !onAlbumDownload && !onDownload && !onRename && !onTrackRetag &&
+          !onGrab && !onReleaseImport && !onRename && !onTrackRetag &&
             !onHealthIssue && !onDownloadFailure && !onImportFailure &&
             <Label
               kind={kinds.DISABLED}
@@ -183,8 +174,7 @@ Notification.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   onGrab: PropTypes.bool.isRequired,
-  onDownload: PropTypes.bool.isRequired,
-  onAlbumDownload: PropTypes.bool.isRequired,
+  onReleaseImport: PropTypes.bool.isRequired,
   onUpgrade: PropTypes.bool.isRequired,
   onRename: PropTypes.bool.isRequired,
   onHealthIssue: PropTypes.bool.isRequired,
@@ -192,8 +182,7 @@ Notification.propTypes = {
   onImportFailure: PropTypes.bool.isRequired,
   onTrackRetag: PropTypes.bool.isRequired,
   supportsOnGrab: PropTypes.bool.isRequired,
-  supportsOnDownload: PropTypes.bool.isRequired,
-  supportsOnAlbumDownload: PropTypes.bool.isRequired,
+  supportsOnReleaseImport: PropTypes.bool.isRequired,
   supportsOnUpgrade: PropTypes.bool.isRequired,
   supportsOnRename: PropTypes.bool.isRequired,
   supportsOnHealthIssue: PropTypes.bool.isRequired,

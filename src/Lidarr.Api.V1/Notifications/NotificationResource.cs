@@ -6,8 +6,7 @@ namespace Lidarr.Api.V1.Notifications
     {
         public string Link { get; set; }
         public bool OnGrab { get; set; }
-        public bool OnDownload { get; set; }
-        public bool OnAlbumDownload { get; set; }
+        public bool OnReleaseImport { get; set; }
         public bool OnUpgrade { get; set; }
         public bool OnRename { get; set; }
         public bool OnHealthIssue { get; set; }
@@ -15,8 +14,7 @@ namespace Lidarr.Api.V1.Notifications
         public bool OnImportFailure { get; set; }
         public bool OnTrackRetag { get; set; }
         public bool SupportsOnGrab { get; set; }
-        public bool SupportsOnDownload { get; set; }
-        public bool SupportsOnAlbumDownload { get; set; }
+        public bool SupportsOnReleaseImport { get; set; }
         public bool SupportsOnUpgrade { get; set; }
         public bool SupportsOnRename { get; set; }
         public bool SupportsOnHealthIssue { get; set; }
@@ -36,8 +34,7 @@ namespace Lidarr.Api.V1.Notifications
             var resource = base.ToResource(definition);
 
             resource.OnGrab = definition.OnGrab;
-            resource.OnDownload = definition.OnDownload;
-            resource.OnAlbumDownload = definition.OnAlbumDownload;
+            resource.OnReleaseImport = definition.OnReleaseImport;
             resource.OnUpgrade = definition.OnUpgrade;
             resource.OnRename = definition.OnRename;
             resource.OnHealthIssue = definition.OnHealthIssue;
@@ -45,8 +42,7 @@ namespace Lidarr.Api.V1.Notifications
             resource.OnImportFailure = definition.OnImportFailure;
             resource.OnTrackRetag = definition.OnTrackRetag;
             resource.SupportsOnGrab = definition.SupportsOnGrab;
-            resource.SupportsOnDownload = definition.SupportsOnDownload;
-            resource.SupportsOnAlbumDownload = definition.SupportsOnAlbumDownload;
+            resource.SupportsOnReleaseImport = definition.SupportsOnReleaseImport;
             resource.SupportsOnUpgrade = definition.SupportsOnUpgrade;
             resource.SupportsOnRename = definition.SupportsOnRename;
             resource.SupportsOnHealthIssue = definition.SupportsOnHealthIssue;
@@ -65,8 +61,7 @@ namespace Lidarr.Api.V1.Notifications
             var definition = base.ToModel(resource);
 
             definition.OnGrab = resource.OnGrab;
-            definition.OnDownload = resource.OnDownload;
-            definition.OnAlbumDownload = resource.OnAlbumDownload;
+            definition.OnReleaseImport = resource.OnReleaseImport;
             definition.OnUpgrade = resource.OnUpgrade;
             definition.OnRename = resource.OnRename;
             definition.OnHealthIssue = resource.OnHealthIssue;
@@ -74,8 +69,7 @@ namespace Lidarr.Api.V1.Notifications
             definition.OnImportFailure = resource.OnImportFailure;
             definition.OnTrackRetag = resource.OnTrackRetag;
             definition.SupportsOnGrab = resource.SupportsOnGrab;
-            definition.SupportsOnDownload = resource.SupportsOnDownload;
-            definition.SupportsOnAlbumDownload = resource.SupportsOnAlbumDownload;
+            definition.SupportsOnReleaseImport = resource.SupportsOnReleaseImport;
             definition.SupportsOnUpgrade = resource.SupportsOnUpgrade;
             definition.SupportsOnRename = resource.SupportsOnRename;
             definition.SupportsOnHealthIssue = resource.SupportsOnHealthIssue;

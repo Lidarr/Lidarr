@@ -17,7 +17,6 @@ namespace NzbDrone.Core.Notifications
 {
     public class NotificationService
         : IHandle<AlbumGrabbedEvent>,
-          IHandle<TrackImportedEvent>,
           IHandle<AlbumImportedEvent>,
           IHandle<ArtistRenamedEvent>,
           IHandle<HealthCheckFailedEvent>,
@@ -158,47 +157,6 @@ namespace NzbDrone.Core.Notifications
             }
         }
 
-        public void Handle(TrackImportedEvent message)
-        {
-            if (!message.NewDownload)
-            {
-                return;
-            }
-
-            var downloadMessage = new TrackDownloadMessage
-
-            {
-                Message = GetTrackMessage(message.TrackInfo.Artist, message.TrackInfo.Tracks, message.TrackInfo.Quality),
-                Artist = message.TrackInfo.Artist,
-                Album = message.TrackInfo.Album,
-                Release = message.TrackInfo.Release,
-                TrackFile = message.ImportedTrack,
-                OldFiles = message.OldFiles,
-                SourcePath = message.TrackInfo.Path,
-                DownloadClient = message.DownloadClient,
-                DownloadId = message.DownloadId
-            };
-
-            foreach (var notification in _notificationFactory.OnDownloadEnabled())
-            {
-                try
-                {
-                    if (ShouldHandleArtist(notification.Definition, message.TrackInfo.Artist))
-                    {
-                        if (downloadMessage.OldFiles.Empty() || ((NotificationDefinition)notification.Definition).OnUpgrade)
-                        {
-                            notification.OnDownload(downloadMessage);
-                        }
-                    }
-                }
-
-                catch (Exception ex)
-                {
-                    _logger.Warn(ex, "Unable to send OnDownload notification to: " + notification.Definition.Name);
-                }
-            }
-        }
-
         public void Handle(AlbumImportedEvent message)
         {
             if (!message.NewDownload)
@@ -219,13 +177,13 @@ namespace NzbDrone.Core.Notifications
                 OldFiles = message.OldFiles,
             };
 
-            foreach (var notification in _notificationFactory.OnAlbumDownloadEnabled())
+            foreach (var notification in _notificationFactory.OnReleaseImportEnabled())
             {
                 try
                 {
                     if (ShouldHandleArtist(notification.Definition, message.Artist))
                     {
-                        notification.OnAlbumDownload(downloadMessage);
+                        notification.OnReleaseImport(downloadMessage);
                     }
                 }
 

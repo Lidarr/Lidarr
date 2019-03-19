@@ -21,14 +21,9 @@ namespace NzbDrone.Core.Notifications.Boxcar
             _proxy.SendNotification(ALBUM_GRABBED_TITLE, grabMessage.Message, Settings);
         }
 
-        public override void OnDownload(TrackDownloadMessage message)
+        public override void OnReleaseImport(AlbumDownloadMessage message)
         {
-            _proxy.SendNotification(TRACK_DOWNLOADED_TITLE , message.Message, Settings);
-        }
-
-        public override void OnAlbumDownload(AlbumDownloadMessage message)
-        {
-            _proxy.SendNotification(TRACK_DOWNLOADED_TITLE, message.Message, Settings);
+            _proxy.SendNotification(ALBUM_DOWNLOADED_TITLE, message.Message, Settings);
         }
 
         public override void OnHealthIssue(HealthCheck.HealthCheck message)

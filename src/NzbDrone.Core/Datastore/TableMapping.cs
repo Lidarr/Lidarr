@@ -72,8 +72,7 @@ namespace NzbDrone.Core.Datastore
 
             Mapper.Entity<NotificationDefinition>().RegisterDefinition("Notifications")
                   .Ignore(i => i.SupportsOnGrab)
-                  .Ignore(i => i.SupportsOnDownload)
-                  .Ignore(i => i.SupportsOnAlbumDownload)
+                  .Ignore(i => i.SupportsOnReleaseImport)
                   .Ignore(i => i.SupportsOnUpgrade)
                   .Ignore(i => i.SupportsOnRename)
                   .Ignore(i => i.SupportsOnHealthIssue)
