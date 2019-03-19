@@ -195,7 +195,6 @@ namespace NzbDrone.Core.Music
                 remoteReleases.OrderByDescending(x => x.TrackCount).First();
             refreshedToMonitor.Monitored = true;
             
-            _logger.Trace($"existing monitored {existingToMonitor} new monitored {refreshedToMonitor}");
             if (upToDateReleaseList.Contains(refreshedToMonitor))
             {
                 // we weren't going to update, but have changed monitored so now need to
