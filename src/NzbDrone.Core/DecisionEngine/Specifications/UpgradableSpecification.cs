@@ -10,14 +10,11 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
     public interface IUpgradableSpecification
     {
         bool IsUpgradable(QualityProfile profile, LanguageProfile languageProfile, List<QualityModel> currentQualities, List<Language> currentLanguages, int currentScore, QualityModel newQuality, Language newLanguage, int newScore);
-        bool IsUpgradable(QualityProfile profile, LanguageProfile languageProfile, QualityModel currentQuality, Language currentLanguage, int currentScore, QualityModel newQuality, Language newLanguage, int newScore);
         bool QualityCutoffNotMet(QualityProfile profile, QualityModel currentQuality, QualityModel newQuality = null);
         bool LanguageCutoffNotMet(LanguageProfile languageProfile, Language currentLanguage);
         bool CutoffNotMet(QualityProfile profile, LanguageProfile languageProfile, List<QualityModel> currentQualities, List<Language> currentLanguages, int currentScore, QualityModel newQuality = null, int newScore = 0);
-        bool CutoffNotMet(QualityProfile profile, LanguageProfile languageProfile, QualityModel currentQuality, Language currentLanguage, int currentScore, QualityModel newQuality = null, int newScore = 0);
         bool IsRevisionUpgrade(QualityModel currentQuality, QualityModel newQuality);
         bool IsUpgradeAllowed(QualityProfile qualityProfile, LanguageProfile languageProfile, List<QualityModel> currentQualities, List<Language> currentLanguages, QualityModel newQuality, Language newLanguage);
-        bool IsUpgradeAllowed(QualityProfile qualityProfile, LanguageProfile languageProfile, QualityModel currentQuality, Language currentLanguage, QualityModel newQuality, Language newLanguage);
     }
 
     public class UpgradableSpecification : IUpgradableSpecification
@@ -29,7 +26,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             _logger = logger;
         }
 
-        private bool IsLanguageUpgradable(LanguageProfile profile, List<Language> currentLanguages, Language newLanguage = null) 
+        private UpgradeType IsLanguageUpgradable(LanguageProfile profile, List<Language> currentLanguages, Language newLanguage = null) 
         {
             if (newLanguage != null)
             {
@@ -44,20 +41,20 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                     // Not upgradable if new language is a downgrade for any current lanaguge
                     if (compare < 0)
                     {
-                        return false;
+                        return UpgradeType.Downgrade;
                     }
                 }
 
                 // Not upgradable if new language is equal to all current languages
                 if (totalCompare == 0)
                 {
-                    return false;
+                    return UpgradeType.Equal;
                 }
             }
-            return true;
+            return UpgradeType.Upgrade;
         }
 
-        private bool IsQualityUpgradable(QualityProfile profile, List<QualityModel> currentQualities, QualityModel newQuality = null)
+        private UpgradeType IsQualityUpgradable(QualityProfile profile, List<QualityModel> currentQualities, QualityModel newQuality = null)
         {
             if (newQuality != null)
             {
@@ -72,17 +69,17 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                     if (compare < 0)
                     {
                         // Not upgradable if new quality is a downgrade for any current quality
-                        return false;
+                        return UpgradeType.Downgrade;
                     }
                 }
 
                 // Not upgradable if new quality is equal to all current qualities
                 if (totalCompare == 0) {
-                    return false;
+                    return UpgradeType.Equal;
                 }
             }
 
-            return true;
+            return UpgradeType.Upgrade;
         }
 
         private bool IsPreferredWordUpgradable(int currentScore, int newScore)
@@ -92,62 +89,28 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
         public bool IsUpgradable(QualityProfile qualityProfile, LanguageProfile languageProfile, List<QualityModel> currentQualities, List<Language> currentLanguages, int currentScore, QualityModel newQuality, Language newLanguage, int newScore)
         {
-            if (IsQualityUpgradable(qualityProfile, currentQualities, newQuality))
+
+            var qualityUpgrade = IsQualityUpgradable(qualityProfile, currentQualities, newQuality);
+
+            if (qualityUpgrade == UpgradeType.Upgrade)
             {
                 return true;
             }
 
-            foreach (var quality in currentQualities)
-            {
-                if (new QualityModelComparer(qualityProfile).Compare(newQuality, quality) < 0)
-                {
-                    _logger.Debug("Existing item has better quality, skipping");
-                    return false;
-                }
-            }
-
-            if (IsLanguageUpgradable(languageProfile, currentLanguages, newLanguage))
-            {
-                return true;
-            }
-
-            foreach (var language in currentLanguages)
-            {
-                if (new LanguageComparer(languageProfile).Compare(newLanguage, language) < 0)
-                {
-                    _logger.Debug("Existing item has better language, skipping");
-                    return false;
-                }
-            }
-
-            if (!IsPreferredWordUpgradable(currentScore, newScore))
-            {
-                _logger.Debug("Existing item has a better preferred word score, skipping");
-                return false;
-            }
-
-            return true;
-        }
-
-        public bool IsUpgradable(QualityProfile qualityProfile, LanguageProfile languageProfile, QualityModel currentQuality, Language currentLanguage, int currentScore, QualityModel newQuality, Language newLanguage, int newScore)
-        {
-            if (IsQualityUpgradable(qualityProfile, new List<QualityModel> { currentQuality }, newQuality))
-            {
-                return true;
-            }
-
-            if (new QualityModelComparer(qualityProfile).Compare(newQuality, currentQuality) < 0)
+            if (qualityUpgrade == UpgradeType.Downgrade)
             {
                 _logger.Debug("Existing item has better quality, skipping");
                 return false;
             }
 
-            if (IsLanguageUpgradable(languageProfile, new List<Language> { currentLanguage }, newLanguage))
+            var languageUpgrade = IsLanguageUpgradable(languageProfile, currentLanguages, newLanguage);
+
+            if (languageUpgrade == UpgradeType.Upgrade)
             {
                 return true;
             }
 
-            if (new LanguageComparer(languageProfile).Compare(newLanguage, currentLanguage) < 0)
+            if (languageUpgrade == UpgradeType.Downgrade)
             {
                 _logger.Debug("Existing item has better language, skipping");
                 return false;
@@ -216,30 +179,6 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             return false;
         }
 
-        public bool CutoffNotMet(QualityProfile profile, LanguageProfile languageProfile, QualityModel currentQuality, Language currentLanguage, int currentScore, QualityModel newQuality = null, int newScore = 0)
-        {
-            // If we can upgrade the language (it is not the cutoff) then the quality doesn't
-            // matter as we can always get same quality with prefered language.
-            if (LanguageCutoffNotMet(languageProfile, currentLanguage))
-            {
-                return true;
-            }
-
-            if (QualityCutoffNotMet(profile, currentQuality, newQuality))
-            {
-                return true;
-            }
-
-            if (IsPreferredWordUpgradable(currentScore, newScore))
-            {
-                return true;
-            }
-
-            _logger.Debug("Existing item meets cut-off. skipping.");
-
-            return false;
-        }
-
         public bool IsRevisionUpgrade(QualityModel currentQuality, QualityModel newQuality)
         {
             var compare = newQuality.Revision.CompareTo(currentQuality.Revision);
@@ -262,36 +201,35 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             return CheckUpgradeAllowed(qualityProfile,languageProfile,isQualityUpgrade,isLanguageUpgrade);
         }
 
-        public bool IsUpgradeAllowed(QualityProfile qualityProfile, LanguageProfile languageProfile, QualityModel currentQuality, Language currentLanguage, QualityModel newQuality, Language newLanguage)
+        private bool CheckUpgradeAllowed (QualityProfile qualityProfile, LanguageProfile languageProfile, UpgradeType isQualityUpgrade, UpgradeType isLanguageUpgrade)
         {
-            var isQualityUpgrade = new QualityModelComparer(qualityProfile).Compare(newQuality, currentQuality) > 0;
-            var isLanguageUpgrade = new LanguageComparer(languageProfile).Compare(newLanguage, currentLanguage) > 0;
-
-            return CheckUpgradeAllowed(qualityProfile, languageProfile, isQualityUpgrade, isLanguageUpgrade);
-        }
-
-        private bool CheckUpgradeAllowed (QualityProfile qualityProfile, LanguageProfile languageProfile, bool isQualityUpgrade, bool isLanguageUpgrade)
-        {
-            if (isQualityUpgrade && qualityProfile.UpgradeAllowed ||
-                isLanguageUpgrade && languageProfile.UpgradeAllowed)
+            if (isQualityUpgrade == UpgradeType.Upgrade && qualityProfile.UpgradeAllowed ||
+                isLanguageUpgrade == UpgradeType.Upgrade && languageProfile.UpgradeAllowed)
             {
                 _logger.Debug("At least one profile allows upgrading");
                 return true;
             }
 
-            if (isQualityUpgrade && !qualityProfile.UpgradeAllowed)
+            if (isQualityUpgrade == UpgradeType.Upgrade && !qualityProfile.UpgradeAllowed)
             {
                 _logger.Debug("Quality profile does not allow upgrades, skipping");
                 return false;
             }
 
-            if (isLanguageUpgrade && !languageProfile.UpgradeAllowed)
+            if (isLanguageUpgrade == UpgradeType.Upgrade && !languageProfile.UpgradeAllowed)
             {
                 _logger.Debug("Language profile does not allow upgrades, skipping");
                 return false;
             }
 
             return true;
+        }
+
+        private enum UpgradeType
+        {
+            Downgrade = -1,
+            Equal = 0,
+            Upgrade = 1
         }
     }
 }

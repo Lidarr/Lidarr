@@ -1,8 +1,11 @@
+using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Languages;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Profiles.Releases;
+using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Queue;
 
 namespace NzbDrone.Core.DecisionEngine.Specifications
@@ -49,8 +52,8 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
                 if (!_upgradableSpecification.CutoffNotMet(qualityProfile,
                                                            languageProfile,
-                                                           remoteAlbum.ParsedAlbumInfo.Quality,
-                                                           remoteAlbum.ParsedAlbumInfo.Language,
+                                                           new List<QualityModel> { remoteAlbum.ParsedAlbumInfo.Quality },
+                                                           new List<Language> { remoteAlbum.ParsedAlbumInfo.Language },
                                                            queuedItemPreferredWordScore,
                                                            subject.ParsedAlbumInfo.Quality,
                                                            subject.PreferredWordScore))
@@ -63,8 +66,8 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
                 if (!_upgradableSpecification.IsUpgradable(qualityProfile,
                                                            languageProfile,
-                                                           remoteAlbum.ParsedAlbumInfo.Quality,
-                                                           remoteAlbum.ParsedAlbumInfo.Language,
+                                                           new List<QualityModel> { remoteAlbum.ParsedAlbumInfo.Quality },
+                                                           new List<Language> { remoteAlbum.ParsedAlbumInfo.Language },
                                                            queuedItemPreferredWordScore,
                                                            subject.ParsedAlbumInfo.Quality,
                                                            subject.ParsedAlbumInfo.Language,
@@ -77,8 +80,8 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
                 if (!_upgradableSpecification.IsUpgradeAllowed(qualityProfile,
                                                                languageProfile,
-                                                               remoteAlbum.ParsedAlbumInfo.Quality,
-                                                               remoteAlbum.ParsedAlbumInfo.Language,
+                                                               new List<QualityModel> { remoteAlbum.ParsedAlbumInfo.Quality },
+                                                               new List<Language> { remoteAlbum.ParsedAlbumInfo.Language },
                                                                subject.ParsedAlbumInfo.Quality,
                                                                subject.ParsedAlbumInfo.Language))
                 {
