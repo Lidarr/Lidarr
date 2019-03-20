@@ -7,6 +7,7 @@ using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Common.Cache;
 using NzbDrone.Core.Profiles.Releases;
+using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Core.DecisionEngine.Specifications
 {
@@ -52,7 +53,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                     var currentQualities = trackFiles.Select(c => c.Quality).Distinct().ToList();
                     var currentLanguages = trackFiles.Select(c => c.Language).Distinct().ToList();
 
-                    _logger.Debug("Comparing file quality and language with report. Existing files contain {0} : {1}", currentQualities, currentLanguages);
+                    _logger.Debug("Comparing file quality and language with report. Existing files contain {0} : {1}", currentQualities.ConcatToString(), currentLanguages.ConcatToString());
 
                     if (!_upgradableSpecification.IsUpgradeAllowed(qualityProfile,
                                                                languageProfile,

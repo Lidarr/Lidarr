@@ -7,6 +7,7 @@ using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Common.Cache;
 using NzbDrone.Core.Profiles.Releases;
+using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Core.DecisionEngine.Specifications
 {
@@ -60,7 +61,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                                                                subject.ParsedAlbumInfo.Language,
                                                                subject.PreferredWordScore))
                     {
-                        return Decision.Reject("Existing files on disk is of equal or higher preference: {0} - {1}", currentQualities, currentLanguages);
+                        return Decision.Reject("Existing files on disk is of equal or higher preference: {0} - {1}", currentQualities.ConcatToString(), currentLanguages.ConcatToString());
                     }
                 }
 
