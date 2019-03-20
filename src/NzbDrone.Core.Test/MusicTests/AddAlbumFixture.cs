@@ -21,8 +21,8 @@ namespace NzbDrone.Core.Test.MusicTests
     {
         private Album _fakeAlbum;
         private AlbumRelease _fakeRelease;
+        private List<ArtistMetadata> _fakeArtists;
         private readonly string _fakeArtistForeignId = "xxx-xxx-xxx";
-        private readonly List<ArtistMetadata> _fakeArtists = new List<ArtistMetadata> { new ArtistMetadata() };
 
         [SetUp]
         public void Setup()
@@ -35,10 +35,19 @@ namespace NzbDrone.Core.Test.MusicTests
                 .Build();
             _fakeRelease.Tracks = new List<Track>();
             _fakeAlbum.AlbumReleases = new List<AlbumRelease> {_fakeRelease};
+        
+            _fakeArtists = Builder<ArtistMetadata>.CreateListOfSize(1)
+                .TheFirst(1)
+                .With(x => x.ForeignArtistId = _fakeArtistForeignId)
+                .Build() as List<ArtistMetadata>;
             
             Mocker.GetMock<IReleaseService>()
                 .Setup(x => x.GetReleasesForRefresh(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
                 .Returns(new List<AlbumRelease>());
+
+            Mocker.GetMock<IArtistMetadataRepository>()
+                .Setup(x => x.FindById(_fakeArtistForeignId))
+                .Returns(_fakeArtists[0]);
         }
 
         private void GivenValidAlbum(string lidarrId)
