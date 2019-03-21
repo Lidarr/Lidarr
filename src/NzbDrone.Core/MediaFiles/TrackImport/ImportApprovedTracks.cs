@@ -67,6 +67,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                    .ThenByDescending(c => c.Item.Size))
                .SelectMany(c => c)
                .ToList();
+            
+            _logger.Debug($"Importing {qualifiedImports.Count} files. replaceExisting: {replaceExisting}");
 
             var importResults = new List<ImportResult>();
             var allImportedTrackFiles = new List<TrackFile>();
@@ -86,6 +88,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                     var rootFolder = _diskProvider.GetParentFolder(artist.Path);
                     var previousFiles = _mediaFileService.GetFilesByAlbum(album.Id);
 
+                    _logger.Debug($"Deleting {previousFiles.Count} existing files for {album}");
+                    
                     foreach (var previousFile in previousFiles)
                     {
                         var trackFilePath = Path.Combine(artist.Path, previousFile.RelativePath);

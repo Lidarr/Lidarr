@@ -26,5 +26,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
         public ParsedTrackInfo Tags { get; set; }
         public bool AdditionalFile { get; set; }
         public bool ReplaceExistingFiles { get; set; }
+        public bool DisableReleaseSwitching { get; set; }
     }
 }

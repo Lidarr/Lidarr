@@ -128,7 +128,7 @@ class InteractiveImportModalContentConnector extends Component {
           tracks,
           quality,
           language,
-          isExistingTrack
+          disableReleaseSwitching
         } = item;
 
         if (!artist) {
@@ -166,7 +166,7 @@ class InteractiveImportModalContentConnector extends Component {
           quality,
           language,
           downloadId: this.props.downloadId,
-          existingFile: isExistingTrack
+          disableReleaseSwitching
         });
       }
     });

@@ -32,6 +32,7 @@ class SelectAlbumReleaseModalContentConnector extends Component {
       this.props.updateInteractiveImportItem({
         id,
         albumReleaseId,
+        disableReleaseSwitching: true,
         tracks: [],
         rejections: []
       });

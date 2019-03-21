@@ -80,7 +80,8 @@ namespace Lidarr.Api.V1.ManualImport
                         Language = resource.Language,
                         DownloadId = resource.DownloadId,
                         AdditionalFile = resource.AdditionalFile,
-                        ReplaceExistingFiles = resource.ReplaceExistingFiles
+                        ReplaceExistingFiles = resource.ReplaceExistingFiles,
+                        DisableReleaseSwitching = resource.DisableReleaseSwitching
                     });
             }
             

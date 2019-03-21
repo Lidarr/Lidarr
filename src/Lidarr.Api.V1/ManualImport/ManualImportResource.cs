@@ -31,6 +31,7 @@ namespace Lidarr.Api.V1.ManualImport
         public ParsedTrackInfo AudioTags { get; set; }
         public bool AdditionalFile { get; set; }
         public bool ReplaceExistingFiles { get; set; }
+        public bool DisableReleaseSwitching { get; set; }
     }
 
     public static class ManualImportResourceMapper
@@ -58,7 +59,8 @@ namespace Lidarr.Api.V1.ManualImport
                 Rejections = model.Rejections,
                 AudioTags = model.Tags,
                 AdditionalFile = model.AdditionalFile,
-                ReplaceExistingFiles = model.ReplaceExistingFiles
+                ReplaceExistingFiles = model.ReplaceExistingFiles,
+                DisableReleaseSwitching = model.DisableReleaseSwitching
             };
         }
 

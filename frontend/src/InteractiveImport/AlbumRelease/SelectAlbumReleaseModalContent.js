@@ -9,6 +9,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import SelectAlbumReleaseRow from './SelectAlbumReleaseRow';
+import Alert from 'Components/Alert';
 import styles from './SelectAlbumReleaseModalContent.css';
 
 const columns = [
@@ -40,13 +41,17 @@ class SelectAlbumReleaseModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Manual Import - Select AlbumRelease
+          Manual Import - Select Album Release
         </ModalHeader>
 
         <ModalBody
           className={styles.modalBody}
           scrollDirection={scrollDirections.NONE}
         >
+          <Alert>
+            Overrriding a release here will <b>disable automatic release selection</b> for that album in future.
+          </Alert>
+
           <Table
             columns={columns}
             {...otherProps}
