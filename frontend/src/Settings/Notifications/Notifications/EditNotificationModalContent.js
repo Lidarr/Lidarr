@@ -14,6 +14,7 @@ import FormGroup from 'Components/Form/FormGroup';
 import FormLabel from 'Components/Form/FormLabel';
 import FormInputGroup from 'Components/Form/FormInputGroup';
 import ProviderFieldFormGroup from 'Components/Form/ProviderFieldFormGroup';
+import NotificationEventItems from './NotificationEventItems';
 import styles from './EditNotificationModalContent.css';
 
 function EditNotificationModalContent(props) {
@@ -38,23 +39,6 @@ function EditNotificationModalContent(props) {
     id,
     implementationName,
     name,
-    onGrab,
-    onReleaseImport,
-    onUpgrade,
-    onRename,
-    onHealthIssue,
-    onDownloadFailure,
-    onImportFailure,
-    onTrackRetag,
-    supportsOnGrab,
-    supportsOnReleaseImport,
-    supportsOnUpgrade,
-    supportsOnRename,
-    supportsOnHealthIssue,
-    includeHealthWarnings,
-    supportsOnDownloadFailure,
-    supportsOnImportFailure,
-    supportsOnTrackRetag,
     tags,
     fields,
     message
@@ -101,128 +85,10 @@ function EditNotificationModalContent(props) {
                 />
               </FormGroup>
 
-              <FormGroup>
-                <FormLabel>On Grab</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.CHECK}
-                  name="onGrab"
-                  helpText="Be notified when albums are available for download and has been sent to a download client"
-                  isDisabled={!supportsOnGrab.value}
-                  {...onGrab}
-                  onChange={onInputChange}
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <FormLabel>On Release Import</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.CHECK}
-                  name="onReleaseImport"
-                  helpText="Be notified when complete releases are successfully imported"
-                  isDisabled={!supportsOnReleaseImport.value}
-                  {...onReleaseImport}
-                  onChange={onInputChange}
-                />
-              </FormGroup>
-
-              {
-                onReleaseImport.value &&
-                  <FormGroup>
-                    <FormLabel>On Track Upgrade</FormLabel>
-
-                    <FormInputGroup
-                      type={inputTypes.CHECK}
-                      name="onUpgrade"
-                      helpText="Be notified when tracks are upgraded to a better quality"
-                      isDisabled={!supportsOnUpgrade.value}
-                      {...onUpgrade}
-                      onChange={onInputChange}
-                    />
-                  </FormGroup>
-              }
-
-              <FormGroup>
-                <FormLabel>On Download Failure</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.CHECK}
-                  name="onDownloadFailure"
-                  helpText="Be notified when downloads fail to complete"
-                  isDisabled={!supportsOnDownloadFailure.value}
-                  {...onDownloadFailure}
-                  onChange={onInputChange}
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <FormLabel>On Release Import Failure</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.CHECK}
-                  name="onImportFailure"
-                  helpText="Be notified when releases cannot be fully imported"
-                  isDisabled={!supportsOnImportFailure.value}
-                  {...onImportFailure}
-                  onChange={onInputChange}
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <FormLabel>On Rename</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.CHECK}
-                  name="onRename"
-                  helpText="Be notified when tracks are renamed"
-                  isDisabled={!supportsOnRename.value}
-                  {...onRename}
-                  onChange={onInputChange}
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <FormLabel>On Retag</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.CHECK}
-                  name="onTrackRetag"
-                  helpText="Be notified when track file tags are updated"
-                  isDisabled={!supportsOnTrackRetag.value}
-                  {...onTrackRetag}
-                  onChange={onInputChange}
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <FormLabel>On Health Issue</FormLabel>
-
-                <FormInputGroup
-                  type={inputTypes.CHECK}
-                  name="onHealthIssue"
-                  helpText="Be notified on health check failures"
-                  isDisabled={!supportsOnHealthIssue.value}
-                  {...onHealthIssue}
-                  onChange={onInputChange}
-                />
-              </FormGroup>
-
-              {
-                onHealthIssue.value &&
-                  <FormGroup>
-                    <FormLabel>Include Health Warnings</FormLabel>
-
-                    <FormInputGroup
-                      type={inputTypes.CHECK}
-                      name="includeHealthWarnings"
-                      helpText="Be notified on health warnings in addition to errors"
-                      isDisabled={!supportsOnHealthIssue.value}
-                      {...includeHealthWarnings}
-                      onChange={onInputChange}
-                    />
-                  </FormGroup>
-              }
+              <NotificationEventItems
+                item={item}
+                onInputChange={onInputChange}
+              />
 
               <FormGroup>
                 <FormLabel>Tags</FormLabel>
