@@ -201,15 +201,15 @@ namespace NzbDrone.Core.MediaFiles
                     Logger.Error(ex, "Tag reading failed for {0}", path);
                 }
 
-                // make sure these are initialized to avoid errors later on
-                Quality = QualityParser.ParseQuality(path, null, EstimateBitrate(file, path));
-                Logger.Debug($"Quality parsed: {Quality}, Source: {Quality.QualityDetectionSource}");
-                MediaInfo = new MediaInfoModel();
             }
             finally
             {
                 file?.Dispose();
             }
+
+            // make sure these are initialized to avoid errors later on
+            Quality = Quality ?? QualityParser.ParseQuality(path, null, EstimateBitrate(file, path));
+            MediaInfo = MediaInfo ?? new MediaInfoModel();
         }
 
         private int EstimateBitrate(TagLib.File file, string path)
