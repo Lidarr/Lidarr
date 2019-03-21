@@ -51,24 +51,6 @@ namespace NzbDrone.Core.Notifications
                                     qualityString);
         }
 
-        private string GetTrackMessage(Artist artist, List<Track> tracks, QualityModel quality)
-        {
-            var qualityString = quality.Quality.ToString();
-
-            if (quality.Revision.Version > 1)
-            {
-                qualityString += " Proper";
-            }
-
-
-            var trackTitles = string.Join(" + ", tracks.Select(e => e.Title));
-
-            return string.Format("{0} - {1} - [{2}]",
-                                    artist.Name,
-                                    trackTitles,
-                                    qualityString);
-        }
-
         private string GetAlbumDownloadMessage(Artist artist, Album album, List<TrackFile> tracks)
         {
             return string.Format("{0} - {1} ({2} Tracks Imported)",
@@ -183,13 +165,16 @@ namespace NzbDrone.Core.Notifications
                 {
                     if (ShouldHandleArtist(notification.Definition, message.Artist))
                     {
-                        notification.OnReleaseImport(downloadMessage);
+                        if (downloadMessage.OldFiles.Empty() || ((NotificationDefinition)notification.Definition).OnUpgrade)
+                        {
+                            notification.OnReleaseImport(downloadMessage);
+                        }
                     }
                 }
 
                 catch (Exception ex)
                 {
-                    _logger.Warn(ex, "Unable to send OnDownload notification to: " + notification.Definition.Name);
+                    _logger.Warn(ex, "Unable to send OnReleaseImport notification to: " + notification.Definition.Name);
                 }
             }
         }
