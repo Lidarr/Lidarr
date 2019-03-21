@@ -26,6 +26,11 @@ namespace NzbDrone.Core.Notifications.Plex.HomeTheater
             Notify(ALBUM_GRABBED_TITLE_BRANDED, grabMessage.Message);
         }
 
+        public override void OnReleaseImport(AlbumDownloadMessage message)
+        {
+            Notify(ALBUM_DOWNLOADED_TITLE_BRANDED, message.Message);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();
