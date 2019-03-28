@@ -11,6 +11,8 @@ using Lidarr.Http.Extensions;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Indexers;
+using FluentValidation.Results;
+using Lidarr.Http.REST;
 
 namespace Lidarr.Api.V1.Indexers
 {
@@ -20,6 +22,7 @@ namespace Lidarr.Api.V1.Indexers
         private readonly IProcessDownloadDecisions _downloadDecisionProcessor;
         private readonly IIndexerFactory _indexerFactory;
         private readonly Logger _logger;
+        private ResourceValidator<ReleaseResource> _releaseValidator;
 
         public ReleasePushModule(IMakeDownloadDecision downloadDecisionMaker,
                                  IProcessDownloadDecisions downloadDecisionProcessor,
@@ -31,16 +34,24 @@ namespace Lidarr.Api.V1.Indexers
             _indexerFactory = indexerFactory;
             _logger = logger;
 
-            Post["/push"] = x => ProcessRelease(this.Bind<ReleaseResource>());
+            _releaseValidator = new ResourceValidator<ReleaseResource>();
+            _releaseValidator.RuleFor(s => s.Title).NotEmpty();
+            _releaseValidator.RuleFor(s => s.DownloadUrl).NotEmpty();
+            _releaseValidator.RuleFor(s => s.DownloadProtocol).NotEmpty();
+            _releaseValidator.RuleFor(s => s.PublishDate).NotEmpty();
 
-            PostValidator.RuleFor(s => s.Title).NotEmpty();
-            PostValidator.RuleFor(s => s.DownloadUrl).NotEmpty();
-            PostValidator.RuleFor(s => s.DownloadProtocol).NotEmpty();
-            PostValidator.RuleFor(s => s.PublishDate).NotEmpty();
+            Post["/push"] = x => ProcessRelease(this.Bind<ReleaseResource>());
         }
 
         private Response ProcessRelease(ReleaseResource release)
         {
+            var validationFailures = _releaseValidator.Validate(release).Errors;
+
+            if (validationFailures.Any())
+            {
+                throw new ValidationException(validationFailures);
+            }
+
             _logger.Info("Release pushed: {0} - {1}", release.Title, release.DownloadUrl);
 
             var info = release.ToModel();
@@ -52,7 +63,14 @@ namespace Lidarr.Api.V1.Indexers
             var decisions = _downloadDecisionMaker.GetRssDecision(new List<ReleaseInfo> { info });
             _downloadDecisionProcessor.ProcessDecisions(decisions);
 
-            return MapDecisions(decisions).First().AsResponse();
+            var firstDecision = decisions.FirstOrDefault();
+
+            if (firstDecision?.RemoteAlbum.ParsedAlbumInfo == null)
+            {
+                throw new ValidationException(new List<ValidationFailure> { new ValidationFailure("Title", "Unable to parse", release.Title) });
+            }
+
+            return MapDecisions(new[] { firstDecision }).AsResponse();
         }
 
         private void ResolveIndexer(ReleaseInfo release)
