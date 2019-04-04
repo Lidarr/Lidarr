@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
+using FluentValidation.Results;
 using Nancy;
 using Nancy.ModelBinding;
 using NLog;
@@ -11,8 +12,10 @@ using Lidarr.Http.Extensions;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Indexers;
-using FluentValidation.Results;
 using Lidarr.Http.REST;
+using System;
+using NzbDrone.Core.Exceptions;
+using HttpStatusCode = System.Net.HttpStatusCode;
 
 namespace Lidarr.Api.V1.Indexers
 {
@@ -40,21 +43,33 @@ namespace Lidarr.Api.V1.Indexers
             _releaseValidator.RuleFor(s => s.DownloadProtocol).NotEmpty();
             _releaseValidator.RuleFor(s => s.PublishDate).NotEmpty();
 
-            Post["/push"] = x => ProcessRelease(this.Bind<ReleaseResource>());
+            Post["/push"] = x => ProcessRelease();
         }
 
-        private Response ProcessRelease(ReleaseResource release)
+        private Response ProcessRelease()
         {
-            var validationFailures = _releaseValidator.Validate(release).Errors;
+
+            var resource = new ReleaseResource();
+
+            try
+            {
+                resource = Request.Body.FromJson<ReleaseResource>();
+            }
+            catch (Exception ex)
+            {
+                throw new NzbDroneClientException(HttpStatusCode.BadRequest, ex.Message);
+            }
+
+            var validationFailures = _releaseValidator.Validate(resource).Errors;
 
             if (validationFailures.Any())
             {
                 throw new ValidationException(validationFailures);
             }
 
-            _logger.Info("Release pushed: {0} - {1}", release.Title, release.DownloadUrl);
+            _logger.Info("Release pushed: {0} - {1}", resource.Title, resource.DownloadUrl);
 
-            var info = release.ToModel();
+            var info = resource.ToModel();
 
             info.Guid = "PUSH-" + info.DownloadUrl;
 
@@ -67,7 +82,7 @@ namespace Lidarr.Api.V1.Indexers
 
             if (firstDecision?.RemoteAlbum.ParsedAlbumInfo == null)
             {
-                throw new ValidationException(new List<ValidationFailure> { new ValidationFailure("Title", "Unable to parse", release.Title) });
+                throw new ValidationException(new List<ValidationFailure> { new ValidationFailure("Title", "Unable to parse", resource.Title) });
             }
 
             return MapDecisions(new[] { firstDecision }).AsResponse();
