@@ -23,14 +23,17 @@ namespace NzbDrone.Core.HealthCheck.Checks
         private readonly IDiskProvider _diskProvider;
         private readonly IProvideDownloadClient _downloadClientProvider;
         private readonly Logger _logger;
+        private readonly IOsInfo _osInfo;
 
         public RemotePathMappingCheck(IDiskProvider diskProvider,
                                       IProvideDownloadClient downloadClientProvider,
+                                      IOsInfo osInfo,
                                       Logger logger)
         {
             _diskProvider = diskProvider;
             _downloadClientProvider = downloadClientProvider;
             _logger = logger;
+            _osInfo = osInfo;
         }
 
         public override HealthCheck Check()
@@ -44,6 +47,22 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 {
                     foreach (var folder in folders)
                     {
+                        if (!folder.IsValid)
+                        {
+                            if (!client.GetStatus().IsLocalhost)
+                            {
+                                return new HealthCheck(GetType(), HealthCheckResult.Error, $"Remote download client {client.Definition.Name} places downloads in {folder.FullPath} but this is not a valid {_osInfo.Name} path.  Review your remote path mappings and download client settings.", "#bad-remote-path-mapping");
+                            }
+                            else if (OsInfo.IsDocker)
+                            {
+                                return new HealthCheck(GetType(), HealthCheckResult.Error, $"You are using docker; download client {client.Definition.Name} places downloads in {folder.FullPath} but this is not a valid {_osInfo.Name} path.  Review your remote path mappings and download client settings.", "#docker-bad-remote-path-mapping");
+                            }
+                            else
+                            {
+                                return new HealthCheck(GetType(), HealthCheckResult.Error, $"Local download client {client.Definition.Name} places downloads in {folder.FullPath} but this is not a valid {_osInfo.Name} path.  Review your download client settings.", "#bad-download-client-settings");
+                            }
+                        }
+
                         if (!_diskProvider.FolderExists(folder.FullPath))
                         {
                             if (OsInfo.IsDocker)
@@ -97,6 +116,22 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 if (dlpath.IsNullOrWhiteSpace())
                 {
                     return new HealthCheck(GetType(), HealthCheckResult.Error, $"Lidarr failed to import a track.  Check your logs for details.");
+                }
+
+                if (!dlpath.IsPathValid())
+                {
+                    if (!client.GetStatus().IsLocalhost)
+                    {
+                        return new HealthCheck(GetType(), HealthCheckResult.Error, $"Remote download client {client.Definition.Name} reported files in {dlpath} but this is not a valid {_osInfo.Name} path.  Review your remote path mappings and download client settings.", "#bad-remote-path-mapping");
+                    }
+                    else if (OsInfo.IsDocker)
+                    {
+                        return new HealthCheck(GetType(), HealthCheckResult.Error, $"You are using docker; download client {client.Definition.Name} reported files in {dlpath} but this is not a valid {_osInfo.Name} path.  Review your remote path mappings and download client settings.", "#docker-bad-remote-path-mapping");
+                    }
+                    else
+                    {
+                        return new HealthCheck(GetType(), HealthCheckResult.Error, $"Local download client {client.Definition.Name} reported files in {dlpath} but this is not a valid {_osInfo.Name} path.  Review your download client settings.", "#bad-download-client-settings");
+                    }
                 }
 
                 if (_diskProvider.FolderExists(dlpath))
