@@ -6,6 +6,7 @@ using NUnit.Framework;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Core.Download;
+using NzbDrone.Core.Download.Clients;
 using NzbDrone.Core.HealthCheck.Checks;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Events;
@@ -23,6 +24,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
 
         private DownloadClientInfo clientStatus;
         private DownloadClientItem downloadItem;
+        private Mock<IDownloadClient> downloadClient;
 
         [SetUp]
         public void Setup()
@@ -38,7 +40,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
                         OutputRootFolders = new List<OsPath> { new OsPath(downloadRootPath) }
             };
 
-            var downloadClient = Mocker.GetMock<IDownloadClient>();
+            downloadClient = Mocker.GetMock<IDownloadClient>();
             downloadClient.Setup(s => s.Definition)
                 .Returns(new DownloadClientDefinition { Name = "Test" });
 
@@ -128,6 +130,15 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         }
 
         [Test]
+        public void should_return_ok_if_client_unavailable()
+        {
+            downloadClient.Setup(s => s.GetStatus())
+                .Throws(new DownloadClientUnavailableException("error"));
+            
+            Subject.Check().ShouldBeOk();
+        }
+
+        [Test]
         [Explicit("Only works if running inside a docker container")]
         public void should_return_docker_path_mapping_error_if_on_docker_and_root_missing()
         {
@@ -211,6 +222,17 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
             var importEvent = new TrackImportFailedEvent(null, null, true, downloadItem);
 
             Subject.Check(importEvent).ShouldBeError(wikiFragment: "docker-bad-remote-path-mapping");
+        }
+        
+        [Test]
+        public void should_return_ok_on_import_failed_event_if_client_unavailable()
+        {
+            downloadClient.Setup(s => s.GetStatus())
+                .Throws(new DownloadClientUnavailableException("error"));
+            
+            var importEvent = new TrackImportFailedEvent(null, null, true, downloadItem);
+            
+            Subject.Check(importEvent).ShouldBeOk();
         }
     }
 }
