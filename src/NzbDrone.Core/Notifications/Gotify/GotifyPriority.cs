@@ -6,6 +6,6 @@ namespace NzbDrone.Core.Notifications.Gotify
         Min = 0,
         Low = 2,
         Normal = 5,
-        High = 8,
+        High = 8
     }
 }
