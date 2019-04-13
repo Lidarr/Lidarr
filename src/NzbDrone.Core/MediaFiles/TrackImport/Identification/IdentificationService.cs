@@ -10,7 +10,9 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles.TrackImport.Aggregation;
+using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.Music.Commands;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 
@@ -33,6 +35,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private readonly IAugmentingService _augmentingService;
         private readonly IMediaFileService _mediaFileService;
         private readonly IConfigService _configService;
+        private readonly IManageCommandQueue _commandQueueManager;
         private readonly Logger _logger;
 
         public IdentificationService(IArtistService artistService,
@@ -45,6 +48,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                                      IAugmentingService augmentingService,
                                      IMediaFileService mediaFileService,
                                      IConfigService configService,
+                                     IManageCommandQueue commandQueueManager,
                                      Logger logger)
         {
             _artistService = artistService;
@@ -57,6 +61,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             _augmentingService = augmentingService;
             _mediaFileService = mediaFileService;
             _configService = configService;
+            _commandQueueManager = commandQueueManager;
             _logger = logger;
         }
 
@@ -211,6 +216,34 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             _logger.Debug($"Got {candidateReleases.Count} candidates for {localAlbumRelease.LocalTracks.Count} tracks in {watch.ElapsedMilliseconds}ms");
 
             var allTracks = _trackService.GetTracksByReleases(candidateReleases.Select(x => x.AlbumRelease.Id).ToList());
+
+            var candidatesWithTracks = candidateReleases.Join(allTracks,
+                                                              x => x.AlbumRelease.Id,
+                                                              t => t.AlbumReleaseId,
+                                                              (c, t) => c);
+            var candidatesWithoutTracks = candidateReleases.Except(candidatesWithTracks);
+
+            if (candidatesWithoutTracks.Any())
+            {
+                // If we have a candidate release without tracks, the album refresh must have failed
+                // or the artist has just been added and the metadata refresh is still in progress.
+                // Trigger a refresh just in case.
+
+                var toRefresh = candidatesWithoutTracks.Select(x => x.AlbumRelease.AlbumId).Distinct();
+
+                _logger.Debug($"AlbumIds {toRefresh.ConcatToString()} have no tracks, triggering refresh");
+
+                foreach (var albumId in toRefresh)
+                {
+                    _commandQueueManager.Push(new RefreshAlbumCommand(albumId));
+                }
+
+                if (!allTracks.Any())
+                {
+                    _logger.Warn("No tracks found for any candidates, aborting identification.  You may need to manually refresh artists.");
+                    return;
+                }
+            }
 
             // convert all the TrackFiles that represent extra files to List<LocalTrack>
             var allLocalTracks = ToLocalTrack(candidateReleases
