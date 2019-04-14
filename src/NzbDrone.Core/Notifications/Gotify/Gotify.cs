@@ -1,16 +1,19 @@
+using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
-using NzbDrone.Common.Extensions;
+using NLog;
 
 namespace NzbDrone.Core.Notifications.Gotify
 {
     public class Gotify : NotificationBase<GotifySettings>
     {
         private readonly IGotifyProxy _proxy;
-        
-        public Gotify(IGotifyProxy proxy)
+        private readonly Logger _logger;
+
+        public Gotify(IGotifyProxy proxy, Logger logger)
         {
             _proxy = proxy;
+            _logger = logger;
         }
 
         public override string Name => "Gotify";
@@ -45,7 +48,18 @@ namespace NzbDrone.Core.Notifications.Gotify
         {
             var failures = new List<ValidationFailure>();
 
-            failures.AddIfNotNull(_proxy.Test(Settings));
+            try
+            {
+                const string title = "Test Notification";
+                const string body = "This is a test message from Lidarr";
+
+                _proxy.SendNotification(title, body, Settings);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Unable to send test message");
+                failures.Add(new ValidationFailure("", "Unable to send test message"));
+            }
 
             return new ValidationResult(failures);
         }
