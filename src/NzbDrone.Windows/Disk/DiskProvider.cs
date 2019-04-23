@@ -24,6 +24,11 @@ namespace NzbDrone.Windows.Disk
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool CreateHardLink(string lpFileName, string lpExistingFileName, IntPtr lpSecurityAttributes);
 
+        public DiskProvider()
+        : this(new FileSystem())
+        {
+        }
+
         public DiskProvider(IFileSystem fileSystem)
         : base(fileSystem)
         {
