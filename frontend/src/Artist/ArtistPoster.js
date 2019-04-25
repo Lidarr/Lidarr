@@ -19,7 +19,8 @@ ArtistPoster.propTypes = {
 };
 
 ArtistPoster.defaultProps = {
-  size: 250
+  size: 250,
+  maxSize: 500
 };
 
 export default ArtistPoster;

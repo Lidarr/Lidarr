@@ -19,7 +19,8 @@ ArtistBanner.propTypes = {
 };
 
 ArtistBanner.defaultProps = {
-  size: 70
+  size: 70,
+  maxSize: 70
 };
 
 export default ArtistBanner;

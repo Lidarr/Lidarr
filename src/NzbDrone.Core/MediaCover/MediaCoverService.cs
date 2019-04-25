@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using NLog;
 using NzbDrone.Common.Disk;
@@ -134,33 +135,33 @@ namespace NzbDrone.Core.MediaCover
             }
         }
 
-        //TODO Decide if we want to cache album art local
-        //private void EnsureAlbumCovers(Album album)
-        //{
-        //    foreach (var cover in album.Images)
-        //    {
-        //        var fileName = GetCoverPath(album.ArtistId, cover.CoverType, null,  album.Id);
-        //        var alreadyExists = false;
-        //        try
-        //        {
-        //            alreadyExists = _coverExistsSpecification.AlreadyExists(cover.Url, fileName);
-        //            if (!alreadyExists)
-        //            {
-        //                DownloadAlbumCover(album, cover);
-        //            }
-        //        }
-        //        catch (WebException e)
-        //        {
-        //            _logger.Warn("Couldn't download media cover for {0}. {1}", album, e.Message);
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            _logger.Error(e, "Couldn't download media cover for {0}", album);
-        //        }
+        private void EnsureAlbumCovers(Album album)
+        {
+            foreach (var cover in album.Images.Where(e => e.CoverType == MediaCoverTypes.Cover))
+            {
+                var fileName = GetCoverPath(album.ArtistId, cover.CoverType, null, album.Id);
+                var alreadyExists = false;
+                try
+                {
+                    var lastModifiedServer = GetCoverModifiedDate(cover.Url);
+                    alreadyExists = _coverExistsSpecification.AlreadyExists(lastModifiedServer, fileName);
+                    if (!alreadyExists)
+                    {
+                        DownloadAlbumCover(album, cover, lastModifiedServer);
+                    }
+                }
+                catch (WebException e)
+                {
+                    _logger.Warn("Couldn't download media cover for {0}. {1}", album, e.Message);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e, "Couldn't download media cover for {0}", album);
+                }
 
-        //        EnsureResizedCovers(album.Artist, cover, !alreadyExists, album);
-        //    }
-        //}
+                EnsureResizedCovers(album.Artist, cover, !alreadyExists, album);
+            }
+        }
 
         private void DownloadCover(Artist artist, MediaCover cover, DateTime lastModified)
         {
@@ -179,13 +180,22 @@ namespace NzbDrone.Core.MediaCover
             }
         }
 
-        //private void DownloadAlbumCover(Album album, MediaCover cover)
-        //{
-        //    var fileName = GetCoverPath(album.ArtistId, cover.CoverType, null, album.Id);
+        private void DownloadAlbumCover(Album album, MediaCover cover, DateTime lastModified)
+        {
+            var fileName = GetCoverPath(album.ArtistId, cover.CoverType, null, album.Id);
 
-        //    _logger.Info("Downloading {0} for {1} {2}", cover.CoverType, album, cover.Url);
-        //    _httpClient.DownloadFile(cover.Url, fileName);
-        //}
+            _logger.Info("Downloading {0} for {1} {2}", cover.CoverType, album, cover.Url);
+            _httpClient.DownloadFile(cover.Url, fileName);
+
+            try
+            {
+                _diskProvider.FileSetLastWriteTime(fileName, lastModified);
+            }
+            catch (Exception ex)
+            {
+                _logger.Debug(ex, "Unable to set modified date for {0} image for album {1}", cover.CoverType, album);
+            }
+        }
 
         private void EnsureResizedCovers(Artist artist, MediaCover cover, bool forceResize, Album album = null)
         {
@@ -197,7 +207,6 @@ namespace NzbDrone.Core.MediaCover
                     return;
 
                 case MediaCoverTypes.Poster:
-                case MediaCoverTypes.Cover:
                 case MediaCoverTypes.Disc:
                 case MediaCoverTypes.Logo:
                 case MediaCoverTypes.Headshot:
@@ -211,6 +220,9 @@ namespace NzbDrone.Core.MediaCover
                 case MediaCoverTypes.Fanart:
                 case MediaCoverTypes.Screenshot:
                     heights = new[] { 360, 180 };
+                    break;
+                case MediaCoverTypes.Cover:
+                    heights = new[] { 250 };
                     break;
             }
             
@@ -265,16 +277,16 @@ namespace NzbDrone.Core.MediaCover
         {
             EnsureCovers(message.Artist);
 
-            //Turn off for now, not using album images
+            var albums = _albumService.GetAlbumsByArtist(message.Artist.Id);
+            foreach (Album album in albums)
+            {
+                EnsureAlbumCovers(album);
+            }
 
-            //var albums = _albumService.GetAlbumsByArtist(message.Artist.Id);
-            //foreach (Album album in albums)
-            //{
-            //    EnsureAlbumCovers(album);
-            //}
-            
             _eventAggregator.PublishEvent(new MediaCoversUpdatedEvent(message.Artist));
         }
+
+
 
         public void HandleAsync(ArtistDeletedEvent message)
         {
