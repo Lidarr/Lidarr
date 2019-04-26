@@ -74,7 +74,11 @@ namespace NzbDrone.Core.MediaFiles
         public void Delete(TrackFile trackFile, DeleteMediaFileReason reason)
         {
             _mediaFileRepository.Delete(trackFile);
-            _eventAggregator.PublishEvent(new TrackFileDeletedEvent(trackFile, reason));
+            // If the trackfile wasn't mapped to a track, don't publish an event
+            if (trackFile.AlbumId > 0)
+            {
+                _eventAggregator.PublishEvent(new TrackFileDeletedEvent(trackFile, reason));
+            }
         }
 
         public List<IFileInfo> FilterUnchangedFiles(List<IFileInfo> files, Artist artist, FilterFilesType filter)
