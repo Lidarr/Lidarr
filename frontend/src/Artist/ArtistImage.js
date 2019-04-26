@@ -6,14 +6,12 @@ function findImage(images, coverType) {
   return images.find((image) => image.coverType === coverType);
 }
 
-function getUrl(image, coverType, size, maxSize) {
+function getUrl(image, coverType, size) {
   if (image) {
     // Remove protocol
     let url = image.url.replace(/^https?:/, '');
 
-    if (size <= maxSize) {
-      url = url.replace(`${coverType}.jpg`, `${coverType}-${size}.jpg`);
-    }
+    url = url.replace(`${coverType}.jpg`, `${coverType}-${size}.jpg`);
 
     return url;
   }
@@ -27,13 +25,12 @@ class ArtistImage extends Component {
   constructor(props, context) {
     super(props, context);
 
-    const pixelRatio = Math.max(Math.round(window.devicePixelRatio), 1);
+    const pixelRatio = Math.ceil(window.devicePixelRatio);
 
     const {
       images,
       coverType,
-      size,
-      maxSize
+      size
     } = props;
 
     const image = findImage(images, coverType);
@@ -41,7 +38,7 @@ class ArtistImage extends Component {
     this.state = {
       pixelRatio,
       image,
-      url: getUrl(image, coverType, pixelRatio * size, maxSize),
+      url: getUrl(image, coverType, pixelRatio * size),
       isLoaded: false,
       hasError: false
     };
@@ -59,7 +56,6 @@ class ArtistImage extends Component {
       coverType,
       placeholder,
       size,
-      maxSize,
       onError
     } = this.props;
 
@@ -73,7 +69,7 @@ class ArtistImage extends Component {
     if (nextImage && (!image || nextImage.url !== image.url)) {
       this.setState({
         image: nextImage,
-        url: getUrl(nextImage, coverType, pixelRatio * size, maxSize),
+        url: getUrl(nextImage, coverType, pixelRatio * size),
         hasError: false
         // Don't reset isLoaded, as we want to immediately try to
         // show the new image, whether an image was shown previously
@@ -189,7 +185,6 @@ ArtistImage.propTypes = {
   coverType: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
   size: PropTypes.number.isRequired,
-  maxSize: PropTypes.number.isRequired,
   lazy: PropTypes.bool.isRequired,
   overflow: PropTypes.bool.isRequired,
   onError: PropTypes.func,
@@ -198,7 +193,6 @@ ArtistImage.propTypes = {
 
 ArtistImage.defaultProps = {
   size: 250,
-  maxSize: 500,
   lazy: true,
   overflow: false
 };

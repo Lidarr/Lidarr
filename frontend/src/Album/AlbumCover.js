@@ -19,8 +19,7 @@ AlbumCover.propTypes = {
 };
 
 AlbumCover.defaultProps = {
-  size: 250,
-  maxSize: 250
+  size: 250
 };
 
 export default AlbumCover;
