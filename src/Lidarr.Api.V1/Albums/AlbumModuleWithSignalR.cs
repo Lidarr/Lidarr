@@ -125,7 +125,7 @@ namespace Lidarr.Api.V1.Albums
         {
             foreach (var albumResource in albums)
             {
-                _coverMapper.ConvertToLocalUrls(albumResource.ArtistId, albumResource.Images, albumResource.Id);
+                _coverMapper.ConvertToLocalUrls(albumResource.Id, MediaCoverEntity.Album, albumResource.Images);
             }
         }
     }
