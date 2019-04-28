@@ -13,7 +13,7 @@ namespace NzbDrone.Common.Cloud
     {
         public LidarrCloudRequestBuilder()
         {
-            Services = new HttpRequestBuilder("https://services.lidarr.audio/v1/")
+            Services = new HttpRequestBuilder("https://lidarr.servarr.com/v1/")
                 .CreateFactory();
 
             Search = new HttpRequestBuilder("https://api.lidarr.audio/api/v0.4/{route}")
