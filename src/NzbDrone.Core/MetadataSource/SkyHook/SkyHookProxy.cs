@@ -50,18 +50,9 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
             _logger.Debug("Getting Artist with LidarrAPI.MetadataID of {0}", foreignArtistId);
 
-            var metadataProfile = _metadataProfileService.Exists(metadataProfileId) ? _metadataProfileService.Get(metadataProfileId) : _metadataProfileService.All().First();
-
-            var primaryTypes = metadataProfile.PrimaryAlbumTypes.Where(s => s.Allowed).Select(s => s.PrimaryAlbumType.Name);
-            var secondaryTypes = metadataProfile.SecondaryAlbumTypes.Where(s => s.Allowed).Select(s => s.SecondaryAlbumType.Name);
-            var releaseStatuses = metadataProfile.ReleaseStatuses.Where(s => s.Allowed).Select(s => s.ReleaseStatus.Name);
-
             var httpRequest = _requestBuilder.GetRequestBuilder().Create()
-                                            .SetSegment("route", "artist/" + foreignArtistId)
-                                            .AddQueryParam("primTypes", string.Join("|", primaryTypes))
-                                            .AddQueryParam("secTypes", string.Join("|", secondaryTypes))
-                                            .AddQueryParam("releaseStatuses", string.Join("|", releaseStatuses))
-                                            .Build();
+                                             .SetSegment("route", "artist/" + foreignArtistId)
+                                             .Build();
 
             httpRequest.AllowAutoRedirect = true;
             httpRequest.SuppressHttpError = true;
@@ -89,7 +80,20 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             artist.Metadata = MapArtistMetadata(httpResponse.Resource);
             artist.CleanName = Parser.Parser.CleanArtistName(artist.Metadata.Value.Name);
             artist.SortName = Parser.Parser.NormalizeTitle(artist.Metadata.Value.Name);
-            artist.Albums = httpResponse.Resource.Albums.Select(x => MapAlbum(x, null)).ToList();
+
+            var metadataProfile = _metadataProfileService.Exists(metadataProfileId) ? _metadataProfileService.Get(metadataProfileId) : _metadataProfileService.All().First();
+            var primaryTypes = new HashSet<string>(metadataProfile.PrimaryAlbumTypes.Where(s => s.Allowed).Select(s => s.PrimaryAlbumType.Name));
+            var secondaryTypes = new HashSet<string>(metadataProfile.SecondaryAlbumTypes.Where(s => s.Allowed).Select(s => s.SecondaryAlbumType.Name));
+            var releaseStatuses = new HashSet<string>(metadataProfile.ReleaseStatuses.Where(s => s.Allowed).Select(s => s.ReleaseStatus.Name));
+            
+            artist.Albums = httpResponse.Resource.Albums.Where(album => primaryTypes.Contains(album.Type) &&
+                                                               (!album.SecondaryTypes.Any() && secondaryTypes.Contains("Studio") ||
+                                                                album.SecondaryTypes.Any(x => secondaryTypes.Contains(x))) &&
+                                                               album.ReleaseStatuses.Any(x => releaseStatuses.Contains(x)))
+                                                        .Select(x => new Album {
+                                                                ForeignAlbumId = x.Id
+                                                            })
+                                                        .ToList();
 
             return artist;
         }
