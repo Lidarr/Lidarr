@@ -124,7 +124,7 @@ namespace NzbDrone.Core.ImportLists
 
                 if (excludedArtist != null)
                 {
-                    _logger.Debug("{0} [{1}] Rejected due to list exlcusion", report.ArtistMusicBrainzId, report.Artist);
+                    _logger.Debug("{0} [{1}] Rejected due to list exclusion", report.ArtistMusicBrainzId, report.Artist);
                 }
 
                 // Append Artist if not already in DB or already on add list

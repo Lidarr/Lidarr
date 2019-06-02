@@ -12,7 +12,6 @@ using NzbDrone.Core.ImportLists.Exceptions;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.ImportLists
 {
@@ -44,15 +43,19 @@ namespace NzbDrone.Core.ImportLists
 
         protected virtual IList<ImportListItemInfo> FetchReleases(Func<IImportListRequestGenerator, ImportListPageableRequestChain> pageableRequestChainSelector, bool isRecent = false)
         {
+            var generator = GetRequestGenerator();
+            var pageableRequestChain = pageableRequestChainSelector(generator);
+            return FetchReleases(pageableRequestChain);
+        }
+
+        protected virtual IList<ImportListItemInfo> FetchReleases(ImportListPageableRequestChain pageableRequestChain)
+        {
             var releases = new List<ImportListItemInfo>();
             var url = string.Empty;
 
             try
             {
-                var generator = GetRequestGenerator();
                 var parser = GetParser();
-
-                var pageableRequestChain = pageableRequestChainSelector(generator);
 
                 for (int i = 0; i < pageableRequestChain.Tiers; i++)
                 {

@@ -521,6 +521,7 @@
     <Compile Include="Http\CloudFlare\CloudFlareHttpInterceptor.cs" />
     <Compile Include="Http\HttpProxySettingsProvider.cs" />
     <Compile Include="Http\TorcacheHttpInterceptor.cs" />
+    <Compile Include="ImportLists\Exceptions\ImportListTokenException.cs" />
     <Compile Include="ImportLists\Exceptions\ImportListException.cs" />
     <Compile Include="ImportLists\Exclusions\ImportListExclusionExistsValidator.cs" />
     <Compile Include="ImportLists\Exclusions\ImportListExclusionService.cs" />
@@ -532,8 +533,10 @@
     <Compile Include="ImportLists\HeadphonesImport\HeadphonesImportParser.cs" />
     <Compile Include="ImportLists\HeadphonesImport\HeadphonesImportRequestGenerator.cs" />
     <Compile Include="ImportLists\HeadphonesImport\HeadphonesImportSettings.cs" />
+    <Compile Include="ImportLists\HttpImportListWithExpiringTokenBase.cs" />
     <Compile Include="ImportLists\HttpImportListBase.cs" />
     <Compile Include="ImportLists\IImportList.cs" />
+    <Compile Include="ImportLists\ImportListRequestGeneratorWithExpiringTokenBase.cs" />
     <Compile Include="ImportLists\IImportListSettings.cs" />
     <Compile Include="ImportLists\IImportListRequestGenerator.cs" />
     <Compile Include="ImportLists\ImportListDefinition.cs" />
