@@ -10,14 +10,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
         public TSettings Settings { get; set; }
 
-        public int MaxPages { get; set; }
         public int PageSize { get; set; }
-
-        public SpotifyRequestGeneratorBase()
-        {
-            MaxPages = 1;
-            PageSize = 100;
-        }
 
         public abstract ImportListPageableRequestChain GetSpotifyListItems();
 

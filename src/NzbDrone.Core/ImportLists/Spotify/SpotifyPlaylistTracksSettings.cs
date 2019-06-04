@@ -1,6 +1,5 @@
 using FluentValidation;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.ImportLists.Spotify
 {
@@ -10,7 +9,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
             : base()
         {
             RuleFor(c => c.PlaylistId).NotEmpty();
-            RuleFor(c => c.Count).LessThanOrEqualTo(100);
+            RuleFor(c => c.Count).LessThanOrEqualTo(10000);
         }
     }
 
@@ -20,13 +19,13 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
         public SpotifyPlaylistTracksSettings()
         {
-            Count = 100;
+            Count = 10000;
         }
 
         [FieldDefinition(0, Label = "Spotify Playlist ID", HelpText = "Playlist ID to pull artists from. Can be obtained by copying a playlist URL and keeping only the last part.")]
         public string PlaylistId { get; set; }
 
-        [FieldDefinition(1, Label = "Count", HelpText = "Number of results to pull from list (Max 100)", Type = FieldType.Number)]
+        [FieldDefinition(1, Label = "Count", HelpText = "Number of results to pull from list (Max 10000)", Type = FieldType.Number)]
         public int Count { get; set; }
     }
 }

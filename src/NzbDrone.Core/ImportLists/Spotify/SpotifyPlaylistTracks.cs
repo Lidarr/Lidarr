@@ -9,7 +9,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
     {
         public override string Name => "Spotify playlist tracks";
 
-        public override int PageSize => 1000;
+        public override int PageSize => 100;
 
         public SpotifyPlaylistTracks(IHttpClient httpClient, IImportListStatusService importListStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
             : base(httpClient, importListStatusService, configService, parsingService, logger)
@@ -18,7 +18,10 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
         public override SpotifyRequestGeneratorBase<SpotifyPlaylistTracksSettings> GetSpotifyRequestGenerator()
         {
-            return new SpotifyPlaylistTracksRequestGenerator { Settings = Settings };
+            return new SpotifyPlaylistTracksRequestGenerator {
+                Settings = Settings,
+                PageSize = PageSize
+            };
         }
 
         public override IParseImportListResponse GetParser()
