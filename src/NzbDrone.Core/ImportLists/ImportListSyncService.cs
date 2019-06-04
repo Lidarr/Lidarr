@@ -102,8 +102,8 @@ namespace NzbDrone.Core.ImportLists
 
                     report.AlbumMusicBrainzId = mappedAlbum.ForeignAlbumId;
                     report.Album = mappedAlbum.Title;
-                    report.Artist = mappedAlbum.ArtistMetadata?.Value?.Name;
-                    report.ArtistMusicBrainzId = mappedAlbum?.ArtistMetadata?.Value?.ForeignArtistId;
+                    report.Artist = mappedAlbum.ArtistMetadata?.Value?.Name ?? mappedAlbum.Artist?.Value?.Name;
+                    report.ArtistMusicBrainzId = mappedAlbum?.ArtistMetadata?.Value?.ForeignArtistId ?? mappedAlbum.Artist?.Value?.ForeignArtistId;
 
                 }
 

@@ -5,11 +5,11 @@ namespace NzbDrone.Core.ImportLists
 {
     public abstract class ImportListRequestGeneratorWithExpiringTokenBase<TToken> : IImportListRequestGenerator
     {
-        public TToken Token { private get; set; }
+        public TToken Token { protected get; set; }
 
         public abstract HttpRequest GetRefreshTokenRequest();
 
-        public abstract ImportListPageableRequestChain GetListItems(TToken token);
+        public abstract ImportListPageableRequestChain GetListItemsWithExpiringToken();
 
         public ImportListPageableRequestChain GetListItems()
         {
@@ -17,7 +17,9 @@ namespace NzbDrone.Core.ImportLists
             {
                 throw new ImportListTokenException("The token needs to be set before generating requests that need the Authorization token");
             }
-            return GetListItems(Token);
+            return GetListItemsWithExpiringToken();
         }
+
+        protected abstract ImportListRequest AddTokenToRequest(ImportListRequest request);
     }
 }

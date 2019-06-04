@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.ImportLists.Exceptions;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 
@@ -39,6 +42,13 @@ namespace NzbDrone.Core.ImportLists
             return FetchReleases(pageableRequestChain);
         }
 
+        protected override ValidationFailure TestConnection()
+        {
+            var generator = GetRequestGeneratorWithExpiringToken();
+            GetAuthorizationToken(generator);
+            return TestConnection(generator.GetListItems().GetAllTiers().First().First());
+        }
+
         private void GetAuthorizationToken(ImportListRequestGeneratorWithExpiringTokenBase<TToken> generator)
         {
             var refreshTokenRequest = generator.GetRefreshTokenRequest();
@@ -48,6 +58,11 @@ namespace NzbDrone.Core.ImportLists
                 var tokenResponse = _httpClient.Execute(refreshTokenRequest);
                 var token = ParseResponseForToken(tokenResponse);
                 generator.Token = token;
+            }
+            catch (ImportListTokenException ex)
+            {
+                _importListStatusService.RecordFailure(Definition.Id);
+                _logger.Warn("{0} {1}", this, ex.Message);
             }
             catch (WebException webException)
             {

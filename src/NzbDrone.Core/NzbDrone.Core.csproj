@@ -568,6 +568,15 @@
     <Compile Include="ImportLists\LidarrLists\LidarrListsParser.cs" />
     <Compile Include="ImportLists\LidarrLists\LidarrListsRequestGenerator.cs" />
     <Compile Include="ImportLists\LidarrLists\LidarrListsSettings.cs" />
+    <Compile Include="ImportLists\Spotify\SpotifyPlaylistTracksRequestGenerator.cs" />
+    <Compile Include="ImportLists\Spotify\SpotifyPlaylistTracksSettings.cs" />
+    <Compile Include="ImportLists\Spotify\SpotifyPlaylistTracks.cs" />
+    <Compile Include="ImportLists\Spotify\SpotifyApi.cs" />
+    <Compile Include="ImportLists\Spotify\SpotifyImportListBase.cs" />
+    <Compile Include="ImportLists\Spotify\SpotifyTokenParser.cs" />
+    <Compile Include="ImportLists\Spotify\SpotifyPlaylistTracksParser.cs" />
+    <Compile Include="ImportLists\Spotify\SpotifyRequestGeneratorBase.cs" />
+    <Compile Include="ImportLists\Spotify\SpotifySettingsBase.cs" />
     <Compile Include="IndexerSearch\AlbumSearchCommand.cs" />
     <Compile Include="IndexerSearch\AlbumSearchService.cs" />
     <Compile Include="IndexerSearch\ArtistSearchCommand.cs" />

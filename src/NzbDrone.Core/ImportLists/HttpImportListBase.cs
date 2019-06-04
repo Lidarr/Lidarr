@@ -208,11 +208,16 @@ namespace NzbDrone.Core.ImportLists
 
         protected virtual ValidationFailure TestConnection()
         {
+            var generator = GetRequestGenerator();
+            return TestConnection(generator.GetListItems().GetAllTiers().First().First());
+        }
+
+        protected virtual ValidationFailure TestConnection(ImportListRequest testRequest)
+        {
             try
             {
                 var parser = GetParser();
-                var generator = GetRequestGenerator();
-                var releases = FetchPage(generator.GetListItems().GetAllTiers().First().First(), parser);
+                var releases = FetchPage(testRequest, parser);
 
                 if (releases.Empty())
                 {
