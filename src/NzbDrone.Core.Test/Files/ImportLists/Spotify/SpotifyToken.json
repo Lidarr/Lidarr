@@ -1,0 +1,6 @@
+﻿{
+	"access_token": "the_token",
+	"token_type": "Bearer",
+	"expires_in": 3600,
+	"scope": ""
+}

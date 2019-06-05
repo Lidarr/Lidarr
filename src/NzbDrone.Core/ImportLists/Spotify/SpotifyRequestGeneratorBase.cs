@@ -12,13 +12,6 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
         public int PageSize { get; set; }
 
-        public abstract ImportListPageableRequestChain GetSpotifyListItems();
-
-        public override ImportListPageableRequestChain GetListItemsWithExpiringToken()
-        {
-            return GetSpotifyListItems();
-        }
-
         protected override ImportListRequest AddTokenToRequest(ImportListRequest importListRequest)
         {
             importListRequest.HttpRequest.Headers.Add(HttpRequestHeader.Authorization.ToString(), $"{Token.TokenType} {Token.AccessToken}");

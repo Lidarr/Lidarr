@@ -146,6 +146,12 @@
     <Compile Include="Download\Pending\PendingReleaseServiceTests\RemoveRejectedFixture.cs" />
     <Compile Include="Download\Pending\PendingReleaseServiceTests\RemoveGrabbedFixture.cs" />
     <Compile Include="Download\Pending\PendingReleaseServiceTests\AddFixture.cs" />
+    <Content Include="Files\ImportLists\Spotify\SpotifyPlaylistTracksNotFull.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\ImportLists\Spotify\SpotifyPlaylistTracksFull.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Files\Indexers\Gazelle\GazelleIndex.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -205,6 +211,7 @@
     <Compile Include="ImportListTests\ImportListServiceFixture.cs" />
     <Compile Include="ImportListTests\ImportListStatusServiceFixture.cs" />
     <Compile Include="ImportListTests\ImportListSyncServiceFixture.cs" />
+    <Compile Include="ImportListTests\SpotifyTests\SpotifyPlaylistTracksFixture.cs" />
     <Compile Include="IndexerSearchTests\ArtistSearchServiceFixture.cs" />
     <Compile Include="IndexerSearchTests\SearchDefinitionFixture.cs" />
     <Compile Include="IndexerTests\BasicRssParserFixture.cs" />
@@ -406,6 +413,9 @@
     <None Include="Files\Indexers\Gazelle\Gazelle.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="Files\ImportLists\Spotify\SpotifyToken.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Files\Indexers\Headphones\Headphones.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
