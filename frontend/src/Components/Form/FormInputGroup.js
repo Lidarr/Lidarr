@@ -9,6 +9,7 @@ import CheckInput from './CheckInput';
 import DeviceInputConnector from './DeviceInputConnector';
 import EnhancedSelectInput from './EnhancedSelectInput';
 import FormInputHelpText from './FormInputHelpText';
+import IndexerSelectInputConnector from './IndexerSelectInputConnector';
 import KeyValueListInput from './KeyValueListInput';
 import MetadataProfileSelectInputConnector from './MetadataProfileSelectInputConnector';
 import MonitorAlbumsSelectInput from './MonitorAlbumsSelectInput';
@@ -68,6 +69,9 @@ function getComponent(type) {
 
     case inputTypes.ALBUM_RELEASE_SELECT:
       return AlbumReleaseSelectInputConnector;
+
+    case inputTypes.INDEXER_SELECT:
+      return IndexerSelectInputConnector;
 
     case inputTypes.ROOT_FOLDER_SELECT:
       return RootFolderSelectInputConnector;
