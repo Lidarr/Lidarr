@@ -14,7 +14,7 @@ namespace NzbDrone.Core.Download.Aggregation.Aggregators
 
         public RemoteAlbum Aggregate(RemoteAlbum remoteAlbum)
         {
-            remoteAlbum.PreferredWordScore = _preferredWordServiceCalculator.Calculate(remoteAlbum.Artist, remoteAlbum.Release.Title);
+            remoteAlbum.PreferredWordScore = _preferredWordServiceCalculator.Calculate(remoteAlbum.Artist, remoteAlbum.Release.Title, remoteAlbum.Release.IndexerId);
 
             return remoteAlbum;
         }

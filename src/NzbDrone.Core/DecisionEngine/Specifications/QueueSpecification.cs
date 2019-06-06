@@ -54,7 +54,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
                 _logger.Debug("Checking if existing release in queue meets cutoff. Queued quality is: {0}", remoteAlbum.ParsedAlbumInfo.Quality);
 
-                var queuedItemPreferredWordScore = _preferredWordServiceCalculator.Calculate(subject.Artist, queueItem.Title);
+                var queuedItemPreferredWordScore = _preferredWordServiceCalculator.Calculate(subject.Artist, queueItem.Title, subject.Release?.IndexerId ?? 0);
 
                 if (!_upgradableSpecification.CutoffNotMet(qualityProfile,
                                                            new List<QualityModel> { remoteAlbum.ParsedAlbumInfo.Quality },

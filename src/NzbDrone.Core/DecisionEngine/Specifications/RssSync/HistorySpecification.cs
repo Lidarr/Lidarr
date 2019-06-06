@@ -62,7 +62,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
 
                     // The artist will be the same as the one in history since it's the same album.
                     // Instead of fetching the artist from the DB reuse the known artist.
-                    var preferredWordScore = _preferredWordServiceCalculator.Calculate(subject.Artist, mostRecent.SourceTitle);
+                    var preferredWordScore = _preferredWordServiceCalculator.Calculate(subject.Artist, mostRecent.SourceTitle, subject.Release?.IndexerId ?? 0);
 
                     var cutoffUnmet = _upgradableSpecification.CutoffNotMet(
                         subject.Artist.QualityProfile,

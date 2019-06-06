@@ -53,7 +53,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
                     if (!_upgradableSpecification.IsUpgradable(subject.Artist.QualityProfile,
                                                                currentQualities,
-                                                               _preferredWordServiceCalculator.Calculate(subject.Artist, trackFiles[0].GetSceneOrFileName()),
+                                                               _preferredWordServiceCalculator.Calculate(subject.Artist, trackFiles[0].GetSceneOrFileName(), subject.Release?.IndexerId ?? 0),
                                                                subject.ParsedAlbumInfo.Quality,
                                                                subject.PreferredWordScore))
                     {
