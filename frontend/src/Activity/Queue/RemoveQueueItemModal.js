@@ -43,14 +43,16 @@ class RemoveQueueItemModal extends Component {
 
     this.setState({
       blacklist: false,
-      skipredownload: false });
+      skipredownload: false
+    });
     this.props.onRemovePress(blacklist, skipredownload);
   }
 
   onModalClose = () => {
     this.setState({
       blacklist: false,
-      skipredownload: false });
+      skipredownload: false
+    });
     this.props.onModalClose();
   }
 
