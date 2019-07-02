@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -100,6 +100,55 @@ namespace NzbDrone.Common.Test
             process.WaitForExit();
 
             Subject.Exists(DummyApp.DUMMY_PROCCESS_NAME).Should().BeFalse();
+        }
+
+        [Test]
+        [Explicit]
+        public void Should_be_able_to_start_powershell()
+        {
+            WindowsOnly();
+
+            var tempDir = GetTempFilePath();
+            var tempScript = Path.Combine(tempDir, "myscript.ps1");
+
+            Directory.CreateDirectory(tempDir);
+
+            File.WriteAllText(tempScript, "Write-Output 'Hello There'\r\n");
+
+            try
+            {
+                var result = Subject.StartAndCapture(tempScript);
+
+                result.Standard.First().Content.Should().Be("Hello There");
+            }
+            catch (Win32Exception ex) when (ex.NativeErrorCode == 2)
+            {
+                Assert.Fail("No Powershell available?!?");
+            }
+        }
+
+        [Test]
+        public void Should_be_able_to_start_python()
+        {
+            WindowsOnly();
+
+            var tempDir = GetTempFilePath();
+            var tempScript = Path.Combine(tempDir, "myscript.py");
+
+            Directory.CreateDirectory(tempDir);
+
+            File.WriteAllText(tempScript, "print(\"Hello There\")\r\n");
+
+            try
+            {
+                var result = Subject.StartAndCapture(tempScript);
+
+                result.Standard.First().Content.Should().Be("Hello There");
+            }
+            catch (Win32Exception ex) when (ex.NativeErrorCode == 2)
+            {
+                Assert.Inconclusive("No Python available");
+            }
         }
 
         [Test]
