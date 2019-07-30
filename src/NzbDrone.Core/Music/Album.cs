@@ -12,6 +12,7 @@ namespace NzbDrone.Core.Music
     {
         public Album()
         {
+            Aliases = new List<string>();
             Genres = new List<string>();
             Images = new List<MediaCover.MediaCover>();
             Links = new List<Links>();
@@ -28,6 +29,7 @@ namespace NzbDrone.Core.Music
         public string ForeignAlbumId { get; set; }
         public List<string> OldForeignAlbumIds { get; set; }
         public string Title { get; set; }
+        public List<string> Aliases { get; set; }
         public string Overview { get; set; }
         public string Disambiguation { get; set; }
         public DateTime? ReleaseDate { get; set; }
@@ -80,6 +82,7 @@ namespace NzbDrone.Core.Music
                 ForeignAlbumId == other.ForeignAlbumId &&
                 (OldForeignAlbumIds?.SequenceEqual(other.OldForeignAlbumIds) ?? true) &&
                 Title == other.Title &&
+                (Aliases?.SequenceEqual(other.Aliases) ?? true) &&
                 Overview == other.Overview &&
                 Disambiguation == other.Disambiguation &&
                 ReleaseDate == other.ReleaseDate &&
@@ -123,6 +126,7 @@ namespace NzbDrone.Core.Music
                 hash = hash * 23 + ForeignAlbumId.GetHashCode();
                 hash = hash * 23 + OldForeignAlbumIds?.GetHashCode() ?? 0;
                 hash = hash * 23 + Title?.GetHashCode() ?? 0;
+                hash = hash * 23 + Aliases?.GetHashCode() ?? 0;
                 hash = hash * 23 + Overview?.GetHashCode() ?? 0;
                 hash = hash * 23 + Disambiguation?.GetHashCode() ?? 0;
                 hash = hash * 23 + ReleaseDate?.GetHashCode() ?? 0;

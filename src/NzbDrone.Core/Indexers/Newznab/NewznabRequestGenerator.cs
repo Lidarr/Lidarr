@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Common.Extensions;
@@ -69,19 +70,48 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             if (SupportsAudioSearch)
             {
-                AddAudioPageableRequests(pageableRequests, searchCriteria,
-                    NewsnabifyTitle($"&artist={searchCriteria.ArtistQuery}&album={searchCriteria.AlbumQuery}"));
+                AddAlbumRequests(pageableRequests, searchCriteria, "&artist={0}&album={1}", AddAudioPageableRequests);
             }
 
             if (SupportsSearch)
             {
-                pageableRequests.AddTier();
-
-                pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search",
-                    NewsnabifyTitle($"&q={searchCriteria.ArtistQuery}+{searchCriteria.AlbumQuery}")));
+                AddAlbumRequests(pageableRequests, searchCriteria, "&q={0}+{1}", AddSearchPageableRequests);
             }
 
             return pageableRequests;
+        }
+
+        private void AddAlbumRequests(IndexerPageableRequestChain pageableRequests, AlbumSearchCriteria searchCriteria, string paramFormat, Action<IndexerPageableRequestChain, SearchCriteriaBase, string> AddRequests)
+        {
+            var albumQuery = searchCriteria.AlbumQueries[0];
+            var artistQuery = searchCriteria.ArtistQueries[0];
+
+            // search using standard name
+            pageableRequests.AddTier();
+            AddRequests(pageableRequests, searchCriteria, NewsnabifyTitle(string.Format(paramFormat, artistQuery, albumQuery)));
+
+            // using artist alias
+            pageableRequests.AddTier();
+            foreach (var artistAlt in searchCriteria.ArtistQueries.Skip(1))
+            {
+                AddRequests(pageableRequests, searchCriteria, NewsnabifyTitle(string.Format(paramFormat, artistAlt, albumQuery)));
+            }
+
+            // using album alias
+            pageableRequests.AddTier();
+            foreach (var albumAlt in searchCriteria.AlbumQueries.Skip(1))
+            {
+                AddRequests(pageableRequests, searchCriteria, NewsnabifyTitle(string.Format(paramFormat, artistQuery, albumAlt)));
+            }
+
+            // using aliases for both
+            foreach (var artistAlt in searchCriteria.ArtistQueries.Skip(1))
+            {
+                foreach (var albumAlt in searchCriteria.AlbumQueries.Skip(1))
+                {
+                    AddRequests(pageableRequests, searchCriteria, NewsnabifyTitle(string.Format(paramFormat, artistAlt, albumAlt)));
+                }
+            }
         }
 
         public virtual IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
@@ -90,19 +120,31 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             if (SupportsAudioSearch)
             {
-                AddAudioPageableRequests(pageableRequests, searchCriteria,
-                    NewsnabifyTitle($"&artist={searchCriteria.ArtistQuery}"));
+                AddArtistRequests(pageableRequests, searchCriteria, "&artist={0}", AddAudioPageableRequests);
             }
 
             if (SupportsSearch)
             {
-                pageableRequests.AddTier();
-
-                pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search",
-                    NewsnabifyTitle($"&q={searchCriteria.ArtistQuery}")));
+                AddArtistRequests(pageableRequests, searchCriteria, "&q={0}", AddSearchPageableRequests);
             }
 
             return pageableRequests;
+        }
+
+        private void AddArtistRequests(IndexerPageableRequestChain pageableRequests, SearchCriteriaBase searchCriteria, string paramFormat, Action<IndexerPageableRequestChain, SearchCriteriaBase, string> AddRequests)
+        {
+            var artistQuery = searchCriteria.ArtistQueries[0];
+
+            // search using standard name
+            pageableRequests.AddTier();
+            AddRequests(pageableRequests, searchCriteria, NewsnabifyTitle(string.Format(paramFormat, artistQuery)));
+
+            // using artist alias
+            pageableRequests.AddTier();
+            foreach (var artistAlt in searchCriteria.ArtistQueries.Skip(1))
+            {
+                AddRequests(pageableRequests, searchCriteria, NewsnabifyTitle(string.Format(paramFormat, artistAlt)));
+            }
         }
 
         private void AddAudioPageableRequests(IndexerPageableRequestChain chain, SearchCriteriaBase searchCriteria, string parameters)
@@ -110,6 +152,11 @@ namespace NzbDrone.Core.Indexers.Newznab
             chain.AddTier();
 
             chain.Add(GetPagedRequests(MaxPages, Settings.Categories, "music", $"&q={parameters}"));
+        }
+
+        private void AddSearchPageableRequests(IndexerPageableRequestChain chain, SearchCriteriaBase searchCriteria, string parameters)
+        {
+            chain.Add(GetPagedRequests(MaxPages, Settings.Categories, "search", parameters));
         }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(int maxPages, IEnumerable<int> categories, string searchType, string parameters)

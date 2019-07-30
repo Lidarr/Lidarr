@@ -104,7 +104,8 @@ namespace NzbDrone.Core.Music
             Func< Func<Artist, string, double>, string, Tuple<Func<Artist, string, double>, string>> tc = Tuple.Create;
             var scoringFunctions = new List<Tuple<Func<Artist, string, double>, string>> {
                 tc((a, t) => a.CleanName.FuzzyMatch(t), cleanTitle),
-                tc((a, t) => a.Name.FuzzyMatch(t), title),
+                tc((a, t) => a.Metadata.Value.Name.FuzzyMatch(t), title),
+                tc((a, t) => a.Metadata.Value.Aliases.Any() ? a.Metadata.Value.Aliases.Select(x => x.CleanArtistName().FuzzyMatch(t)).Max() : 0, cleanTitle)
             };
 
             if (title.StartsWith("The ", StringComparison.CurrentCultureIgnoreCase))

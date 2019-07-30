@@ -174,6 +174,7 @@
     <Compile Include="Datastore\Migration\031_add_artistmetadataid_constraint.cs" />
     <Compile Include="Datastore\Migration\032_old_ids_and_artist_alias.cs" />
     <Compile Include="Datastore\Migration\033_download_propers_config.cs" />
+    <Compile Include="Datastore\Migration\035_release_group_alias.cs" />
     <Compile Include="Datastore\Migration\Framework\MigrationContext.cs" />
     <Compile Include="Datastore\Migration\Framework\MigrationController.cs" />
     <Compile Include="Datastore\Migration\Framework\MigrationDbFactory.cs" />

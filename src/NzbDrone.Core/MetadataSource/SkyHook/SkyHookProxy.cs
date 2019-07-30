@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using NLog;
-using NzbDrone.Common.Cloud;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Exceptions;
@@ -300,6 +299,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             album.ForeignAlbumId = resource.Id;
             album.OldForeignAlbumIds = resource.OldIds;
             album.Title = resource.Title;
+            album.Aliases = resource.Aliases;
             album.Overview = resource.Overview;
             album.Disambiguation = resource.Disambiguation;
             album.ReleaseDate = resource.ReleaseDate;

@@ -163,6 +163,7 @@ namespace NzbDrone.Core.Music
             local.LastInfoSync = DateTime.UtcNow;
             local.CleanTitle = remote.CleanTitle;
             local.Title = remote.Title ?? "Unknown";
+            local.Aliases = remote.Aliases;
             local.Overview = remote.Overview.IsNullOrWhiteSpace() ? local.Overview : remote.Overview;
             local.Disambiguation = remote.Disambiguation;
             local.AlbumType = remote.AlbumType;

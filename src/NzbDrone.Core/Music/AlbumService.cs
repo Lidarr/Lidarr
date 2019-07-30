@@ -87,6 +87,7 @@ namespace NzbDrone.Core.Music
             var scoringFunctions = new List<Tuple<Func<Album, string, double>, string>> {
                 tc((a, t) => a.CleanTitle.FuzzyMatch(t), cleanTitle),
                 tc((a, t) => a.Title.FuzzyMatch(t), title),
+                tc((a, t) => a.Aliases.Any() ? a.Aliases.Select(x => x.CleanArtistName().FuzzyMatch(t)).Max() : 0, cleanTitle),
                 tc((a, t) => a.CleanTitle.FuzzyMatch(t), title.RemoveBracketsAndContents().CleanArtistName()),
                 tc((a, t) => a.CleanTitle.FuzzyMatch(t), title.RemoveAfterDash().CleanArtistName()),
                 tc((a, t) => a.CleanTitle.FuzzyMatch(t), title.RemoveBracketsAndContents().RemoveAfterDash().CleanArtistName()),

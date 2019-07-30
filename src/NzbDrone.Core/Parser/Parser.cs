@@ -322,8 +322,11 @@ namespace NzbDrone.Core.Parser
 
                 simpleTitle = CleanTorrentSuffixRegex.Replace(simpleTitle, string.Empty);
 
-                var escapedArtist = Regex.Escape(artist.Name.RemoveAccent()).Replace(@"\ ", @"[\W_]");
-                var escapedAlbums = string.Join("|", album.Select(s => Regex.Escape(s.Title.RemoveAccent())).ToList()).Replace(@"\ ", @"[\W_]");
+                var artistAliases = new [] { artist.Name }.Concat(artist.Metadata.Value.Aliases);
+                var escapedArtist = string.Join("|", artistAliases.Select(x => Regex.Escape(x.RemoveAccent())).ToList()).Replace(@"\ ", @"[\W_]");
+
+                var albumAliases = album.Select(x => x.Title).Concat(album.SelectMany(x => x.Aliases));
+                var escapedAlbums = string.Join("|", albumAliases.Select(s => Regex.Escape(s.RemoveAccent())).ToList()).Replace(@"\ ", @"[\W_]");
 
                 var releaseRegex = new Regex(@"^(\W*|\b)(?<artist>" + escapedArtist + @")(\W*|\b).*(\W*|\b)(?<album>" + escapedAlbums + @")(\W*|\b)", RegexOptions.IgnoreCase);
 
