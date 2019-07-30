@@ -234,8 +234,8 @@ namespace NzbDrone.Core.Music
                                          "WHERE {0} " +
                                          "AND AlbumReleases.Monitored = 1 " +
                                          "GROUP BY Albums.Id " +
-                                         "HAVING ({1} OR {2}) " +
-                                         "ORDER BY {3} {4} LIMIT {5} OFFSET {6}",
+                                         "HAVING {1} " +
+                                         "ORDER BY {2} {3} LIMIT {4} OFFSET {5}",
                                          monitored,
                                          BuildQualityCutoffWhereClause(qualitiesBelowCutoff),
                                          sortKey,
@@ -265,7 +265,7 @@ namespace NzbDrone.Core.Music
                                          "WHERE {0} " +
                                          "AND AlbumReleases.Monitored = 1 " +
                                          "GROUP BY Albums.Id " +
-                                         "HAVING ({1} OR {2}) ",
+                                         "HAVING {1}",
                                          monitored,
                                          BuildQualityCutoffWhereClause(qualitiesBelowCutoff));
 
