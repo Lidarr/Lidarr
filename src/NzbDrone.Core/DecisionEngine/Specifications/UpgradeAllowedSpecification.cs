@@ -51,7 +51,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                     // Get a distinct list of all current track qualities for a given album
                     var currentQualities = trackFiles.Select(c => c.Quality).Distinct().ToList();
 
-                    _logger.Debug("Comparing file quality with report. Existing files contain {0} : {1}", currentQualities.ConcatToString());
+                    _logger.Debug("Comparing file quality with report. Existing files contain {0}", currentQualities.ConcatToString());
 
                     if (!_upgradableSpecification.IsUpgradeAllowed(qualityProfile,
                                                                currentQualities,
