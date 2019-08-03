@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using NLog;
 using NzbDrone.Common.Cache;
+using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.CustomFormats;
@@ -82,7 +83,7 @@ namespace NzbDrone.Core.Organizer
             _logger = logger;
         }
 
-        public string BuildTrackFileName(List<Track> tracks, Artist artist, Album album, TrackFile trackFile, NamingConfig namingConfig = null, List<CustomFormat> customFormats = null)
+        private string BuildTrackFileName(List<Track> tracks, Artist artist, Album album, TrackFile trackFile, int maxPath, NamingConfig namingConfig = null, List<CustomFormat> customFormats = null)
         {
             if (namingConfig == null)
             {
@@ -106,18 +107,7 @@ namespace NzbDrone.Core.Organizer
                 pattern = namingConfig.MultiDiscTrackFormat;
             }
 
-            var tokenHandlers = new Dictionary<string, Func<TokenMatch, string>>(FileNameBuilderTokenEqualityComparer.Instance);
-
             tracks = tracks.OrderBy(e => e.AlbumReleaseId).ThenBy(e => e.TrackNumber).ToList();
-
-            AddArtistTokens(tokenHandlers, artist);
-            AddAlbumTokens(tokenHandlers, album);
-            AddMediumTokens(tokenHandlers, tracks.First().AlbumRelease.Value.Media.SingleOrDefault(m => m.Number == tracks.First().MediumNumber));
-            AddTrackTokens(tokenHandlers, tracks, artist);
-            AddTrackFileTokens(tokenHandlers, trackFile);
-            AddQualityTokens(tokenHandlers, artist, trackFile);
-            AddMediaInfoTokens(tokenHandlers, trackFile);
-            AddCustomFormats(tokenHandlers, artist, trackFile, customFormats);
 
             var splitPatterns = pattern.Split(new char[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
             var components = new List<string>();
@@ -125,14 +115,31 @@ namespace NzbDrone.Core.Organizer
             foreach (var s in splitPatterns)
             {
                 var splitPattern = s;
-
+                var tokenHandlers = new Dictionary<string, Func<TokenMatch, string>>(FileNameBuilderTokenEqualityComparer.Instance);
                 splitPattern = FormatTrackNumberTokens(splitPattern, "", tracks);
                 splitPattern = FormatMediumNumberTokens(splitPattern, "", tracks);
 
-                var component = ReplaceTokens(splitPattern, tokenHandlers, namingConfig).Trim();
+                AddArtistTokens(tokenHandlers, artist);
+                AddAlbumTokens(tokenHandlers, album);
+                AddMediumTokens(tokenHandlers, tracks.First().AlbumRelease.Value.Media.SingleOrDefault(m => m.Number == tracks.First().MediumNumber));
+                AddTrackTokens(tokenHandlers, tracks, artist);
+                AddTrackTitlePlaceholderTokens(tokenHandlers);
+                AddTrackFileTokens(tokenHandlers, trackFile);
+                AddQualityTokens(tokenHandlers, artist, trackFile);
+                AddMediaInfoTokens(tokenHandlers, trackFile);
+                AddCustomFormats(tokenHandlers, artist, trackFile, customFormats);
+
+                var component = ReplaceTokens(splitPattern, tokenHandlers, namingConfig, true).Trim();
+                var maxPathSegmentLength = Math.Min(LongPathSupport.MaxFileNameLength, maxPath);
+
+                var maxTrackTitleLength = maxPathSegmentLength - GetLengthWithoutTrackTitle(component, namingConfig);
+
+                AddTrackTitleTokens(tokenHandlers, tracks, maxTrackTitleLength);
+                component = ReplaceTokens(component, tokenHandlers, namingConfig).Trim();
 
                 component = FileNameCleanupRegex.Replace(component, match => match.Captures[0].Value[0].ToString());
                 component = TrimSeparatorsRegex.Replace(component, string.Empty);
+                component = component.Replace("{ellipsis}", "...");
 
                 if (component.IsNotNullOrWhiteSpace())
                 {
@@ -141,6 +148,11 @@ namespace NzbDrone.Core.Organizer
             }
 
             return Path.Combine(components.ToArray());
+        }
+
+        public string BuildTrackFileName(List<Track> tracks, Artist artist, Album album, TrackFile trackFile, NamingConfig namingConfig = null, List<CustomFormat> customFormats = null)
+        {
+            return BuildTrackFileName(tracks, artist, album, trackFile, LongPathSupport.MaxFilePathLength, namingConfig, customFormats);
         }
 
         public string BuildTrackFilePath(Artist artist, string fileName, string extension)
@@ -300,9 +312,6 @@ namespace NzbDrone.Core.Organizer
 
         private void AddTrackTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, List<Track> tracks, Artist artist)
         {
-            tokenHandlers["{Track Title}"] = m => GetTrackTitle(tracks, "+");
-            tokenHandlers["{Track CleanTitle}"] = m => CleanTitle(GetTrackTitle(tracks, "and"));
-
             // Use the track's ArtistMetadata by default, as it will handle the "Various Artists" case
             // (where the album artist is "Various Artists" but each track has its own artist). Fall back
             // to the album artist if we don't have any track ArtistMetadata for whatever reason.
@@ -314,6 +323,18 @@ namespace NzbDrone.Core.Organizer
                 tokenHandlers["{Track ArtistNameThe}"] = m => TitleThe(firstArtist.Name);
                 tokenHandlers["{Track ArtistMbId}"] = m => firstArtist.ForeignArtistId ?? string.Empty;
             }
+        }
+
+        private void AddTrackTitlePlaceholderTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers)
+        {
+            tokenHandlers["{Track Title}"] = m => null;
+            tokenHandlers["{Track CleanTitle}"] = m => null;
+        }
+
+        private void AddTrackTitleTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, List<Track> tracks, int maxLength)
+        {
+            tokenHandlers["{Track Title}"] = m => GetTrackTitle(GetTrackTitles(tracks), "+", maxLength);
+            tokenHandlers["{Track CleanTitle}"] = m => GetTrackTitle(GetTrackTitles(tracks).Select(CleanTitle).ToList(), "and", maxLength);
         }
 
         private void AddTrackFileTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, TrackFile trackFile)
@@ -369,13 +390,29 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{Custom Formats}"] = m => string.Join(" ", customFormats.Where(x => x.IncludeCustomFormatWhenRenaming));
         }
 
-        private string ReplaceTokens(string pattern, Dictionary<string, Func<TokenMatch, string>> tokenHandlers, NamingConfig namingConfig)
+        private string ReplaceTokens(string pattern, Dictionary<string, Func<TokenMatch, string>> tokenHandlers, NamingConfig namingConfig, bool escape = false)
         {
-            return TitleRegex.Replace(pattern, match => ReplaceToken(match, tokenHandlers, namingConfig));
+            return TitleRegex.Replace(pattern, match => ReplaceToken(match, tokenHandlers, namingConfig, escape));
         }
 
-        private string ReplaceToken(Match match, Dictionary<string, Func<TokenMatch, string>> tokenHandlers, NamingConfig namingConfig)
+        private string ReplaceToken(Match match, Dictionary<string, Func<TokenMatch, string>> tokenHandlers, NamingConfig namingConfig, bool escape)
         {
+            if (match.Groups["escaped"].Success)
+            {
+                if (escape)
+                {
+                    return match.Value;
+                }
+                else if (match.Value == "{{")
+                {
+                    return "{";
+                }
+                else if (match.Value == "}}")
+                {
+                    return "}";
+                }
+            }
+
             var tokenMatch = new TokenMatch
             {
                 RegexMatch = match,
@@ -393,7 +430,15 @@ namespace NzbDrone.Core.Organizer
 
             var tokenHandler = tokenHandlers.GetValueOrDefault(tokenMatch.Token, m => string.Empty);
 
-            var replacementText = tokenHandler(tokenMatch).Trim();
+            var replacementText = tokenHandler(tokenMatch);
+
+            if (replacementText == null)
+            {
+                // Preserve original token if handler returned null
+                return match.Value;
+            }
+
+            replacementText = replacementText.Trim();
 
             if (tokenMatch.Token.All(t => !char.IsLetter(t) || char.IsLower(t)))
             {
@@ -414,6 +459,11 @@ namespace NzbDrone.Core.Organizer
             if (!replacementText.IsNullOrWhiteSpace())
             {
                 replacementText = tokenMatch.Prefix + replacementText + tokenMatch.Suffix;
+            }
+
+            if (escape)
+            {
+                replacementText = replacementText.Replace("{", "{{").Replace("}", "}}");
             }
 
             return replacementText;
@@ -469,13 +519,14 @@ namespace NzbDrone.Core.Organizer
                 }).ToArray());
         }
 
-        private string GetTrackTitle(List<Track> tracks, string separator)
+        private List<string> GetTrackTitles(List<Track> tracks)
         {
-            separator = string.Format(" {0} ", separator.Trim());
-
             if (tracks.Count == 1)
             {
-                return tracks.First().Title.TrimEnd(TrackTitleTrimCharacters);
+                return new List<string>
+                {
+                    tracks.First().Title.TrimEnd(TrackTitleTrimCharacters)
+                };
             }
 
             var titles = tracks.Select(c => c.Title.TrimEnd(TrackTitleTrimCharacters))
@@ -490,7 +541,44 @@ namespace NzbDrone.Core.Organizer
                                  .ToList();
             }
 
-            return string.Join(separator, titles);
+            return titles;
+        }
+
+        private string GetTrackTitle(List<string> titles, string separator, int maxLength)
+        {
+            separator = $" {separator.Trim()} ";
+
+            var joined = string.Join(separator, titles);
+
+            if (joined.GetByteCount() <= maxLength)
+            {
+                return joined;
+            }
+
+            var firstTitle = titles.First();
+            var firstTitleLength = firstTitle.GetByteCount();
+
+            if (titles.Count >= 2)
+            {
+                var lastTitle = titles.Last();
+                var lastTitleLength = lastTitle.GetByteCount();
+                if (firstTitleLength + lastTitleLength + 3 <= maxLength)
+                {
+                    return $"{firstTitle.TrimEnd(' ', '.')}{{ellipsis}}{lastTitle}";
+                }
+            }
+
+            if (titles.Count > 1 && firstTitleLength + 3 <= maxLength)
+            {
+                return $"{firstTitle.TrimEnd(' ', '.')}{{ellipsis}}";
+            }
+
+            if (titles.Count == 1 && firstTitleLength <= maxLength)
+            {
+                return firstTitle;
+            }
+
+            return $"{firstTitle.Truncate(maxLength - 3).TrimEnd(' ', '.')}{{ellipsis}}";
         }
 
         private string CleanupTrackTitle(string title)
@@ -536,6 +624,17 @@ namespace NzbDrone.Core.Organizer
         private string GetOriginalFileName(TrackFile trackFile)
         {
             return Path.GetFileNameWithoutExtension(trackFile.Path);
+        }
+
+        private int GetLengthWithoutTrackTitle(string pattern, NamingConfig namingConfig)
+        {
+            var tokenHandlers = new Dictionary<string, Func<TokenMatch, string>>(FileNameBuilderTokenEqualityComparer.Instance);
+            tokenHandlers["{Track Title}"] = m => string.Empty;
+            tokenHandlers["{Track CleanTitle}"] = m => string.Empty;
+
+            var result = ReplaceTokens(pattern, tokenHandlers, namingConfig);
+
+            return result.GetByteCount();
         }
 
         private static string CleanFileName(string name, NamingConfig namingConfig)
