@@ -7,7 +7,7 @@ import Link from 'Components/Link/Link';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
-import { icons } from 'Helpers/Props';
+import { icons, kinds } from 'Helpers/Props';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import translate from 'Utilities/String/translate';
 import AddNewAlbumSearchResultConnector from './Album/AddNewAlbumSearchResultConnector';
@@ -81,7 +81,8 @@ class AddNewItem extends Component {
   render() {
     const {
       error,
-      items
+      items,
+      hasExistingArtists
     } = this.props;
 
     const term = this.state.term;
@@ -178,7 +179,8 @@ class AddNewItem extends Component {
           }
 
           {
-            !term &&
+            term ?
+              null :
               <div className={styles.message}>
                 <div className={styles.helpText}>
                   {translate('ItsEasyToAddANewArtistJustStartTypingTheNameOfTheArtistYouWantToAdd')}
@@ -189,6 +191,24 @@ class AddNewItem extends Component {
                   of an artist e.g. lidarr:cc197bad-dc9c-440d-a5b5-d52ba2e14234
                 </div>
               </div>
+          }
+
+          {
+            !term && !hasExistingArtists ?
+              <div className={styles.message}>
+                <div className={styles.noArtistsText}>
+                  You haven't added any artists yet, do you want to add an existing library location (Root Folder) and update?
+                </div>
+                <div>
+                  <Button
+                    to="/settings/mediamanagement"
+                    kind={kinds.PRIMARY}
+                  >
+                    Add Root Folder
+                  </Button>
+                </div>
+              </div> :
+              null
           }
 
           <div />
@@ -205,6 +225,7 @@ AddNewItem.propTypes = {
   isAdding: PropTypes.bool.isRequired,
   addError: PropTypes.object,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  hasExistingArtists: PropTypes.bool.isRequired,
   onSearchChange: PropTypes.func.isRequired,
   onClearSearch: PropTypes.func.isRequired
 };

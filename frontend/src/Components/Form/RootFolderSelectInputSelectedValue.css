@@ -7,10 +7,20 @@
   overflow: hidden;
 }
 
-.path {
+.pathContainer {
   @add-mixin truncate;
-
+  display: flex;
   flex: 1 0 0;
+}
+
+.path {
+  flex: 0 1 auto;
+}
+
+.artistFolder {
+  @add-mixin truncate;
+  flex: 0 1 auto;
+  color: var(--disabledColor);
 }
 
 .freeSpace {

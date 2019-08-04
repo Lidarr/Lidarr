@@ -61,7 +61,8 @@ namespace Lidarr.Api.V1.Artist
                             ArtistAncestorValidator artistAncestorValidator,
                             SystemFolderValidator systemFolderValidator,
                             QualityProfileExistsValidator qualityProfileExistsValidator,
-                            MetadataProfileExistsValidator metadataProfileExistsValidator)
+                            MetadataProfileExistsValidator metadataProfileExistsValidator,
+                            ArtistFolderAsRootFolderValidator artistFolderAsRootFolderValidator)
             : base(signalRBroadcaster)
         {
             _artistService = artistService;
@@ -91,7 +92,10 @@ namespace Lidarr.Api.V1.Artist
             SharedValidator.RuleFor(s => s.MetadataProfileId).SetValidator(metadataProfileExistsValidator);
 
             PostValidator.RuleFor(s => s.Path).IsValidPath().When(s => s.RootFolderPath.IsNullOrWhiteSpace());
-            PostValidator.RuleFor(s => s.RootFolderPath).IsValidPath().When(s => s.Path.IsNullOrWhiteSpace());
+            PostValidator.RuleFor(s => s.RootFolderPath)
+                         .IsValidPath()
+                         .SetValidator(artistFolderAsRootFolderValidator)
+                         .When(s => s.Path.IsNullOrWhiteSpace());
             PostValidator.RuleFor(s => s.ArtistName).NotEmpty();
             PostValidator.RuleFor(s => s.ForeignArtistId).NotEmpty().SetValidator(artistExistsValidator);
 

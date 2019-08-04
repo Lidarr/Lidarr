@@ -11,6 +11,7 @@ import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
 import AddArtistOptionsForm from '../Common/AddArtistOptionsForm.js';
 import styles from './AddNewAlbumModalContent.css';
+import translate from 'Utilities/String/translate';
 
 class AddNewAlbumModalContent extends Component {
 
@@ -56,7 +57,7 @@ class AddNewAlbumModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Add new Album
+          {translate('AddNewAlbum')}
         </ModalHeader>
 
         <ModalBody>

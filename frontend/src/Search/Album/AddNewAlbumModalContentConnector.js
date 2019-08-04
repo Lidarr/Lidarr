@@ -5,6 +5,7 @@ import { createSelector } from 'reselect';
 import { metadataProfileNames } from 'Helpers/Props';
 import { addAlbum, setAddDefault } from 'Store/Actions/searchActions';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
+import createSystemStatusSelector from 'Store/Selectors/createSystemStatusSelector';
 import selectSettings from 'Store/Selectors/selectSettings';
 import AddNewAlbumModalContent from './AddNewAlbumModalContent';
 
@@ -14,7 +15,8 @@ function createMapStateToProps() {
     (state) => state.search,
     (state) => state.settings.metadataProfiles,
     createDimensionsSelector(),
-    (isExistingArtist, searchState, metadataProfiles, dimensions) => {
+    createSystemStatusSelector(),
+    (isExistingArtist, searchState, metadataProfiles, dimensions, systemStatus) => {
       const {
         isAdding,
         addError,
@@ -38,6 +40,7 @@ function createMapStateToProps() {
         validationErrors,
         validationWarnings,
         noneMetadataProfileId: noneProfile.id,
+        isWindows: systemStatus.isWindows,
         ...settings
       };
     }

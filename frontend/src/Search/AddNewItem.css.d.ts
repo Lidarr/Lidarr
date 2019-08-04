@@ -4,6 +4,7 @@ interface CssExports {
   'clearLookupButton': string;
   'helpText': string;
   'message': string;
+  'noArtistsText': string;
   'noResults': string;
   'searchContainer': string;
   'searchIconContainer': string;

@@ -11,6 +11,7 @@ import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
 import AddArtistOptionsForm from '../Common/AddArtistOptionsForm.js';
 import styles from './AddNewArtistModalContent.css';
+import translate from 'Utilities/String/translate';
 
 class AddNewArtistModalContent extends Component {
 
@@ -54,7 +55,7 @@ class AddNewArtistModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Add new Artist
+          {translate('AddNewArtist')}
         </ModalHeader>
 
         <ModalBody>
@@ -139,6 +140,7 @@ AddNewArtistModalContent.propTypes = {
   isAdding: PropTypes.bool.isRequired,
   addError: PropTypes.object,
   isSmallScreen: PropTypes.bool.isRequired,
+  isWindows: PropTypes.bool.isRequired,
   onModalClose: PropTypes.func.isRequired,
   onAddArtistPress: PropTypes.func.isRequired
 };
