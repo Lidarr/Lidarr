@@ -215,6 +215,7 @@ class AddNewAlbumSearchResult extends Component {
           disambiguation={disambiguation}
           artistName={artist.artistName}
           overview={overview}
+          folder={artist.folder}
           images={images}
           onModalClose={this.onAddAlbumModalClose}
         />

@@ -38,7 +38,9 @@ class AddArtistOptionsForm extends Component {
       metadataProfileId,
       includeNoneMetadataProfile,
       showMetadataProfile,
+      folder,
       tags,
+      isWindows,
       onInputChange,
       ...otherProps
     } = this.props;
@@ -53,6 +55,15 @@ class AddArtistOptionsForm extends Component {
           <FormInputGroup
             type={inputTypes.ROOT_FOLDER_SELECT}
             name="rootFolderPath"
+            valueOptions={{
+              artistFolder: folder,
+              isWindows
+            }}
+            selectedValueOptions={{
+              artistFolder: folder,
+              isWindows
+            }}
+            helpText={translate('AddNewArtistRootFolderHelpText', { folder })}
             onChange={onInputChange}
             {...rootFolderPath}
           />
@@ -176,7 +187,9 @@ AddArtistOptionsForm.propTypes = {
   metadataProfileId: PropTypes.object,
   showMetadataProfile: PropTypes.bool.isRequired,
   includeNoneMetadataProfile: PropTypes.bool.isRequired,
+  folder: PropTypes.string.isRequired,
   tags: PropTypes.object.isRequired,
+  isWindows: PropTypes.bool.isRequired,
   onInputChange: PropTypes.func.isRequired
 };
 

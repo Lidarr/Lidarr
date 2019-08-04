@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'Components/Link/Button';
 import { kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './NoArtist.css';
 
 function NoArtist(props) {
@@ -28,7 +29,7 @@ function NoArtist(props) {
           to="/settings/mediamanagement"
           kind={kinds.PRIMARY}
         >
-          Add Root Folder
+          {translate('AddRootFolder')}
         </Button>
       </div>
 
@@ -37,7 +38,7 @@ function NoArtist(props) {
           to="/add/search"
           kind={kinds.PRIMARY}
         >
-          Add New Artist
+          {translate('AddNewArtist')}
         </Button>
       </div>
     </div>

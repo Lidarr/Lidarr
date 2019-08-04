@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Lidarr.Http.REST;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.RootFolders;
 
@@ -35,7 +36,8 @@ namespace Lidarr.Api.V1.RootFolders
                 Id = model.Id,
 
                 Name = model.Name,
-                Path = model.Path,
+                Path = model.Path.GetCleanPath(),
+
                 DefaultMetadataProfileId = model.DefaultMetadataProfileId,
                 DefaultQualityProfileId = model.DefaultQualityProfileId,
                 DefaultMonitorOption = model.DefaultMonitorOption,

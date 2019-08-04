@@ -7,6 +7,7 @@ using Lidarr.Http;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.MetadataSource;
+using NzbDrone.Core.Organizer;
 
 namespace Lidarr.Api.V1.Search
 {
@@ -14,10 +15,12 @@ namespace Lidarr.Api.V1.Search
     public class SearchController : Controller
     {
         private readonly ISearchForNewEntity _searchProxy;
+        private readonly IBuildFileNames _fileNameBuilder;
 
-        public SearchController(ISearchForNewEntity searchProxy)
+        public SearchController(ISearchForNewEntity searchProxy, IBuildFileNames fileNameBuilder)
         {
             _searchProxy = searchProxy;
+            _fileNameBuilder = fileNameBuilder;
         }
 
         [HttpGet]
@@ -27,7 +30,7 @@ namespace Lidarr.Api.V1.Search
             return MapToResource(searchResults).ToList();
         }
 
-        private static IEnumerable<SearchResource> MapToResource(IEnumerable<object> results)
+        private IEnumerable<SearchResource> MapToResource(IEnumerable<object> results)
         {
             var id = 1;
             foreach (var result in results)
@@ -35,29 +38,33 @@ namespace Lidarr.Api.V1.Search
                 var resource = new SearchResource();
                 resource.Id = id++;
 
-                if (result is NzbDrone.Core.Music.Artist)
+                if (result is NzbDrone.Core.Music.Artist artist)
                 {
-                    var artist = (NzbDrone.Core.Music.Artist)result;
                     resource.Artist = artist.ToResource();
                     resource.ForeignId = artist.ForeignArtistId;
 
                     var poster = artist.Metadata.Value.Images.FirstOrDefault(c => c.CoverType == MediaCoverTypes.Poster);
+
                     if (poster != null)
                     {
                         resource.Artist.RemotePoster = poster.Url;
                     }
+
+                    resource.Artist.Folder = _fileNameBuilder.GetArtistFolder(artist);
                 }
-                else if (result is NzbDrone.Core.Music.Album)
+                else if (result is NzbDrone.Core.Music.Album album)
                 {
-                    var album = (NzbDrone.Core.Music.Album)result;
                     resource.Album = album.ToResource();
                     resource.ForeignId = album.ForeignAlbumId;
 
                     var cover = album.Images.FirstOrDefault(c => c.CoverType == MediaCoverTypes.Cover);
+
                     if (cover != null)
                     {
                         resource.Album.RemoteCover = cover.Url;
                     }
+
+                    resource.Album.Artist.Folder = _fileNameBuilder.GetArtistFolder(album.Artist);
                 }
                 else
                 {
