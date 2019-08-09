@@ -20,7 +20,7 @@
   "license": "GPL-3.0",
   "readmeFilename": "readme.md",
   "dependencies": {
-    "@babel/core": "7.3.4",
+    "@babel/core": "7.5.5",
     "@babel/plugin-proposal-class-properties": "7.3.4",
     "@babel/plugin-proposal-decorators": "7.3.0",
     "@babel/plugin-proposal-export-default-from": "7.2.0",
