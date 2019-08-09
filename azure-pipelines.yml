@@ -5,7 +5,8 @@
 
 variables:
   artifactsFolder: './_artifacts'
-
+  lidarrVersion: '0.6.2.$(Build.BuildId)'
+name: 'Lidarr.$(Build.SourceBranchName).$(lidarrVersion)'
 jobs:
 - job: Windows
   pool:
@@ -18,36 +19,36 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
-  - task: Bash@3
-    displayName: Windows Unit Tests
-    inputs:
-      targetType: 'filePath'
-      filePath: ./test.sh
-      arguments: Windows Unit
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'NUnit'
-      testResultsFiles: '**/TestResult.xml'
-      testRunTitle: 'Windows Unit Tests'
-      mergeTestResults: true
+  # - task: Bash@3
+  #   displayName: Windows Unit Tests
+  #   inputs:
+  #     targetType: 'filePath'
+  #     filePath: ./test.sh
+  #     arguments: Windows Unit
+  # - task: PublishTestResults@2
+  #   inputs:
+  #     testResultsFormat: 'NUnit'
+  #     testResultsFiles: '**/TestResult.xml'
+  #     testRunTitle: 'Windows Unit Tests'
+  #     mergeTestResults: true
   - task: ArchiveFiles@2
     displayName: Create Windows zip
     inputs:
-      archiveFile: '$(artifactsFolder)/Lidarr.$(Build.SourceBranchName).$(Build.BuildId).windows.zip'
+      archiveFile: '$(artifactsFolder)/Lidarr.$(Build.SourceBranchName).$(lidarrVersion).windows.zip'
       archiveType: 'zip'
       includeRootFolder: false
       rootFolderOrFile: $(artifactsFolder)/windows
   - task: ArchiveFiles@2
-    displayName: Create MacOS App
+    displayName: Create MacOS app
     inputs:
-      archiveFile: '$(artifactsFolder)/Lidarr.$(Build.SourceBranchName).$(Build.BuildId).osx-app.zip'
+      archiveFile: '$(artifactsFolder)/Lidarr.$(Build.SourceBranchName).$(lidarrVersion).osx-app.zip'
       archiveType: 'zip'
       includeRootFolder: false
       rootFolderOrFile: $(artifactsFolder)/macos-app
   - task: ArchiveFiles@2
     displayName: Create MacOS tar
     inputs:
-      archiveFile: '$(artifactsFolder)/Lidarr.$(Build.SourceBranchName).$(Build.BuildId).osx.tar.gz'
+      archiveFile: '$(artifactsFolder)/Lidarr.$(Build.SourceBranchName).$(lidarrVersion).osx.tar.gz'
       archiveType: 'tar'
       tarCompression: 'gz'
       includeRootFolder: false
@@ -55,18 +56,18 @@ jobs:
   - task: ArchiveFiles@2
     displayName: Create Linux tar
     inputs:
-      archiveFile: '$(artifactsFolder)/Lidarr.$(Build.SourceBranchName).$(Build.BuildId).linux.tar.gz'
+      archiveFile: '$(artifactsFolder)/Lidarr.$(Build.SourceBranchName).$(lidarrVersion).linux.tar.gz'
       archiveType: 'tar'
       tarCompression: 'gz'
       includeRootFolder: false
       rootFolderOrFile: $(artifactsFolder)/linux
   - bash: |
-      export APPVEYOR_BUILD_NUMBER=${BUILD_BUILDNUMBER}
-      export APPVEYOR_BUILD_VERSION=${BUILD_BUILDID}
+      export APPVEYOR_BUILD_NUMBER=${BUILD_BUILDID}
+      export APPVEYOR_BUILD_VERSION=${LIDARRVERSION}
       export APPVEYOR_REPO_BRANCH=${BUILD_SOURCEBRANCHNAME}
       ./setup/inno/ISCC.exe "./setup/lidarr.iss"
-      cp ./setup/output/Lidarr.*windows.exe ${ARTIFACTSFOLDER}/Lidarr.${BUILD_SOURCEBRANCHNAME}.${BUILD_BUILDID}.windows-installer.exe
-    displayName: Create windows installer
+      cp ./setup/output/Lidarr.*windows.exe ${ARTIFACTSFOLDER}/Lidarr.${BUILD_SOURCEBRANCHNAME}.${LIDARRVERSION}.windows-installer.exe
+    displayName: Create Windows installer
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(artifactsFolder)'
