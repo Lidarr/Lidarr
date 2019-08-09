@@ -14,6 +14,16 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
+  - task: Bash@3
+    inputs:
+      targetType: 'filePath'
+      filePath: ./test.sh
+      arguments: Windows Unit
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'NUnit'
+      testResultsFiles: '**/myresults.xml'
+      mergeTestResults: true
 - job: macOS
   pool:
     vmImage: 'macOS-10.13'
@@ -34,20 +44,3 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
-- job: Unit_Test_Windows
-  dependsOn: Windows
-  condition: succeeded()
-  pool:
-    vmImage: 'vs2017-win2016'
-  steps:
-  - checkout: none
-  - task: Bash@3
-    inputs:
-      targetType: 'filePath'
-      filePath: ./test.sh
-      arguments: Windows Unit
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'NUnit'
-      testResultsFiles: '**/myresults.xml'
-      mergeTestResults: true
