@@ -34,7 +34,7 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
-- job: Unit Test Windows
+- job: Unit_Test_Windows
   dependsOn: Windows
   pool:
     vmImage: 'vs2017-win2016'
