@@ -6,10 +6,25 @@
 trigger:
 - develop
 
-pool:
-  vmImage: 'ubuntu-latest'
-
-steps:
-- task: ShellScript@2
-  inputs:
-    scriptPath: build.sh
+jobs:
+- job: Windows
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+  - task: ShellScript@2
+    inputs:
+      scriptPath: build.sh
+- job: macOS
+  pool:
+    vmImage: 'macOS-10.13'
+  steps:
+  - task: ShellScript@2
+    inputs:
+      scriptPath: build.sh
+- job: Linux
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - task: ShellScript@2
+    inputs:
+      scriptPath: build.sh
