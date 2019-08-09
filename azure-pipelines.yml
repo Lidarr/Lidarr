@@ -24,18 +24,18 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
-  # - task: Bash@3
-  #   displayName: Windows Unit Tests
-  #   inputs:
-  #     targetType: 'filePath'
-  #     filePath: ./test.sh
-  #     arguments: Windows Unit
-  # - task: PublishTestResults@2
-  #   inputs:
-  #     testResultsFormat: 'NUnit'
-  #     testResultsFiles: '**/TestResult.xml'
-  #     testRunTitle: 'Windows Unit Tests'
-  #     mergeTestResults: true
+  - task: Bash@3
+    displayName: Windows Unit Tests
+    inputs:
+      targetType: 'filePath'
+      filePath: ./test.sh
+      arguments: Windows Unit
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'NUnit'
+      testResultsFiles: '**/TestResult.xml'
+      testRunTitle: 'Windows Unit Tests'
+      mergeTestResults: true
   - task: ArchiveFiles@2
     displayName: Create Windows zip
     inputs:
@@ -79,30 +79,6 @@ jobs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'Lidarr'
       publishLocation: 'Container'
-  # - task: PublishBuildArtifacts@1
-  #   displayName: Publish Windows Zip
-  #   inputs:
-  #     PathtoPublish: '$(artifactsFolder)/$(windowsZip)'
-  #     ArtifactName: '$(windowsZip)'
-  #     publishLocation: 'Container'
-  # - task: PublishBuildArtifacts@1
-  #   displayName: Publish MacOS App
-  #   inputs:
-  #     PathtoPublish: '$(artifactsFolder)/$(macOsApp)'
-  #     ArtifactName: '$(macOsApp)'
-  #     publishLocation: 'Container'
-  # - task: PublishBuildArtifacts@1
-  #   displayName: Publish MacOS Tar
-  #   inputs:
-  #     PathtoPublish: '$(artifactsFolder)/$(macOsTar)'
-  #     ArtifactName: '$(macOsTar)'
-  #     publishLocation: 'Container'
-  # - task: PublishBuildArtifacts@1
-  #   displayName: Publish Linux Tar
-  #   inputs:
-  #     PathtoPublish: '$(artifactsFolder)/$(linuxTar)'
-  #     ArtifactName: '$(linuxTar)'
-  #     publishLocation: 'Container'
 - job: macOS
   pool:
     vmImage: 'macOS-10.13'
