@@ -34,3 +34,16 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
+- job: Unit Test Windows
+  dependsOn: Windows
+  pool:
+    vmImage: 'vs2017-win2016'
+  - task: Bash@3
+    inputs:
+      targetType: 'filePath'
+      filePath: ./test.sh Windows Unit
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'NUnit'
+      testResultsFiles: '**/myresults.xml'
+      mergeTestResults: true
