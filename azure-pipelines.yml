@@ -36,13 +36,16 @@ jobs:
       filePath: ./build.sh
 - job: Unit_Test_Windows
   dependsOn: Windows
+  condition: succeeded()
   pool:
     vmImage: 'vs2017-win2016'
   steps:
+  - checkout: none
   - task: Bash@3
     inputs:
       targetType: 'filePath'
-      filePath: ./test.sh Windows Unit
+      filePath: ./test.sh
+      arguments: Windows Unit
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'NUnit'
