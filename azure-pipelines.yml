@@ -25,6 +25,7 @@ jobs:
     inputs:
       testResultsFormat: 'NUnit'
       testResultsFiles: '**/TestResult.xml'
+      testRunTitle: 'Windows Unit Tests'
       mergeTestResults: true
 - job: macOS
   pool:
@@ -47,6 +48,7 @@ jobs:
     inputs:
       testResultsFormat: 'NUnit'
       testResultsFiles: '**/TestResult.xml'
+      testRunTitle: 'Mac Unit Tests'
       mergeTestResults: true
 - job: Linux
   pool:
@@ -69,4 +71,5 @@ jobs:
     inputs:
       testResultsFormat: 'NUnit'
       testResultsFiles: '**/TestResult.xml'
+      testRunTitle: 'Linux Unit Tests'
       mergeTestResults: true
