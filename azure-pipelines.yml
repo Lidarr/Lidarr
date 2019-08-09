@@ -8,6 +8,8 @@ jobs:
   pool:
     vmImage: 'vs2017-win2016'
   steps:
+  - checkout: self
+    submodules: true
   - task: Bash@3
     inputs:
       targetType: 'filePath'
@@ -16,6 +18,8 @@ jobs:
   pool:
     vmImage: 'macOS-10.13'
   steps:
+  - checkout: self
+    submodules: true
   - task: Bash@3
     inputs:
       targetType: 'filePath'
@@ -24,6 +28,8 @@ jobs:
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
+  - checkout: self
+    submodules: true
   - task: Bash@3
     inputs:
       targetType: 'filePath'
