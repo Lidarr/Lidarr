@@ -73,36 +73,38 @@ jobs:
       ./setup/inno/ISCC.exe "./setup/lidarr.iss"
       cp ./setup/output/Lidarr.*windows.exe ${ARTIFACTSFOLDER}/${WINDOWSINSTALLER}
     displayName: Create Windows installer
-  - task: PublishBuildArtifacts@1
-    displayName: Publish Windows Installer
-    inputs:
-      PathtoPublish: '$(artifactsFolder)/$(windowsInstaller)'
-      ArtifactName: '$(windowsInstaller)'
-      publishLocation: 'Container'
-  - task: PublishBuildArtifacts@1
-    displayName: Publish Windows Zip
-    inputs:
-      PathtoPublish: '$(artifactsFolder)/$(windowsZip)'
-      ArtifactName: '$(windowsZip)'
-      publishLocation: 'Container'
-  - task: PublishBuildArtifacts@1
-    displayName: Publish MacOS App
-    inputs:
-      PathtoPublish: '$(artifactsFolder)/$(macOsApp)'
-      ArtifactName: '$(macOsApp)'
-      publishLocation: 'Container'
-  - task: PublishBuildArtifacts@1
-    displayName: Publish MacOS Tar
-    inputs:
-      PathtoPublish: '$(artifactsFolder)/$(macOsTar)'
-      ArtifactName: '$(macOsTar)'
-      publishLocation: 'Container'
-  - task: PublishBuildArtifacts@1
-    displayName: Publish Linux Tar
-    inputs:
-      PathtoPublish: '$(artifactsFolder)/$(linuxTar)'
-      ArtifactName: '$(linuxTar)'
-      publishLocation: 'Container'
+  - publish: $(artifactsFolder)/$(windowsInstaller)
+    artifact: $(windowsInstaller)
+  # - task: PublishBuildArtifacts@1
+  #   displayName: Publish Windows Installer
+  #   inputs:
+  #     PathtoPublish: '$(artifactsFolder)/$(windowsInstaller)'
+  #     ArtifactName: '$(windowsInstaller)'
+  #     publishLocation: 'Container'
+  # - task: PublishBuildArtifacts@1
+  #   displayName: Publish Windows Zip
+  #   inputs:
+  #     PathtoPublish: '$(artifactsFolder)/$(windowsZip)'
+  #     ArtifactName: '$(windowsZip)'
+  #     publishLocation: 'Container'
+  # - task: PublishBuildArtifacts@1
+  #   displayName: Publish MacOS App
+  #   inputs:
+  #     PathtoPublish: '$(artifactsFolder)/$(macOsApp)'
+  #     ArtifactName: '$(macOsApp)'
+  #     publishLocation: 'Container'
+  # - task: PublishBuildArtifacts@1
+  #   displayName: Publish MacOS Tar
+  #   inputs:
+  #     PathtoPublish: '$(artifactsFolder)/$(macOsTar)'
+  #     ArtifactName: '$(macOsTar)'
+  #     publishLocation: 'Container'
+  # - task: PublishBuildArtifacts@1
+  #   displayName: Publish Linux Tar
+  #   inputs:
+  #     PathtoPublish: '$(artifactsFolder)/$(linuxTar)'
+  #     ArtifactName: '$(linuxTar)'
+  #     publishLocation: 'Container'
 - job: macOS
   pool:
     vmImage: 'macOS-10.13'
