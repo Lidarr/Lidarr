@@ -3,28 +3,28 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-- develop
-
 jobs:
 - job: Windows
   pool:
     vmImage: 'vs2017-win2016'
   steps:
-  - task: ShellScript@2
+  - task: Bash@3
     inputs:
-      scriptPath: build.sh
+      targetType: 'filePath'
+      filePath: ./build.sh
 - job: macOS
   pool:
     vmImage: 'macOS-10.13'
   steps:
-  - task: ShellScript@2
+  - task: Bash@3
     inputs:
-      scriptPath: build.sh
+      targetType: 'filePath'
+      filePath: ./build.sh
 - job: Linux
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
-  - task: ShellScript@2
+  - task: Bash@3
     inputs:
-      scriptPath: build.sh
+      targetType: 'filePath'
+      filePath: ./build.sh
