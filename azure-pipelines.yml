@@ -11,10 +11,12 @@ jobs:
   - checkout: self
     submodules: true
   - task: Bash@3
+    displayName: Build Lidarr
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
   - task: Bash@3
+    displayName: Windows Unit Tests
     inputs:
       targetType: 'filePath'
       filePath: ./test.sh
@@ -22,7 +24,7 @@ jobs:
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'NUnit'
-      testResultsFiles: '**/myresults.xml'
+      testResultsFiles: '**/TestResult.xml'
       mergeTestResults: true
 - job: macOS
   pool:
@@ -31,9 +33,21 @@ jobs:
   - checkout: self
     submodules: true
   - task: Bash@3
+    displayName: Build Lidarr
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
+  - task: Bash@3
+    displayName: Mac Unit Tests
+    inputs:
+      targetType: 'filePath'
+      filePath: ./test.sh
+      arguments: Mac Unit
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'NUnit'
+      testResultsFiles: '**/TestResult.xml'
+      mergeTestResults: true
 - job: Linux
   pool:
     vmImage: 'ubuntu-16.04'
@@ -41,6 +55,18 @@ jobs:
   - checkout: self
     submodules: true
   - task: Bash@3
+    displayName: Build Lidarr
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
+  - task: Bash@3
+    displayName: Linux Unit Tests
+    inputs:
+      targetType: 'filePath'
+      filePath: ./test.sh
+      arguments: Linux Unit
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'NUnit'
+      testResultsFiles: '**/TestResult.xml'
+      mergeTestResults: true
