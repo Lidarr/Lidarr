@@ -15,306 +15,311 @@ variables:
   linuxTar: 'Lidarr.$(Build.SourceBranchName).$(lidarrVersion).linux.tar.gz'
   sentryOrg: 'lidarr'
 
-jobs:
-- job: Windows
-  displayName: Windows Build
-  pool:
-    vmImage: 'vs2017-win2016'
-  steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '10.x'
-  - checkout: self
-    submodules: true
-  - task: Assembly-Info-NetFramework@2
-    displayName: Patch AssemblyInfo
-    inputs:
-      Path: '$(Build.SourcesDirectory)'
-      FileNames: 'src\NzbDrone.Common\Properties\SharedAssemblyInfo.cs'
-      InsertAttributes: false
-      FileEncoding: 'auto'
-      WriteBOM: false
-      VersionNumber: '$(lidarrVersion)'
-      FileVersionNumber: '$(lidarrVersion)'
-      InformationalVersion: '$(lidarrVersion)-rc1'
-  - task: Bash@3
-    displayName: Build Lidarr
-    inputs:
-      targetType: 'filePath'
-      filePath: ./build.sh
-  - task: PublishPipelineArtifact@0
-    displayName: Publish Tests Artifact
-    inputs:
-      artifactName: 'Tests' 
-      targetPath: '$(testsFolder)'
-  - task: ArchiveFiles@2
-    displayName: Create Windows zip
-    inputs:
-      archiveFile: '$(Build.ArtifactStagingDirectory)/$(windowsZip)'
-      archiveType: 'zip'
-      includeRootFolder: false
-      rootFolderOrFile: $(artifactsFolder)/windows
-  - task: ArchiveFiles@2
-    displayName: Create MacOS app
-    inputs:
-      archiveFile: '$(Build.ArtifactStagingDirectory)/$(macOsApp)'
-      archiveType: 'zip'
-      includeRootFolder: false
-      rootFolderOrFile: $(artifactsFolder)/macos-app
-  - task: ArchiveFiles@2
-    displayName: Create MacOS tar
-    inputs:
-      archiveFile: '$(Build.ArtifactStagingDirectory)/$(macOsTar)'
-      archiveType: 'tar'
-      tarCompression: 'gz'
-      includeRootFolder: false
-      rootFolderOrFile: $(artifactsFolder)/macos
-  - task: ArchiveFiles@2
-    displayName: Create Linux tar
-    inputs:
-      archiveFile: '$(Build.ArtifactStagingDirectory)/$(linuxTar)'
-      archiveType: 'tar'
-      tarCompression: 'gz'
-      includeRootFolder: false
-      rootFolderOrFile: $(artifactsFolder)/linux
-  - bash: |
-      export APPVEYOR_BUILD_NUMBER=${BUILD_BUILDID}
-      export APPVEYOR_BUILD_VERSION=${LIDARRVERSION}
-      export APPVEYOR_REPO_BRANCH=${BUILD_SOURCEBRANCHNAME}
-      ./setup/inno/ISCC.exe "./setup/lidarr.iss"
-      cp ./setup/output/Lidarr.*windows.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/${WINDOWSINSTALLER}
-    displayName: Create Windows installer
-  - publish: $(Build.ArtifactStagingDirectory)
-    artifact: 'Lidarr'
-  - bash: |
-      echo "Uploading source maps to sentry"
-      yarn sentry-cli releases new --finalize -p lidarr -p lidarr-ui -p lidarr-update "${LIDARRVERSION}-debug"
-      yarn sentry-cli releases -p lidarr-ui files "${LIDARRVERSION}-debug" upload-sourcemaps _output/UI/ --rewrite
-      yarn sentry-cli releases set-commits --auto "${LIDARRVERSION}-debug"
-      yarn sentry-cli releases deploys "${LIDARRVERSION}-debug" new -e nightly
-    displayName: Publish Sentry Source Maps
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
-    env:
-      SENTRY_AUTH_TOKEN: $(sentryAuthToken)
+stages:
+  - stage: Build
+    jobs:
+    - job: Windows
+      displayName: Windows Build
+      pool:
+        vmImage: 'vs2017-win2016'
+      steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '10.x'
+      - checkout: self
+        submodules: true
+      - task: Assembly-Info-NetFramework@2
+        displayName: Patch AssemblyInfo
+        inputs:
+          Path: '$(Build.SourcesDirectory)'
+          FileNames: 'src\NzbDrone.Common\Properties\SharedAssemblyInfo.cs'
+          InsertAttributes: false
+          FileEncoding: 'auto'
+          WriteBOM: false
+          VersionNumber: '$(lidarrVersion)'
+          FileVersionNumber: '$(lidarrVersion)'
+          InformationalVersion: '$(lidarrVersion)-rc1'
+      - task: Bash@3
+        displayName: Build Lidarr
+        inputs:
+          targetType: 'filePath'
+          filePath: ./build.sh
+      - task: PublishPipelineArtifact@0
+        displayName: Publish Tests Artifact
+        inputs:
+          artifactName: 'Tests' 
+          targetPath: '$(testsFolder)'
+      - task: ArchiveFiles@2
+        displayName: Create Windows zip
+        inputs:
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(windowsZip)'
+          archiveType: 'zip'
+          includeRootFolder: false
+          rootFolderOrFile: $(artifactsFolder)/windows
+      - task: ArchiveFiles@2
+        displayName: Create MacOS app
+        inputs:
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(macOsApp)'
+          archiveType: 'zip'
+          includeRootFolder: false
+          rootFolderOrFile: $(artifactsFolder)/macos-app
+      - task: ArchiveFiles@2
+        displayName: Create MacOS tar
+        inputs:
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(macOsTar)'
+          archiveType: 'tar'
+          tarCompression: 'gz'
+          includeRootFolder: false
+          rootFolderOrFile: $(artifactsFolder)/macos
+      - task: ArchiveFiles@2
+        displayName: Create Linux tar
+        inputs:
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(linuxTar)'
+          archiveType: 'tar'
+          tarCompression: 'gz'
+          includeRootFolder: false
+          rootFolderOrFile: $(artifactsFolder)/linux
+      - bash: |
+          export APPVEYOR_BUILD_NUMBER=${BUILD_BUILDID}
+          export APPVEYOR_BUILD_VERSION=${LIDARRVERSION}
+          export APPVEYOR_REPO_BRANCH=${BUILD_SOURCEBRANCHNAME}
+          ./setup/inno/ISCC.exe "./setup/lidarr.iss"
+          cp ./setup/output/Lidarr.*windows.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/${WINDOWSINSTALLER}
+        displayName: Create Windows installer
+      - publish: $(Build.ArtifactStagingDirectory)
+        artifact: 'Lidarr'
+      - bash: |
+          echo "Uploading source maps to sentry"
+          yarn sentry-cli releases new --finalize -p lidarr -p lidarr-ui -p lidarr-update "${LIDARRVERSION}-debug"
+          yarn sentry-cli releases -p lidarr-ui files "${LIDARRVERSION}-debug" upload-sourcemaps _output/UI/ --rewrite
+          yarn sentry-cli releases set-commits --auto "${LIDARRVERSION}-debug"
+          yarn sentry-cli releases deploys "${LIDARRVERSION}-debug" new -e nightly
+        displayName: Publish Sentry Source Maps
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+        env:
+          SENTRY_AUTH_TOKEN: $(sentryAuthToken)
 
-- job: macOS
-  displayName: macOS Build
-  pool:
-    vmImage: 'macOS-10.13'
-  steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '10.x'
-  - checkout: self
-    submodules: true
-  - task: Bash@3
-    displayName: Build Lidarr
-    inputs:
-      targetType: 'filePath'
-      filePath: ./build.sh
+    - job: macOS
+      displayName: macOS Build
+      pool:
+        vmImage: 'macOS-10.13'
+      steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '10.x'
+      - checkout: self
+        submodules: true
+      - task: Bash@3
+        displayName: Build Lidarr
+        inputs:
+          targetType: 'filePath'
+          filePath: ./build.sh
 
-- job: Linux
-  displayName: Linux Build
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '10.x'
-  - checkout: self
-    submodules: true
-  - task: Bash@3
-    displayName: Build Lidarr
-    inputs:
-      targetType: 'filePath'
-      filePath: ./build.sh
+    - job: Linux
+      displayName: Linux Build
+      pool:
+        vmImage: 'ubuntu-16.04'
+      steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '10.x'
+      - checkout: self
+        submodules: true
+      - task: Bash@3
+        displayName: Build Lidarr
+        inputs:
+          targetType: 'filePath'
+          filePath: ./build.sh
+  - stage: Test
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+    - job: Linux_Unit_Tests
+      displayName: Linux Unit Tests
+      pool:
+        vmImage: 'ubuntu-16.04'
+      steps:
+      - script: |
+          wget https://github.com/acoustid/chromaprint/releases/download/v1.4.3/chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz
+          sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
+        displayName: Install fpcalc
+      - checkout: self
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Test Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Tests
+          targetPath: $(testsFolder)
+      - task: Bash@3
+        displayName: Linux Unit Tests
+        inputs:
+          targetType: 'filePath'
+          filePath: ./test.sh
+          arguments: Linux Unit
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'NUnit'
+          testResultsFiles: '**/TestResult.xml'
+          testRunTitle: 'Linux Unit Tests'
 
-- job: Linux_Unit_Tests
-  displayName: Linux Unit Tests
-  dependsOn: Windows
-  condition: succeeded()
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-  - script: |
-      wget https://github.com/acoustid/chromaprint/releases/download/v1.4.3/chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz
-      sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
-    displayName: Install fpcalc
-  - checkout: self
-  - task: DownloadPipelineArtifact@2
-    displayName: Download Test Artifact
-    inputs:
-      buildType: 'current'
-      artifactName: Tests
-      targetPath: $(testsFolder)
-  - task: Bash@3
-    displayName: Linux Unit Tests
-    inputs:
-      targetType: 'filePath'
-      filePath: ./test.sh
-      arguments: Linux Unit
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'NUnit'
-      testResultsFiles: '**/TestResult.xml'
-      testRunTitle: 'Linux Unit Tests'
+    - job: Linux_Integration_Tests
+      displayName: Linux Integration Tests
+      pool:
+        vmImage: 'ubuntu-16.04'
+      steps:
+      - script: |
+          wget https://github.com/acoustid/chromaprint/releases/download/v1.4.3/chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz
+          sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
+        displayName: Install fpcalc
+      - checkout: self
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Test Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Tests
+          targetPath: $(testsFolder)
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Build Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Lidarr
+          itemPattern: '**/Lidarr.**.linux.tar.gz!Lidarr/**'
+          targetPath: ./bin
+      - task: Bash@3
+        displayName: Linux Integration Tests
+        inputs:
+          targetType: 'filePath'
+          filePath: ./test.sh
+          arguments: Linux Integration
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'NUnit'
+          testResultsFiles: '**/TestResult.xml'
+          testRunTitle: 'Linux Integration Tests'
 
-- job: Linux_Integration_Tests
-  displayName: Linux Integration Tests
-  dependsOn: Windows
-  condition: succeeded()
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-  - script: |
-      wget https://github.com/acoustid/chromaprint/releases/download/v1.4.3/chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz
-      sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
-    displayName: Install fpcalc
-  - checkout: self
-  - task: DownloadPipelineArtifact@2
-    displayName: Download Test Artifact
-    inputs:
-      buildType: 'current'
-      artifactName: Tests
-      targetPath: $(testsFolder)
-  - task: Bash@3
-    displayName: Linux Integration Tests
-    inputs:
-      targetType: 'filePath'
-      filePath: ./test.sh
-      arguments: Linux Integration
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'NUnit'
-      testResultsFiles: '**/TestResult.xml'
-      testRunTitle: 'Linux Integration Tests'
+    - job: Windows_Unit_Tests
+      displayName: Windows Unit Tests
+      pool:
+        vmImage: 'vs2017-win2016'
+      steps:
+      - checkout: self
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Test Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Tests
+          targetPath: $(testsFolder)
+      - task: Bash@3
+        displayName: Windows Unit Tests
+        inputs:
+          targetType: 'filePath'
+          filePath: ./test.sh
+          arguments: Windows Unit
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'NUnit'
+          testResultsFiles: '**/TestResult.xml'
+          testRunTitle: 'Windows Unit Tests'
 
-- job: Windows_Unit_Tests
-  displayName: Windows Unit Tests
-  dependsOn: Windows
-  condition: succeeded()
-  pool:
-    vmImage: 'vs2017-win2016'
-  steps:
-  - checkout: self
-  - task: DownloadPipelineArtifact@2
-    displayName: Download Test Artifact
-    inputs:
-      buildType: 'current'
-      artifactName: Tests
-      targetPath: $(testsFolder)
-  - task: Bash@3
-    displayName: Windows Unit Tests
-    inputs:
-      targetType: 'filePath'
-      filePath: ./test.sh
-      arguments: Windows Unit
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'NUnit'
-      testResultsFiles: '**/TestResult.xml'
-      testRunTitle: 'Windows Unit Tests'
+    - job: Windows_Integration_Tests
+      displayName: Windows Integration Tests
+      pool:
+        vmImage: 'vs2017-win2016'
+      steps:
+      - checkout: self
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Test Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Tests
+          targetPath: $(testsFolder)
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Build Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Lidarr
+          itemPattern: '**/Lidarr.**.windows.zip!Lidarr/**'
+          targetPath: ./bin
+      - task: Bash@3
+        displayName: Windows Integration Tests
+        inputs:
+          targetType: 'filePath'
+          filePath: ./test.sh
+          arguments: Windows Integration
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'NUnit'
+          testResultsFiles: '**/TestResult.xml'
+          testRunTitle: 'Windows Integration Tests'
 
-- job: Windows_Integration_Tests
-  displayName: Windows Integration Tests
-  dependsOn: Windows
-  condition: succeeded()
-  pool:
-    vmImage: 'vs2017-win2016'
-  steps:
-  - checkout: self
-  - task: DownloadPipelineArtifact@2
-    displayName: Download Test Artifact
-    inputs:
-      buildType: 'current'
-      artifactName: Tests
-      targetPath: $(testsFolder)
-  - task: Bash@3
-    displayName: Windows Integration Tests
-    inputs:
-      targetType: 'filePath'
-      filePath: ./test.sh
-      arguments: Windows Integration
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'NUnit'
-      testResultsFiles: '**/TestResult.xml'
-      testRunTitle: 'Windows Integration Tests'
+    - job: Windows_Automation_Tests
+      displayName: Windows Automation Tests
+      pool:
+        vmImage: 'vs2017-win2016'
+      steps:
+      - checkout: self
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Test Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Tests
+          targetPath: $(testsFolder)
+      - task: Bash@3
+        displayName: Windows Automation Tests
+        inputs:
+          targetType: 'filePath'
+          filePath: ./test.sh
+          arguments: Windows Automation
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'NUnit'
+          testResultsFiles: '**/TestResult.xml'
+          testRunTitle: 'Windows Automation Tests'
 
-- job: Windows_Automation_Tests
-  displayName: Windows Automation Tests
-  dependsOn: Windows
-  condition: succeeded()
-  pool:
-    vmImage: 'vs2017-win2016'
-  steps:
-  - checkout: self
-  - task: DownloadPipelineArtifact@2
-    displayName: Download Test Artifact
-    inputs:
-      buildType: 'current'
-      artifactName: Tests
-      targetPath: $(testsFolder)
-  - task: Bash@3
-    displayName: Windows Automation Tests
-    inputs:
-      targetType: 'filePath'
-      filePath: ./test.sh
-      arguments: Windows Automation
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'NUnit'
-      testResultsFiles: '**/TestResult.xml'
-      testRunTitle: 'Windows Automation Tests'
+    - job: Mac_Unit_Tests
+      displayName: macOS Unit Tests
+      pool:
+        vmImage: 'macOS-10.13'
+      steps:
+      - checkout: self
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Test Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Tests
+          targetPath: $(testsFolder)
+      - task: Bash@3
+        displayName: macOS Unit Tests
+        inputs:
+          targetType: 'filePath'
+          filePath: ./test.sh
+          arguments: Mac Unit
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'NUnit'
+          testResultsFiles: '**/TestResult.xml'
+          testRunTitle: 'macOS Unit Tests'
 
-- job: Mac_Unit_Tests
-  displayName: macOS Unit Tests
-  dependsOn: Windows
-  condition: succeeded()
-  pool:
-    vmImage: 'macOS-10.13'
-  steps:
-  - checkout: self
-  - task: DownloadPipelineArtifact@2
-    displayName: Download Test Artifact
-    inputs:
-      buildType: 'current'
-      artifactName: Tests
-      targetPath: $(testsFolder)
-  - task: Bash@3
-    displayName: macOS Unit Tests
-    inputs:
-      targetType: 'filePath'
-      filePath: ./test.sh
-      arguments: Mac Unit
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'NUnit'
-      testResultsFiles: '**/TestResult.xml'
-      testRunTitle: 'macOS Unit Tests'
-
-- job: Mac_Integration_Tests
-  displayName: macOS Integration Tests
-  dependsOn: Windows
-  condition: succeeded()
-  pool:
-    vmImage: 'macOS-10.13'
-  steps:
-  - checkout: self
-  - task: DownloadPipelineArtifact@2
-    displayName: Download Test Artifact
-    inputs:
-      buildType: 'current'
-      artifactName: Tests
-      targetPath: $(testsFolder)
-  - task: Bash@3
-    displayName: macOS Integration Tests
-    inputs:
-      targetType: 'filePath'
-      filePath: ./test.sh
-      arguments: Mac Integration
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'NUnit'
-      testResultsFiles: '**/TestResult.xml'
-      testRunTitle: 'macOS Integration Tests'
+    - job: Mac_Integration_Tests
+      displayName: macOS Integration Tests
+      pool:
+        vmImage: 'macOS-10.13'
+      steps:
+      - checkout: self
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Test Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Tests
+          targetPath: $(testsFolder)
+      - task: Bash@3
+        displayName: macOS Integration Tests
+        inputs:
+          targetType: 'filePath'
+          filePath: ./test.sh
+          arguments: Mac Integration
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'NUnit'
+          testResultsFiles: '**/TestResult.xml'
+          testRunTitle: 'macOS Integration Tests'
