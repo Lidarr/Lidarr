@@ -42,16 +42,11 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
-  - task: ArchiveFiles@2
-    inputs:
-      rootFolderOrFile: '$(testsFolder)' 
-      includeRootFolder: false
-      archiveType: 'zip'
-      archiveFile: '$(Build.ArtifactStagingDirectory)/tests.zip'
   - task: PublishPipelineArtifact@0
+    displayName: Publish Tests Artifact
     inputs:
-      artifactName: 'tests' 
-      targetPath: '$(Build.ArtifactStagingDirectory)/tests.zip'
+      artifactName: 'Tests' 
+      targetPath: '$(testsFolder)'
   - task: ArchiveFiles@2
     displayName: Create Windows zip
     inputs:
@@ -143,12 +138,12 @@ jobs:
       sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
     displayName: Install fpcalc
   - checkout: self
-  - task: DownloadBuildArtifacts@0
+  - task: DownloadPipelineArtifact@2
     inputs:
       buildType: 'current'
-      downloadType: 'single'
-      artifactName: tests
-      downloadPath: $(testsFolder)
+      artifactName: Tests
+      itemPattern: 'Tests/**'
+      targetPath: $(testsFolder)
   - task: Bash@3
     displayName: Linux Unit Tests
     inputs:
