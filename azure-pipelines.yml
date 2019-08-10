@@ -87,7 +87,7 @@ jobs:
       export APPVEYOR_BUILD_VERSION=${LIDARRVERSION}
       export APPVEYOR_REPO_BRANCH=${BUILD_SOURCEBRANCHNAME}
       ./setup/inno/ISCC.exe "./setup/lidarr.iss"
-      cp ./setup/output/Lidarr.*windows.exe ${ARTIFACTSFOLDER}/${WINDOWSINSTALLER}
+      cp ./setup/output/Lidarr.*windows.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/${WINDOWSINSTALLER}
     displayName: Create Windows installer
   - publish: $(Build.ArtifactStagingDirectory)
     artifact: 'Lidarr'
