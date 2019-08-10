@@ -5,12 +5,14 @@
 
 variables:
   artifactsFolder: './_artifacts'
-  lidarrVersion: '0.6.2.$(Build.BuildId)'
+  minorVersion: $[counter(variables['build.reason'], 1000)]
+  lidarrVersion: '0.6.2.$(minorVersion)'
   windowsInstaller: 'Lidarr.$(Build.SourceBranchName).$(lidarrVersion).windows-installer.exe'
   windowsZip: 'Lidarr.$(Build.SourceBranchName).$(lidarrVersion).windows.zip'
   macOsApp: 'Lidarr.$(Build.SourceBranchName).$(lidarrVersion).osx-app.zip'
   macOsTar: 'Lidarr.$(Build.SourceBranchName).$(lidarrVersion).osx.tar.gz'
   linuxTar: 'Lidarr.$(Build.SourceBranchName).$(lidarrVersion).linux.tar.gz'
+  sentryOrg: 'lidarr'
 
 jobs:
 - job: Windows
@@ -19,6 +21,17 @@ jobs:
   steps:
   - checkout: self
     submodules: true
+  - task: Assembly-Info-NetFramework@2
+    displayName: Patch AssemblyInfo
+    inputs:
+      Path: '$(Build.SourcesDirectory)'
+      FileNames: '**\AssemblyInfo.cs'
+      InsertAttributes: false
+      FileEncoding: 'auto'
+      WriteBOM: false
+      VersionNumber: '$(lidarrVersion)'
+      FileVersionNumber: '$(lidarrVersion)'
+      InformationalVersion: '$(lidarrVersion)'
   - task: Bash@3
     displayName: Build Lidarr
     inputs:
@@ -79,6 +92,17 @@ jobs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'Lidarr'
       publishLocation: 'Container'
+  - bash: |
+      echo "Uploading source maps to sentry"
+      yarn sentry-cli releases new --finalize -p lidarr -p lidarr-ui -p lidarr-update "${LIDARRVERSION}-debug"
+      yarn sentry-cli releases -p lidarr-ui files "${LIDARRVERSION}-debug" upload-sourcemaps _output/UI/ --rewrite
+      yarn sentry-cli releases set-commits --auto "${LIDARRVERSION}-debug"
+      yarn sentry-cli releases deploys "${LIDARRVERSION}-debug" new -e nightly
+    displayName: Publish Sentry Source Maps
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+    env:
+      SENTRY_AUTH_TOKEN: $(sentryAuthToken)
+
 - job: macOS
   pool:
     vmImage: 'macOS-10.13'
