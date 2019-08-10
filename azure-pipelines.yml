@@ -40,18 +40,18 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
-  # - task: Bash@3
-  #   displayName: Windows Unit Tests
-  #   inputs:
-  #     targetType: 'filePath'
-  #     filePath: ./test.sh
-  #     arguments: Windows Unit
-  # - task: PublishTestResults@2
-  #   inputs:
-  #     testResultsFormat: 'NUnit'
-  #     testResultsFiles: '**/TestResult.xml'
-  #     testRunTitle: 'Windows Unit Tests'
-  #     mergeTestResults: true
+  - task: Bash@3
+    displayName: Windows Unit Tests
+    inputs:
+      targetType: 'filePath'
+      filePath: ./test.sh
+      arguments: Windows Unit
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'NUnit'
+      testResultsFiles: '**/TestResult.xml'
+      testRunTitle: 'Windows Unit Tests'
+      mergeTestResults: true
   - task: ArchiveFiles@2
     displayName: Create Windows zip
     inputs:
@@ -89,12 +89,6 @@ jobs:
       ./setup/inno/ISCC.exe "./setup/lidarr.iss"
       cp ./setup/output/Lidarr.*windows.exe ${ARTIFACTSFOLDER}/${WINDOWSINSTALLER}
     displayName: Create Windows installer
-  # - task: PublishBuildArtifacts@1
-  #   displayName: Publish Artifacts
-  #   inputs:
-  #     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-  #     ArtifactName: 'Lidarr'
-  #     publishLocation: 'Container'
   - publish: $(Build.ArtifactStagingDirectory)
     artifact: 'Lidarr'
   - bash: |
