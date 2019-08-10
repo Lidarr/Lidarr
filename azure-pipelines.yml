@@ -19,19 +19,22 @@ jobs:
   pool:
     vmImage: 'vs2017-win2016'
   steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
   - checkout: self
     submodules: true
   - task: Assembly-Info-NetFramework@2
     displayName: Patch AssemblyInfo
     inputs:
       Path: '$(Build.SourcesDirectory)'
-      FileNames: '**\AssemblyInfo.cs'
+      FileNames: 'src\NzbDrone.Common\Properties\SharedAssemblyInfo.cs'
       InsertAttributes: false
       FileEncoding: 'auto'
       WriteBOM: false
       VersionNumber: '$(lidarrVersion)'
       FileVersionNumber: '$(lidarrVersion)'
-      InformationalVersion: '$(lidarrVersion)'
+      InformationalVersion: '$(lidarrVersion)-rc1'
   - task: Bash@3
     displayName: Build Lidarr
     inputs:
@@ -107,6 +110,9 @@ jobs:
   pool:
     vmImage: 'macOS-10.13'
   steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
   - checkout: self
     submodules: true
   - task: Bash@3
@@ -130,6 +136,9 @@ jobs:
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
   # install chromaprint from github since the 16.04 version is ancient
   - script: |
       wget https://github.com/acoustid/chromaprint/releases/download/v1.4.3/chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz
