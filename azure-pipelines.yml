@@ -139,10 +139,10 @@ jobs:
     displayName: Install fpcalc
   - checkout: self
   - task: DownloadPipelineArtifact@2
+    displayName: Download Test Artifact
     inputs:
       buildType: 'current'
       artifactName: Tests
-      itemPattern: 'Tests/**'
       targetPath: $(testsFolder)
   - task: Bash@3
     displayName: Linux Unit Tests
