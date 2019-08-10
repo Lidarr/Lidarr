@@ -16,7 +16,8 @@ variables:
   sentryOrg: 'lidarr'
 
 jobs:
-- job: Windows Build
+- job: Windows
+  displayName: Windows Build
   pool:
     vmImage: 'vs2017-win2016'
   steps:
@@ -92,7 +93,8 @@ jobs:
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
     env:
       SENTRY_AUTH_TOKEN: $(sentryAuthToken)
-- job: macOS Build
+- job: macOS
+  displayName: macOS Build
   pool:
     vmImage: 'macOS-10.13'
   steps:
@@ -106,7 +108,8 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
-- job: Linux Build
+- job: Linux
+  displayName: Linux Build
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
@@ -120,7 +123,10 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
-- job: Linux Unit Tests
+- job: Linux_Unit_Tests
+  displayName: Linux Unit Tests
+  dependsOn: Windows
+  condition: succeeded()
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
