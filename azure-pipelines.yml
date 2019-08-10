@@ -96,6 +96,7 @@ jobs:
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
     env:
       SENTRY_AUTH_TOKEN: $(sentryAuthToken)
+
 - job: macOS
   displayName: macOS Build
   pool:
@@ -111,6 +112,7 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
+
 - job: Linux
   displayName: Linux Build
   pool:
@@ -126,6 +128,7 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
+
 - job: Linux_Unit_Tests
   displayName: Linux Unit Tests
   dependsOn: Windows
@@ -137,7 +140,7 @@ jobs:
       wget https://github.com/acoustid/chromaprint/releases/download/v1.4.3/chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz
       sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
     displayName: Install fpcalc
-  - checkout: none
+  - checkout: self
   - task: DownloadPipelineArtifact@2
     displayName: Download Test Artifact
     inputs:
@@ -148,13 +151,14 @@ jobs:
     displayName: Linux Unit Tests
     inputs:
       targetType: 'filePath'
-      filePath: $(testsFolder)/test.sh
+      filePath: ./test.sh
       arguments: Linux Unit
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'NUnit'
       testResultsFiles: '**/TestResult.xml'
       testRunTitle: 'Linux Unit Tests'
+
 - job: Linux_Integration_Tests
   displayName: Linux Integration Tests
   dependsOn: Windows
@@ -166,7 +170,7 @@ jobs:
       wget https://github.com/acoustid/chromaprint/releases/download/v1.4.3/chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz
       sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
     displayName: Install fpcalc
-  - checkout: none
+  - checkout: self
   - task: DownloadPipelineArtifact@2
     displayName: Download Test Artifact
     inputs:
@@ -177,13 +181,14 @@ jobs:
     displayName: Linux Integration Tests
     inputs:
       targetType: 'filePath'
-      filePath: $(testsFolder)/test.sh
+      filePath: ./test.sh
       arguments: Linux Integration
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'NUnit'
       testResultsFiles: '**/TestResult.xml'
       testRunTitle: 'Linux Integration Tests'
+
 - job: Windows_Unit_Tests
   displayName: Windows Unit Tests
   dependsOn: Windows
@@ -191,7 +196,7 @@ jobs:
   pool:
     vmImage: 'vs2017-win2016'
   steps:
-  - checkout: none
+  - checkout: self
   - task: DownloadPipelineArtifact@2
     displayName: Download Test Artifact
     inputs:
@@ -202,13 +207,14 @@ jobs:
     displayName: Windows Unit Tests
     inputs:
       targetType: 'filePath'
-      filePath: $(testsFolder)/test.sh
+      filePath: ./test.sh
       arguments: Windows Unit
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'NUnit'
       testResultsFiles: '**/TestResult.xml'
       testRunTitle: 'Windows Unit Tests'
+
 - job: Windows_Integration_Tests
   displayName: Windows Integration Tests
   dependsOn: Windows
@@ -216,7 +222,7 @@ jobs:
   pool:
     vmImage: 'vs2017-win2016'
   steps:
-  - checkout: none
+  - checkout: self
   - task: DownloadPipelineArtifact@2
     displayName: Download Test Artifact
     inputs:
@@ -227,13 +233,14 @@ jobs:
     displayName: Windows Integration Tests
     inputs:
       targetType: 'filePath'
-      filePath: $(testsFolder)/test.sh
+      filePath: ./test.sh
       arguments: Windows Integration
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'NUnit'
       testResultsFiles: '**/TestResult.xml'
       testRunTitle: 'Windows Integration Tests'
+
 - job: Windows_Automation_Tests
   displayName: Windows Automation Tests
   dependsOn: Windows
@@ -241,7 +248,7 @@ jobs:
   pool:
     vmImage: 'vs2017-win2016'
   steps:
-  - checkout: none
+  - checkout: self
   - task: DownloadPipelineArtifact@2
     displayName: Download Test Artifact
     inputs:
@@ -252,10 +259,62 @@ jobs:
     displayName: Windows Automation Tests
     inputs:
       targetType: 'filePath'
-      filePath: $(testsFolder)/test.sh
+      filePath: ./test.sh
       arguments: Windows Automation
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'NUnit'
       testResultsFiles: '**/TestResult.xml'
       testRunTitle: 'Windows Automation Tests'
+
+- job: Mac_Unit_Tests
+  displayName: macOS Unit Tests
+  dependsOn: Windows
+  condition: succeeded()
+  pool:
+    vmImage: 'macOS-10.13'
+  steps:
+  - checkout: self
+  - task: DownloadPipelineArtifact@2
+    displayName: Download Test Artifact
+    inputs:
+      buildType: 'current'
+      artifactName: Tests
+      targetPath: $(testsFolder)
+  - task: Bash@3
+    displayName: macOS Unit Tests
+    inputs:
+      targetType: 'filePath'
+      filePath: ./test.sh
+      arguments: Mac Unit
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'NUnit'
+      testResultsFiles: '**/TestResult.xml'
+      testRunTitle: 'macOS Unit Tests'
+
+- job: Mac_Integration_Tests
+  displayName: macOS Integration Tests
+  dependsOn: Windows
+  condition: succeeded()
+  pool:
+    vmImage: 'macOS-10.13'
+  steps:
+  - checkout: self
+  - task: DownloadPipelineArtifact@2
+    displayName: Download Test Artifact
+    inputs:
+      buildType: 'current'
+      artifactName: Tests
+      targetPath: $(testsFolder)
+  - task: Bash@3
+    displayName: macOS Integration Tests
+    inputs:
+      targetType: 'filePath'
+      filePath: ./test.sh
+      arguments: Mac Integration
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'NUnit'
+      testResultsFiles: '**/TestResult.xml'
+      testRunTitle: 'macOS Integration Tests'
