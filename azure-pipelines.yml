@@ -5,6 +5,7 @@
 
 variables:
   artifactsFolder: './_artifacts'
+  testsFolder: './_tests'
   minorVersion: $[counter(variables['build.reason'], 1000)]
   lidarrVersion: '0.6.2.$(minorVersion)'
   windowsInstaller: 'Lidarr.$(Build.SourceBranchName).$(lidarrVersion).windows-installer.exe'
@@ -15,7 +16,7 @@ variables:
   sentryOrg: 'lidarr'
 
 jobs:
-- job: Windows
+- job: Windows Build
   pool:
     vmImage: 'vs2017-win2016'
   steps:
@@ -40,18 +41,8 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
-  - task: Bash@3
-    displayName: Windows Unit Tests
-    inputs:
-      targetType: 'filePath'
-      filePath: ./test.sh
-      arguments: Windows Unit
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'NUnit'
-      testResultsFiles: '**/TestResult.xml'
-      testRunTitle: 'Windows Unit Tests'
-      mergeTestResults: true
+  - publish: $(testsFolder)
+    artifact: Tests
   - task: ArchiveFiles@2
     displayName: Create Windows zip
     inputs:
@@ -101,8 +92,7 @@ jobs:
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
     env:
       SENTRY_AUTH_TOKEN: $(sentryAuthToken)
-
-- job: macOS
+- job: macOS Build
   pool:
     vmImage: 'macOS-10.13'
   steps:
@@ -116,30 +106,13 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
-  - task: Bash@3
-    displayName: Mac Unit Tests
-    inputs:
-      targetType: 'filePath'
-      filePath: ./test.sh
-      arguments: Mac Unit
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'NUnit'
-      testResultsFiles: '**/TestResult.xml'
-      testRunTitle: 'Mac Unit Tests'
-      mergeTestResults: true
-- job: Linux
+- job: Linux Build
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
   - task: NodeTool@0
     inputs:
       versionSpec: '10.x'
-  # install chromaprint from github since the 16.04 version is ancient
-  - script: |
-      wget https://github.com/acoustid/chromaprint/releases/download/v1.4.3/chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz
-      sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
-    displayName: Install fpcalc
   - checkout: self
     submodules: true
   - task: Bash@3
@@ -147,6 +120,21 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
+- job: Linux Unit Tests
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - script: |
+      wget https://github.com/acoustid/chromaprint/releases/download/v1.4.3/chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz
+      sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
+    displayName: Install fpcalc
+  - checkout: self
+  - task: DownloadBuildArtifacts@0
+    inputs:
+      buildType: 'current'
+      downloadType: 'single'
+      artifactName: Tests
+      downloadPath: $(testsFolder)
   - task: Bash@3
     displayName: Linux Unit Tests
     inputs:
@@ -158,4 +146,3 @@ jobs:
       testResultsFormat: 'NUnit'
       testResultsFiles: '**/TestResult.xml'
       testRunTitle: 'Linux Unit Tests'
-      mergeTestResults: true
