@@ -42,8 +42,16 @@ jobs:
     inputs:
       targetType: 'filePath'
       filePath: ./build.sh
-  - publish: $(testsFolder)
-    artifact: Tests
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(testsFolder)' 
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/tests.zip'
+  - task: PublishPipelineArtifact@0
+    inputs:
+      artifactName: 'tests' 
+      targetPath: '$(Build.ArtifactStagingDirectory)/tests.zip'
   - task: ArchiveFiles@2
     displayName: Create Windows zip
     inputs:
@@ -139,7 +147,7 @@ jobs:
     inputs:
       buildType: 'current'
       downloadType: 'single'
-      artifactName: Tests
+      artifactName: tests
       downloadPath: $(testsFolder)
   - task: Bash@3
     displayName: Linux Unit Tests
