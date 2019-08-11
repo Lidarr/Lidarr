@@ -6,13 +6,15 @@
 variables:
   artifactsFolder: './_artifacts'
   testsFolder: './_tests'
+  majorVersion: '0.6.2'
   minorVersion: $[counter(variables['build.reason'], 1000)]
-  lidarrVersion: '0.6.2.$(minorVersion)'
-  windowsInstaller: 'Lidarr.$(Build.SourceBranchName).$(lidarrVersion).windows-installer.exe'
-  windowsZip: 'Lidarr.$(Build.SourceBranchName).$(lidarrVersion).windows.zip'
-  macOsApp: 'Lidarr.$(Build.SourceBranchName).$(lidarrVersion).osx-app.zip'
-  macOsTar: 'Lidarr.$(Build.SourceBranchName).$(lidarrVersion).osx.tar.gz'
-  linuxTar: 'Lidarr.$(Build.SourceBranchName).$(lidarrVersion).linux.tar.gz'
+  lidarrVersion: '$(majorVersion).$(minorVersion)'
+  buildName: '$(Build.SourceBranchName).$(lidarrVersion)'
+  windowsInstaller: 'Lidarr.$(buildName).windows-installer.exe'
+  windowsZip: 'Lidarr.$(buildName).windows.zip'
+  macOsApp: 'Lidarr.$(buildName).osx-app.zip'
+  macOsTar: 'Lidarr.$(buildName).osx.tar.gz'
+  linuxTar: 'Lidarr.$(buildName).linux.tar.gz'
   sentryOrg: 'lidarr'
 
 stages:
@@ -23,6 +25,8 @@ stages:
       pool:
         vmImage: 'vs2017-win2016'
       steps:
+      # Set the build name properly.  The 'name' property won't recursively expand so hack here:
+      - powershell: Write-Host "##vso[build.updatebuildnumber]$($env:BUILDNAME)"
       - task: NodeTool@0
         inputs:
           versionSpec: '10.x'
@@ -80,14 +84,11 @@ stages:
           includeRootFolder: false
           rootFolderOrFile: $(artifactsFolder)/linux
       - bash: |
-          export APPVEYOR_BUILD_NUMBER=${BUILD_BUILDID}
-          export APPVEYOR_BUILD_VERSION=${LIDARRVERSION}
-          export APPVEYOR_REPO_BRANCH=${BUILD_SOURCEBRANCHNAME}
           ./setup/inno/ISCC.exe "./setup/lidarr.iss"
           cp ./setup/output/Lidarr.*windows.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/${WINDOWSINSTALLER}
         displayName: Create Windows installer
       - publish: $(Build.ArtifactStagingDirectory)
-        artifact: 'Lidarr'
+        artifact: 'Packages'
       - bash: |
           echo "Uploading source maps to sentry"
           yarn sentry-cli releases new --finalize -p lidarr -p lidarr-ui -p lidarr-update "${LIDARRVERSION}-debug"
@@ -182,7 +183,7 @@ stages:
         displayName: Download Build Artifact
         inputs:
           buildType: 'current'
-          artifactName: Lidarr
+          artifactName: Packages
           itemPattern: '**/Lidarr.**.linux.tar.gz'
           targetPath: $(Build.ArtifactStagingDirectory)
       - task: ExtractFiles@1
@@ -244,7 +245,7 @@ stages:
         displayName: Download Build Artifact
         inputs:
           buildType: 'current'
-          artifactName: Lidarr
+          artifactName: Packages
           itemPattern: '**\Lidarr.**.windows.zip'
           targetPath: $(Build.ArtifactStagingDirectory)
       - task: ExtractFiles@1
