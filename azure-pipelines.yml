@@ -315,6 +315,10 @@ stages:
           testResultsFiles: '**/TestResult.xml'
           testRunTitle: 'macOS Unit Tests'
 
+  - stage: Coverage
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
     - job: Unit_Test_Coverage
       displayName: Coverage
       pool:

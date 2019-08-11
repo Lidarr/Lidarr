@@ -21,6 +21,7 @@ export LIDARR_TESTS_LOG_OUTPUT="File"
 NUNIT="$TEST_DIR/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe"
 OPEN_COVER="$TEST_DIR/OpenCover.4.7.922/tools/OpenCover.Console.exe"
 NUNIT_COMMAND="$NUNIT"
+OC_COMMAND="$OPEN_COVER"
 NUNIT_PARAMS="--workers=1"
 
 if [ "$PLATFORM" = "Mac" ]; then
@@ -36,6 +37,7 @@ elif [ "$PLATFORM" = "Linux" ] || [ "$PLATFORM" = "Mac" ] ; then
   mkdir -p ~/.config/Lidarr
   WHERE="$WHERE && cat != WINDOWS"
   NUNIT_COMMAND="mono --debug --runtime=v4.0 $NUNIT"
+  OC_COMMAND="mono --debug --runtime=v4.0 $OPEN_COVER"
 else
   echo "Platform must be provided as first arguement: Windows, Linux or Mac"
   exit 1
@@ -57,7 +59,7 @@ for i in `find $TEST_DIR -name "$TEST_PATTERN"`;
 done
 
 if [ "$COVERAGE" = "Coverage" ]; then
-  $OPEN_COVER -register:user -target:"$NUNIT" -targetargs:"$NUNIT_PARAMS --where=\"$WHERE\" $ASSEMBLIES" -output:"$COVERAGE_FILE";
+  $OC_COMMAND -register:user -target:"$NUNIT_COMMAND" -targetargs:"$NUNIT_PARAMS --where=\"$WHERE\" $ASSEMBLIES" -output:"$COVERAGE_FILE";
   EXIT_CODE=$?
 elif [ "$COVERAGE" = "Test" ] ; then
   $NUNIT_COMMAND --where "$WHERE" $NUNIT_PARAMS $ASSEMBLIES;
