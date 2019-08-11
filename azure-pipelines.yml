@@ -190,7 +190,7 @@ stages:
           archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.linux.tar.gz' 
           destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
       - bash: |
-          cp -R -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/* ./bin/
+          cp -R -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/* bin
       - task: Bash@3
         displayName: Linux Integration Tests
         inputs:
@@ -251,7 +251,7 @@ stages:
           archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.windows.zip' 
           destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
       - bash: |
-          cp -R -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/* ./bin/
+          cp -R -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}\bin\Lidarr\* bin
       - task: Bash@3
         displayName: Windows Integration Tests
         inputs:
