@@ -20,11 +20,19 @@ variables:
 
 stages:
   - stage: Build
+    strategy:
+      matrix:
+        Linux:
+          imageName: 'ubuntu-16.04'
+        Mac:
+          imageName: 'macos-10.13'
+        Windows:
+          imageName: 'vs2017-win2016'
+          
     jobs:
-    - job: Windows_Backend
-      displayName: Windows Backend
+    - job: Backend
       pool:
-        vmImage: 'vs2017-win2016'
+        vmImage: $(imageName)
       steps:
       # Set the build name properly.  The 'name' property won't recursively expand so hack here:
       - powershell: Write-Host "##vso[build.updatebuildnumber]$($env:BUILDNAME)"
@@ -35,7 +43,7 @@ stages:
         displayName: Patch AssemblyInfo
         inputs:
           Path: '$(Build.SourcesDirectory)'
-          FileNames: 'src\NzbDrone.Common\Properties\SharedAssemblyInfo.cs'
+          FileNames: 'src/NzbDrone.Common/Properties/SharedAssemblyInfo.cs'
           InsertAttributes: false
           FileEncoding: 'auto'
           WriteBOM: false
@@ -48,9 +56,9 @@ stages:
         artifact: 'WindowsBackend'
 
     - job: Windows_Frontend
-      displayName: Windows Backend
+      displayName: Windows Frontend
       pool:
-        vmImage: 'vs2017-win2016'
+        vmImage: $(imageName)
       steps:
       - task: NodeTool@0
         displayName: Set Node.js version
@@ -162,7 +170,7 @@ stages:
           SENTRY_AUTH_TOKEN: $(sentryAuthToken)
     
   - stage: Test
-    dependsOn: Build
+    dependsOn: Package
     condition: succeeded()
     jobs:
     - job: Linux_Unit_Tests
@@ -347,7 +355,7 @@ stages:
           testRunTitle: 'macOS Unit Tests'
 
   - stage: Coverage
-    dependsOn: Build
+    dependsOn: Package
     condition: succeeded()
     jobs:
     - job: Unit_Test_Coverage
