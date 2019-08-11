@@ -185,8 +185,14 @@ stages:
           artifactName: Lidarr
           itemPattern: '**/Lidarr.**.linux.tar.gz'
           targetPath: $(Build.ArtifactStagingDirectory)
-      - script: |
-          sudo tar xf $(Build.ArtifactStagingDirectory)/**/Lidarr.**.linux.tar.gz --strip-components=1 --directory /bin
+      - task: ExtractFiles@1
+        inputs:
+          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.linux.tar.gz' 
+          destinationFolder: $(Build.ArtifactStagingDirectory)
+      - task: CopyFiles@2
+        inputs:
+          contents: '$(Build.ArtifactStagingDirectory)/Lidarr/**' 
+          targetFolder: bin
       - task: Bash@3
         displayName: Linux Integration Tests
         inputs:
@@ -246,7 +252,6 @@ stages:
         inputs:
           archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.windows.zip' 
           destinationFolder: $(Build.ArtifactStagingDirectory)
-          cleanDestinationFolder: true
       - task: CopyFiles@2
         inputs:
           contents: '$(Build.ArtifactStagingDirectory)\Lidarr\**'
