@@ -63,6 +63,7 @@ if [ "$COVERAGE" = "Coverage" ]; then
   else
     echo "Coverage only supported on Windows"
     exit 3
+  fi
 elif [ "$COVERAGE" = "Test" ] ; then
   $NUNIT_COMMAND --where "$WHERE" $NUNIT_PARAMS $ASSEMBLIES;
   EXIT_CODE=$?
