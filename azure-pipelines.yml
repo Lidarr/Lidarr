@@ -390,12 +390,9 @@ stages:
         vmImage: 'vs2017-win2016'
       steps:
       - checkout: self
-      - task: DownloadPipelineArtifact@2
-        displayName: Download Test Artifact
-        inputs:
-          buildType: 'current'
-          artifactName: Tests
-          targetPath: $(testsFolder)
+        submodules: true
+      - bash: ./build.sh --only-backend
+        displayName: Build Lidarr Backend
       - task: Bash@3
         displayName: Coverage Unit Tests
         inputs:
@@ -406,4 +403,4 @@ stages:
         displayName: Publish Coverage Results
         inputs:
           codeCoverageTool: 'cobertura'
-          summaryFileLocation: '**/coverage.cobertura.xml'
+          summaryFileLocation: './Coverage.xml'

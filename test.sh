@@ -9,8 +9,6 @@ ASSEMBLIES=""
 TEST_LOG_FILE="TestLog.txt"
 COVERAGE_FILE="$TEST_DIR/Coverage.xml"
 
-dotnet tool install --global coverlet.console
-
 if [ -d "$TEST_DIR/_tests" ]; then
   TEST_DIR="$TEST_DIR/_tests"
 fi
@@ -21,7 +19,6 @@ rm -f "$TEST_LOG_FILE"
 export LIDARR_TESTS_LOG_OUTPUT="File"
 
 NUNIT="$TEST_DIR/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe"
-OPEN_COVER="coverlet"
 NUNIT_COMMAND="$NUNIT"
 NUNIT_PARAMS="--workers=1"
 
@@ -60,7 +57,9 @@ done
 
 if [ "$COVERAGE" = "Coverage" ]; then
   if [ "$PLATFORM" = "Windows" ] ; then
-    $OPEN_COVER ./_tests/Lidarr.Core.Test --format "cobertura" --target "$NUNIT" --targetargs "$NUNIT_PARAMS --where=\"$WHERE\" $ASSEMBLIES";
+    dotnet tool install coverlet.console --tool-path=./_tests/coverlet/
+    OPEN_COVER="./_tests/coverlet/coverlet"
+    $OPEN_COVER ./_tests/ --format "cobertura" --output "$COVERAGE_FILE" --exclude "[Lidarr.*.Test]*" --exclude "[Lidarr.Test.*]*" --exclude "[Marr.Data]*" --exclude "[MonoTorrent]*" --exclude "[CurlSharp]*" --target "$NUNIT" --targetargs "$NUNIT_PARAMS --where=\"$WHERE\" $ASSEMBLIES";
     EXIT_CODE=$?
   else
     echo "Coverage only supported on Windows"
