@@ -4,6 +4,7 @@
 # https://aka.ms/yaml
 
 variables:
+  outputFolder: './_output'
   artifactsFolder: './_artifacts'
   testsFolder: './_tests'
   majorVersion: '0.6.2'
@@ -20,16 +21,14 @@ variables:
 stages:
   - stage: Build
     jobs:
-    - job: Windows
-      displayName: Windows
+    - job: Windows_Backend
+      displayName: Windows Backend
       pool:
         vmImage: 'vs2017-win2016'
       steps:
       # Set the build name properly.  The 'name' property won't recursively expand so hack here:
       - powershell: Write-Host "##vso[build.updatebuildnumber]$($env:BUILDNAME)"
-      - task: NodeTool@0
-        inputs:
-          versionSpec: '10.x'
+        displayName: Set Build Name
       - checkout: self
         submodules: true
       - task: Assembly-Info-NetFramework@2
@@ -43,11 +42,73 @@ stages:
           VersionNumber: '$(lidarrVersion)'
           FileVersionNumber: '$(lidarrVersion)'
           InformationalVersion: '$(lidarrVersion)-rc1'
-      - task: Bash@3
-        displayName: Build Lidarr
+      - bash: ./build.sh --only-backend
+        displayName: Build Lidarr Backend
+      - publish: $(outputFolder)
+        artifact: 'WindowsBackend'
+
+    - job: Windows_Frontend
+      displayName: Windows Backend
+      pool:
+        vmImage: 'vs2017-win2016'
+      steps:
+      - task: NodeTool@0
+        displayName: Set Node.js version
         inputs:
-          targetType: 'filePath'
-          filePath: ./build.sh
+          versionSpec: '10.x'
+      - checkout: self
+        submodules: true
+      - bash: ./build.sh --only-frontend
+        displayName: Build Lidarr Frontend
+      - publish: $(outputFolder)
+        artifact: 'WindowsFrontend'
+
+    # - job: macOS
+    #   displayName: macOS
+    #   pool:
+    #     vmImage: 'macOS-10.13'
+    #   steps:
+    #   - task: NodeTool@0
+    #     inputs:
+    #       versionSpec: '10.x'
+    #   - checkout: self
+    #     submodules: true
+    #   - task: Bash@3
+    #     displayName: Build Lidarr
+    #     inputs:
+    #       targetType: 'filePath'
+    #       filePath: ./build.sh
+
+    # - job: Linux
+    #   displayName: Linux
+    #   pool:
+    #     vmImage: 'ubuntu-16.04'
+    #   steps:
+    #   - task: NodeTool@0
+    #     inputs:
+    #       versionSpec: '10.x'
+    #   - checkout: self
+    #     submodules: true
+    #   - task: Bash@3
+    #     displayName: Build Lidarr
+    #     inputs:
+    #       targetType: 'filePath'
+    #       filePath: ./build.sh
+
+  - stage: Package
+    jobs:
+    - job: Windows_Packages
+      displayName: Windows Packages
+      pool:
+        vmImage: 'vs2017-win2016'
+      steps:
+      - download: current
+        artifact: 'WindowsBackend'
+      - download: current
+        artifact: 'WindowsFrontend'
+
+      - bash: ./build.sh --only-packages
+        displayName: Create Lidarr Packages
       - task: PublishPipelineArtifact@0
         displayName: Publish Tests Artifact
         inputs:
@@ -99,38 +160,7 @@ stages:
         condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
         env:
           SENTRY_AUTH_TOKEN: $(sentryAuthToken)
-
-    - job: macOS
-      displayName: macOS
-      pool:
-        vmImage: 'macOS-10.13'
-      steps:
-      - task: NodeTool@0
-        inputs:
-          versionSpec: '10.x'
-      - checkout: self
-        submodules: true
-      - task: Bash@3
-        displayName: Build Lidarr
-        inputs:
-          targetType: 'filePath'
-          filePath: ./build.sh
-
-    - job: Linux
-      displayName: Linux
-      pool:
-        vmImage: 'ubuntu-16.04'
-      steps:
-      - task: NodeTool@0
-        inputs:
-          versionSpec: '10.x'
-      - checkout: self
-        submodules: true
-      - task: Bash@3
-        displayName: Build Lidarr
-        inputs:
-          targetType: 'filePath'
-          filePath: ./build.sh
+    
   - stage: Test
     dependsOn: Build
     condition: succeeded()
