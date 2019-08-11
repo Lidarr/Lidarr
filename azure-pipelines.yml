@@ -341,4 +341,4 @@ stages:
         displayName: Publish Coverage Results
         inputs:
           codeCoverageTool: 'cobertura'
-          summaryFileLocation: '**/Coverage.xml'
+          summaryFileLocation: '**/coverage.cobertura.xml'
