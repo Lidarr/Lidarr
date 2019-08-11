@@ -5,7 +5,7 @@ outputFolderLinux='./_output_linux'
 outputFolderMacOS='./_output_macos'
 outputFolderMacOSApp='./_output_macos_app'
 testPackageFolder='./_tests/'
-testSearchPattern='*.Test/bin/x86/Release'
+testSearchPattern='*.Test/bin/x86/Release/*'
 sourceFolder='./src'
 slnFile=$sourceFolder/Lidarr.sln
 updateFolder=$outputFolder/Lidarr.Update
@@ -159,6 +159,9 @@ CreateMdbs()
             tools/pdb2mdb/pdb2mdb.exe ${filename%.pdb}.exe
           fi
         done
+
+        echo "Removing PDBs"
+        find $path -name "*.pdb" -exec rm "{}" \;
     fi
 }
 
@@ -173,9 +176,6 @@ PackageMono()
 
     echo "Creating MDBs"
     CreateMdbs $outputFolderLinux
-
-    echo "Removing PDBs"
-    find $outputFolderLinux -name "*.pdb" -exec rm "{}" \;
 
     echo "Removing Service helpers"
     rm -f $outputFolderLinux/ServiceUninstall.*
@@ -257,7 +257,7 @@ PackageTests()
     rm -rf $testPackageFolder
     mkdir $testPackageFolder
 
-    find $sourceFolder -path $testSearchPattern -exec cp -r -u -T "{}" $testPackageFolder \;
+    find . -maxdepth 6 -path $testSearchPattern -exec cp -r "{}" $testPackageFolder \;
 
     if [ $runtime = "dotnet" ] ; then
         $nuget install NUnit.ConsoleRunner -Version 3.7.0 -Output $testPackageFolder
