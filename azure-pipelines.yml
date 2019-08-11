@@ -401,6 +401,8 @@ stages:
         submodules: true
       - bash: ./build.sh --only-backend
         displayName: Build Lidarr Backend
+      - publish: $(testsFolder)
+        artifact: 'CoverageTest'
       - task: Bash@3
         displayName: Coverage Unit Tests
         inputs:
