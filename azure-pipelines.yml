@@ -130,7 +130,7 @@ stages:
         inputs:
           targetType: 'filePath'
           filePath: ./build.sh
-  - stage: Tests
+  - stage: Test
     dependsOn: Build
     condition: succeeded()
     jobs:
@@ -185,15 +185,8 @@ stages:
           artifactName: Lidarr
           itemPattern: '**/Lidarr.**.linux.tar.gz'
           targetPath: $(Build.ArtifactStagingDirectory)
-      - task: ExtractFiles@1
-        inputs:
-          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.linux.tar.gz' 
-          destinationFolder: ./bin
-          cleanDestinationFolder: true
-      - task: CopyFiles@2
-        inputs:
-          contents: './bin/Lidarr/**' 
-          targetFolder: ./bin
+      - script: |
+          sudo tar xf $(Build.ArtifactStagingDirectory)/**/Lidarr.**.linux.tar.gz --strip-components=1 --directory /bin
       - task: Bash@3
         displayName: Linux Integration Tests
         inputs:
@@ -252,12 +245,12 @@ stages:
       - task: ExtractFiles@1
         inputs:
           archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.windows.zip' 
-          destinationFolder: ./bin
+          destinationFolder: $(Build.ArtifactStagingDirectory)
           cleanDestinationFolder: true
       - task: CopyFiles@2
         inputs:
-          contents: './bin/Lidarr/**' 
-          targetFolder: ./bin
+          contents: '$(Build.ArtifactStagingDirectory)\Lidarr\**'
+          targetFolder: bin
       - task: Bash@3
         displayName: Windows Integration Tests
         inputs:
