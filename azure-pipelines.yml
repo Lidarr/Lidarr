@@ -245,16 +245,16 @@ stages:
         inputs:
           buildType: 'current'
           artifactName: Lidarr
-          itemPattern: '**/Lidarr.**.windows.zip'
+          itemPattern: '**\Lidarr.**.windows.zip'
           targetPath: $(Build.ArtifactStagingDirectory)
       - task: ExtractFiles@1
         inputs:
-          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.windows.zip' 
-          destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
+          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)\**\Lidarr.**.windows.zip' 
+          destinationFolder: '$(Build.ArtifactStagingDirectory)\bin'
       - bash: |
           ls -R ${BUILD_ARTIFACTSTAGINGDIRECTORY}
-          mkdir -p ./bin
-          cp -R -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/* ./bin
+          mkdir -p .\\bin
+          cp -R -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}\\bin\\Lidarr\\* .\\bin
       - task: Bash@3
         displayName: Windows Integration Tests
         inputs:

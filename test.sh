@@ -59,7 +59,7 @@ for i in `find $TEST_DIR -name "$TEST_PATTERN"`;
 done
 
 if [ "$COVERAGE" = "Coverage" ]; then
-  $OC_COMMAND -register:user -target:"$NUNIT_COMMAND" -targetargs:"$NUNIT_PARAMS --where=\"$WHERE\" $ASSEMBLIES" -output:"$COVERAGE_FILE";
+  $OC_COMMAND -register:user -target:"$NUNIT" -targetargs:"$NUNIT_PARAMS --where=\"$WHERE\" $ASSEMBLIES" -output:"$COVERAGE_FILE";
   EXIT_CODE=$?
 elif [ "$COVERAGE" = "Test" ] ; then
   $NUNIT_COMMAND --where "$WHERE" $NUNIT_PARAMS $ASSEMBLIES;
