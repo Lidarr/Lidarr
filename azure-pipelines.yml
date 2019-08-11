@@ -19,7 +19,7 @@ stages:
   - stage: Build
     jobs:
     - job: Windows
-      displayName: Windows Build
+      displayName: Windows
       pool:
         vmImage: 'vs2017-win2016'
       steps:
@@ -100,7 +100,7 @@ stages:
           SENTRY_AUTH_TOKEN: $(sentryAuthToken)
 
     - job: macOS
-      displayName: macOS Build
+      displayName: macOS
       pool:
         vmImage: 'macOS-10.13'
       steps:
@@ -116,7 +116,7 @@ stages:
           filePath: ./build.sh
 
     - job: Linux
-      displayName: Linux Build
+      displayName: Linux
       pool:
         vmImage: 'ubuntu-16.04'
       steps:
@@ -130,12 +130,12 @@ stages:
         inputs:
           targetType: 'filePath'
           filePath: ./build.sh
-  - stage: Test
+  - stage: Tests
     dependsOn: Build
     condition: succeeded()
     jobs:
     - job: Linux_Unit_Tests
-      displayName: Linux Unit Tests
+      displayName: Linux Unit
       pool:
         vmImage: 'ubuntu-16.04'
       steps:
@@ -163,7 +163,7 @@ stages:
           testRunTitle: 'Linux Unit Tests'
 
     - job: Linux_Integration_Tests
-      displayName: Linux Integration Tests
+      displayName: Linux Integration
       pool:
         vmImage: 'ubuntu-16.04'
       steps:
@@ -190,6 +190,10 @@ stages:
           archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.linux.tar.gz' 
           destinationFolder: ./bin
           cleanDestinationFolder: true
+      - task: CopyFiles@2
+        inputs:
+          contents: './bin/Lidarr/**' 
+          targetFolder: ./bin
       - task: Bash@3
         displayName: Linux Integration Tests
         inputs:
@@ -203,7 +207,7 @@ stages:
           testRunTitle: 'Linux Integration Tests'
 
     - job: Windows_Unit_Tests
-      displayName: Windows Unit Tests
+      displayName: Windows Unit
       pool:
         vmImage: 'vs2017-win2016'
       steps:
@@ -227,7 +231,7 @@ stages:
           testRunTitle: 'Windows Unit Tests'
 
     - job: Windows_Integration_Tests
-      displayName: Windows Integration Tests
+      displayName: Windows Integration
       pool:
         vmImage: 'vs2017-win2016'
       steps:
@@ -243,8 +247,17 @@ stages:
         inputs:
           buildType: 'current'
           artifactName: Lidarr
-          itemPattern: '**/Lidarr.**.windows.zip!Lidarr/**'
-          targetPath: ./bin
+          itemPattern: '**/Lidarr.**.windows.zip'
+          targetPath: $(Build.ArtifactStagingDirectory)
+      - task: ExtractFiles@1
+        inputs:
+          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.windows.zip' 
+          destinationFolder: ./bin
+          cleanDestinationFolder: true
+      - task: CopyFiles@2
+        inputs:
+          contents: './bin/Lidarr/**' 
+          targetFolder: ./bin
       - task: Bash@3
         displayName: Windows Integration Tests
         inputs:
@@ -258,7 +271,7 @@ stages:
           testRunTitle: 'Windows Integration Tests'
 
     - job: Windows_Automation_Tests
-      displayName: Windows Automation Tests
+      displayName: Windows Automation
       pool:
         vmImage: 'vs2017-win2016'
       steps:
@@ -282,7 +295,7 @@ stages:
           testRunTitle: 'Windows Automation Tests'
 
     - job: Mac_Unit_Tests
-      displayName: macOS Unit Tests
+      displayName: macOS Unit
       pool:
         vmImage: 'macOS-10.13'
       steps:
@@ -306,7 +319,7 @@ stages:
           testRunTitle: 'macOS Unit Tests'
 
     - job: Mac_Integration_Tests
-      displayName: macOS Integration Tests
+      displayName: macOS Integration
       pool:
         vmImage: 'macOS-10.13'
       steps:
