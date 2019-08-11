@@ -188,10 +188,10 @@ stages:
       - task: ExtractFiles@1
         inputs:
           archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.linux.tar.gz' 
-          destinationFolder: $(Build.ArtifactStagingDirectory)
+          destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
       - task: CopyFiles@2
         inputs:
-          contents: '$(Build.ArtifactStagingDirectory)/Lidarr/**' 
+          contents: '$(Build.ArtifactStagingDirectory)/bin/Lidarr/**' 
           targetFolder: bin
       - task: Bash@3
         displayName: Linux Integration Tests
@@ -251,10 +251,10 @@ stages:
       - task: ExtractFiles@1
         inputs:
           archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.windows.zip' 
-          destinationFolder: $(Build.ArtifactStagingDirectory)
+          destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
       - task: CopyFiles@2
         inputs:
-          contents: '$(Build.ArtifactStagingDirectory)\Lidarr\**'
+          contents: '$(Build.ArtifactStagingDirectory)\bin\Lidarr\**'
           targetFolder: bin
       - task: Bash@3
         displayName: Windows Integration Tests
