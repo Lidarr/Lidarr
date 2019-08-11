@@ -125,10 +125,20 @@ stages:
         vmImage: 'vs2017-win2016'
       steps:
       - checkout: self
-      - download: current
-        artifact: 'WindowsBackend'
-      - download: current
-        artifact: 'WindowsFrontend'
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: WindowsBackend
+          targetPath: _output
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: WindowsFrontend
+          targetPath: _output
+      # - download: current
+      #   artifact: 'WindowsBackend'
+      # - download: current
+      #   artifact: 'WindowsFrontend'
       - bash: ./build.sh --only-packages
         displayName: Create Lidarr Packages
       - task: PublishPipelineArtifact@0
