@@ -187,7 +187,7 @@ stages:
           targetPath: $(Build.ArtifactStagingDirectory)
       - task: ExtractFiles@1
         inputs:
-          archiveFilePatterns: '**/Lidarr.**.linux.tar.gz' 
+          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.linux.tar.gz' 
           destinationFolder: ./bin
           cleanDestinationFolder: true
       - task: Bash@3

@@ -16,23 +16,9 @@ rm -f "$TEST_LOG_FILE"
 # Uncomment to log test output to a file instead of the console
 export LIDARR_TESTS_LOG_OUTPUT="File"
 
-if [[ -z "${APPVEYOR}" ]]; then
-  NUNIT="$TEST_DIR/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe"
-  NUNIT_COMMAND="$NUNIT"
-  NUNIT_PARAMS="--workers=1"
-elif [ "$PLATFORM" = "Windows" ]; then
-  NUNIT="nunit3-console"
-  NUNIT_COMMAND="$NUNIT"
-  NUNIT_PARAMS="--result=myresults.xml;format=AppVeyor --workers=1"
-  unset TMP
-  unset TEMP
-else
-  NUNIT="$TEST_DIR/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe"
-  NUNIT_COMMAND="$NUNIT"
-  NUNIT_PARAMS="--result=myresults.xml --workers=1"
-  unset TMP
-  unset TEMP
-fi
+NUNIT="$TEST_DIR/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe"
+NUNIT_COMMAND="$NUNIT"
+NUNIT_PARAMS="--workers=1"
 
 if [ "$PLATFORM" = "Mac" ]; then
   LD_LIBRARY_PATH=/usr/bin:$LD_LIBRARY_PATH
@@ -71,12 +57,7 @@ $NUNIT_COMMAND --where "$WHERE" $NUNIT_PARAMS $ASSEMBLIES;
 EXIT_CODE=$?
 
 if [ "$EXIT_CODE" -ge 0 ]; then
-  if [[ -z "${APPVEYOR}" ]]; then
-    echo "Failed tests: $EXIT_CODE"
-  else
-    echo "Failed tests: $EXIT_CODE"
-    appveyor AddMessage "Failed tests: $EXIT_CODE"
-  fi
+  echo "Failed tests: $EXIT_CODE"
   exit 0
 else
   exit $EXIT_CODE
