@@ -122,6 +122,7 @@ _rawPackage/
 _dotTrace*
 _tests/
 *.Result.xml
+coverage.xml
 setup/Output/
 *.~is
 

@@ -261,8 +261,10 @@ PackageTests()
 
     if [ $runtime = "dotnet" ] ; then
         $nuget install NUnit.ConsoleRunner -Version 3.7.0 -Output $testPackageFolder
+        $nuget install OpenCover -Version 4.7.922 -Output $testPackageFolder
     else
         mono $nuget install NUnit.ConsoleRunner -Version 3.7.0 -Output $testPackageFolder
+        mono $nuget install OpenCover -Version 4.7.922 -Output $testPackageFolder
     fi
 
     cp $outputFolder/*.dll $testPackageFolder

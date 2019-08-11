@@ -155,7 +155,7 @@ stages:
         inputs:
           targetType: 'filePath'
           filePath: ./test.sh
-          arguments: Linux Unit
+          arguments: Linux Unit Test
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'
@@ -197,7 +197,7 @@ stages:
         inputs:
           targetType: 'filePath'
           filePath: ./test.sh
-          arguments: Linux Integration
+          arguments: Linux Integration Test
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'
@@ -221,7 +221,7 @@ stages:
         inputs:
           targetType: 'filePath'
           filePath: ./test.sh
-          arguments: Windows Unit
+          arguments: Windows Unit Test
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'
@@ -253,14 +253,14 @@ stages:
           destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
       - bash: |
           ls -R ${BUILD_ARTIFACTSTAGINGDIRECTORY}
-          mkdir -p .\\bin
-          cp -R -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}\\bin\\Lidarr\\* .\\bin
+          mkdir -p ./bin
+          cp -R -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/* ./bin
       - task: Bash@3
         displayName: Windows Integration Tests
         inputs:
           targetType: 'filePath'
           filePath: ./test.sh
-          arguments: Windows Integration
+          arguments: Windows Integration Test
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'
@@ -284,7 +284,7 @@ stages:
         inputs:
           targetType: 'filePath'
           filePath: ./test.sh
-          arguments: Windows Automation
+          arguments: Windows Automation Test
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'
@@ -308,17 +308,17 @@ stages:
         inputs:
           targetType: 'filePath'
           filePath: ./test.sh
-          arguments: Mac Unit
+          arguments: Mac Unit Test
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'
           testResultsFiles: '**/TestResult.xml'
           testRunTitle: 'macOS Unit Tests'
 
-    - job: Mac_Integration_Tests
-      displayName: macOS Integration
+    - job: Unit_Test_Coverage
+      displayName: Coverage
       pool:
-        vmImage: 'macOS-10.13'
+        vmImage: 'ubuntu-16.04'
       steps:
       - checkout: self
       - task: DownloadPipelineArtifact@2
@@ -327,28 +327,14 @@ stages:
           buildType: 'current'
           artifactName: Tests
           targetPath: $(testsFolder)
-      - task: DownloadPipelineArtifact@2
-        displayName: Download Build Artifact
-        inputs:
-          buildType: 'current'
-          artifactName: Lidarr
-          itemPattern: '**/Lidarr.**.osx.tar.gz'
-          targetPath: $(Build.ArtifactStagingDirectory)
-      - task: ExtractFiles@1
-        inputs:
-          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.osx.tar.gz' 
-          destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
-      - bash: |
-          mkdir ./bin
-          cp -R -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/* ./bin
       - task: Bash@3
-        displayName: macOS Integration Tests
+        displayName: Coverage Unit Tests
         inputs:
           targetType: 'filePath'
           filePath: ./test.sh
-          arguments: Mac Integration
-      - task: PublishTestResults@2
+          arguments: Linux Unit Coverage
+      - task: PublishCodeCoverageResults@1
+        displayName: Publish Coverage Results
         inputs:
-          testResultsFormat: 'NUnit'
-          testResultsFiles: '**/TestResult.xml'
-          testRunTitle: 'macOS Integration Tests'
+          codeCoverageTool: 'cobertura'
+          summaryFileLocation: '**/Coverage.xml'

@@ -1,11 +1,13 @@
 #! /bin/bash
 PLATFORM=$1
 TYPE=$2
+COVERAGE=$3
 WHERE="cat != ManualTest"
 TEST_DIR="."
 TEST_PATTERN="*Test.dll"
 ASSEMBLIES=""
 TEST_LOG_FILE="TestLog.txt"
+COVERAGE_FILE="$TEST_DIR/Coverage.xml"
 
 if [ -d "$TEST_DIR/_tests" ]; then
   TEST_DIR="$TEST_DIR/_tests"
@@ -17,6 +19,7 @@ rm -f "$TEST_LOG_FILE"
 export LIDARR_TESTS_LOG_OUTPUT="File"
 
 NUNIT="$TEST_DIR/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe"
+OPEN_COVER="$TEST_DIR/OpenCover.4.7.922/tools/OpenCover.Console.exe"
 NUNIT_COMMAND="$NUNIT"
 NUNIT_PARAMS="--workers=1"
 
@@ -53,8 +56,16 @@ for i in `find $TEST_DIR -name "$TEST_PATTERN"`;
   do ASSEMBLIES="$ASSEMBLIES $i"
 done
 
-$NUNIT_COMMAND --where "$WHERE" $NUNIT_PARAMS $ASSEMBLIES;
-EXIT_CODE=$?
+if [ "$COVERAGE" = "Coverage" ]; then
+  $OPEN_COVER -register:user -target:"$NUNIT" -targetargs:"$NUNIT_PARAMS --where=\"$WHERE\" $ASSEMBLIES" -output:"$COVERAGE_FILE";
+  EXIT_CODE=$?
+elif [ "$COVERAGE" = "Test" ] ; then
+  $NUNIT_COMMAND --where "$WHERE" $NUNIT_PARAMS $ASSEMBLIES;
+  EXIT_CODE=$?
+else
+  echo "Run Type must be provided as third argument: Coverage or Test"
+  exit 3
+fi
 
 if [ "$EXIT_CODE" -ge 0 ]; then
   echo "Failed tests: $EXIT_CODE"
