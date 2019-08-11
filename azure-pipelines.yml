@@ -18,6 +18,14 @@ variables:
   linuxTar: 'Lidarr.$(buildName).linux.tar.gz'
   sentryOrg: 'lidarr'
 
+trigger:
+  branches:
+    include:
+    - develop
+
+pr:
+- develop
+
 stages:
   - stage: Build
           
