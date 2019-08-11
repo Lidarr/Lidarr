@@ -34,6 +34,12 @@ else
   unset TEMP
 fi
 
+if [ "$PLATFORM" = "Mac" ]; then
+  LD_LIBRARY_PATH=/usr/bin:$LD_LIBRARY_PATH
+  sqlite3 -version
+  sqlite3 :memory: "pragma compile_options"
+fi
+
 if [ "$PLATFORM" = "Windows" ]; then
   mkdir -p "$ProgramData/Lidarr"
   WHERE="$WHERE && cat != LINUX"
