@@ -183,8 +183,13 @@ stages:
         inputs:
           buildType: 'current'
           artifactName: Lidarr
-          itemPattern: '**/Lidarr.**.linux.tar.gz!Lidarr/**'
-          targetPath: ./bin
+          itemPattern: '**/Lidarr.**.linux.tar.gz'
+          targetPath: $(Build.ArtifactStagingDirectory)
+      - task: ExtractFiles@1
+        inputs:
+          archiveFilePatterns: '**/Lidarr.**.linux.tar.gz' 
+          destinationFolder: ./bin
+          cleanDestinationFolder: true
       - task: Bash@3
         displayName: Linux Integration Tests
         inputs:
