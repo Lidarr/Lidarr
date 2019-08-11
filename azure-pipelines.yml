@@ -20,17 +20,21 @@ variables:
 
 stages:
   - stage: Build
-    strategy:
-      matrix:
-        Linux:
-          imageName: 'ubuntu-16.04'
-        Mac:
-          imageName: 'macos-10.13'
-        Windows:
-          imageName: 'vs2017-win2016'
           
     jobs:
     - job: Backend
+      strategy:
+        matrix:
+          Linux:
+            osName: 'Linux'
+            imageName: 'ubuntu-16.04'
+          Mac:
+            osName: 'MacOS'
+            imageName: 'macos-10.13'
+          Windows:
+            osName: 'Windows'
+            imageName: 'vs2017-win2016'
+
       pool:
         vmImage: $(imageName)
       steps:
@@ -53,10 +57,20 @@ stages:
       - bash: ./build.sh --only-backend
         displayName: Build Lidarr Backend
       - publish: $(outputFolder)
-        artifact: 'WindowsBackend'
+        artifact: '$(osName)Backend'
 
-    - job: Windows_Frontend
-      displayName: Windows Frontend
+    - job: Frontend
+      strategy:
+        matrix:
+          Linux:
+            osName: 'Linux'
+            imageName: 'ubuntu-16.04'
+          Mac:
+            osName: 'MacOS'
+            imageName: 'macos-10.13'
+          Windows:
+            osName: 'Windows'
+            imageName: 'vs2017-win2016'
       pool:
         vmImage: $(imageName)
       steps:
@@ -69,7 +83,7 @@ stages:
       - bash: ./build.sh --only-frontend
         displayName: Build Lidarr Frontend
       - publish: $(outputFolder)
-        artifact: 'WindowsFrontend'
+        artifact: '$(osName)Frontend'
 
     # - job: macOS
     #   displayName: macOS
@@ -110,11 +124,11 @@ stages:
       pool:
         vmImage: 'vs2017-win2016'
       steps:
+      - checkout: self
       - download: current
         artifact: 'WindowsBackend'
       - download: current
         artifact: 'WindowsFrontend'
-
       - bash: ./build.sh --only-packages
         displayName: Create Lidarr Packages
       - task: PublishPipelineArtifact@0
