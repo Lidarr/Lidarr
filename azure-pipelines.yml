@@ -252,6 +252,7 @@ stages:
           archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.windows.zip' 
           destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
       - bash: |
+          ls -R $(BUILD_ARTIFACTSTAGINGDIRECTORY)
           mkdir -p .\\bin
           cp -R -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}\\bin\\Lidarr\\* .\\bin
       - task: Bash@3
@@ -326,6 +327,20 @@ stages:
           buildType: 'current'
           artifactName: Tests
           targetPath: $(testsFolder)
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Build Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Lidarr
+          itemPattern: '**/Lidarr.**.osx.tar.gz'
+          targetPath: $(Build.ArtifactStagingDirectory)
+      - task: ExtractFiles@1
+        inputs:
+          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.osx.tar.gz' 
+          destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
+      - bash: |
+          mkdir ./bin
+          cp -R -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/* ./bin
       - task: Bash@3
         displayName: macOS Integration Tests
         inputs:
