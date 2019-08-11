@@ -322,7 +322,7 @@ stages:
     - job: Unit_Test_Coverage
       displayName: Coverage
       pool:
-        vmImage: 'ubuntu-16.04'
+        vmImage: 'vs2017-win2016'
       steps:
       - checkout: self
       - task: DownloadPipelineArtifact@2
@@ -336,7 +336,7 @@ stages:
         inputs:
           targetType: 'filePath'
           filePath: ./test.sh
-          arguments: Linux Unit Coverage
+          arguments: Windows Unit Coverage
       - task: PublishCodeCoverageResults@1
         displayName: Publish Coverage Results
         inputs:
