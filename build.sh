@@ -367,7 +367,8 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 # Only build backend if we haven't set only-frontend or only-packages
 if [ -z "$ONLY_FRONTEND" ] && [ -z "$ONLY_PACKAGES" ];
 then
-   Build
+    Build
+    PackageTests
 fi
 
 # Only build frontend if we haven't set only-backend or only-packages
@@ -382,7 +383,6 @@ then
     PackageMono
     PackageMacOS
     PackageMacOSApp
-    PackageTests
     CleanupWindowsPackage
     PackageArtifacts
 fi

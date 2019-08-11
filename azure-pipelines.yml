@@ -58,6 +58,16 @@ stages:
         displayName: Build Lidarr Backend
       - publish: $(outputFolder)
         artifact: '$(osName)Backend'
+        condition: and(succeeded(), eq(variables['osName'], 'Windows'))
+      - publish: $(testsFolder)
+        artifact: 'Tests'
+        condition: and(succeeded(), eq(variables['osName'], 'Windows'))
+      # - task: PublishPipelineArtifact@0
+      #   displayName: Publish Tests Artifact
+      #   inputs:
+      #     artifactName: 'Tests' 
+      #     targetPath: '$(testsFolder)'
+
 
     - job: Frontend
       strategy:
@@ -84,7 +94,8 @@ stages:
         displayName: Build Lidarr Frontend
       - publish: $(outputFolder)
         artifact: '$(osName)Frontend'
-
+        condition: and(succeeded(), eq(variables['osName'], 'Windows'))
+        
     # - job: macOS
     #   displayName: macOS
     #   pool:
@@ -135,17 +146,8 @@ stages:
           buildType: 'current'
           artifactName: WindowsFrontend
           targetPath: _output
-      # - download: current
-      #   artifact: 'WindowsBackend'
-      # - download: current
-      #   artifact: 'WindowsFrontend'
       - bash: ./build.sh --only-packages
         displayName: Create Lidarr Packages
-      - task: PublishPipelineArtifact@0
-        displayName: Publish Tests Artifact
-        inputs:
-          artifactName: 'Tests' 
-          targetPath: '$(testsFolder)'
       - task: ArchiveFiles@2
         displayName: Create Windows zip
         inputs:
