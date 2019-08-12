@@ -25,10 +25,38 @@ NUNIT_PARAMS="--workers=1"
 
 if [ "$PLATFORM" = "Mac" ]; then
   echo "Mac sqlite options:"
-  LD_LIBRARY_PATH=/usr/bin:$LD_LIBRARY_PATH
+  export LD_LIBRARY_PATH=/usr/bin:$LD_LIBRARY_PATH
   echo $LD_LIBRARY_PATH
+
   sqlite3 -version
   sqlite3 :memory: "pragma compile_options"
+
+  #set up environment
+  if [[ -x '/opt/local/bin/mono' ]]; then
+      # Macports and mono-supplied installer path
+      export PATH="/opt/local/bin:$PATH"
+  elif [[ -x '/usr/local/bin/mono' ]]; then
+      # Homebrew-supplied path to mono
+      export PATH="/usr/local/bin:$PATH"
+  fi
+
+  DIR=$(cd "$(dirname "$0")"; pwd)
+  echo $DIR
+  export DYLD_FALLBACK_LIBRARY_PATH="$DIR"
+
+  if [ -e /Library/Frameworks/Mono.framework ]; then
+      MONO_FRAMEWORK_PATH=/Library/Frameworks/Mono.framework/Versions/Current
+      export PATH="$MONO_FRAMEWORK_PATH/bin:$PATH"
+      export DYLD_FALLBACK_LIBRARY_PATH="$DYLD_FALLBACK_LIBRARY_PATH:$MONO_FRAMEWORK_PATH/lib"
+  fi
+
+  if [[ -f '/opt/local/lib/libsqlite3.0.dylib' ]]; then
+      export DYLD_FALLBACK_LIBRARY_PATH="/opt/local/lib:$DYLD_FALLBACK_LIBRARY_PATH"
+  fi
+
+  export DYLD_FALLBACK_LIBRARY_PATH="$DYLD_FALLBACK_LIBRARY_PATH:$HOME/lib:/usr/local/lib:/lib:/usr/lib"
+
+  echo $DYLD_FALLBACK_LIBRARY_PATH  
 fi
 
 if [ "$PLATFORM" = "Windows" ]; then

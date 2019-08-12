@@ -73,13 +73,26 @@ stages:
       #   condition: and(succeeded(), eq(variables['osName'], 'Windows'))
       - bash: |
           pwd
-          ls -R ./
+          ls -lR ./
+
+      # Azure publish strips out permissions, so we have to tar / publish / dowload / untar
+      - task: ArchiveFiles@2
+        displayName: Create Test Package
+        inputs:
+          archiveFile: 'tests.tar.gz'
+          archiveType: 'tar'
+          tarCompression: 'gz'
+          includeRootFolder: false
+          rootFolderOrFile: $(testsFolder)
+      - publish: tests.tar.gz
+        artifact: LinuxTests
+        condition: and(succeeded(), eq(variables['osName'], 'Linux'))
       - publish: $(testsFolder)
-        artifact: 'Tests'
+        artifact: '$(osName)Tests'
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
 
   - stage: Build_Frontend
-    displayName: Build Backend
+    displayName: Build Frontend
     dependsOn: []
     
     jobs:
@@ -106,6 +119,8 @@ stages:
         submodules: true
       - bash: ./build.sh --only-frontend
         displayName: Build Lidarr Frontend
+        env:
+          FORCE_COLOR: 0
       - publish: $(outputFolder)
         artifact: '$(osName)Frontend'
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
@@ -116,7 +131,7 @@ stages:
     - Build_Frontend
     jobs:
     - job: Windows_Packages
-      displayName: Windows Packages
+      displayName: Create Packages
       pool:
         vmImage: 'vs2017-win2016'
       steps:
@@ -202,6 +217,13 @@ stages:
         vmImage: $(imageName)
 
       steps:
+      - checkout: none
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Test Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: WindowsTests
+          targetPath: $(testsFolder)
       - bash: |
           wget https://github.com/acoustid/chromaprint/releases/download/v1.4.3/chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz
           sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
@@ -209,19 +231,21 @@ stages:
         condition: and(succeeded(), eq(variables['osName'], 'Linux'))
       - powershell: Set-Service SCardSvr -StartupType Manual
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
-      - checkout: none
-      - task: DownloadPipelineArtifact@2
-        displayName: Download Test Artifact
-        inputs:
-          buildType: 'current'
-          artifactName: Tests
-          targetPath: $(testsFolder)
+      - bash: |
+          chmod a+x _tests/fpcalc
+          export DYLD_FALLBACK_LIBRARY_PATH=${BUILD_SOURCESDIRECTORY}/_tests
+        condition: and(succeeded(), eq(variables['osName'], 'Mac'))
       - task: Bash@3
         displayName: Run Tests
+        env:
+          DYLD_FALLBACK_LIBRARY_PATH: $(Build.SourcesDirectory)/_tests
         inputs:
           targetType: 'filePath'
           filePath: '$(testsFolder)/test.sh'
           arguments: '$(osName) Unit Test'
+      # - bash: $(testsFolder)/test.sh $(osName) Unit Test
+      #   env:
+      #     DYLD_FALLBACK_LIBRARY_PATH: $(Build.SourcesDirectory)/_tests
       - task: PublishTestResults@2
         displayName: Publish Test Results
         inputs:
@@ -296,7 +320,7 @@ stages:
         displayName: Download Test Artifact
         inputs:
           buildType: 'current'
-          artifactName: Tests
+          artifactName: WindowsTests
           targetPath: $(testsFolder)
       - task: DownloadPipelineArtifact@2
         displayName: Download Build Artifact
@@ -335,7 +359,7 @@ stages:
         displayName: Download Test Artifact
         inputs:
           buildType: 'current'
-          artifactName: Tests
+          artifactName: WindowsTests
           targetPath: $(testsFolder)
       - task: DownloadPipelineArtifact@2
         displayName: Download Build Artifact
@@ -373,7 +397,7 @@ stages:
         displayName: Download Test Artifact
         inputs:
           buildType: 'current'
-          artifactName: Tests
+          artifactName: WindowsTests
           targetPath: $(testsFolder)
       - task: DownloadPipelineArtifact@2
         displayName: Download Build Artifact
@@ -406,8 +430,8 @@ stages:
     dependsOn: Build_Backend
     condition: succeeded()
     jobs:
-    - job: Unit_Test_Coverage
-      displayName: Coverage
+    - job: Windows_Coverage
+      displayName: Windows
       pool:
         vmImage: 'vs2017-win2016'
       steps:
@@ -425,17 +449,53 @@ stages:
       - task: DownloadPipelineArtifact@2
         inputs:
           buildType: 'current'
-          artifactName: Tests
+          artifactName: WindowsTests
           targetPath: $(testsFolder)
       - bash: |
           pwd
-          ls -R ./
+          ls -lR ./
       - task: Bash@3
         displayName: Coverage Unit Tests
         inputs:
           targetType: 'filePath'
           filePath: ./test.sh
           arguments: Windows Unit Coverage
+      - task: PublishCodeCoverageResults@1
+        displayName: Publish Coverage Results
+        inputs:
+          codeCoverageTool: 'cobertura'
+          summaryFileLocation: './Coverage.xml'
+
+    - job: Linux_Coverage
+      displayName: Linux
+      pool:
+        vmImage: 'ubuntu-16.04'
+      steps:
+      - checkout: self
+        submodules: true
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: LinuxTests
+          targetPath: '$(Build.SourcesDirectory)'
+      - bash: |
+          pwd
+          ls -lR ./
+      - task: ExtractFiles@1
+        inputs:
+          archiveFilePatterns: tests.tar.gz
+          destinationFolder: _tests
+      - bash: |
+          pwd
+          ls -lR ./
+      - bash: ./test.sh Linux Unit Coverage
+        displayName: Coverage Unit Tests
+      # - task: Bash@3
+      #   displayName: Coverage Unit Tests
+      #   inputs:
+      #     targetType: 'filePath'
+      #     filePath: ./test.sh
+      #     arguments: Linux Unit Coverage
       - task: PublishCodeCoverageResults@1
         displayName: Publish Coverage Results
         inputs:
