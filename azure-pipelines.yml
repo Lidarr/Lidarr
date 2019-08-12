@@ -67,12 +67,15 @@ stages:
         displayName: Build Lidarr Backend
       - publish: $(outputFolder)
         artifact: '$(osName)Backend'
+        displayName: Publish Backend
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
       - publish: $(Build.SourcesDirectory)
         artifact: 'CoverageBuild'
+        displayName: Publish Coverage Package
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
       - publish: $(testsFolder)
         artifact: '$(osName)Tests'
+        displayName: Publish Test Package
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
 
   - stage: Build_Frontend
@@ -107,6 +110,7 @@ stages:
           FORCE_COLOR: 0
       - publish: $(outputFolder)
         artifact: '$(osName)Frontend'
+        displayName: Publish Frontend
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
         
   - stage: Package
@@ -125,21 +129,25 @@ stages:
           buildType: 'current'
           artifactName: WindowsBackend
           targetPath: _output
+        displayName: Fetch Backend
       - task: DownloadPipelineArtifact@2
         inputs:
           buildType: 'current'
           artifactName: WindowsFrontend
           targetPath: _output
+        displayName: Fetch Frontend
       - bash: ./build.sh --only-packages
-        displayName: Create Lidarr Packages
+        displayName: Create Packages
       - bash: |
           ./setup/inno/ISCC.exe "./setup/lidarr.iss"
           cp ./setup/output/Lidarr.*windows.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/${WINDOWSINSTALLER}
         displayName: Create Windows installer
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: 'WindowsInstaller'
+        displayName: Publish Installer
       
     - job: Other_Packages
+      dependsOn: Windows_Installer
       displayName: Create Standard Packages
       pool:
         vmImage: 'ubuntu-16.04'
@@ -150,18 +158,21 @@ stages:
           buildType: 'current'
           artifactName: WindowsBackend
           targetPath: _output
+        displayName: Fetch Backend
       - task: DownloadPipelineArtifact@2
         inputs:
           buildType: 'current'
           artifactName: WindowsFrontend
           targetPath: _output
+        displayName: Fetch Frontend
       - task: DownloadPipelineArtifact@2
         inputs:
           buildType: 'current'
           artifactName: WindowsInstaller
           targetPath: $(Build.ArtifactStagingDirectory)
+        displayName: Fetch Installer
       - bash: ./build.sh --only-packages
-        displayName: Create Lidarr Packages
+        displayName: Create Packages
       - bash: |
           chmod a+x $(artifactsFolder)/macos/fpcalc
           chmod a+x $(artifactsFolder)/macos-app/fpcalc 
@@ -198,6 +209,7 @@ stages:
           rootFolderOrFile: $(artifactsFolder)/linux
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: 'Packages'
+        displayName: Publish Packages
       - bash: |
           echo "Uploading source maps to sentry"
           yarn sentry-cli releases new --finalize -p lidarr -p lidarr-ui -p lidarr-update "${LIDARRVERSION}-debug"
@@ -244,10 +256,12 @@ stages:
         displayName: Install fpcalc
         condition: and(succeeded(), eq(variables['osName'], 'Linux'))
       - powershell: Set-Service SCardSvr -StartupType Manual
+        displayName: Enable Windows Test Service
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
       - bash: |
           chmod a+x _tests/fpcalc
           export DYLD_FALLBACK_LIBRARY_PATH=${BUILD_SOURCESDIRECTORY}/_tests
+        displayName: Make fpcalc Executable
         condition: and(succeeded(), eq(variables['osName'], 'Mac'))
       - task: Bash@3
         displayName: Run Tests
@@ -313,9 +327,11 @@ stages:
         inputs:
           archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)' 
           destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
+        displayName: Extract Package
       - bash: |
           mkdir ./bin
           cp -R -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/* ./bin
+        displayName: Move Package Contents
       - task: Bash@3
         displayName: Run Integration Tests
         inputs:
@@ -327,6 +343,7 @@ stages:
           testResultsFormat: 'NUnit'
           testResultsFiles: '**/TestResult.xml'
           testRunTitle: '$(osName) Integration Tests'
+        displayName: Publish Test Results
 
     # - job: Windows_Integration_Tests
     #   displayName: Windows Integration
@@ -371,10 +388,25 @@ stages:
     #       testResultsFiles: '**/TestResult.xml'
     #       testRunTitle: 'Windows Integration Tests'
 
-    - job: Windows_Automation_Tests
-      displayName: Windows Automation
+    - job: Automation
+      strategy:
+        matrix:
+          Linux:
+            osName: 'Linux'
+            imageName: 'ubuntu-16.04'
+            pattern: 'Lidarr.**.linux.tar.gz'
+          Mac:
+            osName: 'Mac'
+            imageName: 'macos-10.13'
+            pattern: 'Lidarr.**.osx.tar.gz'
+          Windows:
+            osName: 'Windows'
+            imageName: 'vs2017-win2016'
+            pattern: 'Lidarr.**.windows.zip'
+
       pool:
-        vmImage: 'vs2017-win2016'
+        vmImage: $(imageName)
+        
       steps:
       - checkout: self
       - task: DownloadPipelineArtifact@2
@@ -388,27 +420,29 @@ stages:
         inputs:
           buildType: 'current'
           artifactName: Packages
-          itemPattern: '**\Lidarr.**.windows.zip'
+          itemPattern: '**/$(pattern)'
           targetPath: $(Build.ArtifactStagingDirectory)
       - task: ExtractFiles@1
         inputs:
-          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.windows.zip' 
+          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)' 
           destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
+        displayName: Extract Package
       - bash: |
           mkdir -p ./bin/
           cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
+        displayName: Move Package Contents
       - task: Bash@3
-        displayName: Windows Automation Tests
+        displayName: Run Automation Tests
         inputs:
           targetType: 'filePath'
           filePath: ./test.sh
-          arguments: Windows Automation Test
+          arguments: $(osName) Automation Test
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'
           testResultsFiles: '**/TestResult.xml'
-          testRunTitle: 'Windows Automation Tests'
-
+          testRunTitle: '($osName) Automation Tests'
+        displayName: Publish Test Results
 
   - stage: Coverage
     dependsOn: Build_Backend
