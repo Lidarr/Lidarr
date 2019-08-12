@@ -152,6 +152,7 @@ stages:
       pool:
         vmImage: 'ubuntu-16.04'
       steps:
+      - bash: sudo apt install dos2unix
       - checkout: self
       - task: DownloadPipelineArtifact@2
         inputs:
@@ -173,9 +174,11 @@ stages:
         displayName: Fetch Installer
       - bash: ./build.sh --only-packages
         displayName: Create Packages
+      - bash: ls -lR
+      - bash: ls -lR $(artifactsFolder)
       - bash: |
-          chmod a+x $(artifactsFolder)/macos/fpcalc
-          chmod a+x $(artifactsFolder)/macos-app/fpcalc 
+          chmod a+x $(artifactsFolder)/macos/Lidarr/fpcalc
+          chmod a+x $(artifactsFolder)/macos-app/Lidarr.app/Contents/MacOS/fpcalc
         displayName: Make fpcalc Executable
       - task: ArchiveFiles@2
         displayName: Create Windows zip
@@ -280,7 +283,7 @@ stages:
           testRunTitle: '$(osName) Unit Tests'
 
   - stage: Integration_Automation
-    displayName: Integration / Tests
+    displayName: Integration / Automation
     dependsOn: Package
     jobs:
     
