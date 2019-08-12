@@ -289,10 +289,10 @@ stages:
             osName: 'Linux'
             imageName: 'ubuntu-16.04'
             pattern: 'Lidarr.**.linux.tar.gz'
-          Mac:
-            osName: 'Mac'
-            imageName: 'macos-10.13'
-            pattern: 'Lidarr.**.osx.tar.gz'
+          # Mac:
+          #   osName: 'Mac'
+          #   imageName: 'macos-10.13'
+          #   pattern: 'Lidarr.**.osx.tar.gz'
           Windows:
             osName: 'Windows'
             imageName: 'vs2017-win2016'
@@ -387,11 +387,10 @@ stages:
           cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
         displayName: Move Package Contents
       - bash: |
-          json=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest)
           if [[ $OSNAME == "Mac" ]]; then
-          url=$(echo "$json" | jq -r '.assets[].browser_download_url | select(contains("macos"))')
+          url=https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-macos.tar.gz
           elif [[ $OSNAME == "Linux" ]]; then
-          url=$(echo "$json" | jq -r '.assets[].browser_download_url | select(contains("linux64"))')
+          url=https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
           else
           echo "Unhandled OS"
           exit 1
