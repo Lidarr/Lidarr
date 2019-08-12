@@ -399,10 +399,21 @@ stages:
       steps:
       - checkout: self
         submodules: true
-      - bash: ./build.sh --only-backend
-        displayName: Build Lidarr Backend
-      - publish: $(testsFolder)
-        artifact: 'CoverageTest'
+      #- bash: ./build.sh --only-backend
+      #  displayName: Build Lidarr Backend
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: WindowsBackend
+          targetPath: _output
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Test Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Tests
+          targetPath: _tests
+      #- publish: $(testsFolder)
+      #  artifact: 'CoverageTest'
       - task: Bash@3
         displayName: Coverage Unit Tests
         inputs:
