@@ -67,6 +67,9 @@ stages:
       - publish: $(outputFolder)
         artifact: '$(osName)Backend'
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
+      - publish: $(Pipeline.Workspace)
+        artifact: 'CoverageBuild'
+        condition: and(succeeded(), eq(variables['osName'], 'Windows'))
       - publish: $(testsFolder)
         artifact: 'Tests'
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
@@ -325,7 +328,6 @@ stages:
           archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.windows.zip' 
           destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
       - bash: |
-          ls -R ${BUILD_ARTIFACTSTAGINGDIRECTORY}
           mkdir -p ./bin/
           cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
       - task: Bash@3
@@ -397,21 +399,16 @@ stages:
       pool:
         vmImage: 'vs2017-win2016'
       steps:
-      - checkout: self
-        submodules: true
+      - checkout: none
       #- bash: ./build.sh --only-backend
       #  displayName: Build Lidarr Backend
       - task: DownloadPipelineArtifact@2
         inputs:
           buildType: 'current'
-          artifactName: WindowsBackend
-          targetPath: _output
-      - task: DownloadPipelineArtifact@2
-        displayName: Download Test Artifact
-        inputs:
-          buildType: 'current'
-          artifactName: Tests
-          targetPath: _tests
+          artifactName: CoverageBuild
+          targetPath: $(Pipeline.Workspace)
+      - bash: |
+          ls -R ./
       #- publish: $(testsFolder)
       #  artifact: 'CoverageTest'
       - task: Bash@3

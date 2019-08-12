@@ -59,7 +59,7 @@ if [ "$COVERAGE" = "Coverage" ]; then
   if [ "$PLATFORM" = "Windows" ] ; then
     dotnet tool install coverlet.console --tool-path=./_tests/coverlet/
     OPEN_COVER="./_tests/coverlet/coverlet"
-    $OPEN_COVER ./_tests/ --format "cobertura" --output "$COVERAGE_FILE" --exclude "[Lidarr.*.Test]*" --exclude "[Lidarr.Test.*]*" --exclude "[Marr.Data]*" --exclude "[MonoTorrent]*" --exclude "[CurlSharp]*" --target "$NUNIT" --targetargs "$NUNIT_PARAMS --where=\"$WHERE\" $ASSEMBLIES";
+    $OPEN_COVER ./_tests/ --verbosity "detailed" --format "cobertura" --output "$COVERAGE_FILE" --exclude "[Lidarr.*.Test]*" --exclude "[Lidarr.Test.*]*" --exclude "[Marr.Data]*" --exclude "[MonoTorrent]*" --exclude "[CurlSharp]*" --target "$NUNIT" --targetargs "$NUNIT_PARAMS --where=\"$WHERE\" $ASSEMBLIES";
     EXIT_CODE=$?
   else
     echo "Coverage only supported on Windows"
