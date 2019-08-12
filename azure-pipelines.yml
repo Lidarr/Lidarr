@@ -67,7 +67,7 @@ stages:
       - publish: $(outputFolder)
         artifact: '$(osName)Backend'
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
-      - publish: $(Pipeline.Workspace)
+      - publish: $(Build.SourcesDirectory)
         artifact: 'CoverageBuild'
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
       - publish: $(testsFolder)
@@ -354,6 +354,20 @@ stages:
           buildType: 'current'
           artifactName: Tests
           targetPath: $(testsFolder)
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Build Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Packages
+          itemPattern: '**\Lidarr.**.windows.zip'
+          targetPath: $(Build.ArtifactStagingDirectory)
+      - task: ExtractFiles@1
+        inputs:
+          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.windows.zip' 
+          destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
+      - bash: |
+          mkdir -p ./bin/
+          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
       - task: Bash@3
         displayName: Windows Automation Tests
         inputs:
@@ -406,7 +420,7 @@ stages:
         inputs:
           buildType: 'current'
           artifactName: CoverageBuild
-          targetPath: $(Pipeline.Workspace)
+          targetPath: $(Build.SourcesDirectory)
       - bash: |
           ls -R ./
       #- publish: $(testsFolder)
