@@ -27,7 +27,8 @@ pr:
 - develop
 
 stages:
-  - stage: Build
+  - stage: Build_Backend
+    displayName: Build Backend
           
     jobs:
     - job: Backend
@@ -37,7 +38,7 @@ stages:
             osName: 'Linux'
             imageName: 'ubuntu-16.04'
           Mac:
-            osName: 'MacOS'
+            osName: 'Mac'
             imageName: 'macos-10.13'
           Windows:
             osName: 'Windows'
@@ -67,19 +68,21 @@ stages:
       - publish: $(outputFolder)
         artifact: '$(osName)Backend'
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
-      - publish: $(Build.SourcesDirectory)
-        artifact: 'CoverageBuild'
-        condition: and(succeeded(), eq(variables['osName'], 'Windows'))
+      # - publish: $(Build.SourcesDirectory)
+      #   artifact: 'CoverageBuild'
+      #   condition: and(succeeded(), eq(variables['osName'], 'Windows'))
+      - bash: |
+          pwd
+          ls -R ./
       - publish: $(testsFolder)
         artifact: 'Tests'
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
-      # - task: PublishPipelineArtifact@0
-      #   displayName: Publish Tests Artifact
-      #   inputs:
-      #     artifactName: 'Tests' 
-      #     targetPath: '$(testsFolder)'
 
-
+  - stage: Build_Frontend
+    displayName: Build Backend
+    dependsOn: []
+    
+    jobs:
     - job: Frontend
       strategy:
         matrix:
@@ -87,7 +90,7 @@ stages:
             osName: 'Linux'
             imageName: 'ubuntu-16.04'
           Mac:
-            osName: 'MacOS'
+            osName: 'Mac'
             imageName: 'macos-10.13'
           Windows:
             osName: 'Windows'
@@ -107,39 +110,10 @@ stages:
         artifact: '$(osName)Frontend'
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
         
-    # - job: macOS
-    #   displayName: macOS
-    #   pool:
-    #     vmImage: 'macOS-10.13'
-    #   steps:
-    #   - task: NodeTool@0
-    #     inputs:
-    #       versionSpec: '10.x'
-    #   - checkout: self
-    #     submodules: true
-    #   - task: Bash@3
-    #     displayName: Build Lidarr
-    #     inputs:
-    #       targetType: 'filePath'
-    #       filePath: ./build.sh
-
-    # - job: Linux
-    #   displayName: Linux
-    #   pool:
-    #     vmImage: 'ubuntu-16.04'
-    #   steps:
-    #   - task: NodeTool@0
-    #     inputs:
-    #       versionSpec: '10.x'
-    #   - checkout: self
-    #     submodules: true
-    #   - task: Bash@3
-    #     displayName: Build Lidarr
-    #     inputs:
-    #       targetType: 'filePath'
-    #       filePath: ./build.sh
-
   - stage: Package
+    dependsOn:
+    - Build_Backend
+    - Build_Frontend
     jobs:
     - job: Windows_Packages
       displayName: Windows Packages
@@ -206,20 +180,36 @@ stages:
         env:
           SENTRY_AUTH_TOKEN: $(sentryAuthToken)
     
-  - stage: Test
-    dependsOn: Package
+  - stage: Unit_Test
+    displayName: Unit Tests
+    dependsOn: Build_Backend
     condition: succeeded()
     jobs:
-    - job: Linux_Unit_Tests
-      displayName: Linux Unit
+    - job: Unit
+      strategy:
+        matrix:
+          Linux:
+            osName: 'Linux'
+            imageName: 'ubuntu-16.04'
+          Mac:
+            osName: 'Mac'
+            imageName: 'macos-10.13'
+          Windows:
+            osName: 'Windows'
+            imageName: 'vs2017-win2016'
+
       pool:
-        vmImage: 'ubuntu-16.04'
+        vmImage: $(imageName)
+
       steps:
-      - script: |
+      - bash: |
           wget https://github.com/acoustid/chromaprint/releases/download/v1.4.3/chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz
           sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
         displayName: Install fpcalc
-      - checkout: self
+        condition: and(succeeded(), eq(variables['osName'], 'Linux'))
+      - powershell: Set-Service SCardSvr -StartupType Manual
+        condition: and(succeeded(), eq(variables['osName'], 'Windows'))
+      - checkout: none
       - task: DownloadPipelineArtifact@2
         displayName: Download Test Artifact
         inputs:
@@ -227,17 +217,71 @@ stages:
           artifactName: Tests
           targetPath: $(testsFolder)
       - task: Bash@3
-        displayName: Linux Unit Tests
+        displayName: Run Tests
         inputs:
           targetType: 'filePath'
-          filePath: ./test.sh
-          arguments: Linux Unit Test
+          filePath: '$(testsFolder)/test.sh'
+          arguments: '$(osName) Unit Test'
       - task: PublishTestResults@2
+        displayName: Publish Test Results
         inputs:
           testResultsFormat: 'NUnit'
           testResultsFiles: '**/TestResult.xml'
-          testRunTitle: 'Linux Unit Tests'
+          testRunTitle: '$(osName) Unit Tests'
 
+    # - job: Windows_Unit_Tests
+    #   displayName: Windows Unit
+    #   pool:
+    #     vmImage: 'vs2017-win2016'
+    #   steps:
+    #   - checkout: self
+    #   - task: DownloadPipelineArtifact@2
+    #     displayName: Download Test Artifact
+    #     inputs:
+    #       buildType: 'current'
+    #       artifactName: Tests
+    #       targetPath: $(testsFolder)
+    #   - task: Bash@3
+    #     displayName: Windows Unit Tests
+    #     inputs:
+    #       targetType: 'filePath'
+    #       filePath: ./test.sh
+    #       arguments: Windows Unit Test
+    #   - task: PublishTestResults@2
+    #     inputs:
+    #       testResultsFormat: 'NUnit'
+    #       testResultsFiles: '**/TestResult.xml'
+    #       testRunTitle: 'Windows Unit Tests'
+
+    # - job: Mac_Unit_Tests
+    #   displayName: macOS Unit
+    #   pool:
+    #     vmImage: 'macOS-10.13'
+    #   steps:
+    #   - checkout: self
+    #   - task: DownloadPipelineArtifact@2
+    #     displayName: Download Test Artifact
+    #     inputs:
+    #       buildType: 'current'
+    #       artifactName: Tests
+    #       targetPath: $(testsFolder)
+    #   - task: Bash@3
+    #     displayName: macOS Unit Tests
+    #     inputs:
+    #       targetType: 'filePath'
+    #       filePath: ./test.sh
+    #       arguments: Mac Unit Test
+    #   - task: PublishTestResults@2
+    #     inputs:
+    #       testResultsFormat: 'NUnit'
+    #       testResultsFiles: '**/TestResult.xml'
+    #       testRunTitle: 'macOS Unit Tests'
+
+  - stage: Integration_Automation
+    displayName: Integration / Tests
+    dependsOn: Package
+    jobs:
+    
     - job: Linux_Integration_Tests
       displayName: Linux Integration
       pool:
@@ -280,29 +324,6 @@ stages:
           testResultsFiles: '**/TestResult.xml'
           testRunTitle: 'Linux Integration Tests'
 
-    - job: Windows_Unit_Tests
-      displayName: Windows Unit
-      pool:
-        vmImage: 'vs2017-win2016'
-      steps:
-      - checkout: self
-      - task: DownloadPipelineArtifact@2
-        displayName: Download Test Artifact
-        inputs:
-          buildType: 'current'
-          artifactName: Tests
-          targetPath: $(testsFolder)
-      - task: Bash@3
-        displayName: Windows Unit Tests
-        inputs:
-          targetType: 'filePath'
-          filePath: ./test.sh
-          arguments: Windows Unit Test
-      - task: PublishTestResults@2
-        inputs:
-          testResultsFormat: 'NUnit'
-          testResultsFiles: '**/TestResult.xml'
-          testRunTitle: 'Windows Unit Tests'
 
     - job: Windows_Integration_Tests
       displayName: Windows Integration
@@ -380,32 +401,9 @@ stages:
           testResultsFiles: '**/TestResult.xml'
           testRunTitle: 'Windows Automation Tests'
 
-    - job: Mac_Unit_Tests
-      displayName: macOS Unit
-      pool:
-        vmImage: 'macOS-10.13'
-      steps:
-      - checkout: self
-      - task: DownloadPipelineArtifact@2
-        displayName: Download Test Artifact
-        inputs:
-          buildType: 'current'
-          artifactName: Tests
-          targetPath: $(testsFolder)
-      - task: Bash@3
-        displayName: macOS Unit Tests
-        inputs:
-          targetType: 'filePath'
-          filePath: ./test.sh
-          arguments: Mac Unit Test
-      - task: PublishTestResults@2
-        inputs:
-          testResultsFormat: 'NUnit'
-          testResultsFiles: '**/TestResult.xml'
-          testRunTitle: 'macOS Unit Tests'
 
   - stage: Coverage
-    dependsOn: Package
+    dependsOn: Build_Backend
     condition: succeeded()
     jobs:
     - job: Unit_Test_Coverage
@@ -413,18 +411,25 @@ stages:
       pool:
         vmImage: 'vs2017-win2016'
       steps:
-      - checkout: none
+      - checkout: self
+        submodules: true
       #- bash: ./build.sh --only-backend
       #  displayName: Build Lidarr Backend
+      # - task: DownloadPipelineArtifact@2
+      #   inputs:
+      #     buildType: 'current'
+      #     artifactName: CoverageBuild
+      #     targetPath: $(Build.SourcesDirectory)
+      #- publish: $(testsFolder)
+      #  artifact: 'CoverageTest'
       - task: DownloadPipelineArtifact@2
         inputs:
           buildType: 'current'
-          artifactName: CoverageBuild
-          targetPath: $(Build.SourcesDirectory)
+          artifactName: Tests
+          targetPath: $(testsFolder)
       - bash: |
+          pwd
           ls -R ./
-      #- publish: $(testsFolder)
-      #  artifact: 'CoverageTest'
       - task: Bash@3
         displayName: Coverage Unit Tests
         inputs:

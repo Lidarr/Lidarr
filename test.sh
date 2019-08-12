@@ -7,11 +7,12 @@ TEST_DIR="."
 TEST_PATTERN="*Test.dll"
 ASSEMBLIES=""
 TEST_LOG_FILE="TestLog.txt"
-COVERAGE_FILE="$TEST_DIR/Coverage.xml"
 
 if [ -d "$TEST_DIR/_tests" ]; then
   TEST_DIR="$TEST_DIR/_tests"
 fi
+
+COVERAGE_FILE="$TEST_DIR/Coverage.xml"
 
 rm -f "$TEST_LOG_FILE"
 
@@ -23,7 +24,9 @@ NUNIT_COMMAND="$NUNIT"
 NUNIT_PARAMS="--workers=1"
 
 if [ "$PLATFORM" = "Mac" ]; then
+  echo "Mac sqlite options:"
   LD_LIBRARY_PATH=/usr/bin:$LD_LIBRARY_PATH
+  echo $LD_LIBRARY_PATH
   sqlite3 -version
   sqlite3 :memory: "pragma compile_options"
 fi
@@ -56,13 +59,13 @@ for i in `find $TEST_DIR -name "$TEST_PATTERN"`;
 done
 
 if [ "$COVERAGE" = "Coverage" ]; then
-  if [ "$PLATFORM" = "Windows" ] ; then
-    dotnet tool install coverlet.console --tool-path=./_tests/coverlet/
-    OPEN_COVER="./_tests/coverlet/coverlet"
-    $OPEN_COVER ./_tests/ --verbosity "detailed" --format "cobertura" --output "$COVERAGE_FILE" --exclude "[Lidarr.*.Test]*" --exclude "[Lidarr.Test.*]*" --exclude "[Marr.Data]*" --exclude "[MonoTorrent]*" --exclude "[CurlSharp]*" --target "$NUNIT" --targetargs "$NUNIT_PARAMS --where=\"$WHERE\" $ASSEMBLIES";
+  if [ "$PLATFORM" = "Windows" ] || [ "$PLATFORM" = "Linux" ]; then
+    dotnet tool install coverlet.console --tool-path="$TEST_DIR/coverlet/"
+    OPEN_COVER="$TEST_DIR/coverlet/coverlet"
+    $OPEN_COVER "$TEST_DIR/" --verbosity "detailed" --format "cobertura" --output "$COVERAGE_FILE" --exclude "[Lidarr.*.Test]*" --exclude "[Lidarr.Test.*]*" --exclude "[Marr.Data]*" --exclude "[MonoTorrent]*" --exclude "[CurlSharp]*" --target "$NUNIT" --targetargs "$NUNIT_PARAMS --where=\"$WHERE\" $ASSEMBLIES";
     EXIT_CODE=$?
   else
-    echo "Coverage only supported on Windows"
+    echo "Coverage only supported on Windows and Linux"
     exit 3
   fi
 elif [ "$COVERAGE" = "Test" ] ; then

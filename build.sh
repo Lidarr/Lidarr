@@ -145,26 +145,6 @@ RunGulp()
     ProgressEnd 'Running gulp'
 }
 
-CreateMdbs()
-{
-    local path=$1
-    if [ $runtime = "dotnet" ] ; then
-        local pdbFiles=( $(find $path -name "*.pdb") )
-        for filename in "${pdbFiles[@]}"
-        do
-          if [ -e ${filename%.pdb}.dll ]  ; then
-            tools/pdb2mdb/pdb2mdb.exe ${filename%.pdb}.dll
-          fi
-          if [ -e ${filename%.pdb}.exe ]  ; then
-            tools/pdb2mdb/pdb2mdb.exe ${filename%.pdb}.exe
-          fi
-        done
-
-        echo "Removing PDBs"
-        find $path -name "*.pdb" -exec rm "{}" \;
-    fi
-}
-
 PackageMono()
 {
     ProgressStart 'Creating Mono Package'
@@ -173,9 +153,6 @@ PackageMono()
 
     echo "Copying Binaries"
     cp -r $outputFolder $outputFolderLinux
-
-    echo "Creating MDBs"
-    CreateMdbs $outputFolderLinux
 
     echo "Removing Service helpers"
     rm -f $outputFolderLinux/ServiceUninstall.*
@@ -270,9 +247,6 @@ PackageTests()
     cp $outputFolder/fpcalc $testPackageFolder
     cp ./test.sh $testPackageFolder
 
-    echo "Creating MDBs for tests"
-    CreateMdbs $testPackageFolder
-
     rm -f $testPackageFolder/*.log.config
 
     CleanFolder $testPackageFolder true
@@ -283,8 +257,8 @@ PackageTests()
     echo "Copying CurlSharp libraries"
     cp $sourceFolder/ExternalModules/CurlSharp/libs/i386/* $testPackageFolder
 
-    echo "Copying dylibs"
-    cp -r $outputFolderMacOS/*.dylib $testPackageFolder
+    echo "Adding sqlite dylibs"
+    cp $sourceFolder/Libraries/Sqlite/*.dylib $testPackageFolder
 
     ProgressEnd 'Creating Test Package'
 }
