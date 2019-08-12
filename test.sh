@@ -55,8 +55,9 @@ if [ "$PLATFORM" = "Mac" ]; then
   fi
 
   export DYLD_FALLBACK_LIBRARY_PATH="$DYLD_FALLBACK_LIBRARY_PATH:$HOME/lib:/usr/local/lib:/lib:/usr/lib"
+  echo $DYLD_FALLBACK_LIBRARY_PATH
 
-  echo $DYLD_FALLBACK_LIBRARY_PATH  
+  export DYLD_PRINT_LIBRARIES=YES
 fi
 
 if [ "$PLATFORM" = "Windows" ]; then
