@@ -150,7 +150,6 @@ stages:
         displayName: Publish Installer
       
     - job: Other_Packages
-      dependsOn: Windows_Installer
       displayName: Create Standard Packages
       pool:
         vmImage: 'ubuntu-16.04'
@@ -170,16 +169,8 @@ stages:
           artifactName: WindowsFrontend
           targetPath: _output
         displayName: Fetch Frontend
-      - task: DownloadPipelineArtifact@2
-        inputs:
-          buildType: 'current'
-          artifactName: WindowsInstaller
-          targetPath: $(Build.ArtifactStagingDirectory)
-        displayName: Fetch Installer
       - bash: ./build.sh --only-packages
         displayName: Create Packages
-      - bash: ls -lR
-      - bash: ls -lR $(artifactsFolder)
       - bash: |
           chmod a+x $(artifactsFolder)/macos/Lidarr/fpcalc
           chmod a+x $(artifactsFolder)/macos-app/Lidarr.app/Contents/MacOS/fpcalc
