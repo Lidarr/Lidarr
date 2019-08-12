@@ -68,25 +68,9 @@ stages:
       - publish: $(outputFolder)
         artifact: '$(osName)Backend'
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
-      # - publish: $(Build.SourcesDirectory)
-      #   artifact: 'CoverageBuild'
-      #   condition: and(succeeded(), eq(variables['osName'], 'Windows'))
-      - bash: |
-          pwd
-          ls -lR ./
-
-      # Azure publish strips out permissions, so we have to tar / publish / dowload / untar
-      - task: ArchiveFiles@2
-        displayName: Create Test Package
-        inputs:
-          archiveFile: 'tests.tar.gz'
-          archiveType: 'tar'
-          tarCompression: 'gz'
-          includeRootFolder: false
-          rootFolderOrFile: $(testsFolder)
-      - publish: tests.tar.gz
-        artifact: LinuxTests
-        condition: and(succeeded(), eq(variables['osName'], 'Linux'))
+      - publish: $(Build.SourcesDirectory)
+        artifact: 'CoverageBuild'
+        condition: and(succeeded(), eq(variables['osName'], 'Windows'))
       - publish: $(testsFolder)
         artifact: '$(osName)Tests'
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
@@ -239,6 +223,7 @@ stages:
         displayName: Run Tests
         env:
           DYLD_FALLBACK_LIBRARY_PATH: $(Build.SourcesDirectory)/_tests
+          TEST_DIR: $(Build.SourcesDirectory)/_tests
         inputs:
           targetType: 'filePath'
           filePath: '$(testsFolder)/test.sh'
@@ -252,54 +237,6 @@ stages:
           testResultsFormat: 'NUnit'
           testResultsFiles: '**/TestResult.xml'
           testRunTitle: '$(osName) Unit Tests'
-
-    # - job: Windows_Unit_Tests
-    #   displayName: Windows Unit
-    #   pool:
-    #     vmImage: 'vs2017-win2016'
-    #   steps:
-    #   - checkout: self
-    #   - task: DownloadPipelineArtifact@2
-    #     displayName: Download Test Artifact
-    #     inputs:
-    #       buildType: 'current'
-    #       artifactName: Tests
-    #       targetPath: $(testsFolder)
-    #   - task: Bash@3
-    #     displayName: Windows Unit Tests
-    #     inputs:
-    #       targetType: 'filePath'
-    #       filePath: ./test.sh
-    #       arguments: Windows Unit Test
-    #   - task: PublishTestResults@2
-    #     inputs:
-    #       testResultsFormat: 'NUnit'
-    #       testResultsFiles: '**/TestResult.xml'
-    #       testRunTitle: 'Windows Unit Tests'
-
-    # - job: Mac_Unit_Tests
-    #   displayName: macOS Unit
-    #   pool:
-    #     vmImage: 'macOS-10.13'
-    #   steps:
-    #   - checkout: self
-    #   - task: DownloadPipelineArtifact@2
-    #     displayName: Download Test Artifact
-    #     inputs:
-    #       buildType: 'current'
-    #       artifactName: Tests
-    #       targetPath: $(testsFolder)
-    #   - task: Bash@3
-    #     displayName: macOS Unit Tests
-    #     inputs:
-    #       targetType: 'filePath'
-    #       filePath: ./test.sh
-    #       arguments: Mac Unit Test
-    #   - task: PublishTestResults@2
-    #     inputs:
-    #       testResultsFormat: 'NUnit'
-    #       testResultsFiles: '**/TestResult.xml'
-    #       testRunTitle: 'macOS Unit Tests'
 
   - stage: Integration_Automation
     displayName: Integration / Tests
@@ -347,7 +284,6 @@ stages:
           testResultsFormat: 'NUnit'
           testResultsFiles: '**/TestResult.xml'
           testRunTitle: 'Linux Integration Tests'
-
 
     - job: Windows_Integration_Tests
       displayName: Windows Integration
@@ -435,25 +371,12 @@ stages:
       pool:
         vmImage: 'vs2017-win2016'
       steps:
-      - checkout: self
-        submodules: true
-      #- bash: ./build.sh --only-backend
-      #  displayName: Build Lidarr Backend
-      # - task: DownloadPipelineArtifact@2
-      #   inputs:
-      #     buildType: 'current'
-      #     artifactName: CoverageBuild
-      #     targetPath: $(Build.SourcesDirectory)
-      #- publish: $(testsFolder)
-      #  artifact: 'CoverageTest'
+      - checkout: none
       - task: DownloadPipelineArtifact@2
         inputs:
           buildType: 'current'
-          artifactName: WindowsTests
-          targetPath: $(testsFolder)
-      - bash: |
-          pwd
-          ls -lR ./
+          artifactName: CoverageBuild
+          targetPath: $(Build.SourcesDirectory)
       - task: Bash@3
         displayName: Coverage Unit Tests
         inputs:
@@ -464,40 +387,4 @@ stages:
         displayName: Publish Coverage Results
         inputs:
           codeCoverageTool: 'cobertura'
-          summaryFileLocation: './Coverage.xml'
-
-    - job: Linux_Coverage
-      displayName: Linux
-      pool:
-        vmImage: 'ubuntu-16.04'
-      steps:
-      - checkout: self
-        submodules: true
-      - task: DownloadPipelineArtifact@2
-        inputs:
-          buildType: 'current'
-          artifactName: LinuxTests
-          targetPath: '$(Build.SourcesDirectory)'
-      - bash: |
-          pwd
-          ls -lR ./
-      - task: ExtractFiles@1
-        inputs:
-          archiveFilePatterns: tests.tar.gz
-          destinationFolder: _tests
-      - bash: |
-          pwd
-          ls -lR ./
-      - bash: ./test.sh Linux Unit Coverage
-        displayName: Coverage Unit Tests
-      # - task: Bash@3
-      #   displayName: Coverage Unit Tests
-      #   inputs:
-      #     targetType: 'filePath'
-      #     filePath: ./test.sh
-      #     arguments: Linux Unit Coverage
-      - task: PublishCodeCoverageResults@1
-        displayName: Publish Coverage Results
-        inputs:
-          codeCoverageTool: 'cobertura'
-          summaryFileLocation: './Coverage.xml'
+          summaryFileLocation: './_tests/Coverage.xml'

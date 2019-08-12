@@ -3,10 +3,14 @@ PLATFORM=$1
 TYPE=$2
 COVERAGE=$3
 WHERE="cat != ManualTest"
-TEST_DIR="."
 TEST_PATTERN="*Test.dll"
 ASSEMBLIES=""
 TEST_LOG_FILE="TestLog.txt"
+
+echo "test dir: $TEST_DIR"
+if [ -z "$TEST_DIR" ]; then
+    TEST_DIR="."
+fi
 
 if [ -d "$TEST_DIR/_tests" ]; then
   TEST_DIR="$TEST_DIR/_tests"
@@ -24,12 +28,6 @@ NUNIT_COMMAND="$NUNIT"
 NUNIT_PARAMS="--workers=1"
 
 if [ "$PLATFORM" = "Mac" ]; then
-  echo "Mac sqlite options:"
-  export LD_LIBRARY_PATH=/usr/bin:$LD_LIBRARY_PATH
-  echo $LD_LIBRARY_PATH
-
-  sqlite3 -version
-  sqlite3 :memory: "pragma compile_options"
 
   #set up environment
   if [[ -x '/opt/local/bin/mono' ]]; then
@@ -40,9 +38,8 @@ if [ "$PLATFORM" = "Mac" ]; then
       export PATH="/usr/local/bin:$PATH"
   fi
 
-  DIR=$(cd "$(dirname "$0")"; pwd)
-  echo $DIR
-  export DYLD_FALLBACK_LIBRARY_PATH="$DIR"
+  echo $TEST_DIR
+  export DYLD_FALLBACK_LIBRARY_PATH="$TEST_DIR"
 
   if [ -e /Library/Frameworks/Mono.framework ]; then
       MONO_FRAMEWORK_PATH=/Library/Frameworks/Mono.framework/Versions/Current
@@ -55,6 +52,8 @@ if [ "$PLATFORM" = "Mac" ]; then
   fi
 
   export DYLD_FALLBACK_LIBRARY_PATH="$DYLD_FALLBACK_LIBRARY_PATH:$HOME/lib:/usr/local/lib:/lib:/usr/lib"
+  echo $LD_LIBRARY_PATH
+  echo $DYLD_LIBRARY_PATH
   echo $DYLD_FALLBACK_LIBRARY_PATH
 
   export DYLD_PRINT_LIBRARIES=YES
