@@ -56,7 +56,8 @@ if [ "$PLATFORM" = "Mac" ]; then
   echo $DYLD_LIBRARY_PATH
   echo $DYLD_FALLBACK_LIBRARY_PATH
 
-  export DYLD_PRINT_LIBRARIES=YES
+  # To debug which libraries are being loaded:
+  # export DYLD_PRINT_LIBRARIES=YES
 fi
 
 if [ "$PLATFORM" = "Windows" ]; then

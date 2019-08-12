@@ -52,6 +52,7 @@ stages:
         displayName: Set Build Name
       - checkout: self
         submodules: true
+        fetchDepth: 1
       - task: Assembly-Info-NetFramework@2
         displayName: Patch AssemblyInfo
         inputs:
@@ -104,6 +105,7 @@ stages:
           versionSpec: '10.x'
       - checkout: self
         submodules: true
+        fetchDepth: 1
       - bash: ./build.sh --only-frontend
         displayName: Build Lidarr Frontend
         env:
@@ -124,6 +126,7 @@ stages:
         vmImage: 'vs2017-win2016'
       steps:
       - checkout: self
+        fetchDepth: 1
       - task: DownloadPipelineArtifact@2
         inputs:
           buildType: 'current'
@@ -154,6 +157,7 @@ stages:
       steps:
       - bash: sudo apt install dos2unix
       - checkout: self
+        fetchDepth: 1
       - task: DownloadPipelineArtifact@2
         inputs:
           buildType: 'current'
@@ -312,106 +316,7 @@ stages:
           sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
         displayName: Install fpcalc
         condition: and(succeeded(), eq(variables['osName'], 'Linux'))
-      - checkout: self
-      - task: DownloadPipelineArtifact@2
-        displayName: Download Test Artifact
-        inputs:
-          buildType: 'current'
-          artifactName: WindowsTests
-          targetPath: $(testsFolder)
-      - task: DownloadPipelineArtifact@2
-        displayName: Download Build Artifact
-        inputs:
-          buildType: 'current'
-          artifactName: Packages
-          itemPattern: '**/$(pattern)'
-          targetPath: $(Build.ArtifactStagingDirectory)
-      - task: ExtractFiles@1
-        inputs:
-          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)' 
-          destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
-        displayName: Extract Package
-      - bash: |
-          mkdir ./bin
-          cp -R -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/* ./bin
-        displayName: Move Package Contents
-      - task: Bash@3
-        displayName: Run Integration Tests
-        inputs:
-          targetType: 'filePath'
-          filePath: ./test.sh
-          arguments: $(osName) Integration Test
-      - task: PublishTestResults@2
-        inputs:
-          testResultsFormat: 'NUnit'
-          testResultsFiles: '**/TestResult.xml'
-          testRunTitle: '$(osName) Integration Tests'
-        displayName: Publish Test Results
-
-    # - job: Windows_Integration_Tests
-    #   displayName: Windows Integration
-    #   pool:
-    #     vmImage: 'vs2017-win2016'
-    #   steps:
-    #   - script: |
-    #       wget https://github.com/acoustid/chromaprint/releases/download/v1.4.3/chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz
-    #       sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
-    #     displayName: Install fpcalc
-    #     condition: and(succeeded(), eq(variables['osName'], 'Linux'))
-    #   - checkout: self
-    #   - task: DownloadPipelineArtifact@2
-    #     displayName: Download Test Artifact
-    #     inputs:
-    #       buildType: 'current'
-    #       artifactName: WindowsTests
-    #       targetPath: $(testsFolder)
-    #   - task: DownloadPipelineArtifact@2
-    #     displayName: Download Build Artifact
-    #     inputs:
-    #       buildType: 'current'
-    #       artifactName: Packages
-    #       itemPattern: '**\Lidarr.**.windows.zip'
-    #       targetPath: $(Build.ArtifactStagingDirectory)
-    #   - task: ExtractFiles@1
-    #     inputs:
-    #       archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.windows.zip' 
-    #       destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
-    #   - bash: |
-    #       mkdir -p ./bin/
-    #       cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
-    #   - task: Bash@3
-    #     displayName: Windows Integration Tests
-    #     inputs:
-    #       targetType: 'filePath'
-    #       filePath: ./test.sh
-    #       arguments: Windows Integration Test
-    #   - task: PublishTestResults@2
-    #     inputs:
-    #       testResultsFormat: 'NUnit'
-    #       testResultsFiles: '**/TestResult.xml'
-    #       testRunTitle: 'Windows Integration Tests'
-
-    - job: Automation
-      strategy:
-        matrix:
-          Linux:
-            osName: 'Linux'
-            imageName: 'ubuntu-16.04'
-            pattern: 'Lidarr.**.linux.tar.gz'
-          Mac:
-            osName: 'Mac'
-            imageName: 'macos-10.13'
-            pattern: 'Lidarr.**.osx.tar.gz'
-          Windows:
-            osName: 'Windows'
-            imageName: 'vs2017-win2016'
-            pattern: 'Lidarr.**.windows.zip'
-
-      pool:
-        vmImage: $(imageName)
-        
-      steps:
-      - checkout: self
+      - checkout: none
       - task: DownloadPipelineArtifact@2
         displayName: Download Test Artifact
         inputs:
@@ -435,16 +340,88 @@ stages:
           cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
         displayName: Move Package Contents
       - task: Bash@3
+        displayName: Run Integration Tests
+        inputs:
+          targetType: 'filePath'
+          filePath: '$(testsFolder)/test.sh'
+          arguments: $(osName) Integration Test
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'NUnit'
+          testResultsFiles: '**/TestResult.xml'
+          testRunTitle: '$(osName) Integration Tests'
+        displayName: Publish Test Results
+
+    - job: Automation
+      strategy:
+        matrix:
+          Linux:
+            osName: 'Linux'
+            imageName: 'ubuntu-16.04'
+            pattern: 'Lidarr.**.linux.tar.gz'
+          Mac:
+            osName: 'Mac'
+            imageName: 'macos-10.13'
+            pattern: 'Lidarr.**.osx.tar.gz'
+          Windows:
+            osName: 'Windows'
+            imageName: 'vs2017-win2016'
+            pattern: 'Lidarr.**.windows.zip'
+
+      pool:
+        vmImage: $(imageName)
+        
+      steps:
+      - checkout: none
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Test Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: WindowsTests
+          targetPath: $(testsFolder)
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Build Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Packages
+          itemPattern: '**/$(pattern)'
+          targetPath: $(Build.ArtifactStagingDirectory)
+      - task: ExtractFiles@1
+        inputs:
+          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)' 
+          destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
+        displayName: Extract Package
+      - bash: |
+          mkdir -p ./bin/
+          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
+        displayName: Move Package Contents
+      - bash: |
+          json=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest)
+          if [[ $OSNAME == "Mac" ]]; then
+          url=$(echo "$json" | jq -r '.assets[].browser_download_url | select(contains("macos"))')
+          elif [[ $OSNAME == "Linux" ]]; then
+          url=$(echo "$json" | jq -r '.assets[].browser_download_url | select(contains("linux64"))')
+          else
+          echo "Unhandled OS"
+          exit 1
+          fi
+          curl -s -L "$url" | tar -xz
+          chmod +x geckodriver
+          mv geckodriver _tests
+        displayName: Install Gecko Driver
+        condition: and(succeeded(), ne(variables['osName'], 'Windows'))
+      - bash: ls -lR
+      - task: Bash@3
         displayName: Run Automation Tests
         inputs:
           targetType: 'filePath'
-          filePath: ./test.sh
+          filePath: '$(testsFolder)/test.sh'
           arguments: $(osName) Automation Test
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'
           testResultsFiles: '**/TestResult.xml'
-          testRunTitle: '($osName) Automation Tests'
+          testRunTitle: '$(osName) Automation Tests'
         displayName: Publish Test Results
 
   - stage: Coverage
