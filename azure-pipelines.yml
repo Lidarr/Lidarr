@@ -114,8 +114,8 @@ stages:
     - Build_Backend
     - Build_Frontend
     jobs:
-    - job: Windows_Packages
-      displayName: Create Packages
+    - job: Windows_Installer
+      displayName: Create Windows Installer
       pool:
         vmImage: 'vs2017-win2016'
       steps:
@@ -132,6 +132,40 @@ stages:
           targetPath: _output
       - bash: ./build.sh --only-packages
         displayName: Create Lidarr Packages
+      - bash: |
+          ./setup/inno/ISCC.exe "./setup/lidarr.iss"
+          cp ./setup/output/Lidarr.*windows.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/${WINDOWSINSTALLER}
+        displayName: Create Windows installer
+      - publish: $(Build.ArtifactStagingDirectory)
+        artifact: 'WindowsInstaller'
+      
+    - job: Other_Packages
+      displayName: Create Standard Packages
+      pool:
+        vmImage: 'ubuntu-16.04'
+      steps:
+      - checkout: self
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: WindowsBackend
+          targetPath: _output
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: WindowsFrontend
+          targetPath: _output
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: WindowsInstaller
+          targetPath: $(Build.ArtifactStagingDirectory)
+      - bash: ./build.sh --only-packages
+        displayName: Create Lidarr Packages
+      - bash: |
+          chmod a+x $(artifactsFolder)/macos/fpcalc
+          chmod a+x $(artifactsFolder)/macos-app/fpcalc 
+        displayName: Make fpcalc Executable
       - task: ArchiveFiles@2
         displayName: Create Windows zip
         inputs:
@@ -162,10 +196,6 @@ stages:
           tarCompression: 'gz'
           includeRootFolder: false
           rootFolderOrFile: $(artifactsFolder)/linux
-      - bash: |
-          ./setup/inno/ISCC.exe "./setup/lidarr.iss"
-          cp ./setup/output/Lidarr.*windows.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/${WINDOWSINSTALLER}
-        displayName: Create Windows installer
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: 'Packages'
       - bash: |
@@ -228,9 +258,6 @@ stages:
           targetType: 'filePath'
           filePath: '$(testsFolder)/test.sh'
           arguments: '$(osName) Unit Test'
-      # - bash: $(testsFolder)/test.sh $(osName) Unit Test
-      #   env:
-      #     DYLD_FALLBACK_LIBRARY_PATH: $(Build.SourcesDirectory)/_tests
       - task: PublishTestResults@2
         displayName: Publish Test Results
         inputs:
@@ -243,15 +270,31 @@ stages:
     dependsOn: Package
     jobs:
     
-    - job: Linux_Integration_Tests
-      displayName: Linux Integration
+    - job: Integration
+      strategy:
+        matrix:
+          Linux:
+            osName: 'Linux'
+            imageName: 'ubuntu-16.04'
+            pattern: 'Lidarr.**.linux.tar.gz'
+          Mac:
+            osName: 'Mac'
+            imageName: 'macos-10.13'
+            pattern: 'Lidarr.**.osx.tar.gz'
+          Windows:
+            osName: 'Windows'
+            imageName: 'vs2017-win2016'
+            pattern: 'Lidarr.**.windows.zip'
+
       pool:
-        vmImage: 'ubuntu-16.04'
+        vmImage: $(imageName)
+        
       steps:
       - script: |
           wget https://github.com/acoustid/chromaprint/releases/download/v1.4.3/chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz
           sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
         displayName: Install fpcalc
+        condition: and(succeeded(), eq(variables['osName'], 'Linux'))
       - checkout: self
       - task: DownloadPipelineArtifact@2
         displayName: Download Test Artifact
@@ -264,64 +307,69 @@ stages:
         inputs:
           buildType: 'current'
           artifactName: Packages
-          itemPattern: '**/Lidarr.**.linux.tar.gz'
+          itemPattern: '**/$(pattern)'
           targetPath: $(Build.ArtifactStagingDirectory)
       - task: ExtractFiles@1
         inputs:
-          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.linux.tar.gz' 
+          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)' 
           destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
       - bash: |
           mkdir ./bin
           cp -R -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/* ./bin
       - task: Bash@3
-        displayName: Linux Integration Tests
+        displayName: Run Integration Tests
         inputs:
           targetType: 'filePath'
           filePath: ./test.sh
-          arguments: Linux Integration Test
+          arguments: $(osName) Integration Test
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'
           testResultsFiles: '**/TestResult.xml'
-          testRunTitle: 'Linux Integration Tests'
+          testRunTitle: '$(osName) Integration Tests'
 
-    - job: Windows_Integration_Tests
-      displayName: Windows Integration
-      pool:
-        vmImage: 'vs2017-win2016'
-      steps:
-      - checkout: self
-      - task: DownloadPipelineArtifact@2
-        displayName: Download Test Artifact
-        inputs:
-          buildType: 'current'
-          artifactName: WindowsTests
-          targetPath: $(testsFolder)
-      - task: DownloadPipelineArtifact@2
-        displayName: Download Build Artifact
-        inputs:
-          buildType: 'current'
-          artifactName: Packages
-          itemPattern: '**\Lidarr.**.windows.zip'
-          targetPath: $(Build.ArtifactStagingDirectory)
-      - task: ExtractFiles@1
-        inputs:
-          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.windows.zip' 
-          destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
-      - bash: |
-          mkdir -p ./bin/
-          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
-      - task: Bash@3
-        displayName: Windows Integration Tests
-        inputs:
-          targetType: 'filePath'
-          filePath: ./test.sh
-          arguments: Windows Integration Test
-      - task: PublishTestResults@2
-        inputs:
-          testResultsFormat: 'NUnit'
-          testResultsFiles: '**/TestResult.xml'
-          testRunTitle: 'Windows Integration Tests'
+    # - job: Windows_Integration_Tests
+    #   displayName: Windows Integration
+    #   pool:
+    #     vmImage: 'vs2017-win2016'
+    #   steps:
+    #   - script: |
+    #       wget https://github.com/acoustid/chromaprint/releases/download/v1.4.3/chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz
+    #       sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
+    #     displayName: Install fpcalc
+    #     condition: and(succeeded(), eq(variables['osName'], 'Linux'))
+    #   - checkout: self
+    #   - task: DownloadPipelineArtifact@2
+    #     displayName: Download Test Artifact
+    #     inputs:
+    #       buildType: 'current'
+    #       artifactName: WindowsTests
+    #       targetPath: $(testsFolder)
+    #   - task: DownloadPipelineArtifact@2
+    #     displayName: Download Build Artifact
+    #     inputs:
+    #       buildType: 'current'
+    #       artifactName: Packages
+    #       itemPattern: '**\Lidarr.**.windows.zip'
+    #       targetPath: $(Build.ArtifactStagingDirectory)
+    #   - task: ExtractFiles@1
+    #     inputs:
+    #       archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/Lidarr.**.windows.zip' 
+    #       destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
+    #   - bash: |
+    #       mkdir -p ./bin/
+    #       cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
+    #   - task: Bash@3
+    #     displayName: Windows Integration Tests
+    #     inputs:
+    #       targetType: 'filePath'
+    #       filePath: ./test.sh
+    #       arguments: Windows Integration Test
+    #   - task: PublishTestResults@2
+    #     inputs:
+    #       testResultsFormat: 'NUnit'
+    #       testResultsFiles: '**/TestResult.xml'
+    #       testRunTitle: 'Windows Integration Tests'
 
     - job: Windows_Automation_Tests
       displayName: Windows Automation
