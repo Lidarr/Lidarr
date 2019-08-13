@@ -79,8 +79,8 @@ stages:
         displayName: Publish Test Package
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
 
-  - stage: Analyze_Backend
-    displayName: Analyze Backend
+  - stage: Analyze
+    displayName: Analyze
     dependsOn: []
 
     jobs:
@@ -94,12 +94,13 @@ stages:
         inputs:
           SonarCloud: 'SonarCloud'
           organization: 'lidarr'
-          scannerMode: 'MSBuild'
-          projectKey: 'lidarr_Lidarr'
-          projectName: 'Lidarr'
-          projectVersion: '$(lidarrVersion)'
-      - bash: ./build.sh --only-backend
-        displayName: Build Lidarr Backend
+          scannerMode: 'CLI'
+          configMode: 'manual'
+          cliProjectKey: 'lidarr_Lidarr'
+          cliProjectName: 'Lidarr'
+          cliSources: '.'
+      - bash: ./build.sh
+        displayName: Build Lidarr
       - task: SonarCloudAnalyze@1
 
   - stage: Build_Frontend
