@@ -121,7 +121,7 @@ stages:
     - Build_Frontend
     jobs:
     - job: Windows_Installer
-      displayName: Create Windows Installer
+      displayName: Create Installer
       pool:
         vmImage: 'vs2017-win2016'
       steps:
@@ -446,22 +446,24 @@ stages:
   - stage: Coverage_Upload
     dependsOn: Coverage
     condition: succeeded()
+    displayName: Coverage Upload
     jobs:
     - job: Upload
       pool:
         vmImage: 'vs2017-win2016'
       steps:
-      - checkout: none
+      - checkout: self
+        fetchDepth: 1
       - task: DownloadPipelineArtifact@2
         inputs:
           buildType: 'current'
           artifactName: CoverageResults
-          targetPath: $(Build.SourcesDirectory)
+          targetPath: 'CoverageResults'
       - task: PublishCodeCoverageResults@1
         displayName: Publish Coverage Results
         inputs:
           codeCoverageTool: 'cobertura'
-          summaryFileLocation: './coverage.cobertura.xml'
+          summaryFileLocation: './CoverageResults/coverage.cobertura.xml'
 
   - stage: Analyze
     dependsOn: 
