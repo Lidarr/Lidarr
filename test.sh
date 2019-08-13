@@ -16,7 +16,7 @@ if [ -d "$TEST_DIR/_tests" ]; then
   TEST_DIR="$TEST_DIR/_tests"
 fi
 
-COVERAGE_FILE="$TEST_DIR/Coverage.xml"
+COVERAGE_RESULT_DIRECTORY="$TEST_DIR/CoverageResults/"
 
 rm -f "$TEST_LOG_FILE"
 
@@ -90,8 +90,9 @@ done
 if [ "$COVERAGE" = "Coverage" ]; then
   if [ "$PLATFORM" = "Windows" ] || [ "$PLATFORM" = "Linux" ]; then
     dotnet tool install coverlet.console --tool-path="$TEST_DIR/coverlet/"
+    mkdir $COVERAGE_RESULT_DIRECTORY
     OPEN_COVER="$TEST_DIR/coverlet/coverlet"
-    $OPEN_COVER "$TEST_DIR/" --verbosity "detailed" --format "cobertura" --output "$COVERAGE_FILE" --exclude "[Lidarr.*.Test]*" --exclude "[Lidarr.Test.*]*" --exclude "[Marr.Data]*" --exclude "[MonoTorrent]*" --exclude "[CurlSharp]*" --target "$NUNIT" --targetargs "$NUNIT_PARAMS --where=\"$WHERE\" $ASSEMBLIES";
+    $OPEN_COVER "$TEST_DIR/" --verbosity "detailed" --format "cobertura" --format "opencover" --output "$COVERAGE_RESULT_DIRECTORY" --exclude "[Lidarr.*.Test]*" --exclude "[Lidarr.Test.*]*" --exclude "[Marr.Data]*" --exclude "[MonoTorrent]*" --exclude "[CurlSharp]*" --target "$NUNIT" --targetargs "$NUNIT_PARAMS --where=\"$WHERE\" $ASSEMBLIES";
     EXIT_CODE=$?
   else
     echo "Coverage only supported on Windows and Linux"

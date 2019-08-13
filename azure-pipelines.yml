@@ -79,30 +79,6 @@ stages:
         displayName: Publish Test Package
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
 
-  - stage: Analyze
-    displayName: Analyze
-    dependsOn: []
-
-    jobs:
-    - job: Analyze
-      pool:
-        vmImage: vs2017-win2016
-      steps:
-      - checkout: self
-        submodules: true
-      - task: SonarCloudPrepare@1
-        inputs:
-          SonarCloud: 'SonarCloud'
-          organization: 'lidarr'
-          scannerMode: 'CLI'
-          configMode: 'manual'
-          cliProjectKey: 'lidarr_Lidarr'
-          cliProjectName: 'Lidarr'
-          cliSources: '.'
-      - bash: ./build.sh
-        displayName: Build Lidarr
-      - task: SonarCloudAnalyze@1
-
   - stage: Build_Frontend
     displayName: Build Frontend
     dependsOn: []
@@ -294,6 +270,10 @@ stages:
           targetType: 'filePath'
           filePath: '$(testsFolder)/test.sh'
           arguments: '$(osName) Unit Test'
+      - publish: TestResult.xml
+        artifact: 'TestResult.xml'
+        displayName: Publish Test Result
+        condition: and(succeeded(), eq(variables['osName'], 'Windows'))
       - task: PublishTestResults@2
         displayName: Publish Test Results
         inputs:
@@ -459,8 +439,48 @@ stages:
           targetType: 'filePath'
           filePath: ./test.sh
           arguments: Windows Unit Coverage
+      - publish: ./_tests/CoverageResults
+        artifact: 'CoverageResults'
+        displayName: Publish Coverage Result Artifact
+        condition: and(succeeded(), eq(variables['osName'], 'Windows'))
       - task: PublishCodeCoverageResults@1
         displayName: Publish Coverage Results
         inputs:
           codeCoverageTool: 'cobertura'
-          summaryFileLocation: './_tests/Coverage.xml'
+          summaryFileLocation: './_tests/CoverageResults/coverage.cobertura.xml'
+
+  - stage: Analyze
+    displayName: Analyze
+    dependsOn: []
+
+    jobs:
+    - job: Analyze
+      pool:
+        vmImage: vs2017-win2016
+      steps:
+      - checkout: self
+        submodules: true
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: CoverageResults
+          targetPath: $(Build.SourcesDirectory)
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: TestResult.xml
+          targetPath: $(Build.SourcesDirectory)/TestResults
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarCloud: 'SonarCloud'
+          organization: 'lidarr'
+          scannerMode: 'CLI'
+          configMode: 'manual'
+          cliProjectKey: 'lidarr_Lidarr'
+          cliProjectName: 'Lidarr'
+          cliSources: '.'
+          extraProperties: |
+            sonar.exclusions=**/obj/**,**/*.dll
+            sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/CoverageResults/**/coverage.opencover.xml
+            sonar.cs.nunit.reportsPaths=$(Build.SourcesDirectory)/TestResults/**/TestResult.xml
+      - task: SonarCloudAnalyze@1
