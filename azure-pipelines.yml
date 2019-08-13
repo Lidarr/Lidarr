@@ -8,7 +8,7 @@ variables:
   artifactsFolder: './_artifacts'
   testsFolder: './_tests'
   majorVersion: '0.6.2'
-  minorVersion: $[counter(variables['build.reason'], 1000)]
+  minorVersion: $[counter('minorVersion', 1076)]
   lidarrVersion: '$(majorVersion).$(minorVersion)'
   buildName: '$(Build.SourceBranchName).$(lidarrVersion)'
   windowsInstaller: 'Lidarr.$(buildName).windows-installer.exe'
@@ -48,7 +48,7 @@ stages:
         vmImage: $(imageName)
       steps:
       # Set the build name properly.  The 'name' property won't recursively expand so hack here:
-      - powershell: Write-Host "##vso[build.updatebuildnumber]$($env:BUILDNAME)"
+      - powershell: Write-Host "##vso[build.updatebuildnumber]$($env:LIDARRVERSION)"
         displayName: Set Build Name
       - checkout: self
         submodules: true
