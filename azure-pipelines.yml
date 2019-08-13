@@ -450,8 +450,10 @@ stages:
           summaryFileLocation: './_tests/CoverageResults/coverage.cobertura.xml'
 
   - stage: Analyze
+    dependsOn: 
+    - Coverage
+    - Unit_Test
     displayName: Analyze
-    dependsOn: []
 
     jobs:
     - job: Analyze
