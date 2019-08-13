@@ -64,14 +64,6 @@ stages:
           VersionNumber: '$(lidarrVersion)'
           FileVersionNumber: '$(lidarrVersion)'
           InformationalVersion: '$(lidarrVersion)-rc1'
-      - task: SonarCloudPrepare@1
-        inputs:
-          SonarCloud: 'SonarCloud'
-          organization: 'lidarr'
-          scannerMode: 'MSBuild'
-          projectKey: 'lidarr_Lidarr'
-          projectName: 'Lidarr'
-          projectVersion: '$(lidarrVersion)'
       - bash: ./build.sh --only-backend
         displayName: Build Lidarr Backend
       - publish: $(outputFolder)
@@ -86,6 +78,30 @@ stages:
         artifact: '$(osName)Tests'
         displayName: Publish Test Package
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
+
+  - stage: Analyze_Backend
+    displayName: Analyze Backend
+    dependsOn: []
+    
+    jobs:
+    - job: Analyze
+      pool:
+        vmImage: vs2017-win2016
+      steps:
+      - checkout: self
+        submodules: true
+        fetchDepth: 1
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarCloud: 'SonarCloud'
+          organization: 'lidarr'
+          scannerMode: 'MSBuild'
+          projectKey: 'lidarr_Lidarr'
+          projectName: 'Lidarr'
+          projectVersion: '$(lidarrVersion)'
+      - bash: ./build.sh --only-backend
+        displayName: Build Lidarr Backend
+      - task: SonarCloudAnalyze@1
 
   - stage: Build_Frontend
     displayName: Build Frontend
