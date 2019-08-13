@@ -82,7 +82,7 @@ stages:
   - stage: Analyze_Backend
     displayName: Analyze Backend
     dependsOn: []
-    
+
     jobs:
     - job: Analyze
       pool:
@@ -90,7 +90,6 @@ stages:
       steps:
       - checkout: self
         submodules: true
-        fetchDepth: 1
       - task: SonarCloudPrepare@1
         inputs:
           SonarCloud: 'SonarCloud'
