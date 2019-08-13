@@ -442,11 +442,26 @@ stages:
       - publish: ./_tests/CoverageResults
         artifact: 'CoverageResults'
         displayName: Publish Coverage Result Artifact
+
+  - stage: Coverage_Upload
+    dependsOn: Coverage
+    condition: succeeded()
+    jobs:
+    - job: Upload
+      pool:
+        vmImage: 'vs2017-win2016'
+      steps:
+      - checkout: none
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: CoverageResults
+          targetPath: $(Build.SourcesDirectory)
       - task: PublishCodeCoverageResults@1
         displayName: Publish Coverage Results
         inputs:
           codeCoverageTool: 'cobertura'
-          summaryFileLocation: './_tests/CoverageResults/coverage.cobertura.xml'
+          summaryFileLocation: './coverage.cobertura.xml'
 
   - stage: Analyze
     dependsOn: 
@@ -483,7 +498,7 @@ stages:
           cliProjectName: 'Lidarr'
           cliSources: '.'
           extraProperties: |
-            sonar.exclusions=**/obj/**,**/*.dll
+            sonar.exclusions=**/obj/**,**/*.dll,**/NzbDrone.Core.Test/Files/**/*
             sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/CoverageResults/**/coverage.opencover.xml
             sonar.cs.nunit.reportsPaths=$(Build.SourcesDirectory)/TestResults/**/TestResult.xml
       - task: SonarCloudAnalyze@1
