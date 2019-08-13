@@ -271,7 +271,7 @@ stages:
           filePath: '$(testsFolder)/test.sh'
           arguments: '$(osName) Unit Test'
       - publish: TestResult.xml
-        artifact: 'TestResult.xml'
+        artifact: 'TestResult'
         displayName: Publish Test Result
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
       - task: PublishTestResults@2
@@ -465,13 +465,15 @@ stages:
         inputs:
           buildType: 'current'
           artifactName: CoverageResults
-          targetPath: $(Build.SourcesDirectory)
+          targetPath: $(Build.SourcesDirectory)/CoverageResults
       - task: DownloadPipelineArtifact@2
         inputs:
           buildType: 'current'
-          artifactName: TestResult.xml
+          artifactName: TestResult
           targetPath: $(Build.SourcesDirectory)/TestResults
       - task: SonarCloudPrepare@1
+        env:
+          SONAR_SCANNER_OPTS: ''
         inputs:
           SonarCloud: 'SonarCloud'
           organization: 'lidarr'
