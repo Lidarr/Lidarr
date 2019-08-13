@@ -442,7 +442,6 @@ stages:
       - publish: ./_tests/CoverageResults
         artifact: 'CoverageResults'
         displayName: Publish Coverage Result Artifact
-        condition: and(succeeded(), eq(variables['osName'], 'Windows'))
       - task: PublishCodeCoverageResults@1
         displayName: Publish Coverage Results
         inputs:
