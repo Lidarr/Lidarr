@@ -64,6 +64,14 @@ stages:
           VersionNumber: '$(lidarrVersion)'
           FileVersionNumber: '$(lidarrVersion)'
           InformationalVersion: '$(lidarrVersion)-rc1'
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarCloud: 'SonarCloud'
+          organization: 'lidarr'
+          scannerMode: 'MSBuild'
+          projectKey: 'lidarr_Lidarr'
+          projectName: 'Lidarr'
+          projectVersion: '$(lidarrVersion)'
       - bash: ./build.sh --only-backend
         displayName: Build Lidarr Backend
       - publish: $(outputFolder)
