@@ -70,6 +70,7 @@
     <Compile Include="DiskProviderTests\FreeSpaceFixture.cs" />
     <Compile Include="EnvironmentInfo\WindowsVersionInfoFixture.cs" />
     <Compile Include="EnvironmentInfo\DotNetPlatformInfoFixture.cs" />
+    <Compile Include="ImageResizerTests\ImageResizerFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +101,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Logo\1024.png">
+      <Link>Files\1024.png</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

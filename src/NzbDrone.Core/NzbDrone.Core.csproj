@@ -704,9 +704,7 @@
     <Compile Include="Lifecycle\Commands\ShutdownCommand.cs" />
     <Compile Include="Lifecycle\LifecycleService.cs" />
     <Compile Include="MediaCover\CoverAlreadyExistsSpecification.cs" />
-    <Compile Include="MediaCover\GdiPlusInterop.cs" />
     <Compile Include="MediaCover\MediaCover.cs" />
-    <Compile Include="MediaCover\ImageResizer.cs" />
     <Compile Include="MediaCover\MediaCoverService.cs" />
     <Compile Include="MediaCover\MediaCoversUpdatedEvent.cs" />
     <Compile Include="MediaFiles\Commands\BackendCommandAttribute.cs" />
@@ -1301,9 +1299,6 @@
     </PackageReference>
     <PackageReference Include="FluentValidation">
       <Version>6.2.1</Version>
-    </PackageReference>
-    <PackageReference Include="ImageResizer">
-      <Version>4.2.5</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.2</Version>

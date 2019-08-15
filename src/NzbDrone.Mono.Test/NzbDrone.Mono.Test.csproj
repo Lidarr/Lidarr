@@ -76,6 +76,7 @@
     <Compile Include="EnvironmentInfo\ReleaseFileVersionAdapterFixture.cs" />
     <Compile Include="EnvironmentInfo\VersionAdapters\ReleaseFileVersionAdapterFixture.cs" />
     <Compile Include="EnvironmentInfo\VersionAdapters\MacOsVersionAdapterFixture.cs" />
+    <Compile Include="ImageResizerTests\ImageResizerFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +126,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Files\synology\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Logo\1024.png">
+      <Link>Files\1024.png</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentAssertions">

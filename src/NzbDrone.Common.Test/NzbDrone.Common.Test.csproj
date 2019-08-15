@@ -46,6 +46,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -81,6 +82,7 @@
     <Compile Include="Http\HttpRequestFixture.cs" />
     <Compile Include="Http\HttpUriFixture.cs" />
     <Compile Include="Http\UserAgentBuilderFixture.cs" />
+    <Compile Include="ImageResizerTests\ImageResizerFixtureBase.cs" />
     <Compile Include="InstrumentationTests\CleanseLogMessageFixture.cs" />
     <Compile Include="InstrumentationTests\SentryTargetFixture.cs" />
     <Compile Include="LevenshteinDistanceFixture.cs" />

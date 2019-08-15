@@ -212,6 +212,7 @@
     <Compile Include="TPL\RateLimitService.cs" />
     <Compile Include="TPL\TaskExtensions.cs" />
     <Compile Include="Extensions\TryParseExtensions.cs" />
+    <Compile Include="ImageResizer\ImageResizerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
