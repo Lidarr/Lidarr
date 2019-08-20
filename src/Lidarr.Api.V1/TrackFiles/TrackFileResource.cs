@@ -5,6 +5,7 @@ using NzbDrone.Core.Qualities;
 using Lidarr.Http.REST;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Parser.Model;
+using System.Linq;
 
 namespace Lidarr.Api.V1.TrackFiles
 {
@@ -17,6 +18,7 @@ namespace Lidarr.Api.V1.TrackFiles
         public long Size { get; set; }
         public DateTime DateAdded { get; set; }
         public QualityModel Quality { get; set; }
+        public int QualityWeight { get; set; }
         public MediaInfoResource MediaInfo { get; set; }
 
         public bool QualityCutoffNotMet { get; set; }
@@ -25,6 +27,19 @@ namespace Lidarr.Api.V1.TrackFiles
 
     public static class TrackFileResourceMapper
     {
+        private static int QualityWeight(QualityModel quality)
+        {
+            if (quality == null)
+            {
+                return 0;
+            }
+
+            int qualityWeight = Quality.DefaultQualityDefinitions.Single(q => q.Quality == quality.Quality).Weight;
+            qualityWeight += quality.Revision.Real * 10;
+            qualityWeight += quality.Revision.Version;
+            return qualityWeight;
+        }
+
         public static TrackFileResource ToResource(this TrackFile model)
         {
             if (model == null) return null;
@@ -37,6 +52,7 @@ namespace Lidarr.Api.V1.TrackFiles
                 Size = model.Size,
                 DateAdded = model.DateAdded,
                 Quality = model.Quality,
+                QualityWeight = QualityWeight(model.Quality),
                 MediaInfo = model.MediaInfo.ToResource()
             };
         }
@@ -56,6 +72,7 @@ namespace Lidarr.Api.V1.TrackFiles
                 Size = model.Size,
                 DateAdded = model.DateAdded,
                 Quality = model.Quality,
+                QualityWeight = QualityWeight(model.Quality),
                 MediaInfo = model.MediaInfo.ToResource(),
                 QualityCutoffNotMet = upgradableSpecification.QualityCutoffNotMet(artist.QualityProfile.Value, model.Quality)
             };

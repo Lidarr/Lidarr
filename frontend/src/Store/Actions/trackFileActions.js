@@ -32,8 +32,13 @@ export const defaultState = {
   deleteError: null,
   isSaving: false,
   saveError: null,
-  itemsAreMapped: true,
   items: [],
+
+  sortPredicates: {
+    quality: function(item, direction) {
+      return item.quality ? item.qualityWeight : 0;
+    }
+  },
 
   columns: [
     {
@@ -58,7 +63,7 @@ export const defaultState = {
     {
       name: 'quality',
       label: 'Quality',
-      isSortable: false,
+      isSortable: true,
       isVisible: true
     },
     {
