@@ -30,16 +30,16 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
             {
                 return Decision.Accept();
             }
-                
-            if (Parser.Parser.CleanArtistName(singleAlbumSpec.AlbumTitle) != Parser.Parser.CleanArtistName(remoteAlbum.ParsedAlbumInfo.AlbumTitle))
+
+            if (!remoteAlbum.Albums.Any(x => x.Title == singleAlbumSpec.AlbumTitle))
             {
                 _logger.Debug("Album does not match searched album title, skipping.");
                 return Decision.Reject("Wrong album");
             }
 
-            if (!remoteAlbum.ParsedAlbumInfo.AlbumTitle.Any())
+            if (remoteAlbum.Albums.Count > 1)
             {
-                _logger.Debug("Full discography result during single album search, skipping.");
+                _logger.Debug("Discography result during single album search, skipping.");
                 return Decision.Reject("Full artist pack");
             }
 

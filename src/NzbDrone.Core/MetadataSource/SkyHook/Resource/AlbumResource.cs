@@ -5,6 +5,12 @@ namespace NzbDrone.Core.MetadataSource.SkyHook.Resource
 {
     public class AlbumResource
     {
+        public AlbumResource()
+        {
+            Aliases = new List<string>();
+        }
+
+        public List<string> Aliases { get; set; }
         public string ArtistId { get; set; }
         public List<ArtistResource> Artists { get; set; }
         public string Disambiguation { get; set; }

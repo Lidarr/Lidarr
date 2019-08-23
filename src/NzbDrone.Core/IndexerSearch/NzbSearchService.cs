@@ -73,6 +73,7 @@ namespace NzbDrone.Core.IndexerSearch
             var searchSpec = Get<AlbumSearchCriteria>(artist, new List<Album> { album }, userInvokedSearch, interactiveSearch);
 
             searchSpec.AlbumTitle = album.Title;
+            searchSpec.AlbumAliases = album.Aliases;
             if (album.ReleaseDate.HasValue)
             {
                 searchSpec.AlbumYear = album.ReleaseDate.Value.Year;
