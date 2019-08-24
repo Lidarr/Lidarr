@@ -6,13 +6,9 @@
   <ItemGroup>
     <PackageReference Include="NLog" Version="4.5.4" />
     <PackageReference Include="System.IO.Abstractions" Version="4.0.11" />
+    <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Common\Lidarr.Common.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Mono.Posix">
-      <HintPath>..\Libraries\Mono.Posix.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>
