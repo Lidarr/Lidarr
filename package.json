@@ -122,7 +122,7 @@
     "stylelint-order": "3.0.1",
     "uglifyjs-webpack-plugin": "2.2.0",
     "url-loader": "2.1.0",
-    "webpack": "4.39.1",
+    "webpack": "4.39.2",
     "webpack-stream": "5.2.1"
   },
   "devDependencies": {
