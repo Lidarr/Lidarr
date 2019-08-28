@@ -127,7 +127,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
             try
             {
                 var trackedDownload = _trackedDownloadService.TrackDownload((DownloadClientDefinition)downloadClient.Definition, downloadItem);
-                if (trackedDownload != null && trackedDownload.State == TrackedDownloadStage.Downloading)
+                if (trackedDownload != null && trackedDownload.State == TrackedDownloadStage.Downloading || trackedDownload.State == TrackedDownloadStage.ImportFailed)
                 {
                     _failedDownloadService.Process(trackedDownload);
 
