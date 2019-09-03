@@ -38,10 +38,15 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
             while (true)
             {
+                if (albums == null)
+                {
+                    return result;
+                }
+
                 foreach (var album in albums.Items)
                 {
-                    var artistName = album.Album.Artists.FirstOrDefault()?.Name;
-                    var albumName = album.Album.Name;
+                    var artistName = album?.Album?.Artists?.FirstOrDefault()?.Name;
+                    var albumName = album?.Album?.Name;
                     _logger.Trace($"Adding {artistName} - {albumName}");
 
                     if (artistName.IsNotNullOrWhiteSpace() && albumName.IsNotNullOrWhiteSpace())

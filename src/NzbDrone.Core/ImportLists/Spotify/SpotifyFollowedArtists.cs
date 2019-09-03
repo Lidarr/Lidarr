@@ -37,6 +37,11 @@ namespace NzbDrone.Core.ImportLists.Spotify
             var artists = followed.Artists;
             while (true)
             {
+                if (artists == null)
+                {
+                    return result;
+                }
+
                 foreach (var artist in artists.Items)
                 {
                     if (artist.Name.IsNotNullOrWhiteSpace())
