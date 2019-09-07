@@ -17,6 +17,7 @@ variables:
   macOsTar: 'Lidarr.$(buildName).osx.tar.gz'
   linuxTar: 'Lidarr.$(buildName).linux.tar.gz'
   sentryOrg: 'lidarr'
+  yarnCacheFolder: $(Pipeline.Workspace)/.yarn
 
 trigger:
   branches:
@@ -91,6 +92,11 @@ stages:
       - checkout: self
         submodules: true
         fetchDepth: 1
+      - task: CacheBeta@0
+        inputs:
+          key: yarn | $(Agent.OS) | yarn.lock
+          path: $(yarnCacheFolder)
+        displayName: Cache Yarn packages
       - bash: ./build.sh --only-frontend
         displayName: Build Lidarr Frontend
         env:
