@@ -6,7 +6,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using SpotifyAPI.Web;
-using SpotifyAPI.Web.Enums;
+using SpotifyAPI.Web.Models;
 
 namespace NzbDrone.Core.ImportLists.Spotify
 {
@@ -17,13 +17,14 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
     public class SpotifyFollowedArtists : SpotifyImportListBase<SpotifyFollowedArtistsSettings>
     {
-        public SpotifyFollowedArtists(IImportListStatusService importListStatusService,
+        public SpotifyFollowedArtists(ISpotifyProxy spotifyProxy,
+                                      IImportListStatusService importListStatusService,
                                       IImportListRepository importListRepository,
                                       IConfigService configService,
                                       IParsingService parsingService,
-                                      HttpClient httpClient,
+                                      IHttpClient httpClient,
                                       Logger logger)
-        : base(importListStatusService, importListRepository, configService, parsingService, httpClient, logger)
+        : base(spotifyProxy, importListStatusService, importListRepository, configService, parsingService, httpClient, logger)
         {
         }
 
@@ -32,12 +33,18 @@ namespace NzbDrone.Core.ImportLists.Spotify
         public override IList<ImportListItemInfo> Fetch(SpotifyWebAPI api)
         {
             var result = new List<ImportListItemInfo>();
-            
-            var followed = Execute(api, (x) => x.GetFollowedArtists(FollowType.Artist, 50));
+
+            var followed = _spotifyProxy.GetFollowedArtists(this, api);
+
+            if (followed == null || followed.Artists == null)
+            {
+                return result;
+            }
+
             var artists = followed.Artists;
             while (true)
             {
-                foreach (var artist in artists.Items)
+                foreach (var artist in artists?.Items ?? new List<FullArtist>())
                 {
                     if (artist.Name.IsNotNullOrWhiteSpace())
                     {
@@ -49,7 +56,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
                 }
                 if (!artists.HasNext())
                     break;
-                artists = Execute(api, (x) => x.GetNextPage(artists));
+                artists = _spotifyProxy.GetNextPage(this, api, artists);
             }
 
             return result;

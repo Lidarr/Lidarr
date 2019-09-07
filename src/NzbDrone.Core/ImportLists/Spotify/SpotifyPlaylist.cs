@@ -15,13 +15,14 @@ namespace NzbDrone.Core.ImportLists.Spotify
 {
     public class SpotifyPlaylist : SpotifyImportListBase<SpotifyPlaylistSettings>
     {
-        public SpotifyPlaylist(IImportListStatusService importListStatusService,
+        public SpotifyPlaylist(ISpotifyProxy spotifyProxy,
+                               IImportListStatusService importListStatusService,
                                IImportListRepository importListRepository,
                                IConfigService configService,
                                IParsingService parsingService,
-                               HttpClient httpClient,
+                               IHttpClient httpClient,
                                Logger logger)
-        : base(importListStatusService, importListRepository, configService, parsingService, httpClient, logger)
+        : base(spotifyProxy, importListStatusService, importListRepository, configService, parsingService, httpClient, logger)
         {
         }
 
@@ -35,7 +36,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
             {
                 _logger.Trace($"Processing playlist {id}");
 
-                var playlistTracks = Execute(api, (x) => x.GetPlaylistTracks(id, fields: "next, items(track(name, album(name,artists)))"));
+                var playlistTracks = _spotifyProxy.GetPlaylistTracks(this, api, id, "next, items(track(name, album(name,artists)))");
                 while (true)
                 {
                     foreach (var track in playlistTracks.Items)
@@ -62,7 +63,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
                         
                     if (!playlistTracks.HasNextPage())
                         break;
-                    playlistTracks = Execute(api, (x) => x.GetNextPage(playlistTracks));
+                    playlistTracks = _spotifyProxy.GetNextPage(this, api, playlistTracks);
                 }
             }
 
@@ -87,8 +88,8 @@ namespace NzbDrone.Core.ImportLists.Spotify
                 {
                     try
                     {
-                        var profile = Execute(api, (x) => x.GetPrivateProfile());
-                        var playlistPage = Execute(api, (x) => x.GetUserPlaylists(profile.Id));
+                        var profile = _spotifyProxy.GetPrivateProfile(this, api);
+                        var playlistPage = _spotifyProxy.GetUserPlaylists(this, api, profile.Id);
                         _logger.Trace($"Got {playlistPage.Total} playlists");
 
                         var playlists = new List<SimplePlaylist>(playlistPage.Total);
@@ -98,7 +99,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
                             if (!playlistPage.HasNextPage())
                                 break;
-                            playlistPage = Execute(api, (x) => x.GetNextPage(playlistPage));
+                            playlistPage = _spotifyProxy.GetNextPage(this, api, playlistPage);
                         }
 
                         return new

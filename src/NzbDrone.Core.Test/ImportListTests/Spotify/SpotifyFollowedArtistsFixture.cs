@@ -1,0 +1,92 @@
+using System.Collections.Generic;
+using FluentAssertions;
+using Moq;
+using NUnit.Framework;
+using NzbDrone.Core.ImportLists.Spotify;
+using NzbDrone.Core.Test.Framework;
+using SpotifyAPI.Web;
+using SpotifyAPI.Web.Models;
+
+namespace NzbDrone.Core.Test.ImportListTests
+{
+    [TestFixture]
+    public class SpotifyFollowedArtistsFixture : CoreTest<SpotifyFollowedArtists>
+    {
+        // placeholder, we don't use real API
+        private readonly SpotifyWebAPI api = null;
+
+        [Test]
+        public void should_not_throw_if_followed_is_null()
+        {
+            Mocker.GetMock<ISpotifyProxy>().
+                Setup(x => x.GetFollowedArtists(It.IsAny<SpotifyFollowedArtists>(),
+                                                It.IsAny<SpotifyWebAPI>()))
+                .Returns(default(FollowedArtists));
+
+            var result = Subject.Fetch(api);
+
+            result.Should().BeEmpty();
+        }
+
+        [Test]
+        public void should_not_throw_if_followed_artists_is_null()
+        {
+            var followed = new FollowedArtists {
+                Artists = null
+            };
+
+            Mocker.GetMock<ISpotifyProxy>().
+                Setup(x => x.GetFollowedArtists(It.IsAny<SpotifyFollowedArtists>(),
+                                                It.IsAny<SpotifyWebAPI>()))
+                .Returns(followed);
+
+            var result = Subject.Fetch(api);
+
+            result.Should().BeEmpty();
+        }
+
+        [Test]
+        public void should_not_throw_if_followed_artist_items_is_null()
+        {
+            var followed = new FollowedArtists {
+                Artists = new CursorPaging<FullArtist> {
+                    Items = null
+                }
+            };
+
+            Mocker.GetMock<ISpotifyProxy>().
+                Setup(x => x.GetFollowedArtists(It.IsAny<SpotifyFollowedArtists>(),
+                                                It.IsAny<SpotifyWebAPI>()))
+                .Returns(followed);
+
+            var result = Subject.Fetch(api);
+
+            result.Should().BeEmpty();
+            Subject.Fetch(api);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void should_skip_bad_artist_names(string name)
+        {
+            var followed = new FollowedArtists {
+                Artists = new CursorPaging<FullArtist> {
+                    Items = new List<FullArtist> {
+                        new FullArtist {
+                            Name = name
+                        }
+                    }
+                }
+            };
+
+            Mocker.GetMock<ISpotifyProxy>().
+                Setup(x => x.GetFollowedArtists(It.IsAny<SpotifyFollowedArtists>(),
+                                                It.IsAny<SpotifyWebAPI>()))
+                .Returns(followed);
+
+            var result = Subject.Fetch(api);
+
+            result.Should().BeEmpty();
+        }
+    }
+}

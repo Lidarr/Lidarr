@@ -7,6 +7,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using SpotifyAPI.Web;
+using SpotifyAPI.Web.Models;
 
 namespace NzbDrone.Core.ImportLists.Spotify
 {
@@ -17,13 +18,14 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
     public class SpotifySavedAlbums : SpotifyImportListBase<SpotifySavedAlbumsSettings>
     {
-        public SpotifySavedAlbums(IImportListStatusService importListStatusService,
+        public SpotifySavedAlbums(ISpotifyProxy spotifyProxy,
+                                  IImportListStatusService importListStatusService,
                                   IImportListRepository importListRepository,
                                   IConfigService configService,
                                   IParsingService parsingService,
-                                  HttpClient httpClient,
+                                  IHttpClient httpClient,
                                   Logger logger)
-        : base(importListStatusService, importListRepository, configService, parsingService, httpClient, logger)
+        : base(spotifyProxy, importListStatusService, importListRepository, configService, parsingService, httpClient, logger)
         {
         }
 
@@ -33,15 +35,20 @@ namespace NzbDrone.Core.ImportLists.Spotify
         {
             var result = new List<ImportListItemInfo>();
 
-            var albums = Execute(api, (x) => x.GetSavedAlbums(50));
+            var albums = _spotifyProxy.GetSavedAlbums(this, api);
+            if (albums == null)
+            {
+                return result;
+            }
+
             _logger.Trace($"Got {albums.Total} saved albums");
 
             while (true)
             {
-                foreach (var album in albums.Items)
+                foreach (var album in albums?.Items ?? new List<SavedAlbum>())
                 {
-                    var artistName = album.Album.Artists.FirstOrDefault()?.Name;
-                    var albumName = album.Album.Name;
+                    var artistName = album?.Album?.Artists?.FirstOrDefault()?.Name;
+                    var albumName = album?.Album?.Name;
                     _logger.Trace($"Adding {artistName} - {albumName}");
 
                     if (artistName.IsNotNullOrWhiteSpace() && albumName.IsNotNullOrWhiteSpace())
@@ -55,7 +62,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
                 }
                 if (!albums.HasNextPage())
                     break;
-                albums = Execute(api, (x) => x.GetNextPage(albums));
+                albums = _spotifyProxy.GetNextPage(this, api, albums);
             }
 
             return result;
