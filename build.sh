@@ -348,6 +348,7 @@ fi
 # Only package if we haven't set only-backend or only-frontend
 if [ -z "$ONLY_BACKEND" ] && [ -z "$ONLY_FRONTEND" ];
 then
+    UpdateVersionNumber
     PackageMono
     PackageMacOS
     PackageMacOSApp
