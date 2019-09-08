@@ -46,13 +46,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
                 foreach (var artist in artists?.Items ?? new List<FullArtist>())
                 {
-                    if (artist.Name.IsNotNullOrWhiteSpace())
-                    {
-                        result.AddIfNotNull(new ImportListItemInfo
-                                            {
-                                                Artist = artist.Name,
-                                            });
-                    }
+                    result.AddIfNotNull(ParseFullArtist(artist));
                 }
 
                 if (!artists.HasNext())
@@ -64,6 +58,18 @@ namespace NzbDrone.Core.ImportLists.Spotify
             }
 
             return result;
+        }
+
+        private ImportListItemInfo ParseFullArtist(FullArtist artist)
+        {
+            if (artist.Name.IsNotNullOrWhiteSpace())
+            {
+                return new ImportListItemInfo {
+                    Artist = artist.Name,
+                };
+            }
+
+            return null;
         }
     }
 }

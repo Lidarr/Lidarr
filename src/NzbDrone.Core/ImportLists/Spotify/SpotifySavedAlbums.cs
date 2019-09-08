@@ -48,19 +48,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
                 foreach (var savedAlbum in savedAlbums?.Items ?? new List<SavedAlbum>())
                 {
-                    var artistName = savedAlbum?.Album?.Artists?.FirstOrDefault()?.Name;
-                    var albumName = savedAlbum?.Album?.Name;
-                    _logger.Trace($"Adding {artistName} - {albumName}");
-
-                    if (artistName.IsNotNullOrWhiteSpace() && albumName.IsNotNullOrWhiteSpace())
-                    {
-                        result.AddIfNotNull(new ImportListItemInfo
-                                            {
-                                                Artist = artistName,
-                                                Album = albumName,
-                                                ReleaseDate = ParseSpotifyDate(savedAlbum?.Album?.ReleaseDate, savedAlbum?.Album?.ReleaseDatePrecision)
-                                            });
-                    }
+                    result.AddIfNotNull(ParseSavedAlbum(savedAlbum));
                 }
 
                 if (!savedAlbums.HasNextPage())
@@ -72,6 +60,24 @@ namespace NzbDrone.Core.ImportLists.Spotify
             }
 
             return result;
+        }
+
+        private ImportListItemInfo ParseSavedAlbum(SavedAlbum savedAlbum)
+        {
+            var artistName = savedAlbum?.Album?.Artists?.FirstOrDefault()?.Name;
+            var albumName = savedAlbum?.Album?.Name;
+            _logger.Trace($"Adding {artistName} - {albumName}");
+
+            if (artistName.IsNotNullOrWhiteSpace() && albumName.IsNotNullOrWhiteSpace())
+            {
+                return new ImportListItemInfo {
+                    Artist = artistName,
+                    Album = albumName,
+                    ReleaseDate = ParseSpotifyDate(savedAlbum?.Album?.ReleaseDate, savedAlbum?.Album?.ReleaseDatePrecision)
+                };
+            }
+
+            return null;
         }
     }
 }

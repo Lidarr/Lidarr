@@ -49,25 +49,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
                 foreach (var playlistTrack in playlistTracks.Items ?? new List<PlaylistTrack>())
                 {
-                    var track = playlistTrack.Track;
-
-                    // From spotify docs: "Note, a track object may be null. This can happen if a track is no longer available."
-                    if (track != null && track.Album != null)
-                    {
-                        var albumName = track.Album.Name;
-                        var artistName = track.Album.Artists?.FirstOrDefault()?.Name ?? track.Artists?.FirstOrDefault()?.Name;
-
-                        if (albumName.IsNotNullOrWhiteSpace() && artistName.IsNotNullOrWhiteSpace())
-                        {
-                            result.AddIfNotNull(new ImportListItemInfo
-                                {
-                                    Artist = artistName,
-                                    Album = albumName,
-                                    ReleaseDate = ParseSpotifyDate(track.Album.ReleaseDate, track.Album.ReleaseDatePrecision)
-                                });
-                                
-                        }
-                    }
+                    result.AddIfNotNull(ParseTrack(playlistTrack.Track));
                 }
                         
                 if (!playlistTracks.HasNextPage())
@@ -79,6 +61,27 @@ namespace NzbDrone.Core.ImportLists.Spotify
             }
 
             return result;
+        }
+
+        private ImportListItemInfo ParseTrack(FullTrack track)
+        {
+            // From spotify docs: "Note, a track object may be null. This can happen if a track is no longer available."
+            if (track != null && track.Album != null)
+            {
+                var albumName = track.Album.Name;
+                var artistName = track.Album.Artists?.FirstOrDefault()?.Name ?? track.Artists?.FirstOrDefault()?.Name;
+
+                if (albumName.IsNotNullOrWhiteSpace() && artistName.IsNotNullOrWhiteSpace())
+                {
+                    return new ImportListItemInfo {
+                        Artist = artistName,
+                        Album = albumName,
+                        ReleaseDate = ParseSpotifyDate(track.Album.ReleaseDate, track.Album.ReleaseDatePrecision)
+                    };
+                }
+            }
+
+            return null;
         }
 
         public override object RequestAction(string action, IDictionary<string, string> query)
