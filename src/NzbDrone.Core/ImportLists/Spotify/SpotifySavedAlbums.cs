@@ -41,12 +41,12 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
             while (true)
             {
-                if (savedAlbums == null)
+                if (savedAlbums?.Items == null)
                 {
                     return result;
                 }
 
-                foreach (var savedAlbum in savedAlbums?.Items ?? new List<SavedAlbum>())
+                foreach (var savedAlbum in savedAlbums.Items)
                 {
                     result.AddIfNotNull(ParseSavedAlbum(savedAlbum));
                 }

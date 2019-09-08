@@ -39,12 +39,12 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
             while (true)
             {
-                if (artists == null)
+                if (artists?.Items == null)
                 {
                     return result;
                 }
 
-                foreach (var artist in artists?.Items ?? new List<FullArtist>())
+                foreach (var artist in artists.Items)
                 {
                     result.AddIfNotNull(ParseFullArtist(artist));
                 }
@@ -62,7 +62,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
         private ImportListItemInfo ParseFullArtist(FullArtist artist)
         {
-            if (artist.Name.IsNotNullOrWhiteSpace())
+            if (artist?.Name.IsNotNullOrWhiteSpace() ?? false)
             {
                 return new ImportListItemInfo {
                     Artist = artist.Name,

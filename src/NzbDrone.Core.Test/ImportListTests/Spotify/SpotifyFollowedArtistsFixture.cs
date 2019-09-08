@@ -66,6 +66,28 @@ namespace NzbDrone.Core.Test.ImportListTests
         }
 
         [Test]
+        public void should_not_throw_if_artist_is_null()
+        {
+            var followed = new FollowedArtists {
+                Artists = new CursorPaging<FullArtist> {
+                    Items = new List<FullArtist> {
+                        null
+                    }
+                }
+            };
+
+            Mocker.GetMock<ISpotifyProxy>().
+                Setup(x => x.GetFollowedArtists(It.IsAny<SpotifyFollowedArtists>(),
+                                                It.IsAny<SpotifyWebAPI>()))
+                .Returns(followed);
+
+            var result = Subject.Fetch(api);
+
+            result.Should().BeEmpty();
+            Subject.Fetch(api);
+        }
+
+        [Test]
         public void should_parse_followed_artist()
         {
             var followed = new FollowedArtists {

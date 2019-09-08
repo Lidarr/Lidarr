@@ -50,6 +50,27 @@ namespace NzbDrone.Core.Test.ImportListTests
         }
 
         [Test]
+        public void should_not_throw_if_playlist_track_is_null()
+        {
+            var playlistTracks = new Paging<PlaylistTrack> {
+                Items = new List<PlaylistTrack> {
+                    null
+                }
+            };
+
+            Mocker.GetMock<ISpotifyProxy>().
+                Setup(x => x.GetPlaylistTracks(It.IsAny<SpotifyPlaylist>(),
+                                               It.IsAny<SpotifyWebAPI>(),
+                                               It.IsAny<string>(),
+                                               It.IsAny<string>()))
+                .Returns(playlistTracks);
+
+            var result = Subject.Fetch(api, "playlistid");
+
+            result.Should().BeEmpty();
+        }
+
+        [Test]
         public void should_use_album_artist_when_it_exists()
         {
             var playlistTracks = new Paging<PlaylistTrack> {

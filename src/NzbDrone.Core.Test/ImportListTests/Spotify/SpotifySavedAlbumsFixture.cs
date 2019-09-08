@@ -45,6 +45,25 @@ namespace NzbDrone.Core.Test.ImportListTests
             result.Should().BeEmpty();
         }
 
+        [Test]
+        public void should_not_throw_if_saved_album_is_null()
+        {
+            var savedAlbums = new Paging<SavedAlbum> {
+                Items = new List<SavedAlbum> {
+                    null
+                }
+            };
+
+            Mocker.GetMock<ISpotifyProxy>().
+                Setup(x => x.GetSavedAlbums(It.IsAny<SpotifySavedAlbums>(),
+                                                It.IsAny<SpotifyWebAPI>()))
+                .Returns(savedAlbums);
+
+            var result = Subject.Fetch(api);
+
+            result.Should().BeEmpty();
+        }
+
         [TestCase("Artist", "Album")]
         public void should_parse_saved_album(string artistName, string albumName)
         {

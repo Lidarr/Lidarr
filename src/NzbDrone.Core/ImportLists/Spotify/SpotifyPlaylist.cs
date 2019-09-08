@@ -40,16 +40,17 @@ namespace NzbDrone.Core.ImportLists.Spotify
             _logger.Trace($"Processing playlist {playlistId}");
 
             var playlistTracks = _spotifyProxy.GetPlaylistTracks(this, api, playlistId, "next, items(track(name, album(name,artists)))");
+
             while (true)
             {
-                if (playlistTracks == null)
+                if (playlistTracks?.Items == null)
                 {
                     return result;
                 }
 
-                foreach (var playlistTrack in playlistTracks.Items ?? new List<PlaylistTrack>())
+                foreach (var playlistTrack in playlistTracks.Items)
                 {
-                    result.AddIfNotNull(ParseTrack(playlistTrack.Track));
+                    result.AddIfNotNull(ParsePlaylistTrack(playlistTrack));
                 }
                         
                 if (!playlistTracks.HasNextPage())
@@ -63,20 +64,21 @@ namespace NzbDrone.Core.ImportLists.Spotify
             return result;
         }
 
-        private ImportListItemInfo ParseTrack(FullTrack track)
+        private ImportListItemInfo ParsePlaylistTrack(PlaylistTrack playlistTrack)
         {
             // From spotify docs: "Note, a track object may be null. This can happen if a track is no longer available."
-            if (track != null && track.Album != null)
+            if (playlistTrack?.Track?.Album != null)
             {
-                var albumName = track.Album.Name;
-                var artistName = track.Album.Artists?.FirstOrDefault()?.Name ?? track.Artists?.FirstOrDefault()?.Name;
+                var album = playlistTrack.Track.Album;
+                var albumName = album.Name;
+                var artistName = album.Artists?.FirstOrDefault()?.Name ?? playlistTrack.Track?.Artists?.FirstOrDefault()?.Name;
 
                 if (albumName.IsNotNullOrWhiteSpace() && artistName.IsNotNullOrWhiteSpace())
                 {
                     return new ImportListItemInfo {
                         Artist = artistName,
                         Album = albumName,
-                        ReleaseDate = ParseSpotifyDate(track.Album.ReleaseDate, track.Album.ReleaseDatePrecision)
+                        ReleaseDate = ParseSpotifyDate(album.ReleaseDate, album.ReleaseDatePrecision)
                     };
                 }
             }
