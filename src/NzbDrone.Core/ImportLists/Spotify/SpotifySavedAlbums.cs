@@ -36,15 +36,16 @@ namespace NzbDrone.Core.ImportLists.Spotify
             var result = new List<ImportListItemInfo>();
 
             var albums = _spotifyProxy.GetSavedAlbums(this, api);
-            if (albums == null)
-            {
-                return result;
-            }
 
-            _logger.Trace($"Got {albums.Total} saved albums");
+            _logger.Trace($"Got {albums?.Total ?? 0} saved albums");
 
             while (true)
             {
+                if (albums == null)
+                {
+                    return result;
+                }
+
                 foreach (var album in albums?.Items ?? new List<SavedAlbum>())
                 {
                     var artistName = album?.Album?.Artists?.FirstOrDefault()?.Name;
@@ -60,8 +61,10 @@ namespace NzbDrone.Core.ImportLists.Spotify
                                             });
                     }
                 }
+
                 if (!albums.HasNextPage())
                     break;
+
                 albums = _spotifyProxy.GetNextPage(this, api, albums);
             }
 

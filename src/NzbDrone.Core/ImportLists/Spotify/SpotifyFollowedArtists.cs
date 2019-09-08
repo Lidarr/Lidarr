@@ -35,15 +35,15 @@ namespace NzbDrone.Core.ImportLists.Spotify
             var result = new List<ImportListItemInfo>();
 
             var followed = _spotifyProxy.GetFollowedArtists(this, api);
+            var artists = followed?.Artists;
 
-            if (followed == null || followed.Artists == null)
-            {
-                return result;
-            }
-
-            var artists = followed.Artists;
             while (true)
             {
+                if (artists == null)
+                {
+                    return result;
+                }
+
                 foreach (var artist in artists?.Items ?? new List<FullArtist>())
                 {
                     if (artist.Name.IsNotNullOrWhiteSpace())
@@ -54,8 +54,10 @@ namespace NzbDrone.Core.ImportLists.Spotify
                                             });
                     }
                 }
+
                 if (!artists.HasNext())
                     break;
+
                 artists = _spotifyProxy.GetNextPage(this, api, artists);
             }
 

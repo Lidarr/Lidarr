@@ -39,9 +39,15 @@ namespace NzbDrone.Core.ImportLists.Spotify
                 var playlistTracks = _spotifyProxy.GetPlaylistTracks(this, api, id, "next, items(track(name, album(name,artists)))");
                 while (true)
                 {
-                    foreach (var track in playlistTracks.Items)
+                    if (playlistTracks == null)
+                    {
+                        return result;
+                    }
+
+                    foreach (var track in playlistTracks.Items ?? new List<PlaylistTrack>())
                     {
                         var fullTrack = track.Track;
+
                         // From spotify docs: "Note, a track object may be null. This can happen if a track is no longer available."
                         if (fullTrack != null)
                         {
@@ -63,6 +69,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
                         
                     if (!playlistTracks.HasNextPage())
                         break;
+
                     playlistTracks = _spotifyProxy.GetNextPage(this, api, playlistTracks);
                 }
             }

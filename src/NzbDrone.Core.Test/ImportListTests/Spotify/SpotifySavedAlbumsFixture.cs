@@ -3,7 +3,6 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Core.ImportLists.Spotify;
-using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
 using SpotifyAPI.Web;
 using SpotifyAPI.Web.Models;
@@ -74,10 +73,51 @@ namespace NzbDrone.Core.Test.ImportListTests
             result.Should().HaveCount(1);
         }
 
+        [Test]
+        public void should_not_throw_if_get_next_page_returns_null()
+        {
+            var savedAlbums = new Paging<SavedAlbum> {
+                Items = new List<SavedAlbum> {
+                    new SavedAlbum {
+                        Album = new FullAlbum {
+                            Name = "Album",
+                            Artists = new List<SimpleArtist> {
+                                new SimpleArtist {
+                                    Name = "Artist"
+                                }
+                            }
+                        }
+                    }
+                },
+                Next = "DummyToMakeHasNextTrue"
+            };
+
+            Mocker.GetMock<ISpotifyProxy>().
+                Setup(x => x.GetSavedAlbums(It.IsAny<SpotifySavedAlbums>(),
+                                                It.IsAny<SpotifyWebAPI>()))
+                .Returns(savedAlbums);
+
+            Mocker.GetMock<ISpotifyProxy>()
+                .Setup(x => x.GetNextPage(It.IsAny<SpotifyFollowedArtists>(),
+                                          It.IsAny<SpotifyWebAPI>(),
+                                          It.IsAny<Paging<SavedAlbum>>()))
+                .Returns(default(Paging<SavedAlbum>));
+
+            var result = Subject.Fetch(api);
+
+            result.Should().HaveCount(1);
+
+            Mocker.GetMock<ISpotifyProxy>()
+                .Verify(x => x.GetNextPage(It.IsAny<SpotifySavedAlbums>(),
+                                           It.IsAny<SpotifyWebAPI>(),
+                                           It.IsAny<Paging<SavedAlbum>>()),
+                        Times.Once());
+        }
+
         [TestCase(null, "Album")]
         [TestCase("Artist", null)]
         [TestCase(null, null)]
-        public void should_skip_bad_artist_names(string artistName, string albumName)
+        public void should_skip_bad_artist_or_album_names(string artistName, string albumName)
         {
             var savedAlbums = new Paging<SavedAlbum> {
                 Items = new List<SavedAlbum> {

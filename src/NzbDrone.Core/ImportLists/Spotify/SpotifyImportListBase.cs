@@ -22,13 +22,13 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
         protected ISpotifyProxy _spotifyProxy;
 
-        public SpotifyImportListBase(ISpotifyProxy spotifyProxy,
-                                     IImportListStatusService importListStatusService,
-                                     IImportListRepository importListRepository,
-                                     IConfigService configService,
-                                     IParsingService parsingService,
-                                     IHttpClient httpClient,
-                                     Logger logger)
+        protected SpotifyImportListBase(ISpotifyProxy spotifyProxy,
+                                        IImportListStatusService importListStatusService,
+                                        IImportListRepository importListRepository,
+                                        IConfigService configService,
+                                        IParsingService parsingService,
+                                        IHttpClient httpClient,
+                                        Logger logger)
         : base(importListStatusService, configService, parsingService, logger)
         {
             _httpClient = httpClient;
