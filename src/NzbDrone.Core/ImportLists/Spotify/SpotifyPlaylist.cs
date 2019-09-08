@@ -30,48 +30,52 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
         public override IList<ImportListItemInfo> Fetch(SpotifyWebAPI api)
         {
+            return Settings.PlaylistIds.SelectMany(x => Fetch(api, x)).ToList();
+        }
+
+        public IList<ImportListItemInfo> Fetch(SpotifyWebAPI api, string playlistId)
+        {
             var result = new List<ImportListItemInfo>();
 
-            foreach (var id in Settings.PlaylistIds)
+            _logger.Trace($"Processing playlist {playlistId}");
+
+            var playlistTracks = _spotifyProxy.GetPlaylistTracks(this, api, playlistId, "next, items(track(name, album(name,artists)))");
+            while (true)
             {
-                _logger.Trace($"Processing playlist {id}");
-
-                var playlistTracks = _spotifyProxy.GetPlaylistTracks(this, api, id, "next, items(track(name, album(name,artists)))");
-                while (true)
+                if (playlistTracks == null)
                 {
-                    if (playlistTracks == null)
-                    {
-                        return result;
-                    }
+                    return result;
+                }
 
-                    foreach (var track in playlistTracks.Items ?? new List<PlaylistTrack>())
-                    {
-                        var fullTrack = track.Track;
+                foreach (var playlistTrack in playlistTracks.Items ?? new List<PlaylistTrack>())
+                {
+                    var track = playlistTrack.Track;
 
-                        // From spotify docs: "Note, a track object may be null. This can happen if a track is no longer available."
-                        if (fullTrack != null)
+                    // From spotify docs: "Note, a track object may be null. This can happen if a track is no longer available."
+                    if (track != null && track.Album != null)
+                    {
+                        var albumName = track.Album.Name;
+                        var artistName = track.Album.Artists?.FirstOrDefault()?.Name ?? track.Artists?.FirstOrDefault()?.Name;
+
+                        if (albumName.IsNotNullOrWhiteSpace() && artistName.IsNotNullOrWhiteSpace())
                         {
-                            var album = fullTrack.Album?.Name;
-                            var artist = fullTrack.Album?.Artists?.FirstOrDefault()?.Name ?? fullTrack.Artists.FirstOrDefault()?.Name;
-
-                            if (album.IsNotNullOrWhiteSpace() && artist.IsNotNullOrWhiteSpace())
-                            {
-                                result.AddIfNotNull(new ImportListItemInfo
-                                                    {
-                                                        Artist = artist,
-                                                        Album = album,
-                                                        ReleaseDate = ParseSpotifyDate(fullTrack.Album.ReleaseDate, fullTrack.Album.ReleaseDatePrecision)
-                                                    });
+                            result.AddIfNotNull(new ImportListItemInfo
+                                {
+                                    Artist = artistName,
+                                    Album = albumName,
+                                    ReleaseDate = ParseSpotifyDate(track.Album.ReleaseDate, track.Album.ReleaseDatePrecision)
+                                });
                                 
-                            }
                         }
                     }
-                        
-                    if (!playlistTracks.HasNextPage())
-                        break;
-
-                    playlistTracks = _spotifyProxy.GetNextPage(this, api, playlistTracks);
                 }
+                        
+                if (!playlistTracks.HasNextPage())
+                {
+                    break;
+                }
+
+                playlistTracks = _spotifyProxy.GetNextPage(this, api, playlistTracks);
             }
 
             return result;
@@ -102,10 +106,18 @@ namespace NzbDrone.Core.ImportLists.Spotify
                         var playlists = new List<SimplePlaylist>(playlistPage.Total);
                         while (true)
                         {
+                            if (playlistPage == null)
+                            {
+                                break;
+                            }
+
                             playlists.AddRange(playlistPage.Items);
 
                             if (!playlistPage.HasNextPage())
+                            {
                                 break;
+                            }
+
                             playlistPage = _spotifyProxy.GetNextPage(this, api, playlistPage);
                         }
 

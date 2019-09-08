@@ -35,21 +35,21 @@ namespace NzbDrone.Core.ImportLists.Spotify
         {
             var result = new List<ImportListItemInfo>();
 
-            var albums = _spotifyProxy.GetSavedAlbums(this, api);
+            var savedAlbums = _spotifyProxy.GetSavedAlbums(this, api);
 
-            _logger.Trace($"Got {albums?.Total ?? 0} saved albums");
+            _logger.Trace($"Got {savedAlbums?.Total ?? 0} saved albums");
 
             while (true)
             {
-                if (albums == null)
+                if (savedAlbums == null)
                 {
                     return result;
                 }
 
-                foreach (var album in albums?.Items ?? new List<SavedAlbum>())
+                foreach (var savedAlbum in savedAlbums?.Items ?? new List<SavedAlbum>())
                 {
-                    var artistName = album?.Album?.Artists?.FirstOrDefault()?.Name;
-                    var albumName = album?.Album?.Name;
+                    var artistName = savedAlbum?.Album?.Artists?.FirstOrDefault()?.Name;
+                    var albumName = savedAlbum?.Album?.Name;
                     _logger.Trace($"Adding {artistName} - {albumName}");
 
                     if (artistName.IsNotNullOrWhiteSpace() && albumName.IsNotNullOrWhiteSpace())
@@ -57,15 +57,18 @@ namespace NzbDrone.Core.ImportLists.Spotify
                         result.AddIfNotNull(new ImportListItemInfo
                                             {
                                                 Artist = artistName,
-                                                Album = albumName
+                                                Album = albumName,
+                                                ReleaseDate = ParseSpotifyDate(savedAlbum?.Album?.ReleaseDate, savedAlbum?.Album?.ReleaseDatePrecision)
                                             });
                     }
                 }
 
-                if (!albums.HasNextPage())
+                if (!savedAlbums.HasNextPage())
+                {
                     break;
+                }
 
-                albums = _spotifyProxy.GetNextPage(this, api, albums);
+                savedAlbums = _spotifyProxy.GetNextPage(this, api, savedAlbums);
             }
 
             return result;

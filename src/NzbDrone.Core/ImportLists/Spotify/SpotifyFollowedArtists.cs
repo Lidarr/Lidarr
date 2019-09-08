@@ -34,8 +34,8 @@ namespace NzbDrone.Core.ImportLists.Spotify
         {
             var result = new List<ImportListItemInfo>();
 
-            var followed = _spotifyProxy.GetFollowedArtists(this, api);
-            var artists = followed?.Artists;
+            var followedArtists = _spotifyProxy.GetFollowedArtists(this, api);
+            var artists = followedArtists?.Artists;
 
             while (true)
             {
@@ -56,7 +56,9 @@ namespace NzbDrone.Core.ImportLists.Spotify
                 }
 
                 if (!artists.HasNext())
+                {
                     break;
+                }
 
                 artists = _spotifyProxy.GetNextPage(this, api, artists);
             }
