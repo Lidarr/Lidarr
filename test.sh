@@ -25,7 +25,7 @@ export LIDARR_TESTS_LOG_OUTPUT="File"
 
 NUNIT="$TEST_DIR/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe"
 NUNIT_COMMAND="$NUNIT"
-NUNIT_PARAMS="--workers=1"
+NUNIT_PARAMS=""
 
 if [ "$PLATFORM" = "Mac" ]; then
 
@@ -53,6 +53,7 @@ if [ "$TYPE" = "Unit" ]; then
   WHERE="$WHERE && cat != IntegrationTest && cat != AutomationTest"
 elif [ "$TYPE" = "Integration" ] || [ "$TYPE" = "int" ] ; then
   WHERE="$WHERE && cat == IntegrationTest"
+  NUNIT_PARAMS="--workers=1"
 elif [ "$TYPE" = "Automation" ] ; then
   WHERE="$WHERE && cat == AutomationTest"
 else

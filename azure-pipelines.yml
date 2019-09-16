@@ -100,40 +100,6 @@ stages:
         artifact: '$(osName)Frontend'
         displayName: Publish Frontend
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
-        
-  - stage: Installer
-    dependsOn:
-    - Build_Backend
-    - Build_Frontend
-    jobs:
-    - job: Windows_Installer
-      displayName: Create Installer
-      pool:
-        vmImage: 'vs2017-win2016'
-      steps:
-      - checkout: self
-        fetchDepth: 1
-      - task: DownloadPipelineArtifact@2
-        inputs:
-          buildType: 'current'
-          artifactName: WindowsBackend
-          targetPath: _output
-        displayName: Fetch Backend
-      - task: DownloadPipelineArtifact@2
-        inputs:
-          buildType: 'current'
-          artifactName: WindowsFrontend
-          targetPath: _output
-        displayName: Fetch Frontend
-      - bash: ./build.sh --packages
-        displayName: Create Packages
-      - bash: |
-          ./setup/inno/ISCC.exe "./setup/lidarr.iss"
-          cp ./setup/output/Lidarr.*windows.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/${WINDOWSINSTALLER}
-        displayName: Create Windows installer
-      - publish: $(Build.ArtifactStagingDirectory)
-        artifact: 'WindowsInstaller'
-        displayName: Publish Installer
 
   - stage: Packages
     dependsOn:
@@ -222,6 +188,40 @@ stages:
         env:
           SENTRY_AUTH_TOKEN: $(sentryAuthToken)
           SENTRY_ORG: $(sentryOrg)
+
+  - stage: Installer
+    dependsOn:
+    - Build_Backend
+    - Build_Frontend
+    jobs:
+    - job: Windows_Installer
+      displayName: Create Installer
+      pool:
+        vmImage: 'vs2017-win2016'
+      steps:
+      - checkout: self
+        fetchDepth: 1
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: WindowsBackend
+          targetPath: _output
+        displayName: Fetch Backend
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: WindowsFrontend
+          targetPath: _output
+        displayName: Fetch Frontend
+      - bash: ./build.sh --packages
+        displayName: Create Packages
+      - bash: |
+          ./setup/inno/ISCC.exe "./setup/lidarr.iss"
+          cp ./setup/output/Lidarr.*windows.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/${WINDOWSINSTALLER}
+        displayName: Create Windows installer
+      - publish: $(Build.ArtifactStagingDirectory)
+        artifact: 'WindowsInstaller'
+        displayName: Publish Installer
     
   - stage: Unit_Test
     displayName: Unit Tests
@@ -448,7 +448,7 @@ stages:
 
       container: $[ variables['containerImage'] ]
 
-      timeoutInMinutes: 15
+      timeoutInMinutes: 6
         
       steps:
       - bash: mono --version
@@ -499,16 +499,6 @@ stages:
     - job: Automation
       strategy:
         matrix:
-          Linux:
-            osName: 'Linux'
-            imageName: 'ubuntu-16.04'
-            pattern: 'Lidarr.**.linux.tar.gz'
-            failBuild: true
-          Mac:
-            osName: 'Mac'
-            imageName: 'macos-10.13' # Fails due to firefox not being installed on image
-            pattern: 'Lidarr.**.osx.tar.gz'
-            failBuild: false
           Windows:
             osName: 'Windows'
             imageName: 'vs2017-win2016'
@@ -542,27 +532,22 @@ stages:
           mkdir -p ./bin/
           cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
         displayName: Move Package Contents
-      - bash: |
-          if [[ $OSNAME == "Mac" ]]; then
-          url=https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-macos.tar.gz
-          elif [[ $OSNAME == "Linux" ]]; then
-          url=https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
-          else
-          echo "Unhandled OS"
-          exit 1
-          fi
-          curl -s -L "$url" | tar -xz
-          chmod +x geckodriver
-          mv geckodriver _tests
-        displayName: Install Gecko Driver
-        condition: and(succeeded(), ne(variables['osName'], 'Windows'))
-      - bash: ls -lR
+      - script: |
+          call bin\serviceinstall.exe
+        displayName: Start Lidarr Service
       - task: Bash@3
         displayName: Run Automation Tests
         inputs:
           targetType: 'filePath'
           filePath: '$(testsFolder)/test.sh'
           arguments: $(osName) Automation Test
+        env:
+          BROWSERSTACK_USERNAME: $(browserStackUser)
+          BROWSERSTACK_ACCESS_KEY: $(browserStackKey)
+      - script: |
+          call sc stop lidarr
+          call bin\serviceuninstall.exe
+        displayName: Stop and Remove Lidarr Service
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'

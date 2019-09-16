@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -7,6 +8,7 @@ using NLog.Targets;
 using NUnit.Framework;
 using NzbDrone.Automation.Test.PageModel;
 using NzbDrone.Common.EnvironmentInfo;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Test.Common;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
@@ -32,8 +34,16 @@ namespace NzbDrone.Automation.Test
         }
 
         [OneTimeSetUp]
-        public void SmokeTestSetup()
+        public virtual void SmokeTestSetup()
         {
+            string username = Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME");
+            string accessKey = Environment.GetEnvironmentVariable("BROWSERSTACK_ACCESS_KEY");
+
+            if (username.IsNotNullOrWhiteSpace() && accessKey.IsNotNullOrWhiteSpace())
+            {
+                Assert.Ignore("BrowserStack Tests Enabled, Don't Run Normal Automation Tests");
+            }
+
             var options = new FirefoxOptions();
             options.AddArguments("--headless");
             driver = new FirefoxDriver(options);
@@ -59,7 +69,7 @@ namespace NzbDrone.Automation.Test
         }
 
         [OneTimeTearDown]
-        public void SmokeTestTearDown()
+        public virtual void SmokeTestTearDown()
         {
             _runner.KillAll();
             driver.Quit();

@@ -144,8 +144,7 @@ Build()
 YarnInstall()
 {
     ProgressStart 'yarn install'
-    yarn install
-    #npm-cache install npm || CheckExitCode npm install --no-optional --no-bin-links
+    yarn install --frozen-lockfile
     ProgressEnd 'yarn install'
 }
 
