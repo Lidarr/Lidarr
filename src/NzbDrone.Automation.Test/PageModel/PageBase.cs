@@ -8,12 +8,25 @@ namespace NzbDrone.Automation.Test.PageModel
 {
     public class PageBase
     {
-        private readonly RemoteWebDriver _driver;
+        protected readonly RemoteWebDriver _driver;
 
         public PageBase(RemoteWebDriver driver)
         {
             _driver = driver;
-            driver.Manage().Window.Maximize();
+            MaximizeWindow();
+        }
+
+        public virtual void MaximizeWindow()
+        {
+            _driver.Manage().Window.Maximize();
+        }
+
+        public virtual void OpenSidebar()
+        {
+        }
+
+        public virtual void CloseSidebar()
+        {
         }
 
         public IWebElement FindByClass(string className, int timeout = 5)
@@ -47,16 +60,58 @@ namespace NzbDrone.Automation.Test.PageModel
             });
         }
 
-        public IWebElement LibraryNavIcon => Find(By.LinkText("Library"));
+        public virtual IWebElement LibraryNavIcon
+        {
+            get
+            {
+                OpenSidebar();
+                return Find(By.LinkText("Library"));
+            }
+        }
 
-        public IWebElement CalendarNavIcon => Find(By.LinkText("Calendar"));
+        public virtual IWebElement CalendarNavIcon
+        {
+            get
+            {
+                OpenSidebar();
+                return Find(By.LinkText("Calendar"));
+            }
+        }
 
-        public IWebElement ActivityNavIcon => Find(By.LinkText("Activity"));
+        public virtual IWebElement ActivityNavIcon
+        {
+            get
+            {
+                OpenSidebar();
+                return Find(By.LinkText("Activity"));
+            }
+        }
 
-        public IWebElement WantedNavIcon => Find(By.LinkText("Wanted"));
+        public virtual IWebElement WantedNavIcon
+        {
+            get
+            {
+                OpenSidebar();
+                return Find(By.LinkText("Wanted"));
+            }
+        }
 
-        public IWebElement SettingNavIcon => Find(By.LinkText("Settings"));
+        public virtual IWebElement SettingNavIcon
+        {
+            get
+            {
+                OpenSidebar();
+                return Find(By.LinkText("Setting"));
+            }
+        }
 
-        public IWebElement SystemNavIcon => Find(By.PartialLinkText("System"));
+        public virtual IWebElement SystemNavIcon
+        {
+            get
+            {
+                OpenSidebar();
+                return Find(By.PartialLinkText("System"));
+            }
+        }
     }
 }

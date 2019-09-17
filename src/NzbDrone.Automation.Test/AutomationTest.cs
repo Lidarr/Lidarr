@@ -20,7 +20,7 @@ namespace NzbDrone.Automation.Test
     [AutomationTest]
     public abstract class AutomationTest
     {
-        private NzbDroneRunner _runner;
+        protected NzbDroneRunner _runner;
         protected RemoteWebDriver driver;
 
         public AutomationTest()
@@ -64,21 +64,21 @@ namespace NzbDrone.Automation.Test
 
         protected IEnumerable<string> GetPageErrors()
         {
-            return driver.FindElements(By.CssSelector("#errors div"))
+            return driver?.FindElements(By.CssSelector("#errors div"))
                 .Select(e => e.Text);
         }
 
         [OneTimeTearDown]
         public virtual void SmokeTestTearDown()
         {
-            _runner.KillAll();
-            driver.Quit();
+            _runner?.KillAll();
+            driver?.Quit();
         }
 
         [TearDown]
         public void AutomationTearDown()
         {
-            GetPageErrors().Should().BeEmpty();
+            GetPageErrors().Should().BeNullOrEmpty();
         }
     }
 }

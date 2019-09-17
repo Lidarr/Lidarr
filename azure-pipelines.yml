@@ -499,6 +499,16 @@ stages:
     - job: Automation
       strategy:
         matrix:
+          Linux:
+            osName: 'Linux'
+            imageName: 'ubuntu-16.04'
+            pattern: 'Lidarr.**.linux.tar.gz'
+            failBuild: true
+          Mac:
+            osName: 'Mac'
+            imageName: 'macos-10.13' # Fails due to firefox not being installed on image
+            pattern: 'Lidarr.**.osx.tar.gz'
+            failBuild: true
           Windows:
             osName: 'Windows'
             imageName: 'vs2017-win2016'
@@ -532,9 +542,6 @@ stages:
           mkdir -p ./bin/
           cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
         displayName: Move Package Contents
-      - script: |
-          call bin\serviceinstall.exe
-        displayName: Start Lidarr Service
       - task: Bash@3
         displayName: Run Automation Tests
         inputs:
@@ -544,10 +551,6 @@ stages:
         env:
           BROWSERSTACK_USERNAME: $(browserStackUser)
           BROWSERSTACK_ACCESS_KEY: $(browserStackKey)
-      - script: |
-          call sc stop lidarr
-          call bin\serviceuninstall.exe
-        displayName: Stop and Remove Lidarr Service
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'

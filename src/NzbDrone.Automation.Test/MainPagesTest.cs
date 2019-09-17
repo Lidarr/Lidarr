@@ -8,10 +8,10 @@ namespace NzbDrone.Automation.Test
     [TestFixture]
     public class MainPagesTest : AutomationTest
     {
-        private PageBase page;
+        protected PageBase page;
 
         [SetUp]
-        public void Setup()
+        public virtual void Setup()
         {
             page = new PageBase(driver);
         }
@@ -22,6 +22,8 @@ namespace NzbDrone.Automation.Test
             page.LibraryNavIcon.Click();
             page.WaitForNoSpinner();
             page.Find(By.CssSelector("div[class*='ArtistIndex']")).Should().NotBeNull();
+
+            page.CloseSidebar();
         }
 
         [Test]
@@ -42,6 +44,8 @@ namespace NzbDrone.Automation.Test
             page.Find(By.LinkText("Queue")).Should().NotBeNull();
             page.Find(By.LinkText("History")).Should().NotBeNull();
             page.Find(By.LinkText("Blacklist")).Should().NotBeNull();
+
+            page.CloseSidebar();
         }
 
         [Test]
@@ -52,6 +56,8 @@ namespace NzbDrone.Automation.Test
 
             page.Find(By.LinkText("Missing")).Should().NotBeNull();
             page.Find(By.LinkText("Cutoff Unmet")).Should().NotBeNull();
+
+            page.CloseSidebar();
         }
 
         [Test]
@@ -61,6 +67,7 @@ namespace NzbDrone.Automation.Test
             page.WaitForNoSpinner();
 
             page.Find(By.CssSelector("div[class*='Health']")).Should().NotBeNull();
+            page.CloseSidebar();
         }
 
         [Test]

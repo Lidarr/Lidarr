@@ -20,11 +20,14 @@ namespace NzbDrone.Test.Common
 
         public string AppData { get; private set; }
         public string ApiKey { get; private set; }
+        public int Port { get; private set; }
 
         public NzbDroneRunner(Logger logger, int port = 8686)
         {
             _processProvider = new ProcessProvider(logger);
-            _restClient = new RestClient("http://localhost:8686/api/v1");
+            _restClient = new RestClient($"http://localhost:{port}/api/v1");
+
+            Port = port;
         }
 
         public void Start()
@@ -72,6 +75,23 @@ namespace NzbDrone.Test.Common
 
                 Thread.Sleep(500);
             }
+        }
+
+        public void Kill()
+        {
+            try
+            {
+                if (_nzbDroneProcess != null)
+                {
+                    _processProvider.Kill(_nzbDroneProcess.Id);
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                // May happen if the process closes while being closed
+            }
+
+            TestBase.DeleteTempFolder(AppData);
         }
 
         public void KillAll()
@@ -124,7 +144,8 @@ namespace NzbDrone.Test.Common
                 new XDeclaration("1.0", "utf-8", "yes"), 
                 new XElement(ConfigFileProvider.CONFIG_ELEMENT_NAME,
                              new XElement(nameof(ConfigFileProvider.ApiKey), apiKey),
-                             new XElement(nameof(ConfigFileProvider.AnalyticsEnabled), false)
+                             new XElement(nameof(ConfigFileProvider.AnalyticsEnabled), false),
+                             new XElement(nameof(ConfigFileProvider.Port), Port)
                     )
                 );
 

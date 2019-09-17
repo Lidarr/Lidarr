@@ -4,11 +4,15 @@
     <Platforms>x86</Platforms>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BrowserStackLocal" Version="1.4.0" />
     <PackageReference Include="Selenium.Firefox.WebDriver" Version="0.24.0" />
     <PackageReference Include="Selenium.Support" Version="3.141.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Test.Common\Lidarr.Test.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Posix">
+      <HintPath>..\Libraries\Mono.Posix.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
