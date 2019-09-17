@@ -119,7 +119,7 @@
     "streamqueue": "1.1.2",
     "style-loader": "0.23.1",
     "stylelint": "10.1.0",
-    "stylelint-order": "3.0.1",
+    "stylelint-order": "3.1.1",
     "uglifyjs-webpack-plugin": "2.2.0",
     "url-loader": "2.1.0",
     "webpack": "4.39.3",
