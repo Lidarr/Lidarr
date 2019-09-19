@@ -50,7 +50,7 @@ namespace NzbDrone.Automation.Test.PageModel
             {
                 try
                 {
-                    IWebElement element = d.FindElement(By.Id("followingBalls"));
+                    IWebElement element = d.FindElement(By.CssSelector("div[class*='LoadingIndicator']"));
                     return !element.Displayed;
                 }
                 catch (NoSuchElementException)

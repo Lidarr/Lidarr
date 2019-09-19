@@ -19,10 +19,14 @@ using OpenQA.Selenium.Remote;
 
 namespace NzbDrone.Automation.Test
 {
-    [TestFixture]
-    [AutomationTest]
+    [TestFixture("", "Windows", "10", "Chrome", "63", 9901)]
+    [TestFixture("", "Windows", "10", "Firefox", "67", 9902)]
+    [TestFixture("", "Windows", "10", "Edge", "18", 9903)]
+    [TestFixture("", "OS X", "Mojave", "Safari", "12.1", 9904)]
+    // [TestFixture("iPhone X", "", "11", "iPhone", "", 9905)]
+    // [TestFixture("Samsung Galaxy S9 Plus", "", "9.0", "android", "", 9906)]
     [Parallelizable(ParallelScope.Fixtures)]
-    public abstract class BrowserStackAutomationTest : MainPagesTest
+    public class BrowserStackAutomationTest : MainPagesTest
     {
         protected string browser;
         protected string browserVersion;
@@ -77,7 +81,7 @@ namespace NzbDrone.Automation.Test
             capabilities.SetCapability("browserstack.localIdentifier", browserstackLocalIdentifier);
             capabilities.SetCapability("browserstack.debug", "true");
             capabilities.SetCapability("browserstack.console", "verbose");
-            capabilities.SetCapability("name", "Functional Tests: " + serverOs + " - " +  browser);
+            capabilities.SetCapability("name", string.Format("Functional Tests: {0} - {1}", serverOs, browser));
             capabilities.SetCapability("project", "Lidarr");
             capabilities.SetCapability("build", buildName);
 
@@ -125,7 +129,12 @@ namespace NzbDrone.Automation.Test
         public override void SmokeTestTearDown()
         {
             driver?.Quit();
-            _browserStackLocalProcess?.Kill();
+
+            if (_browserStackLocalProcess != null && !_browserStackLocalProcess.HasExited)
+            {
+                _browserStackLocalProcess.Kill();
+            }
+
             _runner?.Kill();
         }
 
@@ -178,9 +187,9 @@ namespace NzbDrone.Automation.Test
                     }
                 });
 
-            if (!processStarted.Wait(5000))
+            if (!processStarted.Wait(10000))
             {
-                Assert.Fail("Failed to start browserstack within 5 sec");
+                Assert.Fail("Failed to start browserstack within 10 sec");
             }
 
             TestContext.Progress.WriteLine($"Successfully started browserstacklocal pid {process.Id}");

@@ -25,6 +25,15 @@ namespace NzbDrone.Automation.Test
 
         public AutomationTest()
         {
+            string username = Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME");
+            string accessKey = Environment.GetEnvironmentVariable("BROWSERSTACK_ACCESS_KEY");
+            string testType = this.GetType().Name;
+
+            if (username.IsNotNullOrWhiteSpace() && accessKey.IsNotNullOrWhiteSpace() && !testType.Contains("BrowserStack"))
+            {
+                Assert.Ignore("BrowserStack Tests Enabled, Don't Run Normal Automation Tests");
+            }
+
             new StartupContext();
 
             LogManager.Configuration = new LoggingConfiguration();
@@ -36,14 +45,6 @@ namespace NzbDrone.Automation.Test
         [OneTimeSetUp]
         public virtual void SmokeTestSetup()
         {
-            string username = Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME");
-            string accessKey = Environment.GetEnvironmentVariable("BROWSERSTACK_ACCESS_KEY");
-
-            if (username.IsNotNullOrWhiteSpace() && accessKey.IsNotNullOrWhiteSpace())
-            {
-                Assert.Ignore("BrowserStack Tests Enabled, Don't Run Normal Automation Tests");
-            }
-
             var options = new FirefoxOptions();
             options.AddArguments("--headless");
             driver = new FirefoxDriver(options);
