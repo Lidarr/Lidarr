@@ -1,0 +1,27 @@
+<Project>
+  <Import Project="PublishAllRids.targets" />
+
+  <PropertyGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' and
+                            '$(IsWindows)' == 'true' and
+                            '$(RuntimeIdentifier)' == ''">
+    <_UsingDefaultRuntimeIdentifier>true</_UsingDefaultRuntimeIdentifier>
+    <RuntimeIdentifier Condition="'$(PlatformTarget)' == 'x64'">win-x64</RuntimeIdentifier>
+    <RuntimeIdentifier Condition="'$(PlatformTarget)' == 'x86' or '$(PlatformTarget)' == ''">win-x86</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' and
+                            '$(IsLinux)' == 'true' and
+                            '$(RuntimeIdentifier)' == ''">
+    <_UsingDefaultRuntimeIdentifier>true</_UsingDefaultRuntimeIdentifier>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' and
+                            '$(IsOSX)' == 'true' and
+                            '$(RuntimeIdentifier)' == ''">
+    <_UsingDefaultRuntimeIdentifier>true</_UsingDefaultRuntimeIdentifier>
+    <RuntimeIdentifier>osx-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <Import Project="MonoFacades.targets" Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' and !$(RuntimeIdentifier.StartsWith('win'))" />
+</Project>

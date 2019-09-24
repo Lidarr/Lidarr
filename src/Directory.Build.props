@@ -1,6 +1,33 @@
 <Project>
+  <!-- 
+       Note OS so we can set default RuntimeIdentifier later.
+       Check Windows and OSX (where we distribute binaries manually)
+       Otherwise fall back to 'Linux'
+  -->
+  <Choose>
+    <When Condition="'$(OS)' == 'Windows_NT'">
+      <PropertyGroup>
+        <IsWindows>true</IsWindows>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">
+      <PropertyGroup>
+        <IsOSX>true</IsOSX>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <IsLinux>true</IsLinux>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  
   <!-- Common to all Lidarr Projects -->
   <PropertyGroup>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    <RuntimeIdentifiers>win-x64;osx-x64;linux-x64</RuntimeIdentifiers>
+
     <LidarrRootDir>$(MSBuildThisFileDirectory)..\</LidarrRootDir>
 
     <!-- Specifies the type of output -->
@@ -71,10 +98,15 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <!-- We don't want separate framework directories till we go dotnet core -->
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-
     <!-- For now keep the NzbDrone namespace -->
     <RootNamespace Condition="'$(LidarrProject)'=='true'">$(MSBuildProjectName.Replace('Lidarr','NzbDrone'))</RootNamespace>
   </PropertyGroup>
+
+  <!-- Allow building net framework using mono -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 </Project>
