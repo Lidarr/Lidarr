@@ -1,14 +1,17 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import createArtistSelector from 'Store/Selectors/createArtistSelector';
+import createAlbumTrackFilesSelector from 'Store/Selectors/createAlbumTrackFilesSelector';
 import CutoffUnmetRow from './CutoffUnmetRow';
 
 function createMapStateToProps() {
   return createSelector(
     createArtistSelector(),
-    (artist) => {
+    createAlbumTrackFilesSelector(),
+    (artist, trackFiles) => {
       return {
-        artist
+        artist,
+        trackFiles
       };
     }
   );

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import TableRow from 'Components/Table/TableRow';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import formatTimeSpan from 'Utilities/Date/formatTimeSpan';
-import EpisodeStatusConnector from 'Album/EpisodeStatusConnector';
+import TrackStatusConnector from './TrackStatusConnector';
 import MediaInfoConnector from 'TrackFile/MediaInfoConnector';
 import TrackActionsCell from './TrackActionsCell';
 import * as mediaInfoTypes from 'TrackFile/mediaInfoTypes';
@@ -129,7 +129,7 @@ class TrackRow extends Component {
                   key={name}
                   className={styles.status}
                 >
-                  <EpisodeStatusConnector
+                  <TrackStatusConnector
                     albumId={id}
                     trackFileId={trackFileId}
                   />

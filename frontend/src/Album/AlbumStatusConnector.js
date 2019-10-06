@@ -5,23 +5,21 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import createAlbumSelector from 'Store/Selectors/createAlbumSelector';
 import createQueueItemSelector from 'Store/Selectors/createQueueItemSelector';
-import createTrackFileSelector from 'Store/Selectors/createTrackFileSelector';
-import EpisodeStatus from './EpisodeStatus';
+// import createTrackFileSelector from 'Store/Selectors/createTrackFileSelector';
+import AlbumStatus from './AlbumStatus';
 
 function createMapStateToProps() {
   return createSelector(
     createAlbumSelector(),
     createQueueItemSelector(),
-    createTrackFileSelector(),
-    (album, queueItem, trackFile) => {
+    (album, queueItem) => {
       const result = _.pick(album, [
-        'airDateUtc',
+        'releaseDate',
         'monitored',
         'grabbed'
       ]);
 
       result.queueItem = queueItem;
-      result.trackFile = trackFile;
 
       return result;
     }
@@ -31,23 +29,22 @@ function createMapStateToProps() {
 const mapDispatchToProps = {
 };
 
-class EpisodeStatusConnector extends Component {
+class AlbumStatusConnector extends Component {
 
   //
   // Render
 
   render() {
     return (
-      <EpisodeStatus
+      <AlbumStatus
         {...this.props}
       />
     );
   }
 }
 
-EpisodeStatusConnector.propTypes = {
-  albumId: PropTypes.number.isRequired,
-  trackFileId: PropTypes.number.isRequired
+AlbumStatusConnector.propTypes = {
+  albumId: PropTypes.number.isRequired
 };
 
-export default connect(createMapStateToProps, mapDispatchToProps)(EpisodeStatusConnector);
+export default connect(createMapStateToProps, mapDispatchToProps)(AlbumStatusConnector);

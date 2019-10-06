@@ -5,12 +5,12 @@ import { icons, kinds, sizes } from 'Helpers/Props';
 import Icon from 'Components/Icon';
 import ProgressBar from 'Components/ProgressBar';
 import QueueDetails from 'Activity/Queue/QueueDetails';
-import TrackQuality from './TrackQuality';
-import styles from './EpisodeStatus.css';
+import TrackQuality from 'Album/TrackQuality';
+import styles from './TrackStatus.css';
 
-function EpisodeStatus(props) {
+function TrackStatus(props) {
   const {
-    airDateUtc,
+    releaseDate,
     monitored,
     grabbed,
     queueItem,
@@ -19,7 +19,7 @@ function EpisodeStatus(props) {
 
   const hasTrackFile = !!trackFile;
   const isQueued = !!queueItem;
-  const hasAired = isBefore(airDateUtc);
+  const hasReleased = isBefore(releaseDate);
 
   if (isQueued) {
     const {
@@ -73,7 +73,7 @@ function EpisodeStatus(props) {
     );
   }
 
-  if (!airDateUtc) {
+  if (!releaseDate) {
     return (
       <div className={styles.center}>
         <Icon
@@ -95,7 +95,7 @@ function EpisodeStatus(props) {
     );
   }
 
-  if (hasAired) {
+  if (hasReleased) {
     return (
       <div className={styles.center}>
         <Icon
@@ -110,18 +110,18 @@ function EpisodeStatus(props) {
     <div className={styles.center}>
       <Icon
         name={icons.NOT_AIRED}
-        title="Album has not aired"
+        title="Album has not released"
       />
     </div>
   );
 }
 
-EpisodeStatus.propTypes = {
-  airDateUtc: PropTypes.string,
+TrackStatus.propTypes = {
+  releaseDate: PropTypes.string,
   monitored: PropTypes.bool,
   grabbed: PropTypes.bool,
   queueItem: PropTypes.object,
   trackFile: PropTypes.object
 };
 
-export default EpisodeStatus;
+export default TrackStatus;

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import albumEntities from 'Album/albumEntities';
 import AlbumTitleLink from 'Album/AlbumTitleLink';
-import EpisodeStatusConnector from 'Album/EpisodeStatusConnector';
+import AlbumStatusConnector from 'Album/AlbumStatusConnector';
 import AlbumSearchCellConnector from 'Album/AlbumSearchCellConnector';
 import ArtistNameLink from 'Artist/ArtistNameLink';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
@@ -14,8 +14,8 @@ import styles from './CutoffUnmetRow.css';
 function CutoffUnmetRow(props) {
   const {
     id,
-    trackFileId,
     artist,
+    trackFiles,
     releaseDate,
     foreignAlbumId,
     albumType,
@@ -95,9 +95,9 @@ function CutoffUnmetRow(props) {
                 key={name}
                 className={styles.status}
               >
-                <EpisodeStatusConnector
+                <AlbumStatusConnector
                   albumId={id}
-                  trackFileId={trackFileId}
+                  trackFiles={trackFiles}
                   albumEntity={albumEntities.WANTED_CUTOFF_UNMET}
                 />
               </TableRowCell>
@@ -126,8 +126,8 @@ function CutoffUnmetRow(props) {
 
 CutoffUnmetRow.propTypes = {
   id: PropTypes.number.isRequired,
-  trackFileId: PropTypes.number,
   artist: PropTypes.object.isRequired,
+  trackFiles: PropTypes.arrayOf(PropTypes.object),
   releaseDate: PropTypes.string.isRequired,
   foreignAlbumId: PropTypes.string.isRequired,
   albumType: PropTypes.string.isRequired,
