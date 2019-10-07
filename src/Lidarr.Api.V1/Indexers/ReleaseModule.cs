@@ -159,9 +159,8 @@ namespace Lidarr.Api.V1.Indexers
             catch (Exception ex)
             {
                 _logger.Error(ex, "Album search failed");
+                throw new NzbDroneClientException(HttpStatusCode.InternalServerError, ex.Message);
             }
-
-            return new List<ReleaseResource>();
         }
 
         private List<ReleaseResource> GetArtistReleases(int artistId)
@@ -176,9 +175,8 @@ namespace Lidarr.Api.V1.Indexers
             catch (Exception ex)
             {
                 _logger.Error(ex, "Artist search failed");
+                throw new NzbDroneClientException(HttpStatusCode.InternalServerError, ex.Message);
             }
-
-            return new List<ReleaseResource>();
         }
 
         private List<ReleaseResource> GetRss()
