@@ -87,7 +87,15 @@ namespace NzbDrone.Core.Music
             }
             catch (ArtistNotFoundException)
             {
-                _logger.Error($"Could not find artist with id {local.Metadata.Value.ForeignArtistId}");
+                if (local.Metadata.Value.Status != ArtistStatusType.Deleted)
+                {
+                    local.Metadata.Value.Status = ArtistStatusType.Deleted;
+                    _artistService.UpdateArtist(local);
+                    _logger.Debug("Artist marked as deleted on MusicBrainz for {0}", local.Name);
+                    _eventAggregator.PublishEvent(new ArtistUpdatedEvent(local));
+                }
+
+                _logger.Error($"Artist '{local.Name}' (mbid {local.Metadata.Value.ForeignArtistId}) was not found, it may have been removed from MusicBrainz.");
             }
 
             return result;

@@ -136,7 +136,7 @@ namespace NzbDrone.Core.HealthCheck
 
         public void Execute(CheckHealthCommand message)
         {
-            var healthChecks = message.Trigger == CommandTrigger.Manual ? _healthChecks  : _scheduledHealthChecks;
+            var healthChecks = message.Trigger == CommandTrigger.Manual ? _healthChecks : _scheduledHealthChecks;
 
             lock (_pendingHealthChecks)
             {

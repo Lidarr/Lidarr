@@ -42,9 +42,9 @@ namespace NzbDrone.Core.Music
                     return false;
                 }
 
-                if (artist.Metadata.Value.Status == ArtistStatusType.Continuing && artist.LastInfoSync < DateTime.UtcNow.AddDays(-2))
+                if (artist.Metadata.Value.Status != ArtistStatusType.Ended && artist.LastInfoSync < DateTime.UtcNow.AddDays(-2))
                 {
-                    _logger.Trace("Artist {0} is continuing and has not been refreshed in 2 days, should refresh.", artist.Name);
+                    _logger.Trace("Artist {0} is not ended and has not been refreshed in 2 days, should refresh.", artist.Name);
                     return true;
                 }
 
@@ -52,7 +52,7 @@ namespace NzbDrone.Core.Music
 
                 if (lastAlbum != null && lastAlbum.ReleaseDate > DateTime.UtcNow.AddDays(-30))
                 {
-                    _logger.Trace("Last album in {0} aired less than 30 days ago, should refresh.", artist.Name);
+                    _logger.Trace("Last album in {0} released less than 30 days ago, should refresh.", artist.Name);
                     return true;
                 }
 
