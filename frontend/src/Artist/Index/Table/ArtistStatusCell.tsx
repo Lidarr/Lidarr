@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import { getArtistStatusDetails } from 'Artist/ArtistStatus';
 import Icon from 'Components/Icon';
 import MonitorToggleButton from 'Components/MonitorToggleButton';
 import VirtualTableRowCell from 'Components/Table/Cells/TableRowCell';
@@ -11,9 +12,9 @@ import styles from './ArtistStatusCell.css';
 interface ArtistStatusCellProps {
   className: string;
   artistId: number;
-  artistType?: string;
   monitored: boolean;
   status: string;
+  artistType?: string;
   isSelectMode: boolean;
   isSaving: boolean;
   component?: React.ElementType;
@@ -23,17 +24,16 @@ function ArtistStatusCell(props: ArtistStatusCellProps) {
   const {
     className,
     artistId,
-    artistType,
     monitored,
     status,
+    artistType,
     isSelectMode,
     isSaving,
     component: Component = VirtualTableRowCell,
     ...otherProps
   } = props;
 
-  const endedString =
-    artistType === 'Person' ? translate('Deceased') : translate('Inactive');
+  const statusDetails = getArtistStatusDetails(status, artistType);
   const dispatch = useDispatch();
 
   const onMonitoredPress = useCallback(() => {
@@ -63,10 +63,8 @@ function ArtistStatusCell(props: ArtistStatusCellProps) {
 
       <Icon
         className={styles.statusIcon}
-        name={status === 'ended' ? icons.ARTIST_ENDED : icons.ARTIST_CONTINUING}
-        title={
-          status === 'ended' ? endedString : translate('StatusEndedContinuing')
-        }
+        name={statusDetails.icon}
+        title={`${statusDetails.title}: ${statusDetails.message}`}
       />
     </Component>
   );
