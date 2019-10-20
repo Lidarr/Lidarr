@@ -33,6 +33,7 @@ import translate from 'Utilities/String/translate';
 import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
 import InteractiveImportModal from '../../InteractiveImport/InteractiveImportModal';
+import { getArtistStatusDetails } from '../ArtistStatus';
 import ArtistAlternateTitles from './ArtistAlternateTitles';
 import ArtistDetailsLinks from './ArtistDetailsLinks';
 import ArtistDetailsSeasonConnector from './ArtistDetailsSeasonConnector';
@@ -213,7 +214,8 @@ class ArtistDetails extends Component {
       nextArtist,
       onMonitorTogglePress,
       onRefreshPress,
-      onSearchPress
+      onSearchPress,
+      artistType
     } = this.props;
 
     const {
@@ -236,8 +238,7 @@ class ArtistDetails extends Component {
       expandedState
     } = this.state;
 
-    const continuing = status === 'continuing';
-    const endedString = artistType === 'Person' ? translate('Deceased') : translate('Inactive');
+    const statusDetails = getArtistStatusDetails(status, artistType);
 
     let trackFilesCountMessage = translate('TrackFilesCountMessage');
 
@@ -526,16 +527,16 @@ class ArtistDetails extends Component {
 
                   <Label
                     className={styles.detailsLabel}
-                    title={continuing ? translate('ContinuingMoreAlbumsAreExpected') : translate('ContinuingNoAdditionalAlbumsAreExpected')}
+                    title={statusDetails.message}
                     size={sizes.LARGE}
                   >
                     <Icon
-                      name={continuing ? icons.ARTIST_CONTINUING : icons.ARTIST_ENDED}
+                      name={statusDetails.icon}
                       size={17}
                     />
 
                     <span className={styles.qualityProfileName}>
-                      {continuing ? translate('Continuing') : endedString}
+                      {statusDetails.title}
                     </span>
                   </Label>
 
