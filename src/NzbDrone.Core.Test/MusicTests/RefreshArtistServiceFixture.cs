@@ -43,7 +43,9 @@ namespace NzbDrone.Core.Test.MusicTests
             _remoteAlbums = _albums.JsonClone();
             _remoteAlbums.ForEach(x => x.Id = 0);
 
-            var metadata = Builder<ArtistMetadata>.CreateNew().Build();
+            var metadata = Builder<ArtistMetadata>.CreateNew()
+                .With(m => m.Status = ArtistStatusType.Continuing)
+                .Build();
 
             _artist = Builder<Artist>.CreateNew()
                 .With(a => a.Metadata = metadata)
@@ -52,6 +54,14 @@ namespace NzbDrone.Core.Test.MusicTests
             Mocker.GetMock<IArtistService>(MockBehavior.Strict)
                   .Setup(s => s.GetArtists(new List<int> { _artist.Id }))
                   .Returns(new List<Artist> { _artist });
+
+            Mocker.GetMock<IArtistService>(MockBehavior.Strict)
+                  .Setup(s => s.GetArtist(It.IsAny<int>()))
+                  .Returns(_artist);
+
+            Mocker.GetMock<IArtistService>(MockBehavior.Strict)
+                  .Setup(s => s.FindById(It.IsAny<string>()))
+                  .Returns(default(Artist));
 
             Mocker.GetMock<IAlbumService>(MockBehavior.Strict)
                 .Setup(s => s.InsertMany(It.IsAny<List<Album>>()));
@@ -109,8 +119,12 @@ namespace NzbDrone.Core.Test.MusicTests
         private void AllowArtistUpdate()
         {
             Mocker.GetMock<IArtistService>(MockBehavior.Strict)
-                .Setup(x => x.UpdateArtist(It.IsAny<Artist>(), It.IsAny<bool>()))
-                .Returns((Artist a, bool updated) => a);
+                .Setup(x => x.UpdateArtist(It.IsAny<Artist>(), true))
+                .Returns((Artist a, bool publishEvent) => a);
+
+            Mocker.GetMock<IArtistService>(MockBehavior.Strict)
+                .Setup(x => x.UpdateArtist(It.IsAny<Artist>(), false))
+                .Returns((Artist a, bool publishEvent) => a);
         }
 
         [Test]
@@ -177,13 +191,16 @@ namespace NzbDrone.Core.Test.MusicTests
         [Test]
         public void should_log_error_and_delete_if_musicbrainz_id_not_found_and_author_has_no_files()
         {
+            GivenAlbumsForRefresh(new List<Album>());
+            AllowArtistUpdate();
+
             Mocker.GetMock<IArtistService>()
                 .Setup(x => x.DeleteArtist(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()));
 
             Subject.Execute(new RefreshArtistCommand(new List<int> { _artist.Id }));
 
             Mocker.GetMock<IArtistService>()
-                .Verify(v => v.UpdateArtist(It.IsAny<Artist>(), It.IsAny<bool>()), Times.Never());
+                .Verify(v => v.UpdateArtist(It.Is<Artist>(s => s.Metadata.Value.Status == ArtistStatusType.Deleted), true), Times.Once());
 
             Mocker.GetMock<IArtistService>()
                 .Verify(v => v.DeleteArtist(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Once());
@@ -197,16 +214,53 @@ namespace NzbDrone.Core.Test.MusicTests
         {
             GivenArtistFiles();
             GivenAlbumsForRefresh(new List<Album>());
+            AllowArtistUpdate();
+
+            Subject.Execute(new RefreshArtistCommand(new List<int> { _artist.Id }));
+
+            Mocker.GetMock<IArtistService>()
+                .Verify(v => v.UpdateArtist(It.Is<Artist>(s => s.Metadata.Value.Status == ArtistStatusType.Deleted), true), Times.Once());
+
+            Mocker.GetMock<IArtistService>()
+                .Verify(v => v.DeleteArtist(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never());
+
+            ExceptionVerification.ExpectedErrors(2);
+        }
+
+        [Test]
+        public void should_log_error_if_musicbrainz_id_not_found()
+        {
+            GivenAlbumsForRefresh(new List<Album>());
+            AllowArtistUpdate();
+
+            Mocker.GetMock<IArtistService>()
+                .Setup(x => x.DeleteArtist(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()));
+
+            Subject.Execute(new RefreshArtistCommand(new List<int> { _artist.Id }));
+
+            Mocker.GetMock<IArtistService>()
+                .Verify(v => v.UpdateArtist(It.Is<Artist>(s => s.Metadata.Value.Status == ArtistStatusType.Deleted), It.IsAny<bool>()), Times.Once());
+
+            ExceptionVerification.ExpectedErrors(1);
+            ExceptionVerification.ExpectedWarns(1);
+        }
+
+        [Test]
+        public void should_not_remark_as_deleted_if_musicbrainz_id_not_found()
+        {
+            _artist.Metadata.Value.Status = ArtistStatusType.Deleted;
+            GivenAlbumsForRefresh(new List<Album>());
+
+            Mocker.GetMock<IArtistService>()
+                .Setup(x => x.DeleteArtist(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()));
 
             Subject.Execute(new RefreshArtistCommand(new List<int> { _artist.Id }));
 
             Mocker.GetMock<IArtistService>()
                 .Verify(v => v.UpdateArtist(It.IsAny<Artist>(), It.IsAny<bool>()), Times.Never());
 
-            Mocker.GetMock<IArtistService>()
-                .Verify(v => v.DeleteArtist(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never());
-
-            ExceptionVerification.ExpectedErrors(2);
+            ExceptionVerification.ExpectedErrors(1);
+            ExceptionVerification.ExpectedWarns(1);
         }
 
         [Test]
