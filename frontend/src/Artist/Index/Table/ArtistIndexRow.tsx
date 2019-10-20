@@ -164,7 +164,6 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
               key={name}
               className={styles[name]}
               artistId={artistId}
-              artistType={artistType}
               monitored={monitored}
               status={status}
               isSelectMode={isSelectMode}
