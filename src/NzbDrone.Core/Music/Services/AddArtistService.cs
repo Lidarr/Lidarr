@@ -90,6 +90,7 @@ namespace NzbDrone.Core.Music
                         _logger.Debug("Musicbrainz ID {0} was not added due to validation failure: Artist already exists in database", s.ForeignArtistId);
                         continue;
                     }
+
                     if (artistsToAdd.Any(f => f.ForeignArtistId == artist.ForeignArtistId))
                     {
                         _logger.Debug("Musicbrainz ID {0} was not added due to validation failure: Artist already exists on list", s.ForeignArtistId);
