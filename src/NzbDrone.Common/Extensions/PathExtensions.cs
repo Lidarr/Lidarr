@@ -217,17 +217,19 @@ namespace NzbDrone.Common.Extensions
             return null;
         }
 
-        public static string ProcessNameToExe(this string processName, Version version)
+        public static string ProcessNameToExe(this string processName, PlatformType runtime)
         {
-            // Windows always has exe (but is shunted to net core)
-            // Linux is kept on mono pending manual upgrade to net core so has .exe
-            // macOS is shunted to net core and does not have .exe
-            if (OsInfo.IsWindows || OsInfo.IsLinux || (version.Major == 0 && version.Minor == 7))
+            if (OsInfo.IsWindows || runtime != PlatformType.NetCore)
             {
                 processName += ".exe";
             }
 
             return processName;
+        }
+
+        public static string ProcessNameToExe(this string processName)
+        {
+            return processName.ProcessNameToExe(PlatformInfo.Platform);
         }
 
         public static string GetAppDataPath(this IAppFolderInfo appFolderInfo)
@@ -290,9 +292,9 @@ namespace NzbDrone.Common.Extensions
             return Path.Combine(GetUpdatePackageFolder(appFolderInfo), UPDATE_CLIENT_FOLDER_NAME);
         }
 
-        public static string GetUpdateClientExePath(this IAppFolderInfo appFolderInfo, Version version)
+        public static string GetUpdateClientExePath(this IAppFolderInfo appFolderInfo, PlatformType runtime)
         {
-            return Path.Combine(GetUpdateSandboxFolder(appFolderInfo), UPDATE_CLIENT_EXE_NAME).ProcessNameToExe(version);
+            return Path.Combine(GetUpdateSandboxFolder(appFolderInfo), UPDATE_CLIENT_EXE_NAME).ProcessNameToExe(runtime);
         }
 
         public static string GetDatabase(this IAppFolderInfo appFolderInfo)

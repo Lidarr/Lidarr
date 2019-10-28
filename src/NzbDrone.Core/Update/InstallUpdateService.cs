@@ -132,6 +132,7 @@ namespace NzbDrone.Core.Update
             _diskTransferService.TransferFolder(_appFolderInfo.GetUpdateClientFolder(), updateSandboxFolder, TransferMode.Move, false);
 
             // Set executable flag on update app
+<<<<<<< HEAD
             if (OsInfo.IsOsx)
             {
                 _diskProvider.SetPermissions(_appFolderInfo.GetUpdateClientExePath(updatePackage.Version), "0755", null, null);
@@ -141,6 +142,17 @@ namespace NzbDrone.Core.Update
             _logger.ProgressInfo("Lidarr will restart shortly.");
 
             _processProvider.Start(_appFolderInfo.GetUpdateClientExePath(updatePackage.Version), GetUpdaterArgs(updateSandboxFolder));
+=======
+            if (OsInfo.IsOsx || (OsInfo.IsLinux && PlatformInfo.IsNetCore))
+            {
+                _diskProvider.SetPermissions(_appFolderInfo.GetUpdateClientExePath(updatePackage.Runtime), "0755", null, null);
+            }
+
+            _logger.Info("Starting update client {0}", _appFolderInfo.GetUpdateClientExePath(updatePackage.Runtime));
+            _logger.ProgressInfo("Lidarr will restart shortly.");
+
+            _processProvider.Start(_appFolderInfo.GetUpdateClientExePath(updatePackage.Runtime), GetUpdaterArgs(updateSandboxFolder));
+>>>>>>> 4346c76d4... New: Multi target net framework 4.6.2 and net core 3.0
         }
 
         private void EnsureValidBranch(UpdatePackage package)
