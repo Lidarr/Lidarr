@@ -110,6 +110,12 @@ namespace NzbDrone.Core.Jobs
 
                     new ScheduledTask
                     {
+                        Interval = 24 * 60,
+                        TypeName = typeof(CleanUpRecycleBinCommand).FullName
+                    },
+
+                    new ScheduledTask
+                    {
                         Interval = GetBackupInterval(),
                         TypeName = typeof(BackupCommand).FullName
                     },
