@@ -123,10 +123,27 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     AddNewArtists = false
                 };
 
-                var decision = _importDecisionMaker.GetImportDecisions(files, null, null, config);
-                var result = MapItem(decision.First(), downloadId, replaceExistingFiles, false);
+                var decisions = _importDecisionMaker.GetImportDecisions(files, null, null, config);
 
-                return new List<ManualImportItem> { result };
+                if (decisions.Any())
+                {
+                    var result = MapItem(decisions.First(), downloadId, replaceExistingFiles, false);
+                    return new List<ManualImportItem> { result };
+                }
+
+                return new List<ManualImportItem>
+                {
+                    new ManualImportItem()
+                    {
+                        Id = HashConverter.GetHashInt31(path),
+                        DownloadId = downloadId,
+                        Path = path,
+                        Name = Path.GetFileNameWithoutExtension(path),
+                        Size = _diskProvider.GetFileSize(path),
+                        Rejections = new List<Rejection> { new Rejection("Unable to process file") },
+                        ReplaceExistingFiles = replaceExistingFiles
+                    }
+                };
             }
 
             return ProcessFolder(path, downloadId, artist, filter, replaceExistingFiles);
