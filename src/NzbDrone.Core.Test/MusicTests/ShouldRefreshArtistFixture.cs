@@ -34,6 +34,11 @@ namespace NzbDrone.Core.Test.MusicTests
             _artist.Metadata.Value.Status = ArtistStatusType.Ended;
         }
 
+        private void GivenArtistIsDeleted()
+        {
+            _artist.Metadata.Value.Status = ArtistStatusType.Deleted;
+        }
+
         private void GivenArtistLastRefreshedMonthsAgo()
         {
             _artist.LastInfoSync = DateTime.UtcNow.AddDays(-90);
@@ -113,7 +118,7 @@ namespace NzbDrone.Core.Test.MusicTests
         }
 
         [Test]
-        public void should_return_false_when_recently_refreshed_ended_show_has_not_aired_for_30_days()
+        public void should_return_false_when_recently_refreshed_ended_artist_has_not_released_for_30_days()
         {
             GivenArtistIsEnded();
             GivenArtistLastRefreshedYesterday();
@@ -122,7 +127,7 @@ namespace NzbDrone.Core.Test.MusicTests
         }
 
         [Test]
-        public void should_return_false_when_recently_refreshed_ended_show_aired_in_last_30_days()
+        public void should_return_false_when_recently_refreshed_ended_artist_released_in_last_30_days()
         {
             GivenArtistIsEnded();
             GivenArtistLastRefreshedRecently();
@@ -130,6 +135,15 @@ namespace NzbDrone.Core.Test.MusicTests
             GivenRecentlyAired();
 
             Subject.ShouldRefresh(_artist).Should().BeFalse();
+        }
+
+        [Test]
+        public void should_return_true_if_deleted_artist_last_refreshed_more_than_2_days_ago()
+        {
+            GivenArtistLastRefreshedThreeDaysAgo();
+            GivenArtistIsDeleted();
+
+            Subject.ShouldRefresh(_artist).Should().BeTrue();
         }
     }
 }
