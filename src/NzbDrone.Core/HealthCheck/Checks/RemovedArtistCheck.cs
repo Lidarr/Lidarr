@@ -9,6 +9,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
 {
     [CheckOn(typeof(ArtistUpdatedEvent))]
     [CheckOn(typeof(ArtistsDeletedEvent), CheckOnCondition.FailedOnly)]
+    [CheckOn(typeof(ArtistRefreshCompleteEvent))]
     public class RemovedArtistCheck : HealthCheckBase, ICheckOnCondition<ArtistUpdatedEvent>, ICheckOnCondition<ArtistsDeletedEvent>
     {
         private readonly IArtistService _artistService;
