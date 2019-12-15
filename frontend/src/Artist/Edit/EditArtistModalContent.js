@@ -146,6 +146,7 @@ class EditArtistModalContent extends Component {
                     type={inputTypes.METADATA_PROFILE_SELECT}
                     name="metadataProfileId"
                     helpText="Changes will take place on next artist refresh"
+                    includeNone={true}
                     {...metadataProfileId}
                     onChange={onInputChange}
                   />
