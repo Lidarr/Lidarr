@@ -19,7 +19,7 @@ const defaultFontSize = parseInt(fonts.defaultFontSize);
 const lineHeight = parseFloat(fonts.lineHeight);
 
 function calculateHeight(rowHeight, isSmallScreen) {
-  let height = rowHeight - 45;
+  let height = rowHeight - 70;
 
   if (isSmallScreen) {
     height -= columnPaddingSmallScreen;
@@ -223,7 +223,6 @@ class AddNewAlbumSearchResult extends Component {
           artistName={artist.artistName}
           overview={overview}
           images={images}
-          releases={releases}
           onModalClose={this.onAddAlbumModalClose}
         />
       </div>
