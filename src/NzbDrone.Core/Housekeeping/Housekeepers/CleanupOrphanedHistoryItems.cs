@@ -15,6 +15,7 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
         {
             CleanupOrphanedByArtist();
             CleanupOrphanedByAlbum();
+            CleanupOrphanedByTrack();
         }
 
         private void CleanupOrphanedByArtist()
@@ -39,6 +40,18 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
                                      LEFT OUTER JOIN Albums
                                      ON History.AlbumId = Albums.Id
                                      WHERE Albums.Id IS NULL)");
+        }
+
+        private void CleanupOrphanedByTrack()
+        {
+            var mapper = _database.GetDataMapper();
+
+            mapper.ExecuteNonQuery(@"DELETE FROM History
+                                     WHERE Id IN (
+                                     SELECT History.Id FROM History
+                                     LEFT OUTER JOIN Tracks
+                                     ON History.TrackId = Tracks.Id
+                                     WHERE Tracks.Id IS NULL)");
         }
     }
 }

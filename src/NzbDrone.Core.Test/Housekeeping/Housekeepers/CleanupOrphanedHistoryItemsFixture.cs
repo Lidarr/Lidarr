@@ -13,6 +13,7 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
     {
         private Artist _artist;
         private Album _album;
+        private Track _track;
 
         [SetUp]
         public void Setup()
@@ -21,6 +22,9 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
                                      .BuildNew();
 
             _album = Builder<Album>.CreateNew()
+                .BuildNew();
+
+            _track = Builder<Track>.CreateNew()
                 .BuildNew();
         }
 
@@ -34,14 +38,21 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
             Db.Insert(_album);
         }
 
+        private void GivenTrack()
+        {
+            Db.Insert(_track);
+        }
+
         [Test]
         public void should_delete_orphaned_items_by_artist()
         {
             GivenAlbum();
+            GivenTrack();
 
             var history = Builder<History.History>.CreateNew()
                                                   .With(h => h.Quality = new QualityModel())
                                                   .With(h => h.AlbumId = _album.Id)
+                                                  .With(h => h.TrackId = _track.Id)
                                                   .BuildNew();
             Db.Insert(history);
 
@@ -53,10 +64,29 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
         public void should_delete_orphaned_items_by_album()
         {
             GivenArtist();
+            GivenTrack();
 
             var history = Builder<History.History>.CreateNew()
                                                   .With(h => h.Quality = new QualityModel())
                                                   .With(h => h.ArtistId = _artist.Id)
+                                                  .With(h => h.TrackId = _track.Id)
+                                                  .BuildNew();
+            Db.Insert(history);
+
+            Subject.Clean();
+            AllStoredModels.Should().BeEmpty();
+        }
+
+        [Test]
+        public void should_delete_orphaned_items_by_track()
+        {
+            GivenArtist();
+            GivenAlbum();
+
+            var history = Builder<History.History>.CreateNew()
+                                                  .With(h => h.Quality = new QualityModel())
+                                                  .With(h => h.ArtistId = _artist.Id)
+                                                  .With(h => h.AlbumId = _album.Id)
                                                   .BuildNew();
             Db.Insert(history);
 
@@ -69,6 +99,7 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
         {
             GivenArtist();
             GivenAlbum();
+            GivenTrack();
 
             var history = Builder<History.History>.CreateListOfSize(2)
                                                   .All()
@@ -90,6 +121,7 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
         {
             GivenArtist();
             GivenAlbum();
+            GivenTrack();
 
             var history = Builder<History.History>.CreateListOfSize(2)
                                                   .All()
@@ -104,6 +136,29 @@ namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
             Subject.Clean();
             AllStoredModels.Should().HaveCount(1);
             AllStoredModels.Should().Contain(h => h.AlbumId == _album.Id);
+        }
+
+        [Test]
+        public void should_not_delete_unorphaned_data_by_track()
+        {
+            GivenArtist();
+            GivenAlbum();
+            GivenTrack();
+
+            var history = Builder<History.History>.CreateListOfSize(2)
+                                                  .All()
+                                                  .With(h => h.Quality = new QualityModel())
+                                                  .With(h => h.ArtistId = _artist.Id)
+                                                  .With(h => h.AlbumId = _album.Id)
+                                                  .TheFirst(1)
+                                                  .With(h => h.TrackId = _track.Id)
+                                                  .BuildListOfNew();
+
+            Db.InsertMany(history);
+
+            Subject.Clean();
+            AllStoredModels.Should().HaveCount(1);
+            AllStoredModels.Should().Contain(h => h.TrackId == _track.Id);
         }
     }
 }
