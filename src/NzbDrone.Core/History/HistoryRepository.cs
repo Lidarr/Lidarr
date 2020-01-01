@@ -18,6 +18,8 @@ namespace NzbDrone.Core.History
         List<History> GetByAlbum(int albumId, HistoryEventType? eventType);
         List<History> FindDownloadHistory(int idArtistId, QualityModel quality);
         void DeleteForArtist(int artistId);
+        void DeleteForAlbum(int albumId);
+        void DeleteForTrack(int trackId);
         List<History> Since(DateTime date, HistoryEventType? eventType);
 
     }
@@ -95,6 +97,16 @@ namespace NzbDrone.Core.History
         public void DeleteForArtist(int artistId)
         {
             Delete(c => c.ArtistId == artistId);
+        }
+
+        public void DeleteForAlbum(int albumId)
+        {
+            Delete(c => c.AlbumId == albumId);
+        }
+
+        public void DeleteForTrack(int trackId)
+        {
+            Delete(c => c.TrackId == trackId);
         }
 
         protected override SortBuilder<History> GetPagedQuery(QueryBuilder<History> query, PagingSpec<History> pagingSpec)

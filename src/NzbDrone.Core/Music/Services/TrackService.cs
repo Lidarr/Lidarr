@@ -32,12 +32,15 @@ namespace NzbDrone.Core.Music
                                 IHandle<TrackFileDeletedEvent>
     {
         private readonly ITrackRepository _trackRepository;
+        private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
         public TrackService(ITrackRepository trackRepository,
+                            IEventAggregator eventAggregator,
                             Logger logger)
         {
             _trackRepository = trackRepository;
+            _eventAggregator = eventAggregator;
             _logger = logger;
         }
 
@@ -115,6 +118,10 @@ namespace NzbDrone.Core.Music
         public void DeleteMany(List<Track> tracks)
         {
             _trackRepository.DeleteMany(tracks);
+            foreach (var track in tracks)
+            {
+                _eventAggregator.PublishEvent(new TrackDeletedEvent(track));
+            }
         }
 
         public void SetFileIds(List<Track> tracks)

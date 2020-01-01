@@ -39,7 +39,9 @@ namespace NzbDrone.Core.History
                                   IHandle<TrackFileDeletedEvent>,
                                   IHandle<TrackFileRenamedEvent>,
                                   IHandle<TrackFileRetaggedEvent>,
-                                  IHandle<ArtistDeletedEvent>
+                                  IHandle<ArtistDeletedEvent>,
+                                  IHandle<TrackDeletedEvent>,
+                                  IHandle<AlbumDeletedEvent>
     {
         private readonly IHistoryRepository _historyRepository;
         private readonly Logger _logger;
@@ -370,6 +372,16 @@ namespace NzbDrone.Core.History
         public void Handle(ArtistDeletedEvent message)
         {
             _historyRepository.DeleteForArtist(message.Artist.Id);
+        }
+
+        public void Handle(AlbumDeletedEvent message)
+        {
+            _historyRepository.DeleteForAlbum(message.Album.Id);
+        }
+
+        public void Handle(TrackDeletedEvent message)
+        {
+            _historyRepository.DeleteForTrack(message.Track.Id);
         }
 
         public List<History> Since(DateTime date, HistoryEventType? eventType)
