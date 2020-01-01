@@ -16,6 +16,7 @@ namespace NzbDrone.Core.History
         List<History> FindByDownloadId(string downloadId);
         List<History> GetByArtist(int artistId, HistoryEventType? eventType);
         List<History> GetByAlbum(int albumId, HistoryEventType? eventType);
+        List<History> GetByTrack(int trackId, HistoryEventType? eventType);
         List<History> FindDownloadHistory(int idArtistId, QualityModel quality);
         void DeleteForArtist(int artistId);
         void DeleteForAlbum(int albumId);
@@ -72,6 +73,21 @@ namespace NzbDrone.Core.History
         {
             var query = Query.Join<History, Album>(JoinType.Inner, h => h.Album, (h, e) => h.AlbumId == e.Id)
                 .Where(h => h.AlbumId == albumId);
+
+            if (eventType.HasValue)
+            {
+                query.AndWhere(h => h.EventType == eventType);
+            }
+
+            query.OrderByDescending(h => h.Date);
+
+            return query;
+        }
+
+        public List<History> GetByTrack(int trackId, HistoryEventType? eventType)
+        {
+            var query = Query.Join<History, Track>(JoinType.Inner, h => h.Track, (h, e) => h.TrackId == e.Id)
+                .Where(h => h.TrackId == trackId);
 
             if (eventType.HasValue)
             {

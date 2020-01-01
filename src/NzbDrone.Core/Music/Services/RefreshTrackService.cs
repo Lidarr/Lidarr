@@ -1,4 +1,5 @@
 using NLog;
+using NzbDrone.Core.History;
 using NzbDrone.Core.MediaFiles;
 using System;
 using System.Collections.Generic;
@@ -15,14 +16,17 @@ namespace NzbDrone.Core.Music
     {
         private readonly ITrackService _trackService;
         private readonly IAudioTagService _audioTagService;
+        private readonly IHistoryService _historyService;
         private readonly Logger _logger;
 
         public RefreshTrackService(ITrackService trackService,
                                    IAudioTagService audioTagService,
+                                   IHistoryService historyService,
                                    Logger logger)
         {
             _trackService = trackService;
             _audioTagService = audioTagService;
+            _historyService = historyService;
             _logger = logger;
         }
 
@@ -51,6 +55,10 @@ namespace NzbDrone.Core.Music
                 {
                     mergeTarget.TrackFileId = trackToMerge.TrackFileId;
                 }
+
+                var items = _historyService.GetByTrack(trackToMerge.Id, null);
+                items.ForEach(x => x.TrackId = mergeTarget.Id);
+                _historyService.UpdateMany(items);
 
                 if (!updateList.Contains(mergeTarget))
                 {
