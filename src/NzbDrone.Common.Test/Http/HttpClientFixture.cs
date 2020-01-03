@@ -629,7 +629,7 @@ namespace NzbDrone.Common.Test.Http
         [Test]
         public void should_call_interceptor()
         {
-            Mocker.SetConstant<IEnumerable<IHttpRequestInterceptor>>(new [] { Mocker.GetMock<IHttpRequestInterceptor>().Object });
+            Mocker.SetConstant<IEnumerable<IHttpRequestInterceptor>>(new[] { Mocker.GetMock<IHttpRequestInterceptor>().Object });
 
             Mocker.GetMock<IHttpRequestInterceptor>()
                 .Setup(v => v.PreRequest(It.IsAny<HttpRequest>()))
