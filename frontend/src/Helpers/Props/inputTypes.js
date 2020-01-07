@@ -18,6 +18,7 @@ export const SELECT = 'select';
 export const SERIES_TYPE_SELECT = 'artistTypeSelect';
 export const DYNAMIC_SELECT = 'dynamicSelect';
 export const TAG = 'tag';
+export const TAG_SELECT = 'tagSelect';
 export const TEXT = 'text';
 export const TEXT_TAG = 'textTag';
 export const UMASK = 'umask';
@@ -43,6 +44,7 @@ export const all = [
   DYNAMIC_SELECT,
   SERIES_TYPE_SELECT,
   TAG,
+  TAG_SELECT,
   TEXT,
   TEXT_TAG,
   UMASK

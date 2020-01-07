@@ -23,6 +23,7 @@ import QualityProfileSelectInputConnector from './QualityProfileSelectInputConne
 import RootFolderSelectInputConnector from './RootFolderSelectInputConnector';
 import SeriesTypeSelectInput from './SeriesTypeSelectInput';
 import TagInputConnector from './TagInputConnector';
+import TagSelectInputConnector from './TagSelectInputConnector';
 import TextInput from './TextInput';
 import TextTagInputConnector from './TextTagInputConnector';
 import UMaskInput from './UMaskInput';
@@ -95,6 +96,9 @@ function getComponent(type) {
 
     case inputTypes.UMASK:
       return UMaskInput;
+
+    case inputTypes.TAG_SELECT:
+      return TagSelectInputConnector;
 
     default:
       return TextInput;
