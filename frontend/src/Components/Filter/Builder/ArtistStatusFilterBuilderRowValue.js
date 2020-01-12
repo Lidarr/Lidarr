@@ -1,7 +1,7 @@
 import React from 'react';
 import FilterBuilderRowValue from './FilterBuilderRowValue';
 
-const protocols = [
+const artistStatusList = [
   { id: 'continuing', name: 'Continuing' },
   { id: 'ended', name: 'Inactive' }
 ];
@@ -9,7 +9,7 @@ const protocols = [
 function ArtistStatusFilterBuilderRowValue(props) {
   return (
     <FilterBuilderRowValue
-      tagList={protocols}
+      tagList={artistStatusList}
       {...props}
     />
   );
