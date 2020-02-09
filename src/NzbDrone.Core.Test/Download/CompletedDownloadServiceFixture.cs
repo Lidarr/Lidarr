@@ -284,6 +284,19 @@ namespace NzbDrone.Core.Test.Download
         }
 
         [Test]
+        public void should_not_mark_as_failed_if_nothing_found_to_import()
+        {
+            Mocker.GetMock<IDownloadedTracksImportService>()
+                  .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()))
+                  .Returns(new List<ImportResult>());
+
+            Subject.Process(_trackedDownload);
+
+            AssertNoCompletedDownload();
+            _trackedDownload.State.Should().NotBe(TrackedDownloadStage.ImportFailed);
+        }
+
+        [Test]
         public void should_not_mark_as_imported_if_all_files_were_skipped()
         {
             Mocker.GetMock<IDownloadedTracksImportService>()
