@@ -325,14 +325,12 @@ stages:
       - bash: find ${TESTSFOLDER} -name "Lidarr.Test.Dummy" -exec chmod a+x {} \;
         displayName: Make Test Dummy Executable
         condition: and(succeeded(), ne(variables['osName'], 'Windows'))
-      - task: Bash@3
+      - bash: |
+          chmod a+x ${TESTSFOLDER}/test.sh
+          ${TESTSFOLDER}/test.sh ${OSNAME} Unit Test
         displayName: Run Tests
         env:
           TEST_DIR: $(Build.SourcesDirectory)/_tests
-        inputs:
-          targetType: 'filePath'
-          filePath: '$(testsFolder)/test.sh'
-          arguments: '$(osName) Unit Test'
       - task: PublishTestResults@2
         displayName: Publish Test Results
         inputs:
@@ -379,12 +377,10 @@ stages:
           buildType: 'current'
           artifactName: LinuxTests
           targetPath: $(testsFolder)
-      - task: Bash@3
+      - bash: |
+          chmod a+x ${TESTSFOLDER}/test.sh
+          ${TESTSFOLDER}/test.sh Linux Unit Test
         displayName: Run Tests
-        inputs:
-          targetType: 'filePath'
-          filePath: '$(testsFolder)/test.sh'
-          arguments: 'Linux Unit Test'
       - task: PublishTestResults@2
         displayName: Publish Test Results
         inputs:
@@ -457,12 +453,10 @@ stages:
           mkdir -p ./bin/
           cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
         displayName: Move Package Contents
-      - task: Bash@3
+      - bash: |
+          chmod a+x ${TESTSFOLDER}/test.sh
+          ${TESTSFOLDER}/test.sh ${OSNAME} Integration Test
         displayName: Run Integration Tests
-        inputs:
-          targetType: 'filePath'
-          filePath: '$(testsFolder)/test.sh'
-          arguments: $(osName) Integration Test
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'
@@ -528,12 +522,10 @@ stages:
           mkdir -p ./bin/
           cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
         displayName: Move Package Contents
-      - task: Bash@3
+      - bash: |
+          chmod a+x ${TESTSFOLDER}/test.sh
+          ${TESTSFOLDER}/test.sh Linux Integration Test
         displayName: Run Integration Tests
-        inputs:
-          targetType: 'filePath'
-          filePath: '$(testsFolder)/test.sh'
-          arguments: Linux Integration Test
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'
@@ -611,12 +603,10 @@ stages:
           mv geckodriver _tests
         displayName: Install Gecko Driver
         condition: and(succeeded(), ne(variables['osName'], 'Windows'))
-      - task: Bash@3
-        displayName: Run Automation Tests
-        inputs:
-          targetType: 'filePath'
-          filePath: '$(testsFolder)/test.sh'
-          arguments: $(osName) Automation Test
+      - bash: |
+          chmod a+x ${TESTSFOLDER}/test.sh
+          ${TESTSFOLDER}/test.sh ${OSNAME} Automation Test
+        displayName: Run Integration Tests
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'
