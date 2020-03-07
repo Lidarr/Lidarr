@@ -265,15 +265,20 @@ namespace NzbDrone.Core.Music
             _eventAggregator.PublishEvent(new AlbumInfoRefreshedEvent(entity, newChildren, updateChildren));
         }
 
-        private void Rescan(List<int> artistIds, bool isNew, CommandTrigger trigger, bool infoUpdated)
+        private void Rescan(List<Artist> artists, bool isNew, CommandTrigger trigger, bool infoUpdated)
         {
             var rescanAfterRefresh = _configService.RescanAfterRefresh;
             var shouldRescan = true;
+            var folders = _rootFolderService.All().Select(x => x.Path).ToList();
 
             if (isNew)
             {
                 _logger.Trace("Forcing rescan. Reason: New artist added");
                 shouldRescan = true;
+
+                // only rescan artist folders - otherwise it can be super slow for
+                // badly organized / partly matched libraries
+                folders = artists.Select(x => x.Path).ToList();
             }
             else if (rescanAfterRefresh == RescanAfterRefreshType.Never)
             {
@@ -295,9 +300,7 @@ namespace NzbDrone.Core.Music
             {
                 // some metadata has updated so rescan unmatched
                 // (but don't add new artists to reduce repeated searches against api)
-                var folders = _rootFolderService.All().Select(x => x.Path).ToList();
-
-                _commandQueueManager.Push(new RescanFoldersCommand(folders, FilterFilesType.Matched, false, artistIds));
+                _commandQueueManager.Push(new RescanFoldersCommand(folders, FilterFilesType.Matched, false, artists.Select(x => x.Id).ToList()));
             }
         }
 
@@ -318,7 +321,7 @@ namespace NzbDrone.Core.Music
                 }
             }
 
-            Rescan(artistIds, isNew, trigger, updated);
+            Rescan(artists, isNew, trigger, updated);
         }
 
         public void Execute(BulkRefreshArtistCommand message)
@@ -371,7 +374,7 @@ namespace NzbDrone.Core.Music
                     }
                 }
 
-                Rescan(artistIds, isNew, trigger, updated);
+                Rescan(artists, isNew, trigger, updated);
             }
         }
     }
