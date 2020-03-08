@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using NLog;
 using NzbDrone.Common;
 using NzbDrone.Common.Disk;
@@ -11,12 +13,14 @@ using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Common.Processes;
 using NzbDrone.Core.Backup;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Commands;
+using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Update.Commands;
 
 namespace NzbDrone.Core.Update
 {
-    public class InstallUpdateService : IExecute<ApplicationUpdateCheckCommand>, IExecute<ApplicationUpdateCommand>
+    public class InstallUpdateService : IExecute<ApplicationUpdateCheckCommand>, IExecute<ApplicationUpdateCommand>, IHandle<ApplicationStartingEvent>
     {
         private readonly ICheckUpdateService _checkUpdateService;
         private readonly Logger _logger;
@@ -75,7 +79,7 @@ namespace NzbDrone.Core.Update
             _logger = logger;
         }
 
-        private void InstallUpdate(UpdatePackage updatePackage)
+        private bool InstallUpdate(UpdatePackage updatePackage)
         {
             EnsureAppDataSafety();
 
@@ -93,6 +97,12 @@ namespace NzbDrone.Core.Update
                 {
                     throw new UpdateFolderNotWritableException("Cannot install update because UI folder '{0}' is not writable by the user '{1}'.", uiFolder, Environment.UserName);
                 }
+            }
+
+            if (_appFolderInfo.StartUpFolder.EndsWith("_output"))
+            {
+                _logger.ProgressDebug("Running in developer environment, not updating.");
+                return false;
             }
 
             var updateSandboxFolder = _appFolderInfo.GetUpdateSandboxFolder();
@@ -130,7 +140,7 @@ namespace NzbDrone.Core.Update
             if (OsInfo.IsNotWindows && _configFileProvider.UpdateMechanism == UpdateMechanism.Script)
             {
                 InstallUpdateWithScript(updateSandboxFolder);
-                return;
+                return true;
             }
 
             _logger.Info("Preparing client");
@@ -146,6 +156,8 @@ namespace NzbDrone.Core.Update
             _logger.ProgressInfo("Lidarr will restart shortly.");
 
             _processProvider.Start(_appFolderInfo.GetUpdateClientExePath(updatePackage.Runtime), GetUpdaterArgs(updateSandboxFolder));
+
+            return true;
         }
 
         private void EnsureValidBranch(UpdatePackage package)
@@ -279,6 +291,64 @@ namespace NzbDrone.Core.Update
                     _logger.Error(ex, "Update process failed");
                     throw new CommandFailedException(ex);
                 }
+            }
+        }
+
+        public void Handle(ApplicationStartingEvent message)
+        {
+            // Check if we have to do an application update on startup
+            try
+            {
+                // Don't do a prestartup update check unless BuiltIn update is enabled
+                if (_configFileProvider.UpdateAutomatically ||
+                    _configFileProvider.UpdateMechanism != UpdateMechanism.BuiltIn ||
+                    _deploymentInfoProvider.IsExternalUpdateMechanism)
+                {
+                    return;
+                }
+
+                var updateMarker = Path.Combine(_appFolderInfo.AppDataFolder, "update_required");
+                if (!_diskProvider.FileExists(updateMarker))
+                {
+                    return;
+                }
+
+                _logger.Debug("Post-install update check requested");
+
+                var latestAvailable = _checkUpdateService.AvailableUpdate();
+                if (latestAvailable == null)
+                {
+                    _logger.Debug("No post-install update available");
+                    _diskProvider.DeleteFile(updateMarker);
+                    return;
+                }
+
+                _logger.Info("Installing post-install update from {0} to {1}", BuildInfo.Version, latestAvailable.Version);
+                _diskProvider.DeleteFile(updateMarker);
+
+                var installing = InstallUpdate(latestAvailable);
+
+                if (installing)
+                {
+                    _logger.Debug("Install in progress, giving installer 30 seconds.");
+
+                    var watch = Stopwatch.StartNew();
+
+                    while (watch.Elapsed < TimeSpan.FromSeconds(30))
+                    {
+                        Thread.Sleep(1000);
+                    }
+
+                    _logger.Error("Post-install update not completed within 30 seconds. Attempting to continue normal operation.");
+                }
+                else
+                {
+                    _logger.Debug("Post-install update cancelled for unknown reason. Attempting to continue normal operation.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Failed to perform the post-install update check. Attempting to continue normal operation.");
             }
         }
     }
