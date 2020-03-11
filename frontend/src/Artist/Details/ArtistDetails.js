@@ -657,6 +657,7 @@ class ArtistDetails extends Component {
 
           <InteractiveImportModal
             isOpen={isInteractiveImportModalOpen}
+            artistId={id}
             folder={path}
             allowArtistChange={false}
             showFilterExistingFiles={true}

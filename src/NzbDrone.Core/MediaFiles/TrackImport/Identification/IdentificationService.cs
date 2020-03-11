@@ -220,6 +220,14 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             if (candidateReleases.Count == 0)
             {
                 // can't find any candidates even after fingerprinting
+                // populate the overrides and return
+                foreach (var localTrack in localAlbumRelease.LocalTracks)
+                {
+                    localTrack.Release = idOverrides.AlbumRelease;
+                    localTrack.Album = idOverrides.Album;
+                    localTrack.Artist = idOverrides.Artist;
+                }
+
                 return;
             }
 
