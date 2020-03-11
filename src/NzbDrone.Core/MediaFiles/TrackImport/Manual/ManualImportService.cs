@@ -23,7 +23,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
 {
     public interface IManualImportService
     {
-        List<ManualImportItem> GetMediaFiles(string path, string downloadId, FilterFilesType filter, bool replaceExistingFiles);
+        List<ManualImportItem> GetMediaFiles(string path, string downloadId, Artist artist, FilterFilesType filter, bool replaceExistingFiles);
         List<ManualImportItem> UpdateItems(List<ManualImportItem> item);
     }
 
@@ -78,7 +78,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             _logger = logger;
         }
 
-        public List<ManualImportItem> GetMediaFiles(string path, string downloadId, FilterFilesType filter, bool replaceExistingFiles)
+        public List<ManualImportItem> GetMediaFiles(string path, string downloadId, Artist artist, FilterFilesType filter, bool replaceExistingFiles)
         {
             if (downloadId.IsNotNullOrWhiteSpace())
             {
@@ -116,14 +116,14 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                 return new List<ManualImportItem> { result };
             }
 
-            return ProcessFolder(path, downloadId, filter, replaceExistingFiles);
+            return ProcessFolder(path, downloadId, artist, filter, replaceExistingFiles);
         }
 
-        private List<ManualImportItem> ProcessFolder(string folder, string downloadId, FilterFilesType filter, bool replaceExistingFiles)
+        private List<ManualImportItem> ProcessFolder(string folder, string downloadId, Artist artist, FilterFilesType filter, bool replaceExistingFiles)
         {
             DownloadClientItem downloadClientItem = null;
             var directoryInfo = new DirectoryInfo(folder);
-            var artist = _parsingService.GetArtist(directoryInfo.Name);
+            artist = artist ?? _parsingService.GetArtist(directoryInfo.Name);
 
             if (downloadId.IsNotNullOrWhiteSpace())
             {
