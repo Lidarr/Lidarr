@@ -135,8 +135,8 @@ namespace NzbDrone.Core.Test.MusicTests.ArtistRepositoryTests
 
             _artistRepo.All().Should().HaveCount(4);
 
-            var artist = _artistRepo.FindByName(Parser.Parser.CleanArtistName(name));
-            artist.Should().BeNull();
+            Action act = () => _artistRepo.FindByName(Parser.Parser.CleanArtistName(name));
+            act.Should().Throw<MultipleArtistsFoundException>();
         }
 
         [Test]
