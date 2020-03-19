@@ -153,7 +153,15 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
         {
             DownloadClientItem downloadClientItem = null;
             var directoryInfo = new DirectoryInfo(folder);
-            artist = artist ?? _parsingService.GetArtist(directoryInfo.Name);
+
+            try
+            {
+                artist ??= _parsingService.GetArtist(directoryInfo.Name);
+            }
+            catch (MultipleArtistsFoundException e)
+            {
+                _logger.Warn(e, "Unable to find artist from title");
+            }
 
             if (downloadId.IsNotNullOrWhiteSpace())
             {

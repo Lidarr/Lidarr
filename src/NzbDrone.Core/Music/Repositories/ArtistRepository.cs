@@ -61,7 +61,9 @@ namespace NzbDrone.Core.Music
         {
             cleanName = cleanName.ToLowerInvariant();
 
-            return Query(s => s.CleanName == cleanName).ExclusiveOrDefault();
+            var artists = Query(s => s.CleanName == cleanName).ToList();
+
+            return ReturnSingleArtistOrThrow(artists);
         }
 
         public Artist GetArtistByMetadataId(int artistMetadataId)
@@ -90,6 +92,21 @@ namespace NzbDrone.Core.Music
         public List<Artist> GetArtistByMetadataId(IEnumerable<int> artistMetadataIds)
         {
             return Query(s => artistMetadataIds.Contains(s.ArtistMetadataId));
+        }
+
+        private static Artist ReturnSingleArtistOrThrow(List<Artist> artists)
+        {
+            if (artists.Count == 0)
+            {
+                return null;
+            }
+
+            if (artists.Count == 1)
+            {
+                return artists[0];
+            }
+
+            throw new MultipleArtistsFoundException("Expected one artist, but found {0}. Matching artists: {1}", artists.Count, string.Join(",", artists.Select(s => s.Name)));
         }
     }
 }
