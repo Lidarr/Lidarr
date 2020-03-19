@@ -9,6 +9,7 @@ import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
 import PageToolbarButton from 'Components/Page/Toolbar/PageToolbarButton';
 import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
+import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
 import { align, icons } from 'Helpers/Props';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import CalendarConnector from './CalendarConnector';
@@ -81,8 +82,10 @@ class CalendarPage extends Component {
       artistIsFetching,
       artistIsPopulated,
       missingAlbumIds,
+      isRssSyncExecuting,
       isSearchingForMissing,
       useCurrentPage,
+      onRssSyncPress,
       onFilterSelect
     } = this.props;
 
@@ -101,6 +104,15 @@ class CalendarPage extends Component {
               label="iCal Link"
               iconName={icons.CALENDAR}
               onPress={this.onGetCalendarLinkPress}
+            />
+
+            <PageToolbarSeparator />
+
+            <PageToolbarButton
+              label="RSS Sync"
+              iconName={icons.RSS}
+              isSpinning={isRssSyncExecuting}
+              onPress={onRssSyncPress}
             />
 
             <PageToolbarButton
@@ -196,10 +208,12 @@ CalendarPage.propTypes = {
   artistIsFetching: PropTypes.bool.isRequired,
   artistIsPopulated: PropTypes.bool.isRequired,
   missingAlbumIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+  isRssSyncExecuting: PropTypes.bool.isRequired,
   isSearchingForMissing: PropTypes.bool.isRequired,
   useCurrentPage: PropTypes.bool.isRequired,
   onSearchMissingPress: PropTypes.func.isRequired,
   onDaysCountChange: PropTypes.func.isRequired,
+  onRssSyncPress: PropTypes.func.isRequired,
   onFilterSelect: PropTypes.func.isRequired
 };
 
