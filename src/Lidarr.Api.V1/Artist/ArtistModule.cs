@@ -145,19 +145,17 @@ namespace Lidarr.Api.V1.Artist
             var moveFiles = Request.GetBooleanQueryParameter("moveFiles");
             var artist = _artistService.GetArtist(artistResource.Id);
 
-            if (moveFiles)
-            {
-                var sourcePath = artist.Path;
-                var destinationPath = artistResource.Path;
+            var sourcePath = artist.Path;
+            var destinationPath = artistResource.Path;
 
-                _commandQueueManager.Push(new MoveArtistCommand
-                {
-                    ArtistId = artist.Id,
-                    SourcePath = sourcePath,
-                    DestinationPath = destinationPath,
-                    Trigger = CommandTrigger.Manual
-                });
-            }
+            _commandQueueManager.Push(new MoveArtistCommand
+            {
+                ArtistId = artist.Id,
+                SourcePath = sourcePath,
+                DestinationPath = destinationPath,
+                MoveFiles = moveFiles,
+                Trigger = CommandTrigger.Manual
+            });
 
             var model = artistResource.ToModel(artist);
 

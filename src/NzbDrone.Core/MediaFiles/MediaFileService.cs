@@ -203,6 +203,7 @@ namespace NzbDrone.Core.MediaFiles
 
         public void Handle(ArtistMovedEvent message)
         {
+            // TODO: Be more careful when arbitrary artist paths are allowed
             var files = _mediaFileRepository.GetFilesWithBasePath(message.SourcePath);
 
             foreach (var file in files)
