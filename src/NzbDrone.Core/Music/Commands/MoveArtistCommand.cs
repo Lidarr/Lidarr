@@ -7,6 +7,7 @@ namespace NzbDrone.Core.Music.Commands
         public int ArtistId { get; set; }
         public string SourcePath { get; set; }
         public string DestinationPath { get; set; }
+        public bool MoveFiles { get; set; }
 
         public override bool SendUpdatesToClient => true;
         public override bool RequiresDiskAccess => true;
