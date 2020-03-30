@@ -81,12 +81,13 @@ namespace Lidarr.Api.V1.Artist
                 }
             }
 
-            if (resource.MoveFiles && artistToMove.Any())
+            if (artistToMove.Any())
             {
                 _commandQueueManager.Push(new BulkMoveArtistCommand
                 {
                     DestinationRootFolder = resource.RootFolderPath,
-                    Artist = artistToMove
+                    Artist = artistToMove,
+                    MoveFiles = resource.MoveFiles
                 });
             }
 

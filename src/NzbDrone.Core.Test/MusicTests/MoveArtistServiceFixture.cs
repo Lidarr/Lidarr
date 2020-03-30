@@ -5,8 +5,10 @@ using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Disk;
+using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Music.Commands;
+using NzbDrone.Core.Music.Events;
 using NzbDrone.Core.Organizer;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
@@ -29,9 +31,10 @@ namespace NzbDrone.Core.Test.MusicTests
 
             _command = new MoveArtistCommand
             {
-                ArtistId = 1,
+                ArtistId = _artist.Id,
                 SourcePath = @"C:\Test\Music\Artist".AsOsAgnostic(),
-                DestinationPath = @"C:\Test\Music2\Artist".AsOsAgnostic()
+                DestinationPath = @"C:\Test\Music2\Artist".AsOsAgnostic(),
+                MoveFiles = true
             };
 
             _bulkCommand = new BulkMoveArtistCommand
@@ -40,11 +43,12 @@ namespace NzbDrone.Core.Test.MusicTests
                 {
                     new BulkMoveArtist
                     {
-                        ArtistId = 1,
+                        ArtistId = _artist.Id,
                         SourcePath = @"C:\Test\Music\Artist".AsOsAgnostic()
                     }
                 },
-                DestinationRootFolder = @"C:\Test\Music2".AsOsAgnostic()
+                DestinationRootFolder = @"C:\Test\Music2".AsOsAgnostic(),
+                MoveFiles = true
             };
 
             Mocker.GetMock<IArtistService>()
@@ -142,6 +146,34 @@ namespace NzbDrone.Core.Test.MusicTests
 
             Mocker.GetMock<IBuildFileNames>()
                 .Verify(v => v.GetArtistFolder(It.IsAny<Artist>(), null), Times.Never());
+        }
+
+        [Test]
+        public void should_raise_artist_moved_event_when_move_files_false()
+        {
+            _command.MoveFiles = false;
+            Subject.Execute(_command);
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.Is<ArtistMovedEvent>(c => c.Artist.Id == _artist.Id)), Times.Once());
+        }
+
+        [Test]
+        public void should_raise_artist_moved_event_when_move_files_false_bulk()
+        {
+            _bulkCommand.MoveFiles = false;
+
+            var artistFolder = "Artist";
+            var expectedPath = Path.Combine(_bulkCommand.DestinationRootFolder, artistFolder);
+
+            Mocker.GetMock<IBuildFileNames>()
+                .Setup(s => s.GetArtistFolder(It.IsAny<Artist>(), null))
+                .Returns(artistFolder);
+
+            Subject.Execute(_bulkCommand);
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.Is<ArtistMovedEvent>(c => c.Artist.Id == _artist.Id)), Times.Once());
         }
     }
 }
