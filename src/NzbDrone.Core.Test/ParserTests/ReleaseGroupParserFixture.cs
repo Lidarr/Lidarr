@@ -48,6 +48,7 @@ namespace NzbDrone.Core.Test.ParserTests
         [TestCase("Olafur.Arnalds-Remember-WEB-2018-xHD-1", "xHD")]
         [TestCase("Olafur.Arnalds-Remember-WEB-2018-DIMENSION-1", "DIMENSION")]
         [TestCase("Olafur.Arnalds-Remember-WEB-2018-EVL-Scrambled", "EVL")]
+        [TestCase("Olafur.Arnalds-Remember-WEB-2018-EVL-AlteZachen", "EVL")]
         public void should_not_include_repost_in_release_group(string title, string expected)
         {
             Parser.Parser.ParseReleaseGroup(title).Should().Be(expected);
