@@ -3,8 +3,8 @@ using System.Linq;
 using System.Net;
 using FluentValidation.Results;
 using NLog;
+using NzbDrone.Common.Http;
 using NzbDrone.Core.Music;
-using NzbDrone.Core.Rest;
 
 namespace NzbDrone.Core.Notifications.Emby
 {
@@ -48,7 +48,7 @@ namespace NzbDrone.Core.Notifications.Emby
 
                 Notify(settings, "Test from Lidarr", "Success! MediaBrowser has been successfully configured!");
             }
-            catch (RestException ex)
+            catch (HttpException ex)
             {
                 if (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
                 {
