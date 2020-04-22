@@ -254,6 +254,10 @@ stages:
           else
           sentry-cli releases deploys "${RELEASENAME}" new -e production
           fi
+          if [ $? -gt 0 ]; then
+            echo "##vso[task.logissue type=warning]Error uploading source maps."
+          fi
+          exit 0
         displayName: Publish Sentry Source Maps
         condition: |
           or
