@@ -716,3 +716,25 @@ stages:
           codeCoverageTool: 'cobertura'
           summaryFileLocation: './CoverageResults/combined/Cobertura.xml'
           reportDirectory: './CoverageResults/combined/'
+          
+  - stage: Report_Out
+    dependsOn:
+    - Analyze
+    - Unit_Test
+    - Integration
+    - Automation
+    condition: always()
+    displayName: Build Status Report
+    jobs:
+    - job:
+      displayName: Discord Notification
+      pool:
+        vmImage: 'ubuntu-18.04'
+      steps:
+        - checkout: none
+        - powershell: |
+            iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Servarr/AzureDiscordNotify/master/DiscordNotify.ps1'))
+          env:
+            SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+            DISCORDCHANNELID: $(discordChannelId)
+            DISCORDWEBHOOKKEY: $(discordWebhookKey)
