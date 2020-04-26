@@ -119,7 +119,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 try
                 {
                     // TODO fix otherfiles?
-                    _augmentingService.Augment(localTrack, true);
+                    _augmentingService.Augment(localTrack, downloadClientItem, true);
                     localTracks.Add(localTrack);
                 }
                 catch (AugmentingFailedException)

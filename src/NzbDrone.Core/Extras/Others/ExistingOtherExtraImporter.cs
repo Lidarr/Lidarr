@@ -54,7 +54,7 @@ namespace NzbDrone.Core.Extras.Others
 
                 try
                 {
-                    _augmentingService.Augment(localTrack, false);
+                    _augmentingService.Augment(localTrack, null, false);
                 }
                 catch (AugmentingFailedException)
                 {

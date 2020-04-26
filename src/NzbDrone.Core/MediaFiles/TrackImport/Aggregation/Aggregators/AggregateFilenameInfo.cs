@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using NLog;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Download;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators
@@ -55,7 +56,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators
             _logger = logger;
         }
 
-        public LocalAlbumRelease Aggregate(LocalAlbumRelease release, bool others)
+        public LocalAlbumRelease Aggregate(LocalAlbumRelease release, DownloadClientItem downloadClientItem, bool others)
         {
             var tracks = release.LocalTracks;
             if (tracks.Any(x => x.FileTrackInfo.Title.IsNullOrWhiteSpace())

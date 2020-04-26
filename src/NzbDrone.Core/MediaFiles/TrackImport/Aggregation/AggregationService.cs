@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using NLog;
 using NzbDrone.Common.Disk;
+using NzbDrone.Core.Download;
 using NzbDrone.Core.MediaFiles.EpisodeImport;
 using NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators;
 using NzbDrone.Core.Parser.Model;
@@ -11,7 +12,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation
 {
     public interface IAugmentingService
     {
-        LocalTrack Augment(LocalTrack localTrack, bool otherFiles);
+        LocalTrack Augment(LocalTrack localTrack, DownloadClientItem downloadClientItem, bool otherFiles);
         LocalAlbumRelease Augment(LocalAlbumRelease localAlbum);
     }
 
@@ -33,7 +34,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation
             _logger = logger;
         }
 
-        public LocalTrack Augment(LocalTrack localTrack, bool otherFiles)
+        public LocalTrack Augment(LocalTrack localTrack, DownloadClientItem downloadClientItem, bool otherFiles)
         {
             if (localTrack.DownloadClientAlbumInfo == null &&
                 localTrack.FolderAlbumInfo == null &&
@@ -52,7 +53,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation
             {
                 try
                 {
-                    augmenter.Aggregate(localTrack, otherFiles);
+                    augmenter.Aggregate(localTrack, downloadClientItem, otherFiles);
                 }
                 catch (Exception ex)
                 {
@@ -71,7 +72,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation
             {
                 try
                 {
-                    augmenter.Aggregate(localAlbum, false);
+                    augmenter.Aggregate(localAlbum, null, false);
                 }
                 catch (Exception ex)
                 {

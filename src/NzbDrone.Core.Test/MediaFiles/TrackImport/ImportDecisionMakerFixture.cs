@@ -151,8 +151,8 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
         private void GivenAugmentationSuccess()
         {
             Mocker.GetMock<IAugmentingService>()
-                  .Setup(s => s.Augment(It.IsAny<LocalTrack>(), It.IsAny<bool>()))
-                  .Callback<LocalTrack, bool>((localTrack, otherFiles) =>
+                  .Setup(s => s.Augment(It.IsAny<LocalTrack>(), It.IsAny<DownloadClientItem>(), It.IsAny<bool>()))
+                  .Callback<LocalTrack, DownloadClientItem, bool>((localTrack, downloadClientItem, otherFiles) =>
                   {
                       localTrack.Tracks = _localTrack.Tracks;
                   });
@@ -323,7 +323,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
             GivenSpecifications(_pass1);
 
             Mocker.GetMock<IAugmentingService>()
-                  .Setup(c => c.Augment(It.IsAny<LocalTrack>(), It.IsAny<bool>()))
+                  .Setup(c => c.Augment(It.IsAny<LocalTrack>(), It.IsAny<DownloadClientItem>(), It.IsAny<bool>()))
                   .Throws<TestException>();
 
             GivenAudioFiles(new[]
@@ -336,7 +336,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
             var decisions = Subject.GetImportDecisions(_fileInfos, _idOverrides, null, _idConfig);
 
             Mocker.GetMock<IAugmentingService>()
-                  .Verify(c => c.Augment(It.IsAny<LocalTrack>(), It.IsAny<bool>()), Times.Exactly(_fileInfos.Count));
+                  .Verify(c => c.Augment(It.IsAny<LocalTrack>(), It.IsAny<DownloadClientItem>(), It.IsAny<bool>()), Times.Exactly(_fileInfos.Count));
 
             ExceptionVerification.ExpectedErrors(3);
         }
@@ -363,7 +363,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
             var decisions = Subject.GetImportDecisions(_fileInfos, _idOverrides, null, _idConfig);
 
             Mocker.GetMock<IAugmentingService>()
-                  .Verify(c => c.Augment(It.IsAny<LocalTrack>(), It.IsAny<bool>()), Times.Exactly(_fileInfos.Count));
+                  .Verify(c => c.Augment(It.IsAny<LocalTrack>(), It.IsAny<DownloadClientItem>(), It.IsAny<bool>()), Times.Exactly(_fileInfos.Count));
 
             decisions.Should().HaveCount(3);
             decisions.First().Rejections.Should().NotBeEmpty();
@@ -384,7 +384,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
             var decisions = Subject.GetImportDecisions(_fileInfos, _idOverrides, null, _idConfig);
 
             Mocker.GetMock<IAugmentingService>()
-                  .Verify(c => c.Augment(It.IsAny<LocalTrack>(), It.IsAny<bool>()), Times.Exactly(_fileInfos.Count));
+                  .Verify(c => c.Augment(It.IsAny<LocalTrack>(), It.IsAny<DownloadClientItem>(), It.IsAny<bool>()), Times.Exactly(_fileInfos.Count));
 
             decisions.Should().HaveCount(3);
             decisions.First().Rejections.Should().NotBeEmpty();
@@ -394,7 +394,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
         public void should_return_a_decision_when_exception_is_caught()
         {
             Mocker.GetMock<IAugmentingService>()
-                  .Setup(c => c.Augment(It.IsAny<LocalTrack>(), It.IsAny<bool>()))
+                  .Setup(c => c.Augment(It.IsAny<LocalTrack>(), It.IsAny<DownloadClientItem>(), It.IsAny<bool>()))
                   .Throws<TestException>();
 
             GivenAudioFiles(new[]

@@ -47,7 +47,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Aggregation.Aggregators
                     "Adele - 19 - 203 - That's It, I Quit, I'm Moving On.mp3"
             }, @"C:\incoming".AsOsAgnostic());
 
-            Subject.Aggregate(release, true);
+            Subject.Aggregate(release, null, true);
 
             VerifyData(release.LocalTracks[0], "Adele", "Daydreamer", 1, 1);
             VerifyData(release.LocalTracks[1], "Adele", "Best for Last", 2, 1);
@@ -198,7 +198,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Aggregation.Aggregators
             var files = GivenFilenames(testcase.Item1, testcase.Item2, testcase.Item3);
             var release = GivenTracks(files, @"C:\incoming".AsOsAgnostic());
 
-            Subject.Aggregate(release, true);
+            Subject.Aggregate(release, null, true);
 
             VerifyDataAuto(release.LocalTracks, testcase.Item1, testcase.Item3);
         }

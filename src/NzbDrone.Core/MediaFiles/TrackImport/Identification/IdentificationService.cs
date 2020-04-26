@@ -185,7 +185,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             }))
             .ToList();
 
-            localTracks.ForEach(x => _augmentingService.Augment(x, true));
+            localTracks.ForEach(x => _augmentingService.Augment(x, null, true));
 
             return localTracks;
         }
