@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Datastore.Converters;
+using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Music.Commands;
 using NzbDrone.Core.Test.Framework;
 
@@ -48,6 +49,22 @@ namespace NzbDrone.Core.Test.Datastore.Converters
             };
 
             Subject.FromDB(context).Should().BeOfType<RefreshArtistCommand>();
+        }
+
+        [Test]
+        public void should_return_unknown_command_when_getting_json_from_db()
+        {
+            var dataRecordMock = new Mock<IDataRecord>();
+            dataRecordMock.Setup(s => s.GetOrdinal("Name")).Returns(0);
+            dataRecordMock.Setup(s => s.GetString(0)).Returns("MockRemovedCommand");
+
+            var context = new ConverterContext
+            {
+                DataRecord = dataRecordMock.Object,
+                DbValue = new RefreshArtistCommand(2).ToJson()
+            };
+
+            Subject.FromDB(context).Should().BeOfType<UnknownCommand>();
         }
 
         [Test]
