@@ -561,7 +561,7 @@ stages:
             osName: 'Windows'
             imageName: 'windows-2019'
             pattern: 'Lidarr.**.windows-core-x64.zip'
-            failBuild: true
+            failBuild: $(failOnAutomationFailure)
 
       pool:
         vmImage: $(imageName)
