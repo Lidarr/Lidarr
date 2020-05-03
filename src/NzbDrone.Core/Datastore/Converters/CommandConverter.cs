@@ -29,7 +29,11 @@ namespace NzbDrone.Core.Datastore.Converters
 
             if (impType == null)
             {
-                throw new CommandNotFoundException(contract);
+                var result = Json.Deserialize<UnknownCommand>(stringValue);
+
+                result.ContractName = contract;
+
+                return result;
             }
 
             return Json.Deserialize(stringValue, impType);
