@@ -40,7 +40,16 @@ namespace NzbDrone.Core.Notifications.Xbmc
 
         public string UpdateLibrary(XbmcSettings settings, string path)
         {
-            var response = ProcessRequest(settings, "AudioLibrary.Scan", path);
+            string response;
+
+            if (path == null)
+            {
+                response = ProcessRequest(settings, "AudioLibrary.Scan");
+            }
+            else
+            {
+                response = ProcessRequest(settings, "AudioLibrary.Scan", path);
+            }
 
             return Json.Deserialize<XbmcJsonResult<string>>(response).Result;
         }
