@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using NzbDrone.Common.EnsureThat;
 
@@ -42,7 +43,13 @@ namespace NzbDrone.Common.Cache
 
             if (lifetime != null)
             {
-                System.Threading.Tasks.Task.Delay(lifetime.Value).ContinueWith(t => _store.TryRemove(key, out var temp));
+                System.Threading.Tasks.Task.Delay(lifetime.Value).ContinueWith(t =>
+                {
+                    if (_store.TryRemove(key, out var temp2) && !temp2.IsExpired())
+                    {
+                        _store.TryAdd(key, temp2);
+                    }
+                });
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using FluentAssertions;
 using NUnit.Framework;
@@ -127,6 +127,18 @@ namespace NzbDrone.Common.Test.CacheTests
 
             hitCount.Should().BeInRange(3, 7);
             _cachedString.Values.Should().HaveCount(0);
+        }
+
+        [Test]
+        [Retry(3)]
+        public void should_not_clear_when_superseded()
+        {
+            _cachedString.Set("key", "A", TimeSpan.FromMilliseconds(100));
+            _cachedString.Set("key", "B", TimeSpan.FromMilliseconds(10000));
+
+            Thread.Sleep(1000);
+
+            _cachedString.Values.Should().HaveCount(1);
         }
     }
 
