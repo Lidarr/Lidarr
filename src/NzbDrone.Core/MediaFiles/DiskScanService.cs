@@ -10,6 +10,7 @@ using NzbDrone.Common;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles.Commands;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.MediaFiles.TrackImport;
@@ -36,6 +37,7 @@ namespace NzbDrone.Core.MediaFiles
         public static readonly Regex ExcludedSubFoldersRegex = new Regex(@"(?:\\|\/|^)(?:extras|@eadir|\.@__thumb|extrafanart|plex versions|\.[^\\/]+)(?:\\|\/)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         public static readonly Regex ExcludedFilesRegex = new Regex(@"^\._|^Thumbs\.db$|^\.DS_store$|\.partial~$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        private readonly IConfigService _configService;
         private readonly IDiskProvider _diskProvider;
         private readonly IMediaFileService _mediaFileService;
         private readonly IMakeImportDecision _importDecisionMaker;
@@ -46,7 +48,8 @@ namespace NzbDrone.Core.MediaFiles
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
-        public DiskScanService(IDiskProvider diskProvider,
+        public DiskScanService(IConfigService configService,
+                               IDiskProvider diskProvider,
                                IMediaFileService mediaFileService,
                                IMakeImportDecision importDecisionMaker,
                                IImportApprovedTracks importApprovedTracks,
@@ -56,6 +59,7 @@ namespace NzbDrone.Core.MediaFiles
                                IEventAggregator eventAggregator,
                                Logger logger)
         {
+            _configService = configService;
             _diskProvider = diskProvider;
             _mediaFileService = mediaFileService;
             _importDecisionMaker = importDecisionMaker;
