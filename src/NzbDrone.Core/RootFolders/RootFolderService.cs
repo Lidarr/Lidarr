@@ -20,7 +20,7 @@ namespace NzbDrone.Core.RootFolders
         RootFolder Add(RootFolder rootFolder);
         RootFolder Update(RootFolder rootFolder);
         void Remove(int id);
-        RootFolder Get(int id);
+        RootFolder Get(int id, bool timeout);
         List<RootFolder> AllForTag(int tagId);
         RootFolder GetBestRootFolder(string path);
         string GetBestRootFolderPath(string path);
@@ -61,7 +61,7 @@ namespace NzbDrone.Core.RootFolders
                 {
                     if (folder.Path.IsPathValid(PathValidationType.CurrentOs))
                     {
-                        GetDetails(folder);
+                        GetDetails(folder, true);
                     }
                 }
 
@@ -106,7 +106,7 @@ namespace NzbDrone.Core.RootFolders
 
             _commandQueueManager.Push(new RescanFoldersCommand(new List<string> { rootFolder.Path }, FilterFilesType.None, true, null));
 
-            GetDetails(rootFolder);
+            GetDetails(rootFolder, true);
 
             return rootFolder;
         }
@@ -117,7 +117,7 @@ namespace NzbDrone.Core.RootFolders
 
             _rootFolderRepository.Update(rootFolder);
 
-            GetDetails(rootFolder);
+            GetDetails(rootFolder, true);
 
             return rootFolder;
         }
@@ -127,10 +127,10 @@ namespace NzbDrone.Core.RootFolders
             _rootFolderRepository.Delete(id);
         }
 
-        public RootFolder Get(int id)
+        public RootFolder Get(int id, bool timeout)
         {
             var rootFolder = _rootFolderRepository.Get(id);
-            GetDetails(rootFolder);
+            GetDetails(rootFolder, timeout);
 
             return rootFolder;
         }
@@ -160,7 +160,7 @@ namespace NzbDrone.Core.RootFolders
             return possibleRootFolder?.Path;
         }
 
-        private void GetDetails(RootFolder rootFolder)
+        private void GetDetails(RootFolder rootFolder, bool timeout)
         {
             Task.Run(() =>
             {
@@ -170,7 +170,7 @@ namespace NzbDrone.Core.RootFolders
                     rootFolder.FreeSpace = _diskProvider.GetAvailableSpace(rootFolder.Path);
                     rootFolder.TotalSpace = _diskProvider.GetTotalSize(rootFolder.Path);
                 }
-            }).Wait(5000);
+            }).Wait(timeout ? 5000 : -1);
         }
     }
 }

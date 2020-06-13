@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using FluentValidation;
 using Lidarr.Http;
+using Lidarr.Http.Extensions;
 using Lidarr.Http.REST;
 using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
@@ -56,7 +57,9 @@ namespace Lidarr.Api.V1.RootFolders
 
         public override RootFolderResource GetResourceById(int id)
         {
-            return _rootFolderService.Get(id).ToResource();
+            var timeout = Request?.GetBooleanQueryParameter("timeout", true) ?? true;
+
+            return _rootFolderService.Get(id, timeout).ToResource();
         }
 
         [RestPostById]
