@@ -220,6 +220,10 @@ namespace NzbDrone.Core.MediaCover
                         updated = true;
                     }
                 }
+                catch (HttpException e)
+                {
+                    _logger.Warn("Couldn't download media cover for {0}. {1}", album, e.Message);
+                }
                 catch (WebException e)
                 {
                     _logger.Warn("Couldn't download media cover for {0}. {1}", album, e.Message);
