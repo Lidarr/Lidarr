@@ -9,6 +9,7 @@ import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
 import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
 import PageToolbarButton from 'Components/Page/Toolbar/PageToolbarButton';
 import FilterMenu from 'Components/Menu/FilterMenu';
+import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import NoArtist from 'Artist/NoArtist';
 import CalendarLinkModal from './iCal/CalendarLinkModal';
 import CalendarOptionsModal from './Options/CalendarOptionsModal';
@@ -77,6 +78,8 @@ class CalendarPage extends Component {
       filters,
       hasArtist,
       artistError,
+      artistIsFetching,
+      artistIsPopulated,
       missingAlbumIds,
       isSearchingForMissing,
       useCurrentPage,
@@ -89,8 +92,6 @@ class CalendarPage extends Component {
     } = this.state;
 
     const isMeasured = this.state.width > 0;
-
-    const PageComponent = hasArtist ? CalendarConnector : NoArtist;
 
     return (
       <PageContent title="Calendar">
@@ -134,6 +135,11 @@ class CalendarPage extends Component {
           innerClassName={styles.calendarInnerPageBody}
         >
           {
+            artistIsFetching && !artistIsPopulated &&
+              <LoadingIndicator />
+          }
+
+          {
             artistError &&
               <div className={styles.errorMessage}>
                 {getErrorMessage(artistError, 'Failed to load artist from API')}
@@ -141,19 +147,24 @@ class CalendarPage extends Component {
           }
 
           {
-            !artistError &&
+            !artistError && artistIsPopulated && hasArtist &&
               <Measure
                 whitelist={['width']}
                 onMeasure={this.onMeasure}
               >
                 {
                   isMeasured ?
-                    <PageComponent
+                    <CalendarConnector
                       useCurrentPage={useCurrentPage}
                     /> :
                     <div />
                 }
               </Measure>
+          }
+
+          {
+            !artistError && artistIsPopulated && !hasArtist &&
+              <NoArtist />
           }
 
           {
@@ -182,6 +193,8 @@ CalendarPage.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   hasArtist: PropTypes.bool.isRequired,
   artistError: PropTypes.object,
+  artistIsFetching: PropTypes.bool.isRequired,
+  artistIsPopulated: PropTypes.bool.isRequired,
   missingAlbumIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   isSearchingForMissing: PropTypes.bool.isRequired,
   useCurrentPage: PropTypes.bool.isRequired,
