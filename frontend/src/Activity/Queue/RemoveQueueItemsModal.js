@@ -99,16 +99,16 @@ class RemoveQueueItemsModal extends Component {
 
             {
               blacklist &&
-              <FormGroup>
-                <FormLabel>Skip Redownload</FormLabel>
-                <FormInputGroup
-                  type={inputTypes.CHECK}
-                  name="skipredownload"
-                  value={skipredownload}
-                  helpText="Prevents Lidarr from trying download alternative releases for the removed items"
-                  onChange={this.onSkipReDownloadChange}
-                />
-              </FormGroup>
+                <FormGroup>
+                  <FormLabel>Skip Redownload</FormLabel>
+                  <FormInputGroup
+                    type={inputTypes.CHECK}
+                    name="skipredownload"
+                    value={skipredownload}
+                    helpText="Prevents Lidarr from trying download alternative releases for the removed items"
+                    onChange={this.onSkipReDownloadChange}
+                  />
+                </FormGroup>
             }
 
           </ModalBody>

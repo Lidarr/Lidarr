@@ -127,10 +127,10 @@ class ArtistIndexOverview extends Component {
             <div className={styles.posterContainer}>
               {
                 status === 'ended' &&
-                <div
-                  className={styles.ended}
-                  title="Ended"
-                />
+                  <div
+                    className={styles.ended}
+                    title="Ended"
+                  />
               }
 
               <Link

@@ -103,11 +103,11 @@ class AddNewAlbumSearchResult extends Component {
         <div className={styles.overlay}>
           {
             !isSmallScreen &&
-            <AlbumCover
-              className={styles.poster}
-              images={images}
-              size={250}
-            />
+              <AlbumCover
+                className={styles.poster}
+                images={images}
+                size={250}
+              />
           }
 
           <div className={styles.content}>
@@ -116,7 +116,7 @@ class AddNewAlbumSearchResult extends Component {
 
               {
                 !!disambiguation &&
-                <span className={styles.year}>({disambiguation})</span>
+                  <span className={styles.year}>({disambiguation})</span>
               }
 
               {
