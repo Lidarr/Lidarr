@@ -46,7 +46,7 @@ namespace NzbDrone.Common.Test.Http
 
             TestLogger.Info($"{candidates.Length} TestSites available.");
 
-            _httpBinSleep = _httpBinHosts.Length < 2 ? 100 : 10;
+            _httpBinSleep = _httpBinHosts.Count() < 2 ? 100 : 10;
         }
 
         private bool IsTestSiteAvailable(string site)
@@ -250,7 +250,7 @@ namespace NzbDrone.Common.Test.Http
         [Test]
         public void should_throw_on_too_many_redirects()
         {
-            var request = new HttpRequest($"https://{_httpBinHost}/redirect/4");
+            var request = new HttpRequest($"https://{_httpBinHost}/redirect/6");
             request.AllowAutoRedirect = true;
 
             Assert.Throws<WebException>(() => Subject.Get(request));
