@@ -108,7 +108,7 @@ class ArtistIndexBannerOptionsModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-           Options
+          Options
         </ModalHeader>
 
         <ModalBody>

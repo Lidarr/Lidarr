@@ -11,7 +11,7 @@ function NoArtist(props) {
     return (
       <div>
         <div className={styles.message}>
-        All artists are hidden due to the applied filter.
+          All artists are hidden due to the applied filter.
         </div>
       </div>
     );
