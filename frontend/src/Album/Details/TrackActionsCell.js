@@ -71,10 +71,10 @@ class TrackActionsCell extends Component {
         }
         {
           trackFilePath &&
-          <IconButton
-            name={icons.DELETE}
-            onPress={this.onDeleteFilePress}
-          />
+            <IconButton
+              name={icons.DELETE}
+              onPress={this.onDeleteFilePress}
+            />
         }
 
         <FileDetailsModal
