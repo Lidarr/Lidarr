@@ -1,0 +1,2254 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Lidarr",
+    "description": "Music Automation",
+    "contact": {
+      "url": "https://lidarr.audio"
+    },
+    "version": "1.0.0"
+  },
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/api/v1/wanted/cutoff/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Wanted"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/wanted/cutoff": {
+      "get": {
+        "tags": [
+          "Wanted"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/wanted/missing/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Wanted"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/wanted/missing": {
+      "get": {
+        "tags": [
+          "Wanted"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/update": {
+      "get": {
+        "tags": [
+          "Update"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/rename": {
+      "get": {
+        "tags": [
+          "Rename"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/retag": {
+      "get": {
+        "tags": [
+          "Re-Tag"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/track/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Track"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/track": {
+      "get": {
+        "tags": [
+          "Track"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/trackfile/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "TrackFile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "TrackFile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "TrackFile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/trackfile": {
+      "get": {
+        "tags": [
+          "TrackFile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "TrackFile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/trackfile/editor": {
+      "put": {
+        "tags": [
+          "TrackFile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/trackfile/bulk": {
+      "delete": {
+        "tags": [
+          "TrackFile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/tag/detail/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Tag"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/tag/detail": {
+      "get": {
+        "tags": [
+          "Tag"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/tag/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Tag"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Tag"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Tag"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/tag": {
+      "get": {
+        "tags": [
+          "Tag"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Tag"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Tag"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/system/status": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/system/routes": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/system/shutdown": {
+      "post": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/system/restart": {
+      "post": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/system/task": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/system/task/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/system/backup": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/system/backup/(?<id>[\\d]{1,10})": {
+      "delete": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/system/backup/restore/(?<id>[\\d]{1,10})": {
+      "post": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/system/backup/restore/upload": {
+      "post": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/search": {
+      "get": {
+        "tags": [
+          "Search"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/rootfolder": {
+      "get": {
+        "tags": [
+          "Root Folder"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Root Folder"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Root Folder"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/rootfolder/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Root Folder"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Root Folder"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Root Folder"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/remotepathmapping": {
+      "get": {
+        "tags": [
+          "Remote Mapping"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Remote Mapping"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Remote Mapping"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/remotepathmapping/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Remote Mapping"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Remote Mapping"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Remote Mapping"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/queue/grab/(?<id>[\\d]{1,10})": {
+      "post": {
+        "tags": [
+          "Queue"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/queue/grab/bulk": {
+      "post": {
+        "tags": [
+          "Queue"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/queue/(?<id>[\\d]{1,10})": {
+      "delete": {
+        "tags": [
+          "Queue"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/queue/bulk": {
+      "delete": {
+        "tags": [
+          "Queue"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/queue/details": {
+      "get": {
+        "tags": [
+          "Queue"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/queue": {
+      "get": {
+        "tags": [
+          "Queue"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/queue/status": {
+      "get": {
+        "tags": [
+          "Queue"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/qualitydefinition": {
+      "get": {
+        "tags": [
+          "Quality Definitions"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Quality Definitions"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/qualitydefinition/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Quality Definitions"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Quality Definitions"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/qualitydefinition/update": {
+      "put": {
+        "tags": [
+          "Quality Definitions"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/releaseprofile/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Release Profiles"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Release Profiles"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Release Profiles"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/releaseprofile": {
+      "get": {
+        "tags": [
+          "Release Profiles"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Release Profiles"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Release Profiles"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/qualityprofile": {
+      "get": {
+        "tags": [
+          "Quality Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Quality Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Quality Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/qualityprofile/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Quality Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Quality Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Quality Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/qualityprofile/schema": {
+      "get": {
+        "tags": [
+          "Quality Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/metadataprofile": {
+      "get": {
+        "tags": [
+          "Metadata Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Metadata Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Metadata Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/metadataprofile/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Metadata Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Metadata Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Metadata Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/metadataprofile/schema": {
+      "get": {
+        "tags": [
+          "Metadata Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/delayprofile": {
+      "get": {
+        "tags": [
+          "Delay Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Delay Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Delay Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/delayprofile/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Delay Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Delay Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Delay Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/delayprofile/reorder/(?<id>[\\d]{1,10})": {
+      "put": {
+        "tags": [
+          "Delay Profile"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/parse": {
+      "get": {
+        "tags": [
+          "Parse"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/notification/schema": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/notification/test": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/notification/testall": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/notification/action/{action}": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/notification": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/notification/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/metadata/schema": {
+      "get": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/metadata/test": {
+      "post": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/metadata/testall": {
+      "post": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/metadata/action/{action}": {
+      "post": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/metadata": {
+      "get": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/metadata/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/MediaCover/Artist/(?<artistId>\\d+)/(?<filename>(.+)\\.(jpg|png|gif))": {
+      "get": {
+        "tags": [
+          "Media Covers"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/MediaCover/Album/(?<artistId>\\d+)/(?<filename>(.+)\\.(jpg|png|gif))": {
+      "get": {
+        "tags": [
+          "Media Covers"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/manualimport": {
+      "get": {
+        "tags": [
+          "Manual Import"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Manual Import"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/log/file": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/log/file/(?<filename>[-.a-zA-Z0-9]+?\\.txt)": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/log": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/log/file/update": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/log/file/update/(?<filename>[-.a-zA-Z0-9]+?\\.txt)": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/indexer/schema": {
+      "get": {
+        "tags": [
+          "Indexer"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/indexer/test": {
+      "post": {
+        "tags": [
+          "Indexers"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/indexer/testall": {
+      "post": {
+        "tags": [
+          "Indexers"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/indexer/action/{action}": {
+      "post": {
+        "tags": [
+          "Indexers"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/indexer": {
+      "get": {
+        "tags": [
+          "Indexers"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Indexers"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Indexers"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/indexer/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Indexers"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Indexers"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Indexers"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/release": {
+      "get": {
+        "tags": [
+          "Indexer Release"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Indexer Release"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/importlistexclusion/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Import List"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Import List"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Import List"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/importlistexclusion": {
+      "get": {
+        "tags": [
+          "Import List Exclusion"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Import List Exclusion"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Import List Exclusion"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/importlist/schema": {
+      "get": {
+        "tags": [
+          "Import List"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/importlist/test": {
+      "post": {
+        "tags": [
+          "Import List"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/importlist/testall": {
+      "post": {
+        "tags": [
+          "Import List"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/importlist/action/{action}": {
+      "post": {
+        "tags": [
+          "Import List"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/importlist": {
+      "get": {
+        "tags": [
+          "Import List"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Import List"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Import List"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/importlist/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Import List"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Import List"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Import List"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/history": {
+      "get": {
+        "tags": [
+          "History"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/history/since": {
+      "get": {
+        "tags": [
+          "History"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/history/artist": {
+      "get": {
+        "tags": [
+          "History"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/history/failed": {
+      "post": {
+        "tags": [
+          "History"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/filesystem": {
+      "get": {
+        "tags": [
+          "Filesystem"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/filesystem/type": {
+      "get": {
+        "tags": [
+          "Filesystem"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/filesystem/mediafiles": {
+      "get": {
+        "tags": [
+          "Filesystem"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/downloadclient/schema": {
+      "get": {
+        "tags": [
+          "Download Client"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/downloadclient/test": {
+      "post": {
+        "tags": [
+          "Download Client"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/downloadclient/testall": {
+      "post": {
+        "tags": [
+          "Download Client"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/downloadclient/action/{action}": {
+      "post": {
+        "tags": [
+          "Download Client"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/downloadclient": {
+      "get": {
+        "tags": [
+          "Download Client"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Download Client"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Download Client"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/downloadclient/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Download Client"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Download Client"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Download Client"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/diskspace": {
+      "get": {
+        "tags": [
+          "Diskspace"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/customfilter/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Custom Filter"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Custom Filter"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Custom Filter"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/customfilter": {
+      "get": {
+        "tags": [
+          "Custom Filter"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Custom Filter"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Custom Filter"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/config/downloadclient": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/config/downloadclient/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/config/host": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/config/host/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/config/indexer": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/config/indexer/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/config/mediamanagement": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/config/mediamanagement/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/config/metadataprovider": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/config/metadataprovider/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/config/naming": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/config/naming/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/config/naming/examples": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/config/ui": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/config/ui/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/command/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Command"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Command"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/command": {
+      "get": {
+        "tags": [
+          "Command"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Command"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/feed/v1/calendar/Lidarr.ics": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/calendar/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/calendar": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/blacklist": {
+      "get": {
+        "tags": [
+          "Blacklist"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/blacklist/(?<id>[\\d]{1,10})": {
+      "delete": {
+        "tags": [
+          "Blacklist"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/artist/editor": {
+      "put": {
+        "tags": [
+          "Artist"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Artist"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/artist/import": {
+      "post": {
+        "tags": [
+          "Artist"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/artist/lookup": {
+      "get": {
+        "tags": [
+          "Artist"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/artist": {
+      "get": {
+        "tags": [
+          "Artist"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Artist"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Artist"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/artist/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Artist"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Artist"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Artist"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/album/lookup": {
+      "get": {
+        "tags": [
+          "Album"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/album/(?<id>[\\d]{1,10})": {
+      "get": {
+        "tags": [
+          "Album"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Album"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "delete": {
+        "tags": [
+          "Album"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/album": {
+      "get": {
+        "tags": [
+          "Album"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "put": {
+        "tags": [
+          "Album"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "post": {
+        "tags": [
+          "Album"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/album/monitor": {
+      "put": {
+        "tags": [
+          "Album"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/albumstudio": {
+      "post": {
+        "tags": [
+          "Album Studio"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    },
+    "/api/v1/release/push": {
+      "post": {
+        "tags": [
+          "Indexer Release"
+        ],
+        "summary": "Warning: no annotated method found for this route",
+        "description": "This route is not annotated.",
+        "operationId": ""
+      },
+      "parameters": []
+    }
+  },
+  "externalDocs": {
+    "description": "GitHub",
+    "url": "https://github.com/Lidarr/Lidarr"
+  }
+}
