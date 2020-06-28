@@ -164,12 +164,20 @@ namespace NzbDrone.Core.Download.Clients.Transmission
 
         public override DownloadClientInfo GetStatus()
         {
-            var config = _proxy.GetConfig(Settings);
-            var destDir = config.DownloadDir;
-
-            if (Settings.MusicCategory.IsNotNullOrWhiteSpace())
+            string destDir;
+            if (Settings.TvDirectory.IsNotNullOrWhiteSpace())
             {
-                destDir = string.Format("{0}/{1}", destDir, Settings.MusicCategory);
+                destDir = Settings.TvDirectory;
+            }
+            else
+            {
+                var config = _proxy.GetConfig(Settings);
+                destDir = config.DownloadDir;
+
+                if (Settings.MusicCategory.IsNotNullOrWhiteSpace())
+                {
+                    destDir = string.Format("{0}/{1}", destDir, Settings.MusicCategory);
+                }
             }
 
             return new DownloadClientInfo
