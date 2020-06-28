@@ -1,5 +1,5 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.0",
   "info": {
     "title": "Lidarr",
     "description": "Music Automation",
@@ -8,19 +8,61 @@
     },
     "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "{protocol}://{hostPath}",
+      "variables": {
+        "protocol": {
+          "enum": [
+            "https",
+            "http"
+          ],
+          "default": "https"
+        },
+        "hostPath": {
+          "default": "localhost:8686",
+          "description": "Your Lidarr Server URL"
+        }
+      }
+    }
+  ],
   "schemes": [
     "https",
     "http"
   ],
+  "tags": [
+    {
+      "name": "Artist"
+    },
+    {
+      "name": "Album"
+    },
+    {
+      "name": "Track"
+    },
+    {
+      "name": "TrackFile"
+    }
+  ],
   "paths": {
-    "/api/v1/wanted/cutoff/(?<id>[\\d]{1,10})": {
+    "/api/v1/wanted/cutoff/{id}": {
       "get": {
         "tags": [
           "Wanted"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -31,18 +73,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/wanted/missing/(?<id>[\\d]{1,10})": {
+    "/api/v1/wanted/missing/{id}": {
       "get": {
         "tags": [
           "Wanted"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -53,7 +115,16 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -64,7 +135,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -75,7 +156,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -86,18 +177,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/track/(?<id>[\\d]{1,10})": {
+    "/api/v1/track/{id}": {
       "get": {
         "tags": [
           "Track"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -108,18 +219,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/trackfile/(?<id>[\\d]{1,10})": {
+    "/api/v1/trackfile/{id}": {
       "get": {
         "tags": [
           "TrackFile"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -127,7 +258,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -135,7 +276,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -146,7 +297,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -154,7 +315,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -165,7 +336,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -176,18 +357,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/tag/detail/(?<id>[\\d]{1,10})": {
+    "/api/v1/tag/detail/{id}": {
       "get": {
         "tags": [
           "Tag"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -198,18 +399,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/tag/(?<id>[\\d]{1,10})": {
+    "/api/v1/tag/{id}": {
       "get": {
         "tags": [
           "Tag"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -217,7 +438,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -225,7 +456,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -236,7 +477,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -244,7 +495,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -252,7 +513,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -263,7 +534,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -274,7 +555,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -285,7 +576,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -296,7 +597,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -307,18 +618,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/system/task/(?<id>[\\d]{1,10})": {
+    "/api/v1/system/task/{id}": {
       "get": {
         "tags": [
           "System"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -329,29 +660,59 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/system/backup/(?<id>[\\d]{1,10})": {
+    "/api/v1/system/backup/{id}": {
       "delete": {
         "tags": [
           "System"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/system/backup/restore/(?<id>[\\d]{1,10})": {
+    "/api/v1/system/backup/restore/{id}": {
       "post": {
         "tags": [
           "System"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -362,7 +723,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -373,7 +744,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -384,7 +765,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -392,7 +783,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -400,18 +801,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/rootfolder/(?<id>[\\d]{1,10})": {
+    "/api/v1/rootfolder/{id}": {
       "get": {
         "tags": [
           "Root Folder"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -419,7 +840,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -427,7 +858,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -438,7 +879,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -446,7 +897,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -454,18 +915,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/remotepathmapping/(?<id>[\\d]{1,10})": {
+    "/api/v1/remotepathmapping/{id}": {
       "get": {
         "tags": [
           "Remote Mapping"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -473,7 +954,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -481,18 +972,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/queue/grab/(?<id>[\\d]{1,10})": {
+    "/api/v1/queue/grab/{id}": {
       "post": {
         "tags": [
           "Queue"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -503,18 +1014,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/queue/(?<id>[\\d]{1,10})": {
+    "/api/v1/queue/{id}": {
       "delete": {
         "tags": [
           "Queue"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -525,7 +1056,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -536,7 +1077,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -547,7 +1098,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -558,7 +1119,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -569,7 +1140,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -577,18 +1158,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/qualitydefinition/(?<id>[\\d]{1,10})": {
+    "/api/v1/qualitydefinition/{id}": {
       "get": {
         "tags": [
           "Quality Definitions"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -596,7 +1197,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -607,18 +1218,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/releaseprofile/(?<id>[\\d]{1,10})": {
+    "/api/v1/releaseprofile/{id}": {
       "get": {
         "tags": [
           "Release Profiles"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -626,7 +1257,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -634,7 +1275,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -645,7 +1296,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -653,7 +1314,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -661,7 +1332,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -672,7 +1353,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -680,7 +1371,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -688,18 +1389,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/qualityprofile/(?<id>[\\d]{1,10})": {
+    "/api/v1/qualityprofile/{id}": {
       "get": {
         "tags": [
           "Quality Profile"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -707,7 +1428,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -715,7 +1446,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -726,7 +1467,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -737,7 +1488,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -745,7 +1506,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -753,18 +1524,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/metadataprofile/(?<id>[\\d]{1,10})": {
+    "/api/v1/metadataprofile/{id}": {
       "get": {
         "tags": [
           "Metadata Profile"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -772,7 +1563,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -780,7 +1581,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -791,7 +1602,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -802,7 +1623,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -810,7 +1641,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -818,18 +1659,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/delayprofile/(?<id>[\\d]{1,10})": {
+    "/api/v1/delayprofile/{id}": {
       "get": {
         "tags": [
           "Delay Profile"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -837,7 +1698,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -845,18 +1716,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/delayprofile/reorder/(?<id>[\\d]{1,10})": {
+    "/api/v1/delayprofile/reorder/{id}": {
       "put": {
         "tags": [
           "Delay Profile"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -867,7 +1758,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -878,7 +1779,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -889,7 +1800,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -900,7 +1821,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -911,7 +1842,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -922,7 +1863,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -930,7 +1881,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -938,18 +1899,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/notification/(?<id>[\\d]{1,10})": {
+    "/api/v1/notification/{id}": {
       "get": {
         "tags": [
           "Notifications"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -957,7 +1938,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -965,7 +1956,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -976,7 +1977,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -987,7 +1998,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -998,7 +2019,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1009,7 +2040,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1020,7 +2061,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1028,7 +2079,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -1036,18 +2097,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/metadata/(?<id>[\\d]{1,10})": {
+    "/api/v1/metadata/{id}": {
       "get": {
         "tags": [
           "Metadata"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1055,7 +2136,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -1063,7 +2154,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1074,7 +2175,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1085,7 +2196,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1096,7 +2217,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1104,7 +2235,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1115,7 +2256,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1126,7 +2277,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1137,7 +2298,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1148,7 +2319,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1159,7 +2340,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1170,7 +2361,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1181,7 +2382,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1192,7 +2403,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1203,7 +2424,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1214,7 +2445,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1222,7 +2463,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -1230,18 +2481,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/indexer/(?<id>[\\d]{1,10})": {
+    "/api/v1/indexer/{id}": {
       "get": {
         "tags": [
           "Indexers"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1249,7 +2520,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -1257,7 +2538,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1268,7 +2559,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -1276,18 +2577,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/importlistexclusion/(?<id>[\\d]{1,10})": {
+    "/api/v1/importlistexclusion/{id}": {
       "get": {
         "tags": [
           "Import List"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1295,7 +2616,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -1303,7 +2634,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1314,7 +2655,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1322,7 +2673,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -1330,7 +2691,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1341,7 +2712,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1352,7 +2733,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1363,7 +2754,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1374,7 +2775,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1385,7 +2796,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1393,7 +2814,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -1401,18 +2832,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/importlist/(?<id>[\\d]{1,10})": {
+    "/api/v1/importlist/{id}": {
       "get": {
         "tags": [
           "Import List"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1420,7 +2871,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -1428,7 +2889,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1439,7 +2910,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1450,7 +2931,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1461,7 +2952,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1472,7 +2973,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1483,7 +2994,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1494,7 +3015,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1505,7 +3036,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1516,7 +3057,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1527,7 +3078,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1538,7 +3099,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1549,7 +3120,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1560,7 +3141,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1571,7 +3162,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1579,7 +3180,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -1587,18 +3198,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/downloadclient/(?<id>[\\d]{1,10})": {
+    "/api/v1/downloadclient/{id}": {
       "get": {
         "tags": [
           "Download Client"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1606,7 +3237,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -1614,7 +3255,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1625,18 +3276,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/customfilter/(?<id>[\\d]{1,10})": {
+    "/api/v1/customfilter/{id}": {
       "get": {
         "tags": [
           "Custom Filter"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1644,7 +3315,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -1652,7 +3333,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1663,7 +3354,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1671,7 +3372,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -1679,7 +3390,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1690,7 +3411,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1698,18 +3429,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/config/downloadclient/(?<id>[\\d]{1,10})": {
+    "/api/v1/config/downloadclient/{id}": {
       "get": {
         "tags": [
           "Config"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1717,7 +3468,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1728,7 +3489,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1736,18 +3507,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/config/host/(?<id>[\\d]{1,10})": {
+    "/api/v1/config/host/{id}": {
       "get": {
         "tags": [
           "Config"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1755,7 +3546,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1766,7 +3567,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1774,18 +3585,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/config/indexer/(?<id>[\\d]{1,10})": {
+    "/api/v1/config/indexer/{id}": {
       "get": {
         "tags": [
           "Config"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1793,7 +3624,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1804,7 +3645,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1812,18 +3663,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/config/mediamanagement/(?<id>[\\d]{1,10})": {
+    "/api/v1/config/mediamanagement/{id}": {
       "get": {
         "tags": [
           "Config"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1831,7 +3702,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1842,7 +3723,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1850,18 +3741,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/config/metadataprovider/(?<id>[\\d]{1,10})": {
+    "/api/v1/config/metadataprovider/{id}": {
       "get": {
         "tags": [
           "Config"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1869,7 +3780,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1880,7 +3801,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1888,18 +3819,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/config/naming/(?<id>[\\d]{1,10})": {
+    "/api/v1/config/naming/{id}": {
       "get": {
         "tags": [
           "Config"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1907,7 +3858,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1918,7 +3879,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1929,7 +3900,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1937,18 +3918,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/config/ui/(?<id>[\\d]{1,10})": {
+    "/api/v1/config/ui/{id}": {
       "get": {
         "tags": [
           "Config"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1956,18 +3957,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/command/(?<id>[\\d]{1,10})": {
+    "/api/v1/command/{id}": {
       "get": {
         "tags": [
           "Command"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -1975,7 +3996,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -1986,7 +4017,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -1994,7 +4035,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -2005,18 +4056,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/calendar/(?<id>[\\d]{1,10})": {
+    "/api/v1/calendar/{id}": {
       "get": {
         "tags": [
           "Calendar"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -2027,7 +4098,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -2038,18 +4119,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/blacklist/(?<id>[\\d]{1,10})": {
+    "/api/v1/blacklist/{id}": {
       "delete": {
         "tags": [
           "Blacklist"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -2060,7 +4161,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -2068,7 +4179,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -2079,7 +4200,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -2090,7 +4221,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -2101,7 +4242,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -2109,7 +4260,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -2117,18 +4278,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/artist/(?<id>[\\d]{1,10})": {
+    "/api/v1/artist/{id}": {
       "get": {
         "tags": [
           "Artist"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -2136,7 +4317,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -2144,7 +4335,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -2155,18 +4356,38 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
-    "/api/v1/album/(?<id>[\\d]{1,10})": {
+    "/api/v1/album/{id}": {
       "get": {
         "tags": [
           "Album"
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -2174,7 +4395,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -2182,7 +4413,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -2193,7 +4434,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -2201,7 +4452,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -2209,7 +4470,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -2220,7 +4491,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -2231,7 +4512,17 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
     },
@@ -2242,9 +4533,28 @@
         ],
         "summary": "Warning: no annotated method found for this route",
         "description": "This route is not annotated.",
-        "operationId": ""
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       },
       "parameters": []
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "api_key": {
+        "type": "apiKey",
+        "in": "query",
+        "name": "apiKey"
+      }
     }
   },
   "externalDocs": {
