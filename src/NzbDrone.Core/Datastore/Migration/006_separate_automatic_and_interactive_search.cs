@@ -9,11 +9,11 @@ namespace NzbDrone.Core.Datastore.Migration
         protected override void MainDbUpgrade()
         {
             Rename.Column("EnableSearch").OnTable("Indexers").To("EnableAutomaticSearch");
-            Alter.Table("Indexers").AddColumn("EnableInteractiveSearch").AsBoolean().Nullable();
+            Alter.Table("Indexers").AddColumn("EnableInteractiveSearch").AsInt32().Nullable();
 
             Execute.Sql("UPDATE Indexers SET EnableInteractiveSearch = EnableAutomaticSearch");
 
-            Alter.Table("Indexers").AlterColumn("EnableInteractiveSearch").AsBoolean().NotNullable();
+            Alter.Table("Indexers").AlterColumn("EnableInteractiveSearch").AsInt32().NotNullable();
         }
     }
 }

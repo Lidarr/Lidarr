@@ -28,8 +28,8 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("Overview").AsString().Nullable()
                 .WithColumn("Images").AsString()
                 .WithColumn("Path").AsString().Indexed()
-                .WithColumn("Monitored").AsBoolean()
-                .WithColumn("AlbumFolder").AsBoolean()
+                .WithColumn("Monitored").AsInt32()
+                .WithColumn("AlbumFolder").AsInt32()
                 .WithColumn("LastInfoSync").AsDateTime().Nullable()
                 .WithColumn("LastDiskSync").AsDateTime().Nullable()
                 .WithColumn("DateFormed").AsDateTime().Nullable()
@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("Overview").AsString().Nullable()
                 .WithColumn("Images").AsString()
                 .WithColumn("Path").AsString().Indexed()
-                .WithColumn("Monitored").AsBoolean()
+                .WithColumn("Monitored").AsInt32()
                 .WithColumn("LastInfoSync").AsDateTime().Nullable()
                 .WithColumn("LastDiskSync").AsDateTime().Nullable()
                 .WithColumn("ReleaseDate").AsDateTime().Nullable()
@@ -82,11 +82,11 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("AlbumId").AsInt32()
                 .WithColumn("TrackNumber").AsInt32()
                 .WithColumn("Title").AsString().Nullable()
-                .WithColumn("Explicit").AsBoolean()
-                .WithColumn("Compilation").AsBoolean()
+                .WithColumn("Explicit").AsInt32()
+                .WithColumn("Compilation").AsInt32()
                 .WithColumn("DiscNumber").AsInt32().Nullable()
                 .WithColumn("TrackFileId").AsInt32().Nullable().Indexed()
-                .WithColumn("Monitored").AsBoolean()
+                .WithColumn("Monitored").AsInt32()
                 .WithColumn("Ratings").AsString().Nullable()
                 .WithColumn("Duration").AsInt32().WithDefaultValue(0);
 
@@ -120,14 +120,14 @@ namespace NzbDrone.Core.Datastore.Migration
 
             Create.TableForModel("Notifications")
                 .WithColumn("Name").AsString()
-                .WithColumn("OnGrab").AsBoolean()
-                .WithColumn("OnDownload").AsBoolean()
+                .WithColumn("OnGrab").AsInt32()
+                .WithColumn("OnDownload").AsInt32()
                 .WithColumn("Settings").AsString()
                 .WithColumn("Implementation").AsString()
                 .WithColumn("ConfigContract").AsString().Nullable()
-                .WithColumn("OnUpgrade").AsBoolean().Nullable()
+                .WithColumn("OnUpgrade").AsInt32().Nullable()
                 .WithColumn("Tags").AsString().Nullable()
-                .WithColumn("OnRename").AsBoolean().NotNullable();
+                .WithColumn("OnRename").AsInt32().NotNullable();
 
             Create.TableForModel("ScheduledTasks")
                 .WithColumn("TypeName").AsString().Unique()
@@ -139,8 +139,8 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("Implementation").AsString()
                 .WithColumn("Settings").AsString().Nullable()
                 .WithColumn("ConfigContract").AsString().Nullable()
-                .WithColumn("EnableRss").AsBoolean().Nullable()
-                .WithColumn("EnableSearch").AsBoolean().Nullable();
+                .WithColumn("EnableRss").AsInt32().Nullable()
+                .WithColumn("EnableSearch").AsInt32().Nullable();
 
             Create.TableForModel("Profiles")
                 .WithColumn("Name").AsString().Unique()
@@ -154,9 +154,9 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("MaxSize").AsDouble().Nullable();
 
             Create.TableForModel("NamingConfig")
-                .WithColumn("ReplaceIllegalCharacters").AsBoolean().WithDefaultValue(true)
+                .WithColumn("ReplaceIllegalCharacters").AsInt32().WithDefaultValue(true)
                 .WithColumn("ArtistFolderFormat").AsString().Nullable()
-                .WithColumn("RenameTracks").AsBoolean().Nullable()
+                .WithColumn("RenameTracks").AsInt32().Nullable()
                 .WithColumn("StandardTrackFormat").AsString().Nullable()
                 .WithColumn("AlbumFolderFormat").AsString().Nullable();
 
@@ -175,7 +175,7 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("AlbumIds").AsString().WithDefaultValue("");
 
             Create.TableForModel("Metadata")
-                .WithColumn("Enable").AsBoolean().NotNullable()
+                .WithColumn("Enable").AsInt32().NotNullable()
                 .WithColumn("Name").AsString().NotNullable()
                 .WithColumn("Implementation").AsString().NotNullable()
                 .WithColumn("Settings").AsString().NotNullable()
@@ -194,7 +194,7 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("Extension").AsString().NotNullable();
 
             Create.TableForModel("DownloadClients")
-                .WithColumn("Enable").AsBoolean().NotNullable()
+                .WithColumn("Enable").AsInt32().NotNullable()
                 .WithColumn("Name").AsString().NotNullable()
                 .WithColumn("Implementation").AsString().NotNullable()
                 .WithColumn("Settings").AsString().NotNullable()
@@ -222,8 +222,8 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("Tags").AsString().NotNullable();
 
             Create.TableForModel("DelayProfiles")
-                .WithColumn("EnableUsenet").AsBoolean().NotNullable()
-                .WithColumn("EnableTorrent").AsBoolean().NotNullable()
+                .WithColumn("EnableUsenet").AsInt32().NotNullable()
+                .WithColumn("EnableTorrent").AsInt32().NotNullable()
                 .WithColumn("PreferredProtocol").AsInt32().NotNullable()
                 .WithColumn("UsenetDelay").AsInt32().NotNullable()
                 .WithColumn("TorrentDelay").AsInt32().NotNullable()

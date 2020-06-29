@@ -9,7 +9,7 @@ namespace NzbDrone.Core.Datastore.Migration
         protected override void MainDbUpgrade()
         {
             Rename.Table("Restrictions").To("ReleaseProfiles");
-            Alter.Table("ReleaseProfiles").AddColumn("IncludePreferredWhenRenaming").AsBoolean().WithDefaultValue(true);
+            Alter.Table("ReleaseProfiles").AddColumn("IncludePreferredWhenRenaming").AsInt32().WithDefaultValue(true);
         }
     }
 }

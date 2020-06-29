@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("Implementation").AsString()
                 .WithColumn("Settings").AsString().Nullable()
                 .WithColumn("ConfigContract").AsString().Nullable()
-                .WithColumn("EnableAutomaticAdd").AsBoolean().Nullable()
+                .WithColumn("EnableAutomaticAdd").AsInt32().Nullable()
                 .WithColumn("RootFolderPath").AsString()
                 .WithColumn("ShouldMonitor").AsInt32()
                 .WithColumn("ProfileId").AsInt32()

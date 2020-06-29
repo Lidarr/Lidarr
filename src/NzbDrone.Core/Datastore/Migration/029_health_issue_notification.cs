@@ -9,11 +9,11 @@ namespace NzbDrone.Core.Datastore.Migration
     {
         protected override void MainDbUpgrade()
         {
-            Alter.Table("Notifications").AddColumn("OnHealthIssue").AsBoolean().WithDefaultValue(0);
-            Alter.Table("Notifications").AddColumn("IncludeHealthWarnings").AsBoolean().WithDefaultValue(0);
-            Alter.Table("Notifications").AddColumn("OnDownloadFailure").AsBoolean().WithDefaultValue(0);
-            Alter.Table("Notifications").AddColumn("OnImportFailure").AsBoolean().WithDefaultValue(0);
-            Alter.Table("Notifications").AddColumn("OnTrackRetag").AsBoolean().WithDefaultValue(0);
+            Alter.Table("Notifications").AddColumn("OnHealthIssue").AsInt32().WithDefaultValue(0);
+            Alter.Table("Notifications").AddColumn("IncludeHealthWarnings").AsInt32().WithDefaultValue(0);
+            Alter.Table("Notifications").AddColumn("OnDownloadFailure").AsInt32().WithDefaultValue(0);
+            Alter.Table("Notifications").AddColumn("OnImportFailure").AsInt32().WithDefaultValue(0);
+            Alter.Table("Notifications").AddColumn("OnTrackRetag").AsInt32().WithDefaultValue(0);
 
             Delete.Column("OnDownload").FromTable("Notifications");
 

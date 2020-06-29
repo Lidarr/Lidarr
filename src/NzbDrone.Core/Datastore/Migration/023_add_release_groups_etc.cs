@@ -56,7 +56,7 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("ReleaseDate").AsDateTime().Nullable()
                 .WithColumn("Media").AsString().Nullable()
                 .WithColumn("TrackCount").AsInt32().Nullable()
-                .WithColumn("Monitored").AsBoolean();
+                .WithColumn("Monitored").AsInt32();
 
             Execute.WithConnection(PopulateReleases);
 
@@ -64,7 +64,7 @@ namespace NzbDrone.Core.Datastore.Migration
 
             // Add in the extra columns and update artist metadata id
             Alter.Table("Albums").AddColumn("ArtistMetadataId").AsInt32().WithDefaultValue(0);
-            Alter.Table("Albums").AddColumn("AnyReleaseOk").AsBoolean().WithDefaultValue(true);
+            Alter.Table("Albums").AddColumn("AnyReleaseOk").AsInt32().WithDefaultValue(true);
             Alter.Table("Albums").AddColumn("Links").AsString().Nullable();
 
             // Set metadata ID
