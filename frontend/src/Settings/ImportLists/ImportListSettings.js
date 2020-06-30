@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component, Fragment } from 'react';
 import { icons } from 'Helpers/Props';
 import PageContent from 'Components/Page/PageContent';
-import PageContentBodyConnector from 'Components/Page/PageContentBodyConnector';
+import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbarButton from 'Components/Page/Toolbar/PageToolbarButton';
 import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
 import SettingsToolbarConnector from 'Settings/SettingsToolbarConnector';
@@ -73,10 +73,10 @@ class ImportListSettings extends Component {
           onSavePress={this.onSavePress}
         />
 
-        <PageContentBodyConnector>
+        <PageContentBody>
           <ImportListsConnector />
           <ImportListsExclusionsConnector />
-        </PageContentBodyConnector>
+        </PageContentBody>
       </PageContent>
     );
   }

@@ -7,7 +7,7 @@ import Icon from 'Components/Icon';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import TextInput from 'Components/Form/TextInput';
 import PageContent from 'Components/Page/PageContent';
-import PageContentBodyConnector from 'Components/Page/PageContentBodyConnector';
+import PageContentBody from 'Components/Page/PageContentBody';
 import AddNewArtistSearchResultConnector from './Artist/AddNewArtistSearchResultConnector';
 import AddNewAlbumSearchResultConnector from './Album/AddNewAlbumSearchResultConnector';
 import styles from './AddNewItem.css';
@@ -87,7 +87,7 @@ class AddNewItem extends Component {
 
     return (
       <PageContent title="Add New Item">
-        <PageContentBodyConnector>
+        <PageContentBody>
           <div className={styles.searchContainer}>
             <div className={styles.searchIconContainer}>
               <Icon
@@ -181,7 +181,7 @@ class AddNewItem extends Component {
           }
 
           <div />
-        </PageContentBodyConnector>
+        </PageContentBody>
       </PageContent>
     );
   }

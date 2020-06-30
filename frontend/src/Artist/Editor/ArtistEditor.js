@@ -7,7 +7,7 @@ import toggleSelected from 'Utilities/Table/toggleSelected';
 import { align, sortDirections } from 'Helpers/Props';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
-import PageContentBodyConnector from 'Components/Page/PageContentBodyConnector';
+import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
 import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
 import FilterMenu from 'Components/Menu/FilterMenu';
@@ -202,7 +202,7 @@ class ArtistEditor extends Component {
           </PageToolbarSection>
         </PageToolbar>
 
-        <PageContentBodyConnector>
+        <PageContentBody>
           {
             isFetching && !isPopulated &&
               <LoadingIndicator />
@@ -249,7 +249,7 @@ class ArtistEditor extends Component {
             !error && isPopulated && !items.length &&
               <NoArtist totalItems={totalItems} />
           }
-        </PageContentBodyConnector>
+        </PageContentBody>
 
         <ArtistEditorFooter
           artistIds={selectedArtistIds}

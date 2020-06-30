@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { kinds } from 'Helpers/Props';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
-import PageContentBodyConnector from 'Components/Page/PageContentBodyConnector';
+import PageContentBody from 'Components/Page/PageContentBody';
 import SettingsToolbarConnector from 'Settings/SettingsToolbarConnector';
 import Form from 'Components/Form/Form';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
@@ -113,7 +113,7 @@ class GeneralSettings extends Component {
           {...otherProps}
         />
 
-        <PageContentBodyConnector>
+        <PageContentBody>
           {
             isFetching && !isPopulated &&
               <LoadingIndicator />
@@ -176,7 +176,7 @@ class GeneralSettings extends Component {
                 />
               </Form>
           }
-        </PageContentBodyConnector>
+        </PageContentBody>
 
         <ConfirmModal
           isOpen={this.state.isRestartRequiredModalOpen}
