@@ -282,11 +282,7 @@ class ArtistIndex extends Component {
                 null
             }
 
-            {
-              (view === 'posters' || view === 'banners' || view === 'overview') &&
-
-                <PageToolbarSeparator />
-            }
+            <PageToolbarSeparator />
 
             <ArtistIndexViewMenu
               view={view}
