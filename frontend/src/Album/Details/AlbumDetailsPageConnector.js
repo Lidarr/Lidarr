@@ -7,7 +7,7 @@ import { push } from 'connected-react-router';
 import NotFound from 'Components/NotFound';
 import { fetchAlbums, clearAlbums } from 'Store/Actions/albumActions';
 import PageContent from 'Components/Page/PageContent';
-import PageContentBodyConnector from 'Components/Page/PageContentBodyConnector';
+import PageContentBody from 'Components/Page/PageContentBody';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import AlbumDetailsConnector from './AlbumDetailsConnector';
 
@@ -103,9 +103,9 @@ class AlbumDetailsPageConnector extends Component {
         (!isFetching && !isPopulated)) {
       return (
         <PageContent title='loading'>
-          <PageContentBodyConnector>
+          <PageContentBody>
             <LoadingIndicator />
-          </PageContentBodyConnector>
+          </PageContentBody>
         </PageContent>
       );
     }

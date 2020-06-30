@@ -14,7 +14,7 @@ import Label from 'Components/Label';
 import MonitorToggleButton from 'Components/MonitorToggleButton';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
-import PageContentBodyConnector from 'Components/Page/PageContentBodyConnector';
+import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
 import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
 import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
@@ -340,7 +340,7 @@ class ArtistDetails extends Component {
           </PageToolbarSection>
         </PageToolbar>
 
-        <PageContentBodyConnector innerClassName={styles.innerContentBody}>
+        <PageContentBody innerClassName={styles.innerContentBody}>
           <div className={styles.header}>
             <div
               className={styles.backdrop}
@@ -670,7 +670,7 @@ class ArtistDetails extends Component {
             artistId={id}
             onModalClose={this.onInteractiveSearchModalClose}
           />
-        </PageContentBodyConnector>
+        </PageContentBody>
       </PageContent>
     );
   }

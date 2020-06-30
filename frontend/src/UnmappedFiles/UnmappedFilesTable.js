@@ -6,7 +6,7 @@ import VirtualTable from 'Components/Table/VirtualTable';
 import VirtualTableRow from 'Components/Table/VirtualTableRow';
 import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
 import PageContent from 'Components/Page/PageContent';
-import PageContentBodyConnector from 'Components/Page/PageContentBodyConnector';
+import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
 import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
 import PageToolbarButton from 'Components/Page/Toolbar/PageToolbarButton';
@@ -106,7 +106,7 @@ class UnmappedFilesTable extends Component {
           </PageToolbarSection>
         </PageToolbar>
 
-        <PageContentBodyConnector
+        <PageContentBody
           registerScroller={this.setScrollerRef}
         >
           {
@@ -143,7 +143,7 @@ class UnmappedFilesTable extends Component {
                 sortDirection={sortDirection}
               />
           }
-        </PageContentBodyConnector>
+        </PageContentBody>
       </PageContent>
     );
   }

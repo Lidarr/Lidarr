@@ -21,7 +21,7 @@ import EditAlbumModalConnector from 'Album/Edit/EditAlbumModalConnector';
 import DeleteAlbumModal from 'Album/Delete/DeleteAlbumModal';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
-import PageContentBodyConnector from 'Components/Page/PageContentBodyConnector';
+import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
 import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
 import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
@@ -306,7 +306,7 @@ class AlbumDetails extends Component {
           </PageToolbarSection>
         </PageToolbar>
 
-        <PageContentBodyConnector innerClassName={styles.innerContentBody}>
+        <PageContentBody innerClassName={styles.innerContentBody}>
           <div className={styles.header}>
             <div
               className={styles.backdrop}
@@ -579,7 +579,7 @@ class AlbumDetails extends Component {
             onModalClose={this.onDeleteAlbumModalClose}
           />
 
-        </PageContentBodyConnector>
+        </PageContentBody>
       </PageContent>
     );
   }
