@@ -1,6 +1,10 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Support requests will be closed immediately, if you are unsure go to our Discord
+  or Subreddit first. Exceptions do not mean you found a bug!
+title: ''
+labels: Type: Bug
+assignees: ''
 
 ---
 
