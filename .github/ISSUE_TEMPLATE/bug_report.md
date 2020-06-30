@@ -3,7 +3,7 @@ name: Bug report
 about: Support requests will be closed immediately, if you are unsure go to our Discord
   or Subreddit first. Exceptions do not mean you found a bug!
 title: ''
-labels: Type: Bug
+labels: 'Type: Bug'
 assignees: ''
 
 ---
