@@ -26,10 +26,6 @@
       }
     }
   ],
-  "schemes": [
-    "https",
-    "http"
-  ],
   "tags": [
     {
       "name": "Artist"
@@ -64,7 +60,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of album to retrieve",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/wanted/cutoff": {
       "get": {
@@ -106,7 +112,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of album to retrieve",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/wanted/missing": {
       "get": {
@@ -210,7 +226,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of track to retrieve",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/track": {
       "get": {
@@ -288,7 +314,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of trackfile",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/trackfile": {
       "get": {
@@ -390,7 +426,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of tag",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/tag/detail": {
       "get": {
@@ -468,7 +514,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of tag",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/tag": {
       "get": {
@@ -651,7 +707,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of task",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/system/backup": {
       "get": {
@@ -693,7 +759,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of backup",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/system/backup/restore/{id}": {
       "post": {
@@ -714,7 +790,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of backup",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/system/backup/restore/upload": {
       "post": {
@@ -870,7 +956,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Root Folder",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/remotepathmapping": {
       "get": {
@@ -984,7 +1080,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Remote Mapping",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/queue/grab/{id}": {
       "post": {
@@ -1005,7 +1111,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Queue Item",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/queue/grab/bulk": {
       "post": {
@@ -1047,7 +1163,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Queue Item",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/queue/bulk": {
       "delete": {
@@ -1209,7 +1335,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Quality Definition",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/qualitydefinition/update": {
       "put": {
@@ -1287,7 +1423,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Release Profile",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/releaseprofile": {
       "get": {
@@ -1458,7 +1604,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Quality Profile",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/qualityprofile/schema": {
       "get": {
@@ -1593,7 +1749,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Metadata Profile",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/metadataprofile/schema": {
       "get": {
@@ -1728,7 +1894,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Delay Profile",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/delayprofile/reorder/{id}": {
       "put": {
@@ -1749,7 +1925,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Delay Profile",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/parse": {
       "get": {
@@ -1854,7 +2040,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "action",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
     },
     "/api/v1/notification": {
       "get": {
@@ -1968,7 +2164,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of notification",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/metadata/schema": {
       "get": {
@@ -2052,7 +2258,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "action",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
     },
     "/api/v1/metadata": {
       "get": {
@@ -2166,9 +2382,19 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Metadata",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
-    "/api/v1/MediaCover/Artist/(?<artistId>\\d+)/(?<filename>(.+)\\.(jpg|png|gif))": {
+    "/api/v1/MediaCover/Artist/{artistId}/{filename}": {
       "get": {
         "tags": [
           "Media Covers"
@@ -2187,9 +2413,28 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "artistId",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "filename",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
     },
-    "/api/v1/MediaCover/Album/(?<artistId>\\d+)/(?<filename>(.+)\\.(jpg|png|gif))": {
+    "/api/v1/MediaCover/Album/{artistId}/{filename}": {
       "get": {
         "tags": [
           "Media Covers"
@@ -2208,7 +2453,26 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "artistId",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "filename",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
     },
     "/api/v1/manualimport": {
       "get": {
@@ -2270,7 +2534,7 @@
       },
       "parameters": []
     },
-    "/api/v1/log/file/(?<filename>[-.a-zA-Z0-9]+?\\.txt)": {
+    "/api/v1/log/file/{filename}": {
       "get": {
         "tags": [
           "Logs"
@@ -2289,7 +2553,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "filename",
+          "in": "path",
+          "description": "Filename of Log File to retrieve",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
     },
     "/api/v1/log": {
       "get": {
@@ -2333,7 +2607,7 @@
       },
       "parameters": []
     },
-    "/api/v1/log/file/update/(?<filename>[-.a-zA-Z0-9]+?\\.txt)": {
+    "/api/v1/log/file/update/{filename}": {
       "get": {
         "tags": [
           "Logs"
@@ -2352,7 +2626,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "filename",
+          "in": "path",
+          "description": "Filename of Update Log File to retrieve",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
     },
     "/api/v1/indexer/schema": {
       "get": {
@@ -2436,7 +2720,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "action",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
     },
     "/api/v1/indexer": {
       "get": {
@@ -2550,7 +2844,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Indexer",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/release": {
       "get": {
@@ -2646,7 +2950,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/importlistexclusion": {
       "get": {
@@ -2787,7 +3101,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "action",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
     },
     "/api/v1/importlist": {
       "get": {
@@ -2901,7 +3225,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/history": {
       "get": {
@@ -3153,7 +3487,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "action",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
     },
     "/api/v1/downloadclient": {
       "get": {
@@ -3267,7 +3611,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/diskspace": {
       "get": {
@@ -3345,7 +3699,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/customfilter": {
       "get": {
@@ -3480,7 +3844,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/config/host": {
       "get": {
@@ -3558,7 +3932,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/config/indexer": {
       "get": {
@@ -3636,7 +4020,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/config/mediamanagement": {
       "get": {
@@ -3714,7 +4108,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/config/metadataprovider": {
       "get": {
@@ -3792,7 +4196,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/config/naming": {
       "get": {
@@ -3870,7 +4284,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/config/naming/examples": {
       "get": {
@@ -3969,7 +4393,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/command/{id}": {
       "get": {
@@ -4008,7 +4442,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Command",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/command": {
       "get": {
@@ -4089,7 +4533,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "This parameter is not annotated",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/calendar": {
       "get": {
@@ -4152,7 +4606,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Blacklist Item",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/artist/editor": {
       "put": {
@@ -4198,8 +4662,8 @@
         "tags": [
           "Artist"
         ],
-        "summary": "Warning: no annotated method found for this route",
-        "description": "This route is not annotated.",
+        "summary": "Add multiple existsing Artist folders to DB",
+        "description": "",
         "operationId": "",
         "responses": {
           "200": {
@@ -4219,8 +4683,8 @@
         "tags": [
           "Artist"
         ],
-        "summary": "Warning: no annotated method found for this route",
-        "description": "This route is not annotated.",
+        "summary": "Search for Album not in DB",
+        "description": "",
         "operationId": "",
         "responses": {
           "200": {
@@ -4240,8 +4704,8 @@
         "tags": [
           "Artist"
         ],
-        "summary": "Warning: no annotated method found for this route",
-        "description": "This route is not annotated.",
+        "summary": "Get all Artists",
+        "description": "This route is used to retrieve all artist records in the database",
         "operationId": "",
         "responses": {
           "200": {
@@ -4297,8 +4761,8 @@
         "tags": [
           "Artist"
         ],
-        "summary": "Warning: no annotated method found for this route",
-        "description": "This route is not annotated.",
+        "summary": "Get Artist by Id",
+        "description": "",
         "operationId": "",
         "responses": {
           "200": {
@@ -4315,8 +4779,8 @@
         "tags": [
           "Artist"
         ],
-        "summary": "Warning: no annotated method found for this route",
-        "description": "This route is not annotated.",
+        "summary": "Edit Artist by Id",
+        "description": "",
         "operationId": "",
         "responses": {
           "200": {
@@ -4333,8 +4797,8 @@
         "tags": [
           "Artist"
         ],
-        "summary": "Warning: no annotated method found for this route",
-        "description": "This route is not annotated.",
+        "summary": "Delete Artist by Id",
+        "description": "",
         "operationId": "",
         "responses": {
           "200": {
@@ -4347,15 +4811,25 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Artist",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/album/lookup": {
       "get": {
         "tags": [
           "Album"
         ],
-        "summary": "Warning: no annotated method found for this route",
-        "description": "This route is not annotated.",
+        "summary": "Search for Album not in DB",
+        "description": "",
         "operationId": "",
         "responses": {
           "200": {
@@ -4425,7 +4899,17 @@
           }
         ]
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of Album",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ]
     },
     "/api/v1/album": {
       "get": {
