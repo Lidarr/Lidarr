@@ -1,5 +1,6 @@
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Gazelle;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.ThingiProvider.Events;
 
 namespace NzbDrone.Core.HealthCheck.Checks
@@ -11,7 +12,8 @@ namespace NzbDrone.Core.HealthCheck.Checks
     {
         private readonly IIndexerFactory _indexerFactory;
 
-        public RedactedGazelleCheck(IIndexerFactory indexerFactory)
+        public RedactedGazelleCheck(IIndexerFactory indexerFactory, ILocalizationService localizationService)
+            : base(localizationService)
         {
             _indexerFactory = indexerFactory;
         }
@@ -24,8 +26,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
             {
                 var definition = (IndexerDefinition)indexer.Definition;
 
-                if (definition.Settings is GazelleSettings s &&
-                    s.BaseUrl == "https://redacted.ch")
+                if (definition.Settings is GazelleSettings { BaseUrl: "https://redacted.ch" })
                 {
                     return new HealthCheck(GetType(), HealthCheckResult.Warning, "You have set up Redacted as a Gazelle indexer, please reconfigure using the Redacted indexer setting");
                 }

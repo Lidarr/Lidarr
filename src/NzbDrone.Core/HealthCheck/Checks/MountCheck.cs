@@ -1,6 +1,6 @@
 using System.Linq;
 using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.HealthCheck.Checks
@@ -10,7 +10,8 @@ namespace NzbDrone.Core.HealthCheck.Checks
         private readonly IDiskProvider _diskProvider;
         private readonly IArtistService _artistService;
 
-        public MountCheck(IDiskProvider diskProvider, IArtistService artistService)
+        public MountCheck(IDiskProvider diskProvider, IArtistService artistService, ILocalizationService localizationService)
+            : base(localizationService)
         {
             _diskProvider = diskProvider;
             _artistService = artistService;
@@ -27,7 +28,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
             if (mounts.Any())
             {
-                return new HealthCheck(GetType(), HealthCheckResult.Error, "Mount containing a artist path is mounted read-only: " + string.Join(",", mounts.Select(m => m.Name)), "#artist-mount-ro");
+                return new HealthCheck(GetType(), HealthCheckResult.Error, _localizationService.GetLocalizedString("MountCheckMessage") + string.Join(", ", mounts.Select(m => m.Name)), "#movie-mount-ro");
             }
 
             return new HealthCheck(GetType());

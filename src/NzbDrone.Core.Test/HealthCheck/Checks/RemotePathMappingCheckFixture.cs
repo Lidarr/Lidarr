@@ -10,7 +10,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Download.Clients;
 using NzbDrone.Core.HealthCheck.Checks;
-using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Parser.Model;
@@ -41,12 +41,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         {
             _downloadItem = new DownloadClientItem
             {
-                DownloadClientInfo = new DownloadClientItemClientInfo
-                {
-                    Protocol = DownloadProtocol.Usenet,
-                    Id = 1,
-                    Name = "Test"
-                },
+                DownloadClientInfo = new DownloadClientItemClientInfo { Name = "Test" },
                 DownloadId = "TestId",
                 OutputPath = new OsPath(_downloadItemPath)
             };
@@ -71,10 +66,6 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
                   .Setup(s => s.GetDownloadClients(It.IsAny<bool>()))
                   .Returns(new IDownloadClient[] { _downloadClient.Object });
 
-            Mocker.GetMock<IProvideDownloadClient>()
-                .Setup(s => s.Get(It.IsAny<int>()))
-                .Returns(_downloadClient.Object);
-
             Mocker.GetMock<IConfigService>()
                   .Setup(s => s.EnableCompletedDownloadHandling)
                   .Returns(true);
@@ -94,6 +85,10 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
                     Ensure.That(path, () => path).IsValidPath(PathValidationType.CurrentOs);
                     return false;
                 });
+
+            Mocker.GetMock<ILocalizationService>()
+                  .Setup(s => s.GetLocalizedString(It.IsAny<string>()))
+                  .Returns("Some Warning Message");
         }
 
         private void GivenFolderExists(string folder)
@@ -181,7 +176,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         public void should_return_ok_on_track_imported_event()
         {
             GivenFolderExists(_downloadRootPath);
-            var importEvent = new TrackImportedEvent(new LocalTrack(), new TrackFile(), new List<TrackFile>(), true, new DownloadClientItem { DownloadClientInfo = new DownloadClientItemClientInfo() });
+            var importEvent = new TrackImportedEvent(new LocalTrack(), new TrackFile(), new List<TrackFile>(), true, new DownloadClientItem());
 
             Subject.Check(importEvent).ShouldBeOk();
         }
@@ -195,7 +190,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
             };
             GivenFileExists(localTrack.Path);
 
-            var importEvent = new TrackImportFailedEvent(new Exception(), localTrack, true, new DownloadClientItem { DownloadClientInfo = new DownloadClientItemClientInfo() });
+            var importEvent = new TrackImportFailedEvent(new Exception(), localTrack, true, new DownloadClientItem());
 
             Subject.Check(importEvent).ShouldBeError(wikiFragment: "permissions-error");
         }

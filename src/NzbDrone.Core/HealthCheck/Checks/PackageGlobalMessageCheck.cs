@@ -1,9 +1,6 @@
-using System;
-using System.Linq;
-using System.Text.RegularExpressions;
-using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Localization;
 
 namespace NzbDrone.Core.HealthCheck.Checks
 {
@@ -11,7 +8,8 @@ namespace NzbDrone.Core.HealthCheck.Checks
     {
         private readonly IDeploymentInfoProvider _deploymentInfoProvider;
 
-        public PackageGlobalMessageCheck(IDeploymentInfoProvider deploymentInfoProvider)
+        public PackageGlobalMessageCheck(IDeploymentInfoProvider deploymentInfoProvider, ILocalizationService localizationService)
+            : base(localizationService)
         {
             _deploymentInfoProvider = deploymentInfoProvider;
         }
@@ -37,7 +35,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 result = HealthCheckResult.Warning;
             }
 
-            return new HealthCheck(GetType(), result, message, "#package_maintainer_message");
+            return new HealthCheck(GetType(), result, message, "#package-maintainer-message");
         }
     }
 }
