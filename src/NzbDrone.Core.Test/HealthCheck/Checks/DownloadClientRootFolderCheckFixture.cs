@@ -6,6 +6,7 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Download.Clients;
 using NzbDrone.Core.HealthCheck.Checks;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.RootFolders;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
@@ -30,6 +31,10 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         [SetUp]
         public void Setup()
         {
+            Mocker.GetMock<ILocalizationService>()
+                  .Setup(s => s.GetLocalizedString(It.IsAny<string>()))
+                  .Returns("Some Warning Message");
+
             _clientStatus = new DownloadClientInfo
             {
                 IsLocalhost = true,
@@ -68,7 +73,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         {
             GivenRootFolder(_downloadRootPath);
 
-            Subject.Check().ShouldBeWarning(wikiFragment: "downloads_in_root_folder");
+            Subject.Check().ShouldBeWarning(wikiFragment: "downloads-in-root-folder");
         }
 
         [Test]

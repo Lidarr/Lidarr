@@ -12,13 +12,12 @@ namespace NzbDrone.Core.HealthCheck.Checks
     {
         private readonly IConfigService _configService;
         private readonly IDiskProvider _diskProvider;
-        private readonly ILocalizationService _localizationService;
 
         public RecyclingBinCheck(IConfigService configService, IDiskProvider diskProvider, ILocalizationService localizationService)
+            : base(localizationService)
         {
             _configService = configService;
             _diskProvider = diskProvider;
-            _localizationService = localizationService;
         }
 
         public override HealthCheck Check()

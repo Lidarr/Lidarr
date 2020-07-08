@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.HealthCheck;
 
@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
 
             if (wikiFragment.IsNotNullOrWhiteSpace())
             {
-                result.WikiUrl.Fragment.Should().Be(wikiFragment);
+                result.WikiUrl.ToString().Should().Contain(wikiFragment);
             }
         }
 
@@ -47,7 +47,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
 
             if (wikiFragment.IsNotNullOrWhiteSpace())
             {
-                result.WikiUrl.Fragment.Should().Be(wikiFragment);
+                result.WikiUrl.ToString().Should().Contain(wikiFragment);
             }
         }
     }
