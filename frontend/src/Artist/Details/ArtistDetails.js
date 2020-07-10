@@ -197,7 +197,6 @@ class ArtistDetails extends Component {
       overview,
       links,
       images,
-      artistType,
       alternateTitles,
       tags,
       isSaving,
