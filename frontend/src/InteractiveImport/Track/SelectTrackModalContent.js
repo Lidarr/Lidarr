@@ -1,15 +1,17 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import TextInput from 'Components/Form/TextInput';
 import Button from 'Components/Link/Button';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
+import Scroller from 'Components/Scroller/Scroller';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
-import { kinds } from 'Helpers/Props';
+import { kinds, scrollDirections } from 'Helpers/Props';
 import ExpandingFileDetails from 'TrackFile/ExpandingFileDetails';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import translate from 'Utilities/String/translate';
@@ -17,6 +19,7 @@ import getSelectedIds from 'Utilities/Table/getSelectedIds';
 import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
 import SelectTrackRow from './SelectTrackRow';
+import styles from './SelectTrackModalContent.css';
 
 const columns = [
   {
@@ -65,11 +68,12 @@ class SelectTrackModalContent extends Component {
     this.state = {
       allSelected: false,
       allUnselected: false,
+      filter: '',
       lastToggled: null,
       selectedState: init
     };
 
-    props.onSortPress( props.sortKey, props.sortDirection );
+    props.onSortPress(props.sortKey, props.sortDirection);
   }
 
   //
@@ -81,6 +85,10 @@ class SelectTrackModalContent extends Component {
 
   //
   // Listeners
+
+  onFilterChange = ({ value }) => {
+    this.setState({ filter: value.toLowerCase() });
+  };
 
   onSelectAllChange = ({ value }) => {
     this.setState(selectAll(this.state.selectedState, value));
@@ -119,8 +127,10 @@ class SelectTrackModalContent extends Component {
     const {
       allSelected,
       allUnselected,
+      filter,
       selectedState
     } = this.state;
+    const filterTrackNumber = parseInt(filter);
 
     const errorMessage = getErrorMessage(error, 'Unable to load tracks');
 
@@ -141,63 +151,84 @@ class SelectTrackModalContent extends Component {
           {translate('ManualImport')} - {translate('SelectTracks')}
         </ModalHeader>
 
-        <ModalBody>
-          {
-            isFetching &&
-              <LoadingIndicator />
-          }
-
-          {
-            error &&
-              <div>{errorMessage}</div>
-          }
-
-          <ExpandingFileDetails
-            audioTags={audioTags}
-            filename={filename}
-            rejections={rejections}
-            isExpanded={false}
+        <ModalBody
+          className={styles.modalBody}
+          scrollDirection={scrollDirections.NONE}
+        >
+          <TextInput
+            className={styles.filterInput}
+            placeholder={translate('FilterTracksByTitleOrNumber')}
+            name="filter"
+            value={filter}
+            autoFocus={true}
+            onChange={this.onFilterChange}
           />
 
-          {
-            isPopulated && !!items.length &&
-              <Table
-                columns={selectAllEnabled ? columns : selectAllBlankColumn.concat(columns)}
-                selectAll={selectAllEnabled}
-                allSelected={allSelected}
-                allUnselected={allUnselected}
-                sortKey={sortKey}
-                sortDirection={sortDirection}
-                onSortPress={onSortPress}
-                onSelectAllChange={this.onSelectAllChange}
-              >
-                <TableBody>
-                  {
-                    items.map((item) => {
-                      return (
-                        <SelectTrackRow
-                          key={item.id}
-                          id={item.id}
-                          mediumNumber={item.mediumNumber}
-                          trackNumber={item.absoluteTrackNumber}
-                          title={item.title}
-                          hasFile={item.hasFile}
-                          importSelected={otherSelected.concat(currentSelected).includes(item.id)}
-                          isDisabled={otherSelected.includes(item.id)}
-                          isSelected={selectedState[item.id]}
-                          onSelectedChange={this.onSelectedChange}
-                        />
-                      );
-                    })
-                  }
-                </TableBody>
-              </Table>
-          }
+          <Scroller
+            className={styles.scroller}
+            autoFocus={false}
+          >
+            {
+              isFetching ? <LoadingIndicator /> : null
+            }
 
-          {
-            isPopulated && !items.length &&
-              'No tracks were found for the selected album'
-          }
+            {
+              error ? <div>{errorMessage}</div> : null
+            }
+
+            <ExpandingFileDetails
+              audioTags={audioTags}
+              filename={filename}
+              rejections={rejections}
+              isExpanded={false}
+            />
+
+            {
+              isPopulated && !!items.length ?
+                <Table
+                  columns={selectAllEnabled ? columns : selectAllBlankColumn.concat(columns)}
+                  selectAll={selectAllEnabled}
+                  allSelected={allSelected}
+                  allUnselected={allUnselected}
+                  sortKey={sortKey}
+                  sortDirection={sortDirection}
+                  onSortPress={onSortPress}
+                  onSelectAllChange={this.onSelectAllChange}
+                >
+                  <TableBody>
+                    {
+                      items.map((item) => {
+                        return item.title.toLowerCase().includes(filter) ||
+                          item.absoluteTrackNumber === filterTrackNumber ||
+                          item.trackNumber === filterTrackNumber ?
+                          (
+                            <SelectTrackRow
+                              key={item.id}
+                              id={item.id}
+                              mediumNumber={item.mediumNumber}
+                              trackNumber={item.absoluteTrackNumber}
+                              title={item.title}
+                              hasFile={item.hasFile}
+                              importSelected={otherSelected.concat(currentSelected).includes(item.id)}
+                              isDisabled={otherSelected.includes(item.id)}
+                              isSelected={selectedState[item.id]}
+                              onSelectedChange={this.onSelectedChange}
+                            />
+                          ) :
+                          null;
+                      })
+                    }
+                  </TableBody>
+                </Table> :
+                null
+            }
+
+            {
+              isPopulated && !items.length ?
+                translate('NoTracksFoundForSelectedAlbum') :
+                null
+            }
+          </Scroller>
         </ModalBody>
 
         <ModalFooter>
