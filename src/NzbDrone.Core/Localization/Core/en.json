@@ -830,6 +830,7 @@
   "NoMediumInformation": "No medium information is available.",
   "NoMinimumForAnyDuration": "No minimum for any duration",
   "NoMissingItems": "No missing items",
+  "NoTracksFoundForSelectedAlbum": "No tracks were found for the selected album",
   "NoResultsFound": "No results found",
   "NoTagsHaveBeenAddedYet": "No tags have been added yet",
   "NoTracksInThisMedium": "No tracks in this medium",
