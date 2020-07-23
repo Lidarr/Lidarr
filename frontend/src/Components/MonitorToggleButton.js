@@ -7,7 +7,7 @@ import styles from './MonitorToggleButton.css';
 
 function getTooltip(monitored, isDisabled) {
   if (isDisabled) {
-    return 'Cannot toogle monitored state when artist is unmonitored';
+    return 'Cannot toggle monitored state when artist is unmonitored';
   }
 
   if (monitored) {
