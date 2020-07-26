@@ -142,6 +142,35 @@ namespace NzbDrone.Core.MediaFiles
                 mediaFileList.AddRange(files);
             }
 
+            var artists = _artistService.GetArtists(artistIds);
+
+            // Check for missing artist folders if specific artists are being scanned
+            if (artistIds != null && artistIds.Any())
+            {
+                foreach (var artist in artists)
+                {
+                    if (!_diskProvider.FolderExists(artist.Path))
+                    {
+                        if (_configService.CreateEmptyArtistFolders)
+                        {
+                            if (_configService.DeleteEmptyFolders)
+                            {
+                                _logger.Debug("Not creating missing artist folder: {0} because delete empty folders is enabled", artist.Path);
+                            }
+                            else
+                            {
+                                _logger.Debug("Creating missing artist folder: {0}", artist.Path);
+                                _diskProvider.CreateFolder(artist.Path);
+                            }
+                        }
+                        else
+                        {
+                            _logger.Debug("Artist folder doesn't exist: {0}", artist.Path);
+                        }
+                    }
+                }
+            }
+
             musicFilesStopwatch.Stop();
             _logger.Trace("Finished getting track files for:\n{0} [{1}]", folders.ConcatToString("\n"), musicFilesStopwatch.Elapsed);
 
@@ -211,7 +240,6 @@ namespace NzbDrone.Core.MediaFiles
 
             _logger.Debug($"Updated info for {updatedFiles.Count} known files");
 
-            var artists = _artistService.GetArtists(artistIds);
             foreach (var artist in artists)
             {
                 CompletedScanning(artist);
