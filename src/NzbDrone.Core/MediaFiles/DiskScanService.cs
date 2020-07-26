@@ -95,25 +95,28 @@ namespace NzbDrone.Core.MediaFiles
                     return;
                 }
 
-                if (!_diskProvider.FolderExists(rootFolder.Path))
-                {
-                    _logger.Warn("Root folder {0} doesn't exist.", rootFolder.Path);
+                var folderExists = _diskProvider.FolderExists(folder);
 
-                    var skippedArtists = _artistService.GetArtists(artistIds);
-                    skippedArtists.ForEach(x => _eventAggregator.PublishEvent(new ArtistScanSkippedEvent(x, ArtistScanSkippedReason.RootFolderDoesNotExist)));
-                    return;
+                if (!folderExists)
+                {
+                    if (!_diskProvider.FolderExists(rootFolder.Path))
+                    {
+                        _logger.Warn("Artists' root folder ({0}) doesn't exist.", rootFolder);
+                        var skippedArtists = _artistService.GetArtists(artistIds);
+                        skippedArtists.ForEach(x => _eventAggregator.PublishEvent(new ArtistScanSkippedEvent(x, ArtistScanSkippedReason.RootFolderDoesNotExist)));
+                        return;
+                    }
+
+                    if (_diskProvider.FolderEmpty(rootFolder.Path))
+                    {
+                        _logger.Warn("Artists' root folder ({0}) is empty.", rootFolder);
+                        var skippedArtists = _artistService.GetArtists(artistIds);
+                        skippedArtists.ForEach(x => _eventAggregator.PublishEvent(new ArtistScanSkippedEvent(x, ArtistScanSkippedReason.RootFolderIsEmpty)));
+                        return;
+                    }
                 }
 
-                if (_diskProvider.GetDirectories(rootFolder.Path).Empty())
-                {
-                    _logger.Warn("Root folder {0} is empty.", rootFolder.Path);
-
-                    var skippedArtists = _artistService.GetArtists(artistIds);
-                    skippedArtists.ForEach(x => _eventAggregator.PublishEvent(new ArtistScanSkippedEvent(x, ArtistScanSkippedReason.RootFolderIsEmpty)));
-                    return;
-                }
-
-                if (!_diskProvider.FolderExists(folder))
+                if (!folderExists)
                 {
                     _logger.Debug("Specified scan folder ({0}) doesn't exist.", folder);
 

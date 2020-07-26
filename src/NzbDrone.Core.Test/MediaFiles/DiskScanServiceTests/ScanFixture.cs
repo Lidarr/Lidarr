@@ -9,6 +9,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Disk;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.TrackImport;
@@ -139,7 +140,7 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
             ExceptionVerification.ExpectedWarns(1);
 
             Mocker.GetMock<IDiskProvider>()
-                  .Verify(v => v.FolderExists(_artist.Path), Times.Never());
+                  .Verify(v => v.GetFiles(_artist.Path, SearchOption.AllDirectories), Times.Never());
 
             Mocker.GetMock<IMediaFileTableCleanupService>()
                   .Verify(v => v.Clean(It.IsAny<string>(), It.IsAny<List<string>>()), Times.Never());
