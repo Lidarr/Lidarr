@@ -337,19 +337,23 @@ namespace NzbDrone.Core.Music
         private void RefreshSelectedArtists(List<int> artistIds, bool isNew, CommandTrigger trigger)
         {
             var updated = false;
-            var artists = _artistService.GetArtists(artistIds);
+            var artists = new List<Artist>();
 
-            foreach (var artist in artists)
+            foreach (var artistId in artistIds)
             {
                 try
                 {
+                    var artist = _artistService.GetArtist(artistId);
                     updated |= RefreshEntityInfo(artist, null, true, false, null);
                     UpdateTags(artist);
+                    artists.Add(artist);
                 }
                 catch (Exception e)
                 {
+                    var artist = _artistService.GetArtist(artistId);
                     _logger.Error(e, "Couldn't refresh info for Artist '{0}' [{1}]", artist.Name, artist.ForeignArtistId);
                     UpdateTags(artist);
+                    artists.Add(artist);
                 }
             }
 
@@ -418,27 +422,29 @@ namespace NzbDrone.Core.Music
 
                 foreach (var artist in artists)
                 {
+                    var artistLocal = artist;
                     var manualTrigger = message.Trigger == CommandTrigger.Manual;
 
-                    if ((updatedMusicbrainzArtists == null && _checkIfArtistShouldBeRefreshed.ShouldRefresh(artist)) ||
-                        (updatedMusicbrainzArtists != null && updatedMusicbrainzArtists.Contains(artist.ForeignArtistId)) ||
+                    if ((updatedMusicbrainzArtists == null && _checkIfArtistShouldBeRefreshed.ShouldRefresh(artistLocal)) ||
+                        (updatedMusicbrainzArtists != null && updatedMusicbrainzArtists.Contains(artistLocal.ForeignArtistId)) ||
                         manualTrigger)
                     {
                         try
                         {
-                            updated |= RefreshEntityInfo(artist, null, manualTrigger, false, message.LastStartTime);
+                            artistLocal = _artistService.GetArtist(artistLocal.Id);
+                            updated |= RefreshEntityInfo(artistLocal, null, manualTrigger, false, message.LastStartTime);
                         }
                         catch (Exception e)
                         {
-                            _logger.Error(e, "Couldn't refresh info for Artist '{0}' [{1}]", artist.Name, artist.ForeignArtistId);
+                            _logger.Error(e, "Couldn't refresh info for Artist '{0}' [{1}]", artistLocal.Name, artistLocal.ForeignArtistId);
                         }
 
-                        UpdateTags(artist);
+                        UpdateTags(artistLocal);
                     }
                     else
                     {
-                        _logger.Info("Skipping refresh of Artist '{0}' [{1}]", artist.Name, artist.ForeignArtistId);
-                        UpdateTags(artist);
+                        _logger.Info("Skipping refresh of Artist '{0}' [{1}]", artistLocal.Name, artistLocal.ForeignArtistId);
+                        UpdateTags(artistLocal);
                     }
                 }
 
