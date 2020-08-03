@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
@@ -122,8 +123,18 @@ namespace Lidarr.Api.V1.Artist
 
         private List<ArtistResource> AllArtists()
         {
+            var mbId = Request.GetGuidQueryParameter("mbId");
             var artistStats = _artistStatisticsService.ArtistStatistics();
-            var artistsResources = _artistService.GetAllArtists().ToResource();
+            var artistsResources = new List<ArtistResource>();
+
+            if (mbId != Guid.Empty)
+            {
+                artistsResources.AddIfNotNull(_artistService.FindById(mbId.ToString()).ToResource());
+            }
+            else
+            {
+                artistsResources.AddRange(_artistService.GetAllArtists().ToResource());
+            }
 
             MapCoversToLocal(artistsResources.ToArray());
             LinkNextPreviousAlbums(artistsResources.ToArray());
