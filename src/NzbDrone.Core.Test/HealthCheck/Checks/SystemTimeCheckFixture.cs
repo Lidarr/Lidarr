@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using Moq;
 using NUnit.Framework;
@@ -17,12 +17,12 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         [SetUp]
         public void Setup()
         {
-            Mocker.SetConstant<ISonarrCloudRequestBuilder>(new SonarrCloudRequestBuilder());
+            Mocker.SetConstant<ILidarrCloudRequestBuilder>(new LidarrCloudRequestBuilder());
         }
 
         private void GivenServerTime(DateTime dateTime)
         {
-            var json = new ServiceTimeResponse {DateTimeUtc = dateTime}.ToJson();
+            var json = new ServiceTimeResponse { DateTimeUtc = dateTime }.ToJson();
 
             Mocker.GetMock<IHttpClient>()
                   .Setup(s => s.Execute(It.IsAny<HttpRequest>()))
