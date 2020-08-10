@@ -15,7 +15,6 @@ using NzbDrone.Core.Test.Framework;
 namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
 {
     [TestFixture]
-
     public class FileNameBuilderFixture : CoreTest<FileNameBuilder>
     {
         private Artist _artist;
@@ -511,6 +510,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
         {
             _namingConfig.RenameTracks = false;
             _trackFile.Path = "Linkin Park - 06 - Test";
+            _trackFile.SceneName = null;
 
             Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
                    .Should().Be(Path.GetFileNameWithoutExtension(_trackFile.Path));
@@ -520,11 +520,11 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
         public void use_file_name_when_sceneName_is_not_null()
         {
             _namingConfig.RenameTracks = false;
+            _trackFile.SceneName = "Linkin.Park.06.FLAC-LOL";
             _trackFile.Path = "Linkin Park - 06 - Test";
-            _trackFile.SceneName = "SceneName";
 
             Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
-                   .Should().Be(Path.GetFileNameWithoutExtension(_trackFile.Path));
+                   .Should().Be("Linkin.Park.06.FLAC-LOL");
         }
 
         [Test]
@@ -532,6 +532,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
         {
             _namingConfig.RenameTracks = false;
             _trackFile.Path = @"C:\Test\Unsorted\Artist - 01 - Test";
+            _trackFile.SceneName = null;
 
             Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
                    .Should().Be(Path.GetFileNameWithoutExtension(_trackFile.Path));

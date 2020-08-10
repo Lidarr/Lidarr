@@ -110,6 +110,22 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
         }
 
         [Test]
+        public void should_truncate_with_extension()
+        {
+            _artist.Name = "The Fantastic Life of Mr. Sisko";
+
+            _tracks[0].AbsoluteTrackNumber = 18;
+            _tracks[0].Title = "This title has to be 197 characters in length, combined with the series title, quality and episode number it becomes 254ish and the extension puts it above the 255 limit and triggers the truncation";
+            _trackFile.Quality.Quality = Quality.FLAC;
+            _tracks = _tracks.Take(1).ToList();
+            _namingConfig.StandardTrackFormat = "{Artist Name} - {Album Title} - {track:00} - {Track Title} [{Quality Title}]";
+
+            var result = Subject.BuildTrackFileName(_tracks, _artist, _album, _trackFile, ".flac");
+            result.Length.Should().BeLessOrEqualTo(255);
+            result.Should().Be("The Fantastic Life of Mr. Sisko - Hail to the King - 18 - This title has to be 197 characters in length, combined with the series title, quality and episode number it becomes 254ish and the extension puts it above the 255 limit and triggers... [FLAC].flac");
+        }
+
+        [Test]
         public void should_truncate_with_ellipsis_between_first_and_last_episode_titles()
         {
             _namingConfig.StandardTrackFormat = "{Artist Name} - {Album Title} - {track:00} - {Track Title} [{Quality Title}]";

@@ -91,9 +91,7 @@ namespace NzbDrone.Core.MediaFiles
                 }
 
                 var album = _albumService.GetAlbum(tracksInFile.First().AlbumId);
-
-                var newName = _filenameBuilder.BuildTrackFileName(tracksInFile, artist, album, file);
-                var newPath = _filenameBuilder.BuildTrackFilePath(artist, newName, Path.GetExtension(trackFilePath));
+                var newPath = _filenameBuilder.BuildTrackFilePath(tracksInFile, artist, album, file, Path.GetExtension(trackFilePath));
 
                 if (!trackFilePath.PathEquals(newPath, StringComparison.Ordinal))
                 {

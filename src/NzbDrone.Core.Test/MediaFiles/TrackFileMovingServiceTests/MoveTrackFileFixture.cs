@@ -7,6 +7,7 @@ using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Events;
@@ -43,12 +44,8 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackFileMovingServiceTests
                                                  .Build();
 
             Mocker.GetMock<IBuildFileNames>()
-                  .Setup(s => s.BuildTrackFileName(It.IsAny<List<Track>>(), It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<TrackFile>(), null, null))
-                  .Returns("Album\\File Name");
-
-            Mocker.GetMock<IBuildFileNames>()
-                  .Setup(s => s.BuildTrackFilePath(It.IsAny<Artist>(), It.IsAny<string>(), It.IsAny<string>()))
-                  .Returns(@"C:\Test\Music\Artist\Album\File Name.mp3".AsOsAgnostic());
+                .Setup(s => s.BuildTrackFilePath(It.IsAny<List<Track>>(), It.IsAny<Artist>(), It.IsAny<Album>(), It.IsAny<TrackFile>(), It.IsAny<string>(), It.IsAny<NamingConfig>(), It.IsAny<List<CustomFormat>>()))
+                .Returns(@"C:\Test\Music\Artist\Album\File Name.mp3".AsOsAgnostic());
 
             var rootFolder = @"C:\Test\Music\".AsOsAgnostic();
             Mocker.GetMock<IDiskProvider>()
