@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using NLog;
+using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation;
 using NzbDrone.Core.MediaFiles;
@@ -232,7 +233,7 @@ namespace NzbDrone.Core.Parser
             {
                 try
                 {
-                    result.Quality = MediaFileExtensions.GetQualityForExtension(Path.GetExtension(name));
+                    result.Quality = MediaFileExtensions.GetQualityForExtension(name.GetPathExtension());
                     result.QualityDetectionSource = QualityDetectionSource.Extension;
                 }
                 catch (ArgumentException)
