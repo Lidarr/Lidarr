@@ -177,7 +177,7 @@ namespace NzbDrone.Core.Organizer
         {
             try
             {
-                return _buildFileNames.BuildTrackFileName(tracks, artist, album, trackFile, nameSpec, _customFormats);
+                return _buildFileNames.BuildTrackFileName(tracks, artist, album, trackFile, "", nameSpec, _customFormats);
             }
             catch (NamingFormatException)
             {

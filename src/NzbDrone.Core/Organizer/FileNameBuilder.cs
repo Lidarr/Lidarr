@@ -18,8 +18,8 @@ namespace NzbDrone.Core.Organizer
 {
     public interface IBuildFileNames
     {
-        string BuildTrackFileName(List<Track> tracks, Artist artist, Album album, TrackFile trackFile, NamingConfig namingConfig = null, List<CustomFormat> customFormats = null);
-        string BuildTrackFilePath(Artist artist, string fileName, string extension);
+        string BuildTrackFileName(List<Track> tracks, Artist artist, Album album, TrackFile trackFile, string extension = "", NamingConfig namingConfig = null, List<CustomFormat> customFormats = null);
+        string BuildTrackFilePath(List<Track> tracks, Artist artist, Album album, TrackFile trackFile, string extension, NamingConfig namingConfig = null, List<CustomFormat> customFormats = null);
         BasicNamingConfig GetBasicNamingConfig(NamingConfig nameSpec);
         string GetArtistFolder(Artist artist, NamingConfig namingConfig = null);
     }
@@ -83,7 +83,7 @@ namespace NzbDrone.Core.Organizer
             _logger = logger;
         }
 
-        private string BuildTrackFileName(List<Track> tracks, Artist artist, Album album, TrackFile trackFile, int maxPath, NamingConfig namingConfig = null, List<CustomFormat> customFormats = null)
+        private string BuildTrackFileName(List<Track> tracks, Artist artist, Album album, TrackFile trackFile, string extension, int maxPath, NamingConfig namingConfig = null, List<CustomFormat> customFormats = null)
         {
             if (namingConfig == null)
             {
@@ -92,7 +92,7 @@ namespace NzbDrone.Core.Organizer
 
             if (!namingConfig.RenameTracks)
             {
-                return GetOriginalFileName(trackFile);
+                return GetOriginalTitle(trackFile) + extension;
             }
 
             if (namingConfig.StandardTrackFormat.IsNullOrWhiteSpace() || namingConfig.MultiDiscTrackFormat.IsNullOrWhiteSpace())
@@ -112,9 +112,9 @@ namespace NzbDrone.Core.Organizer
             var splitPatterns = pattern.Split(new char[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
             var components = new List<string>();
 
-            foreach (var s in splitPatterns)
+            for (var i = 0; i < splitPatterns.Length; i++)
             {
-                var splitPattern = s;
+                var splitPattern = splitPatterns[i];
                 var tokenHandlers = new Dictionary<string, Func<TokenMatch, string>>(FileNameBuilderTokenEqualityComparer.Instance);
                 splitPattern = FormatTrackNumberTokens(splitPattern, "", tracks);
                 splitPattern = FormatMediumNumberTokens(splitPattern, "", tracks);
@@ -131,6 +131,10 @@ namespace NzbDrone.Core.Organizer
 
                 var component = ReplaceTokens(splitPattern, tokenHandlers, namingConfig, true).Trim();
                 var maxPathSegmentLength = Math.Min(LongPathSupport.MaxFileNameLength, maxPath);
+                if (i == splitPatterns.Length - 1)
+                {
+                    maxPathSegmentLength -= extension.GetByteCount();
+                }
 
                 var maxTrackTitleLength = maxPathSegmentLength - GetLengthWithoutTrackTitle(component, namingConfig);
 
@@ -147,21 +151,23 @@ namespace NzbDrone.Core.Organizer
                 }
             }
 
-            return Path.Combine(components.ToArray());
+            return string.Join(Path.DirectorySeparatorChar.ToString(), components) + extension;
         }
 
-        public string BuildTrackFileName(List<Track> tracks, Artist artist, Album album, TrackFile trackFile, NamingConfig namingConfig = null, List<CustomFormat> customFormats = null)
+        public string BuildTrackFileName(List<Track> tracks, Artist artist, Album album, TrackFile trackFile, string extension = "", NamingConfig namingConfig = null, List<CustomFormat> customFormats = null)
         {
-            return BuildTrackFileName(tracks, artist, album, trackFile, LongPathSupport.MaxFilePathLength, namingConfig, customFormats);
+            return BuildTrackFileName(tracks, artist, album, trackFile, extension, LongPathSupport.MaxFilePathLength, namingConfig, customFormats);
         }
 
-        public string BuildTrackFilePath(Artist artist, string fileName, string extension)
+        public string BuildTrackFilePath(List<Track> tracks, Artist artist, Album album, TrackFile trackFile, string extension, NamingConfig namingConfig = null, List<CustomFormat> customFormats = null)
         {
             Ensure.That(extension, () => extension).IsNotNullOrWhiteSpace();
 
-            var path = artist.Path;
+            var artistPath = artist.Path;
+            var remainingPathLength = LongPathSupport.MaxFilePathLength - artistPath.GetByteCount() - 1;
+            var fileName = BuildTrackFileName(tracks, artist, album, trackFile, extension, remainingPathLength, namingConfig, customFormats);
 
-            return Path.Combine(path, fileName + extension);
+            return Path.Combine(artistPath, fileName);
         }
 
         public BasicNamingConfig GetBasicNamingConfig(NamingConfig nameSpec)

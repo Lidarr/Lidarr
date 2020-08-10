@@ -64,8 +64,7 @@ namespace NzbDrone.Core.MediaFiles
         {
             var tracks = _trackService.GetTracksByFileId(trackFile.Id);
             var album = _albumService.GetAlbum(trackFile.AlbumId);
-            var newFileName = _buildFileNames.BuildTrackFileName(tracks, artist, album, trackFile);
-            var filePath = _buildFileNames.BuildTrackFilePath(artist, newFileName, Path.GetExtension(trackFile.Path));
+            var filePath = _buildFileNames.BuildTrackFilePath(tracks, artist, album, trackFile, Path.GetExtension(trackFile.Path));
 
             EnsureTrackFolder(trackFile, artist, album, filePath);
 
@@ -76,8 +75,7 @@ namespace NzbDrone.Core.MediaFiles
 
         public TrackFile MoveTrackFile(TrackFile trackFile, LocalTrack localTrack)
         {
-            var newFileName = _buildFileNames.BuildTrackFileName(localTrack.Tracks, localTrack.Artist, localTrack.Album, trackFile);
-            var filePath = _buildFileNames.BuildTrackFilePath(localTrack.Artist, newFileName, Path.GetExtension(localTrack.Path));
+            var filePath = _buildFileNames.BuildTrackFilePath(localTrack.Tracks, localTrack.Artist, localTrack.Album, trackFile, Path.GetExtension(trackFile.Path));
 
             EnsureTrackFolder(trackFile, localTrack, filePath);
 
@@ -88,8 +86,7 @@ namespace NzbDrone.Core.MediaFiles
 
         public TrackFile CopyTrackFile(TrackFile trackFile, LocalTrack localTrack)
         {
-            var newFileName = _buildFileNames.BuildTrackFileName(localTrack.Tracks, localTrack.Artist, localTrack.Album, trackFile);
-            var filePath = _buildFileNames.BuildTrackFilePath(localTrack.Artist, newFileName, Path.GetExtension(localTrack.Path));
+            var filePath = _buildFileNames.BuildTrackFilePath(localTrack.Tracks, localTrack.Artist, localTrack.Album, trackFile, Path.GetExtension(trackFile.Path));
 
             EnsureTrackFolder(trackFile, localTrack, filePath);
 
