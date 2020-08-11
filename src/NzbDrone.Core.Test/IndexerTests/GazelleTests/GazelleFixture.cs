@@ -52,7 +52,7 @@ namespace NzbDrone.Core.Test.IndexerTests.GazelleTests
 
             var releaseInfo = releases.First();
 
-            releaseInfo.Title.Should().Be("Shania Twain - Shania Twain (1993) [FLAC 24bit Lossless]");
+            releaseInfo.Title.Should().Be("Shania Twain - Shania Twain (1993) [FLAC 24bit Lossless] [WEB]");
             releaseInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
             releaseInfo.DownloadUrl.Should()
                 .Be("http://someurl.ch/torrents.php?action=download&id=1541452&authkey=redacted&torrent_pass=redacted");
