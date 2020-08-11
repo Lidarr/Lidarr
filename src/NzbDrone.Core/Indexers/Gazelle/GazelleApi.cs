@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public string Format { get; set; }
         public bool HasLog { get; set; }
         public int LogScore { get; set; }
-        public bool HasQueue { get; set; }
+        public bool HasCue { get; set; }
         public bool Scene { get; set; }
         public bool VanityHouse { get; set; }
         public int FileCount { get; set; }
