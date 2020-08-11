@@ -1,20 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Gazelle;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.Indexers.Gazelle
+namespace NzbDrone.Core.Indexers.Redacted
 {
-    public class GazelleParser : IParseIndexerResponse
+    public class RedactedParser : IParseIndexerResponse
     {
-        private readonly GazelleSettings _settings;
-        public ICached<Dictionary<string, string>> AuthCookieCache { get; set; }
+        private readonly RedactedSettings _settings;
 
-        public GazelleParser(GazelleSettings settings)
+        public RedactedParser(RedactedSettings settings)
         {
             _settings = settings;
         }
@@ -25,17 +24,11 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                // Remove cookie cache
-                AuthCookieCache.Remove(_settings.BaseUrl.Trim().TrimEnd('/'));
-
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
             }
 
             if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
             {
-                // Remove cookie cache
-                AuthCookieCache.Remove(_settings.BaseUrl.Trim().TrimEnd('/'));
-
                 throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
             }
 
@@ -59,7 +52,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
                         torrentInfos.Add(new GazelleInfo()
                         {
-                            Guid = string.Format("Gazelle-{0}", id),
+                            Guid = string.Format("Redacted-{0}", id),
                             Artist = artist,
 
                             // Splice Title from info to avoid calling API again for every torrent.
@@ -68,7 +61,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                             Container = torrent.Encoding,
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),
-                            DownloadUrl = GetDownloadUrl(id, _settings.AuthKey, _settings.PassKey),
+                            DownloadUrl = GetDownloadUrl(id, _settings.PassKey),
                             InfoUrl = GetInfoUrl(result.GroupId, id),
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
@@ -86,13 +79,15 @@ namespace NzbDrone.Core.Indexers.Gazelle
                     .ToArray();
         }
 
-        private string GetDownloadUrl(int torrentId, string authKey, string passKey)
+        private string GetDownloadUrl(int torrentId, string passKey)
         {
+            // AuthKey is required but not checked, just pass in a dummy variable
+            // to avoid having to track authkey, which is randomly cycled
             var url = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/torrents.php")
                 .AddQueryParam("action", "download")
                 .AddQueryParam("id", torrentId)
-                .AddQueryParam("authkey", authKey)
+                .AddQueryParam("authkey", "lidarr")
                 .AddQueryParam("torrent_pass", passKey);
 
             return url.FullUri;

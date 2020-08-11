@@ -51,7 +51,6 @@ namespace NzbDrone.Core.Indexers.Gazelle
             get
             {
                 yield return GetDefinition("Orpheus Network", GetSettings("https://orpheus.network"));
-                yield return GetDefinition("REDacted", GetSettings("https://redacted.ch"));
                 yield return GetDefinition("Not What CD", GetSettings("https://notwhat.cd"));
             }
         }
