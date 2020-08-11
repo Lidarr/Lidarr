@@ -50,13 +50,19 @@ namespace NzbDrone.Core.Indexers.Redacted
                         var artist = WebUtility.HtmlDecode(result.Artist);
                         var album = WebUtility.HtmlDecode(result.GroupName);
 
+                        var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
+                        if (torrent.HasCue)
+                        {
+                            title += " [Cue]";
+                        }
+
                         torrentInfos.Add(new GazelleInfo()
                         {
                             Guid = string.Format("Redacted-{0}", id),
                             Artist = artist,
 
                             // Splice Title from info to avoid calling API again for every torrent.
-                            Title = WebUtility.HtmlDecode(result.Artist + " - " + result.GroupName + " (" + result.GroupYear + ") [" + torrent.Format + " " + torrent.Encoding + "]"),
+                            Title = WebUtility.HtmlDecode(title),
                             Album = album,
                             Container = torrent.Encoding,
                             Codec = torrent.Format,
