@@ -48,6 +48,7 @@
   </Rules>
   <Rules AnalyzerId="StyleCop.CSharp.LayoutRules"
          RuleNamespace="StyleCop.CSharp.LayoutRules">
+    <Rule Id="SA1515" Action="None" />
     <Rule Id="SA1516" Action="None" />
   </Rules>
   <Rules AnalyzerId="StyleCop.CSharp.DocumentationRules"
