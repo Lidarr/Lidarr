@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Music
     public interface IAddArtistService
     {
         Artist AddArtist(Artist newArtist, bool doRefresh = true);
-        List<Artist> AddArtists(List<Artist> newArtists);
+        List<Artist> AddArtists(List<Artist> newArtists, bool doRefresh = true);
     }
 
     public class AddArtistService : IAddArtistService
@@ -63,7 +63,7 @@ namespace NzbDrone.Core.Music
             return newArtist;
         }
 
-        public List<Artist> AddArtists(List<Artist> newArtists)
+        public List<Artist> AddArtists(List<Artist> newArtists, bool doRefresh = true)
         {
             var added = DateTime.UtcNow;
             var artistsToAdd = new List<Artist>();
@@ -88,7 +88,7 @@ namespace NzbDrone.Core.Music
             _artistMetadataService.UpsertMany(artistsToAdd.Select(x => x.Metadata.Value).ToList());
             artistsToAdd.ForEach(x => x.ArtistMetadataId = x.Metadata.Value.Id);
 
-            return _artistService.AddArtists(artistsToAdd);
+            return _artistService.AddArtists(artistsToAdd, doRefresh);
         }
 
         private Artist AddSkyhookData(Artist newArtist)

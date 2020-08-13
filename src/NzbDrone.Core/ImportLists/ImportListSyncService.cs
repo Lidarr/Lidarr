@@ -8,6 +8,7 @@ using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.MetadataSource;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.Music.Commands;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.ImportLists
@@ -24,6 +25,7 @@ namespace NzbDrone.Core.ImportLists
         private readonly IAddArtistService _addArtistService;
         private readonly IAddAlbumService _addAlbumService;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IManageCommandQueue _commandQueueManager;
         private readonly Logger _logger;
 
         public ImportListSyncService(IImportListFactory importListFactory,
@@ -36,6 +38,7 @@ namespace NzbDrone.Core.ImportLists
                                      IAddArtistService addArtistService,
                                      IAddAlbumService addAlbumService,
                                      IEventAggregator eventAggregator,
+                                     IManageCommandQueue commandQueueManager,
                                      Logger logger)
         {
             _importListFactory = importListFactory;
@@ -48,6 +51,7 @@ namespace NzbDrone.Core.ImportLists
             _addArtistService = addArtistService;
             _addAlbumService = addAlbumService;
             _eventAggregator = eventAggregator;
+            _commandQueueManager = commandQueueManager;
             _logger = logger;
         }
 
@@ -113,12 +117,18 @@ namespace NzbDrone.Core.ImportLists
                 }
             }
 
-            _addArtistService.AddArtists(artistsToAdd);
-            _addAlbumService.AddAlbums(albumsToAdd);
+            var addedArtists = _addArtistService.AddArtists(artistsToAdd, false);
+            var addedAlbums = _addAlbumService.AddAlbums(albumsToAdd);
 
-            var message = string.Format($"Import List Sync Completed. Items found: {reports.Count}, Artists added: {artistsToAdd.Count}, Albums added: {albumsToAdd.Count}");
+            var message = string.Format($"Import List Sync Completed. Items found: {reports.Count}, Artists added: {addedArtists.Count}, Albums added: {addedAlbums.Count}");
 
             _logger.ProgressInfo(message);
+
+            var toRefresh = addedArtists.Select(x => x.Id).Concat(addedAlbums.Select(x => x.Artist.Value.Id)).Distinct().ToList();
+            if (toRefresh.Any())
+            {
+                _commandQueueManager.Push(new BulkRefreshArtistCommand(toRefresh, true));
+            }
 
             return processed;
         }
