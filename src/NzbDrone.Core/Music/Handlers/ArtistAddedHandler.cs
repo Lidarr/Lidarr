@@ -1,4 +1,3 @@
-using System.Linq;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music.Commands;
@@ -26,7 +25,10 @@ namespace NzbDrone.Core.Music
 
         public void Handle(ArtistsImportedEvent message)
         {
-            _commandQueueManager.PushMany(message.ArtistIds.Select(s => new RefreshArtistCommand(s, true)).ToList());
+            if (message.DoRefresh)
+            {
+                _commandQueueManager.Push(new BulkRefreshArtistCommand(message.ArtistIds, true));
+            }
         }
     }
 }

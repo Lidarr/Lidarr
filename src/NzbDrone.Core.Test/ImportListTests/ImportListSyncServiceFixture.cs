@@ -48,6 +48,14 @@ namespace NzbDrone.Core.Test.ImportListTests
             Mocker.GetMock<IImportListExclusionService>()
                 .Setup(v => v.All())
                 .Returns(new List<ImportListExclusion>());
+
+            Mocker.GetMock<IAddArtistService>()
+                .Setup(v => v.AddArtists(It.IsAny<List<Artist>>(), false))
+                .Returns((List<Artist> artists, bool doRefresh) => artists);
+
+            Mocker.GetMock<IAddAlbumService>()
+                .Setup(v => v.AddAlbums(It.IsAny<List<Album>>()))
+                .Returns((List<Album> albums) => albums);
         }
 
         private void WithAlbum()
@@ -176,7 +184,7 @@ namespace NzbDrone.Core.Test.ImportListTests
             Subject.Execute(new ImportListSyncCommand());
 
             Mocker.GetMock<IAddArtistService>()
-                .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 0)));
+                .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 0), false));
         }
 
         [Test]
@@ -188,7 +196,7 @@ namespace NzbDrone.Core.Test.ImportListTests
             Subject.Execute(new ImportListSyncCommand());
 
             Mocker.GetMock<IAddArtistService>()
-                .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 0)));
+                .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 0), false));
         }
 
         [Test]
@@ -214,7 +222,7 @@ namespace NzbDrone.Core.Test.ImportListTests
             Subject.Execute(new ImportListSyncCommand());
 
             Mocker.GetMock<IAddArtistService>()
-                .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 1 && t.First().Monitored == expectedArtistMonitored)));
+                .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 1 && t.First().Monitored == expectedArtistMonitored), false));
         }
 
         [TestCase(ImportListMonitorType.None, false)]
@@ -240,7 +248,7 @@ namespace NzbDrone.Core.Test.ImportListTests
             Subject.Execute(new ImportListSyncCommand());
 
             Mocker.GetMock<IAddArtistService>()
-                .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 0)));
+                .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 0), false));
         }
 
         [Test]
