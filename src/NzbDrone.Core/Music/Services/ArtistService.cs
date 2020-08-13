@@ -16,7 +16,7 @@ namespace NzbDrone.Core.Music
         Artist GetArtistByMetadataId(int artistMetadataId);
         List<Artist> GetArtists(IEnumerable<int> artistIds);
         Artist AddArtist(Artist newArtist, bool doRefresh);
-        List<Artist> AddArtists(List<Artist> newArtists);
+        List<Artist> AddArtists(List<Artist> newArtists, bool doRefresh);
         Artist FindById(string foreignArtistId);
         Artist FindByName(string title);
         Artist FindByNameInexact(string title);
@@ -60,11 +60,11 @@ namespace NzbDrone.Core.Music
             return newArtist;
         }
 
-        public List<Artist> AddArtists(List<Artist> newArtists)
+        public List<Artist> AddArtists(List<Artist> newArtists, bool doRefresh)
         {
             _cache.Clear();
             _artistRepository.InsertMany(newArtists);
-            _eventAggregator.PublishEvent(new ArtistsImportedEvent(newArtists.Select(s => s.Id).ToList()));
+            _eventAggregator.PublishEvent(new ArtistsImportedEvent(newArtists.Select(s => s.Id).ToList(), doRefresh));
 
             return newArtists;
         }
