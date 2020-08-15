@@ -19,9 +19,4 @@
     <ProjectReference Include="..\Lidarr.Api.V1\Lidarr.Api.V1.csproj" />
     <ProjectReference Include="..\NzbDrone.Test.Common\Lidarr.Test.Common.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="integration.runsettings">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 </Project>
