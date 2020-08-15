@@ -304,6 +304,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
 
                     var artist = _artistService.GetArtist(file.ArtistId);
                     var album = _albumService.GetAlbum(file.AlbumId);
+
+                    // Set the original folder name as a field for naming purposes.
+                    var albumPathSplit = file.Path.Split(Path.DirectorySeparatorChar);
+
+                    // Set the download title from the path: Path/To/Download/Folder/AlbumName(DownloadTitle)/TrackFile
+                    album.DownloadTitle = albumPathSplit[albumPathSplit.Length - 2];
                     var release = _releaseService.GetRelease(file.AlbumReleaseId);
                     var tracks = _trackService.GetTracks(file.TrackIds);
                     var fileTrackInfo = _audioTagService.ReadTags(file.Path) ?? new ParsedTrackInfo();

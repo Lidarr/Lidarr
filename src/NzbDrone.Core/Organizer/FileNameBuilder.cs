@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Organizer
         public static readonly Regex ArtistNameRegex = new Regex(@"(?<token>\{(?:Artist)(?<separator>[- ._])(Clean)?Name(The)?\})",
                                                                             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public static readonly Regex AlbumTitleRegex = new Regex(@"(?<token>\{(?:Album)(?<separator>[- ._])(Clean)?Title(The)?\})",
+        public static readonly Regex AlbumTitleRegex = new Regex(@"(?<token>\{(?:Album)(?<separator>[- ._])(Clean|Download)?Title(The)?\})",
                                                                             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public static readonly Regex TrackTitleRegex = new Regex(@"(?<token>\{(?:Track)(?<separator>[- ._])(Clean)?Title(The)?\})",
@@ -285,6 +285,7 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{Album CleanTitle}"] = m => CleanTitle(album.Title);
             tokenHandlers["{Album TitleThe}"] = m => TitleThe(album.Title);
             tokenHandlers["{Album Type}"] = m => album.AlbumType;
+            tokenHandlers["{Album DownloadTitle}"] = m => album.DownloadTitle;
 
             if (album.Disambiguation != null)
             {
