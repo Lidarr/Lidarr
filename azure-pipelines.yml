@@ -526,7 +526,7 @@ stages:
             pattern: 'Lidarr.**.linux.tar.gz'
           alpine:
             testName: 'Musl Net Core'
-            artifactName: LinuxCoreTests
+            artifactName: LinuxMuslCoreTests
             containerImage: servarr/testimages:alpine
             pattern: 'Lidarr.**.linux-musl-core-x64.tar.gz'
 
