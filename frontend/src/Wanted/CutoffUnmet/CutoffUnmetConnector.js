@@ -17,10 +17,13 @@ import CutoffUnmet from './CutoffUnmet';
 function createMapStateToProps() {
   return createSelector(
     (state) => state.wanted.cutoffUnmet,
+    (state) => state.artist,
     createCommandExecutingSelector(commandNames.CUTOFF_UNMET_ALBUM_SEARCH),
-    (cutoffUnmet, isSearchingForCutoffUnmetAlbums) => {
+    (cutoffUnmet, artist, isSearchingForCutoffUnmetAlbums) => {
 
       return {
+        isArtistFetching: artist.isFetching,
+        isArtistPopulated: artist.isPopulated,
         isSearchingForCutoffUnmetAlbums,
         isSaving: cutoffUnmet.items.filter((m) => m.isSaving).length > 1,
         ...cutoffUnmet

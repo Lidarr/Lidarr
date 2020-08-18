@@ -125,6 +125,8 @@ class Queue extends Component {
       isPopulated,
       error,
       items,
+      isArtistFetching,
+      isArtistPopulated,
       isAlbumsFetching,
       isAlbumsPopulated,
       albumsError,
@@ -145,8 +147,8 @@ class Queue extends Component {
       isPendingSelected
     } = this.state;
 
-    const isRefreshing = isFetching || isAlbumsFetching || isRefreshMonitoredDownloadsExecuting;
-    const isAllPopulated = isPopulated && (isAlbumsPopulated || !items.length || items.every((e) => !e.albumId));
+    const isRefreshing = isFetching || isArtistFetching || isAlbumsFetching || isRefreshMonitoredDownloadsExecuting;
+    const isAllPopulated = isPopulated && ((isArtistPopulated && isAlbumsPopulated) || !items.length || items.every((e) => !e.albumId));
     const hasError = error || albumsError;
     const selectedIds = this.getSelectedIds();
     const selectedCount = selectedIds.length;
@@ -280,6 +282,8 @@ Queue.propTypes = {
   isPopulated: PropTypes.bool.isRequired,
   error: PropTypes.object,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  isArtistFetching: PropTypes.bool.isRequired,
+  isArtistPopulated: PropTypes.bool.isRequired,
   isAlbumsFetching: PropTypes.bool.isRequired,
   isAlbumsPopulated: PropTypes.bool.isRequired,
   albumsError: PropTypes.object,
