@@ -29,12 +29,11 @@ namespace NzbDrone.Core.Test.Datastore.Converters
             Subject.SetValue(_param, items);
 
             var result = (string)_param.Value;
-            result.Should().Be(@"[
-  {
-    ""key"": ""word"",
-    ""value"": 1
-  }
-]");
+
+            // Otherwise we run into grief compiling on windows and running on linux
+            result = result.Replace("\r", "").Replace("\n", "").Replace(" ", "");
+
+            result.Should().Be(@"[{""key"":""word"",""value"":1}]");
         }
 
         [TestCase(@"[{""key"": ""deluxe"", ""value"": 10 }]")]
