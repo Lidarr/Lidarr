@@ -12,8 +12,8 @@ namespace NzbDrone.Core.Music
 {
     public interface IAddAlbumService
     {
-        Album AddAlbum(Album album);
-        List<Album> AddAlbums(List<Album> albums);
+        Album AddAlbum(Album album, bool doRefresh = true);
+        List<Album> AddAlbums(List<Album> albums, bool doRefresh = true);
     }
 
     public class AddAlbumService : IAddAlbumService
@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Music
             _logger = logger;
         }
 
-        public Album AddAlbum(Album album)
+        public Album AddAlbum(Album album, bool doRefresh = true)
         {
             _logger.Debug($"Adding album {album}");
 
@@ -65,12 +65,12 @@ namespace NzbDrone.Core.Music
             }
 
             album.ArtistMetadataId = dbArtist.ArtistMetadataId;
-            _albumService.AddAlbum(album);
+            _albumService.AddAlbum(album, doRefresh);
 
             return album;
         }
 
-        public List<Album> AddAlbums(List<Album> albums)
+        public List<Album> AddAlbums(List<Album> albums, bool doRefresh = true)
         {
             var added = DateTime.UtcNow;
             var addedAlbums = new List<Album>();
@@ -78,7 +78,7 @@ namespace NzbDrone.Core.Music
             foreach (var a in albums)
             {
                 a.Added = added;
-                addedAlbums.Add(AddAlbum(a));
+                addedAlbums.Add(AddAlbum(a, doRefresh));
             }
 
             return addedAlbums;
