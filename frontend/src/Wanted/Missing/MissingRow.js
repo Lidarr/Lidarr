@@ -46,7 +46,7 @@ function MissingRow(props) {
             return null;
           }
 
-          if (name === 'artist.sortName') {
+          if (name === 'artists.sortName') {
             return (
               <TableRowCell key={name}>
                 <ArtistNameLink
@@ -57,7 +57,7 @@ function MissingRow(props) {
             );
           }
 
-          if (name === 'albumTitle') {
+          if (name === 'albums.title') {
             return (
               <TableRowCell key={name}>
                 <AlbumTitleLink

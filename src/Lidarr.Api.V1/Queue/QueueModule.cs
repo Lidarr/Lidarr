@@ -118,13 +118,13 @@ namespace Lidarr.Api.V1.Queue
             {
                 case "status":
                     return q => q.Status;
-                case "artist.sortName":
+                case "artists.sortName":
                     return q => q.Artist?.SortName;
                 case "title":
                     return q => q.Title;
                 case "album":
                     return q => q.Album;
-                case "album.title":
+                case "albums.title":
                     return q => q.Album?.Title;
                 case "album.releaseDate":
                     return q => q.Album?.ReleaseDate;
