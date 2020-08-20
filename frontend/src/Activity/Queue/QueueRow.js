@@ -137,7 +137,7 @@ class QueueRow extends Component {
               );
             }
 
-            if (name === 'artist.sortName') {
+            if (name === 'artists.sortName') {
               return (
                 <TableRowCell key={name}>
                   {
@@ -152,7 +152,7 @@ class QueueRow extends Component {
               );
             }
 
-            if (name === 'album.title') {
+            if (name === 'albums.title') {
               return (
                 <TableRowCell key={name}>
                   {
