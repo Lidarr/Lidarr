@@ -210,6 +210,10 @@ namespace NzbDrone.Core.ImportLists
                             Monitor = monitored ? MonitorTypes.All : MonitorTypes.None
                         }
                     },
+                    AddOptions = new AddAlbumOptions
+                    {
+                        SearchForNewAlbum = monitored
+                    }
                 };
 
                 if (importList.ShouldMonitor == ImportListMonitorType.SpecificAlbum)
