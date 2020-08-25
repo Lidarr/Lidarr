@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Music
         List<Album> GetLastAlbumsByArtistMetadataId(IEnumerable<int> artistMetadataIds);
         List<Album> GetAlbumsByArtistMetadataId(int artistMetadataId);
         List<Album> GetAlbumsForRefresh(int artistMetadataId, IEnumerable<string> foreignIds);
-        Album AddAlbum(Album newAlbum);
+        Album AddAlbum(Album newAlbum, bool doRefresh);
         Album FindById(string foreignId);
         Album FindByTitle(int artistMetadataId, string title);
         Album FindByTitleInexact(int artistMetadataId, string title);
@@ -57,11 +57,11 @@ namespace NzbDrone.Core.Music
             _logger = logger;
         }
 
-        public Album AddAlbum(Album newAlbum)
+        public Album AddAlbum(Album newAlbum, bool doRefresh)
         {
             _albumRepository.Insert(newAlbum);
 
-            _eventAggregator.PublishEvent(new AlbumAddedEvent(GetAlbum(newAlbum.Id)));
+            _eventAggregator.PublishEvent(new AlbumAddedEvent(GetAlbum(newAlbum.Id), doRefresh));
 
             return newAlbum;
         }

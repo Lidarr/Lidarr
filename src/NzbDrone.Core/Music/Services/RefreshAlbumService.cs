@@ -8,6 +8,7 @@ using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.History;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.MediaFiles;
+using NzbDrone.Core.MediaFiles.Commands;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.MetadataSource;
@@ -33,6 +34,7 @@ namespace NzbDrone.Core.Music
         private readonly IMediaFileService _mediaFileService;
         private readonly IHistoryService _historyService;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IManageCommandQueue _commandQueueManager;
         private readonly ICheckIfAlbumShouldBeRefreshed _checkIfAlbumShouldBeRefreshed;
         private readonly IMapCoversToLocal _mediaCoverService;
         private readonly Logger _logger;
@@ -47,6 +49,7 @@ namespace NzbDrone.Core.Music
                                    IMediaFileService mediaFileService,
                                    IHistoryService historyService,
                                    IEventAggregator eventAggregator,
+                                   IManageCommandQueue commandQueueManager,
                                    ICheckIfAlbumShouldBeRefreshed checkIfAlbumShouldBeRefreshed,
                                    IMapCoversToLocal mediaCoverService,
                                    Logger logger)
@@ -61,6 +64,7 @@ namespace NzbDrone.Core.Music
             _mediaFileService = mediaFileService;
             _historyService = historyService;
             _eventAggregator = eventAggregator;
+            _commandQueueManager = commandQueueManager;
             _checkIfAlbumShouldBeRefreshed = checkIfAlbumShouldBeRefreshed;
             _mediaCoverService = mediaCoverService;
             _logger = logger;
@@ -358,6 +362,13 @@ namespace NzbDrone.Core.Music
                 {
                     _eventAggregator.PublishEvent(new ArtistUpdatedEvent(artist));
                     _eventAggregator.PublishEvent(new AlbumUpdatedEvent(album));
+                }
+
+                if (message.IsNewAlbum)
+                {
+                    // Just scan the artist path - triggering a full rescan is too painful
+                    var folders = new List<string> { artist.Path };
+                    _commandQueueManager.Push(new RescanFoldersCommand(folders, FilterFilesType.Matched, false, null));
                 }
             }
         }
