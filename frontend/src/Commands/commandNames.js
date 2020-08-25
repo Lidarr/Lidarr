@@ -19,5 +19,5 @@ export const RETAG_FILES = 'RetagFiles';
 export const RETAG_ARTIST = 'RetagArtist';
 export const RESET_API_KEY = 'ResetApiKey';
 export const RSS_SYNC = 'RssSync';
-export const SEASON_SEARCH = 'AlbumSearch';
+export const SEASON_SEARCH = 'SeasonSearch';
 export const ARTIST_SEARCH = 'ArtistSearch';
