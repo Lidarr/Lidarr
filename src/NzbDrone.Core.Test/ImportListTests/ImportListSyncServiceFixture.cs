@@ -54,8 +54,8 @@ namespace NzbDrone.Core.Test.ImportListTests
                 .Returns((List<Artist> artists, bool doRefresh) => artists);
 
             Mocker.GetMock<IAddAlbumService>()
-                .Setup(v => v.AddAlbums(It.IsAny<List<Album>>()))
-                .Returns((List<Album> albums) => albums);
+                .Setup(v => v.AddAlbums(It.IsAny<List<Album>>(), false))
+                .Returns((List<Album> albums, bool doRefresh) => albums);
         }
 
         private void WithAlbum()
@@ -208,7 +208,7 @@ namespace NzbDrone.Core.Test.ImportListTests
             Subject.Execute(new ImportListSyncCommand());
 
             Mocker.GetMock<IAddAlbumService>()
-                .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 1)));
+                .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 1), false));
         }
 
         [TestCase(ImportListMonitorType.None, false)]
@@ -236,7 +236,7 @@ namespace NzbDrone.Core.Test.ImportListTests
             Subject.Execute(new ImportListSyncCommand());
 
             Mocker.GetMock<IAddAlbumService>()
-                .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 1 && t.First().Monitored == expectedAlbumMonitored)));
+                .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 1 && t.First().Monitored == expectedAlbumMonitored), false));
         }
 
         [Test]
@@ -260,7 +260,7 @@ namespace NzbDrone.Core.Test.ImportListTests
             Subject.Execute(new ImportListSyncCommand());
 
             Mocker.GetMock<IAddAlbumService>()
-                .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 0)));
+                .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 0), false));
         }
 
         [Test]
@@ -273,7 +273,7 @@ namespace NzbDrone.Core.Test.ImportListTests
             Subject.Execute(new ImportListSyncCommand());
 
             Mocker.GetMock<IAddAlbumService>()
-                .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 0)));
+                .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 0), false));
         }
     }
 }
