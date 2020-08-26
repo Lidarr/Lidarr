@@ -112,7 +112,8 @@ class ArtistIndexBanners extends Component {
       items,
       sortKey,
       bannerOptions,
-      jumpToCharacter
+      jumpToCharacter,
+      scrollTop
     } = this.props;
 
     const {
@@ -148,6 +149,10 @@ class ArtistIndexBanners extends Component {
           columnIndex: 0
         });
       }
+    }
+
+    if (this._grid && scrollTop !== 0) {
+      this._grid.scrollToPosition({ scrollTop });
     }
   }
 
@@ -307,6 +312,7 @@ ArtistIndexBanners.propTypes = {
   sortKey: PropTypes.string,
   bannerOptions: PropTypes.object.isRequired,
   jumpToCharacter: PropTypes.string,
+  scrollTop: PropTypes.number.isRequired,
   scroller: PropTypes.instanceOf(Element).isRequired,
   showRelativeDates: PropTypes.bool.isRequired,
   shortDateFormat: PropTypes.string.isRequired,

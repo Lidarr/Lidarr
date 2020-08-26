@@ -408,7 +408,10 @@ class ArtistDetails extends Component {
                       name={icons.ARROW_UP}
                       size={30}
                       title={'Go to artist listing'}
-                      to={'/'}
+                      to={{
+                        pathname: '/',
+                        state: { restoreScrollPosition: true }
+                      }}
                     />
 
                     <IconButton

@@ -83,7 +83,8 @@ class ArtistIndexTable extends Component {
       showBanners,
       isSmallScreen,
       onSortPress,
-      scroller
+      scroller,
+      scrollTop
     } = this.props;
 
     return (
@@ -91,6 +92,7 @@ class ArtistIndexTable extends Component {
         className={styles.tableContainer}
         items={items}
         scrollIndex={this.state.scrollIndex}
+        scrollTop={scrollTop}
         isSmallScreen={isSmallScreen}
         scroller={scroller}
         rowHeight={showBanners ? 70 : 38}
@@ -120,6 +122,7 @@ ArtistIndexTable.propTypes = {
   sortDirection: PropTypes.oneOf(sortDirections.all),
   showBanners: PropTypes.bool.isRequired,
   jumpToCharacter: PropTypes.string,
+  scrollTop: PropTypes.number,
   scroller: PropTypes.instanceOf(Element).isRequired,
   isSmallScreen: PropTypes.bool.isRequired,
   onSortPress: PropTypes.func.isRequired
