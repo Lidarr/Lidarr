@@ -61,6 +61,12 @@ namespace NzbDrone.Core.Music
 
                 artist.Metadata.Value.ForeignArtistId = album.ArtistMetadata.Value.ForeignArtistId;
 
+                // if adding and searching for artist, don't trigger album specific search
+                if (artist.AddOptions?.SearchForMissingAlbums ?? false)
+                {
+                    album.AddOptions.SearchForNewAlbum = false;
+                }
+
                 dbArtist = _addArtistService.AddArtist(artist, false);
             }
 
