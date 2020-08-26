@@ -1,8 +1,7 @@
-.monitored,
 .status {
   composes: headerCell from '~Components/Table/VirtualTableHeaderCell.css';
 
-  width: 20px;
+  flex: 0 0 60px;
   padding: 0;
 }
 

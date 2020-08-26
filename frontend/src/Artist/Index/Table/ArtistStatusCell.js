@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { icons } from 'Helpers/Props';
 import Icon from 'Components/Icon';
+import MonitorToggleButton from 'Components/MonitorToggleButton';
 import VirtualTableRowCell from 'Components/Table/Cells/TableRowCell';
 import styles from './ArtistStatusCell.css';
 
@@ -11,6 +12,8 @@ function ArtistStatusCell(props) {
     artistType,
     monitored,
     status,
+    isSaving,
+    onMonitoredPress,
     component: Component,
     ...otherProps
   } = props;
@@ -22,10 +25,12 @@ function ArtistStatusCell(props) {
       className={className}
       {...otherProps}
     >
-      <Icon
-        className={styles.statusIcon}
-        name={monitored ? icons.MONITORED : icons.UNMONITORED}
-        title={monitored ? 'Artist is monitored' : 'Artist is unmonitored'}
+      <MonitorToggleButton
+        className={styles.monitorToggle}
+        monitored={monitored}
+        size={14}
+        isSaving={isSaving}
+        onPress={onMonitoredPress}
       />
 
       <Icon
@@ -42,6 +47,8 @@ ArtistStatusCell.propTypes = {
   artistType: PropTypes.string,
   monitored: PropTypes.bool.isRequired,
   status: PropTypes.string.isRequired,
+  isSaving: PropTypes.bool.isRequired,
+  onMonitoredPress: PropTypes.func.isRequired,
   component: PropTypes.elementType
 };
 

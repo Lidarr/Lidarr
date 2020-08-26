@@ -47,7 +47,8 @@ class ArtistIndexTable extends Component {
     const {
       items,
       columns,
-      showBanners
+      showBanners,
+      isSaving
     } = this.props;
 
     const artist = items[rowIndex];
@@ -66,6 +67,7 @@ class ArtistIndexTable extends Component {
           qualityProfileId={artist.qualityProfileId}
           metadataProfileId={artist.metadataProfileId}
           showBanners={showBanners}
+          isSaving={isSaving}
         />
       </VirtualTableRow>
     );
@@ -121,6 +123,7 @@ ArtistIndexTable.propTypes = {
   sortKey: PropTypes.string,
   sortDirection: PropTypes.oneOf(sortDirections.all),
   showBanners: PropTypes.bool.isRequired,
+  isSaving: PropTypes.bool.isRequired,
   jumpToCharacter: PropTypes.string,
   scrollTop: PropTypes.number,
   scroller: PropTypes.instanceOf(Element).isRequired,
