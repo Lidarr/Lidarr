@@ -8,6 +8,7 @@ import createArtistSelector from 'Store/Selectors/createArtistSelector';
 import createExecutingCommandsSelector from 'Store/Selectors/createExecutingCommandsSelector';
 import createArtistQualityProfileSelector from 'Store/Selectors/createArtistQualityProfileSelector';
 import createArtistMetadataProfileSelector from 'Store/Selectors/createArtistMetadataProfileSelector';
+import { toggleArtistMonitored } from 'Store/Actions/artistActions';
 import { executeCommand } from 'Store/Actions/commandActions';
 import * as commandNames from 'Commands/commandNames';
 
@@ -85,7 +86,8 @@ function createMapStateToProps() {
 }
 
 const mapDispatchToProps = {
-  dispatchExecuteCommand: executeCommand
+  dispatchExecuteCommand: executeCommand,
+  toggleArtistMonitored
 };
 
 class ArtistIndexItemConnector extends Component {
@@ -104,6 +106,13 @@ class ArtistIndexItemConnector extends Component {
     this.props.dispatchExecuteCommand({
       name: commandNames.ARTIST_SEARCH,
       artistId: this.props.id
+    });
+  }
+
+  onMonitoredPress = () => {
+    this.props.toggleArtistMonitored({
+      artistId: this.props.id,
+      monitored: !this.props.monitored
     });
   }
 
@@ -127,6 +136,7 @@ class ArtistIndexItemConnector extends Component {
         id={id}
         onRefreshArtistPress={this.onRefreshArtistPress}
         onSearchPress={this.onSearchPress}
+        onMonitoredPress={this.onMonitoredPress}
       />
     );
   }
@@ -134,8 +144,10 @@ class ArtistIndexItemConnector extends Component {
 
 ArtistIndexItemConnector.propTypes = {
   id: PropTypes.number,
+  monitored: PropTypes.bool.isRequired,
   component: PropTypes.elementType.isRequired,
-  dispatchExecuteCommand: PropTypes.func.isRequired
+  dispatchExecuteCommand: PropTypes.func.isRequired,
+  toggleArtistMonitored: PropTypes.func.isRequired
 };
 
 export default connect(createMapStateToProps, mapDispatchToProps)(ArtistIndexItemConnector);

@@ -37,7 +37,9 @@ class ArtistEditorRow extends Component {
       path,
       tags,
       columns,
+      isSaving,
       isSelected,
+      onArtistMonitoredPress,
       onSelectedChange
     } = this.props;
 
@@ -53,6 +55,8 @@ class ArtistEditorRow extends Component {
           artistType={artistType}
           monitored={monitored}
           status={status}
+          isSaving={isSaving}
+          onMonitoredPress={onArtistMonitoredPress}
         />
 
         <TableRowCell className={styles.title}>
@@ -109,7 +113,9 @@ ArtistEditorRow.propTypes = {
   path: PropTypes.string.isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  isSaving: PropTypes.bool.isRequired,
   isSelected: PropTypes.bool,
+  onArtistMonitoredPress: PropTypes.func.isRequired,
   onSelectedChange: PropTypes.func.isRequired
 };
 

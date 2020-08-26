@@ -234,6 +234,7 @@ class ArtistEditor extends Component {
                             key={item.id}
                             {...item}
                             columns={columns}
+                            isSaving={isSaving}
                             isSelected={selectedState[item.id]}
                             onSelectedChange={this.onSelectedChange}
                           />
