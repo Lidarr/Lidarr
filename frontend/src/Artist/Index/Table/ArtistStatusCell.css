@@ -4,6 +4,13 @@
   width: 60px;
 }
 
+.monitorToggle {
+  composes: toggleButton from '~Components/MonitorToggleButton.css';
+
+  margin: 0;
+  width: 20px !important;
+}
+
 .statusIcon {
   width: 20px !important;
 }

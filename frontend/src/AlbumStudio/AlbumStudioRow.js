@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { icons } from 'Helpers/Props';
-import Icon from 'Components/Icon';
-import MonitorToggleButton from 'Components/MonitorToggleButton';
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
 import VirtualTableSelectCell from 'Components/Table/Cells/VirtualTableSelectCell';
+import ArtistStatusCell from 'Artist/Index/Table/ArtistStatusCell';
 import ArtistNameLink from 'Artist/ArtistNameLink';
 import AlbumStudioAlbum from './AlbumStudioAlbum';
 import styles from './AlbumStudioRow.css';
@@ -20,6 +18,7 @@ class AlbumStudioRow extends Component {
       status,
       foreignArtistId,
       artistName,
+      artistType,
       monitored,
       albums,
       isSaving,
@@ -39,22 +38,15 @@ class AlbumStudioRow extends Component {
           isDisabled={false}
         />
 
-        <VirtualTableRowCell className={styles.monitored}>
-          <MonitorToggleButton
-            monitored={monitored}
-            size={14}
-            isSaving={isSaving}
-            onPress={onArtistMonitoredPress}
-          />
-        </VirtualTableRowCell>
-
-        <VirtualTableRowCell className={styles.status}>
-          <Icon
-            className={styles.statusIcon}
-            name={status === 'ended' ? icons.ARTIST_ENDED : icons.ARTIST_CONTINUING}
-            title={status === 'ended' ? 'Ended' : 'Continuing'}
-          />
-        </VirtualTableRowCell>
+        <ArtistStatusCell
+          className={styles.status}
+          artistType={artistType}
+          monitored={monitored}
+          status={status}
+          isSaving={isSaving}
+          onMonitoredPress={onArtistMonitoredPress}
+          component={VirtualTableRowCell}
+        />
 
         <VirtualTableRowCell className={styles.title}>
           <ArtistNameLink
@@ -86,6 +78,7 @@ AlbumStudioRow.propTypes = {
   status: PropTypes.string.isRequired,
   foreignArtistId: PropTypes.string.isRequired,
   artistName: PropTypes.string.isRequired,
+  artistType: PropTypes.string,
   monitored: PropTypes.bool.isRequired,
   albums: PropTypes.arrayOf(PropTypes.object).isRequired,
   isSaving: PropTypes.bool.isRequired,

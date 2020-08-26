@@ -94,13 +94,15 @@ class ArtistIndexRow extends Component {
       path,
       tags,
       images,
+      isSaving,
       showBanners,
       showSearchAction,
       columns,
       isRefreshingArtist,
       isSearchingArtist,
       onRefreshArtistPress,
-      onSearchPress
+      onSearchPress,
+      onMonitoredPress
     } = this.props;
 
     const {
@@ -138,6 +140,8 @@ class ArtistIndexRow extends Component {
                   artistType={artistType}
                   monitored={monitored}
                   status={status}
+                  isSaving={isSaving}
+                  onMonitoredPress={onMonitoredPress}
                   component={VirtualTableRowCell}
                 />
               );
@@ -457,13 +461,15 @@ ArtistIndexRow.propTypes = {
   ratings: PropTypes.object.isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
   images: PropTypes.arrayOf(PropTypes.object).isRequired,
+  isSaving: PropTypes.bool.isRequired,
   showBanners: PropTypes.bool.isRequired,
   showSearchAction: PropTypes.bool.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   isRefreshingArtist: PropTypes.bool.isRequired,
   isSearchingArtist: PropTypes.bool.isRequired,
   onRefreshArtistPress: PropTypes.func.isRequired,
-  onSearchPress: PropTypes.func.isRequired
+  onSearchPress: PropTypes.func.isRequired,
+  onMonitoredPress: PropTypes.func.isRequired
 };
 
 ArtistIndexRow.defaultProps = {

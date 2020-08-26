@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import createMetadataProfileSelector from 'Store/Selectors/createMetadataProfileSelector';
 import createQualityProfileSelector from 'Store/Selectors/createQualityProfileSelector';
+import { toggleArtistMonitored } from 'Store/Actions/artistActions';
 import ArtistEditorRow from './ArtistEditorRow';
 
 function createMapStateToProps() {
@@ -19,16 +20,42 @@ function createMapStateToProps() {
   );
 }
 
-function ArtistEditorRowConnector(props) {
-  return (
-    <ArtistEditorRow
-      {...props}
-    />
-  );
+const mapDispatchToProps = {
+  toggleArtistMonitored
+};
+
+class ArtistEditorRowConnector extends Component {
+
+  //
+  // Listeners
+
+  onArtistMonitoredPress = () => {
+    const {
+      id,
+      monitored
+    } = this.props;
+
+    this.props.toggleArtistMonitored({
+      artistId: id,
+      monitored: !monitored
+    });
+  }
+
+  render() {
+    return (
+      <ArtistEditorRow
+        {...this.props}
+        onArtistMonitoredPress={this.onArtistMonitoredPress}
+      />
+    );
+  }
 }
 
 ArtistEditorRowConnector.propTypes = {
-  qualityProfileId: PropTypes.number.isRequired
+  id: PropTypes.number.isRequired,
+  monitored: PropTypes.bool.isRequired,
+  qualityProfileId: PropTypes.number.isRequired,
+  toggleArtistMonitored: PropTypes.func.isRequired
 };
 
-export default connect(createMapStateToProps)(ArtistEditorRowConnector);
+export default connect(createMapStateToProps, mapDispatchToProps)(ArtistEditorRowConnector);

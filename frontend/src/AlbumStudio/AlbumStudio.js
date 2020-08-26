@@ -26,10 +26,6 @@ import styles from './AlbumStudio.css';
 
 const columns = [
   {
-    name: 'monitored',
-    isVisible: true
-  },
-  {
     name: 'status',
     isVisible: true
   },
@@ -94,15 +90,15 @@ class AlbumStudio extends Component {
 
     // nasty hack to fix react-virtualized jumping incorrectly
     // due to variable row heights
-    if (scrollIndex != null) {
+    if (scrollIndex != null && scrollIndex > 0) {
       if (jumpCount === 0) {
         this.setState({
-          scrollIndex: scrollIndex + 1,
+          scrollIndex: scrollIndex - 1,
           jumpCount: 1
         });
       } else if (jumpCount === 1) {
         this.setState({
-          scrollIndex: scrollIndex - 1,
+          scrollIndex: scrollIndex + 1,
           jumpCount: 2
         });
       } else {
