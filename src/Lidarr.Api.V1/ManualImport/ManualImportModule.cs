@@ -47,14 +47,11 @@ namespace Lidarr.Api.V1.ManualImport
             var downloadId = (string)Request.Query.downloadId;
             NzbDrone.Core.Music.Artist artist = null;
 
-            var artistIdQuery = Request.Query.artistId;
-            if (artistIdQuery.HasValue)
+            var artistIdQuery = Request.GetNullableIntegerQueryParameter("artistId", null);
+
+            if (artistIdQuery.HasValue && artistIdQuery.Value > 0)
             {
-                var artistId = Convert.ToInt32(artistIdQuery.Value);
-                if (artistId > 0)
-                {
-                    artist = _artistService.GetArtist(Convert.ToInt32(artistIdQuery.Value));
-                }
+                artist = _artistService.GetArtist(Convert.ToInt32(artistIdQuery.Value));
             }
 
             var filter = Request.GetBooleanQueryParameter("filterExistingFiles", true) ? FilterFilesType.Matched : FilterFilesType.None;
