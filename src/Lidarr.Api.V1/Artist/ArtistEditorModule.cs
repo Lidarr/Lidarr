@@ -102,7 +102,7 @@ namespace Lidarr.Api.V1.Artist
 
             foreach (var artistId in resource.ArtistIds)
             {
-                _artistService.DeleteArtist(artistId, false);
+                _artistService.DeleteArtist(artistId, resource.DeleteFiles);
             }
 
             return new object();
