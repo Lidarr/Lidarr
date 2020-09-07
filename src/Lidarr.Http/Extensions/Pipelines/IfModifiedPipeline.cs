@@ -1,4 +1,3 @@
-using System;
 using Lidarr.Http.Frontend;
 using Nancy;
 using Nancy.Bootstrapper;

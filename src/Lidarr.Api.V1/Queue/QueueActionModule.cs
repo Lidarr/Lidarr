@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Lidarr.Http;
 using Lidarr.Http.Extensions;
 using Lidarr.Http.REST;
