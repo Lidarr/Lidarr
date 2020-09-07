@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Dapper;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;

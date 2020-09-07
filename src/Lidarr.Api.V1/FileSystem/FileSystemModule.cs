@@ -2,7 +2,6 @@ using System.Linq;
 using Lidarr.Http.Extensions;
 using Nancy;
 using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Core.MediaFiles;
 
 namespace Lidarr.Api.V1.FileSystem
