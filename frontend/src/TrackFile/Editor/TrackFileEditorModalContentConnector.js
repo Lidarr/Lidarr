@@ -67,6 +67,7 @@ function createMapStateToProps() {
         return {
           path: trackFile.path,
           quality: trackFile.quality,
+          qualityCutoffNotMet: trackFile.qualityCutoffNotMet,
           ...track
         };
       });

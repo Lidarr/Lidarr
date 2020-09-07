@@ -12,6 +12,7 @@ function TrackFileEditorRow(props) {
     trackNumber,
     path,
     quality,
+    qualityCutoffNotMet,
     isSelected,
     onSelectedChange
   } = props;
@@ -35,6 +36,7 @@ function TrackFileEditorRow(props) {
       <TableRowCell>
         <TrackQuality
           quality={quality}
+          isCutoffNotMet={qualityCutoffNotMet}
         />
       </TableRowCell>
     </TableRow>
@@ -46,6 +48,7 @@ TrackFileEditorRow.propTypes = {
   trackNumber: PropTypes.string.isRequired,
   path: PropTypes.string.isRequired,
   quality: PropTypes.object.isRequired,
+  qualityCutoffNotMet: PropTypes.bool.isRequired,
   isSelected: PropTypes.bool,
   onSelectedChange: PropTypes.func.isRequired
 };
