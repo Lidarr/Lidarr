@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import TextTruncate from 'react-text-truncate';
-import { icons } from 'Helpers/Props';
-import dimensions from 'Styles/Variables/dimensions';
-import fonts from 'Styles/Variables/fonts';
+import ArtistPoster from 'Artist/ArtistPoster';
+import DeleteArtistModal from 'Artist/Delete/DeleteArtistModal';
+import EditArtistModalConnector from 'Artist/Edit/EditArtistModalConnector';
+import ArtistIndexProgressBar from 'Artist/Index/ProgressBar/ArtistIndexProgressBar';
 import IconButton from 'Components/Link/IconButton';
 import Link from 'Components/Link/Link';
 import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
-import ArtistPoster from 'Artist/ArtistPoster';
-import EditArtistModalConnector from 'Artist/Edit/EditArtistModalConnector';
-import DeleteArtistModal from 'Artist/Delete/DeleteArtistModal';
-import ArtistIndexProgressBar from 'Artist/Index/ProgressBar/ArtistIndexProgressBar';
+import { icons } from 'Helpers/Props';
+import dimensions from 'Styles/Variables/dimensions';
+import fonts from 'Styles/Variables/fonts';
 import ArtistIndexOverviewInfo from './ArtistIndexOverviewInfo';
 import styles from './ArtistIndexOverview.css';
 

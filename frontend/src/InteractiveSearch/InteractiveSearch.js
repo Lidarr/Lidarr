@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { align, icons, sortDirections } from 'Helpers/Props';
-import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import Icon from 'Components/Icon';
+import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import FilterMenu from 'Components/Menu/FilterMenu';
 import PageMenuButton from 'Components/Menu/PageMenuButton';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
+import { align, icons, sortDirections } from 'Helpers/Props';
 import InteractiveSearchFilterModalConnector from './InteractiveSearchFilterModalConnector';
 import InteractiveSearchRow from './InteractiveSearchRow';
 import styles from './InteractiveSearch.css';

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import createExistingArtistSelector from 'Store/Selectors/createExistingArtistSelector';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
+import createExistingArtistSelector from 'Store/Selectors/createExistingArtistSelector';
 import AddNewArtistSearchResult from './AddNewArtistSearchResult';
 
 function createMapStateToProps() {

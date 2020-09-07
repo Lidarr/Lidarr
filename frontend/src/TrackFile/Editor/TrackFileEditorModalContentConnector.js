@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import getQualities from 'Utilities/Quality/getQualities';
-import createArtistSelector from 'Store/Selectors/createArtistSelector';
-import { deleteTrackFiles, updateTrackFiles } from 'Store/Actions/trackFileActions';
-import { fetchTracks, clearTracks } from 'Store/Actions/trackActions';
 import { fetchQualityProfileSchema } from 'Store/Actions/settingsActions';
+import { clearTracks, fetchTracks } from 'Store/Actions/trackActions';
+import { deleteTrackFiles, updateTrackFiles } from 'Store/Actions/trackFileActions';
+import createArtistSelector from 'Store/Selectors/createArtistSelector';
+import getQualities from 'Utilities/Quality/getQualities';
 import TrackFileEditorModalContent from './TrackFileEditorModalContent';
 
 function createSchemaSelector() {

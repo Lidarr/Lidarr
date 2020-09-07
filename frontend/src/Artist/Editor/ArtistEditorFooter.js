@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { kinds } from 'Helpers/Props';
-import SelectInput from 'Components/Form/SelectInput';
+import MoveArtistModal from 'Artist/MoveArtist/MoveArtistModal';
 import MetadataProfileSelectInputConnector from 'Components/Form/MetadataProfileSelectInputConnector';
 import QualityProfileSelectInputConnector from 'Components/Form/QualityProfileSelectInputConnector';
 import RootFolderSelectInputConnector from 'Components/Form/RootFolderSelectInputConnector';
+import SelectInput from 'Components/Form/SelectInput';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
-import MoveArtistModal from 'Artist/MoveArtist/MoveArtistModal';
-import TagsModal from './Tags/TagsModal';
-import DeleteArtistModal from './Delete/DeleteArtistModal';
+import { kinds } from 'Helpers/Props';
 import ArtistEditorFooterLabel from './ArtistEditorFooterLabel';
+import DeleteArtistModal from './Delete/DeleteArtistModal';
+import TagsModal from './Tags/TagsModal';
 import styles from './ArtistEditorFooter.css';
 
 const NO_CHANGE = 'noChange';

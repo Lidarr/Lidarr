@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { setAlbumStudioFilter } from 'Store/Actions/albumStudioActions';
 import FilterModal from 'Components/Filter/FilterModal';
+import { setAlbumStudioFilter } from 'Store/Actions/albumStudioActions';
 
 function createMapStateToProps() {
   return createSelector(

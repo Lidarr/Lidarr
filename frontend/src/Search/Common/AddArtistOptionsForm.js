@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { icons, inputTypes, tooltipPositions } from 'Helpers/Props';
+import ArtistMetadataProfilePopoverContent from 'AddArtist/ArtistMetadataProfilePopoverContent';
+import ArtistMonitoringOptionsPopoverContent from 'AddArtist/ArtistMonitoringOptionsPopoverContent';
 import Form from 'Components/Form/Form';
 import FormGroup from 'Components/Form/FormGroup';
-import FormLabel from 'Components/Form/FormLabel';
 import FormInputGroup from 'Components/Form/FormInputGroup';
+import FormLabel from 'Components/Form/FormLabel';
 import Icon from 'Components/Icon';
 import Popover from 'Components/Tooltip/Popover';
-import ArtistMonitoringOptionsPopoverContent from 'AddArtist/ArtistMonitoringOptionsPopoverContent';
-import ArtistMetadataProfilePopoverContent from 'AddArtist/ArtistMetadataProfilePopoverContent';
+import { icons, inputTypes, tooltipPositions } from 'Helpers/Props';
 import styles from './AddArtistOptionsForm.css';
 
 class AddArtistOptionsForm extends Component {

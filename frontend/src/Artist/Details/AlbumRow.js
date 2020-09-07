@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import MonitorToggleButton from 'Components/MonitorToggleButton';
-import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
-import { kinds, sizes } from 'Helpers/Props';
-import TableRow from 'Components/Table/TableRow';
-import Label from 'Components/Label';
-import TableRowCell from 'Components/Table/Cells/TableRowCell';
-import formatTimeSpan from 'Utilities/Date/formatTimeSpan';
 import AlbumSearchCellConnector from 'Album/AlbumSearchCellConnector';
 import AlbumTitleLink from 'Album/AlbumTitleLink';
+import Label from 'Components/Label';
+import MonitorToggleButton from 'Components/MonitorToggleButton';
 import StarRating from 'Components/StarRating';
+import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
+import TableRowCell from 'Components/Table/Cells/TableRowCell';
+import TableRow from 'Components/Table/TableRow';
+import { kinds, sizes } from 'Helpers/Props';
+import formatTimeSpan from 'Utilities/Date/formatTimeSpan';
 import styles from './AlbumRow.css';
 
 function getTrackCountKind(monitored, trackFileCount, trackCount) {

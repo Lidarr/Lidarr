@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import * as commandNames from 'Commands/commandNames';
+import { saveArtistEditor, setArtistEditorFilter, setArtistEditorSort } from 'Store/Actions/artistEditorActions';
+import { executeCommand } from 'Store/Actions/commandActions';
+import { fetchRootFolders } from 'Store/Actions/settingsActions';
 import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
 import createCommandExecutingSelector from 'Store/Selectors/createCommandExecutingSelector';
-import { setArtistEditorSort, setArtistEditorFilter, saveArtistEditor } from 'Store/Actions/artistEditorActions';
-import { fetchRootFolders } from 'Store/Actions/settingsActions';
-import { executeCommand } from 'Store/Actions/commandActions';
-import * as commandNames from 'Commands/commandNames';
 import ArtistEditor from './ArtistEditor';
 
 function createMapStateToProps() {

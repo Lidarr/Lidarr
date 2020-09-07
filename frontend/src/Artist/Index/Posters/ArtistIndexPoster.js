@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import getRelativeDate from 'Utilities/Date/getRelativeDate';
-import { icons } from 'Helpers/Props';
-import IconButton from 'Components/Link/IconButton';
-import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
-import Label from 'Components/Label';
-import Link from 'Components/Link/Link';
 import ArtistPoster from 'Artist/ArtistPoster';
-import EditArtistModalConnector from 'Artist/Edit/EditArtistModalConnector';
 import DeleteArtistModal from 'Artist/Delete/DeleteArtistModal';
+import EditArtistModalConnector from 'Artist/Edit/EditArtistModalConnector';
 import ArtistIndexProgressBar from 'Artist/Index/ProgressBar/ArtistIndexProgressBar';
+import Label from 'Components/Label';
+import IconButton from 'Components/Link/IconButton';
+import Link from 'Components/Link/Link';
+import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
+import { icons } from 'Helpers/Props';
+import getRelativeDate from 'Utilities/Date/getRelativeDate';
 import ArtistIndexPosterInfo from './ArtistIndexPosterInfo';
 import styles from './ArtistIndexPoster.css';
 

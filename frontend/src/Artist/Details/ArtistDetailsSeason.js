@@ -1,15 +1,15 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import getToggledRange from 'Utilities/Table/getToggledRange';
-import { icons, sortDirections } from 'Helpers/Props';
 import Icon from 'Components/Icon';
 import IconButton from 'Components/Link/IconButton';
 import Link from 'Components/Link/Link';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
-import TrackFileEditorModal from 'TrackFile/Editor/TrackFileEditorModal';
+import { icons, sortDirections } from 'Helpers/Props';
 import OrganizePreviewModalConnector from 'Organize/OrganizePreviewModalConnector';
+import TrackFileEditorModal from 'TrackFile/Editor/TrackFileEditorModal';
+import getToggledRange from 'Utilities/Table/getToggledRange';
 import AlbumRowConnector from './AlbumRowConnector';
 import styles from './ArtistDetailsSeason.css';
 

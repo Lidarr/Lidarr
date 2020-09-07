@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import getErrorMessage from 'Utilities/Object/getErrorMessage';
-import { fetchTrackFiles } from 'Store/Actions/trackFileActions';
-import FileDetails from './FileDetails';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
+import { fetchTrackFiles } from 'Store/Actions/trackFileActions';
+import getErrorMessage from 'Utilities/Object/getErrorMessage';
+import FileDetails from './FileDetails';
 
 function createMapStateToProps() {
   return createSelector(

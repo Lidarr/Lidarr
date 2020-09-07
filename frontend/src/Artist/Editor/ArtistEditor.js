@@ -1,24 +1,24 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import getErrorMessage from 'Utilities/Object/getErrorMessage';
-import getSelectedIds from 'Utilities/Table/getSelectedIds';
-import selectAll from 'Utilities/Table/selectAll';
-import toggleSelected from 'Utilities/Table/toggleSelected';
-import { align, sortDirections } from 'Helpers/Props';
+import NoArtist from 'Artist/NoArtist';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
+import FilterMenu from 'Components/Menu/FilterMenu';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
 import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
-import FilterMenu from 'Components/Menu/FilterMenu';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
-import NoArtist from 'Artist/NoArtist';
-import OrganizeArtistModal from './Organize/OrganizeArtistModal';
-import RetagArtistModal from './AudioTags/RetagArtistModal';
-import ArtistEditorRowConnector from './ArtistEditorRowConnector';
-import ArtistEditorFooter from './ArtistEditorFooter';
+import { align, sortDirections } from 'Helpers/Props';
+import getErrorMessage from 'Utilities/Object/getErrorMessage';
+import getSelectedIds from 'Utilities/Table/getSelectedIds';
+import selectAll from 'Utilities/Table/selectAll';
+import toggleSelected from 'Utilities/Table/toggleSelected';
 import ArtistEditorFilterModalConnector from './ArtistEditorFilterModalConnector';
+import ArtistEditorFooter from './ArtistEditorFooter';
+import ArtistEditorRowConnector from './ArtistEditorRowConnector';
+import RetagArtistModal from './AudioTags/RetagArtistModal';
+import OrganizeArtistModal from './Organize/OrganizeArtistModal';
 
 function getColumns(showMetadataProfile) {
   return [

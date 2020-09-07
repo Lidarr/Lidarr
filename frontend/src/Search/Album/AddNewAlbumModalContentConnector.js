@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { metadataProfileNames } from 'Helpers/Props';
-import { setAddDefault, addAlbum } from 'Store/Actions/searchActions';
+import { addAlbum, setAddDefault } from 'Store/Actions/searchActions';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
 import selectSettings from 'Store/Selectors/selectSettings';
 import AddNewAlbumModalContent from './AddNewAlbumModalContent';

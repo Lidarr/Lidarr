@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
-import { setTracksTableOption } from 'Store/Actions/trackActions';
 import { executeCommand } from 'Store/Actions/commandActions';
+import { setTracksTableOption } from 'Store/Actions/trackActions';
+import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
 import AlbumDetailsMedium from './AlbumDetailsMedium';
 
 function createMapStateToProps() {

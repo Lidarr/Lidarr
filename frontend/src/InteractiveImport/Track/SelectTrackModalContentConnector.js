@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { fetchTracks, setTracksSort, clearTracks } from 'Store/Actions/trackActions';
 import { updateInteractiveImportItem } from 'Store/Actions/interactiveImportActions';
+import { clearTracks, fetchTracks, setTracksSort } from 'Store/Actions/trackActions';
 import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
 import SelectTrackModalContent from './SelectTrackModalContent';
 

@@ -1,14 +1,14 @@
+import { push } from 'connected-react-router';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { push } from 'connected-react-router';
+import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import NotFound from 'Components/NotFound';
-import { fetchAlbums, clearAlbums } from 'Store/Actions/albumActions';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
-import LoadingIndicator from 'Components/Loading/LoadingIndicator';
+import { clearAlbums, fetchAlbums } from 'Store/Actions/albumActions';
 import AlbumDetailsConnector from './AlbumDetailsConnector';
 
 function createMapStateToProps() {

@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { icons } from 'Helpers/Props';
-import IconButton from 'Components/Link/IconButton';
-import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
-import TableRow from 'Components/Table/TableRow';
-import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import AlbumTitleLink from 'Album/AlbumTitleLink';
 import TrackQuality from 'Album/TrackQuality';
 import ArtistNameLink from 'Artist/ArtistNameLink';
-import HistoryEventTypeCell from './HistoryEventTypeCell';
+import IconButton from 'Components/Link/IconButton';
+import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
+import TableRowCell from 'Components/Table/Cells/TableRowCell';
+import TableRow from 'Components/Table/TableRow';
+import { icons } from 'Helpers/Props';
 import HistoryDetailsModal from './Details/HistoryDetailsModal';
+import HistoryEventTypeCell from './HistoryEventTypeCell';
 import styles from './HistoryRow.css';
 
 class HistoryRow extends Component {

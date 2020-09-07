@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import ArtistNameLink from 'Artist/ArtistNameLink';
+import ArtistStatusCell from 'Artist/Index/Table/ArtistStatusCell';
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
 import VirtualTableSelectCell from 'Components/Table/Cells/VirtualTableSelectCell';
-import ArtistStatusCell from 'Artist/Index/Table/ArtistStatusCell';
-import ArtistNameLink from 'Artist/ArtistNameLink';
 import AlbumStudioAlbum from './AlbumStudioAlbum';
 import styles from './AlbumStudioRow.css';
 

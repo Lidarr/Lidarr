@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
-import createArtistSelector from 'Store/Selectors/createArtistSelector';
-import createCommandsSelector from 'Store/Selectors/createCommandsSelector';
-import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
-import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
-import { toggleAlbumsMonitored, setAlbumsTableOption, setAlbumsSort } from 'Store/Actions/albumActions';
+import { setAlbumsSort, setAlbumsTableOption, toggleAlbumsMonitored } from 'Store/Actions/albumActions';
 import { executeCommand } from 'Store/Actions/commandActions';
+import createArtistSelector from 'Store/Selectors/createArtistSelector';
+import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
+import createCommandsSelector from 'Store/Selectors/createCommandsSelector';
+import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
+import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
 import ArtistDetailsSeason from './ArtistDetailsSeason';
 
 function createMapStateToProps() {

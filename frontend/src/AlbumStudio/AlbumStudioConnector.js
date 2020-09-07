@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import { clearAlbums, fetchAlbums } from 'Store/Actions/albumActions';
+import { saveAlbumStudio, setAlbumStudioFilter, setAlbumStudioSort } from 'Store/Actions/albumStudioActions';
 import createArtistClientSideCollectionItemsSelector from 'Store/Selectors/createArtistClientSideCollectionItemsSelector';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
-import { setAlbumStudioSort, setAlbumStudioFilter, saveAlbumStudio } from 'Store/Actions/albumStudioActions';
-import { fetchAlbums, clearAlbums } from 'Store/Actions/albumActions';
 import AlbumStudio from './AlbumStudio';
 
 function createAlbumFetchStateSelector() {

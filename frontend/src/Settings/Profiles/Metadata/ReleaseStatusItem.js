@@ -1,6 +1,6 @@
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import classNames from 'classnames';
 import CheckInput from 'Components/Form/CheckInput';
 import styles from './TypeItem.css';
 

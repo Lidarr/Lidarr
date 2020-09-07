@@ -1,24 +1,24 @@
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import classNames from 'classnames';
-import getProgressBarKind from 'Utilities/Artist/getProgressBarKind';
-import formatBytes from 'Utilities/Number/formatBytes';
-import { icons } from 'Helpers/Props';
+import AlbumTitleLink from 'Album/AlbumTitleLink';
+import ArtistBanner from 'Artist/ArtistBanner';
+import ArtistNameLink from 'Artist/ArtistNameLink';
+import DeleteArtistModal from 'Artist/Delete/DeleteArtistModal';
+import EditArtistModalConnector from 'Artist/Edit/EditArtistModalConnector';
 import HeartRating from 'Components/HeartRating';
 import IconButton from 'Components/Link/IconButton';
 import Link from 'Components/Link/Link';
 import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
 import ProgressBar from 'Components/ProgressBar';
-import TagListConnector from 'Components/TagListConnector';
-import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
-import ArtistNameLink from 'Artist/ArtistNameLink';
-import AlbumTitleLink from 'Album/AlbumTitleLink';
-import EditArtistModalConnector from 'Artist/Edit/EditArtistModalConnector';
-import DeleteArtistModal from 'Artist/Delete/DeleteArtistModal';
-import ArtistBanner from 'Artist/ArtistBanner';
-import hasGrowableColumns from './hasGrowableColumns';
+import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
+import TagListConnector from 'Components/TagListConnector';
+import { icons } from 'Helpers/Props';
+import getProgressBarKind from 'Utilities/Artist/getProgressBarKind';
+import formatBytes from 'Utilities/Number/formatBytes';
 import ArtistStatusCell from './ArtistStatusCell';
+import hasGrowableColumns from './hasGrowableColumns';
 import styles from './ArtistIndexRow.css';
 
 class ArtistIndexRow extends Component {

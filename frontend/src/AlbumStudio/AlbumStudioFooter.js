@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { kinds } from 'Helpers/Props';
-import SpinnerButton from 'Components/Link/SpinnerButton';
 import MonitorAlbumsSelectInput from 'Components/Form/MonitorAlbumsSelectInput';
 import SelectInput from 'Components/Form/SelectInput';
+import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
+import { kinds } from 'Helpers/Props';
 import styles from './AlbumStudioFooter.css';
 
 const NO_CHANGE = 'noChange';

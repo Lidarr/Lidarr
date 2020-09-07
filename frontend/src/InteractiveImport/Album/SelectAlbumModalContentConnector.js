@@ -4,12 +4,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import {
-  updateInteractiveImportItem,
-  saveInteractiveImportItem,
+  clearInteractiveImportAlbums,
   fetchInteractiveImportAlbums,
+  saveInteractiveImportItem,
   setInteractiveImportAlbumsSort,
-  clearInteractiveImportAlbums
-} from 'Store/Actions/interactiveImportActions';
+  updateInteractiveImportItem } from 'Store/Actions/interactiveImportActions';
 import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
 import SelectAlbumModalContent from './SelectAlbumModalContent';
 

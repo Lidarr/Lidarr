@@ -2,13 +2,13 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { registerPagePopulator, unregisterPagePopulator } from 'Utilities/pagePopulator';
+import withCurrentPage from 'Components/withCurrentPage';
+import { clearAlbums, fetchAlbums } from 'Store/Actions/albumActions';
+import * as historyActions from 'Store/Actions/historyActions';
+import { clearTracks, fetchTracks } from 'Store/Actions/trackActions';
 import hasDifferentItems from 'Utilities/Object/hasDifferentItems';
 import selectUniqueIds from 'Utilities/Object/selectUniqueIds';
-import withCurrentPage from 'Components/withCurrentPage';
-import * as historyActions from 'Store/Actions/historyActions';
-import { fetchAlbums, clearAlbums } from 'Store/Actions/albumActions';
-import { fetchTracks, clearTracks } from 'Store/Actions/trackActions';
+import { registerPagePopulator, unregisterPagePopulator } from 'Utilities/pagePopulator';
 import History from './History';
 
 function createMapStateToProps() {

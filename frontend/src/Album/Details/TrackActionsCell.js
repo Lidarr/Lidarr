@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { icons, kinds } from 'Helpers/Props';
 import IconButton from 'Components/Link/IconButton';
-import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
+import TableRowCell from 'Components/Table/Cells/TableRowCell';
+import { icons, kinds } from 'Helpers/Props';
 import FileDetailsModal from 'TrackFile/FileDetailsModal';
 import styles from './TrackActionsCell.css';
 

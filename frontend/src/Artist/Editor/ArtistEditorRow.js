@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import TagListConnector from 'Components/TagListConnector';
-import CheckInput from 'Components/Form/CheckInput';
-import TableRow from 'Components/Table/TableRow';
-import TableRowCell from 'Components/Table/Cells/TableRowCell';
-import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
 import ArtistNameLink from 'Artist/ArtistNameLink';
 import ArtistStatusCell from 'Artist/Index/Table/ArtistStatusCell';
+import CheckInput from 'Components/Form/CheckInput';
+import TableRowCell from 'Components/Table/Cells/TableRowCell';
+import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
+import TableRow from 'Components/Table/TableRow';
+import TagListConnector from 'Components/TagListConnector';
 import styles from './ArtistEditorRow.css';
 
 class ArtistEditorRow extends Component {
