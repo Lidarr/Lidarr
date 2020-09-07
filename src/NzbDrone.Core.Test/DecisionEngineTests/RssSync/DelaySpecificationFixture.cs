@@ -48,7 +48,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
             _profile.Items = new List<QualityProfileQualityItem>();
             _profile.Items.Add(new QualityProfileQualityItem { Allowed = true, Quality = Quality.MP3_256 });
             _profile.Items.Add(new QualityProfileQualityItem { Allowed = true, Quality = Quality.MP3_320 });
-            _profile.Items.Add(new QualityProfileQualityItem { Allowed = true, Quality = Quality.MP3_320 });
+            _profile.Items.Add(new QualityProfileQualityItem { Allowed = true, Quality = Quality.FLAC });
 
             _profile.Cutoff = Quality.MP3_320.Id;
 
@@ -185,10 +185,10 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
         [Test]
         public void should_be_false_when_release_is_proper_for_existing_album_of_different_quality()
         {
-            _remoteAlbum.ParsedAlbumInfo.Quality = new QualityModel(Quality.MP3_256, new Revision(version: 2));
+            _remoteAlbum.ParsedAlbumInfo.Quality = new QualityModel(Quality.MP3_320, new Revision(version: 2));
             _remoteAlbum.Release.PublishDate = DateTime.UtcNow;
 
-            GivenExistingFile(new QualityModel(Quality.MP3_192));
+            GivenExistingFile(new QualityModel(Quality.MP3_256));
 
             _delayProfile.UsenetDelay = 720;
 
