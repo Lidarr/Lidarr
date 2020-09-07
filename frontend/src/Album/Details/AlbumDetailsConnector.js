@@ -4,17 +4,17 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import * as commandNames from 'Commands/commandNames';
+import { toggleAlbumsMonitored } from 'Store/Actions/albumActions';
+import { executeCommand } from 'Store/Actions/commandActions';
+import { clearTracks, fetchTracks } from 'Store/Actions/trackActions';
+import { clearTrackFiles, fetchTrackFiles } from 'Store/Actions/trackFileActions';
+import createAllArtistSelector from 'Store/Selectors/createAllArtistSelector';
+import createCommandsSelector from 'Store/Selectors/createCommandsSelector';
+import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
 import { findCommand, isCommandExecuting } from 'Utilities/Command';
 import { registerPagePopulator, unregisterPagePopulator } from 'Utilities/pagePopulator';
-import createCommandsSelector from 'Store/Selectors/createCommandsSelector';
-import { toggleAlbumsMonitored } from 'Store/Actions/albumActions';
-import { fetchTracks, clearTracks } from 'Store/Actions/trackActions';
-import { fetchTrackFiles, clearTrackFiles } from 'Store/Actions/trackFileActions';
-import { executeCommand } from 'Store/Actions/commandActions';
-import * as commandNames from 'Commands/commandNames';
 import AlbumDetails from './AlbumDetails';
-import createAllArtistSelector from 'Store/Selectors/createAllArtistSelector';
-import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
 
 const selectTrackFiles = createSelector(
   (state) => state.trackFiles,

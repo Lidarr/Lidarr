@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { icons } from 'Helpers/Props';
+import TextInput from 'Components/Form/TextInput';
+import Icon from 'Components/Icon';
 import Button from 'Components/Link/Button';
 import Link from 'Components/Link/Link';
-import Icon from 'Components/Icon';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
-import TextInput from 'Components/Form/TextInput';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
-import AddNewArtistSearchResultConnector from './Artist/AddNewArtistSearchResultConnector';
+import { icons } from 'Helpers/Props';
 import AddNewAlbumSearchResultConnector from './Album/AddNewAlbumSearchResultConnector';
+import AddNewArtistSearchResultConnector from './Artist/AddNewArtistSearchResultConnector';
 import styles from './AddNewItem.css';
 
 class AddNewItem extends Component {

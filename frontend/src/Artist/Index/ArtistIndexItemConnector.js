@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import createArtistSelector from 'Store/Selectors/createArtistSelector';
-import createExecutingCommandsSelector from 'Store/Selectors/createExecutingCommandsSelector';
-import createArtistQualityProfileSelector from 'Store/Selectors/createArtistQualityProfileSelector';
-import createArtistMetadataProfileSelector from 'Store/Selectors/createArtistMetadataProfileSelector';
+import * as commandNames from 'Commands/commandNames';
 import { toggleArtistMonitored } from 'Store/Actions/artistActions';
 import { executeCommand } from 'Store/Actions/commandActions';
-import * as commandNames from 'Commands/commandNames';
+import createArtistMetadataProfileSelector from 'Store/Selectors/createArtistMetadataProfileSelector';
+import createArtistQualityProfileSelector from 'Store/Selectors/createArtistQualityProfileSelector';
+import createArtistSelector from 'Store/Selectors/createArtistSelector';
+import createExecutingCommandsSelector from 'Store/Selectors/createExecutingCommandsSelector';
 
 function selectShowSearchAction() {
   return createSelector(

@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import { toggleArtistMonitored } from 'Store/Actions/artistActions';
 import createMetadataProfileSelector from 'Store/Selectors/createMetadataProfileSelector';
 import createQualityProfileSelector from 'Store/Selectors/createQualityProfileSelector';
-import { toggleArtistMonitored } from 'Store/Actions/artistActions';
 import ArtistEditorRow from './ArtistEditorRow';
 
 function createMapStateToProps() {

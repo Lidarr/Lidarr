@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { fetchArtistHistory, clearArtistHistory, artistHistoryMarkAsFailed } from 'Store/Actions/artistHistoryActions';
+import { artistHistoryMarkAsFailed, clearArtistHistory, fetchArtistHistory } from 'Store/Actions/artistHistoryActions';
 import ArtistHistoryModalContent from './ArtistHistoryModalContent';
 
 function createMapStateToProps() {

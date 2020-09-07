@@ -1,13 +1,13 @@
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
-import classNames from 'classnames';
-import { icons } from 'Helpers/Props';
 import IconButton from 'Components/Link/IconButton';
+import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
 import VirtualTableHeader from 'Components/Table/VirtualTableHeader';
 import VirtualTableHeaderCell from 'Components/Table/VirtualTableHeaderCell';
-import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
-import hasGrowableColumns from './hasGrowableColumns';
+import { icons } from 'Helpers/Props';
 import ArtistIndexTableOptionsConnector from './ArtistIndexTableOptionsConnector';
+import hasGrowableColumns from './hasGrowableColumns';
 import styles from './ArtistIndexHeader.css';
 
 function ArtistIndexHeader(props) {

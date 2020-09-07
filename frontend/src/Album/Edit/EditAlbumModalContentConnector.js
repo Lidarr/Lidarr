@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import selectSettings from 'Store/Selectors/selectSettings';
+import { saveAlbum, setAlbumValue } from 'Store/Actions/albumActions';
 import createAlbumSelector from 'Store/Selectors/createAlbumSelector';
 import createArtistSelector from 'Store/Selectors/createArtistSelector';
-import { setAlbumValue, saveAlbum } from 'Store/Actions/albumActions';
+import selectSettings from 'Store/Selectors/selectSettings';
 import EditAlbumModalContent from './EditAlbumModalContent';
 
 function createMapStateToProps() {

@@ -4,16 +4,16 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { findCommand, isCommandExecuting } from 'Utilities/Command';
-import { registerPagePopulator, unregisterPagePopulator } from 'Utilities/pagePopulator';
+import * as commandNames from 'Commands/commandNames';
+import { clearAlbums, fetchAlbums } from 'Store/Actions/albumActions';
+import { toggleArtistMonitored } from 'Store/Actions/artistActions';
+import { executeCommand } from 'Store/Actions/commandActions';
+import { clearQueueDetails, fetchQueueDetails } from 'Store/Actions/queueActions';
+import { clearTrackFiles, fetchTrackFiles } from 'Store/Actions/trackFileActions';
 import createAllArtistSelector from 'Store/Selectors/createAllArtistSelector';
 import createCommandsSelector from 'Store/Selectors/createCommandsSelector';
-import { fetchAlbums, clearAlbums } from 'Store/Actions/albumActions';
-import { fetchTrackFiles, clearTrackFiles } from 'Store/Actions/trackFileActions';
-import { toggleArtistMonitored } from 'Store/Actions/artistActions';
-import { fetchQueueDetails, clearQueueDetails } from 'Store/Actions/queueActions';
-import { executeCommand } from 'Store/Actions/commandActions';
-import * as commandNames from 'Commands/commandNames';
+import { findCommand, isCommandExecuting } from 'Utilities/Command';
+import { registerPagePopulator, unregisterPagePopulator } from 'Utilities/pagePopulator';
 import ArtistDetails from './ArtistDetails';
 
 const selectAlbums = createSelector(

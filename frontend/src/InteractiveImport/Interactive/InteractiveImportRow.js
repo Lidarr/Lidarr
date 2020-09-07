@@ -1,22 +1,22 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import formatBytes from 'Utilities/Number/formatBytes';
-import hasDifferentItems from 'Utilities/Object/hasDifferentItems';
-import { icons, kinds, tooltipPositions, sortDirections } from 'Helpers/Props';
+import TrackQuality from 'Album/TrackQuality';
 import Icon from 'Components/Icon';
-import TableRow from 'Components/Table/TableRow';
+import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRowCellButton from 'Components/Table/Cells/TableRowCellButton';
 import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
+import TableRow from 'Components/Table/TableRow';
 import Popover from 'Components/Tooltip/Popover';
 import Tooltip from 'Components/Tooltip/Tooltip';
-import TrackQuality from 'Album/TrackQuality';
-import SelectArtistModal from 'InteractiveImport/Artist/SelectArtistModal';
+import { icons, kinds, sortDirections, tooltipPositions } from 'Helpers/Props';
 import SelectAlbumModal from 'InteractiveImport/Album/SelectAlbumModal';
-import SelectTrackModal from 'InteractiveImport/Track/SelectTrackModal';
+import SelectArtistModal from 'InteractiveImport/Artist/SelectArtistModal';
 import SelectQualityModal from 'InteractiveImport/Quality/SelectQualityModal';
+import SelectTrackModal from 'InteractiveImport/Track/SelectTrackModal';
+import formatBytes from 'Utilities/Number/formatBytes';
+import hasDifferentItems from 'Utilities/Object/hasDifferentItems';
 import InteractiveImportRowCellPlaceholder from './InteractiveImportRowCellPlaceholder';
-import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import styles from './InteractiveImportRow.css';
 
 class InteractiveImportRow extends Component {

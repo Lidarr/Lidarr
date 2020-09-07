@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import createArtistSelector from 'Store/Selectors/createArtistSelector';
-import { toggleArtistMonitored } from 'Store/Actions/artistActions';
 import { toggleAlbumsMonitored } from 'Store/Actions/albumActions';
+import { toggleArtistMonitored } from 'Store/Actions/artistActions';
+import createArtistSelector from 'Store/Selectors/createArtistSelector';
 import AlbumStudioRow from './AlbumStudioRow';
 
 // Use a const to share the reselect cache between instances

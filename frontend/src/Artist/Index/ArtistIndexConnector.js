@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import * as commandNames from 'Commands/commandNames';
+import withScrollPosition from 'Components/withScrollPosition';
+import { setArtistFilter, setArtistSort, setArtistTableOption, setArtistView } from 'Store/Actions/artistIndexActions';
+import { executeCommand } from 'Store/Actions/commandActions';
+import scrollPositions from 'Store/scrollPositions';
 import createArtistClientSideCollectionItemsSelector from 'Store/Selectors/createArtistClientSideCollectionItemsSelector';
 import createCommandExecutingSelector from 'Store/Selectors/createCommandExecutingSelector';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
-import scrollPositions from 'Store/scrollPositions';
-import { setArtistSort, setArtistFilter, setArtistView, setArtistTableOption } from 'Store/Actions/artistIndexActions';
-import { executeCommand } from 'Store/Actions/commandActions';
-import * as commandNames from 'Commands/commandNames';
-import withScrollPosition from 'Components/withScrollPosition';
 import ArtistIndex from './ArtistIndex';
 
 function createMapStateToProps() {

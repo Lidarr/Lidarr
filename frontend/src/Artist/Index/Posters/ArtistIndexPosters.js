@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Grid, WindowScroller } from 'react-virtualized';
+import ArtistIndexItemConnector from 'Artist/Index/ArtistIndexItemConnector';
+import Measure from 'Components/Measure';
+import dimensions from 'Styles/Variables/dimensions';
 import getIndexOfFirstCharacter from 'Utilities/Array/getIndexOfFirstCharacter';
 import hasDifferentItemsOrOrder from 'Utilities/Object/hasDifferentItemsOrOrder';
-import dimensions from 'Styles/Variables/dimensions';
-import Measure from 'Components/Measure';
-import ArtistIndexItemConnector from 'Artist/Index/ArtistIndexItemConnector';
 import ArtistIndexPoster from './ArtistIndexPoster';
 import styles from './ArtistIndexPosters.css';
 

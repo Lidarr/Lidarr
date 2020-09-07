@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { icons } from 'Helpers/Props';
+import DeleteArtistModal from 'Artist/Delete/DeleteArtistModal';
+import EditArtistModalConnector from 'Artist/Edit/EditArtistModalConnector';
 import IconButton from 'Components/Link/IconButton';
 import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
-import EditArtistModalConnector from 'Artist/Edit/EditArtistModalConnector';
-import DeleteArtistModal from 'Artist/Delete/DeleteArtistModal';
+import { icons } from 'Helpers/Props';
 
 class ArtistIndexActionsCell extends Component {
 

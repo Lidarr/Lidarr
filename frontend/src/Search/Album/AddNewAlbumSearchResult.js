@@ -2,14 +2,14 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import TextTruncate from 'react-text-truncate';
-import dimensions from 'Styles/Variables/dimensions';
-import fonts from 'Styles/Variables/fonts';
-import { icons, sizes } from 'Helpers/Props';
+import AlbumCover from 'Album/AlbumCover';
 import HeartRating from 'Components/HeartRating';
 import Icon from 'Components/Icon';
 import Label from 'Components/Label';
 import Link from 'Components/Link/Link';
-import AlbumCover from 'Album/AlbumCover';
+import { icons, sizes } from 'Helpers/Props';
+import dimensions from 'Styles/Variables/dimensions';
+import fonts from 'Styles/Variables/fonts';
 import AddNewAlbumModal from './AddNewAlbumModal';
 import styles from './AddNewAlbumSearchResult.css';
 

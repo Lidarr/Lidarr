@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import albumEntities from 'Album/albumEntities';
-import AlbumTitleLink from 'Album/AlbumTitleLink';
 import AlbumSearchCellConnector from 'Album/AlbumSearchCellConnector';
+import AlbumTitleLink from 'Album/AlbumTitleLink';
 import ArtistNameLink from 'Artist/ArtistNameLink';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
-import TableRow from 'Components/Table/TableRow';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
+import TableRow from 'Components/Table/TableRow';
 
 function MissingRow(props) {
   const {
