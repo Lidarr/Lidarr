@@ -284,6 +284,38 @@ namespace NzbDrone.Common.Test.Http
         }
 
         [Test]
+        public void should_download_file()
+        {
+            var file = GetTempFilePath();
+
+            var url = "https://lidarr.audio/img/slider/artistdetails.png";
+
+            Subject.DownloadFile(url, file);
+
+            var fileInfo = new FileInfo(file);
+            fileInfo.Exists.Should().BeTrue();
+            fileInfo.Length.Should().Be(146122);
+        }
+
+        [Test]
+        public void should_download_file_with_redirect()
+        {
+            var file = GetTempFilePath();
+
+            var request = new HttpRequestBuilder($"https://{_httpBinHost}/redirect-to")
+                .AddQueryParam("url", $"https://lidarr.audio/img/slider/artistdetails.png")
+                .Build();
+
+            Subject.DownloadFile(request.Url.FullUri, file);
+
+            ExceptionVerification.ExpectedErrors(0);
+
+            var fileInfo = new FileInfo(file);
+            fileInfo.Exists.Should().BeTrue();
+            fileInfo.Length.Should().Be(146122);
+        }
+
+        [Test]
         public void should_not_download_file_with_error()
         {
             var file = GetTempFilePath();
@@ -320,7 +352,7 @@ namespace NzbDrone.Common.Test.Http
             var oldRequest = new HttpRequest($"https://{_httpBinHost2}/get");
             oldRequest.Cookies["my"] = "cookie";
 
-            var oldClient = new HttpClient(new IHttpRequestInterceptor[0], Mocker.Resolve<ICacheManager>(), Mocker.Resolve<IRateLimitService>(), Mocker.Resolve<IHttpDispatcher>(), Mocker.GetMock<IUserAgentBuilder>().Object, Mocker.Resolve<Logger>());
+            var oldClient = new HttpClient(new IHttpRequestInterceptor[0], Mocker.Resolve<ICacheManager>(), Mocker.Resolve<IRateLimitService>(), Mocker.Resolve<IHttpDispatcher>(), Mocker.Resolve<Logger>());
 
             oldClient.Should().NotBeSameAs(Subject);
 
