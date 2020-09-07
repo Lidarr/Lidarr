@@ -200,25 +200,29 @@ export const actionHandlers = handleThunks({
 
     dispatch(set({ section, isSaving: true }));
 
-    const data = {
+    const requestData = {
       trackFileIds
     };
 
     if (quality) {
-      data.quality = quality;
+      requestData.quality = quality;
     }
 
     const promise = createAjaxRequest({
       url: '/trackFile/editor',
       method: 'PUT',
       dataType: 'json',
-      data: JSON.stringify(data)
+      data: JSON.stringify(requestData)
     }).request;
 
-    promise.done(() => {
+    promise.done((data) => {
       dispatch(batchActions([
         ...trackFileIds.map((id) => {
           const props = {};
+
+          const trackFile = data.find((file) => file.id === id);
+
+          props.qualityCutoffNotMet = trackFile.qualityCutoffNotMet;
 
           if (quality) {
             props.quality = quality;
