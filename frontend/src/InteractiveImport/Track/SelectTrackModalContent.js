@@ -1,21 +1,21 @@
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import _ from 'lodash';
+import Button from 'Components/Link/Button';
+import LoadingIndicator from 'Components/Loading/LoadingIndicator';
+import ModalBody from 'Components/Modal/ModalBody';
+import ModalContent from 'Components/Modal/ModalContent';
+import ModalFooter from 'Components/Modal/ModalFooter';
+import ModalHeader from 'Components/Modal/ModalHeader';
+import Table from 'Components/Table/Table';
+import TableBody from 'Components/Table/TableBody';
+import { kinds } from 'Helpers/Props';
+import ExpandingFileDetails from 'TrackFile/ExpandingFileDetails';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import getSelectedIds from 'Utilities/Table/getSelectedIds';
 import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
-import { kinds } from 'Helpers/Props';
-import Button from 'Components/Link/Button';
-import LoadingIndicator from 'Components/Loading/LoadingIndicator';
-import ModalContent from 'Components/Modal/ModalContent';
-import ModalHeader from 'Components/Modal/ModalHeader';
-import ModalBody from 'Components/Modal/ModalBody';
-import ModalFooter from 'Components/Modal/ModalFooter';
-import Table from 'Components/Table/Table';
-import TableBody from 'Components/Table/TableBody';
 import SelectTrackRow from './SelectTrackRow';
-import ExpandingFileDetails from 'TrackFile/ExpandingFileDetails';
 
 const columns = [
   {

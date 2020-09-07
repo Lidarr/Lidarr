@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import createTrackFileSelector from 'Store/Selectors/createTrackFileSelector';
 import { deleteTrackFile } from 'Store/Actions/trackFileActions';
+import createTrackFileSelector from 'Store/Selectors/createTrackFileSelector';
 import TrackRow from './TrackRow';
 
 function createMapStateToProps() {

@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { icons, kinds } from 'Helpers/Props';
-import formatBytes from 'Utilities/Number/formatBytes';
+import TrackQuality from 'Album/TrackQuality';
 import IconButton from 'Components/Link/IconButton';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
-import TrackQuality from 'Album/TrackQuality';
+import { icons, kinds } from 'Helpers/Props';
 import InteractiveImportModal from 'InteractiveImport/InteractiveImportModal';
 import FileDetailsModal from 'TrackFile/FileDetailsModal';
+import formatBytes from 'Utilities/Number/formatBytes';
 import styles from './UnmappedFilesTableRow.css';
 
 class UnmappedFilesTableRow extends Component {

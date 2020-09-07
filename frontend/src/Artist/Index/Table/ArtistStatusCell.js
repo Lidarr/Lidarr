@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { icons } from 'Helpers/Props';
 import Icon from 'Components/Icon';
 import MonitorToggleButton from 'Components/MonitorToggleButton';
 import VirtualTableRowCell from 'Components/Table/Cells/TableRowCell';
+import { icons } from 'Helpers/Props';
 import styles from './ArtistStatusCell.css';
 
 function ArtistStatusCell(props) {

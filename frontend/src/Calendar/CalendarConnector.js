@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { registerPagePopulator, unregisterPagePopulator } from 'Utilities/pagePopulator';
+import * as calendarActions from 'Store/Actions/calendarActions';
+import { clearQueueDetails, fetchQueueDetails } from 'Store/Actions/queueActions';
+import { clearTrackFiles, fetchTrackFiles } from 'Store/Actions/trackFileActions';
 import hasDifferentItems from 'Utilities/Object/hasDifferentItems';
 import selectUniqueIds from 'Utilities/Object/selectUniqueIds';
-import * as calendarActions from 'Store/Actions/calendarActions';
-import { fetchTrackFiles, clearTrackFiles } from 'Store/Actions/trackFileActions';
-import { fetchQueueDetails, clearQueueDetails } from 'Store/Actions/queueActions';
+import { registerPagePopulator, unregisterPagePopulator } from 'Utilities/pagePopulator';
 import Calendar from './Calendar';
 
 const UPDATE_DELAY = 3600000; // 1 hour

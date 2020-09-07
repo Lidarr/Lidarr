@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import TableRowButton from 'Components/Table/TableRowButton';
+import Icon from 'Components/Icon';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
-import { icons, kinds, tooltipPositions } from 'Helpers/Props';
-import Icon from 'Components/Icon';
+import TableRowButton from 'Components/Table/TableRowButton';
 import Popover from 'Components/Tooltip/Popover';
+import { icons, kinds, tooltipPositions } from 'Helpers/Props';
 
 class SelectTrackRow extends Component {
 

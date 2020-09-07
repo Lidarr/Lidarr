@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { icons, kinds, sizes } from 'Helpers/Props';
 import Icon from 'Components/Icon';
-import IconButton from 'Components/Link/IconButton';
 import Label from 'Components/Label';
+import IconButton from 'Components/Link/IconButton';
 import Link from 'Components/Link/Link';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
+import { icons, kinds, sizes } from 'Helpers/Props';
 import TrackRowConnector from './TrackRowConnector';
 import styles from './AlbumDetailsMedium.css';
 

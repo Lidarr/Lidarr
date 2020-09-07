@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import TableRow from 'Components/Table/TableRow';
-import TableRowCell from 'Components/Table/Cells/TableRowCell';
-import formatTimeSpan from 'Utilities/Date/formatTimeSpan';
 import EpisodeStatusConnector from 'Album/EpisodeStatusConnector';
+import TableRowCell from 'Components/Table/Cells/TableRowCell';
+import TableRow from 'Components/Table/TableRow';
 import MediaInfoConnector from 'TrackFile/MediaInfoConnector';
-import TrackActionsCell from './TrackActionsCell';
 import * as mediaInfoTypes from 'TrackFile/mediaInfoTypes';
-
+import formatTimeSpan from 'Utilities/Date/formatTimeSpan';
+import TrackActionsCell from './TrackActionsCell';
 import styles from './TrackRow.css';
 
 class TrackRow extends Component {

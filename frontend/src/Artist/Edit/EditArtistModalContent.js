@@ -1,20 +1,20 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { icons, inputTypes, kinds, tooltipPositions } from 'Helpers/Props';
-import Button from 'Components/Link/Button';
-import SpinnerButton from 'Components/Link/SpinnerButton';
-import ModalContent from 'Components/Modal/ModalContent';
-import ModalHeader from 'Components/Modal/ModalHeader';
-import ModalBody from 'Components/Modal/ModalBody';
-import ModalFooter from 'Components/Modal/ModalFooter';
+import ArtistMetadataProfilePopoverContent from 'AddArtist/ArtistMetadataProfilePopoverContent';
+import MoveArtistModal from 'Artist/MoveArtist/MoveArtistModal';
 import Form from 'Components/Form/Form';
 import FormGroup from 'Components/Form/FormGroup';
-import FormLabel from 'Components/Form/FormLabel';
 import FormInputGroup from 'Components/Form/FormInputGroup';
+import FormLabel from 'Components/Form/FormLabel';
 import Icon from 'Components/Icon';
+import Button from 'Components/Link/Button';
+import SpinnerButton from 'Components/Link/SpinnerButton';
+import ModalBody from 'Components/Modal/ModalBody';
+import ModalContent from 'Components/Modal/ModalContent';
+import ModalFooter from 'Components/Modal/ModalFooter';
+import ModalHeader from 'Components/Modal/ModalHeader';
 import Popover from 'Components/Tooltip/Popover';
-import MoveArtistModal from 'Artist/MoveArtist/MoveArtistModal';
-import ArtistMetadataProfilePopoverContent from 'AddArtist/ArtistMetadataProfilePopoverContent';
+import { icons, inputTypes, kinds, tooltipPositions } from 'Helpers/Props';
 import styles from './EditArtistModalContent.css';
 
 class EditArtistModalContent extends Component {

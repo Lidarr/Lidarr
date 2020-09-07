@@ -1,23 +1,23 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { icons, kinds, tooltipPositions } from 'Helpers/Props';
-import IconButton from 'Components/Link/IconButton';
-import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
-import ProgressBar from 'Components/ProgressBar';
-import TableRow from 'Components/Table/TableRow';
-import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
-import TableRowCell from 'Components/Table/Cells/TableRowCell';
-import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
-import Icon from 'Components/Icon';
-import Popover from 'Components/Tooltip/Popover';
 import ProtocolLabel from 'Activity/Queue/ProtocolLabel';
 import AlbumTitleLink from 'Album/AlbumTitleLink';
 import TrackQuality from 'Album/TrackQuality';
-import InteractiveImportModal from 'InteractiveImport/InteractiveImportModal';
 import ArtistNameLink from 'Artist/ArtistNameLink';
+import Icon from 'Components/Icon';
+import IconButton from 'Components/Link/IconButton';
+import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
+import ProgressBar from 'Components/ProgressBar';
+import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
+import TableRowCell from 'Components/Table/Cells/TableRowCell';
+import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
+import TableRow from 'Components/Table/TableRow';
+import Popover from 'Components/Tooltip/Popover';
+import { icons, kinds, tooltipPositions } from 'Helpers/Props';
+import InteractiveImportModal from 'InteractiveImport/InteractiveImportModal';
 import QueueStatusCell from './QueueStatusCell';
-import TimeleftCell from './TimeleftCell';
 import RemoveQueueItemModal from './RemoveQueueItemModal';
+import TimeleftCell from './TimeleftCell';
 import styles from './QueueRow.css';
 
 class QueueRow extends Component {

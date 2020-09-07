@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import padNumber from 'Utilities/Number/padNumber';
-import TableRow from 'Components/Table/TableRow';
+import TrackQuality from 'Album/TrackQuality';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
-import TrackQuality from 'Album/TrackQuality';
+import TableRow from 'Components/Table/TableRow';
+import padNumber from 'Utilities/Number/padNumber';
 
 function TrackFileEditorRow(props) {
   const {

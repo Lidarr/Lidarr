@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import createAllArtistSelector from 'Store/Selectors/createAllArtistSelector';
 import { bulkDeleteArtist } from 'Store/Actions/artistEditorActions';
+import createAllArtistSelector from 'Store/Selectors/createAllArtistSelector';
 import DeleteArtistModalContent from './DeleteArtistModalContent';
 
 function createMapStateToProps() {

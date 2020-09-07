@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import TextTruncate from 'react-text-truncate';
-import dimensions from 'Styles/Variables/dimensions';
-import fonts from 'Styles/Variables/fonts';
-import { icons, kinds, sizes } from 'Helpers/Props';
+import ArtistPoster from 'Artist/ArtistPoster';
 import HeartRating from 'Components/HeartRating';
 import Icon from 'Components/Icon';
 import Label from 'Components/Label';
 import Link from 'Components/Link/Link';
-import ArtistPoster from 'Artist/ArtistPoster';
+import { icons, kinds, sizes } from 'Helpers/Props';
+import dimensions from 'Styles/Variables/dimensions';
+import fonts from 'Styles/Variables/fonts';
 import AddNewArtistModal from './AddNewArtistModal';
 import styles from './AddNewArtistSearchResult.css';
 
