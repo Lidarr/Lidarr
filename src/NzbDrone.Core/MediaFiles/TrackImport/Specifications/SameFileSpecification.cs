@@ -15,9 +15,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
             _logger = logger;
         }
 
-        public Decision IsSatisfiedBy(LocalTrack item, DownloadClientItem downloadClientItem)
+        public Decision IsSatisfiedBy(LocalTrack localTrack, DownloadClientItem downloadClientItem)
         {
-            var trackFiles = item.Tracks.Where(e => e.TrackFileId != 0).Select(e => e.TrackFile).ToList();
+            var trackFiles = localTrack.Tracks.Where(e => e.TrackFileId != 0).Select(e => e.TrackFile).ToList();
 
             if (trackFiles.Count == 0)
             {
@@ -31,9 +31,19 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
                 return Decision.Accept();
             }
 
-            if (trackFiles.First().Value.Size == item.Size)
+            var trackFile = trackFiles.First().Value;
+
+            if (trackFile == null)
             {
-                _logger.Debug("'{0}' Has the same filesize as existing file", item.Path);
+                var track = localTrack.Tracks.First();
+                _logger.Trace("Unable to get track file details from the DB. TrackId: {0} TrackFileId: {1}", track.Id, track.TrackFileId);
+
+                return Decision.Accept();
+            }
+
+            if (trackFiles.First().Value.Size == localTrack.Size)
+            {
+                _logger.Debug("'{0}' Has the same filesize as existing file", localTrack.Path);
                 return Decision.Reject("Has the same filesize as existing file");
             }
 
