@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Lidarr.Http.REST;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Parser.Model;
