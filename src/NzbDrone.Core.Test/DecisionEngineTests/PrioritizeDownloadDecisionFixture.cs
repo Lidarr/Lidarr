@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
                             .Build();
         }
 
-        private RemoteAlbum GivenRemoteAlbum(List<Album> albums, QualityModel quality, int age = 0, long size = 0, DownloadProtocol downloadProtocol = DownloadProtocol.Usenet)
+        private RemoteAlbum GivenRemoteAlbum(List<Album> albums, QualityModel quality, int age = 0, long size = 0, DownloadProtocol downloadProtocol = DownloadProtocol.Usenet, int indexerPriority = 25)
         {
             var remoteAlbum = new RemoteAlbum();
             remoteAlbum.ParsedAlbumInfo = new ParsedAlbumInfo();
@@ -47,6 +47,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             remoteAlbum.Release.PublishDate = DateTime.Now.AddDays(-age);
             remoteAlbum.Release.Size = size;
             remoteAlbum.Release.DownloadProtocol = downloadProtocol;
+            remoteAlbum.Release.IndexerPriority = indexerPriority;
 
             remoteAlbum.Artist = Builder<Artist>.CreateNew()
                                                 .With(e => e.QualityProfile = new QualityProfile
@@ -513,6 +514,40 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             qualifiedReports.First().RemoteAlbum.ParsedAlbumInfo.Quality.Revision.Version.Should().Be(1);
             qualifiedReports.First().RemoteAlbum.ParsedAlbumInfo.Quality.Revision.Real.Should().Be(0);
             qualifiedReports.First().RemoteAlbum.PreferredWordScore.Should().Be(10);
+        }
+
+        [Test]
+        public void sort_download_decisions_based_on_indexer_priority()
+        {
+            var remoteAlbum1 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC, new Revision(1)), indexerPriority: 25);
+            var remoteAlbum2 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC, new Revision(1)), indexerPriority: 50);
+            var remoteAlbum3 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC, new Revision(1)), indexerPriority: 1);
+
+            var decisions = new List<DownloadDecision>();
+            decisions.AddRange(new[] { new DownloadDecision(remoteAlbum1), new DownloadDecision(remoteAlbum2), new DownloadDecision(remoteAlbum3) });
+
+            var qualifiedReports = Subject.PrioritizeDecisions(decisions);
+            qualifiedReports.First().RemoteAlbum.Should().Be(remoteAlbum3);
+            qualifiedReports.Skip(1).First().RemoteAlbum.Should().Be(remoteAlbum1);
+            qualifiedReports.Last().RemoteAlbum.Should().Be(remoteAlbum2);
+        }
+
+        [Test]
+        public void ensure_download_decisions_indexer_priority_is_not_perfered_over_quality()
+        {
+            var remoteAlbum1 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_320, new Revision(1)), indexerPriority: 25);
+            var remoteAlbum2 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC, new Revision(1)), indexerPriority: 50);
+            var remoteAlbum3 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_128, new Revision(1)), indexerPriority: 1);
+            var remoteAlbum4 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC, new Revision(1)), indexerPriority: 25);
+
+            var decisions = new List<DownloadDecision>();
+            decisions.AddRange(new[] { new DownloadDecision(remoteAlbum1), new DownloadDecision(remoteAlbum2), new DownloadDecision(remoteAlbum3), new DownloadDecision(remoteAlbum4) });
+
+            var qualifiedReports = Subject.PrioritizeDecisions(decisions);
+            qualifiedReports.First().RemoteAlbum.Should().Be(remoteAlbum4);
+            qualifiedReports.Skip(1).First().RemoteAlbum.Should().Be(remoteAlbum2);
+            qualifiedReports.Skip(2).First().RemoteAlbum.Should().Be(remoteAlbum1);
+            qualifiedReports.Last().RemoteAlbum.Should().Be(remoteAlbum3);
         }
     }
 }
