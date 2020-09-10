@@ -74,6 +74,7 @@ namespace NzbDrone.Core.Download
 
                 try
                 {
+                    _logger.Trace("Grabbing from Indexer {0} at priority {1}.", remoteAlbum.Release.Indexer, remoteAlbum.Release.IndexerPriority);
                     _downloadService.DownloadReport(remoteAlbum);
                     grabbed.Add(report);
                 }
