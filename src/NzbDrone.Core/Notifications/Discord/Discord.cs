@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Notifications.Discord.Payloads;
 using NzbDrone.Core.Validation;
@@ -22,34 +24,184 @@ namespace NzbDrone.Core.Notifications.Discord
 
         public override void OnGrab(GrabMessage message)
         {
-            var embeds = new List<Embed>
-                              {
-                                  new Embed
-                                  {
-                                      Description = message.Message,
-                                      Title = message.Artist.Name,
-                                      Text = message.Message,
-                                      Color = (int)DiscordColors.Warning
-                                  }
-                              };
-            var payload = CreatePayload($"Grabbed: {message.Message}", embeds);
+            var artist = message.Artist;
+            var albums = message.Album.Albums;
+            var artistMetadata = message.Artist.Metadata.Value;
+
+            var embed = new Embed
+            {
+                Author = new DiscordAuthor
+                {
+                    Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
+                    IconUrl = "https://raw.githubusercontent.com/lidarr/Lidarr/develop/Logo/256.png"
+                },
+                Url = $"https://musicbrainz.org/artist/{artist.ForeignArtistId}",
+                Description = "Album Grabbed",
+                Title = GetTitle(artist, albums),
+                Color = (int)DiscordColors.Standard,
+                Fields = new List<DiscordField>(),
+                Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+            };
+
+            if (Settings.GrabFields.Contains((int)DiscordGrabFieldType.Poster))
+            {
+                embed.Thumbnail = new DiscordImage
+                {
+                    Url = albums.First().Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Cover)?.Url
+                };
+            }
+
+            if (Settings.GrabFields.Contains((int)DiscordGrabFieldType.Fanart))
+            {
+                embed.Image = new DiscordImage
+                {
+                    Url = artistMetadata.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Fanart)?.Url
+                };
+            }
+
+            foreach (var field in Settings.GrabFields)
+            {
+                var discordField = new DiscordField();
+
+                switch ((DiscordGrabFieldType)field)
+                {
+                    case DiscordGrabFieldType.Overview:
+                        var overview = albums.First().Overview ?? "";
+                        discordField.Name = "Overview";
+                        discordField.Value = overview.Length <= 300 ? overview : overview.Substring(0, 300) + "...";
+                        break;
+                    case DiscordGrabFieldType.Rating:
+                        discordField.Name = "Rating";
+                        discordField.Value = albums.First().Ratings.Value.ToString();
+                        break;
+                    case DiscordGrabFieldType.Genres:
+                        discordField.Name = "Genres";
+                        discordField.Value = albums.First().Genres.Take(5).Join(", ");
+                        break;
+                    case DiscordGrabFieldType.Quality:
+                        discordField.Name = "Quality";
+                        discordField.Inline = true;
+                        discordField.Value = message.Quality.Quality.Name;
+                        break;
+                    case DiscordGrabFieldType.Group:
+                        discordField.Name = "Group";
+                        discordField.Value = message.Album.ParsedAlbumInfo.ReleaseGroup;
+                        break;
+                    case DiscordGrabFieldType.Size:
+                        discordField.Name = "Size";
+                        discordField.Value = BytesToString(message.Album.Release.Size);
+                        discordField.Inline = true;
+                        break;
+                    case DiscordGrabFieldType.Release:
+                        discordField.Name = "Release";
+                        discordField.Value = string.Format("```{0}```", message.Album.Release.Title);
+                        break;
+                    case DiscordGrabFieldType.Links:
+                        discordField.Name = "Links";
+                        discordField.Value = GetLinksString(artist);
+                        break;
+                }
+
+                if (discordField.Name.IsNotNullOrWhiteSpace() && discordField.Value.IsNotNullOrWhiteSpace())
+                {
+                    embed.Fields.Add(discordField);
+                }
+            }
+
+            var payload = CreatePayload(null, new List<Embed> { embed });
 
             _proxy.SendPayload(payload, Settings);
         }
 
         public override void OnReleaseImport(AlbumDownloadMessage message)
         {
-            var attachments = new List<Embed>
+            var artist = message.Artist;
+            var artistMetadata = message.Artist.Metadata.Value;
+            var album = message.Album;
+            var episodes = message.TrackFiles;
+            var isUpgrade = message.OldFiles.Count > 0;
+
+            var embed = new Embed
             {
-                new Embed
+                Author = new DiscordAuthor
                 {
-                    Description = message.Message,
-                    Title = message.Artist.Name,
-                    Text = message.Message,
-                    Color = (int)DiscordColors.Success
-                }
+                    Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
+                    IconUrl = "https://raw.githubusercontent.com/lidarr/Lidarr/develop/Logo/256.png"
+                },
+                Url = $"https://musicbrainz.org/artist/{artist.ForeignArtistId}",
+                Description = isUpgrade ? "Album Upgraded" : "Album Imported",
+                Title = GetTitle(artist, new List<Album> { album }),
+                Color = isUpgrade ? (int)DiscordColors.Upgrade : (int)DiscordColors.Standard,
+                Fields = new List<DiscordField>(),
+                Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
             };
-            var payload = CreatePayload($"Imported: {message.Message}", attachments);
+
+            if (Settings.ImportFields.Contains((int)DiscordImportFieldType.Poster))
+            {
+                embed.Thumbnail = new DiscordImage
+                {
+                    Url = album.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Cover)?.Url
+                };
+            }
+
+            if (Settings.ImportFields.Contains((int)DiscordImportFieldType.Fanart))
+            {
+                embed.Image = new DiscordImage
+                {
+                    Url = artistMetadata.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Fanart)?.Url
+                };
+            }
+
+            foreach (var field in Settings.ImportFields)
+            {
+                var discordField = new DiscordField();
+
+                switch ((DiscordImportFieldType)field)
+                {
+                    case DiscordImportFieldType.Overview:
+                        var overview = album.Overview ?? "";
+                        discordField.Name = "Overview";
+                        discordField.Value = overview.Length <= 300 ? overview : overview.Substring(0, 300) + "...";
+                        break;
+                    case DiscordImportFieldType.Rating:
+                        discordField.Name = "Rating";
+                        discordField.Value = album.Ratings.Value.ToString();
+                        break;
+                    case DiscordImportFieldType.Genres:
+                        discordField.Name = "Genres";
+                        discordField.Value = album.Genres.Take(5).Join(", ");
+                        break;
+                    case DiscordImportFieldType.Quality:
+                        discordField.Name = "Quality";
+                        discordField.Inline = true;
+                        discordField.Value = message.TrackFiles.First().Quality.Quality.Name;
+                        break;
+                    case DiscordImportFieldType.Group:
+                        discordField.Name = "Group";
+                        discordField.Value = message.TrackFiles.First().ReleaseGroup;
+                        break;
+                    case DiscordImportFieldType.Size:
+                        discordField.Name = "Size";
+                        discordField.Value = BytesToString(message.TrackFiles.Sum(x => x.Size));
+                        discordField.Inline = true;
+                        break;
+                    case DiscordImportFieldType.Release:
+                        discordField.Name = "Release";
+                        discordField.Value = message.TrackFiles.First().SceneName;
+                        break;
+                    case DiscordImportFieldType.Links:
+                        discordField.Name = "Links";
+                        discordField.Value = GetLinksString(artist);
+                        break;
+                }
+
+                if (discordField.Name.IsNotNullOrWhiteSpace() && discordField.Value.IsNotNullOrWhiteSpace())
+                {
+                    embed.Fields.Add(discordField);
+                }
+            }
+
+            var payload = CreatePayload(null, new List<Embed> { embed });
 
             _proxy.SendPayload(payload, Settings);
         }
@@ -75,13 +227,19 @@ namespace NzbDrone.Core.Notifications.Discord
                               {
                                   new Embed
                                   {
+                                      Author = new DiscordAuthor
+                                      {
+                                          Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
+                                          IconUrl = "https://raw.githubusercontent.com/lidarr/Lidarr/develop/Logo/256.png"
+                                      },
                                       Title = healthCheck.Source.Name,
-                                      Text = healthCheck.Message,
+                                      Description = healthCheck.Message,
+                                      Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
                                       Color = healthCheck.Type == HealthCheck.HealthCheckResult.Warning ? (int)DiscordColors.Warning : (int)DiscordColors.Danger
                                   }
                               };
 
-            var payload = CreatePayload("Health Issue", attachments);
+            var payload = CreatePayload(null, attachments);
 
             _proxy.SendPayload(payload, Settings);
         }
@@ -92,6 +250,11 @@ namespace NzbDrone.Core.Notifications.Discord
                               {
                                   new Embed
                                   {
+                                      Author = new DiscordAuthor
+                                      {
+                                          Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
+                                          IconUrl = "https://raw.githubusercontent.com/lidarr/Lidarr/develop/Logo/256.png"
+                                      },
                                       Title = TRACK_RETAGGED_TITLE,
                                       Text = message.Message
                                   }
@@ -108,6 +271,11 @@ namespace NzbDrone.Core.Notifications.Discord
             {
                 new Embed
                 {
+                    Author = new DiscordAuthor
+                    {
+                        Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
+                        IconUrl = "https://raw.githubusercontent.com/lidarr/Lidarr/develop/Logo/256.png"
+                    },
                     Description = message.Message,
                     Title = message.SourceTitle,
                     Text = message.Message,
@@ -125,6 +293,11 @@ namespace NzbDrone.Core.Notifications.Discord
             {
                 new Embed
                 {
+                    Author = new DiscordAuthor
+                    {
+                        Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
+                        IconUrl = "https://raw.githubusercontent.com/lidarr/Lidarr/develop/Logo/256.png"
+                    },
                     Description = message.Message,
                     Title = message.Album.Title,
                     Text = message.Message,
@@ -184,6 +357,36 @@ namespace NzbDrone.Core.Notifications.Discord
             }
 
             return payload;
+        }
+
+        private string BytesToString(long byteCount)
+        {
+            string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; //Longs run out around EB
+            if (byteCount == 0)
+            {
+                return "0 " + suf[0];
+            }
+
+            var bytes = Math.Abs(byteCount);
+            var place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
+            var num = Math.Round(bytes / Math.Pow(1024, place), 1);
+            return string.Format("{0} {1}", (Math.Sign(byteCount) * num).ToString(), suf[place]);
+        }
+
+        private string GetLinksString(Artist artist)
+        {
+            var links = new List<string>();
+
+            links.Add($"[MusicBrainz](https://musicbrainz.org/artist/{artist.ForeignArtistId})");
+
+            return string.Join(" / ", links);
+        }
+
+        private string GetTitle(Artist artist, List<Album> albums)
+        {
+            var albumTitles = string.Join(" + ", albums.Select(e => e.Title));
+
+            return $"{artist.Name} - {albumTitles}";
         }
     }
 }
