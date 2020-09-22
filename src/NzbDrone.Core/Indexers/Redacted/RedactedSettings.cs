@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Indexers.Redacted
         public string BaseUrl { get; set; }
         public string PassKey { get; set; }
 
-        [FieldDefinition(1, Label = "ApiKey", HelpText = "Generate this in 'Access Settings' in your Redacted profile")]
+        [FieldDefinition(1, Label = "ApiKey", HelpText = "Generate this in 'Access Settings' in your Redacted profile", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
         [FieldDefinition(3, Type = FieldType.Textbox, Label = "Minimum Seeders", HelpText = "Minimum number of seeders required.", Advanced = true)]
