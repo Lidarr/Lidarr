@@ -27,10 +27,10 @@ namespace NzbDrone.Core.Indexers.Waffles
         [FieldDefinition(0, Label = "Website URL")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(1, Label = "UserId")]
+        [FieldDefinition(1, Label = "UserId", Privacy = PrivacyLevel.UserName)]
         public string UserId { get; set; }
 
-        [FieldDefinition(2, Label = "RSS Passkey")]
+        [FieldDefinition(2, Label = "RSS Passkey", Privacy = PrivacyLevel.ApiKey)]
         public string RssPasskey { get; set; }
 
         [FieldDefinition(3, Type = FieldType.Textbox, Label = "Minimum Seeders", HelpText = "Minimum number of seeders required.", Advanced = true)]
