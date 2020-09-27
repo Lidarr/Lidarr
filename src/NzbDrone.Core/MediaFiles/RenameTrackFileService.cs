@@ -157,6 +157,8 @@ namespace NzbDrone.Core.MediaFiles
             _logger.ProgressInfo("Renaming {0} files for {1}", trackFiles.Count, artist.Name);
             RenameFiles(trackFiles, artist);
             _logger.ProgressInfo("Selected track files renamed for {0}", artist.Name);
+
+            _eventAggregator.PublishEvent(new RenameCompletedEvent());
         }
 
         public void Execute(RenameArtistCommand message)
@@ -171,6 +173,8 @@ namespace NzbDrone.Core.MediaFiles
                 RenameFiles(trackFiles, artist);
                 _logger.ProgressInfo("All track files renamed for {0}", artist.Name);
             }
+
+            _eventAggregator.PublishEvent(new RenameCompletedEvent());
         }
     }
 }
