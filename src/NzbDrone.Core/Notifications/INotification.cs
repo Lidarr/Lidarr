@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Notifications
         void OnDownloadFailure(DownloadFailedMessage message);
         void OnImportFailure(AlbumDownloadMessage message);
         void OnTrackRetag(TrackRetagMessage message);
+        void ProcessQueue();
         bool SupportsOnGrab { get; }
         bool SupportsOnReleaseImport { get; }
         bool SupportsOnUpgrade { get; }
