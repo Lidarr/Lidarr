@@ -64,6 +64,10 @@ namespace NzbDrone.Core.Notifications
         {
         }
 
+        public virtual void ProcessQueue()
+        {
+        }
+
         public bool SupportsOnGrab => HasConcreteImplementation("OnGrab");
         public bool SupportsOnRename => HasConcreteImplementation("OnRename");
         public bool SupportsOnReleaseImport => HasConcreteImplementation("OnReleaseImport");
