@@ -101,33 +101,6 @@ namespace NzbDrone.Common.Test.CacheTests
 
             hitCount.Should().BeInRange(3, 7);
         }
-
-        [Test]
-        [Retry(3)]
-        [Platform(Exclude = "MacOsX")]
-        public void should_clear_expired_when_they_expire()
-        {
-            int hitCount = 0;
-            _cachedString = new Cached<string>();
-
-            for (int i = 0; i < 10; i++)
-            {
-                _cachedString.Get("key",
-                    () =>
-                        {
-                            hitCount++;
-                            return null;
-                        },
-                    TimeSpan.FromMilliseconds(300));
-
-                Thread.Sleep(100);
-            }
-
-            Thread.Sleep(1000);
-
-            hitCount.Should().BeInRange(3, 7);
-            _cachedString.Values.Should().HaveCount(0);
-        }
     }
 
     public class Worker
