@@ -141,6 +141,8 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
                 return null;
             }
 
+            var albumRelease = album.AlbumReleases.Value.Single(x => x.Monitored);
+
             _logger.Debug("Generating album.nfo for: {0}", album.Title);
             var sb = new StringBuilder();
             var xws = new XmlWriterSettings();
@@ -158,9 +160,11 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
                     albumElement.Add(new XElement("rating", album.Ratings.Value));
                 }
 
-                albumElement.Add(new XElement("musicbrainzalbumid", album.ForeignAlbumId));
+                albumElement.Add(new XElement("musicbrainzreleasegroupid", album.ForeignAlbumId));
+                albumElement.Add(new XElement("musicbrainzalbumid", albumRelease.ForeignReleaseId));
                 albumElement.Add(new XElement("artistdesc", artist.Metadata.Value.Overview));
                 albumElement.Add(new XElement("releasedate", album.ReleaseDate.Value.ToShortDateString()));
+                albumElement.Add(new XElement("label", albumRelease.Label));
 
                 var doc = new XDocument(albumElement);
                 doc.Save(xw);
