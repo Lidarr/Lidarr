@@ -7,15 +7,18 @@ namespace NzbDrone.Core.MediaCover
     {
         public Artist Artist { get; set; }
         public Album Album { get; set; }
+        public bool Updated { get; set; }
 
-        public MediaCoversUpdatedEvent(Artist artist)
+        public MediaCoversUpdatedEvent(Artist artist, bool updated)
         {
             Artist = artist;
+            Updated = updated;
         }
 
-        public MediaCoversUpdatedEvent(Album album)
+        public MediaCoversUpdatedEvent(Album album, bool updated)
         {
             Album = album;
+            Updated = updated;
         }
     }
 }
