@@ -29,6 +29,11 @@ namespace NzbDrone.Core.Extras.Others
 
         public override int Order => 2;
 
+        public override IEnumerable<ExtraFile> CreateAfterMediaCoverUpdate(Artist artist)
+        {
+            return Enumerable.Empty<ExtraFile>();
+        }
+
         public override IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<TrackFile> trackFiles)
         {
             return Enumerable.Empty<ExtraFile>();
@@ -39,7 +44,7 @@ namespace NzbDrone.Core.Extras.Others
             return Enumerable.Empty<ExtraFile>();
         }
 
-        public override IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, Album album, string artistFolder, string albumFolder)
+        public override IEnumerable<ExtraFile> CreateAfterTrackFolder(Artist artist, Album album, string artistFolder, string albumFolder)
         {
             return Enumerable.Empty<ExtraFile>();
         }

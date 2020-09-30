@@ -24,6 +24,7 @@ namespace NzbDrone.Core.Extras
     public class ExtraService : IExtraService,
                                 IHandle<MediaCoversUpdatedEvent>,
                                 IHandle<TrackFolderCreatedEvent>,
+                                IHandle<ArtistScannedEvent>,
                                 IHandle<ArtistRenamedEvent>
     {
         private readonly IMediaFileService _mediaFileService;
@@ -55,7 +56,7 @@ namespace NzbDrone.Core.Extras
         {
             ImportExtraFiles(localTrack, trackFile, isReadOnly);
 
-            CreateAfterImport(localTrack.Artist, trackFile);
+            CreateAfterTrackImport(localTrack.Artist, trackFile);
         }
 
         public void ImportExtraFiles(LocalTrack localTrack, TrackFile trackFile, bool isReadOnly)
@@ -123,7 +124,7 @@ namespace NzbDrone.Core.Extras
             }
         }
 
-        private void CreateAfterImport(Artist artist, TrackFile trackFile)
+        private void CreateAfterTrackImport(Artist artist, TrackFile trackFile)
         {
             foreach (var extraFileManager in _extraFileManagers)
             {
@@ -132,6 +133,19 @@ namespace NzbDrone.Core.Extras
         }
 
         public void Handle(MediaCoversUpdatedEvent message)
+        {
+            if (message.Updated)
+            {
+                var artist = message.Artist;
+
+                foreach (var extraFileManager in _extraFileManagers)
+                {
+                    extraFileManager.CreateAfterMediaCoverUpdate(artist);
+                }
+            }
+        }
+
+        public void Handle(ArtistScannedEvent message)
         {
             var artist = message.Artist;
 
@@ -150,7 +164,7 @@ namespace NzbDrone.Core.Extras
 
             foreach (var extraFileManager in _extraFileManagers)
             {
-                extraFileManager.CreateAfterTrackImport(artist, album, message.ArtistFolder, message.AlbumFolder);
+                extraFileManager.CreateAfterTrackFolder(artist, album, message.ArtistFolder, message.AlbumFolder);
             }
         }
 

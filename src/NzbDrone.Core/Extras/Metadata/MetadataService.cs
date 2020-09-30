@@ -59,6 +59,31 @@ namespace NzbDrone.Core.Extras.Metadata
 
         public override int Order => 0;
 
+        public override IEnumerable<ExtraFile> CreateAfterMediaCoverUpdate(Artist artist)
+        {
+            var metadataFiles = _metadataFileService.GetFilesByArtist(artist.Id);
+            _cleanMetadataService.Clean(artist);
+
+            if (!_diskProvider.FolderExists(artist.Path))
+            {
+                _logger.Info("Artist folder does not exist, skipping metadata image creation");
+                return Enumerable.Empty<MetadataFile>();
+            }
+
+            var files = new List<MetadataFile>();
+
+            foreach (var consumer in _metadataFactory.Enabled())
+            {
+                var consumerFiles = GetMetadataFilesForConsumer(consumer, metadataFiles);
+
+                files.AddRange(ProcessArtistImages(consumer, artist, consumerFiles));
+            }
+
+            _metadataFileService.Upsert(files);
+
+            return files;
+        }
+
         public override IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<TrackFile> trackFiles)
         {
             var metadataFiles = _metadataFileService.GetFilesByArtist(artist.Id);
@@ -114,7 +139,7 @@ namespace NzbDrone.Core.Extras.Metadata
             return files;
         }
 
-        public override IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, Album album, string artistFolder, string albumFolder)
+        public override IEnumerable<ExtraFile> CreateAfterTrackFolder(Artist artist, Album album, string artistFolder, string albumFolder)
         {
             var metadataFiles = _metadataFileService.GetFilesByArtist(artist.Id);
 
