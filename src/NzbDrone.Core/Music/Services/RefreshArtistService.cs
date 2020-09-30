@@ -190,7 +190,7 @@ namespace NzbDrone.Core.Music
 
         protected override void SaveEntity(Artist local)
         {
-            _artistService.UpdateArtist(local);
+            _artistService.UpdateArtist(local, publishUpdatedEvent: false);
         }
 
         protected override void DeleteEntity(Artist local, bool deleteFiles)

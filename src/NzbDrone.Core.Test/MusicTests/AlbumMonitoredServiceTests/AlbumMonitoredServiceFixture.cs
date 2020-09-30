@@ -58,7 +58,7 @@ namespace NzbDrone.Core.Test.MusicTests.AlbumMonitoredServiceTests
             Subject.SetAlbumMonitoredStatus(_artist, null);
 
             Mocker.GetMock<IArtistService>()
-                  .Verify(v => v.UpdateArtist(It.IsAny<Artist>()), Times.Once());
+                .Verify(v => v.UpdateArtist(It.IsAny<Artist>(), It.IsAny<bool>()), Times.Once());
 
             Mocker.GetMock<IAlbumService>()
                   .Verify(v => v.UpdateMany(It.IsAny<List<Album>>()), Times.Never());
@@ -72,7 +72,7 @@ namespace NzbDrone.Core.Test.MusicTests.AlbumMonitoredServiceTests
             Subject.SetAlbumMonitoredStatus(_artist, new MonitoringOptions { Monitored = true, AlbumsToMonitor = albumsToMonitor });
 
             Mocker.GetMock<IArtistService>()
-                .Verify(v => v.UpdateArtist(It.IsAny<Artist>()), Times.Once());
+                .Verify(v => v.UpdateArtist(It.IsAny<Artist>(), It.IsAny<bool>()), Times.Once());
 
             VerifyMonitored(e => e.ForeignAlbumId == _albums.First().ForeignAlbumId);
             VerifyNotMonitored(e => e.ForeignAlbumId != _albums.First().ForeignAlbumId);

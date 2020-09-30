@@ -100,8 +100,8 @@ namespace NzbDrone.Core.Test.MusicTests
         private void AllowArtistUpdate()
         {
             Mocker.GetMock<IArtistService>(MockBehavior.Strict)
-                .Setup(x => x.UpdateArtist(It.IsAny<Artist>()))
-                .Returns((Artist a) => a);
+                .Setup(x => x.UpdateArtist(It.IsAny<Artist>(), It.IsAny<bool>()))
+                .Returns((Artist a, bool updated) => a);
         }
 
         [Test]
@@ -151,7 +151,7 @@ namespace NzbDrone.Core.Test.MusicTests
             Subject.Execute(new RefreshArtistCommand(_artist.Id));
 
             Mocker.GetMock<IArtistService>()
-                .Verify(v => v.UpdateArtist(It.IsAny<Artist>()), Times.Never());
+                .Verify(v => v.UpdateArtist(It.IsAny<Artist>(), It.IsAny<bool>()), Times.Never());
 
             Mocker.GetMock<IArtistService>()
                 .Verify(v => v.DeleteArtist(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Once());
@@ -169,7 +169,7 @@ namespace NzbDrone.Core.Test.MusicTests
             Subject.Execute(new RefreshArtistCommand(_artist.Id));
 
             Mocker.GetMock<IArtistService>()
-                .Verify(v => v.UpdateArtist(It.IsAny<Artist>()), Times.Never());
+                .Verify(v => v.UpdateArtist(It.IsAny<Artist>(), It.IsAny<bool>()), Times.Never());
 
             Mocker.GetMock<IArtistService>()
                 .Verify(v => v.DeleteArtist(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never());
@@ -197,8 +197,8 @@ namespace NzbDrone.Core.Test.MusicTests
             // Make sure that the artist is updated before we refresh the albums
             Mocker.GetMock<IArtistService>(MockBehavior.Strict)
                 .InSequence(seq)
-                .Setup(x => x.UpdateArtist(It.IsAny<Artist>()))
-                .Returns((Artist a) => a);
+                .Setup(x => x.UpdateArtist(It.IsAny<Artist>(), It.IsAny<bool>()))
+                .Returns((Artist a, bool updated) => a);
 
             Mocker.GetMock<IAlbumService>(MockBehavior.Strict)
                 .InSequence(seq)
@@ -208,13 +208,13 @@ namespace NzbDrone.Core.Test.MusicTests
             // Update called twice for a move/merge
             Mocker.GetMock<IArtistService>(MockBehavior.Strict)
                 .InSequence(seq)
-                .Setup(x => x.UpdateArtist(It.IsAny<Artist>()))
-                .Returns((Artist a) => a);
+                .Setup(x => x.UpdateArtist(It.IsAny<Artist>(), It.IsAny<bool>()))
+                .Returns((Artist a, bool updated) => a);
 
             Subject.Execute(new RefreshArtistCommand(_artist.Id));
 
             Mocker.GetMock<IArtistService>()
-                .Verify(v => v.UpdateArtist(It.Is<Artist>(s => s.ArtistMetadataId == 100 && s.ForeignArtistId == newArtistInfo.ForeignArtistId)),
+                .Verify(v => v.UpdateArtist(It.Is<Artist>(s => s.ArtistMetadataId == 100 && s.ForeignArtistId == newArtistInfo.ForeignArtistId), It.IsAny<bool>()),
                         Times.Exactly(2));
         }
 
@@ -257,8 +257,8 @@ namespace NzbDrone.Core.Test.MusicTests
 
             Mocker.GetMock<IArtistService>(MockBehavior.Strict)
                 .InSequence(seq)
-                .Setup(x => x.UpdateArtist(It.Is<Artist>(a => a.Id == clash.Id)))
-                .Returns((Artist a) => a);
+                .Setup(x => x.UpdateArtist(It.Is<Artist>(a => a.Id == clash.Id), It.IsAny<bool>()))
+                .Returns((Artist a, bool updated) => a);
 
             Mocker.GetMock<IAlbumService>(MockBehavior.Strict)
                 .InSequence(seq)
@@ -268,14 +268,14 @@ namespace NzbDrone.Core.Test.MusicTests
             // Update called twice for a move/merge
             Mocker.GetMock<IArtistService>(MockBehavior.Strict)
                 .InSequence(seq)
-                .Setup(x => x.UpdateArtist(It.IsAny<Artist>()))
-                .Returns((Artist a) => a);
+                .Setup(x => x.UpdateArtist(It.IsAny<Artist>(), It.IsAny<bool>()))
+                .Returns((Artist a, bool updated) => a);
 
             Subject.Execute(new RefreshArtistCommand(_artist.Id));
 
             // the retained artist gets updated
             Mocker.GetMock<IArtistService>()
-                .Verify(v => v.UpdateArtist(It.Is<Artist>(s => s.Id == clash.Id)), Times.Exactly(2));
+                .Verify(v => v.UpdateArtist(It.Is<Artist>(s => s.Id == clash.Id), It.IsAny<bool>()), Times.Exactly(2));
 
             // the old one gets removed
             Mocker.GetMock<IArtistService>()
