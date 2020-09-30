@@ -20,7 +20,7 @@ namespace NzbDrone.Core.MediaCover
     {
         void ConvertToLocalUrls(int entityId, MediaCoverEntity coverEntity, IEnumerable<MediaCover> covers);
         string GetCoverPath(int entityId, MediaCoverEntity coverEntity, MediaCoverTypes mediaCoverTypes, string extension, int? height = null);
-        void EnsureAlbumCovers(Album album);
+        bool EnsureAlbumCovers(Album album);
     }
 
     public class MediaCoverService :
@@ -114,8 +114,9 @@ namespace NzbDrone.Core.MediaCover
             return Path.Combine(_coverRootFolder, "Albums", albumId.ToString());
         }
 
-        private void EnsureArtistCovers(Artist artist)
+        private bool EnsureArtistCovers(Artist artist)
         {
+            bool updated = false;
             var toResize = new List<Tuple<MediaCover, bool>>();
 
             foreach (var cover in artist.Metadata.Value.Images)
@@ -132,6 +133,7 @@ namespace NzbDrone.Core.MediaCover
                     if (!alreadyExists)
                     {
                         DownloadCover(artist, cover, serverFileHeaders.LastModified ?? DateTime.Now);
+                        updated = true;
                     }
                 }
                 catch (WebException e)
@@ -159,10 +161,14 @@ namespace NzbDrone.Core.MediaCover
             {
                 _semaphore.Release();
             }
+
+            return updated;
         }
 
-        public void EnsureAlbumCovers(Album album)
+        public bool EnsureAlbumCovers(Album album)
         {
+            bool updated = false;
+
             foreach (var cover in album.Images.Where(e => e.CoverType == MediaCoverTypes.Cover))
             {
                 var fileName = GetCoverPath(album.Id, MediaCoverEntity.Album, cover.CoverType, cover.Extension, null);
@@ -176,6 +182,7 @@ namespace NzbDrone.Core.MediaCover
                     if (!alreadyExists)
                     {
                         DownloadAlbumCover(album, cover, serverFileHeaders.LastModified ?? DateTime.Now);
+                        updated = true;
                     }
                 }
                 catch (WebException e)
@@ -187,6 +194,8 @@ namespace NzbDrone.Core.MediaCover
                     _logger.Error(e, "Couldn't download media cover for {0}", album);
                 }
             }
+
+            return updated;
         }
 
         private void DownloadCover(Artist artist, MediaCover cover, DateTime lastModified)
@@ -273,15 +282,18 @@ namespace NzbDrone.Core.MediaCover
 
         public void HandleAsync(ArtistRefreshCompleteEvent message)
         {
-            EnsureArtistCovers(message.Artist);
+            var updated = EnsureArtistCovers(message.Artist);
 
             var albums = _albumService.GetAlbumsByArtist(message.Artist.Id);
-            foreach (Album album in albums)
+            foreach (var album in albums)
             {
-                EnsureAlbumCovers(album);
+                updated |= EnsureAlbumCovers(album);
             }
 
-            _eventAggregator.PublishEvent(new MediaCoversUpdatedEvent(message.Artist));
+            if (updated)
+            {
+                _eventAggregator.PublishEvent(new MediaCoversUpdatedEvent(message.Artist));
+            }
         }
 
         public void HandleAsync(ArtistDeletedEvent message)
@@ -297,7 +309,11 @@ namespace NzbDrone.Core.MediaCover
         {
             if (message.DoRefresh)
             {
-                EnsureAlbumCovers(message.Album);
+                var updated = EnsureAlbumCovers(message.Album);
+                if (updated)
+                {
+                    _eventAggregator.PublishEvent(new MediaCoversUpdatedEvent(message.Album));
+                }
             }
         }
 
