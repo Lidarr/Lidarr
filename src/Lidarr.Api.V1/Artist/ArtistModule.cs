@@ -290,7 +290,10 @@ namespace Lidarr.Api.V1.Artist
 
         public void Handle(MediaCoversUpdatedEvent message)
         {
-            BroadcastResourceChange(ModelAction.Updated, GetArtistResource(message.Artist));
+            if (message.Updated)
+            {
+                BroadcastResourceChange(ModelAction.Updated, GetArtistResource(message.Artist));
+            }
         }
     }
 }

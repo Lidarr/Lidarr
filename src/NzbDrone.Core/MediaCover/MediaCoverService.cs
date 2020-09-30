@@ -290,10 +290,7 @@ namespace NzbDrone.Core.MediaCover
                 updated |= EnsureAlbumCovers(album);
             }
 
-            if (updated)
-            {
-                _eventAggregator.PublishEvent(new MediaCoversUpdatedEvent(message.Artist));
-            }
+            _eventAggregator.PublishEvent(new MediaCoversUpdatedEvent(message.Artist, updated));
         }
 
         public void HandleAsync(ArtistDeletedEvent message)
@@ -310,10 +307,8 @@ namespace NzbDrone.Core.MediaCover
             if (message.DoRefresh)
             {
                 var updated = EnsureAlbumCovers(message.Album);
-                if (updated)
-                {
-                    _eventAggregator.PublishEvent(new MediaCoversUpdatedEvent(message.Album));
-                }
+
+                _eventAggregator.PublishEvent(new MediaCoversUpdatedEvent(message.Album, updated));
             }
         }
 
