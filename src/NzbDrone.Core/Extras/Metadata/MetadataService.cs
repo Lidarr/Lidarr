@@ -104,12 +104,12 @@ namespace NzbDrone.Core.Extras.Metadata
                 files.AddIfNotNull(ProcessArtistMetadata(consumer, artist, consumerFiles));
                 files.AddRange(ProcessArtistImages(consumer, artist, consumerFiles));
 
-                var albumGroups = trackFiles.GroupBy(s => Path.GetDirectoryName(s.Path)).ToList();
+                var albumGroups = trackFiles.GroupBy(s => s.AlbumId).ToList();
 
                 foreach (var group in albumGroups)
                 {
-                    var album = _albumService.GetAlbum(group.First().AlbumId);
-                    var albumFolder = group.Key;
+                    var album = _albumService.GetAlbum(group.Key);
+                    var albumFolder = Path.GetDirectoryName(group.First().Path);
                     files.AddIfNotNull(ProcessAlbumMetadata(consumer, artist, album, albumFolder, consumerFiles));
                     files.AddRange(ProcessAlbumImages(consumer, artist, album, albumFolder, consumerFiles));
 
@@ -158,6 +158,12 @@ namespace NzbDrone.Core.Extras.Metadata
                 {
                     files.AddIfNotNull(ProcessArtistMetadata(consumer, artist, consumerFiles));
                     files.AddRange(ProcessArtistImages(consumer, artist, consumerFiles));
+                }
+
+                if (albumFolder.IsNotNullOrWhiteSpace())
+                {
+                    files.AddIfNotNull(ProcessAlbumMetadata(consumer, artist, album, albumFolder, consumerFiles));
+                    files.AddRange(ProcessAlbumImages(consumer, artist, album, albumFolder, consumerFiles));
                 }
             }
 
