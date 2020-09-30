@@ -174,8 +174,10 @@ namespace NzbDrone.Core.Music
             // Force update and fetch covers if images have changed so that we can write them into tags
             if (remote.Images.Any() && !local.Images.SequenceEqual(remote.Images))
             {
-                _mediaCoverService.EnsureAlbumCovers(remote);
-                result = UpdateResult.UpdateTags;
+                if (_mediaCoverService.EnsureAlbumCovers(remote))
+                {
+                    result = UpdateResult.UpdateTags;
+                }
             }
 
             local.UseMetadataFrom(remote);

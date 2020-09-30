@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Music
         void DeleteArtist(int artistId, bool deleteFiles, bool addImportListExclusion = false);
         List<Artist> GetAllArtists();
         List<Artist> AllForTag(int tagId);
-        Artist UpdateArtist(Artist artist);
+        Artist UpdateArtist(Artist artist, bool publishUpdatedEvent = true);
         List<Artist> UpdateArtists(List<Artist> artist, bool useExistingRelativeFolder);
         bool ArtistPathExists(string folder);
         void RemoveAddOptions(Artist artist);
@@ -194,12 +194,16 @@ namespace NzbDrone.Core.Music
             _artistRepository.SetFields(artist, s => s.AddOptions);
         }
 
-        public Artist UpdateArtist(Artist artist)
+        public Artist UpdateArtist(Artist artist, bool publishUpdatedEvent = true)
         {
             _cache.Clear();
             var storedArtist = GetArtist(artist.Id);
             var updatedArtist = _artistRepository.Update(artist);
-            _eventAggregator.PublishEvent(new ArtistEditedEvent(updatedArtist, storedArtist));
+
+            if (publishUpdatedEvent)
+            {
+                _eventAggregator.PublishEvent(new ArtistEditedEvent(updatedArtist, storedArtist));
+            }
 
             return updatedArtist;
         }
