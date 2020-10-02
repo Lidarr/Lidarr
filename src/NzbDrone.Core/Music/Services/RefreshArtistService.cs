@@ -269,6 +269,7 @@ namespace NzbDrone.Core.Music
         {
             var rescanAfterRefresh = _configService.RescanAfterRefresh;
             var shouldRescan = true;
+            var filter = FilterFilesType.Matched;
             var folders = _rootFolderService.All().Select(x => x.Path).ToList();
 
             if (isNew)
@@ -290,17 +291,22 @@ namespace NzbDrone.Core.Music
                 _logger.Trace("Skipping rescan. Reason: not after automatic refreshes");
                 shouldRescan = false;
             }
+            else if (!infoUpdated && trigger != CommandTrigger.Manual)
+            {
+                _logger.Trace("Skipping rescan. Reason: no metadata updated after automatic refresh");
+                shouldRescan = false;
+            }
             else if (!infoUpdated)
             {
-                _logger.Trace("Skipping rescan. Reason: no metadata updated");
-                shouldRescan = false;
+                _logger.Trace("No metadata updated, only scanning new files");
+                filter = FilterFilesType.Known;
             }
 
             if (shouldRescan)
             {
                 // some metadata has updated so rescan unmatched
                 // (but don't add new artists to reduce repeated searches against api)
-                _commandQueueManager.Push(new RescanFoldersCommand(folders, FilterFilesType.Matched, false, artists.Select(x => x.Id).ToList()));
+                _commandQueueManager.Push(new RescanFoldersCommand(folders, filter, false, artists.Select(x => x.Id).ToList()));
             }
         }
 
