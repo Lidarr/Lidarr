@@ -139,6 +139,7 @@ namespace Lidarr.Api.V1.Artist
             MapCoversToLocal(artistsResources.ToArray());
             LinkNextPreviousAlbums(artistsResources.ToArray());
             LinkArtistStatistics(artistsResources, artistStats);
+            artistsResources.ForEach(LinkRootFolderPath);
 
             //PopulateAlternateTitles(seriesResources);
             return artistsResources;
