@@ -165,7 +165,7 @@ class Naming extends Component {
                 <FormInputGroup
                   type={inputTypes.CHECK}
                   name="replaceIllegalCharacters"
-                  helpText="Replace illegal characters. If unchecked, Sonarr will remove them instead"
+                  helpText="Replace illegal characters. If unchecked, Lidarr will remove them instead"
                   onChange={onInputChange}
                   {...settings.replaceIllegalCharacters}
                 />
