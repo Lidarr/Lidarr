@@ -115,7 +115,7 @@ class ArtistIndexPoster extends Component {
     };
 
     return (
-      <div className={styles.container}>
+      <div>
         <div className={styles.content}>
           <div className={styles.posterContainer}>
             <Label className={styles.controls}>

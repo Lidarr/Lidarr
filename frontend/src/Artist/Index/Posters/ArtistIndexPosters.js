@@ -105,6 +105,7 @@ class ArtistIndexPosters extends Component {
 
     this._isInitialized = false;
     this._grid = null;
+    this._padding = props.isSmallScreen ? columnPaddingSmallScreen : columnPadding;
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -113,7 +114,8 @@ class ArtistIndexPosters extends Component {
       sortKey,
       posterOptions,
       jumpToCharacter,
-      scrollTop
+      scrollTop,
+      isSmallScreen
     } = this.props;
 
     const {
@@ -125,7 +127,7 @@ class ArtistIndexPosters extends Component {
 
     if (prevProps.sortKey !== sortKey ||
         prevProps.posterOptions !== posterOptions) {
-      this.calculateGrid();
+      this.calculateGrid(width, isSmallScreen);
     }
 
     if (this._grid &&
@@ -169,10 +171,9 @@ class ArtistIndexPosters extends Component {
       posterOptions
     } = this.props;
 
-    const padding = isSmallScreen ? columnPaddingSmallScreen : columnPadding;
     const columnWidth = calculateColumnWidth(width, posterOptions.size, isSmallScreen);
     const columnCount = Math.max(Math.floor(width / columnWidth), 1);
-    const posterWidth = columnWidth - padding;
+    const posterWidth = columnWidth - this._padding * 2;
     const posterHeight = calculatePosterHeight(posterWidth);
     const rowHeight = calculateRowHeight(posterHeight, sortKey, isSmallScreen, posterOptions);
 
@@ -209,8 +210,7 @@ class ArtistIndexPosters extends Component {
       showQualityProfile
     } = posterOptions;
 
-    const artistIdx = rowIndex * columnCount + columnIndex;
-    const artist = items[artistIdx];
+    const artist = items[rowIndex * columnCount + columnIndex];
 
     if (!artist) {
       return null;
@@ -219,7 +219,10 @@ class ArtistIndexPosters extends Component {
     return (
       <div
         key={key}
-        style={style}
+        style={{
+          ...style,
+          padding: this._padding
+        }}
       >
         <ArtistIndexItemConnector
           key={artist.id}
@@ -234,6 +237,7 @@ class ArtistIndexPosters extends Component {
           showRelativeDates={showRelativeDates}
           shortDateFormat={shortDateFormat}
           timeFormat={timeFormat}
+          style={style}
           artistId={artist.id}
           qualityProfileId={artist.qualityProfileId}
           metadataProfileId={artist.metadataProfileId}
@@ -254,9 +258,9 @@ class ArtistIndexPosters extends Component {
 
   render() {
     const {
+      scroller,
       items,
-      isSmallScreen,
-      scroller
+      isSmallScreen
     } = this.props;
 
     const {
