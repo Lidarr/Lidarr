@@ -34,7 +34,9 @@ namespace NzbDrone.Core.Notifications.Webhook
                     QualityVersion = quality.Revision.Version,
                     ReleaseGroup = remoteAlbum.ParsedAlbumInfo.ReleaseGroup
                 }),
-                Release = new WebhookRelease(quality, remoteAlbum)
+                Release = new WebhookRelease(quality, remoteAlbum),
+                DownloadClient = message.DownloadClient,
+                DownloadId = message.DownloadId
             };
 
             _proxy.SendWebhook(payload, Settings);
@@ -56,7 +58,9 @@ namespace NzbDrone.Core.Notifications.Webhook
                     ReleaseGroup = x.ReleaseGroup
                 })).ToList(),
                 TrackFiles = trackFiles.ConvertAll(x => new WebhookTrackFile(x)),
-                IsUpgrade = message.OldFiles.Any()
+                IsUpgrade = message.OldFiles.Any(),
+                DownloadClient = message.DownloadClient,
+                DownloadId = message.DownloadId
             };
 
             _proxy.SendWebhook(payload, Settings);
