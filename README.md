@@ -27,7 +27,7 @@ Lidarr is a music collection manager for Usenet and BitTorrent users. It can mon
 
 ## Support
 
-[![Discord](https://img.shields.io/badge/discord-chat-7289DA.svg?maxAge=60)](https://discord.gg/8Y7rDc9)
+[![Discord](https://img.shields.io/badge/discord-chat-7289DA.svg?maxAge=60)](https://discord.gg/5WQc3S8)
 [![Reddit](https://img.shields.io/badge/reddit-discussion-FF4500.svg?maxAge=60)](https://www.reddit.com/r/lidarr)
 [![GitHub](https://img.shields.io/badge/github-issues-red.svg?maxAge=60)](https://github.com/Lidarr/Lidarr/issues)
 [![GitHub Wiki](https://img.shields.io/badge/github-wiki-181717.svg?maxAge=60)](https://github.com/Lidarr/Lidarr/wiki)
