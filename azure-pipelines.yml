@@ -7,7 +7,7 @@ variables:
   outputFolder: './_output'
   artifactsFolder: './_artifacts'
   testsFolder: './_tests'
-  majorVersion: '0.7.1'
+  majorVersion: '0.7.2'
   minorVersion: $[counter('minorVersion', 1076)]
   lidarrVersion: '$(majorVersion).$(minorVersion)'
   buildName: '$(Build.SourceBranchName).$(lidarrVersion)'
@@ -40,7 +40,7 @@ stages:
             imageName: 'ubuntu-16.04'
           Mac:
             osName: 'Mac'
-            imageName: 'macos-10.13'
+            imageName: 'macos-10.14'
           Windows:
             osName: 'Windows'
             imageName: 'vs2017-win2016'
@@ -78,7 +78,7 @@ stages:
             imageName: 'ubuntu-16.04'
           Mac:
             osName: 'Mac'
-            imageName: 'macos-10.13'
+            imageName: 'macos-10.14'
           Windows:
             osName: 'Windows'
             imageName: 'vs2017-win2016'
@@ -232,9 +232,6 @@ stages:
       displayName: Unit Native
       strategy:
         matrix:
-          Mac:
-            osName: 'Mac'
-            imageName: 'macos-10.13'
           Windows:
             osName: 'Windows'
             imageName: 'vs2017-win2016'
@@ -282,33 +279,18 @@ stages:
       displayName: Unit Docker
       strategy:
         matrix:
-          mono508:
-            testName: 'Mono 5.8'
-            containerImage: lidarr/testimages:mono-5.8
-          mono510:
-            testName: 'Mono 5.10'
-            containerImage: lidarr/testimages:mono-5.10
-          mono512:
-            testName: 'Mono 5.12'
-            containerImage: lidarr/testimages:mono-5.12
-          mono514:
-            testName: 'Mono 5.14'
-            containerImage: lidarr/testimages:mono-5.14
-          mono516:
-            testName: 'Mono 5.16'
-            containerImage: lidarr/testimages:mono-5.16
           mono518:
             testName: 'Mono 5.18'
-            containerImage: lidarr/testimages:mono-5.18
+            containerImage: servarr/testimages:mono-5.18
           mono520:
             testName: 'Mono 5.20'
-            containerImage: lidarr/testimages:mono-5.20
+            containerImage: servarr/testimages:mono-5.20
           mono600:
             testName: 'Mono 6.0'
-            containerImage: lidarr/testimages:mono-6.0
+            containerImage: servarr/testimages:mono-6.10
           mono604:
             testName: 'Mono 6.4'
-            containerImage: lidarr/testimages:mono-6.4
+            containerImage: servarr/testimages:mono-6.12
 
       pool:
         vmImage: 'ubuntu-16.04'
@@ -350,10 +332,6 @@ stages:
       displayName: Integration Native
       strategy:
         matrix:
-          Mac:
-            osName: 'Mac'
-            imageName: 'macos-10.13'
-            pattern: 'Lidarr.**.osx.tar.gz'
           Windows:
             osName: 'Windows'
             imageName: 'vs2017-win2016'
@@ -412,33 +390,18 @@ stages:
       displayName: Integration Docker
       strategy:
         matrix:
-          mono508:
-            testName: 'Mono 5.8'
-            containerImage: lidarr/testimages:mono-5.8
-          mono510:
-            testName: 'Mono 5.10'
-            containerImage: lidarr/testimages:mono-5.10
-          mono512:
-            testName: 'Mono 5.12'
-            containerImage: lidarr/testimages:mono-5.12
-          mono514:
-            testName: 'Mono 5.14'
-            containerImage: lidarr/testimages:mono-5.14
-          mono516:
-            testName: 'Mono 5.16'
-            containerImage: lidarr/testimages:mono-5.16
           mono518:
             testName: 'Mono 5.18'
-            containerImage: lidarr/testimages:mono-5.18
+            containerImage: servarr/testimages:mono-5.18
           mono520:
             testName: 'Mono 5.20'
-            containerImage: lidarr/testimages:mono-5.20
+            containerImage: servarr/testimages:mono-5.20
           mono600:
             testName: 'Mono 6.0'
-            containerImage: lidarr/testimages:mono-6.0
+            containerImage: servarr/testimages:mono-6.10
           mono604:
             testName: 'Mono 6.4'
-            containerImage: lidarr/testimages:mono-6.4
+            containerImage: servarr/testimages:mono-6.12
 
       variables:
         pattern: 'Lidarr.**.linux.tar.gz'
@@ -506,7 +469,7 @@ stages:
             failBuild: true
           Mac:
             osName: 'Mac'
-            imageName: 'macos-10.13' # Fails due to firefox not being installed on image
+            imageName: 'macos-10.14' # Fails due to firefox not being installed on image
             pattern: 'Lidarr.**.osx.tar.gz'
             failBuild: false
           Windows:

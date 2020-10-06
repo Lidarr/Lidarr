@@ -281,7 +281,7 @@ namespace NzbDrone.Common.Test
         [Test]
         public void GetUpdateClientExePath()
         {
-            GetIAppDirectoryInfo().GetUpdateClientExePath().Should().BeEquivalentTo(@"C:\Temp\lidarr_update\Lidarr.Update.exe".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetUpdateClientExePath(new Version("0.7.1.1381")).Should().BeEquivalentTo(@"C:\Temp\lidarr_update\Lidarr.Update.exe".AsOsAgnostic());
         }
 
         [Test]
