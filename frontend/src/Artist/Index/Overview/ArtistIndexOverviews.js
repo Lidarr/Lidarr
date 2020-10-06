@@ -73,7 +73,8 @@ class ArtistIndexOverviews extends Component {
       sortKey,
       overviewOptions,
       jumpToCharacter,
-      scrollTop
+      scrollTop,
+      isSmallScreen
     } = this.props;
 
     const {
@@ -84,13 +85,17 @@ class ArtistIndexOverviews extends Component {
 
     if (prevProps.sortKey !== sortKey ||
         prevProps.overviewOptions !== overviewOptions) {
-      this.calculateGrid();
+      this.calculateGrid(this.state.width, isSmallScreen);
     }
 
-    if (this._grid &&
+    if (
+      this._grid &&
         (prevState.width !== width ||
             prevState.rowHeight !== rowHeight ||
-            hasDifferentItemsOrOrder(prevProps.items, items))) {
+            hasDifferentItemsOrOrder(prevProps.items, items) ||
+            prevProps.overviewOptions !== overviewOptions
+        )
+    ) {
       // recomputeGridSize also forces Grid to discard its cache of rendered cells
       this._grid.recomputeGridSize();
     }
