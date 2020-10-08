@@ -58,7 +58,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         public NewznabSettings()
         {
             ApiPath = "/api";
-            Categories = new[] { 3000, 3010, 3020, 3030, 3040 };
+            Categories = new[] { 3000, 3010, 3030, 3040 };
         }
 
         [FieldDefinition(0, Label = "URL")]
@@ -70,7 +70,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
-        [FieldDefinition(3, Label = "Categories", HelpText = "Comma Separated list, leave blank to disable standard/daily shows", Advanced = true)]
+        [FieldDefinition(3, Label = "Categories", Type = FieldType.Select, SelectOptionsProviderAction = "newznabCategories", HelpText = "Comma Separated list")]
         public IEnumerable<int> Categories { get; set; }
 
         [FieldDefinition(4, Type = FieldType.Number, Label = "Early Download Limit", HelpText = "Time before release date Lidarr will download from this indexer, empty is no limit", Unit = "days", Advanced = true)]
