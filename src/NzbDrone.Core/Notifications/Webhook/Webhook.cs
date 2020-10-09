@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Notifications.Webhook
 
             var payload = new WebhookGrabPayload
             {
-                EventType = "Grab",
+                EventType = WebhookEventType.Grab,
                 Artist = new WebhookArtist(message.Artist),
                 Albums = remoteAlbum.Albums.ConvertAll(x => new WebhookAlbum(x)
                 {
@@ -48,7 +48,7 @@ namespace NzbDrone.Core.Notifications.Webhook
 
             var payload = new WebhookImportPayload
             {
-                EventType = "Download",
+                EventType = WebhookEventType.Download,
                 Artist = new WebhookArtist(message.Artist),
                 Tracks = trackFiles.SelectMany(x => x.Tracks.Value.Select(y => new WebhookTrack(y)
                 {
@@ -68,9 +68,9 @@ namespace NzbDrone.Core.Notifications.Webhook
 
         public override void OnRename(Artist artist)
         {
-            var payload = new WebhookPayload
+            var payload = new WebhookRenamePayload
             {
-                EventType = "Rename",
+                EventType = WebhookEventType.Rename,
                 Artist = new WebhookArtist(artist)
             };
 
@@ -79,11 +79,25 @@ namespace NzbDrone.Core.Notifications.Webhook
 
         public override void OnTrackRetag(TrackRetagMessage message)
         {
-            var payload = new WebhookPayload
+            var payload = new WebhookRetagPayload
             {
-                EventType = "Retag",
+                EventType = WebhookEventType.Retag,
                 Artist = new WebhookArtist(message.Artist)
             };
+
+            _proxy.SendWebhook(payload, Settings);
+        }
+
+        public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
+        {
+            var payload = new WebhookHealthPayload
+                          {
+                              EventType = WebhookEventType.Health,
+                              Level = healthCheck.Type,
+                              Message = healthCheck.Message,
+                              Type = healthCheck.Source.Name,
+                              WikiUrl = healthCheck.WikiUrl?.ToString()
+                          };
 
             _proxy.SendWebhook(payload, Settings);
         }
@@ -105,7 +119,7 @@ namespace NzbDrone.Core.Notifications.Webhook
             {
                 var payload = new WebhookGrabPayload
                 {
-                    EventType = "Test",
+                    EventType = WebhookEventType.Test,
                     Artist = new WebhookArtist()
                     {
                         Id = 1,
