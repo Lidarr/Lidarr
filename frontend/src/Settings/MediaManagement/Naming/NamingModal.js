@@ -54,6 +54,8 @@ const albumTokens = [
 
   { token: '{Album CleanTitle}', example: 'Album Title' },
 
+  { token: '{Album DownloadTitle}', example: 'Album Title CD-FLAC-1997-RlsGrp' },
+
   { token: '{Album Type}', example: 'Album Type' },
 
   { token: '{Album Disambiguation}', example: 'Disambiguation' }

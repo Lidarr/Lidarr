@@ -5,6 +5,7 @@ namespace NzbDrone.Core.Parser.Model
     public class ParsedAlbumInfo
     {
         public string AlbumTitle { get; set; }
+        public string DownloadTitle { get; set; }
         public string ArtistName { get; set; }
         public ArtistTitleInfo ArtistTitleInfo { get; set; }
         public QualityModel Quality { get; set; }

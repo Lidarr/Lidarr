@@ -29,6 +29,9 @@ namespace NzbDrone.Core.Music
         public string ForeignAlbumId { get; set; }
         public List<string> OldForeignAlbumIds { get; set; }
         public string Title { get; set; }
+
+        public string DownloadTitle { get; set; }
+
         public string Overview { get; set; }
         public string Disambiguation { get; set; }
         public DateTime? ReleaseDate { get; set; }
@@ -62,7 +65,8 @@ namespace NzbDrone.Core.Music
         [JsonIgnore]
         public int ArtistId
         {
-            get { return Artist?.Value?.Id ?? 0; } set { Artist.Value.Id = value; }
+            get { return Artist?.Value?.Id ?? 0; }
+            set { Artist.Value.Id = value; }
         }
 
         public override string ToString()

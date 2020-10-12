@@ -46,6 +46,7 @@ namespace NzbDrone.Core.Organizer
                 ReleaseDate = System.DateTime.Today,
                 AlbumType = "Album",
                 Disambiguation = "The Best Album",
+                DownloadTitle = "The Album Title CD-FLAC-1997-RlsGrp"
             };
 
             _singleRelease = new AlbumRelease
