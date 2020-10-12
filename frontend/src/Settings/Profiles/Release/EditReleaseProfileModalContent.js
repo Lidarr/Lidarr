@@ -65,13 +65,14 @@ function EditReleaseProfileModalContent(props) {
             </FormLabel>
 
             <FormInputGroup
+              {...required}
               type={inputTypes.TEXT_TAG}
               name="required"
               helpText={translate('RequiredHelpText')}
               kind={kinds.SUCCESS}
               placeholder={translate('RequiredPlaceHolder')}
               delimiters={tagInputDelimiters}
-              {...required}
+              canEdit={true}
               onChange={onInputChange}
             />
           </FormGroup>
@@ -82,13 +83,14 @@ function EditReleaseProfileModalContent(props) {
             </FormLabel>
 
             <FormInputGroup
+              {...ignored}
               type={inputTypes.TEXT_TAG}
               name="ignored"
               helpText={translate('IgnoredHelpText')}
               kind={kinds.DANGER}
               placeholder={translate('IgnoredPlaceHolder')}
               delimiters={tagInputDelimiters}
-              {...ignored}
+              canEdit={true}
               onChange={onInputChange}
             />
           </FormGroup>
