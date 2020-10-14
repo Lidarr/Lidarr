@@ -717,6 +717,7 @@ stages:
       - publish: $(Build.ArtifactStagingDirectory)/screenshots
         artifact: '$(osName)AutomationScreenshots'
         displayName: Publish Screenshot Bundle
+        continueOnError: true
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'
