@@ -800,7 +800,7 @@ stages:
       - task: SonarCloudAnalyze@1
 
     - job: Analyze_Backend
-      displayName: Backend
+      displayName: Backend Sonar
       dependsOn: Prepare
       condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
 
@@ -851,6 +851,25 @@ stages:
           codeCoverageTool: 'cobertura'
           summaryFileLocation: './CoverageResults/combined/Cobertura.xml'
           reportDirectory: './CoverageResults/combined/'
+
+    - job: Analyze_Backend_Lint
+      displayName: Backend Lint
+      dependsOn: Prepare
+      condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
+
+      pool:
+        vmImage: ubuntu-18.04
+
+      steps:
+      - task: UseDotNet@2
+        displayName: 'Install .net core'
+        inputs:
+          version: $(dotnetVersion)
+      - checkout: self
+        submodules: true
+        fetchDepth: 1
+      - bash: ./build.sh --backend
+        displayName: Build Lidarr Backend Lint
 
   - stage: Report_Out
     dependsOn:
