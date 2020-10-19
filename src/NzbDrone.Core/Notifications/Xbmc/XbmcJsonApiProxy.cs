@@ -59,7 +59,7 @@ namespace NzbDrone.Core.Notifications.Xbmc
 
         public List<KodiArtist> GetArtist(XbmcSettings settings)
         {
-            var response = ProcessRequest(settings, "AudioLibrary.GetArtists", new[] { "properties", "musicbrainzartistid" });
+            var response = ProcessRequest(settings, "AudioLibrary.GetArtists", new List<string> { "properties", "musicbrainzartistid" });
 
             return Json.Deserialize<ArtistResponse>(response).Result.Artists;
         }
