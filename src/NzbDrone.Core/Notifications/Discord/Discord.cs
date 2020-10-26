@@ -131,7 +131,7 @@ namespace NzbDrone.Core.Notifications.Discord
                 Url = $"https://musicbrainz.org/artist/{artist.ForeignArtistId}",
                 Description = isUpgrade ? "Album Upgraded" : "Album Imported",
                 Title = GetTitle(artist, new List<Album> { album }),
-                Color = isUpgrade ? (int)DiscordColors.Upgrade : (int)DiscordColors.Standard,
+                Color = isUpgrade ? (int)DiscordColors.Upgrade : (int)DiscordColors.Success,
                 Fields = new List<DiscordField>(),
                 Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
             };
