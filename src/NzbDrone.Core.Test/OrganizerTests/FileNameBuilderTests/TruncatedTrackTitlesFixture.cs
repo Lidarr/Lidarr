@@ -156,5 +156,45 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
             result.Should().Be("Lorem ipsum dolor sit amet, consectetur adipiscing elit Maecenas et magna sem Morbi vitae volutpat quam, id porta arcu Orci varius natoque penatibus et magnis dis parturient montes nascetur ridiculus musu Cras - Hail to the King - 01 - First... [MP3-320]");
             result.Length.Should().BeLessOrEqualTo(255);
         }
+
+        [Test]
+        public void should_truncate_titles_measuring_artist_title_bytes()
+        {
+            _artist.Name = "Lor\u00E9m ipsum dolor sit amet, consectetur adipiscing elit Maecenas et magna sem Morbi vitae volutpat quam, id porta arcu Orci varius natoque penatibus et magnis dis parturient montes nascetur ridiculus musu";
+            _namingConfig.StandardTrackFormat = "{Artist Name} - {Album Title} - {track:00} - {Track Title} [{Quality Title}]";
+
+            var result = Subject.BuildTrackFileName(new List<Track> { _tracks.First() }, _artist, _album, _trackFile);
+            result.GetByteCount().Should().BeLessOrEqualTo(255);
+
+            result.Should().Be("Lor\u00E9m ipsum dolor sit amet, consectetur adipiscing elit Maecenas et magna sem Morbi vitae volutpat quam, id porta arcu Orci varius natoque penatibus et magnis dis parturient montes nascetur ridiculus musu - Hail to the King - 01 - First Trac... [MP3-320]");
+        }
+
+        [Test]
+        public void should_truncate_titles_measuring_episode_title_bytes()
+        {
+            _artist.Name = "Lorem ipsum dolor sit amet, consectetur adipiscing elit Maecenas et magna sem Morbi vitae volutpat quam, id porta arcu Orci varius natoque penatibus et magnis dis parturient montes nascetur ridiculus musu";
+            _namingConfig.StandardTrackFormat = "{Artist Name} - {Album Title} - {track:00} - {Track Title} [{Quality Title}]";
+
+            _tracks.First().Title = "Episod\u00E9 Track Title";
+
+            var result = Subject.BuildTrackFileName(new List<Track> { _tracks.First() }, _artist, _album, _trackFile);
+            result.GetByteCount().Should().BeLessOrEqualTo(255);
+
+            result.Should().Be("Lorem ipsum dolor sit amet, consectetur adipiscing elit Maecenas et magna sem Morbi vitae volutpat quam, id porta arcu Orci varius natoque penatibus et magnis dis parturient montes nascetur ridiculus musu - Hail to the King - 01 - Episod\u00E9 Tr... [MP3-320]");
+        }
+
+        [Test]
+        public void should_truncate_titles_measuring_episode_title_bytes_middle()
+        {
+            _artist.Name = "Lorem ipsum dolor sit amet, consectetur adipiscing elit Maecenas et magna sem Morbi vitae volutpat quam, id porta arcu Orci varius natoque penatibus et magnis dis parturient montes nascetur ridiculus musu";
+            _namingConfig.StandardTrackFormat = "{Artist Name} - {Album Title} - {track:00} - {Track Title} [{Quality Title}]";
+
+            _tracks.First().Title = "Episode Track T\u00E9tle";
+
+            var result = Subject.BuildTrackFileName(new List<Track> { _tracks.First() }, _artist, _album, _trackFile);
+            result.GetByteCount().Should().BeLessOrEqualTo(255);
+
+            result.Should().Be("Lorem ipsum dolor sit amet, consectetur adipiscing elit Maecenas et magna sem Morbi vitae volutpat quam, id porta arcu Orci varius natoque penatibus et magnis dis parturient montes nascetur ridiculus musu - Hail to the King - 01 - Episode Tra... [MP3-320]");
+        }
     }
 }
