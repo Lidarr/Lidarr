@@ -10,7 +10,10 @@ namespace NzbDrone.Core.Indexers.Newznab
         public static List<FieldSelectOption> GetFieldSelectOptions(List<NewznabCategory> categories)
         {
             // Ignore categories not relevant for Lidarr
-            var ignoreCategories = new[] { 0, 1000, 2000, 4000, 5000, 6000, 7000 };
+            var ignoreCategories = new[] { 1000, 2000, 4000, 5000, 6000, 7000 };
+
+            // And maybe relevant for specific users
+            var unimportantCategories = new[] { 0 };
 
             var result = new List<FieldSelectOption>();
 
@@ -32,13 +35,8 @@ namespace NzbDrone.Core.Indexers.Newznab
                 });
             }
 
-            foreach (var category in categories)
+            foreach (var category in categories.Where(cat => !ignoreCategories.Contains(cat.Id)).OrderBy(cat => unimportantCategories.Contains(cat.Id)).ThenBy(cat => cat.Id))
             {
-                if (ignoreCategories.Contains(category.Id))
-                {
-                    continue;
-                }
-
                 result.Add(new FieldSelectOption
                 {
                     Value = category.Id,
@@ -48,7 +46,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
                 if (category.Subcategories != null)
                 {
-                    foreach (var subcat in category.Subcategories)
+                    foreach (var subcat in category.Subcategories.OrderBy(cat => cat.Id))
                     {
                         result.Add(new FieldSelectOption
                         {
@@ -60,8 +58,6 @@ namespace NzbDrone.Core.Indexers.Newznab
                     }
                 }
             }
-
-            result.Sort((l, r) => l.Value.CompareTo(r.Value));
 
             return result;
         }
