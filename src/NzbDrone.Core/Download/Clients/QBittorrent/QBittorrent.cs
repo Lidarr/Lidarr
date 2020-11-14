@@ -213,6 +213,19 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                         break;
                 }
 
+                if (version >= new Version("2.6.1"))
+                {
+                    if (torrent.ContentPath != torrent.SavePath)
+                    {
+                        item.OutputPath = _remotePathMappingService.RemapRemoteToLocal(Settings.Host, new OsPath(torrent.ContentPath));
+                    }
+                    else if (item.Status == DownloadItemStatus.Completed)
+                    {
+                        item.Status = DownloadItemStatus.Warning;
+                        item.Message = "Unable to import since content path is equal to root download directory, perhaps Keep top-level folder was disabled for this torrent?";
+                    }
+                }
+
                 queueItems.Add(item);
             }
 
