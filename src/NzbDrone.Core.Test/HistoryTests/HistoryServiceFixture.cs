@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.History;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Music;
@@ -58,7 +59,12 @@ namespace NzbDrone.Core.Test.HistoryTests
 
             var downloadClientItem = new DownloadClientItem
             {
-                DownloadClient = "sab",
+                DownloadClientInfo = new DownloadClientItemClientInfo
+                {
+                    Protocol = DownloadProtocol.Usenet,
+                    Id = 1,
+                    Name = "sab"
+                },
                 DownloadId = "abcd"
             };
 

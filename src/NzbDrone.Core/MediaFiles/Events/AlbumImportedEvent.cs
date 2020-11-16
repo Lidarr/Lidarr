@@ -27,7 +27,7 @@ namespace NzbDrone.Core.MediaFiles.Events
 
             if (downloadClientItem != null)
             {
-                DownloadClient = downloadClientItem.DownloadClient;
+                DownloadClient = downloadClientItem.DownloadClientInfo.Name;
                 DownloadId = downloadClientItem.DownloadId;
             }
         }

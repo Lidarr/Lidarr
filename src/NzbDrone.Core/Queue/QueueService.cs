@@ -86,7 +86,7 @@ namespace NzbDrone.Core.Queue
                 RemoteAlbum = trackedDownload.RemoteAlbum,
                 DownloadId = trackedDownload.DownloadItem.DownloadId,
                 Protocol = trackedDownload.Protocol,
-                DownloadClient = trackedDownload.DownloadItem.DownloadClient,
+                DownloadClient = trackedDownload.DownloadItem.DownloadClientInfo.Name,
                 Indexer = trackedDownload.Indexer,
                 OutputPath = trackedDownload.DownloadItem.OutputPath.ToString(),
                 DownloadForced = downloadForced
