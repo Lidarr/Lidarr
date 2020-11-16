@@ -11,6 +11,7 @@ namespace NzbDrone.Core.Download
 
         string Download(RemoteAlbum remoteAlbum);
         IEnumerable<DownloadClientItem> GetItems();
+        DownloadClientItem GetImportItem(DownloadClientItem item, DownloadClientItem previousImportAttempt);
         void RemoveItem(string downloadId, bool deleteData);
         DownloadClientInfo GetStatus();
         void MarkItemAsImported(DownloadClientItem downloadClientItem);

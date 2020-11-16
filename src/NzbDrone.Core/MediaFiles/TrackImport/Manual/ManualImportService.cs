@@ -89,7 +89,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     return new List<ManualImportItem>();
                 }
 
-                path = trackedDownload.DownloadItem.OutputPath.FullPath;
+                path = trackedDownload.ImportItem.OutputPath.FullPath;
             }
 
             if (!_diskProvider.FolderExists(path))
@@ -362,14 +362,15 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             foreach (var groupedTrackedDownload in importedTrackedDownload.GroupBy(i => i.TrackedDownload.DownloadItem.DownloadId).ToList())
             {
                 var trackedDownload = groupedTrackedDownload.First().TrackedDownload;
+                var outputPath = trackedDownload.ImportItem.OutputPath.FullPath;
 
-                if (_diskProvider.FolderExists(trackedDownload.DownloadItem.OutputPath.FullPath))
+                if (_diskProvider.FolderExists(outputPath))
                 {
                     if (_downloadedTracksImportService.ShouldDeleteFolder(
-                            _diskProvider.GetDirectoryInfo(trackedDownload.DownloadItem.OutputPath.FullPath),
+                            _diskProvider.GetDirectoryInfo(outputPath),
                             trackedDownload.RemoteAlbum.Artist) && trackedDownload.DownloadItem.CanMoveFiles)
                     {
-                        _diskProvider.DeleteFolder(trackedDownload.DownloadItem.OutputPath.FullPath, true);
+                        _diskProvider.DeleteFolder(outputPath, true);
                     }
                 }
 
