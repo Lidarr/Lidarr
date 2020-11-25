@@ -3,12 +3,12 @@
 We're always looking for people to help make Lidarr even better, there are a number of ways to contribute.
 
 ## Documentation ##
-Setup guides, FAQ, the more information we have on the wiki the better.
+Setup guides, FAQ, the more information we have on the [wiki](https://wiki.servarr.com/Lidarr) the better.
 
 ## Development ##
 
 ### Tools required ###
-- Visual Studio 2019 or higher (https://www.visualstudio.com/vs/).  The community version is free and works (https://www.visualstudio.com/downloads/).
+- Visual Studio 2019 or higher (https://www.visualstudio.com/vs/).  The community version is free and works fine. [Download it here](https://www.visualstudio.com/downloads/).
 - HTML/Javascript editor of choice (VS Code/Sublime Text/Webstorm/Atom/etc)
 - [Git](https://git-scm.com/downloads)
 - [NodeJS](https://nodejs.org/en/download/) (Node 10.X.X or higher)
@@ -19,12 +19,14 @@ Setup guides, FAQ, the more information we have on the wiki the better.
 
 1. Fork Lidarr
 2. Clone the repository into your development machine. [*info*](https://help.github.com/articles/working-with-repositories)
-3. Grab the submodules `git submodule init && git submodule update`
-4. Install the required Node Packages `yarn install`
-5. Start gulp to monitor your dev environment for any changes that need post processing using `yarn start` command.
-6. Build the project in Visual Studio, Setting startup project to `Lidarr.Console` and framework to `netcoreapp31`
-7. Debug the project in Visual Studio
-8. Open http://localhost:8686
+3. Install the required Node Packages `yarn install`
+4. Start gulp to monitor your dev environment for any changes that need post processing using `yarn start` command.
+5. Build the project in Visual Studio, Setting startup project to `Lidarr.Console` and framework to `netcoreapp31`
+6. Debug the project in Visual Studio
+7. Open http://localhost:8686
+
+Be sure to run lint `yarn lint --fix` on your code for any front end changes before comitting.
+For css changes `yarn stylelint-windows --fix`
 
 ### Contributing Code ###
 - If you're adding a new, already requested feature, please comment on [Github Issues](https://github.com/lidarr/Lidarr/issues "Github Issues") so work is not duplicated (If you want to add something not already on there, please talk to us first)
