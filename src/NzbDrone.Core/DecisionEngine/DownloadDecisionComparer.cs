@@ -86,8 +86,9 @@ namespace NzbDrone.Core.DecisionEngine
             var result = CompareBy(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum =>
             {
                 var delayProfile = _delayProfileService.BestForTags(remoteAlbum.Artist.Tags);
-                var downloadProtocol = remoteAlbum.Release.DownloadProtocol;
-                return downloadProtocol == delayProfile.PreferredProtocol;
+
+                // Flip sign since most preferred is first
+                return -1 * delayProfile.Items.FindIndex(i => i.Protocol == remoteAlbum.Release.DownloadProtocol);
             });
 
             return result;

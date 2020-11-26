@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -25,6 +26,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             _remoteAlbum.Artist = new Artist();
 
             _delayProfile = new DelayProfile();
+            _delayProfile.Items.ForEach(x => x.Allowed = false);
 
             Mocker.GetMock<IDelayProfileService>()
                   .Setup(s => s.BestForTags(It.IsAny<HashSet<int>>()))
@@ -40,7 +42,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         public void should_be_true_if_usenet_and_usenet_is_enabled()
         {
             GivenProtocol(DownloadProtocol.Usenet);
-            _delayProfile.EnableUsenet = true;
+            _delayProfile.Items.Single(x => x.Protocol == DownloadProtocol.Usenet).Allowed = true;
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().Be(true);
         }
@@ -49,7 +51,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         public void should_be_true_if_torrent_and_torrent_is_enabled()
         {
             GivenProtocol(DownloadProtocol.Torrent);
-            _delayProfile.EnableTorrent = true;
+            _delayProfile.Items.Single(x => x.Protocol == DownloadProtocol.Torrent).Allowed = true;
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().Be(true);
         }
@@ -58,7 +60,6 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         public void should_be_false_if_usenet_and_usenet_is_disabled()
         {
             GivenProtocol(DownloadProtocol.Usenet);
-            _delayProfile.EnableUsenet = false;
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().Be(false);
         }
@@ -67,7 +68,6 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         public void should_be_false_if_torrent_and_torrent_is_disabled()
         {
             GivenProtocol(DownloadProtocol.Torrent);
-            _delayProfile.EnableTorrent = false;
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().Be(false);
         }

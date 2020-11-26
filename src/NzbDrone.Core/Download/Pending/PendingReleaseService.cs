@@ -417,7 +417,8 @@ namespace NzbDrone.Core.Download.Pending
         {
             var delayProfile = _delayProfileService.BestForTags(artist.Tags);
 
-            if (downloadProtocol == delayProfile.PreferredProtocol)
+            // TODO: proper comparer
+            if (downloadProtocol == delayProfile.Items.First().Protocol)
             {
                 return 0;
             }

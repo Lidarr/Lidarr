@@ -21,6 +21,7 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
     <PackageReference Include="Equ" Version="2.2.0" />
     <PackageReference Include="MonoTorrent" Version="1.0.19" />
+    <PackageReference Include="SocketIOClient" Version="2.0.2.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Common\Lidarr.Common.csproj" />

@@ -2,29 +2,29 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Icon from 'Components/Icon';
+import Label from 'Components/Label';
 import Link from 'Components/Link/Link';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
 import TagList from 'Components/TagList';
 import { icons, kinds } from 'Helpers/Props';
-import titleCase from 'Utilities/String/titleCase';
 import EditDelayProfileModalConnector from './EditDelayProfileModalConnector';
 import styles from './DelayProfile.css';
 
-function getDelay(enabled, delay) {
-  if (!enabled) {
+function getDelay(item) {
+  if (!item.allowed) {
     return '-';
   }
 
-  if (!delay) {
+  if (!item.delay) {
     return 'No Delay';
   }
 
-  if (delay === 1) {
+  if (item.delay === 1) {
     return '1 Minute';
   }
 
   // TODO: use better units of time than just minutes
-  return `${delay} Minutes`;
+  return `${item.delay} Minutes`;
 }
 
 class DelayProfile extends Component {
@@ -73,24 +73,17 @@ class DelayProfile extends Component {
   render() {
     const {
       id,
-      enableUsenet,
-      enableTorrent,
-      preferredProtocol,
-      usenetDelay,
-      torrentDelay,
+      name,
+      items,
       tags,
       tagList,
       isDragging,
       connectDragSource
     } = this.props;
 
-    let preferred = titleCase(preferredProtocol);
-
-    if (!enableUsenet) {
-      preferred = 'Only Torrent';
-    } else if (!enableTorrent) {
-      preferred = 'Only Usenet';
-    }
+    const usenet = items.find((x) => x.protocol === 'usenet');
+    const torrent = items.find((x) => x.protocol === 'torrent');
+    const deemix = items.find((x) => x.protocol === 'deemix');
 
     return (
       <div
@@ -99,9 +92,27 @@ class DelayProfile extends Component {
           isDragging && styles.isDragging
         )}
       >
-        <div className={styles.column}>{preferred}</div>
-        <div className={styles.column}>{getDelay(enableUsenet, usenetDelay)}</div>
-        <div className={styles.column}>{getDelay(enableTorrent, torrentDelay)}</div>
+
+        <div className={styles.column}>{name}</div>
+
+        <div className={styles.column}>
+          {
+            items.map((x) => {
+              return (
+                <Label
+                  key={x.id}
+                  kind={x.allowed ? kinds.INFO : kinds.DANGER}
+                >
+                  {x.name}
+                </Label>
+              );
+            })
+          }
+        </div>
+
+        <div className={styles.column}>{getDelay(usenet)}</div>
+        <div className={styles.column}>{getDelay(torrent)}</div>
+        <div className={styles.column}>{getDelay(deemix)}</div>
 
         <TagList
           tags={tags}
@@ -152,11 +163,8 @@ class DelayProfile extends Component {
 
 DelayProfile.propTypes = {
   id: PropTypes.number.isRequired,
-  enableUsenet: PropTypes.bool.isRequired,
-  enableTorrent: PropTypes.bool.isRequired,
-  preferredProtocol: PropTypes.string.isRequired,
-  usenetDelay: PropTypes.number.isRequired,
-  torrentDelay: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  items: PropTypes.arrayOf(PropTypes.object).isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
   tagList: PropTypes.arrayOf(PropTypes.object).isRequired,
   isDragging: PropTypes.bool.isRequired,

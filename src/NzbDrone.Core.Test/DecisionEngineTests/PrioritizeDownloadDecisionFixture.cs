@@ -62,12 +62,12 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
 
         private void GivenPreferredDownloadProtocol(DownloadProtocol downloadProtocol)
         {
+            var profile = new DelayProfile();
+            profile.Items = profile.Items.OrderByDescending(x => x.Protocol == downloadProtocol).ToList();
+
             Mocker.GetMock<IDelayProfileService>()
                   .Setup(s => s.BestForTags(It.IsAny<HashSet<int>>()))
-                  .Returns(new DelayProfile
-                  {
-                      PreferredProtocol = downloadProtocol
-                  });
+                  .Returns(profile);
         }
 
         [Test]
