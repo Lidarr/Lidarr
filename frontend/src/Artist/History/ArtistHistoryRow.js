@@ -94,7 +94,7 @@ class ArtistHistoryRow extends Component {
           {album.title}
         </TableRowCell>
 
-        <TableRowCell>
+        <TableRowCell className={styles.sourceTitle}>
           {sourceTitle}
         </TableRowCell>
 
