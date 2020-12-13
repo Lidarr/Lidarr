@@ -2,11 +2,12 @@ import _ from 'lodash';
 import { createAction } from 'redux-actions';
 import { batchActions } from 'redux-batched-actions';
 import { filterTypePredicates, filterTypes, sortDirections } from 'Helpers/Props';
+import { fetchAlbums } from 'Store/Actions/albumActions';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import dateFilterPredicate from 'Utilities/Date/dateFilterPredicate';
 import translate from 'Utilities/String/translate';
-import { updateItem } from './baseActions';
+import { set, updateItem } from './baseActions';
 import createFetchHandler from './Creators/createFetchHandler';
 import createHandleActions from './Creators/createHandleActions';
 import createRemoveItemHandler from './Creators/createRemoveItemHandler';
@@ -177,6 +178,7 @@ export const DELETE_ARTIST = 'artist/deleteArtist';
 
 export const TOGGLE_ARTIST_MONITORED = 'artist/toggleArtistMonitored';
 export const TOGGLE_ALBUM_MONITORED = 'artist/toggleAlbumMonitored';
+export const UPDATE_ARTISTS_MONITOR = 'artist/updateArtistsMonitor';
 
 export const SET_DELETE_OPTION = 'artist/setDeleteOption';
 
@@ -212,6 +214,7 @@ export const deleteArtist = createThunk(DELETE_ARTIST, (payload) => {
 
 export const toggleArtistMonitored = createThunk(TOGGLE_ARTIST_MONITORED);
 export const toggleAlbumMonitored = createThunk(TOGGLE_ALBUM_MONITORED);
+export const updateArtistsMonitor = createThunk(UPDATE_ARTISTS_MONITOR);
 
 export const setArtistValue = createAction(SET_ARTIST_VALUE, (payload) => {
   return {
@@ -340,6 +343,61 @@ export const actionHandlers = handleThunks({
         id,
         section,
         seasons: artist.seasons
+      }));
+    });
+  },
+
+  [UPDATE_ARTISTS_MONITOR]: function(getState, payload, dispatch) {
+    const {
+      artistIds,
+      monitor,
+      monitored,
+      monitorNewItems
+    } = payload;
+
+    const artists = [];
+
+    artistIds.forEach((id) => {
+      const artistsToUpdate = { id };
+
+      if (monitored != null) {
+        artistsToUpdate.monitored = monitored;
+      }
+
+      artists.push(artistsToUpdate);
+    });
+
+    dispatch(set({
+      section,
+      isSaving: true
+    }));
+
+    const promise = createAjaxRequest({
+      url: '/albumStudio',
+      method: 'POST',
+      data: JSON.stringify({
+        artist: artists,
+        monitoringOptions: { monitor },
+        monitorNewItems
+      }),
+      dataType: 'json'
+    }).request;
+
+    promise.done((data) => {
+      dispatch(fetchAlbums({ artistId: artistIds[0] }));
+
+      dispatch(set({
+        section,
+        isSaving: false,
+        saveError: null
+      }));
+    });
+
+    promise.fail((xhr) => {
+      dispatch(set({
+        section,
+        isSaving: false,
+        saveError: xhr
       }));
     });
   }

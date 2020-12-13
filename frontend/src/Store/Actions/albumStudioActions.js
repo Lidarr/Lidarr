@@ -102,21 +102,21 @@ export const actionHandlers = handleThunks({
   [SAVE_ALBUM_STUDIO]: function(getState, payload, dispatch) {
     const {
       artistIds,
-      monitored,
       monitor,
+      monitored,
       monitorNewItems
     } = payload;
 
-    const artist = [];
+    const artists = [];
 
     artistIds.forEach((id) => {
-      const artistToUpdate = { id };
+      const artistsToUpdate = { id };
 
       if (payload.hasOwnProperty('monitored')) {
-        artistToUpdate.monitored = monitored;
+        artistsToUpdate.monitored = monitored;
       }
 
-      artist.push(artistToUpdate);
+      artists.push(artistsToUpdate);
     });
 
     dispatch(set({
@@ -128,7 +128,7 @@ export const actionHandlers = handleThunks({
       url: '/albumStudio',
       method: 'POST',
       data: JSON.stringify({
-        artist,
+        artist: artists,
         monitoringOptions: { monitor },
         monitorNewItems
       }),

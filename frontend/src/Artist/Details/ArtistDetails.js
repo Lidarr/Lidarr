@@ -6,6 +6,7 @@ import ArtistPoster from 'Artist/ArtistPoster';
 import DeleteArtistModal from 'Artist/Delete/DeleteArtistModal';
 import EditArtistModalConnector from 'Artist/Edit/EditArtistModalConnector';
 import ArtistHistoryModal from 'Artist/History/ArtistHistoryModal';
+import MonitoringOptionsModal from 'Artist/MonitoringOptions/MonitoringOptionsModal';
 import ArtistInteractiveSearchModalConnector from 'Artist/Search/ArtistInteractiveSearchModalConnector';
 import HeartRating from 'Components/HeartRating';
 import Icon from 'Components/Icon';
@@ -72,6 +73,7 @@ class ArtistDetails extends Component {
       isArtistHistoryModalOpen: false,
       isInteractiveImportModalOpen: false,
       isInteractiveSearchModalOpen: false,
+      isMonitorOptionsModalOpen: false,
       allExpanded: false,
       allCollapsed: false,
       expandedState: {}
@@ -146,6 +148,14 @@ class ArtistDetails extends Component {
 
   onArtistHistoryModalClose = () => {
     this.setState({ isArtistHistoryModalOpen: false });
+  };
+
+  onMonitorOptionsPress = () => {
+    this.setState({ isMonitorOptionsModalOpen: true });
+  };
+
+  onMonitorOptionsClose = () => {
+    this.setState({ isMonitorOptionsModalOpen: false });
   };
 
   onExpandAllPress = () => {
@@ -224,6 +234,7 @@ class ArtistDetails extends Component {
       isArtistHistoryModalOpen,
       isInteractiveImportModalOpen,
       isInteractiveSearchModalOpen,
+      isMonitorOptionsModalOpen,
       allExpanded,
       allCollapsed,
       expandedState
@@ -320,6 +331,12 @@ class ArtistDetails extends Component {
             <PageToolbarSeparator />
 
             <PageToolbarButton
+              label={translate('ArtistMonitoring')}
+              iconName={icons.MONITORED}
+              onPress={this.onMonitorOptionsPress}
+            />
+
+            <PageToolbarButton
               label={translate('Edit')}
               iconName={icons.EDIT}
               onPress={this.onEditArtistPress}
@@ -330,6 +347,7 @@ class ArtistDetails extends Component {
               iconName={icons.DELETE}
               onPress={this.onDeleteArtistPress}
             />
+
           </PageToolbarSection>
 
           <PageToolbarSection alignContent={align.RIGHT}>
@@ -688,6 +706,12 @@ class ArtistDetails extends Component {
             isOpen={isInteractiveSearchModalOpen}
             artistId={id}
             onModalClose={this.onInteractiveSearchModalClose}
+          />
+
+          <MonitoringOptionsModal
+            isOpen={isMonitorOptionsModalOpen}
+            artistId={id}
+            onModalClose={this.onMonitorOptionsClose}
           />
         </PageContentBody>
       </PageContent>

@@ -98,6 +98,7 @@
   "ArtistClickToChangeAlbum": "Click to change album",
   "ArtistEditor": "Artist Editor",
   "ArtistFolderFormat": "Artist Folder Format",
+  "ArtistMonitoring": "Artist Monitoring",
   "ArtistName": "Artist Name",
   "ArtistNameHelpText": "The name of the artist/album to exclude (can be anything meaningful)",
   "ArtistProgressBarText": "{trackFileCount} / {trackCount} (Total: {totalTrackCount})",
