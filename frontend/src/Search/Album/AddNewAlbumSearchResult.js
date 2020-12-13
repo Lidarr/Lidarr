@@ -111,52 +111,42 @@ class AddNewAlbumSearchResult extends Component {
           }
 
           <div className={styles.content}>
-            <div className={styles.name}>
-              {title}
+            <div className={styles.titleRow}>
+              <div className={styles.titleContainer}>
+                <div className={styles.title}>
+                  {title}
 
-              {
-                !!disambiguation &&
-                  <span className={styles.year}>({disambiguation})</span>
-              }
+                  {
+                    !!disambiguation &&
+                      <span className={styles.year}>({disambiguation})</span>
+                  }
+                </div>
+              </div>
 
-              {
-                isExistingAlbum ?
+              <div className={styles.icons}>
+                {
+                  isExistingAlbum ?
+                    <Icon
+                      className={styles.alreadyExistsIcon}
+                      name={icons.CHECK_CIRCLE}
+                      size={36}
+                      title="Already in your library"
+                    /> :
+                    null
+                }
+
+                <Link
+                  className={styles.mbLink}
+                  to={`https://musicbrainz.org/release-group/${foreignAlbumId}`}
+                  onPress={this.onTVDBLinkPress}
+                >
                   <Icon
-                    className={styles.alreadyExistsIcon}
-                    name={icons.CHECK_CIRCLE}
-                    size={20}
-                    title="Album already in your library"
-                  /> :
-                  null
-              }
-
-              <Link
-                className={styles.mbLink}
-                to={`https://musicbrainz.org/release-group/${foreignAlbumId}`}
-                onPress={this.onMBLinkPress}
-              >
-                <Icon
-                  className={styles.mbLinkIcon}
-                  name={icons.EXTERNAL_LINK}
-                  size={28}
-                />
-              </Link>
-
-            </div>
-
-            <div>
-              <span className={styles.artistName}> By: {artist.artistName}</span>
-
-              {
-                isExistingArtist ?
-                  <Icon
-                    className={styles.alreadyExistsIcon}
-                    name={icons.CHECK_CIRCLE}
-                    size={15}
-                    title="Artist already in your library"
-                  /> :
-                  null
-              }
+                    className={styles.mbLinkIcon}
+                    name={icons.EXTERNAL_LINK}
+                    size={28}
+                  />
+                </Link>
+              </div>
             </div>
 
             <div>

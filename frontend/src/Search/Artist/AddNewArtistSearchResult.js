@@ -111,44 +111,49 @@ class AddNewArtistSearchResult extends Component {
           }
 
           <div className={styles.content}>
-            <div className={styles.name}>
-              {artistName}
+            <div className={styles.nameRow}>
+              <div className={styles.nameContainer}>
+                <div className={styles.name}>
+                  {artistName}
 
-              {
-                !name.contains(year) && year ?
-                  <span className={styles.year}>
-                    ({year})
-                  </span> :
-                  null
-              }
+                  {
+                    !artistName.contains(year) && year ?
+                      <span className={styles.year}>
+                        ({year})
+                      </span> :
+                      null
+                  }
+                  {
+                    !!disambiguation &&
+                      <span className={styles.year}>({disambiguation})</span>
+                  }
+                </div>
+              </div>
 
-              {
-                !!disambiguation &&
-                  <span className={styles.year}>({disambiguation})</span>
-              }
+              <div className={styles.icons}>
+                {
+                  isExistingArtist ?
+                    <Icon
+                      className={styles.alreadyExistsIcon}
+                      name={icons.CHECK_CIRCLE}
+                      size={36}
+                      title="Already in your library"
+                    /> :
+                    null
+                }
 
-              {
-                isExistingArtist ?
+                <Link
+                  className={styles.mbLink}
+                  to={`https://musicbrainz.org/artist/${foreignArtistId}`}
+                  onPress={this.onMBLinkPress}
+                >
                   <Icon
-                    className={styles.alreadyExistsIcon}
-                    name={icons.CHECK_CIRCLE}
-                    size={36}
-                    title="Already in your library"
-                  /> :
-                  null
-              }
-
-              <Link
-                className={styles.mbLink}
-                to={`https://musicbrainz.org/artist/${foreignArtistId}`}
-                onPress={this.onMBLinkPress}
-              >
-                <Icon
-                  className={styles.mbLinkIcon}
-                  name={icons.EXTERNAL_LINK}
-                  size={28}
-                />
-              </Link>
+                    className={styles.mbLinkIcon}
+                    name={icons.EXTERNAL_LINK}
+                    size={28}
+                  />
+                </Link>
+              </div>
             </div>
 
             <div>
