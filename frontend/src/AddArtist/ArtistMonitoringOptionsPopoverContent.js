@@ -2,14 +2,17 @@ import React from 'react';
 import Alert from 'Components/Alert';
 import DescriptionList from 'Components/DescriptionList/DescriptionList';
 import DescriptionListItem from 'Components/DescriptionList/DescriptionListItem';
+import { kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
+import styles from './ArtistMonitoringOptionsPopoverContent.css';
 
 function ArtistMonitoringOptionsPopoverContent() {
   return (
     <>
-      <Alert>
+      <Alert kind={kinds.INFO} className={styles.message}>
         This is a one time adjustment to set which albums are monitored
       </Alert>
+
       <DescriptionList>
         <DescriptionListItem
           title={translate('AllAlbums')}

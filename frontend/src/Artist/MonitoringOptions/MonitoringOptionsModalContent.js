@@ -1,18 +1,22 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import ArtistMonitoringOptionsPopoverContent from 'AddArtist/ArtistMonitoringOptionsPopoverContent';
 import Alert from 'Components/Alert';
 import Form from 'Components/Form/Form';
 import FormGroup from 'Components/Form/FormGroup';
 import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
+import Icon from 'Components/Icon';
 import Button from 'Components/Link/Button';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
-import { inputTypes, kinds } from 'Helpers/Props';
+import Popover from 'Components/Tooltip/Popover';
+import { icons, inputTypes, kinds, tooltipPositions } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
+import styles from './MonitoringOptionsModalContent.css';
 
 const NO_CHANGE = 'noChange';
 
@@ -51,8 +55,7 @@ class MonitoringOptionsModalContent extends Component {
 
   onSavePress = () => {
     const {
-      onSavePress,
-      isSaving
+      onSavePress
     } = this.props;
     const {
       monitor
@@ -61,14 +64,6 @@ class MonitoringOptionsModalContent extends Component {
     if (monitor !== NO_CHANGE) {
       onSavePress({ monitor });
     }
-
-    if (!isSaving) {
-      this.onModalClose();
-    }
-  };
-
-  onModalClose = () => {
-    this.props.onModalClose();
   };
 
   //
@@ -89,19 +84,31 @@ class MonitoringOptionsModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          {translate('MonitorAlbum')}
+          {translate('MonitorArtist')}
         </ModalHeader>
 
         <ModalBody>
-          <Alert kind={kinds.INFO}>
-            <div>
-              {translate('MonitorAlbumExistingOnlyWarning')}
-            </div>
+          <Alert kind={kinds.INFO} className={styles.message}>
+            {translate('MonitorAlbumExistingOnlyWarning')}
           </Alert>
 
           <Form {...otherProps}>
             <FormGroup>
-              <FormLabel>{translate('Monitoring')}</FormLabel>
+              <FormLabel>
+                {translate('MonitorExistingAlbums')}
+
+                <Popover
+                  anchor={
+                    <Icon
+                      className={styles.labelIcon}
+                      name={icons.INFO}
+                    />
+                  }
+                  title={translate('MonitoringOptions')}
+                  body={<ArtistMonitoringOptionsPopoverContent />}
+                  position={tooltipPositions.RIGHT}
+                />
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.MONITOR_ALBUMS_SELECT}
@@ -134,7 +141,7 @@ class MonitoringOptionsModalContent extends Component {
 }
 
 MonitoringOptionsModalContent.propTypes = {
-  authorId: PropTypes.number.isRequired,
+  artistId: PropTypes.number.isRequired,
   saveError: PropTypes.object,
   isSaving: PropTypes.bool.isRequired,
   onInputChange: PropTypes.func.isRequired,
