@@ -16,6 +16,7 @@ namespace NzbDrone.Core.Notifications.Webhook
             QualityVersion = trackFile.Quality.Revision.Version;
             ReleaseGroup = trackFile.ReleaseGroup;
             SceneName = trackFile.SceneName;
+            Size = trackFile.Size;
         }
 
         public int Id { get; set; }
@@ -24,5 +25,6 @@ namespace NzbDrone.Core.Notifications.Webhook
         public int QualityVersion { get; set; }
         public string ReleaseGroup { get; set; }
         public string SceneName { get; set; }
+        public long Size { get; set; }
     }
 }
