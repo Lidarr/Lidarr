@@ -416,7 +416,7 @@ class AlbumDetails extends Component {
 
                     <span className={styles.sizeOnDisk}>
                       {
-                        formatBytes(statistics.sizeOnDisk)
+                        formatBytes(statistics.sizeOnDisk || 0)
                       }
                     </span>
                   </Label>

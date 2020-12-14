@@ -207,12 +207,6 @@ export const defaultState = {
       return statistics.totalTrackCount || 0;
     },
 
-    sizeOnDisk: function(item) {
-      const { statistics = {} } = item;
-
-      return statistics.sizeOnDisk;
-    },
-
     ratings: function(item) {
       const { ratings = {} } = item;
 
