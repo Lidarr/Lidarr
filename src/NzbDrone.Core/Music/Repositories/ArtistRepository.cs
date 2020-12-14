@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Dapper;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Messaging.Events;
@@ -11,6 +12,7 @@ namespace NzbDrone.Core.Music
         bool ArtistPathExists(string path);
         Artist FindByName(string cleanName);
         Artist FindById(string foreignArtistId);
+        Dictionary<int, string> AllArtistPaths();
         Artist GetArtistByMetadataId(int artistMetadataId);
         List<Artist> GetArtistByMetadataId(IEnumerable<int> artistMetadataId);
     }
@@ -64,6 +66,15 @@ namespace NzbDrone.Core.Music
         public Artist GetArtistByMetadataId(int artistMetadataId)
         {
             return Query(s => s.ArtistMetadataId == artistMetadataId).SingleOrDefault();
+        }
+
+        public Dictionary<int, string> AllArtistPaths()
+        {
+            using (var conn = _database.OpenConnection())
+            {
+                var strSql = "SELECT Id AS [Key], Path AS [Value] FROM Artists";
+                return conn.Query<KeyValuePair<int, string>>(strSql).ToDictionary(x => x.Key, x => x.Value);
+            }
         }
 
         public List<Artist> GetArtistByMetadataId(IEnumerable<int> artistMetadataIds)

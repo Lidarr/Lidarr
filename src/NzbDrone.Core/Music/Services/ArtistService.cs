@@ -26,6 +26,7 @@ namespace NzbDrone.Core.Music
         List<Artist> AllForTag(int tagId);
         Artist UpdateArtist(Artist artist, bool publishUpdatedEvent = true);
         List<Artist> UpdateArtists(List<Artist> artist, bool useExistingRelativeFolder);
+        Dictionary<int, string> AllArtistPaths();
         bool ArtistPathExists(string folder);
         void RemoveAddOptions(Artist artist);
     }
@@ -166,6 +167,11 @@ namespace NzbDrone.Core.Music
         public List<Artist> GetAllArtists()
         {
             return _cache.Get("GetAllArtists", () => _artistRepository.All().ToList(), TimeSpan.FromSeconds(30));
+        }
+
+        public Dictionary<int, string> AllArtistPaths()
+        {
+            return _artistRepository.AllArtistPaths();
         }
 
         public List<Artist> AllForTag(int tagId)
