@@ -104,22 +104,22 @@ namespace NzbDrone.Core.MediaFiles
             if (message.DeleteFiles)
             {
                 var artist = message.Artist;
-                var allArtists = _artistService.GetAllArtists();
+                var allArtists = _artistService.AllArtistPaths();
 
                 foreach (var s in allArtists)
                 {
-                    if (s.Id == artist.Id)
+                    if (s.Key == artist.Id)
                     {
                         continue;
                     }
 
-                    if (artist.Path.IsParentPath(s.Path))
+                    if (artist.Path.IsParentPath(s.Value))
                     {
                         _logger.Error("Artist path: '{0}' is a parent of another artist, not deleting files.", artist.Path);
                         return;
                     }
 
-                    if (artist.Path.PathEquals(s.Path))
+                    if (artist.Path.PathEquals(s.Value))
                     {
                         _logger.Error("Artist path: '{0}' is the same as another artist, not deleting files.", artist.Path);
                         return;

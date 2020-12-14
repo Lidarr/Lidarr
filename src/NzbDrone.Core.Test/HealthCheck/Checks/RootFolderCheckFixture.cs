@@ -25,8 +25,8 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
                 .ToList();
 
             Mocker.GetMock<IArtistService>()
-                  .Setup(s => s.GetAllArtists())
-                  .Returns(artist);
+                  .Setup(s => s.AllArtistPaths())
+                  .Returns(artist.ToDictionary(x => x.Id, x => x.Path));
 
             Mocker.GetMock<IImportListFactory>()
                 .Setup(s => s.All())
@@ -45,8 +45,8 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         public void should_not_return_error_when_no_artist()
         {
             Mocker.GetMock<IArtistService>()
-                  .Setup(s => s.GetAllArtists())
-                  .Returns(new List<Artist>());
+                  .Setup(s => s.AllArtistPaths())
+                  .Returns(new Dictionary<int, string>());
 
             Mocker.GetMock<IImportListFactory>()
                 .Setup(s => s.All())

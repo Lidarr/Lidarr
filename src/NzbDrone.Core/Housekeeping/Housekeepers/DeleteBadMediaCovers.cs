@@ -38,19 +38,19 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
                 return;
             }
 
-            var artists = _artistService.GetAllArtists();
+            var artists = _artistService.AllArtistPaths();
             var imageExtensions = new List<string> { ".jpg", ".png", ".gif" };
 
             foreach (var artist in artists)
             {
-                var images = _metaFileService.GetFilesByArtist(artist.Id)
+                var images = _metaFileService.GetFilesByArtist(artist.Key)
                     .Where(c => c.LastUpdated > new DateTime(2014, 12, 27) && imageExtensions.Any(x => c.RelativePath.EndsWith(x, StringComparison.InvariantCultureIgnoreCase)));
 
                 foreach (var image in images)
                 {
                     try
                     {
-                        var path = Path.Combine(artist.Path, image.RelativePath);
+                        var path = Path.Combine(artist.Value, image.RelativePath);
                         if (!IsValid(path))
                         {
                             _logger.Debug("Deleting invalid image file " + path);
