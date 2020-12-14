@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import * as commandNames from 'Commands/commandNames';
-import { saveArtistEditor, setArtistEditorFilter, setArtistEditorSort } from 'Store/Actions/artistEditorActions';
+import { saveArtistEditor, setArtistEditorFilter, setArtistEditorSort, setArtistEditorTableOption } from 'Store/Actions/artistEditorActions';
 import { executeCommand } from 'Store/Actions/commandActions';
 import { fetchRootFolders } from 'Store/Actions/settingsActions';
 import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
@@ -12,15 +12,13 @@ import ArtistEditor from './ArtistEditor';
 
 function createMapStateToProps() {
   return createSelector(
-    (state) => state.settings.metadataProfiles,
     createClientSideCollectionSelector('artist', 'artistEditor'),
     createCommandExecutingSelector(commandNames.RENAME_ARTIST),
     createCommandExecutingSelector(commandNames.RETAG_ARTIST),
-    (metadataProfiles, artist, isOrganizingArtist, isRetaggingArtist) => {
+    (artist, isOrganizingArtist, isRetaggingArtist) => {
       return {
         isOrganizingArtist,
         isRetaggingArtist,
-        showMetadataProfile: metadataProfiles.items.length > 1,
         ...artist
       };
     }
@@ -30,6 +28,7 @@ function createMapStateToProps() {
 const mapDispatchToProps = {
   dispatchSetArtistEditorSort: setArtistEditorSort,
   dispatchSetArtistEditorFilter: setArtistEditorFilter,
+  dispatchSetArtistEditorTableOption: setArtistEditorTableOption,
   dispatchSaveArtistEditor: saveArtistEditor,
   dispatchFetchRootFolders: fetchRootFolders,
   dispatchExecuteCommand: executeCommand
@@ -55,6 +54,10 @@ class ArtistEditorConnector extends Component {
     this.props.dispatchSetArtistEditorFilter({ selectedFilterKey });
   }
 
+  onTableOptionChange = (payload) => {
+    this.props.dispatchSetArtistEditorTableOption(payload);
+  }
+
   onSaveSelected = (payload) => {
     this.props.dispatchSaveArtistEditor(payload);
   }
@@ -76,6 +79,7 @@ class ArtistEditorConnector extends Component {
         onSortPress={this.onSortPress}
         onFilterSelect={this.onFilterSelect}
         onSaveSelected={this.onSaveSelected}
+        onTableOptionChange={this.onTableOptionChange}
       />
     );
   }
@@ -84,6 +88,7 @@ class ArtistEditorConnector extends Component {
 ArtistEditorConnector.propTypes = {
   dispatchSetArtistEditorSort: PropTypes.func.isRequired,
   dispatchSetArtistEditorFilter: PropTypes.func.isRequired,
+  dispatchSetArtistEditorTableOption: PropTypes.func.isRequired,
   dispatchSaveArtistEditor: PropTypes.func.isRequired,
   dispatchFetchRootFolders: PropTypes.func.isRequired,
   dispatchExecuteCommand: PropTypes.func.isRequired

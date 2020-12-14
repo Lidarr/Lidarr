@@ -6,10 +6,13 @@ import FilterMenu from 'Components/Menu/FilterMenu';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
+import PageToolbarButton from 'Components/Page/Toolbar/PageToolbarButton';
 import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
+import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
-import { align, sortDirections } from 'Helpers/Props';
+import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
+import { align, icons, sortDirections } from 'Helpers/Props';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import getSelectedIds from 'Utilities/Table/getSelectedIds';
 import selectAll from 'Utilities/Table/selectAll';
@@ -19,52 +22,6 @@ import ArtistEditorFooter from './ArtistEditorFooter';
 import ArtistEditorRowConnector from './ArtistEditorRowConnector';
 import RetagArtistModal from './AudioTags/RetagArtistModal';
 import OrganizeArtistModal from './Organize/OrganizeArtistModal';
-
-function getColumns(showMetadataProfile) {
-  return [
-    {
-      name: 'status',
-      isSortable: true,
-      isVisible: true
-    },
-    {
-      name: 'sortName',
-      label: 'Name',
-      isSortable: true,
-      isVisible: true
-    },
-    {
-      name: 'qualityProfileId',
-      label: 'Quality Profile',
-      isSortable: true,
-      isVisible: true
-    },
-    {
-      name: 'metadataProfileId',
-      label: 'Metadata Profile',
-      isSortable: true,
-      isVisible: showMetadataProfile
-    },
-    {
-      name: 'albumFolder',
-      label: 'Album Folder',
-      isSortable: true,
-      isVisible: true
-    },
-    {
-      name: 'path',
-      label: 'Path',
-      isSortable: true,
-      isVisible: true
-    },
-    {
-      name: 'tags',
-      label: 'Tags',
-      isSortable: false,
-      isVisible: true
-    }
-  ];
-}
 
 class ArtistEditor extends Component {
 
@@ -80,8 +37,7 @@ class ArtistEditor extends Component {
       lastToggled: null,
       selectedState: {},
       isOrganizingArtistModalOpen: false,
-      isRetaggingArtistModalOpen: false,
-      columns: getColumns(props.showMetadataProfile)
+      isRetaggingArtistModalOpen: false
     };
   }
 
@@ -161,6 +117,7 @@ class ArtistEditor extends Component {
       error,
       totalItems,
       items,
+      columns,
       selectedFilterKey,
       filters,
       customFilters,
@@ -172,7 +129,7 @@ class ArtistEditor extends Component {
       deleteError,
       isOrganizingArtist,
       isRetaggingArtist,
-      showMetadataProfile,
+      onTableOptionChange,
       onSortPress,
       onFilterSelect
     } = this.props;
@@ -180,8 +137,7 @@ class ArtistEditor extends Component {
     const {
       allSelected,
       allUnselected,
-      selectedState,
-      columns
+      selectedState
     } = this.state;
 
     const selectedArtistIds = this.getSelectedIds();
@@ -191,6 +147,18 @@ class ArtistEditor extends Component {
         <PageToolbar>
           <PageToolbarSection />
           <PageToolbarSection alignContent={align.RIGHT}>
+            <TableOptionsModalWrapper
+              columns={columns}
+              onTableOptionChange={onTableOptionChange}
+            >
+              <PageToolbarButton
+                label="Options"
+                iconName={icons.TABLE}
+              />
+            </TableOptionsModalWrapper>
+
+            <PageToolbarSeparator />
+
             <FilterMenu
               alignMenu={align.RIGHT}
               selectedFilterKey={selectedFilterKey}
@@ -261,7 +229,8 @@ class ArtistEditor extends Component {
           deleteError={deleteError}
           isOrganizingArtist={isOrganizingArtist}
           isRetaggingArtist={isRetaggingArtist}
-          showMetadataProfile={showMetadataProfile}
+          columns={columns}
+          showMetadataProfile={columns.find((column) => column.name === 'metadataProfileId').isVisible}
           onSaveSelected={this.onSaveSelected}
           onOrganizeArtistPress={this.onOrganizeArtistPress}
           onRetagArtistPress={this.onRetagArtistPress}
@@ -290,6 +259,7 @@ ArtistEditor.propTypes = {
   error: PropTypes.object,
   totalItems: PropTypes.number.isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   sortKey: PropTypes.string,
   sortDirection: PropTypes.oneOf(sortDirections.all),
   selectedFilterKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -301,7 +271,7 @@ ArtistEditor.propTypes = {
   deleteError: PropTypes.object,
   isOrganizingArtist: PropTypes.bool.isRequired,
   isRetaggingArtist: PropTypes.bool.isRequired,
-  showMetadataProfile: PropTypes.bool.isRequired,
+  onTableOptionChange: PropTypes.func.isRequired,
   onSortPress: PropTypes.func.isRequired,
   onFilterSelect: PropTypes.func.isRequired,
   onSaveSelected: PropTypes.func.isRequired

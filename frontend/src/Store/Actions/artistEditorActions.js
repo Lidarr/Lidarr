@@ -8,6 +8,7 @@ import { set, updateItem } from './baseActions';
 import createHandleActions from './Creators/createHandleActions';
 import createSetClientSideCollectionFilterReducer from './Creators/Reducers/createSetClientSideCollectionFilterReducer';
 import createSetClientSideCollectionSortReducer from './Creators/Reducers/createSetClientSideCollectionSortReducer';
+import createSetTableOptionReducer from './Creators/Reducers/createSetTableOptionReducer';
 
 //
 // Variables
@@ -29,6 +30,58 @@ export const defaultState = {
   selectedFilterKey: 'all',
   filters,
   filterPredicates,
+
+  columns: [
+    {
+      name: 'status',
+      columnLabel: 'Status',
+      isSortable: true,
+      isVisible: true,
+      isModifiable: false
+    },
+    {
+      name: 'sortName',
+      label: 'Name',
+      isSortable: true,
+      isVisible: true
+    },
+    {
+      name: 'qualityProfileId',
+      label: 'Quality Profile',
+      isSortable: true,
+      isVisible: true
+    },
+    {
+      name: 'metadataProfileId',
+      label: 'Metadata Profile',
+      isSortable: true,
+      isVisible: false
+    },
+    {
+      name: 'albumFolder',
+      label: 'Album Folder',
+      isSortable: true,
+      isVisible: true
+    },
+    {
+      name: 'path',
+      label: 'Path',
+      isSortable: true,
+      isVisible: true
+    },
+    {
+      name: 'sizeOnDisk',
+      label: 'Size on Disk',
+      isSortable: true,
+      isVisible: false
+    },
+    {
+      name: 'tags',
+      label: 'Tags',
+      isSortable: false,
+      isVisible: true
+    }
+  ],
 
   filterBuilderProps: [
     {
@@ -66,6 +119,12 @@ export const defaultState = {
       type: filterBuilderTypes.EXACT
     },
     {
+      name: 'sizeOnDisk',
+      label: 'Size on Disk',
+      type: filterBuilderTypes.NUMBER,
+      valueType: filterBuilderValueTypes.BYTES
+    },
+    {
       name: 'tags',
       label: 'Tags',
       type: filterBuilderTypes.ARRAY,
@@ -90,6 +149,7 @@ export const SET_ARTIST_EDITOR_SORT = 'artistEditor/setArtistEditorSort';
 export const SET_ARTIST_EDITOR_FILTER = 'artistEditor/setArtistEditorFilter';
 export const SAVE_ARTIST_EDITOR = 'artistEditor/saveArtistEditor';
 export const BULK_DELETE_ARTIST = 'artistEditor/bulkDeleteArtist';
+export const SET_ARTIST_EDITOR_TABLE_OPTION = 'artistEditor/setArtistEditorTableOption';
 
 //
 // Action Creators
@@ -98,6 +158,7 @@ export const setArtistEditorSort = createAction(SET_ARTIST_EDITOR_SORT);
 export const setArtistEditorFilter = createAction(SET_ARTIST_EDITOR_FILTER);
 export const saveArtistEditor = createThunk(SAVE_ARTIST_EDITOR);
 export const bulkDeleteArtist = createThunk(BULK_DELETE_ARTIST);
+export const setArtistEditorTableOption = createAction(SET_ARTIST_EDITOR_TABLE_OPTION);
 
 //
 // Action Handlers
@@ -181,6 +242,7 @@ export const actionHandlers = handleThunks({
 
 export const reducers = createHandleActions({
 
+  [SET_ARTIST_EDITOR_TABLE_OPTION]: createSetTableOptionReducer(section),
   [SET_ARTIST_EDITOR_SORT]: createSetClientSideCollectionSortReducer(section),
   [SET_ARTIST_EDITOR_FILTER]: createSetClientSideCollectionFilterReducer(section)
 
