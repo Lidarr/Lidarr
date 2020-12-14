@@ -37,6 +37,7 @@ Compression=lzma2/normal
 AppContact={#ForumsURL}
 VersionInfoVersion={#BaseVersion}.{#BuildNumber}
 SetupLogging=yes
+OutputDir=output
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -56,6 +57,9 @@ Source: "..\_artifacts\{#Runtime}\{#Framework}\Lidarr\*"; Excludes: "Lidarr.Upda
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Parameters: "/icon"
 Name: "{commondesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Parameters: "/icon"; Tasks: desktopIcon
 Name: "{userstartup}\{#AppName}"; Filename: "{app}\Lidarr.exe"; WorkingDir: "{app}"; Tasks: startupShortcut
+
+[InstallDelete]
+Name: "{app}"; Type: filesandordirs
 
 [Run]
 Filename: "{app}\Lidarr.Console.exe"; StatusMsg: "Removing previous Windows Service"; Parameters: "/u"; Flags: runhidden waituntilterminated;
