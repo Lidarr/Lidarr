@@ -135,6 +135,15 @@ function ArtistIndexSortMenu(props) {
         >
           Size on Disk
         </SortMenuItem>
+
+        <SortMenuItem
+          name="tags"
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onPress={onSortSelect}
+        >
+          Tags
+        </SortMenuItem>
       </MenuContent>
     </SortMenu>
   );
