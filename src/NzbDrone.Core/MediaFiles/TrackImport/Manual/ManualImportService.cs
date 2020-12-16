@@ -42,6 +42,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
         private readonly IImportApprovedTracks _importApprovedTracks;
         private readonly ITrackedDownloadService _trackedDownloadService;
         private readonly IDownloadedTracksImportService _downloadedTracksImportService;
+        private readonly IProvideImportItemService _provideImportItemService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
@@ -58,6 +59,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                                    IImportApprovedTracks importApprovedTracks,
                                    ITrackedDownloadService trackedDownloadService,
                                    IDownloadedTracksImportService downloadedTracksImportService,
+                                   IProvideImportItemService provideImportItemService,
                                    IEventAggregator eventAggregator,
                                    Logger logger)
         {
@@ -74,6 +76,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             _importApprovedTracks = importApprovedTracks;
             _trackedDownloadService = trackedDownloadService;
             _downloadedTracksImportService = downloadedTracksImportService;
+            _provideImportItemService = provideImportItemService;
             _eventAggregator = eventAggregator;
             _logger = logger;
         }
@@ -87,6 +90,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                 if (trackedDownload == null)
                 {
                     return new List<ManualImportItem>();
+                }
+
+                if (trackedDownload.ImportItem == null)
+                {
+                    trackedDownload.ImportItem = _provideImportItemService.ProvideImportItem(trackedDownload.DownloadItem, trackedDownload.ImportItem);
                 }
 
                 path = trackedDownload.ImportItem.OutputPath.FullPath;
