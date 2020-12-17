@@ -39,7 +39,7 @@ function NotificationEventItems(props) {
       <div>
         <FormInputHelpText
           text="Select which events should trigger this notification"
-          link="https://github.com/lidarr/Lidarr/wiki/Connections"
+          link="https://wiki.servarr.com/Lidarr_Settings#Connections"
         />
         <div className={styles.events}>
           <div>

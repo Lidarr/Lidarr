@@ -21,7 +21,7 @@ class MoreInfo extends Component {
 
           <DescriptionListItemTitle>Wiki</DescriptionListItemTitle>
           <DescriptionListItemDescription>
-            <Link to="https://github.com/lidarr/Lidarr/wiki">wiki.lidarr.audio</Link>
+            <Link to="https://wiki.servarr.com/Lidarr">wiki.lidarr.audio</Link>
           </DescriptionListItemDescription>
 
           <DescriptionListItemTitle>Reddit</DescriptionListItemTitle>

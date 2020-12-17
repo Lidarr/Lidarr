@@ -14,7 +14,7 @@ function Tags(props) {
 
   if (!items.length) {
     return (
-      <div>No tags have been added yet. Add tags to link artists with delay profiles, restrictions, or notifications. Click <Link to='https://github.com/lidarr/Lidarr/wiki/Tags'>here</Link> to find out more about tags in Lidarr.</div>
+      <div>No tags have been added yet. Add tags to link artists with delay profiles, restrictions, or notifications. Click <Link to='https://wiki.servarr.com/Lidarr_Settings#Tags'>here</Link> to find out more about tags in Lidarr.</div>
     );
   }
 

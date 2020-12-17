@@ -63,7 +63,7 @@ function UpdateSettings(props) {
           type={inputTypes.TEXT}
           name="branch"
           helpText={usingExternalUpdateMechanism ? 'Branch used by external update mechanism' : 'Branch to use to update Lidarr'}
-          helpLink="https://github.com/Lidarr/Lidarr/wiki/Release-Branches"
+          helpLink="https://wiki.servarr.com/Lidarr_FAQ#How_do_I_update_my_Lidarr"
           {...branch}
           onChange={onInputChange}
           readOnly={usingExternalUpdateMechanism}
@@ -100,7 +100,7 @@ function UpdateSettings(props) {
                 name="updateMechanism"
                 values={updateOptions}
                 helpText="Use Lidarr's built-in updater or a script"
-                helpLink="https://github.com/Lidarr/Lidarr/wiki/Updating"
+                helpLink="https://wiki.servarr.com/Lidarr_FAQ#How_do_I_update_my_Lidarr"
                 onChange={onInputChange}
                 {...updateMechanism}
               />
