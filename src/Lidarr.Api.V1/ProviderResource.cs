@@ -38,8 +38,7 @@ namespace Lidarr.Api.V1
                 Tags = definition.Tags,
                 Fields = SchemaBuilder.ToSchema(definition.Settings),
 
-                InfoLink = string.Format("https://github.com/Lidarr/Lidarr/wiki/Supported-{0}#{1}",
-                    typeof(TProviderResource).Name.Replace("Resource", "s"),
+                InfoLink = string.Format("https://wiki.servarr.com/Lidarr_Supported_{0}",
                     definition.Implementation.ToLower())
             };
         }
