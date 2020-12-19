@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Test.Datastore
             TableMapping.Mapper.IsValidSortKey(sortKey).Should().BeFalse();
         }
 
+        //[TestCase("artists.sortName")] TODO: Figure out why Artists table properties don't get mapped
         [TestCase("Id")]
         [TestCase("id")]
         [TestCase("commands.id")]
