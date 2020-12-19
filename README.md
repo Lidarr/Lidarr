@@ -22,16 +22,19 @@ Lidarr is a music collection manager for Usenet and BitTorrent users. It can mon
 * Full support for specials and multi-album releases
 * And a beautiful UI
 
-## Feature Requests
-
-[Feature Requests](https://github.com/lidarr/Lidarr/issues/new?assignees=&labels=Type%3A+Enhancement&template=feature_request.md&title=)
-
 ## Support
+
+Note: GitHub Issues are for Bugs and Feature Requests Only
+
 
 [![Discord](https://img.shields.io/badge/discord-chat-7289DA.svg?maxAge=60)](https://discord.gg/5WQc3S8)
 [![Reddit](https://img.shields.io/badge/reddit-discussion-FF4500.svg?maxAge=60)](https://www.reddit.com/r/lidarr)
 [![GitHub - Bugs and Feature Requests Only](https://img.shields.io/badge/github-issues-red.svg?maxAge=60)](https://github.com/Lidarr/Lidarr/issues)
-[![Wiki](https://img.shields.io/badge/github-wiki-181717.svg?maxAge=60)](https://wiki.servarr.com/Lidarr)
+[![Wiki](https://img.shields.io/badge/servarr-wiki-181717.svg?maxAge=60)](https://wiki.servarr.com/Lidarr)
+
+## Feature Requests
+
+[Feature Requests](https://github.com/lidarr/Lidarr/issues/new?assignees=&labels=Type%3A+Enhancement&template=feature_request.md&title=)
 
 ## Contributors
 
