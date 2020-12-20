@@ -292,7 +292,9 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
                 var httpResponse = _httpClient.Get<List<AlbumResource>>(httpRequest);
 
-                return httpResponse.Resource.SelectList(MapSearchResult);
+                return httpResponse.Resource.Select(MapSearchResult)
+                    .Where(x => x != null)
+                    .ToList();
             }
             catch (HttpException)
             {
@@ -317,7 +319,9 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
             var httpResponse = _httpClient.Post<List<AlbumResource>>(httpRequest);
 
-            return httpResponse.Resource.SelectList(MapSearchResult);
+            return httpResponse.Resource.Select(MapSearchResult)
+                .Where(x => x != null)
+                .ToList();
         }
 
         public List<object> SearchForNewEntity(string title)
@@ -335,7 +339,15 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 var album = SearchForNewAlbum(lowerTitle, null);
                 if (album.Any())
                 {
-                    return new List<object> { album.First() };
+                    var result = album.Where(x => x.AlbumReleases.Value.Any()).FirstOrDefault();
+                    if (result != null)
+                    {
+                        return new List<object> { result };
+                    }
+                    else
+                    {
+                        return new List<object>();
+                    }
                 }
             }
 
@@ -344,12 +356,14 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 var httpRequest = _requestBuilder.GetRequestBuilder().Create()
                                     .SetSegment("route", "search")
                                     .AddQueryParam("type", "all")
-                                    .AddQueryParam("query", title.ToLower().Trim())
+                                    .AddQueryParam("query", lowerTitle.Trim())
                                     .Build();
 
                 var httpResponse = _httpClient.Get<List<EntityResource>>(httpRequest);
 
-                return httpResponse.Resource.SelectList(MapSearchResult);
+                return httpResponse.Resource.Select(MapSearchResult)
+                    .Where(x => x != null)
+                    .ToList();
             }
             catch (HttpException)
             {
@@ -393,6 +407,11 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             var album = _albumService.FindById(resource.Id) ?? MapAlbum(resource, artists);
             album.Artist = artist;
             album.ArtistMetadata = artist.Metadata.Value;
+
+            if (!album.AlbumReleases.Value.Any())
+            {
+                return null;
+            }
 
             return album;
         }
