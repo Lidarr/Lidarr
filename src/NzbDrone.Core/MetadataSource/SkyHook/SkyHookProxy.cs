@@ -186,7 +186,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             {
                 var lowerTitle = title.ToLowerInvariant();
 
-                if (lowerTitle.StartsWith("lidarr:") || lowerTitle.StartsWith("lidarrid:") || lowerTitle.StartsWith("mbid:"))
+                if (IsMbidQuery(lowerTitle))
                 {
                     var slug = lowerTitle.Split(':')[1].Trim();
 
@@ -244,7 +244,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             {
                 var lowerTitle = title.ToLowerInvariant();
 
-                if (lowerTitle.StartsWith("lidarr:") || lowerTitle.StartsWith("lidarrid:") || lowerTitle.StartsWith("mbid:"))
+                if (IsMbidQuery(lowerTitle))
                 {
                     var slug = lowerTitle.Split(':')[1].Trim();
 
@@ -322,6 +322,23 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
         public List<object> SearchForNewEntity(string title)
         {
+            var lowerTitle = title.ToLowerInvariant();
+
+            if (IsMbidQuery(lowerTitle))
+            {
+                var artist = SearchForNewArtist(lowerTitle);
+                if (artist.Any())
+                {
+                    return new List<object> { artist.First() };
+                }
+
+                var album = SearchForNewAlbum(lowerTitle, null);
+                if (album.Any())
+                {
+                    return new List<object> { album.First() };
+                }
+            }
+
             try
             {
                 var httpRequest = _requestBuilder.GetRequestBuilder().Create()
@@ -343,6 +360,11 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 _logger.Warn(ex, ex.Message);
                 throw new SkyHookException("Search for '{0}' failed. Invalid response received from LidarrAPI.", title);
             }
+        }
+
+        private static bool IsMbidQuery(string query)
+        {
+            return query.StartsWith("lidarr:") || query.StartsWith("lidarrid:") || query.StartsWith("mbid:");
         }
 
         private Artist MapSearchResult(ArtistResource resource)
