@@ -5,6 +5,7 @@ import FormInputGroup from 'Components/Form/FormInputGroup';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import { inputTypes } from 'Helpers/Props';
+import shortenList from 'Utilities/String/shortenList';
 import titleCase from 'Utilities/String/titleCase';
 
 class SelectAlbumReleaseRow extends Component {
@@ -63,7 +64,7 @@ class SelectAlbumReleaseRow extends Component {
                       value: `${r.title}` +
                         `${r.disambiguation ? ' (' : ''}${titleCase(r.disambiguation)}${r.disambiguation ? ')' : ''}` +
                         `, ${r.mediumCount} med, ${r.trackCount} tracks` +
-                        `${r.country.length > 0 ? ', ' : ''}${r.country}` +
+                        `${r.country.length > 0 ? ', ' : ''}${shortenList(r.country)}` +
                         `${r.format ? ', [' : ''}${r.format}${r.format ? ']' : ''}` +
                         `${r.monitored ? ', Monitored' : ''}`
                     }))}

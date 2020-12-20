@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import shortenList from 'Utilities/String/shortenList';
 import titleCase from 'Utilities/String/titleCase';
 import SelectInput from './SelectInput';
 
@@ -17,7 +18,7 @@ function createMapStateToProps() {
           value: `${albumRelease.title}` +
             `${albumRelease.disambiguation ? ' (' : ''}${titleCase(albumRelease.disambiguation)}${albumRelease.disambiguation ? ')' : ''}` +
             `, ${albumRelease.mediumCount} med, ${albumRelease.trackCount} tracks` +
-            `${albumRelease.country.length > 0 ? ', ' : ''}${albumRelease.country}` +
+            `${albumRelease.country.length > 0 ? ', ' : ''}${shortenList(albumRelease.country)}` +
             `${albumRelease.format ? ', [' : ''}${albumRelease.format}${albumRelease.format ? ']' : ''}`
         };
       });
