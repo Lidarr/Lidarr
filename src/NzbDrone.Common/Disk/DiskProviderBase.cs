@@ -138,7 +138,7 @@ namespace NzbDrone.Common.Disk
             {
                 var testPath = Path.Combine(path, "lidarr_write_test.txt");
                 var testContent = $"This file was created to verify if '{path}' is writable. It should've been automatically deleted. Feel free to delete it.";
-                _fileSystem.File.WriteAllText(testPath, testContent);
+                WriteAllText(testPath, testContent);
                 _fileSystem.File.Delete(testPath);
                 return true;
             }
@@ -314,7 +314,16 @@ namespace NzbDrone.Common.Disk
         {
             Ensure.That(filename, () => filename).IsValidPath();
             RemoveReadOnly(filename);
-            _fileSystem.File.WriteAllText(filename, contents);
+
+            // File.WriteAllText is broken on net core when writing to some CIFS mounts
+            // This workaround from https://github.com/dotnet/runtime/issues/42790#issuecomment-700362617
+            using (var fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                using (var writer = new StreamWriter(fs))
+                {
+                    writer.Write(contents);
+                }
+            }
         }
 
         public void FolderSetLastWriteTime(string path, DateTime dateTime)
