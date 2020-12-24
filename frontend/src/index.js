@@ -4,6 +4,7 @@ import { render } from 'react-dom';
 import createAppStore from 'Store/createAppStore';
 import App from './App/App';
 
+import 'Diag/ConsoleApi';
 import './preload';
 import './polyfills';
 import 'Styles/globals.css';
