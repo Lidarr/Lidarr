@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using NLog;
 using NzbDrone.Common.Composition;
@@ -30,6 +31,7 @@ namespace NzbDrone.Host
                 }
 
                 LongPathSupport.Enable();
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
                 _container = MainAppContainerBuilder.BuildContainer(startupContext);
                 _container.Resolve<InitializeLogger>().Initialize();
