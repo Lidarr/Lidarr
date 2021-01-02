@@ -29,7 +29,7 @@ class SelectArtistModalContent extends Component {
   // Listeners
 
   onFilterChange = ({ value }) => {
-    this.setState({ filter: value.toLowerCase() });
+    this.setState({ filter: value });
   };
 
   //
@@ -43,6 +43,7 @@ class SelectArtistModalContent extends Component {
     } = this.props;
 
     const filter = this.state.filter;
+    const filterLower = filter.toLowerCase();
 
     return (
       <ModalContent onModalClose={onModalClose}>
@@ -69,7 +70,7 @@ class SelectArtistModalContent extends Component {
           >
             {
               items.map((item) => {
-                return item.artistName.toLowerCase().includes(filter) ?
+                return item.artistName.toLowerCase().includes(filterLower) ?
                   (
                     <SelectArtistRow
                       key={item.id}
