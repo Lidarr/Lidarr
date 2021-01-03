@@ -37,7 +37,6 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
 
             _trackedDownload = Builder<TrackedDownload>.CreateNew()
                     .With(c => c.State = TrackedDownloadState.Downloading)
-                    .With(c => c.ImportItem = completed)
                     .With(c => c.DownloadItem = completed)
                     .With(c => c.RemoteAlbum = remoteAlbum)
                     .Build();
@@ -57,6 +56,10 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
             Mocker.GetMock<IParsingService>()
                   .Setup(s => s.GetArtist("Drone.S01E01.HDTV"))
                   .Returns(remoteAlbum.Artist);
+
+            Mocker.GetMock<IProvideImportItemService>()
+                  .Setup(s => s.ProvideImportItem(It.IsAny<DownloadClientItem>(), It.IsAny<DownloadClientItem>()))
+                  .Returns<DownloadClientItem, DownloadClientItem>((i, p) => i);
         }
 
         private Album CreateAlbum(int id, int trackCount)
