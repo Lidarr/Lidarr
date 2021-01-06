@@ -105,7 +105,7 @@ namespace NzbDrone.Core.Notifications.Subsonic
                 throw new SubsonicException("Invalid Response, Check Server Settings");
             }
 
-            if (status == "failed")
+            if (status != "ok")
             {
                 var ns = xDoc.Root.GetDefaultNamespace();
                 var error = xDoc.Root.Element(XName.Get("error", ns.ToString()));
