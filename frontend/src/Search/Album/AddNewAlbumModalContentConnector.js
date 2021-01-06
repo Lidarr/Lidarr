@@ -87,7 +87,6 @@ class AddNewAlbumModalContentConnector extends Component {
       monitor,
       qualityProfileId,
       metadataProfileId,
-      albumFolder,
       tags
     } = this.props;
 
@@ -97,7 +96,6 @@ class AddNewAlbumModalContentConnector extends Component {
       monitor: monitor.value,
       qualityProfileId: qualityProfileId.value,
       metadataProfileId: metadataProfileId.value,
-      albumFolder: albumFolder.value,
       tags: tags.value,
       searchForNewAlbum
     });
@@ -125,7 +123,6 @@ AddNewAlbumModalContentConnector.propTypes = {
   qualityProfileId: PropTypes.object,
   metadataProfileId: PropTypes.object,
   noneMetadataProfileId: PropTypes.number.isRequired,
-  albumFolder: PropTypes.object.isRequired,
   tags: PropTypes.object.isRequired,
   onModalClose: PropTypes.func.isRequired,
   setAddDefault: PropTypes.func.isRequired,

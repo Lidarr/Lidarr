@@ -2,23 +2,13 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ArtistNameLink from 'Artist/ArtistNameLink';
 import ArtistStatusCell from 'Artist/Index/Table/ArtistStatusCell';
-import CheckInput from 'Components/Form/CheckInput';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
 import TableRow from 'Components/Table/TableRow';
 import TagListConnector from 'Components/TagListConnector';
 import formatBytes from 'Utilities/Number/formatBytes';
-import styles from './ArtistEditorRow.css';
 
 class ArtistEditorRow extends Component {
-
-  //
-  // Listeners
-
-  onAlbumFolderChange = () => {
-    // Mock handler to satisfy `onChange` being required for `CheckInput`.
-    //
-  }
 
   //
   // Render
@@ -33,7 +23,6 @@ class ArtistEditorRow extends Component {
       monitored,
       metadataProfile,
       qualityProfile,
-      albumFolder,
       path,
       statistics,
       tags,
@@ -80,7 +69,6 @@ class ArtistEditorRow extends Component {
               return (
                 <TableRowCell
                   key={name}
-                  className={styles.title}
                 >
                   <ArtistNameLink
                     foreignArtistId={foreignArtistId}
@@ -102,22 +90,6 @@ class ArtistEditorRow extends Component {
               return (
                 <TableRowCell key={name}>
                   {metadataProfile.name}
-                </TableRowCell>
-              );
-            }
-
-            if (name === 'albumFolder') {
-              return (
-                <TableRowCell
-                  key={name}
-                  className={styles.albumFolder}
-                >
-                  <CheckInput
-                    name="albumFolder"
-                    value={albumFolder}
-                    isDisabled={true}
-                    onChange={this.onAlbumFolderChange}
-                  />
                 </TableRowCell>
               );
             }
@@ -165,7 +137,6 @@ ArtistEditorRow.propTypes = {
   monitored: PropTypes.bool.isRequired,
   metadataProfile: PropTypes.object.isRequired,
   qualityProfile: PropTypes.object.isRequired,
-  albumFolder: PropTypes.bool.isRequired,
   path: PropTypes.string.isRequired,
   statistics: PropTypes.object.isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,

@@ -27,7 +27,6 @@ class ArtistEditorFooter extends Component {
       monitored: NO_CHANGE,
       qualityProfileId: NO_CHANGE,
       metadataProfileId: NO_CHANGE,
-      albumFolder: NO_CHANGE,
       rootFolderPath: NO_CHANGE,
       savingTags: false,
       isDeleteArtistModalOpen: false,
@@ -48,7 +47,6 @@ class ArtistEditorFooter extends Component {
         monitored: NO_CHANGE,
         qualityProfileId: NO_CHANGE,
         metadataProfileId: NO_CHANGE,
-        albumFolder: NO_CHANGE,
         rootFolderPath: NO_CHANGE,
         savingTags: false
       });
@@ -74,9 +72,6 @@ class ArtistEditorFooter extends Component {
         break;
       case 'monitored':
         this.props.onSaveSelected({ [name]: value === 'monitored' });
-        break;
-      case 'albumFolder':
-        this.props.onSaveSelected({ [name]: value === 'yes' });
         break;
       default:
         this.props.onSaveSelected({ [name]: value });
@@ -152,7 +147,6 @@ class ArtistEditorFooter extends Component {
       monitored,
       qualityProfileId,
       metadataProfileId,
-      albumFolder,
       rootFolderPath,
       savingTags,
       isTagsModalOpen,
@@ -165,12 +159,6 @@ class ArtistEditorFooter extends Component {
       { key: NO_CHANGE, value: 'No Change', disabled: true },
       { key: 'monitored', value: 'Monitored' },
       { key: 'unmonitored', value: 'Unmonitored' }
-    ];
-
-    const albumFolderOptions = [
-      { key: NO_CHANGE, value: 'No Change', disabled: true },
-      { key: 'yes', value: 'Yes' },
-      { key: 'no', value: 'No' }
     ];
 
     return (
@@ -238,28 +226,6 @@ class ArtistEditorFooter extends Component {
                     name="metadataProfileId"
                     value={metadataProfileId}
                     includeNoChange={true}
-                    isDisabled={!selectedCount}
-                    onChange={this.onInputChange}
-                  />
-                </div>
-              );
-            }
-
-            if (name === 'albumFolder') {
-              return (
-                <div
-                  key={name}
-                  className={styles.inputContainer}
-                >
-                  <ArtistEditorFooterLabel
-                    label="Album Folder"
-                    isSaving={isSaving && albumFolder !== NO_CHANGE}
-                  />
-
-                  <SelectInput
-                    name="albumFolder"
-                    value={albumFolder}
-                    values={albumFolderOptions}
                     isDisabled={!selectedCount}
                     onChange={this.onInputChange}
                   />

@@ -6,7 +6,6 @@ function getNewArtist(artist, payload) {
     qualityProfileId,
     metadataProfileId,
     artistType,
-    albumFolder,
     tags,
     searchForMissingAlbums = false
   } = payload;
@@ -22,7 +21,6 @@ function getNewArtist(artist, payload) {
   artist.metadataProfileId = metadataProfileId;
   artist.rootFolderPath = rootFolderPath;
   artist.artistType = artistType;
-  artist.albumFolder = albumFolder;
   artist.tags = tags;
 
   return artist;

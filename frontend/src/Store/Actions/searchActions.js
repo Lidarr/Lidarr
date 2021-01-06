@@ -34,7 +34,6 @@ export const defaultState = {
     monitor: monitorOptions[0].key,
     qualityProfileId: 0,
     metadataProfileId: 0,
-    albumFolder: true,
     tags: []
   }
 };

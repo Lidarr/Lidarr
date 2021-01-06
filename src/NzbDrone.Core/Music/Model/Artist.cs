@@ -21,7 +21,6 @@ namespace NzbDrone.Core.Music
         public string CleanName { get; set; }
         public string SortName { get; set; }
         public bool Monitored { get; set; }
-        public bool AlbumFolder { get; set; }
         public DateTime? LastInfoSync { get; set; }
         public string Path { get; set; }
         public string RootFolderPath { get; set; }
@@ -71,7 +70,6 @@ namespace NzbDrone.Core.Music
             Id = other.Id;
             ArtistMetadataId = other.ArtistMetadataId;
             Monitored = other.Monitored;
-            AlbumFolder = other.AlbumFolder;
             LastInfoSync = other.LastInfoSync;
             Path = other.Path;
             RootFolderPath = other.RootFolderPath;
@@ -95,7 +93,6 @@ namespace NzbDrone.Core.Music
             AddOptions = other.AddOptions;
             RootFolderPath = other.RootFolderPath;
             Monitored = other.Monitored;
-            AlbumFolder = other.AlbumFolder;
         }
     }
 }
