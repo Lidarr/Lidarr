@@ -45,7 +45,6 @@ namespace Lidarr.Api.V1.Artist
         public int MetadataProfileId { get; set; }
 
         //Editing Only
-        public bool AlbumFolder { get; set; }
         public bool Monitored { get; set; }
 
         public string RootFolderPath { get; set; }
@@ -91,7 +90,6 @@ namespace Lidarr.Api.V1.Artist
                 MetadataProfileId = model.MetadataProfileId,
                 Links = model.Metadata.Value.Links,
 
-                AlbumFolder = model.AlbumFolder,
                 Monitored = model.Monitored,
 
                 CleanName = model.CleanName,
@@ -139,7 +137,6 @@ namespace Lidarr.Api.V1.Artist
                 QualityProfileId = resource.QualityProfileId,
                 MetadataProfileId = resource.MetadataProfileId,
 
-                AlbumFolder = resource.AlbumFolder,
                 Monitored = resource.Monitored,
 
                 CleanName = resource.CleanName,

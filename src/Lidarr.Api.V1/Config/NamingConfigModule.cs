@@ -35,7 +35,6 @@ namespace Lidarr.Api.V1.Config
             SharedValidator.RuleFor(c => c.StandardTrackFormat).ValidTrackFormat();
             SharedValidator.RuleFor(c => c.MultiDiscTrackFormat).ValidTrackFormat();
             SharedValidator.RuleFor(c => c.ArtistFolderFormat).ValidArtistFolderFormat();
-            SharedValidator.RuleFor(c => c.AlbumFolderFormat).ValidAlbumFolderFormat();
         }
 
         private void UpdateNamingConfig(NamingConfigResource resource)
@@ -95,10 +94,6 @@ namespace Lidarr.Api.V1.Config
             sampleResource.ArtistFolderExample = nameSpec.ArtistFolderFormat.IsNullOrWhiteSpace()
                 ? null
                 : _filenameSampleService.GetArtistFolderSample(nameSpec);
-
-            sampleResource.AlbumFolderExample = nameSpec.AlbumFolderFormat.IsNullOrWhiteSpace()
-                ? null
-                : _filenameSampleService.GetAlbumFolderSample(nameSpec);
 
             return sampleResource;
         }

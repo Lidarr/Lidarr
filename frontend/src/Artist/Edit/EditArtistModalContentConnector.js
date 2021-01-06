@@ -39,7 +39,6 @@ function createMapStateToProps() {
 
       const artistSettings = _.pick(artist, [
         'monitored',
-        'albumFolder',
         'qualityProfileId',
         'metadataProfileId',
         'path',

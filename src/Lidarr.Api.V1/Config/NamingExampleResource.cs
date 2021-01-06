@@ -22,8 +22,7 @@ namespace Lidarr.Api.V1.Config
                 ReplaceIllegalCharacters = model.ReplaceIllegalCharacters,
                 StandardTrackFormat = model.StandardTrackFormat,
                 MultiDiscTrackFormat = model.MultiDiscTrackFormat,
-                ArtistFolderFormat = model.ArtistFolderFormat,
-                AlbumFolderFormat = model.AlbumFolderFormat
+                ArtistFolderFormat = model.ArtistFolderFormat
             };
         }
 
@@ -48,8 +47,7 @@ namespace Lidarr.Api.V1.Config
                 StandardTrackFormat = resource.StandardTrackFormat,
                 MultiDiscTrackFormat = resource.MultiDiscTrackFormat,
 
-                ArtistFolderFormat = resource.ArtistFolderFormat,
-                AlbumFolderFormat = resource.AlbumFolderFormat
+                ArtistFolderFormat = resource.ArtistFolderFormat
             };
         }
     }

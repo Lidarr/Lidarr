@@ -66,7 +66,7 @@ namespace NzbDrone.Core.MediaFiles
             var tracks = _trackService.GetTracksByFileId(trackFile.Id);
             var album = _albumService.GetAlbum(trackFile.AlbumId);
             var newFileName = _buildFileNames.BuildTrackFileName(tracks, artist, album, trackFile);
-            var filePath = _buildFileNames.BuildTrackFilePath(artist, album, newFileName, Path.GetExtension(trackFile.Path));
+            var filePath = _buildFileNames.BuildTrackFilePath(artist, newFileName, Path.GetExtension(trackFile.Path));
 
             EnsureTrackFolder(trackFile, artist, album, filePath);
 
@@ -78,7 +78,7 @@ namespace NzbDrone.Core.MediaFiles
         public TrackFile MoveTrackFile(TrackFile trackFile, LocalTrack localTrack)
         {
             var newFileName = _buildFileNames.BuildTrackFileName(localTrack.Tracks, localTrack.Artist, localTrack.Album, trackFile);
-            var filePath = _buildFileNames.BuildTrackFilePath(localTrack.Artist, localTrack.Album, newFileName, Path.GetExtension(localTrack.Path));
+            var filePath = _buildFileNames.BuildTrackFilePath(localTrack.Artist, newFileName, Path.GetExtension(localTrack.Path));
 
             EnsureTrackFolder(trackFile, localTrack, filePath);
 
@@ -90,7 +90,7 @@ namespace NzbDrone.Core.MediaFiles
         public TrackFile CopyTrackFile(TrackFile trackFile, LocalTrack localTrack)
         {
             var newFileName = _buildFileNames.BuildTrackFileName(localTrack.Tracks, localTrack.Artist, localTrack.Album, trackFile);
-            var filePath = _buildFileNames.BuildTrackFilePath(localTrack.Artist, localTrack.Album, newFileName, Path.GetExtension(localTrack.Path));
+            var filePath = _buildFileNames.BuildTrackFilePath(localTrack.Artist, newFileName, Path.GetExtension(localTrack.Path));
 
             EnsureTrackFolder(trackFile, localTrack, filePath);
 
@@ -132,13 +132,6 @@ namespace NzbDrone.Core.MediaFiles
             try
             {
                 _mediaFileAttributeService.SetFolderLastWriteTime(artist.Path, trackFile.DateAdded);
-
-                if (artist.AlbumFolder)
-                {
-                    var albumFolder = Path.GetDirectoryName(destinationFilePath);
-
-                    _mediaFileAttributeService.SetFolderLastWriteTime(albumFolder, trackFile.DateAdded);
-                }
             }
             catch (Exception ex)
             {
@@ -158,7 +151,6 @@ namespace NzbDrone.Core.MediaFiles
         private void EnsureTrackFolder(TrackFile trackFile, Artist artist, Album album, string filePath)
         {
             var trackFolder = Path.GetDirectoryName(filePath);
-            var albumFolder = _buildFileNames.BuildAlbumPath(artist, album);
             var artistFolder = artist.Path;
             var rootFolder = new OsPath(artistFolder).Directory.FullPath;
 
@@ -170,7 +162,7 @@ namespace NzbDrone.Core.MediaFiles
             var changed = false;
             var newEvent = new TrackFolderCreatedEvent(artist, trackFile);
 
-            _rootFolderWatchingService.ReportFileSystemChangeBeginning(artistFolder, albumFolder, trackFolder);
+            _rootFolderWatchingService.ReportFileSystemChangeBeginning(artistFolder, trackFolder);
 
             if (!_diskProvider.FolderExists(artistFolder))
             {
@@ -179,16 +171,10 @@ namespace NzbDrone.Core.MediaFiles
                 changed = true;
             }
 
-            if (artistFolder != albumFolder && !_diskProvider.FolderExists(albumFolder))
-            {
-                CreateFolder(albumFolder);
-                newEvent.AlbumFolder = albumFolder;
-                changed = true;
-            }
-
-            if (albumFolder != trackFolder && !_diskProvider.FolderExists(trackFolder))
+            if (artistFolder != trackFolder && !_diskProvider.FolderExists(trackFolder))
             {
                 CreateFolder(trackFolder);
+                newEvent.AlbumFolder = trackFolder;
                 newEvent.TrackFolder = trackFolder;
                 changed = true;
             }

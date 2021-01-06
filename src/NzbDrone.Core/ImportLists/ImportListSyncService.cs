@@ -202,7 +202,6 @@ namespace NzbDrone.Core.ImportLists
                         QualityProfileId = importList.ProfileId,
                         MetadataProfileId = importList.MetadataProfileId,
                         Tags = importList.Tags,
-                        AlbumFolder = true,
                         AddOptions = new AddArtistOptions
                         {
                             SearchForMissingAlbums = monitored,
@@ -275,7 +274,6 @@ namespace NzbDrone.Core.ImportLists
                     QualityProfileId = importList.ProfileId,
                     MetadataProfileId = importList.MetadataProfileId,
                     Tags = importList.Tags,
-                    AlbumFolder = true,
                     AddOptions = new AddArtistOptions
                     {
                         SearchForMissingAlbums = monitored,
