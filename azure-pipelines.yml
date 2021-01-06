@@ -288,7 +288,7 @@ stages:
           includeRootFolder: false
           rootFolderOrFile: $(artifactsFolder)/linux-arm/netcoreapp3.1
       - task: ArchiveFiles@2
-        displayName: Create Linux Core tar
+        displayName: Create ARM64 Linux Core tar
         inputs:
           archiveFile: '$(Build.ArtifactStagingDirectory)/Lidarr.$(buildName).linux-core-arm64.tar.gz'
           archiveType: 'tar'
@@ -597,7 +597,6 @@ stages:
             artifactName: LinuxMuslCoreTests
             containerImage: servarr/testimages:alpine
             pattern: 'Lidarr.**.linux-musl-core-x64.tar.gz'
-
       pool:
         vmImage: 'ubuntu-18.04'
 
@@ -660,14 +659,14 @@ stages:
             failBuild: true
           Mac:
             osName: 'Mac'
-            imageName: 'macos-10.14' # Fails due to firefox not being installed on image
+            imageName: 'macos-10.14'
             pattern: 'Lidarr.**.osx-core-x64.tar.gz'
-            failBuild: false
+            failBuild: true
           Windows:
             osName: 'Windows'
             imageName: 'windows-2019'
             pattern: 'Lidarr.**.windows-core-x64.zip'
-            failBuild: $(failOnAutomationFailure)
+            failBuild: true
 
       pool:
         vmImage: $(imageName)
@@ -701,20 +700,6 @@ stages:
           cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
         displayName: Move Package Contents
       - bash: |
-          if [[ $OSNAME == "Mac" ]]; then
-          url=https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-macos.tar.gz
-          elif [[ $OSNAME == "Linux" ]]; then
-          url=https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz
-          else
-          echo "Unhandled OS"
-          exit 1
-          fi
-          curl -s -L "$url" | tar -xz
-          chmod +x geckodriver
-          mv geckodriver _tests
-        displayName: Install Gecko Driver
-        condition: and(succeeded(), ne(variables['osName'], 'Windows'))
-      - bash: |
           chmod a+x ${TESTSFOLDER}/test.sh
           ${TESTSFOLDER}/test.sh ${OSNAME} Automation Test
         displayName: Run Automation Tests
@@ -728,6 +713,7 @@ stages:
       - publish: $(Build.ArtifactStagingDirectory)/screenshots
         artifact: '$(osName)AutomationScreenshots'
         displayName: Publish Screenshot Bundle
+        condition: and(succeeded(), eq(variables['System.JobAttempt'], '1'))
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'NUnit'
