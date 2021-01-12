@@ -55,7 +55,7 @@ namespace NzbDrone.Core.Test.IndexerTests.GazelleTests
             releaseInfo.Title.Should().Be("Shania Twain - Shania Twain (1993) [FLAC 24bit Lossless] [WEB]");
             releaseInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
             releaseInfo.DownloadUrl.Should()
-                .Be("http://someurl.ch/torrents.php?action=download&id=1541452&authkey=redacted&torrent_pass=redacted");
+                .Be("http://someurl.ch/torrents.php?action=download&id=1541452&authkey=redacted&torrent_pass=redacted&usetoken=0");
             releaseInfo.InfoUrl.Should().Be("http://someurl.ch/torrents.php?id=106951&torrentid=1541452");
             releaseInfo.CommentUrl.Should().Be(null);
             releaseInfo.Indexer.Should().Be(Subject.Definition.Name);

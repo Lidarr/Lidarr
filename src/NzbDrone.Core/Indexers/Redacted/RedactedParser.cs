@@ -95,7 +95,7 @@ namespace NzbDrone.Core.Indexers.Redacted
                 .AddQueryParam("id", torrentId)
                 .AddQueryParam("authkey", "lidarr")
                 .AddQueryParam("torrent_pass", _settings.PassKey)
-                .AddQueryParam("usetoken", _settings.UseFreeleechToken);
+                .AddQueryParam("usetoken", _settings.UseFreeleechToken ? 1 : 0);
 
             return url.FullUri;
         }
