@@ -11,6 +11,7 @@
     <PackageReference Include="FluentMigrator.Runner" Version="4.0.0-alpha.268" />
     <PackageReference Include="FluentMigrator.Runner.SQLite" Version="4.0.0-alpha.268" />
     <PackageReference Include="FluentValidation" Version="8.6.2" />
+    <PackageReference Include="MailKit" Version="2.10.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NLog" Version="4.6.8" />
     <PackageReference Include="RestSharp" Version="106.10.1" />
