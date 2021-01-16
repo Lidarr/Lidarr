@@ -4,6 +4,7 @@ using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
+using NzbDrone.Core.Datastore;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Organizer;
@@ -17,10 +18,13 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
     public class FileNameBuilderFixture : CoreTest<FileNameBuilder>
     {
         private Artist _artist;
+        private Artist _variousArtists;
         private Album _album;
+        private Album _mixAlbum;
         private Medium _medium;
         private AlbumRelease _release;
         private Track _track1;
+        private Track _mixTrack1;
         private TrackFile _trackFile;
         private NamingConfig _namingConfig;
 
@@ -36,6 +40,15 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
                         Name = "Linkin Park"
                     })
                     .Build();
+
+            _variousArtists = Builder<Artist>
+                .CreateNew()
+                .With(s => s.Name = "Various Artists")
+                .With(s => s.Metadata = new ArtistMetadata
+                {
+                    Name = "Various Artists"
+                })
+                .Build();
 
             _medium = Builder<Medium>
                 .CreateNew()
@@ -55,6 +68,12 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
                 .With(s => s.Disambiguation = "The Best Album")
                 .Build();
 
+            _mixAlbum = Builder<Album>
+                .CreateNew()
+                .With(s => s.Title = "Cool Music")
+                .With(s => s.AlbumType = "Album")
+                .Build();
+
             _namingConfig = NamingConfig.Default;
             _namingConfig.RenameTracks = true;
 
@@ -66,7 +85,16 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
                             .With(e => e.AbsoluteTrackNumber = 6)
                             .With(e => e.AlbumRelease = _release)
                             .With(e => e.MediumNumber = _medium.Number)
+                            .With(e => e.ArtistMetadata = _artist.Metadata)
                             .Build();
+
+            _mixTrack1 = Builder<Track>.CreateNew()
+                .With(e => e.Title = "City Sushi")
+                .With(e => e.AbsoluteTrackNumber = 1)
+                .With(e => e.AlbumRelease = _release)
+                .With(e => e.MediumNumber = _medium.Number)
+                .With(e => e.ArtistMetadata = _artist.Metadata)
+                .Build();
 
             _trackFile = Builder<TrackFile>.CreateNew()
                 .With(e => e.Quality = new QualityModel(Quality.MP3_256))
@@ -461,6 +489,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
                             .With(e => e.Title = "Part 1")
                             .With(e => e.AbsoluteTrackNumber = 6)
                             .With(e => e.AlbumRelease = _release)
+                            .With(e => e.ArtistMetadata = new ArtistMetadata { Name = "In The Woods." })
                             .Build();
 
             Subject.BuildTrackFileName(new List<Track> { track }, new Artist { Name = "In The Woods." }, new Album { Title = "30 Rock" }, _trackFile)
@@ -476,6 +505,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
                             .With(e => e.Title = "Part 1")
                             .With(e => e.AbsoluteTrackNumber = 6)
                             .With(e => e.AlbumRelease = _release)
+                            .With(e => e.ArtistMetadata = new ArtistMetadata { Name = "In The Woods..." })
                             .Build();
 
             Subject.BuildTrackFileName(new List<Track> { track }, new Artist { Name = "In The Woods..." }, new Album { Title = "30 Rock" }, _trackFile)
@@ -647,6 +677,22 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
 
             Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
                    .Should().Be(releaseGroup);
+        }
+
+        [Test]
+        public void should_replace_artist_name_for_Various_Artists_album()
+        {
+            _namingConfig.StandardTrackFormat = "{Artist Name}";
+            Subject.BuildTrackFileName(new List<Track> { _mixTrack1 }, _variousArtists, _mixAlbum, _trackFile)
+                .Should().Be("Various Artists");
+        }
+
+        [Test]
+        public void should_replace_track_artist_name_for_Various_Artists_album()
+        {
+            _namingConfig.StandardTrackFormat = "{Track ArtistName}";
+            Subject.BuildTrackFileName(new List<Track> { _mixTrack1 }, _variousArtists, _mixAlbum, _trackFile)
+                .Should().Be("Linkin Park");
         }
     }
 }

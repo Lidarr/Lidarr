@@ -86,6 +86,7 @@ namespace NzbDrone.Core.Organizer
             _track1 = new Track
             {
                 AlbumRelease = _singleRelease,
+                Artist = _standardArtist,
                 AbsoluteTrackNumber = 3,
                 MediumNumber = 1,
 
