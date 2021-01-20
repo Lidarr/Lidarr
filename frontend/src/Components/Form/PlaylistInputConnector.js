@@ -3,20 +3,21 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { clearOptions, fetchOptions } from 'Store/Actions/providerOptionActions';
+import { clearOptions, defaultState, fetchOptions } from 'Store/Actions/providerOptionActions';
 import PlaylistInput from './PlaylistInput';
 
 function createMapStateToProps() {
   return createSelector(
-    (state) => state.providerOptions,
-    (state) => {
+    (state) => state.providerOptions.playlists || defaultState,
+    (playlists) => {
       const {
         items,
         ...otherState
-      } = state;
+      } = playlists;
+
       return ({
-        user: items.user ? items.user : '',
-        items: items.playlists ? items.playlists : [],
+        user: items && items.user ? items.user : '',
+        items: items && items.playlists ? items.playlists : [],
         ...otherState
       });
     }
@@ -48,7 +49,7 @@ class PlaylistInputConnector extends Component {
   }
 
   componentWillUnmount = () => {
-    this.props.dispatchClearOptions();
+    this.props.dispatchClearOptions({ section: 'playlists' });
   }
 
   //
@@ -62,6 +63,7 @@ class PlaylistInputConnector extends Component {
     } = this.props;
 
     dispatchFetchOptions({
+      section: 'playlists',
       action: 'getPlaylists',
       provider,
       providerData

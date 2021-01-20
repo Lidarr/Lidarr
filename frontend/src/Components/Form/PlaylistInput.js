@@ -180,7 +180,8 @@ PlaylistInput.propTypes = {
 
 PlaylistInput.defaultProps = {
   className: styles.playlistInputWrapper,
-  inputClassName: styles.input
+  inputClassName: styles.input,
+  isPopulated: false
 };
 
 export default PlaylistInput;
