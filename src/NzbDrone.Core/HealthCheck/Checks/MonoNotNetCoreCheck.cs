@@ -49,7 +49,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
             return new HealthCheck(GetType(),
                                    HealthCheckResult.Warning,
                                    "Please upgrade to the .NET Core version of Lidarr",
-                                   "#update-to-net-core-version");
+                                   "#update_to_net_core_version");
         }
 
         public override bool CheckOnSchedule => false;

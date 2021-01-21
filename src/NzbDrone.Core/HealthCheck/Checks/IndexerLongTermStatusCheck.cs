@@ -42,14 +42,14 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 return new HealthCheck(GetType(),
                     HealthCheckResult.Error,
                     "All indexers are unavailable due to failures for more than 6 hours",
-                    "#indexers-are-unavailable-due-to-failures");
+                    "#indexers_are_unavailable_due_to_failures");
             }
 
             return new HealthCheck(GetType(),
                 HealthCheckResult.Warning,
                 string.Format("Indexers unavailable due to failures for more than 6 hours: {0}",
                     string.Join(", ", backOffProviders.Select(v => v.Provider.Definition.Name))),
-                "#indexers-are-unavailable-due-to-failures");
+                "#indexers_are_unavailable_due_to_failures");
         }
     }
 }
