@@ -18,7 +18,7 @@ namespace NzbDrone.Core.ImportLists.Exclusions
     }
 
     public class ImportListExclusionService : IImportListExclusionService,
-                                              IHandleAsync<ArtistDeletedEvent>,
+                                              IHandleAsync<ArtistsDeletedEvent>,
                                               IHandleAsync<AlbumDeletedEvent>
     {
         private readonly IImportListExclusionRepository _repo;
@@ -72,27 +72,32 @@ namespace NzbDrone.Core.ImportLists.Exclusions
             return _repo.All().ToList();
         }
 
-        public void HandleAsync(ArtistDeletedEvent message)
+        public void HandleAsync(ArtistsDeletedEvent message)
         {
             if (!message.AddImportListExclusion)
             {
                 return;
             }
 
-            var existingExclusion = _repo.FindByForeignId(message.Artist.ForeignArtistId);
+            var importExclusions = new List<ImportListExclusion>();
 
-            if (existingExclusion != null)
+            foreach (var artist in message.Artists)
             {
-                return;
+                var existingExclusion = _repo.FindByForeignId(artist.ForeignArtistId);
+
+                if (existingExclusion != null)
+                {
+                    return;
+                }
+
+                importExclusions.Add(new ImportListExclusion
+                {
+                    ForeignId = artist.ForeignArtistId,
+                    Name = artist.Name
+                });
             }
 
-            var importExclusion = new ImportListExclusion
-            {
-                ForeignId = message.Artist.ForeignArtistId,
-                Name = message.Artist.Name
-            };
-
-            _repo.Insert(importExclusion);
+            _repo.InsertMany(importExclusions);
         }
 
         public void HandleAsync(AlbumDeletedEvent message)

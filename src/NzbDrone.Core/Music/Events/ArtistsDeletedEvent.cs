@@ -1,16 +1,17 @@
+using System.Collections.Generic;
 using NzbDrone.Common.Messaging;
 
 namespace NzbDrone.Core.Music.Events
 {
-    public class ArtistDeletedEvent : IEvent
+    public class ArtistsDeletedEvent : IEvent
     {
-        public Artist Artist { get; private set; }
+        public List<Artist> Artists { get; private set; }
         public bool DeleteFiles { get; private set; }
         public bool AddImportListExclusion { get; private set; }
 
-        public ArtistDeletedEvent(Artist artist, bool deleteFiles, bool addImportListExclusion)
+        public ArtistsDeletedEvent(List<Artist> artists, bool deleteFiles, bool addImportListExclusion)
         {
-            Artist = artist;
+            Artists = artists;
             DeleteFiles = deleteFiles;
             AddImportListExclusion = addImportListExclusion;
         }

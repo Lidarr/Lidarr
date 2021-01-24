@@ -39,7 +39,7 @@ namespace NzbDrone.Core.History
                                   IHandle<TrackFileDeletedEvent>,
                                   IHandle<TrackFileRenamedEvent>,
                                   IHandle<TrackFileRetaggedEvent>,
-                                  IHandle<ArtistDeletedEvent>,
+                                  IHandle<ArtistsDeletedEvent>,
                                   IHandle<DownloadIgnoredEvent>
     {
         private readonly IHistoryRepository _historyRepository;
@@ -365,9 +365,9 @@ namespace NzbDrone.Core.History
             }
         }
 
-        public void Handle(ArtistDeletedEvent message)
+        public void Handle(ArtistsDeletedEvent message)
         {
-            _historyRepository.DeleteForArtist(message.Artist.Id);
+            _historyRepository.DeleteForArtists(message.Artists.Select(x => x.Id).ToList());
         }
 
         public void Handle(DownloadIgnoredEvent message)

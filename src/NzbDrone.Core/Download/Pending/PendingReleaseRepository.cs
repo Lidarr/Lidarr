@@ -6,7 +6,7 @@ namespace NzbDrone.Core.Download.Pending
 {
     public interface IPendingReleaseRepository : IBasicRepository<PendingRelease>
     {
-        void DeleteByArtistId(int artistId);
+        void DeleteByArtistIds(List<int> artistIds);
         List<PendingRelease> AllByArtistId(int artistId);
         List<PendingRelease> WithoutFallback();
     }
@@ -18,9 +18,9 @@ namespace NzbDrone.Core.Download.Pending
         {
         }
 
-        public void DeleteByArtistId(int artistId)
+        public void DeleteByArtistIds(List<int> artistIds)
         {
-            Delete(artistId);
+            Delete(x => artistIds.Contains(x.ArtistId));
         }
 
         public List<PendingRelease> AllByArtistId(int artistId)

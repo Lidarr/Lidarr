@@ -95,10 +95,7 @@ namespace Lidarr.Api.V1.Artist
         {
             var resource = Request.Body.FromJson<ArtistEditorResource>();
 
-            foreach (var artistId in resource.ArtistIds)
-            {
-                _artistService.DeleteArtist(artistId, resource.DeleteFiles);
-            }
+            _artistService.DeleteArtists(resource.ArtistIds, resource.DeleteFiles);
 
             return new object();
         }

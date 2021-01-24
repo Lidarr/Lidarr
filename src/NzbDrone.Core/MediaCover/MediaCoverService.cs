@@ -25,7 +25,7 @@ namespace NzbDrone.Core.MediaCover
 
     public class MediaCoverService :
         IHandleAsync<ArtistRefreshCompleteEvent>,
-        IHandleAsync<ArtistDeletedEvent>,
+        IHandleAsync<ArtistsDeletedEvent>,
         IHandleAsync<AlbumAddedEvent>,
         IHandleAsync<AlbumDeletedEvent>,
         IMapCoversToLocal
@@ -293,12 +293,15 @@ namespace NzbDrone.Core.MediaCover
             _eventAggregator.PublishEvent(new MediaCoversUpdatedEvent(message.Artist, updated));
         }
 
-        public void HandleAsync(ArtistDeletedEvent message)
+        public void HandleAsync(ArtistsDeletedEvent message)
         {
-            var path = GetArtistCoverPath(message.Artist.Id);
-            if (_diskProvider.FolderExists(path))
+            foreach (var artist in message.Artists)
             {
-                _diskProvider.DeleteFolder(path, true);
+                var path = GetArtistCoverPath(artist.Id);
+                if (_diskProvider.FolderExists(path))
+                {
+                    _diskProvider.DeleteFolder(path, true);
+                }
             }
         }
 

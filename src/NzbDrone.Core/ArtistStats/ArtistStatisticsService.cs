@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Common.Cache;
 using NzbDrone.Core.MediaFiles.Events;
@@ -16,7 +16,7 @@ namespace NzbDrone.Core.ArtistStats
 
     public class ArtistStatisticsService : IArtistStatisticsService,
         IHandle<ArtistUpdatedEvent>,
-        IHandle<ArtistDeletedEvent>,
+        IHandle<ArtistsDeletedEvent>,
         IHandle<AlbumAddedEvent>,
         IHandle<AlbumDeletedEvent>,
         IHandle<AlbumImportedEvent>,
@@ -76,10 +76,14 @@ namespace NzbDrone.Core.ArtistStats
         }
 
         [EventHandleOrder(EventHandleOrder.First)]
-        public void Handle(ArtistDeletedEvent message)
+        public void Handle(ArtistsDeletedEvent message)
         {
             _cache.Remove("AllArtists");
-            _cache.Remove(message.Artist.Id.ToString());
+
+            foreach (var artist in message.Artists)
+            {
+                _cache.Remove(artist.Id.ToString());
+            }
         }
 
         [EventHandleOrder(EventHandleOrder.First)]

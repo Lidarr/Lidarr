@@ -31,7 +31,7 @@ namespace NzbDrone.Core.Download.Pending
     }
 
     public class PendingReleaseService : IPendingReleaseService,
-                                         IHandle<ArtistDeletedEvent>,
+                                         IHandle<ArtistsDeletedEvent>,
                                          IHandle<AlbumGrabbedEvent>,
                                          IHandle<RssSyncCompleteEvent>
     {
@@ -425,9 +425,9 @@ namespace NzbDrone.Core.Download.Pending
             return 1;
         }
 
-        public void Handle(ArtistDeletedEvent message)
+        public void Handle(ArtistsDeletedEvent message)
         {
-            _repository.DeleteByArtistId(message.Artist.Id);
+            _repository.DeleteByArtistIds(message.Artists.Select(x => x.Id).ToList());
         }
 
         public void Handle(AlbumGrabbedEvent message)

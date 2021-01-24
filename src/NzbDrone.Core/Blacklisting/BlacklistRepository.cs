@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
@@ -9,7 +9,8 @@ namespace NzbDrone.Core.Blacklisting
     {
         List<Blacklist> BlacklistedByTitle(int artistId, string sourceTitle);
         List<Blacklist> BlacklistedByTorrentInfoHash(int artistId, string torrentInfoHash);
-        List<Blacklist> BlacklistedByArtist(int artistId);
+        List<Blacklist> BlacklistedByArtists(List<int> artistIds);
+        void DeleteForArtists(List<int> artistIds);
     }
 
     public class BlacklistRepository : BasicRepository<Blacklist>, IBlacklistRepository
@@ -29,9 +30,14 @@ namespace NzbDrone.Core.Blacklisting
             return Query(e => e.ArtistId == artistId && e.TorrentInfoHash.Contains(torrentInfoHash));
         }
 
-        public List<Blacklist> BlacklistedByArtist(int artistId)
+        public List<Blacklist> BlacklistedByArtists(List<int> artistIds)
         {
-            return Query(b => b.ArtistId == artistId);
+            return Query(x => artistIds.Contains(x.ArtistId));
+        }
+
+        public void DeleteForArtists(List<int> artistIds)
+        {
+            Delete(x => artistIds.Contains(x.ArtistId));
         }
 
         protected override SqlBuilder PagedBuilder() => new SqlBuilder().Join<Blacklist, Artist>((b, m) => b.ArtistId == m.Id);
