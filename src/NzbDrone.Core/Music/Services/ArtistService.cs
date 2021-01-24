@@ -22,6 +22,7 @@ namespace NzbDrone.Core.Music
         Artist FindByNameInexact(string title);
         List<Artist> GetCandidates(string title);
         void DeleteArtist(int artistId, bool deleteFiles, bool addImportListExclusion = false);
+        void DeleteArtists(List<int> artistIds, bool deleteFiles, bool addImportListExclusion = false);
         List<Artist> GetAllArtists();
         List<Artist> AllForTag(int tagId);
         Artist UpdateArtist(Artist artist, bool publishUpdatedEvent = true);
@@ -80,7 +81,21 @@ namespace NzbDrone.Core.Music
             _cache.Clear();
             var artist = _artistRepository.Get(artistId);
             _artistRepository.Delete(artistId);
-            _eventAggregator.PublishEvent(new ArtistDeletedEvent(artist, deleteFiles, addImportListExclusion));
+            _eventAggregator.PublishEvent(new ArtistsDeletedEvent(new List<Artist> { artist }, deleteFiles, addImportListExclusion));
+        }
+
+        public void DeleteArtists(List<int> artistIds, bool deleteFiles, bool addExclusion = false)
+        {
+            var artistsToDelete = _artistRepository.Get(artistIds).ToList();
+
+            _artistRepository.DeleteMany(artistIds);
+
+            _eventAggregator.PublishEvent(new ArtistsDeletedEvent(artistsToDelete, deleteFiles, addExclusion));
+
+            foreach (var artist in artistsToDelete)
+            {
+                _logger.Info("Deleted artist {0}", artist);
+            }
         }
 
         public Artist FindById(string foreignArtistId)

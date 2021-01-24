@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Blacklisting
 
                                     IExecute<ClearBlacklistCommand>,
                                     IHandle<DownloadFailedEvent>,
-                                    IHandleAsync<ArtistDeletedEvent>
+                                    IHandleAsync<ArtistsDeletedEvent>
     {
         private readonly IBlacklistRepository _blacklistRepository;
 
@@ -161,11 +161,9 @@ namespace NzbDrone.Core.Blacklisting
             _blacklistRepository.Insert(blacklist);
         }
 
-        public void HandleAsync(ArtistDeletedEvent message)
+        public void HandleAsync(ArtistsDeletedEvent message)
         {
-            var blacklisted = _blacklistRepository.BlacklistedByArtist(message.Artist.Id);
-
-            _blacklistRepository.DeleteMany(blacklisted);
+            _blacklistRepository.DeleteForArtists(message.Artists.Select(x => x.Id).ToList());
         }
     }
 }

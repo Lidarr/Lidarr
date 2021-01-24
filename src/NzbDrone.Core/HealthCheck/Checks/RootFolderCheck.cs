@@ -8,7 +8,7 @@ using NzbDrone.Core.RootFolders;
 
 namespace NzbDrone.Core.HealthCheck.Checks
 {
-    [CheckOn(typeof(ArtistDeletedEvent))]
+    [CheckOn(typeof(ArtistsDeletedEvent))]
     [CheckOn(typeof(ArtistMovedEvent))]
     [CheckOn(typeof(TrackImportedEvent), CheckOnCondition.FailedOnly)]
     [CheckOn(typeof(TrackImportFailedEvent), CheckOnCondition.SuccessfulOnly)]

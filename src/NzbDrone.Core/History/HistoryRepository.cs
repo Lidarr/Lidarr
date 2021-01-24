@@ -16,7 +16,7 @@ namespace NzbDrone.Core.History
         List<History> GetByArtist(int artistId, HistoryEventType? eventType);
         List<History> GetByAlbum(int albumId, HistoryEventType? eventType);
         List<History> FindDownloadHistory(int idArtistId, QualityModel quality);
-        void DeleteForArtist(int artistId);
+        void DeleteForArtists(List<int> artistIds);
         List<History> Since(DateTime date, HistoryEventType? eventType);
     }
 
@@ -97,9 +97,9 @@ namespace NzbDrone.Core.History
                          allowed.Contains(h.EventType));
         }
 
-        public void DeleteForArtist(int artistId)
+        public void DeleteForArtists(List<int> artistIds)
         {
-            Delete(c => c.ArtistId == artistId);
+            Delete(c => artistIds.Contains(c.ArtistId));
         }
 
         protected override SqlBuilder PagedBuilder() => new SqlBuilder()

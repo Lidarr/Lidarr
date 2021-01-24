@@ -42,7 +42,7 @@ namespace NzbDrone.Core.Music
     }
 
     public class AlbumService : IAlbumService,
-                                IHandle<ArtistDeletedEvent>
+                                IHandle<ArtistsDeletedEvent>
     {
         private readonly IAlbumRepository _albumRepository;
         private readonly IEventAggregator _eventAggregator;
@@ -289,9 +289,10 @@ namespace NzbDrone.Core.Music
             }
         }
 
-        public void Handle(ArtistDeletedEvent message)
+        public void Handle(ArtistsDeletedEvent message)
         {
-            var albums = GetAlbumsByArtistMetadataId(message.Artist.ArtistMetadataId);
+            //TODO Do this in one call instead of one for each artist?
+            var albums = message.Artists.SelectMany(x => GetAlbumsByArtistMetadataId(x.ArtistMetadataId)).ToList();
             DeleteMany(albums);
         }
     }

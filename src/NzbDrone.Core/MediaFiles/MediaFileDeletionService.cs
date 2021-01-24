@@ -21,7 +21,7 @@ namespace NzbDrone.Core.MediaFiles
     }
 
     public class MediaFileDeletionService : IDeleteMediaFiles,
-                                            IHandleAsync<ArtistDeletedEvent>,
+                                            IHandleAsync<ArtistsDeletedEvent>,
                                             IHandleAsync<AlbumDeletedEvent>,
                                             IHandle<TrackFileDeletedEvent>
     {
@@ -99,36 +99,39 @@ namespace NzbDrone.Core.MediaFiles
             _mediaFileService.Delete(trackFile, DeleteMediaFileReason.Manual);
         }
 
-        public void HandleAsync(ArtistDeletedEvent message)
+        public void HandleAsync(ArtistsDeletedEvent message)
         {
             if (message.DeleteFiles)
             {
-                var artist = message.Artist;
+                var artists = message.Artists;
                 var allArtists = _artistService.AllArtistPaths();
 
-                foreach (var s in allArtists)
+                foreach (var artist in artists)
                 {
-                    if (s.Key == artist.Id)
+                    foreach (var s in allArtists)
                     {
-                        continue;
+                        if (s.Key == artist.Id)
+                        {
+                            continue;
+                        }
+
+                        if (artist.Path.IsParentPath(s.Value))
+                        {
+                            _logger.Error("Artist path: '{0}' is a parent of another artist, not deleting files.", artist.Path);
+                            return;
+                        }
+
+                        if (artist.Path.PathEquals(s.Value))
+                        {
+                            _logger.Error("Artist path: '{0}' is the same as another artist, not deleting files.", artist.Path);
+                            return;
+                        }
                     }
 
-                    if (artist.Path.IsParentPath(s.Value))
+                    if (_diskProvider.FolderExists(artist.Path))
                     {
-                        _logger.Error("Artist path: '{0}' is a parent of another artist, not deleting files.", artist.Path);
-                        return;
+                        _recycleBinProvider.DeleteFolder(artist.Path);
                     }
-
-                    if (artist.Path.PathEquals(s.Value))
-                    {
-                        _logger.Error("Artist path: '{0}' is the same as another artist, not deleting files.", artist.Path);
-                        return;
-                    }
-                }
-
-                if (_diskProvider.FolderExists(message.Artist.Path))
-                {
-                    _recycleBinProvider.DeleteFolder(message.Artist.Path);
                 }
             }
         }
