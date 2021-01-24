@@ -276,7 +276,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                         existingAlbum.Artist = _artistService.GetArtist(existingAlbum.ArtistId);
                         return new List<Album> { existingAlbum };
                     }
-                    catch (ArtistNotFoundException)
+                    catch (AlbumNotFoundException)
                     {
                         return new List<Album>();
                     }
