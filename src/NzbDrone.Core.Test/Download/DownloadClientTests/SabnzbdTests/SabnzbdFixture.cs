@@ -218,7 +218,6 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.SabnzbdTests
         [TestCase(SabnzbdDownloadStatus.Checking)]
         [TestCase(SabnzbdDownloadStatus.Downloading)]
         [TestCase(SabnzbdDownloadStatus.QuickCheck)]
-        [TestCase(SabnzbdDownloadStatus.ToPP)]
         [TestCase(SabnzbdDownloadStatus.Verifying)]
         [TestCase(SabnzbdDownloadStatus.Repairing)]
         [TestCase(SabnzbdDownloadStatus.Fetching)]
