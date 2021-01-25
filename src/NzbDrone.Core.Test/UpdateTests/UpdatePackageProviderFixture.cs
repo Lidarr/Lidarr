@@ -47,7 +47,8 @@ namespace NzbDrone.Core.Test.UpdateTests
 
             const string branch = "nightly";
             UseRealHttp();
-            var recent = Subject.GetRecentUpdates(branch, new Version(0, 1));
+            var recent = Subject.GetRecentUpdates(branch, new Version(0, 1), null);
+            var recentWithChanges = recent.Where(c => c.Changes != null);
 
             recent.Should().NotBeEmpty();
             recent.Should().OnlyContain(c => c.Hash.IsNotNullOrWhiteSpace());
