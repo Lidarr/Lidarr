@@ -148,7 +148,8 @@ ArtistEditorRow.propTypes = {
 };
 
 ArtistEditorRow.defaultProps = {
-  tags: []
+  tags: [],
+  statistics: {}
 };
 
 export default ArtistEditorRow;
