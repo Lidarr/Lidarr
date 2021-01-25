@@ -138,6 +138,11 @@ class SignalRConnector extends Component {
 
     const handler = this[getHandlerName(name)];
 
+    if (body && body.action === 'updated' && !body.resource) {
+      console.error(`signalR: Null resource broadcast ignored for ${name}`);
+      return;
+    }
+
     if (handler) {
       handler(body);
       return;

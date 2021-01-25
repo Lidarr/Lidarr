@@ -58,7 +58,7 @@ namespace Lidarr.Http
 
         protected void BroadcastResourceChange(ModelAction action, TResource resource)
         {
-            if (!_signalRBroadcaster.IsConnected)
+            if (!_signalRBroadcaster.IsConnected || resource == null)
             {
                 return;
             }
