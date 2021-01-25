@@ -58,12 +58,6 @@ export const defaultState = {
       isVisible: false
     },
     {
-      name: 'albumFolder',
-      label: 'Album Folder',
-      isSortable: true,
-      isVisible: true
-    },
-    {
       name: 'path',
       label: 'Path',
       isSortable: true,
