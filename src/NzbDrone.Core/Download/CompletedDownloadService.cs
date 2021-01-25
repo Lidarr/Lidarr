@@ -26,19 +26,19 @@ namespace NzbDrone.Core.Download
         private readonly IHistoryService _historyService;
         private readonly IDownloadedTracksImportService _downloadedTracksImportService;
         private readonly IArtistService _artistService;
-        private readonly IProvideImportItemService _importItemService;
+        private readonly IProvideImportItemService _provideImportItemService;
         private readonly ITrackedDownloadAlreadyImported _trackedDownloadAlreadyImported;
 
         public CompletedDownloadService(IEventAggregator eventAggregator,
                                         IHistoryService historyService,
-                                        IProvideImportItemService importItemService,
+                                        IProvideImportItemService provideImportItemService,
                                         IDownloadedTracksImportService downloadedTracksImportService,
                                         IArtistService artistService,
                                         ITrackedDownloadAlreadyImported trackedDownloadAlreadyImported)
         {
             _eventAggregator = eventAggregator;
             _historyService = historyService;
-            _importItemService = importItemService;
+            _provideImportItemService = provideImportItemService;
             _downloadedTracksImportService = downloadedTracksImportService;
             _artistService = artistService;
             _trackedDownloadAlreadyImported = trackedDownloadAlreadyImported;
@@ -52,7 +52,7 @@ namespace NzbDrone.Core.Download
                 return;
             }
 
-            trackedDownload.ImportItem = _importItemService.ProvideImportItem(trackedDownload.DownloadItem, trackedDownload.ImportItem);
+            SetImportItem(trackedDownload);
 
             // Only process tracked downloads that are still downloading
             if (trackedDownload.State != TrackedDownloadState.Downloading)
@@ -68,18 +68,8 @@ namespace NzbDrone.Core.Download
                 return;
             }
 
-            var downloadItemOutputPath = trackedDownload.ImportItem.OutputPath;
-
-            if (downloadItemOutputPath.IsEmpty)
+            if (!ValidatePath(trackedDownload))
             {
-                trackedDownload.Warn("Download doesn't contain intermediate path, Skipping.");
-                return;
-            }
-
-            if ((OsInfo.IsWindows && !downloadItemOutputPath.IsWindowsPath) ||
-                (OsInfo.IsNotWindows && !downloadItemOutputPath.IsUnixPath))
-            {
-                trackedDownload.Warn("[{0}] is not a valid local path. You may need a Remote Path Mapping.", downloadItemOutputPath);
                 return;
             }
 
@@ -104,6 +94,13 @@ namespace NzbDrone.Core.Download
 
         public void Import(TrackedDownload trackedDownload)
         {
+            SetImportItem(trackedDownload);
+
+            if (!ValidatePath(trackedDownload))
+            {
+                return;
+            }
+
             trackedDownload.State = TrackedDownloadState.Importing;
 
             var outputPath = trackedDownload.ImportItem.OutputPath.FullPath;
@@ -168,6 +165,31 @@ namespace NzbDrone.Core.Download
                 _eventAggregator.PublishEvent(new AlbumImportIncompleteEvent(trackedDownload));
                 return;
             }
+        }
+
+        private void SetImportItem(TrackedDownload trackedDownload)
+        {
+            trackedDownload.ImportItem = _provideImportItemService.ProvideImportItem(trackedDownload.DownloadItem, trackedDownload.ImportItem);
+        }
+
+        private bool ValidatePath(TrackedDownload trackedDownload)
+        {
+            var downloadItemOutputPath = trackedDownload.ImportItem.OutputPath;
+
+            if (downloadItemOutputPath.IsEmpty)
+            {
+                trackedDownload.Warn("Download doesn't contain intermediate path, Skipping.");
+                return false;
+            }
+
+            if ((OsInfo.IsWindows && !downloadItemOutputPath.IsWindowsPath) ||
+                (OsInfo.IsNotWindows && !downloadItemOutputPath.IsUnixPath))
+            {
+                trackedDownload.Warn("[{0}] is not a valid local path. You may need a Remote Path Mapping.", downloadItemOutputPath);
+                return false;
+            }
+
+            return true;
         }
     }
 }
