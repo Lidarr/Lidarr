@@ -27,14 +27,22 @@ namespace NzbDrone.Common.EnvironmentInfo
                                serviceProvider.ServiceExist(ServiceProvider.SERVICE_NAME) &&
                                serviceProvider.GetStatus(ServiceProvider.SERVICE_NAME) == ServiceControllerStatus.StartPending;
 
-            //Guarded to avoid issues when running in a non-managed process
-            var entry = Assembly.GetEntryAssembly();
+#if NETCOREAPP
+            // net5.0 will return Lidarr.dll for entry assembly, we need the actual
+            // executable name (Lidarr on linux).  On mono this will return the location of
+            // the mono executable itself, which is not what we want.
+            var entry = Process.GetCurrentProcess().MainModule;
 
             if (entry != null)
             {
-                ExecutingApplication = entry.Location;
-                IsWindowsTray = OsInfo.IsWindows && entry.ManifestModule.Name == $"{ProcessProvider.LIDARR_PROCESS_NAME}.exe";
+                ExecutingApplication = entry.FileName;
+                IsWindowsTray = OsInfo.IsWindows && entry.ModuleName == $"{ProcessProvider.LIDARR_PROCESS_NAME}.exe";
             }
+#else
+            // On mono we need to get the location of the Lidarr assembly, not Mono.
+            // Can't be running tray app in mono.
+            ExecutingApplication = Assembly.GetEntryAssembly()?.Location;
+#endif
         }
 
         static RuntimeInfo()
