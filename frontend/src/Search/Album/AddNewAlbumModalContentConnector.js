@@ -83,7 +83,7 @@ class AddNewAlbumModalContentConnector extends Component {
     this.props.setAddDefault({ [name]: value });
   };
 
-  onAddAlbumPress = (searchForNewAlbum) => {
+  onAddAlbumPress = () => {
     const {
       foreignAlbumId,
       rootFolderPath,
@@ -91,6 +91,7 @@ class AddNewAlbumModalContentConnector extends Component {
       monitorNewItems,
       qualityProfileId,
       metadataProfileId,
+      searchForNewAlbum,
       tags
     } = this.props;
 
@@ -101,8 +102,8 @@ class AddNewAlbumModalContentConnector extends Component {
       monitorNewItems: monitorNewItems.value,
       qualityProfileId: qualityProfileId.value,
       metadataProfileId: metadataProfileId.value,
-      tags: tags.value,
-      searchForNewAlbum
+      searchForNewAlbum: searchForNewAlbum.value,
+      tags: tags.value
     });
   };
 
@@ -129,6 +130,7 @@ AddNewAlbumModalContentConnector.propTypes = {
   qualityProfileId: PropTypes.object,
   metadataProfileId: PropTypes.object,
   noneMetadataProfileId: PropTypes.number.isRequired,
+  searchForNewAlbum: PropTypes.object.isRequired,
   tags: PropTypes.object.isRequired,
   onModalClose: PropTypes.func.isRequired,
   setAddDefault: PropTypes.func.isRequired,

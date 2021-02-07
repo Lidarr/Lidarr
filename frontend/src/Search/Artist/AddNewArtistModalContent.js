@@ -16,25 +16,10 @@ import styles from './AddNewArtistModalContent.css';
 class AddNewArtistModalContent extends Component {
 
   //
-  // Lifecycle
-
-  constructor(props, context) {
-    super(props, context);
-
-    this.state = {
-      searchForMissingAlbums: false
-    };
-  }
-
-  //
   // Listeners
 
-  onSearchForMissingAlbumsChange = ({ value }) => {
-    this.setState({ searchForMissingAlbums: value });
-  };
-
   onAddArtistPress = () => {
-    this.props.onAddArtistPress(this.state.searchForMissingAlbums);
+    this.props.onAddArtistPress();
   };
 
   //
@@ -46,9 +31,11 @@ class AddNewArtistModalContent extends Component {
       disambiguation,
       overview,
       images,
+      searchForMissingAlbums,
       isAdding,
       isSmallScreen,
       onModalClose,
+      onInputChange,
       ...otherProps
     } = this.props;
 
@@ -96,6 +83,7 @@ class AddNewArtistModalContent extends Component {
 
               <AddArtistOptionsForm
                 includeNoneMetadataProfile={false}
+                onInputChange={onInputChange}
                 {...otherProps}
               />
 
@@ -106,15 +94,15 @@ class AddNewArtistModalContent extends Component {
         <ModalFooter className={styles.modalFooter}>
           <label className={styles.searchForMissingAlbumsLabelContainer}>
             <span className={styles.searchForMissingAlbumsLabel}>
-              Start search for missing albums
+              {translate('AddNewArtistSearchForMissingAlbums')}
             </span>
 
             <CheckInput
               containerClassName={styles.searchForMissingAlbumsContainer}
               className={styles.searchForMissingAlbumsInput}
               name="searchForMissingAlbums"
-              value={this.state.searchForMissingAlbums}
-              onChange={this.onSearchForMissingAlbumsChange}
+              onChange={onInputChange}
+              {...searchForMissingAlbums}
             />
           </label>
 
@@ -124,7 +112,7 @@ class AddNewArtistModalContent extends Component {
             isSpinning={isAdding}
             onPress={this.onAddArtistPress}
           >
-            Add {artistName}
+            {translate('AddArtistWithName', { artistName })}
           </SpinnerButton>
         </ModalFooter>
       </ModalContent>
@@ -139,9 +127,11 @@ AddNewArtistModalContent.propTypes = {
   images: PropTypes.arrayOf(PropTypes.object).isRequired,
   isAdding: PropTypes.bool.isRequired,
   addError: PropTypes.object,
+  searchForMissingAlbums: PropTypes.object.isRequired,
   isSmallScreen: PropTypes.bool.isRequired,
   isWindows: PropTypes.bool.isRequired,
   onModalClose: PropTypes.func.isRequired,
+  onInputChange: PropTypes.func.isRequired,
   onAddArtistPress: PropTypes.func.isRequired
 };
 

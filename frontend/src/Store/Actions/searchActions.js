@@ -36,6 +36,8 @@ export const defaultState = {
     monitorNewItems: monitorNewItemsOptions[0].key,
     qualityProfileId: 0,
     metadataProfileId: 0,
+    searchForMissingAlbums: false,
+    searchForNewAlbum: false,
     tags: []
   }
 };

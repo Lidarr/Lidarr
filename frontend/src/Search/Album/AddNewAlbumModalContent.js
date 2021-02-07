@@ -16,25 +16,10 @@ import styles from './AddNewAlbumModalContent.css';
 class AddNewAlbumModalContent extends Component {
 
   //
-  // Lifecycle
-
-  constructor(props, context) {
-    super(props, context);
-
-    this.state = {
-      searchForNewAlbum: false
-    };
-  }
-
-  //
   // Listeners
 
-  onSearchForNewAlbumChange = ({ value }) => {
-    this.setState({ searchForNewAlbum: value });
-  };
-
   onAddAlbumPress = () => {
-    this.props.onAddAlbumPress(this.state.searchForNewAlbum);
+    this.props.onAddAlbumPress();
   };
 
   //
@@ -47,10 +32,12 @@ class AddNewAlbumModalContent extends Component {
       disambiguation,
       overview,
       images,
+      searchForNewAlbum,
       isAdding,
       isExistingArtist,
       isSmallScreen,
       onModalClose,
+      onInputChange,
       ...otherProps
     } = this.props;
 
@@ -105,6 +92,7 @@ class AddNewAlbumModalContent extends Component {
                   <AddArtistOptionsForm
                     artistName={artistName}
                     includeNoneMetadataProfile={true}
+                    onInputChange={onInputChange}
                     {...otherProps}
                   />
               }
@@ -115,15 +103,15 @@ class AddNewAlbumModalContent extends Component {
         <ModalFooter className={styles.modalFooter}>
           <label className={styles.searchForNewAlbumLabelContainer}>
             <span className={styles.searchForNewAlbumLabel}>
-              Start search for new album
+              {translate('AddNewAlbumSearchForNewAlbum')}
             </span>
 
             <CheckInput
               containerClassName={styles.searchForNewAlbumContainer}
               className={styles.searchForNewAlbumInput}
               name="searchForNewAlbum"
-              value={this.state.searchForNewAlbum}
-              onChange={this.onSearchForNewAlbumChange}
+              onChange={onInputChange}
+              {...searchForNewAlbum}
             />
           </label>
 
@@ -133,7 +121,7 @@ class AddNewAlbumModalContent extends Component {
             isSpinning={isAdding}
             onPress={this.onAddAlbumPress}
           >
-            Add {albumTitle}
+            {translate('AddAlbumWithTitle', { albumTitle })}
           </SpinnerButton>
         </ModalFooter>
       </ModalContent>
@@ -149,9 +137,11 @@ AddNewAlbumModalContent.propTypes = {
   images: PropTypes.arrayOf(PropTypes.object).isRequired,
   isAdding: PropTypes.bool.isRequired,
   addError: PropTypes.object,
+  searchForNewAlbum: PropTypes.object.isRequired,
   isExistingArtist: PropTypes.bool.isRequired,
   isSmallScreen: PropTypes.bool.isRequired,
   onModalClose: PropTypes.func.isRequired,
+  onInputChange: PropTypes.func.isRequired,
   onAddAlbumPress: PropTypes.func.isRequired
 };
 
