@@ -218,5 +218,18 @@ namespace NzbDrone.Core.Test.MediaFiles
             Mocker.GetMock<IMediaFileService>()
                 .Verify(v => v.Delete(It.IsAny<TrackFile>(), DeleteMediaFileReason.ManualOverride), Times.Once());
         }
+
+        [Test]
+        public void should_include_scene_name_with_new_downloads()
+        {
+            var firstDecision = _approvedDecisions.First();
+            firstDecision.Item.SceneName = "Artist.Name.Album.Name.TrackNum.Track.Title.MP3256";
+
+            Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true);
+
+            Mocker.GetMock<IUpgradeMediaFiles>()
+                .Verify(v => v.UpgradeTrackFile(It.Is<TrackFile>(e => e.SceneName == firstDecision.Item.SceneName), _approvedDecisions.First().Item, false),
+                    Times.Once());
+        }
     }
 }
