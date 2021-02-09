@@ -11,6 +11,7 @@ function RootFolderSelectInputOption(props) {
     value,
     name,
     freeSpace,
+    isMissing,
     artistFolder,
     isMobile,
     isWindows,
@@ -19,9 +20,7 @@ function RootFolderSelectInputOption(props) {
 
   const slashCharacter = isWindows ? '\\' : '/';
 
-  const text = value === '' ? name : `[${name}] ${value}`;
-
-  console.debug(props);
+  const text = name === '' ? value : `[${name}] ${value}`;
 
   return (
     <EnhancedSelectInputOption
@@ -48,10 +47,19 @@ function RootFolderSelectInputOption(props) {
         </div>
 
         {
-          freeSpace != null &&
+          freeSpace == null ?
+            null :
             <div className={styles.freeSpace}>
               {formatBytes(freeSpace)} Free
             </div>
+        }
+
+        {
+          isMissing ?
+            <div className={styles.isMissing}>
+              Missing
+            </div> :
+            null
         }
       </div>
     </EnhancedSelectInputOption>
@@ -63,9 +71,14 @@ RootFolderSelectInputOption.propTypes = {
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   freeSpace: PropTypes.number,
+  isMissing: PropTypes.bool,
   artistFolder: PropTypes.string,
   isMobile: PropTypes.bool.isRequired,
   isWindows: PropTypes.bool
+};
+
+RootFolderSelectInputOption.defaultProps = {
+  name: ''
 };
 
 export default RootFolderSelectInputOption;

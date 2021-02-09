@@ -3,6 +3,7 @@
 interface CssExports {
   'artistFolder': string;
   'freeSpace': string;
+  'isMissing': string;
   'isMobile': string;
   'optionText': string;
   'value': string;

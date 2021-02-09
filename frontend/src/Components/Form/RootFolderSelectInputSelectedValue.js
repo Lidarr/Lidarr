@@ -17,7 +17,7 @@ function RootFolderSelectInputSelectedValue(props) {
 
   const slashCharacter = isWindows ? '\\' : '/';
 
-  const text = value === '' ? name : `[${name}] ${value}`;
+  const text = name === '' ? value : `[${name}] ${value}`;
 
   return (
     <EnhancedSelectInputSelectedValue
@@ -59,6 +59,7 @@ RootFolderSelectInputSelectedValue.propTypes = {
 };
 
 RootFolderSelectInputSelectedValue.defaultProps = {
+  name: '',
   includeFreeSpace: true
 };
 

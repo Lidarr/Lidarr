@@ -437,6 +437,8 @@
   "ImportFailedInterp": "Import failed: {0}",
   "ImportFailures": "Import failures",
   "ImportListExclusions": "Import List Exclusions",
+  "ImportListRootFolderMissingRootHealthCheckMessage": "Missing root folder for import list(s): {0}",
+  "ImportListRootFolderMultipleMissingRootsHealthCheckMessage": "Multiple root folders are missing for import lists: {0}",
   "ImportListSettings": "General Import List Settings",
   "ImportListSpecificSettings": "Import List Specific Settings",
   "ImportListStatusCheckAllClientMessage": "All lists are unavailable due to failures",
