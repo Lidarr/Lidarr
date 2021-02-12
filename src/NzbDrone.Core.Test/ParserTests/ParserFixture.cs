@@ -143,7 +143,7 @@ namespace NzbDrone.Core.Test.ParserTests
 
         // [TestCase("ADELE 25 CD FLAC 2015 PERFECT", "Adele", "25")]
         [TestCase("A.I. - Sex & Robots [2007/MP3/V0(VBR)]", "A I", "Sex & Robots")]
-        [TestCase("Jay-Z - 4:44 (Deluxe Edition) (2017) 320", "Jay-Z", "444")]
+        [TestCase("Jay-Z - 4:44 (Deluxe Edition) (2017) 320", "Jay-Z", "4:44")]
 
         // [TestCase("Roberta Flack 2006 - The Very Best of", "Roberta Flack", "The Very Best of")]
         [TestCase("VA - NOW Thats What I Call Music 96 (2017) [Mp3~Kbps]", "VA", "NOW Thats What I Call Music 96")]
@@ -175,6 +175,9 @@ namespace NzbDrone.Core.Test.ParserTests
         [TestCase("(Heavy Metal) Aria - Discography(46 CD) [1985 - 2015], FLAC(image + .cue), lossless", "Aria", "Discography", true)]
         [TestCase("(Heavy Metal) [CD] Forces United - Discography(6 CDs), 2014-2016, FLAC(image + .cue), lossless", "Forces United", "Discography", true)]
         [TestCase("Gorillaz - The now now - 2018 [FLAC]", "Gorillaz", "The now now")]
+        [TestCase("Bone Thugs-n-Harmony - UNI5: The World's Enemy (2010) [Album] [FLAC Lossless / CD / Log (100%) / Cue]", "Bone Thugs-n-Harmony", "UNI5: The World's Enemy")]
+        [TestCase("Guru - Jazzmatazz, Volume 3: Streetsoul (2000) [Album] [FLAC Lossless / CD / Log (100%) / Cue]", "Guru", "Jazzmatazz, Volume 3: Streetsoul")]
+        [TestCase("Bad Movie Cast - Bad: The Soundtrack (2024) [FLAC (M4A) Lossless] [WEB]", "Bad Movie Cast", "Bad: The Soundtrack")]
 
         // Regex Works on below, but ParseAlbumMatchCollection cleans the "..." and converts it to spaces
         // [TestCase("Metallica - ...And Justice for All (1988) [FLAC Lossless]", "Metallica", "...And Justice for All")]
