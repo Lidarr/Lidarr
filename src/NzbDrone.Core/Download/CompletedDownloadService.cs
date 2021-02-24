@@ -149,14 +149,11 @@ namespace NzbDrone.Core.Download
 
             var statusMessages = new List<TrackedDownloadStatusMessage>
                                  {
-                                    new TrackedDownloadStatusMessage("One or more albums expected in this release were not imported or missing", new List<string>())
+                                    new TrackedDownloadStatusMessage("One or more tracks expected in this release were not imported or missing from the release", new List<string>())
                                  };
 
             if (importResults.Any(c => c.Result != ImportResultType.Imported))
             {
-                // Mark as failed to prevent further attempts at processing
-                trackedDownload.State = TrackedDownloadState.ImportFailed;
-
                 statusMessages.AddRange(
                     importResults
                         .Where(v => v.Result != ImportResultType.Imported && v.ImportDecision.Item != null)
@@ -165,14 +162,16 @@ namespace NzbDrone.Core.Download
                             new TrackedDownloadStatusMessage(Path.GetFileName(v.ImportDecision.Item.Path),
                                 v.Errors)));
 
-                if (statusMessages.Any())
-                {
-                    trackedDownload.Warn(statusMessages.ToArray());
-                }
-
-                // Publish event to notify Album was imported incompelte
+                // Publish event to notify album was imported incomplete
                 _eventAggregator.PublishEvent(new AlbumImportIncompleteEvent(trackedDownload));
-                return;
+            }
+
+            if (statusMessages.Any())
+            {
+                trackedDownload.Warn(statusMessages.ToArray());
+
+                // Mark as failed to prevent further attempts at processing
+                trackedDownload.State = TrackedDownloadState.ImportFailed;
             }
         }
 
