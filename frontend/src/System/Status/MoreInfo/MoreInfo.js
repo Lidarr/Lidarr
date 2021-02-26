@@ -31,7 +31,7 @@ class MoreInfo extends Component {
 
           <DescriptionListItemTitle>Discord</DescriptionListItemTitle>
           <DescriptionListItemDescription>
-            <Link to="https://discord.gg/5WQc3S8">#lidarr on Discord</Link>
+            <Link to="https://lidarr.audio/discord">lidarr.audio/discord</Link>
           </DescriptionListItemDescription>
 
           <DescriptionListItemTitle>Donations</DescriptionListItemTitle>
