@@ -45,6 +45,7 @@ namespace NzbDrone.Core.Download
             try
             {
                 var nzbDataRequest = new HttpRequest(url);
+                nzbDataRequest.RateLimitKey = remoteAlbum?.Release?.IndexerId.ToString();
 
                 // TODO: Look into moving download request handling to indexer
                 if (remoteAlbum.Release.BasicAuthString.IsNotNullOrWhiteSpace())

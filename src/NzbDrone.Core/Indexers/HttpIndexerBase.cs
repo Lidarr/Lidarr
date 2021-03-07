@@ -280,6 +280,8 @@ namespace NzbDrone.Core.Indexers
                 request.HttpRequest.RateLimit = RateLimit;
             }
 
+            request.HttpRequest.RateLimitKey = Definition.Id.ToString();
+
             return new IndexerResponse(request, _httpClient.Execute(request.HttpRequest));
         }
 
