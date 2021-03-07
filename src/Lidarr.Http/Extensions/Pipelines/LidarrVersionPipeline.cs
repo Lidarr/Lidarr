@@ -15,9 +15,9 @@ namespace Lidarr.Http.Extensions.Pipelines
 
         private void Handle(NancyContext context)
         {
-            if (!context.Response.Headers.ContainsKey("X-ApplicationVersion"))
+            if (!context.Response.Headers.ContainsKey("X-Application-Version"))
             {
-                context.Response.Headers.Add("X-ApplicationVersion", BuildInfo.Version.ToString());
+                context.Response.Headers.Add("X-Application-Version", BuildInfo.Version.ToString());
             }
         }
     }
