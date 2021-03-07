@@ -52,6 +52,11 @@ namespace Lidarr.Http.Extensions
             return defaultValue;
         }
 
+        public static bool IsBundledJsRequest(this Request request)
+        {
+            return !request.Path.EqualsIgnoreCase("/initialize.js") && request.Path.EndsWith(".js", StringComparison.InvariantCultureIgnoreCase);
+        }
+
         public static bool IsSharedContentRequest(this Request request)
         {
             return request.Path.StartsWith("/MediaCover/", StringComparison.InvariantCultureIgnoreCase) ||
