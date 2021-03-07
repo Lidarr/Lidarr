@@ -6,7 +6,6 @@ using Nancy;
 using Nancy.Authentication.Basic;
 using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
-using Nancy.Cookies;
 using Nancy.Cryptography;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
@@ -118,7 +117,7 @@ namespace Lidarr.Http.Authentication
 
                 if (FormsAuthentication.DecryptAndValidateAuthenticationCookie(formsAuthCookieValue, _formsAuthConfig).IsNotNullOrWhiteSpace())
                 {
-                    var formsAuthCookie = new NancyCookie(formsAuthCookieName, formsAuthCookieValue, true, false, DateTime.UtcNow.AddDays(7))
+                    var formsAuthCookie = new LidarrNancyCookie(formsAuthCookieName, formsAuthCookieValue, true, false, DateTime.UtcNow.AddDays(7))
                     {
                         Path = GetCookiePath()
                     };
