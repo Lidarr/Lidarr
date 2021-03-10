@@ -241,7 +241,7 @@ namespace Lidarr.Http.ClientSchema
                     }
                     else
                     {
-                        return fieldValue.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        return fieldValue.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Trim());
                     }
                 };
             }
