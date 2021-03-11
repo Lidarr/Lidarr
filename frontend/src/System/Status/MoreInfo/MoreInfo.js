@@ -34,16 +34,6 @@ class MoreInfo extends Component {
             <Link to="https://lidarr.audio/discord">lidarr.audio/discord</Link>
           </DescriptionListItemDescription>
 
-          <DescriptionListItemTitle>Donations</DescriptionListItemTitle>
-          <DescriptionListItemDescription>
-            <Link to="https://opencollective.com/lidarr">Donate to Lidarr</Link>
-          </DescriptionListItemDescription>
-
-          <DescriptionListItemTitle>Sonarr Donations</DescriptionListItemTitle>
-          <DescriptionListItemDescription>
-            <Link to="https://sonarr.tv/donate">Donate to Sonarr</Link>
-          </DescriptionListItemDescription>
-
           <DescriptionListItemTitle>Source</DescriptionListItemTitle>
           <DescriptionListItemDescription>
             <Link to="https://github.com/lidarr/Lidarr/">github.com/Lidarr/Lidarr</Link>
