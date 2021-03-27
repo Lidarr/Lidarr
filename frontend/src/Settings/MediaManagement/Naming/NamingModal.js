@@ -22,8 +22,8 @@ const separatorOptions = [
 
 const caseOptions = [
   { key: 'title', value: 'Default Case' },
-  { key: 'lower', value: 'Lower Case' },
-  { key: 'upper', value: 'Upper Case' }
+  { key: 'lower', value: 'Lowercase' },
+  { key: 'upper', value: 'Uppercase' }
 ];
 
 const fileNameTokens = [
