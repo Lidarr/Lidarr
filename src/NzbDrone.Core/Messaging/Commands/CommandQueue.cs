@@ -144,7 +144,7 @@ namespace NzbDrone.Core.Messaging.Commands
             }
         }
 
-        private bool TryGet(out CommandModel item)
+        public bool TryGet(out CommandModel item)
         {
             var rval = true;
             item = default(CommandModel);
