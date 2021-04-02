@@ -89,7 +89,6 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
 
         private void GivenABadlyNamedDownload()
         {
-            _trackedDownload.RemoteAlbum.Artist = null;
             _trackedDownload.DownloadItem.DownloadId = "1234";
             _trackedDownload.DownloadItem.Title = "Droned Pilot"; // Set a badly named download
             Mocker.GetMock<IHistoryService>()
@@ -375,6 +374,10 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
                            {
                                new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic() }))
                            });
+
+            Mocker.GetMock<IArtistService>()
+                  .Setup(v => v.GetArtist(It.IsAny<int>()))
+                  .Returns(BuildRemoteAlbum().Artist);
 
             Subject.Import(_trackedDownload);
 
