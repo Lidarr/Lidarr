@@ -6,6 +6,7 @@ import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
+import Scroller from 'Components/Scroller/Scroller';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import { scrollDirections } from 'Helpers/Props';
@@ -52,26 +53,30 @@ class SelectAlbumReleaseModalContent extends Component {
             Overrriding a release here will <b>disable automatic release selection</b> for that album in future.
           </Alert>
 
-          <Table
-            columns={columns}
-            {...otherProps}
-          >
-            <TableBody>
-              {
-                albums.map((item) => {
-                  return (
-                    <SelectAlbumReleaseRow
-                      key={item.album.id}
-                      matchedReleaseId={item.matchedReleaseId}
-                      columns={columns}
-                      onAlbumReleaseSelect={onAlbumReleaseSelect}
-                      {...item.album}
-                    />
-                  );
-                })
-              }
-            </TableBody>
-          </Table>
+          <Scroller className={styles.scroller}>
+            {
+              <Table
+                columns={columns}
+                {...otherProps}
+              >
+                <TableBody>
+                  {
+                    albums.map((item) => {
+                      return (
+                        <SelectAlbumReleaseRow
+                          key={item.album.id}
+                          matchedReleaseId={item.matchedReleaseId}
+                          columns={columns}
+                          onAlbumReleaseSelect={onAlbumReleaseSelect}
+                          {...item.album}
+                        />
+                      );
+                    })
+                  }
+                </TableBody>
+              </Table>
+            }
+          </Scroller>
         </ModalBody>
 
         <ModalFooter>
