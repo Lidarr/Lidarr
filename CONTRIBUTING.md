@@ -18,7 +18,7 @@ Setup guides, FAQ, the more information we have on the [wiki](https://wiki.serva
 ### Getting started ###
 
 1. Fork Lidarr
-2. Clone the repository into your development machine. [*info*](https://help.github.com/articles/working-with-repositories)
+2. Clone the repository into your development machine. [*info*](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github)
 3. Install the required Node Packages `yarn install`
 4. Start gulp to monitor your dev environment for any changes that need post processing using `yarn start` command.
 5. Build the project in Visual Studio, Setting startup project to `Lidarr.Console` and framework to `netcoreapp31`
