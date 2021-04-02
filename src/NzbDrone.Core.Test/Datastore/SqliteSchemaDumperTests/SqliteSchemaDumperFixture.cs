@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
@@ -25,6 +25,7 @@ namespace NzbDrone.Core.Test.Datastore.SqliteSchemaDumperTests
         [TestCase(@"CREATE TABLE ""Test """"Table"" (""My""""Id"" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)", "Test \"Table", "My\"Id")]
         [TestCase(@"CREATE TABLE [Test Table] ([My Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)", "Test Table", "My Id")]
         [TestCase(@" CREATE  TABLE  `Test ``Table`  ( `My``  Id`  INTEGER  NOT  NULL  PRIMARY  KEY  AUTOINCREMENT ) ", "Test `Table", "My`  Id")]
+        [TestCase(@"CREATE TABLE TestTable (MyId INTEGER NOT NULL,  PRIMARY KEY(""MyId"" AUTOINCREMENT))", "TestTable", "MyId")]
         public void should_parse_table_language_flavors(string sql, string tableName, string columnName)
         {
             var result = Subject.ReadTableSchema(sql);
