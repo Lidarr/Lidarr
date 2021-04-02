@@ -13,7 +13,7 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.1.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.10" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.13" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lidarr.Api.V1\Lidarr.Api.V1.csproj" />
