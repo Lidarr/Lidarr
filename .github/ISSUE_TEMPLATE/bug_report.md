@@ -31,7 +31,6 @@ assignees: ''
  - Lidarr Version: <!--[e.g. 0.7.2.1854 , 0.8.0.2023]-->
  - Lidarr Branch: <!--[e.g. develop, nightly]-->
 
-**Trace Logs**
-Turn on Trace logs under Settings -> General and wait for the bug to occur again. **Upload the full log file here (or another site (e.g. pastebin) and link it). Issues will be closed, if they do not include this!**
-Turn on Trace logs under Settings -> General and wait for the bug to occur again. 
+Turn on Trace logs under Settings -> General and wait for the bug to occur again.
 **Upload the full log file here (or another site (e.g. pastebin) and link it). Issues will be closed, if they do not include this!**
+<!-- Trace logs are named Lidarr.trace.txt or Lidarr.trace.#.txt and will contain "trace" in them-->
