@@ -241,7 +241,7 @@ namespace NzbDrone.Core.Notifications
             // TODO: Build out this message so that we can pass on what failed and what was successful
             var downloadMessage = new AlbumDownloadMessage
             {
-                Message = GetAlbumIncompleteImportMessage(message.TrackedDownload.DownloadItem.Title),
+                Message = GetAlbumIncompleteImportMessage(message.TrackedDownload.DownloadItem.Title)
             };
 
             foreach (var notification in _notificationFactory.OnImportFailureEnabled())

@@ -299,7 +299,7 @@ namespace NzbDrone.Core.Notifications.Discord
                         IconUrl = "https://raw.githubusercontent.com/lidarr/Lidarr/develop/Logo/256.png"
                     },
                     Description = message.Message,
-                    Title = message.Album.Title,
+                    Title = message.Album?.Title ?? message.Message,
                     Text = message.Message,
                     Color = (int)DiscordColors.Warning
                 }
