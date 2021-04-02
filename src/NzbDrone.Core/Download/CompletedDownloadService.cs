@@ -123,7 +123,7 @@ namespace NzbDrone.Core.Download
             if (allTracksImported)
             {
                 trackedDownload.State = TrackedDownloadState.Imported;
-                _eventAggregator.PublishEvent(new DownloadCompletedEvent(trackedDownload));
+                _eventAggregator.PublishEvent(new DownloadCompletedEvent(trackedDownload, trackedDownload.RemoteAlbum.Artist.Id));
                 return;
             }
 
@@ -141,7 +141,7 @@ namespace NzbDrone.Core.Download
                 if (allTracksImportedInHistory)
                 {
                     trackedDownload.State = TrackedDownloadState.Imported;
-                    _eventAggregator.PublishEvent(new DownloadCompletedEvent(trackedDownload));
+                    _eventAggregator.PublishEvent(new DownloadCompletedEvent(trackedDownload, trackedDownload.RemoteAlbum.Artist.Id));
                     return;
                 }
             }

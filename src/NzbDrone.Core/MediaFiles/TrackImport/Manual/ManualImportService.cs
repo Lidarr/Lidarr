@@ -370,6 +370,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             foreach (var groupedTrackedDownload in importedTrackedDownload.GroupBy(i => i.TrackedDownload.DownloadItem.DownloadId).ToList())
             {
                 var trackedDownload = groupedTrackedDownload.First().TrackedDownload;
+                var importArtist = groupedTrackedDownload.First().ImportResult.ImportDecision.Item.Artist;
 
                 var outputPath = trackedDownload.ImportItem.OutputPath.FullPath;
 
@@ -377,7 +378,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                 {
                     if (_downloadedTracksImportService.ShouldDeleteFolder(
                             _diskProvider.GetDirectoryInfo(outputPath),
-                            trackedDownload.RemoteAlbum.Artist) && trackedDownload.DownloadItem.CanMoveFiles)
+                            importArtist) && trackedDownload.DownloadItem.CanMoveFiles)
                     {
                         _diskProvider.DeleteFolder(outputPath, true);
                     }
@@ -386,7 +387,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                 if (groupedTrackedDownload.Select(c => c.ImportResult).Count(c => c.Result == ImportResultType.Imported) >= Math.Max(1, trackedDownload.RemoteAlbum.Albums.Count))
                 {
                     trackedDownload.State = TrackedDownloadState.Imported;
-                    _eventAggregator.PublishEvent(new DownloadCompletedEvent(trackedDownload));
+                    _eventAggregator.PublishEvent(new DownloadCompletedEvent(trackedDownload, importArtist.Id));
                 }
             }
         }
