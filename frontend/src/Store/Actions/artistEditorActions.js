@@ -133,7 +133,8 @@ export const persistState = [
   'artistEditor.sortKey',
   'artistEditor.sortDirection',
   'artistEditor.selectedFilterKey',
-  'artistEditor.customFilters'
+  'artistEditor.customFilters',
+  'artistEditor.columns'
 ];
 
 //
