@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Music
     public interface IAddAlbumService
     {
         Album AddAlbum(Album album, bool doRefresh = true);
-        List<Album> AddAlbums(List<Album> albums, bool doRefresh = true);
+        List<Album> AddAlbums(List<Album> albums, bool doRefresh = true, bool ignoreErrors = false);
     }
 
     public class AddAlbumService : IAddAlbumService
@@ -77,15 +77,33 @@ namespace NzbDrone.Core.Music
             return album;
         }
 
-        public List<Album> AddAlbums(List<Album> albums, bool doRefresh = true)
+        public List<Album> AddAlbums(List<Album> albums, bool doRefresh = true, bool ignoreErrors = false)
         {
             var added = DateTime.UtcNow;
             var addedAlbums = new List<Album>();
 
             foreach (var a in albums)
             {
-                a.Added = added;
-                addedAlbums.Add(AddAlbum(a, doRefresh));
+                try
+                {
+                    a.Added = added;
+                    if (addedAlbums.Any(f => f.ForeignAlbumId == a.ForeignAlbumId))
+                    {
+                        _logger.Debug("Musicbrainz ID {0} was not added due to validation failure: Album already exists on list", a.ForeignAlbumId);
+                        continue;
+                    }
+
+                    addedAlbums.Add(AddAlbum(a, doRefresh));
+                }
+                catch (ValidationException ex)
+                {
+                    if (!ignoreErrors)
+                    {
+                        throw;
+                    }
+
+                    _logger.Debug("Musicbrainz ID {0} was not added due to validation failures. {1}", a.ForeignAlbumId, ex.Message);
+                }
             }
 
             return addedAlbums;

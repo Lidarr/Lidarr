@@ -117,8 +117,8 @@ namespace NzbDrone.Core.ImportLists
                 }
             }
 
-            var addedArtists = _addArtistService.AddArtists(artistsToAdd, false);
-            var addedAlbums = _addAlbumService.AddAlbums(albumsToAdd, false);
+            var addedArtists = _addArtistService.AddArtists(artistsToAdd, false, true);
+            var addedAlbums = _addAlbumService.AddAlbums(albumsToAdd, false, true);
 
             var message = string.Format($"Import List Sync Completed. Items found: {reports.Count}, Artists added: {addedArtists.Count}, Albums added: {addedAlbums.Count}");
 

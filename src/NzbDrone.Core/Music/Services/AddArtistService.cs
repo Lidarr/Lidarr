@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Music
     public interface IAddArtistService
     {
         Artist AddArtist(Artist newArtist, bool doRefresh = true);
-        List<Artist> AddArtists(List<Artist> newArtists, bool doRefresh = true);
+        List<Artist> AddArtists(List<Artist> newArtists, bool doRefresh = true, bool ignoreErrors = false);
     }
 
     public class AddArtistService : IAddArtistService
@@ -63,7 +63,7 @@ namespace NzbDrone.Core.Music
             return newArtist;
         }
 
-        public List<Artist> AddArtists(List<Artist> newArtists, bool doRefresh = true)
+        public List<Artist> AddArtists(List<Artist> newArtists, bool doRefresh = true, bool ignoreErrors = false)
         {
             var added = DateTime.UtcNow;
             var artistsToAdd = new List<Artist>();
@@ -75,12 +75,23 @@ namespace NzbDrone.Core.Music
                     var artist = AddSkyhookData(s);
                     artist = SetPropertiesAndValidate(artist);
                     artist.Added = added;
+                    if (artistsToAdd.Any(f => f.ForeignArtistId == artist.ForeignArtistId))
+                    {
+                        _logger.Debug("Musicbrainz ID {0} was not added due to validation failure: Artist already exists on list", s.ForeignArtistId);
+                        continue;
+                    }
+
                     artistsToAdd.Add(artist);
                 }
-                catch (Exception ex)
+                catch (ValidationException ex)
                 {
+                    if (!ignoreErrors)
+                    {
+                        throw;
+                    }
+
                     // Catch Import Errors for now until we get things fixed up
-                    _logger.Error(ex, "Failed to import id: {0} - {1}", s.Metadata.Value.ForeignArtistId, s.Metadata.Value.Name);
+                    _logger.Debug(ex, "Failed to import id: {0} - {1}", s.Metadata.Value.ForeignArtistId, s.Metadata.Value.Name);
                 }
             }
 
