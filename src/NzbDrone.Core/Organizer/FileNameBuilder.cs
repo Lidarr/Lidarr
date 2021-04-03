@@ -114,7 +114,6 @@ namespace NzbDrone.Core.Organizer
             AddAlbumTokens(tokenHandlers, album);
             AddMediumTokens(tokenHandlers, tracks.First().AlbumRelease.Value.Media.SingleOrDefault(m => m.Number == tracks.First().MediumNumber));
             AddTrackTokens(tokenHandlers, tracks);
-            AddTrackArtistTokens(tokenHandlers, tracks);
             AddTrackFileTokens(tokenHandlers, trackFile);
             AddQualityTokens(tokenHandlers, artist, trackFile);
             AddMediaInfoTokens(tokenHandlers, trackFile);
@@ -275,16 +274,6 @@ namespace NzbDrone.Core.Organizer
             }
         }
 
-        private void AddTrackArtistTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, List<Track> tracks)
-        {
-            var artists = tracks.Select(t => t.ArtistMetadata.Value)
-                .DistinctBy(a => a.Name)
-                .ToList();
-
-            tokenHandlers["{Track ArtistName}"] = m => string.Join("+", artists.Select(a => a.Name));
-            tokenHandlers["{Track ArtistCleanName}"] = m => string.Join("+", artists.Select(a => a.Name));
-        }
-
         private void AddAlbumTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, Album album)
         {
             tokenHandlers["{Album Title}"] = m => album.Title;
@@ -316,6 +305,14 @@ namespace NzbDrone.Core.Organizer
         {
             tokenHandlers["{Track Title}"] = m => GetTrackTitle(tracks, "+");
             tokenHandlers["{Track CleanTitle}"] = m => CleanTitle(GetTrackTitle(tracks, "and"));
+
+            var firstArtist = tracks.Select(t => t.ArtistMetadata?.Value).FirstOrDefault();
+            if (firstArtist != null)
+            {
+                tokenHandlers["{Track ArtistName}"] = m => firstArtist.Name;
+                tokenHandlers["{Track ArtistCleanName}"] = m => CleanTitle(firstArtist.Name);
+                tokenHandlers["{Track ArtistNameThe}"] = m => TitleThe(firstArtist.Name);
+            }
         }
 
         private void AddTrackFileTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, TrackFile trackFile)
