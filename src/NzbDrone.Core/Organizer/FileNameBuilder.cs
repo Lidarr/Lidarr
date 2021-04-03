@@ -113,7 +113,7 @@ namespace NzbDrone.Core.Organizer
             AddArtistTokens(tokenHandlers, artist);
             AddAlbumTokens(tokenHandlers, album);
             AddMediumTokens(tokenHandlers, tracks.First().AlbumRelease.Value.Media.SingleOrDefault(m => m.Number == tracks.First().MediumNumber));
-            AddTrackTokens(tokenHandlers, tracks);
+            AddTrackTokens(tokenHandlers, tracks, artist);
             AddTrackFileTokens(tokenHandlers, trackFile);
             AddQualityTokens(tokenHandlers, artist, trackFile);
             AddMediaInfoTokens(tokenHandlers, trackFile);
@@ -301,12 +301,15 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{Medium Format}"] = m => medium.Format;
         }
 
-        private void AddTrackTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, List<Track> tracks)
+        private void AddTrackTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, List<Track> tracks, Artist artist)
         {
             tokenHandlers["{Track Title}"] = m => GetTrackTitle(tracks, "+");
             tokenHandlers["{Track CleanTitle}"] = m => CleanTitle(GetTrackTitle(tracks, "and"));
 
-            var firstArtist = tracks.Select(t => t.ArtistMetadata?.Value).FirstOrDefault();
+            // Use the track's ArtistMetadata by default, as it will handle the "Various Artists" case
+            // (where the album artist is "Various Artists" but each track has its own artist). Fall back
+            // to the album artist if we don't have any track ArtistMetadata for whatever reason.
+            var firstArtist = tracks.Select(t => t.ArtistMetadata?.Value).FirstOrDefault() ?? artist.Metadata;
             if (firstArtist != null)
             {
                 tokenHandlers["{Track ArtistName}"] = m => firstArtist.Name;
