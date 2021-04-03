@@ -82,6 +82,12 @@ const trackTitleTokens = [
   { token: '{Track CleanTitle}', example: 'Track Title' }
 ];
 
+const trackArtistTokens = [
+  { token: '{Track ArtistName}', example: 'Artist Name' },
+  { token: '{Track ArtistNameThe}', example: 'Artist Name, The' },
+  { token: '{Track ArtistCleanName}', example: 'Artist Name' }
+];
+
 const qualityTokens = [
   { token: '{Quality Full}', example: 'FLAC Proper' },
   { token: '{Quality Title}', example: 'FLAC' }
@@ -393,6 +399,28 @@ class NamingModal extends Component {
                     <div className={styles.groups}>
                       {
                         trackTitleTokens.map(({ token, example }) => {
+                          return (
+                            <NamingOption
+                              key={token}
+                              name={name}
+                              value={value}
+                              token={token}
+                              example={example}
+                              tokenSeparator={tokenSeparator}
+                              tokenCase={tokenCase}
+                              onPress={this.onOptionPress}
+                            />
+                          );
+                        }
+                        )
+                      }
+                    </div>
+                  </FieldSet>
+
+                  <FieldSet legend="Track Artist">
+                    <div className={styles.groups}>
+                      {
+                        trackArtistTokens.map(({ token, example }) => {
                           return (
                             <NamingOption
                               key={token}
