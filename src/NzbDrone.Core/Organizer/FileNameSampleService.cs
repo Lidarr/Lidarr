@@ -29,14 +29,15 @@ namespace NzbDrone.Core.Organizer
         public FileNameSampleService(IBuildFileNames buildFileNames)
         {
             _buildFileNames = buildFileNames;
+            var artistMetadata = new ArtistMetadata
+            {
+                Name = "The Artist Name",
+                Disambiguation = "US Rock Band"
+            };
 
             _standardArtist = new Artist
             {
-                Metadata = new ArtistMetadata
-                {
-                    Name = "The Artist Name",
-                    Disambiguation = "US Rock Band"
-                }
+                Metadata = artistMetadata
             };
 
             _standardAlbum = new Album
@@ -89,6 +90,7 @@ namespace NzbDrone.Core.Organizer
                 Artist = _standardArtist,
                 AbsoluteTrackNumber = 3,
                 MediumNumber = 1,
+                ArtistMetadata = artistMetadata,
 
                 Title = "Track Title (1)",
             };
