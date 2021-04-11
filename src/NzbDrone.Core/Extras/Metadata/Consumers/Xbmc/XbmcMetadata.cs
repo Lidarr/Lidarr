@@ -114,7 +114,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
             {
                 var artistElement = new XElement("artist");
 
-                artistElement.Add(new XElement("title", artist.Name));
+                artistElement.Add(new XElement("name", artist.Name));
 
                 if (artist.Metadata.Value.Ratings != null && artist.Metadata.Value.Ratings.Votes > 0)
                 {
