@@ -136,7 +136,7 @@ namespace NzbDrone.Core.Extras
         {
             if (message.Updated)
             {
-                var artist = message.Artist;
+                var artist = message.Artist ?? message.Album.Artist;
 
                 foreach (var extraFileManager in _extraFileManagers)
                 {
