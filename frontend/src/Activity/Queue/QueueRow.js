@@ -181,7 +181,7 @@ class QueueRow extends Component {
               );
             }
 
-            if (name === 'album.releaseDate') {
+            if (name === 'albums.releaseDate') {
               if (album) {
                 return (
                   <RelativeDateCellConnector

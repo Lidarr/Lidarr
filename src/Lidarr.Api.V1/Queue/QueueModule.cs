@@ -126,7 +126,7 @@ namespace Lidarr.Api.V1.Queue
                     return q => q.Album;
                 case "albums.title":
                     return q => q.Album?.Title ?? string.Empty;
-                case "album.releaseDate":
+                case "albums.releaseDate":
                     return q => q.Album?.ReleaseDate ?? DateTime.MinValue;
                 case "quality":
                     return q => q.Quality;

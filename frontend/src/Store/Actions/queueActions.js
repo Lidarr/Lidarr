@@ -75,7 +75,7 @@ export const defaultState = {
         isVisible: true
       },
       {
-        name: 'album.releaseDate',
+        name: 'albums.releaseDate',
         label: 'Album Release Date',
         isSortable: true,
         isVisible: false
