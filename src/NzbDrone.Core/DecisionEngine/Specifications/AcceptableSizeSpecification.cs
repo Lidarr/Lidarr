@@ -35,10 +35,18 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
             var qualityDefinition = _qualityDefinitionService.Get(quality);
 
+            var minReleaseDuration = subject.Albums.Select(a => a.AlbumReleases.Value.Where(r => r.Monitored || a.AnyReleaseOk).Select(r => r.Duration).MinOrDefault()).Sum() / 1000;
+            var maxReleaseDuration = subject.Albums.Select(a => a.AlbumReleases.Value.Where(r => r.Monitored || a.AnyReleaseOk).Select(r => r.Duration).MaxOrDefault()).Sum() / 1000;
+
             if (qualityDefinition.MinSize.HasValue)
             {
+                if (maxReleaseDuration == 0)
+                {
+                    _logger.Debug("Album duration is 0, unable to validate size until it is available, rejecting");
+                    return Decision.Reject("Album duration is 0, unable to validate size until it is available");
+                }
+
                 var minSize = qualityDefinition.MinSize.Value.Kilobits();
-                var minReleaseDuration = subject.Albums.Select(a => a.AlbumReleases.Value.Where(r => r.Monitored || a.AnyReleaseOk).Select(r => r.Duration).Min()).Sum() / 1000;
 
                 //Multiply minSize by smallest release duration
                 minSize = minSize * minReleaseDuration;
@@ -57,10 +65,14 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             {
                 _logger.Debug("Max size is unlimited, skipping size check");
             }
+            else if (maxReleaseDuration == 0)
+            {
+                _logger.Debug("Album duration is 0, unable to validate size until it is available, rejecting");
+                return Decision.Reject("Album duration is 0, unable to validate size until it is available");
+            }
             else
             {
                 var maxSize = qualityDefinition.MaxSize.Value.Kilobits();
-                var maxReleaseDuration = subject.Albums.Select(a => a.AlbumReleases.Value.Where(r => r.Monitored || a.AnyReleaseOk).Select(r => r.Duration).Max()).Sum() / 1000;
 
                 //Multiply maxSize by Album.Duration
                 maxSize = maxSize * maxReleaseDuration;
