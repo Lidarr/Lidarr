@@ -1,3 +1,4 @@
+using System.Linq;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music.Commands;
@@ -9,10 +10,12 @@ namespace NzbDrone.Core.Music
                                       IHandle<ArtistsImportedEvent>
     {
         private readonly IManageCommandQueue _commandQueueManager;
+        private readonly IEventAggregator _eventAggregator;
 
-        public ArtistAddedHandler(IManageCommandQueue commandQueueManager)
+        public ArtistAddedHandler(IManageCommandQueue commandQueueManager, IEventAggregator eventAggregator)
         {
             _commandQueueManager = commandQueueManager;
+            _eventAggregator = eventAggregator;
         }
 
         public void Handle(ArtistAddedEvent message)
@@ -21,13 +24,26 @@ namespace NzbDrone.Core.Music
             {
                 _commandQueueManager.Push(new RefreshArtistCommand(message.Artist.Id, true));
             }
+            else
+            {
+                // Trigger Artist Metadata download when adding Albums
+                _eventAggregator.PublishEvent(new ArtistRefreshCompleteEvent(message.Artist));
+            }
         }
 
         public void Handle(ArtistsImportedEvent message)
         {
             if (message.DoRefresh)
             {
-                _commandQueueManager.Push(new BulkRefreshArtistCommand(message.ArtistIds, true));
+                _commandQueueManager.Push(new BulkRefreshArtistCommand(message.Artists.Select(a => a.Id).ToList(), true));
+            }
+            else
+            {
+                // Trigger Artist Metadata download when adding Albums
+                foreach (var artist in message.Artists)
+                {
+                    _eventAggregator.PublishEvent(new ArtistRefreshCompleteEvent(artist));
+                }
             }
         }
     }

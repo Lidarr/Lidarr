@@ -66,7 +66,7 @@ namespace NzbDrone.Core.Music
         {
             _cache.Clear();
             _artistRepository.InsertMany(newArtists);
-            _eventAggregator.PublishEvent(new ArtistsImportedEvent(newArtists.Select(s => s.Id).ToList(), doRefresh));
+            _eventAggregator.PublishEvent(new ArtistsImportedEvent(newArtists.ToList(), doRefresh));
 
             return newArtists;
         }
