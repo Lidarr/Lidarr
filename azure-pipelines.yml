@@ -87,7 +87,18 @@ stages:
         displayName: 'Install .net core'
         inputs:
           version: $(dotnetVersion)
-      - bash: ./build.sh --backend
+      - bash: |
+          BUNDLEDVERSIONS=${AGENT_TOOLSDIRECTORY}/dotnet/sdk/${DOTNETVERSION}/Microsoft.NETCoreSdk.BundledVersions.props
+          echo $BUNDLEDVERSIONS
+          grep osx-x64 $BUNDLEDVERSIONS
+          if grep -q freebsd-x64 $BUNDLEDVERSIONS; then
+            echo "BSD already enabled"
+          else
+            echo "Enabling BSD support"
+            sed -i.ORI 's/osx-x64/osx-x64;freebsd-x64/' $BUNDLEDVERSIONS
+          fi
+        displayName: Enable FreeBSD Support
+      - bash: ./build.sh --backend --enable-bsd
         displayName: Build Lidarr Backend
       - bash: |
           find ${OUTPUTFOLDER} -type f ! -path "*/publish/*" -exec rm -rf {} \;
@@ -115,6 +126,10 @@ stages:
       - publish: '$(testsFolder)/net5.0/linux-musl-x64/publish'
         artifact: LinuxMuslCoreTests
         displayName: Publish Linux Musl Test Package
+        condition: and(succeeded(), eq(variables['osName'], 'Windows'))
+      - publish: '$(testsFolder)/net5.0/freebsd-x64/publish'
+        artifact: FreebsdCoreTests
+        displayName: Publish FreeBSD Test Package
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
       - publish: '$(testsFolder)/net5.0/osx-x64/publish'
         artifact: MacCoreTests
@@ -227,7 +242,7 @@ stages:
           artifactName: WindowsFrontend
           targetPath: _output
         displayName: Fetch Frontend
-      - bash: ./build.sh --packages
+      - bash: ./build.sh --packages --enable-bsd
         displayName: Create Packages
       - bash: |
           find . -name "fpcalc" -exec chmod a+x {} \;
@@ -311,6 +326,14 @@ stages:
           tarCompression: 'gz'
           includeRootFolder: false
           rootFolderOrFile: $(artifactsFolder)/linux-musl-arm64/net5.0
+      - task: ArchiveFiles@2
+        displayName: Create FreeBSD Core Core tar
+        inputs:
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Lidarr.$(buildName).freebsd-core-x64.tar.gz'
+          archiveType: 'tar'
+          tarCompression: 'gz'
+          includeRootFolder: false
+          rootFolderOrFile: $(artifactsFolder)/freebsd-x64/net5.0
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: 'Packages'
         displayName: Publish Packages
@@ -364,24 +387,34 @@ stages:
       displayName: Unit Native
       dependsOn: Prepare
       condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
+      workspace:
+        clean: all
 
       strategy:
         matrix:
           MacCore:
             osName: 'Mac'
             testName: 'MacCore'
+            poolName: 'Azure Pipelines'
             imageName: 'macos-10.14'
           WindowsCore:
             osName: 'Windows'
             testName: 'WindowsCore'
+            poolName: 'Azure Pipelines'
             imageName: 'windows-2019'
           LinuxCore:
             osName: 'Linux'
             testName: 'LinuxCore'
+            poolName: 'Azure Pipelines'
             imageName: 'ubuntu-18.04'
-            pattern: 'Lidarr.**.linux-core-x64.tar.gz'
+          FreebsdCore:
+            osName: 'Linux'
+            testName: 'FreebsdCore'
+            poolName: 'FreeBSD'
+            imageName:
 
       pool:
+        name: $(poolName)
         vmImage: $(imageName)
 
       steps:
@@ -390,6 +423,7 @@ stages:
         displayName: 'Install .net core'
         inputs:
           version: $(dotnetVersion)
+        condition: ne(variables['poolName'], 'FreeBSD')
       - task: DownloadPipelineArtifact@2
         displayName: Download Test Artifact
         inputs:
@@ -404,15 +438,10 @@ stages:
           sudo tar xf chromaprint-fpcalc-1.4.3-linux-x86_64.tar.gz --strip-components=1 --directory /usr/bin
           chmod a+x _tests/fpcalc
         displayName: Install fpcalc
-        condition: and(succeeded(), eq(variables['osName'], 'Linux'))
+        condition: and(succeeded(), eq(variables['testName'], 'LinuxCore'))
       - bash: |
-          SYMLINK=6_6_0
-          MONOPREFIX=/Library/Frameworks/Mono.framework/Versions/$SYMLINK
-          echo "##vso[task.setvariable variable=MONOPREFIX;]$MONOPREFIX"
-          echo "##vso[task.setvariable variable=PKG_CONFIG_PATH;]$MONOPREFIX/lib/pkgconfig:$MONOPREFIX/share/pkgconfig:$PKG_CONFIG_PATH"
-          echo "##vso[task.setvariable variable=PATH;]$MONOPREFIX/bin:$PATH"
           chmod a+x _tests/fpcalc
-        displayName: Set Mono Version and make fpcalc Executable
+        displayName: Make fpcalc Executable
         condition: and(succeeded(), eq(variables['osName'], 'Mac'))
       - bash: find ${TESTSFOLDER} -name "Lidarr.Test.Dummy" -exec chmod a+x {} \;
         displayName: Make Test Dummy Executable
@@ -516,30 +545,22 @@ stages:
             osName: 'Mac'
             testName: 'MacCore'
             imageName: 'macos-10.14'
-            pattern: 'Lidarr.**.osx-core-x64.tar.gz'
+            pattern: 'Lidarr.*.osx-core-x64.tar.gz'
           WindowsCore:
             osName: 'Windows'
             testName: 'WindowsCore'
             imageName: 'windows-2019'
-            pattern: 'Lidarr.**.windows-core-x64.zip'
+            pattern: 'Lidarr.*.windows-core-x64.zip'
           LinuxCore:
             osName: 'Linux'
             testName: 'LinuxCore'
             imageName: 'ubuntu-18.04'
-            pattern: 'Lidarr.**.linux-core-x64.tar.gz'
+            pattern: 'Lidarr.*.linux-core-x64.tar.gz'
 
       pool:
         vmImage: $(imageName)
         
       steps:
-      - bash: |
-          SYMLINK=6_6_0
-          MONOPREFIX=/Library/Frameworks/Mono.framework/Versions/$SYMLINK
-          echo "##vso[task.setvariable variable=MONOPREFIX;]$MONOPREFIX"
-          echo "##vso[task.setvariable variable=PKG_CONFIG_PATH;]$MONOPREFIX/lib/pkgconfig:$MONOPREFIX/share/pkgconfig:$PKG_CONFIG_PATH"
-          echo "##vso[task.setvariable variable=PATH;]$MONOPREFIX/bin:$PATH"
-        displayName: Set Mono Version
-        condition: and(succeeded(), eq(variables['osName'], 'Mac'))
       - task: UseDotNet@2
         displayName: 'Install .net core'
         inputs:
@@ -579,6 +600,52 @@ stages:
           failTaskOnFailedTests: true
         displayName: Publish Test Results
 
+    - job: Integration_FreeBSD
+      displayName: Integration Native FreeBSD
+      dependsOn: Prepare
+      condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
+      workspace:
+        clean: all
+      variables:
+        pattern: 'Lidarr.*.freebsd-core-x64.tar.gz'
+      pool:
+        name: 'FreeBSD'
+
+      steps:
+      - checkout: none
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Test Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: 'FreebsdCoreTests'
+          targetPath: $(testsFolder)
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Build Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Packages
+          itemPattern: '/$(pattern)'
+          targetPath: $(Build.ArtifactStagingDirectory)
+      - bash: |
+          mkdir -p ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin
+          tar xf ${BUILD_ARTIFACTSTAGINGDIRECTORY}/$(pattern) -C ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin
+        displayName: Extract Package
+      - bash: |
+          mkdir -p ./bin/
+          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
+        displayName: Move Package Contents
+      - bash: |
+          chmod a+x ${TESTSFOLDER}/test.sh
+          ${TESTSFOLDER}/test.sh Linux Integration Test
+        displayName: Run Integration Tests
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'NUnit'
+          testResultsFiles: '**/TestResult.xml'
+          testRunTitle: 'FreeBSD Integration Tests'
+          failTaskOnFailedTests: true
+        displayName: Publish Test Results
+
     - job: Integration_Docker
       displayName: Integration Docker
       dependsOn: Prepare
@@ -589,22 +656,23 @@ stages:
             testName: 'Mono 5.20'
             artifactName: LinuxTests
             containerImage: ghcr.io/servarr/testimages:mono-5.20
-            pattern: 'Lidarr.**.linux.tar.gz'
+            pattern: 'Lidarr.*.linux.tar.gz'
           mono610:
             testName: 'Mono 6.10'
             artifactName: LinuxTests
             containerImage: ghcr.io/servarr/testimages:mono-6.10
-            pattern: 'Lidarr.**.linux.tar.gz'
+            pattern: 'Lidarr.*.linux.tar.gz'
           mono612:
             testName: 'Mono 6.12'
             artifactName: LinuxTests
             containerImage: ghcr.io/servarr/testimages:mono-6.12
-            pattern: 'Lidarr.**.linux.tar.gz'
+            pattern: 'Lidarr.*.linux.tar.gz'
           alpine:
             testName: 'Musl Net Core'
             artifactName: LinuxMuslCoreTests
             containerImage: ghcr.io/servarr/testimages:alpine
-            pattern: 'Lidarr.**.linux-musl-core-x64.tar.gz'
+            pattern: 'Lidarr.*.linux-musl-core-x64.tar.gz'
+
       pool:
         vmImage: 'ubuntu-18.04'
 
@@ -663,18 +731,15 @@ stages:
           Linux:
             osName: 'Linux'
             imageName: 'ubuntu-18.04'
-            pattern: 'Lidarr.**.linux-core-x64.tar.gz'
-            failBuild: true
+            pattern: 'Lidarr.*.linux-core-x64.tar.gz'
           Mac:
             osName: 'Mac'
             imageName: 'macos-10.14'
-            pattern: 'Lidarr.**.osx-core-x64.tar.gz'
-            failBuild: true
+            pattern: 'Lidarr.*.osx-core-x64.tar.gz'
           Windows:
             osName: 'Windows'
             imageName: 'windows-2019'
-            pattern: 'Lidarr.**.windows-core-x64.zip'
-            failBuild: true
+            pattern: 'Lidarr.*.windows-core-x64.zip'
 
       pool:
         vmImage: $(imageName)
