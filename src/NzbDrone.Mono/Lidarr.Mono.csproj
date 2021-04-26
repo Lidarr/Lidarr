@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NLog" Version="4.7.9" />
-    <PackageReference Include="System.IO.Abstractions" Version="7.0.15" />
+    <PackageReference Include="System.IO.Abstractions" Version="13.2.29" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageReference Include="Mono.Posix-4.5" Version="4.5.0" PrivateAssets="all" />

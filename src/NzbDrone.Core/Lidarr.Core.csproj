@@ -9,17 +9,17 @@
     <PackageReference Include="FluentMigrator.Runner" Version="4.0.0-alpha.268" />
     <PackageReference Include="FluentMigrator.Runner.SQLite" Version="4.0.0-alpha.268" />
     <PackageReference Include="FluentValidation" Version="8.6.2" />
-    <PackageReference Include="MailKit" Version="2.10.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="MailKit" Version="2.11.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NLog" Version="4.7.9" />
     <PackageReference Include="RestSharp" Version="106.11.7" />
-    <PackageReference Include="System.IO.Abstractions" Version="7.0.15" />
+    <PackageReference Include="System.IO.Abstractions" Version="13.2.29" />
     <PackageReference Include="TagLibSharp-Lidarr" Version="2.2.0.25" />
     <PackageReference Include="Kveer.XmlRPC" Version="1.1.1" />
     <PackageReference Include="SpotifyAPI.Web" Version="4.2.2" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
-    <PackageReference Include="Equ" Version="2.2.0" />
-    <PackageReference Include="MonoTorrent" Version="1.0.19" />
+    <PackageReference Include="Equ" Version="2.3.0" />
+    <PackageReference Include="MonoTorrent" Version="1.0.29" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Common\Lidarr.Common.csproj" />
