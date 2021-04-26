@@ -103,11 +103,8 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="NunitXml.TestLogger" Version="3.0.97" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TestProject)'=='true' and '$(TargetFramework)' == 'net5.0' and '$(DoCoverage)' == 'true'">
-    <PackageReference Include="coverlet.collector" Version="1.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
+  <ItemGroup Condition="'$(TestProject)'=='true' and '$(TargetFramework)' == 'net5.0'">
+    <PackageReference Include="coverlet.collector" Version="3.0.4-preview.27.ge7cb7c3b40" />
   </ItemGroup>
 
   <!-- Set up stylecop -->
