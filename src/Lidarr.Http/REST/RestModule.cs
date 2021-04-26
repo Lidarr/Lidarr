@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using FluentValidation;
 using FluentValidation.Results;
 using Lidarr.Http.Extensions;
 using Nancy;
 using Nancy.Responses.Negotiation;
-using Newtonsoft.Json;
 using NzbDrone.Core.Datastore;
 
 namespace Lidarr.Http.REST
@@ -248,9 +248,9 @@ namespace Lidarr.Http.REST
             {
                 resource = Request.Body.FromJson<TResource>();
             }
-            catch (JsonReaderException ex)
+            catch (JsonException e)
             {
-                throw new BadRequestException(ex.Message);
+                throw new BadRequestException(e.Message);
             }
 
             if (resource == null)

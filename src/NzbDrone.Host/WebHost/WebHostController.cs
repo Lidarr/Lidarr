@@ -106,17 +106,15 @@ namespace NzbDrone.Host
                     services
                     .AddSignalR()
 #if !NETCOREAPP
-                    .AddJsonProtocol(
-                        options =>
-                        {
-                            options.PayloadSerializerSettings = Json.GetSerializerSettings();
-                        });
+                    .AddJsonProtocol(options =>
+                    {
+                        options.PayloadSerializerSettings = Json.GetSerializerSettings();
+                    });
 #else
-                    .AddNewtonsoftJsonProtocol(
-                        options =>
-                        {
-                            options.PayloadSerializerSettings = Json.GetSerializerSettings();
-                        });
+                    .AddJsonProtocol(options =>
+                    {
+                        options.PayloadSerializerOptions = STJson.GetSerializerSettings();
+                    });
 #endif
                 })
                 .Configure(app =>
