@@ -24,6 +24,10 @@
     <LidarrProject Condition="$(MSBuildProjectName.StartsWith('Lidarr'))">true</LidarrProject>
     <LidarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceInstall'))">true</LidarrProject>
     <LidarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceUninstall'))">true</LidarrProject>
+
+    <!-- A test project gets the test sdk packages automatically added -->
+    <TestProject>false</TestProject>
+    <TestProject Condition="$(MSBuildProjectName.EndsWith('.Test'))">true</TestProject>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -87,6 +91,20 @@
   <!-- Allow building net framework using mono -->
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- Standard testing packages -->
+  <ItemGroup Condition="'$(TestProject)'=='true'">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
+    <PackageReference Include="NUnit" Version="3.13.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="NunitXml.TestLogger" Version="3.0.97" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TestProject)'=='true' and '$(TargetFramework)' == 'net5.0' and '$(DoCoverage)' == 'true'">
+    <PackageReference Include="coverlet.collector" Version="1.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
