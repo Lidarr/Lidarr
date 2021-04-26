@@ -18,6 +18,8 @@ namespace NzbDrone.Mono.Test.EnvironmentInfo.VersionAdapters
         [Platform("Linux")]
         public void should_get_version_info_from_actual_linux()
         {
+            NotBsd();
+
             Mocker.SetConstant<IDiskProvider>(Mocker.Resolve<DiskProvider>());
             var info = Subject.Read();
             info.FullName.Should().NotBeNullOrWhiteSpace();
