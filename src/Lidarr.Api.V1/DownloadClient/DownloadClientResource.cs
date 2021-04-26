@@ -3,7 +3,7 @@ using NzbDrone.Core.Indexers;
 
 namespace Lidarr.Api.V1.DownloadClient
 {
-    public class DownloadClientResource : ProviderResource
+    public class DownloadClientResource : ProviderResource<DownloadClientResource>
     {
         public bool Enable { get; set; }
         public DownloadProtocol Protocol { get; set; }
