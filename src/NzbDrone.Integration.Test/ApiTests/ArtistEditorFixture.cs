@@ -11,6 +11,8 @@ namespace NzbDrone.Integration.Test.ApiTests
     {
         private void GivenExistingArtist()
         {
+            WaitForCompletion(() => Profiles.All().Count > 0);
+
             foreach (var name in new[] { "Alien Ant Farm", "Kiss" })
             {
                 var newArtist = Artist.Lookup(name).First();

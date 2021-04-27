@@ -13,6 +13,7 @@ using Lidarr.Api.V1.DownloadClient;
 using Lidarr.Api.V1.History;
 using Lidarr.Api.V1.Profiles.Quality;
 using Lidarr.Api.V1.RootFolders;
+using Lidarr.Api.V1.System.Tasks;
 using Lidarr.Api.V1.Tags;
 using Microsoft.AspNetCore.SignalR.Client;
 using NLog;
@@ -38,6 +39,7 @@ namespace NzbDrone.Integration.Test
 
         public ClientBase<BlacklistResource> Blacklist;
         public CommandClient Commands;
+        public ClientBase<TaskResource> Tasks;
         public DownloadClientClient DownloadClients;
         public AlbumClient Albums;
         public TrackClient Tracks;
@@ -103,6 +105,7 @@ namespace NzbDrone.Integration.Test
 
             Blacklist = new ClientBase<BlacklistResource>(RestClient, ApiKey);
             Commands = new CommandClient(RestClient, ApiKey);
+            Tasks = new ClientBase<TaskResource>(RestClient, ApiKey, "system/task");
             DownloadClients = new DownloadClientClient(RestClient, ApiKey);
             Albums = new AlbumClient(RestClient, ApiKey);
             Tracks = new TrackClient(RestClient, ApiKey);
