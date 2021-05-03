@@ -57,8 +57,7 @@ namespace NzbDrone.Test.Common
             _startupLog = new List<string>();
             if (BuildInfo.IsDebug)
             {
-                var frameworkFolder = PlatformInfo.IsNetCore ? "net5.0" : "net462";
-                Start(Path.Combine(TestContext.CurrentContext.TestDirectory, "..", "..", "_output", frameworkFolder, lidarrConsoleExe));
+                Start(Path.Combine(TestContext.CurrentContext.TestDirectory, "..", "..", "_output", "net5.0", lidarrConsoleExe));
             }
             else
             {
