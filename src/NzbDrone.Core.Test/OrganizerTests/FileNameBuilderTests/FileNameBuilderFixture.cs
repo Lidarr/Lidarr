@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
@@ -791,6 +793,30 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
 
             Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
                    .Should().Be(releaseGroup);
+        }
+
+        [TestCase("en-US")]
+        [TestCase("fr-FR")]
+        [TestCase("az")]
+        [TestCase("tr-TR")]
+        public void should_replace_all_tokens_for_different_cultures(string culture)
+        {
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            try
+            {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
+
+                _album.ReleaseDate = new DateTime(2021, 1, 15);
+
+                _namingConfig.StandardTrackFormat = "{Release Year}";
+
+                Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
+                    .Should().Be("2021");
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = oldCulture;
+            }
         }
 
         [Test]
