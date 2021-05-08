@@ -1,8 +1,8 @@
 ---
-name: Feature request
+name: Feature Request
 about: Suggest an idea for Lidarr
 title: ''
-labels: 'Type: Enhancement'
+labels: 'Type: Feature Request'
 assignees: ''
 
 ---
