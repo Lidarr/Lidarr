@@ -2,7 +2,7 @@ using NzbDrone.Core.Indexers;
 
 namespace Lidarr.Api.V1.Indexers
 {
-    public class IndexerResource : ProviderResource
+    public class IndexerResource : ProviderResource<IndexerResource>
     {
         public bool EnableRss { get; set; }
         public bool EnableAutomaticSearch { get; set; }
