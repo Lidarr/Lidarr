@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using Lidarr.Http;
-using Nancy.Bootstrapper;
 using NzbDrone.Common.Composition;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.SignalR;
@@ -27,8 +25,6 @@ namespace NzbDrone.Host
             : base(args, assemblies)
         {
             AutoRegisterImplementations<MessageHub>();
-
-            Container.Register<INancyBootstrapper, LidarrBootstrapper>();
 
             if (OsInfo.IsWindows)
             {

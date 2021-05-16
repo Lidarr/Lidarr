@@ -35,8 +35,6 @@ namespace NzbDrone.Integration.Test.ApiTests
         [Test]
         public void should_get_bad_request_if_standard_format_is_empty()
         {
-            IgnoreOnMonoVersions("5.12", "5.14");
-
             var config = NamingConfig.GetSingle();
             config.RenameTracks = true;
             config.StandardTrackFormat = "";
@@ -48,8 +46,6 @@ namespace NzbDrone.Integration.Test.ApiTests
         [Test]
         public void should_get_bad_request_if_standard_format_doesnt_contain_track_number_and_title()
         {
-            IgnoreOnMonoVersions("5.12", "5.14");
-
             var config = NamingConfig.GetSingle();
             config.RenameTracks = true;
             config.StandardTrackFormat = "{track:00}";
@@ -61,8 +57,6 @@ namespace NzbDrone.Integration.Test.ApiTests
         [Test]
         public void should_not_require_format_when_rename_tracks_is_false()
         {
-            IgnoreOnMonoVersions("5.12", "5.14");
-
             var config = NamingConfig.GetSingle();
             config.RenameTracks = false;
             config.StandardTrackFormat = "";
@@ -74,8 +68,6 @@ namespace NzbDrone.Integration.Test.ApiTests
         [Test]
         public void should_require_format_when_rename_tracks_is_true()
         {
-            IgnoreOnMonoVersions("5.12", "5.14");
-
             var config = NamingConfig.GetSingle();
             config.RenameTracks = true;
             config.StandardTrackFormat = "";
@@ -87,8 +79,6 @@ namespace NzbDrone.Integration.Test.ApiTests
         [Test]
         public void should_get_bad_request_if_artist_folder_format_does_not_contain_artist_name()
         {
-            IgnoreOnMonoVersions("5.12", "5.14");
-
             var config = NamingConfig.GetSingle();
             config.RenameTracks = true;
             config.ArtistFolderFormat = "This and That";
