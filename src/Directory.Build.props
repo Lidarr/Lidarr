@@ -6,7 +6,6 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <RuntimeIdentifiers>win-x64;win-x86;osx-x64;linux-x64;linux-musl-x64;linux-arm;linux-arm64;linux-musl-arm64</RuntimeIdentifiers>
-    <ExcludedRuntimeFrameworkPairs>win-x64:net462;win-x86:net462;osx-x64:net462;linux-arm:net462;linux-arm64:net462;linux-musl-x64:net462;linux-musl-arm64:net462</ExcludedRuntimeFrameworkPairs>
 
     <LidarrRootDir>$(MSBuildThisFileDirectory)..\</LidarrRootDir>
 
@@ -88,22 +87,12 @@
     <RootNamespace Condition="'$(LidarrProject)'=='true'">$(MSBuildProjectName.Replace('Lidarr','NzbDrone'))</RootNamespace>
   </PropertyGroup>
 
-  <!-- Allow building net framework using mono -->
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
   <!-- Standard testing packages -->
   <ItemGroup Condition="'$(TestProject)'=='true'">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="NUnit" Version="3.13.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="NunitXml.TestLogger" Version="3.0.97" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TestProject)'=='true' and '$(TargetFramework)' == 'net5.0'">
     <PackageReference Include="coverlet.collector" Version="3.0.4-preview.27.ge7cb7c3b40" />
   </ItemGroup>
 
