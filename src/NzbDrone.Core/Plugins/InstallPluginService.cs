@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common;
 using NzbDrone.Common.Disk;
@@ -9,45 +7,55 @@ using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Instrumentation.Extensions;
+using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Plugins.Commands;
-using NzbDrone.Core.Plugins.Resources;
 
 namespace NzbDrone.Core.Plugins
 {
-    public class InstallPluginService : IExecute<InstallPluginCommand>
+    public class InstallPluginService : IExecute<InstallPluginCommand>, IExecute<UninstallPluginCommand>
     {
-        private static readonly Regex RepoRegex = new Regex(@"https://github.com/(?<repo>[^/]*)/(?<name>[^/]*)", RegexOptions.Compiled);
-
+        private readonly IPluginService _pluginService;
         private readonly IDiskProvider _diskProvider;
         private readonly IAppFolderInfo _appFolderInfo;
         private readonly IHttpClient _httpClient;
         private readonly IArchiveService _archiveService;
+        private readonly ILifecycleService _lifecycleService;
         private readonly Logger _logger;
 
-        public InstallPluginService(IDiskProvider diskProvider,
+        public InstallPluginService(IPluginService pluginService,
+                                    IDiskProvider diskProvider,
                                     IAppFolderInfo appFolderInfo,
                                     IHttpClient httpClient,
                                     IArchiveService archiveService,
+                                    ILifecycleService lifecycleService,
                                     Logger logger)
         {
+            _pluginService = pluginService;
             _diskProvider = diskProvider;
             _appFolderInfo = appFolderInfo;
             _httpClient = httpClient;
             _archiveService = archiveService;
+            _lifecycleService = lifecycleService;
             _logger = logger;
+        }
+
+        public void Execute(UninstallPluginCommand message)
+        {
+            var (owner, name) = _pluginService.ParseUrl(message.GithubUrl);
+            UninstallPlugin(owner, name);
         }
 
         public void Execute(InstallPluginCommand message)
         {
-            var package = GetPlugin(message.GithubUrl);
+            var package = _pluginService.GetRemotePlugin(message.GithubUrl);
             if (package != null)
             {
                 InstallPlugin(package);
             }
         }
 
-        private void InstallPlugin(Plugin package)
+        private void InstallPlugin(RemotePlugin package)
         {
             EnsurePluginFolder();
 
@@ -64,49 +72,19 @@ namespace NzbDrone.Core.Plugins
             _httpClient.DownloadFile(package.PackageUrl, packageDestination);
 
             _logger.ProgressInfo("Extracting Plugin package");
-            _archiveService.Extract(packageDestination, Path.Combine(PluginFolder(), package.Name));
-            _logger.ProgressInfo($"Installed {package.Name}");
+            _archiveService.Extract(packageDestination, Path.Combine(PluginFolder(), package.Owner, package.Name));
+            _logger.ProgressInfo($"Installed {package.Name}, restarting");
+
+            Task.Factory.StartNew(() => _lifecycleService.Restart());
         }
 
-        private Plugin GetPlugin(string repoUrl)
+        private void UninstallPlugin(string owner, string name)
         {
-            var match = RepoRegex.Match(repoUrl);
+            _logger.ProgressInfo($"Uninstalling Plugin {owner}/{name}");
+            _diskProvider.DeleteFolder(Path.Combine(PluginFolder(), owner, name), true);
+            _logger.ProgressInfo($"Uninstalled Plugin {owner}/{name}, restarting");
 
-            if (!match.Success)
-            {
-                _logger.ProgressInfo("Invalid plugin repo URL");
-                return null;
-            }
-
-            var repo = match.Groups["repo"].Value;
-            var name = match.Groups["name"].Value;
-
-            var releaseUrl = $"https://api.github.com/repos/{repo}/{name}/releases";
-
-            var releases = _httpClient.Get<List<Release>>(new HttpRequest(releaseUrl)).Resource;
-
-            if (!releases?.Any() ?? true)
-            {
-                _logger.ProgressInfo("No releases found for {name}");
-                return null;
-            }
-
-            var latest = releases.OrderByDescending(x => x.PublishedAt).First();
-            var framework = PlatformInfo.IsNetCore ? "netcoreapp3.1" : "net462";
-            var asset = latest.Assets.FirstOrDefault(x => x.Name.EndsWith($"{framework}.zip"));
-
-            if (asset == null)
-            {
-                _logger.ProgressInfo("No plugin package found for {framework} for {name}");
-                return null;
-            }
-
-            return new Plugin
-            {
-                GithubUrl = repoUrl,
-                Name = name,
-                PackageUrl = asset.BrowserDownloadUrl
-            };
+            Task.Factory.StartNew(() => _lifecycleService.Restart());
         }
 
         private void EnsurePluginFolder()

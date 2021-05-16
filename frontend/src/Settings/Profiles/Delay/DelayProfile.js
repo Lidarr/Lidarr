@@ -82,6 +82,7 @@ class DelayProfile extends Component {
                   key={x.protocol}
                   name={x.name}
                   allowed={x.allowed}
+                  delay={x.delay}
                 />
               );
             })
