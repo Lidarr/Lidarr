@@ -2,6 +2,7 @@ using System.Threading;
 using Lidarr.Http.ClientSchema;
 using NLog;
 using NUnit.Framework;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Test.Common;
 
@@ -34,6 +35,9 @@ namespace NzbDrone.Integration.Test
 
         protected override void InitializeTestTarget()
         {
+            // Make sure tasks have been initialized so the config put below doesn't cause errors
+            WaitForCompletion(() => Tasks.All().SelectList(x => x.TaskName).Contains("RssSync"));
+
             Indexers.Post(new Lidarr.Api.V1.Indexers.IndexerResource
             {
                 EnableRss = false,
