@@ -4,8 +4,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NBuilder" Version="6.1.0" />
-    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="7.0.15" />
-    <PackageReference Include="AutoFixture" Version="4.11.0" />
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="13.2.29" />
+    <PackageReference Include="AutoFixture" Version="4.17.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Test.Common\Lidarr.Test.Common.csproj" />
