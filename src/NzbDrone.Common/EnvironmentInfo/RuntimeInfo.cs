@@ -7,10 +7,6 @@ using System.ServiceProcess;
 using NLog;
 using NzbDrone.Common.Processes;
 
-#if NETCOREAPP
-using Microsoft.Extensions.Hosting.WindowsServices;
-#endif
-
 namespace NzbDrone.Common.EnvironmentInfo
 {
     public class RuntimeInfo : IRuntimeInfo
@@ -67,12 +63,7 @@ namespace NzbDrone.Common.EnvironmentInfo
             }
         }
 
-#if !NETCOREAPP
         public static bool IsUserInteractive => Environment.UserInteractive;
-#else
-        // Note that Environment.UserInteractive is always true on net core: https://stackoverflow.com/a/57325783
-        public static bool IsUserInteractive => OsInfo.IsWindows && !WindowsServiceHelpers.IsWindowsService();
-#endif
 
         bool IRuntimeInfo.IsUserInteractive => IsUserInteractive;
 
