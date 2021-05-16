@@ -5,7 +5,9 @@ function getNewAlbum(album, payload) {
     searchForNewAlbum = false
   } = payload;
 
-  getNewArtist(album.artist, payload);
+  if (!('id' in album.artist) || album.artist.id === 0) {
+    getNewArtist(album.artist, payload);
+  }
 
   album.addOptions = {
     searchForNewAlbum
