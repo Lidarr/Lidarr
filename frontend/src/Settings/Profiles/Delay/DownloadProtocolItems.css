@@ -1,0 +1,24 @@
+.qualities {
+  margin-top: 10px;
+  transition: min-height 200ms;
+  user-select: none;
+}
+
+.headerContainer {
+  display: flex;
+  font-weight: bold;
+  line-height: 35px;
+}
+
+.headerTitle {
+  display: flex;
+  flex-grow: 1;
+}
+
+.headerDelay {
+  display: flex;
+  flex-grow: 0;
+  margin-right: 40px;
+  padding-left: 16px;
+  width: 150px;
+}

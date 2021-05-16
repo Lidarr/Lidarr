@@ -33,9 +33,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
             _profile = Builder<QualityProfile>.CreateNew()
                                        .Build();
 
-            _delayProfile = Builder<DelayProfile>.CreateNew()
-                                      .With(d => d.PreferredProtocol = DownloadProtocol.Usenet)
-                                      .Build();
+            _delayProfile = new DelayProfile();
 
             var artist = Builder<Artist>.CreateNew()
                                         .With(s => s.QualityProfile = _profile)
@@ -54,7 +52,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
 
             _remoteAlbum.ParsedAlbumInfo = new ParsedAlbumInfo();
             _remoteAlbum.Release = new ReleaseInfo();
-            _remoteAlbum.Release.DownloadProtocol = DownloadProtocol.Usenet;
+            _remoteAlbum.Release.DownloadProtocol = nameof(UsenetDownloadProtocol);
 
             _remoteAlbum.Albums = Builder<Album>.CreateListOfSize(1).Build().ToList();
 
@@ -103,7 +101,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
             _remoteAlbum.ParsedAlbumInfo.Quality = new QualityModel(Quality.MP3_192);
             _remoteAlbum.Release.PublishDate = DateTime.UtcNow;
 
-            _delayProfile.UsenetDelay = 720;
+            _delayProfile.Items[0].Delay = 720;
 
             Subject.IsSatisfiedBy(_remoteAlbum, new AlbumSearchCriteria()).Accepted.Should().BeFalse();
         }
@@ -111,7 +109,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
         [Test]
         public void should_be_true_when_profile_does_not_have_a_delay()
         {
-            _delayProfile.UsenetDelay = 0;
+            _delayProfile.Items[0].Delay = 0;
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
         }
@@ -130,7 +128,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
             _remoteAlbum.ParsedAlbumInfo.Quality = new QualityModel(Quality.MP3_256);
             _remoteAlbum.Release.PublishDate = DateTime.UtcNow.AddHours(-10);
 
-            _delayProfile.UsenetDelay = 60;
+            _delayProfile.Items[0].Delay = 60;
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
         }
@@ -141,7 +139,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
             _remoteAlbum.ParsedAlbumInfo.Quality = new QualityModel(Quality.MP3_192);
             _remoteAlbum.Release.PublishDate = DateTime.UtcNow;
 
-            _delayProfile.UsenetDelay = 720;
+            _delayProfile.Items[0].Delay = 720;
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
         }
@@ -159,7 +157,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
                   .Setup(s => s.IsRevisionUpgrade(It.IsAny<QualityModel>(), It.IsAny<QualityModel>()))
                   .Returns(true);
 
-            _delayProfile.UsenetDelay = 720;
+            _delayProfile.Items[0].Delay = 720;
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
         }
@@ -177,7 +175,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
                   .Setup(s => s.IsRevisionUpgrade(It.IsAny<QualityModel>(), It.IsAny<QualityModel>()))
                   .Returns(true);
 
-            _delayProfile.UsenetDelay = 720;
+            _delayProfile.Items[0].Delay = 720;
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
         }
@@ -190,7 +188,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
 
             GivenExistingFile(new QualityModel(Quality.MP3_256));
 
-            _delayProfile.UsenetDelay = 720;
+            _delayProfile.Items[0].Delay = 720;
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
         }

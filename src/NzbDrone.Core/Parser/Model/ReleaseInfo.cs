@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Parser.Model
         public string Artist { get; set; }
         public string Album { get; set; }
         public int IndexerPriority { get; set; }
-        public DownloadProtocol DownloadProtocol { get; set; }
+        public string DownloadProtocol { get; set; }
         public DateTime PublishDate { get; set; }
 
         public string Origin { get; set; }

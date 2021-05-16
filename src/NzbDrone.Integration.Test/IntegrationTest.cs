@@ -46,7 +46,7 @@ namespace NzbDrone.Integration.Test
                 ConfigContract = nameof(NewznabSettings),
                 Implementation = nameof(Newznab),
                 Name = "NewznabTest",
-                Protocol = Core.Indexers.DownloadProtocol.Usenet,
+                Protocol = nameof(Core.Indexers.UsenetDownloadProtocol),
                 Fields = SchemaBuilder.ToSchema(new NewznabSettings())
             });
 

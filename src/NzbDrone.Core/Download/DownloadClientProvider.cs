@@ -1,14 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Cache;
-using NzbDrone.Core.Indexers;
 
 namespace NzbDrone.Core.Download
 {
     public interface IProvideDownloadClient
     {
-        IDownloadClient GetDownloadClient(DownloadProtocol downloadProtocol);
+        IDownloadClient GetDownloadClient(string downloadProtocol);
         IEnumerable<IDownloadClient> GetDownloadClients();
         IDownloadClient Get(int id);
     }
@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Download
             _lastUsedDownloadClient = cacheManager.GetCache<int>(GetType(), "lastDownloadClientId");
         }
 
-        public IDownloadClient GetDownloadClient(DownloadProtocol downloadProtocol)
+        public IDownloadClient GetDownloadClient(string downloadProtocol)
         {
             var availableProviders = _downloadClientFactory.GetAvailableProviders().Where(v => v.Protocol == downloadProtocol).ToList();
 

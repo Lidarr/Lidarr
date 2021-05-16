@@ -1,3 +1,4 @@
+using System;
 using NzbDrone.Core.Indexers;
 
 namespace Lidarr.Api.V1.Indexers
@@ -9,7 +10,7 @@ namespace Lidarr.Api.V1.Indexers
         public bool EnableInteractiveSearch { get; set; }
         public bool SupportsRss { get; set; }
         public bool SupportsSearch { get; set; }
-        public DownloadProtocol Protocol { get; set; }
+        public string Protocol { get; set; }
         public int Priority { get; set; }
     }
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Lidarr.Api.V1.Artist;
 using Lidarr.Http.REST;
-using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Qualities;
 
 namespace Lidarr.Api.V1.Blacklist
@@ -14,7 +13,7 @@ namespace Lidarr.Api.V1.Blacklist
         public string SourceTitle { get; set; }
         public QualityModel Quality { get; set; }
         public DateTime Date { get; set; }
-        public DownloadProtocol Protocol { get; set; }
+        public string Protocol { get; set; }
         public string Indexer { get; set; }
         public string Message { get; set; }
 

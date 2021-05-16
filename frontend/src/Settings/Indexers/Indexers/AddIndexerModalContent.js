@@ -12,6 +12,19 @@ import { kinds } from 'Helpers/Props';
 import AddIndexerItem from './AddIndexerItem';
 import styles from './AddIndexerModalContent.css';
 
+function mapIndexers(indexers, onIndexerSelect) {
+  return indexers.map((indexer) => {
+    return (
+      <AddIndexerItem
+        key={indexer.implementation}
+        implementation={indexer.implementation}
+        {...indexer}
+        onIndexerSelect={onIndexerSelect}
+      />
+    );
+  });
+}
+
 class AddIndexerModalContent extends Component {
 
   //
@@ -24,6 +37,7 @@ class AddIndexerModalContent extends Component {
       schemaError,
       usenetIndexers,
       torrentIndexers,
+      otherIndexers,
       onIndexerSelect,
       onModalClose
     } = this.props;
@@ -57,16 +71,7 @@ class AddIndexerModalContent extends Component {
                 <FieldSet legend="Usenet">
                   <div className={styles.indexers}>
                     {
-                      usenetIndexers.map((indexer) => {
-                        return (
-                          <AddIndexerItem
-                            key={indexer.implementation}
-                            implementation={indexer.implementation}
-                            {...indexer}
-                            onIndexerSelect={onIndexerSelect}
-                          />
-                        );
-                      })
+                      mapIndexers(usenetIndexers, onIndexerSelect)
                     }
                   </div>
                 </FieldSet>
@@ -74,19 +79,22 @@ class AddIndexerModalContent extends Component {
                 <FieldSet legend="Torrents">
                   <div className={styles.indexers}>
                     {
-                      torrentIndexers.map((indexer) => {
-                        return (
-                          <AddIndexerItem
-                            key={indexer.implementation}
-                            implementation={indexer.implementation}
-                            {...indexer}
-                            onIndexerSelect={onIndexerSelect}
-                          />
-                        );
-                      })
+                      mapIndexers(torrentIndexers, onIndexerSelect)
                     }
                   </div>
                 </FieldSet>
+
+                {
+                  otherIndexers.length ?
+                    <FieldSet legend="Other">
+                      <div className={styles.indexers}>
+                        {
+                          mapIndexers(otherIndexers, onIndexerSelect)
+                        }
+                      </div>
+                    </FieldSet> :
+                    null
+                }
               </div>
           }
         </ModalBody>
@@ -108,6 +116,7 @@ AddIndexerModalContent.propTypes = {
   schemaError: PropTypes.object,
   usenetIndexers: PropTypes.arrayOf(PropTypes.object).isRequired,
   torrentIndexers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  otherIndexers: PropTypes.arrayOf(PropTypes.object).isRequired,
   onIndexerSelect: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired
 };

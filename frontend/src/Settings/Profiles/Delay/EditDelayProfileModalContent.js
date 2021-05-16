@@ -12,22 +12,21 @@ import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
-import { inputTypes, kinds } from 'Helpers/Props';
-import { boolSettingShape, numberSettingShape, tagSettingShape } from 'Helpers/Props/Shapes/settingShape';
+import { inputTypes, kinds, sizes } from 'Helpers/Props';
+import { numberSettingShape, stringSettingShape, tagSettingShape } from 'Helpers/Props/Shapes/settingShape';
+import DownloadProtocolItems from './DownloadProtocolItems';
 import styles from './EditDelayProfileModalContent.css';
 
 function EditDelayProfileModalContent(props) {
   const {
     id,
     isFetching,
+    isPopulated,
     error,
     isSaving,
     saveError,
     item,
-    protocol,
-    protocolOptions,
     onInputChange,
-    onProtocolChange,
     onSavePress,
     onModalClose,
     onDeleteDelayProfilePress,
@@ -35,10 +34,8 @@ function EditDelayProfileModalContent(props) {
   } = props;
 
   const {
-    enableUsenet,
-    enableTorrent,
-    usenetDelay,
-    torrentDelay,
+    name,
+    items,
     tags
   } = item;
 
@@ -56,65 +53,44 @@ function EditDelayProfileModalContent(props) {
 
         {
           !isFetching && !!error &&
-            <div>Unable to add a new quality profile, please try again.</div>
+            <div>Unable to add a new delay profile, please try again.</div>
         }
 
         {
-          !isFetching && !error &&
+          !isFetching && isPopulated && !error &&
             <Form {...otherProps}>
-              <FormGroup>
-                <FormLabel>Protocol</FormLabel>
+              <FormGroup size={sizes.SMALL}>
+                <FormLabel size={sizes.SMALL}>
+                  Name
+                </FormLabel>
 
                 <FormInputGroup
-                  type={inputTypes.SELECT}
-                  name="protocol"
-                  value={protocol}
-                  values={protocolOptions}
-                  helpText="Choose which protocol(s) to use and which one is preferred when choosing between otherwise equal releases"
-                  onChange={onProtocolChange}
+                  type={inputTypes.TEXT}
+                  name="name"
+                  {...name}
+                  onChange={onInputChange}
                 />
               </FormGroup>
 
-              {
-                enableUsenet.value &&
-                  <FormGroup>
-                    <FormLabel>Usenet Delay</FormLabel>
-
-                    <FormInputGroup
-                      type={inputTypes.NUMBER}
-                      name="usenetDelay"
-                      unit="minutes"
-                      {...usenetDelay}
-                      helpText="Delay in minutes to wait before grabbing a release from Usenet"
-                      onChange={onInputChange}
-                    />
-                  </FormGroup>
-              }
-
-              {
-                enableTorrent.value &&
-                  <FormGroup>
-                    <FormLabel>Torrent Delay</FormLabel>
-
-                    <FormInputGroup
-                      type={inputTypes.NUMBER}
-                      name="torrentDelay"
-                      unit="minutes"
-                      {...torrentDelay}
-                      helpText="Delay in minutes to wait before grabbing a torrent"
-                      onChange={onInputChange}
-                    />
-                  </FormGroup>
-              }
+              <div className={styles.formGroupWrapper}>
+                <DownloadProtocolItems
+                  items={items.value}
+                  errors={items.errors}
+                  warnings={items.warnings}
+                  {...otherProps}
+                />
+              </div>
 
               {
                 id === 1 ?
                   <Alert>
-                    This is the default profile. It applies to all artist that don't have an explicit profile.
+                    This is the default profile. It applies to all artists that don't have an explicit profile.
                   </Alert> :
 
-                  <FormGroup>
-                    <FormLabel>Tags</FormLabel>
+                  <FormGroup size={sizes.SMALL}>
+                    <FormLabel size={sizes.SMALL}>
+                      Tags
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.TAG}
@@ -159,10 +135,8 @@ function EditDelayProfileModalContent(props) {
 }
 
 const delayProfileShape = {
-  enableUsenet: PropTypes.shape(boolSettingShape).isRequired,
-  enableTorrent: PropTypes.shape(boolSettingShape).isRequired,
-  usenetDelay: PropTypes.shape(numberSettingShape).isRequired,
-  torrentDelay: PropTypes.shape(numberSettingShape).isRequired,
+  name: PropTypes.shape(stringSettingShape).isRequired,
+  items: PropTypes.object.isRequired,
   order: PropTypes.shape(numberSettingShape),
   tags: PropTypes.shape(tagSettingShape).isRequired
 };
@@ -170,14 +144,12 @@ const delayProfileShape = {
 EditDelayProfileModalContent.propTypes = {
   id: PropTypes.number,
   isFetching: PropTypes.bool.isRequired,
+  isPopulated: PropTypes.bool.isRequired,
   error: PropTypes.object,
   isSaving: PropTypes.bool.isRequired,
   saveError: PropTypes.object,
   item: PropTypes.shape(delayProfileShape).isRequired,
-  protocol: PropTypes.string.isRequired,
-  protocolOptions: PropTypes.arrayOf(PropTypes.object).isRequired,
   onInputChange: PropTypes.func.isRequired,
-  onProtocolChange: PropTypes.func.isRequired,
   onSavePress: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired,
   onDeleteDelayProfilePress: PropTypes.func

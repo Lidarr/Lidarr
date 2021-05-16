@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Indexers.Torznab
 
         public override string Name => "Torznab";
 
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override string Protocol => nameof(TorrentDownloadProtocol);
         public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings).DefaultPageSize;
 
         public override IIndexerRequestGenerator GetRequestGenerator()
@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Indexers.Torznab
                 Name = name,
                 Implementation = GetType().Name,
                 Settings = settings,
-                Protocol = DownloadProtocol.Usenet,
+                Protocol = nameof(UsenetDownloadProtocol),
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch
             };

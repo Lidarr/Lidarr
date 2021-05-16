@@ -1,12 +1,12 @@
-﻿using NzbDrone.Core.Download;
-using NzbDrone.Core.Indexers;
+﻿using System;
+using NzbDrone.Core.Download;
 
 namespace Lidarr.Api.V1.DownloadClient
 {
     public class DownloadClientResource : ProviderResource<DownloadClientResource>
     {
         public bool Enable { get; set; }
-        public DownloadProtocol Protocol { get; set; }
+        public string Protocol { get; set; }
         public int Priority { get; set; }
     }
 

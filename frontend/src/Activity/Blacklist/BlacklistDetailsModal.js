@@ -45,7 +45,7 @@ class BlacklistDetailsModal extends Component {
 
               <DescriptionListItem
                 title="Protocol"
-                data={protocol}
+                data={protocol.replace('DownloadProtocol', '')}
               />
 
               {

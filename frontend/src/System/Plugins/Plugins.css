@@ -1,0 +1,6 @@
+.loading {
+  composes: loading from '~Components/Loading/LoadingIndicator.css';
+
+  margin-top: 5px;
+  margin-left: auto;
+}
