@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Lidarr.Http.REST;
-using Newtonsoft.Json;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
@@ -49,12 +49,12 @@ namespace Lidarr.Api.V1.Indexers
         public DownloadProtocol Protocol { get; set; }
 
         // Sent when queuing an unknown release
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
 
         //        [JsonIgnore]
         public int? ArtistId { get; set; }
 
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
 
         //        [JsonIgnore]
         public int? AlbumId { get; set; }

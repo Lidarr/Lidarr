@@ -9,7 +9,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NLog" Version="4.7.9" />
     <PackageReference Include="NUnit" Version="3.13.1" />
-    <PackageReference Include="RestSharp" Version="106.10.1" />
+    <PackageReference Include="RestSharp" Version="106.11.7" />
+	<PackageReference Include="RestSharp.Serializers.SystemTextJson" Version="106.11.7" />
     <PackageReference Include="System.IO.Abstractions" Version="7.0.15" />
     <PackageReference Include="Unity" Version="5.11.2" />
   </ItemGroup>
