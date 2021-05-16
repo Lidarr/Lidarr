@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Tags
         public TagService(ITagRepository repo,
                           IEventAggregator eventAggregator,
                           IDelayProfileService delayProfileService,
-                          ImportListFactory importListFactory,
+                          IImportListFactory importListFactory,
                           INotificationFactory notificationFactory,
                           IReleaseProfileService releaseProfileService,
                           IArtistService artistService,
