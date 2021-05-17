@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
@@ -9,7 +10,7 @@ namespace NzbDrone.Core.Indexers
     {
         bool SupportsRss { get; }
         bool SupportsSearch { get; }
-        DownloadProtocol Protocol { get; }
+        string Protocol { get; }
 
         IList<ReleaseInfo> FetchRecent();
         IList<ReleaseInfo> Fetch(AlbumSearchCriteria searchCriteria);

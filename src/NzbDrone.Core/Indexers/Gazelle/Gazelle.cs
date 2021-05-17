@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
 using NLog;
@@ -12,7 +13,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
     public class Gazelle : HttpIndexerBase<GazelleSettings>
     {
         public override string Name => "Gazelle API";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override string Protocol => nameof(TorrentDownloadProtocol);
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
         public override int PageSize => 50;
@@ -65,7 +66,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                 Name = name,
                 Implementation = GetType().Name,
                 Settings = settings,
-                Protocol = DownloadProtocol.Torrent,
+                Protocol = nameof(TorrentDownloadProtocol),
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch
             };

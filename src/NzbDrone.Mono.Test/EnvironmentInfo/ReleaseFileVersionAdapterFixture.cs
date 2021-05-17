@@ -14,6 +14,8 @@ namespace NzbDrone.Mono.Test.EnvironmentInfo
         [SetUp]
         public void Setup()
         {
+            NotBsd();
+
             Mocker.SetConstant<IDiskProvider>(Mocker.Resolve<DiskProvider>());
         }
 

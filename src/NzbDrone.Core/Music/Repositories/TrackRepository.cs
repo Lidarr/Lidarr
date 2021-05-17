@@ -10,6 +10,7 @@ namespace NzbDrone.Core.Music
     {
         List<Track> GetTracks(int artistId);
         List<Track> GetTracksByAlbum(int albumId);
+        List<Track> GetTracksByForeignAlbumId(string foreignAlbumId);
         List<Track> GetTracksByRelease(int albumReleaseId);
         List<Track> GetTracksByReleases(List<int> albumReleaseIds);
         List<Track> GetTracksForRefresh(int albumReleaseId, IEnumerable<string> foreignTrackIds);
@@ -45,6 +46,15 @@ namespace NzbDrone.Core.Music
                          .Join<AlbumRelease, Album>((r, a) => r.AlbumId == a.Id)
                          .Where<AlbumRelease>(r => r.Monitored == true)
                          .Where<Album>(x => x.Id == albumId));
+        }
+
+        public List<Track> GetTracksByForeignAlbumId(string foreignAlbumId)
+        {
+            return Query(Builder()
+                         .Join<Track, AlbumRelease>((t, r) => t.AlbumReleaseId == r.Id)
+                         .Join<AlbumRelease, Album>((r, a) => r.AlbumId == a.Id)
+                         .Where<AlbumRelease>(r => r.Monitored == true)
+                         .Where<Album>(x => x.ForeignAlbumId == foreignAlbumId));
         }
 
         public List<Track> GetTracksByRelease(int albumReleaseId)

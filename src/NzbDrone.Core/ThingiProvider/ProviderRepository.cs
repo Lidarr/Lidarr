@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Dapper;
+using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Reflection;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Datastore.Converters;
 using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.ThingiProvider
@@ -15,14 +16,19 @@ namespace NzbDrone.Core.ThingiProvider
             new()
     {
         protected readonly JsonSerializerOptions _serializerSettings;
+        private readonly Logger _logger;
 
-        protected ProviderRepository(IMainDatabase database, IEventAggregator eventAggregator)
+        protected ProviderRepository(IMainDatabase database,
+                                     IEventAggregator eventAggregator,
+                                     Logger logger)
             : base(database, eventAggregator)
         {
+            _logger = logger;
+
             var serializerSettings = new JsonSerializerOptions
             {
                 AllowTrailingCommas = true,
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 PropertyNameCaseInsensitive = true,
                 DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -30,8 +36,8 @@ namespace NzbDrone.Core.ThingiProvider
             };
 
             serializerSettings.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, true));
-            serializerSettings.Converters.Add(new TimeSpanConverter());
-            serializerSettings.Converters.Add(new UtcConverter());
+            serializerSettings.Converters.Add(new STJTimeSpanConverter());
+            serializerSettings.Converters.Add(new STJUtcConverter());
 
             _serializerSettings = serializerSettings;
         }
@@ -53,7 +59,14 @@ namespace NzbDrone.Core.ThingiProvider
                 {
                     var body = reader.IsDBNull(settingsIndex) ? null : reader.GetString(settingsIndex);
                     var item = parser(reader);
-                    var impType = typeof(IProviderConfig).Assembly.FindTypeByName(item.ConfigContract);
+                    var impType = ReflectionExtensions.FindTypeByName(item.ConfigContract);
+
+                    // If the type is missing
+                    if (impType == null)
+                    {
+                        _logger.Warn($"Skipping provider of unknown type {item.ConfigContract}");
+                        continue;
+                    }
 
                     if (body.IsNullOrWhiteSpace())
                     {

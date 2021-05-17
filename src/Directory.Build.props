@@ -6,7 +6,6 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <RuntimeIdentifiers>win-x64;win-x86;osx-x64;linux-x64;linux-musl-x64;linux-arm;linux-arm64;linux-musl-arm64</RuntimeIdentifiers>
-    <ExcludedRuntimeFrameworkPairs>win-x64:net462;win-x86:net462;osx-x64:net462;linux-arm:net462;linux-arm64:net462;linux-musl-x64:net462;linux-musl-arm64:net462</ExcludedRuntimeFrameworkPairs>
 
     <LidarrRootDir>$(MSBuildThisFileDirectory)..\</LidarrRootDir>
 
@@ -24,6 +23,10 @@
     <LidarrProject Condition="$(MSBuildProjectName.StartsWith('Lidarr'))">true</LidarrProject>
     <LidarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceInstall'))">true</LidarrProject>
     <LidarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceUninstall'))">true</LidarrProject>
+
+    <!-- A test project gets the test sdk packages automatically added -->
+    <TestProject>false</TestProject>
+    <TestProject Condition="$(MSBuildProjectName.EndsWith('.Test'))">true</TestProject>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -63,6 +66,7 @@
     <!-- Should be replaced by CI -->
     <AssemblyVersion>10.0.0.*</AssemblyVersion>
     <AssemblyConfiguration>$(Configuration)-dev</AssemblyConfiguration>
+    <NeutralLanguage>en</NeutralLanguage>
 
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
@@ -83,21 +87,18 @@
     <RootNamespace Condition="'$(LidarrProject)'=='true'">$(MSBuildProjectName.Replace('Lidarr','NzbDrone'))</RootNamespace>
   </PropertyGroup>
 
-  <!-- Allow building net framework using mono -->
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
+  <!-- Standard testing packages -->
+  <ItemGroup Condition="'$(TestProject)'=='true'">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+    <PackageReference Include="NUnit" Version="3.13.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="NunitXml.TestLogger" Version="3.0.97" />
+    <PackageReference Include="coverlet.collector" Version="3.0.4-preview.27.ge7cb7c3b40" />
   </ItemGroup>
 
   <!-- Set up stylecop -->
   <ItemGroup Condition="'$(LidarrProject)'=='true' and '$(EnableAnalyzers)'!='false'">
     <!-- StyleCop analysis -->
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

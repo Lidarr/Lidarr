@@ -16,11 +16,13 @@ namespace NzbDrone.Core.ImportLists.Spotify
             where TSettings : SpotifySettingsBase<TSettings>, new();
         Paging<SavedAlbum> GetSavedAlbums<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api)
             where TSettings : SpotifySettingsBase<TSettings>, new();
-        Paging<PlaylistTrack> GetPlaylistTracks<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, string id, string fields)
+        FullPlaylist GetPlaylist<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, string id, string fields)
             where TSettings : SpotifySettingsBase<TSettings>, new();
         Paging<T> GetNextPage<T, TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, Paging<T> item)
             where TSettings : SpotifySettingsBase<TSettings>, new();
         FollowedArtists GetNextPage<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, FollowedArtists item)
+            where TSettings : SpotifySettingsBase<TSettings>, new();
+        SearchItem SearchItems<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, string query, SearchType type)
             where TSettings : SpotifySettingsBase<TSettings>, new();
     }
 
@@ -57,10 +59,10 @@ namespace NzbDrone.Core.ImportLists.Spotify
             return Execute(list, api, x => x.GetSavedAlbums(50));
         }
 
-        public Paging<PlaylistTrack> GetPlaylistTracks<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, string id, string fields)
+        public FullPlaylist GetPlaylist<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, string id, string fields)
             where TSettings : SpotifySettingsBase<TSettings>, new()
         {
-            return Execute(list, api, x => x.GetPlaylistTracks(id, fields: fields));
+            return Execute(list, api, x => x.GetPlaylist(id, fields: fields));
         }
 
         public Paging<T> GetNextPage<T, TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, Paging<T> item)
@@ -73,6 +75,12 @@ namespace NzbDrone.Core.ImportLists.Spotify
             where TSettings : SpotifySettingsBase<TSettings>, new()
         {
             return Execute(list, api, (x) => x.GetNextPage<FollowedArtists, FullArtist>(item.Artists));
+        }
+
+        public SearchItem SearchItems<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, string query, SearchType type)
+            where TSettings : SpotifySettingsBase<TSettings>, new()
+        {
+            return Execute(list, api, (x) => x.SearchItems(query, type));
         }
 
         public T Execute<T, TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, Func<SpotifyWebAPI, T> method, bool allowReauth = true)

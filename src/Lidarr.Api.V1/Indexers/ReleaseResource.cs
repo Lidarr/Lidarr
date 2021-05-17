@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Lidarr.Http.REST;
-using Newtonsoft.Json;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
@@ -46,15 +46,15 @@ namespace Lidarr.Api.V1.Indexers
         public string InfoHash { get; set; }
         public int? Seeders { get; set; }
         public int? Leechers { get; set; }
-        public DownloadProtocol Protocol { get; set; }
+        public string Protocol { get; set; }
 
         // Sent when queuing an unknown release
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
 
         //        [JsonIgnore]
         public int? ArtistId { get; set; }
 
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
 
         //        [JsonIgnore]
         public int? AlbumId { get; set; }
@@ -113,7 +113,7 @@ namespace Lidarr.Api.V1.Indexers
         {
             ReleaseInfo model;
 
-            if (resource.Protocol == DownloadProtocol.Torrent)
+            if (resource.Protocol == nameof(TorrentDownloadProtocol))
             {
                 model = new TorrentInfo
                 {

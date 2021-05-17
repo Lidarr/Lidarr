@@ -1,3 +1,4 @@
+using System;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers
@@ -7,7 +8,7 @@ namespace NzbDrone.Core.Indexers
         public bool EnableRss { get; set; }
         public bool EnableAutomaticSearch { get; set; }
         public bool EnableInteractiveSearch { get; set; }
-        public DownloadProtocol Protocol { get; set; }
+        public string Protocol { get; set; }
         public bool SupportsRss { get; set; }
         public bool SupportsSearch { get; set; }
         public int Priority { get; set; } = 25;

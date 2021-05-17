@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 set -e
 
 outputFolder='_output'
@@ -24,6 +24,18 @@ UpdateVersionNumber()
         sed -i'' -e "s/<AssemblyVersion>[0-9.*]\+<\/AssemblyVersion>/<AssemblyVersion>$LIDARRVERSION<\/AssemblyVersion>/g" src/Directory.Build.props
         sed -i'' -e "s/<AssemblyConfiguration>[\$()A-Za-z-]\+<\/AssemblyConfiguration>/<AssemblyConfiguration>${BUILD_SOURCEBRANCHNAME}<\/AssemblyConfiguration>/g" src/Directory.Build.props
         sed -i'' -e "s/<string>10.0.0.0<\/string>/<string>$LIDARRVERSION<\/string>/g" macOS/Lidarr.app/Contents/Info.plist
+    fi
+}
+
+EnableBsdSupport()
+{
+    #todo enable sdk with
+    #SDK_PATH=$(dotnet --list-sdks | grep -P '5\.\d\.\d+' | head -1 | sed 's/\(5\.[0-9]*\.[0-9]*\).*\[\(.*\)\]/\2\/\1/g')
+    # BUNDLED_VERSIONS="${SDK_PATH}/Microsoft.NETCoreSdk.BundledVersions.props"
+
+    if grep -qv freebsd-x64 src/Directory.Build.props; then
+        sed -i'' -e "s^<RuntimeIdentifiers>\(.*\)</RuntimeIdentifiers>^<RuntimeIdentifiers>\1;freebsd-x64</RuntimeIdentifiers>^g" src/Directory.Build.props
+        sed -i'' -e "s^<ExcludedRuntimeFrameworkPairs>\(.*\)</ExcludedRuntimeFrameworkPairs>^<ExcludedRuntimeFrameworkPairs>\1;freebsd-x64:net472</ExcludedRuntimeFrameworkPairs>^g" src/Directory.Build.props
     fi
 }
 
@@ -120,7 +132,7 @@ PackageLinux()
 
     echo "Adding Lidarr.Mono to UpdatePackage"
     cp $folder/Lidarr.Mono.* $folder/Lidarr.Update
-    if [ "$framework" = "netcoreapp3.1" ]; then
+    if [ "$framework" = "net5.0" ]; then
         cp $folder/Mono.Posix.NETStandard.* $folder/Lidarr.Update
         cp $folder/libMonoPosixHelper.* $folder/Lidarr.Update
     fi
@@ -138,11 +150,6 @@ PackageMacOS()
 
     PackageFiles "$folder" "$framework" "osx-x64"
 
-    if [ "$framework" = "net462" ]; then
-        echo "Adding Startup script"
-        cp macOS/Lidarr $folder
-    fi
-
     echo "Removing Service helpers"
     rm -f $folder/ServiceUninstall.*
     rm -f $folder/ServiceInstall.*
@@ -152,7 +159,7 @@ PackageMacOS()
 
     echo "Adding Lidarr.Mono to UpdatePackage"
     cp $folder/Lidarr.Mono.* $folder/Lidarr.Update
-    if [ "$framework" = "netcoreapp3.1" ]; then
+    if [ "$framework" = "net5.0" ]; then
         cp $folder/Mono.Posix.NETStandard.* $folder/Lidarr.Update
         cp $folder/libMonoPosixHelper.* $folder/Lidarr.Update
     fi
@@ -186,12 +193,13 @@ PackageWindows()
 {
     local framework="$1"
     local runtime="$2"
-    
-    ProgressStart "Creating Windows Package for $framework"
+
+    ProgressStart "Creating $runtime Package for $framework"
 
     local folder=$artifactsFolder/$runtime/$framework/Lidarr
     
     PackageFiles "$folder" "$framework" "$runtime"
+    cp -r $outputFolder/$framework-windows/$runtime/publish/* $folder
 
     echo "Removing Lidarr.Mono"
     rm -f $folder/Lidarr.Mono.*
@@ -201,7 +209,7 @@ PackageWindows()
     echo "Adding Lidarr.Windows to UpdatePackage"
     cp $folder/Lidarr.Windows.* $folder/Lidarr.Update
 
-    ProgressEnd 'Creating Windows Package'
+    ProgressEnd "Creating $runtime Package for $framework"
 }
 
 Package()
@@ -213,7 +221,7 @@ Package()
     IFS='-' read -ra SPLIT <<< "$runtime"
 
     case "${SPLIT[0]}" in
-        linux)
+        linux|freebsd*)
             PackageLinux "$framework" "$runtime"
             ;;
         win)
@@ -258,6 +266,7 @@ if [ $# -eq 0 ]; then
     FRONTEND=YES
     PACKAGES=YES
     LINT=YES
+    ENABLE_BSD=NO
 fi
 
 while [[ $# -gt 0 ]]
@@ -267,6 +276,10 @@ key="$1"
 case $key in
     --backend)
         BACKEND=YES
+        shift # past argument
+        ;;
+    --enable-bsd)
+        ENABLE_BSD=YES
         shift # past argument
         ;;
     -r|--runtime)
@@ -309,15 +322,22 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 if [ "$BACKEND" = "YES" ];
 then
     UpdateVersionNumber
+    if [ "$ENABLE_BSD" = "YES" ];
+    then
+        EnableBsdSupport
+    fi
     Build
     if [[ -z "$RID" || -z "$FRAMEWORK" ]];
     then
-        PackageTests "netcoreapp3.1" "win-x64"
-        PackageTests "netcoreapp3.1" "win-x86"
-        PackageTests "netcoreapp3.1" "linux-x64"
-        PackageTests "netcoreapp3.1" "linux-musl-x64"
-        PackageTests "netcoreapp3.1" "osx-x64"
-        PackageTests "net462" "linux-x64"
+        PackageTests "net5.0" "win-x64"
+        PackageTests "net5.0" "win-x86"
+        PackageTests "net5.0" "linux-x64"
+        PackageTests "net5.0" "linux-musl-x64"
+        PackageTests "net5.0" "osx-x64"
+        if [ "$ENABLE_BSD" = "YES" ];
+        then
+            PackageTests "net5.0" "freebsd-x64"
+        fi
     else
         PackageTests "$FRAMEWORK" "$RID"
     fi
@@ -345,15 +365,18 @@ then
 
     if [[ -z "$RID" || -z "$FRAMEWORK" ]];
     then
-        Package "netcoreapp3.1" "win-x64"
-        Package "netcoreapp3.1" "win-x86"
-        Package "netcoreapp3.1" "linux-x64"
-        Package "netcoreapp3.1" "linux-musl-x64"
-        Package "netcoreapp3.1" "linux-arm64"
-        Package "netcoreapp3.1" "linux-musl-arm64"
-        Package "netcoreapp3.1" "linux-arm"
-        Package "netcoreapp3.1" "osx-x64"
-        Package "net462" "linux-x64"
+        Package "net5.0" "win-x64"
+        Package "net5.0" "win-x86"
+        Package "net5.0" "linux-x64"
+        Package "net5.0" "linux-musl-x64"
+        Package "net5.0" "linux-arm64"
+        Package "net5.0" "linux-musl-arm64"
+        Package "net5.0" "linux-arm"
+        Package "net5.0" "osx-x64"
+        if [ "$ENABLE_BSD" = "YES" ];
+        then
+            Package "net5.0" "freebsd-x64"
+        fi
     else
         Package "$FRAMEWORK" "$RID"
     fi

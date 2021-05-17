@@ -1,15 +1,16 @@
+using System;
 using NzbDrone.Core.Indexers;
 
 namespace Lidarr.Api.V1.Indexers
 {
-    public class IndexerResource : ProviderResource
+    public class IndexerResource : ProviderResource<IndexerResource>
     {
         public bool EnableRss { get; set; }
         public bool EnableAutomaticSearch { get; set; }
         public bool EnableInteractiveSearch { get; set; }
         public bool SupportsRss { get; set; }
         public bool SupportsSearch { get; set; }
-        public DownloadProtocol Protocol { get; set; }
+        public string Protocol { get; set; }
         public int Priority { get; set; }
     }
 

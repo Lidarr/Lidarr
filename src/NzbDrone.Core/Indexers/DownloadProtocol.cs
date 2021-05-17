@@ -1,9 +1,14 @@
 ﻿namespace NzbDrone.Core.Indexers
 {
-    public enum DownloadProtocol
+    public interface IDownloadProtocol
     {
-        Unknown = 0,
-        Usenet = 1,
-        Torrent = 2
+    }
+
+    public class UsenetDownloadProtocol : IDownloadProtocol
+    {
+    }
+
+    public class TorrentDownloadProtocol : IDownloadProtocol
+    {
     }
 }

@@ -115,6 +115,7 @@ export const actionHandlers = handleThunks({
     const promise = createAjaxRequest({
       url: '/artist',
       method: 'POST',
+      dataType: 'json',
       contentType: 'application/json',
       data: JSON.stringify(newArtist)
     }).request;
