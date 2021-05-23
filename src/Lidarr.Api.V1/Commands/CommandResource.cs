@@ -4,6 +4,7 @@ using System.Linq;
 using Lidarr.Http.REST;
 using Newtonsoft.Json;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Http;
 using NzbDrone.Core.Messaging.Commands;
 
 namespace Lidarr.Api.V1.Commands
@@ -22,6 +23,8 @@ namespace Lidarr.Api.V1.Commands
         public TimeSpan? Duration { get; set; }
         public string Exception { get; set; }
         public CommandTrigger Trigger { get; set; }
+
+        public string ClientUserAgent { get; set; }
 
         [JsonIgnore]
         public string CompletionMessage { get; set; }
@@ -105,6 +108,8 @@ namespace Lidarr.Api.V1.Commands
                 Duration = model.Duration,
                 Exception = model.Exception,
                 Trigger = model.Trigger,
+
+                ClientUserAgent = UserAgentParser.SimplifyUserAgent(model.Body.ClientUserAgent),
 
                 CompletionMessage = model.Body.CompletionMessage,
                 LastExecutionTime = model.Body.LastExecutionTime
