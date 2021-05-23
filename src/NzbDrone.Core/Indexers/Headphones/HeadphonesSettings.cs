@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Indexers.Headphones
 
         public string ApiKey { get; set; }
 
-        [FieldDefinition(0, Label = "Categories", HelpText = "Comma Separated list, leave blank to disable standard/daily shows", Advanced = true)]
+        [FieldDefinition(0, Label = "Categories", HelpText = "Comma Separated list, leave blank to disable standard/daily shows")]
         public IEnumerable<int> Categories { get; set; }
 
         [FieldDefinition(1, Label = "Username")]
