@@ -135,7 +135,7 @@ namespace NzbDrone.Core.Configuration
 
         public int Port => GetValueInt("Port", 8686);
 
-        public int SslPort => GetValueInt("SslPort", 6868);
+        public int SslPort => GetValueInt("SslPort", 6869);
 
         public bool EnableSsl => GetValueBoolean("EnableSsl", false);
 
