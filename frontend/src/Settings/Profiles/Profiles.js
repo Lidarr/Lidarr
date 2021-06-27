@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd-multi-backend';
+import HTML5toTouch from 'react-dnd-multi-backend/dist/esm/HTML5toTouch';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import SettingsToolbarConnector from 'Settings/SettingsToolbarConnector';
@@ -25,7 +25,7 @@ class Profiles extends Component {
         />
 
         <PageContentBody>
-          <DndProvider backend={HTML5Backend}>
+          <DndProvider options={HTML5toTouch}>
             <QualityProfilesConnector />
             <MetadataProfilesConnector />
             <DelayProfilesConnector />
