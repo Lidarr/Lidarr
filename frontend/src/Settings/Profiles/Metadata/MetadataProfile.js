@@ -98,7 +98,7 @@ class MetadataProfile extends Component {
               return (
                 <Label
                   key={item.albumType.id}
-                  kind={kinds.default}
+                  kind={kinds.DEFAULT}
                   title={null}
                 >
                   {item.albumType.name}

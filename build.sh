@@ -77,11 +77,11 @@ YarnInstall()
     ProgressEnd 'yarn install'
 }
 
-RunGulp()
+RunWebpack()
 {
-    ProgressStart 'Running gulp'
-    yarn run build --production
-    ProgressEnd 'Running gulp'
+    ProgressStart 'Running webpack'
+    yarn run build --env production
+    ProgressEnd 'Running webpack'
 }
 
 PackageFiles()
@@ -326,7 +326,7 @@ fi
 if [ "$FRONTEND" = "YES" ];
 then
     YarnInstall
-    RunGulp
+    RunWebpack
 fi
 
 if [ "$LINT" = "YES" ];
