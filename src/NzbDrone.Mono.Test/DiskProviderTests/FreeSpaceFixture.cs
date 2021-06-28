@@ -10,11 +10,6 @@ namespace NzbDrone.Mono.Test.DiskProviderTests
     [Platform(Exclude = "Win")]
     public class FreeSpaceFixture : FreeSpaceFixtureBase<DiskProvider>
     {
-        public FreeSpaceFixture()
-        {
-            MonoOnly();
-        }
-
         [SetUp]
         public void Setup()
         {
