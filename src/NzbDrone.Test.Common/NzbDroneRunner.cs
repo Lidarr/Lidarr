@@ -45,10 +45,6 @@ namespace NzbDrone.Test.Common
             {
                 lidarrConsoleExe = "Lidarr.Console.exe";
             }
-            else if (PlatformInfo.IsMono)
-            {
-                lidarrConsoleExe = "Lidarr.exe";
-            }
             else
             {
                 lidarrConsoleExe = "Lidarr";
