@@ -39,7 +39,7 @@ namespace NzbDrone.Core.Indexers.Headphones
             pageableRequests.Add(GetPagedRequests(MaxPages,
                 Settings.Categories,
                 "search",
-                NewsnabifyTitle($"&q={searchCriteria.ArtistQuery}+{searchCriteria.AlbumQuery}")));
+                NewsnabifyTitle($"&q={searchCriteria.CleanArtistQuery}+{searchCriteria.CleanAlbumQuery}")));
 
             return pageableRequests;
         }
@@ -53,7 +53,7 @@ namespace NzbDrone.Core.Indexers.Headphones
             pageableRequests.Add(GetPagedRequests(MaxPages,
                 Settings.Categories,
                 "search",
-                NewsnabifyTitle($"&q={searchCriteria.ArtistQuery}")));
+                NewsnabifyTitle($"&q={searchCriteria.CleanArtistQuery}")));
 
             return pageableRequests;
         }

@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Indexers.FileList
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetRequest("search-torrents", Settings.Categories, string.Format("&type=name&query={0}+{1}", Uri.EscapeDataString(searchCriteria.ArtistQuery.Trim()), Uri.EscapeDataString(searchCriteria.AlbumQuery.Trim()))));
+            pageableRequests.Add(GetRequest("search-torrents", Settings.Categories, string.Format("&type=name&query={0}+{1}", Uri.EscapeDataString(searchCriteria.CleanArtistQuery.Trim()), Uri.EscapeDataString(searchCriteria.CleanAlbumQuery.Trim()))));
 
             return pageableRequests;
         }
@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Indexers.FileList
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetRequest("search-torrents", Settings.Categories, string.Format("&type=name&query={0}", Uri.EscapeDataString(searchCriteria.ArtistQuery.Trim()))));
+            pageableRequests.Add(GetRequest("search-torrents", Settings.Categories, string.Format("&type=name&query={0}", Uri.EscapeDataString(searchCriteria.CleanArtistQuery.Trim()))));
 
             return pageableRequests;
         }
