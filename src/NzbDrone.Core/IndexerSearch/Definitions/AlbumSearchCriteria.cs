@@ -8,7 +8,8 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public int AlbumYear { get; set; }
         public string Disambiguation { get; set; }
 
-        public string AlbumQuery => GetQueryTitle($"{AlbumTitle}{(Disambiguation.IsNullOrWhiteSpace() ? string.Empty : $"+{Disambiguation}")}");
+        public string AlbumQuery => $"{AlbumTitle}{(Disambiguation.IsNullOrWhiteSpace() ? string.Empty : $"+{Disambiguation}")}";
+        public string CleanAlbumQuery => GetQueryTitle(AlbumQuery);
 
         public override string ToString()
         {

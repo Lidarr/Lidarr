@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Xml;
 using FluentAssertions;
 using Moq;
@@ -96,6 +96,29 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             result.Should().NotBeNull();
 
             ExceptionVerification.ExpectedErrors(1);
+        }
+
+        [Test]
+        public void should_use_default_searchengine_if_missing()
+        {
+            GivenCapsResponse(_caps);
+
+            var caps = Subject.GetCapabilities(_settings);
+
+            caps.TextSearchEngine.Should().Be("sphinx");
+            caps.AudioTextSearchEngine.Should().Be("sphinx");
+        }
+
+        [Test]
+        public void should_use_specified_searchengine()
+        {
+            GivenCapsResponse(_caps.Replace("<search ", "<search searchEngine=\"raw\" ")
+                                   .Replace("<audio-search ", "<audio-search searchEngine=\"raw2\" "));
+
+            var caps = Subject.GetCapabilities(_settings);
+
+            caps.TextSearchEngine.Should().Be("raw");
+            caps.AudioTextSearchEngine.Should().Be("raw2");
         }
     }
 }
