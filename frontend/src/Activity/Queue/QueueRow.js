@@ -19,6 +19,7 @@ import QueueStatusCell from './QueueStatusCell';
 import RemoveQueueItemModal from './RemoveQueueItemModal';
 import TimeleftCell from './TimeleftCell';
 import styles from './QueueRow.css';
+import formatBytes from 'Utilities/Number/formatBytes';
 
 class QueueRow extends Component {
 
@@ -243,6 +244,12 @@ class QueueRow extends Component {
                 <TableRowCell key={name}>
                   {title}
                 </TableRowCell>
+              );
+            }
+
+            if (name === 'size') {
+              return (
+                <TableRowCell key={name}>{formatBytes(size)}</TableRowCell>
               );
             }
 
