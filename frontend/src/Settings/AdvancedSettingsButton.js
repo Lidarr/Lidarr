@@ -10,13 +10,14 @@ import styles from './AdvancedSettingsButton.css';
 function AdvancedSettingsButton(props) {
   const {
     advancedSettings,
-    onAdvancedSettingsPress
+    onAdvancedSettingsPress,
+    showLabel
   } = props;
 
   return (
     <Link
       className={styles.button}
-      title={advancedSettings ? translate('AdvancedSettingsShownClickToHide') : translate('AdvancedSettingsHiddenClickToShow')}
+      title={advancedSettings ? translate('ShownClickToHide') : translate('HiddenClickToShow')}
       onPress={onAdvancedSettingsPress}
     >
       <Icon
@@ -43,18 +44,27 @@ function AdvancedSettingsButton(props) {
         />
       </span>
 
-      <div className={styles.labelContainer}>
-        <div className={styles.label}>
-          {advancedSettings ? translate('HideAdvanced') : translate('ShowAdvanced')}
-        </div>
-      </div>
+      {
+        showLabel ?
+          <div className={styles.labelContainer}>
+            <div className={styles.label}>
+              {advancedSettings ? translate('HideAdvanced') : translate('ShowAdvanced')}
+            </div>
+          </div> :
+          null
+      }
     </Link>
   );
 }
 
 AdvancedSettingsButton.propTypes = {
   advancedSettings: PropTypes.bool.isRequired,
-  onAdvancedSettingsPress: PropTypes.func.isRequired
+  onAdvancedSettingsPress: PropTypes.func.isRequired,
+  showLabel: PropTypes.bool.isRequired
+};
+
+AdvancedSettingsButton.defaultProps = {
+  showLabel: true
 };
 
 export default AdvancedSettingsButton;
