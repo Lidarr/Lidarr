@@ -15,11 +15,11 @@ import TableRow from 'Components/Table/TableRow';
 import Popover from 'Components/Tooltip/Popover';
 import { icons, kinds, tooltipPositions } from 'Helpers/Props';
 import InteractiveImportModal from 'InteractiveImport/InteractiveImportModal';
+import formatBytes from 'Utilities/Number/formatBytes';
 import QueueStatusCell from './QueueStatusCell';
 import RemoveQueueItemModal from './RemoveQueueItemModal';
 import TimeleftCell from './TimeleftCell';
 import styles from './QueueRow.css';
-import formatBytes from 'Utilities/Number/formatBytes';
 
 class QueueRow extends Component {
 
