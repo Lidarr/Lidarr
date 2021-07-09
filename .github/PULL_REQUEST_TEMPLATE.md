@@ -1,5 +1,5 @@
 #### Database Migration
-YES | NO
+YES - XXXX | NO
 
 #### Description
 A few sentences describing the overall goals of the pull request's commits.
@@ -8,7 +8,7 @@ A few sentences describing the overall goals of the pull request's commits.
 
 #### Todos
 - [ ] Tests
-- [ ] Wiki Updates
+- [ ] [Wiki Updates](https://wiki.servarr.com)
 
 #### Issues Fixed or Closed by this PR
 
