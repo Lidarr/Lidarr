@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using System;
+using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Parser;
@@ -9,7 +10,7 @@ namespace NzbDrone.Core.Indexers.Omgwtfnzbs
     {
         public override string Name => "omgwtfnzbs";
 
-        public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
+        public override string Protocol => nameof(UsenetDownloadProtocol);
 
         public Omgwtfnzbs(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
             : base(httpClient, indexerStatusService, configService, parsingService, logger)

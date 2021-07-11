@@ -26,7 +26,10 @@
     <PackageReference Include="MonoTorrent" Version="1.0.29" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NzbDrone.Common\Lidarr.Common.csproj" />
+    <ProjectReference Include="..\NzbDrone.Common\Lidarr.Common.csproj">
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\Logo\64.png">

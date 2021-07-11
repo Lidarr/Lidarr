@@ -29,7 +29,7 @@ namespace Lidarr.Api.V1.Queue
         public List<TrackedDownloadStatusMessage> StatusMessages { get; set; }
         public string ErrorMessage { get; set; }
         public string DownloadId { get; set; }
-        public DownloadProtocol Protocol { get; set; }
+        public string Protocol { get; set; }
         public string DownloadClient { get; set; }
         public string Indexer { get; set; }
         public string OutputPath { get; set; }

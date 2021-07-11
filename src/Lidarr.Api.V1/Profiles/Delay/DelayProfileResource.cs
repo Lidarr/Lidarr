@@ -1,18 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Lidarr.Http.REST;
-using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Profiles.Delay;
 
 namespace Lidarr.Api.V1.Profiles.Delay
 {
     public class DelayProfileResource : RestResource
     {
-        public bool EnableUsenet { get; set; }
-        public bool EnableTorrent { get; set; }
-        public DownloadProtocol PreferredProtocol { get; set; }
-        public int UsenetDelay { get; set; }
-        public int TorrentDelay { get; set; }
+        public string Name { get; set; }
+        public List<DelayProfileProtocolItemResource> Items { get; set; }
         public int Order { get; set; }
         public HashSet<int> Tags { get; set; }
     }
@@ -29,12 +25,8 @@ namespace Lidarr.Api.V1.Profiles.Delay
             return new DelayProfileResource
             {
                 Id = model.Id,
-
-                EnableUsenet = model.EnableUsenet,
-                EnableTorrent = model.EnableTorrent,
-                PreferredProtocol = model.PreferredProtocol,
-                UsenetDelay = model.UsenetDelay,
-                TorrentDelay = model.TorrentDelay,
+                Name = model.Name,
+                Items = model.Items.Select(x => x.ToResource()).ToList(),
                 Order = model.Order,
                 Tags = new HashSet<int>(model.Tags)
             };
@@ -50,12 +42,8 @@ namespace Lidarr.Api.V1.Profiles.Delay
             return new DelayProfile
             {
                 Id = resource.Id,
-
-                EnableUsenet = resource.EnableUsenet,
-                EnableTorrent = resource.EnableTorrent,
-                PreferredProtocol = resource.PreferredProtocol,
-                UsenetDelay = resource.UsenetDelay,
-                TorrentDelay = resource.TorrentDelay,
+                Name = resource.Name,
+                Items = resource.Items.Select(x => x.ToModel()).ToList(),
                 Order = resource.Order,
                 Tags = new HashSet<int>(resource.Tags)
             };

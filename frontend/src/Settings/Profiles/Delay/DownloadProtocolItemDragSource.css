@@ -1,0 +1,18 @@
+.downloadProtocolItemDragSource {
+  padding: $qualityProfileItemDragSourcePadding 0;
+}
+
+.downloadProtocolItemPlaceholder {
+  width: 100%;
+  height: $qualityProfileItemHeight;
+  border: 1px dotted #aaa;
+  border-radius: 4px;
+}
+
+.downloadProtocolItemPlaceholderBefore {
+  margin-bottom: 8px;
+}
+
+.downloadProtocolItemPlaceholderAfter {
+  margin-top: 8px;
+}

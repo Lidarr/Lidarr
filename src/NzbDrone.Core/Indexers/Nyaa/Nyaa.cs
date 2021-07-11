@@ -1,3 +1,4 @@
+using System;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
@@ -9,7 +10,7 @@ namespace NzbDrone.Core.Indexers.Nyaa
     {
         public override string Name => "Nyaa";
 
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override string Protocol => nameof(TorrentDownloadProtocol);
         public override int PageSize => 100;
 
         public Nyaa(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)

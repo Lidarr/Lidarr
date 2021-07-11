@@ -30,7 +30,7 @@ namespace NzbDrone.Core.Download.Clients.Pneumatic
 
         public override string Name => "Pneumatic";
 
-        public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
+        public override string Protocol => nameof(UsenetDownloadProtocol);
 
         public override string Download(RemoteAlbum remoteAlbum)
         {

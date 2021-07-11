@@ -5,9 +5,9 @@ import { kinds } from 'Helpers/Props';
 import Label from './Label';
 import styles from './TagList.css';
 
-function TagList({ tags, tagList }) {
+function TagList({ className, tags, tagList }) {
   return (
-    <div className={styles.tags}>
+    <div className={className}>
       {
         tags.map((t) => {
           const tag = _.find(tagList, { id: t });
@@ -31,8 +31,13 @@ function TagList({ tags, tagList }) {
 }
 
 TagList.propTypes = {
+  className: PropTypes.string.isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
   tagList: PropTypes.arrayOf(PropTypes.object).isRequired
+};
+
+TagList.defaultProps = {
+  className: styles.tags
 };
 
 export default TagList;

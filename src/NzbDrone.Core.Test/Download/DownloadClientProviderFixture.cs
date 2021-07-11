@@ -45,7 +45,7 @@ namespace NzbDrone.Core.Test.Download
 
             _downloadClients.Add(mock.Object);
 
-            mock.SetupGet(v => v.Protocol).Returns(DownloadProtocol.Usenet);
+            mock.SetupGet(v => v.Protocol).Returns(nameof(UsenetDownloadProtocol));
 
             return mock;
         }
@@ -62,7 +62,7 @@ namespace NzbDrone.Core.Test.Download
 
             _downloadClients.Add(mock.Object);
 
-            mock.SetupGet(v => v.Protocol).Returns(DownloadProtocol.Torrent);
+            mock.SetupGet(v => v.Protocol).Returns(nameof(TorrentDownloadProtocol));
 
             return mock;
         }
@@ -84,11 +84,11 @@ namespace NzbDrone.Core.Test.Download
             WithUsenetClient();
             WithTorrentClient();
 
-            var client1 = Subject.GetDownloadClient(DownloadProtocol.Usenet);
-            var client2 = Subject.GetDownloadClient(DownloadProtocol.Usenet);
-            var client3 = Subject.GetDownloadClient(DownloadProtocol.Usenet);
-            var client4 = Subject.GetDownloadClient(DownloadProtocol.Usenet);
-            var client5 = Subject.GetDownloadClient(DownloadProtocol.Usenet);
+            var client1 = Subject.GetDownloadClient(nameof(UsenetDownloadProtocol));
+            var client2 = Subject.GetDownloadClient(nameof(UsenetDownloadProtocol));
+            var client3 = Subject.GetDownloadClient(nameof(UsenetDownloadProtocol));
+            var client4 = Subject.GetDownloadClient(nameof(UsenetDownloadProtocol));
+            var client5 = Subject.GetDownloadClient(nameof(UsenetDownloadProtocol));
 
             client1.Definition.Id.Should().Be(1);
             client2.Definition.Id.Should().Be(2);
@@ -105,11 +105,11 @@ namespace NzbDrone.Core.Test.Download
             WithTorrentClient();
             WithTorrentClient();
 
-            var client1 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client2 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client3 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client4 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client5 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
+            var client1 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client2 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client3 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client4 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client5 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
 
             client1.Definition.Id.Should().Be(2);
             client2.Definition.Id.Should().Be(3);
@@ -125,10 +125,10 @@ namespace NzbDrone.Core.Test.Download
             WithTorrentClient();
             WithTorrentClient();
 
-            var client1 = Subject.GetDownloadClient(DownloadProtocol.Usenet);
-            var client2 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client3 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client4 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
+            var client1 = Subject.GetDownloadClient(nameof(UsenetDownloadProtocol));
+            var client2 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client3 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client4 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
 
             client1.Definition.Id.Should().Be(1);
             client2.Definition.Id.Should().Be(2);
@@ -146,11 +146,11 @@ namespace NzbDrone.Core.Test.Download
 
             GivenBlockedClient(3);
 
-            var client1 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client2 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client3 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client4 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client5 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
+            var client1 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client2 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client3 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client4 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client5 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
 
             client1.Definition.Id.Should().Be(2);
             client2.Definition.Id.Should().Be(4);
@@ -170,11 +170,11 @@ namespace NzbDrone.Core.Test.Download
             GivenBlockedClient(3);
             GivenBlockedClient(4);
 
-            var client1 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client2 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client3 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client4 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client5 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
+            var client1 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client2 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client3 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client4 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client5 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
 
             client1.Definition.Id.Should().Be(2);
             client2.Definition.Id.Should().Be(3);
@@ -190,11 +190,11 @@ namespace NzbDrone.Core.Test.Download
             WithTorrentClient();
             WithTorrentClient();
 
-            var client1 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client2 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client3 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client4 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client5 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
+            var client1 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client2 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client3 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client4 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client5 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
 
             client1.Definition.Id.Should().Be(3);
             client2.Definition.Id.Should().Be(4);
@@ -212,11 +212,11 @@ namespace NzbDrone.Core.Test.Download
 
             GivenBlockedClient(4);
 
-            var client1 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client2 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client3 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client4 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
-            var client5 = Subject.GetDownloadClient(DownloadProtocol.Torrent);
+            var client1 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client2 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client3 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client4 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
+            var client5 = Subject.GetDownloadClient(nameof(TorrentDownloadProtocol));
 
             client1.Definition.Id.Should().Be(2);
             client2.Definition.Id.Should().Be(3);

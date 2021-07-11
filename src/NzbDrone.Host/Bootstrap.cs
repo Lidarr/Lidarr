@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -19,6 +20,7 @@ using NzbDrone.Common.Exceptions;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation;
 using NzbDrone.Common.Instrumentation.Extensions;
+using NzbDrone.Common.Processes;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Datastore.Extensions;
 
@@ -120,12 +122,14 @@ namespace NzbDrone.Host
                 urls.Add(BuildUrl("https", bindAddress, sslPort));
             }
 
+            var pluginAssemblies = new AppFolderInfo(context).GetPluginAssemblies();
+
             return new HostBuilder()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseServiceProviderFactory(new DryIocServiceProviderFactory(new Container(rules => rules.WithNzbDroneRules())))
                 .ConfigureContainer<IContainer>(c =>
                 {
-                    c.AutoAddServices(Bootstrap.ASSEMBLIES)
+                    c.AutoAddServices(ASSEMBLIES.Union(pluginAssemblies).ToList())
                         .AddNzbDroneLogger()
                         .AddDatabase()
                         .AddStartupContext(context);
