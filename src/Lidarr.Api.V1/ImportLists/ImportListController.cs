@@ -10,9 +10,9 @@ namespace Lidarr.Api.V1.ImportLists
     {
         public static readonly ImportListResourceMapper ResourceMapper = new ImportListResourceMapper();
 
-        public ImportListController(ImportListFactory importListFactory,
-                                QualityProfileExistsValidator qualityProfileExistsValidator,
-                                MetadataProfileExistsValidator metadataProfileExistsValidator)
+        public ImportListController(IImportListFactory importListFactory,
+                                    QualityProfileExistsValidator qualityProfileExistsValidator,
+                                    MetadataProfileExistsValidator metadataProfileExistsValidator)
             : base(importListFactory, "importlist", ResourceMapper)
         {
             Http.Validation.RuleBuilderExtensions.ValidId(SharedValidator.RuleFor(s => s.QualityProfileId));
