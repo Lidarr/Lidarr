@@ -19,11 +19,11 @@ namespace NzbDrone.Core.Test.ImportListTests
         public void should_not_throw_if_playlist_tracks_is_null()
         {
             Mocker.GetMock<ISpotifyProxy>().
-                Setup(x => x.GetPlaylistTracks(It.IsAny<SpotifyPlaylist>(),
-                                               It.IsAny<SpotifyWebAPI>(),
-                                               It.IsAny<string>(),
-                                               It.IsAny<string>()))
-                .Returns(default(Paging<PlaylistTrack>));
+                Setup(x => x.GetPlaylist(It.IsAny<SpotifyPlaylist>(),
+                                         It.IsAny<SpotifyWebAPI>(),
+                                         It.IsAny<string>(),
+                                         It.IsAny<string>()))
+                .Returns(default(FullPlaylist));
 
             var result = Subject.Fetch(_api, "playlistid");
 
@@ -39,11 +39,11 @@ namespace NzbDrone.Core.Test.ImportListTests
             };
 
             Mocker.GetMock<ISpotifyProxy>().
-                Setup(x => x.GetPlaylistTracks(It.IsAny<SpotifyPlaylist>(),
-                                               It.IsAny<SpotifyWebAPI>(),
-                                               It.IsAny<string>(),
-                                               It.IsAny<string>()))
-                .Returns(playlistTracks);
+                Setup(x => x.GetPlaylist(It.IsAny<SpotifyPlaylist>(),
+                                         It.IsAny<SpotifyWebAPI>(),
+                                         It.IsAny<string>(),
+                                         It.IsAny<string>()))
+                .Returns(new FullPlaylist { Tracks = playlistTracks });
 
             var result = Subject.Fetch(_api, "playlistid");
 
@@ -62,11 +62,11 @@ namespace NzbDrone.Core.Test.ImportListTests
             };
 
             Mocker.GetMock<ISpotifyProxy>().
-                Setup(x => x.GetPlaylistTracks(It.IsAny<SpotifyPlaylist>(),
-                                               It.IsAny<SpotifyWebAPI>(),
-                                               It.IsAny<string>(),
-                                               It.IsAny<string>()))
-                .Returns(playlistTracks);
+                Setup(x => x.GetPlaylist(It.IsAny<SpotifyPlaylist>(),
+                                         It.IsAny<SpotifyWebAPI>(),
+                                         It.IsAny<string>(),
+                                         It.IsAny<string>()))
+                .Returns(new FullPlaylist { Tracks = playlistTracks });
 
             var result = Subject.Fetch(_api, "playlistid");
 
@@ -108,11 +108,11 @@ namespace NzbDrone.Core.Test.ImportListTests
             };
 
             Mocker.GetMock<ISpotifyProxy>().
-                Setup(x => x.GetPlaylistTracks(It.IsAny<SpotifyPlaylist>(),
-                                               It.IsAny<SpotifyWebAPI>(),
-                                               It.IsAny<string>(),
-                                               It.IsAny<string>()))
-                .Returns(playlistTracks);
+                Setup(x => x.GetPlaylist(It.IsAny<SpotifyPlaylist>(),
+                                         It.IsAny<SpotifyWebAPI>(),
+                                         It.IsAny<string>(),
+                                         It.IsAny<string>()))
+                .Returns(new FullPlaylist { Tracks = playlistTracks });
 
             var result = Subject.Fetch(_api, "playlistid");
 
@@ -155,11 +155,11 @@ namespace NzbDrone.Core.Test.ImportListTests
             };
 
             Mocker.GetMock<ISpotifyProxy>().
-                Setup(x => x.GetPlaylistTracks(It.IsAny<SpotifyPlaylist>(),
-                                               It.IsAny<SpotifyWebAPI>(),
-                                               It.IsAny<string>(),
-                                               It.IsAny<string>()))
-                .Returns(playlistTracks);
+                Setup(x => x.GetPlaylist(It.IsAny<SpotifyPlaylist>(),
+                                         It.IsAny<SpotifyWebAPI>(),
+                                         It.IsAny<string>(),
+                                         It.IsAny<string>()))
+                .Returns(new FullPlaylist { Tracks = playlistTracks });
 
             var result = Subject.Fetch(_api, "playlistid");
 
@@ -204,11 +204,11 @@ namespace NzbDrone.Core.Test.ImportListTests
             };
 
             Mocker.GetMock<ISpotifyProxy>().
-                Setup(x => x.GetPlaylistTracks(It.IsAny<SpotifyPlaylist>(),
-                                               It.IsAny<SpotifyWebAPI>(),
-                                               It.IsAny<string>(),
-                                               It.IsAny<string>()))
-                .Returns(playlistTracks);
+                Setup(x => x.GetPlaylist(It.IsAny<SpotifyPlaylist>(),
+                                         It.IsAny<SpotifyWebAPI>(),
+                                         It.IsAny<string>(),
+                                         It.IsAny<string>()))
+                .Returns(new FullPlaylist { Tracks = playlistTracks });
 
             var result = Subject.Fetch(_api, "playlistid");
 
@@ -251,11 +251,11 @@ namespace NzbDrone.Core.Test.ImportListTests
             };
 
             Mocker.GetMock<ISpotifyProxy>().
-                Setup(x => x.GetPlaylistTracks(It.IsAny<SpotifyPlaylist>(),
-                                               It.IsAny<SpotifyWebAPI>(),
-                                               It.IsAny<string>(),
-                                               It.IsAny<string>()))
-                .Returns(playlistTracks);
+                Setup(x => x.GetPlaylist(It.IsAny<SpotifyPlaylist>(),
+                                         It.IsAny<SpotifyWebAPI>(),
+                                         It.IsAny<string>(),
+                                         It.IsAny<string>()))
+                .Returns(new FullPlaylist { Tracks = playlistTracks });
 
             Mocker.GetMock<ISpotifyProxy>()
                 .Setup(x => x.GetNextPage(It.IsAny<SpotifyFollowedArtists>(),

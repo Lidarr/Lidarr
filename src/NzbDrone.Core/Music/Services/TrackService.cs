@@ -1,15 +1,19 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music.Events;
+using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Music
 {
     public interface ITrackService
     {
         Track GetTrack(int id);
+        Track FindTrackByTitleInexact(string foreignAlbumId, string title);
         List<Track> GetTracks(IEnumerable<int> ids);
         List<Track> GetTracksByArtist(int artistId);
         List<Track> GetTracksByAlbum(int albumId);
@@ -44,6 +48,31 @@ namespace NzbDrone.Core.Music
         public Track GetTrack(int id)
         {
             return _trackRepository.Get(id);
+        }
+
+        public Track FindTrackByTitleInexact(string foreignAlbumId, string title)
+        {
+            var normalizedTitle = title.NormalizeTrackTitle().Replace(".", " ");
+            var tracks = _trackRepository.GetTracksByForeignAlbumId(foreignAlbumId);
+
+            Func<Func<Track, string, double>, string, Tuple<Func<Track, string, double>, string>> tc = Tuple.Create;
+            var scoringFunctions = new List<Tuple<Func<Track, string, double>, string>>
+            {
+                tc((a, t) => a.Title.NormalizeTrackTitle().FuzzyMatch(t), normalizedTitle),
+                tc((a, t) => a.Title.NormalizeTrackTitle().FuzzyContains(t), normalizedTitle),
+                tc((a, t) => t.FuzzyContains(a.Title.NormalizeTrackTitle()), normalizedTitle)
+            };
+
+            foreach (var func in scoringFunctions)
+            {
+                var track = FindByStringInexact(tracks, func.Item1, func.Item2);
+                if (track != null)
+                {
+                    return track;
+                }
+            }
+
+            return null;
         }
 
         public List<Track> GetTracks(IEnumerable<int> ids)
@@ -132,6 +161,33 @@ namespace NzbDrone.Core.Music
         {
             _logger.Debug($"Detaching tracks from file {message.TrackFile}");
             _trackRepository.DetachTrackFile(message.TrackFile.Id);
+        }
+
+        private Track FindByStringInexact(List<Track> tracks, Func<Track, string, double> scoreFunction, string title)
+        {
+            const double fuzzThreshold = 0.7;
+            const double fuzzGap = 0.2;
+
+            var sortedTracks = tracks.Select(s => new
+            {
+                MatchProb = scoreFunction(s, title),
+                Track = s
+            }).ToList()
+                .OrderByDescending(s => s.MatchProb)
+                .ToList();
+
+            if (!sortedTracks.Any())
+            {
+                return null;
+            }
+
+            if (sortedTracks[0].MatchProb > fuzzThreshold
+                && (sortedTracks.Count == 1 || sortedTracks[0].MatchProb - sortedTracks[1].MatchProb > fuzzGap))
+            {
+                return sortedTracks[0].Track;
+            }
+
+            return null;
         }
     }
 }

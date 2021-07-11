@@ -188,6 +188,11 @@ namespace NzbDrone.Core.Datastore
 
             Mapper.Entity<CustomFilter>("CustomFilters").RegisterModel();
             Mapper.Entity<ImportListExclusion>("ImportListExclusions").RegisterModel();
+
+            Mapper.Entity<Playlist>("Playlists").RegisterModel()
+                  .Ignore(p => p.Items);
+
+            Mapper.Entity<PlaylistEntry>("PlaylistEntries").RegisterModel();
         }
 
         private static void RegisterMappers()
