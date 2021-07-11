@@ -28,7 +28,7 @@ namespace Lidarr.Http.Frontend.Mappers
 
         public abstract bool CanHandle(string resourceUrl);
 
-        public virtual IActionResult GetResponse(string resourceUrl)
+        public FileStreamResult GetResponse(string resourceUrl)
         {
             var filePath = Map(resourceUrl);
 
