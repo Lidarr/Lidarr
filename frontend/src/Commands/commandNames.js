@@ -22,3 +22,4 @@ export const RESET_API_KEY = 'ResetApiKey';
 export const RSS_SYNC = 'RssSync';
 export const SEASON_SEARCH = 'AlbumSearch';
 export const ARTIST_SEARCH = 'ArtistSearch';
+export const UNINSTALL_PLUGIN = 'UninstallPlugin';

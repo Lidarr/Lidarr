@@ -187,6 +187,9 @@ namespace NzbDrone.Core.Profiles.Delay
         {
             var missing = _downloadProtocols.Where(x => !profile.Items.Any(i => i.Protocol == x.GetType().Name));
             profile.Items.AddRange(missing.Select(x => GetProtocolItem(x, false)));
+
+            var protocolNames = _downloadProtocols.Select(x => x.GetType().Name).ToList();
+            profile.Items.RemoveAll(x => !protocolNames.Contains(x.Protocol));
             return profile;
         }
 
