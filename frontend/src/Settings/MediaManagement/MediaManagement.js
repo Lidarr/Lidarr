@@ -219,18 +219,6 @@ class MediaManagement extends Component {
                 <FieldSet
                   legend="File Management"
                 >
-                  <FormGroup size={sizes.MEDIUM}>
-                    <FormLabel>Ignore Deleted Tracks</FormLabel>
-
-                    <FormInputGroup
-                      type={inputTypes.CHECK}
-                      name="autoUnmonitorPreviouslyDownloadedTracks"
-                      helpText="Tracks deleted from disk are automatically unmonitored in Lidarr"
-                      onChange={onInputChange}
-                      {...settings.autoUnmonitorPreviouslyDownloadedTracks}
-                    />
-                  </FormGroup>
-
                   <FormGroup
                     advancedSettings={advancedSettings}
                     isAdvanced={true}
