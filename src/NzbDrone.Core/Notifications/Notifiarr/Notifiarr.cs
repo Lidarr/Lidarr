@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.HealthCheck;
 
 namespace NzbDrone.Core.Notifications.Notifiarr
 {
@@ -87,7 +88,7 @@ namespace NzbDrone.Core.Notifications.Notifiarr
             var variables = new StringDictionary();
 
             variables.Add("Lidarr_EventType", "HealthIssue");
-            variables.Add("Lidarr_Health_Issue_Level", nameof(healthCheck.Type));
+            variables.Add("Lidarr_Health_Issue_Level", Enum.GetName(typeof(HealthCheckResult), healthCheck.Type));
             variables.Add("Lidarr_Health_Issue_Message", healthCheck.Message);
             variables.Add("Lidarr_Health_Issue_Type", healthCheck.Source.Name);
             variables.Add("Lidarr_Health_Issue_Wiki", healthCheck.WikiUrl.ToString() ?? string.Empty);
