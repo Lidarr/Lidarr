@@ -110,6 +110,8 @@ namespace NzbDrone.Core.ImportLists.Spotify
             // map to musicbrainz ids
             releases = MapSpotifyReleases(releases);
 
+            ProcessMappedReleases(releases);
+
             return CleanupListItems(releases);
         }
 
@@ -289,6 +291,11 @@ namespace NzbDrone.Core.ImportLists.Spotify
             {
                 _logger.Error(e);
             }
+        }
+
+        protected virtual void ProcessMappedReleases(IList<SpotifyImportListItemInfo> items)
+        {
+            return;
         }
 
         protected override void Test(List<ValidationFailure> failures)

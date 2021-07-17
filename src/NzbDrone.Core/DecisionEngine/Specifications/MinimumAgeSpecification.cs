@@ -1,6 +1,7 @@
 using System;
 using NLog;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 
@@ -22,7 +23,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
         public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
         {
-            if (subject.Release.DownloadProtocol != Indexers.DownloadProtocol.Usenet)
+            if (subject.Release.DownloadProtocol != nameof(UsenetDownloadProtocol))
             {
                 _logger.Debug("Not checking minimum age requirement for non-usenet report");
                 return Decision.Accept();

@@ -413,16 +413,13 @@ namespace NzbDrone.Core.Download.Pending
             return HashConverter.GetHashInt31(string.Format("pending-{0}-album{1}", pendingRelease.Id, album.Id));
         }
 
-        private int PrioritizeDownloadProtocol(Artist artist, DownloadProtocol downloadProtocol)
+        private int PrioritizeDownloadProtocol(Artist artist, string downloadProtocol)
         {
             var delayProfile = _delayProfileService.BestForTags(artist.Tags);
 
-            if (downloadProtocol == delayProfile.PreferredProtocol)
-            {
-                return 0;
-            }
+            var index = delayProfile.Items.FindIndex(x => x.Protocol == downloadProtocol);
 
-            return 1;
+            return index >= 0 ? index : int.MaxValue;
         }
 
         public void Handle(ArtistsDeletedEvent message)

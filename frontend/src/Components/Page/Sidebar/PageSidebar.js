@@ -161,6 +161,10 @@ const links = [
         to: '/system/updates'
       },
       {
+        title: 'Plugins',
+        to: '/system/plugins'
+      },
+      {
         title: 'Events',
         to: '/system/events'
       },

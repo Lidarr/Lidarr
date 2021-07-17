@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using System;
+using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Parser;
@@ -9,7 +10,7 @@ namespace NzbDrone.Core.Indexers.Torrentleech
     {
         public override string Name => "TorrentLeech";
 
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override string Protocol => nameof(TorrentDownloadProtocol);
         public override bool SupportsSearch => false;
         public override int PageSize => 0;
 

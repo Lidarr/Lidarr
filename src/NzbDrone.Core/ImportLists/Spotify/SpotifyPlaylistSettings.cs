@@ -26,5 +26,8 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
         [FieldDefinition(1, Label = "Playlists", Type = FieldType.Playlist)]
         public IEnumerable<string> PlaylistIds { get; set; }
+
+        [FieldDefinition(1, Label = "Output folder", HelpText = "Folder for the .m3u files containing tracks of imported playlists", Type = FieldType.Path)]
+        public string PlaylistFolder { get; set; }
     }
 }

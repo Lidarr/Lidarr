@@ -188,6 +188,11 @@ namespace NzbDrone.Core.Datastore
 
             Mapper.Entity<CustomFilter>("CustomFilters").RegisterModel();
             Mapper.Entity<ImportListExclusion>("ImportListExclusions").RegisterModel();
+
+            Mapper.Entity<Playlist>("Playlists").RegisterModel()
+                  .Ignore(p => p.Items);
+
+            Mapper.Entity<PlaylistEntry>("PlaylistEntries").RegisterModel();
         }
 
         private static void RegisterMappers()
@@ -222,7 +227,7 @@ namespace NzbDrone.Core.Datastore
 
         private static void RegisterProviderSettingConverter()
         {
-            var settingTypes = typeof(IProviderConfig).Assembly.ImplementationsOf<IProviderConfig>()
+            var settingTypes = ReflectionExtensions.ImplementationsOf<IProviderConfig>()
                 .Where(x => !x.ContainsGenericParameters);
 
             var providerSettingConverter = new ProviderSettingConverter();
@@ -234,7 +239,7 @@ namespace NzbDrone.Core.Datastore
 
         private static void RegisterEmbeddedConverter()
         {
-            var embeddedTypes = typeof(IEmbeddedDocument).Assembly.ImplementationsOf<IEmbeddedDocument>();
+            var embeddedTypes = ReflectionExtensions.ImplementationsOf<IEmbeddedDocument>();
 
             var embeddedConverterDefinition = typeof(EmbeddedDocumentConverter<>).GetGenericTypeDefinition();
             var genericListDefinition = typeof(List<>).GetGenericTypeDefinition();
