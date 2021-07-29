@@ -1,7 +1,7 @@
 # Lidarr
 
 [![Build Status](https://dev.azure.com/Lidarr/Lidarr/_apis/build/status/lidarr.Lidarr?branchName=develop)](https://dev.azure.com/Lidarr/Lidarr/_build/latest?definitionId=1&branchName=develop)
-[![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/lidarr.svg)](https://wiki.servarr.com/Lidarr_Installation#Docker)
+[![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/lidarr.svg)](https://wiki.servarr.com/lidarr/installation#docker)
 ![Github Downloads](https://img.shields.io/github/downloads/lidarr/lidarr/total.svg)
 [![Backers on Open Collective](https://opencollective.com/lidarr/backers/badge.svg)](#backers) 
 [![Sponsors on Open Collective](https://opencollective.com/lidarr/sponsors/badge.svg)](#sponsors)
@@ -26,15 +26,10 @@ Lidarr is a music collection manager for Usenet and BitTorrent users. It can mon
 
 Note: GitHub Issues are for Bugs and Feature Requests Only
 
-
 [![Discord](https://img.shields.io/badge/discord-chat-7289DA.svg?maxAge=60)](https://lidarr.audio/discord)
 [![Reddit](https://img.shields.io/badge/reddit-discussion-FF4500.svg?maxAge=60)](https://www.reddit.com/r/lidarr)
 [![GitHub - Bugs and Feature Requests Only](https://img.shields.io/badge/github-issues-red.svg?maxAge=60)](https://github.com/Lidarr/Lidarr/issues)
-[![Wiki](https://img.shields.io/badge/servarr-wiki-181717.svg?maxAge=60)](https://wiki.servarr.com/Lidarr)
-
-## Feature Requests
-
-[Feature Requests](https://github.com/lidarr/Lidarr/issues/new?assignees=&labels=Type%3A+Enhancement&template=feature_request.md&title=)
+[![Wiki](https://img.shields.io/badge/servarr-wiki-181717.svg?maxAge=60)](https://wiki.servarr.com/lidarr)
 
 ## Contributors
 
