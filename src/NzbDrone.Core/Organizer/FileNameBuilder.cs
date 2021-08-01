@@ -69,6 +69,8 @@ namespace NzbDrone.Core.Organizer
 
         private static readonly Regex TitlePrefixRegex = new Regex(@"^(The|An|A) (.*?)((?: *\([^)]+\))*)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        private static readonly Regex ReservedDeviceNamesRegex = new Regex(@"^(?:aux|com[1-9]|con|lpt[1-9]|nul|prn)\.", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         public FileNameBuilder(INamingConfigService namingConfigService,
                                IQualityDefinitionService qualityDefinitionService,
                                ICacheManager cacheManager,
@@ -144,6 +146,7 @@ namespace NzbDrone.Core.Organizer
                 component = FileNameCleanupRegex.Replace(component, match => match.Captures[0].Value[0].ToString());
                 component = TrimSeparatorsRegex.Replace(component, string.Empty);
                 component = component.Replace("{ellipsis}", "...");
+                component = ReplaceReservedDeviceNames(component);
 
                 if (component.IsNotNullOrWhiteSpace())
                 {
@@ -236,6 +239,7 @@ namespace NzbDrone.Core.Organizer
 
                 var component = ReplaceTokens(splitPattern, tokenHandlers, namingConfig);
                 component = CleanFolderName(component);
+                component = ReplaceReservedDeviceNames(component);
 
                 if (component.IsNotNullOrWhiteSpace())
                 {
@@ -642,6 +646,12 @@ namespace NzbDrone.Core.Organizer
             var result = ReplaceTokens(pattern, tokenHandlers, namingConfig);
 
             return result.GetByteCount();
+        }
+
+        private string ReplaceReservedDeviceNames(string input)
+        {
+            // Replace reserved windows device names with an alternative
+            return ReservedDeviceNamesRegex.Replace(input, match => match.Value.Replace(".", "_"));
         }
 
         private static string CleanFileName(string name, NamingConfig namingConfig)
