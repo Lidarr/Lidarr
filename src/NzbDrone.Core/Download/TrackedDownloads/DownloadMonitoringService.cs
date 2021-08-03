@@ -114,6 +114,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
             try
             {
                 var trackedDownload = _trackedDownloadService.TrackDownload((DownloadClientDefinition)downloadClient.Definition, downloadItem);
+                _logger.Trace($"processing item {trackedDownload.DownloadItem.Title}");
 
                 if (trackedDownload != null && trackedDownload.State == TrackedDownloadState.Downloading)
                 {
@@ -138,12 +139,14 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                 trackedDownload.State == TrackedDownloadState.DownloadFailed ||
                 trackedDownload.State == TrackedDownloadState.Ignored)
             {
+                _logger.Trace($"Download {trackedDownload.DownloadItem.Title} not trackable, state is {trackedDownload.State}");
                 return false;
             }
 
             // If CDH is disabled and the download status is complete don't track it
             if (!_configService.EnableCompletedDownloadHandling && trackedDownload.DownloadItem.Status == DownloadItemStatus.Completed)
             {
+                _logger.Trace("no CDH enabled");
                 return false;
             }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NLog;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Download.TrackedDownloads;
@@ -28,13 +29,15 @@ namespace NzbDrone.Core.Download
         private readonly IArtistService _artistService;
         private readonly IProvideImportItemService _provideImportItemService;
         private readonly ITrackedDownloadAlreadyImported _trackedDownloadAlreadyImported;
+        private readonly Logger _logger;
 
         public CompletedDownloadService(IEventAggregator eventAggregator,
                                         IHistoryService historyService,
                                         IProvideImportItemService provideImportItemService,
                                         IDownloadedTracksImportService downloadedTracksImportService,
                                         IArtistService artistService,
-                                        ITrackedDownloadAlreadyImported trackedDownloadAlreadyImported)
+                                        ITrackedDownloadAlreadyImported trackedDownloadAlreadyImported,
+                                        Logger logger)
         {
             _eventAggregator = eventAggregator;
             _historyService = historyService;
@@ -42,6 +45,7 @@ namespace NzbDrone.Core.Download
             _downloadedTracksImportService = downloadedTracksImportService;
             _artistService = artistService;
             _trackedDownloadAlreadyImported = trackedDownloadAlreadyImported;
+            _logger = logger;
         }
 
         public void Check(TrackedDownload trackedDownload)
@@ -110,8 +114,11 @@ namespace NzbDrone.Core.Download
             {
                 trackedDownload.Warn("No files found are eligible for import in {0}", outputPath);
                 trackedDownload.State = TrackedDownloadState.ImportPending;
+                _logger.Trace($"No import results, resetting state to ImportPending for {trackedDownload.DownloadItem.Title}");
                 return;
             }
+
+            _logger.Trace("Got some import results");
 
             var allTracksImported = importResults.All(c => c.Result == ImportResultType.Imported) ||
                 importResults.Count(c => c.Result == ImportResultType.Imported) >=

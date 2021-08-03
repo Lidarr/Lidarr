@@ -54,15 +54,22 @@ namespace NzbDrone.Core.Download
 
             foreach (var trackedDownload in trackedDownloads)
             {
+                _logger.Trace($"Processing tracked download {trackedDownload.DownloadItem.Title}");
                 try
                 {
                     if (trackedDownload.State == TrackedDownloadState.DownloadFailedPending)
                     {
+                        _logger.Trace("Failed");
                         _failedDownloadService.ProcessFailed(trackedDownload);
                     }
                     else if (enableCompletedDownloadHandling && trackedDownload.State == TrackedDownloadState.ImportPending)
                     {
+                        _logger.Trace("ImportPending");
                         _completedDownloadService.Import(trackedDownload);
+                    }
+                    else
+                    {
+                        _logger.Trace($"state is {trackedDownload.State}, no action taken");
                     }
                 }
                 catch (Exception e)
