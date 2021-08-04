@@ -12,7 +12,7 @@ function createHealthCheckSelector() {
           source: 'UI',
           type: 'warning',
           message: 'Could not connect to SignalR, UI won\'t update',
-          wikiUrl: 'https://wiki.servarr.com/Lidarr_System#Could_not_connect_to_signalR'
+          wikiUrl: 'https://wiki.servarr.com/lidarr/system#could-not-connect-to-signalr'
         });
       }
 

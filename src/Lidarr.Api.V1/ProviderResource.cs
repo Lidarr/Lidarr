@@ -38,7 +38,8 @@ namespace Lidarr.Api.V1
                 Tags = definition.Tags,
                 Fields = SchemaBuilder.ToSchema(definition.Settings),
 
-                InfoLink = string.Format("https://wiki.servarr.com/Lidarr_Supported_{0}",
+                //lidarr/supported is an disambagation page. the # should be a header on the page with appropiate details/link
+                InfoLink = string.Format("https://wiki.servarr.com/lidarr/supported#{0}",
                     definition.Implementation.ToLower())
             };
         }
