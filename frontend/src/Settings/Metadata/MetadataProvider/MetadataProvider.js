@@ -54,7 +54,7 @@ function MetadataProvider(props) {
                       type={inputTypes.TEXT}
                       name="metadataSource"
                       helpText="Alternative Metadata Source (Leave blank for default)"
-                      helpLink="https://wiki.servarr.com/Lidarr_Settings#Metadata"
+                      helpLink="https://wiki.servarr.com/lidarr/settings#metadata"
                       onChange={onInputChange}
                       {...settings.metadataSource}
                     />
@@ -70,7 +70,7 @@ function MetadataProvider(props) {
                   type={inputTypes.SELECT}
                   name="writeAudioTags"
                   helpTextWarning="Selecting 'All files' will alter existing files when they are imported."
-                  helpLink="https://wiki.servarr.com/Lidarr_Settings#Write_Metadata_to_Audio_Files"
+                  helpLink="https://wiki.servarr.com/lidarr/settings#write-metadata-to-audio-files"
                   values={writeAudioTagOptions}
                   onChange={onInputChange}
                   {...settings.writeAudioTags}

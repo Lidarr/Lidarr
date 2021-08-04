@@ -119,10 +119,10 @@ namespace NzbDrone.Core.Datastore
 
                 if (OsInfo.IsOsx)
                 {
-                    throw new CorruptDatabaseException("Database file: {0} is corrupt, restore from backup if available. See: https://wiki.servarr.com/Lidarr_FAQ#I_use_Lidarr_on_a_Mac_and_it_suddenly_stopped_working_What_happened", e, fileName);
+                    throw new CorruptDatabaseException("Database file: {0} is corrupt, restore from backup if available. See: https://wiki.servarr.com/lidarr/faq#i-use-lidarr-on-a-mac-and-it-suddenly-stopped-working-what-happened", e, fileName);
                 }
 
-                throw new CorruptDatabaseException("Database file: {0} is corrupt, restore from backup if available. See: https://wiki.servarr.com/Lidarr_FAQ#I_am_getting_an_error_Database_disk_image_is_malformed", e, fileName);
+                throw new CorruptDatabaseException("Database file: {0} is corrupt, restore from backup if available. See: https://wiki.servarr.com/lidarr/faq#i-am-getting-an-error-database-disk-image-is-malformed", e, fileName);
             }
             catch (Exception e)
             {
