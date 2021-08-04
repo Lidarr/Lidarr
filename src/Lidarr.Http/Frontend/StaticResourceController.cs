@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Lidarr.Http.Extensions;
 using Lidarr.Http.Frontend.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -36,6 +37,7 @@ namespace Lidarr.Http.Frontend
         [HttpGet("login")]
         public IActionResult LoginPage()
         {
+            Response.Headers.DisableCache();
             return PhysicalFile(_loginPath, "text/html");
         }
 
@@ -62,7 +64,19 @@ namespace Lidarr.Http.Frontend
 
             if (mapper != null)
             {
-                return mapper.GetResponse(path) ?? NotFound();
+                var result = mapper.GetResponse(path);
+
+                if (result != null)
+                {
+                    if (result.ContentType == "text/html")
+                    {
+                        Response.Headers.DisableCache();
+                    }
+
+                    return result;
+                }
+
+                return NotFound();
             }
 
             _logger.Warn("Couldn't find handler for {0}", path);
