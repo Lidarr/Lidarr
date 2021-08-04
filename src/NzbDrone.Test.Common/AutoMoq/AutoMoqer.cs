@@ -164,7 +164,7 @@ namespace NzbDrone.Test.Common.AutoMoq
             RegisterPlatformLibrary(container);
             AddTheAutoMockingContainerExtensionToTheContainer(container);
 
-            ContainerBuilderBase.RegisterSQLiteResolver();
+            AssemblyLoader.RegisterSQLiteResolver();
         }
 
         private static void AddTheAutoMockingContainerExtensionToTheContainer(IUnityContainer container)

@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Extras
                             ITrackService trackService,
                             IDiskProvider diskProvider,
                             IConfigService configService,
-                            List<IManageExtraFiles> extraFileManagers,
+                            IEnumerable<IManageExtraFiles> extraFileManagers,
                             Logger logger)
         {
             _mediaFileService = mediaFileService;

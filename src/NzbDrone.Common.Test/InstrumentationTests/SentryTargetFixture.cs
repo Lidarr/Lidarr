@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using FluentAssertions;
@@ -21,7 +21,6 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         private static Exception[] FilteredExceptions = new Exception[]
         {
             new UnauthorizedAccessException(),
-            new TinyIoC.TinyIoCResolutionException(typeof(string)),
             new OutOfMemoryException()
         };
 
