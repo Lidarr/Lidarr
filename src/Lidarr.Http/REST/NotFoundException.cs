@@ -1,5 +1,5 @@
-﻿using Lidarr.Http.Exceptions;
-using Nancy;
+using System.Net;
+using Lidarr.Http.Exceptions;
 
 namespace Lidarr.Http.REST
 {
