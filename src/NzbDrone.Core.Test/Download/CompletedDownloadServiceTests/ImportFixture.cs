@@ -167,7 +167,7 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
 
             Subject.Import(_trackedDownload);
 
-            _trackedDownload.State.Should().Be(TrackedDownloadState.Importing);
+            _trackedDownload.State.Should().Be(TrackedDownloadState.ImportPending);
         }
 
         [Test]

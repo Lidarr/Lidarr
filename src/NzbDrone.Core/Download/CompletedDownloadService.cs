@@ -109,16 +109,13 @@ namespace NzbDrone.Core.Download
             if (importResults.Empty())
             {
                 trackedDownload.Warn("No files found are eligible for import in {0}", outputPath);
+                trackedDownload.State = TrackedDownloadState.ImportPending;
                 return;
             }
 
             var allTracksImported = importResults.All(c => c.Result == ImportResultType.Imported) ||
                 importResults.Count(c => c.Result == ImportResultType.Imported) >=
                 Math.Max(1, trackedDownload.RemoteAlbum.Albums.Sum(x => x.AlbumReleases.Value.Where(y => y.Monitored).Sum(z => z.TrackCount)));
-
-            Console.WriteLine($"allimported: {allTracksImported}");
-            Console.WriteLine($"count: {importResults.Count(c => c.Result == ImportResultType.Imported)}");
-            Console.WriteLine($"max: {Math.Max(1, trackedDownload.RemoteAlbum.Albums.Sum(x => x.AlbumReleases.Value.Where(y => y.Monitored).Sum(z => z.TrackCount)))}");
 
             if (allTracksImported)
             {
@@ -147,11 +144,6 @@ namespace NzbDrone.Core.Download
             }
 
             trackedDownload.State = TrackedDownloadState.ImportPending;
-
-            if (importResults.Empty())
-            {
-                trackedDownload.Warn("No files found are eligible for import in {0}", outputPath);
-            }
 
             if (importResults.Any(c => c.Result != ImportResultType.Imported))
             {
