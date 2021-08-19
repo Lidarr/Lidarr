@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import BlacklistConnector from 'Activity/Blacklist/BlacklistConnector';
+import BlocklistConnector from 'Activity/Blocklist/BlocklistConnector';
 import HistoryConnector from 'Activity/History/HistoryConnector';
 import QueueConnector from 'Activity/Queue/QueueConnector';
 import AlbumDetailsPageConnector from 'Album/Details/AlbumDetailsPageConnector';
@@ -124,8 +124,8 @@ function AppRoutes(props) {
       />
 
       <Route
-        path="/activity/blacklist"
-        component={BlacklistConnector}
+        path="/activity/blocklist"
+        component={BlocklistConnector}
       />
 
       {/*

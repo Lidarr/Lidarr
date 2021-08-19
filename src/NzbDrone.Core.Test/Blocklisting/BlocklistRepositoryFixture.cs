@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Blacklisting;
+using NzbDrone.Core.Blocklisting;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Blacklisting
+namespace NzbDrone.Core.Test.Blocklisting
 {
     [TestFixture]
-    public class BlacklistRepositoryFixture : DbTest<BlacklistRepository, Blacklist>
+    public class BlocklistRepositoryFixture : DbTest<BlocklistRepository, Blocklist>
     {
-        private Blacklist _blacklist;
+        private Blocklist _blocklist;
 
         [SetUp]
         public void Setup()
         {
-            _blacklist = new Blacklist
+            _blocklist = new Blocklist
             {
                 ArtistId = 12345,
                 AlbumIds = new List<int> { 1 },
@@ -30,24 +30,24 @@ namespace NzbDrone.Core.Test.Blacklisting
         [Test]
         public void should_be_able_to_write_to_database()
         {
-            Subject.Insert(_blacklist);
+            Subject.Insert(_blocklist);
             Subject.All().Should().HaveCount(1);
         }
 
         [Test]
         public void should_should_have_album_ids()
         {
-            Subject.Insert(_blacklist);
+            Subject.Insert(_blocklist);
 
-            Subject.All().First().AlbumIds.Should().Contain(_blacklist.AlbumIds);
+            Subject.All().First().AlbumIds.Should().Contain(_blocklist.AlbumIds);
         }
 
         [Test]
-        public void should_check_for_blacklisted_title_case_insensative()
+        public void should_check_for_blocklisted_title_case_insensative()
         {
-            Subject.Insert(_blacklist);
+            Subject.Insert(_blocklist);
 
-            Subject.BlacklistedByTitle(_blacklist.ArtistId, _blacklist.SourceTitle.ToUpperInvariant()).Should().HaveCount(1);
+            Subject.BlocklistedByTitle(_blocklist.ArtistId, _blocklist.SourceTitle.ToUpperInvariant()).Should().HaveCount(1);
         }
     }
 }

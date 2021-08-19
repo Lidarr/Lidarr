@@ -6,7 +6,7 @@ import * as artist from './artistActions';
 import * as artistEditor from './artistEditorActions';
 import * as artistHistory from './artistHistoryActions';
 import * as artistIndex from './artistIndexActions';
-import * as blacklist from './blacklistActions';
+import * as blocklist from './blocklistActions';
 import * as calendar from './calendarActions';
 import * as captcha from './captchaActions';
 import * as commands from './commandActions';
@@ -30,7 +30,7 @@ import * as wanted from './wantedActions';
 
 export default [
   app,
-  blacklist,
+  blocklist,
   captcha,
   calendar,
   commands,

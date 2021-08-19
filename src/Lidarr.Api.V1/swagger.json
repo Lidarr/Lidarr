@@ -791,10 +791,10 @@
         }
       }
     },
-    "/api/v1/blacklist": {
+    "/api/v1/blocklist": {
       "get": {
         "tags": [
-          "Blacklist"
+          "Blocklist"
         ],
         "responses": {
           "200": {
@@ -802,17 +802,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/BlacklistResourcePagingResource"
+                  "$ref": "#/components/schemas/BlocklistResourcePagingResource"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BlacklistResourcePagingResource"
+                  "$ref": "#/components/schemas/BlocklistResourcePagingResource"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BlacklistResourcePagingResource"
+                  "$ref": "#/components/schemas/BlocklistResourcePagingResource"
                 }
               }
             }
@@ -820,10 +820,10 @@
         }
       }
     },
-    "/api/v1/blacklist/{id}": {
+    "/api/v1/blocklist/{id}": {
       "delete": {
         "tags": [
-          "Blacklist"
+          "Blocklist"
         ],
         "parameters": [
           {
@@ -843,26 +843,26 @@
         }
       }
     },
-    "/api/v1/blacklist/bulk": {
+    "/api/v1/blocklist/bulk": {
       "delete": {
         "tags": [
-          "Blacklist"
+          "Blocklist"
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BlacklistBulkResource"
+                "$ref": "#/components/schemas/BlocklistBulkResource"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/BlacklistBulkResource"
+                "$ref": "#/components/schemas/BlocklistBulkResource"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/BlacklistBulkResource"
+                "$ref": "#/components/schemas/BlocklistBulkResource"
               }
             }
           }
@@ -5905,7 +5905,7 @@
             }
           },
           {
-            "name": "blacklist",
+            "name": "blocklist",
             "in": "query",
             "schema": {
               "type": "boolean",
@@ -5943,7 +5943,7 @@
             }
           },
           {
-            "name": "blacklist",
+            "name": "blocklist",
             "in": "query",
             "schema": {
               "type": "boolean",
@@ -9421,7 +9421,7 @@
         ],
         "type": "string"
       },
-      "BlacklistBulkResource": {
+      "BlocklistBulkResource": {
         "type": "object",
         "properties": {
           "ids": {
@@ -9435,7 +9435,7 @@
         },
         "additionalProperties": false
       },
-      "BlacklistResource": {
+      "BlocklistResource": {
         "type": "object",
         "properties": {
           "id": {
@@ -9482,7 +9482,7 @@
         },
         "additionalProperties": false
       },
-      "BlacklistResourcePagingResource": {
+      "BlocklistResourcePagingResource": {
         "type": "object",
         "properties": {
           "page": {
@@ -9514,7 +9514,7 @@
           "records": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/BlacklistResource"
+              "$ref": "#/components/schemas/BlocklistResource"
             },
             "nullable": true
           }

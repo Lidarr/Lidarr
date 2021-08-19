@@ -5,9 +5,9 @@ using Lidarr.Http.REST;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Qualities;
 
-namespace Lidarr.Api.V1.Blacklist
+namespace Lidarr.Api.V1.Blocklist
 {
-    public class BlacklistResource : RestResource
+    public class BlocklistResource : RestResource
     {
         public int ArtistId { get; set; }
         public List<int> AlbumIds { get; set; }
@@ -21,16 +21,16 @@ namespace Lidarr.Api.V1.Blacklist
         public ArtistResource Artist { get; set; }
     }
 
-    public static class BlacklistResourceMapper
+    public static class BlocklistResourceMapper
     {
-        public static BlacklistResource MapToResource(this NzbDrone.Core.Blacklisting.Blacklist model)
+        public static BlocklistResource MapToResource(this NzbDrone.Core.Blocklisting.Blocklist model)
         {
             if (model == null)
             {
                 return null;
             }
 
-            return new BlacklistResource
+            return new BlocklistResource
             {
                 Id = model.Id,
 

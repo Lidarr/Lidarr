@@ -21,7 +21,7 @@ class RemoveQueueItemModal extends Component {
 
     this.state = {
       remove: true,
-      blacklist: false,
+      blocklist: false,
       skipredownload: false
     };
   }
@@ -32,7 +32,7 @@ class RemoveQueueItemModal extends Component {
   resetState = function() {
     this.setState({
       remove: true,
-      blacklist: false,
+      blocklist: false,
       skipredownload: false
     });
   }
@@ -44,8 +44,8 @@ class RemoveQueueItemModal extends Component {
     this.setState({ remove: value });
   }
 
-  onBlacklistChange = ({ value }) => {
-    this.setState({ blacklist: value });
+  onBlocklistChange = ({ value }) => {
+    this.setState({ blocklist: value });
   }
 
   onSkipReDownloadChange = ({ value }) => {
@@ -74,7 +74,7 @@ class RemoveQueueItemModal extends Component {
       canIgnore
     } = this.props;
 
-    const { remove, blacklist, skipredownload } = this.state;
+    const { remove, blocklist, skipredownload } = this.state;
 
     return (
       <Modal
@@ -108,19 +108,19 @@ class RemoveQueueItemModal extends Component {
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Blacklist Release</FormLabel>
+              <FormLabel>Blocklist Release</FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
-                name="blacklist"
-                value={blacklist}
+                name="blocklist"
+                value={blocklist}
                 helpText="Prevents Lidarr from automatically grabbing this release again"
-                onChange={this.onBlacklistChange}
+                onChange={this.onBlocklistChange}
               />
             </FormGroup>
 
             {
-              blacklist &&
+              blocklist &&
                 <FormGroup>
                   <FormLabel>Skip Redownload</FormLabel>
                   <FormInputGroup
