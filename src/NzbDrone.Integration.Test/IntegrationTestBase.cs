@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Lidarr.Api.V1.Albums;
 using Lidarr.Api.V1.Artist;
-using Lidarr.Api.V1.Blacklist;
+using Lidarr.Api.V1.Blocklist;
 using Lidarr.Api.V1.Config;
 using Lidarr.Api.V1.DownloadClient;
 using Lidarr.Api.V1.History;
@@ -37,7 +37,7 @@ namespace NzbDrone.Integration.Test
     {
         protected RestClient RestClient { get; private set; }
 
-        public ClientBase<BlacklistResource> Blacklist;
+        public ClientBase<BlocklistResource> Blocklist;
         public CommandClient Commands;
         public ClientBase<TaskResource> Tasks;
         public DownloadClientClient DownloadClients;
@@ -103,7 +103,7 @@ namespace NzbDrone.Integration.Test
             RestClient.AddDefaultHeader("X-Api-Key", ApiKey);
             RestClient.UseSystemTextJson();
 
-            Blacklist = new ClientBase<BlacklistResource>(RestClient, ApiKey);
+            Blocklist = new ClientBase<BlocklistResource>(RestClient, ApiKey);
             Commands = new CommandClient(RestClient, ApiKey);
             Tasks = new ClientBase<TaskResource>(RestClient, ApiKey, "system/task");
             DownloadClients = new DownloadClientClient(RestClient, ApiKey);

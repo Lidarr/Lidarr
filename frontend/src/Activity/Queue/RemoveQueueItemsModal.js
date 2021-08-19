@@ -22,7 +22,7 @@ class RemoveQueueItemsModal extends Component {
 
     this.state = {
       remove: true,
-      blacklist: false,
+      blocklist: false,
       skipredownload: false
     };
   }
@@ -33,7 +33,7 @@ class RemoveQueueItemsModal extends Component {
    resetState = function() {
      this.setState({
        remove: true,
-       blacklist: false,
+       blocklist: false,
        skipredownload: false
      });
    }
@@ -45,8 +45,8 @@ class RemoveQueueItemsModal extends Component {
      this.setState({ remove: value });
    }
 
-  onBlacklistChange = ({ value }) => {
-    this.setState({ blacklist: value });
+  onBlocklistChange = ({ value }) => {
+    this.setState({ blocklist: value });
   }
 
   onSkipReDownloadChange = ({ value }) => {
@@ -75,7 +75,7 @@ class RemoveQueueItemsModal extends Component {
       canIgnore
     } = this.props;
 
-    const { remove, blacklist, skipredownload } = this.state;
+    const { remove, blocklist, skipredownload } = this.state;
 
     return (
       <Modal
@@ -110,20 +110,20 @@ class RemoveQueueItemsModal extends Component {
 
             <FormGroup>
               <FormLabel>
-                Blacklist Release{selectedCount > 1 ? 's' : ''}
+                Blocklist Release{selectedCount > 1 ? 's' : ''}
               </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
-                name="blacklist"
-                value={blacklist}
+                name="blocklist"
+                value={blocklist}
                 helpText="Prevents Lidarr from automatically grabbing these files again"
-                onChange={this.onBlacklistChange}
+                onChange={this.onBlocklistChange}
               />
             </FormGroup>
 
             {
-              blacklist &&
+              blocklist &&
                 <FormGroup>
                   <FormLabel>Skip Redownload</FormLabel>
                   <FormInputGroup

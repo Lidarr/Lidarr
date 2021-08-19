@@ -5,9 +5,9 @@ using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Qualities;
 
-namespace NzbDrone.Core.Blacklisting
+namespace NzbDrone.Core.Blocklisting
 {
-    public class Blacklist : ModelBase
+    public class Blocklist : ModelBase
     {
         public int ArtistId { get; set; }
         public Artist Artist { get; set; }
