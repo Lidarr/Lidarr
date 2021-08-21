@@ -131,7 +131,7 @@ namespace NzbDrone.Core.Organizer
 
                 var component = ReplaceTokens(splitPattern, tokenHandlers, namingConfig).Trim();
 
-                component = FileNameCleanupRegex.Replace(component, match => match.Captures[0].Value[0].ToString());
+                component = CleanFolderName(component);
                 component = TrimSeparatorsRegex.Replace(component, string.Empty);
 
                 if (component.IsNotNullOrWhiteSpace())
