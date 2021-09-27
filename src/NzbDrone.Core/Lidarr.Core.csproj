@@ -16,6 +16,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NLog" Version="4.7.14" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />
+    <PackageReference Include="NLog.Targets.Syslog" Version="6.0.2" />
     <PackageReference Include="System.IO.Abstractions" Version="13.2.29" />
     <PackageReference Include="TagLibSharp-Lidarr" Version="2.2.0.27" />
     <PackageReference Include="Kveer.XmlRPC" Version="1.1.1" />
