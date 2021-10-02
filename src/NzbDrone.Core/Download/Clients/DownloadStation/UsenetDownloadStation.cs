@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
     public class UsenetDownloadStation : UsenetClientBase<DownloadStationSettings>
     {
         protected readonly IDownloadStationInfoProxy _dsInfoProxy;
-        protected readonly IDownloadStationTaskProxy _dsTaskProxy;
+        protected readonly IDownloadStationTaskProxySelector _dsTaskProxySelector;
         protected readonly ISharedFolderResolver _sharedFolderResolver;
         protected readonly ISerialNumberProvider _serialNumberProvider;
         protected readonly IFileStationProxy _fileStationProxy;
@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
                                      ISerialNumberProvider serialNumberProvider,
                                      IFileStationProxy fileStationProxy,
                                      IDownloadStationInfoProxy dsInfoProxy,
-                                     IDownloadStationTaskProxy dsTaskProxy,
+                                     IDownloadStationTaskProxySelector dsTaskProxySelector,
                                      IHttpClient httpClient,
                                      IConfigService configService,
                                      IDiskProvider diskProvider,
@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
             : base(httpClient, configService, diskProvider, remotePathMappingService, nzbValidationService, logger)
         {
             _dsInfoProxy = dsInfoProxy;
-            _dsTaskProxy = dsTaskProxy;
+            _dsTaskProxySelector = dsTaskProxySelector;
             _fileStationProxy = fileStationProxy;
             _sharedFolderResolver = sharedFolderResolver;
             _serialNumberProvider = serialNumberProvider;
@@ -48,9 +48,11 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
 
         public override ProviderMessage Message => new ProviderMessage("Lidarr is unable to connect to Download Station if 2-Factor Authentication is enabled on your DSM account", ProviderMessageType.Warning);
 
+        private IDownloadStationTaskProxy DsTaskProxy => _dsTaskProxySelector.GetProxy(Settings);
+
         protected IEnumerable<DownloadStationTask> GetTasks()
         {
-            return _dsTaskProxy.GetTasks(Settings).Where(v => v.Type.ToLower() == DownloadStationTaskType.NZB.ToString().ToLower());
+            return DsTaskProxy.GetTasks(Settings).Where(v => v.Type.ToLower() == DownloadStationTaskType.NZB.ToString().ToLower());
         }
 
         public override IEnumerable<DownloadClientItem> GetItems()
@@ -163,7 +165,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
                 DeleteItemData(downloadId);
             }
 
-            _dsTaskProxy.RemoveTask(ParseDownloadId(downloadId), Settings);
+            DsTaskProxy.RemoveTask(ParseDownloadId(downloadId), Settings);
             _logger.Debug("{0} removed correctly", downloadId);
         }
 
@@ -171,7 +173,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
         {
             var hashedSerialNumber = _serialNumberProvider.GetSerialNumber(Settings);
 
-            _dsTaskProxy.AddTaskFromData(fileContent, filename, GetDownloadDirectory(), Settings);
+            DsTaskProxy.AddTaskFromData(fileContent, filename, GetDownloadDirectory(), Settings);
 
             var items = GetTasks().Where(t => t.Additional.Detail["uri"] == filename);
 
@@ -296,7 +298,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
 
         protected ValidationFailure ValidateVersion()
         {
-            var info = _dsTaskProxy.GetApiInfo(Settings);
+            var info = DsTaskProxy.GetApiInfo(Settings);
 
             _logger.Debug("Download Station api version information: Min {0} - Max {1}", info.MinVersion, info.MaxVersion);
 
@@ -424,14 +426,15 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
             {
                 return Settings.TvDirectory.TrimStart('/');
             }
-            else if (Settings.MusicCategory.IsNotNullOrWhiteSpace())
-            {
-                var destDir = GetDefaultDir();
 
+            var destDir = GetDefaultDir();
+
+            if (Settings.MusicCategory.IsNotNullOrWhiteSpace())
+            {
                 return $"{destDir.TrimEnd('/')}/{Settings.MusicCategory}";
             }
 
-            return null;
+            return destDir.TrimEnd('/');
         }
     }
 }

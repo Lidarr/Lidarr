@@ -288,6 +288,10 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
             Mocker.GetMock<IDownloadStationInfoProxy>()
               .Setup(v => v.GetConfig(It.IsAny<DownloadStationSettings>()))
               .Returns(_downloadStationConfigItems);
+
+            Mocker.GetMock<IDownloadStationTaskProxySelector>()
+                  .Setup(s => s.GetProxy(It.IsAny<DownloadStationSettings>()))
+                  .Returns(Mocker.GetMock<IDownloadStationTaskProxy>().Object);
         }
 
         protected void GivenSharedFolder()
@@ -427,7 +431,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
             id.Should().NotBeNullOrEmpty();
 
             Mocker.GetMock<IDownloadStationTaskProxy>()
-                  .Verify(v => v.AddTaskFromUrl(It.IsAny<string>(), null, It.IsAny<DownloadStationSettings>()), Times.Once());
+                  .Verify(v => v.AddTaskFromUrl(It.IsAny<string>(), _defaultDestination, It.IsAny<DownloadStationSettings>()), Times.Once());
         }
 
         [Test]
