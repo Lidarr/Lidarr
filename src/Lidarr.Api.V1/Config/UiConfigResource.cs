@@ -16,6 +16,7 @@ namespace Lidarr.Api.V1.Config
         public bool ShowRelativeDates { get; set; }
 
         public bool EnableColorImpairedMode { get; set; }
+        public int UILanguage { get; set; }
 
         public bool ExpandAlbumByDefault { get; set; }
         public bool ExpandSingleByDefault { get; set; }
@@ -39,6 +40,7 @@ namespace Lidarr.Api.V1.Config
                 ShowRelativeDates = model.ShowRelativeDates,
 
                 EnableColorImpairedMode = model.EnableColorImpairedMode,
+                UILanguage = model.UILanguage,
 
                 ExpandAlbumByDefault = model.ExpandAlbumByDefault,
                 ExpandSingleByDefault = model.ExpandSingleByDefault,

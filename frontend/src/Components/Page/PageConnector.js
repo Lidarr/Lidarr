@@ -6,7 +6,7 @@ import { createSelector } from 'reselect';
 import { saveDimensions, setIsSidebarVisible } from 'Store/Actions/appActions';
 import { fetchArtist } from 'Store/Actions/artistActions';
 import { fetchCustomFilters } from 'Store/Actions/customFilterActions';
-import { fetchImportLists, fetchMetadataProfiles, fetchQualityProfiles, fetchUISettings } from 'Store/Actions/settingsActions';
+import { fetchImportLists, fetchLanguages, fetchMetadataProfiles, fetchQualityProfiles, fetchUISettings } from 'Store/Actions/settingsActions';
 import { fetchStatus } from 'Store/Actions/systemActions';
 import { fetchTags } from 'Store/Actions/tagActions';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
@@ -46,6 +46,7 @@ const selectIsPopulated = createSelector(
   (state) => state.customFilters.isPopulated,
   (state) => state.tags.isPopulated,
   (state) => state.settings.ui.isPopulated,
+  (state) => state.settings.languages.isPopulated,
   (state) => state.settings.qualityProfiles.isPopulated,
   (state) => state.settings.metadataProfiles.isPopulated,
   (state) => state.settings.importLists.isPopulated,
@@ -54,6 +55,7 @@ const selectIsPopulated = createSelector(
     customFiltersIsPopulated,
     tagsIsPopulated,
     uiSettingsIsPopulated,
+    languagesIsPopulated,
     qualityProfilesIsPopulated,
     metadataProfilesIsPopulated,
     importListsIsPopulated,
@@ -63,6 +65,7 @@ const selectIsPopulated = createSelector(
       customFiltersIsPopulated &&
       tagsIsPopulated &&
       uiSettingsIsPopulated &&
+      languagesIsPopulated &&
       qualityProfilesIsPopulated &&
       metadataProfilesIsPopulated &&
       importListsIsPopulated &&
@@ -75,6 +78,7 @@ const selectErrors = createSelector(
   (state) => state.customFilters.error,
   (state) => state.tags.error,
   (state) => state.settings.ui.error,
+  (state) => state.settings.languages.error,
   (state) => state.settings.qualityProfiles.error,
   (state) => state.settings.metadataProfiles.error,
   (state) => state.settings.importLists.error,
@@ -83,6 +87,7 @@ const selectErrors = createSelector(
     customFiltersError,
     tagsError,
     uiSettingsError,
+    languagesError,
     qualityProfilesError,
     metadataProfilesError,
     importListsError,
@@ -92,6 +97,7 @@ const selectErrors = createSelector(
       customFiltersError ||
       tagsError ||
       uiSettingsError ||
+      languagesError ||
       qualityProfilesError ||
       metadataProfilesError ||
       importListsError ||
@@ -103,6 +109,7 @@ const selectErrors = createSelector(
       customFiltersError,
       tagsError,
       uiSettingsError,
+      languagesError,
       qualityProfilesError,
       metadataProfilesError,
       importListsError,
@@ -147,6 +154,9 @@ function createMapDispatchToProps(dispatch, props) {
     dispatchFetchTags() {
       dispatch(fetchTags());
     },
+    dispatchFetchLanguages() {
+      dispatch(fetchLanguages());
+    },
     dispatchFetchQualityProfiles() {
       dispatch(fetchQualityProfiles());
     },
@@ -189,6 +199,7 @@ class PageConnector extends Component {
       this.props.dispatchFetchArtist();
       this.props.dispatchFetchCustomFilters();
       this.props.dispatchFetchTags();
+      this.props.dispatchFetchLanguages();
       this.props.dispatchFetchQualityProfiles();
       this.props.dispatchFetchMetadataProfiles();
       this.props.dispatchFetchImportLists();
@@ -213,6 +224,7 @@ class PageConnector extends Component {
       hasError,
       dispatchFetchArtist,
       dispatchFetchTags,
+      dispatchFetchLanguages,
       dispatchFetchQualityProfiles,
       dispatchFetchMetadataProfiles,
       dispatchFetchImportLists,
@@ -252,6 +264,7 @@ PageConnector.propTypes = {
   dispatchFetchArtist: PropTypes.func.isRequired,
   dispatchFetchCustomFilters: PropTypes.func.isRequired,
   dispatchFetchTags: PropTypes.func.isRequired,
+  dispatchFetchLanguages: PropTypes.func.isRequired,
   dispatchFetchQualityProfiles: PropTypes.func.isRequired,
   dispatchFetchMetadataProfiles: PropTypes.func.isRequired,
   dispatchFetchImportLists: PropTypes.func.isRequired,

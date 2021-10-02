@@ -29,6 +29,11 @@
     <ProjectReference Include="..\NzbDrone.Common\Lidarr.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Localization\Core\**">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="..\..\Logo\64.png">
       <Link>Resources\Logo\64.png</Link>
     </EmbeddedResource>

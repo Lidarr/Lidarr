@@ -10,6 +10,7 @@ import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import { inputTypes } from 'Helpers/Props';
 import SettingsToolbarConnector from 'Settings/SettingsToolbarConnector';
+import translate from 'Utilities/String/translate';
 import styles from './UISettings.css';
 
 export const firstDayOfWeekOptions = [
@@ -56,8 +57,11 @@ class UISettings extends Component {
       hasSettings,
       onInputChange,
       onSavePress,
+      languages,
       ...otherProps
     } = this.props;
+
+    const uiLanguages = languages.filter((item) => item.value !== 'Original');
 
     return (
       <PageContent title="UI Settings">
@@ -220,6 +224,20 @@ class UISettings extends Component {
                     </div>
                   </FormGroup>
                 </FieldSet>
+                <FieldSet legend={translate('Language')}>
+                  <FormGroup>
+                    <FormLabel>{translate('UILanguage')}</FormLabel>
+                    <FormInputGroup
+                      type={inputTypes.SELECT}
+                      name="uiLanguage"
+                      values={uiLanguages}
+                      helpText={translate('UILanguageHelpText')}
+                      helpTextWarning={translate('UILanguageHelpTextWarning')}
+                      onChange={onInputChange}
+                      {...settings.uiLanguage}
+                    />
+                  </FormGroup>
+                </FieldSet>
               </Form>
           }
         </PageContentBody>
@@ -235,6 +253,7 @@ UISettings.propTypes = {
   settings: PropTypes.object.isRequired,
   hasSettings: PropTypes.bool.isRequired,
   onSavePress: PropTypes.func.isRequired,
+  languages: PropTypes.arrayOf(PropTypes.object).isRequired,
   onInputChange: PropTypes.func.isRequired
 };
 
