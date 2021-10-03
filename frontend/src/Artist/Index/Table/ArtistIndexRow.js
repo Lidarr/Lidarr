@@ -17,6 +17,7 @@ import TagListConnector from 'Components/TagListConnector';
 import { icons } from 'Helpers/Props';
 import getProgressBarKind from 'Utilities/Artist/getProgressBarKind';
 import formatBytes from 'Utilities/Number/formatBytes';
+import translate from 'Utilities/String/translate';
 import ArtistStatusCell from './ArtistStatusCell';
 import hasGrowableColumns from './hasGrowableColumns';
 import styles from './ArtistIndexRow.css';
@@ -307,7 +308,7 @@ class ArtistIndexRow extends Component {
                     kind={getProgressBarKind(status, monitored, progress)}
                     showText={true}
                     text={`${trackFileCount} / ${trackCount}`}
-                    title={`${trackFileCount} / ${trackCount} (Total: ${totalTrackCount})`}
+                    title={translate('TrackFileCountTrackCountTotalTotalTrackCountInterp', [trackFileCount, trackCount, totalTrackCount])}
                     width={125}
                   />
                 </VirtualTableRowCell>
@@ -396,7 +397,7 @@ class ArtistIndexRow extends Component {
                 >
                   <SpinnerIconButton
                     name={icons.REFRESH}
-                    title="Refresh Artist"
+                    title={translate('RefreshArtist')}
                     isSpinning={isRefreshingArtist}
                     onPress={onRefreshArtistPress}
                   />
@@ -406,7 +407,7 @@ class ArtistIndexRow extends Component {
                       <SpinnerIconButton
                         className={styles.action}
                         name={icons.SEARCH}
-                        title="Search for monitored albums"
+                        title={translate('SearchForMonitoredAlbums')}
                         isSpinning={isSearchingArtist}
                         onPress={onSearchPress}
                       />
@@ -414,7 +415,7 @@ class ArtistIndexRow extends Component {
 
                   <IconButton
                     name={icons.EDIT}
-                    title="Edit Artist"
+                    title={translate('EditArtist')}
                     onPress={this.onEditArtistPress}
                   />
                 </VirtualTableRowCell>

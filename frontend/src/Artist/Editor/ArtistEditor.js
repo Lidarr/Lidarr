@@ -14,6 +14,7 @@ import TableBody from 'Components/Table/TableBody';
 import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
 import { align, icons, sortDirections } from 'Helpers/Props';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
+import translate from 'Utilities/String/translate';
 import getSelectedIds from 'Utilities/Table/getSelectedIds';
 import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
@@ -143,7 +144,7 @@ class ArtistEditor extends Component {
     const selectedArtistIds = this.getSelectedIds();
 
     return (
-      <PageContent title="Artist Editor">
+      <PageContent title={translate('ArtistEditor')}>
         <PageToolbar>
           <PageToolbarSection />
           <PageToolbarSection alignContent={align.RIGHT}>
@@ -152,7 +153,7 @@ class ArtistEditor extends Component {
               onTableOptionChange={onTableOptionChange}
             >
               <PageToolbarButton
-                label="Options"
+                label={translate('Options')}
                 iconName={icons.TABLE}
               />
             </TableOptionsModalWrapper>

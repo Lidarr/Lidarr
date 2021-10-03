@@ -4,6 +4,7 @@ import DescriptionListItemDescription from 'Components/DescriptionList/Descripti
 import DescriptionListItemTitle from 'Components/DescriptionList/DescriptionListItemTitle';
 import FieldSet from 'Components/FieldSet';
 import Link from 'Components/Link/Link';
+import translate from 'Utilities/String/translate';
 
 class MoreInfo extends Component {
 
@@ -12,7 +13,7 @@ class MoreInfo extends Component {
 
   render() {
     return (
-      <FieldSet legend="More Info">
+      <FieldSet legend={translate('MoreInfo')}>
         <DescriptionList>
           <DescriptionListItemTitle>Home page</DescriptionListItemTitle>
           <DescriptionListItemDescription>

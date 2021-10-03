@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import FormGroup from 'Components/Form/FormGroup';
 import FormInputHelpText from 'Components/Form/FormInputHelpText';
 import FormLabel from 'Components/Form/FormLabel';
+import translate from 'Utilities/String/translate';
 import PrimaryTypeItem from './PrimaryTypeItem';
 import styles from './TypeItems.css';
 
@@ -21,7 +22,9 @@ class PrimaryTypeItems extends Component {
 
     return (
       <FormGroup>
-        <FormLabel>Primary Types</FormLabel>
+        <FormLabel>
+          {translate('PrimaryTypes')}
+        </FormLabel>
         <div>
 
           {

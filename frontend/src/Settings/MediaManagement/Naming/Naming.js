@@ -8,6 +8,7 @@ import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import { inputTypes, sizes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import NamingModal from './NamingModal';
 import styles from './Naming.css';
 
@@ -115,7 +116,7 @@ class Naming extends Component {
     }
 
     return (
-      <FieldSet legend="Track Naming">
+      <FieldSet legend={translate('TrackNaming')}>
         {
           isFetching &&
             <LoadingIndicator />
@@ -123,31 +124,37 @@ class Naming extends Component {
 
         {
           !isFetching && error &&
-            <div>Unable to load Naming settings</div>
+            <div>
+              {translate('UnableToLoadNamingSettings')}
+            </div>
         }
 
         {
           hasSettings && !isFetching && !error &&
             <Form>
               <FormGroup size={sizes.MEDIUM}>
-                <FormLabel>Rename Tracks</FormLabel>
+                <FormLabel>
+                  {translate('RenameTracks')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.CHECK}
                   name="renameTracks"
-                  helpText="Lidarr will use the existing file name if renaming is disabled"
+                  helpText={translate('RenameTracksHelpText')}
                   onChange={onInputChange}
                   {...settings.renameTracks}
                 />
               </FormGroup>
 
               <FormGroup size={sizes.MEDIUM}>
-                <FormLabel>Replace Illegal Characters</FormLabel>
+                <FormLabel>
+                  {translate('ReplaceIllegalCharacters')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.CHECK}
                   name="replaceIllegalCharacters"
-                  helpText="Replace illegal characters. If unchecked, Lidarr will remove them instead"
+                  helpText={translate('ReplaceIllegalCharactersHelpText')}
                   onChange={onInputChange}
                   {...settings.replaceIllegalCharacters}
                 />
@@ -157,7 +164,9 @@ class Naming extends Component {
                 renameTracks &&
                   <div>
                     <FormGroup size={sizes.LARGE}>
-                      <FormLabel>Standard Track Format</FormLabel>
+                      <FormLabel>
+                        {translate('StandardTrackFormat')}
+                      </FormLabel>
 
                       <FormInputGroup
                         inputClassName={styles.namingInput}
@@ -172,7 +181,9 @@ class Naming extends Component {
                     </FormGroup>
 
                     <FormGroup size={sizes.LARGE}>
-                      <FormLabel>Multi Disc Track Format</FormLabel>
+                      <FormLabel>
+                        {translate('MultiDiscTrackFormat')}
+                      </FormLabel>
 
                       <FormInputGroup
                         inputClassName={styles.namingInput}
@@ -193,7 +204,9 @@ class Naming extends Component {
                 advancedSettings={advancedSettings}
                 isAdvanced={true}
               >
-                <FormLabel>Artist Folder Format</FormLabel>
+                <FormLabel>
+                  {translate('ArtistFolderFormat')}
+                </FormLabel>
 
                 <FormInputGroup
                   inputClassName={styles.namingInput}

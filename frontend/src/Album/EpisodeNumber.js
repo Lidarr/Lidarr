@@ -3,6 +3,7 @@ import React from 'react';
 import Icon from 'Components/Icon';
 import Popover from 'Components/Tooltip/Popover';
 import { icons, kinds, tooltipPositions } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import SceneInfo from './SceneInfo';
 import styles from './EpisodeNumber.css';
 
@@ -40,7 +41,7 @@ function EpisodeNumber(props) {
                 }
               </span>
             }
-            title="Scene Information"
+            title={translate('SceneInformation')}
             body={
               <SceneInfo
                 sceneSeasonNumber={sceneSeasonNumber}
@@ -70,7 +71,7 @@ function EpisodeNumber(props) {
             className={styles.warning}
             name={icons.WARNING}
             kind={kinds.WARNING}
-            title="Scene number hasn't been verified yet"
+            title={translate('SceneNumberHasntBeenVerifiedYet')}
           />
       }
 
@@ -80,7 +81,7 @@ function EpisodeNumber(props) {
             className={styles.warning}
             name={icons.WARNING}
             kind={kinds.WARNING}
-            title="Episode does not have an absolute episode number"
+            title={translate('EpisodeDoesNotHaveAnAbsoluteEpisodeNumber')}
           />
       }
     </span>

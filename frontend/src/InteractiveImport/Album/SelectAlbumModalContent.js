@@ -11,6 +11,7 @@ import Scroller from 'Components/Scroller/Scroller';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import { scrollDirections } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import SelectAlbumRow from './SelectAlbumRow';
 import styles from './SelectAlbumModalContent.css';
 
@@ -87,7 +88,7 @@ class SelectAlbumModalContent extends Component {
           }
           <TextInput
             className={styles.filterInput}
-            placeholder="Filter album"
+            placeholder={translate('FilterPlaceHolder')}
             name="filter"
             value={filter}
             autoFocus={true}

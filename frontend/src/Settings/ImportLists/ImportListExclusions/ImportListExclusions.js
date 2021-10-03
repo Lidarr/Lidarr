@@ -5,6 +5,7 @@ import Icon from 'Components/Icon';
 import Link from 'Components/Link/Link';
 import PageSectionContent from 'Components/Page/PageSectionContent';
 import { icons } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import EditImportListExclusionModalConnector from './EditImportListExclusionModalConnector';
 import ImportListExclusion from './ImportListExclusion';
 import styles from './ImportListExclusions.css';
@@ -44,9 +45,9 @@ class ImportListExclusions extends Component {
     } = this.props;
 
     return (
-      <FieldSet legend="Import List Exclusions">
+      <FieldSet legend={translate('ImportListExclusions')}>
         <PageSectionContent
-          errorMessage="Unable to load Import List Exclusions"
+          errorMessage={translate('UnableToLoadImportListExclusions')}
           {...otherProps}
         >
           <div className={styles.importListExclusionsHeader}>

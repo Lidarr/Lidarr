@@ -9,6 +9,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
 import split from 'Utilities/String/split';
+import translate from 'Utilities/String/translate';
 import TagDetailsDelayProfile from './TagDetailsDelayProfile';
 import styles from './TagDetailsModalContent.css';
 
@@ -34,12 +35,14 @@ function TagDetailsModalContent(props) {
       <ModalBody>
         {
           !isTagUsed &&
-            <div>Tag is not used and can be deleted</div>
+            <div>
+              {translate('TagIsNotUsedAndCanBeDeleted')}
+            </div>
         }
 
         {
           !!artist.length &&
-            <FieldSet legend="Artists">
+            <FieldSet legend={translate('Artists')}>
               {
                 artist.map((item) => {
                   return (
@@ -54,7 +57,7 @@ function TagDetailsModalContent(props) {
 
         {
           !!delayProfiles.length &&
-            <FieldSet legend="Delay Profile">
+            <FieldSet legend={translate('DelayProfile')}>
               {
                 delayProfiles.map((item) => {
                   const {
@@ -83,7 +86,7 @@ function TagDetailsModalContent(props) {
 
         {
           !!notifications.length &&
-            <FieldSet legend="Connections">
+            <FieldSet legend={translate('Connections')}>
               {
                 notifications.map((item) => {
                   return (
@@ -98,7 +101,7 @@ function TagDetailsModalContent(props) {
 
         {
           !!importLists.length &&
-            <FieldSet legend="Import Lists">
+            <FieldSet legend={translate('ImportLists')}>
               {
                 importLists.map((item) => {
                   return (
@@ -113,7 +116,7 @@ function TagDetailsModalContent(props) {
 
         {
           !!releaseProfiles.length &&
-            <FieldSet legend="Release Profiles">
+            <FieldSet legend={translate('ReleaseProfiles')}>
               {
                 releaseProfiles.map((item) => {
                   return (
@@ -163,7 +166,7 @@ function TagDetailsModalContent(props) {
           <Button
             className={styles.deleteButton}
             kind={kinds.DANGER}
-            title={isTagUsed ? 'Cannot be deleted while in use' : undefined}
+            title={isTagUsed ? translate('IsTagUsedCannotBeDeletedWhileInUse') : undefined}
             isDisabled={isTagUsed}
             onPress={onDeleteTagPress}
           >

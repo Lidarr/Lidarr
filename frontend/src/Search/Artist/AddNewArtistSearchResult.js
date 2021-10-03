@@ -9,6 +9,7 @@ import Link from 'Components/Link/Link';
 import { icons, kinds, sizes } from 'Helpers/Props';
 import dimensions from 'Styles/Variables/dimensions';
 import fonts from 'Styles/Variables/fonts';
+import translate from 'Utilities/String/translate';
 import AddNewArtistModal from './AddNewArtistModal';
 import styles from './AddNewArtistSearchResult.css';
 
@@ -137,7 +138,7 @@ class AddNewArtistSearchResult extends Component {
                       className={styles.alreadyExistsIcon}
                       name={icons.CHECK_CIRCLE}
                       size={36}
-                      title="Already in your library"
+                      title={translate('AlreadyInYourLibrary')}
                     /> :
                     null
                 }

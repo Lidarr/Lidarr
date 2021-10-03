@@ -13,6 +13,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds } from 'Helpers/Props';
 import { stringSettingShape } from 'Helpers/Props/Shapes/settingShape';
+import translate from 'Utilities/String/translate';
 import styles from './EditRemotePathMappingModalContent.css';
 
 function EditRemotePathMappingModalContent(props) {
@@ -51,19 +52,23 @@ function EditRemotePathMappingModalContent(props) {
 
         {
           !isFetching && !!error &&
-            <div>Unable to add a new remote path mapping, please try again.</div>
+            <div>
+              {translate('UnableToAddANewRemotePathMappingPleaseTryAgain')}
+            </div>
         }
 
         {
           !isFetching && !error &&
             <Form {...otherProps}>
               <FormGroup>
-                <FormLabel>Host</FormLabel>
+                <FormLabel>
+                  {translate('Host')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.SELECT}
                   name="host"
-                  helpText="The same host you specified for the remote Download Client"
+                  helpText={translate('HostHelpText')}
                   {...host}
                   values={downloadClientHosts}
                   onChange={onInputChange}
@@ -71,24 +76,28 @@ function EditRemotePathMappingModalContent(props) {
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>Remote Path</FormLabel>
+                <FormLabel>
+                  {translate('RemotePath')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.TEXT}
                   name="remotePath"
-                  helpText="Root path to the directory that the Download Client accesses"
+                  helpText={translate('RemotePathHelpText')}
                   {...remotePath}
                   onChange={onInputChange}
                 />
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>Local Path</FormLabel>
+                <FormLabel>
+                  {translate('LocalPath')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.PATH}
                   name="localPath"
-                  helpText="Path that Lidarr should use to access the remote path locally"
+                  helpText={translate('LocalPathHelpText')}
                   {...localPath}
                   onChange={onInputChange}
                 />

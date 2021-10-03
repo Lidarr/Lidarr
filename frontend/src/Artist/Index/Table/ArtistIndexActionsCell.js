@@ -6,6 +6,7 @@ import IconButton from 'Components/Link/IconButton';
 import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
 import { icons } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 class ArtistIndexActionsCell extends Component {
 
@@ -65,14 +66,14 @@ class ArtistIndexActionsCell extends Component {
       >
         <SpinnerIconButton
           name={icons.REFRESH}
-          title="Refresh Artist"
+          title={translate('RefreshArtist')}
           isSpinning={isRefreshingArtist}
           onPress={onRefreshArtistPress}
         />
 
         <IconButton
           name={icons.EDIT}
-          title="Edit Artist"
+          title={translate('EditArtist')}
           onPress={this.onEditArtistPress}
         />
 

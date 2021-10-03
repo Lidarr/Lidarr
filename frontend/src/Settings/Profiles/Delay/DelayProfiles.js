@@ -6,6 +6,7 @@ import Link from 'Components/Link/Link';
 import Measure from 'Components/Measure';
 import PageSectionContent from 'Components/Page/PageSectionContent';
 import { icons } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import DelayProfile from './DelayProfile';
 import DelayProfileDragPreview from './DelayProfileDragPreview';
 import DelayProfileDragSource from './DelayProfileDragSource';
@@ -66,9 +67,9 @@ class DelayProfiles extends Component {
 
     return (
       <Measure onMeasure={this.onMeasure}>
-        <FieldSet legend="Delay Profiles">
+        <FieldSet legend={translate('DelayProfiles')}>
           <PageSectionContent
-            errorMessage="Unable to load Delay Profiles"
+            errorMessage={translate('UnableToLoadDelayProfiles')}
             {...otherProps}
           >
             <div className={styles.delayProfilesHeader}>

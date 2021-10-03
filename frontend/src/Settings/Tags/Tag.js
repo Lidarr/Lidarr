@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Card from 'Components/Card';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
 import { kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import TagDetailsModal from './Details/TagDetailsModal';
 import styles from './Tag.css';
 
@@ -145,9 +146,9 @@ class Tag extends Component {
         <ConfirmModal
           isOpen={isDeleteTagModalOpen}
           kind={kinds.DANGER}
-          title="Delete Tag"
-          message={`Are you sure you want to delete the tag '${label}'?`}
-          confirmLabel="Delete"
+          title={translate('DeleteTag')}
+          message={translate('DeleteTagMessageText', [label])}
+          confirmLabel={translate('Delete')}
           onConfirm={this.onConfirmDeleteTag}
           onCancel={this.onDeleteTagModalClose}
         />

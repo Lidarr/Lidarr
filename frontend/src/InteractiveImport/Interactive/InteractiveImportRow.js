@@ -16,6 +16,7 @@ import SelectQualityModal from 'InteractiveImport/Quality/SelectQualityModal';
 import SelectTrackModal from 'InteractiveImport/Track/SelectTrackModal';
 import formatBytes from 'Utilities/Number/formatBytes';
 import hasDifferentItems from 'Utilities/Object/hasDifferentItems';
+import translate from 'Utilities/String/translate';
 import InteractiveImportRowCellPlaceholder from './InteractiveImportRowCellPlaceholder';
 import styles from './InteractiveImportRow.css';
 
@@ -197,7 +198,7 @@ class InteractiveImportRow extends Component {
     const pathCell = additionalFile ? (
       <Tooltip
         anchor={pathCellContents}
-        tooltip='This file is already in your library for a release you are currently importing'
+        tooltip={translate('AnchorTooltip')}
         position={tooltipPositions.TOP}
       />
     ) : pathCellContents;
@@ -221,7 +222,7 @@ class InteractiveImportRow extends Component {
 
         <TableRowCellButton
           isDisabled={!allowArtistChange}
-          title={allowArtistChange ? 'Click to change artist' : undefined}
+          title={allowArtistChange ? translate('AllowArtistChangeClickToChangeArtist') : undefined}
           onPress={this.onSelectArtistPress}
         >
           {
@@ -231,7 +232,7 @@ class InteractiveImportRow extends Component {
 
         <TableRowCellButton
           isDisabled={!artist}
-          title={artist ? 'Click to change album' : undefined}
+          title={artist ? translate('ArtistClickToChangeAlbum') : undefined}
           onPress={this.onSelectAlbumPress}
         >
           {
@@ -241,7 +242,7 @@ class InteractiveImportRow extends Component {
 
         <TableRowCellButton
           isDisabled={!artist || !album}
-          title={artist && album ? 'Click to change track' : undefined}
+          title={artist && album ? translate('ArtistAlbumClickToChangeTrack') : undefined}
           onPress={this.onSelectTrackPress}
         >
           {
@@ -254,7 +255,7 @@ class InteractiveImportRow extends Component {
 
         <TableRowCellButton
           className={styles.quality}
-          title="Click to change quality"
+          title={translate('ClickToChangeQuality')}
           onPress={this.onSelectQualityPress}
         >
           {
@@ -285,7 +286,7 @@ class InteractiveImportRow extends Component {
                     kind={kinds.DANGER}
                   />
                 }
-                title="Release Rejected"
+                title={translate('ReleaseRejected')}
                 body={
                   <ul>
                     {

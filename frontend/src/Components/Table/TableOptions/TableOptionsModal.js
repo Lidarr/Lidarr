@@ -15,6 +15,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import TableOptionsColumn from './TableOptionsColumn';
 import TableOptionsColumnDragPreview from './TableOptionsColumnDragPreview';
 import TableOptionsColumnDragSource from './TableOptionsColumnDragSource';
@@ -144,13 +145,15 @@ class TableOptionsModal extends Component {
                     {
                       hasPageSize ?
                         <FormGroup>
-                          <FormLabel>Page Size</FormLabel>
+                          <FormLabel>
+                            {translate('PageSize')}
+                          </FormLabel>
 
                           <FormInputGroup
                             type={inputTypes.NUMBER}
                             name="pageSize"
                             value={pageSize || 0}
-                            helpText="Number of items to show on each page"
+                            helpText={translate('PageSizeHelpText')}
                             errors={pageSizeError ? [{ message: pageSizeError }] : undefined}
                             onChange={this.onPageSizeChange}
                           />
@@ -168,7 +171,9 @@ class TableOptionsModal extends Component {
                     {
                       canModifyColumns ?
                         <FormGroup>
-                          <FormLabel>Columns</FormLabel>
+                          <FormLabel>
+                            {translate('Columns')}
+                          </FormLabel>
 
                           <div>
                             <FormInputHelpText

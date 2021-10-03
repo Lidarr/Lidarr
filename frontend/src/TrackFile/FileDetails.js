@@ -7,6 +7,7 @@ import DescriptionListItemDescription from 'Components/DescriptionList/Descripti
 import DescriptionListItemTitle from 'Components/DescriptionList/DescriptionListItemTitle';
 import Link from 'Components/Link/Link';
 import formatTimeSpan from 'Utilities/Date/formatTimeSpan';
+import translate from 'Utilities/String/translate';
 import styles from './FileDetails.css';
 
 function renderRejections(rejections) {
@@ -43,7 +44,7 @@ function FileDetails(props) {
           {
             filename &&
               <DescriptionListItem
-                title="Filename"
+                title={translate('Filename')}
                 data={filename}
                 descriptionClassName={styles.filename}
               />
@@ -51,84 +52,84 @@ function FileDetails(props) {
           {
             audioTags.title !== undefined &&
               <DescriptionListItem
-                title="Track Title"
+                title={translate('TrackTitle')}
                 data={audioTags.title}
               />
           }
           {
             audioTags.trackNumbers[0] > 0 &&
               <DescriptionListItem
-                title="Track Number"
+                title={translate('TrackNumber')}
                 data={audioTags.trackNumbers[0]}
               />
           }
           {
             audioTags.discNumber > 0 &&
               <DescriptionListItem
-                title="Disc Number"
+                title={translate('DiscNumber')}
                 data={audioTags.discNumber}
               />
           }
           {
             audioTags.discCount > 0 &&
               <DescriptionListItem
-                title="Disc Count"
+                title={translate('DiscCount')}
                 data={audioTags.discCount}
               />
           }
           {
             audioTags.albumTitle !== undefined &&
               <DescriptionListItem
-                title="Album"
+                title={translate('Album')}
                 data={audioTags.albumTitle}
               />
           }
           {
             audioTags.artistTitle !== undefined &&
               <DescriptionListItem
-                title="Artist"
+                title={translate('Artist')}
                 data={audioTags.artistTitle}
               />
           }
           {
             audioTags.country !== undefined &&
               <DescriptionListItem
-                title="Country"
+                title={translate('Country')}
                 data={audioTags.country.name}
               />
           }
           {
             audioTags.year > 0 &&
               <DescriptionListItem
-                title="Year"
+                title={translate('Year')}
                 data={audioTags.year}
               />
           }
           {
             audioTags.label !== undefined &&
               <DescriptionListItem
-                title="Label"
+                title={translate('Label')}
                 data={audioTags.label}
               />
           }
           {
             audioTags.catalogNumber !== undefined &&
               <DescriptionListItem
-                title="Catalog Number"
+                title={translate('CatalogNumber')}
                 data={audioTags.catalogNumber}
               />
           }
           {
             audioTags.disambiguation !== undefined &&
               <DescriptionListItem
-                title="Disambiguation"
+                title={translate('Disambiguation')}
                 data={audioTags.disambiguation}
               />
           }
           {
             audioTags.duration !== undefined &&
               <DescriptionListItem
-                title="Duration"
+                title={translate('Duration')}
                 data={formatTimeSpan(audioTags.duration)}
               />
           }
@@ -138,7 +139,7 @@ function FileDetails(props) {
                 to={`https://musicbrainz.org/artist/${audioTags.artistMBId}`}
               >
                 <DescriptionListItem
-                  title="MusicBrainz Artist ID"
+                  title={translate('MusicBrainzArtistID')}
                   data={audioTags.artistMBId}
                 />
               </Link>
@@ -149,7 +150,7 @@ function FileDetails(props) {
                 to={`https://musicbrainz.org/release-group/${audioTags.albumMBId}`}
               >
                 <DescriptionListItem
-                  title="MusicBrainz Album ID"
+                  title={translate('MusicBrainzAlbumID')}
                   data={audioTags.albumMBId}
                 />
               </Link>
@@ -160,7 +161,7 @@ function FileDetails(props) {
                 to={`https://musicbrainz.org/release/${audioTags.releaseMBId}`}
               >
                 <DescriptionListItem
-                  title="MusicBrainz Release ID"
+                  title={translate('MusicBrainzReleaseID')}
                   data={audioTags.releaseMBId}
                 />
               </Link>
@@ -171,7 +172,7 @@ function FileDetails(props) {
                 to={`https://musicbrainz.org/recording/${audioTags.recordingMBId}`}
               >
                 <DescriptionListItem
-                  title="MusicBrainz Recording ID"
+                  title={translate('MusicBrainzRecordingID')}
                   data={audioTags.recordingMBId}
                 />
               </Link>
@@ -182,7 +183,7 @@ function FileDetails(props) {
                 to={`https://musicbrainz.org/track/${audioTags.trackMBId}`}
               >
                 <DescriptionListItem
-                  title="MusicBrainz Track ID"
+                  title={translate('MusicBrainzTrackID')}
                   data={audioTags.trackMBId}
                 />
               </Link>

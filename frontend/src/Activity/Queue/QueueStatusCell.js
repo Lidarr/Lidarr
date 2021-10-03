@@ -4,6 +4,7 @@ import Icon from 'Components/Icon';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import Popover from 'Components/Tooltip/Popover';
 import { icons, kinds, tooltipPositions } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './QueueStatusCell.css';
 
 function getDetailedPopoverBody(statusMessages) {
@@ -49,7 +50,7 @@ function QueueStatusCell(props) {
   // status === 'downloading'
   let iconName = icons.DOWNLOADING;
   let iconKind = kinds.DEFAULT;
-  let title = 'Downloading';
+  let title = translate('Downloading');
 
   if (hasWarning) {
     iconKind = kinds.WARNING;

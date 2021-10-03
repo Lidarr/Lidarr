@@ -9,6 +9,7 @@ import Link from 'Components/Link/Link';
 import { icons } from 'Helpers/Props';
 import formatDateTime from 'Utilities/Date/formatDateTime';
 import formatAge from 'Utilities/Number/formatAge';
+import translate from 'Utilities/String/translate';
 import styles from './HistoryDetails.css';
 
 function getDetailedList(statusMessages) {
@@ -47,7 +48,9 @@ function formatMissing(value) {
 
 function formatChange(oldValue, newValue) {
   return (
-    <div> {formatMissing(oldValue)} <Icon name={icons.ARROW_RIGHT_NO_CIRCLE} size={12} /> {formatMissing(newValue)} </div>
+    <div>
+      {formatMissing(oldValue)} <Icon name={icons.ARROW_RIGHT_NO_CIRCLE} size={12} /> {formatMissing(newValue)}
+    </div>
   );
 }
 
@@ -77,14 +80,14 @@ function HistoryDetails(props) {
       <DescriptionList>
         <DescriptionListItem
           descriptionClassName={styles.description}
-          title="Name"
+          title={translate('Name')}
           data={sourceTitle}
         />
 
         {
           !!indexer &&
             <DescriptionListItem
-              title="Indexer"
+              title={translate('Indexer')}
               data={indexer}
             />
         }
@@ -93,7 +96,7 @@ function HistoryDetails(props) {
           !!releaseGroup &&
             <DescriptionListItem
               descriptionClassName={styles.description}
-              title="Release Group"
+              title={translate('ReleaseGroup')}
               data={releaseGroup}
             />
         }
@@ -114,7 +117,7 @@ function HistoryDetails(props) {
         {
           !!downloadClient &&
             <DescriptionListItem
-              title="Download Client"
+              title={translate('DownloadClient')}
               data={downloadClient}
             />
         }
@@ -122,7 +125,7 @@ function HistoryDetails(props) {
         {
           !!downloadId &&
             <DescriptionListItem
-              title="Grab ID"
+              title={translate('GrabID')}
               data={downloadId}
             />
         }
@@ -130,7 +133,7 @@ function HistoryDetails(props) {
         {
           !!indexer &&
             <DescriptionListItem
-              title="Age (when grabbed)"
+              title={translate('AgeWhenGrabbed')}
               data={formatAge(age, ageHours, ageMinutes)}
             />
         }
@@ -138,7 +141,7 @@ function HistoryDetails(props) {
         {
           !!publishedDate &&
             <DescriptionListItem
-              title="Published Date"
+              title={translate('PublishedDate')}
               data={formatDateTime(publishedDate, shortDateFormat, timeFormat, { includeSeconds: true })}
             />
         }
@@ -155,14 +158,14 @@ function HistoryDetails(props) {
       <DescriptionList>
         <DescriptionListItem
           descriptionClassName={styles.description}
-          title="Name"
+          title={translate('Name')}
           data={sourceTitle}
         />
 
         {
           !!message &&
             <DescriptionListItem
-              title="Message"
+              title={translate('Message')}
               data={message}
             />
         }
@@ -180,7 +183,7 @@ function HistoryDetails(props) {
       <DescriptionList>
         <DescriptionListItem
           descriptionClassName={styles.description}
-          title="Name"
+          title={translate('Name')}
           data={sourceTitle}
         />
 
@@ -188,7 +191,7 @@ function HistoryDetails(props) {
           !!droppedPath &&
             <DescriptionListItem
               descriptionClassName={styles.description}
-              title="Source"
+              title={translate('Source')}
               data={droppedPath}
             />
         }
@@ -197,7 +200,7 @@ function HistoryDetails(props) {
           !!importedPath &&
             <DescriptionListItem
               descriptionClassName={styles.description}
-              title="Imported To"
+              title={translate('ImportedTo')}
               data={importedPath}
             />
         }
@@ -229,12 +232,12 @@ function HistoryDetails(props) {
     return (
       <DescriptionList>
         <DescriptionListItem
-          title="Name"
+          title={translate('Name')}
           data={sourceTitle}
         />
 
         <DescriptionListItem
-          title="Reason"
+          title={translate('Reason')}
           data={reasonMessage}
         />
       </DescriptionList>
@@ -250,12 +253,12 @@ function HistoryDetails(props) {
     return (
       <DescriptionList>
         <DescriptionListItem
-          title="Source Path"
+          title={translate('SourcePath')}
           data={sourcePath}
         />
 
         <DescriptionListItem
-          title="Destination Path"
+          title={translate('DestinationPath')}
           data={path}
         />
       </DescriptionList>
@@ -271,7 +274,7 @@ function HistoryDetails(props) {
     return (
       <DescriptionList>
         <DescriptionListItem
-          title="Path"
+          title={translate('Path')}
           data={sourceTitle}
         />
         {
@@ -286,7 +289,7 @@ function HistoryDetails(props) {
           })
         }
         <DescriptionListItem
-          title="Existing tags scrubbed"
+          title={translate('ExistingTagsScrubbed')}
           data={tagsScrubbed === 'True' ? <Icon name={icons.CHECK} /> : <Icon name={icons.REMOVE} />}
         />
       </DescriptionList>
@@ -301,14 +304,14 @@ function HistoryDetails(props) {
     return (
       <DescriptionList>
         <DescriptionListItem
-          title="Name"
+          title={translate('Name')}
           data={sourceTitle}
         />
 
         {
           !!statusMessages &&
             <DescriptionListItem
-              title="Import failures"
+              title={translate('ImportFailures')}
               data={getDetailedList(JSON.parse(statusMessages))}
             />
         }
@@ -332,14 +335,14 @@ function HistoryDetails(props) {
     return (
       <DescriptionList>
         <DescriptionListItem
-          title="Name"
+          title={translate('Name')}
           data={sourceTitle}
         />
 
         {
           !!indexer &&
             <DescriptionListItem
-              title="Indexer"
+              title={translate('Indexer')}
               data={indexer}
             />
         }
@@ -347,7 +350,7 @@ function HistoryDetails(props) {
         {
           !!releaseGroup &&
             <DescriptionListItem
-              title="Release Group"
+              title={translate('ReleaseGroup')}
               data={releaseGroup}
             />
         }
@@ -368,7 +371,7 @@ function HistoryDetails(props) {
         {
           !!downloadClient &&
             <DescriptionListItem
-              title="Download Client"
+              title={translate('DownloadClient')}
               data={downloadClient}
             />
         }
@@ -376,7 +379,7 @@ function HistoryDetails(props) {
         {
           !!downloadId &&
             <DescriptionListItem
-              title="Grab ID"
+              title={translate('GrabID')}
               data={downloadId}
             />
         }
@@ -384,7 +387,7 @@ function HistoryDetails(props) {
         {
           !!indexer &&
             <DescriptionListItem
-              title="Age (when grabbed)"
+              title={translate('AgeWhenGrabbed')}
               data={formatAge(age, ageHours, ageMinutes)}
             />
         }
@@ -392,7 +395,7 @@ function HistoryDetails(props) {
         {
           !!publishedDate &&
             <DescriptionListItem
-              title="Published Date"
+              title={translate('PublishedDate')}
               data={formatDateTime(publishedDate, shortDateFormat, timeFormat, { includeSeconds: true })}
             />
         }
@@ -409,14 +412,14 @@ function HistoryDetails(props) {
       <DescriptionList>
         <DescriptionListItem
           descriptionClassName={styles.description}
-          title="Name"
+          title={translate('Name')}
           data={sourceTitle}
         />
 
         {
           !!message &&
             <DescriptionListItem
-              title="Message"
+              title={translate('Message')}
               data={message}
             />
         }
@@ -428,7 +431,7 @@ function HistoryDetails(props) {
     <DescriptionList>
       <DescriptionListItem
         descriptionClassName={styles.description}
-        title="Name"
+        title={translate('Name')}
         data={sourceTitle}
       />
     </DescriptionList>

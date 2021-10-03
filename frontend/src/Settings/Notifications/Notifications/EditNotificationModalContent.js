@@ -14,6 +14,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import NotificationEventItems from './NotificationEventItems';
 import styles from './EditNotificationModalContent.css';
 
@@ -58,7 +59,9 @@ function EditNotificationModalContent(props) {
 
         {
           !isFetching && !!error &&
-            <div>Unable to add a new notification, please try again.</div>
+            <div>
+              {translate('UnableToAddANewNotificationPleaseTryAgain')}
+            </div>
         }
 
         {
@@ -75,7 +78,9 @@ function EditNotificationModalContent(props) {
               }
 
               <FormGroup>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>
+                  {translate('Name')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.TEXT}
@@ -91,12 +96,14 @@ function EditNotificationModalContent(props) {
               />
 
               <FormGroup>
-                <FormLabel>Tags</FormLabel>
+                <FormLabel>
+                  {translate('Tags')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.TAG}
                   name="tags"
-                  helpText="Only send notifications for artist with at least one matching tag"
+                  helpText={translate('TagsHelpText')}
                   {...tags}
                   onChange={onInputChange}
                 />

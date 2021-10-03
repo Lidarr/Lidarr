@@ -13,6 +13,7 @@ import { icons, kinds, tooltipPositions } from 'Helpers/Props';
 import formatDateTime from 'Utilities/Date/formatDateTime';
 import formatAge from 'Utilities/Number/formatAge';
 import formatBytes from 'Utilities/Number/formatBytes';
+import translate from 'Utilities/String/translate';
 import Peers from './Peers';
 import styles from './InteractiveSearchRow.css';
 
@@ -179,7 +180,7 @@ class InteractiveSearchRow extends Component {
                     kind={kinds.DANGER}
                   />
                 }
-                title="Release Rejected"
+                title={translate('ReleaseRejected')}
                 body={
                   <ul>
                     {
@@ -213,9 +214,9 @@ class InteractiveSearchRow extends Component {
         <ConfirmModal
           isOpen={this.state.isConfirmGrabModalOpen}
           kind={kinds.WARNING}
-          title="Grab Release"
-          message={`Lidarr was unable to determine which artist and album this release was for. Lidarr may be unable to automatically import this release. Do you want to grab '${title}'?`}
-          confirmLabel="Grab"
+          title={translate('GrabRelease')}
+          message={translate('GrabReleaseMessageText', [title])}
+          confirmLabel={translate('Grab')}
           onConfirm={this.onGrabConfirm}
           onCancel={this.onGrabCancel}
         />

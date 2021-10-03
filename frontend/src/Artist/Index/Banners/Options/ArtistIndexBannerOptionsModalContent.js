@@ -11,6 +11,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 const bannerSizeOptions = [
   { key: 'small', value: 'Small' },
@@ -114,7 +115,9 @@ class ArtistIndexBannerOptionsModalContent extends Component {
         <ModalBody>
           <Form>
             <FormGroup>
-              <FormLabel> Size</FormLabel>
+              <FormLabel>
+                {translate('Size')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.SELECT}
@@ -126,61 +129,71 @@ class ArtistIndexBannerOptionsModalContent extends Component {
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Detailed Progress Bar</FormLabel>
+              <FormLabel>
+                {translate('DetailedProgressBar')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="detailedProgressBar"
                 value={detailedProgressBar}
-                helpText="Show text on progess bar"
+                helpText={translate('DetailedProgressBarHelpText')}
                 onChange={this.onChangeBannerOption}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Show Name</FormLabel>
+              <FormLabel>
+                {translate('ShowName')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="showTitle"
                 value={showTitle}
-                helpText="Show artist name under banner"
+                helpText={translate('ShowTitleHelpText')}
                 onChange={this.onChangeBannerOption}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Show Monitored</FormLabel>
+              <FormLabel>
+                {translate('ShowMonitored')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="showMonitored"
                 value={showMonitored}
-                helpText="Show monitored status under banner"
+                helpText={translate('ShowMonitoredHelpText')}
                 onChange={this.onChangeBannerOption}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Show Quality Profile</FormLabel>
+              <FormLabel>
+                {translate('ShowQualityProfile')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="showQualityProfile"
                 value={showQualityProfile}
-                helpText="Show quality profile under banner"
+                helpText={translate('ShowQualityProfileHelpText')}
                 onChange={this.onChangeBannerOption}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Show Search</FormLabel>
+              <FormLabel>
+                {translate('ShowSearch')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="showSearchAction"
                 value={showSearchAction}
-                helpText="Show search button on hover"
+                helpText={translate('ShowSearchActionHelpText')}
                 onChange={this.onChangeBannerOption}
               />
             </FormGroup>

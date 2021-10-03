@@ -6,6 +6,7 @@ import PageToolbarButton from 'Components/Page/Toolbar/PageToolbarButton';
 import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
 import { icons } from 'Helpers/Props';
 import SettingsToolbarConnector from 'Settings/SettingsToolbarConnector';
+import translate from 'Utilities/String/translate';
 import ImportListsExclusionsConnector from './ImportListExclusions/ImportListExclusionsConnector';
 import ImportListsConnector from './ImportLists/ImportListsConnector';
 
@@ -54,7 +55,7 @@ class ImportListSettings extends Component {
     } = this.state;
 
     return (
-      <PageContent title="Import List Settings">
+      <PageContent title={translate('ImportListSettings')}>
         <SettingsToolbarConnector
           isSaving={isSaving}
           hasPendingChanges={hasPendingChanges}
@@ -63,7 +64,7 @@ class ImportListSettings extends Component {
               <PageToolbarSeparator />
 
               <PageToolbarButton
-                label="Test All Lists"
+                label={translate('TestAllLists')}
                 iconName={icons.TEST}
                 isSpinning={isTestingAll}
                 onPress={dispatchTestAllImportLists}

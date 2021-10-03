@@ -14,6 +14,7 @@ import Scroller from 'Components/Scroller/Scroller';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import { kinds, scrollDirections } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import FileBrowserRow from './FileBrowserRow';
 import styles from './FileBrowserModalContent.css';
 
@@ -134,7 +135,7 @@ class FileBrowserModalContent extends Component {
 
           <PathInput
             className={styles.pathInput}
-            placeholder="Start typing or select a path below"
+            placeholder={translate('StartTypingOrSelectAPathBelow')}
             hasFileBrowser={false}
             {...otherProps}
             value={this.state.currentPath}
@@ -148,7 +149,9 @@ class FileBrowserModalContent extends Component {
           >
             {
               !!error &&
-                <div>Error loading contents</div>
+                <div>
+                  {translate('ErrorLoadingContents')}
+                </div>
             }
 
             {

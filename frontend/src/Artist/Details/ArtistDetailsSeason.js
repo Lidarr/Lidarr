@@ -9,6 +9,7 @@ import TableBody from 'Components/Table/TableBody';
 import { icons, sortDirections } from 'Helpers/Props';
 import OrganizePreviewModalConnector from 'Organize/OrganizePreviewModalConnector';
 import TrackFileEditorModal from 'TrackFile/Editor/TrackFileEditorModal';
+import translate from 'Utilities/String/translate';
 import getToggledRange from 'Utilities/Table/getToggledRange';
 import AlbumRowConnector from './AlbumRowConnector';
 import styles from './ArtistDetailsSeason.css';
@@ -159,7 +160,7 @@ class ArtistDetailsSeason extends Component {
             <Icon
               className={styles.expandButtonIcon}
               name={isExpanded ? icons.COLLAPSE : icons.EXPAND}
-              title={isExpanded ? 'Hide albums' : 'Show albums'}
+              title={isExpanded ? translate('IsExpandedHideAlbums') : translate('IsExpandedShowAlbums')}
               size={24}
             />
 
@@ -209,7 +210,7 @@ class ArtistDetailsSeason extends Component {
                     iconClassName={styles.collapseButtonIcon}
                     name={icons.COLLAPSE}
                     size={20}
-                    title="Hide albums"
+                    title={translate('HideAlbums')}
                     onPress={this.onExpandPress}
                   />
                 </div>

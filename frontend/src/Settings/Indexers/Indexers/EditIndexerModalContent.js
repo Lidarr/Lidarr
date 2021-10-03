@@ -13,6 +13,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './EditIndexerModalContent.css';
 
 function EditIndexerModalContent(props) {
@@ -60,14 +61,18 @@ function EditIndexerModalContent(props) {
 
         {
           !isFetching && !!error &&
-            <div>Unable to add a new indexer, please try again.</div>
+            <div>
+              {translate('UnableToAddANewIndexerPleaseTryAgain')}
+            </div>
         }
 
         {
           !isFetching && !error &&
             <Form {...otherProps}>
               <FormGroup>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>
+                  {translate('Name')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.TEXT}
@@ -78,12 +83,14 @@ function EditIndexerModalContent(props) {
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>Enable RSS</FormLabel>
+                <FormLabel>
+                  {translate('EnableRSS')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.CHECK}
                   name="enableRss"
-                  helpTextWarning={supportsRss.value ? undefined : 'RSS is not supported with this indexer'}
+                  helpTextWarning={supportsRss.value ? undefined : translate('SupportsRssvalueRSSIsNotSupportedWithThisIndexer')}
                   isDisabled={!supportsRss.value}
                   {...enableRss}
                   onChange={onInputChange}
@@ -91,13 +98,15 @@ function EditIndexerModalContent(props) {
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>Enable Automatic Search</FormLabel>
+                <FormLabel>
+                  {translate('EnableAutomaticSearch')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.CHECK}
                   name="enableAutomaticSearch"
-                  helpText={supportsSearch.value ? 'Will be used when automatic searches are performed via the UI or by Lidarr' : undefined}
-                  helpTextWarning={supportsSearch.value ? undefined : 'Search is not supported with this indexer'}
+                  helpText={supportsSearch.value ? translate('SupportsSearchvalueWillBeUsedWhenAutomaticSearchesArePerformedViaTheUIOrByLidarr') : undefined}
+                  helpTextWarning={supportsSearch.value ? undefined : translate('SupportsSearchvalueSearchIsNotSupportedWithThisIndexer')}
                   isDisabled={!supportsSearch.value}
                   {...enableAutomaticSearch}
                   onChange={onInputChange}
@@ -105,13 +114,15 @@ function EditIndexerModalContent(props) {
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>Enable Interactive Search</FormLabel>
+                <FormLabel>
+                  {translate('EnableInteractiveSearch')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.CHECK}
                   name="enableInteractiveSearch"
-                  helpText={supportsSearch.value ? 'Will be used when interactive search is used' : undefined}
-                  helpTextWarning={supportsSearch.value ? undefined : 'Search is not supported with this indexer'}
+                  helpText={supportsSearch.value ? translate('SupportsSearchvalueWillBeUsedWhenInteractiveSearchIsUsed') : undefined}
+                  helpTextWarning={supportsSearch.value ? undefined : translate('SupportsSearchvalueSearchIsNotSupportedWithThisIndexer')}
                   isDisabled={!supportsSearch.value}
                   {...enableInteractiveSearch}
                   onChange={onInputChange}
@@ -136,12 +147,14 @@ function EditIndexerModalContent(props) {
                 advancedSettings={advancedSettings}
                 isAdvanced={true}
               >
-                <FormLabel>Indexer Priority</FormLabel>
+                <FormLabel>
+                  {translate('IndexerPriority')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.NUMBER}
                   name="priority"
-                  helpText="Indexer Priority from 1 (Highest) to 50 (Lowest). Default: 25."
+                  helpText={translate('PriorityHelpText')}
                   min={1}
                   max={50}
                   {...priority}

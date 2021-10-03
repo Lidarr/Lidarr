@@ -12,6 +12,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import PrimaryTypeItems from './PrimaryTypeItems';
 import ReleaseStatusItems from './ReleaseStatusItems';
 import SecondaryTypeItems from './SecondaryTypeItems';
@@ -56,14 +57,18 @@ function EditMetadataProfileModalContent(props) {
 
         {
           !isFetching && !!error &&
-            <div>Unable to add a new metadata profile, please try again.</div>
+            <div>
+              {translate('UnableToAddANewMetadataProfilePleaseTryAgain')}
+            </div>
         }
 
         {
           !isFetching && !error &&
             <Form {...otherProps}>
               <FormGroup>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>
+                  {translate('Name')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.TEXT}
@@ -77,7 +82,7 @@ function EditMetadataProfileModalContent(props) {
                 metadataProfileItems={itemPrimaryAlbumTypes.value}
                 errors={itemPrimaryAlbumTypes.errors}
                 warnings={itemPrimaryAlbumTypes.warnings}
-                formLabel="Primary Album Types"
+                formLabel={translate('PrimaryAlbumTypes')}
                 {...otherProps}
               />
 
@@ -85,7 +90,7 @@ function EditMetadataProfileModalContent(props) {
                 metadataProfileItems={itemSecondaryAlbumTypes.value}
                 errors={itemSecondaryAlbumTypes.errors}
                 warnings={itemSecondaryAlbumTypes.warnings}
-                formLabel="Secondary Album Types"
+                formLabel={translate('SecondaryAlbumTypes')}
                 {...otherProps}
               />
 
@@ -93,7 +98,7 @@ function EditMetadataProfileModalContent(props) {
                 metadataProfileItems={itemReleaseStatuses.value}
                 errors={itemReleaseStatuses.errors}
                 warnings={itemReleaseStatuses.warnings}
-                formLabel="Release Statuses"
+                formLabel={translate('ReleaseStatuses')}
                 {...otherProps}
               />
 
@@ -105,7 +110,7 @@ function EditMetadataProfileModalContent(props) {
           id &&
             <div
               className={styles.deleteButtonContainer}
-              title={isInUse ? 'Can\'t delete a metadata profile that is attached to an artist or import list' : undefined}
+              title={isInUse ? translate('IsInUseCantDeleteAMetadataProfileThatIsAttachedToAnArtistOrImportList') : undefined}
             >
               <Button
                 kind={kinds.DANGER}

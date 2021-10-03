@@ -8,6 +8,7 @@ import SelectInput from 'Components/Form/SelectInput';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
 import { kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import ArtistEditorFooterLabel from './ArtistEditorFooterLabel';
 import DeleteArtistModal from './Delete/DeleteArtistModal';
 import TagsModal from './Tags/TagsModal';
@@ -165,7 +166,7 @@ class ArtistEditorFooter extends Component {
       <PageContentFooter>
         <div className={styles.inputContainer}>
           <ArtistEditorFooterLabel
-            label="Monitor Artist"
+            label={translate('MonitorArtist')}
             isSaving={isSaving && monitored !== NO_CHANGE}
           />
 
@@ -196,7 +197,7 @@ class ArtistEditorFooter extends Component {
                   className={styles.inputContainer}
                 >
                   <ArtistEditorFooterLabel
-                    label="Quality Profile"
+                    label={translate('QualityProfile')}
                     isSaving={isSaving && qualityProfileId !== NO_CHANGE}
                   />
 
@@ -218,7 +219,7 @@ class ArtistEditorFooter extends Component {
                   className={styles.inputContainer}
                 >
                   <ArtistEditorFooterLabel
-                    label="Metadata Profile"
+                    label={translate('MetadataProfile')}
                     isSaving={isSaving && metadataProfileId !== NO_CHANGE}
                   />
 
@@ -240,7 +241,7 @@ class ArtistEditorFooter extends Component {
                   className={styles.inputContainer}
                 >
                   <ArtistEditorFooterLabel
-                    label="Root Folder"
+                    label={translate('RootFolder')}
                     isSaving={isSaving && rootFolderPath !== NO_CHANGE}
                   />
 
@@ -263,7 +264,7 @@ class ArtistEditorFooter extends Component {
         <div className={styles.buttonContainer}>
           <div className={styles.buttonContainerContent}>
             <ArtistEditorFooterLabel
-              label={`${selectedCount} Artist(s) Selected`}
+              label={translate('SelectedCountArtistsSelectedInterp', [selectedCount])}
               isSaving={false}
             />
 

@@ -5,6 +5,7 @@ import ConfirmModal from 'Components/Modal/ConfirmModal';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import { icons, kinds } from 'Helpers/Props';
 import FileDetailsModal from 'TrackFile/FileDetailsModal';
+import translate from 'Utilities/String/translate';
 import styles from './TrackActionsCell.css';
 
 class TrackActionsCell extends Component {
@@ -86,9 +87,9 @@ class TrackActionsCell extends Component {
         <ConfirmModal
           isOpen={isConfirmDeleteModalOpen}
           kind={kinds.DANGER}
-          title="Delete Track File"
-          message={`Are you sure you want to delete ${trackFilePath}?`}
-          confirmLabel="Delete"
+          title={translate('DeleteTrackFile')}
+          message={translate('DeleteTrackFileMessageText', [trackFilePath])}
+          confirmLabel={translate('Delete')}
           onConfirm={this.onConfirmDelete}
           onCancel={this.onConfirmDeleteModalClose}
         />

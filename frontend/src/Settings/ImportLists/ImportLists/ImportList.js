@@ -4,6 +4,7 @@ import Card from 'Components/Card';
 import Label from 'Components/Label';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
 import { kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import EditImportListModalConnector from './EditImportListModalConnector';
 import styles from './ImportList.css';
 
@@ -87,9 +88,9 @@ class ImportList extends Component {
         <ConfirmModal
           isOpen={this.state.isDeleteImportListModalOpen}
           kind={kinds.DANGER}
-          title="Delete Import List"
-          message={`Are you sure you want to delete the list '${name}'?`}
-          confirmLabel="Delete"
+          title={translate('DeleteImportList')}
+          message={translate('DeleteImportListMessageText', [name])}
+          confirmLabel={translate('Delete')}
           onConfirm={this.onConfirmDeleteImportList}
           onCancel={this.onDeleteImportListModalClose}
         />

@@ -8,6 +8,7 @@ import Popover from 'Components/Tooltip/Popover';
 import { kinds, tooltipPositions } from 'Helpers/Props';
 import formatBytes from 'Utilities/Number/formatBytes';
 import roundNumber from 'Utilities/Number/roundNumber';
+import translate from 'Utilities/String/translate';
 import QualityDefinitionLimits from './QualityDefinitionLimits';
 import styles from './QualityDefinition.css';
 
@@ -167,11 +168,11 @@ class QualityDefinition extends Component {
                 anchor={
                   <Label kind={kinds.INFO}>{minRate}</Label>
                 }
-                title="Minimum Limits"
+                title={translate('MinimumLimits')}
                 body={
                   <QualityDefinitionLimits
                     bytes={minBytes}
-                    message="No minimum for any runtime"
+                    message={translate('NoMinimumForAnyRuntime')}
                   />
                 }
                 position={tooltipPositions.BOTTOM}
@@ -183,11 +184,11 @@ class QualityDefinition extends Component {
                 anchor={
                   <Label kind={kinds.WARNING}>{maxRate}</Label>
                 }
-                title="Maximum Limits"
+                title={translate('MaximumLimits')}
                 body={
                   <QualityDefinitionLimits
                     bytes={maxBytes}
-                    message="No limit for any runtime"
+                    message={translate('NoLimitForAnyRuntime')}
                   />
                 }
                 position={tooltipPositions.BOTTOM}

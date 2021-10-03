@@ -7,6 +7,7 @@ import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import { inputTypes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 const writeAudioTagOptions = [
   { key: 'sync', value: 'All files; keep in sync with MusicBrainz' },
@@ -35,7 +36,9 @@ function MetadataProvider(props) {
 
       {
         !isFetching && error &&
-          <div>Unable to load Metadata Provider settings</div>
+          <div>
+            {translate('UnableToLoadMetadataProviderSettings')}
+          </div>
       }
 
       {
@@ -43,17 +46,19 @@ function MetadataProvider(props) {
           <Form>
             {
               advancedSettings &&
-                <FieldSet legend="Metadata Provider Source">
+                <FieldSet legend={translate('MetadataProviderSource')}>
                   <FormGroup
                     advancedSettings={advancedSettings}
                     isAdvanced={true}
                   >
-                    <FormLabel>Metadata Source</FormLabel>
+                    <FormLabel>
+                      {translate('MetadataSource')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.TEXT}
                       name="metadataSource"
-                      helpText="Alternative Metadata Source (Leave blank for default)"
+                      helpText={translate('MetadataSourceHelpText')}
                       helpLink="https://wiki.servarr.com/lidarr/settings#metadata"
                       onChange={onInputChange}
                       {...settings.metadataSource}
@@ -62,14 +67,16 @@ function MetadataProvider(props) {
                 </FieldSet>
             }
 
-            <FieldSet legend="Write Metadata to Audio Files">
+            <FieldSet legend={translate('WriteMetadataToAudioFiles')}>
               <FormGroup>
-                <FormLabel>Tag Audio Files with Metadata</FormLabel>
+                <FormLabel>
+                  {translate('TagAudioFilesWithMetadata')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.SELECT}
                   name="writeAudioTags"
-                  helpTextWarning="Selecting 'All files' will alter existing files when they are imported."
+                  helpTextWarning={translate('WriteAudioTagsHelpTextWarning')}
                   helpLink="https://wiki.servarr.com/lidarr/settings#write-metadata-to-audio-files"
                   values={writeAudioTagOptions}
                   onChange={onInputChange}
@@ -78,12 +85,14 @@ function MetadataProvider(props) {
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>Scrub Existing Tags</FormLabel>
+                <FormLabel>
+                  {translate('ScrubExistingTags')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.CHECK}
                   name="scrubAudioTags"
-                  helpText="Remove existing tags from files, leaving only those added by Lidarr."
+                  helpText={translate('ScrubAudioTagsHelpText')}
                   onChange={onInputChange}
                   {...settings.scrubAudioTags}
                 />

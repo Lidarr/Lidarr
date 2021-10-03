@@ -2,12 +2,13 @@ import React from 'react';
 import Link from 'Components/Link/Link';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
+import translate from 'Utilities/String/translate';
 import SettingsToolbarConnector from './SettingsToolbarConnector';
 import styles from './Settings.css';
 
 function Settings() {
   return (
-    <PageContent title="Settings">
+    <PageContent title={translate('Settings')}>
       <SettingsToolbarConnector
         hasPendingChanges={false}
       />

@@ -6,6 +6,7 @@ import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
 import { inputTypes, sizes } from 'Helpers/Props';
 import titleCase from 'Utilities/String/titleCase';
+import translate from 'Utilities/String/translate';
 
 function UpdateSettings(props) {
   const {
@@ -45,24 +46,28 @@ function UpdateSettings(props) {
 
   if (isDocker) {
     return (
-      <FieldSet legend="Updates">
-        <div>Updating is disabled inside a docker container.  Update the container image instead.</div>
+      <FieldSet legend={translate('Updates')}>
+        <div>
+          {translate('UpdatingIsDisabledInsideADockerContainerUpdateTheContainerImageInstead')}
+        </div>
       </FieldSet>
     );
   }
 
   return (
-    <FieldSet legend="Updates">
+    <FieldSet legend={translate('Updates')}>
       <FormGroup
         advancedSettings={advancedSettings}
         isAdvanced={true}
       >
-        <FormLabel>Branch</FormLabel>
+        <FormLabel>
+          {translate('Branch')}
+        </FormLabel>
 
         <FormInputGroup
           type={inputTypes.TEXT}
           name="branch"
-          helpText={usingExternalUpdateMechanism ? 'Branch used by external update mechanism' : 'Branch to use to update Lidarr'}
+          helpText={usingExternalUpdateMechanism ? translate('UsingExternalUpdateMechanismBranchUsedByExternalUpdateMechanism') : translate('UsingExternalUpdateMechanismBranchToUseToUpdateLidarr')}
           helpLink="https://wiki.servarr.com/lidarr/faq#how-do-i-update-lidarr"
           {...branch}
           onChange={onInputChange}
@@ -78,12 +83,14 @@ function UpdateSettings(props) {
               isAdvanced={true}
               size={sizes.MEDIUM}
             >
-              <FormLabel>Automatic</FormLabel>
+              <FormLabel>
+                {translate('Automatic')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="updateAutomatically"
-                helpText="Automatically download and install updates. You will still be able to install from System: Updates"
+                helpText={translate('UpdateAutomaticallyHelpText')}
                 onChange={onInputChange}
                 {...updateAutomatically}
               />
@@ -93,13 +100,15 @@ function UpdateSettings(props) {
               advancedSettings={advancedSettings}
               isAdvanced={true}
             >
-              <FormLabel>Mechanism</FormLabel>
+              <FormLabel>
+                {translate('Mechanism')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.SELECT}
                 name="updateMechanism"
                 values={updateOptions}
-                helpText="Use Lidarr's built-in updater or a script"
+                helpText={translate('UpdateMechanismHelpText')}
                 helpLink="https://wiki.servarr.com/lidarr/faq#how-do-i-update-lidarr"
                 onChange={onInputChange}
                 {...updateMechanism}
@@ -112,12 +121,14 @@ function UpdateSettings(props) {
                   advancedSettings={advancedSettings}
                   isAdvanced={true}
                 >
-                  <FormLabel>Script Path</FormLabel>
+                  <FormLabel>
+                    {translate('ScriptPath')}
+                  </FormLabel>
 
                   <FormInputGroup
                     type={inputTypes.TEXT}
                     name="updateScriptPath"
-                    helpText="Path to a custom script that takes an extracted update package and handle the remainder of the update process"
+                    helpText={translate('UpdateScriptPathHelpText')}
                     onChange={onInputChange}
                     {...updateScriptPath}
                   />

@@ -29,6 +29,7 @@ import QualityProfileNameConnector from 'Settings/Profiles/Quality/QualityProfil
 import fonts from 'Styles/Variables/fonts';
 import TrackFileEditorModal from 'TrackFile/Editor/TrackFileEditorModal';
 import formatBytes from 'Utilities/Number/formatBytes';
+import translate from 'Utilities/String/translate';
 import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
 import InteractiveImportModal from '../../InteractiveImport/InteractiveImportModal';
@@ -233,7 +234,7 @@ class ArtistDetails extends Component {
     const continuing = status === 'continuing';
     const endedString = artistType === 'Person' ? 'Deceased' : 'Ended';
 
-    let trackFilesCountMessage = 'No track files';
+    let trackFilesCountMessage = translate('TrackFilesCountMessage');
 
     if (trackFileCount === 1) {
       trackFilesCountMessage = '1 track file';
@@ -254,64 +255,64 @@ class ArtistDetails extends Component {
         <PageToolbar>
           <PageToolbarSection>
             <PageToolbarButton
-              label="Refresh & Scan"
+              label={translate('RefreshScan')}
               iconName={icons.REFRESH}
               spinningName={icons.REFRESH}
-              title="Refresh information and scan disk"
+              title={translate('RefreshInformationAndScanDisk')}
               isSpinning={isRefreshing}
               onPress={onRefreshPress}
             />
 
             <PageToolbarButton
-              label="Search Monitored"
+              label={translate('SearchMonitored')}
               iconName={icons.SEARCH}
               isDisabled={!monitored || !hasMonitoredAlbums || !hasAlbums}
               isSpinning={isSearching}
-              title={hasMonitoredAlbums ? undefined : 'No monitored albums for this artist'}
+              title={hasMonitoredAlbums ? undefined : translate('HasMonitoredAlbumsNoMonitoredAlbumsForThisArtist')}
               onPress={onSearchPress}
             />
 
             <PageToolbarButton
-              label="Interactive Search"
+              label={translate('InteractiveSearch')}
               iconName={icons.INTERACTIVE}
               isDisabled={!monitored || !hasMonitoredAlbums || !hasAlbums}
               isSpinning={isSearching}
-              title={hasMonitoredAlbums ? undefined : 'No monitored albums for this artist'}
+              title={hasMonitoredAlbums ? undefined : translate('HasMonitoredAlbumsNoMonitoredAlbumsForThisArtist')}
               onPress={this.onInteractiveSearchPress}
             />
 
             <PageToolbarSeparator />
 
             <PageToolbarButton
-              label="Preview Rename"
+              label={translate('PreviewRename')}
               iconName={icons.ORGANIZE}
               isDisabled={!hasTrackFiles}
               onPress={this.onOrganizePress}
             />
 
             <PageToolbarButton
-              label="Preview Retag"
+              label={translate('PreviewRetag')}
               iconName={icons.RETAG}
               isDisabled={!hasTrackFiles}
               onPress={this.onRetagPress}
             />
 
             <PageToolbarButton
-              label="Manage Tracks"
+              label={translate('ManageTracks')}
               iconName={icons.TRACK_FILE}
               isDisabled={!hasTrackFiles}
               onPress={this.onManageTracksPress}
             />
 
             <PageToolbarButton
-              label="History"
+              label={translate('History')}
               iconName={icons.HISTORY}
               isDisabled={!hasAlbums}
               onPress={this.onArtistHistoryPress}
             />
 
             <PageToolbarButton
-              label="Manual Import"
+              label={translate('ManualImport')}
               iconName={icons.INTERACTIVE}
               onPress={this.onInteractiveImportPress}
             />
@@ -319,13 +320,13 @@ class ArtistDetails extends Component {
             <PageToolbarSeparator />
 
             <PageToolbarButton
-              label="Edit"
+              label={translate('Edit')}
               iconName={icons.EDIT}
               onPress={this.onEditArtistPress}
             />
 
             <PageToolbarButton
-              label="Delete"
+              label={translate('Delete')}
               iconName={icons.DELETE}
               onPress={this.onDeleteArtistPress}
             />
@@ -333,7 +334,7 @@ class ArtistDetails extends Component {
 
           <PageToolbarSection alignContent={align.RIGHT}>
             <PageToolbarButton
-              label={allExpanded ? 'Collapse All' : 'Expand All'}
+              label={allExpanded ? translate('AllExpandedCollapseAll') : translate('AllExpandedExpandAll')}
               iconName={expandIcon}
               onPress={this.onExpandAllPress}
             />
@@ -386,7 +387,7 @@ class ArtistDetails extends Component {
                                 size={20}
                               />
                             }
-                            title="Alternate Titles"
+                            title={translate('AlternateTitles')}
                             body={<ArtistAlternateTitles alternateTitles={alternateTitles} />}
                             position={tooltipPositions.BOTTOM}
                           />
@@ -399,7 +400,7 @@ class ArtistDetails extends Component {
                       className={styles.artistNavigationButton}
                       name={icons.ARROW_LEFT}
                       size={30}
-                      title={`Go to ${previousArtist.artistName}`}
+                      title={translate('GoToInterp', [previousArtist.artistName])}
                       to={`/artist/${previousArtist.foreignArtistId}`}
                     />
 
@@ -407,7 +408,7 @@ class ArtistDetails extends Component {
                       className={styles.artistNavigationButton}
                       name={icons.ARROW_UP}
                       size={30}
-                      title={'Go to artist listing'}
+                      title={translate('GoToArtistListing')}
                       to={{
                         pathname: '/',
                         state: { restoreScrollPosition: true }
@@ -418,7 +419,7 @@ class ArtistDetails extends Component {
                       className={styles.artistNavigationButton}
                       name={icons.ARROW_RIGHT}
                       size={30}
-                      title={`Go to ${nextArtist.artistName}`}
+                      title={translate('GoToInterp', [nextArtist.artistName])}
                       to={`/artist/${nextArtist.foreignArtistId}`}
                     />
                   </div>
@@ -467,7 +468,7 @@ class ArtistDetails extends Component {
 
                   <Label
                     className={styles.detailsLabel}
-                    title="Quality Profile"
+                    title={translate('QualityProfile')}
                     size={sizes.LARGE}
                   >
                     <Icon
@@ -500,7 +501,7 @@ class ArtistDetails extends Component {
 
                   <Label
                     className={styles.detailsLabel}
-                    title={continuing ? 'More albums are expected' : 'No additional albums are expected'}
+                    title={continuing ? translate('ContinuingMoreAlbumsAreExpected') : translate('ContinuingNoAdditionalAlbumsAreExpected')}
                     size={sizes.LARGE}
                   >
                     <Icon
@@ -582,12 +583,16 @@ class ArtistDetails extends Component {
 
             {
               !isFetching && albumsError &&
-                <div>Loading albums failed</div>
+                <div>
+                  {translate('LoadingAlbumsFailed')}
+                </div>
             }
 
             {
               !isFetching && trackFilesError &&
-                <div>Loading track files failed</div>
+                <div>
+                  {translate('LoadingTrackFilesFailed')}
+                </div>
             }
 
             {

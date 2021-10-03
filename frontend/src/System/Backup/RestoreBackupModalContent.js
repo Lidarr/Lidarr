@@ -9,6 +9,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { icons, kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './RestoreBackupModalContent.css';
 
 function getErrorMessage(error) {
@@ -167,7 +168,9 @@ class RestoreBackupModalContent extends Component {
                 />
               </div>
 
-              <div>Restore</div>
+              <div>
+                {translate('Restore')}
+              </div>
             </div>
 
             <div className={styles.step}>
@@ -178,7 +181,9 @@ class RestoreBackupModalContent extends Component {
                 />
               </div>
 
-              <div>Restart</div>
+              <div>
+                {translate('Restart')}
+              </div>
             </div>
 
             <div className={styles.step}>
@@ -189,7 +194,9 @@ class RestoreBackupModalContent extends Component {
                 />
               </div>
 
-              <div>Reload</div>
+              <div>
+                {translate('Reload')}
+              </div>
             </div>
           </div>
         </ModalBody>

@@ -10,6 +10,7 @@ import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import { inputTypes, sizes } from 'Helpers/Props';
 import SettingsToolbarConnector from 'Settings/SettingsToolbarConnector';
+import translate from 'Utilities/String/translate';
 import NamingConnector from './Naming/NamingConnector';
 import RootFoldersConnector from './RootFolder/RootFoldersConnector';
 
@@ -55,7 +56,7 @@ class MediaManagement extends Component {
     } = this.props;
 
     return (
-      <PageContent title="Media Management Settings">
+      <PageContent title={translate('MediaManagementSettings')}>
         <SettingsToolbarConnector
           advancedSettings={advancedSettings}
           {...otherProps}
@@ -68,15 +69,17 @@ class MediaManagement extends Component {
 
           {
             isFetching &&
-              <FieldSet legend="Naming Settings">
+              <FieldSet legend={translate('NamingSettings')}>
                 <LoadingIndicator />
               </FieldSet>
           }
 
           {
             !isFetching && error &&
-              <FieldSet legend="Naming Settings">
-                <div>Unable to load Media Management settings</div>
+              <FieldSet legend={translate('NamingSettings')}>
+                <div>
+                  {translate('UnableToLoadMediaManagementSettings')}
+                </div>
               </FieldSet>
           }
 
@@ -88,18 +91,20 @@ class MediaManagement extends Component {
               >
                 {
                   advancedSettings &&
-                    <FieldSet legend="Folders">
+                    <FieldSet legend={translate('Folders')}>
                       <FormGroup
                         advancedSettings={advancedSettings}
                         isAdvanced={true}
                         size={sizes.MEDIUM}
                       >
-                        <FormLabel>Create empty artist folders</FormLabel>
+                        <FormLabel>
+                          {translate('CreateEmptyArtistFolders')}
+                        </FormLabel>
 
                         <FormInputGroup
                           type={inputTypes.CHECK}
                           name="createEmptyArtistFolders"
-                          helpText="Create missing artist folders during disk scan"
+                          helpText={translate('CreateEmptyArtistFoldersHelpText')}
                           onChange={onInputChange}
                           {...settings.createEmptyArtistFolders}
                         />
@@ -110,12 +115,14 @@ class MediaManagement extends Component {
                         isAdvanced={true}
                         size={sizes.MEDIUM}
                       >
-                        <FormLabel>Delete empty folders</FormLabel>
+                        <FormLabel>
+                          {translate('DeleteEmptyFolders')}
+                        </FormLabel>
 
                         <FormInputGroup
                           type={inputTypes.CHECK}
                           name="deleteEmptyFolders"
-                          helpText="Delete empty artist and album folders during disk scan and when track files are deleted"
+                          helpText={translate('DeleteEmptyFoldersHelpText')}
                           onChange={onInputChange}
                           {...settings.deleteEmptyFolders}
                         />
@@ -126,7 +133,7 @@ class MediaManagement extends Component {
                 {
                   advancedSettings &&
                     <FieldSet
-                      legend="Importing"
+                      legend={translate('Importing')}
                     >
                       {
                         !isWindows &&
@@ -135,12 +142,14 @@ class MediaManagement extends Component {
                             isAdvanced={true}
                             size={sizes.MEDIUM}
                           >
-                            <FormLabel>Skip Free Space Check</FormLabel>
+                            <FormLabel>
+                              {translate('SkipFreeSpaceCheck')}
+                            </FormLabel>
 
                             <FormInputGroup
                               type={inputTypes.CHECK}
                               name="skipFreeSpaceCheckWhenImporting"
-                              helpText="Use when Lidarr is unable to detect free space from your artist root folder"
+                              helpText={translate('SkipFreeSpaceCheckWhenImportingHelpText')}
                               onChange={onInputChange}
                               {...settings.skipFreeSpaceCheckWhenImporting}
                             />
@@ -152,13 +161,15 @@ class MediaManagement extends Component {
                         isAdvanced={true}
                         size={sizes.MEDIUM}
                       >
-                        <FormLabel>Minimum Free Space</FormLabel>
+                        <FormLabel>
+                          {translate('MinimumFreeSpace')}
+                        </FormLabel>
 
                         <FormInputGroup
                           type={inputTypes.NUMBER}
                           unit='MB'
                           name="minimumFreeSpaceWhenImporting"
-                          helpText="Prevent import if it would leave less than this amount of disk space available"
+                          helpText={translate('MinimumFreeSpaceWhenImportingHelpText')}
                           onChange={onInputChange}
                           {...settings.minimumFreeSpaceWhenImporting}
                         />
@@ -169,25 +180,29 @@ class MediaManagement extends Component {
                         isAdvanced={true}
                         size={sizes.MEDIUM}
                       >
-                        <FormLabel>Use Hardlinks instead of Copy</FormLabel>
+                        <FormLabel>
+                          {translate('UseHardlinksInsteadOfCopy')}
+                        </FormLabel>
 
                         <FormInputGroup
                           type={inputTypes.CHECK}
                           name="copyUsingHardlinks"
-                          helpText="Use Hardlinks when trying to copy files from torrents that are still being seeded"
-                          helpTextWarning="Occasionally, file locks may prevent renaming files that are being seeded. You may temporarily disable seeding and use Lidarr's rename function as a work around."
+                          helpText={translate('CopyUsingHardlinksHelpText')}
+                          helpTextWarning={translate('CopyUsingHardlinksHelpTextWarning')}
                           onChange={onInputChange}
                           {...settings.copyUsingHardlinks}
                         />
                       </FormGroup>
 
                       <FormGroup size={sizes.MEDIUM}>
-                        <FormLabel>Import Extra Files</FormLabel>
+                        <FormLabel>
+                          {translate('ImportExtraFiles')}
+                        </FormLabel>
 
                         <FormInputGroup
                           type={inputTypes.CHECK}
                           name="importExtraFiles"
-                          helpText="Import matching extra files (subtitles, nfo, etc) after importing an track file"
+                          helpText={translate('ImportExtraFilesHelpText')}
                           onChange={onInputChange}
                           {...settings.importExtraFiles}
                         />
@@ -199,14 +214,16 @@ class MediaManagement extends Component {
                             advancedSettings={advancedSettings}
                             isAdvanced={true}
                           >
-                            <FormLabel>Import Extra Files</FormLabel>
+                            <FormLabel>
+                              {translate('ImportExtraFiles')}
+                            </FormLabel>
 
                             <FormInputGroup
                               type={inputTypes.TEXT}
                               name="extraFileExtensions"
                               helpTexts={[
-                                'Comma separated list of extra files to import (.nfo will be imported as .nfo-orig)',
-                                'Examples: ".sub, .nfo" or "sub,nfo"'
+                                translate('ExtraFileExtensionsHelpTexts1'),
+                                translate('ExtraFileExtensionsHelpTexts2')
                               ]}
                               onChange={onInputChange}
                               {...settings.extraFileExtensions}
@@ -217,21 +234,23 @@ class MediaManagement extends Component {
                 }
 
                 <FieldSet
-                  legend="File Management"
+                  legend={translate('FileManagement')}
                 >
                   <FormGroup
                     advancedSettings={advancedSettings}
                     isAdvanced={true}
                     size={sizes.MEDIUM}
                   >
-                    <FormLabel>Propers and Repacks</FormLabel>
+                    <FormLabel>
+                      {translate('PropersAndRepacks')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.SELECT}
                       name="downloadPropersAndRepacks"
                       helpTexts={[
-                        'Whether or not to automatically upgrade to Propers/Repacks',
-                        'Use \'Do not Prefer\' to sort by preferred word score over propers/repacks'
+                        translate('DownloadPropersAndRepacksHelpTexts1'),
+                        translate('DownloadPropersAndRepacksHelpTexts2')
                       ]}
                       helpTextWarning={
                         settings.downloadPropersAndRepacks.value === 'doNotPrefer' ?
@@ -249,12 +268,14 @@ class MediaManagement extends Component {
                     isAdvanced={true}
                     size={sizes.MEDIUM}
                   >
-                    <FormLabel>Watch Root Folders for file changes</FormLabel>
+                    <FormLabel>
+                      {translate('WatchRootFoldersForFileChanges')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.CHECK}
                       name="watchLibraryForChanges"
-                      helpText="Rescan automatically when files change in a root folder"
+                      helpText={translate('WatchLibraryForChangesHelpText')}
                       onChange={onInputChange}
                       {...settings.watchLibraryForChanges}
                     />
@@ -264,13 +285,15 @@ class MediaManagement extends Component {
                     advancedSettings={advancedSettings}
                     isAdvanced={true}
                   >
-                    <FormLabel>Rescan Artist Folder after Refresh</FormLabel>
+                    <FormLabel>
+                      {translate('RescanArtistFolderAfterRefresh')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.SELECT}
                       name="rescanAfterRefresh"
-                      helpText="Rescan the artist folder after refreshing the artist"
-                      helpTextWarning="Lidarr will not automatically detect changes to files when not set to 'Always'"
+                      helpText={translate('RescanAfterRefreshHelpText')}
+                      helpTextWarning={translate('RescanAfterRefreshHelpTextWarning')}
                       values={rescanAfterRefreshOptions}
                       onChange={onInputChange}
                       {...settings.rescanAfterRefresh}
@@ -281,13 +304,15 @@ class MediaManagement extends Component {
                     advancedSettings={advancedSettings}
                     isAdvanced={true}
                   >
-                    <FormLabel>Allow Fingerprinting</FormLabel>
+                    <FormLabel>
+                      {translate('AllowFingerprinting')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.SELECT}
                       name="allowFingerprinting"
-                      helpText="Use fingerprinting to improve accuracy of track matching"
-                      helpTextWarning="This requires Lidarr to read parts of the file which will slow down scans and may cause high disk or network activity."
+                      helpText={translate('AllowFingerprintingHelpText')}
+                      helpTextWarning={translate('AllowFingerprintingHelpTextWarning')}
                       values={allowFingerprintingOptions}
                       onChange={onInputChange}
                       {...settings.allowFingerprinting}
@@ -298,12 +323,14 @@ class MediaManagement extends Component {
                     advancedSettings={advancedSettings}
                     isAdvanced={true}
                   >
-                    <FormLabel>Change File Date</FormLabel>
+                    <FormLabel>
+                      {translate('ChangeFileDate')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.SELECT}
                       name="fileDate"
-                      helpText="Change file date on import/rescan"
+                      helpText={translate('FileDateHelpText')}
                       values={fileDateOptions}
                       onChange={onInputChange}
                       {...settings.fileDate}
@@ -314,12 +341,14 @@ class MediaManagement extends Component {
                     advancedSettings={advancedSettings}
                     isAdvanced={true}
                   >
-                    <FormLabel>Recycling Bin</FormLabel>
+                    <FormLabel>
+                      {translate('RecyclingBin')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.PATH}
                       name="recycleBin"
-                      helpText="Track files will go here when deleted instead of being permanently deleted"
+                      helpText={translate('RecycleBinHelpText')}
                       onChange={onInputChange}
                       {...settings.recycleBin}
                     />
@@ -329,13 +358,15 @@ class MediaManagement extends Component {
                     advancedSettings={advancedSettings}
                     isAdvanced={true}
                   >
-                    <FormLabel>Recycling Bin Cleanup</FormLabel>
+                    <FormLabel>
+                      {translate('RecyclingBinCleanup')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.NUMBER}
                       name="recycleBinCleanupDays"
-                      helpText="Set to 0 to disable automatic cleanup"
-                      helpTextWarning="Files in the recycle bin older than the selected number of days will be cleaned up automatically"
+                      helpText={translate('RecycleBinCleanupDaysHelpText')}
+                      helpTextWarning={translate('RecycleBinCleanupDaysHelpTextWarning')}
                       min={0}
                       onChange={onInputChange}
                       {...settings.recycleBinCleanupDays}
@@ -346,20 +377,22 @@ class MediaManagement extends Component {
                 {
                   advancedSettings && !isWindows &&
                     <FieldSet
-                      legend="Permissions"
+                      legend={translate('Permissions')}
                     >
                       <FormGroup
                         advancedSettings={advancedSettings}
                         isAdvanced={true}
                         size={sizes.MEDIUM}
                       >
-                        <FormLabel>Set Permissions</FormLabel>
+                        <FormLabel>
+                          {translate('SetPermissions')}
+                        </FormLabel>
 
                         <FormInputGroup
                           type={inputTypes.CHECK}
                           name="setPermissionsLinux"
-                          helpText="Should chmod be run when files are imported/renamed?"
-                          helpTextWarning="If you're unsure what these settings do, do not alter them."
+                          helpText={translate('SetPermissionsLinuxHelpText')}
+                          helpTextWarning={translate('SetPermissionsLinuxHelpTextWarning')}
                           onChange={onInputChange}
                           {...settings.setPermissionsLinux}
                         />
@@ -369,13 +402,15 @@ class MediaManagement extends Component {
                         advancedSettings={advancedSettings}
                         isAdvanced={true}
                       >
-                        <FormLabel>chmod Folder</FormLabel>
+                        <FormLabel>
+                          {translate('ChmodFolder')}
+                        </FormLabel>
 
                         <FormInputGroup
                           type={inputTypes.UMASK}
                           name="chmodFolder"
-                          helpText="Octal, applied during import/rename to media folders and files (without execute bits)"
-                          helpTextWarning="This only works if the user running Lidarr is the owner of the file. It's better to ensure the download client sets the permissions properly."
+                          helpText={translate('ChmodFolderHelpText')}
+                          helpTextWarning={translate('ChmodFolderHelpTextWarning')}
                           onChange={onInputChange}
                           {...settings.chmodFolder}
                         />
@@ -385,13 +420,15 @@ class MediaManagement extends Component {
                         advancedSettings={advancedSettings}
                         isAdvanced={true}
                       >
-                        <FormLabel>chown Group</FormLabel>
+                        <FormLabel>
+                          {translate('ChownGroup')}
+                        </FormLabel>
 
                         <FormInputGroup
                           type={inputTypes.TEXT}
                           name="chownGroup"
-                          helpText="Group name or gid. Use gid for remote file systems."
-                          helpTextWarning="This only works if the user running Lidarr is the owner of the file. It's better to ensure the download client uses the same group as Lidarr."
+                          helpText={translate('ChownGroupHelpText')}
+                          helpTextWarning={translate('ChownGroupHelpTextWarning')}
                           values={fileDateOptions}
                           onChange={onInputChange}
                           {...settings.chownGroup}

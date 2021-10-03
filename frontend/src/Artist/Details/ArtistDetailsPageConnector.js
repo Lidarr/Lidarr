@@ -9,6 +9,7 @@ import NotFound from 'Components/NotFound';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
+import translate from 'Utilities/String/translate';
 import ArtistDetailsConnector from './ArtistDetailsConnector';
 import styles from './ArtistDetails.css';
 
@@ -92,7 +93,7 @@ class ArtistDetailsPageConnector extends Component {
     if (!foreignArtistId) {
       return (
         <NotFound
-          message="Sorry, that artist cannot be found."
+          message={translate('SorryThatArtistCannotBeFound')}
         />
       );
     }

@@ -11,6 +11,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 class EditAlbumModalContent extends Component {
 
@@ -59,36 +60,42 @@ class EditAlbumModalContent extends Component {
             {...otherProps}
           >
             <FormGroup>
-              <FormLabel>Monitored</FormLabel>
+              <FormLabel>
+                {translate('Monitored')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="monitored"
-                helpText="Lidarr will search for and download album"
+                helpText={translate('MonitoredHelpText')}
                 {...monitored}
                 onChange={onInputChange}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Automatically Switch Release</FormLabel>
+              <FormLabel>
+                {translate('AutomaticallySwitchRelease')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="anyReleaseOk"
-                helpText="Lidarr will automatically switch to the release best matching downloaded tracks"
+                helpText={translate('AnyReleaseOkHelpText')}
                 {...anyReleaseOk}
                 onChange={onInputChange}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel> Release</FormLabel>
+              <FormLabel>
+                {translate('Release')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.ALBUM_RELEASE_SELECT}
                 name="releases"
-                helpText="Change release for this album"
+                helpText={translate('ReleasesHelpText')}
                 isDisabled={anyReleaseOk.value && statistics.trackFileCount > 0}
                 albumReleases={releases}
                 onChange={onInputChange}

@@ -12,6 +12,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 function EditMetadataModalContent(props) {
   const {
@@ -40,12 +41,14 @@ function EditMetadataModalContent(props) {
       <ModalBody>
         <Form {...otherProps}>
           <FormGroup>
-            <FormLabel>Enable</FormLabel>
+            <FormLabel>
+              {translate('Enable')}
+            </FormLabel>
 
             <FormInputGroup
               type={inputTypes.CHECK}
               name="enable"
-              helpText="Enable metadata file creation for this metadata type"
+              helpText={translate('EnableHelpText')}
               {...enable}
               onChange={onInputChange}
             />

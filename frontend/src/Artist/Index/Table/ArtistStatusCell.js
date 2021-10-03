@@ -4,6 +4,7 @@ import Icon from 'Components/Icon';
 import MonitorToggleButton from 'Components/MonitorToggleButton';
 import VirtualTableRowCell from 'Components/Table/Cells/TableRowCell';
 import { icons } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './ArtistStatusCell.css';
 
 function ArtistStatusCell(props) {
@@ -36,7 +37,7 @@ function ArtistStatusCell(props) {
       <Icon
         className={styles.statusIcon}
         name={status === 'ended' ? icons.ARTIST_ENDED : icons.ARTIST_CONTINUING}
-        title={status === 'ended' ? endedString : 'Continuing'}
+        title={status === 'ended' ? endedString : translate('StatusEndedContinuing')}
       />
     </Component>
   );

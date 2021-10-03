@@ -4,6 +4,7 @@ import FormGroup from 'Components/Form/FormGroup';
 import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
 import { inputTypes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 class QueueOptions extends Component {
 
@@ -54,13 +55,15 @@ class QueueOptions extends Component {
     return (
       <Fragment>
         <FormGroup>
-          <FormLabel>Show Unknown Artist Items</FormLabel>
+          <FormLabel>
+            {translate('ShowUnknownArtistItems')}
+          </FormLabel>
 
           <FormInputGroup
             type={inputTypes.CHECK}
             name="includeUnknownArtistItems"
             value={includeUnknownArtistItems}
-            helpText="Show items without a artist in the queue, this could include removed artists, movies or anything else in Lidarr's category"
+            helpText={translate('IncludeUnknownArtistItemsHelpText')}
             onChange={this.onOptionChange}
           />
         </FormGroup>

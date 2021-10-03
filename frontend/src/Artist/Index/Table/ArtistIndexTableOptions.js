@@ -4,6 +4,7 @@ import FormGroup from 'Components/Form/FormGroup';
 import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
 import { inputTypes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 class ArtistIndexTableOptions extends Component {
 
@@ -64,25 +65,29 @@ class ArtistIndexTableOptions extends Component {
     return (
       <Fragment>
         <FormGroup>
-          <FormLabel>Show Banners</FormLabel>
+          <FormLabel>
+            {translate('ShowBanners')}
+          </FormLabel>
 
           <FormInputGroup
             type={inputTypes.CHECK}
             name="showBanners"
             value={showBanners}
-            helpText="Show banners instead of names"
+            helpText={translate('ShowBannersHelpText')}
             onChange={this.onTableOptionChange}
           />
         </FormGroup>
 
         <FormGroup>
-          <FormLabel>Show Search</FormLabel>
+          <FormLabel>
+            {translate('ShowSearch')}
+          </FormLabel>
 
           <FormInputGroup
             type={inputTypes.CHECK}
             name="showSearchAction"
             value={showSearchAction}
-            helpText="Show search button on hover"
+            helpText={translate('ShowSearchActionHelpText')}
             onChange={this.onTableOptionChange}
           />
         </FormGroup>

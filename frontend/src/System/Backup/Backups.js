@@ -9,6 +9,7 @@ import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import { icons } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import BackupRow from './BackupRow';
 import RestoreBackupModalConnector from './RestoreBackupModalConnector';
 
@@ -75,18 +76,18 @@ class Backups extends Component {
     const noBackups = isPopulated && !items.length;
 
     return (
-      <PageContent title="Backups">
+      <PageContent title={translate('Backups')}>
         <PageToolbar>
           <PageToolbarSection>
             <PageToolbarButton
-              label="Backup Now"
+              label={translate('BackupNow')}
               iconName={icons.BACKUP}
               isSpinning={backupExecuting}
               onPress={onBackupPress}
             />
 
             <PageToolbarButton
-              label="Restore Backup"
+              label={translate('RestoreBackup')}
               iconName={icons.RESTORE}
               onPress={this.onRestorePress}
             />
@@ -101,12 +102,16 @@ class Backups extends Component {
 
           {
             !isFetching && !!error &&
-              <div>Unable to load backups</div>
+              <div>
+                {translate('UnableToLoadBackups')}
+              </div>
           }
 
           {
             noBackups &&
-              <div>No backups are available</div>
+              <div>
+                {translate('NoBackupsAreAvailable')}
+              </div>
           }
 
           {

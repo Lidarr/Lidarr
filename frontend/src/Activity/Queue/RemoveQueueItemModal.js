@@ -10,6 +10,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds, sizes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 class RemoveQueueItemModal extends Component {
 
@@ -95,26 +96,30 @@ class RemoveQueueItemModal extends Component {
             </div>
 
             <FormGroup>
-              <FormLabel>Remove From Download Client</FormLabel>
+              <FormLabel>
+                {translate('RemoveFromDownloadClient')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="remove"
                 value={remove}
-                helpTextWarning="Removing will remove the download and the file(s) from the download client."
+                helpTextWarning={translate('RemoveHelpTextWarning')}
                 isDisabled={!canIgnore}
                 onChange={this.onRemoveChange}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Blocklist Release</FormLabel>
+              <FormLabel>
+                {translate('BlocklistRelease')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="blocklist"
                 value={blocklist}
-                helpText="Prevents Lidarr from automatically grabbing this release again"
+                helpText={translate('BlocklistHelpText')}
                 onChange={this.onBlocklistChange}
               />
             </FormGroup>
@@ -122,12 +127,14 @@ class RemoveQueueItemModal extends Component {
             {
               blocklist &&
                 <FormGroup>
-                  <FormLabel>Skip Redownload</FormLabel>
+                  <FormLabel>
+                    {translate('SkipRedownload')}
+                  </FormLabel>
                   <FormInputGroup
                     type={inputTypes.CHECK}
                     name="skipredownload"
                     value={skipredownload}
-                    helpText="Prevents Lidarr from trying download an alternative release for this item"
+                    helpText={translate('SkipredownloadHelpText')}
                     onChange={this.onSkipReDownloadChange}
                   />
                 </FormGroup>

@@ -10,6 +10,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds } from 'Helpers/Props';
 import formatBytes from 'Utilities/Number/formatBytes';
+import translate from 'Utilities/String/translate';
 import styles from './DeleteAlbumModalContent.css';
 
 class DeleteAlbumModalContent extends Component {
@@ -91,13 +92,15 @@ class DeleteAlbumModalContent extends Component {
           </FormGroup>
 
           <FormGroup>
-            <FormLabel>Add List Exclusion</FormLabel>
+            <FormLabel>
+              {translate('AddListExclusion')}
+            </FormLabel>
 
             <FormInputGroup
               type={inputTypes.CHECK}
               name="addImportListExclusion"
               value={addImportListExclusion}
-              helpText="Prevent album from being added to Lidarr by Import Lists or Artist Refresh"
+              helpText={translate('AddImportListExclusionHelpText')}
               kind={kinds.DANGER}
               onChange={this.onAddImportListExclusionChange}
             />
@@ -106,14 +109,18 @@ class DeleteAlbumModalContent extends Component {
           {
             !addImportListExclusion &&
               <div className={styles.deleteFilesMessage}>
-                <div>If you don't add an import list exclusion and the artist has a metadata profile other than 'None' then this album may be re-added during the next artist refresh.</div>
+                <div>
+                  {translate('IfYouDontAddAnImportListExclusionAndTheArtistHasAMetadataProfileOtherThanNoneThenThisAlbumMayBeReaddedDuringTheNextArtistRefresh')}
+                </div>
               </div>
           }
 
           {
             deleteFiles &&
               <div className={styles.deleteFilesMessage}>
-                <div>The album's files will be deleted.</div>
+                <div>
+                  {translate('TheAlbumsFilesWillBeDeleted')}
+                </div>
 
                 {
                   !!trackFileCount &&
