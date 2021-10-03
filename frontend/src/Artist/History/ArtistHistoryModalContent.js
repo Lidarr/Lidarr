@@ -8,6 +8,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
+import translate from 'Utilities/String/translate';
 import ArtistHistoryRowConnector from './ArtistHistoryRowConnector';
 
 const columns = [
@@ -80,12 +81,16 @@ class ArtistHistoryModalContent extends Component {
 
           {
             !isFetching && !!error &&
-              <div>Unable to load history.</div>
+              <div>
+                {translate('UnableToLoadHistory')}
+              </div>
           }
 
           {
             isPopulated && !hasItems && !error &&
-              <div>No history.</div>
+              <div>
+                {translate('NoHistory')}
+              </div>
           }
 
           {

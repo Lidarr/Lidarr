@@ -64,7 +64,7 @@ class UISettings extends Component {
     const uiLanguages = languages.filter((item) => item.value !== 'Original');
 
     return (
-      <PageContent title="UI Settings">
+      <PageContent title={translate('UISettings')}>
         <SettingsToolbarConnector
           {...otherProps}
           onSavePress={onSavePress}
@@ -78,7 +78,9 @@ class UISettings extends Component {
 
           {
             !isFetching && error &&
-              <div>Unable to load UI settings</div>
+              <div>
+                {translate('UnableToLoadUISettings')}
+              </div>
           }
 
           {
@@ -87,9 +89,11 @@ class UISettings extends Component {
                 id="uiSettings"
                 {...otherProps}
               >
-                <FieldSet legend="Calendar">
+                <FieldSet legend={translate('Calendar')}>
                   <FormGroup>
-                    <FormLabel>First Day of Week</FormLabel>
+                    <FormLabel>
+                      {translate('FirstDayOfWeek')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.SELECT}
@@ -101,24 +105,28 @@ class UISettings extends Component {
                   </FormGroup>
 
                   <FormGroup>
-                    <FormLabel>Week Column Header</FormLabel>
+                    <FormLabel>
+                      {translate('WeekColumnHeader')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.SELECT}
                       name="calendarWeekColumnHeader"
                       values={weekColumnOptions}
                       onChange={onInputChange}
-                      helpText="Shown above each column when week is the active view"
+                      helpText={translate('CalendarWeekColumnHeaderHelpText')}
                       {...settings.calendarWeekColumnHeader}
                     />
                   </FormGroup>
                 </FieldSet>
 
                 <FieldSet
-                  legend="Dates"
+                  legend={translate('Dates')}
                 >
                   <FormGroup>
-                    <FormLabel>Short Date Format</FormLabel>
+                    <FormLabel>
+                      {translate('ShortDateFormat')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.SELECT}
@@ -130,7 +138,9 @@ class UISettings extends Component {
                   </FormGroup>
 
                   <FormGroup>
-                    <FormLabel>Long Date Format</FormLabel>
+                    <FormLabel>
+                      {translate('LongDateFormat')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.SELECT}
@@ -142,7 +152,9 @@ class UISettings extends Component {
                   </FormGroup>
 
                   <FormGroup>
-                    <FormLabel>Time Format</FormLabel>
+                    <FormLabel>
+                      {translate('TimeFormat')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.SELECT}
@@ -154,11 +166,13 @@ class UISettings extends Component {
                   </FormGroup>
 
                   <FormGroup>
-                    <FormLabel>Show Relative Dates</FormLabel>
+                    <FormLabel>
+                      {translate('ShowRelativeDates')}
+                    </FormLabel>
                     <FormInputGroup
                       type={inputTypes.CHECK}
                       name="showRelativeDates"
-                      helpText="Show relative (Today/Yesterday/etc) or absolute dates"
+                      helpText={translate('ShowRelativeDatesHelpText')}
                       onChange={onInputChange}
                       {...settings.showRelativeDates}
                     />
@@ -166,26 +180,30 @@ class UISettings extends Component {
                 </FieldSet>
 
                 <FieldSet
-                  legend="Style"
+                  legend={translate('Style')}
                 >
                   <FormGroup>
-                    <FormLabel>Enable Color-Impaired Mode</FormLabel>
+                    <FormLabel>
+                      {translate('EnableColorImpairedMode')}
+                    </FormLabel>
                     <FormInputGroup
                       type={inputTypes.CHECK}
                       name="enableColorImpairedMode"
-                      helpText="Altered style to allow color-impaired users to better distinguish color coded information"
+                      helpText={translate('EnableColorImpairedModeHelpText')}
                       onChange={onInputChange}
                       {...settings.enableColorImpairedMode}
                     />
                   </FormGroup>
 
                   <FormGroup>
-                    <FormLabel>Expand Items by Default</FormLabel>
+                    <FormLabel>
+                      {translate('ExpandItemsByDefault')}
+                    </FormLabel>
                     <div className={styles.columnGroup}>
                       <FormInputGroup
                         type={inputTypes.CHECK}
                         name="expandAlbumByDefault"
-                        helpText="Albums"
+                        helpText={translate('ExpandAlbumByDefaultHelpText')}
                         onChange={onInputChange}
                         {...settings.expandAlbumByDefault}
                       />
@@ -193,7 +211,7 @@ class UISettings extends Component {
                       <FormInputGroup
                         type={inputTypes.CHECK}
                         name="expandEPByDefault"
-                        helpText="EPs"
+                        helpText={translate('ExpandEPByDefaultHelpText')}
                         onChange={onInputChange}
                         {...settings.expandEPByDefault}
                       />
@@ -201,7 +219,7 @@ class UISettings extends Component {
                       <FormInputGroup
                         type={inputTypes.CHECK}
                         name="expandSingleByDefault"
-                        helpText="Singles"
+                        helpText={translate('ExpandSingleByDefaultHelpText')}
                         onChange={onInputChange}
                         {...settings.expandSingleByDefault}
                       />
@@ -209,7 +227,7 @@ class UISettings extends Component {
                       <FormInputGroup
                         type={inputTypes.CHECK}
                         name="expandBroadcastByDefault"
-                        helpText="Broadcast"
+                        helpText={translate('ExpandBroadcastByDefaultHelpText')}
                         onChange={onInputChange}
                         {...settings.expandBroadcastByDefault}
                       />
@@ -217,7 +235,7 @@ class UISettings extends Component {
                       <FormInputGroup
                         type={inputTypes.CHECK}
                         name="expandOtherByDefault"
-                        helpText="Other"
+                        helpText={translate('ExpandOtherByDefaultHelpText')}
                         onChange={onInputChange}
                         {...settings.expandOtherByDefault}
                       />

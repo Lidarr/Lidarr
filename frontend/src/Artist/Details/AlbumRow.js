@@ -10,6 +10,7 @@ import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import { kinds, sizes } from 'Helpers/Props';
 import formatTimeSpan from 'Utilities/Date/formatTimeSpan';
+import translate from 'Utilities/String/translate';
 import styles from './AlbumRow.css';
 
 function getTrackCountKind(monitored, trackFileCount, trackCount) {
@@ -202,7 +203,7 @@ class AlbumRow extends Component {
                   className={styles.status}
                 >
                   <Label
-                    title={`${totalTrackCount} tracks total. ${trackFileCount} tracks with files.`}
+                    title={translate('TotalTrackCountTracksTotalTrackFileCountTracksWithFilesInterp', [totalTrackCount, trackFileCount])}
                     kind={getTrackCountKind(monitored, trackFileCount, trackCount)}
                     size={sizes.MEDIUM}
                   >

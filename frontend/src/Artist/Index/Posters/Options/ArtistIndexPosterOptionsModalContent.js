@@ -11,6 +11,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 const posterSizeOptions = [
   { key: 'small', value: 'Small' },
@@ -114,7 +115,9 @@ class ArtistIndexPosterOptionsModalContent extends Component {
         <ModalBody>
           <Form>
             <FormGroup>
-              <FormLabel>Poster Size</FormLabel>
+              <FormLabel>
+                {translate('PosterSize')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.SELECT}
@@ -126,61 +129,71 @@ class ArtistIndexPosterOptionsModalContent extends Component {
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Detailed Progress Bar</FormLabel>
+              <FormLabel>
+                {translate('DetailedProgressBar')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="detailedProgressBar"
                 value={detailedProgressBar}
-                helpText="Show text on progess bar"
+                helpText={translate('DetailedProgressBarHelpText')}
                 onChange={this.onChangePosterOption}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Show Name</FormLabel>
+              <FormLabel>
+                {translate('ShowName')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="showTitle"
                 value={showTitle}
-                helpText="Show artist name under poster"
+                helpText={translate('ShowTitleHelpText')}
                 onChange={this.onChangePosterOption}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Show Monitored</FormLabel>
+              <FormLabel>
+                {translate('ShowMonitored')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="showMonitored"
                 value={showMonitored}
-                helpText="Show monitored status under poster"
+                helpText={translate('ShowMonitoredHelpText')}
                 onChange={this.onChangePosterOption}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Show Quality Profile</FormLabel>
+              <FormLabel>
+                {translate('ShowQualityProfile')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="showQualityProfile"
                 value={showQualityProfile}
-                helpText="Show quality profile under poster"
+                helpText={translate('ShowQualityProfileHelpText')}
                 onChange={this.onChangePosterOption}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Show Search</FormLabel>
+              <FormLabel>
+                {translate('ShowSearch')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="showSearchAction"
                 value={showSearchAction}
-                helpText="Show search button on hover"
+                helpText={translate('ShowSearchActionHelpText')}
                 onChange={this.onChangePosterOption}
               />
             </FormGroup>

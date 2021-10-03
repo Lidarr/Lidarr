@@ -9,6 +9,7 @@ import Icon from 'Components/Icon';
 import ClipboardButton from 'Components/Link/ClipboardButton';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
 import { icons, inputTypes, kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 const authenticationMethodOptions = [
   { key: 'none', value: 'None' },
@@ -76,15 +77,17 @@ class SecuritySettings extends Component {
     const authenticationEnabled = authenticationMethod && authenticationMethod.value !== 'none';
 
     return (
-      <FieldSet legend="Security">
+      <FieldSet legend={translate('Security')}>
         <FormGroup>
-          <FormLabel>Authentication</FormLabel>
+          <FormLabel>
+            {translate('Authentication')}
+          </FormLabel>
 
           <FormInputGroup
             type={inputTypes.SELECT}
             name="authenticationMethod"
             values={authenticationMethodOptions}
-            helpText="Require Username and Password to access Lidarr"
+            helpText={translate('AuthenticationMethodHelpText')}
             onChange={onInputChange}
             {...authenticationMethod}
           />
@@ -93,7 +96,9 @@ class SecuritySettings extends Component {
         {
           authenticationEnabled &&
             <FormGroup>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>
+                {translate('Username')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.TEXT}
@@ -107,7 +112,9 @@ class SecuritySettings extends Component {
         {
           authenticationEnabled &&
             <FormGroup>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>
+                {translate('Password')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.PASSWORD}
@@ -119,13 +126,15 @@ class SecuritySettings extends Component {
         }
 
         <FormGroup>
-          <FormLabel>API Key</FormLabel>
+          <FormLabel>
+            {translate('APIKey')}
+          </FormLabel>
 
           <FormInputGroup
             type={inputTypes.TEXT}
             name="apiKey"
             readOnly={true}
-            helpTextWarning="Requires restart to take effect"
+            helpTextWarning={translate('ApiKeyHelpTextWarning')}
             buttons={[
               <ClipboardButton
                 key="copy"
@@ -151,13 +160,15 @@ class SecuritySettings extends Component {
         </FormGroup>
 
         <FormGroup>
-          <FormLabel>Certificate Validation</FormLabel>
+          <FormLabel>
+            {translate('CertificateValidation')}
+          </FormLabel>
 
           <FormInputGroup
             type={inputTypes.SELECT}
             name="certificateValidation"
             values={certificateValidationOptions}
-            helpText="Change how strict HTTPS certification validation is"
+            helpText={translate('CertificateValidationHelpText')}
             onChange={onInputChange}
             {...certificateValidation}
           />
@@ -166,9 +177,9 @@ class SecuritySettings extends Component {
         <ConfirmModal
           isOpen={this.state.isConfirmApiKeyResetModalOpen}
           kind={kinds.DANGER}
-          title="Reset API Key"
-          message="Are you sure you want to reset your API Key?"
-          confirmLabel="Reset"
+          title={translate('ResetAPIKey')}
+          message={translate('ResetAPIKeyMessageText')}
+          confirmLabel={translate('Reset')}
           onConfirm={this.onConfirmResetApiKey}
           onCancel={this.onCloseResetApiKeyModal}
         />

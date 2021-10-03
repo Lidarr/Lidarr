@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import FormGroup from 'Components/Form/FormGroup';
 import FormInputHelpText from 'Components/Form/FormInputHelpText';
 import FormLabel from 'Components/Form/FormLabel';
+import translate from 'Utilities/String/translate';
 import ReleaseStatusItem from './ReleaseStatusItem';
 import styles from './TypeItems.css';
 
@@ -21,7 +22,9 @@ class ReleaseStatusItems extends Component {
 
     return (
       <FormGroup>
-        <FormLabel>Release Statuses</FormLabel>
+        <FormLabel>
+          {translate('ReleaseStatuses')}
+        </FormLabel>
         <div>
 
           {

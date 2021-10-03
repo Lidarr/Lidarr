@@ -6,6 +6,7 @@ import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
 import TableRowButton from 'Components/Table/TableRowButton';
 import Popover from 'Components/Tooltip/Popover';
 import { icons, kinds, tooltipPositions } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 class SelectTrackRow extends Component {
 
@@ -96,7 +97,7 @@ class SelectTrackRow extends Component {
                 kind={iconKind}
               />
             }
-            title={'Track status'}
+            title={translate('TrackStatus')}
             body={iconTip}
             position={tooltipPositions.LEFT}
           />

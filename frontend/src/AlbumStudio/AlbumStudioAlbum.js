@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import MonitorToggleButton from 'Components/MonitorToggleButton';
+import translate from 'Utilities/String/translate';
 import styles from './AlbumStudioAlbum.css';
 
 class AlbumStudioAlbum extends Component {
@@ -67,7 +68,7 @@ class AlbumStudioAlbum extends Component {
             percentOfTracks < 100 && monitored && styles.missingWanted,
             percentOfTracks === 100 && styles.allTracks
           )}
-          title={`${trackFileCount}/${totalTrackCount} tracks downloaded`}
+          title={translate('TrackFileCounttotalTrackCountTracksDownloadedInterp', [trackFileCount, totalTrackCount])}
         >
           {
             totalTrackCount === 0 ? '0/0' : `${trackFileCount}/${totalTrackCount}`

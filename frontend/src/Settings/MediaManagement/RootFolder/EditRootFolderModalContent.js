@@ -16,6 +16,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import Popover from 'Components/Tooltip/Popover';
 import { icons, inputTypes, kinds, tooltipPositions } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './EditRootFolderModalContent.css';
 
 function EditRootFolderModalContent(props) {
@@ -59,14 +60,18 @@ function EditRootFolderModalContent(props) {
 
         {
           !isFetching && !!error &&
-            <div>Unable to add a new root folder, please try again.</div>
+            <div>
+              {translate('UnableToAddANewRootFolderPleaseTryAgain')}
+            </div>
         }
 
         {
           !isFetching && !error &&
             <Form {...otherProps}>
               <FormGroup>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>
+                  {translate('Name')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.TEXT}
@@ -77,14 +82,16 @@ function EditRootFolderModalContent(props) {
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>Path</FormLabel>
+                <FormLabel>
+                  {translate('Path')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={id ? inputTypes.TEXT : inputTypes.PATH}
                   readOnly={!!id}
                   name="path"
-                  helpText="Root Folder containing your music library"
-                  helpTextWarning="This must be different to the directory where your download client puts files"
+                  helpText={translate('PathHelpText')}
+                  helpTextWarning={translate('PathHelpTextWarning')}
                   {...path}
                   onChange={onInputChange}
                 />
@@ -101,7 +108,7 @@ function EditRootFolderModalContent(props) {
                         name={icons.INFO}
                       />
                     }
-                    title="Monitoring Options"
+                    title={translate('MonitoringOptions')}
                     body={<ArtistMonitoringOptionsPopoverContent />}
                     position={tooltipPositions.RIGHT}
                   />
@@ -112,18 +119,20 @@ function EditRootFolderModalContent(props) {
                   name="defaultMonitorOption"
                   onChange={onInputChange}
                   {...defaultMonitorOption}
-                  helpText="Default Monitoring Options for albums by artists detected in this folder"
+                  helpText={translate('DefaultMonitorOptionHelpText')}
                 />
 
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>Quality Profile</FormLabel>
+                <FormLabel>
+                  {translate('QualityProfile')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.QUALITY_PROFILE_SELECT}
                   name="defaultQualityProfileId"
-                  helpText="Default Quality Profile for artists detected in this folder"
+                  helpText={translate('DefaultQualityProfileIdHelpText')}
                   {...defaultQualityProfileId}
                   onChange={onInputChange}
                 />
@@ -139,7 +148,7 @@ function EditRootFolderModalContent(props) {
                         name={icons.INFO}
                       />
                     }
-                    title="Metadata Profile"
+                    title={translate('MetadataProfile')}
                     body={<ArtistMetadataProfilePopoverContent />}
                     position={tooltipPositions.RIGHT}
                   />
@@ -148,7 +157,7 @@ function EditRootFolderModalContent(props) {
                 <FormInputGroup
                   type={inputTypes.METADATA_PROFILE_SELECT}
                   name="defaultMetadataProfileId"
-                  helpText="Default Metadata Profile for artists detected in this folder"
+                  helpText={translate('DefaultMetadataProfileIdHelpText')}
                   {...defaultMetadataProfileId}
                   includeNone={true}
                   onChange={onInputChange}
@@ -156,12 +165,14 @@ function EditRootFolderModalContent(props) {
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>Default Lidarr Tags</FormLabel>
+                <FormLabel>
+                  {translate('DefaultLidarrTags')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.TAG}
                   name="defaultTags"
-                  helpText="Default Lidarr Tags for artists detected in this folder"
+                  helpText={translate('DefaultTagsHelpText')}
                   {...defaultTags}
                   onChange={onInputChange}
                 />

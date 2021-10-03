@@ -8,6 +8,7 @@ import Icon from 'Components/Icon';
 import Link from 'Components/Link/Link';
 import { icons } from 'Helpers/Props';
 import formatTime from 'Utilities/Date/formatTime';
+import translate from 'Utilities/String/translate';
 import styles from './AgendaEvent.css';
 
 class AgendaEvent extends Component {
@@ -110,7 +111,7 @@ class AgendaEvent extends Component {
             !queueItem && grabbed &&
               <Icon
                 name={icons.DOWNLOADING}
-                title="Album is downloading"
+                title={translate('AlbumIsDownloading')}
               />
           }
         </Link>

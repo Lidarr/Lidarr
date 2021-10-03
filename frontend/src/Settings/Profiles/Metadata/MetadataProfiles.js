@@ -6,6 +6,7 @@ import Icon from 'Components/Icon';
 import PageSectionContent from 'Components/Page/PageSectionContent';
 import { icons, metadataProfileNames } from 'Helpers/Props';
 import sortByName from 'Utilities/Array/sortByName';
+import translate from 'Utilities/String/translate';
 import EditMetadataProfileModalConnector from './EditMetadataProfileModalConnector';
 import MetadataProfile from './MetadataProfile';
 import styles from './MetadataProfiles.css';
@@ -51,9 +52,9 @@ class MetadataProfiles extends Component {
     } = this.props;
 
     return (
-      <FieldSet legend="Metadata Profiles">
+      <FieldSet legend={translate('MetadataProfiles')}>
         <PageSectionContent
-          errorMessage="Unable to load Metadata Profiles"
+          errorMessage={translate('UnableToLoadMetadataProfiles')}
           {...otherProps}
         >
           <div className={styles.metadataProfiles}>

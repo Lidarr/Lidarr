@@ -7,6 +7,7 @@ import Link from 'Components/Link/Link';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import { icons, kinds, sizes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import TrackRowConnector from './TrackRowConnector';
 import styles from './AlbumDetailsMedium.css';
 
@@ -120,7 +121,7 @@ class AlbumDetailsMedium extends Component {
             }
 
             <Label
-              title={`${totalTrackCount} tracks total. ${trackFileCount} tracks with files.`}
+              title={translate('TotalTrackCountTracksTotalTrackFileCountTracksWithFilesInterp', [totalTrackCount, trackFileCount])}
               kind={getTrackCountKind(albumMonitored, trackFileCount, trackCount)}
               size={sizes.LARGE}
             >
@@ -137,7 +138,7 @@ class AlbumDetailsMedium extends Component {
             <Icon
               className={styles.expandButtonIcon}
               name={isExpanded ? icons.COLLAPSE : icons.EXPAND}
-              title={isExpanded ? 'Hide tracks' : 'Show tracks'}
+              title={isExpanded ? translate('IsExpandedHideTracks') : translate('IsExpandedShowTracks')}
               size={24}
             />
             {
@@ -181,7 +182,7 @@ class AlbumDetailsMedium extends Component {
                   <IconButton
                     name={icons.COLLAPSE}
                     size={20}
-                    title="Hide tracks"
+                    title={translate('HideTracks')}
                     onPress={this.onExpandPress}
                   />
                 </div>

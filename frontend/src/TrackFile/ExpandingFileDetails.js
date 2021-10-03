@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Icon from 'Components/Icon';
 import { icons } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import FileDetails from './FileDetails';
 import styles from './ExpandingFileDetails.css';
 
@@ -55,7 +56,7 @@ class ExpandingFileDetails extends Component {
             <Icon
               className={styles.expandButtonIcon}
               name={isExpanded ? icons.COLLAPSE : icons.EXPAND}
-              title={isExpanded ? 'Hide file info' : 'Show file info'}
+              title={isExpanded ? translate('IsExpandedHideFileInfo') : translate('IsExpandedShowFileInfo')}
               size={24}
             />
           </div>

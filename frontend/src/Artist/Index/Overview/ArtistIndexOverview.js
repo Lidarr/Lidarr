@@ -11,6 +11,7 @@ import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
 import { icons } from 'Helpers/Props';
 import dimensions from 'Styles/Variables/dimensions';
 import fonts from 'Styles/Variables/fonts';
+import translate from 'Utilities/String/translate';
 import ArtistIndexOverviewInfo from './ArtistIndexOverviewInfo';
 import styles from './ArtistIndexOverview.css';
 
@@ -129,7 +130,7 @@ class ArtistIndexOverview extends Component {
                 status === 'ended' &&
                   <div
                     className={styles.ended}
-                    title="Ended"
+                    title={translate('Ended')}
                   />
               }
 
@@ -172,7 +173,7 @@ class ArtistIndexOverview extends Component {
               <div className={styles.actions}>
                 <SpinnerIconButton
                   name={icons.REFRESH}
-                  title="Refresh Artist"
+                  title={translate('RefreshArtist')}
                   isSpinning={isRefreshingArtist}
                   onPress={onRefreshArtistPress}
                 />
@@ -182,7 +183,7 @@ class ArtistIndexOverview extends Component {
                     <SpinnerIconButton
                       className={styles.action}
                       name={icons.SEARCH}
-                      title="Search for monitored albums"
+                      title={translate('SearchForMonitoredAlbums')}
                       isSpinning={isSearchingArtist}
                       onPress={onSearchPress}
                     />
@@ -190,7 +191,7 @@ class ArtistIndexOverview extends Component {
 
                 <IconButton
                   name={icons.EDIT}
-                  title="Edit Artist"
+                  title={translate('EditArtist')}
                   onPress={this.onEditArtistPress}
                 />
               </div>

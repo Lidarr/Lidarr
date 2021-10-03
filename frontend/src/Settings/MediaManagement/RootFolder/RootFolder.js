@@ -4,6 +4,7 @@ import Card from 'Components/Card';
 import Label from 'Components/Label';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
 import { kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import EditRootFolderModalConnector from './EditRootFolderModalConnector';
 import styles from './RootFolder.css';
 
@@ -93,9 +94,9 @@ class RootFolder extends Component {
         <ConfirmModal
           isOpen={this.state.isDeleteRootFolderModalOpen}
           kind={kinds.DANGER}
-          title="Delete Root Folder"
-          message={`Are you sure you want to delete the root folder '${name}'?`}
-          confirmLabel="Delete"
+          title={translate('DeleteRootFolder')}
+          message={translate('DeleteRootFolderMessageText', [name])}
+          confirmLabel={translate('Delete')}
           onConfirm={this.onConfirmDeleteRootFolder}
           onCancel={this.onDeleteRootFolderModalClose}
         />

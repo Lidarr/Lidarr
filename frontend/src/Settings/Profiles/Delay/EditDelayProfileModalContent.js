@@ -14,6 +14,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds } from 'Helpers/Props';
 import { boolSettingShape, numberSettingShape, tagSettingShape } from 'Helpers/Props/Shapes/settingShape';
+import translate from 'Utilities/String/translate';
 import styles from './EditDelayProfileModalContent.css';
 
 function EditDelayProfileModalContent(props) {
@@ -56,21 +57,25 @@ function EditDelayProfileModalContent(props) {
 
         {
           !isFetching && !!error &&
-            <div>Unable to add a new quality profile, please try again.</div>
+            <div>
+              {translate('UnableToAddANewQualityProfilePleaseTryAgain')}
+            </div>
         }
 
         {
           !isFetching && !error &&
             <Form {...otherProps}>
               <FormGroup>
-                <FormLabel>Protocol</FormLabel>
+                <FormLabel>
+                  {translate('Protocol')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.SELECT}
                   name="protocol"
                   value={protocol}
                   values={protocolOptions}
-                  helpText="Choose which protocol(s) to use and which one is preferred when choosing between otherwise equal releases"
+                  helpText={translate('ProtocolHelpText')}
                   onChange={onProtocolChange}
                 />
               </FormGroup>
@@ -78,14 +83,16 @@ function EditDelayProfileModalContent(props) {
               {
                 enableUsenet.value &&
                   <FormGroup>
-                    <FormLabel>Usenet Delay</FormLabel>
+                    <FormLabel>
+                      {translate('UsenetDelay')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.NUMBER}
                       name="usenetDelay"
                       unit="minutes"
                       {...usenetDelay}
-                      helpText="Delay in minutes to wait before grabbing a release from Usenet"
+                      helpText={translate('UsenetDelayHelpText')}
                       onChange={onInputChange}
                     />
                   </FormGroup>
@@ -94,14 +101,16 @@ function EditDelayProfileModalContent(props) {
               {
                 enableTorrent.value &&
                   <FormGroup>
-                    <FormLabel>Torrent Delay</FormLabel>
+                    <FormLabel>
+                      {translate('TorrentDelay')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.NUMBER}
                       name="torrentDelay"
                       unit="minutes"
                       {...torrentDelay}
-                      helpText="Delay in minutes to wait before grabbing a torrent"
+                      helpText={translate('TorrentDelayHelpText')}
                       onChange={onInputChange}
                     />
                   </FormGroup>
@@ -114,13 +123,15 @@ function EditDelayProfileModalContent(props) {
                   </Alert> :
 
                   <FormGroup>
-                    <FormLabel>Tags</FormLabel>
+                    <FormLabel>
+                      {translate('Tags')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.TAG}
                       name="tags"
                       {...tags}
-                      helpText="Applies to artist with at least one matching tag"
+                      helpText={translate('TagsHelpText')}
                       onChange={onInputChange}
                     />
                   </FormGroup>

@@ -12,6 +12,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes } from 'Helpers/Props';
 import { firstDayOfWeekOptions, timeFormatOptions, weekColumnOptions } from 'Settings/UI/UISettings';
+import translate from 'Utilities/String/translate';
 
 class CalendarOptionsModalContent extends Component {
 
@@ -110,38 +111,44 @@ class CalendarOptionsModalContent extends Component {
         </ModalHeader>
 
         <ModalBody>
-          <FieldSet legend="Local">
+          <FieldSet legend={translate('Local')}>
             <Form>
               <FormGroup>
-                <FormLabel>Collapse Multiple Albums</FormLabel>
+                <FormLabel>
+                  {translate('CollapseMultipleAlbums')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.CHECK}
                   name="collapseMultipleAlbums"
                   value={collapseMultipleAlbums}
-                  helpText="Collapse multiple albums releasing on the same day"
+                  helpText={translate('CollapseMultipleAlbumsHelpText')}
                   onChange={this.onOptionInputChange}
                 />
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>Icon for Cutoff Unmet</FormLabel>
+                <FormLabel>
+                  {translate('IconForCutoffUnmet')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.CHECK}
                   name="showCutoffUnmetIcon"
                   value={showCutoffUnmetIcon}
-                  helpText="Show icon for files when the cutoff hasn't been met"
+                  helpText={translate('ShowCutoffUnmetIconHelpText')}
                   onChange={this.onOptionInputChange}
                 />
               </FormGroup>
             </Form>
           </FieldSet>
 
-          <FieldSet legend="Global">
+          <FieldSet legend={translate('Global')}>
             <Form>
               <FormGroup>
-                <FormLabel>First Day of Week</FormLabel>
+                <FormLabel>
+                  {translate('FirstDayOfWeek')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.SELECT}
@@ -153,7 +160,9 @@ class CalendarOptionsModalContent extends Component {
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>Week Column Header</FormLabel>
+                <FormLabel>
+                  {translate('WeekColumnHeader')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.SELECT}
@@ -161,12 +170,14 @@ class CalendarOptionsModalContent extends Component {
                   values={weekColumnOptions}
                   value={calendarWeekColumnHeader}
                   onChange={this.onGlobalInputChange}
-                  helpText="Shown above each column when week is the active view"
+                  helpText={translate('ShownAboveEachColumnWhenWeekIsTheActiveView')}
                 />
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>Time Format</FormLabel>
+                <FormLabel>
+                  {translate('TimeFormat')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.SELECT}
@@ -176,13 +187,15 @@ class CalendarOptionsModalContent extends Component {
                   onChange={this.onGlobalInputChange}
                 />
               </FormGroup><FormGroup>
-                <FormLabel>Enable Color-Impaired Mode</FormLabel>
+                <FormLabel>
+                  {translate('EnableColorImpairedMode')}
+                </FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.CHECK}
                   name="enableColorImpairedMode"
                   value={enableColorImpairedMode}
-                  helpText="Altered style to allow color-impaired users to better distinguish color coded information"
+                  helpText={translate('EnableColorImpairedModeHelpText')}
                   onChange={this.onGlobalInputChange}
                 />
               </FormGroup>

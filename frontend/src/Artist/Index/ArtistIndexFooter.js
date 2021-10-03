@@ -5,6 +5,7 @@ import { ColorImpairedConsumer } from 'App/ColorImpairedContext';
 import DescriptionList from 'Components/DescriptionList/DescriptionList';
 import DescriptionListItem from 'Components/DescriptionList/DescriptionListItem';
 import formatBytes from 'Utilities/Number/formatBytes';
+import translate from 'Utilities/String/translate';
 import styles from './ArtistIndexFooter.css';
 
 class ArtistIndexFooter extends PureComponent {
@@ -60,7 +61,9 @@ class ArtistIndexFooter extends PureComponent {
                       enableColorImpairedMode && 'colorImpaired'
                     )}
                   />
-                  <div>Continuing (All tracks downloaded)</div>
+                  <div>
+                    {translate('ContinuingAllTracksDownloaded')}
+                  </div>
                 </div>
 
                 <div className={styles.legendItem}>
@@ -70,7 +73,9 @@ class ArtistIndexFooter extends PureComponent {
                       enableColorImpairedMode && 'colorImpaired'
                     )}
                   />
-                  <div>Ended (All tracks downloaded)</div>
+                  <div>
+                    {translate('EndedAllTracksDownloaded')}
+                  </div>
                 </div>
 
                 <div className={styles.legendItem}>
@@ -80,7 +85,9 @@ class ArtistIndexFooter extends PureComponent {
                       enableColorImpairedMode && 'colorImpaired'
                     )}
                   />
-                  <div>Missing Tracks (Artist monitored)</div>
+                  <div>
+                    {translate('MissingTracksArtistMonitored')}
+                  </div>
                 </div>
 
                 <div className={styles.legendItem}>
@@ -90,55 +97,57 @@ class ArtistIndexFooter extends PureComponent {
                       enableColorImpairedMode && 'colorImpaired'
                     )}
                   />
-                  <div>Missing Tracks (Artist not monitored)</div>
+                  <div>
+                    {translate('MissingTracksArtistNotMonitored')}
+                  </div>
                 </div>
               </div>
 
               <div className={styles.statistics}>
                 <DescriptionList>
                   <DescriptionListItem
-                    title="Artist"
+                    title={translate('Artist')}
                     data={count}
                   />
 
                   <DescriptionListItem
-                    title="Ended"
+                    title={translate('Ended')}
                     data={ended}
                   />
 
                   <DescriptionListItem
-                    title="Continuing"
+                    title={translate('Continuing')}
                     data={continuing}
                   />
                 </DescriptionList>
 
                 <DescriptionList>
                   <DescriptionListItem
-                    title="Monitored"
+                    title={translate('Monitored')}
                     data={monitored}
                   />
 
                   <DescriptionListItem
-                    title="Unmonitored"
+                    title={translate('Unmonitored')}
                     data={count - monitored}
                   />
                 </DescriptionList>
 
                 <DescriptionList>
                   <DescriptionListItem
-                    title="Tracks"
+                    title={translate('Tracks')}
                     data={tracks}
                   />
 
                   <DescriptionListItem
-                    title="Files"
+                    title={translate('Files')}
                     data={trackFiles}
                   />
                 </DescriptionList>
 
                 <DescriptionList>
                   <DescriptionListItem
-                    title="Total File Size"
+                    title={translate('TotalFileSize')}
                     data={formatBytes(totalFileSize)}
                   />
                 </DescriptionList>

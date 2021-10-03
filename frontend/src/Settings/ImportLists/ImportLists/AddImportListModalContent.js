@@ -10,6 +10,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
 import titleCase from 'Utilities/String/titleCase';
+import translate from 'Utilities/String/translate';
 import AddImportListItem from './AddImportListItem';
 import styles from './AddImportListModalContent.css';
 
@@ -42,7 +43,9 @@ class AddImportListModalContent extends Component {
 
           {
             !isSchemaFetching && !!schemaError &&
-              <div>Unable to add a new list, please try again.</div>
+              <div>
+                {translate('UnableToAddANewListPleaseTryAgain')}
+              </div>
           }
 
           {
@@ -50,8 +53,12 @@ class AddImportListModalContent extends Component {
               <div>
 
                 <Alert kind={kinds.INFO}>
-                  <div>Lidarr supports multiple lists for importing Albums and Artists into the database.</div>
-                  <div>For more information on the individual lists, click on the info buttons.</div>
+                  <div>
+                    {translate('LidarrSupportsMultipleListsForImportingAlbumsAndArtistsIntoTheDatabase')}
+                  </div>
+                  <div>
+                    {translate('ForMoreInformationOnTheIndividualListsClickOnTheInfoButtons')}
+                  </div>
                 </Alert>
                 {
                   Object.keys(listGroups).map((key) => {

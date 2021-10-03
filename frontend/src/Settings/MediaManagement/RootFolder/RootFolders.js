@@ -6,6 +6,7 @@ import Icon from 'Components/Icon';
 import PageSectionContent from 'Components/Page/PageSectionContent';
 import { icons } from 'Helpers/Props';
 import sortByName from 'Utilities/Array/sortByName';
+import translate from 'Utilities/String/translate';
 import EditRootFolderModalConnector from './EditRootFolderModalConnector';
 import RootFolder from './RootFolder';
 import styles from './RootFolders.css';
@@ -47,9 +48,9 @@ class RootFolders extends Component {
     } = this.props;
 
     return (
-      <FieldSet legend="Root Folders">
+      <FieldSet legend={translate('RootFolders')}>
         <PageSectionContent
-          errorMessage="Unable to load root folders"
+          errorMessage={translate('UnableToLoadRootFolders')}
           {...otherProps}
         >
           <div className={styles.rootFolders}>

@@ -13,6 +13,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { icons, inputTypes, kinds, sizes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 function getUrls(state) {
   const {
@@ -113,49 +114,57 @@ class CalendarLinkModalContent extends Component {
         <ModalBody>
           <Form>
             <FormGroup>
-              <FormLabel>Include Unmonitored</FormLabel>
+              <FormLabel>
+                {translate('IncludeUnmonitored')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="unmonitored"
                 value={unmonitored}
-                helpText="Include unmonitored albums in the iCal feed"
+                helpText={translate('UnmonitoredHelpText')}
                 onChange={this.onInputChange}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Past Days</FormLabel>
+              <FormLabel>
+                {translate('PastDays')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.NUMBER}
                 name="pastDays"
                 value={pastDays}
-                helpText="Days for iCal feed to look into the past"
+                helpText={translate('PastDaysHelpText')}
                 onChange={this.onInputChange}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Future Days</FormLabel>
+              <FormLabel>
+                {translate('FutureDays')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.NUMBER}
                 name="futureDays"
                 value={futureDays}
-                helpText="Days for iCal feed to look into the future"
+                helpText={translate('FutureDaysHelpText')}
                 onChange={this.onInputChange}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Tags</FormLabel>
+              <FormLabel>
+                {translate('Tags')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.TAG}
                 name="tags"
                 value={tags}
-                helpText="Feed will only contain artists with at least one matching tag"
+                helpText={translate('TagsHelpText')}
                 onChange={this.onInputChange}
               />
             </FormGroup>
@@ -163,14 +172,16 @@ class CalendarLinkModalContent extends Component {
             <FormGroup
               size={sizes.LARGE}
             >
-              <FormLabel>iCal Feed</FormLabel>
+              <FormLabel>
+                {translate('ICalFeed')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.TEXT}
                 name="iCalHttpUrl"
                 value={iCalHttpUrl}
                 readOnly={true}
-                helpText="Copy this URL to your client(s) or click to subscribe if your browser supports webcal"
+                helpText={translate('ICalHttpUrlHelpText')}
                 buttons={[
                   <ClipboardButton
                     key="copy"

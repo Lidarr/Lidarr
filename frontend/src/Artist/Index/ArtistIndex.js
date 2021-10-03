@@ -14,6 +14,7 @@ import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptions
 import { align, icons, sortDirections } from 'Helpers/Props';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import hasDifferentItemsOrOrder from 'Utilities/Object/hasDifferentItemsOrOrder';
+import translate from 'Utilities/String/translate';
 import ArtistIndexFooterConnector from './ArtistIndexFooterConnector';
 import ArtistIndexBannersConnector from './Banners/ArtistIndexBannersConnector';
 import ArtistIndexBannerOptionsModal from './Banners/Options/ArtistIndexBannerOptionsModal';
@@ -213,7 +214,7 @@ class ArtistIndex extends Component {
         <PageToolbar>
           <PageToolbarSection>
             <PageToolbarButton
-              label="Update all"
+              label={translate('UpdateAll')}
               iconName={icons.REFRESH}
               spinningName={icons.REFRESH}
               isSpinning={isRefreshingArtist}
@@ -221,7 +222,7 @@ class ArtistIndex extends Component {
             />
 
             <PageToolbarButton
-              label="RSS Sync"
+              label={translate('RSSSync')}
               iconName={icons.RSS}
               isSpinning={isRssSyncExecuting}
               isDisabled={hasNoArtist}
@@ -242,7 +243,7 @@ class ArtistIndex extends Component {
                   optionsComponent={ArtistIndexTableOptionsConnector}
                 >
                   <PageToolbarButton
-                    label="Options"
+                    label={translate('Options')}
                     iconName={icons.TABLE}
                   />
                 </TableOptionsModalWrapper> :
@@ -252,7 +253,7 @@ class ArtistIndex extends Component {
             {
               view === 'posters' ?
                 <PageToolbarButton
-                  label="Options"
+                  label={translate('Options')}
                   iconName={icons.POSTER}
                   isDisabled={hasNoArtist}
                   onPress={this.onPosterOptionsPress}
@@ -263,7 +264,7 @@ class ArtistIndex extends Component {
             {
               view === 'banners' ?
                 <PageToolbarButton
-                  label="Options"
+                  label={translate('Options')}
                   iconName={icons.POSTER}
                   isDisabled={hasNoArtist}
                   onPress={this.onBannerOptionsPress}
@@ -274,7 +275,7 @@ class ArtistIndex extends Component {
             {
               view === 'overview' ?
                 <PageToolbarButton
-                  label="Options"
+                  label={translate('Options')}
                   iconName={icons.OVERVIEW}
                   isDisabled={hasNoArtist}
                   onPress={this.onOverviewOptionsPress}

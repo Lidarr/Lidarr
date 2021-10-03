@@ -10,6 +10,7 @@ import Link from 'Components/Link/Link';
 import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
 import { icons } from 'Helpers/Props';
 import getRelativeDate from 'Utilities/Date/getRelativeDate';
+import translate from 'Utilities/String/translate';
 import ArtistIndexPosterInfo from './ArtistIndexPosterInfo';
 import styles from './ArtistIndexPoster.css';
 
@@ -122,7 +123,7 @@ class ArtistIndexPoster extends Component {
               <SpinnerIconButton
                 className={styles.action}
                 name={icons.REFRESH}
-                title="Refresh Artist"
+                title={translate('RefreshArtist')}
                 isSpinning={isRefreshingArtist}
                 onPress={onRefreshArtistPress}
               />
@@ -132,7 +133,7 @@ class ArtistIndexPoster extends Component {
                   <SpinnerIconButton
                     className={styles.action}
                     name={icons.SEARCH}
-                    title="Search for monitored albums"
+                    title={translate('SearchForMonitoredAlbums')}
                     isSpinning={isSearchingArtist}
                     onPress={onSearchPress}
                   />
@@ -141,7 +142,7 @@ class ArtistIndexPoster extends Component {
               <IconButton
                 className={styles.action}
                 name={icons.EDIT}
-                title="Edit Artist"
+                title={translate('EditArtist')}
                 onPress={this.onEditArtistPress}
               />
             </Label>
@@ -150,7 +151,7 @@ class ArtistIndexPoster extends Component {
               status === 'ended' &&
                 <div
                   className={styles.ended}
-                  title="Ended"
+                  title={translate('Ended')}
                 />
             }
 

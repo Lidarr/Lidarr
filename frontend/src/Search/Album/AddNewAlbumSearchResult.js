@@ -10,6 +10,7 @@ import Link from 'Components/Link/Link';
 import { icons, sizes } from 'Helpers/Props';
 import dimensions from 'Styles/Variables/dimensions';
 import fonts from 'Styles/Variables/fonts';
+import translate from 'Utilities/String/translate';
 import AddNewAlbumModal from './AddNewAlbumModal';
 import styles from './AddNewAlbumSearchResult.css';
 
@@ -130,7 +131,7 @@ class AddNewAlbumSearchResult extends Component {
                       className={styles.alreadyExistsIcon}
                       name={icons.CHECK_CIRCLE}
                       size={36}
-                      title="Already in your library"
+                      title={translate('AlreadyInYourLibrary')}
                     /> :
                     null
                 }

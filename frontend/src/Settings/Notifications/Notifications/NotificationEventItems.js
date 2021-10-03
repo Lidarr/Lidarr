@@ -5,6 +5,7 @@ import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormInputHelpText from 'Components/Form/FormInputHelpText';
 import FormLabel from 'Components/Form/FormLabel';
 import { inputTypes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './NotificationEventItems.css';
 
 function NotificationEventItems(props) {
@@ -35,7 +36,9 @@ function NotificationEventItems(props) {
 
   return (
     <FormGroup>
-      <FormLabel>Notification Triggers</FormLabel>
+      <FormLabel>
+        {translate('NotificationTriggers')}
+      </FormLabel>
       <div>
         <FormInputHelpText
           text="Select which events should trigger this notification"
@@ -46,7 +49,7 @@ function NotificationEventItems(props) {
             <FormInputGroup
               type={inputTypes.CHECK}
               name="onGrab"
-              helpText="On Grab"
+              helpText={translate('OnGrabHelpText')}
               isDisabled={!supportsOnGrab.value}
               {...onGrab}
               onChange={onInputChange}
@@ -57,7 +60,7 @@ function NotificationEventItems(props) {
             <FormInputGroup
               type={inputTypes.CHECK}
               name="onReleaseImport"
-              helpText="On Release Import"
+              helpText={translate('OnReleaseImportHelpText')}
               isDisabled={!supportsOnReleaseImport.value}
               {...onReleaseImport}
               onChange={onInputChange}
@@ -70,7 +73,7 @@ function NotificationEventItems(props) {
                 <FormInputGroup
                   type={inputTypes.CHECK}
                   name="onUpgrade"
-                  helpText="On Upgrade"
+                  helpText={translate('OnUpgradeHelpText')}
                   isDisabled={!supportsOnUpgrade.value}
                   {...onUpgrade}
                   onChange={onInputChange}
@@ -82,7 +85,7 @@ function NotificationEventItems(props) {
             <FormInputGroup
               type={inputTypes.CHECK}
               name="onDownloadFailure"
-              helpText="On Download Failure"
+              helpText={translate('OnDownloadFailureHelpText')}
               isDisabled={!supportsOnDownloadFailure.value}
               {...onDownloadFailure}
               onChange={onInputChange}
@@ -93,7 +96,7 @@ function NotificationEventItems(props) {
             <FormInputGroup
               type={inputTypes.CHECK}
               name="onImportFailure"
-              helpText="On Import Failure"
+              helpText={translate('OnImportFailureHelpText')}
               isDisabled={!supportsOnImportFailure.value}
               {...onImportFailure}
               onChange={onInputChange}
@@ -104,7 +107,7 @@ function NotificationEventItems(props) {
             <FormInputGroup
               type={inputTypes.CHECK}
               name="onRename"
-              helpText="On Rename"
+              helpText={translate('OnRenameHelpText')}
               isDisabled={!supportsOnRename.value}
               {...onRename}
               onChange={onInputChange}
@@ -115,7 +118,7 @@ function NotificationEventItems(props) {
             <FormInputGroup
               type={inputTypes.CHECK}
               name="onTrackRetag"
-              helpText="On Track Retag"
+              helpText={translate('OnTrackRetagHelpText')}
               isDisabled={!supportsOnTrackRetag.value}
               {...onTrackRetag}
               onChange={onInputChange}
@@ -126,7 +129,7 @@ function NotificationEventItems(props) {
             <FormInputGroup
               type={inputTypes.CHECK}
               name="onHealthIssue"
-              helpText="On Health Issue"
+              helpText={translate('OnHealthIssueHelpText')}
               isDisabled={!supportsOnHealthIssue.value}
               {...onHealthIssue}
               onChange={onInputChange}
@@ -139,7 +142,7 @@ function NotificationEventItems(props) {
                 <FormInputGroup
                   type={inputTypes.CHECK}
                   name="includeHealthWarnings"
-                  helpText="Include Health Warnings"
+                  helpText={translate('IncludeHealthWarningsHelpText')}
                   isDisabled={!supportsOnHealthIssue.value}
                   {...includeHealthWarnings}
                   onChange={onInputChange}

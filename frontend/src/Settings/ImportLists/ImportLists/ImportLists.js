@@ -5,6 +5,7 @@ import FieldSet from 'Components/FieldSet';
 import Icon from 'Components/Icon';
 import PageSectionContent from 'Components/Page/PageSectionContent';
 import { icons } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import AddImportListModal from './AddImportListModal';
 import EditImportListModalConnector from './EditImportListModalConnector';
 import ImportList from './ImportList';
@@ -59,10 +60,10 @@ class ImportLists extends Component {
 
     return (
       <FieldSet
-        legend="Import Lists"
+        legend={translate('ImportLists')}
       >
         <PageSectionContent
-          errorMessage="Unable to load Lists"
+          errorMessage={translate('UnableToLoadLists')}
           {...otherProps}
         >
           <div className={styles.lists}>

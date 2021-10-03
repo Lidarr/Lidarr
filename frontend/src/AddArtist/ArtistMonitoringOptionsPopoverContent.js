@@ -1,43 +1,44 @@
 import React from 'react';
 import DescriptionList from 'Components/DescriptionList/DescriptionList';
 import DescriptionListItem from 'Components/DescriptionList/DescriptionListItem';
+import translate from 'Utilities/String/translate';
 
 function ArtistMonitoringOptionsPopoverContent() {
   return (
     <DescriptionList>
       <DescriptionListItem
-        title="All Albums"
-        data="Monitor all albums except specials"
+        title={translate('AllAlbums')}
+        data={translate('AllAlbumsData')}
       />
 
       <DescriptionListItem
-        title="Future Albums"
-        data="Monitor albums that have not released yet"
+        title={translate('FutureAlbums')}
+        data={translate('FutureAlbumsData')}
       />
 
       <DescriptionListItem
-        title="Missing Albums"
-        data="Monitor albums that do not have files or have not released yet"
+        title={translate('MissingAlbums')}
+        data={translate('MissingAlbumsData')}
       />
 
       <DescriptionListItem
-        title="Existing Albums"
-        data="Monitor albums that have files or have not released yet"
+        title={translate('ExistingAlbums')}
+        data={translate('ExistingAlbumsData')}
       />
 
       <DescriptionListItem
-        title="First Album"
-        data="Monitor the first albums. All other albums will be ignored"
+        title={translate('FirstAlbum')}
+        data={translate('FirstAlbumData')}
       />
 
       <DescriptionListItem
-        title="Latest Album"
-        data="Monitor the latest albums and future albums"
+        title={translate('LatestAlbum')}
+        data={translate('LatestAlbumData')}
       />
 
       <DescriptionListItem
-        title="None"
-        data="No albums will be monitored"
+        title={translate('None')}
+        data={translate('NoneData')}
       />
     </DescriptionList>
   );

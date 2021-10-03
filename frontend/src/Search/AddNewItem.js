@@ -9,6 +9,7 @@ import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import { icons } from 'Helpers/Props';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
+import translate from 'Utilities/String/translate';
 import AddNewAlbumSearchResultConnector from './Album/AddNewAlbumSearchResultConnector';
 import AddNewArtistSearchResultConnector from './Artist/AddNewArtistSearchResultConnector';
 import styles from './AddNewItem.css';
@@ -87,7 +88,7 @@ class AddNewItem extends Component {
     const isFetching = this.state.isFetching;
 
     return (
-      <PageContent title="Add New Item">
+      <PageContent title={translate('AddNewItem')}>
         <PageContentBody>
           <div className={styles.searchContainer}>
             <div className={styles.searchIconContainer}>
@@ -101,7 +102,7 @@ class AddNewItem extends Component {
               className={styles.searchInput}
               name="searchBox"
               value={term}
-              placeholder="eg. Breaking Benjamin, lidarr:854a1807-025b-42a8-ba8c-2a39717f1d25"
+              placeholder={translate('SearchBoxPlaceHolder')}
               autoFocus={true}
               onChange={this.onSearchInputChange}
             />

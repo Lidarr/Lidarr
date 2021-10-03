@@ -9,6 +9,7 @@ import { icons, kinds } from 'Helpers/Props';
 import InteractiveImportModal from 'InteractiveImport/InteractiveImportModal';
 import FileDetailsModal from 'TrackFile/FileDetailsModal';
 import formatBytes from 'Utilities/Number/formatBytes';
+import translate from 'Utilities/String/translate';
 import styles from './UnmappedFilesTableRow.css';
 
 class UnmappedFilesTableRow extends Component {
@@ -187,9 +188,9 @@ class UnmappedFilesTableRow extends Component {
         <ConfirmModal
           isOpen={isConfirmDeleteModalOpen}
           kind={kinds.DANGER}
-          title="Delete Track File"
-          message={`Are you sure you want to delete ${path}?`}
-          confirmLabel="Delete"
+          title={translate('DeleteTrackFile')}
+          message={translate('DeleteTrackFileMessageText', [path])}
+          confirmLabel={translate('Delete')}
           onConfirm={this.onConfirmDelete}
           onCancel={this.onConfirmDeleteModalClose}
         />

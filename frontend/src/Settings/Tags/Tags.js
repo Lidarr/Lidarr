@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import FieldSet from 'Components/FieldSet';
-import Link from 'Components/Link/Link';
 import PageSectionContent from 'Components/Page/PageSectionContent';
+import translate from 'Utilities/String/translate';
 import TagConnector from './TagConnector';
 import styles from './Tags.css';
 
@@ -14,16 +14,18 @@ function Tags(props) {
 
   if (!items.length) {
     return (
-      <div>No tags have been added yet. Add tags to link artists with delay profiles, restrictions, or notifications. Click <Link to='https://wiki.servarr.com/lidarr/settings#tags'>here</Link> to find out more about tags in Lidarr.</div>
+      <div>
+        {translate('NoTagsHaveBeenAddedYetAddTagsToLinkArtistsWithDelayProfilesRestrictionsOrNotificationsClickLinkTohttpswikiservarrcomlidarrsettingstagshereLinkToFindOutMoreAboutTagsInLidarr')}
+      </div>
     );
   }
 
   return (
     <FieldSet
-      legend="Tags"
+      legend={translate('Tags')}
     >
       <PageSectionContent
-        errorMessage="Unable to load Tags"
+        errorMessage={translate('UnableToLoadTags')}
         {...otherProps}
       >
         <div className={styles.tags}>

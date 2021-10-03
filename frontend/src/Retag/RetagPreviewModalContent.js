@@ -9,6 +9,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import getSelectedIds from 'Utilities/Table/getSelectedIds';
 import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
@@ -99,12 +100,16 @@ class RetagPreviewModalContent extends Component {
 
           {
             !isFetching && error &&
-              <div>Error loading previews</div>
+              <div>
+                {translate('ErrorLoadingPreviews')}
+              </div>
           }
 
           {
             !isFetching && ((isPopulated && !items.length)) &&
-              <div>Success! My work is done, no files to retag.</div>
+              <div>
+                {translate('SuccessMyWorkIsDoneNoFilesToRetag')}
+              </div>
           }
 
           {

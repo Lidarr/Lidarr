@@ -27,6 +27,7 @@ import RetagPreviewModalConnector from 'Retag/RetagPreviewModalConnector';
 import fonts from 'Styles/Variables/fonts';
 import TrackFileEditorModal from 'TrackFile/Editor/TrackFileEditorModal';
 import formatBytes from 'Utilities/Number/formatBytes';
+import translate from 'Utilities/String/translate';
 import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
 import AlbumDetailsLinks from './AlbumDetailsLinks';
@@ -241,14 +242,14 @@ class AlbumDetails extends Component {
         <PageToolbar>
           <PageToolbarSection>
             <PageToolbarButton
-              label="Search Album"
+              label={translate('SearchAlbum')}
               iconName={icons.SEARCH}
               isSpinning={isSearching}
               onPress={onSearchPress}
             />
 
             <PageToolbarButton
-              label="Interactive Search"
+              label={translate('InteractiveSearch')}
               iconName={icons.INTERACTIVE}
               onPress={this.onInteractiveSearchPress}
             />
@@ -256,28 +257,28 @@ class AlbumDetails extends Component {
             <PageToolbarSeparator />
 
             <PageToolbarButton
-              label="Preview Rename"
+              label={translate('PreviewRename')}
               iconName={icons.ORGANIZE}
               isDisabled={!hasTrackFiles}
               onPress={this.onOrganizePress}
             />
 
             <PageToolbarButton
-              label="Preview Retag"
+              label={translate('PreviewRetag')}
               iconName={icons.RETAG}
               isDisabled={!hasTrackFiles}
               onPress={this.onRetagPress}
             />
 
             <PageToolbarButton
-              label="Manage Tracks"
+              label={translate('ManageTracks')}
               iconName={icons.TRACK_FILE}
               isDisabled={!hasTrackFiles}
               onPress={this.onManageTracksPress}
             />
 
             <PageToolbarButton
-              label="History"
+              label={translate('History')}
               iconName={icons.HISTORY}
               onPress={this.onArtistHistoryPress}
             />
@@ -285,13 +286,13 @@ class AlbumDetails extends Component {
             <PageToolbarSeparator />
 
             <PageToolbarButton
-              label="Edit"
+              label={translate('Edit')}
               iconName={icons.EDIT}
               onPress={this.onEditAlbumPress}
             />
 
             <PageToolbarButton
-              label="Delete"
+              label={translate('Delete')}
               iconName={icons.DELETE}
               onPress={this.onDeleteAlbumPress}
             />
@@ -299,7 +300,7 @@ class AlbumDetails extends Component {
           </PageToolbarSection>
           <PageToolbarSection alignContent={align.RIGHT}>
             <PageToolbarButton
-              label={allExpanded ? 'Collapse All' : 'Expand All'}
+              label={allExpanded ? translate('AllExpandedCollapseAll') : translate('AllExpandedExpandAll')}
               iconName={expandIcon}
               onPress={this.onExpandAllPress}
             />
@@ -349,7 +350,7 @@ class AlbumDetails extends Component {
                       className={styles.albumNavigationButton}
                       name={icons.ARROW_LEFT}
                       size={30}
-                      title={`Go to ${previousAlbum.title}`}
+                      title={translate('GoToInterp', [previousAlbum.title])}
                       to={`/album/${previousAlbum.foreignAlbumId}`}
                     />
 
@@ -357,7 +358,7 @@ class AlbumDetails extends Component {
                       className={styles.albumNavigationButton}
                       name={icons.ARROW_UP}
                       size={30}
-                      title={`Go to ${artist.artistName}`}
+                      title={translate('GoToInterp', [artist.artistName])}
                       to={`/artist/${artist.foreignArtistId}`}
                     />
 
@@ -365,7 +366,7 @@ class AlbumDetails extends Component {
                       className={styles.albumNavigationButton}
                       name={icons.ARROW_RIGHT}
                       size={30}
-                      title={`Go to ${nextAlbum.title}`}
+                      title={translate('GoToInterp', [nextAlbum.title])}
                       to={`/album/${nextAlbum.foreignAlbumId}`}
                     />
                   </div>
@@ -439,7 +440,7 @@ class AlbumDetails extends Component {
                     !!albumType &&
                       <Label
                         className={styles.detailsLabel}
-                        title="Type"
+                        title={translate('Type')}
                         size={sizes.LARGE}
                       >
                         <Icon
@@ -498,12 +499,16 @@ class AlbumDetails extends Component {
 
             {
               !isFetching && albumsError &&
-                <div>Loading albums failed</div>
+                <div>
+                  {translate('LoadingAlbumsFailed')}
+                </div>
             }
 
             {
               !isFetching && trackFilesError &&
-                <div>Loading track files failed</div>
+                <div>
+                  {translate('LoadingTrackFilesFailed')}
+                </div>
             }
 
             {

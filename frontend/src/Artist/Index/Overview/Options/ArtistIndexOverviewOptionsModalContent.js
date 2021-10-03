@@ -11,6 +11,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 const posterSizeOptions = [
   { key: 'small', value: 'Small' },
@@ -142,7 +143,9 @@ class ArtistIndexOverviewOptionsModalContent extends Component {
         <ModalBody>
           <Form>
             <FormGroup>
-              <FormLabel>Poster Size</FormLabel>
+              <FormLabel>
+                {translate('PosterSize')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.SELECT}
@@ -154,19 +157,23 @@ class ArtistIndexOverviewOptionsModalContent extends Component {
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Detailed Progress Bar</FormLabel>
+              <FormLabel>
+                {translate('DetailedProgressBar')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="detailedProgressBar"
                 value={detailedProgressBar}
-                helpText="Show text on progess bar"
+                helpText={translate('DetailedProgressBarHelpText')}
                 onChange={this.onChangeOverviewOption}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Show Monitored</FormLabel>
+              <FormLabel>
+                {translate('ShowMonitored')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
@@ -178,7 +185,9 @@ class ArtistIndexOverviewOptionsModalContent extends Component {
 
             <FormGroup>
 
-              <FormLabel>Show Quality Profile</FormLabel>
+              <FormLabel>
+                {translate('ShowQualityProfile')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
@@ -189,7 +198,9 @@ class ArtistIndexOverviewOptionsModalContent extends Component {
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Show Last Album</FormLabel>
+              <FormLabel>
+                {translate('ShowLastAlbum')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
@@ -200,7 +211,9 @@ class ArtistIndexOverviewOptionsModalContent extends Component {
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Show Date Added</FormLabel>
+              <FormLabel>
+                {translate('ShowDateAdded')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
@@ -211,7 +224,9 @@ class ArtistIndexOverviewOptionsModalContent extends Component {
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Show Album Count</FormLabel>
+              <FormLabel>
+                {translate('ShowAlbumCount')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
@@ -222,7 +237,9 @@ class ArtistIndexOverviewOptionsModalContent extends Component {
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Show Path</FormLabel>
+              <FormLabel>
+                {translate('ShowPath')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
@@ -233,7 +250,9 @@ class ArtistIndexOverviewOptionsModalContent extends Component {
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Show Size on Disk</FormLabel>
+              <FormLabel>
+                {translate('ShowSizeOnDisk')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
@@ -244,13 +263,15 @@ class ArtistIndexOverviewOptionsModalContent extends Component {
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Show Search</FormLabel>
+              <FormLabel>
+                {translate('ShowSearch')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="showSearchAction"
                 value={showSearchAction}
-                helpText="Show search button"
+                helpText={translate('ShowSearchActionHelpText')}
                 onChange={this.onChangeOverviewOption}
               />
             </FormGroup>

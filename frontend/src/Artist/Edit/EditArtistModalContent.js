@@ -15,6 +15,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import Popover from 'Components/Tooltip/Popover';
 import { icons, inputTypes, kinds, tooltipPositions } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './EditArtistModalContent.css';
 
 class EditArtistModalContent extends Component {
@@ -87,19 +88,23 @@ class EditArtistModalContent extends Component {
         <ModalBody>
           <Form {...otherProps}>
             <FormGroup>
-              <FormLabel>Monitored</FormLabel>
+              <FormLabel>
+                {translate('Monitored')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="monitored"
-                helpText="Download monitored albums from this artist"
+                helpText={translate('MonitoredHelpText')}
                 {...monitored}
                 onChange={onInputChange}
               />
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Quality Profile</FormLabel>
+              <FormLabel>
+                {translate('QualityProfile')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.QUALITY_PROFILE_SELECT}
@@ -122,7 +127,7 @@ class EditArtistModalContent extends Component {
                           name={icons.INFO}
                         />
                       }
-                      title="Metadata Profile"
+                      title={translate('MetadataProfile')}
                       body={<ArtistMetadataProfilePopoverContent />}
                       position={tooltipPositions.RIGHT}
                     />
@@ -132,7 +137,7 @@ class EditArtistModalContent extends Component {
                   <FormInputGroup
                     type={inputTypes.METADATA_PROFILE_SELECT}
                     name="metadataProfileId"
-                    helpText="Changes will take place on next artist refresh"
+                    helpText={translate('MetadataProfileIdHelpText')}
                     includeNone={true}
                     {...metadataProfileId}
                     onChange={onInputChange}
@@ -141,7 +146,9 @@ class EditArtistModalContent extends Component {
             }
 
             <FormGroup>
-              <FormLabel>Path</FormLabel>
+              <FormLabel>
+                {translate('Path')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.PATH}
@@ -152,7 +159,9 @@ class EditArtistModalContent extends Component {
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>Tags</FormLabel>
+              <FormLabel>
+                {translate('Tags')}
+              </FormLabel>
 
               <FormInputGroup
                 type={inputTypes.TAG}

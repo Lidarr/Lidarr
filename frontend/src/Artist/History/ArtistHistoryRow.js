@@ -11,6 +11,7 @@ import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import Popover from 'Components/Tooltip/Popover';
 import { icons, kinds, tooltipPositions } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './ArtistHistoryRow.css';
 
 function getTitle(eventType) {
@@ -132,7 +133,7 @@ class ArtistHistoryRow extends Component {
           {
             eventType === 'grabbed' &&
               <IconButton
-                title="Mark as failed"
+                title={translate('MarkAsFailed')}
                 name={icons.REMOVE}
                 onPress={this.onMarkAsFailedPress}
               />
@@ -142,9 +143,9 @@ class ArtistHistoryRow extends Component {
         <ConfirmModal
           isOpen={isMarkAsFailedModalOpen}
           kind={kinds.DANGER}
-          title="Mark as Failed"
-          message={`Are you sure you want to mark '${sourceTitle}' as failed?`}
-          confirmLabel="Mark as Failed"
+          title={translate('MarkAsFailed')}
+          message={translate('MarkAsFailedMessageText', [sourceTitle])}
+          confirmLabel={translate('MarkAsFailed')}
           onConfirm={this.onConfirmMarkAsFailed}
           onCancel={this.onMarkAsFailedModalClose}
         />

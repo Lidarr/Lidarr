@@ -5,6 +5,7 @@ import Label from 'Components/Label';
 import IconButton from 'Components/Link/IconButton';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
 import { icons, kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import EditIndexerModalConnector from './EditIndexerModalConnector';
 import styles from './Indexer.css';
 
@@ -86,7 +87,7 @@ class Indexer extends Component {
 
           <IconButton
             className={styles.cloneButton}
-            title="Clone Indexer"
+            title={translate('CloneIndexer')}
             name={icons.CLONE}
             onPress={this.onCloneIndexerPress}
           />
@@ -142,9 +143,9 @@ class Indexer extends Component {
         <ConfirmModal
           isOpen={this.state.isDeleteIndexerModalOpen}
           kind={kinds.DANGER}
-          title="Delete Indexer"
-          message={`Are you sure you want to delete the indexer '${name}'?`}
-          confirmLabel="Delete"
+          title={translate('DeleteIndexer')}
+          message={translate('DeleteIndexerMessageText', [name])}
+          confirmLabel={translate('Delete')}
           onConfirm={this.onConfirmDeleteIndexer}
           onCancel={this.onDeleteIndexerModalClose}
         />

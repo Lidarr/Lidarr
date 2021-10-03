@@ -4,6 +4,7 @@ import Card from 'Components/Card';
 import Label from 'Components/Label';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
 import { kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import EditNotificationModalConnector from './EditNotificationModalConnector';
 import styles from './Notification.css';
 
@@ -159,9 +160,9 @@ class Notification extends Component {
         <ConfirmModal
           isOpen={this.state.isDeleteNotificationModalOpen}
           kind={kinds.DANGER}
-          title="Delete Notification"
-          message={`Are you sure you want to delete the notification '${name}'?`}
-          confirmLabel="Delete"
+          title={translate('DeleteNotification')}
+          message={translate('DeleteNotificationMessageText', [name])}
+          confirmLabel={translate('Delete')}
           onConfirm={this.onConfirmDeleteNotification}
           onCancel={this.onDeleteNotificationModalClose}
         />

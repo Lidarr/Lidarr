@@ -11,6 +11,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { icons, inputTypes, kinds } from 'Helpers/Props';
 import formatBytes from 'Utilities/Number/formatBytes';
+import translate from 'Utilities/String/translate';
 import styles from './DeleteArtistModalContent.css';
 
 class DeleteArtistModalContent extends Component {
@@ -67,7 +68,7 @@ class DeleteArtistModalContent extends Component {
     const addImportListExclusion = this.state.addImportListExclusion;
 
     let deleteFilesLabel = `Delete ${trackFileCount} Track Files`;
-    let deleteFilesHelpText = 'Delete the track files and artist folder';
+    let deleteFilesHelpText = translate('DeleteFilesHelpText');
 
     if (trackFileCount === 0) {
       deleteFilesLabel = 'Delete Artist Folder';
@@ -106,13 +107,15 @@ class DeleteArtistModalContent extends Component {
           </FormGroup>
 
           <FormGroup>
-            <FormLabel>Add List Exclusion</FormLabel>
+            <FormLabel>
+              {translate('AddListExclusion')}
+            </FormLabel>
 
             <FormInputGroup
               type={inputTypes.CHECK}
               name="addImportListExclusion"
               value={addImportListExclusion}
-              helpText="Prevent artist from being added to Lidarr by Import lists"
+              helpText={translate('AddImportListExclusionHelpText')}
               kind={kinds.DANGER}
               onChange={this.onAddImportListExclusionChange}
             />
@@ -121,7 +124,9 @@ class DeleteArtistModalContent extends Component {
           {
             deleteFiles &&
               <div className={styles.deleteFilesMessage}>
-                <div>The artist folder <strong>{path}</strong> and all of its content will be deleted.</div>
+                <div>
+                  {translate('TheArtistFolderStrongpathstrongAndAllOfItsContentWillBeDeleted')}
+                </div>
 
                 {
                   !!trackFileCount &&

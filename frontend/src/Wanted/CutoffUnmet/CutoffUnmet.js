@@ -15,6 +15,7 @@ import TablePager from 'Components/Table/TablePager';
 import { align, icons, kinds } from 'Helpers/Props';
 import getFilterValue from 'Utilities/Filter/getFilterValue';
 import hasDifferentItems from 'Utilities/Object/hasDifferentItems';
+import translate from 'Utilities/String/translate';
 import getSelectedIds from 'Utilities/Table/getSelectedIds';
 import removeOldSelectedState from 'Utilities/Table/removeOldSelectedState';
 import selectAll from 'Utilities/Table/selectAll';
@@ -139,18 +140,18 @@ class CutoffUnmet extends Component {
     const isShowingMonitored = getMonitoredValue(this.props);
 
     return (
-      <PageContent title="Cutoff Unmet">
+      <PageContent title={translate('CutoffUnmet')}>
         <PageToolbar>
           <PageToolbarSection>
             <PageToolbarButton
-              label="Search Selected"
+              label={translate('SearchSelected')}
               iconName={icons.SEARCH}
               isDisabled={!itemsSelected || isSearchingForCutoffUnmetAlbums}
               onPress={this.onSearchSelectedPress}
             />
 
             <PageToolbarButton
-              label={isShowingMonitored ? 'Unmonitor Selected' : 'Monitor Selected'}
+              label={isShowingMonitored ? translate('IsShowingMonitoredUnmonitorSelected') : translate('IsShowingMonitoredMonitorSelected')}
               iconName={isShowingMonitored ? icons.UNMONITORED : icons.MONITORED}
               isDisabled={!itemsSelected}
               isSpinning={isSaving}
@@ -160,7 +161,7 @@ class CutoffUnmet extends Component {
             <PageToolbarSeparator />
 
             <PageToolbarButton
-              label="Search All"
+              label={translate('SearchAll')}
               iconName={icons.SEARCH}
               isDisabled={!items.length}
               isSpinning={isSearchingForCutoffUnmetAlbums}
@@ -238,7 +239,7 @@ class CutoffUnmet extends Component {
                 <ConfirmModal
                   isOpen={isConfirmSearchAllCutoffUnmetModalOpen}
                   kind={kinds.DANGER}
-                  title="Search for all Cutoff Unmet albums"
+                  title={translate('SearchForAllCutoffUnmetAlbums')}
                   message={
                     <div>
                       <div>
@@ -249,7 +250,7 @@ class CutoffUnmet extends Component {
                       </div>
                     </div>
                   }
-                  confirmLabel="Search"
+                  confirmLabel={translate('Search')}
                   onConfirm={this.onSearchAllCutoffUnmetConfirmed}
                   onCancel={this.onConfirmSearchAllCutoffUnmetModalClose}
                 />

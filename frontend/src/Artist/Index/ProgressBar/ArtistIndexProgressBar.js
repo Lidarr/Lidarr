@@ -3,6 +3,7 @@ import React from 'react';
 import ProgressBar from 'Components/ProgressBar';
 import { sizes } from 'Helpers/Props';
 import getProgressBarKind from 'Utilities/Artist/getProgressBarKind';
+import translate from 'Utilities/String/translate';
 import styles from './ArtistIndexProgressBar.css';
 
 function ArtistIndexProgressBar(props) {
@@ -28,7 +29,7 @@ function ArtistIndexProgressBar(props) {
       size={detailedProgressBar ? sizes.MEDIUM : sizes.SMALL}
       showText={detailedProgressBar}
       text={text}
-      title={`${trackFileCount} / ${trackCount} (Total: ${totalTrackCount})`}
+      title={translate('TrackFileCountTrackCountTotalTotalTrackCountInterp', [trackFileCount, trackCount, totalTrackCount])}
       width={posterWidth}
     />
   );

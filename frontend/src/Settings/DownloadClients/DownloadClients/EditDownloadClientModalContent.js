@@ -14,6 +14,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './EditDownloadClientModalContent.css';
 
 class EditDownloadClientModalContent extends Component {
@@ -63,7 +64,9 @@ class EditDownloadClientModalContent extends Component {
 
           {
             !isFetching && !!error &&
-              <div>Unable to add a new download client, please try again.</div>
+              <div>
+                {translate('UnableToAddANewDownloadClientPleaseTryAgain')}
+              </div>
           }
 
           {
@@ -80,7 +83,9 @@ class EditDownloadClientModalContent extends Component {
                 }
 
                 <FormGroup>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>
+                    {translate('Name')}
+                  </FormLabel>
 
                   <FormInputGroup
                     type={inputTypes.TEXT}
@@ -91,7 +96,9 @@ class EditDownloadClientModalContent extends Component {
                 </FormGroup>
 
                 <FormGroup>
-                  <FormLabel>Enable</FormLabel>
+                  <FormLabel>
+                    {translate('Enable')}
+                  </FormLabel>
 
                   <FormInputGroup
                     type={inputTypes.CHECK}
@@ -120,12 +127,14 @@ class EditDownloadClientModalContent extends Component {
                   advancedSettings={advancedSettings}
                   isAdvanced={true}
                 >
-                  <FormLabel>Client Priority</FormLabel>
+                  <FormLabel>
+                    {translate('ClientPriority')}
+                  </FormLabel>
 
                   <FormInputGroup
                     type={inputTypes.NUMBER}
                     name="priority"
-                    helpText="Prioritize multiple Download Clients. Round-Robin is used for clients with the same priority."
+                    helpText={translate('PriorityHelpText')}
                     min={1}
                     max={50}
                     {...priority}

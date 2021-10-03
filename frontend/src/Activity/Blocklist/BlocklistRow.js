@@ -8,6 +8,7 @@ import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
 import TableRow from 'Components/Table/TableRow';
 import { icons, kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import BlocklistDetailsModal from './BlocklistDetailsModal';
 import styles from './BlocklistRow.css';
 
@@ -141,7 +142,7 @@ class BlocklistRow extends Component {
                   />
 
                   <IconButton
-                    title="Remove from blocklist"
+                    title={translate('RemoveFromBlocklist')}
                     name={icons.REMOVE}
                     kind={kinds.DANGER}
                     onPress={onRemovePress}

@@ -6,6 +6,7 @@ import getStatusStyle from 'Calendar/getStatusStyle';
 import Icon from 'Components/Icon';
 import Link from 'Components/Link/Link';
 import { icons } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import CalendarEventQueueDetails from './CalendarEventQueueDetails';
 import styles from './CalendarEvent.css';
 
@@ -97,7 +98,7 @@ class CalendarEvent extends Component {
                 <Icon
                   className={styles.statusIcon}
                   name={icons.DOWNLOADING}
-                  title="Album is downloading"
+                  title={translate('AlbumIsDownloading')}
                 />
             }
           </div>

@@ -9,6 +9,7 @@ import NotFound from 'Components/NotFound';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import { clearAlbums, fetchAlbums } from 'Store/Actions/albumActions';
+import translate from 'Utilities/String/translate';
 import AlbumDetailsConnector from './AlbumDetailsConnector';
 
 function createMapStateToProps() {
@@ -94,7 +95,7 @@ class AlbumDetailsPageConnector extends Component {
     if (!foreignAlbumId) {
       return (
         <NotFound
-          message="Sorry, that album cannot be found."
+          message={translate('SorryThatAlbumCannotBeFound')}
         />
       );
     }

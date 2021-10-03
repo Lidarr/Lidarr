@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import FormGroup from 'Components/Form/FormGroup';
 import FormInputHelpText from 'Components/Form/FormInputHelpText';
 import FormLabel from 'Components/Form/FormLabel';
+import translate from 'Utilities/String/translate';
 import SecondaryTypeItem from './SecondaryTypeItem';
 import styles from './TypeItems.css';
 
@@ -21,7 +22,9 @@ class SecondaryTypeItems extends Component {
 
     return (
       <FormGroup>
-        <FormLabel>Secondary Types</FormLabel>
+        <FormLabel>
+          {translate('SecondaryTypes')}
+        </FormLabel>
         <div>
 
           {

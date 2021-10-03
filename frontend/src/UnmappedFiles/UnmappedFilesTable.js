@@ -10,6 +10,7 @@ import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptions
 import VirtualTable from 'Components/Table/VirtualTable';
 import VirtualTableRow from 'Components/Table/VirtualTableRow';
 import { align, icons, sortDirections } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import UnmappedFilesTableHeader from './UnmappedFilesTableHeader';
 import UnmappedFilesTableRow from './UnmappedFilesTableRow';
 
@@ -79,11 +80,11 @@ class UnmappedFilesTable extends Component {
     } = this.state;
 
     return (
-      <PageContent title="UnmappedFiles">
+      <PageContent title={translate('UnmappedFiles')}>
         <PageToolbar>
           <PageToolbarSection>
             <PageToolbarButton
-              label="Add missing"
+              label={translate('AddMissing')}
               iconName={icons.ADD_MISSING_ARTISTS}
               isDisabled={isPopulated && !error && !items.length}
               isSpinning={isScanningFolders}
@@ -98,7 +99,7 @@ class UnmappedFilesTable extends Component {
               onTableOptionChange={onTableOptionChange}
             >
               <PageToolbarButton
-                label="Options"
+                label={translate('Options')}
                 iconName={icons.TABLE}
               />
             </TableOptionsModalWrapper>
