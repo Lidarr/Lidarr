@@ -1,3 +1,4 @@
+
 # How to Contribute #
 
 We're always looking for people to help make Lidarr even better, there are a number of ways to contribute.
@@ -5,7 +6,7 @@ We're always looking for people to help make Lidarr even better, there are a num
 This file is updated on an ad-hoc basis, for the latest details please see the [contributing wiki page](https://wiki.servarr.com/lidarr/contributing).
 
 ## Documentation ##
-Setup guides, FAQ, the more information we have on the [wiki](https://wiki.servarr.com/lidarr) the better.
+Setup guides, [FAQ](https://wiki.servarr.com/lidarr/faq), the more information we have on the [wiki](https://wiki.servarr.com/lidarr) the better.
 
 ## Development ##
 
@@ -13,17 +14,17 @@ Setup guides, FAQ, the more information we have on the [wiki](https://wiki.serva
 - Visual Studio 2019 or higher (https://www.visualstudio.com/vs/).  The community version is free and works fine. [Download it here](https://www.visualstudio.com/downloads/).
 - HTML/Javascript editor of choice (VS Code/Sublime Text/Webstorm/Atom/etc)
 - [Git](https://git-scm.com/downloads)
-- [NodeJS](https://nodejs.org/en/download/) (Node 10.X.X or higher)
+- [NodeJS](https://nodejs.org/en/download/) (Node 12.X.X or higher)
 - [Yarn](https://yarnpkg.com/)
-- .NET Core 3.1. 
+- .NET Core 5.0. 
 
 ### Getting started ###
 
 1. Fork Lidarr
-2. Clone the repository into your development machine. [*info*](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github)
+2. Clone the repository into your development machine. [*info*](https://docs.github.com/en/get-started/quickstart/fork-a-repo)
 3. Install the required Node Packages `yarn install`
 4. Start webpack to monitor your dev environment for any changes that need post processing using `yarn start` command.
-5. Build the project in Visual Studio, Setting startup project to `Lidarr.Console` and framework to `netcoreapp31`
+5. Build the project in Visual Studio, Setting startup project to `Lidarr.Console` and framework to `net5.0`
 6. Debug the project in Visual Studio
 7. Open http://localhost:8686
 
