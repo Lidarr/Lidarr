@@ -15,7 +15,7 @@ Setup guides, [FAQ](https://wiki.servarr.com/lidarr/faq), the more information w
 - [Git](https://git-scm.com/downloads)
 - [NodeJS](https://nodejs.org/en/download/) (Node 12.X.X or higher)
 - [Yarn](https://yarnpkg.com/)
-- .NET Core 5.0. 
+- .NET 5.0. 
 
 ### Getting started ###
 
