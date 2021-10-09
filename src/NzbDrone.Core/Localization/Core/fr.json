@@ -1,1 +1,7 @@
-{}
+{
+    "Language": "Langue",
+    "UILanguage": "UI Langue",
+    "AppDataDirectory": "Dossier AppData",
+    "AddingTag": "Ajouter un tag",
+    "Analytics": "Analytique"
+}
