@@ -4,6 +4,7 @@ import { setAppValue } from 'Store/Actions/appActions';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import serverSideCollectionHandlers from 'Utilities/serverSideCollectionHandlers';
+import translate from 'Utilities/String/translate';
 import { pingServer } from './appActions';
 import { set } from './baseActions';
 import createFetchHandler from './Creators/createFetchHandler';
@@ -81,34 +82,34 @@ export const defaultState = {
     columns: [
       {
         name: 'level',
-        columnLabel: 'Level',
+        columnLabel: translate('Level'),
         isSortable: false,
         isVisible: true,
         isModifiable: false
       },
       {
+        name: 'time',
+        label: translate('Time'),
+        isSortable: true,
+        isVisible: true,
+        isModifiable: false
+      },
+      {
         name: 'logger',
-        label: 'Component',
+        label: translate('Component'),
         isSortable: false,
         isVisible: true,
         isModifiable: false
       },
       {
         name: 'message',
-        label: 'Message',
-        isVisible: true,
-        isModifiable: false
-      },
-      {
-        name: 'time',
-        label: 'Time',
-        isSortable: true,
+        label: translate('Message'),
         isVisible: true,
         isModifiable: false
       },
       {
         name: 'actions',
-        columnLabel: 'Actions',
+        columnLabel: translate('Actions'),
         isSortable: true,
         isVisible: true,
         isModifiable: false
