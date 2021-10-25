@@ -17,7 +17,7 @@ namespace Lidarr.Http
         public int Version { get; private set; }
     }
 
-    public class V1FeedControllerAttribute : VersionedApiControllerAttribute
+    public class V1FeedControllerAttribute : VersionedFeedControllerAttribute
     {
         public V1FeedControllerAttribute(string resource = "[controller]")
             : base(1, resource)
