@@ -18,17 +18,17 @@ namespace NzbDrone.Core.Notifications.Prowl
 
         public override void OnGrab(GrabMessage message)
         {
-            _prowlProxy.SendNotification(ALBUM_GRABBED_TITLE, message.Message, Settings.ApiKey);
+            _prowlProxy.SendNotification(ALBUM_GRABBED_TITLE, message.Message, Settings);
         }
 
         public override void OnReleaseImport(AlbumDownloadMessage message)
         {
-            _prowlProxy.SendNotification(ALBUM_DOWNLOADED_TITLE, message.Message, Settings.ApiKey);
+            _prowlProxy.SendNotification(ALBUM_DOWNLOADED_TITLE, message.Message, Settings);
         }
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
-            _prowlProxy.SendNotification(HEALTH_ISSUE_TITLE, healthCheck.Message, Settings.ApiKey, (ProwlPriority)Settings.Priority);
+            _prowlProxy.SendNotification(HEALTH_ISSUE_TITLE, healthCheck.Message, Settings);
         }
 
         public override ValidationResult Test()
