@@ -170,7 +170,7 @@ class AddNewItem extends Component {
                 <div>
                   You can also search using the
                   <Link to="https://musicbrainz.org/search"> MusicBrainz ID </Link>
-                  of an artist e.g. lidarr:cc197bad-dc9c-440d-a5b5-d52ba2e14234
+                  of an artist or release group e.g. lidarr:cc197bad-dc9c-440d-a5b5-d52ba2e14234
                 </div>
               </div>
           }
