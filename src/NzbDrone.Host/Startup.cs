@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Lidarr.Api.V1.System;
 using Lidarr.Http;
 using Lidarr.Http.Authentication;
@@ -8,6 +9,7 @@ using Lidarr.Http.Frontend;
 using Lidarr.Http.Middleware;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +48,7 @@ namespace NzbDrone.Host
                 b.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
                 b.AddFilter("Microsoft.AspNetCore", Microsoft.Extensions.Logging.LogLevel.Warning);
                 b.AddFilter("Lidarr.Http.Authentication", LogLevel.Information);
+                b.AddFilter("Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager", LogLevel.Error);
                 b.AddNLog();
             });
 
@@ -94,6 +97,9 @@ namespace NzbDrone.Host
             {
                 options.PayloadSerializerOptions = STJson.GetSerializerSettings();
             });
+
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(Configuration["dataProtectionFolder"]));
 
             services.AddSingleton<IAuthorizationPolicyProvider, UiAuthorizationPolicyProvider>();
             services.AddAuthorization(options =>
