@@ -1,4 +1,9 @@
 {
     "Language": "Idioma",
-    "UILanguage": "Idioma da interface"
+    "UILanguage": "Idioma da interface",
+    "20MinutesTwenty": "20 Minutos: {0}",
+    "Blocklist": "Lista de bloqueio",
+    "RemoveSelectedMessageText": "Tem certeza de que deseja remover os itens selecionados da lista de bloqueio?",
+    "45MinutesFourtyFive": "45 Minutos: {0}",
+    "YesCancel": "Sim, Cancelar"
 }

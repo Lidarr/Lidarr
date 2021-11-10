@@ -1,4 +1,24 @@
 {
     "Language": "Lingua",
-    "UILanguage": "Lingua della UI"
+    "UILanguage": "Lingua della UI",
+    "20MinutesTwenty": "20 Minuti: {0}",
+    "AddImportListExclusionHelpText": "Previene che l’artista sia aggiunto da Lidarr alla lista di importazione",
+    "AlbumHasNotAired": "Album non trasmesso",
+    "45MinutesFourtyFive": "45 Minuti: {0}",
+    "60MinutesSixty": "60 Minuti: {0}",
+    "APIKey": "Chiavi API",
+    "Absolute": "Assoluto",
+    "AddListExclusion": "Aggiungi Lista di esclusione",
+    "AddMissing": "Aggiungi ai mancanti",
+    "AddNewItem": "Aggiungi Nuovo Elemento",
+    "AddingTag": "Aggiungi tag",
+    "AdvancedSettingsHiddenClickToShow": "Nascosto, clicca per mostrare",
+    "AdvancedSettingsShownClickToHide": "Visibile, clicca per nascondere",
+    "AgeWhenGrabbed": "Età (quando trovato)",
+    "Album": "Album",
+    "AlbumIsDownloading": "Album in scaricamento",
+    "AlbumIsDownloadingInterp": "Album in scaricamento - {0}% {1}",
+    "AlbumIsNotMonitored": "Album non monitorato",
+    "AlbumStudio": "Album Studio",
+    "AllAlbums": "Tutti gli album"
 }
