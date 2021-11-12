@@ -5,5 +5,9 @@
     "Blocklist": "Lista de bloqueio",
     "RemoveSelectedMessageText": "Tem certeza de que deseja remover os itens selecionados da lista de bloqueio?",
     "45MinutesFourtyFive": "45 Minutos: {0}",
-    "YesCancel": "Sim, Cancelar"
+    "YesCancel": "Sim, Cancelar",
+    "Actions": "Ações",
+    "About": "Sobre",
+    "60MinutesSixty": "60 Minutos: {0}",
+    "Absolute": "Absoluto"
 }
