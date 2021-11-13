@@ -5,7 +5,7 @@ root = true
 # NOTE: Requires **VS2019 16.3** or later
 
 # Stylecop.ruleset
-# Description: Rules for Radarr
+# Description: Rules for Lidarr
 
 # Code files
 [*.cs]
@@ -264,7 +264,7 @@ dotnet_diagnostic.CA5392.severity = suggestion
 dotnet_diagnostic.CA5394.severity = suggestion
 dotnet_diagnostic.CA5397.severity = suggestion
 
-dotnet_diagnostic.SYSLIB0014.severity = none
+dotnet_diagnostic.SYSLIB0006.severity = none
 
 [*.{js,html,js,hbs,less,css}]
 charset = utf-8
