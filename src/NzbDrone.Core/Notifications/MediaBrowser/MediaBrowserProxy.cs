@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
@@ -23,7 +24,7 @@ namespace NzbDrone.Core.Notifications.Emby
             var path = "/Notifications/Admin";
             var request = BuildRequest(path, settings);
             request.Headers.ContentType = "application/json";
-            request.Method = HttpMethod.POST;
+            request.Method = HttpMethod.Post;
 
             request.SetContent(new
             {
@@ -68,7 +69,7 @@ namespace NzbDrone.Core.Notifications.Emby
                 request = BuildRequest(path, settings);
             }
 
-            request.Method = HttpMethod.POST;
+            request.Method = HttpMethod.Post;
 
             ProcessRequest(request, settings);
         }
@@ -105,7 +106,7 @@ namespace NzbDrone.Core.Notifications.Emby
         {
             var path = "/Library/MediaFolders";
             var request = BuildRequest(path, settings);
-            request.Method = HttpMethod.GET;
+            request.Method = HttpMethod.Get;
 
             var response = ProcessRequest(request, settings);
 

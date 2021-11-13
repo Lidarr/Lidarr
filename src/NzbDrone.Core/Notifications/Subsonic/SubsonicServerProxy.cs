@@ -1,4 +1,5 @@
 using System.IO;
+using System.Net.Http;
 using System.Xml.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -36,7 +37,7 @@ namespace NzbDrone.Core.Notifications.Subsonic
         public void Notify(SubsonicSettings settings, string message)
         {
             var resource = "addChatMessage";
-            var request = GetSubsonicServerRequest(resource, HttpMethod.GET, settings);
+            var request = GetSubsonicServerRequest(resource, HttpMethod.Get, settings);
             request.AddQueryParam("message", message);
 
             var response = _httpClient.Execute(request.Build());
@@ -48,7 +49,7 @@ namespace NzbDrone.Core.Notifications.Subsonic
         public void Update(SubsonicSettings settings)
         {
             var resource = "startScan";
-            var request = GetSubsonicServerRequest(resource, HttpMethod.GET, settings);
+            var request = GetSubsonicServerRequest(resource, HttpMethod.Get, settings);
             var response = _httpClient.Execute(request.Build());
 
             _logger.Trace("Update response: {0}", response.Content);
@@ -57,7 +58,7 @@ namespace NzbDrone.Core.Notifications.Subsonic
 
         public string Version(SubsonicSettings settings)
         {
-            var request = GetSubsonicServerRequest("ping", HttpMethod.GET, settings);
+            var request = GetSubsonicServerRequest("ping", HttpMethod.Get, settings);
             var response = _httpClient.Execute(request.Build());
 
             _logger.Trace("Version response: {0}", response.Content);

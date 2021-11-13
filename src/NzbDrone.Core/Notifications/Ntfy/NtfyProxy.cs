@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Net;
-
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -118,7 +117,7 @@ namespace NzbDrone.Core.Notifications.Ntfy
 
                 if (!settings.UserName.IsNullOrWhiteSpace() && !settings.Password.IsNullOrWhiteSpace())
                 {
-                    request.AddBasicAuthentication(settings.UserName, settings.Password);
+                    request.Credentials = new BasicNetworkCredential(settings.UserName, settings.Password);
                 }
 
                 _httpClient.Execute(request);

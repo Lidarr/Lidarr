@@ -7,17 +7,21 @@ using MailKit.Security;
 using MimeKit;
 using NLog;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Http.Dispatchers;
+using NzbDrone.Core.Security;
 
 namespace NzbDrone.Core.Notifications.Email
 {
     public class Email : NotificationBase<EmailSettings>
     {
+        private readonly ICertificateValidationService _certificateValidationService;
         private readonly Logger _logger;
 
         public override string Name => "Email";
 
-        public Email(Logger logger)
+        public Email(ICertificateValidationService certificateValidationService, Logger logger)
         {
+            _certificateValidationService = certificateValidationService;
             _logger = logger;
         }
 
@@ -66,23 +70,6 @@ namespace NzbDrone.Core.Notifications.Email
             failures.AddIfNotNull(Test(Settings));
 
             return new ValidationResult(failures);
-        }
-
-        public ValidationFailure Test(EmailSettings settings)
-        {
-            const string body = "Success! You have properly configured your email notification settings";
-
-            try
-            {
-                SendEmail(settings, "Lidarr - Test Notification", body);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Unable to send test email");
-                return new ValidationFailure("Server", "Unable to send test email");
-            }
-
-            return null;
         }
 
         private void SendEmail(EmailSettings settings, string subject, string body, bool htmlBody = false)
@@ -137,6 +124,8 @@ namespace NzbDrone.Core.Notifications.Email
                     }
                 }
 
+                client.ServerCertificateValidationCallback = _certificateValidationService.ShouldByPassValidationError;
+
                 _logger.Debug("Connecting to mail server");
 
                 client.Connect(settings.Server, settings.Port, serverOption);
@@ -158,6 +147,23 @@ namespace NzbDrone.Core.Notifications.Email
 
                 _logger.Debug("Disconnecting from mail server");
             }
+        }
+
+        public ValidationFailure Test(EmailSettings settings)
+        {
+            const string body = "Success! You have properly configured your email notification settings";
+
+            try
+            {
+                SendEmail(settings, "Sonarr - Test Notification", body);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Unable to send test email");
+                return new ValidationFailure("Server", "Unable to send test email");
+            }
+
+            return null;
         }
 
         private MailboxAddress ParseAddress(string type, string address)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Xml;
 using System.Xml.Linq;
 using NLog;
@@ -50,7 +51,7 @@ namespace NzbDrone.Core.Indexers.Headphones
 
             var request = new HttpRequest(url, HttpAccept.Rss);
 
-            request.AddBasicAuthentication(indexerSettings.Username, indexerSettings.Password);
+            request.Credentials = new BasicNetworkCredential(indexerSettings.Username, indexerSettings.Password);
 
             HttpResponse response;
 

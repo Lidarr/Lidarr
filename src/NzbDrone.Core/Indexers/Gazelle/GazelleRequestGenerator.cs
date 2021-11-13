@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
@@ -71,7 +72,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
             };
 
             indexRequestBuilder.SetCookies(cookies);
-            indexRequestBuilder.Method = HttpMethod.POST;
+            indexRequestBuilder.Method = HttpMethod.Post;
             indexRequestBuilder.Resource("ajax.php?action=index");
 
             var authIndexRequest = indexRequestBuilder
@@ -92,7 +93,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                 LogResponseContent = true
             };
 
-            requestBuilder.Method = HttpMethod.POST;
+            requestBuilder.Method = HttpMethod.Post;
             requestBuilder.Resource("login.php");
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
