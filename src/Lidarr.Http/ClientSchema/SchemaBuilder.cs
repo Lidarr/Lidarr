@@ -103,7 +103,8 @@ namespace Lidarr.Http.ClientSchema
                         Order = fieldAttribute.Order,
                         Advanced = fieldAttribute.Advanced,
                         Type = fieldAttribute.Type.ToString().FirstCharToLower(),
-                        Section = fieldAttribute.Section
+                        Section = fieldAttribute.Section,
+                        Placeholder = fieldAttribute.Placeholder
                     };
 
                     if (fieldAttribute.Type == FieldType.Select || fieldAttribute.Type == FieldType.TagSelect)
