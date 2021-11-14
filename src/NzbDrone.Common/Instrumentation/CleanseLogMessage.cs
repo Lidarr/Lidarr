@@ -11,7 +11,7 @@ namespace NzbDrone.Common.Instrumentation
         private static readonly Regex[] CleansingRules = new[]
             {
                 // Url
-                new Regex(@"(?<=[?&: ;])(apikey|token|pass(?:key|wd)?|auth|authkey|user|u?id|api|[a-z_]*apikey|refresh_token|account|pwd)=(?<secret>[^&=]+?)(?= |&|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                new Regex(@"(?<=[?&: ;])(apikey|(?:access[-_]?)?token|pass(?:key|wd)?|auth|authkey|user|u?id|api|[a-z_]*apikey|refresh_token|account|pwd)=(?<secret>[^&=]+?)(?= |&|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@"(?<=[?& ])[^=]*?(username|passwo?rd)=(?<secret>[^&=]+?)(?= |&|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@"torrentleech\.org/(?!rss)(?<secret>[0-9a-z]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@"torrentleech\.org/rss/download/[0-9]+/(?<secret>[0-9a-z]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
