@@ -1,22 +1,18 @@
-import $ from 'jquery';
+import createAjaxRequest from 'Utilities/createAjaxRequest';
 
 function getTranslations() {
   let localization = null;
   const ajaxOptions = {
     async: false,
-    type: 'GET',
-    global: false,
     dataType: 'json',
-    url: `${window.Lidarr.apiRoot}/localization`,
+    url: '/localization',
     success: function(data) {
       localization = data.Strings;
     }
   };
 
-  ajaxOptions.headers = ajaxOptions.headers || {};
-  ajaxOptions.headers['X-Api-Key'] = window.Lidarr.apiKey;
+  createAjaxRequest(ajaxOptions);
 
-  $.ajax(ajaxOptions);
   return localization;
 }
 
