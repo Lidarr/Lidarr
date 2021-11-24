@@ -6,12 +6,8 @@ namespace Lidarr.Api.V1.Config
     public class DownloadClientConfigResource : RestResource
     {
         public string DownloadClientWorkingFolders { get; set; }
-
         public bool EnableCompletedDownloadHandling { get; set; }
-        public bool RemoveCompletedDownloads { get; set; }
-
         public bool AutoRedownloadFailed { get; set; }
-        public bool RemoveFailedDownloads { get; set; }
     }
 
     public static class DownloadClientConfigResourceMapper
@@ -23,10 +19,7 @@ namespace Lidarr.Api.V1.Config
                 DownloadClientWorkingFolders = model.DownloadClientWorkingFolders,
 
                 EnableCompletedDownloadHandling = model.EnableCompletedDownloadHandling,
-                RemoveCompletedDownloads = model.RemoveCompletedDownloads,
-
-                AutoRedownloadFailed = model.AutoRedownloadFailed,
-                RemoveFailedDownloads = model.RemoveFailedDownloads
+                AutoRedownloadFailed = model.AutoRedownloadFailed
             };
         }
     }
