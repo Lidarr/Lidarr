@@ -70,8 +70,7 @@ namespace NzbDrone.Core.Download.Clients.Flood
         }
 
         public override string Name => "Flood";
-        public override ProviderMessage Message => new ProviderMessage("Lidarr is unable to remove torrents that have finished seeding when using Flood", ProviderMessageType.Warning);
-
+        public override ProviderMessage Message => new ProviderMessage("Lidarr will handle automatic removal of torrents based on the current seed criteria in Settings -> Indexers", ProviderMessageType.Info);
         protected override string AddFromTorrentFile(RemoteAlbum remoteAlbum, string hash, string filename, byte[] fileContent)
         {
             _proxy.AddTorrentByFile(Convert.ToBase64String(fileContent), HandleTags(remoteAlbum, Settings), Settings);
@@ -112,6 +111,8 @@ namespace NzbDrone.Core.Download.Clients.Flood
                     TotalSize = properties.SizeBytes,
                     SeedRatio = properties.Ratio,
                     Message = properties.Message,
+                    CanMoveFiles = false,
+                    CanBeRemoved = false,
                 };
 
                 if (properties.Eta > 0)
@@ -135,8 +136,6 @@ namespace NzbDrone.Core.Download.Clients.Flood
                 {
                     item.Status = DownloadItemStatus.Paused;
                 }
-
-                item.CanMoveFiles = item.CanBeRemoved = false;
 
                 items.Add(item);
             }
