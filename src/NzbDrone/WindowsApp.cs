@@ -16,21 +16,23 @@ namespace NzbDrone
 
         public static void Main(string[] args)
         {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.SetHighDpiMode(HighDpiMode.SystemAware);
+
             try
             {
                 var startupArgs = new StartupContext(args);
 
                 NzbDroneLogger.Register(startupArgs, false, true);
 
-                Bootstrap.Start(args, e =>
-                {
-                    e.ConfigureServices((_, s) => s.AddSingleton<IHostedService, SystemTrayApp>());
-                });
+                Bootstrap.Start(args, e => { e.ConfigureServices((_, s) => s.AddSingleton<IHostedService, SystemTrayApp>()); });
             }
             catch (Exception e)
             {
-                Logger.Fatal(e, "EPIC FAIL");
-                MessageBox.Show($"{e.GetType().Name}: {e.Message}", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error, caption: "Epic Fail!");
+                Logger.Fatal(e, "EPIC FAIL: " + e.Message);
+                var message = string.Format("{0}: {1}", e.GetType().Name, e.ToString());
+                MessageBox.Show(text: message, buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error, caption: "Epic Fail!");
             }
         }
     }
