@@ -8,11 +8,13 @@
 }
 
 .artistName {
-  flex: 0 0 300px;
+  @add-mixin truncate;
+
+  flex: 0 1 600px;
 }
 
 .foreignId {
-  flex: 0 0 400px;
+  flex: 0 0 290px;
 }
 
 .actions {
