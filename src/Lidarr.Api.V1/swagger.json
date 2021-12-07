@@ -2,11 +2,30 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Lidarr",
-    "description": "Lidarr API docs",
     "version": "1.0.0",
     "contact": {
       "url": "https://lidarr.audio"
-    },
+     },
+    "description": "The way users should interact with Lidarr programatically. To utilize any of these endpoints you will need a few pieces of information:\n\nex: localhost:8686/api/v1/artist?apiKey={key_here}\n\n* url: localhost, 10.1.0.1, 192.168.1.1, etc\n* port: 8686 (unless you modify it)\n* apiKey: Located in Settings > General > Security"
+  },
+  "servers": [
+    {
+      "url": "{protocol}://{hostPath}/api/v1",
+      "variables": {
+        "protocol": {
+          "enum": [
+            "https",
+            "http"
+          ],
+          "default": "https"
+        },
+        "hostPath": {
+          "default": "localhost:8686",
+          "description": "Your Lidarr Server URL"
+        }
+      }
+    }
+  ],
   },
   "paths": {
     "/api/v1/album": {
