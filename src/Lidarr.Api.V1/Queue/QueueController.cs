@@ -59,9 +59,9 @@ namespace Lidarr.Api.V1.Queue
         }
 
         [RestDeleteById]
-        public void RemoveAction(int id, bool removeFromClient = true, bool blacklist = false, bool skipReDownload = false)
+        public void RemoveAction(int id, bool removeFromClient = true, bool blocklist = false, bool skipReDownload = false)
         {
-            var trackedDownload = Remove(id, removeFromClient, blacklist, skipReDownload);
+            var trackedDownload = Remove(id, removeFromClient, blocklist, skipReDownload);
 
             if (trackedDownload != null)
             {
@@ -70,13 +70,13 @@ namespace Lidarr.Api.V1.Queue
         }
 
         [HttpDelete("bulk")]
-        public object RemoveMany([FromBody] QueueBulkResource resource, [FromQuery] bool removeFromClient = true, [FromQuery] bool blacklist = false, [FromQuery] bool skipReDownload = false)
+        public object RemoveMany([FromBody] QueueBulkResource resource, [FromQuery] bool removeFromClient = true, [FromQuery] bool blocklist = false, [FromQuery] bool skipReDownload = false)
         {
             var trackedDownloadIds = new List<string>();
 
             foreach (var id in resource.Ids)
             {
-                var trackedDownload = Remove(id, removeFromClient, blacklist, skipReDownload);
+                var trackedDownload = Remove(id, removeFromClient, blocklist, skipReDownload);
 
                 if (trackedDownload != null)
                 {
@@ -191,7 +191,7 @@ namespace Lidarr.Api.V1.Queue
             }
         }
 
-        private TrackedDownload Remove(int id, bool removeFromClient, bool blacklist, bool skipReDownload)
+        private TrackedDownload Remove(int id, bool removeFromClient, bool blocklist, bool skipReDownload)
         {
             var pendingRelease = _pendingReleaseService.FindPendingQueueItem(id);
 
@@ -221,12 +221,12 @@ namespace Lidarr.Api.V1.Queue
                 downloadClient.RemoveItem(trackedDownload.DownloadItem.DownloadId, true);
             }
 
-            if (blacklist)
+            if (blocklist)
             {
                 _failedDownloadService.MarkAsFailed(trackedDownload.DownloadItem.DownloadId, skipReDownload);
             }
 
-            if (!removeFromClient && !blacklist)
+            if (!removeFromClient && !blocklist)
             {
                 if (!_ignoredDownloadService.IgnoreDownload(trackedDownload))
                 {
