@@ -18,7 +18,7 @@ namespace Lidarr.Api.V1.Blocklist
         }
 
         [HttpGet]
-        public PagingResource<BlocklistResource> GetBlacklist()
+        public PagingResource<BlocklistResource> GetBlocklist()
         {
             var pagingResource = Request.ReadPagingResourceFromRequest<BlocklistResource>();
             var pagingSpec = pagingResource.MapToPagingSpec<BlocklistResource, NzbDrone.Core.Blocklisting.Blocklist>("date", SortDirection.Descending);
