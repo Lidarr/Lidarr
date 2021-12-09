@@ -612,6 +612,8 @@
     "TrackTitle": "Track Title",
     "Type": "Type",
     "UILanguage": "UI Language",
+    "UILanguageHelpText": "Language that Lidarr will use for UI",
+    "UILanguageHelpTextWarning": "Browser Reload Required",
     "UISettings": "UI Settings",
     "UnableToAddANewDownloadClientPleaseTryAgain": "Unable to add a new download client, please try again.",
     "UnableToAddANewImportListExclusionPleaseTryAgain": "Unable to add a new import list exclusion, please try again.",
