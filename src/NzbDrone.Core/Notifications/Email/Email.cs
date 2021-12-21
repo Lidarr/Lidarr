@@ -52,6 +52,13 @@ namespace NzbDrone.Core.Notifications.Email
             SendEmail(Settings, IMPORT_FAILURE_TITLE_BRANDED, message.Message);
         }
 
+        public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
+        {
+            var body = $"{updateMessage.Message}";
+
+            SendEmail(Settings, APPLICATION_UPDATE_TITLE_BRANDED, body);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();

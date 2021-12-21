@@ -11,6 +11,7 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.ThingiProvider;
+using NzbDrone.Core.Update.History.Events;
 
 namespace NzbDrone.Core.Notifications
 {
@@ -23,7 +24,8 @@ namespace NzbDrone.Core.Notifications
           IHandle<AlbumImportIncompleteEvent>,
           IHandle<TrackFileRetaggedEvent>,
           IHandleAsync<RenameCompletedEvent>,
-          IHandleAsync<HealthCheckCompleteEvent>
+          IHandleAsync<HealthCheckCompleteEvent>,
+          IHandle<UpdateInstalledEvent>
     {
         private readonly INotificationFactory _notificationFactory;
         private readonly Logger _logger;
@@ -75,7 +77,7 @@ namespace NzbDrone.Core.Notifications
         {
             return string.Format("{0}:\n{1}",
                                  trackFile.Path,
-                                 string.Join("\n", diff.Select(x => $"{x.Key}: {FormatMissing(x.Value.Item1)} → {FormatMissing(x.Value.Item2)}")));
+                                 string.Join("\n", diff.Select(x => $"{x.Key}: {FormatMissing(x.Value.Item1)} ? {FormatMissing(x.Value.Item2)}")));
         }
 
         private bool ShouldHandleArtist(ProviderDefinition definition, Artist artist)
@@ -271,6 +273,26 @@ namespace NzbDrone.Core.Notifications
                 if (ShouldHandleArtist(notification.Definition, message.Artist))
                 {
                     notification.OnTrackRetag(retagMessage);
+                }
+            }
+        }
+
+        public void Handle(UpdateInstalledEvent message)
+        {
+            var updateMessage = new ApplicationUpdateMessage();
+            updateMessage.Message = $"Lidarr updated from {message.PreviousVerison.ToString()} to {message.NewVersion.ToString()}";
+            updateMessage.PreviousVersion = message.PreviousVerison;
+            updateMessage.NewVersion = message.NewVersion;
+
+            foreach (var notification in _notificationFactory.OnApplicationUpdateEnabled())
+            {
+                try
+                {
+                    notification.OnApplicationUpdate(updateMessage);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "Unable to send OnApplicationUpdate notification to: " + notification.Definition.Name);
                 }
             }
         }

@@ -155,6 +155,18 @@ namespace NzbDrone.Core.Notifications.CustomScript
             ExecuteScript(environmentVariables);
         }
 
+        public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
+        {
+            var environmentVariables = new StringDictionary();
+
+            environmentVariables.Add("Lidarr_EventType", "ApplicationUpdate");
+            environmentVariables.Add("Lidarr_Update_Message", updateMessage.Message);
+            environmentVariables.Add("Lidarr_Update_NewVersion", updateMessage.NewVersion.ToString());
+            environmentVariables.Add("Lidarr_Update_PreviousVersion", updateMessage.PreviousVersion.ToString());
+
+            ExecuteScript(environmentVariables);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();
