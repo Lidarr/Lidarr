@@ -63,6 +63,7 @@ class Notification extends Component {
       onDownloadFailure,
       onImportFailure,
       onTrackRetag,
+      onApplicationUpdate,
       supportsOnGrab,
       supportsOnReleaseImport,
       supportsOnUpgrade,
@@ -70,7 +71,8 @@ class Notification extends Component {
       supportsOnHealthIssue,
       supportsOnDownloadFailure,
       supportsOnImportFailure,
-      supportsOnTrackRetag
+      supportsOnTrackRetag,
+      supportsOnApplicationUpdate
     } = this.props;
 
     return (
@@ -86,62 +88,69 @@ class Notification extends Component {
         {
           supportsOnGrab && onGrab &&
             <Label kind={kinds.SUCCESS}>
-              On Grab
+              {translate('OnGrab')}
             </Label>
         }
 
         {
           supportsOnReleaseImport && onReleaseImport &&
             <Label kind={kinds.SUCCESS}>
-              On Release Import
+              {translate('OnReleaseImport')}
             </Label>
         }
 
         {
           supportsOnUpgrade && onReleaseImport && onUpgrade &&
             <Label kind={kinds.SUCCESS}>
-              On Upgrade
+              {translate('OnUpgrade')}
             </Label>
         }
 
         {
           supportsOnRename && onRename &&
             <Label kind={kinds.SUCCESS}>
-              On Rename
+              {translate('OnRename')}
             </Label>
         }
 
         {
           supportsOnTrackRetag && onTrackRetag &&
             <Label kind={kinds.SUCCESS}>
-              On Track Tag Update
+              {translate('OnTrackRetag')}
             </Label>
         }
 
         {
           supportsOnHealthIssue && onHealthIssue &&
             <Label kind={kinds.SUCCESS}>
-              On Health Issue
+              {translate('OnHealthIssue')}
             </Label>
         }
 
         {
           supportsOnDownloadFailure && onDownloadFailure &&
             <Label kind={kinds.SUCCESS} >
-              On Download Failure
+              {translate('OnDownloadFailure')}
             </Label>
         }
 
         {
           supportsOnImportFailure && onImportFailure &&
             <Label kind={kinds.SUCCESS} >
-              On Import Failure
+              {translate('OnImportFailure')}
+            </Label>
+        }
+
+        {
+          supportsOnApplicationUpdate && onApplicationUpdate &&
+            <Label kind={kinds.SUCCESS} >
+              {translate('OnApplicationUpdate')}
             </Label>
         }
 
         {
           !onGrab && !onReleaseImport && !onRename && !onTrackRetag &&
-            !onHealthIssue && !onDownloadFailure && !onImportFailure &&
+            !onHealthIssue && !onDownloadFailure && !onImportFailure && !onApplicationUpdate &&
               <Label
                 kind={kinds.DISABLED}
                 outline={true}
@@ -182,6 +191,7 @@ Notification.propTypes = {
   onDownloadFailure: PropTypes.bool.isRequired,
   onImportFailure: PropTypes.bool.isRequired,
   onTrackRetag: PropTypes.bool.isRequired,
+  onApplicationUpdate: PropTypes.bool.isRequired,
   supportsOnGrab: PropTypes.bool.isRequired,
   supportsOnReleaseImport: PropTypes.bool.isRequired,
   supportsOnUpgrade: PropTypes.bool.isRequired,
@@ -190,6 +200,7 @@ Notification.propTypes = {
   supportsOnDownloadFailure: PropTypes.bool.isRequired,
   supportsOnImportFailure: PropTypes.bool.isRequired,
   supportsOnTrackRetag: PropTypes.bool.isRequired,
+  supportsOnApplicationUpdate: PropTypes.bool.isRequired,
   onConfirmDeleteNotification: PropTypes.func.isRequired
 };
 

@@ -44,6 +44,11 @@ namespace NzbDrone.Core.Notifications.SendGrid
             _proxy.SendNotification(IMPORT_FAILURE_TITLE, message.Message, Settings);
         }
 
+        public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
+        {
+            _proxy.SendNotification(APPLICATION_UPDATE_TITLE, updateMessage.Message, Settings);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();

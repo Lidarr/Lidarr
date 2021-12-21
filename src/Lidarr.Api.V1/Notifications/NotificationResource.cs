@@ -13,6 +13,7 @@ namespace Lidarr.Api.V1.Notifications
         public bool OnDownloadFailure { get; set; }
         public bool OnImportFailure { get; set; }
         public bool OnTrackRetag { get; set; }
+        public bool OnApplicationUpdate { get; set; }
         public bool SupportsOnGrab { get; set; }
         public bool SupportsOnReleaseImport { get; set; }
         public bool SupportsOnUpgrade { get; set; }
@@ -22,6 +23,7 @@ namespace Lidarr.Api.V1.Notifications
         public bool SupportsOnDownloadFailure { get; set; }
         public bool SupportsOnImportFailure { get; set; }
         public bool SupportsOnTrackRetag { get; set; }
+        public bool SupportsOnApplicationUpdate { get; set; }
         public string TestCommand { get; set; }
     }
 
@@ -44,6 +46,7 @@ namespace Lidarr.Api.V1.Notifications
             resource.OnDownloadFailure = definition.OnDownloadFailure;
             resource.OnImportFailure = definition.OnImportFailure;
             resource.OnTrackRetag = definition.OnTrackRetag;
+            resource.OnApplicationUpdate = definition.OnApplicationUpdate;
             resource.SupportsOnGrab = definition.SupportsOnGrab;
             resource.SupportsOnReleaseImport = definition.SupportsOnReleaseImport;
             resource.SupportsOnUpgrade = definition.SupportsOnUpgrade;
@@ -53,6 +56,7 @@ namespace Lidarr.Api.V1.Notifications
             resource.SupportsOnDownloadFailure = definition.SupportsOnDownloadFailure;
             resource.SupportsOnImportFailure = definition.SupportsOnImportFailure;
             resource.SupportsOnTrackRetag = definition.SupportsOnTrackRetag;
+            resource.SupportsOnApplicationUpdate = definition.SupportsOnApplicationUpdate;
 
             return resource;
         }
@@ -74,6 +78,7 @@ namespace Lidarr.Api.V1.Notifications
             definition.OnDownloadFailure = resource.OnDownloadFailure;
             definition.OnImportFailure = resource.OnImportFailure;
             definition.OnTrackRetag = resource.OnTrackRetag;
+            definition.OnApplicationUpdate = resource.OnApplicationUpdate;
             definition.SupportsOnGrab = resource.SupportsOnGrab;
             definition.SupportsOnReleaseImport = resource.SupportsOnReleaseImport;
             definition.SupportsOnUpgrade = resource.SupportsOnUpgrade;
@@ -83,6 +88,7 @@ namespace Lidarr.Api.V1.Notifications
             definition.SupportsOnDownloadFailure = resource.SupportsOnDownloadFailure;
             definition.SupportsOnImportFailure = resource.SupportsOnImportFailure;
             definition.SupportsOnTrackRetag = resource.SupportsOnTrackRetag;
+            definition.SupportsOnApplicationUpdate = resource.SupportsOnApplicationUpdate;
 
             return definition;
         }

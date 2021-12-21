@@ -11,6 +11,7 @@ namespace NzbDrone.Core.Notifications
         void OnReleaseImport(AlbumDownloadMessage message);
         void OnRename(Artist artist);
         void OnHealthIssue(HealthCheck.HealthCheck healthCheck);
+        void OnApplicationUpdate(ApplicationUpdateMessage updateMessage);
         void OnDownloadFailure(DownloadFailedMessage message);
         void OnImportFailure(AlbumDownloadMessage message);
         void OnTrackRetag(TrackRetagMessage message);
@@ -20,6 +21,7 @@ namespace NzbDrone.Core.Notifications
         bool SupportsOnUpgrade { get; }
         bool SupportsOnRename { get; }
         bool SupportsOnHealthIssue { get; }
+        bool SupportsOnApplicationUpdate { get; }
         bool SupportsOnDownloadFailure { get; }
         bool SupportsOnImportFailure { get; }
         bool SupportsOnTrackRetag { get; }

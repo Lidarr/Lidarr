@@ -81,6 +81,11 @@ namespace NzbDrone.Core.Test.NotificationTests
             {
                 TestLogger.Info("OnTrackRetag was called");
             }
+
+            public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
+            {
+                TestLogger.Info("OnApplicationUpdate was called");
+            }
         }
 
         private class TestNotificationWithNoEvents : NotificationBase<TestSetting>
@@ -119,6 +124,7 @@ namespace NzbDrone.Core.Test.NotificationTests
             notification.SupportsOnDownloadFailure.Should().BeTrue();
             notification.SupportsOnImportFailure.Should().BeTrue();
             notification.SupportsOnTrackRetag.Should().BeTrue();
+            notification.SupportsOnApplicationUpdate.Should().BeTrue();
         }
 
         [Test]
@@ -134,6 +140,7 @@ namespace NzbDrone.Core.Test.NotificationTests
             notification.SupportsOnDownloadFailure.Should().BeFalse();
             notification.SupportsOnImportFailure.Should().BeFalse();
             notification.SupportsOnTrackRetag.Should().BeFalse();
+            notification.SupportsOnApplicationUpdate.Should().BeFalse();
         }
     }
 }
