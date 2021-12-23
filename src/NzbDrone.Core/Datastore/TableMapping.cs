@@ -34,6 +34,7 @@ using NzbDrone.Core.RemotePathMappings;
 using NzbDrone.Core.RootFolders;
 using NzbDrone.Core.Tags;
 using NzbDrone.Core.ThingiProvider;
+using NzbDrone.Core.Update.History;
 using static Dapper.SqlMapper;
 
 namespace NzbDrone.Core.Datastore
@@ -189,6 +190,7 @@ namespace NzbDrone.Core.Datastore
 
             Mapper.Entity<CustomFilter>("CustomFilters").RegisterModel();
             Mapper.Entity<ImportListExclusion>("ImportListExclusions").RegisterModel();
+            Mapper.Entity<UpdateHistory>().RegisterModel("UpdateHistory");
         }
 
         private static void RegisterMappers()
@@ -219,6 +221,7 @@ namespace NzbDrone.Core.Datastore
             SqlMapper.RemoveTypeMap(typeof(Guid?));
             SqlMapper.AddTypeHandler(new GuidConverter());
             SqlMapper.AddTypeHandler(new CommandConverter());
+            SqlMapper.AddTypeHandler(new SystemVersionConverter());
         }
 
         private static void RegisterProviderSettingConverter()

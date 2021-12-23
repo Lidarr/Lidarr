@@ -159,10 +159,10 @@ namespace NzbDrone.Core.Notifications.CustomScript
         {
             var environmentVariables = new StringDictionary();
 
-            environmentVariables.Add("Radarr_EventType", "ApplicationUpdate");
-            environmentVariables.Add("Radarr_Update_Message", updateMessage.Message);
-            environmentVariables.Add("Radarr_Update_NewVersion", updateMessage.NewVersion.ToString());
-            environmentVariables.Add("Radarr_Update_PreviousVersion", updateMessage.PreviousVersion.ToString());
+            environmentVariables.Add("Lidarr_EventType", "ApplicationUpdate");
+            environmentVariables.Add("Lidarr_Update_Message", updateMessage.Message);
+            environmentVariables.Add("Lidarr_Update_NewVersion", updateMessage.NewVersion.ToString());
+            environmentVariables.Add("Lidarr_Update_PreviousVersion", updateMessage.PreviousVersion.ToString());
 
             ExecuteScript(environmentVariables);
         }
