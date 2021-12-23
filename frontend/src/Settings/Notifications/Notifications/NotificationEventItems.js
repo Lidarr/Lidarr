@@ -20,6 +20,7 @@ function NotificationEventItems(props) {
     onUpgrade,
     onRename,
     onHealthIssue,
+    onApplicationUpdate,
     onDownloadFailure,
     onImportFailure,
     onTrackRetag,
@@ -27,6 +28,7 @@ function NotificationEventItems(props) {
     supportsOnReleaseImport,
     supportsOnUpgrade,
     supportsOnRename,
+    supportsOnApplicationUpdate,
     supportsOnHealthIssue,
     includeHealthWarnings,
     supportsOnDownloadFailure,
@@ -149,6 +151,17 @@ function NotificationEventItems(props) {
                 />
               </div>
           }
+
+          <div>
+            <FormInputGroup
+              type={inputTypes.CHECK}
+              name="onApplicationUpdate"
+              helpText={translate('OnApplicationUpdateHelpText')}
+              isDisabled={!supportsOnApplicationUpdate.value}
+              {...onApplicationUpdate}
+              onChange={onInputChange}
+            />
+          </div>
         </div>
       </div>
     </FormGroup>

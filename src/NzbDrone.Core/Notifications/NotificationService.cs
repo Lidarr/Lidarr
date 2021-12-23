@@ -11,6 +11,7 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.ThingiProvider;
+using NzbDrone.Core.Update.History.Events;
 
 namespace NzbDrone.Core.Notifications
 {
@@ -19,6 +20,7 @@ namespace NzbDrone.Core.Notifications
           IHandle<AlbumImportedEvent>,
           IHandle<ArtistRenamedEvent>,
           IHandle<HealthCheckFailedEvent>,
+          IHandle<UpdateInstalledEvent>,
           IHandle<DownloadFailedEvent>,
           IHandle<AlbumImportIncompleteEvent>,
           IHandle<TrackFileRetaggedEvent>,
@@ -110,6 +112,26 @@ namespace NzbDrone.Core.Notifications
             }
 
             return false;
+        }
+
+        public void Handle(UpdateInstalledEvent message)
+        {
+            var updateMessage = new ApplicationUpdateMessage();
+            updateMessage.Message = $"Lidarr updated from {message.PreviousVerison.ToString()} to {message.NewVersion.ToString()}";
+            updateMessage.PreviousVersion = message.PreviousVerison;
+            updateMessage.NewVersion = message.NewVersion;
+
+            foreach (var notification in _notificationFactory.OnApplicationUpdateEnabled())
+            {
+                try
+                {
+                    notification.OnApplicationUpdate(updateMessage);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "Unable to send OnApplicationUpdate notification to: " + notification.Definition.Name);
+                }
+            }
         }
 
         public void Handle(AlbumGrabbedEvent message)

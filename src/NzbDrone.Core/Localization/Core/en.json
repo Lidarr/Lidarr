@@ -375,6 +375,8 @@
     "NoTagsHaveBeenAddedYetAddTagsToLinkArtistsWithDelayProfilesRestrictionsOrNotificationsClickLinkTohttpswikiservarrcomlidarrsettingstagshereLinkToFindOutMoreAboutTagsInLidarr": "No tags have been added yet. Add tags to link artists with delay profiles, restrictions, or notifications. Click <Link to='https://wiki.servarr.com/lidarr/settings#tags'>here</Link> to find out more about tags in Lidarr.",
     "NotificationTriggers": "Notification Triggers",
     "NoUpdatesAreAvailable": "No updates are available",
+    "OnApplicationUpdate": "On Application Update",
+    "OnApplicationUpdateHelpText": "On Application Update",
     "OnDownloadFailureHelpText": "On Download Failure",
     "OnGrabHelpText": "On Grab",
     "OnHealthIssueHelpText": "On Health Issue",

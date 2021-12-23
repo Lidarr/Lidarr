@@ -31,6 +31,11 @@ namespace NzbDrone.Core.Notifications.Boxcar
             _proxy.SendNotification(HEALTH_ISSUE_TITLE, message.Message, Settings);
         }
 
+        public override void OnApplicationUpdate(ApplicationUpdateMessage message)
+        {
+            _proxy.SendNotification(APPLICATION_UPDATE_TITLE, message.Message, Settings);
+        }
+
         public override void OnDownloadFailure(DownloadFailedMessage message)
         {
             _proxy.SendNotification(DOWNLOAD_FAILURE_TITLE, message.Message, Settings);

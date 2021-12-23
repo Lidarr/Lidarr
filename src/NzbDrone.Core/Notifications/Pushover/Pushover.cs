@@ -31,6 +31,11 @@ namespace NzbDrone.Core.Notifications.Pushover
             _proxy.SendNotification(HEALTH_ISSUE_TITLE, healthCheck.Message, Settings);
         }
 
+        public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
+        {
+            _proxy.SendNotification(APPLICATION_UPDATE_TITLE, updateMessage.Message, Settings);
+        }
+
         public override void OnDownloadFailure(DownloadFailedMessage message)
         {
             _proxy.SendNotification(DOWNLOAD_FAILURE_TITLE, message.Message, Settings);

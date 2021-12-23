@@ -10,6 +10,7 @@ namespace Lidarr.Api.V1.Notifications
         public bool OnUpgrade { get; set; }
         public bool OnRename { get; set; }
         public bool OnHealthIssue { get; set; }
+        public bool OnApplicationUpdate { get; set; }
         public bool OnDownloadFailure { get; set; }
         public bool OnImportFailure { get; set; }
         public bool OnTrackRetag { get; set; }
@@ -18,6 +19,7 @@ namespace Lidarr.Api.V1.Notifications
         public bool SupportsOnUpgrade { get; set; }
         public bool SupportsOnRename { get; set; }
         public bool SupportsOnHealthIssue { get; set; }
+        public bool SupportsOnApplicationUpdate { get; set; }
         public bool IncludeHealthWarnings { get; set; }
         public bool SupportsOnDownloadFailure { get; set; }
         public bool SupportsOnImportFailure { get; set; }
@@ -49,7 +51,9 @@ namespace Lidarr.Api.V1.Notifications
             resource.SupportsOnUpgrade = definition.SupportsOnUpgrade;
             resource.SupportsOnRename = definition.SupportsOnRename;
             resource.SupportsOnHealthIssue = definition.SupportsOnHealthIssue;
+            resource.OnApplicationUpdate = definition.OnApplicationUpdate;
             resource.IncludeHealthWarnings = definition.IncludeHealthWarnings;
+            resource.SupportsOnApplicationUpdate = definition.SupportsOnApplicationUpdate;
             resource.SupportsOnDownloadFailure = definition.SupportsOnDownloadFailure;
             resource.SupportsOnImportFailure = definition.SupportsOnImportFailure;
             resource.SupportsOnTrackRetag = definition.SupportsOnTrackRetag;
@@ -71,6 +75,7 @@ namespace Lidarr.Api.V1.Notifications
             definition.OnUpgrade = resource.OnUpgrade;
             definition.OnRename = resource.OnRename;
             definition.OnHealthIssue = resource.OnHealthIssue;
+            definition.OnApplicationUpdate = resource.OnApplicationUpdate;
             definition.OnDownloadFailure = resource.OnDownloadFailure;
             definition.OnImportFailure = resource.OnImportFailure;
             definition.OnTrackRetag = resource.OnTrackRetag;
@@ -79,6 +84,7 @@ namespace Lidarr.Api.V1.Notifications
             definition.SupportsOnUpgrade = resource.SupportsOnUpgrade;
             definition.SupportsOnRename = resource.SupportsOnRename;
             definition.SupportsOnHealthIssue = resource.SupportsOnHealthIssue;
+            definition.SupportsOnApplicationUpdate = resource.SupportsOnApplicationUpdate;
             definition.IncludeHealthWarnings = resource.IncludeHealthWarnings;
             definition.SupportsOnDownloadFailure = resource.SupportsOnDownloadFailure;
             definition.SupportsOnImportFailure = resource.SupportsOnImportFailure;

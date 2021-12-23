@@ -15,6 +15,7 @@ namespace NzbDrone.Core.Notifications
         List<INotification> OnUpgradeEnabled();
         List<INotification> OnRenameEnabled();
         List<INotification> OnHealthIssueEnabled();
+        List<INotification> OnApplicationUpdateEnabled();
         List<INotification> OnDownloadFailureEnabled();
         List<INotification> OnImportFailureEnabled();
         List<INotification> OnTrackRetagEnabled();
@@ -52,6 +53,11 @@ namespace NzbDrone.Core.Notifications
             return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnHealthIssue).ToList();
         }
 
+        public List<INotification> OnApplicationUpdateEnabled()
+        {
+            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnApplicationUpdate).ToList();
+        }
+
         public List<INotification> OnDownloadFailureEnabled()
         {
             return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnDownloadFailure).ToList();
@@ -76,6 +82,7 @@ namespace NzbDrone.Core.Notifications
             definition.SupportsOnUpgrade = provider.SupportsOnUpgrade;
             definition.SupportsOnRename = provider.SupportsOnRename;
             definition.SupportsOnHealthIssue = provider.SupportsOnHealthIssue;
+            definition.SupportsOnApplicationUpdate = provider.SupportsOnApplicationUpdate;
             definition.SupportsOnDownloadFailure = provider.SupportsOnDownloadFailure;
             definition.SupportsOnImportFailure = provider.SupportsOnImportFailure;
             definition.SupportsOnTrackRetag = provider.SupportsOnTrackRetag;

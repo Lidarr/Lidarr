@@ -9,6 +9,7 @@ namespace NzbDrone.Core.Notifications
         public bool OnUpgrade { get; set; }
         public bool OnRename { get; set; }
         public bool OnHealthIssue { get; set; }
+        public bool OnApplicationUpdate { get; set; }
         public bool OnDownloadFailure { get; set; }
         public bool OnImportFailure { get; set; }
         public bool OnTrackRetag { get; set; }
@@ -18,10 +19,11 @@ namespace NzbDrone.Core.Notifications
         public bool SupportsOnRename { get; set; }
         public bool SupportsOnHealthIssue { get; set; }
         public bool IncludeHealthWarnings { get; set; }
+        public bool SupportsOnApplicationUpdate { get; set; }
         public bool SupportsOnDownloadFailure { get; set; }
         public bool SupportsOnImportFailure { get; set; }
         public bool SupportsOnTrackRetag { get; set; }
 
-        public override bool Enable => OnGrab || OnReleaseImport || (OnReleaseImport && OnUpgrade) || OnHealthIssue || OnDownloadFailure || OnImportFailure || OnTrackRetag;
+        public override bool Enable => OnGrab || OnReleaseImport || (OnReleaseImport && OnUpgrade) || OnHealthIssue || OnDownloadFailure || OnImportFailure || OnTrackRetag || OnApplicationUpdate;
     }
 }

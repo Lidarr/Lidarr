@@ -67,6 +67,11 @@ namespace NzbDrone.Core.Test.NotificationTests
                 TestLogger.Info("OnHealthIssue was called");
             }
 
+            public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
+            {
+                TestLogger.Info("OnApplicationUpdate was called");
+            }
+
             public override void OnDownloadFailure(DownloadFailedMessage message)
             {
                 TestLogger.Info("OnDownloadFailure was called");
@@ -116,6 +121,7 @@ namespace NzbDrone.Core.Test.NotificationTests
             notification.SupportsOnUpgrade.Should().BeTrue();
             notification.SupportsOnRename.Should().BeTrue();
             notification.SupportsOnHealthIssue.Should().BeTrue();
+            notification.SupportsOnApplicationUpdate.Should().BeTrue();
             notification.SupportsOnDownloadFailure.Should().BeTrue();
             notification.SupportsOnImportFailure.Should().BeTrue();
             notification.SupportsOnTrackRetag.Should().BeTrue();
@@ -131,6 +137,7 @@ namespace NzbDrone.Core.Test.NotificationTests
             notification.SupportsOnUpgrade.Should().BeFalse();
             notification.SupportsOnRename.Should().BeFalse();
             notification.SupportsOnHealthIssue.Should().BeFalse();
+            notification.SupportsOnApplicationUpdate.Should().BeFalse();
             notification.SupportsOnDownloadFailure.Should().BeFalse();
             notification.SupportsOnImportFailure.Should().BeFalse();
             notification.SupportsOnTrackRetag.Should().BeFalse();

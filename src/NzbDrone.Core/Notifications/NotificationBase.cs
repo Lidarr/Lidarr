@@ -12,6 +12,7 @@ namespace NzbDrone.Core.Notifications
         protected const string ALBUM_GRABBED_TITLE = "Album Grabbed";
         protected const string ALBUM_DOWNLOADED_TITLE = "Album Downloaded";
         protected const string HEALTH_ISSUE_TITLE = "Health Check Failure";
+        protected const string APPLICATION_UPDATE_TITLE = "Application Updated";
         protected const string DOWNLOAD_FAILURE_TITLE = "Download Failed";
         protected const string IMPORT_FAILURE_TITLE = "Import Failed";
         protected const string TRACK_RETAGGED_TITLE = "Track File Tags Updated";
@@ -52,6 +53,10 @@ namespace NzbDrone.Core.Notifications
         {
         }
 
+        public virtual void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
+        {
+        }
+
         public virtual void OnDownloadFailure(DownloadFailedMessage message)
         {
         }
@@ -73,6 +78,7 @@ namespace NzbDrone.Core.Notifications
         public bool SupportsOnReleaseImport => HasConcreteImplementation("OnReleaseImport");
         public bool SupportsOnUpgrade => SupportsOnReleaseImport;
         public bool SupportsOnHealthIssue => HasConcreteImplementation("OnHealthIssue");
+        public bool SupportsOnApplicationUpdate => HasConcreteImplementation("OnApplicationUpdate");
         public bool SupportsOnDownloadFailure => HasConcreteImplementation("OnDownloadFailure");
         public bool SupportsOnImportFailure => HasConcreteImplementation("OnImportFailure");
         public bool SupportsOnTrackRetag => HasConcreteImplementation("OnTrackRetag");

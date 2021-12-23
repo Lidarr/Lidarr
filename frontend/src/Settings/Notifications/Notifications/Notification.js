@@ -60,6 +60,7 @@ class Notification extends Component {
       onUpgrade,
       onRename,
       onHealthIssue,
+      onApplicationUpdate,
       onDownloadFailure,
       onImportFailure,
       onTrackRetag,
@@ -70,7 +71,8 @@ class Notification extends Component {
       supportsOnHealthIssue,
       supportsOnDownloadFailure,
       supportsOnImportFailure,
-      supportsOnTrackRetag
+      supportsOnTrackRetag,
+      supportsOnApplicationUpdate
     } = this.props;
 
     return (
@@ -126,6 +128,13 @@ class Notification extends Component {
         }
 
         {
+          supportsOnApplicationUpdate && onApplicationUpdate &&
+            <Label kind={kinds.SUCCESS} >
+              {translate('onApplicationUpdate')}
+            </Label>
+        }
+
+        {
           supportsOnDownloadFailure && onDownloadFailure &&
             <Label kind={kinds.SUCCESS} >
               On Download Failure
@@ -141,7 +150,7 @@ class Notification extends Component {
 
         {
           !onGrab && !onReleaseImport && !onRename && !onTrackRetag &&
-            !onHealthIssue && !onDownloadFailure && !onImportFailure &&
+            !onHealthIssue && !onApplicationUpdate && !onDownloadFailure && !onImportFailure &&
               <Label
                 kind={kinds.DISABLED}
                 outline={true}
@@ -179,6 +188,7 @@ Notification.propTypes = {
   onUpgrade: PropTypes.bool.isRequired,
   onRename: PropTypes.bool.isRequired,
   onHealthIssue: PropTypes.bool.isRequired,
+  onApplicationUpdate: PropTypes.bool.isRequired,
   onDownloadFailure: PropTypes.bool.isRequired,
   onImportFailure: PropTypes.bool.isRequired,
   onTrackRetag: PropTypes.bool.isRequired,
@@ -187,6 +197,7 @@ Notification.propTypes = {
   supportsOnUpgrade: PropTypes.bool.isRequired,
   supportsOnRename: PropTypes.bool.isRequired,
   supportsOnHealthIssue: PropTypes.bool.isRequired,
+  supportsOnApplicationUpdate: PropTypes.bool.isRequired,
   supportsOnDownloadFailure: PropTypes.bool.isRequired,
   supportsOnImportFailure: PropTypes.bool.isRequired,
   supportsOnTrackRetag: PropTypes.bool.isRequired,
