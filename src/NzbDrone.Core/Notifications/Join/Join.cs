@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Notifications.Join
 
         public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
         {
-            _proxy.SendNotification(APPLICATION_UPDATE_TITLE_BRANDED, updateMessage.Message, Settings);
+            _proxy.SendNotification(APPLICATION_UPDATE_TITLE, updateMessage.Message, Settings);
         }
 
         public override ValidationResult Test()

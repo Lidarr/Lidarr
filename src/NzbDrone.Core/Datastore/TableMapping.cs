@@ -190,7 +190,7 @@ namespace NzbDrone.Core.Datastore
 
             Mapper.Entity<CustomFilter>("CustomFilters").RegisterModel();
             Mapper.Entity<ImportListExclusion>("ImportListExclusions").RegisterModel();
-            Mapper.Entity<UpdateHistory>().RegisterModel("UpdateHistory");
+            Mapper.Entity<UpdateHistory>("UpdateHistory").RegisterModel();
         }
 
         private static void RegisterMappers()
@@ -221,7 +221,6 @@ namespace NzbDrone.Core.Datastore
             SqlMapper.RemoveTypeMap(typeof(Guid?));
             SqlMapper.AddTypeHandler(new GuidConverter());
             SqlMapper.AddTypeHandler(new CommandConverter());
-            SqlMapper.AddTypeHandler(new SystemVersionConverter());
         }
 
         private static void RegisterProviderSettingConverter()

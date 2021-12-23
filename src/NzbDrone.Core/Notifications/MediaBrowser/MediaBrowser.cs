@@ -58,7 +58,7 @@ namespace NzbDrone.Core.Notifications.Emby
         {
             if (Settings.Notify)
             {
-                _mediaBrowserService.Notify(Settings, APPLICATION_UPDATE_TITLE_BRANDED, updateMessage.Message);
+                _mediaBrowserService.Notify(Settings, APPLICATION_UPDATE_TITLE, updateMessage.Message);
             }
         }
 

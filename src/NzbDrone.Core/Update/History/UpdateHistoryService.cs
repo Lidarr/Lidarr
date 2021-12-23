@@ -14,14 +14,14 @@ namespace NzbDrone.Core.Update.History
         List<UpdateHistory> InstalledSince(DateTime dateTime);
     }
 
-    public class UpdateHistoryService : IUpdateHistoryService, IHandle<ApplicationStartedEvent>, IHandleAsync<ApplicationStartedEvent, Logger logger>
+    public class UpdateHistoryService : Logger, IUpdateHistoryService, IHandle<ApplicationStartedEvent>, IHandleAsync<ApplicationStartedEvent>
     {
         private readonly IUpdateHistoryRepository _repository;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
         private Version _prevVersion;
 
-        public UpdateHistoryService(IUpdateHistoryRepository repository, IEventAggregator eventAggregator)
+        public UpdateHistoryService(IUpdateHistoryRepository repository, IEventAggregator eventAggregator, Logger logger)
         {
             _repository = repository;
             _eventAggregator = eventAggregator;

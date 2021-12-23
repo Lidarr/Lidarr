@@ -48,7 +48,7 @@ namespace NzbDrone.Core.Notifications.Xbmc
 
         public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
         {
-            Notify(Settings, APPLICATION_UPDATE_TITLE_BRANDED, updateMessage.Message);
+            Notify(Settings, APPLICATION_UPDATE_TITLE, updateMessage.Message);
         }
 
         public override void OnTrackRetag(TrackRetagMessage message)

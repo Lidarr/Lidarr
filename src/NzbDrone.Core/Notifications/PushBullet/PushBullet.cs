@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Notifications.PushBullet
 
         public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
         {
-            _proxy.SendNotification(APPLICATION_UPDATE_TITLE_BRANDED, updateMessage.Message, Settings);
+            _proxy.SendNotification(APPLICATION_UPDATE_TITLE, updateMessage.Message, Settings);
         }
 
         public override void OnDownloadFailure(DownloadFailedMessage message)

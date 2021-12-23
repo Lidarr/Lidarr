@@ -29,7 +29,6 @@ namespace NzbDrone.Common.Test
                 .GetServiceProvider();
 
             container.GetRequiredService<IAppFolderFactory>().Register();
-            container.Register<ILogDatabase>(new LogDatabase(null));
 
             Mocker.SetConstant<System.IServiceProvider>(container);
 

@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Notifications.Email
         {
             var body = $"{updateMessage.Message}";
 
-            SendEmail(Settings, APPLICATION_UPDATE_TITLE_BRANDED, body);
+            SendEmail(Settings, APPLICATION_UPDATE_TITLE, body);
         }
 
         public override void OnDownloadFailure(DownloadFailedMessage message)
