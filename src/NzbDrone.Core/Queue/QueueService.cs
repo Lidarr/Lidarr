@@ -92,14 +92,7 @@ namespace NzbDrone.Core.Queue
                 DownloadForced = downloadForced
             };
 
-            if (album != null)
-            {
-                queue.Id = HashConverter.GetHashInt31(string.Format("trackedDownload-{0}-album{1}", trackedDownload.DownloadItem.DownloadId, album.Id));
-            }
-            else
-            {
-                queue.Id = HashConverter.GetHashInt31(string.Format("trackedDownload-{0}", trackedDownload.DownloadItem.DownloadId));
-            }
+            queue.Id = HashConverter.GetHashInt31($"trackedDownload-{trackedDownload.DownloadClient}-{trackedDownload.DownloadItem.DownloadId}-album{album?.Id ?? 0}");
 
             if (queue.Timeleft.HasValue)
             {
