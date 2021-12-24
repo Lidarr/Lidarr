@@ -152,10 +152,10 @@ namespace NzbDrone.Core.Download.Clients.Aria2
             }
         }
 
-        public override void RemoveItem(string downloadId, bool deleteData)
+        public override void RemoveItem(DownloadClientItem item, bool deleteData)
         {
             // Aria2 doesn't support file deletion: https://github.com/aria2/aria2/issues/728
-            var hash = downloadId.ToLower();
+            var hash = item.DownloadId.ToLower();
             var aria2Item = _proxy.GetTorrents(Settings).FirstOrDefault(t => t.InfoHash?.ToLower() == hash);
 
             if (aria2Item == null)
@@ -187,7 +187,7 @@ namespace NzbDrone.Core.Download.Clients.Aria2
 
             if (deleteData)
             {
-                DeleteItemData(downloadId);
+                DeleteItemData(item);
             }
         }
 

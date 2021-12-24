@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Net;
+using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -22,6 +23,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
         protected string _completedDownloadFolder;
         protected string _blackholeFolder;
         protected string _filePath;
+        protected DownloadClientItem _downloadClientItem;
 
         [SetUp]
         public void Setup()
@@ -29,6 +31,12 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
             _completedDownloadFolder = @"c:\blackhole\completed".AsOsAgnostic();
             _blackholeFolder = @"c:\blackhole\nzb".AsOsAgnostic();
             _filePath = (@"c:\blackhole\nzb\" + _title + ".nzb").AsOsAgnostic();
+
+            _downloadClientItem = Builder<DownloadClientItem>
+                                  .CreateNew()
+                                  .With(d => d.DownloadId = "_Droned.S01E01.Pilot.1080p.WEB-DL-DRONE_0")
+                                  .With(d => d.OutputPath = new OsPath(Path.Combine(_completedDownloadFolder, _title)))
+                                  .Build();
 
             Mocker.SetConstant<IScanWatchFolder>(Mocker.Resolve<ScanWatchFolder>());
 
@@ -147,7 +155,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
                 .Setup(c => c.FileExists(It.IsAny<string>()))
                 .Returns(true);
 
-            Subject.RemoveItem("_Droned.S01E01.Pilot.1080p.WEB-DL-DRONE_0", true);
+            Subject.RemoveItem(_downloadClientItem, true);
 
             Mocker.GetMock<IDiskProvider>()
                 .Verify(c => c.DeleteFile(It.IsAny<string>()), Times.Once());
@@ -162,7 +170,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
                 .Setup(c => c.FolderExists(It.IsAny<string>()))
                 .Returns(true);
 
-            Subject.RemoveItem("_Droned.S01E01.Pilot.1080p.WEB-DL-DRONE_0", true);
+            Subject.RemoveItem(_downloadClientItem, true);
 
             Mocker.GetMock<IDiskProvider>()
                 .Verify(c => c.DeleteFolder(It.IsAny<string>(), true), Times.Once());
@@ -171,7 +179,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
         [Test]
         public void RemoveItem_should_ignore_if_unknown_item()
         {
-            Subject.RemoveItem("_Droned.S01E01.Pilot.1080p.WEB-DL-DRONE_0", true);
+            Subject.RemoveItem(_downloadClientItem, true);
 
             Mocker.GetMock<IDiskProvider>()
                 .Verify(c => c.DeleteFile(It.IsAny<string>()), Times.Never());
@@ -185,7 +193,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
         {
             GivenCompletedItem();
 
-            Assert.Throws<NotSupportedException>(() => Subject.RemoveItem("_Droned.S01E01.Pilot.1080p.WEB-DL-DRONE_0", false));
+            Assert.Throws<NotSupportedException>(() => Subject.RemoveItem(_downloadClientItem, false));
 
             Mocker.GetMock<IDiskProvider>()
                 .Verify(c => c.DeleteFile(It.IsAny<string>()), Times.Never());
