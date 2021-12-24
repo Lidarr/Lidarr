@@ -63,26 +63,26 @@ class Missing extends Component {
 
   getSelectedIds = () => {
     return getSelectedIds(this.state.selectedState);
-  }
+  };
 
   //
   // Listeners
 
   onSelectAllChange = ({ value }) => {
     this.setState(selectAll(this.state.selectedState, value));
-  }
+  };
 
   onSelectedChange = ({ id, value, shiftKey = false }) => {
     this.setState((state) => {
       return toggleSelected(state, this.props.items, id, value, shiftKey);
     });
-  }
+  };
 
   onSearchSelectedPress = () => {
     const selected = this.getSelectedIds();
 
     this.props.onSearchSelectedPress(selected);
-  }
+  };
 
   onToggleSelectedPress = () => {
     const albumIds = this.getSelectedIds();
@@ -91,28 +91,28 @@ class Missing extends Component {
       albumIds,
       monitored: !getMonitoredValue(this.props)
     });
-  }
+  };
 
   onSearchAllMissingPress = () => {
     this.setState({ isConfirmSearchAllMissingModalOpen: true });
-  }
+  };
 
   onSearchAllMissingConfirmed = () => {
     this.props.onSearchAllMissingPress();
     this.setState({ isConfirmSearchAllMissingModalOpen: false });
-  }
+  };
 
   onConfirmSearchAllMissingModalClose = () => {
     this.setState({ isConfirmSearchAllMissingModalOpen: false });
-  }
+  };
 
   onInteractiveImportPress = () => {
     this.setState({ isInteractiveImportModalOpen: true });
-  }
+  };
 
   onInteractiveImportModalClose = () => {
     this.setState({ isInteractiveImportModalOpen: false });
-  }
+  };
 
   //
   // Render

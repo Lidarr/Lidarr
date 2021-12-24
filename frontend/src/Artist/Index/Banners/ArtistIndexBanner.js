@@ -33,22 +33,22 @@ class ArtistIndexBanner extends Component {
 
   onEditArtistPress = () => {
     this.setState({ isEditArtistModalOpen: true });
-  }
+  };
 
   onEditArtistModalClose = () => {
     this.setState({ isEditArtistModalOpen: false });
-  }
+  };
 
   onDeleteArtistPress = () => {
     this.setState({
       isEditArtistModalOpen: false,
       isDeleteArtistModalOpen: true
     });
-  }
+  };
 
   onDeleteArtistModalClose = () => {
     this.setState({ isDeleteArtistModalOpen: false });
-  }
+  };
 
   //
   // Render

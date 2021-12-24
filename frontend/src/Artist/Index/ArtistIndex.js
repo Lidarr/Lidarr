@@ -91,7 +91,7 @@ class ArtistIndex extends Component {
 
   setScrollerRef = (ref) => {
     this.setState({ scroller: ref });
-  }
+  };
 
   setJumpBarItems() {
     const {
@@ -142,31 +142,31 @@ class ArtistIndex extends Component {
 
   onPosterOptionsPress = () => {
     this.setState({ isPosterOptionsModalOpen: true });
-  }
+  };
 
   onPosterOptionsModalClose = () => {
     this.setState({ isPosterOptionsModalOpen: false });
-  }
+  };
 
   onBannerOptionsPress = () => {
     this.setState({ isBannerOptionsModalOpen: true });
-  }
+  };
 
   onBannerOptionsModalClose = () => {
     this.setState({ isBannerOptionsModalOpen: false });
-  }
+  };
 
   onOverviewOptionsPress = () => {
     this.setState({ isOverviewOptionsModalOpen: true });
-  }
+  };
 
   onOverviewOptionsModalClose = () => {
     this.setState({ isOverviewOptionsModalOpen: false });
-  }
+  };
 
   onJumpBarItemPress = (jumpToCharacter) => {
     this.setState({ jumpToCharacter });
-  }
+  };
 
   //
   // Render

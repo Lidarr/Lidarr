@@ -21,7 +21,7 @@ class QualityDefinitionConnector extends Component {
 
   onTitleChange = ({ value }) => {
     this.props.setQualityDefinitionValue({ id: this.props.id, name: 'title', value });
-  }
+  };
 
   onSizeChange = ({ minSize, maxSize }) => {
     const {
@@ -37,7 +37,7 @@ class QualityDefinitionConnector extends Component {
     if (maxSize !== currentMaxSize) {
       this.props.setQualityDefinitionValue({ id, name: 'maxSize', value: maxSize });
     }
-  }
+  };
 
   //
   // Render

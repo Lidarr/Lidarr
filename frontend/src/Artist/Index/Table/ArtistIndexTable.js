@@ -71,7 +71,7 @@ class ArtistIndexTable extends Component {
         />
       </VirtualTableRow>
     );
-  }
+  };
 
   //
   // Render

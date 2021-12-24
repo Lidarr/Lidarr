@@ -24,11 +24,11 @@ class Metadata extends Component {
 
   onEditMetadataPress = () => {
     this.setState({ isEditMetadataModalOpen: true });
-  }
+  };
 
   onEditMetadataModalClose = () => {
     this.setState({ isEditMetadataModalOpen: false });
-  }
+  };
 
   //
   // Render

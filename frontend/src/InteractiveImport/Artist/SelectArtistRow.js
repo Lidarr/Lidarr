@@ -10,7 +10,7 @@ class SelectArtistRow extends Component {
 
   onPress = () => {
     this.props.onArtistSelect(this.props.id);
-  }
+  };
 
   //
   // Render

@@ -16,7 +16,7 @@ class PrimaryTypeItem extends Component {
     } = this.props;
 
     onMetadataPrimaryTypeItemAllowedChange(albumTypeId, value);
-  }
+  };
 
   //
   // Render

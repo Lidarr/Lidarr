@@ -82,11 +82,11 @@ class CalendarLinkModalContent extends Component {
       [name]: value,
       ...urls
     });
-  }
+  };
 
   onLinkFocus = (event) => {
     event.target.select();
-  }
+  };
 
   //
   // Render

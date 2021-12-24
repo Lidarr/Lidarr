@@ -43,7 +43,7 @@ class SelectQualityModalContentConnector extends Component {
     if (!this.props.isPopulated) {
       this.props.dispatchFetchQualityProfileSchema();
     }
-  }
+  };
 
   //
   // Listeners
@@ -66,7 +66,7 @@ class SelectQualityModalContentConnector extends Component {
     });
 
     this.props.onModalClose(true);
-  }
+  };
 
   //
   // Render

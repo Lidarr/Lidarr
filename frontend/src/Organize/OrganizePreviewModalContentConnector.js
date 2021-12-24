@@ -63,7 +63,7 @@ class OrganizePreviewModalContentConnector extends Component {
     });
 
     this.props.onModalClose();
-  }
+  };
 
   //
   // Render

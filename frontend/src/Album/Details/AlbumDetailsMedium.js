@@ -83,7 +83,7 @@ class AlbumDetailsMedium extends Component {
     } = this.props;
 
     this.props.onExpandPress(mediumNumber, !isExpanded);
-  }
+  };
 
   //
   // Render

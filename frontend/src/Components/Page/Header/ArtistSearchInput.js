@@ -40,12 +40,12 @@ class ArtistSearchInput extends Component {
 
   setAutosuggestRef = (ref) => {
     this._autosuggest = ref;
-  }
+  };
 
   focusInput = (event) => {
     event.preventDefault();
     this._autosuggest.input.focus();
-  }
+  };
 
   getSectionSuggestions(section) {
     return section.suggestions;
@@ -111,7 +111,7 @@ class ArtistSearchInput extends Component {
     }
 
     this.setState({ value: newValue });
-  }
+  };
 
   onKeyDown = (event) => {
     if (event.key !== 'Tab' && event.key !== 'Enter') {
@@ -147,11 +147,11 @@ class ArtistSearchInput extends Component {
 
     this._autosuggest.input.blur();
     this.reset();
-  }
+  };
 
   onBlur = () => {
     this.reset();
-  }
+  };
 
   onSuggestionsFetchRequested = ({ value }) => {
     this.setState({
@@ -178,13 +178,13 @@ class ArtistSearchInput extends Component {
     this.setState({
       suggestions: message.data
     });
-  }
+  };
 
   onSuggestionsClearRequested = () => {
     this.setState({
       suggestions: []
     });
-  }
+  };
 
   onSuggestionSelected = (event, { suggestion }) => {
     if (suggestion.type === ADD_NEW_TYPE) {
@@ -192,7 +192,7 @@ class ArtistSearchInput extends Component {
     } else {
       this.goToArtist(suggestion);
     }
-  }
+  };
 
   //
   // Render

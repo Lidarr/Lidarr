@@ -38,11 +38,11 @@ class MetadataProfilesConnector extends Component {
 
   onConfirmDeleteMetadataProfile = (id) => {
     this.props.dispatchDeleteMetadataProfile({ id });
-  }
+  };
 
   onCloneMetadataProfilePress = (id) => {
     this.props.dispatchCloneMetadataProfile({ id });
-  }
+  };
 
   //
   // Render

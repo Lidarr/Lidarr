@@ -133,12 +133,12 @@ class AlbumDetailsConnector extends Component {
 
     this.props.fetchTracks({ albumId });
     this.props.fetchTrackFiles({ albumId });
-  }
+  };
 
   unpopulate = () => {
     this.props.clearTracks();
     this.props.clearTrackFiles();
-  }
+  };
 
   //
   // Listeners
@@ -148,14 +148,14 @@ class AlbumDetailsConnector extends Component {
       albumIds: [this.props.id],
       monitored
     });
-  }
+  };
 
   onSearchPress = () => {
     this.props.executeCommand({
       name: commandNames.ALBUM_SEARCH,
       albumIds: [this.props.id]
     });
-  }
+  };
 
   //
   // Render

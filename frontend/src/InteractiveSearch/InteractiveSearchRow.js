@@ -68,11 +68,11 @@ class InteractiveSearchRow extends Component {
       guid,
       indexerId
     });
-  }
+  };
 
   onConfirmGrabPress = () => {
     this.setState({ isConfirmGrabModalOpen: true });
-  }
+  };
 
   onGrabConfirm = () => {
     this.setState({ isConfirmGrabModalOpen: false });
@@ -89,11 +89,11 @@ class InteractiveSearchRow extends Component {
       indexerId,
       ...searchPayload
     });
-  }
+  };
 
   onGrabCancel = () => {
     this.setState({ isConfirmGrabModalOpen: false });
-  }
+  };
 
   //
   // Render

@@ -27,7 +27,7 @@ class SelectAlbumRow extends Component {
 
   onPress = () => {
     this.props.onAlbumSelect(this.props.id);
-  }
+  };
 
   //
   // Render

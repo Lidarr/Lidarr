@@ -66,11 +66,11 @@ class AddNewItemConnector extends Component {
         this.props.getSearchResults({ term });
       }, 300);
     }
-  }
+  };
 
   onClearSearch = () => {
     this.props.clearSearchResults();
-  }
+  };
 
   //
   // Render

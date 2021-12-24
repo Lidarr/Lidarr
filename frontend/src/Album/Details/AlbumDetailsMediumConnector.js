@@ -39,7 +39,7 @@ class AlbumDetailsMediumConnector extends Component {
 
   onTableOptionChange = (payload) => {
     this.props.setTracksTableOption(payload);
-  }
+  };
 
   //
   // Render

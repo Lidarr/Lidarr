@@ -138,7 +138,7 @@ class TrackFileEditorModalContentConnector extends Component {
     };
 
     this.props.dispatchUpdateTrackFiles({ trackFileIds, quality });
-  }
+  };
 
   //
   // Render

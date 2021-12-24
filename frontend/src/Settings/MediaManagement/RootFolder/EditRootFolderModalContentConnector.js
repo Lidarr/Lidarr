@@ -45,7 +45,7 @@ class EditRootFolderModalContentConnector extends Component {
 
   onInputChange = ({ name, value }) => {
     this.props.setRootFolderValue({ name, value });
-  }
+  };
 
   onSavePress = () => {
     this.props.saveRootFolder({ id: this.props.id });
@@ -53,7 +53,7 @@ class EditRootFolderModalContentConnector extends Component {
     if (this.props.onRootFolderAdded) {
       this.props.onRootFolderAdded(this.props.item.path);
     }
-  }
+  };
 
   //
   // Render

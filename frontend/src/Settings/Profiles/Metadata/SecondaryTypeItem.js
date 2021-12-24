@@ -16,7 +16,7 @@ class SecondaryTypeItem extends Component {
     } = this.props;
 
     onMetadataSecondaryTypeItemAllowedChange(albumTypeId, value);
-  }
+  };
 
   //
   // Render

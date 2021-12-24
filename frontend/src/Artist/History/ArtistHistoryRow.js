@@ -55,16 +55,16 @@ class ArtistHistoryRow extends Component {
 
   onMarkAsFailedPress = () => {
     this.setState({ isMarkAsFailedModalOpen: true });
-  }
+  };
 
   onConfirmMarkAsFailed = () => {
     this.props.onMarkAsFailedPress(this.props.id);
     this.setState({ isMarkAsFailedModalOpen: false });
-  }
+  };
 
   onMarkAsFailedModalClose = () => {
     this.setState({ isMarkAsFailedModalOpen: false });
-  }
+  };
 
   //
   // Render

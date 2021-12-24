@@ -42,7 +42,7 @@ class AlbumStudioFooter extends Component {
 
   onInputChange = ({ name, value }) => {
     this.setState({ [name]: value });
-  }
+  };
 
   onUpdateSelectedPress = () => {
     const {
@@ -61,7 +61,7 @@ class AlbumStudioFooter extends Component {
     }
 
     this.props.onUpdateSelectedPress(changes);
-  }
+  };
 
   //
   // Render

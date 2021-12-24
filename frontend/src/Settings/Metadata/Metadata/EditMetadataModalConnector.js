@@ -22,7 +22,7 @@ class EditMetadataModalConnector extends Component {
   onModalClose = () => {
     this.props.dispatchClearPendingChanges();
     this.props.onModalClose();
-  }
+  };
 
   //
   // Render

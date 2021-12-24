@@ -34,34 +34,34 @@ class ArtistIndexPoster extends Component {
 
   onEditArtistPress = () => {
     this.setState({ isEditArtistModalOpen: true });
-  }
+  };
 
   onEditArtistModalClose = () => {
     this.setState({ isEditArtistModalOpen: false });
-  }
+  };
 
   onDeleteArtistPress = () => {
     this.setState({
       isEditArtistModalOpen: false,
       isDeleteArtistModalOpen: true
     });
-  }
+  };
 
   onDeleteArtistModalClose = () => {
     this.setState({ isDeleteArtistModalOpen: false });
-  }
+  };
 
   onPosterLoad = () => {
     if (this.state.hasPosterError) {
       this.setState({ hasPosterError: false });
     }
-  }
+  };
 
   onPosterLoadError = () => {
     if (!this.state.hasPosterError) {
       this.setState({ hasPosterError: true });
     }
-  }
+  };
 
   //
   // Render

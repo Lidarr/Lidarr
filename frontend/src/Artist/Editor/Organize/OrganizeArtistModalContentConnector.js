@@ -43,7 +43,7 @@ class OrganizeArtistModalContentConnector extends Component {
     });
 
     this.props.onModalClose(true);
-  }
+  };
 
   //
   // Render

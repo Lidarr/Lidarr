@@ -39,7 +39,7 @@ class RootFoldersConnector extends Component {
 
   onConfirmDeleteRootFolder = (id) => {
     this.props.dispatchDeleteRootFolder({ id });
-  }
+  };
 
   //
   // Render

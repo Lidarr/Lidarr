@@ -28,17 +28,17 @@ class ImportListSettings extends Component {
 
   setListOptionsRef = (ref) => {
     this._listOptions = ref;
-  }
+  };
 
   onHasPendingChange = (hasPendingChanges) => {
     this.setState({
       hasPendingChanges
     });
-  }
+  };
 
   onSavePress = () => {
     this._listOptions.getWrappedInstance().save();
-  }
+  };
 
   //
   // Render

@@ -77,7 +77,7 @@ class ArtistEditorFooter extends Component {
       default:
         this.props.onSaveSelected({ [name]: value });
     }
-  }
+  };
 
   onApplyTagsPress = (tags, applyTags) => {
     this.setState({
@@ -89,23 +89,23 @@ class ArtistEditorFooter extends Component {
       tags,
       applyTags
     });
-  }
+  };
 
   onDeleteSelectedPress = () => {
     this.setState({ isDeleteArtistModalOpen: true });
-  }
+  };
 
   onDeleteArtistModalClose = () => {
     this.setState({ isDeleteArtistModalOpen: false });
-  }
+  };
 
   onTagsPress = () => {
     this.setState({ isTagsModalOpen: true });
-  }
+  };
 
   onTagsModalClose = () => {
     this.setState({ isTagsModalOpen: false });
-  }
+  };
 
   onSaveRootFolderPress = () => {
     this.setState({
@@ -114,7 +114,7 @@ class ArtistEditorFooter extends Component {
     });
 
     this.props.onSaveSelected({ rootFolderPath: this.state.destinationRootFolder });
-  }
+  };
 
   onMoveArtistPress = () => {
     this.setState({
@@ -126,7 +126,7 @@ class ArtistEditorFooter extends Component {
       rootFolderPath: this.state.destinationRootFolder,
       moveFiles: true
     });
-  }
+  };
 
   //
   // Render

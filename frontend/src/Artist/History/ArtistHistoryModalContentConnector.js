@@ -55,7 +55,7 @@ class ArtistHistoryModalContentConnector extends Component {
       artistId,
       albumId
     });
-  }
+  };
 
   //
   // Render

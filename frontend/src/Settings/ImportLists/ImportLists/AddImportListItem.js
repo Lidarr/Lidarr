@@ -19,7 +19,7 @@ class AddImportListItem extends Component {
     } = this.props;
 
     this.props.onImportListSelect({ implementation });
-  }
+  };
 
   //
   // Render

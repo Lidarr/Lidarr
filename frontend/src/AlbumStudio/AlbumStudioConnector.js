@@ -69,26 +69,26 @@ class AlbumStudioConnector extends Component {
 
   populate = () => {
     this.props.fetchAlbums();
-  }
+  };
 
   unpopulate = () => {
     this.props.clearAlbums();
-  }
+  };
 
   //
   // Listeners
 
   onSortPress = (sortKey) => {
     this.props.setAlbumStudioSort({ sortKey });
-  }
+  };
 
   onFilterSelect = (selectedFilterKey) => {
     this.props.setAlbumStudioFilter({ selectedFilterKey });
-  }
+  };
 
   onUpdateSelectedPress = (payload) => {
     this.props.saveAlbumStudio(payload);
-  }
+  };
 
   //
   // Render

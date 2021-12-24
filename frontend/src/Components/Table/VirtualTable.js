@@ -80,7 +80,7 @@ class VirtualTable extends Component {
 
   setGridRef = (ref) => {
     this._grid = ref;
-  }
+  };
 
   //
   // Listeners
@@ -89,7 +89,7 @@ class VirtualTable extends Component {
     this.setState({
       width
     });
-  }
+  };
 
   //
   // Render

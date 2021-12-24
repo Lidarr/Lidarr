@@ -29,11 +29,11 @@ class RootFolders extends Component {
 
   onAddRootFolderPress = () => {
     this.setState({ isAddRootFolderModalOpen: true });
-  }
+  };
 
   onAddRootFolderModalClose = () => {
     this.setState({ isAddRootFolderModalOpen: false });
-  }
+  };
 
   //
   // Render

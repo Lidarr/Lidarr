@@ -51,7 +51,7 @@ class ArtistIndexTableOptions extends Component {
         }
       });
     });
-  }
+  };
 
   //
   // Render

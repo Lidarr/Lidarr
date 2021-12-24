@@ -64,13 +64,13 @@ class EditAlbumModalContentConnector extends Component {
 
   onInputChange = ({ name, value }) => {
     this.props.dispatchSetAlbumValue({ name, value });
-  }
+  };
 
   onSavePress = () => {
     this.props.dispatchSaveAlbum({
       id: this.props.albumId
     });
-  }
+  };
 
   //
   // Render

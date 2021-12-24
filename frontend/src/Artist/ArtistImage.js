@@ -99,7 +99,7 @@ class ArtistImage extends Component {
     if (this.props.onError) {
       this.props.onError();
     }
-  }
+  };
 
   onLoad = () => {
     this.setState({
@@ -110,7 +110,7 @@ class ArtistImage extends Component {
     if (this.props.onLoad) {
       this.props.onLoad();
     }
-  }
+  };
 
   //
   // Render

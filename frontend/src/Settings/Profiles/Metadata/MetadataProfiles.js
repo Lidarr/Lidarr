@@ -30,15 +30,15 @@ class MetadataProfiles extends Component {
   onCloneMetadataProfilePress = (id) => {
     this.props.onCloneMetadataProfilePress(id);
     this.setState({ isMetadataProfileModalOpen: true });
-  }
+  };
 
   onEditMetadataProfilePress = () => {
     this.setState({ isMetadataProfileModalOpen: true });
-  }
+  };
 
   onModalClose = () => {
     this.setState({ isMetadataProfileModalOpen: false });
-  }
+  };
 
   //
   // Render

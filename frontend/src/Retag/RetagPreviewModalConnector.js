@@ -16,7 +16,7 @@ class RetagPreviewModalConnector extends Component {
   onModalClose = () => {
     this.props.clearRetagPreview();
     this.props.onModalClose();
-  }
+  };
 
   //
   // Render

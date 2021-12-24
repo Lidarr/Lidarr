@@ -103,19 +103,19 @@ class InteractiveImportModalContentConnector extends Component {
 
   onSortPress = (sortKey, sortDirection) => {
     this.props.setInteractiveImportSort({ sortKey, sortDirection });
-  }
+  };
 
   onFilterExistingFilesChange = (filterExistingFiles) => {
     this.setState({ filterExistingFiles });
-  }
+  };
 
   onReplaceExistingFilesChange = (replaceExistingFiles) => {
     this.setState({ replaceExistingFiles });
-  }
+  };
 
   onImportModeChange = (importMode) => {
     this.props.setInteractiveImportMode({ importMode });
-  }
+  };
 
   onImportSelectedPress = (selected, importMode) => {
     const files = [];
@@ -178,7 +178,7 @@ class InteractiveImportModalContentConnector extends Component {
     });
 
     this.props.onModalClose();
-  }
+  };
 
   //
   // Render

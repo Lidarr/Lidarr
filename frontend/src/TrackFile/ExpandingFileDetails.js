@@ -27,7 +27,7 @@ class ExpandingFileDetails extends Component {
       isExpanded
     } = this.state;
     this.setState({ isExpanded: !isExpanded });
-  }
+  };
 
   //
   // Render

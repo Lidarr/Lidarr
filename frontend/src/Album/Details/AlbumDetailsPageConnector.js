@@ -76,11 +76,11 @@ class AlbumDetailsPageConnector extends Component {
       foreignAlbumId,
       includeAllArtistAlbums: true
     });
-  }
+  };
 
   unpopulate = () => {
     this.props.clearAlbums();
-  }
+  };
 
   //
   // Render

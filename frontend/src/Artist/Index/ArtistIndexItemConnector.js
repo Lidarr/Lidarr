@@ -100,21 +100,21 @@ class ArtistIndexItemConnector extends Component {
       name: commandNames.REFRESH_ARTIST,
       artistId: this.props.id
     });
-  }
+  };
 
   onSearchPress = () => {
     this.props.dispatchExecuteCommand({
       name: commandNames.ARTIST_SEARCH,
       artistId: this.props.id
     });
-  }
+  };
 
   onMonitoredPress = () => {
     this.props.toggleArtistMonitored({
       artistId: this.props.id,
       monitored: !this.props.monitored
     });
-  }
+  };
 
   //
   // Render

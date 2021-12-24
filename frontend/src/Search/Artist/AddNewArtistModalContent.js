@@ -30,11 +30,11 @@ class AddNewArtistModalContent extends Component {
 
   onSearchForMissingAlbumsChange = ({ value }) => {
     this.setState({ searchForMissingAlbums: value });
-  }
+  };
 
   onAddArtistPress = () => {
     this.props.onAddArtistPress(this.state.searchForMissingAlbums);
-  }
+  };
 
   //
   // Render

@@ -72,7 +72,7 @@ class MetadataProviderConnector extends Component {
 
   onInputChange = ({ name, value }) => {
     this.props.dispatchSetMetadataProviderValue({ name, value });
-  }
+  };
 
   //
   // Render
