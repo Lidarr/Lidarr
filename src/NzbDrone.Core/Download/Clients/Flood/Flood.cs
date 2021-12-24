@@ -193,9 +193,9 @@ namespace NzbDrone.Core.Download.Clients.Flood
             }
         }
 
-        public override void RemoveItem(string downloadId, bool deleteData)
+        public override void RemoveItem(DownloadClientItem item, bool deleteData)
         {
-            _proxy.DeleteTorrent(downloadId, deleteData, Settings);
+            _proxy.DeleteTorrent(item.DownloadId, deleteData, Settings);
         }
 
         public override DownloadClientInfo GetStatus()

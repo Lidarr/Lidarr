@@ -318,9 +318,9 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             return queueItems;
         }
 
-        public override void RemoveItem(string hash, bool deleteData)
+        public override void RemoveItem(DownloadClientItem item, bool deleteData)
         {
-            Proxy.RemoveTorrent(hash.ToLower(), deleteData, Settings);
+            Proxy.RemoveTorrent(item.DownloadId.ToLower(), deleteData, Settings);
         }
 
         public override DownloadClientItem GetImportItem(DownloadClientItem item, DownloadClientItem previousImportAttempt)

@@ -218,7 +218,7 @@ namespace Lidarr.Api.V1.Queue
                     throw new BadRequestException();
                 }
 
-                downloadClient.RemoveItem(trackedDownload.DownloadItem.DownloadId, true);
+                downloadClient.RemoveItem(trackedDownload.DownloadItem, true);
             }
 
             if (blocklist)

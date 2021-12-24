@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
@@ -68,20 +68,14 @@ namespace NzbDrone.Core.Download
             return item;
         }
 
-        public abstract void RemoveItem(string downloadId, bool deleteData);
+        public abstract void RemoveItem(DownloadClientItem item, bool deleteData);
         public abstract DownloadClientInfo GetStatus();
 
-        protected virtual void DeleteItemData(string downloadId)
+        protected virtual void DeleteItemData(DownloadClientItem item)
         {
-            if (downloadId.IsNullOrWhiteSpace())
-            {
-                return;
-            }
-
-            var item = GetItems().FirstOrDefault(v => v.DownloadId == downloadId);
             if (item == null)
             {
-                _logger.Trace("DownloadItem {0} in {1} history not found, skipping delete data.", downloadId, Name);
+                _logger.Trace("DownloadItem {0} in {1} history not found, skipping delete data.", item.DownloadId, Name);
                 return;
             }
 
