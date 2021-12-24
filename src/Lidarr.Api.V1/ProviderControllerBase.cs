@@ -105,7 +105,7 @@ namespace Lidarr.Api.V1
         public object DeleteProvider(int id)
         {
             _providerFactory.Delete(id);
-            return new object();
+            return new { };
         }
 
         [HttpGet("schema")]

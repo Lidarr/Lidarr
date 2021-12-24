@@ -31,7 +31,7 @@ namespace Lidarr.Api.V1.Queue
 
             _downloadService.DownloadReport(pendingRelease.RemoteAlbum);
 
-            return new object();
+            return new { };
         }
 
         [HttpPost("grab/bulk")]
@@ -49,7 +49,7 @@ namespace Lidarr.Api.V1.Queue
                 _downloadService.DownloadReport(pendingRelease.RemoteAlbum);
             }
 
-            return new object();
+            return new { };
         }
     }
 }
