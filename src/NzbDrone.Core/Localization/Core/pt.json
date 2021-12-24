@@ -1,4 +1,20 @@
 {
     "Language": "Idioma",
-    "UILanguage": "Idioma da IU"
+    "UILanguage": "Idioma da IU",
+    "CopyUsingHardlinksHelpText": "Usar ligações fixas (Hardlinks) ao tentar copiar ficheiros de torrents que ainda estão em modo de semeio",
+    "DownloadClients": "Clientes de transferências",
+    "DownloadClientSettings": "Definições do cliente de transferências",
+    "DownloadWarningCheckDownloadClientForMoreDetails": "Alerta de transferência: verifique o cliente de transferências para obter mais detalhes",
+    "EnableColorImpairedModeHelpText": "Estilo alterado para permitir que utilizadores com daltonismo possam distinguir melhor os códigos de cores",
+    "Exception": "Exceção",
+    "Host": "Anfitrião",
+    "IconForCutoffUnmet": "Ícone para Limite não correspondido",
+    "IncludeHealthWarningsHelpText": "Incluir avisos de estado de funcionamento",
+    "ChangeFileDate": "Modificar data do ficheiro",
+    "DeleteBackupMessageText": "Tem a certeza que quer eliminar a cópia de segurança \"{0}\"?",
+    "DeleteDelayProfile": "Eliminar perfil de atraso",
+    "DownloadFailedCheckDownloadClientForMoreDetails": "Falha na transferência: verifique o cliente de transferências para obter mais detalhes",
+    "DownloadFailedInterp": "Falha na transferência: {0}",
+    "EnableCompletedDownloadHandlingHelpText": "Importar automaticamente as transferências concluídas do cliente de transferências",
+    "LogFiles": "Ficheiros de log"
 }
