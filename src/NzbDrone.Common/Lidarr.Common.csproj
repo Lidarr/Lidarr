@@ -7,7 +7,6 @@
   <ItemGroup>
     <PackageReference Include="DryIoc.dll" Version="4.7.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="DotNet4.SocksProxy" Version="1.4.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NLog" Version="4.7.9" />
     <PackageReference Include="Sentry" Version="2.1.1" />
