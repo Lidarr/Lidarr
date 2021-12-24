@@ -61,7 +61,7 @@ class SelectTrackModalContentConnector extends Component {
 
   onSortPress = (sortKey, sortDirection) => {
     this.props.setTracksSort({ sortKey, sortDirection });
-  }
+  };
 
   onTracksSelect = (trackIds) => {
     const tracks = _.reduce(this.props.items, (acc, item) => {
@@ -78,7 +78,7 @@ class SelectTrackModalContentConnector extends Component {
     });
 
     this.props.onModalClose(true);
-  }
+  };
 
   //
   // Render

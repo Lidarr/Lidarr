@@ -15,7 +15,7 @@ class SelectAlbumReleaseRow extends Component {
 
   onInputChange = ({ name, value }) => {
     this.props.onAlbumReleaseSelect(parseInt(name), parseInt(value));
-  }
+  };
 
   //
   // Render

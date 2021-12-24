@@ -82,14 +82,14 @@ class EditArtistModalContentConnector extends Component {
 
   onInputChange = ({ name, value }) => {
     this.props.dispatchSetArtistValue({ name, value });
-  }
+  };
 
   onSavePress = (moveFiles) => {
     this.props.dispatchSaveArtist({
       id: this.props.artistId,
       moveFiles
     });
-  }
+  };
 
   //
   // Render

@@ -60,18 +60,18 @@ class ArtistDetailsSeasonConnector extends Component {
 
   onTableOptionChange = (payload) => {
     this.props.setAlbumsTableOption(payload);
-  }
+  };
 
   onSortPress = (sortKey) => {
     this.props.dispatchSetAlbumSort({ sortKey });
-  }
+  };
 
   onMonitorAlbumPress = (albumIds, monitored) => {
     this.props.toggleAlbumsMonitored({
       albumIds,
       monitored
     });
-  }
+  };
 
   //
   // Render

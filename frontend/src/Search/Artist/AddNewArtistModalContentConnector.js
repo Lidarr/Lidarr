@@ -50,7 +50,7 @@ class AddNewArtistModalContentConnector extends Component {
 
   onInputChange = ({ name, value }) => {
     this.props.setAddDefault({ [name]: value });
-  }
+  };
 
   onAddArtistPress = (searchForMissingAlbums) => {
     const {
@@ -71,7 +71,7 @@ class AddNewArtistModalContentConnector extends Component {
       tags: tags.value,
       searchForMissingAlbums
     });
-  }
+  };
 
   //
   // Render

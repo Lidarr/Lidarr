@@ -68,12 +68,12 @@ class AddNewItem extends Component {
         this.props.onClearSearch();
       }
     });
-  }
+  };
 
   onClearSearchPress = () => {
     this.setState({ term: '' });
     this.props.onClearSearch();
-  }
+  };
 
   //
   // Render

@@ -61,20 +61,20 @@ class PlaylistInput extends Component {
 
   getSelectedIds = () => {
     return getSelectedIds(this.state.selectedState, { parseIds: false });
-  }
+  };
 
   //
   // Listeners
 
   onSelectAllChange = ({ value }) => {
     this.setState(selectAll(this.state.selectedState, value));
-  }
+  };
 
   onSelectedChange = ({ id, value, shiftKey = false }) => {
     this.setState((state, props) => {
       return toggleSelected(state, props.items, id, value, shiftKey);
     });
-  }
+  };
 
   //
   // Render

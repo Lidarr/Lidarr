@@ -27,26 +27,26 @@ class RootFolder extends Component {
 
   onEditRootFolderPress = () => {
     this.setState({ isEditRootFolderModalOpen: true });
-  }
+  };
 
   onEditRootFolderModalClose = () => {
     this.setState({ isEditRootFolderModalOpen: false });
-  }
+  };
 
   onDeleteRootFolderPress = () => {
     this.setState({
       isEditRootFolderModalOpen: false,
       isDeleteRootFolderModalOpen: true
     });
-  }
+  };
 
   onDeleteRootFolderModalClose= () => {
     this.setState({ isDeleteRootFolderModalOpen: false });
-  }
+  };
 
   onConfirmDeleteRootFolder = () => {
     this.props.onConfirmDeleteRootFolder(this.props.id);
-  }
+  };
 
   //
   // Render

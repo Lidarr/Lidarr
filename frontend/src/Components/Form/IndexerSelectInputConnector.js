@@ -63,7 +63,7 @@ class IndexerSelectInputConnector extends Component {
 
   onChange = ({ name, value }) => {
     this.props.onChange({ name, value: parseInt(value) });
-  }
+  };
 
   //
   // Render

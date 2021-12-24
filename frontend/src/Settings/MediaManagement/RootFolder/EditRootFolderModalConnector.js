@@ -28,7 +28,7 @@ class EditRootFolderModalConnector extends Component {
     this.props.dispatchClearPendingChanges();
     this.props.dispatchCancelSaveRootFolder();
     this.props.onModalClose();
-  }
+  };
 
   //
   // Render

@@ -30,11 +30,11 @@ class AddNewAlbumModalContent extends Component {
 
   onSearchForNewAlbumChange = ({ value }) => {
     this.setState({ searchForNewAlbum: value });
-  }
+  };
 
   onAddAlbumPress = () => {
     this.props.onAddAlbumPress(this.state.searchForNewAlbum);
-  }
+  };
 
   //
   // Render

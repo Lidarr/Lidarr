@@ -35,7 +35,7 @@ class ListsConnector extends Component {
 
   onConfirmDeleteImportList = (id) => {
     this.props.deleteImportList({ id });
-  }
+  };
 
   //
   // Render

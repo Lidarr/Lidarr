@@ -17,7 +17,7 @@ class AlbumStudioAlbum extends Component {
     } = this.props;
 
     this.props.onAlbumMonitoredPress(id, !monitored);
-  }
+  };
 
   //
   // Render

@@ -27,24 +27,24 @@ class TrackActionsCell extends Component {
 
   onDetailsPress = () => {
     this.setState({ isDetailsModalOpen: true });
-  }
+  };
 
   onDetailsModalClose = () => {
     this.setState({ isDetailsModalOpen: false });
-  }
+  };
 
   onDeleteFilePress = () => {
     this.setState({ isConfirmDeleteModalOpen: true });
-  }
+  };
 
   onConfirmDelete = () => {
     this.setState({ isConfirmDeleteModalOpen: false });
     this.props.deleteTrackFile({ id: this.props.trackFileId });
-  }
+  };
 
   onConfirmDeleteModalClose = () => {
     this.setState({ isConfirmDeleteModalOpen: false });
-  }
+  };
 
   //
   // Render

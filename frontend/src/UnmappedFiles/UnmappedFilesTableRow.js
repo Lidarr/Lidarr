@@ -32,32 +32,32 @@ class UnmappedFilesTableRow extends Component {
 
   onDetailsPress = () => {
     this.setState({ isDetailsModalOpen: true });
-  }
+  };
 
   onDetailsModalClose = () => {
     this.setState({ isDetailsModalOpen: false });
-  }
+  };
 
   onInteractiveImportPress = () => {
     this.setState({ isInteractiveImportModalOpen: true });
-  }
+  };
 
   onInteractiveImportModalClose = () => {
     this.setState({ isInteractiveImportModalOpen: false });
-  }
+  };
 
   onDeleteFilePress = () => {
     this.setState({ isConfirmDeleteModalOpen: true });
-  }
+  };
 
   onConfirmDelete = () => {
     this.setState({ isConfirmDeleteModalOpen: false });
     this.props.deleteUnmappedFile(this.props.id);
-  }
+  };
 
   onConfirmDeleteModalClose = () => {
     this.setState({ isConfirmDeleteModalOpen: false });
-  }
+  };
 
   //
   // Render

@@ -57,7 +57,7 @@ class ClipboardButton extends Component {
       showSuccess: false,
       showError: false
     });
-  }
+  };
 
   //
   // Listeners
@@ -66,13 +66,13 @@ class ClipboardButton extends Component {
     this.setState({
       showSuccess: true
     });
-  }
+  };
 
   onError = () => {
     this.setState({
       showError: true
     });
-  }
+  };
 
   //
   // Render

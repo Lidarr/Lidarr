@@ -116,7 +116,7 @@ class AlbumStudio extends Component {
 
   setScrollerRef = (ref) => {
     this.setState({ scroller: ref });
-  }
+  };
 
   setJumpBarItems() {
     const {
@@ -167,7 +167,7 @@ class AlbumStudio extends Component {
       return [];
     }
     return getSelectedIds(this.state.selectedState);
-  }
+  };
 
   setSelectedState = () => {
     const {
@@ -202,7 +202,7 @@ class AlbumStudio extends Component {
     }
 
     this.setState({ selectedState: newSelectedState, allSelected: isAllSelected, allUnselected: isAllUnselected });
-  }
+  };
 
   estimateRowHeight = (width) => {
     const {
@@ -222,7 +222,7 @@ class AlbumStudio extends Component {
 
     // each row is 23px per album row plus 16px padding
     return albumRowsPerArtist * 23 + 16;
-  }
+  };
 
   rowRenderer = ({ key, rowIndex, parent, style }) => {
     const {
@@ -258,31 +258,31 @@ class AlbumStudio extends Component {
         )}
       </CellMeasurer>
     );
-  }
+  };
 
   //
   // Listeners
 
   onSelectAllChange = ({ value }) => {
     this.setState(selectAll(this.state.selectedState, value));
-  }
+  };
 
   onSelectedChange = ({ id, value, shiftKey = false }) => {
     this.setState((state) => {
       return toggleSelected(state, this.props.items, id, value, shiftKey);
     });
-  }
+  };
 
   onSelectAllPress = () => {
     this.onSelectAllChange({ value: !this.state.allSelected });
-  }
+  };
 
   onUpdateSelectedPress = (changes) => {
     this.props.onUpdateSelectedPress({
       artistIds: this.getSelectedIds(),
       ...changes
     });
-  }
+  };
 
   onJumpBarItemPress = (jumpToCharacter) => {
     const scrollIndex = getIndexOfFirstCharacter(this.props.items, jumpToCharacter);
@@ -290,14 +290,14 @@ class AlbumStudio extends Component {
     if (scrollIndex != null) {
       this.setState({ scrollIndex });
     }
-  }
+  };
 
   onGridRecompute = (width) => {
     this.setJumpBarItems();
     this.setSelectedState();
     this.setState({ estimatedRowSize: this.estimateRowHeight(width) });
     this.cache.clearAll();
-  }
+  };
 
   //
   // Render

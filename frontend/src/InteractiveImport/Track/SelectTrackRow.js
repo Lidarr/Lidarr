@@ -20,7 +20,7 @@ class SelectTrackRow extends Component {
     } = this.props;
 
     this.props.onSelectedChange({ id, value: !isSelected });
-  }
+  };
 
   //
   // Render

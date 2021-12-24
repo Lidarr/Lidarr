@@ -212,13 +212,13 @@ class ArtistDetailsConnector extends Component {
     this.props.fetchAlbums({ artistId });
     this.props.fetchTrackFiles({ artistId });
     this.props.fetchQueueDetails({ artistId });
-  }
+  };
 
   unpopulate = () => {
     this.props.clearAlbums();
     this.props.clearTrackFiles();
     this.props.clearQueueDetails();
-  }
+  };
 
   //
   // Listeners
@@ -228,21 +228,21 @@ class ArtistDetailsConnector extends Component {
       artistId: this.props.id,
       monitored
     });
-  }
+  };
 
   onRefreshPress = () => {
     this.props.executeCommand({
       name: commandNames.REFRESH_ARTIST,
       artistId: this.props.id
     });
-  }
+  };
 
   onSearchPress = () => {
     this.props.executeCommand({
       name: commandNames.ARTIST_SEARCH,
       artistId: this.props.id
     });
-  }
+  };
 
   //
   // Render

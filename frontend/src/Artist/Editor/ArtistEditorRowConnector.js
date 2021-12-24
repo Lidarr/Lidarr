@@ -39,7 +39,7 @@ class ArtistEditorRowConnector extends Component {
       artistId: id,
       monitored: !monitored
     });
-  }
+  };
 
   render() {
     return (

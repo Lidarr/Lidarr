@@ -60,7 +60,7 @@ class AlbumStudioRowConnector extends Component {
       artistId,
       monitored: !monitored
     });
-  }
+  };
 
   onAlbumMonitoredPress = (albumId, monitored) => {
     const albumIds = [albumId];
@@ -68,7 +68,7 @@ class AlbumStudioRowConnector extends Component {
       albumIds,
       monitored
     });
-  }
+  };
 
   //
   // Render

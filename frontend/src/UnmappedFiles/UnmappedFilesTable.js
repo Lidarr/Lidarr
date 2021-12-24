@@ -32,7 +32,7 @@ class UnmappedFilesTable extends Component {
 
   setScrollerRef = (ref) => {
     this.setState({ scroller: ref });
-  }
+  };
 
   rowRenderer = ({ key, rowIndex, style }) => {
     const {
@@ -56,7 +56,7 @@ class UnmappedFilesTable extends Component {
         />
       </VirtualTableRow>
     );
-  }
+  };
 
   render() {
 

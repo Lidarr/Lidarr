@@ -39,7 +39,7 @@ class Naming extends Component {
         additional: true
       }
     });
-  }
+  };
 
   onMultiDiscNamingModalOpenClick = () => {
     this.setState({
@@ -51,7 +51,7 @@ class Naming extends Component {
         additional: true
       }
     });
-  }
+  };
 
   onArtistFolderNamingModalOpenClick = () => {
     this.setState({
@@ -60,11 +60,11 @@ class Naming extends Component {
         name: 'artistFolderFormat'
       }
     });
-  }
+  };
 
   onNamingModalClose = () => {
     this.setState({ isNamingModalOpen: false });
-  }
+  };
 
   //
   // Render

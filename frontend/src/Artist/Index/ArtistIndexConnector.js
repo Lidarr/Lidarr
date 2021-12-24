@@ -74,11 +74,11 @@ class ArtistIndexConnector extends Component {
 
   onViewSelect = (view) => {
     this.props.dispatchSetArtistView(view);
-  }
+  };
 
   onScroll = ({ scrollTop }) => {
     scrollPositions.artistIndex = scrollTop;
-  }
+  };
 
   //
   // Render

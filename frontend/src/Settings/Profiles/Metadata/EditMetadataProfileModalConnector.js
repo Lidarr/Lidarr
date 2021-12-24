@@ -20,7 +20,7 @@ class EditMetadataProfileModalConnector extends Component {
   onModalClose = () => {
     this.props.clearPendingChanges({ section: 'settings.metadataProfiles' });
     this.props.onModalClose();
-  }
+  };
 
   //
   // Render

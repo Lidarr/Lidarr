@@ -19,7 +19,7 @@ class AddDownloadClientItem extends Component {
     } = this.props;
 
     this.props.onDownloadClientSelect({ implementation });
-  }
+  };
 
   //
   // Render

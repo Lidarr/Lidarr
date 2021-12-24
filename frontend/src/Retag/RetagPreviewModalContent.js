@@ -47,24 +47,24 @@ class RetagPreviewModalContent extends Component {
 
   getSelectedIds = () => {
     return getSelectedIds(this.state.selectedState);
-  }
+  };
 
   //
   // Listeners
 
   onSelectAllChange = ({ value }) => {
     this.setState(selectAll(this.state.selectedState, value));
-  }
+  };
 
   onSelectedChange = ({ id, value, shiftKey = false }) => {
     this.setState((state) => {
       return toggleSelected(state, this.props.items, id, value, shiftKey);
     });
-  }
+  };
 
   onRetagPress = () => {
     this.props.onRetagPress(this.getSelectedIds());
-  }
+  };
 
   //
   // Render

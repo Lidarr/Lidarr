@@ -102,62 +102,62 @@ class AlbumDetails extends Component {
 
   onOrganizePress = () => {
     this.setState({ isOrganizeModalOpen: true });
-  }
+  };
 
   onOrganizeModalClose = () => {
     this.setState({ isOrganizeModalOpen: false });
-  }
+  };
 
   onRetagPress = () => {
     this.setState({ isRetagModalOpen: true });
-  }
+  };
 
   onRetagModalClose = () => {
     this.setState({ isRetagModalOpen: false });
-  }
+  };
 
   onEditAlbumPress = () => {
     this.setState({ isEditAlbumModalOpen: true });
-  }
+  };
 
   onEditAlbumModalClose = () => {
     this.setState({ isEditAlbumModalOpen: false });
-  }
+  };
 
   onDeleteAlbumPress = () => {
     this.setState({
       isEditAlbumModalOpen: false,
       isDeleteAlbumModalOpen: true
     });
-  }
+  };
 
   onDeleteAlbumModalClose = () => {
     this.setState({ isDeleteAlbumModalOpen: false });
-  }
+  };
 
   onManageTracksPress = () => {
     this.setState({ isManageTracksOpen: true });
-  }
+  };
 
   onManageTracksModalClose = () => {
     this.setState({ isManageTracksOpen: false });
-  }
+  };
 
   onInteractiveSearchPress = () => {
     this.setState({ isInteractiveSearchModalOpen: true });
-  }
+  };
 
   onInteractiveSearchModalClose = () => {
     this.setState({ isInteractiveSearchModalOpen: false });
-  }
+  };
 
   onArtistHistoryPress = () => {
     this.setState({ isArtistHistoryModalOpen: true });
-  }
+  };
 
   onArtistHistoryModalClose = () => {
     this.setState({ isArtistHistoryModalOpen: false });
-  }
+  };
 
   onExpandAllPress = () => {
     const {
@@ -166,7 +166,7 @@ class AlbumDetails extends Component {
     } = this.state;
 
     this.setState(getExpandedState(selectAll(expandedState, !allExpanded)));
-  }
+  };
 
   onExpandPress = (albumId, isExpanded) => {
     this.setState((state) => {
@@ -180,7 +180,7 @@ class AlbumDetails extends Component {
 
       return getExpandedState(newState);
     });
-  }
+  };
 
   //
   // Render

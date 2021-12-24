@@ -133,11 +133,11 @@ class EditMetadataProfileModalContentConnector extends Component {
 
   onInputChange = ({ name, value }) => {
     this.props.setMetadataProfileValue({ name, value });
-  }
+  };
 
   onSavePress = () => {
     this.props.saveMetadataProfile({ id: this.props.id });
-  }
+  };
 
   onMetadataPrimaryTypeItemAllowedChange = (id, allowed) => {
     const metadataProfile = _.cloneDeep(this.props.item);
@@ -149,7 +149,7 @@ class EditMetadataProfileModalContentConnector extends Component {
       name: 'primaryAlbumTypes',
       value: metadataProfile.primaryAlbumTypes.value
     });
-  }
+  };
 
   onMetadataSecondaryTypeItemAllowedChange = (id, allowed) => {
     const metadataProfile = _.cloneDeep(this.props.item);
@@ -161,7 +161,7 @@ class EditMetadataProfileModalContentConnector extends Component {
       name: 'secondaryAlbumTypes',
       value: metadataProfile.secondaryAlbumTypes.value
     });
-  }
+  };
 
   onMetadataReleaseStatusItemAllowedChange = (id, allowed) => {
     const metadataProfile = _.cloneDeep(this.props.item);
@@ -173,7 +173,7 @@ class EditMetadataProfileModalContentConnector extends Component {
       name: 'releaseStatuses',
       value: metadataProfile.releaseStatuses.value
     });
-  }
+  };
 
   //
   // Render

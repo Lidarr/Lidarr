@@ -30,13 +30,13 @@ class CalendarEvent extends Component {
     this.setState({ isDetailsModalOpen: true }, () => {
       this.props.onEventModalOpenToggle(true);
     });
-  }
+  };
 
   onDetailsModalClose = () => {
     this.setState({ isDetailsModalOpen: false }, () => {
       this.props.onEventModalOpenToggle(false);
     });
-  }
+  };
 
   //
   // Render

@@ -78,7 +78,7 @@ class AddNewAlbumModalContentConnector extends Component {
 
   onInputChange = ({ name, value }) => {
     this.props.setAddDefault({ [name]: value });
-  }
+  };
 
   onAddAlbumPress = (searchForNewAlbum) => {
     const {
@@ -99,7 +99,7 @@ class AddNewAlbumModalContentConnector extends Component {
       tags: tags.value,
       searchForNewAlbum
     });
-  }
+  };
 
   //
   // Render

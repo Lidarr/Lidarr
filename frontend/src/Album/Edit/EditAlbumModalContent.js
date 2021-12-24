@@ -25,7 +25,7 @@ class EditAlbumModalContent extends Component {
 
     onSavePress(false);
 
-  }
+  };
 
   //
   // Render

@@ -87,38 +87,38 @@ class CutoffUnmetConnector extends Component {
 
   repopulate = () => {
     this.props.fetchCutoffUnmet();
-  }
+  };
 
   //
   // Listeners
 
   onFirstPagePress = () => {
     this.props.gotoCutoffUnmetFirstPage();
-  }
+  };
 
   onPreviousPagePress = () => {
     this.props.gotoCutoffUnmetPreviousPage();
-  }
+  };
 
   onNextPagePress = () => {
     this.props.gotoCutoffUnmetNextPage();
-  }
+  };
 
   onLastPagePress = () => {
     this.props.gotoCutoffUnmetLastPage();
-  }
+  };
 
   onPageSelect = (page) => {
     this.props.gotoCutoffUnmetPage({ page });
-  }
+  };
 
   onSortPress = (sortKey) => {
     this.props.setCutoffUnmetSort({ sortKey });
-  }
+  };
 
   onFilterSelect = (selectedFilterKey) => {
     this.props.setCutoffUnmetFilter({ selectedFilterKey });
-  }
+  };
 
   onTableOptionChange = (payload) => {
     this.props.setCutoffUnmetTableOption(payload);
@@ -126,20 +126,20 @@ class CutoffUnmetConnector extends Component {
     if (payload.pageSize) {
       this.props.gotoCutoffUnmetFirstPage();
     }
-  }
+  };
 
   onSearchSelectedPress = (selected) => {
     this.props.executeCommand({
       name: commandNames.ALBUM_SEARCH,
       albumIds: selected
     });
-  }
+  };
 
   onSearchAllCutoffUnmetPress = () => {
     this.props.executeCommand({
       name: commandNames.CUTOFF_UNMET_ALBUM_SEARCH
     });
-  }
+  };
 
   //
   // Render

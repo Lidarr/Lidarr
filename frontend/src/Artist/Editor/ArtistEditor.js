@@ -62,31 +62,31 @@ class ArtistEditor extends Component {
 
   getSelectedIds = () => {
     return getSelectedIds(this.state.selectedState);
-  }
+  };
 
   //
   // Listeners
 
   onSelectAllChange = ({ value }) => {
     this.setState(selectAll(this.state.selectedState, value));
-  }
+  };
 
   onSelectedChange = ({ id, value, shiftKey = false }) => {
     this.setState((state) => {
       return toggleSelected(state, this.props.items, id, value, shiftKey);
     });
-  }
+  };
 
   onSaveSelected = (changes) => {
     this.props.onSaveSelected({
       artistIds: this.getSelectedIds(),
       ...changes
     });
-  }
+  };
 
   onOrganizeArtistPress = () => {
     this.setState({ isOrganizingArtistModalOpen: true });
-  }
+  };
 
   onOrganizeArtistModalClose = (organized) => {
     this.setState({ isOrganizingArtistModalOpen: false });
@@ -94,11 +94,11 @@ class ArtistEditor extends Component {
     if (organized === true) {
       this.onSelectAllChange({ value: false });
     }
-  }
+  };
 
   onRetagArtistPress = () => {
     this.setState({ isRetaggingArtistModalOpen: true });
-  }
+  };
 
   onRetagArtistModalClose = (organized) => {
     this.setState({ isRetaggingArtistModalOpen: false });
@@ -106,7 +106,7 @@ class ArtistEditor extends Component {
     if (organized === true) {
       this.onSelectAllChange({ value: false });
     }
-  }
+  };
 
   //
   // Render

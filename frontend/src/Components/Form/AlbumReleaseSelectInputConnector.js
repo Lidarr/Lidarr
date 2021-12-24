@@ -49,7 +49,7 @@ class AlbumReleaseSelectInputConnector extends Component {
     _.find(updatedReleases, { foreignReleaseId: value }).monitored = true;
 
     this.props.onChange({ name, value: updatedReleases });
-  }
+  };
 
   render() {
 

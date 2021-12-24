@@ -48,26 +48,26 @@ class ArtistEditorConnector extends Component {
 
   onSortPress = (sortKey) => {
     this.props.dispatchSetArtistEditorSort({ sortKey });
-  }
+  };
 
   onFilterSelect = (selectedFilterKey) => {
     this.props.dispatchSetArtistEditorFilter({ selectedFilterKey });
-  }
+  };
 
   onTableOptionChange = (payload) => {
     this.props.dispatchSetArtistEditorTableOption(payload);
-  }
+  };
 
   onSaveSelected = (payload) => {
     this.props.dispatchSaveArtistEditor(payload);
-  }
+  };
 
   onMoveSelected = (payload) => {
     this.props.dispatchExecuteCommand({
       name: commandNames.MOVE_ARTIST,
       ...payload
     });
-  }
+  };
 
   //
   // Render

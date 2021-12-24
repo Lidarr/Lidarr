@@ -86,70 +86,70 @@ class ArtistDetails extends Component {
 
   onOrganizePress = () => {
     this.setState({ isOrganizeModalOpen: true });
-  }
+  };
 
   onOrganizeModalClose = () => {
     this.setState({ isOrganizeModalOpen: false });
-  }
+  };
 
   onRetagPress = () => {
     this.setState({ isRetagModalOpen: true });
-  }
+  };
 
   onRetagModalClose = () => {
     this.setState({ isRetagModalOpen: false });
-  }
+  };
 
   onManageTracksPress = () => {
     this.setState({ isManageTracksOpen: true });
-  }
+  };
 
   onManageTracksModalClose = () => {
     this.setState({ isManageTracksOpen: false });
-  }
+  };
 
   onInteractiveImportPress = () => {
     this.setState({ isInteractiveImportModalOpen: true });
-  }
+  };
 
   onInteractiveImportModalClose = () => {
     this.setState({ isInteractiveImportModalOpen: false });
-  }
+  };
 
   onInteractiveSearchPress = () => {
     this.setState({ isInteractiveSearchModalOpen: true });
-  }
+  };
 
   onInteractiveSearchModalClose = () => {
     this.setState({ isInteractiveSearchModalOpen: false });
-  }
+  };
 
   onEditArtistPress = () => {
     this.setState({ isEditArtistModalOpen: true });
-  }
+  };
 
   onEditArtistModalClose = () => {
     this.setState({ isEditArtistModalOpen: false });
-  }
+  };
 
   onDeleteArtistPress = () => {
     this.setState({
       isEditArtistModalOpen: false,
       isDeleteArtistModalOpen: true
     });
-  }
+  };
 
   onDeleteArtistModalClose = () => {
     this.setState({ isDeleteArtistModalOpen: false });
-  }
+  };
 
   onArtistHistoryPress = () => {
     this.setState({ isArtistHistoryModalOpen: true });
-  }
+  };
 
   onArtistHistoryModalClose = () => {
     this.setState({ isArtistHistoryModalOpen: false });
-  }
+  };
 
   onExpandAllPress = () => {
     const {
@@ -158,7 +158,7 @@ class ArtistDetails extends Component {
     } = this.state;
 
     this.setState(getExpandedState(selectAll(expandedState, !allExpanded)));
-  }
+  };
 
   onExpandPress = (albumId, isExpanded) => {
     this.setState((state) => {
@@ -172,7 +172,7 @@ class ArtistDetails extends Component {
 
       return getExpandedState(newState);
     });
-  }
+  };
 
   //
   // Render

@@ -44,23 +44,23 @@ class AlbumRow extends Component {
 
   onManualSearchPress = () => {
     this.setState({ isDetailsModalOpen: true });
-  }
+  };
 
   onDetailsModalClose = () => {
     this.setState({ isDetailsModalOpen: false });
-  }
+  };
 
   onEditAlbumPress = () => {
     this.setState({ isEditAlbumModalOpen: true });
-  }
+  };
 
   onEditAlbumModalClose = () => {
     this.setState({ isEditAlbumModalOpen: false });
-  }
+  };
 
   onMonitorAlbumPress = (monitored, options) => {
     this.props.onMonitorAlbumPress(this.props.id, monitored, options);
-  }
+  };
 
   //
   // Render

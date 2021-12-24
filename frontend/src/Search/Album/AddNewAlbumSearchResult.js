@@ -55,15 +55,15 @@ class AddNewAlbumSearchResult extends Component {
 
   onPress = () => {
     this.setState({ isNewAddAlbumModalOpen: true });
-  }
+  };
 
   onAddAlbumModalClose = () => {
     this.setState({ isNewAddAlbumModalOpen: false });
-  }
+  };
 
   onMBLinkPress = (event) => {
     event.stopPropagation();
-  }
+  };
 
   //
   // Render

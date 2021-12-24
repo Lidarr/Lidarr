@@ -56,7 +56,7 @@ class SelectAlbumModalContent extends Component {
 
   onFilterChange = ({ value }) => {
     this.setState({ filter: value.toLowerCase() });
-  }
+  };
 
   //
   // Render

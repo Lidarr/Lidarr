@@ -70,19 +70,19 @@ class ArtistDetailsSeason extends Component {
 
   onOrganizePress = () => {
     this.setState({ isOrganizeModalOpen: true });
-  }
+  };
 
   onOrganizeModalClose = () => {
     this.setState({ isOrganizeModalOpen: false });
-  }
+  };
 
   onManageTracksPress = () => {
     this.setState({ isManageTracksOpen: true });
-  }
+  };
 
   onManageTracksModalClose = () => {
     this.setState({ isManageTracksOpen: false });
-  }
+  };
 
   onExpandPress = () => {
     const {
@@ -91,7 +91,7 @@ class ArtistDetailsSeason extends Component {
     } = this.props;
 
     this.props.onExpandPress(name, !isExpanded);
-  }
+  };
 
   onMonitorAlbumPress = (albumId, monitored, { shiftKey }) => {
     const lastToggled = this.state.lastToggledAlbum;
@@ -109,7 +109,7 @@ class ArtistDetailsSeason extends Component {
     this.setState({ lastToggledAlbum: albumId });
 
     this.props.onMonitorAlbumPress(_.uniq(albumIds), monitored);
-  }
+  };
 
   //
   // Render

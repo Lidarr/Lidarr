@@ -16,7 +16,7 @@ class EditAlbumModalConnector extends Component {
   onModalClose = () => {
     this.props.clearPendingChanges({ section: 'albums' });
     this.props.onModalClose();
-  }
+  };
 
   //
   // Render

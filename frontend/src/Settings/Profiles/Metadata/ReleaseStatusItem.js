@@ -16,7 +16,7 @@ class ReleaseStatusItem extends Component {
     } = this.props;
 
     onMetadataReleaseStatusItemAllowedChange(albumTypeId, value);
-  }
+  };
 
   //
   // Render

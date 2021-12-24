@@ -77,38 +77,38 @@ class MissingConnector extends Component {
 
   repopulate = () => {
     this.props.fetchMissing();
-  }
+  };
 
   //
   // Listeners
 
   onFirstPagePress = () => {
     this.props.gotoMissingFirstPage();
-  }
+  };
 
   onPreviousPagePress = () => {
     this.props.gotoMissingPreviousPage();
-  }
+  };
 
   onNextPagePress = () => {
     this.props.gotoMissingNextPage();
-  }
+  };
 
   onLastPagePress = () => {
     this.props.gotoMissingLastPage();
-  }
+  };
 
   onPageSelect = (page) => {
     this.props.gotoMissingPage({ page });
-  }
+  };
 
   onSortPress = (sortKey) => {
     this.props.setMissingSort({ sortKey });
-  }
+  };
 
   onFilterSelect = (selectedFilterKey) => {
     this.props.setMissingFilter({ selectedFilterKey });
-  }
+  };
 
   onTableOptionChange = (payload) => {
     this.props.setMissingTableOption(payload);
@@ -116,20 +116,20 @@ class MissingConnector extends Component {
     if (payload.pageSize) {
       this.props.gotoMissingFirstPage();
     }
-  }
+  };
 
   onSearchSelectedPress = (selected) => {
     this.props.executeCommand({
       name: commandNames.ALBUM_SEARCH,
       albumIds: selected
     });
-  }
+  };
 
   onSearchAllMissingPress = () => {
     this.props.executeCommand({
       name: commandNames.MISSING_ALBUM_SEARCH
     });
-  }
+  };
 
   //
   // Render

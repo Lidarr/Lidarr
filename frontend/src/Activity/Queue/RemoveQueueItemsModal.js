@@ -31,40 +31,40 @@ class RemoveQueueItemsModal extends Component {
   //
   // Control
 
-   resetState = function() {
-     this.setState({
-       remove: true,
-       blocklist: false,
-       skipredownload: false
-     });
-   }
+  resetState = function() {
+    this.setState({
+      remove: true,
+      blocklist: false,
+      skipredownload: false
+    });
+  };
 
-   //
-   // Listeners
+  //
+  // Listeners
 
-   onRemoveChange = ({ value }) => {
-     this.setState({ remove: value });
-   }
+  onRemoveChange = ({ value }) => {
+    this.setState({ remove: value });
+  };
 
   onBlocklistChange = ({ value }) => {
     this.setState({ blocklist: value });
-  }
+  };
 
   onSkipReDownloadChange = ({ value }) => {
     this.setState({ skipredownload: value });
-  }
+  };
 
   onRemoveConfirmed = () => {
     const state = this.state;
 
     this.resetState();
     this.props.onRemovePress(state);
-  }
+  };
 
   onModalClose = () => {
     this.resetState();
     this.props.onModalClose();
-  }
+  };
 
   //
   // Render

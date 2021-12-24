@@ -111,7 +111,7 @@ class ArtistIndexOverviewOptionsModalContent extends Component {
     }, () => {
       this.props.onChangeOverviewOption({ [name]: value });
     });
-  }
+  };
 
   //
   // Render

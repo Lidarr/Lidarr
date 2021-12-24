@@ -87,7 +87,7 @@ class ArtistIndexBannerOptionsModalContent extends Component {
     }, () => {
       this.props.onChangeBannerOption({ [name]: value });
     });
-  }
+  };
 
   //
   // Render

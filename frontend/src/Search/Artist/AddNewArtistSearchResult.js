@@ -54,15 +54,15 @@ class AddNewArtistSearchResult extends Component {
 
   onPress = () => {
     this.setState({ isNewAddArtistModalOpen: true });
-  }
+  };
 
   onAddArtistModalClose = () => {
     this.setState({ isNewAddArtistModalOpen: false });
-  }
+  };
 
   onMBLinkPress = (event) => {
     event.stopPropagation();
-  }
+  };
 
   //
   // Render

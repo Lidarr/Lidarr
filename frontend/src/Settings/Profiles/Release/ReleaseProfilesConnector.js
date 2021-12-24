@@ -45,7 +45,7 @@ class ReleaseProfilesConnector extends Component {
 
   onConfirmDeleteReleaseProfile = (id) => {
     this.props.deleteReleaseProfile({ id });
-  }
+  };
 
   //
   // Render

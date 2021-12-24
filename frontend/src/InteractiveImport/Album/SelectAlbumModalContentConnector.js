@@ -53,7 +53,7 @@ class SelectAlbumModalContentConnector extends Component {
 
   onSortPress = (sortKey, sortDirection) => {
     this.props.setInteractiveImportAlbumsSort({ sortKey, sortDirection });
-  }
+  };
 
   onAlbumSelect = (albumId) => {
     const album = _.find(this.props.items, { id: albumId });
@@ -73,7 +73,7 @@ class SelectAlbumModalContentConnector extends Component {
     this.props.saveInteractiveImportItem({ id: ids });
 
     this.props.onModalClose(true);
-  }
+  };
 
   //
   // Render

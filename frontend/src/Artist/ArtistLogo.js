@@ -72,11 +72,11 @@ class ArtistLogo extends Component {
 
   onError = () => {
     this.setState({ hasError: true });
-  }
+  };
 
   onLoad = () => {
     this.setState({ isLoaded: true });
-  }
+  };
 
   //
   // Render
