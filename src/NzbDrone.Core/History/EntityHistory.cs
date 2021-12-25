@@ -6,11 +6,11 @@ using NzbDrone.Core.Qualities;
 
 namespace NzbDrone.Core.History
 {
-    public class History : ModelBase
+    public class EntityHistory : ModelBase
     {
         public const string DOWNLOAD_CLIENT = "downloadClient";
 
-        public History()
+        public EntityHistory()
         {
             Data = new Dictionary<string, string>();
         }
@@ -24,13 +24,13 @@ namespace NzbDrone.Core.History
         public Album Album { get; set; }
         public Artist Artist { get; set; }
         public Track Track { get; set; }
-        public HistoryEventType EventType { get; set; }
+        public EntityHistoryEventType EventType { get; set; }
         public Dictionary<string, string> Data { get; set; }
 
         public string DownloadId { get; set; }
     }
 
-    public enum HistoryEventType
+    public enum EntityHistoryEventType
     {
         Unknown = 0,
         Grabbed = 1,

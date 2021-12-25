@@ -26,7 +26,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         private QualityModel _mp3;
         private QualityModel _flac;
         private RemoteAlbum _remoteAlbum;
-        private List<History.History> _history;
+        private List<EntityHistory> _history;
         private TrackFile _firstFile;
 
         [SetUp]
@@ -58,7 +58,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
                                               .Build()
             };
 
-            _history = new List<History.History>();
+            _history = new List<EntityHistory>();
 
             Mocker.GetMock<IConfigService>()
                   .SetupGet(s => s.EnableCompletedDownloadHandling)
@@ -80,9 +80,9 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
                   .Returns(false);
         }
 
-        private void GivenHistoryItem(string downloadId, string sourceTitle, QualityModel quality, HistoryEventType eventType)
+        private void GivenHistoryItem(string downloadId, string sourceTitle, QualityModel quality, EntityHistoryEventType eventType)
         {
-            _history.Add(new History.History
+            _history.Add(new EntityHistory
             {
                 DownloadId = downloadId,
                 SourceTitle = sourceTitle,
@@ -119,7 +119,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [Test]
         public void should_be_accepted_if_album_does_not_have_imported_event()
         {
-            GivenHistoryItem(Guid.NewGuid().ToString().ToUpper(), TITLE, _mp3, HistoryEventType.Grabbed);
+            GivenHistoryItem(Guid.NewGuid().ToString().ToUpper(), TITLE, _mp3, EntityHistoryEventType.Grabbed);
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
         }
@@ -129,8 +129,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         {
             var downloadId = Guid.NewGuid().ToString().ToUpper();
 
-            GivenHistoryItem(downloadId, TITLE, _mp3, HistoryEventType.Grabbed);
-            GivenHistoryItem(downloadId, TITLE, _mp3, HistoryEventType.DownloadImported);
+            GivenHistoryItem(downloadId, TITLE, _mp3, EntityHistoryEventType.Grabbed);
+            GivenHistoryItem(downloadId, TITLE, _mp3, EntityHistoryEventType.DownloadImported);
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
         }
@@ -140,8 +140,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         {
             var downloadId = Guid.NewGuid().ToString().ToUpper();
 
-            GivenHistoryItem(downloadId, TITLE, _mp3, HistoryEventType.Grabbed);
-            GivenHistoryItem(downloadId, TITLE, _flac, HistoryEventType.DownloadImported);
+            GivenHistoryItem(downloadId, TITLE, _mp3, EntityHistoryEventType.Grabbed);
+            GivenHistoryItem(downloadId, TITLE, _flac, EntityHistoryEventType.DownloadImported);
 
             _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
                                                          .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)
@@ -156,8 +156,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         {
             var downloadId = Guid.NewGuid().ToString().ToUpper();
 
-            GivenHistoryItem(downloadId, TITLE, _mp3, HistoryEventType.Grabbed);
-            GivenHistoryItem(downloadId, TITLE, _flac, HistoryEventType.DownloadImported);
+            GivenHistoryItem(downloadId, TITLE, _mp3, EntityHistoryEventType.Grabbed);
+            GivenHistoryItem(downloadId, TITLE, _flac, EntityHistoryEventType.DownloadImported);
 
             _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
                                                          .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)
@@ -170,8 +170,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [Test]
         public void should_be_accepted_if_release_torrent_hash_is_null_and_downloadId_is_null()
         {
-            GivenHistoryItem(null, TITLE, _mp3, HistoryEventType.Grabbed);
-            GivenHistoryItem(null, TITLE, _flac, HistoryEventType.DownloadImported);
+            GivenHistoryItem(null, TITLE, _mp3, EntityHistoryEventType.Grabbed);
+            GivenHistoryItem(null, TITLE, _flac, EntityHistoryEventType.DownloadImported);
 
             _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
                                                          .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)
@@ -186,8 +186,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         {
             var downloadId = Guid.NewGuid().ToString().ToUpper();
 
-            GivenHistoryItem(downloadId, TITLE, _mp3, HistoryEventType.Grabbed);
-            GivenHistoryItem(downloadId, TITLE, _flac, HistoryEventType.DownloadImported);
+            GivenHistoryItem(downloadId, TITLE, _mp3, EntityHistoryEventType.Grabbed);
+            GivenHistoryItem(downloadId, TITLE, _flac, EntityHistoryEventType.DownloadImported);
 
             _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
                                                          .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)

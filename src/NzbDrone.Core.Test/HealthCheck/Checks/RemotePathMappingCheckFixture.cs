@@ -71,6 +71,10 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
                   .Setup(s => s.GetDownloadClients())
                   .Returns(new IDownloadClient[] { _downloadClient.Object });
 
+            Mocker.GetMock<IProvideDownloadClient>()
+                .Setup(s => s.Get(It.IsAny<int>()))
+                .Returns(_downloadClient.Object);
+
             Mocker.GetMock<IConfigService>()
                   .Setup(s => s.EnableCompletedDownloadHandling)
                   .Returns(true);

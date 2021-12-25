@@ -22,9 +22,9 @@ namespace NzbDrone.Core.Test.Download.TrackedDownloads
         {
             Mocker.GetMock<IHistoryService>()
                 .Setup(s => s.FindByDownloadId(It.Is<string>(sr => sr == "35238")))
-                .Returns(new List<History.History>()
+                .Returns(new List<EntityHistory>()
                 {
-                 new History.History()
+                 new EntityHistory()
                 {
                      DownloadId = "35238",
                      SourceTitle = "Audio Artist - Audio Album [2018 - FLAC]",

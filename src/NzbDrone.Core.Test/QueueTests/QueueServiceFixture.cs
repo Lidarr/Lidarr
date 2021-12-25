@@ -51,12 +51,12 @@ namespace NzbDrone.Core.Test.QueueTests
                 .Build()
                 .ToList();
 
-            var historyItem = Builder<History.History>.CreateNew()
+            var historyItem = Builder<EntityHistory>.CreateNew()
                 .Build();
 
             Mocker.GetMock<IHistoryService>()
-                .Setup(c => c.Find(It.IsAny<string>(), HistoryEventType.Grabbed)).Returns(
-                    new List<History.History> { historyItem });
+                .Setup(c => c.Find(It.IsAny<string>(), EntityHistoryEventType.Grabbed)).Returns(
+                    new List<EntityHistory> { historyItem });
         }
 
         [Test]

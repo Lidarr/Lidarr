@@ -40,16 +40,18 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport.Specifications
             }
 
             var albumHistory = _historyService.GetByAlbum(albumRelease.AlbumId, null);
-            var lastImported = albumHistory.FirstOrDefault(h => h.EventType == HistoryEventType.DownloadImported);
-            var lastGrabbed = albumHistory.FirstOrDefault(h => h.EventType == HistoryEventType.Grabbed);
+            var lastImported = albumHistory.FirstOrDefault(h => h.EventType == EntityHistoryEventType.DownloadImported);
+            var lastGrabbed = albumHistory.FirstOrDefault(h => h.EventType == EntityHistoryEventType.Grabbed);
 
             if (lastImported == null)
             {
+                _logger.Trace("Track file has not been imported");
                 return Decision.Accept();
             }
 
             if (lastGrabbed != null && lastGrabbed.Date.After(lastImported.Date))
             {
+                _logger.Trace("Track file was grabbed again after importing");
                 return Decision.Accept();
             }
 

@@ -102,6 +102,8 @@ namespace NzbDrone.Core.Download
 
             var albumGrabbedEvent = new AlbumGrabbedEvent(remoteAlbum);
             albumGrabbedEvent.DownloadClient = downloadClient.Name;
+            albumGrabbedEvent.DownloadClientId = downloadClient.Definition.Id;
+            albumGrabbedEvent.DownloadClientName = downloadClient.Definition.Name;
 
             if (!string.IsNullOrWhiteSpace(downloadClientId))
             {

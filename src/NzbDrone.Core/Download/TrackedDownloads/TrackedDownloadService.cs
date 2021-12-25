@@ -5,6 +5,7 @@ using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Serializer;
+using NzbDrone.Core.Download.History;
 using NzbDrone.Core.History;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
@@ -28,6 +29,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
         private readonly IParsingService _parsingService;
         private readonly IHistoryService _historyService;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IDownloadHistoryService _downloadHistoryService;
         private readonly ITrackedDownloadAlreadyImported _trackedDownloadAlreadyImported;
         private readonly Logger _logger;
         private readonly ICached<TrackedDownload> _cache;
@@ -35,15 +37,17 @@ namespace NzbDrone.Core.Download.TrackedDownloads
         public TrackedDownloadService(IParsingService parsingService,
                                       ICacheManager cacheManager,
                                       IHistoryService historyService,
+                                      IDownloadHistoryService downloadHistoryService,
                                       IEventAggregator eventAggregator,
                                       ITrackedDownloadAlreadyImported trackedDownloadAlreadyImported,
                                       Logger logger)
         {
             _parsingService = parsingService;
             _historyService = historyService;
+            _cache = cacheManager.GetCache<TrackedDownload>(GetType());
             _eventAggregator = eventAggregator;
             _trackedDownloadAlreadyImported = trackedDownloadAlreadyImported;
-            _cache = cacheManager.GetCache<TrackedDownload>(GetType());
+            _downloadHistoryService = downloadHistoryService;
             _logger = logger;
         }
 
@@ -116,41 +120,31 @@ namespace NzbDrone.Core.Download.TrackedDownloads
 
             try
             {
-                var parsedAlbumInfo = Parser.Parser.ParseAlbumTitle(trackedDownload.DownloadItem.Title);
                 var historyItems = _historyService.FindByDownloadId(downloadItem.DownloadId)
                     .OrderByDescending(h => h.Date)
                     .ToList();
+
+                //TODO: Create release info from history and use that here, so we don't loose indexer flags!
+                var parsedAlbumInfo = Parser.Parser.ParseAlbumTitle(trackedDownload.DownloadItem.Title);
 
                 if (parsedAlbumInfo != null)
                 {
                     trackedDownload.RemoteAlbum = _parsingService.Map(parsedAlbumInfo);
                 }
 
+                var downloadHistory = _downloadHistoryService.GetLatestDownloadHistoryItem(downloadItem.DownloadId);
+
+                if (downloadHistory != null)
+                {
+                    var state = GetStateFromHistory(downloadHistory.EventType);
+                    trackedDownload.State = state;
+                }
+
                 if (historyItems.Any())
                 {
                     var firstHistoryItem = historyItems.First();
-                    var state = GetStateFromHistory(firstHistoryItem);
+                    var grabbedEvent = historyItems.FirstOrDefault(v => v.EventType == EntityHistoryEventType.Grabbed);
 
-                    // One potential issue here is if the latest is imported, but other episodes are ignored or never imported.
-                    // It's unlikely that will happen, but could happen if additional episodes are added to season after it's already imported.
-                    if (state == TrackedDownloadState.Imported)
-                    {
-                        var allImported = _trackedDownloadAlreadyImported.IsImported(trackedDownload, historyItems);
-
-                        trackedDownload.State = allImported ? TrackedDownloadState.Imported : TrackedDownloadState.Downloading;
-                    }
-                    else
-                    {
-                        trackedDownload.State = state;
-                    }
-
-                    if (firstHistoryItem.EventType == HistoryEventType.AlbumImportIncomplete)
-                    {
-                        var messages = Json.Deserialize<List<TrackedDownloadStatusMessage>>(firstHistoryItem?.Data["statusMessages"]).ToArray();
-                        trackedDownload.Warn(messages);
-                    }
-
-                    var grabbedEvent = historyItems.FirstOrDefault(v => v.EventType == HistoryEventType.Grabbed);
                     trackedDownload.Indexer = grabbedEvent?.Data["indexer"];
 
                     if (parsedAlbumInfo == null ||
@@ -159,7 +153,6 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                         trackedDownload.RemoteAlbum.Albums.Empty())
                     {
                         // Try parsing the original source title and if that fails, try parsing it as a special
-                        // TODO: Pass the TVDB ID and TVRage IDs in as well so we have a better chance for finding the item
                         var historyArtist = firstHistoryItem.Artist;
                         var historyAlbums = new List<Album> { firstHistoryItem.Album };
 
@@ -169,7 +162,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                         {
                             trackedDownload.RemoteAlbum = _parsingService.Map(parsedAlbumInfo,
                                 firstHistoryItem.ArtistId,
-                                historyItems.Where(v => v.EventType == HistoryEventType.Grabbed).Select(h => h.AlbumId)
+                                historyItems.Where(v => v.EventType == EntityHistoryEventType.Grabbed).Select(h => h.AlbumId)
                                     .Distinct());
                         }
                         else
@@ -183,7 +176,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                             {
                                 trackedDownload.RemoteAlbum = _parsingService.Map(parsedAlbumInfo,
                                     firstHistoryItem.ArtistId,
-                                    historyItems.Where(v => v.EventType == HistoryEventType.Grabbed).Select(h => h.AlbumId)
+                                    historyItems.Where(v => v.EventType == EntityHistoryEventType.Grabbed).Select(h => h.AlbumId)
                                         .Distinct());
                             }
                         }
@@ -194,7 +187,6 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                 if (trackedDownload.RemoteAlbum == null)
                 {
                     _logger.Trace("No Album found for download '{0}'", trackedDownload.DownloadItem.Title);
-                    trackedDownload.Warn("No Album found for download '{0}'", trackedDownload.DownloadItem.Title);
                 }
             }
             catch (Exception e)
@@ -224,6 +216,23 @@ namespace NzbDrone.Core.Download.TrackedDownloads
             }
         }
 
+        private static TrackedDownloadState GetStateFromHistory(DownloadHistoryEventType eventType)
+        {
+            switch (eventType)
+            {
+                case DownloadHistoryEventType.DownloadImportIncomplete:
+                    return TrackedDownloadState.ImportFailed;
+                case DownloadHistoryEventType.DownloadImported:
+                    return TrackedDownloadState.Imported;
+                case DownloadHistoryEventType.DownloadFailed:
+                    return TrackedDownloadState.DownloadFailed;
+                case DownloadHistoryEventType.DownloadIgnored:
+                    return TrackedDownloadState.Ignored;
+                default:
+                    return TrackedDownloadState.Downloading;
+            }
+        }
+
         private void LogItemChange(TrackedDownload trackedDownload, DownloadClientItem existingItem, DownloadClientItem downloadItem)
         {
             if (existingItem == null ||
@@ -240,29 +249,6 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                     trackedDownload.RemoteAlbum?.ParsedAlbumInfo,
                     downloadItem.OutputPath);
             }
-        }
-
-        private static TrackedDownloadState GetStateFromHistory(NzbDrone.Core.History.History history)
-        {
-            switch (history.EventType)
-            {
-                case HistoryEventType.AlbumImportIncomplete:
-                    return TrackedDownloadState.ImportFailed;
-                case HistoryEventType.DownloadImported:
-                    return TrackedDownloadState.Imported;
-                case HistoryEventType.DownloadFailed:
-                    return TrackedDownloadState.DownloadFailed;
-                case HistoryEventType.DownloadIgnored:
-                    return TrackedDownloadState.Ignored;
-            }
-
-            // Since DownloadComplete is a new event type, we can't assume it exists for old downloads
-            if (history.EventType == HistoryEventType.TrackFileImported)
-            {
-                return DateTime.UtcNow.Subtract(history.Date).TotalSeconds < 60 ? TrackedDownloadState.Importing : TrackedDownloadState.Imported;
-            }
-
-            return TrackedDownloadState.Downloading;
         }
 
         public void Handle(AlbumDeletedEvent message)

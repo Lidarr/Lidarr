@@ -51,7 +51,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
                 _logger.Debug("Checking current status of album [{0}] in history", album.Id);
                 var mostRecent = _historyService.MostRecentForAlbum(album.Id);
 
-                if (mostRecent != null && mostRecent.EventType == HistoryEventType.Grabbed)
+                if (mostRecent != null && mostRecent.EventType == EntityHistoryEventType.Grabbed)
                 {
                     var recent = mostRecent.Date.After(DateTime.UtcNow.AddHours(-12));
 

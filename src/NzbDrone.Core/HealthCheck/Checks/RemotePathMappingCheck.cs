@@ -136,7 +136,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
                 // If the previous case did not match then the failure occured in DownloadedTracksImportService,
                 // while trying to locate the files reported by the download client
-                var client = _downloadClientProvider.GetDownloadClients().FirstOrDefault(x => x.Definition.Name == failureMessage.DownloadClient);
+                var client = _downloadClientProvider.Get(failureMessage.DownloadClientInfo.Id);
                 try
                 {
                     var status = client.GetStatus();

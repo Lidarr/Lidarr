@@ -20,7 +20,7 @@ namespace Lidarr.Api.V1.History
         public DateTime Date { get; set; }
         public string DownloadId { get; set; }
 
-        public HistoryEventType EventType { get; set; }
+        public EntityHistoryEventType EventType { get; set; }
 
         public Dictionary<string, string> Data { get; set; }
 
@@ -31,7 +31,7 @@ namespace Lidarr.Api.V1.History
 
     public static class HistoryResourceMapper
     {
-        public static HistoryResource ToResource(this NzbDrone.Core.History.History model)
+        public static HistoryResource ToResource(this EntityHistory model)
         {
             if (model == null)
             {

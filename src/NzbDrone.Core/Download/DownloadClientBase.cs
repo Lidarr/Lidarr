@@ -4,7 +4,6 @@ using System.Linq;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
@@ -75,7 +74,6 @@ namespace NzbDrone.Core.Download
         {
             if (item == null)
             {
-                _logger.Trace("DownloadItem {0} in {1} history not found, skipping delete data.", item.DownloadId, Name);
                 return;
             }
 

@@ -18,7 +18,7 @@ using NzbDrone.Core.Test.Qualities;
 
 namespace NzbDrone.Core.Test.HistoryTests
 {
-    public class HistoryServiceFixture : CoreTest<HistoryService>
+    public class HistoryServiceFixture : CoreTest<EntityHistoryService>
     {
         private QualityProfile _profile;
         private QualityProfile _profileCustom;
@@ -71,7 +71,7 @@ namespace NzbDrone.Core.Test.HistoryTests
             Subject.Handle(new TrackImportedEvent(localTrack, trackFile, new List<TrackFile>(), true, downloadClientItem));
 
             Mocker.GetMock<IHistoryRepository>()
-                .Verify(v => v.Insert(It.Is<History.History>(h => h.SourceTitle == Path.GetFileNameWithoutExtension(localTrack.Path))));
+                .Verify(v => v.Insert(It.Is<EntityHistory>(h => h.SourceTitle == Path.GetFileNameWithoutExtension(localTrack.Path))));
         }
     }
 }
