@@ -4,6 +4,7 @@ using System.Linq;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Download;
 using NzbDrone.Core.Download.TrackedDownloads;
 using NzbDrone.Core.MediaFiles.Commands;
 using NzbDrone.Core.MediaFiles.TrackImport;
@@ -16,16 +17,19 @@ namespace NzbDrone.Core.MediaFiles
         private readonly IDownloadedTracksImportService _downloadedTracksImportService;
         private readonly ITrackedDownloadService _trackedDownloadService;
         private readonly IDiskProvider _diskProvider;
+        private readonly ICompletedDownloadService _completedDownloadService;
         private readonly Logger _logger;
 
         public DownloadedAlbumsCommandService(IDownloadedTracksImportService downloadedTracksImportService,
                                                 ITrackedDownloadService trackedDownloadService,
                                                 IDiskProvider diskProvider,
+                                                ICompletedDownloadService completedDownloadService,
                                                 Logger logger)
         {
             _downloadedTracksImportService = downloadedTracksImportService;
             _trackedDownloadService = trackedDownloadService;
             _diskProvider = diskProvider;
+            _completedDownloadService = completedDownloadService;
             _logger = logger;
         }
 
@@ -45,14 +49,14 @@ namespace NzbDrone.Core.MediaFiles
                 {
                     _logger.Debug("External directory scan request for known download {0}. [{1}]", message.DownloadClientId, message.Path);
 
-                    return _downloadedTracksImportService.ProcessPath(message.Path, message.ImportMode, trackedDownload.RemoteAlbum.Artist, trackedDownload.DownloadItem);
-                }
-                else
-                {
-                    _logger.Warn("External directory scan request for unknown download {0}, attempting normal import. [{1}]", message.DownloadClientId, message.Path);
+                    var importResults = _downloadedTracksImportService.ProcessPath(message.Path, message.ImportMode, trackedDownload.RemoteAlbum.Artist, trackedDownload.DownloadItem);
 
-                    return _downloadedTracksImportService.ProcessPath(message.Path, message.ImportMode);
+                    _completedDownloadService.VerifyImport(trackedDownload, importResults);
+
+                    return importResults;
                 }
+
+                _logger.Warn("External directory scan request for unknown download {0}, attempting normal import. [{1}]", message.DownloadClientId, message.Path);
             }
 
             return _downloadedTracksImportService.ProcessPath(message.Path, message.ImportMode);

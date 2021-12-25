@@ -18,19 +18,20 @@ namespace NzbDrone.Core.History
 {
     public interface IHistoryService
     {
-        PagingSpec<History> Paged(PagingSpec<History> pagingSpec);
-        History MostRecentForAlbum(int albumId);
-        History MostRecentForDownloadId(string downloadId);
-        History Get(int historyId);
-        List<History> GetByArtist(int artistId, HistoryEventType? eventType);
-        List<History> GetByAlbum(int albumId, HistoryEventType? eventType);
-        List<History> Find(string downloadId, HistoryEventType eventType);
-        List<History> FindByDownloadId(string downloadId);
-        List<History> Since(DateTime date, HistoryEventType? eventType);
-        void UpdateMany(IList<History> items);
+        PagingSpec<EntityHistory> Paged(PagingSpec<EntityHistory> pagingSpec);
+        EntityHistory MostRecentForAlbum(int albumId);
+        EntityHistory MostRecentForDownloadId(string downloadId);
+        EntityHistory Get(int historyId);
+        List<EntityHistory> GetByArtist(int artistId, EntityHistoryEventType? eventType);
+        List<EntityHistory> GetByAlbum(int albumId, EntityHistoryEventType? eventType);
+        List<EntityHistory> Find(string downloadId, EntityHistoryEventType eventType);
+        List<EntityHistory> FindByDownloadId(string downloadId);
+        string FindDownloadId(TrackImportedEvent trackedDownload);
+        List<EntityHistory> Since(DateTime date, EntityHistoryEventType? eventType);
+        void UpdateMany(IList<EntityHistory> items);
     }
 
-    public class HistoryService : IHistoryService,
+    public class EntityHistoryService : IHistoryService,
                                   IHandle<AlbumGrabbedEvent>,
                                   IHandle<AlbumImportIncompleteEvent>,
                                   IHandle<TrackImportedEvent>,
@@ -45,53 +46,53 @@ namespace NzbDrone.Core.History
         private readonly IHistoryRepository _historyRepository;
         private readonly Logger _logger;
 
-        public HistoryService(IHistoryRepository historyRepository, Logger logger)
+        public EntityHistoryService(IHistoryRepository historyRepository, Logger logger)
         {
             _historyRepository = historyRepository;
             _logger = logger;
         }
 
-        public PagingSpec<History> Paged(PagingSpec<History> pagingSpec)
+        public PagingSpec<EntityHistory> Paged(PagingSpec<EntityHistory> pagingSpec)
         {
             return _historyRepository.GetPaged(pagingSpec);
         }
 
-        public History MostRecentForAlbum(int albumId)
+        public EntityHistory MostRecentForAlbum(int albumId)
         {
             return _historyRepository.MostRecentForAlbum(albumId);
         }
 
-        public History MostRecentForDownloadId(string downloadId)
+        public EntityHistory MostRecentForDownloadId(string downloadId)
         {
             return _historyRepository.MostRecentForDownloadId(downloadId);
         }
 
-        public History Get(int historyId)
+        public EntityHistory Get(int historyId)
         {
             return _historyRepository.Get(historyId);
         }
 
-        public List<History> GetByArtist(int artistId, HistoryEventType? eventType)
+        public List<EntityHistory> GetByArtist(int artistId, EntityHistoryEventType? eventType)
         {
             return _historyRepository.GetByArtist(artistId, eventType);
         }
 
-        public List<History> GetByAlbum(int albumId, HistoryEventType? eventType)
+        public List<EntityHistory> GetByAlbum(int albumId, EntityHistoryEventType? eventType)
         {
             return _historyRepository.GetByAlbum(albumId, eventType);
         }
 
-        public List<History> Find(string downloadId, HistoryEventType eventType)
+        public List<EntityHistory> Find(string downloadId, EntityHistoryEventType eventType)
         {
             return _historyRepository.FindByDownloadId(downloadId).Where(c => c.EventType == eventType).ToList();
         }
 
-        public List<History> FindByDownloadId(string downloadId)
+        public List<EntityHistory> FindByDownloadId(string downloadId)
         {
             return _historyRepository.FindByDownloadId(downloadId);
         }
 
-        private string FindDownloadId(TrackImportedEvent trackedDownload)
+        public string FindDownloadId(TrackImportedEvent trackedDownload)
         {
             _logger.Debug("Trying to find downloadId for {0} from history", trackedDownload.ImportedTrack.Path);
 
@@ -103,10 +104,10 @@ namespace NzbDrone.Core.History
             var albumsHistory = allHistory.Where(h => albumIds.Contains(h.AlbumId)).ToList();
 
             var processedDownloadId = albumsHistory
-                .Where(c => c.EventType != HistoryEventType.Grabbed && c.DownloadId != null)
+                .Where(c => c.EventType != EntityHistoryEventType.Grabbed && c.DownloadId != null)
                 .Select(c => c.DownloadId);
 
-            var stillDownloading = albumsHistory.Where(c => c.EventType == HistoryEventType.Grabbed && !processedDownloadId.Contains(c.DownloadId)).ToList();
+            var stillDownloading = albumsHistory.Where(c => c.EventType == EntityHistoryEventType.Grabbed && !processedDownloadId.Contains(c.DownloadId)).ToList();
 
             string downloadId = null;
 
@@ -139,9 +140,9 @@ namespace NzbDrone.Core.History
         {
             foreach (var album in message.Album.Albums)
             {
-                var history = new History
+                var history = new EntityHistory
                 {
-                    EventType = HistoryEventType.Grabbed,
+                    EventType = EntityHistoryEventType.Grabbed,
                     Date = DateTime.UtcNow,
                     Quality = message.Album.ParsedAlbumInfo.Quality,
                     SourceTitle = message.Album.Release.Title,
@@ -184,9 +185,9 @@ namespace NzbDrone.Core.History
         {
             foreach (var album in message.TrackedDownload.RemoteAlbum.Albums)
             {
-                var history = new History
+                var history = new EntityHistory
                 {
-                    EventType = HistoryEventType.AlbumImportIncomplete,
+                    EventType = EntityHistoryEventType.AlbumImportIncomplete,
                     Date = DateTime.UtcNow,
                     Quality = message.TrackedDownload.RemoteAlbum.ParsedAlbumInfo?.Quality ?? new QualityModel(),
                     SourceTitle = message.TrackedDownload.DownloadItem.Title,
@@ -216,9 +217,9 @@ namespace NzbDrone.Core.History
 
             foreach (var track in message.TrackInfo.Tracks)
             {
-                var history = new History
+                var history = new EntityHistory
                 {
-                    EventType = HistoryEventType.TrackFileImported,
+                    EventType = EntityHistoryEventType.TrackFileImported,
                     Date = DateTime.UtcNow,
                     Quality = message.TrackInfo.Quality,
                     SourceTitle = message.ImportedTrack.SceneName ?? Path.GetFileNameWithoutExtension(message.TrackInfo.Path),
@@ -232,7 +233,7 @@ namespace NzbDrone.Core.History
                 //history.Data.Add("FileId", message.ImportedEpisode.Id.ToString());
                 history.Data.Add("DroppedPath", message.TrackInfo.Path);
                 history.Data.Add("ImportedPath", message.ImportedTrack.Path);
-                history.Data.Add("DownloadClient", message.DownloadClient);
+                history.Data.Add("DownloadClient", message.DownloadClientInfo.Name);
 
                 _historyRepository.Insert(history);
             }
@@ -242,9 +243,9 @@ namespace NzbDrone.Core.History
         {
             foreach (var albumId in message.AlbumIds)
             {
-                var history = new History
+                var history = new EntityHistory
                 {
-                    EventType = HistoryEventType.DownloadFailed,
+                    EventType = EntityHistoryEventType.DownloadFailed,
                     Date = DateTime.UtcNow,
                     Quality = message.Quality,
                     SourceTitle = message.SourceTitle,
@@ -264,9 +265,9 @@ namespace NzbDrone.Core.History
         {
             foreach (var album in message.TrackedDownload.RemoteAlbum.Albums)
             {
-                var history = new History
+                var history = new EntityHistory
                 {
-                    EventType = HistoryEventType.DownloadImported,
+                    EventType = EntityHistoryEventType.DownloadImported,
                     Date = DateTime.UtcNow,
                     Quality = message.TrackedDownload.RemoteAlbum.ParsedAlbumInfo?.Quality ?? new QualityModel(),
                     SourceTitle = message.TrackedDownload.DownloadItem.Title,
@@ -294,9 +295,9 @@ namespace NzbDrone.Core.History
 
             foreach (var track in message.TrackFile.Tracks.Value)
             {
-                var history = new History
+                var history = new EntityHistory
                 {
-                    EventType = HistoryEventType.TrackFileDeleted,
+                    EventType = EntityHistoryEventType.TrackFileDeleted,
                     Date = DateTime.UtcNow,
                     Quality = message.TrackFile.Quality,
                     SourceTitle = message.TrackFile.Path,
@@ -318,9 +319,9 @@ namespace NzbDrone.Core.History
 
             foreach (var track in message.TrackFile.Tracks.Value)
             {
-                var history = new History
+                var history = new EntityHistory
                 {
-                    EventType = HistoryEventType.TrackFileRenamed,
+                    EventType = EntityHistoryEventType.TrackFileRenamed,
                     Date = DateTime.UtcNow,
                     Quality = message.TrackFile.Quality,
                     SourceTitle = message.OriginalPath,
@@ -342,9 +343,9 @@ namespace NzbDrone.Core.History
 
             foreach (var track in message.TrackFile.Tracks.Value)
             {
-                var history = new History
+                var history = new EntityHistory
                 {
-                    EventType = HistoryEventType.TrackFileRetagged,
+                    EventType = EntityHistoryEventType.TrackFileRetagged,
                     Date = DateTime.UtcNow,
                     Quality = message.TrackFile.Quality,
                     SourceTitle = path,
@@ -372,12 +373,12 @@ namespace NzbDrone.Core.History
 
         public void Handle(DownloadIgnoredEvent message)
         {
-            var historyToAdd = new List<History>();
+            var historyToAdd = new List<EntityHistory>();
             foreach (var albumId in message.AlbumIds)
             {
-                var history = new History
+                var history = new EntityHistory
                 {
-                    EventType = HistoryEventType.DownloadIgnored,
+                    EventType = EntityHistoryEventType.DownloadIgnored,
                     Date = DateTime.UtcNow,
                     Quality = message.Quality,
                     SourceTitle = message.SourceTitle,
@@ -395,12 +396,12 @@ namespace NzbDrone.Core.History
             _historyRepository.InsertMany(historyToAdd);
         }
 
-        public List<History> Since(DateTime date, HistoryEventType? eventType)
+        public List<EntityHistory> Since(DateTime date, EntityHistoryEventType? eventType)
         {
             return _historyRepository.Since(date, eventType);
         }
 
-        public void UpdateMany(IList<History> items)
+        public void UpdateMany(IList<EntityHistory> items)
         {
             _historyRepository.UpdateMany(items);
         }

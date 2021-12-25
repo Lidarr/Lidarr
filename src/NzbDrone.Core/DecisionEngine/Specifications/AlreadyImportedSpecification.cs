@@ -53,7 +53,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                 }
 
                 var historyForAlbum = _historyService.GetByAlbum(album.Id, null);
-                var lastGrabbed = historyForAlbum.FirstOrDefault(h => h.EventType == HistoryEventType.Grabbed);
+                var lastGrabbed = historyForAlbum.FirstOrDefault(h => h.EventType == EntityHistoryEventType.Grabbed);
 
                 if (lastGrabbed == null)
                 {
@@ -61,7 +61,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                 }
 
                 var imported = historyForAlbum.FirstOrDefault(h =>
-                    h.EventType == HistoryEventType.DownloadImported &&
+                    h.EventType == EntityHistoryEventType.DownloadImported &&
                     h.DownloadId == lastGrabbed.DownloadId);
 
                 if (imported == null)

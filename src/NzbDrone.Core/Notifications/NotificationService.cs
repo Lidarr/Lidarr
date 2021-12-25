@@ -155,7 +155,7 @@ namespace NzbDrone.Core.Notifications
                 Artist = message.Artist,
                 Album = message.Album,
                 Release = message.AlbumRelease,
-                DownloadClient = message.DownloadClient,
+                DownloadClient = message.DownloadClientInfo?.Name,
                 DownloadId = message.DownloadId,
                 TrackFiles = message.ImportedTracks,
                 OldFiles = message.OldFiles,

@@ -4,6 +4,7 @@ using System.Net;
 using CookComputing.XmlRpc;
 using NLog;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Serializer;
 
 namespace NzbDrone.Core.Download.Clients.RTorrent
 {
@@ -17,6 +18,7 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
         void RemoveTorrent(string hash, RTorrentSettings settings);
         void SetTorrentLabel(string hash, string label, RTorrentSettings settings);
         bool HasHashTorrent(string hash, RTorrentSettings settings);
+        void PushTorrentUniqueView(string hash, string view, RTorrentSettings settings);
     }
 
     public interface IRTorrent : IXmlRpcProxy
@@ -44,6 +46,9 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
 
         [XmlRpcMethod("d.custom1.set")]
         string SetLabel(string hash, string label);
+
+        [XmlRpcMethod("d.views.push_back_unique")]
+        int PushUniqueView(string hash, string view);
 
         [XmlRpcMethod("system.client_version")]
         string GetVersion();
@@ -86,7 +91,10 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
                     "d.ratio=", // long
                     "d.is_open=", // long
                     "d.is_active=", // long
-                    "d.complete=")); //long
+                    "d.complete=", //long
+                    "d.timestamp.finished=")); // long (unix timestamp)
+
+            _logger.Trace(ret.ToJson());
 
             var items = new List<RTorrentTorrent>();
 
@@ -106,6 +114,7 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
                 item.IsOpen = Convert.ToBoolean((long)torrent[8]);
                 item.IsActive = Convert.ToBoolean((long)torrent[9]);
                 item.IsFinished = Convert.ToBoolean((long)torrent[10]);
+                item.FinishedTime = (long)torrent[11];
 
                 items.Add(item);
             }
@@ -169,6 +178,18 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
             if (response != label)
             {
                 throw new DownloadClientException("Could not set label to {1} for torrent: {0}.", hash, label);
+            }
+        }
+
+        public void PushTorrentUniqueView(string hash, string view, RTorrentSettings settings)
+        {
+            _logger.Debug("Executing remote method: d.views.push_back_unique");
+
+            var client = BuildClient(settings);
+            var response = ExecuteRequest(() => client.PushUniqueView(hash, view));
+            if (response != 0)
+            {
+                throw new DownloadClientException("Could not push unique view {0} for torrent: {1}.", view, hash);
             }
         }
 

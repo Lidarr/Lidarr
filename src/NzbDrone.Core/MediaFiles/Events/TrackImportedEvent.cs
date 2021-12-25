@@ -11,7 +11,7 @@ namespace NzbDrone.Core.MediaFiles.Events
         public TrackFile ImportedTrack { get; private set; }
         public List<TrackFile> OldFiles { get; private set; }
         public bool NewDownload { get; private set; }
-        public string DownloadClient { get; private set; }
+        public DownloadClientItemClientInfo DownloadClientInfo { get; set; }
         public string DownloadId { get; private set; }
 
         public TrackImportedEvent(LocalTrack trackInfo, TrackFile importedTrack, List<TrackFile> oldFiles, bool newDownload, DownloadClientItem downloadClientItem)
@@ -23,7 +23,7 @@ namespace NzbDrone.Core.MediaFiles.Events
 
             if (downloadClientItem != null)
             {
-                DownloadClient = downloadClientItem.DownloadClientInfo.Name;
+                DownloadClientInfo = downloadClientItem.DownloadClientInfo;
                 DownloadId = downloadClientItem.DownloadId;
             }
         }

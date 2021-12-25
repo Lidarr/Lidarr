@@ -30,7 +30,7 @@ namespace Lidarr.Api.V1.History
             _failedDownloadService = failedDownloadService;
         }
 
-        protected HistoryResource MapToResource(NzbDrone.Core.History.History model, bool includeArtist, bool includeAlbum, bool includeTrack)
+        protected HistoryResource MapToResource(EntityHistory model, bool includeArtist, bool includeAlbum, bool includeTrack)
         {
             var resource = model.ToResource();
 
@@ -61,7 +61,7 @@ namespace Lidarr.Api.V1.History
         public PagingResource<HistoryResource> GetHistory(bool includeArtist = false, bool includeAlbum = false, bool includeTrack = false)
         {
             var pagingResource = Request.ReadPagingResourceFromRequest<HistoryResource>();
-            var pagingSpec = pagingResource.MapToPagingSpec<HistoryResource, NzbDrone.Core.History.History>("date", SortDirection.Descending);
+            var pagingSpec = pagingResource.MapToPagingSpec<HistoryResource, EntityHistory>("date", SortDirection.Descending);
 
             var eventTypeFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "eventType");
             var albumIdFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "albumId");
@@ -69,7 +69,7 @@ namespace Lidarr.Api.V1.History
 
             if (eventTypeFilter != null)
             {
-                var filterValue = (HistoryEventType)Convert.ToInt32(eventTypeFilter.Value);
+                var filterValue = (EntityHistoryEventType)Convert.ToInt32(eventTypeFilter.Value);
                 pagingSpec.FilterExpressions.Add(v => v.EventType == filterValue);
             }
 
@@ -89,13 +89,13 @@ namespace Lidarr.Api.V1.History
         }
 
         [HttpGet("since")]
-        public List<HistoryResource> GetHistorySince(DateTime date, HistoryEventType? eventType = null, bool includeArtist = false, bool includeAlbum = false, bool includeTrack = false)
+        public List<HistoryResource> GetHistorySince(DateTime date, EntityHistoryEventType? eventType = null, bool includeArtist = false, bool includeAlbum = false, bool includeTrack = false)
         {
             return _historyService.Since(date, eventType).Select(h => MapToResource(h, includeArtist, includeAlbum, includeTrack)).ToList();
         }
 
         [HttpGet("artist")]
-        public List<HistoryResource> GetArtistHistory(int artistId, int? albumId = null, HistoryEventType? eventType = null, bool includeArtist = false, bool includeAlbum = false, bool includeTrack = false)
+        public List<HistoryResource> GetArtistHistory(int artistId, int? albumId = null, EntityHistoryEventType? eventType = null, bool includeArtist = false, bool includeAlbum = false, bool includeTrack = false)
         {
             if (albumId.HasValue)
             {

@@ -17,8 +17,10 @@ namespace NzbDrone.Core.Download.Clients.Flood
     public class Flood : TorrentClientBase<FloodSettings>
     {
         private readonly IFloodProxy _proxy;
+        private readonly IDownloadSeedConfigProvider _downloadSeedConfigProvider;
 
         public Flood(IFloodProxy proxy,
+                        IDownloadSeedConfigProvider downloadSeedConfigProvider,
                         ITorrentFileInfoReader torrentFileInfoReader,
                         IHttpClient httpClient,
                         IConfigService configService,
@@ -28,6 +30,7 @@ namespace NzbDrone.Core.Download.Clients.Flood
             : base(torrentFileInfoReader, httpClient, configService, diskProvider, remotePathMappingService, logger)
         {
             _proxy = proxy;
+            _downloadSeedConfigProvider = downloadSeedConfigProvider;
         }
 
         private static IEnumerable<string> HandleTags(RemoteAlbum remoteAlbum, FloodSettings settings)
@@ -135,6 +138,29 @@ namespace NzbDrone.Core.Download.Clients.Flood
                 else if (properties.Status.Contains("stopped"))
                 {
                     item.Status = DownloadItemStatus.Paused;
+                }
+
+                if (item.Status == DownloadItemStatus.Completed)
+                {
+                    // Grab cached seedConfig
+                    var seedConfig = _downloadSeedConfigProvider.GetSeedConfiguration(item.DownloadId);
+
+                    if (seedConfig != null)
+                    {
+                        if (item.SeedRatio >= seedConfig.Ratio)
+                        {
+                            // Check if seed ratio reached
+                            item.CanMoveFiles = item.CanBeRemoved = true;
+                        }
+                        else if (properties.DateFinished != null && properties.DateFinished > 0)
+                        {
+                            // Check if seed time reached
+                            if ((DateTimeOffset.Now - DateTimeOffset.FromUnixTimeSeconds((long)properties.DateFinished)) >= seedConfig.SeedTime)
+                            {
+                                item.CanMoveFiles = item.CanBeRemoved = true;
+                            }
+                        }
+                    }
                 }
 
                 items.Add(item);

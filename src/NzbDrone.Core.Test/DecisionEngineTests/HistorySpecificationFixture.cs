@@ -76,10 +76,10 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
                   .Returns(true);
         }
 
-        private void GivenMostRecentForAlbum(int albumId, string downloadId, QualityModel quality, DateTime date, HistoryEventType eventType)
+        private void GivenMostRecentForAlbum(int albumId, string downloadId, QualityModel quality, DateTime date, EntityHistoryEventType eventType)
         {
             Mocker.GetMock<IHistoryService>().Setup(s => s.MostRecentForAlbum(albumId))
-                  .Returns(new History.History { DownloadId = downloadId, Quality = quality, Date = date, EventType = eventType });
+                  .Returns(new EntityHistory { DownloadId = downloadId, Quality = quality, Date = date, EventType = eventType });
         }
 
         private void GivenCdhDisabled()
@@ -98,14 +98,14 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [Test]
         public void should_return_true_if_latest_history_item_is_null()
         {
-            Mocker.GetMock<IHistoryService>().Setup(s => s.MostRecentForAlbum(It.IsAny<int>())).Returns((History.History)null);
+            Mocker.GetMock<IHistoryService>().Setup(s => s.MostRecentForAlbum(It.IsAny<int>())).Returns((EntityHistory)null);
             _upgradeHistory.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeTrue();
         }
 
         [Test]
         public void should_return_true_if_latest_history_item_is_not_grabbed()
         {
-            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _notupgradableQuality, DateTime.UtcNow, HistoryEventType.DownloadFailed);
+            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _notupgradableQuality, DateTime.UtcNow, EntityHistoryEventType.DownloadFailed);
             _upgradeHistory.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeTrue();
         }
 
@@ -118,46 +118,46 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [Test]
         public void should_return_true_if_latest_history_item_is_older_than_twelve_hours()
         {
-            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _notupgradableQuality, DateTime.UtcNow.AddHours(-12).AddMilliseconds(-1), HistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _notupgradableQuality, DateTime.UtcNow.AddHours(-12).AddMilliseconds(-1), EntityHistoryEventType.Grabbed);
             _upgradeHistory.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeTrue();
         }
 
         [Test]
         public void should_be_upgradable_if_only_album_is_upgradable()
         {
-            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _upgradableQuality, DateTime.UtcNow, HistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _upgradableQuality, DateTime.UtcNow, EntityHistoryEventType.Grabbed);
             _upgradeHistory.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeTrue();
         }
 
         [Test]
         public void should_be_upgradable_if_both_albums_are_upgradable()
         {
-            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _upgradableQuality, DateTime.UtcNow, HistoryEventType.Grabbed);
-            GivenMostRecentForAlbum(SECOND_ALBUM_ID, string.Empty, _upgradableQuality, DateTime.UtcNow, HistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _upgradableQuality, DateTime.UtcNow, EntityHistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(SECOND_ALBUM_ID, string.Empty, _upgradableQuality, DateTime.UtcNow, EntityHistoryEventType.Grabbed);
             _upgradeHistory.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeTrue();
         }
 
         [Test]
         public void should_not_be_upgradable_if_both_albums_are_not_upgradable()
         {
-            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _notupgradableQuality, DateTime.UtcNow, HistoryEventType.Grabbed);
-            GivenMostRecentForAlbum(SECOND_ALBUM_ID, string.Empty, _notupgradableQuality, DateTime.UtcNow, HistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _notupgradableQuality, DateTime.UtcNow, EntityHistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(SECOND_ALBUM_ID, string.Empty, _notupgradableQuality, DateTime.UtcNow, EntityHistoryEventType.Grabbed);
             _upgradeHistory.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
         }
 
         [Test]
         public void should_be_not_upgradable_if_only_first_albums_is_upgradable()
         {
-            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _upgradableQuality, DateTime.UtcNow, HistoryEventType.Grabbed);
-            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _notupgradableQuality, DateTime.UtcNow, HistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _upgradableQuality, DateTime.UtcNow, EntityHistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _notupgradableQuality, DateTime.UtcNow, EntityHistoryEventType.Grabbed);
             _upgradeHistory.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
         }
 
         [Test]
         public void should_be_not_upgradable_if_only_second_albums_is_upgradable()
         {
-            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _notupgradableQuality, DateTime.UtcNow, HistoryEventType.Grabbed);
-            GivenMostRecentForAlbum(SECOND_ALBUM_ID, string.Empty, _upgradableQuality, DateTime.UtcNow, HistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _notupgradableQuality, DateTime.UtcNow, EntityHistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(SECOND_ALBUM_ID, string.Empty, _upgradableQuality, DateTime.UtcNow, EntityHistoryEventType.Grabbed);
             _upgradeHistory.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
         }
 
@@ -168,7 +168,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             _parseResultSingle.ParsedAlbumInfo.Quality = new QualityModel(Quality.MP3_320, new Revision(version: 1));
             _upgradableQuality = new QualityModel(Quality.MP3_320, new Revision(version: 1));
 
-            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _upgradableQuality, DateTime.UtcNow, HistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _upgradableQuality, DateTime.UtcNow, EntityHistoryEventType.Grabbed);
 
             _upgradeHistory.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeFalse();
         }
@@ -180,7 +180,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             _parseResultSingle.ParsedAlbumInfo.Quality = new QualityModel(Quality.MP3_320, new Revision(version: 1));
             _upgradableQuality = new QualityModel(Quality.MP3_320, new Revision(version: 1));
 
-            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _upgradableQuality, DateTime.UtcNow, HistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _upgradableQuality, DateTime.UtcNow, EntityHistoryEventType.Grabbed);
 
             _upgradeHistory.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeFalse();
         }
@@ -188,7 +188,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [Test]
         public void should_return_false_if_latest_history_item_is_only_one_hour_old()
         {
-            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _notupgradableQuality, DateTime.UtcNow.AddHours(-1), HistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(FIRST_ALBUM_ID, string.Empty, _notupgradableQuality, DateTime.UtcNow.AddHours(-1), EntityHistoryEventType.Grabbed);
             _upgradeHistory.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
         }
 
@@ -196,7 +196,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         public void should_return_false_if_latest_history_has_a_download_id_and_cdh_is_disabled()
         {
             GivenCdhDisabled();
-            GivenMostRecentForAlbum(FIRST_ALBUM_ID, "test", _upgradableQuality, DateTime.UtcNow.AddDays(-100), HistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(FIRST_ALBUM_ID, "test", _upgradableQuality, DateTime.UtcNow.AddDays(-100), EntityHistoryEventType.Grabbed);
             _upgradeHistory.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeTrue();
         }
 
@@ -208,7 +208,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             _parseResultSingle.ParsedAlbumInfo.Quality = new QualityModel(Quality.MP3_320, new Revision(version: 1));
             _upgradableQuality = new QualityModel(Quality.MP3_320, new Revision(version: 1));
 
-            GivenMostRecentForAlbum(FIRST_ALBUM_ID, "test", _upgradableQuality, DateTime.UtcNow.AddDays(-100), HistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(FIRST_ALBUM_ID, "test", _upgradableQuality, DateTime.UtcNow.AddDays(-100), EntityHistoryEventType.Grabbed);
 
             _upgradeHistory.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeFalse();
         }
@@ -217,7 +217,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         public void should_return_false_if_only_album_is_not_upgradable_and_cdh_is_disabled()
         {
             GivenCdhDisabled();
-            GivenMostRecentForAlbum(FIRST_ALBUM_ID, "test", _notupgradableQuality, DateTime.UtcNow.AddDays(-100), HistoryEventType.Grabbed);
+            GivenMostRecentForAlbum(FIRST_ALBUM_ID, "test", _notupgradableQuality, DateTime.UtcNow.AddDays(-100), EntityHistoryEventType.Grabbed);
             _upgradeHistory.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeFalse();
         }
     }
