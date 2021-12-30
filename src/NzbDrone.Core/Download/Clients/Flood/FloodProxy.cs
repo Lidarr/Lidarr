@@ -215,7 +215,7 @@ namespace NzbDrone.Core.Download.Clients.Flood
         {
             var contentsRequest = BuildRequest(settings).Resource($"/client/settings").Build();
 
-            contentsRequest.Method = HttpMethod.Get;
+            contentsRequest.Method = HttpMethod.GET;
 
             return Json.Deserialize<FloodClientSettings>(HandleRequest(contentsRequest, settings).Content);
         }
