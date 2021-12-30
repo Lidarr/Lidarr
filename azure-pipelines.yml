@@ -313,6 +313,14 @@ stages:
           includeRootFolder: false
           rootFolderOrFile: $(artifactsFolder)/linux-arm/net6.0
       - task: ArchiveFiles@2
+        displayName: Create ARM32 Linux Musl Core tar
+        inputs:
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Lidarr.$(buildName).linux-musl-core-arm.tar.gz'
+          archiveType: 'tar'
+          tarCompression: 'gz'
+          includeRootFolder: false
+          rootFolderOrFile: $(artifactsFolder)/linux-musl-arm/net6.0
+      - task: ArchiveFiles@2
         displayName: Create ARM64 Linux Core tar
         inputs:
           archiveFile: '$(Build.ArtifactStagingDirectory)/Lidarr.$(buildName).linux-core-arm64.tar.gz'

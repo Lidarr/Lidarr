@@ -374,6 +374,7 @@ then
         Package "net6.0" "linux-arm64"
         Package "net6.0" "linux-musl-arm64"
         Package "net6.0" "linux-arm"
+        Package "net6.0" "linux-musl-arm"
         Package "net6.0" "osx-x64"
         Package "net6.0" "osx-arm64"
         if [ "$ENABLE_BSD" = "YES" ];
