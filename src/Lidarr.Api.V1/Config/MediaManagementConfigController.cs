@@ -10,12 +10,28 @@ namespace Lidarr.Api.V1.Config
     [V1ApiController("config/mediamanagement")]
     public class MediaManagementConfigController : ConfigController<MediaManagementConfigResource>
     {
-        public MediaManagementConfigController(IConfigService configService, PathExistsValidator pathExistsValidator, FolderChmodValidator folderChmodValidator)
+        public MediaManagementConfigController(IConfigService configService,
+                                           PathExistsValidator pathExistsValidator,
+                                           FolderChmodValidator folderChmodValidator,
+                                           FolderWritableValidator folderWritableValidator,
+                                           ArtistPathValidator artistPathValidator,
+                                           StartupFolderValidator startupFolderValidator,
+                                           SystemFolderValidator systemFolderValidator,
+                                           RootFolderAncestorValidator rootFolderAncestorValidator,
+                                           RootFolderValidator rootFolderValidator)
             : base(configService)
         {
+            SharedValidator.RuleFor(c => c.RecycleBin).IsValidPath()
+                                                      .SetValidator(folderWritableValidator)
+                                                      .SetValidator(rootFolderValidator)
+                                                      .SetValidator(pathExistsValidator)
+                                                      .SetValidator(artistPathValidator)
+                                                      .SetValidator(rootFolderAncestorValidator)
+                                                      .SetValidator(startupFolderValidator)
+                                                      .SetValidator(systemFolderValidator)
+                                                      .When(c => !string.IsNullOrWhiteSpace(c.RecycleBin));
             SharedValidator.RuleFor(c => c.RecycleBinCleanupDays).GreaterThanOrEqualTo(0);
             SharedValidator.RuleFor(c => c.ChmodFolder).SetValidator(folderChmodValidator).When(c => !string.IsNullOrEmpty(c.ChmodFolder) && (OsInfo.IsLinux || OsInfo.IsOsx));
-            SharedValidator.RuleFor(c => c.RecycleBin).IsValidPath().SetValidator(pathExistsValidator).When(c => !string.IsNullOrWhiteSpace(c.RecycleBin));
             SharedValidator.RuleFor(c => c.MinimumFreeSpaceWhenImporting).GreaterThanOrEqualTo(100);
         }
 
