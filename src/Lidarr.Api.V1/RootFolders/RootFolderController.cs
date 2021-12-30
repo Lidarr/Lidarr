@@ -21,6 +21,7 @@ namespace Lidarr.Api.V1.RootFolders
                                 RootFolderValidator rootFolderValidator,
                                 PathExistsValidator pathExistsValidator,
                                 MappedNetworkDriveValidator mappedNetworkDriveValidator,
+                                RecycleBinValidator recycleBinValidator,
                                 StartupFolderValidator startupFolderValidator,
                                 SystemFolderValidator systemFolderValidator,
                                 FolderWritableValidator folderWritableValidator,
@@ -35,6 +36,7 @@ namespace Lidarr.Api.V1.RootFolders
                 .IsValidPath()
                 .SetValidator(mappedNetworkDriveValidator)
                 .SetValidator(startupFolderValidator)
+                .SetValidator(recycleBinValidator)
                 .SetValidator(pathExistsValidator)
                 .SetValidator(systemFolderValidator)
                 .SetValidator(folderWritableValidator);

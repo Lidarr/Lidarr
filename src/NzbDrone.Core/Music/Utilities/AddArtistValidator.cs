@@ -13,6 +13,7 @@ namespace NzbDrone.Core.Music
     public class AddArtistValidator : AbstractValidator<Artist>, IAddArtistValidator
     {
         public AddArtistValidator(RootFolderValidator rootFolderValidator,
+                                  RecycleBinValidator recycleBinValidator,
                                   ArtistPathValidator artistPathValidator,
                                   ArtistAncestorValidator artistAncestorValidator,
                                   QualityProfileExistsValidator qualityProfileExistsValidator,
@@ -21,6 +22,7 @@ namespace NzbDrone.Core.Music
             RuleFor(c => c.Path).Cascade(CascadeMode.StopOnFirstFailure)
                                 .IsValidPath()
                                 .SetValidator(rootFolderValidator)
+                                .SetValidator(recycleBinValidator)
                                 .SetValidator(artistPathValidator)
                                 .SetValidator(artistAncestorValidator);
 

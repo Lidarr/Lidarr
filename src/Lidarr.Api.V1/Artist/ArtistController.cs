@@ -53,6 +53,7 @@ namespace Lidarr.Api.V1.Artist
                             IMapCoversToLocal coverMapper,
                             IManageCommandQueue commandQueueManager,
                             IRootFolderService rootFolderService,
+                            RecycleBinValidator recycleBinValidator,
                             RootFolderValidator rootFolderValidator,
                             MappedNetworkDriveValidator mappedNetworkDriveValidator,
                             ArtistPathValidator artistPathValidator,
@@ -82,6 +83,7 @@ namespace Lidarr.Api.V1.Artist
                            .SetValidator(mappedNetworkDriveValidator)
                            .SetValidator(artistPathValidator)
                            .SetValidator(artistAncestorValidator)
+                           .SetValidator(recycleBinValidator)
                            .SetValidator(systemFolderValidator)
                            .When(s => !s.Path.IsNullOrWhiteSpace());
 
