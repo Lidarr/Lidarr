@@ -42,6 +42,15 @@ namespace Lidarr.Api.V1.Albums
         {
             var resource = album.ToResource();
 
+            // To prevent propagating changes to the MediaCovers in the Images list (made by MapCoversToLocal below), clone the items for this resource
+            // N.B. Done here it does not affect every album resource grab (e.g. browsing from UI), only notifications from Album Import/Changes
+            List<MediaCover> newImages = new List<MediaCover>(resource.Images.Count);
+            resource.Images.ForEach((item) =>
+            {
+                newImages.Add((MediaCover)item.Clone());
+            });
+            resource.Images = newImages;
+
             if (includeArtist)
             {
                 var artist = album.Artist.Value;

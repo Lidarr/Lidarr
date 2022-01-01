@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Equ;
 using NzbDrone.Common.Extensions;
@@ -24,7 +25,7 @@ namespace NzbDrone.Core.MediaCover
         Album = 1
     }
 
-    public class MediaCover : MemberwiseEquatable<MediaCover>, IEmbeddedDocument
+    public class MediaCover : MemberwiseEquatable<MediaCover>, IEmbeddedDocument, ICloneable
     {
         private string _url;
         public string Url
@@ -54,6 +55,12 @@ namespace NzbDrone.Core.MediaCover
         {
             CoverType = coverType;
             Url = url;
+        }
+
+        public object Clone()
+        {
+            //Implement ICloneable to ease cloning.
+            return this.MemberwiseClone();
         }
     }
 }
