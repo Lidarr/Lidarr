@@ -308,7 +308,7 @@
     "IfYouDontAddAnImportListExclusionAndTheArtistHasAMetadataProfileOtherThanNoneThenThisAlbumMayBeReaddedDuringTheNextArtistRefresh": "Ha nem ad hozzá importlista-kizárást, és az előadó metaadat-profilja a „Nincs”-től eltérő, akkor az albumot a következő előadói frissítés során újra hozzáadhatja.",
     "ImportListSettings": "Listabeállítások importálása",
     "IsInUseCantDeleteAMetadataProfileThatIsAttachedToAnArtistOrImportList": "Előadóhoz vagy importáló listához csatolt metaadatprofil nem törölhető",
-    "LidarrSupportsAnyDownloadClientThatUsesTheNewznabStandardAsWellAsOtherDownloadClientsListedBelow": "A Lidarr minden olyan letöltőklienst támogat, amely a Newznab szabványt használja, valamint az alább felsorolt egyéb letöltőklienseket is.",
+    "LidarrSupportsAnyDownloadClientThatUsesTheNewznabStandardAsWellAsOtherDownloadClientsListedBelow": "A Lidarr számos népszerű torrent és usenet letöltő klienst támogat.",
     "LogLevelvalueTraceTraceLoggingShouldOnlyBeEnabledTemporarily": "A nyomkövetést csak ideiglenesen szabad engedélyezni",
     "MetadataProfileIdHelpText": "A Metaadat-profil listaelemeket hozzá kell adni a",
     "MinimumAgeHelpText": "Usenet: Az NZB-k minimális életkora percekben, mielőtt megragadnák őket. Használja ezt arra, hogy időt biztosítson az új kiadásoknak az usenet-szolgáltatóhoz történő továbbterjesztésre.",
@@ -457,7 +457,7 @@
     "MusicBrainzTrackID": "MusicBrainz zeneszám azonosítója",
     "MustContain": "Tartalmaznia kell",
     "MustNotContain": "Nem tartalmazhatja",
-    "NETCore": ".NET Mag",
+    "NETCore": ".NET",
     "NoHistory": "Nincs(enek) előzmény(ek).",
     "Other": "Egyéb",
     "PastDays": "Elmúlt napok",
@@ -585,7 +585,7 @@
     "Episode": "Epizód",
     "ExistingAlbums": "Meglévő albumok",
     "ForeignIdHelpText": "A kizárandó előadó/album Musicbrainz-azonosítója",
-    "ForMoreInformationOnTheIndividualDownloadClientsClickOnTheInfoButtons": "Ha többet szeretnél megtudni a különböző letöltési kliensekről, kattints az információs gombokra.",
+    "ForMoreInformationOnTheIndividualDownloadClientsClickOnTheInfoButtons": "Az egyes letöltési kliensekkel kapcsolatos további információkért kattintson a további információ gombra.",
     "ForMoreInformationOnTheIndividualIndexersClickOnTheInfoButtons": "Az egyes indexerekről további információkért kattints az info gombokra.",
     "ForMoreInformationOnTheIndividualListsClickOnTheInfoButtons": "Az egyes listákkal kapcsolatos további információkért kattintson az információs gombokra.",
     "IncludeUnknownArtistItemsHelpText": "Mutasson olyan elemeket, amelyekben nincs előadó a sorban, beleértve az eltávolított előadókat, filmeket vagy bármi mást a Lidarr kategóriájában",
@@ -681,5 +681,8 @@
     "UnableToLoadMetadataProfiles": "Nem sikerült betölteni a metaadat-profilokat",
     "WatchRootFoldersForFileChanges": "Gyökérmappák figyelése fájlváltozások érdekében",
     "UILanguageHelpText": "A Lidarr által a felhasználói felülethez használt nyelv",
-    "UILanguageHelpTextWarning": "Böngésző újratöltése szükséges"
+    "UILanguageHelpTextWarning": "Böngésző újratöltése szükséges",
+    "RemoveCompleted": "Eltávolítás Kész",
+    "RemoveDownloadsAlert": "Az eltávolításhoz szükséges beállítások átkerültek a fenti táblázatban található egyéni letöltő beállítások közé.",
+    "RemoveFailed": "Eltávolítás Sikertelen"
 }

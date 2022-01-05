@@ -3,5 +3,14 @@
     "UILanguage": "Язык пользовательского интерфейса",
     "Quality": "Качество",
     "FileDateHelpText": "Заменить дату файла при импорте/сканировании",
-    "Docker": "Docker"
+    "Docker": "Docker",
+    "OnHealthIssueHelpText": "О проблемах в системе",
+    "ImportExtraFiles": "Импортировать дополнительные файлы",
+    "UnableToLoadIndexerOptions": "Не удалось загрузить параметры индексатора",
+    "ClickToChangeQuality": "Нажмите чтобы изменить качество",
+    "LocalPath": "Локальный путь",
+    "RemotePath": "Удалённый путь",
+    "QualityDefinitions": "Определения качества",
+    "Usenet": "Usenet",
+    "ReleaseGroup": "Релиз группа"
 }

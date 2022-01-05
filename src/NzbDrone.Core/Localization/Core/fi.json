@@ -459,7 +459,7 @@
     "ReleaseRejected": "Vapautus hylätty",
     "ReleaseStatuses": "Julkaisutila",
     "ReleaseWillBeProcessedInterp": "Julkaisu käsitellään {0}",
-    "RemotePath": "Kaukopolku",
+    "RemotePath": "Etäsijainti",
     "RemotePathMappings": "Etäreittien kartoitukset",
     "Remove": "Poista",
     "RemoveCompletedDownloadsHelpText": "Poista tuodut lataukset asiakasasiakashistoriasta",
