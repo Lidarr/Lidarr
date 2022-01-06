@@ -179,5 +179,18 @@
     "Actions": "操作",
     "AddListExclusion": "添加排除列表",
     "MinimumAge": "最小年龄",
-    "MinimumFreeSpaceWhenImportingHelpText": "如果导入的磁盘空间不足，则禁止导入"
+    "MinimumFreeSpaceWhenImportingHelpText": "如果导入的磁盘空间不足，则禁止导入",
+    "Absolute": "绝对",
+    "AddImportListExclusionHelpText": "防止列表中的电影被添加到 Lidarr 中",
+    "AddMissing": "添加丢失项",
+    "AlbumIsDownloadingInterp": "正在下载专辑 - {0}% {1}",
+    "AdvancedSettingsHiddenClickToShow": "已隐藏，点击显示",
+    "AdvancedSettingsShownClickToHide": "已显示，点击隐藏",
+    "Album": "专辑",
+    "AlbumHasNotAired": "专辑尚未发布",
+    "AlbumIsDownloading": "正在下载专辑",
+    "AlbumIsNotMonitored": "专辑未被监控",
+    "AlbumStudio": "专辑库",
+    "AllAlbums": "所有专辑",
+    "AddNewItem": "添加新项目"
 }
