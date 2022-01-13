@@ -683,5 +683,10 @@
     "ExpandEPByDefaultHelpText": "EPs",
     "ExpandSingleByDefaultHelpText": "Singles",
     "ExtraFileExtensionsHelpTexts2": "\"Exemplos: \".sub",
-    "Sonarr": "Sonarr"
+    "Sonarr": "Sonarr",
+    "OnApplicationUpdateHelpText": "Ao Atualizar o Aplicativo",
+    "OnApplicationUpdate": "Ao Atualizar o Aplicativo",
+    "OnRename": "Ao Renomear",
+    "OnTrackRetag": "Ao Re-etiquetar Faixa",
+    "OnUpgrade": "Ao Atualizar"
 }

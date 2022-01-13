@@ -684,5 +684,15 @@
     "UILanguageHelpTextWarning": "Böngésző újratöltése szükséges",
     "RemoveCompleted": "Eltávolítás Kész",
     "RemoveDownloadsAlert": "Az eltávolításhoz szükséges beállítások átkerültek a fenti táblázatban található egyéni letöltő beállítások közé.",
-    "RemoveFailed": "Eltávolítás Sikertelen"
+    "RemoveFailed": "Eltávolítás Sikertelen",
+    "OnApplicationUpdateHelpText": "Alkalmazásfrissítésről",
+    "OnDownloadFailure": "Letöltési hiba esetén",
+    "OnGrab": "Kiválasztás alatt",
+    "OnHealthIssue": "Állapotprobléma",
+    "OnReleaseImport": "A kiadás importálásakor",
+    "OnRename": "Átnevezés alatt",
+    "OnTrackRetag": "Dal átcímkézés alatt",
+    "OnUpgrade": "Minőségjavítás alatt",
+    "OnApplicationUpdate": "Alkalmazásfrissítésről",
+    "OnImportFailure": "Importálási hiba esetén"
 }
