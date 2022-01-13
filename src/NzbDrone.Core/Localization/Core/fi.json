@@ -506,5 +506,13 @@
     "Label": "Tunniste",
     "Score": "Pisteet",
     "SourcePath": "Lähteen polku",
-    "Year": "Vuosi"
+    "Year": "Vuosi",
+    "Album": "Albumi",
+    "AlbumHasNotAired": "Albumia ei ole julkaistu",
+    "AlbumIsDownloading": "Albumia ladataan",
+    "AlbumIsNotMonitored": "Albumia ei seurata",
+    "AlbumStudio": "Albumin studio",
+    "AllAlbums": "Kaikki albumit",
+    "AllAlbumsData": "Seuraa kaikkia albumeita, erikoisalbumeita lukuunottamatta",
+    "AllArtistAlbums": "Kaikki artistin albumit"
 }
