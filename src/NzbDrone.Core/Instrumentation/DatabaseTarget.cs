@@ -16,12 +16,11 @@ namespace NzbDrone.Core.Instrumentation
         private const string INSERT_COMMAND = "INSERT INTO [Logs]([Message],[Time],[Logger],[Exception],[ExceptionType],[Level]) " +
                                       "VALUES(@Message,@Time,@Logger,@Exception,@ExceptionType,@Level)";
 
-        private readonly SQLiteConnection _connection;
+        private readonly IConnectionStringFactory _connectionStringFactory;
 
         public DatabaseTarget(IConnectionStringFactory connectionStringFactory)
         {
-            _connection = new SQLiteConnection(connectionStringFactory.LogDbConnectionString);
-            _connection.Open();
+            _connectionStringFactory = connectionStringFactory;
         }
 
         public void Register()
@@ -56,6 +55,7 @@ namespace NzbDrone.Core.Instrumentation
         {
             try
             {
+                using var connection = new SQLiteConnection(_connectionStringFactory.LogDbConnectionString).OpenAndReturn();
                 var log = new Log();
                 log.Time = logEvent.TimeStamp;
                 log.Message = CleanseLogMessage.Cleanse(logEvent.FormattedMessage);
@@ -84,7 +84,7 @@ namespace NzbDrone.Core.Instrumentation
 
                 log.Level = logEvent.Level.Name;
 
-                var sqlCommand = new SQLiteCommand(INSERT_COMMAND, _connection);
+                var sqlCommand = new SQLiteCommand(INSERT_COMMAND, connection);
 
                 sqlCommand.Parameters.Add(new SQLiteParameter("Message", DbType.String) { Value = log.Message });
                 sqlCommand.Parameters.Add(new SQLiteParameter("Time", DbType.DateTime) { Value = log.Time.ToUniversalTime() });
