@@ -260,10 +260,10 @@ class Missing extends Component {
                   message={
                     <div>
                       <div>
-                        Are you sure you want to search for all {totalRecords} missing albums?
+                        {translate('MassAlbumsSearchWarning', [totalRecords])}
                       </div>
                       <div>
-                        This cannot be cancelled once started without restarting Lidarr.
+                        {translate('ThisCannotBeCancelled')}
                       </div>
                     </div>
                   }
