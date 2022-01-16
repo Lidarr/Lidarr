@@ -105,8 +105,8 @@ namespace Lidarr.Api.V1.History
             return _historyService.GetByArtist(artistId, eventType).Select(h => MapToResource(h, includeArtist, includeAlbum, includeTrack)).ToList();
         }
 
-        [HttpPost("failed")]
-        public object MarkAsFailed([FromBody] int id)
+        [HttpPost("failed/{id}")]
+        public object MarkAsFailed([FromRoute] int id)
         {
             _failedDownloadService.MarkAsFailed(id);
             return new { };
