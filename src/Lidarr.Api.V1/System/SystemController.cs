@@ -58,6 +58,7 @@ namespace Lidarr.Api.V1.System
         {
             return new
             {
+                AppName = BuildInfo.AppName,
                 Version = BuildInfo.Version.ToString(),
                 BuildTime = BuildInfo.BuildDateTime,
                 IsDebug = BuildInfo.IsDebug,
