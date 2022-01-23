@@ -44,7 +44,9 @@ function EditIndexerModalContent(props) {
     supportsRss,
     supportsSearch,
     fields,
-    priority
+    priority,
+    protocol,
+    downloadClientId
   } = item;
 
   return (
@@ -158,6 +160,23 @@ function EditIndexerModalContent(props) {
                   min={1}
                   max={50}
                   {...priority}
+                  onChange={onInputChange}
+                />
+              </FormGroup>
+
+              <FormGroup
+                advancedSettings={advancedSettings}
+                isAdvanced={true}
+              >
+                <FormLabel>DownloadClient</FormLabel>
+
+                <FormInputGroup
+                  type={inputTypes.DOWNLOAD_CLIENT_SELECT}
+                  name="downloadClientId"
+                  helpText={'Specify which download client is used for grabs from this indexer'}
+                  {...downloadClientId}
+                  includeAny={true}
+                  protocol={protocol.value}
                   onChange={onInputChange}
                 />
               </FormGroup>
