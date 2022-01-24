@@ -8,10 +8,8 @@ namespace Lidarr.Api.V1.Profiles.Release
     public class ReleaseProfileResource : RestResource
     {
         public bool Enabled { get; set; }
-        public string Required { get; set; }
-        public string Ignored { get; set; }
-        public List<KeyValuePair<string, int>> Preferred { get; set; }
-        public bool IncludePreferredWhenRenaming { get; set; }
+        public List<string> Required { get; set; }
+        public List<string> Ignored { get; set; }
         public int IndexerId { get; set; }
         public HashSet<int> Tags { get; set; }
 
@@ -37,8 +35,6 @@ namespace Lidarr.Api.V1.Profiles.Release
                 Enabled = model.Enabled,
                 Required = model.Required,
                 Ignored = model.Ignored,
-                Preferred = model.Preferred,
-                IncludePreferredWhenRenaming = model.IncludePreferredWhenRenaming,
                 IndexerId = model.IndexerId,
                 Tags = new HashSet<int>(model.Tags)
             };
@@ -58,8 +54,6 @@ namespace Lidarr.Api.V1.Profiles.Release
                 Enabled = resource.Enabled,
                 Required = resource.Required,
                 Ignored = resource.Ignored,
-                Preferred = resource.Preferred,
-                IncludePreferredWhenRenaming = resource.IncludePreferredWhenRenaming,
                 IndexerId = resource.IndexerId,
                 Tags = new HashSet<int>(resource.Tags)
             };

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ProtocolLabel from 'Activity/Queue/ProtocolLabel';
+import AlbumFormats from 'Album/AlbumFormats';
 import TrackQuality from 'Album/TrackQuality';
 import Icon from 'Components/Icon';
 import Link from 'Components/Link/Link';
@@ -9,10 +10,12 @@ import ConfirmModal from 'Components/Modal/ConfirmModal';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import Popover from 'Components/Tooltip/Popover';
+import Tooltip from 'Components/Tooltip/Tooltip';
 import { icons, kinds, tooltipPositions } from 'Helpers/Props';
 import formatDateTime from 'Utilities/Date/formatDateTime';
 import formatAge from 'Utilities/Number/formatAge';
 import formatBytes from 'Utilities/Number/formatBytes';
+import formatPreferredWordScore from 'Utilities/Number/formatPreferredWordScore';
 import translate from 'Utilities/String/translate';
 import Peers from './Peers';
 import styles from './InteractiveSearchRow.css';
@@ -112,7 +115,8 @@ class InteractiveSearchRow extends Component {
       seeders,
       leechers,
       quality,
-      preferredWordScore,
+      customFormatScore,
+      customFormats,
       rejections,
       downloadAllowed,
       isGrabbing,
@@ -165,9 +169,14 @@ class InteractiveSearchRow extends Component {
           <TrackQuality quality={quality} />
         </TableRowCell>
 
-        <TableRowCell className={styles.preferredWordScore}>
-          {preferredWordScore > 0 && `+${preferredWordScore}`}
-          {preferredWordScore < 0 && preferredWordScore}
+        <TableRowCell className={styles.customFormatScore}>
+          <Tooltip
+            anchor={
+              formatPreferredWordScore(customFormatScore, customFormats.length)
+            }
+            tooltip={<AlbumFormats formats={customFormats} />}
+            position={tooltipPositions.BOTTOM}
+          />
         </TableRowCell>
 
         <TableRowCell className={styles.rejected}>
@@ -240,7 +249,8 @@ InteractiveSearchRow.propTypes = {
   seeders: PropTypes.number,
   leechers: PropTypes.number,
   quality: PropTypes.object.isRequired,
-  preferredWordScore: PropTypes.number.isRequired,
+  customFormats: PropTypes.arrayOf(PropTypes.object),
+  customFormatScore: PropTypes.number.isRequired,
   rejections: PropTypes.arrayOf(PropTypes.string).isRequired,
   downloadAllowed: PropTypes.bool.isRequired,
   isGrabbing: PropTypes.bool.isRequired,

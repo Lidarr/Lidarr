@@ -31,7 +31,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
     public class ImportDecisionMakerInfo
     {
         public DownloadClientItem DownloadClientItem { get; set; }
-        public ParsedTrackInfo ParsedTrackInfo { get; set; }
+        public ParsedAlbumInfo ParsedAlbumInfo { get; set; }
     }
 
     public class ImportDecisionMakerConfig
@@ -76,7 +76,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             _logger = logger;
         }
 
-        public Tuple<List<LocalTrack>, List<ImportDecision<LocalTrack>>> GetLocalTracks(List<IFileInfo> musicFiles, DownloadClientItem downloadClientItem, ParsedTrackInfo folderInfo, FilterFilesType filter)
+        public Tuple<List<LocalTrack>, List<ImportDecision<LocalTrack>>> GetLocalTracks(List<IFileInfo> musicFiles, DownloadClientItem downloadClientItem, ParsedAlbumInfo folderInfo, FilterFilesType filter)
         {
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
@@ -108,7 +108,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 var localTrack = new LocalTrack
                 {
                     DownloadClientAlbumInfo = downloadClientItemInfo,
-                    FolderTrackInfo = folderInfo,
+                    FolderAlbumInfo = folderInfo,
                     Path = file.FullName,
                     Size = file.Length,
                     Modified = file.LastWriteTimeUtc,
@@ -144,7 +144,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             idOverrides ??= new IdentificationOverrides();
             itemInfo ??= new ImportDecisionMakerInfo();
 
-            var trackData = GetLocalTracks(musicFiles, itemInfo.DownloadClientItem, itemInfo.ParsedTrackInfo, config.Filter);
+            var trackData = GetLocalTracks(musicFiles, itemInfo.DownloadClientItem, itemInfo.ParsedAlbumInfo, config.Filter);
             var localTracks = trackData.Item1;
             var decisions = trackData.Item2;
 

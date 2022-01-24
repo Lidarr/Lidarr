@@ -3,6 +3,7 @@ using System.Linq;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
@@ -16,22 +17,22 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
         private readonly UpgradableSpecification _upgradableSpecification;
         private readonly IMediaFileService _mediaFileService;
         private readonly ITrackService _trackService;
+        private readonly ICustomFormatCalculationService _formatService;
         private readonly Logger _logger;
         private readonly ICached<bool> _missingFilesCache;
-        private readonly IPreferredWordService _preferredWordServiceCalculator;
 
         public CutoffSpecification(UpgradableSpecification upgradableSpecification,
                                    Logger logger,
                                    ICacheManager cacheManager,
                                    IMediaFileService mediaFileService,
-                                   IPreferredWordService preferredWordServiceCalculator,
+                                   ICustomFormatCalculationService formatService,
                                    ITrackService trackService)
         {
             _upgradableSpecification = upgradableSpecification;
             _mediaFileService = mediaFileService;
             _trackService = trackService;
             _missingFilesCache = cacheManager.GetCache<bool>(GetType());
-            _preferredWordServiceCalculator = preferredWordServiceCalculator;
+            _formatService = formatService;
             _logger = logger;
         }
 
@@ -56,11 +57,12 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
                     _logger.Debug("Comparing file quality with report. Existing files contain {0}", currentQualities.ConcatToString());
 
+                    var customFormats = _formatService.ParseCustomFormat(trackFiles[0]);
+
                     if (!_upgradableSpecification.CutoffNotMet(qualityProfile,
                                                                currentQualities,
-                                                               _preferredWordServiceCalculator.Calculate(subject.Artist, trackFiles[0].GetSceneOrFileName(), subject.Release.IndexerId),
-                                                               subject.ParsedAlbumInfo.Quality,
-                                                               subject.PreferredWordScore))
+                                                               customFormats,
+                                                               subject.ParsedAlbumInfo.Quality))
                     {
                         _logger.Debug("Cutoff already met by existing files, rejecting.");
 

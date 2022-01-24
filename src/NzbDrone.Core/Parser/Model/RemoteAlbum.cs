@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.Download.Clients;
 using NzbDrone.Core.Music;
 
@@ -14,11 +15,13 @@ namespace NzbDrone.Core.Parser.Model
         public List<Album> Albums { get; set; }
         public bool DownloadAllowed { get; set; }
         public TorrentSeedConfiguration SeedConfiguration { get; set; }
-        public int PreferredWordScore { get; set; }
+        public List<CustomFormat> CustomFormats { get; set; }
+        public int CustomFormatScore { get; set; }
 
         public RemoteAlbum()
         {
             Albums = new List<Album>();
+            CustomFormats = new List<CustomFormat>();
         }
 
         public bool IsRecentAlbum()

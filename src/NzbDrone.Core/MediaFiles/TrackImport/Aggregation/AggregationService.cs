@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using NLog;
 using NzbDrone.Common.Disk;
+using NzbDrone.Core.MediaFiles.EpisodeImport;
 using NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators;
 using NzbDrone.Core.Parser.Model;
 
@@ -35,7 +36,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation
         public LocalTrack Augment(LocalTrack localTrack, bool otherFiles)
         {
             if (localTrack.DownloadClientAlbumInfo == null &&
-                localTrack.FolderTrackInfo == null &&
+                localTrack.FolderAlbumInfo == null &&
                 localTrack.FileTrackInfo == null)
             {
                 if (MediaFileExtensions.Extensions.Contains(Path.GetExtension(localTrack.Path)))
@@ -45,6 +46,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation
             }
 
             localTrack.Size = _diskProvider.GetFileSize(localTrack.Path);
+            localTrack.SceneName = localTrack.SceneSource ? SceneNameCalculator.GetSceneName(localTrack) : null;
 
             foreach (var augmenter in _trackAugmenters)
             {
@@ -54,6 +56,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation
                 }
                 catch (Exception ex)
                 {
+                    var message = $"Unable to augment information for file: '{localTrack.Path}'. Artist: {localTrack.Artist} Error: {ex.Message}";
+
                     _logger.Warn(ex, ex.Message);
                 }
             }

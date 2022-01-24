@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import AlbumFormats from 'Album/AlbumFormats';
 import AlbumTitleLink from 'Album/AlbumTitleLink';
 import TrackQuality from 'Album/TrackQuality';
 import ArtistNameLink from 'Artist/ArtistNameLink';
@@ -8,6 +9,7 @@ import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellCo
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import { icons } from 'Helpers/Props';
+import formatPreferredWordScore from 'Utilities/Number/formatPreferredWordScore';
 import HistoryDetailsModal from './Details/HistoryDetailsModal';
 import HistoryEventTypeCell from './HistoryEventTypeCell';
 import styles from './HistoryRow.css';
@@ -55,6 +57,7 @@ class HistoryRow extends Component {
       album,
       track,
       quality,
+      customFormats,
       qualityCutoffNotMet,
       eventType,
       sourceTitle,
@@ -136,6 +139,16 @@ class HistoryRow extends Component {
               );
             }
 
+            if (name === 'customFormats') {
+              return (
+                <TableRowCell key={name}>
+                  <AlbumFormats
+                    formats={customFormats}
+                  />
+                </TableRowCell>
+              );
+            }
+
             if (name === 'date') {
               return (
                 <RelativeDateCellConnector
@@ -163,6 +176,17 @@ class HistoryRow extends Component {
                   className={styles.indexer}
                 >
                   {data.indexer}
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'customFormatScore') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.customFormatScore}
+                >
+                  {formatPreferredWordScore(data.customFormatScore)}
                 </TableRowCell>
               );
             }
@@ -229,6 +253,7 @@ HistoryRow.propTypes = {
   album: PropTypes.object,
   track: PropTypes.object,
   quality: PropTypes.object.isRequired,
+  customFormats: PropTypes.arrayOf(PropTypes.object),
   qualityCutoffNotMet: PropTypes.bool.isRequired,
   eventType: PropTypes.string.isRequired,
   sourceTitle: PropTypes.string.isRequired,

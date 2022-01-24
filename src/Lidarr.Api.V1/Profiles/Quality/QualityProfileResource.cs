@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Lidarr.Http.REST;
+using NzbDrone.Core.CustomFormats;
+using NzbDrone.Core.Profiles;
 using NzbDrone.Core.Profiles.Qualities;
 
 namespace Lidarr.Api.V1.Profiles.Quality
@@ -11,6 +13,9 @@ namespace Lidarr.Api.V1.Profiles.Quality
         public bool UpgradeAllowed { get; set; }
         public int Cutoff { get; set; }
         public List<QualityProfileQualityItemResource> Items { get; set; }
+        public int MinFormatScore { get; set; }
+        public int CutoffFormatScore { get; set; }
+        public List<ProfileFormatItemResource> FormatItems { get; set; }
     }
 
     public class QualityProfileQualityItemResource : RestResource
@@ -24,6 +29,13 @@ namespace Lidarr.Api.V1.Profiles.Quality
         {
             Items = new List<QualityProfileQualityItemResource>();
         }
+    }
+
+    public class ProfileFormatItemResource : RestResource
+    {
+        public int Format { get; set; }
+        public string Name { get; set; }
+        public int Score { get; set; }
     }
 
     public static class ProfileResourceMapper
@@ -41,7 +53,10 @@ namespace Lidarr.Api.V1.Profiles.Quality
                 Name = model.Name,
                 UpgradeAllowed = model.UpgradeAllowed,
                 Cutoff = model.Cutoff,
-                Items = model.Items.ConvertAll(ToResource)
+                Items = model.Items.ConvertAll(ToResource),
+                MinFormatScore = model.MinFormatScore,
+                CutoffFormatScore = model.CutoffFormatScore,
+                FormatItems = model.FormatItems.ConvertAll(ToResource)
             };
         }
 
@@ -62,6 +77,16 @@ namespace Lidarr.Api.V1.Profiles.Quality
             };
         }
 
+        public static ProfileFormatItemResource ToResource(this ProfileFormatItem model)
+        {
+            return new ProfileFormatItemResource
+            {
+                Format = model.Format.Id,
+                Name = model.Format.Name,
+                Score = model.Score
+            };
+        }
+
         public static QualityProfile ToModel(this QualityProfileResource resource)
         {
             if (resource == null)
@@ -75,7 +100,10 @@ namespace Lidarr.Api.V1.Profiles.Quality
                 Name = resource.Name,
                 UpgradeAllowed = resource.UpgradeAllowed,
                 Cutoff = resource.Cutoff,
-                Items = resource.Items.ConvertAll(ToModel)
+                Items = resource.Items.ConvertAll(ToModel),
+                MinFormatScore = resource.MinFormatScore,
+                CutoffFormatScore = resource.CutoffFormatScore,
+                FormatItems = resource.FormatItems.ConvertAll(ToModel)
             };
         }
 
@@ -93,6 +121,15 @@ namespace Lidarr.Api.V1.Profiles.Quality
                 Quality = resource.Quality != null ? (NzbDrone.Core.Qualities.Quality)resource.Quality.Id : null,
                 Items = resource.Items.ConvertAll(ToModel),
                 Allowed = resource.Allowed
+            };
+        }
+
+        public static ProfileFormatItem ToModel(this ProfileFormatItemResource resource)
+        {
+            return new ProfileFormatItem
+            {
+                Format = new CustomFormat { Id = resource.Format },
+                Score = resource.Score
             };
         }
 

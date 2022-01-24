@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.Download.TrackedDownloads;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
@@ -14,17 +15,17 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
     {
         private readonly IQueueService _queueService;
         private readonly UpgradableSpecification _upgradableSpecification;
-        private readonly IPreferredWordService _preferredWordServiceCalculator;
+        private readonly ICustomFormatCalculationService _formatService;
         private readonly Logger _logger;
 
         public QueueSpecification(IQueueService queueService,
-                                       UpgradableSpecification upgradableSpecification,
-                                       IPreferredWordService preferredWordServiceCalculator,
-                                       Logger logger)
+                                  UpgradableSpecification upgradableSpecification,
+                                  ICustomFormatCalculationService formatService,
+                                  Logger logger)
         {
             _queueService = queueService;
             _upgradableSpecification = upgradableSpecification;
-            _preferredWordServiceCalculator = preferredWordServiceCalculator;
+            _formatService = formatService;
             _logger = logger;
         }
 
@@ -52,15 +53,14 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                     continue;
                 }
 
-                _logger.Debug("Checking if existing release in queue meets cutoff. Queued quality is: {0}", remoteAlbum.ParsedAlbumInfo.Quality);
+                var queuedItemCustomFormats = _formatService.ParseCustomFormat(remoteAlbum, (long)queueItem.Size);
 
-                var queuedItemPreferredWordScore = _preferredWordServiceCalculator.Calculate(subject.Artist, queueItem.Title, subject.Release?.IndexerId ?? 0);
+                _logger.Debug("Checking if existing release in queue meets cutoff. Queued quality is: {0}", remoteAlbum.ParsedAlbumInfo.Quality);
 
                 if (!_upgradableSpecification.CutoffNotMet(qualityProfile,
                                                            new List<QualityModel> { remoteAlbum.ParsedAlbumInfo.Quality },
-                                                           queuedItemPreferredWordScore,
-                                                           subject.ParsedAlbumInfo.Quality,
-                                                           subject.PreferredWordScore))
+                                                           queuedItemCustomFormats,
+                                                           subject.ParsedAlbumInfo.Quality))
                 {
                     return Decision.Reject("Release in queue already meets cutoff: {0}", remoteAlbum.ParsedAlbumInfo.Quality);
                 }
@@ -69,9 +69,9 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
                 if (!_upgradableSpecification.IsUpgradable(qualityProfile,
                                                            new List<QualityModel> { remoteAlbum.ParsedAlbumInfo.Quality },
-                                                           queuedItemPreferredWordScore,
+                                                           queuedItemCustomFormats,
                                                            subject.ParsedAlbumInfo.Quality,
-                                                           subject.PreferredWordScore))
+                                                           subject.CustomFormats))
                 {
                     return Decision.Reject("Release in queue is of equal or higher preference: {0}", remoteAlbum.ParsedAlbumInfo.Quality);
                 }
@@ -80,7 +80,9 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
                 if (!_upgradableSpecification.IsUpgradeAllowed(qualityProfile,
                                                                new List<QualityModel> { remoteAlbum.ParsedAlbumInfo.Quality },
-                                                               subject.ParsedAlbumInfo.Quality))
+                                                               queuedItemCustomFormats,
+                                                               subject.ParsedAlbumInfo.Quality,
+                                                               subject.CustomFormats))
                 {
                     return Decision.Reject("Another release is queued and the Quality profile does not allow upgrades");
                 }

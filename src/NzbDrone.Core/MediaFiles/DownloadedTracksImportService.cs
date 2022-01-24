@@ -175,25 +175,6 @@ namespace NzbDrone.Core.MediaFiles
 
             var cleanedUpName = GetCleanedUpFolderName(directoryInfo.Name);
             var folderInfo = Parser.Parser.ParseAlbumTitle(directoryInfo.Name);
-            var trackInfo = new ParsedTrackInfo { };
-
-            if (folderInfo != null)
-            {
-                _logger.Debug("{0} folder quality: {1}", cleanedUpName, folderInfo.Quality);
-
-                trackInfo = new ParsedTrackInfo
-                {
-                    AlbumTitle = folderInfo.AlbumTitle,
-                    ArtistTitle = folderInfo.ArtistName,
-                    Quality = folderInfo.Quality,
-                    ReleaseGroup = folderInfo.ReleaseGroup,
-                    ReleaseHash = folderInfo.ReleaseHash,
-                };
-            }
-            else
-            {
-                trackInfo = null;
-            }
 
             var audioFiles = _diskScanService.FilterFiles(directoryInfo.FullName, _diskScanService.GetAudioFiles(directoryInfo.FullName));
 
@@ -218,7 +199,7 @@ namespace NzbDrone.Core.MediaFiles
             var idInfo = new ImportDecisionMakerInfo
             {
                 DownloadClientItem = downloadClientItem,
-                ParsedTrackInfo = trackInfo
+                ParsedAlbumInfo = folderInfo
             };
             var idConfig = new ImportDecisionMakerConfig
             {

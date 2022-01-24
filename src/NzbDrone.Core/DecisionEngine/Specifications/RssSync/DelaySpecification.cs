@@ -5,7 +5,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Profiles.Delay;
-using NzbDrone.Core.Profiles.Releases;
 using NzbDrone.Core.Qualities;
 
 namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
@@ -16,21 +15,18 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
         private readonly IUpgradableSpecification _upgradableSpecification;
         private readonly IDelayProfileService _delayProfileService;
         private readonly IMediaFileService _mediaFileService;
-        private readonly IPreferredWordService _preferredWordServiceCalculator;
         private readonly Logger _logger;
 
         public DelaySpecification(IPendingReleaseService pendingReleaseService,
                                   IUpgradableSpecification qualityUpgradableSpecification,
                                   IDelayProfileService delayProfileService,
                                   IMediaFileService mediaFileService,
-                                  IPreferredWordService preferredWordServiceCalculator,
                                   Logger logger)
         {
             _pendingReleaseService = pendingReleaseService;
             _upgradableSpecification = qualityUpgradableSpecification;
             _delayProfileService = delayProfileService;
             _mediaFileService = mediaFileService;
-            _preferredWordServiceCalculator = preferredWordServiceCalculator;
             _logger = logger;
         }
 
@@ -80,13 +76,29 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
             }
 
             // If quality meets or exceeds the best allowed quality in the profile accept it immediately
-            var bestQualityInProfile = qualityProfile.LastAllowedQuality();
-            var isBestInProfile = qualityComparer.Compare(subject.ParsedAlbumInfo.Quality.Quality, bestQualityInProfile) >= 0;
-
-            if (isBestInProfile && isPreferredProtocol)
+            if (delayProfile.BypassIfHighestQuality)
             {
+                var bestQualityInProfile = qualityProfile.LastAllowedQuality();
+                var isBestInProfile = qualityComparer.Compare(subject.ParsedAlbumInfo.Quality.Quality, bestQualityInProfile) >= 0;
+
+                if (isBestInProfile && isPreferredProtocol)
+                {
                 _logger.Debug("Quality is highest in profile for preferred protocol, will not delay");
                 return Decision.Accept();
+                }
+            }
+
+            // If quality meets or exceeds the best allowed quality in the profile accept it immediately
+            if (delayProfile.BypassIfAboveCustomFormatScore)
+            {
+                var score = subject.CustomFormatScore;
+                var minimum = delayProfile.MinimumCustomFormatScore;
+
+                if (score >= minimum && isPreferredProtocol)
+                {
+                    _logger.Debug("Custom format score ({0}) meets minimum ({1}) for preferred protocol, will not delay", score, minimum);
+                    return Decision.Accept();
+                }
             }
 
             var albumIds = subject.Albums.Select(e => e.Id);

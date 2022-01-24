@@ -105,6 +105,10 @@ const links = [
         to: '/settings/quality'
       },
       {
+        title: translate('CustomFormats'),
+        to: '/settings/customformats'
+      },
+      {
         title: translate('Indexers'),
         to: '/settings/indexers'
       },

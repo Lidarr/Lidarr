@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using NzbDrone.Core.Qualities;
 
 namespace NzbDrone.Core.Parser.Model
@@ -15,6 +17,10 @@ namespace NzbDrone.Core.Parser.Model
         public string ReleaseGroup { get; set; }
         public string ReleaseHash { get; set; }
         public string ReleaseVersion { get; set; }
+        public string ReleaseTitle { get; set; }
+
+        [JsonIgnore]
+        public Dictionary<string, object> ExtraInfo { get; set; } = new Dictionary<string, object>();
 
         public override string ToString()
         {

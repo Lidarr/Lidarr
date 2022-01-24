@@ -5,6 +5,7 @@ using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Serializer;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.Download.History;
 using NzbDrone.Core.History;
 using NzbDrone.Core.Messaging.Events;
@@ -31,20 +32,23 @@ namespace NzbDrone.Core.Download.TrackedDownloads
         private readonly IEventAggregator _eventAggregator;
         private readonly IDownloadHistoryService _downloadHistoryService;
         private readonly ITrackedDownloadAlreadyImported _trackedDownloadAlreadyImported;
+        private readonly ICustomFormatCalculationService _formatCalculator;
         private readonly Logger _logger;
         private readonly ICached<TrackedDownload> _cache;
 
         public TrackedDownloadService(IParsingService parsingService,
                                       ICacheManager cacheManager,
                                       IHistoryService historyService,
-                                      IDownloadHistoryService downloadHistoryService,
+                                      ICustomFormatCalculationService formatCalculator,
                                       IEventAggregator eventAggregator,
+                                      IDownloadHistoryService downloadHistoryService,
                                       ITrackedDownloadAlreadyImported trackedDownloadAlreadyImported,
                                       Logger logger)
         {
             _parsingService = parsingService;
             _historyService = historyService;
             _cache = cacheManager.GetCache<TrackedDownload>(GetType());
+            _formatCalculator = formatCalculator;
             _eventAggregator = eventAggregator;
             _trackedDownloadAlreadyImported = trackedDownloadAlreadyImported;
             _downloadHistoryService = downloadHistoryService;
@@ -176,6 +180,12 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                             }
                         }
                     }
+                }
+
+                // Calculate custom formats
+                if (trackedDownload.RemoteAlbum != null)
+                {
+                    trackedDownload.RemoteAlbum.CustomFormats = _formatCalculator.ParseCustomFormat(trackedDownload.RemoteAlbum, downloadItem.TotalSize);
                 }
 
                 // Track it so it can be displayed in the queue even though we can't determine which artist it is for

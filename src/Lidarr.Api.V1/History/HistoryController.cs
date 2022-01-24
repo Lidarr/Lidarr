@@ -7,6 +7,7 @@ using Lidarr.Api.V1.Tracks;
 using Lidarr.Http;
 using Lidarr.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.Download;
@@ -18,21 +19,24 @@ namespace Lidarr.Api.V1.History
     public class HistoryController : Controller
     {
         private readonly IHistoryService _historyService;
+        private readonly ICustomFormatCalculationService _formatCalculator;
         private readonly IUpgradableSpecification _upgradableSpecification;
         private readonly IFailedDownloadService _failedDownloadService;
 
         public HistoryController(IHistoryService historyService,
+                             ICustomFormatCalculationService formatCalculator,
                              IUpgradableSpecification upgradableSpecification,
                              IFailedDownloadService failedDownloadService)
         {
             _historyService = historyService;
+            _formatCalculator = formatCalculator;
             _upgradableSpecification = upgradableSpecification;
             _failedDownloadService = failedDownloadService;
         }
 
         protected HistoryResource MapToResource(EntityHistory model, bool includeArtist, bool includeAlbum, bool includeTrack)
         {
-            var resource = model.ToResource();
+            var resource = model.ToResource(_formatCalculator);
 
             if (includeArtist)
             {

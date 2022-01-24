@@ -10,7 +10,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators
 
             if (quality == null)
             {
-                quality = localTrack.FolderTrackInfo?.Quality;
+                quality = localTrack.FolderAlbumInfo?.Quality;
             }
 
             if (quality == null)

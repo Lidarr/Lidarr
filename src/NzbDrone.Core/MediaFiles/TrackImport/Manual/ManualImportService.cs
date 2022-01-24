@@ -9,6 +9,7 @@ using NzbDrone.Common.Crypto;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Download.TrackedDownloads;
@@ -35,6 +36,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
         private readonly IRootFolderService _rootFolderService;
         private readonly IDiskScanService _diskScanService;
         private readonly IMakeImportDecision _importDecisionMaker;
+        private readonly ICustomFormatCalculationService _formatCalculator;
         private readonly IArtistService _artistService;
         private readonly IAlbumService _albumService;
         private readonly IReleaseService _releaseService;
@@ -52,6 +54,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                                    IRootFolderService rootFolderService,
                                    IDiskScanService diskScanService,
                                    IMakeImportDecision importDecisionMaker,
+                                   ICustomFormatCalculationService formatCalculator,
                                    IArtistService artistService,
                                    IAlbumService albumService,
                                    IReleaseService releaseService,
@@ -69,6 +72,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             _rootFolderService = rootFolderService;
             _diskScanService = diskScanService;
             _importDecisionMaker = importDecisionMaker;
+            _formatCalculator = formatCalculator;
             _artistService = artistService;
             _albumService = albumService;
             _releaseService = releaseService;
@@ -153,7 +157,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             var itemInfo = new ImportDecisionMakerInfo
             {
                 DownloadClientItem = downloadClientItem,
-                ParsedTrackInfo = Parser.Parser.ParseMusicTitle(directoryInfo.Name)
+                ParsedAlbumInfo = Parser.Parser.ParseAlbumTitle(directoryInfo.Name)
             };
             var config = new ImportDecisionMakerConfig
             {
@@ -273,6 +277,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             if (decision.Item.Artist != null)
             {
                 item.Artist = decision.Item.Artist;
+
+                item.CustomFormats = _formatCalculator.ParseCustomFormat(decision.Item);
             }
 
             if (decision.Item.Album != null)

@@ -3,6 +3,7 @@ using System.Linq;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
@@ -15,6 +16,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
         private readonly UpgradableSpecification _upgradableSpecification;
         private readonly IMediaFileService _mediaFileService;
         private readonly ITrackService _trackService;
+        private readonly ICustomFormatCalculationService _formatService;
         private readonly Logger _logger;
         private readonly ICached<bool> _missingFilesCache;
 
@@ -22,11 +24,13 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                                            Logger logger,
                                            ICacheManager cacheManager,
                                            IMediaFileService mediaFileService,
-                                           ITrackService trackService)
+                                           ITrackService trackService,
+                                           ICustomFormatCalculationService formatService)
         {
             _upgradableSpecification = upgradableSpecification;
             _mediaFileService = mediaFileService;
             _trackService = trackService;
+            _formatService = formatService;
             _missingFilesCache = cacheManager.GetCache<bool>(GetType());
             _logger = logger;
         }
@@ -51,11 +55,16 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                     // Get a distinct list of all current track qualities for a given album
                     var currentQualities = trackFiles.Select(c => c.Quality).Distinct().ToList();
 
+                    // TODO: Should union these?
+                    var fileCustomFormats = _formatService.ParseCustomFormat(trackFiles.First(), subject.Artist);
+
                     _logger.Debug("Comparing file quality with report. Existing files contain {0}", currentQualities.ConcatToString());
 
                     if (!_upgradableSpecification.IsUpgradeAllowed(qualityProfile,
-                                                               currentQualities,
-                                                               subject.ParsedAlbumInfo.Quality))
+                                                                   currentQualities,
+                                                                   fileCustomFormats,
+                                                                   subject.ParsedAlbumInfo.Quality,
+                                                                   subject.CustomFormats))
                     {
                         _logger.Debug("Upgrading is not allowed by the quality profile");
 

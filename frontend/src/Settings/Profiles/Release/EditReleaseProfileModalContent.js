@@ -14,8 +14,7 @@ import { inputTypes, kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import styles from './EditReleaseProfileModalContent.css';
 
-// Tab, enter, and comma
-const tagInputDelimiters = [9, 13, 188];
+const tagInputDelimiters = ['Tab', 'Enter'];
 
 function EditReleaseProfileModalContent(props) {
   const {
@@ -34,8 +33,6 @@ function EditReleaseProfileModalContent(props) {
     enabled,
     required,
     ignored,
-    preferred,
-    includePreferredWhenRenaming,
     tags,
     indexerId
   } = item;
@@ -93,41 +90,6 @@ function EditReleaseProfileModalContent(props) {
               delimiters={tagInputDelimiters}
               {...ignored}
               onChange={onInputChange}
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <FormLabel>
-              {translate('Preferred')}
-            </FormLabel>
-
-            <FormInputGroup
-              type={inputTypes.KEY_VALUE_LIST}
-              name="preferred"
-              helpTexts={[
-                translate('PreferredHelpTexts1'),
-                translate('PreferredHelpTexts2'),
-                translate('PreferredHelpTexts3')
-              ]}
-              {...preferred}
-              keyPlaceholder={translate('Term')}
-              valuePlaceholder={translate('Score')}
-              onChange={onInputChange}
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <FormLabel>
-              {translate('IncludePreferredWhenRenaming')}
-            </FormLabel>
-
-            <FormInputGroup
-              type={inputTypes.CHECK}
-              name="includePreferredWhenRenaming"
-              helpText={indexerId.value === 0 ? translate('IndexerIdvalue0IncludeInPreferredWordsRenamingFormat') : translate('IndexerIdvalue0OnlySupportedWhenIndexerIsSetToAll')}
-              {...includePreferredWhenRenaming}
-              onChange={onInputChange}
-              isDisabled={indexerId.value !== 0}
             />
           </FormGroup>
 
