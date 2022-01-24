@@ -1,12 +1,12 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import MiddleTruncate from 'react-middle-truncate';
 import Card from 'Components/Card';
 import Label from 'Components/Label';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
 import TagList from 'Components/TagList';
 import { kinds } from 'Helpers/Props';
-import split from 'Utilities/String/split';
 import translate from 'Utilities/String/translate';
 import EditReleaseProfileModalConnector from './EditReleaseProfileModalConnector';
 import styles from './ReleaseProfile.css';
@@ -60,7 +60,6 @@ class ReleaseProfile extends Component {
       enabled,
       required,
       ignored,
-      preferred,
       tags,
       indexerId,
       tagList,
@@ -82,17 +81,22 @@ class ReleaseProfile extends Component {
       >
         <div>
           {
-            split(required).map((item) => {
+            required.map((item) => {
               if (!item) {
                 return null;
               }
 
               return (
                 <Label
+                  className={styles.label}
                   key={item}
                   kind={kinds.SUCCESS}
                 >
-                  {item}
+                  <MiddleTruncate
+                    text={item}
+                    start={10}
+                    end={10}
+                  />
                 </Label>
               );
             })
@@ -101,34 +105,22 @@ class ReleaseProfile extends Component {
 
         <div>
           {
-            preferred.map((item) => {
-              const isPreferred = item.value >= 0;
-
-              return (
-                <Label
-                  key={item.key}
-                  kind={isPreferred ? kinds.DEFAULT : kinds.WARNING}
-                >
-                  {item.key} {isPreferred && '+'}{item.value}
-                </Label>
-              );
-            })
-          }
-        </div>
-
-        <div>
-          {
-            split(ignored).map((item) => {
+            ignored.map((item) => {
               if (!item) {
                 return null;
               }
 
               return (
                 <Label
+                  className={styles.label}
                   key={item}
                   kind={kinds.DANGER}
                 >
-                  {item}
+                  <MiddleTruncate
+                    text={item}
+                    start={10}
+                    end={10}
+                  />
                 </Label>
               );
             })
@@ -186,9 +178,8 @@ class ReleaseProfile extends Component {
 ReleaseProfile.propTypes = {
   id: PropTypes.number.isRequired,
   enabled: PropTypes.bool.isRequired,
-  required: PropTypes.string.isRequired,
-  ignored: PropTypes.string.isRequired,
-  preferred: PropTypes.arrayOf(PropTypes.object).isRequired,
+  required: PropTypes.arrayOf(PropTypes.string).isRequired,
+  ignored: PropTypes.arrayOf(PropTypes.string).isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
   indexerId: PropTypes.number.isRequired,
   tagList: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -198,9 +189,8 @@ ReleaseProfile.propTypes = {
 
 ReleaseProfile.defaultProps = {
   enabled: true,
-  required: '',
-  ignored: '',
-  preferred: [],
+  required: [],
+  ignored: [],
   indexerId: 0
 };
 

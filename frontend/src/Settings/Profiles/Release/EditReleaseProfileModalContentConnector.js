@@ -9,9 +9,8 @@ import EditReleaseProfileModalContent from './EditReleaseProfileModalContent';
 
 const newReleaseProfile = {
   enabled: true,
-  required: '',
-  ignored: '',
-  preferred: [],
+  required: [],
+  ignored: [],
   includePreferredWhenRenaming: false,
   tags: [],
   indexerId: 0

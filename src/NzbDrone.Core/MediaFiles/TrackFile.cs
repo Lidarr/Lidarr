@@ -15,6 +15,7 @@ namespace NzbDrone.Core.MediaFiles
         public long Size { get; set; }
         public DateTime Modified { get; set; }
         public DateTime DateAdded { get; set; }
+        public string OriginalFilePath { get; set; }
         public string SceneName { get; set; }
         public string ReleaseGroup { get; set; }
         public QualityModel Quality { get; set; }
@@ -40,7 +41,7 @@ namespace NzbDrone.Core.MediaFiles
 
             if (Path.IsNotNullOrWhiteSpace())
             {
-                return System.IO.Path.GetFileName(Path);
+                return System.IO.Path.GetFileNameWithoutExtension(Path);
             }
 
             return string.Empty;

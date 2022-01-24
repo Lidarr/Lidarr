@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.Profiles.Qualities;
 using NzbDrone.Core.Qualities;
 
@@ -9,11 +11,11 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 {
     public interface IUpgradableSpecification
     {
-        bool IsUpgradable(QualityProfile profile, List<QualityModel> currentQualities, int currentScore, QualityModel newQuality, int newScore);
+        bool IsUpgradable(QualityProfile profile, List<QualityModel> currentQualities, List<CustomFormat> currentCustomFormats, QualityModel newQuality, List<CustomFormat> newCustomFormats);
         bool QualityCutoffNotMet(QualityProfile profile, QualityModel currentQuality, QualityModel newQuality = null);
-        bool CutoffNotMet(QualityProfile profile, List<QualityModel> currentQualities, int currentScore, QualityModel newQuality = null, int newScore = 0);
+        bool CutoffNotMet(QualityProfile profile, List<QualityModel> currentQualities, List<CustomFormat> currentFormats, QualityModel newQuality = null);
         bool IsRevisionUpgrade(QualityModel currentQuality, QualityModel newQuality);
-        bool IsUpgradeAllowed(QualityProfile qualityProfile, List<QualityModel> currentQualities, QualityModel newQuality);
+        bool IsUpgradeAllowed(QualityProfile qualityProfile, List<QualityModel> currentQualities, List<CustomFormat> currentCustomFormats, QualityModel newQuality, List<CustomFormat> newCustomFormats);
     }
 
     public class UpgradableSpecification : IUpgradableSpecification
@@ -63,14 +65,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             return ProfileComparisonResult.Upgrade;
         }
 
-        private bool IsPreferredWordUpgradable(int currentScore, int newScore)
-        {
-            _logger.Debug("Comparing preferred word score. Current: {0} New: {1}", currentScore, newScore);
-
-            return newScore > currentScore;
-        }
-
-        public bool IsUpgradable(QualityProfile qualityProfile, List<QualityModel> currentQualities, int currentScore, QualityModel newQuality, int newScore)
+        public bool IsUpgradable(QualityProfile qualityProfile, List<QualityModel> currentQualities, List<CustomFormat> currentCustomFormats, QualityModel newQuality, List<CustomFormat> newCustomFormats)
         {
             var qualityUpgrade = IsQualityUpgradable(qualityProfile, currentQualities, newQuality);
 
@@ -86,13 +81,19 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                 return false;
             }
 
-            if (!IsPreferredWordUpgradable(currentScore, newScore))
+            var currentFormatScore = qualityProfile.CalculateCustomFormatScore(currentCustomFormats);
+            var newFormatScore = qualityProfile.CalculateCustomFormatScore(newCustomFormats);
+
+            if (newFormatScore <= currentFormatScore)
             {
-                _logger.Debug("Existing item has a better preferred word score, skipping");
+                _logger.Debug("New item's custom formats [{0}] do not improve on [{1}], skipping",
+                              newCustomFormats.ConcatToString(),
+                              currentCustomFormats.ConcatToString());
+
                 return false;
             }
 
-            _logger.Debug("New item has a better preferred word score");
+            _logger.Debug("New item has a better custom format score");
             return true;
         }
 
@@ -113,7 +114,13 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             return false;
         }
 
-        public bool CutoffNotMet(QualityProfile profile, List<QualityModel> currentQualities, int currentScore, QualityModel newQuality = null, int newScore = 0)
+        private bool CustomFormatCutoffNotMet(QualityProfile profile, List<CustomFormat> currentFormats)
+        {
+            var score = profile.CalculateCustomFormatScore(currentFormats);
+            return score < profile.CutoffFormatScore;
+        }
+
+        public bool CutoffNotMet(QualityProfile profile, List<QualityModel> currentQualities, List<CustomFormat> currentFormats, QualityModel newQuality = null)
         {
             foreach (var quality in currentQualities)
             {
@@ -123,7 +130,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                 }
             }
 
-            if (IsPreferredWordUpgradable(currentScore, newScore))
+            if (CustomFormatCutoffNotMet(profile, currentFormats))
             {
                 return true;
             }
@@ -147,16 +154,23 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             return false;
         }
 
-        public bool IsUpgradeAllowed(QualityProfile qualityProfile, List<QualityModel> currentQualities, QualityModel newQuality)
+        public bool IsUpgradeAllowed(QualityProfile qualityProfile, List<QualityModel> currentQualities, List<CustomFormat> currentCustomFormats, QualityModel newQuality, List<CustomFormat> newCustomFormats)
         {
             var isQualityUpgrade = IsQualityUpgradable(qualityProfile, currentQualities, newQuality);
+            var isCustomFormatUpgrade = qualityProfile.CalculateCustomFormatScore(newCustomFormats) > qualityProfile.CalculateCustomFormatScore(currentCustomFormats);
 
-            return CheckUpgradeAllowed(qualityProfile, isQualityUpgrade);
+            return CheckUpgradeAllowed(qualityProfile, isQualityUpgrade, isCustomFormatUpgrade);
         }
 
-        private bool CheckUpgradeAllowed(QualityProfile qualityProfile, ProfileComparisonResult isQualityUpgrade)
+        private bool CheckUpgradeAllowed(QualityProfile qualityProfile, ProfileComparisonResult isQualityUpgrade, bool isCustomFormatUpgrade)
         {
-            if (isQualityUpgrade == ProfileComparisonResult.Upgrade && !qualityProfile.UpgradeAllowed)
+            if ((isQualityUpgrade == ProfileComparisonResult.Upgrade || isCustomFormatUpgrade) && qualityProfile.UpgradeAllowed)
+            {
+                _logger.Debug("Quality profile allows upgrading");
+                return true;
+            }
+
+            if ((isQualityUpgrade == ProfileComparisonResult.Upgrade || isCustomFormatUpgrade) && !qualityProfile.UpgradeAllowed)
             {
                 _logger.Debug("Quality profile does not allow upgrades, skipping");
                 return false;

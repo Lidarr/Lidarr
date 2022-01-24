@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Disk;
@@ -212,7 +213,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
                     if (!localTrack.ExistingFile)
                     {
-                        trackFile.SceneName = GetSceneReleaseName(downloadClientItem);
+                        trackFile.SceneName = localTrack.SceneName;
+                        trackFile.OriginalFilePath = GetOriginalFilePath(downloadClientItem, localTrack);
 
                         var moveResult = _trackFileUpgrader.UpgradeTrackFile(trackFile, localTrack, copyOnly);
                         oldFiles = moveResult.OldFiles;
@@ -453,21 +455,41 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             }
         }
 
-        private string GetSceneReleaseName(DownloadClientItem downloadClientItem)
+        private string GetOriginalFilePath(DownloadClientItem downloadClientItem, LocalTrack localTrack)
         {
-            if (downloadClientItem != null)
+            var path = localTrack.Path;
+
+            if (downloadClientItem != null && !downloadClientItem.OutputPath.IsEmpty)
             {
-                var title = Parser.Parser.RemoveFileExtension(downloadClientItem.Title);
+                var outputDirectory = downloadClientItem.OutputPath.Directory.ToString();
 
-                var parsedTitle = Parser.Parser.ParseAlbumTitle(title);
-
-                if (parsedTitle != null)
+                if (outputDirectory.IsParentPath(path))
                 {
-                    return title;
+                    return outputDirectory.GetRelativePath(path);
                 }
             }
 
-            return null;
+            var folderEpisodeInfo = localTrack.FolderAlbumInfo;
+
+            if (folderEpisodeInfo != null)
+            {
+                var folderPath = path.GetAncestorPath(folderEpisodeInfo.ReleaseTitle);
+
+                if (folderPath != null)
+                {
+                    return folderPath.GetParentPath().GetRelativePath(path);
+                }
+            }
+
+            var parentPath = path.GetParentPath();
+            var grandparentPath = parentPath.GetParentPath();
+
+            if (grandparentPath != null)
+            {
+                return grandparentPath.GetRelativePath(path);
+            }
+
+            return Path.GetFileName(path);
         }
     }
 }

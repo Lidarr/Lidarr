@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import AlbumFormats from 'Album/AlbumFormats';
 import TrackQuality from 'Album/TrackQuality';
 import ArtistNameLink from 'Artist/ArtistNameLink';
 import IconButton from 'Components/Link/IconButton';
@@ -45,6 +46,7 @@ class BlocklistRow extends Component {
       artist,
       sourceTitle,
       quality,
+      customFormats,
       date,
       protocol,
       indexer,
@@ -105,6 +107,16 @@ class BlocklistRow extends Component {
                 >
                   <TrackQuality
                     quality={quality}
+                  />
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'customFormats') {
+              return (
+                <TableRowCell key={name}>
+                  <AlbumFormats
+                    formats={customFormats}
                   />
                 </TableRowCell>
               );
@@ -174,6 +186,7 @@ BlocklistRow.propTypes = {
   artist: PropTypes.object.isRequired,
   sourceTitle: PropTypes.string.isRequired,
   quality: PropTypes.object.isRequired,
+  customFormats: PropTypes.arrayOf(PropTypes.object).isRequired,
   date: PropTypes.string.isRequired,
   protocol: PropTypes.string.isRequired,
   indexer: PropTypes.string,

@@ -254,7 +254,7 @@ class MediaManagement extends Component {
                       ]}
                       helpTextWarning={
                         settings.downloadPropersAndRepacks.value === 'doNotPrefer' ?
-                          'Use preferred words for automatic upgrades to propers/repacks' :
+                          'Use custom formats for automatic upgrades to propers/repacks' :
                           undefined
                       }
                       values={downloadPropersAndRepacksOptions}

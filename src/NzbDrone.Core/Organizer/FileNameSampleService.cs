@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
@@ -24,7 +25,7 @@ namespace NzbDrone.Core.Organizer
         private static Track _track1;
         private static List<Track> _singleTrack;
         private static TrackFile _singleTrackFile;
-        private static List<string> _preferredWords;
+        private static List<CustomFormat> _customFormats;
 
         public FileNameSampleService(IBuildFileNames buildFileNames)
         {
@@ -99,6 +100,20 @@ namespace NzbDrone.Core.Organizer
 
             _singleTrack = new List<Track> { _track1 };
 
+            _customFormats = new List<CustomFormat>
+            {
+                new CustomFormat
+                {
+                    Name = "Surround Sound",
+                    IncludeCustomFormatWhenRenaming = true
+                },
+                new CustomFormat
+                {
+                    Name = "x264",
+                    IncludeCustomFormatWhenRenaming = true
+                }
+            };
+
             var mediaInfo = new MediaInfoModel()
             {
                 AudioFormat = "Flac Audio",
@@ -115,11 +130,6 @@ namespace NzbDrone.Core.Organizer
                 SceneName = "Artist.Name.Album.Name.TrackNum.Track.Title.MP3256",
                 ReleaseGroup = "RlsGrp",
                 MediaInfo = mediaInfo
-            };
-
-            _preferredWords = new List<string>
-            {
-                "iNTERNAL"
             };
         }
 
@@ -164,7 +174,7 @@ namespace NzbDrone.Core.Organizer
         {
             try
             {
-                return _buildFileNames.BuildTrackFileName(tracks, artist, album, trackFile, nameSpec, _preferredWords);
+                return _buildFileNames.BuildTrackFileName(tracks, artist, album, trackFile, nameSpec, _customFormats);
             }
             catch (NamingFormatException)
             {

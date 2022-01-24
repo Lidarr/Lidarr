@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.ImportLists;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Music;
@@ -13,11 +15,15 @@ namespace NzbDrone.Core.Test.Profiles
 {
     [TestFixture]
 
-    public class ProfileServiceFixture : CoreTest<QualityProfileService>
+    public class QualityProfileServiceFixture : CoreTest<QualityProfileService>
     {
         [Test]
         public void init_should_add_default_profiles()
         {
+            Mocker.GetMock<ICustomFormatService>()
+                .Setup(s => s.All())
+                .Returns(new List<CustomFormat>());
+
             Subject.Handle(new ApplicationStartedEvent());
 
             Mocker.GetMock<IProfileRepository>()

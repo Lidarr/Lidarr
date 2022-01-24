@@ -110,7 +110,7 @@ const mediaInfoTokens = [
 
 const otherTokens = [
   { token: '{Release Group}', example: 'Rls Grp' },
-  { token: '{Preferred Words}', example: 'iNTERNAL' }
+  { token: '{Custom Formats}', example: 'iNTERNAL' }
 ];
 
 const originalTokens = [

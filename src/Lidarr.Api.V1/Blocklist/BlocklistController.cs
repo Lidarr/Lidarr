@@ -3,6 +3,7 @@ using Lidarr.Http.Extensions;
 using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.Blocklisting;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.Datastore;
 
 namespace Lidarr.Api.V1.Blocklist
@@ -11,10 +12,13 @@ namespace Lidarr.Api.V1.Blocklist
     public class BlocklistController : Controller
     {
         private readonly IBlocklistService _blocklistService;
+        private readonly ICustomFormatCalculationService _formatCalculator;
 
-        public BlocklistController(IBlocklistService blocklistService)
+        public BlocklistController(IBlocklistService blocklistService,
+                                   ICustomFormatCalculationService formatCalculator)
         {
             _blocklistService = blocklistService;
+            _formatCalculator = formatCalculator;
         }
 
         [HttpGet]
@@ -23,7 +27,7 @@ namespace Lidarr.Api.V1.Blocklist
             var pagingResource = Request.ReadPagingResourceFromRequest<BlocklistResource>();
             var pagingSpec = pagingResource.MapToPagingSpec<BlocklistResource, NzbDrone.Core.Blocklisting.Blocklist>("date", SortDirection.Descending);
 
-            return pagingSpec.ApplyToPage(_blocklistService.Paged, BlocklistResourceMapper.MapToResource);
+            return pagingSpec.ApplyToPage(_blocklistService.Paged, model => BlocklistResourceMapper.MapToResource(model, _formatCalculator));
         }
 
         [RestDeleteById]

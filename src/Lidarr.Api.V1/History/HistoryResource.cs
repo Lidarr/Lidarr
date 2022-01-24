@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using Lidarr.Api.V1.Albums;
 using Lidarr.Api.V1.Artist;
+using Lidarr.Api.V1.CustomFormats;
 using Lidarr.Api.V1.Tracks;
 using Lidarr.Http.REST;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.History;
 using NzbDrone.Core.Qualities;
 
@@ -16,6 +18,7 @@ namespace Lidarr.Api.V1.History
         public int TrackId { get; set; }
         public string SourceTitle { get; set; }
         public QualityModel Quality { get; set; }
+        public List<CustomFormatResource> CustomFormats { get; set; }
         public bool QualityCutoffNotMet { get; set; }
         public DateTime Date { get; set; }
         public string DownloadId { get; set; }
@@ -31,7 +34,7 @@ namespace Lidarr.Api.V1.History
 
     public static class HistoryResourceMapper
     {
-        public static HistoryResource ToResource(this EntityHistory model)
+        public static HistoryResource ToResource(this EntityHistory model, ICustomFormatCalculationService formatCalculator)
         {
             if (model == null)
             {
@@ -47,6 +50,7 @@ namespace Lidarr.Api.V1.History
                 TrackId = model.TrackId,
                 SourceTitle = model.SourceTitle,
                 Quality = model.Quality,
+                CustomFormats = formatCalculator.ParseCustomFormat(model, model.Artist).ToResource(false),
 
                 // QualityCutoffNotMet
                 Date = model.Date,

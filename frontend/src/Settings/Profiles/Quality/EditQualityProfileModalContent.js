@@ -15,10 +15,22 @@ import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds, sizes } from 'Helpers/Props';
 import dimensions from 'Styles/Variables/dimensions';
 import translate from 'Utilities/String/translate';
+import QualityProfileFormatItems from './QualityProfileFormatItems';
 import QualityProfileItems from './QualityProfileItems';
 import styles from './EditQualityProfileModalContent.css';
 
 const MODAL_BODY_PADDING = parseInt(dimensions.modalBodyPadding);
+
+function getCustomFormatRender(formatItems, otherProps) {
+  return (
+    <QualityProfileFormatItems
+      profileFormatItems={formatItems.value}
+      errors={formatItems.errors}
+      warnings={formatItems.warnings}
+      {...otherProps}
+    />
+  );
+}
 
 class EditQualityProfileModalContent extends Component {
 
@@ -93,6 +105,7 @@ class EditQualityProfileModalContent extends Component {
       isSaving,
       saveError,
       qualities,
+      customFormats,
       item,
       isInUse,
       onInputChange,
@@ -108,7 +121,10 @@ class EditQualityProfileModalContent extends Component {
       name,
       upgradeAllowed,
       cutoff,
-      items
+      minFormatScore,
+      cutoffFormatScore,
+      items,
+      formatItems
     } = item;
 
     return (
@@ -190,6 +206,44 @@ class EditQualityProfileModalContent extends Component {
                               />
                             </FormGroup>
                         }
+
+                        {
+                          formatItems.value.length > 0 &&
+                            <FormGroup size={sizes.EXTRA_SMALL}>
+                              <FormLabel size={sizes.SMALL}>
+                                Minimum Custom Format Score
+                              </FormLabel>
+
+                              <FormInputGroup
+                                type={inputTypes.NUMBER}
+                                name="minFormatScore"
+                                {...minFormatScore}
+                                helpText="Minimum custom format score allowed to download"
+                                onChange={onInputChange}
+                              />
+                            </FormGroup>
+                        }
+
+                        {
+                          upgradeAllowed.value && formatItems.value.length > 0 &&
+                            <FormGroup size={sizes.EXTRA_SMALL}>
+                              <FormLabel size={sizes.SMALL}>
+                                Upgrade Until Custom Format Score
+                              </FormLabel>
+
+                              <FormInputGroup
+                                type={inputTypes.NUMBER}
+                                name="cutoffFormatScore"
+                                {...cutoffFormatScore}
+                                helpText="Once this custom format score is reached Lidarr will no longer grab album releases"
+                                onChange={onInputChange}
+                              />
+                            </FormGroup>
+                        }
+
+                        <div className={styles.formatItemLarge}>
+                          {getCustomFormatRender(formatItems, ...otherProps)}
+                        </div>
                       </div>
 
                       <div className={styles.formGroupWrapper}>
@@ -200,6 +254,10 @@ class EditQualityProfileModalContent extends Component {
                           warnings={items.warnings}
                           {...otherProps}
                         />
+                      </div>
+
+                      <div className={styles.formatItemSmall}>
+                        {getCustomFormatRender(formatItems, otherProps)}
                       </div>
                     </div>
                   </Form>
@@ -216,7 +274,7 @@ class EditQualityProfileModalContent extends Component {
         >
           <ModalFooter>
             {
-              id &&
+              id ?
                 <div
                   className={styles.deleteButtonContainer}
                   title={isInUse ? translate('IsInUseCantDeleteAQualityProfileThatIsAttachedToAnArtistOrImportList') : undefined}
@@ -228,7 +286,8 @@ class EditQualityProfileModalContent extends Component {
                   >
                     {translate('Delete')}
                   </Button>
-                </div>
+                </div> :
+                null
             }
 
             <Button
@@ -258,6 +317,7 @@ EditQualityProfileModalContent.propTypes = {
   isSaving: PropTypes.bool.isRequired,
   saveError: PropTypes.object,
   qualities: PropTypes.arrayOf(PropTypes.object).isRequired,
+  customFormats: PropTypes.arrayOf(PropTypes.object).isRequired,
   item: PropTypes.object.isRequired,
   isInUse: PropTypes.bool.isRequired,
   onInputChange: PropTypes.func.isRequired,

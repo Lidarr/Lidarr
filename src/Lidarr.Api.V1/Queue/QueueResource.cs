@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Lidarr.Api.V1.Albums;
 using Lidarr.Api.V1.Artist;
+using Lidarr.Api.V1.CustomFormats;
 using Lidarr.Http.REST;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Download.TrackedDownloads;
@@ -18,6 +19,7 @@ namespace Lidarr.Api.V1.Queue
         public ArtistResource Artist { get; set; }
         public AlbumResource Album { get; set; }
         public QualityModel Quality { get; set; }
+        public List<CustomFormatResource> CustomFormats { get; set; }
         public decimal Size { get; set; }
         public string Title { get; set; }
         public decimal Sizeleft { get; set; }
@@ -53,6 +55,7 @@ namespace Lidarr.Api.V1.Queue
                 Artist = includeArtist && model.Artist != null ? model.Artist.ToResource() : null,
                 Album = includeAlbum && model.Album != null ? model.Album.ToResource() : null,
                 Quality = model.Quality,
+                CustomFormats = model.RemoteAlbum?.CustomFormats?.ToResource(false),
                 Size = model.Size,
                 Title = model.Title,
                 Sizeleft = model.Sizeleft,

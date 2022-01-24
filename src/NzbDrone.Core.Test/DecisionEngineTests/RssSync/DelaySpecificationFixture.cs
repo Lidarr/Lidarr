@@ -5,6 +5,7 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.DecisionEngine.Specifications.RssSync;
 using NzbDrone.Core.Download.Pending;
@@ -87,7 +88,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
         private void GivenUpgradeForExistingFile()
         {
             Mocker.GetMock<IUpgradableSpecification>()
-                  .Setup(s => s.IsUpgradable(It.IsAny<QualityProfile>(), It.IsAny<List<QualityModel>>(), It.IsAny<int>(), It.IsAny<QualityModel>(), It.IsAny<int>()))
+                  .Setup(s => s.IsUpgradable(It.IsAny<QualityProfile>(), It.IsAny<List<QualityModel>>(), It.IsAny<List<CustomFormat>>(), It.IsAny<QualityModel>(), It.IsAny<List<CustomFormat>>()))
                   .Returns(true);
         }
 
@@ -117,9 +118,24 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
         }
 
         [Test]
-        public void should_be_true_when_quality_is_last_allowed_in_profile()
+        public void should_be_false_when_quality_is_last_allowed_in_profile_and_bypass_disabled()
         {
+            _remoteAlbum.Release.PublishDate = DateTime.UtcNow;
             _remoteAlbum.ParsedAlbumInfo.Quality = new QualityModel(Quality.MP3_320);
+
+            _delayProfile.UsenetDelay = 720;
+
+            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
+        }
+
+        [Test]
+        public void should_be_true_when_quality_is_last_allowed_in_profile_and_bypass_enabled()
+        {
+            _delayProfile.UsenetDelay = 720;
+            _delayProfile.BypassIfHighestQuality = true;
+
+            _remoteAlbum.Release.PublishDate = DateTime.UtcNow;
+            _remoteAlbum.ParsedAlbumInfo.Quality = new QualityModel(Quality.FLAC);
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
         }
@@ -193,6 +209,44 @@ namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
             _delayProfile.UsenetDelay = 720;
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
+        }
+
+        [Test]
+        public void should_be_false_when_custom_format_score_is_above_minimum_but_bypass_disabled()
+        {
+            _remoteAlbum.Release.PublishDate = DateTime.UtcNow;
+            _remoteAlbum.CustomFormatScore = 100;
+
+            _delayProfile.UsenetDelay = 720;
+            _delayProfile.MinimumCustomFormatScore = 50;
+
+            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
+        }
+
+        [Test]
+        public void should_be_false_when_custom_format_score_is_above_minimum_and_bypass_enabled_but_under_minimum()
+        {
+            _remoteAlbum.Release.PublishDate = DateTime.UtcNow;
+            _remoteAlbum.CustomFormatScore = 5;
+
+            _delayProfile.UsenetDelay = 720;
+            _delayProfile.BypassIfAboveCustomFormatScore = true;
+            _delayProfile.MinimumCustomFormatScore = 50;
+
+            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
+        }
+
+        [Test]
+        public void should_be_true_when_custom_format_score_is_above_minimum_and_bypass_enabled()
+        {
+            _remoteAlbum.Release.PublishDate = DateTime.UtcNow;
+            _remoteAlbum.CustomFormatScore = 100;
+
+            _delayProfile.UsenetDelay = 720;
+            _delayProfile.BypassIfAboveCustomFormatScore = true;
+            _delayProfile.MinimumCustomFormatScore = 50;
+
+            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
         }
     }
 }

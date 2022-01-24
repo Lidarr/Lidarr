@@ -24,7 +24,7 @@ namespace Lidarr.Api.V1.Profiles.Release
 
             SharedValidator.RuleFor(r => r).Custom((restriction, context) =>
             {
-                if (restriction.Ignored.IsNullOrWhiteSpace() && restriction.Required.IsNullOrWhiteSpace() && restriction.Preferred.Empty())
+                if (restriction.Ignored.Empty() && restriction.Required.Empty())
                 {
                     context.AddFailure("Either 'Must contain' or 'Must not contain' is required");
                 }
@@ -32,11 +32,6 @@ namespace Lidarr.Api.V1.Profiles.Release
                 if (restriction.Enabled && restriction.IndexerId != 0 && !_indexerFactory.Exists(restriction.IndexerId))
                 {
                     context.AddFailure(nameof(ReleaseProfile.IndexerId), "Indexer does not exist");
-                }
-
-                if (restriction.Preferred.Any(p => p.Key.IsNullOrWhiteSpace()))
-                {
-                    context.AddFailure("Preferred", "Term cannot be empty or consist of only spaces");
                 }
             });
         }

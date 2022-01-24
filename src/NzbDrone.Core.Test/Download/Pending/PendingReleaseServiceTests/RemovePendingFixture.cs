@@ -52,7 +52,9 @@ namespace NzbDrone.Core.Test.Download.Pending.PendingReleaseServiceTests
             _pending.Add(new PendingRelease
             {
                 Id = id,
-                ParsedAlbumInfo = new ParsedAlbumInfo { AlbumTitle = album }
+                Title = "Artist.Title-Album.Title.abc-Lidarr",
+                ParsedAlbumInfo = new ParsedAlbumInfo { AlbumTitle = album },
+                Release = Builder<ReleaseInfo>.CreateNew().Build()
             });
         }
 

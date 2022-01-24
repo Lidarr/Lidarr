@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ProtocolLabel from 'Activity/Queue/ProtocolLabel';
+import AlbumFormats from 'Album/AlbumFormats';
 import AlbumTitleLink from 'Album/AlbumTitleLink';
 import TrackQuality from 'Album/TrackQuality';
 import ArtistNameLink from 'Artist/ArtistNameLink';
@@ -89,6 +90,7 @@ class QueueRow extends Component {
       artist,
       album,
       quality,
+      customFormats,
       protocol,
       indexer,
       outputPath,
@@ -210,6 +212,16 @@ class QueueRow extends Component {
                       /> :
                       null
                   }
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'customFormats') {
+              return (
+                <TableRowCell key={name}>
+                  <AlbumFormats
+                    formats={customFormats}
+                  />
                 </TableRowCell>
               );
             }
@@ -382,6 +394,7 @@ QueueRow.propTypes = {
   artist: PropTypes.object,
   album: PropTypes.object,
   quality: PropTypes.object.isRequired,
+  customFormats: PropTypes.arrayOf(PropTypes.object),
   protocol: PropTypes.string.isRequired,
   indexer: PropTypes.string,
   outputPath: PropTypes.string,

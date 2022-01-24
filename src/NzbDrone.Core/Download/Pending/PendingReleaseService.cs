@@ -5,7 +5,9 @@ using NLog;
 using NzbDrone.Common.Crypto;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.DecisionEngine;
+using NzbDrone.Core.Download.Aggregation;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Jobs;
 using NzbDrone.Core.Messaging.Events;
@@ -42,6 +44,8 @@ namespace NzbDrone.Core.Download.Pending
         private readonly IDelayProfileService _delayProfileService;
         private readonly ITaskManager _taskManager;
         private readonly IConfigService _configService;
+        private readonly ICustomFormatCalculationService _formatCalculator;
+        private readonly IRemoteAlbumAggregationService _aggregationService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
@@ -52,6 +56,8 @@ namespace NzbDrone.Core.Download.Pending
                                     IDelayProfileService delayProfileService,
                                     ITaskManager taskManager,
                                     IConfigService configService,
+                                    ICustomFormatCalculationService formatCalculator,
+                                    IRemoteAlbumAggregationService aggregationService,
                                     IEventAggregator eventAggregator,
                                     Logger logger)
         {
@@ -62,6 +68,8 @@ namespace NzbDrone.Core.Download.Pending
             _delayProfileService = delayProfileService;
             _taskManager = taskManager;
             _configService = configService;
+            _formatCalculator = formatCalculator;
+            _aggregationService = aggregationService;
             _eventAggregator = eventAggregator;
             _logger = logger;
         }
@@ -310,6 +318,9 @@ namespace NzbDrone.Core.Download.Pending
                     ParsedAlbumInfo = release.ParsedAlbumInfo,
                     Release = release.Release
                 };
+
+                _aggregationService.Augment(release.RemoteAlbum);
+                release.RemoteAlbum.CustomFormats = _formatCalculator.ParseCustomFormat(release.RemoteAlbum, release.Release.Size);
 
                 result.Add(release);
             }

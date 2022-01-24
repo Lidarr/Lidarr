@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
+using NzbDrone.Common.Extensions;
+using NzbDrone.Core.CustomFormats;
+using NzbDrone.Core.CustomFormats.Events;
 using NzbDrone.Core.ImportLists;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Events;
@@ -21,17 +24,22 @@ namespace NzbDrone.Core.Profiles.Qualities
         QualityProfile GetDefaultProfile(string name, Quality cutoff = null, params Quality[] allowed);
     }
 
-    public class QualityProfileService : IQualityProfileService, IHandle<ApplicationStartedEvent>
+    public class QualityProfileService : IQualityProfileService,
+                                         IHandle<ApplicationStartedEvent>,
+                                         IHandle<CustomFormatAddedEvent>,
+                                         IHandle<CustomFormatDeletedEvent>
     {
         private readonly IProfileRepository _profileRepository;
         private readonly IArtistService _artistService;
         private readonly IImportListFactory _importListFactory;
+        private readonly ICustomFormatService _formatService;
         private readonly IRootFolderService _rootFolderService;
         private readonly Logger _logger;
 
         public QualityProfileService(IProfileRepository profileRepository,
                                      IArtistService artistService,
                                      IImportListFactory importListFactory,
+                                     ICustomFormatService formatService,
                                      IRootFolderService rootFolderService,
                                      Logger logger)
         {
@@ -39,6 +47,7 @@ namespace NzbDrone.Core.Profiles.Qualities
             _artistService = artistService;
             _importListFactory = importListFactory;
             _rootFolderService = rootFolderService;
+            _formatService = formatService;
             _logger = logger;
         }
 
@@ -139,6 +148,39 @@ namespace NzbDrone.Core.Profiles.Qualities
                 Quality.MP3_320);
         }
 
+        public void Handle(CustomFormatAddedEvent message)
+        {
+            var all = All();
+
+            foreach (var profile in all)
+            {
+                profile.FormatItems.Insert(0, new ProfileFormatItem
+                {
+                    Score = 0,
+                    Format = message.CustomFormat
+                });
+
+                Update(profile);
+            }
+        }
+
+        public void Handle(CustomFormatDeletedEvent message)
+        {
+            var all = All();
+            foreach (var profile in all)
+            {
+                profile.FormatItems = profile.FormatItems.Where(c => c.Format.Id != message.CustomFormat.Id).ToList();
+
+                if (profile.FormatItems.Empty())
+                {
+                    profile.MinFormatScore = 0;
+                    profile.CutoffFormatScore = 0;
+                }
+
+                Update(profile);
+            }
+        }
+
         public QualityProfile GetDefaultProfile(string name, Quality cutoff = null, params Quality[] allowed)
         {
             var groupedQualites = Quality.DefaultQualityDefinitions.GroupBy(q => q.GroupWeight);
@@ -177,11 +219,20 @@ namespace NzbDrone.Core.Profiles.Qualities
                 groupId++;
             }
 
+            var formatItems = _formatService.All().Select(format => new ProfileFormatItem
+            {
+                Score = 0,
+                Format = format
+            }).ToList();
+
             var qualityProfile = new QualityProfile
             {
                 Name = name,
                 Cutoff = profileCutoff,
-                Items = items
+                Items = items,
+                MinFormatScore = 0,
+                CutoffFormatScore = 0,
+                FormatItems = formatItems
             };
 
             return qualityProfile;

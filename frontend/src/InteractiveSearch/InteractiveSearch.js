@@ -56,10 +56,10 @@ const columns = [
     isVisible: true
   },
   {
-    name: 'preferredWordScore',
+    name: 'customFormatScore',
     label: React.createElement(Icon, {
       name: icons.SCORE,
-      title: translate('PreferredWordScore')
+      title: translate('CustomFormatScore')
     }),
     isSortable: true,
     isVisible: true

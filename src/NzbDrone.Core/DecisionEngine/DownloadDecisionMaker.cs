@@ -5,6 +5,7 @@ using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Common.Serializer;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.Download.Aggregation;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -22,17 +23,20 @@ namespace NzbDrone.Core.DecisionEngine
     public class DownloadDecisionMaker : IMakeDownloadDecision
     {
         private readonly IEnumerable<IDecisionEngineSpecification> _specifications;
+        private readonly ICustomFormatCalculationService _formatCalculator;
         private readonly IParsingService _parsingService;
         private readonly IRemoteAlbumAggregationService _aggregationService;
         private readonly Logger _logger;
 
         public DownloadDecisionMaker(IEnumerable<IDecisionEngineSpecification> specifications,
             IParsingService parsingService,
+            ICustomFormatCalculationService formatService,
             IRemoteAlbumAggregationService aggregationService,
             Logger logger)
         {
             _specifications = specifications;
             _parsingService = parsingService;
+            _formatCalculator = formatService;
             _aggregationService = aggregationService;
             _logger = logger;
         }
@@ -77,67 +81,56 @@ namespace NzbDrone.Core.DecisionEngine
                             searchCriteria.Albums);
                     }
 
-                    if (parsedAlbumInfo != null)
+                    if (parsedAlbumInfo != null && !parsedAlbumInfo.ArtistName.IsNullOrWhiteSpace())
                     {
-                        // TODO: Artist Data Augment without calling to parse title again
-                        // if (!report.Artist.IsNullOrWhiteSpace())
-                        // {
-                        //    if (parsedAlbumInfo.ArtistName.IsNullOrWhiteSpace() || _parsingService.GetArtist(parsedAlbumInfo.ArtistName) == null)
-                        //    {
-                        //        parsedAlbumInfo.ArtistName = report.Artist;
-                        //    }
-                        // }
+                        var remoteAlbum = _parsingService.Map(parsedAlbumInfo, searchCriteria);
+                        remoteAlbum.Release = report;
 
-                        // TODO: Replace Parsed AlbumTitle with metadata Title if Parsed AlbumTitle not a valid match
-                        // if (!report.Album.IsNullOrWhiteSpace())
-                        // {
-                        //    parsedAlbumInfo.AlbumTitle = report.Album;
-                        // }
-                        if (!parsedAlbumInfo.ArtistName.IsNullOrWhiteSpace())
+                        _aggregationService.Augment(remoteAlbum);
+
+                        remoteAlbum.CustomFormats = _formatCalculator.ParseCustomFormat(remoteAlbum, remoteAlbum.Release.Size);
+                        remoteAlbum.CustomFormatScore = remoteAlbum?.Artist?.QualityProfile?.Value.CalculateCustomFormatScore(remoteAlbum.CustomFormats) ?? 0;
+
+                        // try parsing again using the search criteria, in case it parsed but parsed incorrectly
+                        if ((remoteAlbum.Artist == null || remoteAlbum.Albums.Empty()) && searchCriteria != null)
                         {
-                            var remoteAlbum = _parsingService.Map(parsedAlbumInfo, searchCriteria);
+                            _logger.Debug("Artist/Album null for {0}, reparsing with search criteria", report.Title);
+                            var parsedAlbumInfoWithCriteria = Parser.Parser.ParseAlbumTitleWithSearchCriteria(report.Title,
+                                                                                                                searchCriteria.Artist,
+                                                                                                                searchCriteria.Albums);
 
-                            // try parsing again using the search criteria, in case it parsed but parsed incorrectly
-                            if ((remoteAlbum.Artist == null || remoteAlbum.Albums.Empty()) && searchCriteria != null)
+                            if (parsedAlbumInfoWithCriteria != null && parsedAlbumInfoWithCriteria.ArtistName.IsNotNullOrWhiteSpace())
                             {
-                                _logger.Debug("Artist/Album null for {0}, reparsing with search criteria", report.Title);
-                                var parsedAlbumInfoWithCriteria = Parser.Parser.ParseAlbumTitleWithSearchCriteria(report.Title,
-                                                                                                                  searchCriteria.Artist,
-                                                                                                                  searchCriteria.Albums);
-
-                                if (parsedAlbumInfoWithCriteria != null && parsedAlbumInfoWithCriteria.ArtistName.IsNotNullOrWhiteSpace())
-                                {
-                                    remoteAlbum = _parsingService.Map(parsedAlbumInfoWithCriteria, searchCriteria);
-                                }
+                                remoteAlbum = _parsingService.Map(parsedAlbumInfoWithCriteria, searchCriteria);
                             }
+                        }
 
-                            remoteAlbum.Release = report;
+                        remoteAlbum.Release = report;
 
-                            if (remoteAlbum.Artist == null)
+                        if (remoteAlbum.Artist == null)
+                        {
+                            decision = new DownloadDecision(remoteAlbum, new Rejection("Unknown Artist"));
+
+                            // shove in the searched artist in case of forced download in interactive search
+                            if (searchCriteria != null)
                             {
-                                decision = new DownloadDecision(remoteAlbum, new Rejection("Unknown Artist"));
-
-                                // shove in the searched artist in case of forced download in interactive search
-                                if (searchCriteria != null)
-                                {
-                                    remoteAlbum.Artist = searchCriteria.Artist;
-                                    remoteAlbum.Albums = searchCriteria.Albums;
-                                }
+                                remoteAlbum.Artist = searchCriteria.Artist;
+                                remoteAlbum.Albums = searchCriteria.Albums;
                             }
-                            else if (remoteAlbum.Albums.Empty())
+                        }
+                        else if (remoteAlbum.Albums.Empty())
+                        {
+                            decision = new DownloadDecision(remoteAlbum, new Rejection("Unable to parse albums from release name"));
+                            if (searchCriteria != null)
                             {
-                                decision = new DownloadDecision(remoteAlbum, new Rejection("Unable to parse albums from release name"));
-                                if (searchCriteria != null)
-                                {
-                                    remoteAlbum.Albums = searchCriteria.Albums;
-                                }
+                                remoteAlbum.Albums = searchCriteria.Albums;
                             }
-                            else
-                            {
-                                _aggregationService.Augment(remoteAlbum);
-                                remoteAlbum.DownloadAllowed = remoteAlbum.Albums.Any();
-                                decision = GetDecisionForReport(remoteAlbum, searchCriteria);
-                            }
+                        }
+                        else
+                        {
+                            _aggregationService.Augment(remoteAlbum);
+                            remoteAlbum.DownloadAllowed = remoteAlbum.Albums.Any();
+                            decision = GetDecisionForReport(remoteAlbum, searchCriteria);
                         }
                     }
 

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import AlbumFormats from 'Album/AlbumFormats';
 import TrackQuality from 'Album/TrackQuality';
 import Icon from 'Components/Icon';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
@@ -169,6 +170,7 @@ class InteractiveImportRow extends Component {
       quality,
       releaseGroup,
       size,
+      customFormats,
       rejections,
       isReprocessing,
       audioTags,
@@ -303,7 +305,26 @@ class InteractiveImportRow extends Component {
 
         <TableRowCell>
           {
-            rejections && rejections.length ?
+            customFormats?.length ?
+              <Popover
+                anchor={
+                  <Icon name={icons.INTERACTIVE} />
+                }
+                title="Formats"
+                body={
+                  <div className={styles.customFormatTooltip}>
+                    <AlbumFormats formats={customFormats} />
+                  </div>
+                }
+                position={tooltipPositions.LEFT}
+              /> :
+              null
+          }
+        </TableRowCell>
+
+        <TableRowCell>
+          {
+            rejections.length ?
               <Popover
                 anchor={
                   <Icon
@@ -391,6 +412,7 @@ InteractiveImportRow.propTypes = {
   releaseGroup: PropTypes.string,
   quality: PropTypes.object,
   size: PropTypes.number.isRequired,
+  customFormats: PropTypes.arrayOf(PropTypes.object),
   rejections: PropTypes.arrayOf(PropTypes.object).isRequired,
   audioTags: PropTypes.object.isRequired,
   additionalFile: PropTypes.bool.isRequired,

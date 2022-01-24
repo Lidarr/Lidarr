@@ -196,7 +196,7 @@ class TableOptionsModal extends Component {
                                       <TableOptionsColumnDragSource
                                         key={name}
                                         name={name}
-                                        label={label || columnLabel}
+                                        label={columnLabel || label}
                                         isVisible={isVisible}
                                         isModifiable={true}
                                         index={index}
@@ -214,7 +214,7 @@ class TableOptionsModal extends Component {
                                     <TableOptionsColumn
                                       key={name}
                                       name={name}
-                                      label={label || columnLabel}
+                                      label={columnLabel || label}
                                       isVisible={isVisible}
                                       index={index}
                                       isModifiable={false}

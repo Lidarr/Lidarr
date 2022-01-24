@@ -5,6 +5,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.DecisionEngine.Specifications.RssSync;
 using NzbDrone.Core.History;
@@ -13,9 +14,10 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Profiles.Qualities;
 using NzbDrone.Core.Qualities;
+using NzbDrone.Core.Test.CustomFormats;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.DecisionEngineTests
+namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
 {
     [TestFixture]
     public class HistorySpecificationFixture : CoreTest<HistorySpecification>
@@ -37,6 +39,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             Mocker.Resolve<UpgradableSpecification>();
             _upgradeHistory = Mocker.Resolve<HistorySpecification>();
 
+            CustomFormatsTestHelpers.GivenCustomFormats();
+
             var singleAlbumList = new List<Album> { new Album { Id = FIRST_ALBUM_ID } };
             var doubleAlbumList = new List<Album>
             {
@@ -50,6 +54,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
                 {
                     UpgradeAllowed = true,
                     Cutoff = Quality.MP3_320.Id,
+                    FormatItems = CustomFormatsTestHelpers.GetSampleFormatItems("None"),
+                    MinFormatScore = 0,
                     Items = Qualities.QualityFixture.GetDefaultQualities()
                 })
                 .Build();
@@ -58,14 +64,16 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             {
                 Artist = _fakeArtist,
                 ParsedAlbumInfo = new ParsedAlbumInfo { Quality = new QualityModel(Quality.MP3_192, new Revision(version: 2)) },
-                Albums = doubleAlbumList
+                Albums = doubleAlbumList,
+                CustomFormats = new List<CustomFormat>()
             };
 
             _parseResultSingle = new RemoteAlbum
             {
                 Artist = _fakeArtist,
                 ParsedAlbumInfo = new ParsedAlbumInfo { Quality = new QualityModel(Quality.MP3_192, new Revision(version: 2)) },
-                Albums = singleAlbumList
+                Albums = singleAlbumList,
+                CustomFormats = new List<CustomFormat>()
             };
 
             _upgradableQuality = new QualityModel(Quality.MP3_192, new Revision(version: 1));
@@ -74,6 +82,10 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             Mocker.GetMock<IConfigService>()
                   .SetupGet(s => s.EnableCompletedDownloadHandling)
                   .Returns(true);
+
+            Mocker.GetMock<ICustomFormatCalculationService>()
+                  .Setup(x => x.ParseCustomFormat(It.IsAny<EntityHistory>(), It.IsAny<Artist>()))
+                  .Returns(new List<CustomFormat>());
         }
 
         private void GivenMostRecentForAlbum(int albumId, string downloadId, QualityModel quality, DateTime date, EntityHistoryEventType eventType)

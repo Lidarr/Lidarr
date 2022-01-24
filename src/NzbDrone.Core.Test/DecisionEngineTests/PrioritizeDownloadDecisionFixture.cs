@@ -416,15 +416,15 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             var remoteAlbum1 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC));
             var remoteAlbum2 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC));
 
-            remoteAlbum1.PreferredWordScore = 10;
-            remoteAlbum2.PreferredWordScore = 0;
+            remoteAlbum1.CustomFormatScore = 10;
+            remoteAlbum2.CustomFormatScore = 0;
 
             var decisions = new List<DownloadDecision>();
             decisions.Add(new DownloadDecision(remoteAlbum1));
             decisions.Add(new DownloadDecision(remoteAlbum2));
 
             var qualifiedReports = Subject.PrioritizeDecisions(decisions);
-            qualifiedReports.First().RemoteAlbum.PreferredWordScore.Should().Be(10);
+            qualifiedReports.First().RemoteAlbum.CustomFormatScore.Should().Be(10);
         }
 
         [Test]
@@ -437,8 +437,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             var remoteAlbum1 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC, new Revision(1)));
             var remoteAlbum2 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC, new Revision(2)));
 
-            remoteAlbum1.PreferredWordScore = 10;
-            remoteAlbum2.PreferredWordScore = 0;
+            remoteAlbum1.CustomFormatScore = 10;
+            remoteAlbum2.CustomFormatScore = 0;
 
             var decisions = new List<DownloadDecision>();
             decisions.Add(new DownloadDecision(remoteAlbum1));
@@ -458,8 +458,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             var remoteAlbum1 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC, new Revision(1)));
             var remoteAlbum2 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC, new Revision(2)));
 
-            remoteAlbum1.PreferredWordScore = 10;
-            remoteAlbum2.PreferredWordScore = 0;
+            remoteAlbum1.CustomFormatScore = 10;
+            remoteAlbum2.CustomFormatScore = 0;
 
             var decisions = new List<DownloadDecision>();
             decisions.Add(new DownloadDecision(remoteAlbum1));
@@ -479,8 +479,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             var remoteAlbum1 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC, new Revision(1)));
             var remoteAlbum2 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC, new Revision(2)));
 
-            remoteAlbum1.PreferredWordScore = 10;
-            remoteAlbum2.PreferredWordScore = 0;
+            remoteAlbum1.CustomFormatScore = 10;
+            remoteAlbum2.CustomFormatScore = 0;
 
             var decisions = new List<DownloadDecision>();
             decisions.Add(new DownloadDecision(remoteAlbum1));
@@ -489,7 +489,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             var qualifiedReports = Subject.PrioritizeDecisions(decisions);
             qualifiedReports.First().RemoteAlbum.ParsedAlbumInfo.Quality.Quality.Should().Be(Quality.FLAC);
             qualifiedReports.First().RemoteAlbum.ParsedAlbumInfo.Quality.Revision.Version.Should().Be(1);
-            qualifiedReports.First().RemoteAlbum.PreferredWordScore.Should().Be(10);
+            qualifiedReports.First().RemoteAlbum.CustomFormatScore.Should().Be(10);
         }
 
         [Test]
@@ -502,8 +502,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             var remoteAlbum1 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC, new Revision(1, 0)));
             var remoteAlbum2 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC, new Revision(1, 1)));
 
-            remoteAlbum1.PreferredWordScore = 10;
-            remoteAlbum2.PreferredWordScore = 0;
+            remoteAlbum1.CustomFormatScore = 10;
+            remoteAlbum2.CustomFormatScore = 0;
 
             var decisions = new List<DownloadDecision>();
             decisions.Add(new DownloadDecision(remoteAlbum1));
@@ -513,7 +513,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             qualifiedReports.First().RemoteAlbum.ParsedAlbumInfo.Quality.Quality.Should().Be(Quality.FLAC);
             qualifiedReports.First().RemoteAlbum.ParsedAlbumInfo.Quality.Revision.Version.Should().Be(1);
             qualifiedReports.First().RemoteAlbum.ParsedAlbumInfo.Quality.Revision.Real.Should().Be(0);
-            qualifiedReports.First().RemoteAlbum.PreferredWordScore.Should().Be(10);
+            qualifiedReports.First().RemoteAlbum.CustomFormatScore.Should().Be(10);
         }
 
         [Test]

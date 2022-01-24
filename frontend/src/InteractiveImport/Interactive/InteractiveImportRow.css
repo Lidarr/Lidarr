@@ -28,3 +28,7 @@
 
   color: var(--disabledColor);
 }
+
+.customFormatTooltip {
+  max-width: 250px;
+}

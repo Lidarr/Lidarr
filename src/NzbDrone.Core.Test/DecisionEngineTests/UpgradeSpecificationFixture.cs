@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.Profiles.Qualities;
 using NzbDrone.Core.Qualities;
@@ -22,8 +23,6 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             new object[] { Quality.MP3_320, 1, Quality.MP3_256, 2, Quality.MP3_320, false },
             new object[] { Quality.MP3_320, 1, Quality.MP3_320, 1, Quality.MP3_320, false }
         };
-
-        private static readonly int NoPreferredWordScore = 0;
 
         private void GivenAutoDownloadPropers(ProperDownloadTypes type)
         {
@@ -47,9 +46,9 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             Subject.IsUpgradable(
                         profile,
                         new List<QualityModel> { new QualityModel(current, new Revision(version: currentVersion)) },
-                        NoPreferredWordScore,
+                        new List<CustomFormat>(),
                         new QualityModel(newQuality, new Revision(version: newVersion)),
-                        NoPreferredWordScore)
+                        new List<CustomFormat>())
                    .Should().Be(expected);
         }
 
@@ -66,9 +65,9 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             Subject.IsUpgradable(
                         profile,
                         new List<QualityModel> { new QualityModel(Quality.MP3_256, new Revision(version: 1)) },
-                        NoPreferredWordScore,
+                        new List<CustomFormat>(),
                         new QualityModel(Quality.MP3_256, new Revision(version: 2)),
-                        NoPreferredWordScore)
+                        new List<CustomFormat>())
                     .Should().BeTrue();
         }
 
@@ -85,9 +84,9 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             Subject.IsUpgradable(
                         profile,
                         new List<QualityModel> { new QualityModel(Quality.MP3_256, new Revision(version: 1)) },
-                        NoPreferredWordScore,
+                        new List<CustomFormat>(),
                         new QualityModel(Quality.MP3_256, new Revision(version: 2)),
-                        NoPreferredWordScore)
+                        new List<CustomFormat>())
                     .Should().BeFalse();
         }
     }

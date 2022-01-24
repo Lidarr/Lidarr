@@ -3,11 +3,11 @@ using System.Linq;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Profiles.Releases;
 
 namespace NzbDrone.Core.DecisionEngine.Specifications
 {
@@ -16,7 +16,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
         private readonly IMediaFileService _mediaFileService;
         private readonly ITrackService _trackService;
         private readonly UpgradableSpecification _upgradableSpecification;
-        private readonly IPreferredWordService _preferredWordServiceCalculator;
+        private readonly ICustomFormatCalculationService _formatService;
         private readonly Logger _logger;
         private readonly ICached<bool> _missingFilesCache;
 
@@ -24,13 +24,13 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                                         IMediaFileService mediaFileService,
                                         ITrackService trackService,
                                         ICacheManager cacheManager,
-                                        IPreferredWordService preferredWordServiceCalculator,
+                                        ICustomFormatCalculationService formatService,
                                         Logger logger)
         {
             _upgradableSpecification = qualityUpgradableSpecification;
             _mediaFileService = mediaFileService;
             _trackService = trackService;
-            _preferredWordServiceCalculator = preferredWordServiceCalculator;
+            _formatService = formatService;
             _logger = logger;
             _missingFilesCache = cacheManager.GetCache<bool>(GetType());
         }
@@ -51,11 +51,13 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                 {
                     var currentQualities = trackFiles.Select(c => c.Quality).Distinct().ToList();
 
+                    var customFormats = _formatService.ParseCustomFormat(trackFiles[0]);
+
                     if (!_upgradableSpecification.IsUpgradable(subject.Artist.QualityProfile,
                                                                currentQualities,
-                                                               _preferredWordServiceCalculator.Calculate(subject.Artist, trackFiles[0].GetSceneOrFileName(), subject.Release?.IndexerId ?? 0),
+                                                               customFormats,
                                                                subject.ParsedAlbumInfo.Quality,
-                                                               subject.PreferredWordScore))
+                                                               subject.CustomFormats))
                     {
                         return Decision.Reject("Existing files on disk is of equal or higher preference: {0}", currentQualities.ConcatToString());
                     }

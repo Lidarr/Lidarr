@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using Lidarr.Api.V1.CustomFormats;
 using Lidarr.Http.REST;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Indexers;
@@ -40,7 +41,8 @@ namespace Lidarr.Api.V1.Indexers
         public string InfoUrl { get; set; }
         public bool DownloadAllowed { get; set; }
         public int ReleaseWeight { get; set; }
-        public int PreferredWordScore { get; set; }
+        public List<CustomFormatResource> CustomFormats { get; set; }
+        public int CustomFormatScore { get; set; }
 
         public string MagnetUrl { get; set; }
         public string InfoHash { get; set; }
@@ -99,7 +101,8 @@ namespace Lidarr.Api.V1.Indexers
                 DownloadAllowed = remoteAlbum.DownloadAllowed,
 
                 // ReleaseWeight
-                PreferredWordScore = remoteAlbum.PreferredWordScore,
+                CustomFormatScore = remoteAlbum.CustomFormatScore,
+                CustomFormats = remoteAlbum.CustomFormats.ToResource(false),
 
                 MagnetUrl = torrentInfo.MagnetUrl,
                 InfoHash = torrentInfo.InfoHash,
