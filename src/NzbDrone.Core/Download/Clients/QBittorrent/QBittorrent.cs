@@ -366,9 +366,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
 
             if (Settings.MusicCategory.IsNotNullOrWhiteSpace() && version >= Version.Parse("2.0"))
             {
-                var label = Proxy.GetLabels(Settings)[Settings.MusicCategory];
-
-                if (label.SavePath.IsNotNullOrWhiteSpace())
+                if (Proxy.GetLabels(Settings).TryGetValue(Settings.MusicCategory, out var label) && label.SavePath.IsNotNullOrWhiteSpace())
                 {
                     var labelDir = new OsPath(label.SavePath);
 
