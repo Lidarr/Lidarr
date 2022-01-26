@@ -8,8 +8,8 @@ namespace NzbDrone.Core.Datastore.Migration
     {
         protected override void MainDbUpgrade()
         {
-            Execute.Sql("DELETE FROM Indexers WHERE Implementation = 'Omgwtfnzbs'");
-            Execute.Sql("DELETE FROM Indexers WHERE Implementation = 'Waffles'");
+            Delete.FromTable("Indexers").Row(new { Implementation = "Omgwtfnzbs" });
+            Delete.FromTable("Indexers").Row(new { Implementation = "Waffles" });
 
             Alter.Table("Indexers").AddColumn("Tags").AsString().Nullable();
         }

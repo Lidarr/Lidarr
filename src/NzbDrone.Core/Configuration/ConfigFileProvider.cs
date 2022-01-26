@@ -4,12 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using Microsoft.Extensions.Options;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Authentication;
 using NzbDrone.Core.Configuration.Events;
+using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
@@ -49,6 +51,12 @@ namespace NzbDrone.Core.Configuration
         int SyslogPort { get; }
         string SyslogLevel { get; }
         string Theme { get; }
+        string PostgresHost { get; }
+        int PostgresPort { get; }
+        string PostgresUser { get; }
+        string PostgresPassword { get; }
+        string PostgresMainDb { get; }
+        string PostgresLogDb { get; }
     }
 
     public class ConfigFileProvider : IConfigFileProvider
@@ -58,6 +66,7 @@ namespace NzbDrone.Core.Configuration
         private readonly IEventAggregator _eventAggregator;
         private readonly IDiskProvider _diskProvider;
         private readonly ICached<string> _cache;
+        private readonly PostgresOptions _postgresOptions;
 
         private readonly string _configFile;
 
@@ -66,12 +75,14 @@ namespace NzbDrone.Core.Configuration
         public ConfigFileProvider(IAppFolderInfo appFolderInfo,
                                   ICacheManager cacheManager,
                                   IEventAggregator eventAggregator,
-                                  IDiskProvider diskProvider)
+                                  IDiskProvider diskProvider,
+                                  IOptions<PostgresOptions> postgresOptions)
         {
             _cache = cacheManager.GetCache<string>(GetType());
             _eventAggregator = eventAggregator;
             _diskProvider = diskProvider;
             _configFile = appFolderInfo.GetConfigPath();
+            _postgresOptions = postgresOptions.Value;
         }
 
         public Dictionary<string, object> GetConfigDictionary()
@@ -186,6 +197,12 @@ namespace NzbDrone.Core.Configuration
         public string ConsoleLogLevel => GetValue("ConsoleLogLevel", string.Empty, persist: false);
 
         public string Theme => GetValue("Theme", "light", persist: false);
+        public string PostgresHost => _postgresOptions?.Host ?? GetValue("PostgresHost", string.Empty, persist: false);
+        public string PostgresUser => _postgresOptions?.User ?? GetValue("PostgresUser", string.Empty, persist: false);
+        public string PostgresPassword => _postgresOptions?.Password ?? GetValue("PostgresPassword", string.Empty, persist: false);
+        public string PostgresMainDb => _postgresOptions?.MainDb ?? GetValue("PostgresMainDb", "lidarr-main", persist: false);
+        public string PostgresLogDb => _postgresOptions?.LogDb ?? GetValue("PostgresLogDb", "lidarr-log", persist: false);
+        public int PostgresPort => (_postgresOptions?.Port ?? 0) != 0 ? _postgresOptions.Port : GetValueInt("PostgresPort", 5432, persist: false);
         public bool LogSql => GetValueBoolean("LogSql", false, persist: false);
         public int LogRotate => GetValueInt("LogRotate", 50, persist: false);
         public bool FilterSentryEvents => GetValueBoolean("FilterSentryEvents", true, persist: false);

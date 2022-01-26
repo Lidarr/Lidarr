@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Music
         {
         }
 
-        protected override SqlBuilder Builder() => new SqlBuilder()
+        protected override SqlBuilder Builder() => new SqlBuilder(_database.DatabaseType)
             .Join<Artist, ArtistMetadata>((a, m) => a.ArtistMetadataId == m.Id);
 
         protected override List<Artist> Query(SqlBuilder builder) => Query(_database, builder).ToList();
@@ -46,7 +46,9 @@ namespace NzbDrone.Core.Music
 
         public Artist FindById(string foreignArtistId)
         {
-            var artist = Query(Builder().Where<ArtistMetadata>(m => m.ForeignArtistId == foreignArtistId)).SingleOrDefault();
+            Artist artist;
+
+            artist = Query(Builder().Where<ArtistMetadata>(m => m.ForeignArtistId == foreignArtistId)).SingleOrDefault();
 
             if (artist == null)
             {
@@ -72,7 +74,7 @@ namespace NzbDrone.Core.Music
         {
             using (var conn = _database.OpenConnection())
             {
-                var strSql = "SELECT Id AS [Key], Path AS [Value] FROM Artists";
+                var strSql = "SELECT \"Id\" AS \"Key\", \"Path\" AS \"Value\" FROM \"Artists\"";
                 return conn.Query<KeyValuePair<int, string>>(strSql).ToDictionary(x => x.Key, x => x.Value);
             }
         }

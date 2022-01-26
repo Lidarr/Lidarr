@@ -71,7 +71,7 @@ namespace NzbDrone.Core.Datastore.Migration
                 using (var updateProfileCmd = _connection.CreateCommand())
                 {
                     updateProfileCmd.Transaction = _transaction;
-                    updateProfileCmd.CommandText = "UPDATE Profiles SET Name = ?, Cutoff = ?, Items = ? WHERE Id = ?";
+                    updateProfileCmd.CommandText = "UPDATE \"Profiles\" SET \"Name\" = ?, \"Cutoff\" = ?, \"Items\" = ? WHERE \"Id\" = ?";
                     updateProfileCmd.AddParameter(profile.Name);
                     updateProfileCmd.AddParameter(profile.Cutoff);
                     updateProfileCmd.AddParameter(profile.Items.ToJson());
@@ -115,7 +115,7 @@ namespace NzbDrone.Core.Datastore.Migration
             using (var getProfilesCmd = _connection.CreateCommand())
             {
                 getProfilesCmd.Transaction = _transaction;
-                getProfilesCmd.CommandText = @"SELECT Id, Name, Cutoff, Items FROM Profiles";
+                getProfilesCmd.CommandText = @"SELECT ""Id"", ""Name"", ""Cutoff"", ""Items"" FROM ""Profiles""";
 
                 using (var profileReader = getProfilesCmd.ExecuteReader())
                 {

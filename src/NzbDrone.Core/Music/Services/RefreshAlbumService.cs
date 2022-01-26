@@ -247,7 +247,7 @@ namespace NzbDrone.Core.Music
         {
             var children = _releaseService.GetReleasesForRefresh(entity.Id,
                                                                  remoteChildren.Select(x => x.ForeignReleaseId)
-                                                                 .Concat(remoteChildren.SelectMany(x => x.OldForeignReleaseIds)));
+                                                                 .Concat(remoteChildren.SelectMany(x => x.OldForeignReleaseIds)).ToList());
 
             // Make sure trackfiles point to the new album where we are grabbing a release from another album
             var files = new List<TrackFile>();

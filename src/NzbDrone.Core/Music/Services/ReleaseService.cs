@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Music
         void InsertMany(List<AlbumRelease> releases);
         void UpdateMany(List<AlbumRelease> releases);
         void DeleteMany(List<AlbumRelease> releases);
-        List<AlbumRelease> GetReleasesForRefresh(int albumId, IEnumerable<string> foreignReleaseIds);
+        List<AlbumRelease> GetReleasesForRefresh(int albumId, List<string> foreignReleaseIds);
         List<AlbumRelease> GetReleasesByAlbum(int releaseGroupId);
         List<AlbumRelease> GetReleasesByRecordingIds(List<string> recordingIds);
         List<AlbumRelease> SetMonitored(AlbumRelease release);
@@ -66,7 +66,7 @@ namespace NzbDrone.Core.Music
             }
         }
 
-        public List<AlbumRelease> GetReleasesForRefresh(int albumId, IEnumerable<string> foreignReleaseIds)
+        public List<AlbumRelease> GetReleasesForRefresh(int albumId, List<string> foreignReleaseIds)
         {
             return _releaseRepository.GetReleasesForRefresh(albumId, foreignReleaseIds);
         }

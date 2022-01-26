@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Dapper;
 using FluentMigrator;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.Datastore.Migration
 {
@@ -30,18 +30,18 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("Members").AsString().Nullable();
 
             // we want to preserve the artist ID.  Shove all the metadata into the metadata table.
-            Execute.Sql(@"INSERT INTO ArtistMetadata (ForeignArtistId, Name, Overview, Disambiguation, Type, Status, Images, Links, Genres, Ratings, Members)
-                          SELECT ForeignArtistId, Name, Overview, Disambiguation, ArtistType, Status, Images, Links, Genres, Ratings, Members
-                          FROM Artists");
+            Execute.Sql(@"INSERT INTO ""ArtistMetadata"" (""ForeignArtistId"", ""Name"", ""Overview"", ""Disambiguation"", ""Type"", ""Status"", ""Images"", ""Links"", ""Genres"", ""Ratings"", ""Members"")
+                          SELECT ""ForeignArtistId"", ""Name"", ""Overview"", ""Disambiguation"", ""ArtistType"", ""Status"", ""Images"", ""Links"", ""Genres"", ""Ratings"", ""Members""
+                          FROM ""Artists""");
 
             // Add an ArtistMetadataId column to Artists
             Alter.Table("Artists").AddColumn("ArtistMetadataId").AsInt32().WithDefaultValue(0);
 
             // Update artistmetadataId
-            Execute.Sql(@"UPDATE Artists
-                          SET ArtistMetadataId = (SELECT ArtistMetadata.Id 
-                                                  FROM ArtistMetadata 
-                                                  WHERE ArtistMetadata.ForeignArtistId = Artists.ForeignArtistId)");
+            Execute.Sql(@"UPDATE ""Artists""
+                          SET ""ArtistMetadataId"" = (SELECT ""ArtistMetadata"".""Id"" 
+                                                  FROM ""ArtistMetadata"" 
+                                                  WHERE ""ArtistMetadata"".""ForeignArtistId"" = ""Artists"".""ForeignArtistId"")");
 
             // ALBUM RELEASES TABLE - Do this before we mess with the Albums table
             Create.TableForModel("AlbumReleases")
@@ -68,11 +68,11 @@ namespace NzbDrone.Core.Datastore.Migration
             Alter.Table("Albums").AddColumn("Links").AsString().Nullable();
 
             // Set metadata ID
-            Execute.Sql(@"UPDATE Albums
-                          SET ArtistMetadataId = (SELECT ArtistMetadata.Id 
-                                                  FROM ArtistMetadata 
-                                                  JOIN Artists ON ArtistMetadata.Id = Artists.ArtistMetadataId
-                                                  WHERE Albums.ArtistId = Artists.Id)");
+            Execute.Sql(@"UPDATE ""Albums""
+                          SET ""ArtistMetadataId"" = (SELECT ""ArtistMetadata"".""Id"" 
+                                                  FROM ""ArtistMetadata"" 
+                                                  JOIN ""Artists"" ON ""ArtistMetadata"".""Id"" = ""Artists"".""ArtistMetadataId""
+                                                  WHERE ""Albums"".""ArtistId"" = ""Artists"".""Id"")");
 
             // TRACKS TABLE
             Alter.Table("Tracks").AddColumn("ForeignRecordingId").AsString().WithDefaultValue("0");
@@ -80,18 +80,18 @@ namespace NzbDrone.Core.Datastore.Migration
             Alter.Table("Tracks").AddColumn("ArtistMetadataId").AsInt32().WithDefaultValue(0);
 
             // Set track release to the only release we've bothered populating
-            Execute.Sql(@"UPDATE Tracks
-                          SET AlbumReleaseId = (SELECT AlbumReleases.Id 
-                                                FROM AlbumReleases
-                                                JOIN Albums ON AlbumReleases.AlbumId = Albums.Id
-                                                WHERE Albums.Id = Tracks.AlbumId)");
+            Execute.Sql(@"UPDATE ""Tracks""
+                          SET ""AlbumReleaseId"" = (SELECT ""AlbumReleases"".""Id"" 
+                                                FROM ""AlbumReleases""
+                                                JOIN ""Albums"" ON ""AlbumReleases"".""AlbumId"" = ""Albums"".""Id""
+                                                WHERE ""Albums"".""Id"" = ""Tracks"".""AlbumId"")");
 
             // Set metadata ID
-            Execute.Sql(@"UPDATE Tracks
-                          SET ArtistMetadataId = (SELECT ArtistMetadata.Id 
-                                                  FROM ArtistMetadata 
-                                                  JOIN Albums ON ArtistMetadata.Id = Albums.ArtistMetadataId
-                                                  WHERE Tracks.AlbumId = Albums.Id)");
+            Execute.Sql(@"UPDATE ""Tracks""
+                          SET ""ArtistMetadataId"" = (SELECT ""ArtistMetadata"".""Id"" 
+                                                  FROM ""ArtistMetadata"" 
+                                                  JOIN ""Albums"" ON ""ArtistMetadata"".""Id"" = ""Albums"".""ArtistMetadataId""
+                                                  WHERE ""Tracks"".""AlbumId"" = ""Albums"".""Id"")");
 
             // CLEAR OUT OLD COLUMNS
 
@@ -188,15 +188,15 @@ namespace NzbDrone.Core.Datastore.Migration
             public List<string> Label { get; set; }
         }
 
-        private List<AlbumRelease> ReadReleasesFromAlbums(IDbConnection conn, IDbTransaction tran)
+        private List<AlbumRelease023> ReadReleasesFromAlbums(IDbConnection conn, IDbTransaction tran)
         {
             // need to get all the old albums
-            var releases = new List<AlbumRelease>();
+            var releases = new List<AlbumRelease023>();
 
             using (var getReleasesCmd = conn.CreateCommand())
             {
                 getReleasesCmd.Transaction = tran;
-                getReleasesCmd.CommandText = @"SELECT Id, CurrentRelease FROM Albums";
+                getReleasesCmd.CommandText = @"SELECT ""Id"", ""CurrentRelease"" FROM ""Albums""";
 
                 using (var releaseReader = getReleasesCmd.ExecuteReader())
                 {
@@ -205,16 +205,16 @@ namespace NzbDrone.Core.Datastore.Migration
                         int albumId = releaseReader.GetInt32(0);
                         var albumRelease = Json.Deserialize<LegacyAlbumRelease>(releaseReader.GetString(1));
 
-                        AlbumRelease toInsert = null;
+                        AlbumRelease023 toInsert = null;
                         if (albumRelease != null)
                         {
-                            var media = new List<Medium>();
+                            var media = new List<Medium023>();
                             for (var i = 1; i <= Math.Max(albumRelease.MediaCount, 1); i++)
                             {
-                                media.Add(new Medium { Number = i, Name = "", Format = albumRelease.Format ?? "Unknown" });
+                                media.Add(new Medium023 { Number = i, Name = "", Format = albumRelease.Format ?? "Unknown" });
                             }
 
-                            toInsert = new AlbumRelease
+                            toInsert = new AlbumRelease023
                             {
                                 AlbumId = albumId,
                                 ForeignReleaseId = albumRelease.Id.IsNotNullOrWhiteSpace() ? albumRelease.Id : albumId.ToString(),
@@ -231,7 +231,7 @@ namespace NzbDrone.Core.Datastore.Migration
                         }
                         else
                         {
-                            toInsert = new AlbumRelease
+                            toInsert = new AlbumRelease023
                             {
                                 AlbumId = albumId,
                                 ForeignReleaseId = albumId.ToString(),
@@ -239,7 +239,7 @@ namespace NzbDrone.Core.Datastore.Migration
                                 Status = "",
                                 Label = new List<string>(),
                                 Country = new List<string>(),
-                                Media = new List<Medium> { new Medium { Name = "Unknown", Number = 1, Format = "Unknown" } },
+                                Media = new List<Medium023> { new Medium023 { Name = "Unknown", Number = 1, Format = "Unknown" } },
                                 Monitored = true
                             };
                         }
@@ -252,31 +252,54 @@ namespace NzbDrone.Core.Datastore.Migration
             return releases;
         }
 
-        private void WriteReleasesToReleases(List<AlbumRelease> releases, IDbConnection conn, IDbTransaction tran)
+        private void WriteReleasesToReleases(List<AlbumRelease023> releases, IDbConnection conn, IDbTransaction tran)
         {
+            var dbReleases = new List<dynamic>();
+
             foreach (var release in releases)
             {
-                using (var writeReleaseCmd = conn.CreateCommand())
+                dbReleases.Add(new
                 {
-                    writeReleaseCmd.Transaction = tran;
-                    writeReleaseCmd.CommandText =
-                        "INSERT INTO AlbumReleases (AlbumId, ForeignReleaseId, Title, Status, Duration, Label, Disambiguation, Country, Media, TrackCount, Monitored) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                    writeReleaseCmd.AddParameter(release.AlbumId);
-                    writeReleaseCmd.AddParameter(release.ForeignReleaseId);
-                    writeReleaseCmd.AddParameter(release.Title);
-                    writeReleaseCmd.AddParameter(release.Status);
-                    writeReleaseCmd.AddParameter(release.Duration);
-                    writeReleaseCmd.AddParameter(release.Label.ToJson());
-                    writeReleaseCmd.AddParameter(release.Disambiguation);
-                    writeReleaseCmd.AddParameter(release.Country.ToJson());
-                    writeReleaseCmd.AddParameter(release.Media.ToJson());
-                    writeReleaseCmd.AddParameter(release.TrackCount);
-                    writeReleaseCmd.AddParameter(release.Monitored);
-
-                    writeReleaseCmd.ExecuteNonQuery();
-                }
+                    AlbumId = release.AlbumId,
+                    ForeignReleaseId = release.ForeignReleaseId,
+                    Title = release.Title,
+                    Status = release.Status,
+                    Duration = release.Duration,
+                    Label = release.Label.ToJson(),
+                    Disambiguation = release.Disambiguation,
+                    Country = release.Country.ToJson(),
+                    Media = release.Media.ToJson(),
+                    TrackCount = release.TrackCount,
+                    Monitored = release.Monitored
+                });
             }
+
+            var updateSql = "INSERT INTO \"AlbumReleases\" (\"AlbumId\", \"ForeignReleaseId\", \"Title\", \"Status\", \"Duration\", \"Label\", \"Disambiguation\", \"Country\", \"Media\", \"TrackCount\", \"Monitored\") " +
+                        "VALUES (@AlbumId, @ForeignReleaseId, @Title, @Status, @Duration, @Label, @Disambiguation, @Country, @Media, @TrackCount, @Monitored)";
+
+            conn.Execute(updateSql, dbReleases, transaction: tran);
+        }
+
+        public class AlbumRelease023
+        {
+            public int AlbumId { get; set; }
+            public string ForeignReleaseId { get; set; }
+            public string Title { get; set; }
+            public string Status { get; set; }
+            public int Duration { get; set; }
+            public List<string> Label { get; set; }
+            public string Disambiguation { get; set; }
+            public List<string> Country { get; set; }
+            public List<Medium023> Media { get; set; }
+            public int TrackCount { get; set; }
+            public bool Monitored { get; set; }
+        }
+
+        public class Medium023
+        {
+            public int Number { get; set; }
+            public string Name { get; set; }
+            public string Format { get; set; }
         }
     }
 }

@@ -9,11 +9,11 @@ namespace NzbDrone.Core.Datastore.Migration
         protected override void MainDbUpgrade()
         {
             // Remove any duplicate artists
-            Execute.Sql(@"DELETE FROM Artists
-                          WHERE Id NOT IN (
-                            SELECT MIN(Artists.id) from Artists
-                            JOIN ArtistMetadata ON Artists.ArtistMetadataId = ArtistMetadata.Id
-                            GROUP BY ArtistMetadata.Id)");
+            Execute.Sql(@"DELETE FROM ""Artists""
+                          WHERE ""Id"" NOT IN (
+                            SELECT MIN(""Artists"".""Id"") from ""Artists""
+                            JOIN ""ArtistMetadata"" ON ""Artists"".""ArtistMetadataId"" = ""ArtistMetadata"".""Id""
+                            GROUP BY ""ArtistMetadata"".""Id"")");
 
             // The index exists but will be recreated as part of unique constraint
             Delete.Index().OnTable("Artists").OnColumn("ArtistMetadataId");

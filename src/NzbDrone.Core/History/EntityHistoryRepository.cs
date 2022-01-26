@@ -90,11 +90,11 @@ namespace NzbDrone.Core.History
 
         public List<EntityHistory> FindDownloadHistory(int idArtistId, QualityModel quality)
         {
-            var allowed = new[] { EntityHistoryEventType.Grabbed, EntityHistoryEventType.DownloadFailed, EntityHistoryEventType.TrackFileImported };
+            var allowed = new[] { (int)EntityHistoryEventType.Grabbed, (int)EntityHistoryEventType.DownloadFailed, (int)EntityHistoryEventType.TrackFileImported };
 
             return Query(h => h.ArtistId == idArtistId &&
                          h.Quality == quality &&
-                         allowed.Contains(h.EventType));
+                         allowed.Contains((int)h.EventType));
         }
 
         public void DeleteForArtists(List<int> artistIds)
@@ -102,7 +102,7 @@ namespace NzbDrone.Core.History
             Delete(c => artistIds.Contains(c.ArtistId));
         }
 
-        protected override SqlBuilder PagedBuilder() => new SqlBuilder()
+        protected override SqlBuilder PagedBuilder() => new SqlBuilder(_database.DatabaseType)
             .Join<EntityHistory, Artist>((h, a) => h.ArtistId == a.Id)
             .Join<EntityHistory, Album>((h, a) => h.AlbumId == a.Id)
             .LeftJoin<EntityHistory, Track>((h, t) => h.TrackId == t.Id);

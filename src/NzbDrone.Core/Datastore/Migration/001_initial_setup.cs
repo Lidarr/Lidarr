@@ -288,8 +288,8 @@ namespace NzbDrone.Core.Datastore.Migration
 
             Insert.IntoTable("DelayProfiles").Row(new
             {
-                EnableUsenet = 1,
-                EnableTorrent = 1,
+                EnableUsenet = true,
+                EnableTorrent = true,
                 PreferredProtocol = 1,
                 UsenetDelay = 0,
                 TorrentDelay = 0,

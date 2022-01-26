@@ -97,7 +97,7 @@ namespace NzbDrone.Core.Test.MusicTests
         private void GivenAlbumsForRefresh(List<Album> albums)
         {
             Mocker.GetMock<IAlbumService>(MockBehavior.Strict)
-                .Setup(s => s.GetAlbumsForRefresh(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
+                .Setup(s => s.GetAlbumsForRefresh(It.IsAny<int>(), It.IsAny<List<string>>()))
                 .Returns(albums);
         }
 
@@ -229,7 +229,7 @@ namespace NzbDrone.Core.Test.MusicTests
 
             Mocker.GetMock<IAlbumService>(MockBehavior.Strict)
                 .InSequence(seq)
-                .Setup(x => x.GetAlbumsForRefresh(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
+                .Setup(x => x.GetAlbumsForRefresh(It.IsAny<int>(), It.IsAny<List<string>>()))
                 .Returns(new List<Album>());
 
             // Update called twice for a move/merge
@@ -289,7 +289,7 @@ namespace NzbDrone.Core.Test.MusicTests
 
             Mocker.GetMock<IAlbumService>(MockBehavior.Strict)
                 .InSequence(seq)
-                .Setup(x => x.GetAlbumsForRefresh(clash.ArtistMetadataId, It.IsAny<IEnumerable<string>>()))
+                .Setup(x => x.GetAlbumsForRefresh(clash.ArtistMetadataId, It.IsAny<List<string>>()))
                 .Returns(_albums);
 
             // Update called twice for a move/merge

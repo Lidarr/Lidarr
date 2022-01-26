@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Messaging.Events;
+using TagLib.Riff;
 
 namespace NzbDrone.Core.Music
 {
@@ -11,7 +12,7 @@ namespace NzbDrone.Core.Music
         AlbumRelease FindByForeignReleaseId(string foreignReleaseId, bool checkRedirect = false);
         List<AlbumRelease> FindByAlbum(int id);
         List<AlbumRelease> FindByRecordingId(List<string> recordingIds);
-        List<AlbumRelease> GetReleasesForRefresh(int albumId, IEnumerable<string> foreignReleaseIds);
+        List<AlbumRelease> GetReleasesForRefresh(int albumId, List<string> foreignReleaseIds);
         List<AlbumRelease> SetMonitored(AlbumRelease release);
     }
 
@@ -35,7 +36,7 @@ namespace NzbDrone.Core.Music
             return release;
         }
 
-        public List<AlbumRelease> GetReleasesForRefresh(int albumId, IEnumerable<string> foreignReleaseIds)
+        public List<AlbumRelease> GetReleasesForRefresh(int albumId, List<string> foreignReleaseIds)
         {
             return Query(r => r.AlbumId == albumId || foreignReleaseIds.Contains(r.ForeignReleaseId));
         }
@@ -44,10 +45,12 @@ namespace NzbDrone.Core.Music
         {
             // populate the albums and artist metadata also
             // this hopefully speeds up the track matching a lot
-            var builder = new SqlBuilder()
-                .LeftJoin<AlbumRelease, Album>((r, a) => r.AlbumId == a.Id)
-                .LeftJoin<Album, ArtistMetadata>((a, m) => a.ArtistMetadataId == m.Id)
-                .Where<AlbumRelease>(r => r.AlbumId == id);
+            SqlBuilder builder;
+
+            builder = new SqlBuilder(_database.DatabaseType)
+                    .LeftJoin<AlbumRelease, Album>((r, a) => r.AlbumId == a.Id)
+                    .LeftJoin<Album, ArtistMetadata>((a, m) => a.ArtistMetadataId == m.Id)
+                    .Where<AlbumRelease>(r => r.AlbumId == id);
 
             return _database.QueryJoined<AlbumRelease, Album, ArtistMetadata>(builder, (release, album, metadata) =>
                     {

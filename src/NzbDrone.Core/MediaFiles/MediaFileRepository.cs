@@ -31,7 +31,7 @@ namespace NzbDrone.Core.MediaFiles
 
         // always join with all the other good stuff
         // needed more often than not so better to load it all now
-        protected override SqlBuilder Builder() => new SqlBuilder()
+        protected override SqlBuilder Builder() => new SqlBuilder(_database.DatabaseType)
             .LeftJoin<TrackFile, Track>((t, x) => t.Id == x.TrackFileId)
             .LeftJoin<TrackFile, Album>((t, a) => t.AlbumId == a.Id)
             .LeftJoin<Album, Artist>((album, artist) => album.ArtistMetadataId == artist.ArtistMetadataId)
@@ -90,7 +90,7 @@ namespace NzbDrone.Core.MediaFiles
         {
             //x.Id == null is converted to SQL, so warning incorrect
 #pragma warning disable CS0472
-            return _database.Query<TrackFile>(new SqlBuilder().Select(typeof(TrackFile))
+            return _database.Query<TrackFile>(new SqlBuilder(_database.DatabaseType).Select(typeof(TrackFile))
                                               .LeftJoin<TrackFile, Track>((f, t) => f.Id == t.TrackFileId)
                                               .Where<Track>(t => t.Id == null)).ToList();
 #pragma warning restore CS0472
@@ -117,7 +117,7 @@ namespace NzbDrone.Core.MediaFiles
         {
             // ensure path ends with a single trailing path separator to avoid matching partial paths
             var safePath = path.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-            return _database.Query<TrackFile>(new SqlBuilder().Where<TrackFile>(x => x.Path.StartsWith(safePath))).ToList();
+            return _database.Query<TrackFile>(new SqlBuilder(_database.DatabaseType).Where<TrackFile>(x => x.Path.StartsWith(safePath))).ToList();
         }
 
         public TrackFile GetFileWithPath(string path)
@@ -128,7 +128,7 @@ namespace NzbDrone.Core.MediaFiles
         public List<TrackFile> GetFileWithPath(List<string> paths)
         {
             // use more limited join for speed
-            var builder = new SqlBuilder()
+            var builder = new SqlBuilder(_database.DatabaseType)
                 .LeftJoin<TrackFile, Track>((f, t) => f.Id == t.TrackFileId);
 
             var dict = new Dictionary<int, TrackFile>();

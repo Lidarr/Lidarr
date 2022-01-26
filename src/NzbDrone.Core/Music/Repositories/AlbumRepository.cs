@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Music
         List<Album> GetLastAlbums(IEnumerable<int> artistMetadataIds);
         List<Album> GetNextAlbums(IEnumerable<int> artistMetadataIds);
         List<Album> GetAlbumsByArtistMetadataId(int artistMetadataId);
-        List<Album> GetAlbumsForRefresh(int artistMetadataId, IEnumerable<string> foreignIds);
+        List<Album> GetAlbumsForRefresh(int artistMetadataId, List<string> foreignIds);
         Album FindByTitle(int artistMetadataId, string title);
         Album FindById(string foreignAlbumId);
         PagingSpec<Album> AlbumsWithoutFiles(PagingSpec<Album> pagingSpec);
@@ -44,17 +44,35 @@ namespace NzbDrone.Core.Music
         public List<Album> GetLastAlbums(IEnumerable<int> artistMetadataIds)
         {
             var now = DateTime.UtcNow;
-            return Query(Builder().Where<Album>(x => artistMetadataIds.Contains(x.ArtistMetadataId) && x.ReleaseDate < now)
-                         .GroupBy<Album>(x => x.ArtistMetadataId)
-                         .Having("Albums.ReleaseDate = MAX(Albums.ReleaseDate)"));
+
+            var inner = Builder()
+                .Select("MIN(\"Albums\".\"Id\") as id, MAX(\"Albums\".\"ReleaseDate\") as date")
+                .Where<Album>(x => artistMetadataIds.Contains(x.ArtistMetadataId) && x.ReleaseDate < now)
+                .GroupBy<Album>(x => x.ArtistMetadataId)
+                .AddSelectTemplate(typeof(Album));
+
+            var outer = Builder()
+                .Join($"({inner.RawSql}) ids on ids.id = \"Albums\".\"Id\" and ids.date = \"Albums\".\"ReleaseDate\"")
+                .AddParameters(inner.Parameters);
+
+            return Query(outer);
         }
 
         public List<Album> GetNextAlbums(IEnumerable<int> artistMetadataIds)
         {
             var now = DateTime.UtcNow;
-            return Query(Builder().Where<Album>(x => artistMetadataIds.Contains(x.ArtistMetadataId) && x.ReleaseDate > now)
-                         .GroupBy<Album>(x => x.ArtistMetadataId)
-                         .Having("Albums.ReleaseDate = MIN(Albums.ReleaseDate)"));
+
+            var inner = Builder()
+                .Select("MIN(\"Albums\".\"Id\") as id, MIN(\"Albums\".\"ReleaseDate\") as date")
+                .Where<Album>(x => artistMetadataIds.Contains(x.ArtistMetadataId) && x.ReleaseDate > now)
+                .GroupBy<Album>(x => x.ArtistMetadataId)
+                .AddSelectTemplate(typeof(Album));
+
+            var outer = Builder()
+                .Join($"({inner.RawSql}) ids on ids.id = \"Albums\".\"Id\" and ids.date = \"Albums\".\"ReleaseDate\"")
+                .AddParameters(inner.Parameters);
+
+            return Query(outer);
         }
 
         public List<Album> GetAlbumsByArtistMetadataId(int artistMetadataId)
@@ -62,7 +80,7 @@ namespace NzbDrone.Core.Music
             return Query(s => s.ArtistMetadataId == artistMetadataId);
         }
 
-        public List<Album> GetAlbumsForRefresh(int artistMetadataId, IEnumerable<string> foreignIds)
+        public List<Album> GetAlbumsForRefresh(int artistMetadataId, List<string> foreignIds)
         {
             return Query(a => a.ArtistMetadataId == artistMetadataId || foreignIds.Contains(a.ForeignAlbumId));
         }
@@ -74,15 +92,17 @@ namespace NzbDrone.Core.Music
 
         //x.Id == null is converted to SQL, so warning incorrect
 #pragma warning disable CS0472
-        private SqlBuilder AlbumsWithoutFilesBuilder(DateTime currentTime) => Builder()
-            .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
-            .Join<Album, AlbumRelease>((a, r) => a.Id == r.AlbumId)
-            .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
-            .LeftJoin<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
-            .Where<TrackFile>(f => f.Id == null)
-            .Where<AlbumRelease>(r => r.Monitored == true)
-            .Where<Album>(a => a.ReleaseDate <= currentTime)
-            .GroupBy<Album>(a => a.Id);
+        private SqlBuilder AlbumsWithoutFilesBuilder(DateTime currentTime)
+        {
+            return Builder()
+                    .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
+                    .Join<Album, AlbumRelease>((a, r) => a.Id == r.AlbumId)
+                    .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
+                    .LeftJoin<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
+                    .Where<TrackFile>(f => f.Id == null)
+                    .Where<AlbumRelease>(r => r.Monitored == true)
+                    .Where<Album>(a => a.ReleaseDate <= currentTime);
+        }
 #pragma warning restore CS0472
 
         public PagingSpec<Album> AlbumsWithoutFiles(PagingSpec<Album> pagingSpec)
@@ -95,14 +115,16 @@ namespace NzbDrone.Core.Music
             return pagingSpec;
         }
 
-        private SqlBuilder AlbumsWhereCutoffUnmetBuilder(List<QualitiesBelowCutoff> qualitiesBelowCutoff) => Builder()
-            .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
-            .Join<Album, AlbumRelease>((a, r) => a.Id == r.AlbumId)
-            .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
-            .LeftJoin<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
-            .Where<AlbumRelease>(r => r.Monitored == true)
-            .GroupBy<Album>(a => a.Id)
-            .Having(BuildQualityCutoffWhereClause(qualitiesBelowCutoff));
+        private SqlBuilder AlbumsWhereCutoffUnmetBuilder(List<QualitiesBelowCutoff> qualitiesBelowCutoff)
+        {
+            return Builder()
+                    .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
+                    .Join<Album, AlbumRelease>((a, r) => a.Id == r.AlbumId)
+                    .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
+                    .LeftJoin<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
+                    .Where<AlbumRelease>(r => r.Monitored == true)
+                    .Where(BuildQualityCutoffWhereClause(qualitiesBelowCutoff));
+        }
 
         private string BuildQualityCutoffWhereClause(List<QualitiesBelowCutoff> qualitiesBelowCutoff)
         {
@@ -112,7 +134,7 @@ namespace NzbDrone.Core.Music
             {
                 foreach (var belowCutoff in profile.QualityIds)
                 {
-                    clauses.Add(string.Format("(Artists.[QualityProfileId] = {0} AND MIN(TrackFiles.Quality) LIKE '%_quality_: {1},%')", profile.ProfileId, belowCutoff));
+                    clauses.Add(string.Format("(\"Artists\".\"QualityProfileId\" = {0} AND \"TrackFiles\".\"Quality\" LIKE '%_quality_: {1},%')", profile.ProfileId, belowCutoff));
                 }
             }
 
@@ -123,7 +145,7 @@ namespace NzbDrone.Core.Music
         {
             pagingSpec.Records = GetPagedRecords(AlbumsWhereCutoffUnmetBuilder(qualitiesBelowCutoff), pagingSpec, PagedQuery);
 
-            var countTemplate = $"SELECT COUNT(*) FROM (SELECT /**select**/ FROM {TableMapping.Mapper.TableNameMapping(typeof(Album))} /**join**/ /**innerjoin**/ /**leftjoin**/ /**where**/ /**groupby**/ /**having**/)";
+            var countTemplate = $"SELECT COUNT(*) FROM (SELECT /**select**/ FROM \"{TableMapping.Mapper.TableNameMapping(typeof(Album))}\" /**join**/ /**innerjoin**/ /**leftjoin**/ /**where**/ /**groupby**/ /**having**/) AS \"Inner\"";
             pagingSpec.TotalRecords = GetPagedRecordCount(AlbumsWhereCutoffUnmetBuilder(qualitiesBelowCutoff).Select(typeof(Album)), pagingSpec, countTemplate);
 
             return pagingSpec;
@@ -131,13 +153,15 @@ namespace NzbDrone.Core.Music
 
         public List<Album> AlbumsBetweenDates(DateTime startDate, DateTime endDate, bool includeUnmonitored)
         {
-            var builder = Builder().Where<Album>(rg => rg.ReleaseDate >= startDate && rg.ReleaseDate <= endDate);
+            SqlBuilder builder;
+
+            builder = Builder().Where<Album>(rg => rg.ReleaseDate >= startDate && rg.ReleaseDate <= endDate);
 
             if (!includeUnmonitored)
             {
                 builder = builder.Where<Album>(e => e.Monitored == true)
-                    .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
-                    .Where<Artist>(e => e.Monitored == true);
+                        .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
+                        .Where<Artist>(e => e.Monitored == true);
             }
 
             return Query(builder);
@@ -145,15 +169,17 @@ namespace NzbDrone.Core.Music
 
         public List<Album> ArtistAlbumsBetweenDates(Artist artist, DateTime startDate, DateTime endDate, bool includeUnmonitored)
         {
-            var builder = Builder().Where<Album>(rg => rg.ReleaseDate >= startDate &&
-                                                 rg.ReleaseDate <= endDate &&
-                                                 rg.ArtistMetadataId == artist.ArtistMetadataId);
+            SqlBuilder builder;
+
+            builder = Builder().Where<Album>(rg => rg.ReleaseDate >= startDate &&
+                                                    rg.ReleaseDate <= endDate &&
+                                                    rg.ArtistMetadataId == artist.ArtistMetadataId);
 
             if (!includeUnmonitored)
             {
                 builder = builder.Where<Album>(e => e.Monitored == true)
-                    .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
-                    .Where<Artist>(e => e.Monitored == true);
+                        .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
+                        .Where<Artist>(e => e.Monitored == true);
             }
 
             return Query(builder);
@@ -200,6 +226,7 @@ namespace NzbDrone.Core.Music
         public List<Album> GetArtistAlbumsWithFiles(Artist artist)
         {
             var id = artist.ArtistMetadataId;
+
             return Query(Builder().Join<Album, AlbumRelease>((a, r) => a.Id == r.AlbumId)
                          .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
                          .Join<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
