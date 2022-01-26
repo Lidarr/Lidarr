@@ -25,8 +25,8 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 Id = id,
                 CleanName = name,
                 Path = _artistPath,
-                Monitored = 1,
-                AlbumFolder = 1,
+                Monitored = true,
+                AlbumFolder = true,
                 LanguageProfileId = 1,
                 MetadataProfileId = 1,
                 ArtistMetadataId = id
@@ -43,9 +43,9 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 Title = title,
                 CleanTitle = title,
                 Images = "",
-                Monitored = 1,
+                Monitored = true,
                 AlbumType = "Studio",
-                AnyReleaseOk = 1
+                AnyReleaseOk = true
             });
         }
 
@@ -85,7 +85,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                     {
                         Id = id,
                         ForeignTrackId = id.ToString(),
-                        Explicit = 0,
+                        Explicit = false,
                         TrackFileId = id,
                         Duration = 100,
                         MediumNumber = 1,
@@ -102,8 +102,8 @@ namespace NzbDrone.Core.Test.Datastore.Migration
 
         private void VerifyTracksFiles(IDirectDataMapper db, int albumId, List<string> expectedPaths)
         {
-            var tracks = db.Query("SELECT TrackFiles.* FROM TrackFiles " +
-                                  "WHERE TrackFiles.AlbumId = " + albumId);
+            var tracks = db.Query("SELECT \"TrackFiles\".* FROM \"TrackFiles\" " +
+                                  "WHERE \"TrackFiles\".\"AlbumId\" = " + albumId);
 
             TestLogger.Debug($"Got {tracks.Count} tracks");
 

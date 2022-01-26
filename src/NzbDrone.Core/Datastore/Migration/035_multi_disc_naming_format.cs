@@ -9,7 +9,7 @@ namespace NzbDrone.Core.Datastore.Migration
         protected override void MainDbUpgrade()
         {
             Alter.Table("NamingConfig").AddColumn("MultiDiscTrackFormat").AsString().Nullable();
-            Execute.Sql("UPDATE NamingConfig SET MultiDiscTrackFormat = '{Medium Format} {medium:00}/{Artist Name} - {Album Title} - {track:00} - {Track Title}'");
+            Execute.Sql("UPDATE \"NamingConfig\" SET \"MultiDiscTrackFormat\" = '{Medium Format} {medium:00}/{Artist Name} - {Album Title} - {track:00} - {Track Title}'");
         }
     }
 }

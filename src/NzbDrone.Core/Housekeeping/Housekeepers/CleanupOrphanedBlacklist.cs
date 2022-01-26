@@ -16,12 +16,12 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
         {
             using (var mapper = _database.OpenConnection())
             {
-                mapper.Execute(@"DELETE FROM Blocklist
-                                     WHERE Id IN (
-                                     SELECT Blocklist.Id FROM Blocklist
-                                     LEFT OUTER JOIN Artists
-                                     ON Blocklist.ArtistId = Artists.Id
-                                     WHERE Artists.Id IS NULL)");
+                mapper.Execute(@"DELETE FROM ""Blocklist""
+                                     WHERE ""Id"" IN (
+                                     SELECT ""Blocklist"".""Id"" FROM ""Blocklist""
+                                     LEFT OUTER JOIN ""Artists""
+                                     ON ""Blocklist"".""ArtistId"" = ""Artists"".""Id""
+                                     WHERE ""Artists"".""Id"" IS NULL)");
             }
         }
     }

@@ -6,6 +6,7 @@ using NzbDrone.Common.Cloud;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Analytics;
+using NzbDrone.Core.Datastore;
 
 namespace NzbDrone.Core.Update
 {
@@ -21,13 +22,15 @@ namespace NzbDrone.Core.Update
         private readonly IHttpRequestBuilderFactory _requestBuilder;
         private readonly IPlatformInfo _platformInfo;
         private readonly IAnalyticsService _analyticsService;
+        private readonly IMainDatabase _mainDatabase;
 
-        public UpdatePackageProvider(IHttpClient httpClient, ILidarrCloudRequestBuilder requestBuilder, IAnalyticsService analyticsService, IPlatformInfo platformInfo)
+        public UpdatePackageProvider(IHttpClient httpClient, ILidarrCloudRequestBuilder requestBuilder, IAnalyticsService analyticsService, IPlatformInfo platformInfo, IMainDatabase mainDatabase)
         {
             _platformInfo = platformInfo;
             _analyticsService = analyticsService;
             _requestBuilder = requestBuilder.Services;
             _httpClient = httpClient;
+            _mainDatabase = mainDatabase;
         }
 
         public UpdatePackage GetLatestUpdate(string branch, Version currentVersion)
@@ -39,6 +42,7 @@ namespace NzbDrone.Core.Update
                                          .AddQueryParam("arch", RuntimeInformation.OSArchitecture)
                                          .AddQueryParam("runtime", "netcore")
                                          .AddQueryParam("runtimeVer", _platformInfo.Version)
+                                         .AddQueryParam("dbType", _mainDatabase.DatabaseType)
                                          .SetSegment("branch", branch);
 
             if (_analyticsService.IsEnabled)

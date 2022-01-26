@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Music
         List<Album> GetNextAlbumsByArtistMetadataId(IEnumerable<int> artistMetadataIds);
         List<Album> GetLastAlbumsByArtistMetadataId(IEnumerable<int> artistMetadataIds);
         List<Album> GetAlbumsByArtistMetadataId(int artistMetadataId);
-        List<Album> GetAlbumsForRefresh(int artistMetadataId, IEnumerable<string> foreignIds);
+        List<Album> GetAlbumsForRefresh(int artistMetadataId, List<string> foreignIds);
         Album AddAlbum(Album newAlbum, bool doRefresh);
         Album FindById(string foreignId);
         Album FindByTitle(int artistMetadataId, string title);
@@ -185,7 +185,7 @@ namespace NzbDrone.Core.Music
             return _albumRepository.GetAlbumsByArtistMetadataId(artistMetadataId).ToList();
         }
 
-        public List<Album> GetAlbumsForRefresh(int artistMetadataId, IEnumerable<string> foreignIds)
+        public List<Album> GetAlbumsForRefresh(int artistMetadataId, List<string> foreignIds)
         {
             return _albumRepository.GetAlbumsForRefresh(artistMetadataId, foreignIds);
         }

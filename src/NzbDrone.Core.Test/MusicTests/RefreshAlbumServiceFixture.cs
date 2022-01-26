@@ -55,7 +55,7 @@ namespace NzbDrone.Core.Test.MusicTests
                   .Returns(_artist);
 
             Mocker.GetMock<IReleaseService>()
-                .Setup(s => s.GetReleasesForRefresh(album1.Id, It.IsAny<IEnumerable<string>>()))
+                .Setup(s => s.GetReleasesForRefresh(album1.Id, It.IsAny<List<string>>()))
                 .Returns(new List<AlbumRelease> { release });
 
             Mocker.GetMock<IArtistMetadataService>()
@@ -133,7 +133,7 @@ namespace NzbDrone.Core.Test.MusicTests
                 .Returns(new List<AlbumRelease>());
 
             Mocker.GetMock<IReleaseService>()
-                .Setup(x => x.GetReleasesForRefresh(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
+                .Setup(x => x.GetReleasesForRefresh(It.IsAny<int>(), It.IsAny<List<string>>()))
                 .Returns(_releases);
 
             var newAlbumInfo = existing.JsonClone();
@@ -209,7 +209,7 @@ namespace NzbDrone.Core.Test.MusicTests
                 .Build() as List<AlbumRelease>;
 
             Mocker.GetMock<IReleaseService>()
-                .Setup(x => x.GetReleasesForRefresh(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
+                .Setup(x => x.GetReleasesForRefresh(It.IsAny<int>(), It.IsAny<List<string>>()))
                 .Returns(existingReleases);
 
             Mocker.GetMock<IProvideAlbumInfo>()
@@ -263,7 +263,7 @@ namespace NzbDrone.Core.Test.MusicTests
                 .Build() as List<AlbumRelease>;
 
             Mocker.GetMock<IReleaseService>()
-                .Setup(x => x.GetReleasesForRefresh(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
+                .Setup(x => x.GetReleasesForRefresh(It.IsAny<int>(), It.IsAny<List<string>>()))
                 .Returns(existingReleases);
 
             Mocker.GetMock<IProvideAlbumInfo>()
@@ -318,7 +318,7 @@ namespace NzbDrone.Core.Test.MusicTests
                 .Build() as List<AlbumRelease>;
 
             Mocker.GetMock<IReleaseService>()
-                .Setup(x => x.GetReleasesForRefresh(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
+                .Setup(x => x.GetReleasesForRefresh(It.IsAny<int>(), It.IsAny<List<string>>()))
                 .Returns(existingReleases);
 
             Mocker.GetMock<IProvideAlbumInfo>()
@@ -376,7 +376,7 @@ namespace NzbDrone.Core.Test.MusicTests
                 .Build() as List<AlbumRelease>;
 
             Mocker.GetMock<IReleaseService>()
-                .Setup(x => x.GetReleasesForRefresh(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
+                .Setup(x => x.GetReleasesForRefresh(It.IsAny<int>(), It.IsAny<List<string>>()))
                 .Returns(existingReleases);
 
             Mocker.GetMock<IProvideAlbumInfo>()

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using NUnit.Framework;
+using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Test.Framework;
 
@@ -23,6 +25,13 @@ namespace NzbDrone.Core.Test.MusicTests.AlbumRepositoryTests
         [SetUp]
         public void Setup()
         {
+            AssertionOptions.AssertEquivalencyUsing(options =>
+            {
+                options.Using<DateTime>(ctx => ctx.Subject.Should().BeCloseTo(ctx.Expectation.ToUniversalTime())).WhenTypeIs<DateTime>();
+                options.Using<DateTime?>(ctx => ctx.Subject.Should().BeCloseTo(ctx.Expectation.Value.ToUniversalTime())).WhenTypeIs<DateTime?>();
+                return options;
+            });
+
             _artist = new Artist
             {
                 Name = "Alien Ant Farm",
@@ -184,7 +193,7 @@ namespace NzbDrone.Core.Test.MusicTests.AlbumRepositoryTests
             GivenMultipleAlbums();
 
             var result = _albumRepo.GetNextAlbums(new[] { _artist.ArtistMetadataId });
-            result.Should().BeEquivalentTo(_albums.Take(1));
+            result.Should().BeEquivalentTo(_albums.Take(1), AlbumComparerOptions);
         }
 
         [Test]
@@ -193,7 +202,11 @@ namespace NzbDrone.Core.Test.MusicTests.AlbumRepositoryTests
             GivenMultipleAlbums();
 
             var result = _albumRepo.GetLastAlbums(new[] { _artist.ArtistMetadataId });
-            result.Should().BeEquivalentTo(_albums.Skip(2).Take(1));
+            result.Should().BeEquivalentTo(_albums.Skip(2).Take(1), AlbumComparerOptions);
         }
+
+        private EquivalencyAssertionOptions<Album> AlbumComparerOptions(EquivalencyAssertionOptions<Album> opts) => opts.ComparingByMembers<Album>()
+                .Excluding(ctx => ctx.SelectedMemberInfo.MemberType.IsGenericType && ctx.SelectedMemberInfo.MemberType.GetGenericTypeDefinition() == typeof(LazyLoaded<>))
+                .Excluding(x => x.ArtistId);
     }
 }

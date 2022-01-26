@@ -25,12 +25,12 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
         {
             using (var mapper = _database.OpenConnection())
             {
-                mapper.Execute(@"DELETE FROM MetadataFiles
-                                     WHERE Id IN (
-                                     SELECT MetadataFiles.Id FROM MetadataFiles
-                                     LEFT OUTER JOIN Artists
-                                     ON MetadataFiles.ArtistId = Artists.Id
-                                     WHERE Artists.Id IS NULL)");
+                mapper.Execute(@"DELETE FROM ""MetadataFiles""
+                                     WHERE ""Id"" IN (
+                                     SELECT ""MetadataFiles"".""Id"" FROM ""MetadataFiles""
+                                     LEFT OUTER JOIN ""Artists""
+                                     ON ""MetadataFiles"".""ArtistId"" = ""Artists"".""Id""
+                                     WHERE ""Artists"".""Id"" IS NULL)");
             }
         }
 
@@ -38,13 +38,13 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
         {
             using (var mapper = _database.OpenConnection())
             {
-                mapper.Execute(@"DELETE FROM MetadataFiles
-                                     WHERE Id IN (
-                                     SELECT MetadataFiles.Id FROM MetadataFiles
-                                     LEFT OUTER JOIN Albums
-                                     ON MetadataFiles.AlbumId = Albums.Id
-                                     WHERE MetadataFiles.AlbumId > 0
-                                     AND Albums.Id IS NULL)");
+                mapper.Execute(@"DELETE FROM ""MetadataFiles""
+                                     WHERE ""Id"" IN (
+                                     SELECT ""MetadataFiles"".""Id"" FROM ""MetadataFiles""
+                                     LEFT OUTER JOIN ""Albums""
+                                     ON ""MetadataFiles"".""AlbumId"" = ""Albums"".""Id""
+                                     WHERE ""MetadataFiles"".""AlbumId"" > 0
+                                     AND ""Albums"".""Id"" IS NULL)");
             }
         }
 
@@ -52,13 +52,13 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
         {
             using (var mapper = _database.OpenConnection())
             {
-                mapper.Execute(@"DELETE FROM MetadataFiles
-                                     WHERE Id IN (
-                                     SELECT MetadataFiles.Id FROM MetadataFiles
-                                     LEFT OUTER JOIN TrackFiles
-                                     ON MetadataFiles.TrackFileId = TrackFiles.Id
-                                     WHERE MetadataFiles.TrackFileId > 0
-                                     AND TrackFiles.Id IS NULL)");
+                mapper.Execute(@"DELETE FROM ""MetadataFiles""
+                                     WHERE ""Id"" IN (
+                                     SELECT ""MetadataFiles"".""Id"" FROM ""MetadataFiles""
+                                     LEFT OUTER JOIN ""TrackFiles""
+                                     ON ""MetadataFiles"".""TrackFileId"" = ""TrackFiles"".""Id""
+                                     WHERE ""MetadataFiles"".""TrackFileId"" > 0
+                                     AND ""TrackFiles"".""Id"" IS NULL)");
             }
         }
 
@@ -66,11 +66,11 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
         {
             using (var mapper = _database.OpenConnection())
             {
-                mapper.Execute(@"DELETE FROM MetadataFiles
-                                     WHERE Id IN (
-                                     SELECT Id FROM MetadataFiles
-                                     WHERE Type IN (4, 6)
-                                     AND AlbumId = 0)");
+                mapper.Execute(@"DELETE FROM ""MetadataFiles""
+                                     WHERE ""Id"" IN (
+                                     SELECT ""Id"" FROM ""MetadataFiles""
+                                     WHERE ""Type"" IN (4, 6)
+                                     AND ""AlbumId"" = 0)");
             }
         }
 
@@ -78,11 +78,11 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
         {
             using (var mapper = _database.OpenConnection())
             {
-                mapper.Execute(@"DELETE FROM MetadataFiles
-                                     WHERE Id IN (
-                                     SELECT Id FROM MetadataFiles
-                                     WHERE Type IN (2, 5)
-                                     AND TrackFileId = 0)");
+                mapper.Execute(@"DELETE FROM ""MetadataFiles""
+                                     WHERE ""Id"" IN (
+                                     SELECT ""Id"" FROM ""MetadataFiles""
+                                     WHERE ""Type"" IN (2, 5)
+                                     AND ""TrackFileId"" = 0)");
             }
         }
     }

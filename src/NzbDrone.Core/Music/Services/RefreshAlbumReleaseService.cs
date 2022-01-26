@@ -78,7 +78,7 @@ namespace NzbDrone.Core.Music
         {
             return _trackService.GetTracksForRefresh(entity.Id,
                                                      remoteChildren.Select(x => x.ForeignTrackId)
-                                                         .Concat(remoteChildren.SelectMany(x => x.OldForeignTrackIds)));
+                                                         .Concat(remoteChildren.SelectMany(x => x.OldForeignTrackIds)).ToList());
         }
 
         protected override Tuple<Track, List<Track>> GetMatchingExistingChildren(List<Track> existingChildren, Track remote)

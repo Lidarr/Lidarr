@@ -213,7 +213,7 @@ namespace NzbDrone.Core.Music
         {
             return _albumService.GetAlbumsForRefresh(entity.ArtistMetadataId,
                                                      remoteChildren.Select(x => x.ForeignAlbumId)
-                                                     .Concat(remoteChildren.SelectMany(x => x.OldForeignAlbumIds)));
+                                                     .Concat(remoteChildren.SelectMany(x => x.OldForeignAlbumIds)).ToList());
         }
 
         protected override Tuple<Album, List<Album>> GetMatchingExistingChildren(List<Album> existingChildren, Album remote)

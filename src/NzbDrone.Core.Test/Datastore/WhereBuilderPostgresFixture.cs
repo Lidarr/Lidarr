@@ -11,9 +11,9 @@ using NzbDrone.Core.Test.Framework;
 namespace NzbDrone.Core.Test.Datastore
 {
     [TestFixture]
-    public class WhereBuilderFixture : CoreTest
+    public class WhereBuilderPostgresFixture : CoreTest
     {
-        private WhereBuilder _subject;
+        private WhereBuilderPostgres _subject;
 
         [OneTimeSetUp]
         public void MapTables()
@@ -22,14 +22,14 @@ namespace NzbDrone.Core.Test.Datastore
             Mocker.Resolve<DbFactory>();
         }
 
-        private WhereBuilder Where(Expression<Func<Artist, bool>> filter)
+        private WhereBuilderPostgres Where(Expression<Func<Artist, bool>> filter)
         {
-            return new WhereBuilder(filter, true, 0);
+            return new WhereBuilderPostgres(filter, true, 0);
         }
 
-        private WhereBuilder WhereMetadata(Expression<Func<ArtistMetadata, bool>> filter)
+        private WhereBuilderPostgres WhereMetadata(Expression<Func<ArtistMetadata, bool>> filter)
         {
-            return new WhereBuilder(filter, true, 0);
+            return new WhereBuilderPostgres(filter, true, 0);
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace NzbDrone.Core.Test.Datastore
         public void where_throws_without_concrete_condition_if_requiresConcreteCondition()
         {
             Expression<Func<Artist, Artist, bool>> filter = (x, y) => x.Id == y.Id;
-            _subject = new WhereBuilder(filter, true, 0);
+            _subject = new WhereBuilderPostgres(filter, true, 0);
             Assert.Throws<InvalidOperationException>(() => _subject.ToString());
         }
 
@@ -84,7 +84,7 @@ namespace NzbDrone.Core.Test.Datastore
         public void where_allows_abstract_condition_if_not_requiresConcreteCondition()
         {
             Expression<Func<Artist, Artist, bool>> filter = (x, y) => x.Id == y.Id;
-            _subject = new WhereBuilder(filter, false, 0);
+            _subject = new WhereBuilderPostgres(filter, false, 0);
             _subject.ToString().Should().Be($"(\"Artists\".\"Id\" = \"Artists\".\"Id\")");
         }
 
@@ -120,7 +120,7 @@ namespace NzbDrone.Core.Test.Datastore
             var test = "small";
             _subject = Where(x => x.CleanName.Contains(test));
 
-            _subject.ToString().Should().Be($"(\"Artists\".\"CleanName\" LIKE '%' || @Clause1_P1 || '%')");
+            _subject.ToString().Should().Be($"(\"Artists\".\"CleanName\" ILIKE '%' || @Clause1_P1 || '%')");
             _subject.Parameters.Get<string>("Clause1_P1").Should().Be(test);
         }
 
@@ -130,7 +130,7 @@ namespace NzbDrone.Core.Test.Datastore
             var test = "small";
             _subject = Where(x => test.Contains(x.CleanName));
 
-            _subject.ToString().Should().Be($"(@Clause1_P1 LIKE '%' || \"Artists\".\"CleanName\" || '%')");
+            _subject.ToString().Should().Be($"(@Clause1_P1 ILIKE '%' || \"Artists\".\"CleanName\" || '%')");
             _subject.Parameters.Get<string>("Clause1_P1").Should().Be(test);
         }
 
@@ -140,7 +140,7 @@ namespace NzbDrone.Core.Test.Datastore
             var test = "small";
             _subject = Where(x => x.CleanName.StartsWith(test));
 
-            _subject.ToString().Should().Be($"(\"Artists\".\"CleanName\" LIKE @Clause1_P1 || '%')");
+            _subject.ToString().Should().Be($"(\"Artists\".\"CleanName\" ILIKE @Clause1_P1 || '%')");
             _subject.Parameters.Get<string>("Clause1_P1").Should().Be(test);
         }
 
@@ -150,7 +150,7 @@ namespace NzbDrone.Core.Test.Datastore
             var test = "small";
             _subject = Where(x => x.CleanName.EndsWith(test));
 
-            _subject.ToString().Should().Be($"(\"Artists\".\"CleanName\" LIKE '%' || @Clause1_P1)");
+            _subject.ToString().Should().Be($"(\"Artists\".\"CleanName\" ILIKE '%' || @Clause1_P1)");
             _subject.Parameters.Get<string>("Clause1_P1").Should().Be(test);
         }
 
@@ -160,7 +160,7 @@ namespace NzbDrone.Core.Test.Datastore
             var list = new List<int> { 1, 2, 3 };
             _subject = Where(x => list.Contains(x.Id));
 
-            _subject.ToString().Should().Be($"(\"Artists\".\"Id\" IN (1, 2, 3))");
+            _subject.ToString().Should().Be($"(\"Artists\".\"Id\" = ANY (('{{1, 2, 3}}')))");
         }
 
         [Test]
@@ -169,7 +169,7 @@ namespace NzbDrone.Core.Test.Datastore
             var list = new List<int> { 1, 2, 3 };
             _subject = Where(x => x.CleanName == "test" && list.Contains(x.Id));
 
-            _subject.ToString().Should().Be($"((\"Artists\".\"CleanName\" = @Clause1_P1) AND (\"Artists\".\"Id\" IN (1, 2, 3)))");
+            _subject.ToString().Should().Be($"((\"Artists\".\"CleanName\" = @Clause1_P1) AND (\"Artists\".\"Id\" = ANY (('{{1, 2, 3}}'))))");
         }
 
         [Test]
@@ -179,7 +179,7 @@ namespace NzbDrone.Core.Test.Datastore
 
             _subject = Where(x => list.Contains(x.CleanName));
 
-            _subject.ToString().Should().Be($"(\"Artists\".\"CleanName\" IN @Clause1_P1)");
+            _subject.ToString().Should().Be($"(\"Artists\".\"CleanName\" = ANY (@Clause1_P1))");
         }
 
         [Test]
@@ -187,7 +187,7 @@ namespace NzbDrone.Core.Test.Datastore
         {
             _subject = WhereMetadata(x => x.OldForeignArtistIds.Contains("foreignId"));
 
-            _subject.ToString().Should().Be($"(\"ArtistMetadata\".\"OldForeignArtistIds\" LIKE '%' || @Clause1_P1 || '%')");
+            _subject.ToString().Should().Be($"(\"ArtistMetadata\".\"OldForeignArtistIds\" ILIKE '%' || @Clause1_P1 || '%')");
         }
 
         [Test]
@@ -204,7 +204,7 @@ namespace NzbDrone.Core.Test.Datastore
             var allowed = new List<ArtistStatusType> { ArtistStatusType.Continuing, ArtistStatusType.Ended };
             _subject = WhereMetadata(x => allowed.Contains(x.Status));
 
-            _subject.ToString().Should().Be($"(\"ArtistMetadata\".\"Status\" IN @Clause1_P1)");
+            _subject.ToString().Should().Be($"(\"ArtistMetadata\".\"Status\" = ANY (@Clause1_P1))");
         }
 
         [Test]
@@ -213,7 +213,7 @@ namespace NzbDrone.Core.Test.Datastore
             var allowed = new ArtistStatusType[] { ArtistStatusType.Continuing, ArtistStatusType.Ended };
             _subject = WhereMetadata(x => allowed.Contains(x.Status));
 
-            _subject.ToString().Should().Be($"(\"ArtistMetadata\".\"Status\" IN @Clause1_P1)");
+            _subject.ToString().Should().Be($"(\"ArtistMetadata\".\"Status\" = ANY (@Clause1_P1))");
         }
     }
 }

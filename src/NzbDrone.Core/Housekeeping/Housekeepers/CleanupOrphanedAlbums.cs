@@ -16,12 +16,12 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
         {
             using (var mapper = _database.OpenConnection())
             {
-                mapper.Execute(@"DELETE FROM Albums
-                                     WHERE Id IN (
-                                     SELECT Albums.Id FROM Albums
-                                     LEFT OUTER JOIN Artists
-                                     ON Albums.ArtistMetadataId = Artists.ArtistMetadataId
-                                     WHERE Artists.Id IS NULL)");
+                mapper.Execute(@"DELETE FROM ""Albums""
+                                     WHERE ""Id"" IN (
+                                     SELECT ""Albums"".""Id"" FROM ""Albums""
+                                     LEFT OUTER JOIN ""Artists""
+                                     ON ""Albums"".""ArtistMetadataId"" = ""Artists"".""ArtistMetadataId""
+                                     WHERE ""Artists"".""Id"" IS NULL)");
             }
         }
     }

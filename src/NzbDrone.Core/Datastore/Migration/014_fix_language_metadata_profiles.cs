@@ -8,17 +8,17 @@ namespace NzbDrone.Core.Datastore.Migration
     {
         protected override void MainDbUpgrade()
         {
-            Execute.Sql("UPDATE artists SET metadataProfileId = " +
-                        "CASE WHEN ((SELECT COUNT(*) FROM metadataprofiles) > 0) " +
-                        "THEN (SELECT id FROM metadataprofiles ORDER BY id ASC LIMIT 1) " +
+            Execute.Sql("UPDATE \"Artists\" SET \"MetadataProfileId\" = " +
+                        "CASE WHEN ((SELECT COUNT(*) FROM \"MetadataProfiles\") > 0) " +
+                        "THEN (SELECT \"Id\" FROM \"MetadataProfiles\" ORDER BY \"Id\" ASC LIMIT 1) " +
                         "ELSE 0 END " +
-                        "WHERE artists.metadataProfileId == 0");
+                        "WHERE \"Artists\".\"MetadataProfileId\" = 0");
 
-            Execute.Sql("UPDATE artists SET languageProfileId = " +
-                        "CASE WHEN ((SELECT COUNT(*) FROM languageprofiles) > 0) " +
-                        "THEN (SELECT id FROM languageprofiles ORDER BY id ASC LIMIT 1) " +
+            Execute.Sql("UPDATE \"Artists\" SET \"LanguageProfileId\" = " +
+                        "CASE WHEN ((SELECT COUNT(*) FROM \"LanguageProfiles\") > 0) " +
+                        "THEN (SELECT \"Id\" FROM \"LanguageProfiles\" ORDER BY \"Id\" ASC LIMIT 1) " +
                         "ELSE 0 END " +
-                        "WHERE artists.languageProfileId == 0");
+                        "WHERE \"Artists\".\"LanguageProfileId\" = 0");
         }
     }
 }

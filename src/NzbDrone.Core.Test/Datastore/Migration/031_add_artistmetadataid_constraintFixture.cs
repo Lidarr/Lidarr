@@ -34,8 +34,8 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 ArtistMetadataId = artistMetadataId,
                 CleanName = name,
                 Path = _artistPath,
-                Monitored = 1,
-                AlbumFolder = 1,
+                Monitored = true,
+                AlbumFolder = true,
                 LanguageProfileId = 1,
                 MetadataProfileId = 1,
             });
@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
 
         private void VerifyArtists(IDirectDataMapper db, List<int> ids)
         {
-            var artists = db.Query("SELECT Artists.* from Artists");
+            var artists = db.Query("SELECT \"Artists\".* from \"Artists\"");
 
             artists.Select(x => x["Id"]).Should().BeEquivalentTo(ids);
 

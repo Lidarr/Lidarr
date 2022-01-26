@@ -2,7 +2,9 @@ using System;
 using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using NUnit.Framework;
+using NzbDrone.Core.Datastore;
 using NzbDrone.Core.History;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Qualities;
@@ -13,6 +15,17 @@ namespace NzbDrone.Core.Test.Datastore
     [TestFixture]
     public class DatabaseRelationshipFixture : DbTest
     {
+        [SetUp]
+        public void Setup()
+        {
+            AssertionOptions.AssertEquivalencyUsing(options =>
+            {
+                options.Using<DateTime>(ctx => ctx.Subject.Should().BeCloseTo(ctx.Expectation.ToUniversalTime())).WhenTypeIs<DateTime>();
+                options.Using<DateTime?>(ctx => ctx.Subject.Should().BeCloseTo(ctx.Expectation.Value.ToUniversalTime())).WhenTypeIs<DateTime?>();
+                return options;
+            });
+        }
+
         [Test]
         public void one_to_one()
         {
@@ -33,13 +46,7 @@ namespace NzbDrone.Core.Test.Datastore
             var loadedAlbum = Db.Single<AlbumRelease>().Album.Value;
 
             loadedAlbum.Should().NotBeNull();
-            loadedAlbum.Should().BeEquivalentTo(album,
-                                             options => options
-                                             .IncludingAllRuntimeProperties()
-                                             .Excluding(c => c.Artist)
-                                             .Excluding(c => c.ArtistId)
-                                             .Excluding(c => c.ArtistMetadata)
-                                             .Excluding(c => c.AlbumReleases));
+            loadedAlbum.Should().BeEquivalentTo(album, AlbumComparerOptions);
         }
 
         [Test]
@@ -86,5 +93,9 @@ namespace NzbDrone.Core.Test.Datastore
 
             returnedHistory[0].Quality.Quality.Should().Be(Quality.MP3_320);
         }
+
+        private EquivalencyAssertionOptions<Album> AlbumComparerOptions(EquivalencyAssertionOptions<Album> opts) => opts.ComparingByMembers<Album>()
+                .Excluding(ctx => ctx.SelectedMemberInfo.MemberType.IsGenericType && ctx.SelectedMemberInfo.MemberType.GetGenericTypeDefinition() == typeof(LazyLoaded<>))
+                .Excluding(x => x.ArtistId);
     }
 }

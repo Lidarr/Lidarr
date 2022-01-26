@@ -24,8 +24,8 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 Status = 1,
                 Images = "",
                 Path = $"/mnt/data/path/{name}",
-                Monitored = 1,
-                AlbumFolder = 1,
+                Monitored = true,
+                AlbumFolder = true,
                 LanguageProfileId = 1,
                 MetadataProfileId = 1
             });
@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 Title = title,
                 CleanTitle = title,
                 Images = "",
-                Monitored = 1,
+                Monitored = true,
                 AlbumType = "Studio",
                 Duration = 100,
                 Media = "",
@@ -61,9 +61,9 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                     ForeignTrackId = id.ToString(),
                     ArtistId = artistid,
                     AlbumId = albumid,
-                    Explicit = 0,
-                    Compilation = 0,
-                    Monitored = 0,
+                    Explicit = false,
+                    Compilation = false,
+                    Monitored = false,
                     Duration = 100,
                     MediumNumber = 1,
                     AbsoluteTrackNumber = i,
@@ -74,8 +74,8 @@ namespace NzbDrone.Core.Test.Datastore.Migration
 
         private IEnumerable<AlbumRelease> VerifyAlbumReleases(IDirectDataMapper db)
         {
-            var releases = db.Query<AlbumRelease>("SELECT * FROM AlbumReleases");
-            var albums = db.Query<Album>("SELECT * FROM Albums");
+            var releases = db.Query<AlbumRelease>("SELECT * FROM \"AlbumReleases\"");
+            var albums = db.Query<Album>("SELECT * FROM \"Albums\"");
 
             // we only put in one release per album
             releases.Count().Should().Be(albums.Count());
@@ -91,12 +91,12 @@ namespace NzbDrone.Core.Test.Datastore.Migration
 
         private void VerifyTracks(IDirectDataMapper db, int albumId, int albumReleaseId, int expectedCount)
         {
-            var tracks = db.Query<Track>("SELECT Tracks.* FROM Tracks " +
-                                         "JOIN AlbumReleases ON Tracks.AlbumReleaseId = AlbumReleases.Id " +
-                                         "JOIN Albums ON AlbumReleases.AlbumId = Albums.Id " +
-                                         "WHERE Albums.Id = " + albumId).ToList();
+            var tracks = db.Query<Track>("SELECT \"Tracks\".* FROM \"Tracks\" " +
+                                         "JOIN \"AlbumReleases\" ON \"Tracks\".\"AlbumReleaseId\" = \"AlbumReleases\".\"Id\" " +
+                                         "JOIN \"Albums\" ON \"AlbumReleases\".\"AlbumId\" = \"Albums\".\"Id\" " +
+                                         "WHERE \"Albums\".\"Id\" = " + albumId).ToList();
 
-            var album = db.Query<Album>("SELECT * FROM Albums WHERE Albums.Id = " + albumId).ToList().Single();
+            var album = db.Query<Album>("SELECT * FROM \"Albums\" WHERE \"Albums\".\"Id\" = " + albumId).ToList().Single();
 
             tracks.Count.Should().Be(expectedCount);
             tracks.First().AlbumReleaseId.Should().Be(albumReleaseId);

@@ -39,7 +39,7 @@ namespace NzbDrone.Core.Test.MusicTests
                 .BuildList();
 
             Mocker.GetMock<ITrackService>()
-                .Setup(s => s.GetTracksForRefresh(_release.Id, It.IsAny<IEnumerable<string>>()))
+                .Setup(s => s.GetTracksForRefresh(_release.Id, It.IsAny<List<string>>()))
                 .Returns(_tracks);
         }
 
@@ -78,7 +78,7 @@ namespace NzbDrone.Core.Test.MusicTests
                 .Returns(clash);
 
             Mocker.GetMock<ITrackService>()
-                .Setup(x => x.GetTracksForRefresh(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
+                .Setup(x => x.GetTracksForRefresh(It.IsAny<int>(), It.IsAny<List<string>>()))
                 .Returns(_tracks);
 
             var newInfo = existing.JsonClone();
@@ -117,7 +117,7 @@ namespace NzbDrone.Core.Test.MusicTests
             newInfo.Tracks = new List<Track> { newTrack };
 
             Mocker.GetMock<ITrackService>()
-                .Setup(s => s.GetTracksForRefresh(_release.Id, It.IsAny<IEnumerable<string>>()))
+                .Setup(s => s.GetTracksForRefresh(_release.Id, It.IsAny<List<string>>()))
                 .Returns(new List<Track> { oldTrack });
 
             Subject.RefreshEntityInfo(_release, new List<AlbumRelease> { newInfo }, false, false, null);

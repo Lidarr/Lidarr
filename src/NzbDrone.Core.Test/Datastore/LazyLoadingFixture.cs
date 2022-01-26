@@ -104,7 +104,7 @@ namespace NzbDrone.Core.Test.Datastore
         public void should_lazy_load_artist_for_trackfile()
         {
             var db = Mocker.Resolve<IDatabase>();
-            var tracks = db.Query<TrackFile>(new SqlBuilder()).ToList();
+            var tracks = db.Query<TrackFile>(new SqlBuilder(db.DatabaseType)).ToList();
 
             Assert.IsNotEmpty(tracks);
             foreach (var track in tracks)
@@ -120,7 +120,7 @@ namespace NzbDrone.Core.Test.Datastore
         public void should_lazy_load_trackfile_if_not_joined()
         {
             var db = Mocker.Resolve<IDatabase>();
-            var tracks = db.Query<Track>(new SqlBuilder()).ToList();
+            var tracks = db.Query<Track>(new SqlBuilder(db.DatabaseType)).ToList();
 
             foreach (var track in tracks)
             {
@@ -135,7 +135,7 @@ namespace NzbDrone.Core.Test.Datastore
         {
             var db = Mocker.Resolve<IDatabase>();
             var files = MediaFileRepository.Query(db,
-                                                  new SqlBuilder()
+                                                  new SqlBuilder(db.DatabaseType)
                                                   .Join<TrackFile, Track>((f, t) => f.Id == t.TrackFileId)
                                                   .Join<TrackFile, Album>((t, a) => t.AlbumId == a.Id)
                                                   .Join<Album, Artist>((album, artist) => album.ArtistMetadataId == artist.ArtistMetadataId)
@@ -157,7 +157,7 @@ namespace NzbDrone.Core.Test.Datastore
         {
             var db = Mocker.Resolve<IDatabase>();
             var files = db.QueryJoined<TrackFile, Album, Artist, ArtistMetadata>(
-                new SqlBuilder()
+                new SqlBuilder(db.DatabaseType)
                 .Join<TrackFile, Album>((t, a) => t.AlbumId == a.Id)
                 .Join<Album, Artist>((album, artist) => album.ArtistMetadataId == artist.ArtistMetadataId)
                 .Join<Artist, ArtistMetadata>((a, m) => a.ArtistMetadataId == m.Id),
@@ -186,7 +186,7 @@ namespace NzbDrone.Core.Test.Datastore
         public void should_lazy_load_tracks_if_not_joined()
         {
             var db = Mocker.Resolve<IDatabase>();
-            var release = db.Query<AlbumRelease>(new SqlBuilder().Where<AlbumRelease>(x => x.Id == 1)).SingleOrDefault();
+            var release = db.Query<AlbumRelease>(new SqlBuilder(db.DatabaseType).Where<AlbumRelease>(x => x.Id == 1)).SingleOrDefault();
 
             Assert.IsFalse(release.Tracks.IsLoaded);
             Assert.IsNotNull(release.Tracks.Value);
@@ -198,7 +198,7 @@ namespace NzbDrone.Core.Test.Datastore
         public void should_lazy_load_track_if_not_joined()
         {
             var db = Mocker.Resolve<IDatabase>();
-            var tracks = db.Query<TrackFile>(new SqlBuilder()).ToList();
+            var tracks = db.Query<TrackFile>(new SqlBuilder(db.DatabaseType)).ToList();
 
             foreach (var track in tracks)
             {

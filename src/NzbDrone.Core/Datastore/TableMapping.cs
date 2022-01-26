@@ -105,24 +105,24 @@ namespace NzbDrone.Core.Datastore
                 .HasOne(a => a.Metadata, a => a.ArtistMetadataId)
                 .HasOne(a => a.QualityProfile, a => a.QualityProfileId)
                 .HasOne(s => s.MetadataProfile, s => s.MetadataProfileId)
-                .LazyLoad(a => a.Albums, (db, a) => db.Query<Album>(new SqlBuilder().Where<Album>(rg => rg.ArtistMetadataId == a.Id)).ToList(), a => a.Id > 0);
+                .LazyLoad(a => a.Albums, (db, a) => db.Query<Album>(new SqlBuilder(db.DatabaseType).Where<Album>(rg => rg.ArtistMetadataId == a.Id)).ToList(), a => a.Id > 0);
 
             Mapper.Entity<ArtistMetadata>("ArtistMetadata").RegisterModel();
 
             Mapper.Entity<Album>("Albums").RegisterModel()
                 .Ignore(x => x.ArtistId)
                 .HasOne(r => r.ArtistMetadata, r => r.ArtistMetadataId)
-                .LazyLoad(a => a.AlbumReleases, (db, album) => db.Query<AlbumRelease>(new SqlBuilder().Where<AlbumRelease>(r => r.AlbumId == album.Id)).ToList(), a => a.Id > 0)
+                .LazyLoad(a => a.AlbumReleases, (db, album) => db.Query<AlbumRelease>(new SqlBuilder(db.DatabaseType).Where<AlbumRelease>(r => r.AlbumId == album.Id)).ToList(), a => a.Id > 0)
                 .LazyLoad(a => a.Artist,
                           (db, album) => ArtistRepository.Query(db,
-                                                                new SqlBuilder()
+                                                                new SqlBuilder(db.DatabaseType)
                                                                 .Join<Artist, ArtistMetadata>((a, m) => a.ArtistMetadataId == m.Id)
                                                                 .Where<Artist>(a => a.ArtistMetadataId == album.ArtistMetadataId)).SingleOrDefault(),
                           a => a.ArtistMetadataId > 0);
 
             Mapper.Entity<AlbumRelease>("AlbumReleases").RegisterModel()
                 .HasOne(r => r.Album, r => r.AlbumId)
-                .LazyLoad(x => x.Tracks, (db, release) => db.Query<Track>(new SqlBuilder().Where<Track>(t => t.AlbumReleaseId == release.Id)).ToList(), r => r.Id > 0);
+                .LazyLoad(x => x.Tracks, (db, release) => db.Query<Track>(new SqlBuilder(db.DatabaseType).Where<Track>(t => t.AlbumReleaseId == release.Id)).ToList(), r => r.Id > 0);
 
             Mapper.Entity<Track>("Tracks").RegisterModel()
                 .Ignore(t => t.HasFile)
@@ -131,7 +131,7 @@ namespace NzbDrone.Core.Datastore
                 .HasOne(track => track.ArtistMetadata, track => track.ArtistMetadataId)
                 .LazyLoad(t => t.TrackFile,
                           (db, track) => MediaFileRepository.Query(db,
-                                                                   new SqlBuilder()
+                                                                   new SqlBuilder(db.DatabaseType)
                                                                    .Join<TrackFile, Track>((l, r) => l.Id == r.TrackFileId)
                                                                    .Join<TrackFile, Album>((l, r) => l.AlbumId == r.Id)
                                                                    .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
@@ -140,7 +140,7 @@ namespace NzbDrone.Core.Datastore
                           t => t.TrackFileId > 0)
                 .LazyLoad(x => x.Artist,
                           (db, t) => ArtistRepository.Query(db,
-                                                            new SqlBuilder()
+                                                            new SqlBuilder(db.DatabaseType)
                                                             .Join<Artist, ArtistMetadata>((a, m) => a.ArtistMetadataId == m.Id)
                                                             .Join<Artist, Album>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
                                                             .Join<Album, AlbumRelease>((l, r) => l.Id == r.AlbumId)
@@ -149,10 +149,10 @@ namespace NzbDrone.Core.Datastore
 
             Mapper.Entity<TrackFile>("TrackFiles").RegisterModel()
                 .HasOne(f => f.Album, f => f.AlbumId)
-                .LazyLoad(x => x.Tracks, (db, file) => db.Query<Track>(new SqlBuilder().Where<Track>(t => t.TrackFileId == file.Id)).ToList(), x => x.Id > 0)
+                .LazyLoad(x => x.Tracks, (db, file) => db.Query<Track>(new SqlBuilder(db.DatabaseType).Where<Track>(t => t.TrackFileId == file.Id)).ToList(), x => x.Id > 0)
                 .LazyLoad(x => x.Artist,
                           (db, f) => ArtistRepository.Query(db,
-                                                            new SqlBuilder()
+                                                            new SqlBuilder(db.DatabaseType)
                                                             .Join<Artist, ArtistMetadata>((a, m) => a.ArtistMetadataId == m.Id)
                                                             .Join<Artist, Album>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
                                                             .Where<Album>(a => a.Id == f.AlbumId)).SingleOrDefault(),
