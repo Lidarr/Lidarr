@@ -1,10 +1,9 @@
 using NzbDrone.Common.Messaging;
 
-namespace NzbDrone.Core.Messaging.Events
+namespace NzbDrone.Core.Messaging.Events;
+
+public interface IEventAggregator
 {
-    public interface IEventAggregator
-    {
-        void PublishEvent<TEvent>(TEvent @event)
-            where TEvent : class, IEvent;
-    }
+    void PublishEvent<TEvent>(TEvent @event)
+        where TEvent : class, IEvent;
 }

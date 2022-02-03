@@ -2,28 +2,27 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using NzbDrone.Common.Extensions;
 
-namespace Lidarr.Http.Middleware
+namespace Lidarr.Http.Middleware;
+
+public class UrlBaseMiddleware
 {
-    public class UrlBaseMiddleware
+    private readonly RequestDelegate _next;
+    private readonly string _urlBase;
+
+    public UrlBaseMiddleware(RequestDelegate next, string urlBase)
     {
-        private readonly RequestDelegate _next;
-        private readonly string _urlBase;
+        _next = next;
+        _urlBase = urlBase;
+    }
 
-        public UrlBaseMiddleware(RequestDelegate next, string urlBase)
+    public async Task InvokeAsync(HttpContext context)
+    {
+        if (_urlBase.IsNotNullOrWhiteSpace() && context.Request.PathBase.Value.IsNullOrWhiteSpace())
         {
-            _next = next;
-            _urlBase = urlBase;
+            context.Response.Redirect($"{_urlBase}{context.Request.Path}{context.Request.QueryString}");
+            return;
         }
 
-        public async Task InvokeAsync(HttpContext context)
-        {
-            if (_urlBase.IsNotNullOrWhiteSpace() && context.Request.PathBase.Value.IsNullOrWhiteSpace())
-            {
-                context.Response.Redirect($"{_urlBase}{context.Request.Path}{context.Request.QueryString}");
-                return;
-            }
-
-            await _next(context);
-        }
+        await _next(context);
     }
 }

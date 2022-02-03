@@ -2,62 +2,61 @@
 using System.Collections.Generic;
 using NzbDrone.Common.EnsureThat;
 
-namespace NzbDrone.Common.Cache
+namespace NzbDrone.Common.Cache;
+
+public interface ICacheManager
 {
-    public interface ICacheManager
+    ICached<T> GetCache<T>(Type host);
+    ICached<T> GetCache<T>(Type host, string name);
+    ICached<T> GetRollingCache<T>(Type host, string name, TimeSpan defaultLifeTime);
+    ICachedDictionary<T> GetCacheDictionary<T>(Type host, string name, Func<IDictionary<string, T>> fetchFunc = null, TimeSpan? lifeTime = null);
+    void Clear();
+    ICollection<ICached> Caches { get; }
+}
+
+public class CacheManager : ICacheManager
+{
+    private readonly ICached<ICached> _cache;
+
+    public CacheManager()
     {
-        ICached<T> GetCache<T>(Type host);
-        ICached<T> GetCache<T>(Type host, string name);
-        ICached<T> GetRollingCache<T>(Type host, string name, TimeSpan defaultLifeTime);
-        ICachedDictionary<T> GetCacheDictionary<T>(Type host, string name, Func<IDictionary<string, T>> fetchFunc = null, TimeSpan? lifeTime = null);
-        void Clear();
-        ICollection<ICached> Caches { get; }
+        _cache = new Cached<ICached>();
     }
 
-    public class CacheManager : ICacheManager
+    public void Clear()
     {
-        private readonly ICached<ICached> _cache;
+        _cache.Clear();
+    }
 
-        public CacheManager()
-        {
-            _cache = new Cached<ICached>();
-        }
+    public ICollection<ICached> Caches => _cache.Values;
 
-        public void Clear()
-        {
-            _cache.Clear();
-        }
+    public ICached<T> GetCache<T>(Type host)
+    {
+        Ensure.That(host, () => host).IsNotNull();
+        return GetCache<T>(host, host.FullName);
+    }
 
-        public ICollection<ICached> Caches => _cache.Values;
+    public ICached<T> GetCache<T>(Type host, string name)
+    {
+        Ensure.That(host, () => host).IsNotNull();
+        Ensure.That(name, () => name).IsNotNullOrWhiteSpace();
 
-        public ICached<T> GetCache<T>(Type host)
-        {
-            Ensure.That(host, () => host).IsNotNull();
-            return GetCache<T>(host, host.FullName);
-        }
+        return (ICached<T>)_cache.Get(host.FullName + "_" + name, () => new Cached<T>());
+    }
 
-        public ICached<T> GetCache<T>(Type host, string name)
-        {
-            Ensure.That(host, () => host).IsNotNull();
-            Ensure.That(name, () => name).IsNotNullOrWhiteSpace();
+    public ICached<T> GetRollingCache<T>(Type host, string name, TimeSpan defaultLifeTime)
+    {
+        Ensure.That(host, () => host).IsNotNull();
+        Ensure.That(name, () => name).IsNotNullOrWhiteSpace();
 
-            return (ICached<T>)_cache.Get(host.FullName + "_" + name, () => new Cached<T>());
-        }
+        return (ICached<T>)_cache.Get(host.FullName + "_" + name, () => new Cached<T>(defaultLifeTime, true));
+    }
 
-        public ICached<T> GetRollingCache<T>(Type host, string name, TimeSpan defaultLifeTime)
-        {
-            Ensure.That(host, () => host).IsNotNull();
-            Ensure.That(name, () => name).IsNotNullOrWhiteSpace();
+    public ICachedDictionary<T> GetCacheDictionary<T>(Type host, string name, Func<IDictionary<string, T>> fetchFunc = null, TimeSpan? lifeTime = null)
+    {
+        Ensure.That(host, () => host).IsNotNull();
+        Ensure.That(name, () => name).IsNotNullOrWhiteSpace();
 
-            return (ICached<T>)_cache.Get(host.FullName + "_" + name, () => new Cached<T>(defaultLifeTime, true));
-        }
-
-        public ICachedDictionary<T> GetCacheDictionary<T>(Type host, string name, Func<IDictionary<string, T>> fetchFunc = null, TimeSpan? lifeTime = null)
-        {
-            Ensure.That(host, () => host).IsNotNull();
-            Ensure.That(name, () => name).IsNotNullOrWhiteSpace();
-
-            return (ICachedDictionary<T>)_cache.Get("dict_" + host.FullName + "_" + name, () => new CachedDictionary<T>(fetchFunc, lifeTime));
-        }
+        return (ICachedDictionary<T>)_cache.Get("dict_" + host.FullName + "_" + name, () => new CachedDictionary<T>(fetchFunc, lifeTime));
     }
 }

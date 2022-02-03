@@ -19,329 +19,328 @@ using NzbDrone.Core.Update.Commands;
 using NzbDrone.Test.Common;
 using NzbDrone.Test.Common.Categories;
 
-namespace NzbDrone.Core.Test.UpdateTests
+namespace NzbDrone.Core.Test.UpdateTests;
+
+[TestFixture]
+public class UpdateServiceFixture : CoreTest<InstallUpdateService>
 {
-    [TestFixture]
-    public class UpdateServiceFixture : CoreTest<InstallUpdateService>
+    private string _sandboxFolder;
+
+    private UpdatePackage _updatePackage;
+
+    [SetUp]
+    public void Setup()
     {
-        private string _sandboxFolder;
-
-        private UpdatePackage _updatePackage;
-
-        [SetUp]
-        public void Setup()
+        if (OsInfo.IsLinux)
         {
-            if (OsInfo.IsLinux)
-            {
-                _updatePackage = new UpdatePackage
-                {
-                    FileName = "Lidarr.develop.0.6.2.883.tar.gz",
-                    Url = "https://github.com/lidarr/Lidarr/releases/download/v0.6.2.883/Lidarr.develop.0.6.2.883.linux.tar.gz",
-                    Version = new Version("0.6.2.883")
-                };
-            }
-            else
-            {
-                _updatePackage = new UpdatePackage
-                {
-                    FileName = "Lidarr.develop.0.6.2.883.zip",
-                    Url = "https://github.com/lidarr/Lidarr/releases/download/v0.6.2.883/Lidarr.develop.0.6.2.883.windows.zip",
-                    Version = new Version("0.6.2.883")
-                };
-            }
-
-            Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.TempFolder).Returns(TempFolder);
-            Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.StartUpFolder).Returns(@"C:\Lidarr".AsOsAgnostic);
-            Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.AppDataFolder).Returns(@"C:\ProgramData\Lidarr".AsOsAgnostic);
-
-            Mocker.GetMock<ICheckUpdateService>().Setup(c => c.AvailableUpdate()).Returns(_updatePackage);
-            Mocker.GetMock<IVerifyUpdates>().Setup(c => c.Verify(It.IsAny<UpdatePackage>(), It.IsAny<string>())).Returns(true);
-
-            Mocker.GetMock<IProcessProvider>().Setup(c => c.GetCurrentProcess()).Returns(new ProcessInfo { Id = 12 });
-            Mocker.GetMock<IRuntimeInfo>().Setup(c => c.ExecutingApplication).Returns(@"C:\Test\Lidarr.exe");
-
-            Mocker.GetMock<IConfigFileProvider>()
-                  .SetupGet(s => s.UpdateAutomatically)
-                  .Returns(true);
-
-            Mocker.GetMock<IDiskProvider>()
-                  .Setup(c => c.FolderWritable(It.IsAny<string>()))
-                  .Returns(true);
-
-            Mocker.GetMock<IDiskProvider>()
-                  .Setup(v => v.FileExists(It.Is<string>(s => s.EndsWith("Lidarr.Update.exe"))))
-                  .Returns(true);
-
-            _sandboxFolder = Mocker.GetMock<IAppFolderInfo>().Object.GetUpdateSandboxFolder();
+            _updatePackage = new UpdatePackage
+                             {
+                                 FileName = "Lidarr.develop.0.6.2.883.tar.gz",
+                                 Url = "https://github.com/lidarr/Lidarr/releases/download/v0.6.2.883/Lidarr.develop.0.6.2.883.linux.tar.gz",
+                                 Version = new Version("0.6.2.883")
+                             };
+        }
+        else
+        {
+            _updatePackage = new UpdatePackage
+                             {
+                                 FileName = "Lidarr.develop.0.6.2.883.zip",
+                                 Url = "https://github.com/lidarr/Lidarr/releases/download/v0.6.2.883/Lidarr.develop.0.6.2.883.windows.zip",
+                                 Version = new Version("0.6.2.883")
+                             };
         }
 
-        private void GivenInstallScript(string path)
-        {
-            Mocker.GetMock<IConfigFileProvider>()
-                  .SetupGet(s => s.UpdateMechanism)
-                  .Returns(UpdateMechanism.Script);
+        Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.TempFolder).Returns(TempFolder);
+        Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.StartUpFolder).Returns(@"C:\Lidarr".AsOsAgnostic);
+        Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.AppDataFolder).Returns(@"C:\ProgramData\Lidarr".AsOsAgnostic);
 
-            Mocker.GetMock<IConfigFileProvider>()
-                  .SetupGet(s => s.UpdateScriptPath)
-                  .Returns(path);
+        Mocker.GetMock<ICheckUpdateService>().Setup(c => c.AvailableUpdate()).Returns(_updatePackage);
+        Mocker.GetMock<IVerifyUpdates>().Setup(c => c.Verify(It.IsAny<UpdatePackage>(), It.IsAny<string>())).Returns(true);
 
-            Mocker.GetMock<IDiskProvider>()
-                  .Setup(s => s.FileExists(path, StringComparison.Ordinal))
-                  .Returns(true);
-        }
+        Mocker.GetMock<IProcessProvider>().Setup(c => c.GetCurrentProcess()).Returns(new ProcessInfo { Id = 12 });
+        Mocker.GetMock<IRuntimeInfo>().Setup(c => c.ExecutingApplication).Returns(@"C:\Test\Lidarr.exe");
 
-        [Test]
-        public void should_not_update_if_inside_docker()
-        {
-            Mocker.GetMock<IOsInfo>().Setup(x => x.IsDocker).Returns(true);
+        Mocker.GetMock<IConfigFileProvider>()
+              .SetupGet(s => s.UpdateAutomatically)
+              .Returns(true);
 
-            Subject.Execute(new ApplicationUpdateCommand());
+        Mocker.GetMock<IDiskProvider>()
+              .Setup(c => c.FolderWritable(It.IsAny<string>()))
+              .Returns(true);
 
-            Mocker.GetMock<IProcessProvider>()
-                .Verify(c => c.Start(It.IsAny<string>(), It.Is<string>(s => s.StartsWith("12")), null, null, null), Times.Never());
-        }
+        Mocker.GetMock<IDiskProvider>()
+              .Setup(v => v.FileExists(It.Is<string>(s => s.EndsWith("Lidarr.Update.exe"))))
+              .Returns(true);
 
-        [Test]
-        public void should_delete_sandbox_before_update_if_folder_exists()
-        {
-            Mocker.GetMock<IDiskProvider>().Setup(c => c.FolderExists(_sandboxFolder)).Returns(true);
+        _sandboxFolder = Mocker.GetMock<IAppFolderInfo>().Object.GetUpdateSandboxFolder();
+    }
 
-            Subject.Execute(new ApplicationUpdateCommand());
+    private void GivenInstallScript(string path)
+    {
+        Mocker.GetMock<IConfigFileProvider>()
+              .SetupGet(s => s.UpdateMechanism)
+              .Returns(UpdateMechanism.Script);
 
-            Mocker.GetMock<IDiskProvider>().Verify(c => c.DeleteFolder(_sandboxFolder, true));
-        }
+        Mocker.GetMock<IConfigFileProvider>()
+              .SetupGet(s => s.UpdateScriptPath)
+              .Returns(path);
 
-        [Test]
-        public void should_not_delete_sandbox_before_update_if_folder_doesnt_exists()
-        {
-            Mocker.GetMock<IDiskProvider>().Setup(c => c.FolderExists(_sandboxFolder)).Returns(false);
+        Mocker.GetMock<IDiskProvider>()
+              .Setup(s => s.FileExists(path, StringComparison.Ordinal))
+              .Returns(true);
+    }
 
-            Subject.Execute(new ApplicationUpdateCommand());
+    [Test]
+    public void should_not_update_if_inside_docker()
+    {
+        Mocker.GetMock<IOsInfo>().Setup(x => x.IsDocker).Returns(true);
 
-            Mocker.GetMock<IDiskProvider>().Verify(c => c.DeleteFolder(_sandboxFolder, true), Times.Never());
-        }
+        Subject.Execute(new ApplicationUpdateCommand());
 
-        [Test]
-        public void Should_download_update_package()
-        {
-            var updateArchive = Path.Combine(_sandboxFolder, _updatePackage.FileName);
+        Mocker.GetMock<IProcessProvider>()
+              .Verify(c => c.Start(It.IsAny<string>(), It.Is<string>(s => s.StartsWith("12")), null, null, null), Times.Never());
+    }
 
-            Subject.Execute(new ApplicationUpdateCommand());
+    [Test]
+    public void should_delete_sandbox_before_update_if_folder_exists()
+    {
+        Mocker.GetMock<IDiskProvider>().Setup(c => c.FolderExists(_sandboxFolder)).Returns(true);
 
-            Mocker.GetMock<IHttpClient>().Verify(c => c.DownloadFile(_updatePackage.Url, updateArchive));
-        }
+        Subject.Execute(new ApplicationUpdateCommand());
 
-        [Test]
-        public void Should_extract_update_package()
-        {
-            var updateArchive = Path.Combine(_sandboxFolder, _updatePackage.FileName);
+        Mocker.GetMock<IDiskProvider>().Verify(c => c.DeleteFolder(_sandboxFolder, true));
+    }
 
-            Subject.Execute(new ApplicationUpdateCommand());
+    [Test]
+    public void should_not_delete_sandbox_before_update_if_folder_doesnt_exists()
+    {
+        Mocker.GetMock<IDiskProvider>().Setup(c => c.FolderExists(_sandboxFolder)).Returns(false);
 
-            Mocker.GetMock<IArchiveService>().Verify(c => c.Extract(updateArchive, _sandboxFolder));
-        }
+        Subject.Execute(new ApplicationUpdateCommand());
 
-        [Test]
-        public void Should_copy_update_client_to_root_of_sandbox()
-        {
-            var updateClientFolder = Mocker.GetMock<IAppFolderInfo>().Object.GetUpdateClientFolder();
+        Mocker.GetMock<IDiskProvider>().Verify(c => c.DeleteFolder(_sandboxFolder, true), Times.Never());
+    }
 
-            Subject.Execute(new ApplicationUpdateCommand());
+    [Test]
+    public void Should_download_update_package()
+    {
+        var updateArchive = Path.Combine(_sandboxFolder, _updatePackage.FileName);
 
-            Mocker.GetMock<IDiskTransferService>()
-                  .Verify(c => c.TransferFolder(updateClientFolder, _sandboxFolder, TransferMode.Move));
-        }
+        Subject.Execute(new ApplicationUpdateCommand());
 
-        [Test]
-        public void should_start_update_client_if_updater_exists()
-        {
-            Subject.Execute(new ApplicationUpdateCommand());
+        Mocker.GetMock<IHttpClient>().Verify(c => c.DownloadFile(_updatePackage.Url, updateArchive));
+    }
 
-            Mocker.GetMock<IProcessProvider>()
-                .Verify(c => c.Start(It.IsAny<string>(), It.Is<string>(s => s.StartsWith("12")), null, null, null), Times.Once());
-        }
+    [Test]
+    public void Should_extract_update_package()
+    {
+        var updateArchive = Path.Combine(_sandboxFolder, _updatePackage.FileName);
 
-        [Test]
-        public void should_return_with_warning_if_updater_doesnt_exists()
-        {
-            Mocker.GetMock<IDiskProvider>()
-                  .Setup(v => v.FileExists(It.Is<string>(s => s.EndsWith("Lidarr.Update.exe"))))
-                  .Returns(false);
+        Subject.Execute(new ApplicationUpdateCommand());
 
-            Subject.Execute(new ApplicationUpdateCommand());
+        Mocker.GetMock<IArchiveService>().Verify(c => c.Extract(updateArchive, _sandboxFolder));
+    }
 
-            Mocker.GetMock<IProcessProvider>()
-                .Verify(c => c.Start(It.IsAny<string>(), It.IsAny<string>(), null, null, null), Times.Never());
+    [Test]
+    public void Should_copy_update_client_to_root_of_sandbox()
+    {
+        var updateClientFolder = Mocker.GetMock<IAppFolderInfo>().Object.GetUpdateClientFolder();
 
-            ExceptionVerification.ExpectedWarns(1);
-        }
+        Subject.Execute(new ApplicationUpdateCommand());
 
-        [Test]
-        public void should_return_without_error_or_warnings_when_no_updates_are_available()
-        {
-            Mocker.GetMock<ICheckUpdateService>().Setup(c => c.AvailableUpdate()).Returns<UpdatePackage>(null);
+        Mocker.GetMock<IDiskTransferService>()
+              .Verify(c => c.TransferFolder(updateClientFolder, _sandboxFolder, TransferMode.Move));
+    }
 
-            Subject.Execute(new ApplicationUpdateCommand());
+    [Test]
+    public void should_start_update_client_if_updater_exists()
+    {
+        Subject.Execute(new ApplicationUpdateCommand());
 
-            ExceptionVerification.AssertNoUnexpectedLogs();
-        }
+        Mocker.GetMock<IProcessProvider>()
+              .Verify(c => c.Start(It.IsAny<string>(), It.Is<string>(s => s.StartsWith("12")), null, null, null), Times.Once());
+    }
 
-        [Test]
-        public void should_not_extract_if_verification_fails()
-        {
-            Mocker.GetMock<IVerifyUpdates>().Setup(c => c.Verify(It.IsAny<UpdatePackage>(), It.IsAny<string>())).Returns(false);
+    [Test]
+    public void should_return_with_warning_if_updater_doesnt_exists()
+    {
+        Mocker.GetMock<IDiskProvider>()
+              .Setup(v => v.FileExists(It.Is<string>(s => s.EndsWith("Lidarr.Update.exe"))))
+              .Returns(false);
 
-            Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
+        Subject.Execute(new ApplicationUpdateCommand());
 
-            Mocker.GetMock<IArchiveService>().Verify(v => v.Extract(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
-        }
+        Mocker.GetMock<IProcessProvider>()
+              .Verify(c => c.Start(It.IsAny<string>(), It.IsAny<string>(), null, null, null), Times.Never());
 
-        [Test]
-        [Platform(Exclude = "Win")]
-        public void should_run_script_if_configured()
-        {
-            const string scriptPath = "/tmp/lidarr/update.sh";
+        ExceptionVerification.ExpectedWarns(1);
+    }
 
-            GivenInstallScript(scriptPath);
+    [Test]
+    public void should_return_without_error_or_warnings_when_no_updates_are_available()
+    {
+        Mocker.GetMock<ICheckUpdateService>().Setup(c => c.AvailableUpdate()).Returns<UpdatePackage>(null);
 
-            Subject.Execute(new ApplicationUpdateCommand());
+        Subject.Execute(new ApplicationUpdateCommand());
 
-            Mocker.GetMock<IProcessProvider>().Verify(v => v.Start(scriptPath, It.IsAny<string>(), null, null, null), Times.Once());
-        }
+        ExceptionVerification.AssertNoUnexpectedLogs();
+    }
 
-        [Test]
-        [Platform(Exclude = "Win")]
-        public void should_throw_if_script_is_not_set()
-        {
-            const string scriptPath = "/tmp/lidarr/update.sh";
+    [Test]
+    public void should_not_extract_if_verification_fails()
+    {
+        Mocker.GetMock<IVerifyUpdates>().Setup(c => c.Verify(It.IsAny<UpdatePackage>(), It.IsAny<string>())).Returns(false);
 
-            GivenInstallScript("");
+        Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
 
-            Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
+        Mocker.GetMock<IArchiveService>().Verify(v => v.Extract(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+    }
 
-            ExceptionVerification.ExpectedErrors(1);
-            Mocker.GetMock<IProcessProvider>().Verify(v => v.Start(scriptPath, It.IsAny<string>(), null, null, null), Times.Never());
-        }
+    [Test]
+    [Platform(Exclude = "Win")]
+    public void should_run_script_if_configured()
+    {
+        const string scriptPath = "/tmp/lidarr/update.sh";
 
-        [Test]
-        [Platform(Exclude = "Win")]
-        public void should_throw_if_script_is_null()
-        {
-            const string scriptPath = "/tmp/lidarr/update.sh";
+        GivenInstallScript(scriptPath);
 
-            GivenInstallScript(null);
+        Subject.Execute(new ApplicationUpdateCommand());
 
-            Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
+        Mocker.GetMock<IProcessProvider>().Verify(v => v.Start(scriptPath, It.IsAny<string>(), null, null, null), Times.Once());
+    }
 
-            ExceptionVerification.ExpectedErrors(1);
-            Mocker.GetMock<IProcessProvider>().Verify(v => v.Start(scriptPath, It.IsAny<string>(), null, null, null), Times.Never());
-        }
+    [Test]
+    [Platform(Exclude = "Win")]
+    public void should_throw_if_script_is_not_set()
+    {
+        const string scriptPath = "/tmp/lidarr/update.sh";
 
-        [Test]
-        [Platform(Exclude = "Win")]
-        public void should_throw_if_script_path_does_not_exist()
-        {
-            const string scriptPath = "/tmp/lidarr/update.sh";
+        GivenInstallScript("");
 
-            GivenInstallScript(scriptPath);
+        Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
 
-            Mocker.GetMock<IDiskProvider>()
-                  .Setup(s => s.FileExists(scriptPath, StringComparison.Ordinal))
-                  .Returns(false);
+        ExceptionVerification.ExpectedErrors(1);
+        Mocker.GetMock<IProcessProvider>().Verify(v => v.Start(scriptPath, It.IsAny<string>(), null, null, null), Times.Never());
+    }
 
-            Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
+    [Test]
+    [Platform(Exclude = "Win")]
+    public void should_throw_if_script_is_null()
+    {
+        const string scriptPath = "/tmp/lidarr/update.sh";
 
-            ExceptionVerification.ExpectedErrors(1);
-            Mocker.GetMock<IProcessProvider>().Verify(v => v.Start(scriptPath, It.IsAny<string>(), null, null, null), Times.Never());
-        }
+        GivenInstallScript(null);
 
-        [Test]
-        [IntegrationTest]
-        public void Should_download_and_extract_to_temp_folder()
-        {
-            UseRealHttp();
+        Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
 
-            var updateSubFolder = new DirectoryInfo(Mocker.GetMock<IAppFolderInfo>().Object.GetUpdateSandboxFolder());
+        ExceptionVerification.ExpectedErrors(1);
+        Mocker.GetMock<IProcessProvider>().Verify(v => v.Start(scriptPath, It.IsAny<string>(), null, null, null), Times.Never());
+    }
 
-            updateSubFolder.Exists.Should().BeFalse();
+    [Test]
+    [Platform(Exclude = "Win")]
+    public void should_throw_if_script_path_does_not_exist()
+    {
+        const string scriptPath = "/tmp/lidarr/update.sh";
 
-            Mocker.SetConstant<IArchiveService>(Mocker.Resolve<ArchiveService>());
+        GivenInstallScript(scriptPath);
 
-            Subject.Execute(new ApplicationUpdateCommand());
+        Mocker.GetMock<IDiskProvider>()
+              .Setup(s => s.FileExists(scriptPath, StringComparison.Ordinal))
+              .Returns(false);
 
-            updateSubFolder.Refresh();
+        Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
 
-            updateSubFolder.Exists.Should().BeTrue();
-            updateSubFolder.GetDirectories("Lidarr").Should().HaveCount(1);
-            updateSubFolder.GetDirectories().Should().HaveCount(1);
-            updateSubFolder.GetFiles().Should().NotBeEmpty();
-        }
+        ExceptionVerification.ExpectedErrors(1);
+        Mocker.GetMock<IProcessProvider>().Verify(v => v.Start(scriptPath, It.IsAny<string>(), null, null, null), Times.Never());
+    }
 
-        [Test]
-        public void should_log_error_when_app_data_is_child_of_startup_folder()
-        {
-            Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.StartUpFolder).Returns(@"C:\Lidarr".AsOsAgnostic);
-            Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.AppDataFolder).Returns(@"C:\Lidarr\AppData".AsOsAgnostic);
+    [Test]
+    [IntegrationTest]
+    public void Should_download_and_extract_to_temp_folder()
+    {
+        UseRealHttp();
 
-            Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
-            ExceptionVerification.ExpectedErrors(1);
-        }
+        var updateSubFolder = new DirectoryInfo(Mocker.GetMock<IAppFolderInfo>().Object.GetUpdateSandboxFolder());
 
-        [Test]
-        public void should_log_error_when_app_data_is_same_as_startup_folder()
-        {
-            Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.StartUpFolder).Returns(@"C:\NzbDrone".AsOsAgnostic);
-            Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.AppDataFolder).Returns(@"C:\NzbDrone".AsOsAgnostic);
+        updateSubFolder.Exists.Should().BeFalse();
 
-            Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
-            ExceptionVerification.ExpectedErrors(1);
-        }
+        Mocker.SetConstant<IArchiveService>(Mocker.Resolve<ArchiveService>());
 
-        [Test]
-        public void should_log_error_when_startup_folder_is_not_writable()
-        {
-            Mocker.GetMock<IDiskProvider>()
-                  .Setup(c => c.FolderWritable(It.IsAny<string>()))
-                  .Returns(false);
+        Subject.Execute(new ApplicationUpdateCommand());
 
-            var updateArchive = Path.Combine(_sandboxFolder, _updatePackage.FileName);
+        updateSubFolder.Refresh();
 
-            Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
+        updateSubFolder.Exists.Should().BeTrue();
+        updateSubFolder.GetDirectories("Lidarr").Should().HaveCount(1);
+        updateSubFolder.GetDirectories().Should().HaveCount(1);
+        updateSubFolder.GetFiles().Should().NotBeEmpty();
+    }
 
-            Mocker.GetMock<IHttpClient>().Verify(c => c.DownloadFile(_updatePackage.Url, updateArchive), Times.Never());
-            ExceptionVerification.ExpectedErrors(1);
-        }
+    [Test]
+    public void should_log_error_when_app_data_is_child_of_startup_folder()
+    {
+        Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.StartUpFolder).Returns(@"C:\Lidarr".AsOsAgnostic);
+        Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.AppDataFolder).Returns(@"C:\Lidarr\AppData".AsOsAgnostic);
 
-        [Test]
-        public void should_log_when_install_cannot_be_started()
-        {
-            Mocker.GetMock<IDiskProvider>()
-                  .Setup(c => c.FolderWritable(It.IsAny<string>()))
-                  .Returns(false);
+        Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
+        ExceptionVerification.ExpectedErrors(1);
+    }
 
-            var updateArchive = Path.Combine(_sandboxFolder, _updatePackage.FileName);
+    [Test]
+    public void should_log_error_when_app_data_is_same_as_startup_folder()
+    {
+        Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.StartUpFolder).Returns(@"C:\NzbDrone".AsOsAgnostic);
+        Mocker.GetMock<IAppFolderInfo>().SetupGet(c => c.AppDataFolder).Returns(@"C:\NzbDrone".AsOsAgnostic);
 
-            Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
+        Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
+        ExceptionVerification.ExpectedErrors(1);
+    }
 
-            Mocker.GetMock<IHttpClient>().Verify(c => c.DownloadFile(_updatePackage.Url, updateArchive), Times.Never());
-            ExceptionVerification.ExpectedErrors(1);
-        }
+    [Test]
+    public void should_log_error_when_startup_folder_is_not_writable()
+    {
+        Mocker.GetMock<IDiskProvider>()
+              .Setup(c => c.FolderWritable(It.IsAny<string>()))
+              .Returns(false);
 
-        [Test]
-        public void should_switch_to_branch_specified_in_updatepackage()
-        {
-            _updatePackage.Branch = "fake";
+        var updateArchive = Path.Combine(_sandboxFolder, _updatePackage.FileName);
 
-            Subject.Execute(new ApplicationUpdateCommand());
+        Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
 
-            Mocker.GetMock<IConfigFileProvider>()
-                  .Verify(v => v.SaveConfigDictionary(It.Is<Dictionary<string, object>>(d => d.ContainsKey("Branch") && (string)d["Branch"] == "fake")), Times.Once());
-        }
+        Mocker.GetMock<IHttpClient>().Verify(c => c.DownloadFile(_updatePackage.Url, updateArchive), Times.Never());
+        ExceptionVerification.ExpectedErrors(1);
+    }
 
-        [TearDown]
-        public void TearDown()
-        {
-            ExceptionVerification.IgnoreErrors();
-        }
+    [Test]
+    public void should_log_when_install_cannot_be_started()
+    {
+        Mocker.GetMock<IDiskProvider>()
+              .Setup(c => c.FolderWritable(It.IsAny<string>()))
+              .Returns(false);
+
+        var updateArchive = Path.Combine(_sandboxFolder, _updatePackage.FileName);
+
+        Assert.Throws<CommandFailedException>(() => Subject.Execute(new ApplicationUpdateCommand()));
+
+        Mocker.GetMock<IHttpClient>().Verify(c => c.DownloadFile(_updatePackage.Url, updateArchive), Times.Never());
+        ExceptionVerification.ExpectedErrors(1);
+    }
+
+    [Test]
+    public void should_switch_to_branch_specified_in_updatepackage()
+    {
+        _updatePackage.Branch = "fake";
+
+        Subject.Execute(new ApplicationUpdateCommand());
+
+        Mocker.GetMock<IConfigFileProvider>()
+              .Verify(v => v.SaveConfigDictionary(It.Is<Dictionary<string, object>>(d => d.ContainsKey("Branch") && (string)d["Branch"] == "fake")), Times.Once());
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        ExceptionVerification.IgnoreErrors();
     }
 }

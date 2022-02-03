@@ -1,9 +1,8 @@
 ﻿using NzbDrone.Core.Validation;
 
-namespace NzbDrone.Core.ThingiProvider
+namespace NzbDrone.Core.ThingiProvider;
+
+public interface IProviderConfig
 {
-    public interface IProviderConfig
-    {
-        NzbDroneValidationResult Validate();
-    }
+    NzbDroneValidationResult Validate();
 }

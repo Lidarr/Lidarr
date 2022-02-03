@@ -5,52 +5,51 @@ using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation;
 
-namespace NzbDrone.Core.Datastore
+namespace NzbDrone.Core.Datastore;
+
+public interface IRestoreDatabase
 {
-    public interface IRestoreDatabase
+    void Restore();
+}
+
+public class DatabaseRestorationService : IRestoreDatabase
+{
+    private readonly IDiskProvider _diskProvider;
+    private readonly IAppFolderInfo _appFolderInfo;
+    private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(DatabaseRestorationService));
+
+    public DatabaseRestorationService(IDiskProvider diskProvider, IAppFolderInfo appFolderInfo)
     {
-        void Restore();
+        _diskProvider = diskProvider;
+        _appFolderInfo = appFolderInfo;
     }
 
-    public class DatabaseRestorationService : IRestoreDatabase
+    public void Restore()
     {
-        private readonly IDiskProvider _diskProvider;
-        private readonly IAppFolderInfo _appFolderInfo;
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(DatabaseRestorationService));
+        var dbRestorePath = _appFolderInfo.GetDatabaseRestore();
 
-        public DatabaseRestorationService(IDiskProvider diskProvider, IAppFolderInfo appFolderInfo)
+        if (!_diskProvider.FileExists(dbRestorePath))
         {
-            _diskProvider = diskProvider;
-            _appFolderInfo = appFolderInfo;
+            return;
         }
 
-        public void Restore()
+        try
         {
-            var dbRestorePath = _appFolderInfo.GetDatabaseRestore();
+            Logger.Info("Restoring Database");
 
-            if (!_diskProvider.FileExists(dbRestorePath))
-            {
-                return;
-            }
+            var dbPath = _appFolderInfo.GetDatabase();
 
-            try
-            {
-                Logger.Info("Restoring Database");
+            _diskProvider.DeleteFile(dbPath + "-shm");
+            _diskProvider.DeleteFile(dbPath + "-wal");
+            _diskProvider.DeleteFile(dbPath + "-journal");
+            _diskProvider.DeleteFile(dbPath);
 
-                var dbPath = _appFolderInfo.GetDatabase();
-
-                _diskProvider.DeleteFile(dbPath + "-shm");
-                _diskProvider.DeleteFile(dbPath + "-wal");
-                _diskProvider.DeleteFile(dbPath + "-journal");
-                _diskProvider.DeleteFile(dbPath);
-
-                _diskProvider.MoveFile(dbRestorePath, dbPath);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, "Failed to restore database");
-                throw;
-            }
+            _diskProvider.MoveFile(dbRestorePath, dbPath);
+        }
+        catch (Exception e)
+        {
+            Logger.Error(e, "Failed to restore database");
+            throw;
         }
     }
 }

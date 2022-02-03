@@ -5,60 +5,59 @@ using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Processes;
 using IServiceProvider = NzbDrone.Common.IServiceProvider;
 
-namespace NzbDrone.Update.UpdateEngine
+namespace NzbDrone.Update.UpdateEngine;
+
+public interface ITerminateNzbDrone
 {
-    public interface ITerminateNzbDrone
+    void Terminate(int processId);
+}
+
+public class TerminateNzbDrone : ITerminateNzbDrone
+{
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IProcessProvider _processProvider;
+    private readonly Logger _logger;
+
+    public TerminateNzbDrone(IServiceProvider serviceProvider, IProcessProvider processProvider, Logger logger)
     {
-        void Terminate(int processId);
+        _serviceProvider = serviceProvider;
+        _processProvider = processProvider;
+        _logger = logger;
     }
 
-    public class TerminateNzbDrone : ITerminateNzbDrone
+    public void Terminate(int processId)
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IProcessProvider _processProvider;
-        private readonly Logger _logger;
-
-        public TerminateNzbDrone(IServiceProvider serviceProvider, IProcessProvider processProvider, Logger logger)
+        if (OsInfo.IsWindows)
         {
-            _serviceProvider = serviceProvider;
-            _processProvider = processProvider;
-            _logger = logger;
-        }
+            _logger.Info("Stopping all running services");
 
-        public void Terminate(int processId)
-        {
-            if (OsInfo.IsWindows)
+            if (_serviceProvider.ServiceExist(ServiceProvider.SERVICE_NAME)
+             && _serviceProvider.IsServiceRunning(ServiceProvider.SERVICE_NAME))
             {
-                _logger.Info("Stopping all running services");
-
-                if (_serviceProvider.ServiceExist(ServiceProvider.SERVICE_NAME)
-                    && _serviceProvider.IsServiceRunning(ServiceProvider.SERVICE_NAME))
+                try
                 {
-                    try
-                    {
-                        _logger.Info("NzbDrone Service is installed and running");
-                        _serviceProvider.Stop(ServiceProvider.SERVICE_NAME);
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.Error(e, "couldn't stop service");
-                    }
+                    _logger.Info("NzbDrone Service is installed and running");
+                    _serviceProvider.Stop(ServiceProvider.SERVICE_NAME);
                 }
-
-                _logger.Info("Killing all running processes");
-
-                _processProvider.KillAll(ProcessProvider.LIDARR_CONSOLE_PROCESS_NAME);
-                _processProvider.KillAll(ProcessProvider.LIDARR_PROCESS_NAME);
+                catch (Exception e)
+                {
+                    _logger.Error(e, "couldn't stop service");
+                }
             }
-            else
-            {
-                _logger.Info("Killing all running processes");
 
-                _processProvider.KillAll(ProcessProvider.LIDARR_CONSOLE_PROCESS_NAME);
-                _processProvider.KillAll(ProcessProvider.LIDARR_PROCESS_NAME);
+            _logger.Info("Killing all running processes");
 
-                _processProvider.Kill(processId);
-            }
+            _processProvider.KillAll(ProcessProvider.LIDARR_CONSOLE_PROCESS_NAME);
+            _processProvider.KillAll(ProcessProvider.LIDARR_PROCESS_NAME);
+        }
+        else
+        {
+            _logger.Info("Killing all running processes");
+
+            _processProvider.KillAll(ProcessProvider.LIDARR_CONSOLE_PROCESS_NAME);
+            _processProvider.KillAll(ProcessProvider.LIDARR_PROCESS_NAME);
+
+            _processProvider.Kill(processId);
         }
     }
 }

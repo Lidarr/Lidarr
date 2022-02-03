@@ -7,74 +7,73 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Update
+namespace NzbDrone.Core.Update;
+
+public interface IUpdaterConfigProvider
 {
-    public interface IUpdaterConfigProvider
+}
+
+public class UpdaterConfigProvider : IUpdaterConfigProvider, IHandle<ApplicationStartedEvent>
+{
+    private readonly Logger _logger;
+    private readonly IConfigFileProvider _configFileProvider;
+    private readonly IDeploymentInfoProvider _deploymentInfoProvider;
+
+    public UpdaterConfigProvider(IDeploymentInfoProvider deploymentInfoProvider, IConfigFileProvider configFileProvider, Logger logger)
     {
+        _deploymentInfoProvider = deploymentInfoProvider;
+        _configFileProvider = configFileProvider;
+        _logger = logger;
     }
 
-    public class UpdaterConfigProvider : IUpdaterConfigProvider, IHandle<ApplicationStartedEvent>
+    public void Handle(ApplicationStartedEvent message)
     {
-        private readonly Logger _logger;
-        private readonly IConfigFileProvider _configFileProvider;
-        private readonly IDeploymentInfoProvider _deploymentInfoProvider;
+        var updateMechanism = _configFileProvider.UpdateMechanism;
+        var packageUpdateMechanism = _deploymentInfoProvider.PackageUpdateMechanism;
 
-        public UpdaterConfigProvider(IDeploymentInfoProvider deploymentInfoProvider, IConfigFileProvider configFileProvider, Logger logger)
+        var externalMechanisms = Enum.GetValues(typeof(UpdateMechanism))
+                                     .Cast<UpdateMechanism>()
+                                     .Where(v => v >= UpdateMechanism.External)
+                                     .ToArray();
+
+        foreach (var externalMechanism in externalMechanisms)
         {
-            _deploymentInfoProvider = deploymentInfoProvider;
-            _configFileProvider = configFileProvider;
-            _logger = logger;
-        }
-
-        public void Handle(ApplicationStartedEvent message)
-        {
-            var updateMechanism = _configFileProvider.UpdateMechanism;
-            var packageUpdateMechanism = _deploymentInfoProvider.PackageUpdateMechanism;
-
-            var externalMechanisms = Enum.GetValues(typeof(UpdateMechanism))
-                                         .Cast<UpdateMechanism>()
-                                         .Where(v => v >= UpdateMechanism.External)
-                                         .ToArray();
-
-            foreach (var externalMechanism in externalMechanisms)
+            if ((packageUpdateMechanism != externalMechanism && updateMechanism == externalMechanism) ||
+                (packageUpdateMechanism == externalMechanism && updateMechanism == UpdateMechanism.BuiltIn))
             {
-                if ((packageUpdateMechanism != externalMechanism && updateMechanism == externalMechanism) ||
-                    (packageUpdateMechanism == externalMechanism && updateMechanism == UpdateMechanism.BuiltIn))
-                {
-                    _logger.Info("Update mechanism {0} not supported in the current configuration, changing to {1}.", updateMechanism, packageUpdateMechanism);
-                    ChangeUpdateMechanism(packageUpdateMechanism);
-                    break;
-                }
-            }
-
-            if (_deploymentInfoProvider.IsExternalUpdateMechanism)
-            {
-                var currentBranch = _configFileProvider.Branch;
-                var packageBranch = _deploymentInfoProvider.PackageBranch;
-                if (packageBranch.IsNotNullOrWhiteSpace() && packageBranch != currentBranch)
-                {
-                    _logger.Info("External updater uses branch {0} instead of the currently selected {1}, changing to {0}.", packageBranch, currentBranch);
-                    ChangeBranch(packageBranch);
-                }
+                _logger.Info("Update mechanism {0} not supported in the current configuration, changing to {1}.", updateMechanism, packageUpdateMechanism);
+                ChangeUpdateMechanism(packageUpdateMechanism);
+                break;
             }
         }
 
-        private void ChangeUpdateMechanism(UpdateMechanism updateMechanism)
+        if (_deploymentInfoProvider.IsExternalUpdateMechanism)
         {
-            var config = new Dictionary<string, object>
+            var currentBranch = _configFileProvider.Branch;
+            var packageBranch = _deploymentInfoProvider.PackageBranch;
+            if (packageBranch.IsNotNullOrWhiteSpace() && packageBranch != currentBranch)
             {
-                [nameof(_configFileProvider.UpdateMechanism)] = updateMechanism
-            };
-            _configFileProvider.SaveConfigDictionary(config);
+                _logger.Info("External updater uses branch {0} instead of the currently selected {1}, changing to {0}.", packageBranch, currentBranch);
+                ChangeBranch(packageBranch);
+            }
         }
+    }
 
-        private void ChangeBranch(string branch)
-        {
-            var config = new Dictionary<string, object>
-            {
-                [nameof(_configFileProvider.Branch)] = branch
-            };
-            _configFileProvider.SaveConfigDictionary(config);
-        }
+    private void ChangeUpdateMechanism(UpdateMechanism updateMechanism)
+    {
+        var config = new Dictionary<string, object>
+                     {
+                         [nameof(_configFileProvider.UpdateMechanism)] = updateMechanism
+                     };
+        _configFileProvider.SaveConfigDictionary(config);
+    }
+
+    private void ChangeBranch(string branch)
+    {
+        var config = new Dictionary<string, object>
+                     {
+                         [nameof(_configFileProvider.Branch)] = branch
+                     };
+        _configFileProvider.SaveConfigDictionary(config);
     }
 }

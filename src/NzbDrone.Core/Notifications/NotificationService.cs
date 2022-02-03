@@ -13,312 +13,311 @@ using NzbDrone.Core.Qualities;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Update.History.Events;
 
-namespace NzbDrone.Core.Notifications
+namespace NzbDrone.Core.Notifications;
+
+public class NotificationService
+    : IHandle<AlbumGrabbedEvent>,
+      IHandle<AlbumImportedEvent>,
+      IHandle<ArtistRenamedEvent>,
+      IHandle<HealthCheckFailedEvent>,
+      IHandle<DownloadFailedEvent>,
+      IHandle<AlbumImportIncompleteEvent>,
+      IHandle<TrackFileRetaggedEvent>,
+      IHandleAsync<RenameCompletedEvent>,
+      IHandleAsync<HealthCheckCompleteEvent>,
+      IHandle<UpdateInstalledEvent>
 {
-    public class NotificationService
-        : IHandle<AlbumGrabbedEvent>,
-          IHandle<AlbumImportedEvent>,
-          IHandle<ArtistRenamedEvent>,
-          IHandle<HealthCheckFailedEvent>,
-          IHandle<DownloadFailedEvent>,
-          IHandle<AlbumImportIncompleteEvent>,
-          IHandle<TrackFileRetaggedEvent>,
-          IHandleAsync<RenameCompletedEvent>,
-          IHandleAsync<HealthCheckCompleteEvent>,
-          IHandle<UpdateInstalledEvent>
+    private readonly INotificationFactory _notificationFactory;
+    private readonly Logger _logger;
+
+    public NotificationService(INotificationFactory notificationFactory, Logger logger)
     {
-        private readonly INotificationFactory _notificationFactory;
-        private readonly Logger _logger;
+        _notificationFactory = notificationFactory;
+        _logger = logger;
+    }
 
-        public NotificationService(INotificationFactory notificationFactory, Logger logger)
+    private string GetMessage(Artist artist, List<Album> albums, QualityModel quality)
+    {
+        var qualityString = quality.Quality.ToString();
+
+        if (quality.Revision.Version > 1)
         {
-            _notificationFactory = notificationFactory;
-            _logger = logger;
+            qualityString += " Proper";
         }
 
-        private string GetMessage(Artist artist, List<Album> albums, QualityModel quality)
-        {
-            var qualityString = quality.Quality.ToString();
+        var albumTitles = string.Join(" + ", albums.Select(e => e.Title));
 
-            if (quality.Revision.Version > 1)
+        return string.Format("{0} - {1} - [{2}]",
+                             artist.Name,
+                             albumTitles,
+                             qualityString);
+    }
+
+    private string GetAlbumDownloadMessage(Artist artist, Album album, List<TrackFile> tracks)
+    {
+        return string.Format("{0} - {1} ({2} Tracks Imported)",
+                             artist.Name,
+                             album.Title,
+                             tracks.Count);
+    }
+
+    private string GetAlbumIncompleteImportMessage(string source)
+    {
+        return string.Format("Lidarr failed to Import all tracks for {0}",
+                             source);
+    }
+
+    private string FormatMissing(object value)
+    {
+        var text = value?.ToString();
+        return text.IsNullOrWhiteSpace() ? "<missing>" : text;
+    }
+
+    private string GetTrackRetagMessage(Artist artist, TrackFile trackFile, Dictionary<string, Tuple<string, string>> diff)
+    {
+        return string.Format("{0}:\n{1}",
+                             trackFile.Path,
+                             string.Join("\n", diff.Select(x => $"{x.Key}: {FormatMissing(x.Value.Item1)} ? {FormatMissing(x.Value.Item2)}")));
+    }
+
+    private bool ShouldHandleArtist(ProviderDefinition definition, Artist artist)
+    {
+        if (definition.Tags.Empty())
+        {
+            _logger.Debug("No tags set for this notification.");
+            return true;
+        }
+
+        if (definition.Tags.Intersect(artist.Tags).Any())
+        {
+            _logger.Debug("Notification and artist have one or more intersecting tags.");
+            return true;
+        }
+
+        //TODO: this message could be more clear
+        _logger.Debug("{0} does not have any intersecting tags with {1}. Notification will not be sent.", definition.Name, artist.Name);
+        return false;
+    }
+
+    private bool ShouldHandleHealthFailure(HealthCheck.HealthCheck healthCheck, bool includeWarnings)
+    {
+        if (healthCheck.Type == HealthCheckResult.Error)
+        {
+            return true;
+        }
+
+        if (healthCheck.Type == HealthCheckResult.Warning && includeWarnings)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void Handle(AlbumGrabbedEvent message)
+    {
+        var grabMessage = new GrabMessage
+                          {
+                              Message = GetMessage(message.Album.Artist, message.Album.Albums, message.Album.ParsedAlbumInfo.Quality),
+                              Artist = message.Album.Artist,
+                              Quality = message.Album.ParsedAlbumInfo.Quality,
+                              Album = message.Album,
+                              DownloadClient = message.DownloadClient,
+                              DownloadId = message.DownloadId
+                          };
+
+        foreach (var notification in _notificationFactory.OnGrabEnabled())
+        {
+            try
             {
-                qualityString += " Proper";
-            }
-
-            var albumTitles = string.Join(" + ", albums.Select(e => e.Title));
-
-            return string.Format("{0} - {1} - [{2}]",
-                                    artist.Name,
-                                    albumTitles,
-                                    qualityString);
-        }
-
-        private string GetAlbumDownloadMessage(Artist artist, Album album, List<TrackFile> tracks)
-        {
-            return string.Format("{0} - {1} ({2} Tracks Imported)",
-                artist.Name,
-                album.Title,
-                tracks.Count);
-        }
-
-        private string GetAlbumIncompleteImportMessage(string source)
-        {
-            return string.Format("Lidarr failed to Import all tracks for {0}",
-                source);
-        }
-
-        private string FormatMissing(object value)
-        {
-            var text = value?.ToString();
-            return text.IsNullOrWhiteSpace() ? "<missing>" : text;
-        }
-
-        private string GetTrackRetagMessage(Artist artist, TrackFile trackFile, Dictionary<string, Tuple<string, string>> diff)
-        {
-            return string.Format("{0}:\n{1}",
-                                 trackFile.Path,
-                                 string.Join("\n", diff.Select(x => $"{x.Key}: {FormatMissing(x.Value.Item1)} ? {FormatMissing(x.Value.Item2)}")));
-        }
-
-        private bool ShouldHandleArtist(ProviderDefinition definition, Artist artist)
-        {
-            if (definition.Tags.Empty())
-            {
-                _logger.Debug("No tags set for this notification.");
-                return true;
-            }
-
-            if (definition.Tags.Intersect(artist.Tags).Any())
-            {
-                _logger.Debug("Notification and artist have one or more intersecting tags.");
-                return true;
-            }
-
-            //TODO: this message could be more clear
-            _logger.Debug("{0} does not have any intersecting tags with {1}. Notification will not be sent.", definition.Name, artist.Name);
-            return false;
-        }
-
-        private bool ShouldHandleHealthFailure(HealthCheck.HealthCheck healthCheck, bool includeWarnings)
-        {
-            if (healthCheck.Type == HealthCheckResult.Error)
-            {
-                return true;
-            }
-
-            if (healthCheck.Type == HealthCheckResult.Warning && includeWarnings)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public void Handle(AlbumGrabbedEvent message)
-        {
-            var grabMessage = new GrabMessage
-            {
-                Message = GetMessage(message.Album.Artist, message.Album.Albums, message.Album.ParsedAlbumInfo.Quality),
-                Artist = message.Album.Artist,
-                Quality = message.Album.ParsedAlbumInfo.Quality,
-                Album = message.Album,
-                DownloadClient = message.DownloadClient,
-                DownloadId = message.DownloadId
-            };
-
-            foreach (var notification in _notificationFactory.OnGrabEnabled())
-            {
-                try
+                if (!ShouldHandleArtist(notification.Definition, message.Album.Artist))
                 {
-                    if (!ShouldHandleArtist(notification.Definition, message.Album.Artist))
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    notification.OnGrab(grabMessage);
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex, "Unable to send OnGrab notification to {0}", notification.Definition.Name);
-                }
+                notification.OnGrab(grabMessage);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Unable to send OnGrab notification to {0}", notification.Definition.Name);
             }
         }
+    }
 
-        public void Handle(AlbumImportedEvent message)
+    public void Handle(AlbumImportedEvent message)
+    {
+        if (!message.NewDownload)
         {
-            if (!message.NewDownload)
-            {
-                return;
-            }
-
-            var downloadMessage = new AlbumDownloadMessage
-            {
-                Message = GetAlbumDownloadMessage(message.Artist, message.Album, message.ImportedTracks),
-                Artist = message.Artist,
-                Album = message.Album,
-                Release = message.AlbumRelease,
-                DownloadClient = message.DownloadClientInfo?.Name,
-                DownloadId = message.DownloadId,
-                TrackFiles = message.ImportedTracks,
-                OldFiles = message.OldFiles,
-            };
-
-            foreach (var notification in _notificationFactory.OnReleaseImportEnabled())
-            {
-                try
-                {
-                    if (ShouldHandleArtist(notification.Definition, message.Artist))
-                    {
-                        if (downloadMessage.OldFiles.Empty() || ((NotificationDefinition)notification.Definition).OnUpgrade)
-                        {
-                            notification.OnReleaseImport(downloadMessage);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.Warn(ex, "Unable to send OnReleaseImport notification to: " + notification.Definition.Name);
-                }
-            }
+            return;
         }
 
-        public void Handle(ArtistRenamedEvent message)
+        var downloadMessage = new AlbumDownloadMessage
+                              {
+                                  Message = GetAlbumDownloadMessage(message.Artist, message.Album, message.ImportedTracks),
+                                  Artist = message.Artist,
+                                  Album = message.Album,
+                                  Release = message.AlbumRelease,
+                                  DownloadClient = message.DownloadClientInfo?.Name,
+                                  DownloadId = message.DownloadId,
+                                  TrackFiles = message.ImportedTracks,
+                                  OldFiles = message.OldFiles,
+                              };
+
+        foreach (var notification in _notificationFactory.OnReleaseImportEnabled())
         {
-            foreach (var notification in _notificationFactory.OnRenameEnabled())
-            {
-                try
-                {
-                    if (ShouldHandleArtist(notification.Definition, message.Artist))
-                    {
-                        notification.OnRename(message.Artist);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.Warn(ex, "Unable to send OnRename notification to: " + notification.Definition.Name);
-                }
-            }
-        }
-
-        public void Handle(HealthCheckFailedEvent message)
-        {
-            foreach (var notification in _notificationFactory.OnHealthIssueEnabled())
-            {
-                try
-                {
-                    if (ShouldHandleHealthFailure(message.HealthCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
-                    {
-                        notification.OnHealthIssue(message.HealthCheck);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.Warn(ex, "Unable to send OnHealthIssue notification to: " + notification.Definition.Name);
-                }
-            }
-        }
-
-        public void Handle(DownloadFailedEvent message)
-        {
-            var downloadFailedMessage = new DownloadFailedMessage
-            {
-                DownloadId = message.DownloadId,
-                DownloadClient = message.DownloadClient,
-                Quality = message.Quality,
-                SourceTitle = message.SourceTitle,
-                Message = message.Message
-            };
-
-            foreach (var notification in _notificationFactory.OnDownloadFailureEnabled())
-            {
-                if (ShouldHandleArtist(notification.Definition, message.TrackedDownload.RemoteAlbum.Artist))
-                {
-                    notification.OnDownloadFailure(downloadFailedMessage);
-                }
-            }
-        }
-
-        public void Handle(AlbumImportIncompleteEvent message)
-        {
-            // TODO: Build out this message so that we can pass on what failed and what was successful
-            var downloadMessage = new AlbumDownloadMessage
-            {
-                Message = GetAlbumIncompleteImportMessage(message.TrackedDownload.DownloadItem.Title)
-            };
-
-            foreach (var notification in _notificationFactory.OnImportFailureEnabled())
-            {
-                if (ShouldHandleArtist(notification.Definition, message.TrackedDownload.RemoteAlbum.Artist))
-                {
-                    notification.OnImportFailure(downloadMessage);
-                }
-            }
-        }
-
-        public void Handle(TrackFileRetaggedEvent message)
-        {
-            var retagMessage = new TrackRetagMessage
-            {
-                Message = GetTrackRetagMessage(message.Artist, message.TrackFile, message.Diff),
-                Artist = message.Artist,
-                Album = message.TrackFile.Album,
-                Release = message.TrackFile.Tracks.Value.First().AlbumRelease.Value,
-                TrackFile = message.TrackFile,
-                Diff = message.Diff,
-                Scrubbed = message.Scrubbed
-            };
-
-            foreach (var notification in _notificationFactory.OnTrackRetagEnabled())
+            try
             {
                 if (ShouldHandleArtist(notification.Definition, message.Artist))
                 {
-                    notification.OnTrackRetag(retagMessage);
+                    if (downloadMessage.OldFiles.Empty() || ((NotificationDefinition)notification.Definition).OnUpgrade)
+                    {
+                        notification.OnReleaseImport(downloadMessage);
+                    }
                 }
             }
-        }
-
-        public void Handle(UpdateInstalledEvent message)
-        {
-            var updateMessage = new ApplicationUpdateMessage();
-            updateMessage.Message = $"Lidarr updated from {message.PreviousVerison.ToString()} to {message.NewVersion.ToString()}";
-            updateMessage.PreviousVersion = message.PreviousVerison;
-            updateMessage.NewVersion = message.NewVersion;
-
-            foreach (var notification in _notificationFactory.OnApplicationUpdateEnabled())
+            catch (Exception ex)
             {
-                try
-                {
-                    notification.OnApplicationUpdate(updateMessage);
-                }
-                catch (Exception ex)
-                {
-                    _logger.Warn(ex, "Unable to send OnApplicationUpdate notification to: " + notification.Definition.Name);
-                }
+                _logger.Warn(ex, "Unable to send OnReleaseImport notification to: " + notification.Definition.Name);
             }
         }
+    }
 
-        public void HandleAsync(RenameCompletedEvent message)
+    public void Handle(ArtistRenamedEvent message)
+    {
+        foreach (var notification in _notificationFactory.OnRenameEnabled())
         {
-            ProcessQueue();
-        }
-
-        public void HandleAsync(HealthCheckCompleteEvent message)
-        {
-            ProcessQueue();
-        }
-
-        private void ProcessQueue()
-        {
-            foreach (var notification in _notificationFactory.GetAvailableProviders())
+            try
             {
-                try
+                if (ShouldHandleArtist(notification.Definition, message.Artist))
                 {
-                    notification.ProcessQueue();
+                    notification.OnRename(message.Artist);
                 }
-                catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Unable to send OnRename notification to: " + notification.Definition.Name);
+            }
+        }
+    }
+
+    public void Handle(HealthCheckFailedEvent message)
+    {
+        foreach (var notification in _notificationFactory.OnHealthIssueEnabled())
+        {
+            try
+            {
+                if (ShouldHandleHealthFailure(message.HealthCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
                 {
-                    _logger.Warn(ex, "Unable to process notification queue for " + notification.Definition.Name);
+                    notification.OnHealthIssue(message.HealthCheck);
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Unable to send OnHealthIssue notification to: " + notification.Definition.Name);
+            }
+        }
+    }
+
+    public void Handle(DownloadFailedEvent message)
+    {
+        var downloadFailedMessage = new DownloadFailedMessage
+                                    {
+                                        DownloadId = message.DownloadId,
+                                        DownloadClient = message.DownloadClient,
+                                        Quality = message.Quality,
+                                        SourceTitle = message.SourceTitle,
+                                        Message = message.Message
+                                    };
+
+        foreach (var notification in _notificationFactory.OnDownloadFailureEnabled())
+        {
+            if (ShouldHandleArtist(notification.Definition, message.TrackedDownload.RemoteAlbum.Artist))
+            {
+                notification.OnDownloadFailure(downloadFailedMessage);
+            }
+        }
+    }
+
+    public void Handle(AlbumImportIncompleteEvent message)
+    {
+        // TODO: Build out this message so that we can pass on what failed and what was successful
+        var downloadMessage = new AlbumDownloadMessage
+                              {
+                                  Message = GetAlbumIncompleteImportMessage(message.TrackedDownload.DownloadItem.Title)
+                              };
+
+        foreach (var notification in _notificationFactory.OnImportFailureEnabled())
+        {
+            if (ShouldHandleArtist(notification.Definition, message.TrackedDownload.RemoteAlbum.Artist))
+            {
+                notification.OnImportFailure(downloadMessage);
+            }
+        }
+    }
+
+    public void Handle(TrackFileRetaggedEvent message)
+    {
+        var retagMessage = new TrackRetagMessage
+                           {
+                               Message = GetTrackRetagMessage(message.Artist, message.TrackFile, message.Diff),
+                               Artist = message.Artist,
+                               Album = message.TrackFile.Album,
+                               Release = message.TrackFile.Tracks.Value.First().AlbumRelease.Value,
+                               TrackFile = message.TrackFile,
+                               Diff = message.Diff,
+                               Scrubbed = message.Scrubbed
+                           };
+
+        foreach (var notification in _notificationFactory.OnTrackRetagEnabled())
+        {
+            if (ShouldHandleArtist(notification.Definition, message.Artist))
+            {
+                notification.OnTrackRetag(retagMessage);
+            }
+        }
+    }
+
+    public void Handle(UpdateInstalledEvent message)
+    {
+        var updateMessage = new ApplicationUpdateMessage();
+        updateMessage.Message = $"Lidarr updated from {message.PreviousVerison.ToString()} to {message.NewVersion.ToString()}";
+        updateMessage.PreviousVersion = message.PreviousVerison;
+        updateMessage.NewVersion = message.NewVersion;
+
+        foreach (var notification in _notificationFactory.OnApplicationUpdateEnabled())
+        {
+            try
+            {
+                notification.OnApplicationUpdate(updateMessage);
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Unable to send OnApplicationUpdate notification to: " + notification.Definition.Name);
+            }
+        }
+    }
+
+    public void HandleAsync(RenameCompletedEvent message)
+    {
+        ProcessQueue();
+    }
+
+    public void HandleAsync(HealthCheckCompleteEvent message)
+    {
+        ProcessQueue();
+    }
+
+    private void ProcessQueue()
+    {
+        foreach (var notification in _notificationFactory.GetAvailableProviders())
+        {
+            try
+            {
+                notification.ProcessQueue();
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Unable to process notification queue for " + notification.Definition.Name);
             }
         }
     }

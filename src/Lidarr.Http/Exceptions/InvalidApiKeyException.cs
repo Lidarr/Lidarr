@@ -1,16 +1,15 @@
 ﻿using System;
 
-namespace Lidarr.Http.Exceptions
-{
-    public class InvalidApiKeyException : Exception
-    {
-        public InvalidApiKeyException()
-        {
-        }
+namespace Lidarr.Http.Exceptions;
 
-        public InvalidApiKeyException(string message)
-            : base(message)
-        {
-        }
+public class InvalidApiKeyException : Exception
+{
+    public InvalidApiKeyException()
+    {
+    }
+
+    public InvalidApiKeyException(string message)
+        : base(message)
+    {
     }
 }

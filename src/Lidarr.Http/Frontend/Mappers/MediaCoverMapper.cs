@@ -6,44 +6,43 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 
-namespace Lidarr.Http.Frontend.Mappers
+namespace Lidarr.Http.Frontend.Mappers;
+
+public class MediaCoverMapper : StaticResourceMapperBase
 {
-    public class MediaCoverMapper : StaticResourceMapperBase
+    private static readonly Regex RegexResizedImage = new Regex(@"-\d+(?=\.(jpg|png|gif)($|\?))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+    private readonly IAppFolderInfo _appFolderInfo;
+    private readonly IDiskProvider _diskProvider;
+
+    public MediaCoverMapper(IAppFolderInfo appFolderInfo, IDiskProvider diskProvider, Logger logger)
+        : base(diskProvider, logger)
     {
-        private static readonly Regex RegexResizedImage = new Regex(@"-\d+(?=\.(jpg|png|gif)($|\?))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        _appFolderInfo = appFolderInfo;
+        _diskProvider = diskProvider;
+    }
 
-        private readonly IAppFolderInfo _appFolderInfo;
-        private readonly IDiskProvider _diskProvider;
+    public override string Map(string resourceUrl)
+    {
+        var path = resourceUrl.Replace('/', Path.DirectorySeparatorChar);
+        path = path.Trim(Path.DirectorySeparatorChar);
 
-        public MediaCoverMapper(IAppFolderInfo appFolderInfo, IDiskProvider diskProvider, Logger logger)
-            : base(diskProvider, logger)
+        var resourcePath = Path.Combine(_appFolderInfo.GetAppDataPath(), path);
+
+        if (!_diskProvider.FileExists(resourcePath) || _diskProvider.GetFileSize(resourcePath) == 0)
         {
-            _appFolderInfo = appFolderInfo;
-            _diskProvider = diskProvider;
-        }
-
-        public override string Map(string resourceUrl)
-        {
-            var path = resourceUrl.Replace('/', Path.DirectorySeparatorChar);
-            path = path.Trim(Path.DirectorySeparatorChar);
-
-            var resourcePath = Path.Combine(_appFolderInfo.GetAppDataPath(), path);
-
-            if (!_diskProvider.FileExists(resourcePath) || _diskProvider.GetFileSize(resourcePath) == 0)
+            var baseResourcePath = RegexResizedImage.Replace(resourcePath, "");
+            if (baseResourcePath != resourcePath)
             {
-                var baseResourcePath = RegexResizedImage.Replace(resourcePath, "");
-                if (baseResourcePath != resourcePath)
-                {
-                    return baseResourcePath;
-                }
+                return baseResourcePath;
             }
-
-            return resourcePath;
         }
 
-        public override bool CanHandle(string resourceUrl)
-        {
-            return resourceUrl.StartsWith("/MediaCover", StringComparison.InvariantCultureIgnoreCase);
-        }
+        return resourcePath;
+    }
+
+    public override bool CanHandle(string resourceUrl)
+    {
+        return resourceUrl.StartsWith("/MediaCover", StringComparison.InvariantCultureIgnoreCase);
     }
 }

@@ -4,45 +4,44 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Organizer;
 using NzbDrone.Core.RootFolders;
 
-namespace NzbDrone.Core.Music
+namespace NzbDrone.Core.Music;
+
+public interface IBuildArtistPaths
 {
-    public interface IBuildArtistPaths
+    string BuildPath(Artist artist, bool useExistingRelativeFolder);
+}
+
+public class ArtistPathBuilder : IBuildArtistPaths
+{
+    private readonly IBuildFileNames _fileNameBuilder;
+    private readonly IRootFolderService _rootFolderService;
+
+    public ArtistPathBuilder(IBuildFileNames fileNameBuilder, IRootFolderService rootFolderService)
     {
-        string BuildPath(Artist artist, bool useExistingRelativeFolder);
+        _fileNameBuilder = fileNameBuilder;
+        _rootFolderService = rootFolderService;
     }
 
-    public class ArtistPathBuilder : IBuildArtistPaths
+    public string BuildPath(Artist artist, bool useExistingRelativeFolder)
     {
-        private readonly IBuildFileNames _fileNameBuilder;
-        private readonly IRootFolderService _rootFolderService;
-
-        public ArtistPathBuilder(IBuildFileNames fileNameBuilder, IRootFolderService rootFolderService)
+        if (artist.RootFolderPath.IsNullOrWhiteSpace())
         {
-            _fileNameBuilder = fileNameBuilder;
-            _rootFolderService = rootFolderService;
+            throw new ArgumentException("Root folder was not provided", nameof(artist));
         }
 
-        public string BuildPath(Artist artist, bool useExistingRelativeFolder)
+        if (useExistingRelativeFolder && artist.Path.IsNotNullOrWhiteSpace())
         {
-            if (artist.RootFolderPath.IsNullOrWhiteSpace())
-            {
-                throw new ArgumentException("Root folder was not provided", nameof(artist));
-            }
-
-            if (useExistingRelativeFolder && artist.Path.IsNotNullOrWhiteSpace())
-            {
-                var relativePath = GetExistingRelativePath(artist);
-                return Path.Combine(artist.RootFolderPath, relativePath);
-            }
-
-            return Path.Combine(artist.RootFolderPath, _fileNameBuilder.GetArtistFolder(artist));
+            var relativePath = GetExistingRelativePath(artist);
+            return Path.Combine(artist.RootFolderPath, relativePath);
         }
 
-        private string GetExistingRelativePath(Artist artist)
-        {
-            var rootFolderPath = _rootFolderService.GetBestRootFolderPath(artist.Path);
+        return Path.Combine(artist.RootFolderPath, _fileNameBuilder.GetArtistFolder(artist));
+    }
 
-            return rootFolderPath.GetRelativePath(artist.Path);
-        }
+    private string GetExistingRelativePath(Artist artist)
+    {
+        var rootFolderPath = _rootFolderService.GetBestRootFolderPath(artist.Path);
+
+        return rootFolderPath.GetRelativePath(artist.Path);
     }
 }

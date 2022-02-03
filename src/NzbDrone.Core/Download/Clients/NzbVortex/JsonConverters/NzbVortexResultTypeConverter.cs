@@ -1,29 +1,28 @@
 using System;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Download.Clients.NzbVortex.JsonConverters
+namespace NzbDrone.Core.Download.Clients.NzbVortex.JsonConverters;
+
+public class NzbVortexResultTypeConverter : JsonConverter
 {
-    public class NzbVortexResultTypeConverter : JsonConverter
+    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            var priorityType = (NzbVortexResultType)value;
-            writer.WriteValue(priorityType.ToString().ToLower());
-        }
+        var priorityType = (NzbVortexResultType)value;
+        writer.WriteValue(priorityType.ToString().ToLower());
+    }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            var result = reader.Value.ToString().Replace("_", string.Empty);
+    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    {
+        var result = reader.Value.ToString().Replace("_", string.Empty);
 
-            NzbVortexResultType output;
-            Enum.TryParse(result, true, out output);
+        NzbVortexResultType output;
+        Enum.TryParse(result, true, out output);
 
-            return output;
-        }
+        return output;
+    }
 
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(NzbVortexResultType);
-        }
+    public override bool CanConvert(Type objectType)
+    {
+        return objectType == typeof(NzbVortexResultType);
     }
 }

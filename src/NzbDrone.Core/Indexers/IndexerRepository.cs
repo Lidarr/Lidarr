@@ -2,17 +2,16 @@
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Indexers
-{
-    public interface IIndexerRepository : IProviderRepository<IndexerDefinition>
-    {
-    }
+namespace NzbDrone.Core.Indexers;
 
-    public class IndexerRepository : ProviderRepository<IndexerDefinition>, IIndexerRepository
+public interface IIndexerRepository : IProviderRepository<IndexerDefinition>
+{
+}
+
+public class IndexerRepository : ProviderRepository<IndexerDefinition>, IIndexerRepository
+{
+    public IndexerRepository(IMainDatabase database, IEventAggregator eventAggregator)
+        : base(database, eventAggregator)
     {
-        public IndexerRepository(IMainDatabase database, IEventAggregator eventAggregator)
-            : base(database, eventAggregator)
-        {
-        }
     }
 }

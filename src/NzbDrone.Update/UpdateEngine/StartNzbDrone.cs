@@ -7,80 +7,79 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Processes;
 using IServiceProvider = NzbDrone.Common.IServiceProvider;
 
-namespace NzbDrone.Update.UpdateEngine
+namespace NzbDrone.Update.UpdateEngine;
+
+public interface IStartNzbDrone
 {
-    public interface IStartNzbDrone
+    void Start(AppType appType, string installationFolder);
+}
+
+public class StartNzbDrone : IStartNzbDrone
+{
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IProcessProvider _processProvider;
+    private readonly IStartupContext _startupContext;
+    private readonly Logger _logger;
+
+    public StartNzbDrone(IServiceProvider serviceProvider, IProcessProvider processProvider, IStartupContext startupContext, Logger logger)
     {
-        void Start(AppType appType, string installationFolder);
+        _serviceProvider = serviceProvider;
+        _processProvider = processProvider;
+        _startupContext = startupContext;
+        _logger = logger;
     }
 
-    public class StartNzbDrone : IStartNzbDrone
+    public void Start(AppType appType, string installationFolder)
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IProcessProvider _processProvider;
-        private readonly IStartupContext _startupContext;
-        private readonly Logger _logger;
-
-        public StartNzbDrone(IServiceProvider serviceProvider, IProcessProvider processProvider, IStartupContext startupContext, Logger logger)
+        _logger.Info("Starting Lidarr");
+        if (appType == AppType.Service)
         {
-            _serviceProvider = serviceProvider;
-            _processProvider = processProvider;
-            _startupContext = startupContext;
-            _logger = logger;
-        }
-
-        public void Start(AppType appType, string installationFolder)
-        {
-            _logger.Info("Starting Lidarr");
-            if (appType == AppType.Service)
+            try
             {
-                try
-                {
-                    StartService();
-                }
-                catch (InvalidOperationException e)
-                {
-                    _logger.Warn(e, "Couldn't start Lidarr Service (Most likely due to permission issues). Falling back to console.");
-                    StartConsole(installationFolder);
-                }
+                StartService();
             }
-            else if (appType == AppType.Console)
+            catch (InvalidOperationException e)
             {
+                _logger.Warn(e, "Couldn't start Lidarr Service (Most likely due to permission issues). Falling back to console.");
                 StartConsole(installationFolder);
             }
-            else
-            {
-                StartWinform(installationFolder);
-            }
         }
-
-        private void StartService()
+        else if (appType == AppType.Console)
         {
-            _logger.Info("Starting Lidarr service");
-            _serviceProvider.Start(ServiceProvider.SERVICE_NAME);
+            StartConsole(installationFolder);
         }
-
-        private void StartWinform(string installationFolder)
+        else
         {
-            Start(installationFolder, "Lidarr".ProcessNameToExe());
+            StartWinform(installationFolder);
         }
+    }
 
-        private void StartConsole(string installationFolder)
+    private void StartService()
+    {
+        _logger.Info("Starting Lidarr service");
+        _serviceProvider.Start(ServiceProvider.SERVICE_NAME);
+    }
+
+    private void StartWinform(string installationFolder)
+    {
+        Start(installationFolder, "Lidarr".ProcessNameToExe());
+    }
+
+    private void StartConsole(string installationFolder)
+    {
+        Start(installationFolder, "Lidarr.Console".ProcessNameToExe());
+    }
+
+    private void Start(string installationFolder, string fileName)
+    {
+        _logger.Info("Starting {0}", fileName);
+        var path = Path.Combine(installationFolder, fileName);
+
+        if (!_startupContext.Flags.Contains(StartupContext.NO_BROWSER))
         {
-            Start(installationFolder, "Lidarr.Console".ProcessNameToExe());
+            _startupContext.Flags.Add(StartupContext.NO_BROWSER);
         }
 
-        private void Start(string installationFolder, string fileName)
-        {
-            _logger.Info("Starting {0}", fileName);
-            var path = Path.Combine(installationFolder, fileName);
-
-            if (!_startupContext.Flags.Contains(StartupContext.NO_BROWSER))
-            {
-                _startupContext.Flags.Add(StartupContext.NO_BROWSER);
-            }
-
-            _processProvider.SpawnNewProcess(path, _startupContext.PreservedArguments);
-        }
+        _processProvider.SpawnNewProcess(path, _startupContext.PreservedArguments);
     }
 }

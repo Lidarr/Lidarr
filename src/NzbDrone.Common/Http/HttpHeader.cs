@@ -7,186 +7,185 @@ using System.Linq;
 using System.Text;
 using NzbDrone.Common.Extensions;
 
-namespace NzbDrone.Common.Http
+namespace NzbDrone.Common.Http;
+
+public class HttpHeader : NameValueCollection, IEnumerable<KeyValuePair<string, string>>, IEnumerable
 {
-    public class HttpHeader : NameValueCollection, IEnumerable<KeyValuePair<string, string>>, IEnumerable
+    public HttpHeader(NameValueCollection headers)
+        : base(headers)
     {
-        public HttpHeader(NameValueCollection headers)
-            : base(headers)
+    }
+
+    public HttpHeader()
+    {
+    }
+
+    public bool ContainsKey(string key)
+    {
+        key = key.ToLowerInvariant();
+        return AllKeys.Any(v => v.ToLowerInvariant() == key);
+    }
+
+    public string GetSingleValue(string key)
+    {
+        var values = GetValues(key);
+        if (values == null || values.Length == 0)
         {
+            return null;
         }
 
-        public HttpHeader()
+        if (values.Length > 1)
         {
+            throw new ApplicationException($"Expected {key} to occur only once, but was {values.Join("|")}.");
         }
 
-        public bool ContainsKey(string key)
+        return values[0];
+    }
+
+    protected T? GetSingleValue<T>(string key, Func<string, T> converter)
+        where T : struct
+    {
+        var value = GetSingleValue(key);
+        if (value == null)
         {
-            key = key.ToLowerInvariant();
-            return AllKeys.Any(v => v.ToLowerInvariant() == key);
+            return null;
         }
 
-        public string GetSingleValue(string key)
+        return converter(value);
+    }
+
+    protected void SetSingleValue(string key, string value)
+    {
+        if (value == null)
         {
-            var values = GetValues(key);
-            if (values == null || values.Length == 0)
-            {
-                return null;
-            }
+            Remove(key);
+        }
+        else
+        {
+            Set(key, value);
+        }
+    }
 
-            if (values.Length > 1)
-            {
-                throw new ApplicationException($"Expected {key} to occur only once, but was {values.Join("|")}.");
-            }
+    protected void SetSingleValue<T>(string key, T? value, Func<T, string> converter = null)
+        where T : struct
+    {
+        if (!value.HasValue)
+        {
+            Remove(key);
+        }
+        else if (converter != null)
+        {
+            Set(key, converter(value.Value));
+        }
+        else
+        {
+            Set(key, value.Value.ToString());
+        }
+    }
 
-            return values[0];
+    public long? ContentLength
+    {
+        get
+        {
+            return GetSingleValue("Content-Length", Convert.ToInt64);
+        }
+        set
+        {
+            SetSingleValue("Content-Length", value);
+        }
+    }
+
+    public string ContentType
+    {
+        get
+        {
+            return GetSingleValue("Content-Type");
+        }
+        set
+        {
+            SetSingleValue("Content-Type", value);
+        }
+    }
+
+    public string Accept
+    {
+        get
+        {
+            return GetSingleValue("Accept");
+        }
+        set
+        {
+            SetSingleValue("Accept", value);
+        }
+    }
+
+    public DateTime? LastModified
+    {
+        get
+        {
+            return GetSingleValue("Last-Modified", Convert.ToDateTime);
+        }
+        set
+        {
+            SetSingleValue("Last-Modified", value);
+        }
+    }
+
+    public new IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+    {
+        return AllKeys.SelectMany(GetValues, (k, c) => new KeyValuePair<string, string>(k, c)).ToList().GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return base.GetEnumerator();
+    }
+
+    public Encoding GetEncodingFromContentType()
+    {
+        return GetEncodingFromContentType(ContentType ?? string.Empty);
+    }
+
+    public static Encoding GetEncodingFromContentType(string contentType)
+    {
+        Encoding encoding = null;
+
+        if (contentType.IsNotNullOrWhiteSpace())
+        {
+            var charset = contentType.ToLowerInvariant()
+                                     .Split(';', '=', ' ')
+                                     .SkipWhile(v => v != "charset")
+                                     .Skip(1).FirstOrDefault();
+
+            if (charset.IsNotNullOrWhiteSpace())
+            {
+                encoding = Encoding.GetEncoding(charset.Replace("\"", ""));
+            }
         }
 
-        protected T? GetSingleValue<T>(string key, Func<string, T> converter)
-            where T : struct
+        if (encoding == null)
         {
-            var value = GetSingleValue(key);
-            if (value == null)
-            {
-                return null;
-            }
-
-            return converter(value);
+            // TODO: Find encoding by Byte order mask.
         }
 
-        protected void SetSingleValue(string key, string value)
+        if (encoding == null)
         {
-            if (value == null)
-            {
-                Remove(key);
-            }
-            else
-            {
-                Set(key, value);
-            }
+            encoding = Encoding.UTF8;
         }
 
-        protected void SetSingleValue<T>(string key, T? value, Func<T, string> converter = null)
-            where T : struct
-        {
-            if (!value.HasValue)
-            {
-                Remove(key);
-            }
-            else if (converter != null)
-            {
-                Set(key, converter(value.Value));
-            }
-            else
-            {
-                Set(key, value.Value.ToString());
-            }
-        }
+        return encoding;
+    }
 
-        public long? ContentLength
-        {
-            get
-            {
-                return GetSingleValue("Content-Length", Convert.ToInt64);
-            }
-            set
-            {
-                SetSingleValue("Content-Length", value);
-            }
-        }
+    public static DateTime ParseDateTime(string value)
+    {
+        return DateTime.ParseExact(value, "R", CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.AssumeUniversal);
+    }
 
-        public string ContentType
-        {
-            get
-            {
-                return GetSingleValue("Content-Type");
-            }
-            set
-            {
-                SetSingleValue("Content-Type", value);
-            }
-        }
-
-        public string Accept
-        {
-            get
-            {
-                return GetSingleValue("Accept");
-            }
-            set
-            {
-                SetSingleValue("Accept", value);
-            }
-        }
-
-        public DateTime? LastModified
-        {
-            get
-            {
-                return GetSingleValue("Last-Modified", Convert.ToDateTime);
-            }
-            set
-            {
-                SetSingleValue("Last-Modified", value);
-            }
-        }
-
-        public new IEnumerator<KeyValuePair<string, string>> GetEnumerator()
-        {
-            return AllKeys.SelectMany(GetValues, (k, c) => new KeyValuePair<string, string>(k, c)).ToList().GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return base.GetEnumerator();
-        }
-
-        public Encoding GetEncodingFromContentType()
-        {
-            return GetEncodingFromContentType(ContentType ?? string.Empty);
-        }
-
-        public static Encoding GetEncodingFromContentType(string contentType)
-        {
-            Encoding encoding = null;
-
-            if (contentType.IsNotNullOrWhiteSpace())
-            {
-                var charset = contentType.ToLowerInvariant()
-                    .Split(';', '=', ' ')
-                    .SkipWhile(v => v != "charset")
-                    .Skip(1).FirstOrDefault();
-
-                if (charset.IsNotNullOrWhiteSpace())
-                {
-                    encoding = Encoding.GetEncoding(charset.Replace("\"", ""));
-                }
-            }
-
-            if (encoding == null)
-            {
-                // TODO: Find encoding by Byte order mask.
-            }
-
-            if (encoding == null)
-            {
-                encoding = Encoding.UTF8;
-            }
-
-            return encoding;
-        }
-
-        public static DateTime ParseDateTime(string value)
-        {
-            return DateTime.ParseExact(value, "R", CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.AssumeUniversal);
-        }
-
-        public static List<KeyValuePair<string, string>> ParseCookies(string cookies)
-        {
-            return cookies.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
-                          .Select(v => v.Trim().Split('='))
-                          .Select(v => new KeyValuePair<string, string>(v[0], v[1]))
-                          .ToList();
-        }
+    public static List<KeyValuePair<string, string>> ParseCookies(string cookies)
+    {
+        return cookies.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
+                      .Select(v => v.Trim().Split('='))
+                      .Select(v => new KeyValuePair<string, string>(v[0], v[1]))
+                      .ToList();
     }
 }

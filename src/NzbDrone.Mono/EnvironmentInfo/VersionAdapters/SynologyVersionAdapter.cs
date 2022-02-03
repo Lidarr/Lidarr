@@ -4,74 +4,73 @@ using System.Text.RegularExpressions;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
 
-namespace NzbDrone.Mono.EnvironmentInfo.VersionAdapters
-{
-    public class SynologyVersionAdapter : IOsVersionAdapter
-    {
-        private const string NAME = "DSM";
-        private const string FULL_NAME = "Synology DSM";
-        private readonly IDiskProvider _diskProvider;
+namespace NzbDrone.Mono.EnvironmentInfo.VersionAdapters;
 
-        public SynologyVersionAdapter(IDiskProvider diskProvider)
+public class SynologyVersionAdapter : IOsVersionAdapter
+{
+    private const string NAME = "DSM";
+    private const string FULL_NAME = "Synology DSM";
+    private readonly IDiskProvider _diskProvider;
+
+    public SynologyVersionAdapter(IDiskProvider diskProvider)
+    {
+        _diskProvider = diskProvider;
+    }
+
+    public OsVersionModel Read()
+    {
+        if (!_diskProvider.FolderExists("/etc.defaults/"))
         {
-            _diskProvider = diskProvider;
+            return null;
         }
 
-        public OsVersionModel Read()
+        var versionFile = _diskProvider.GetFiles("/etc.defaults/", SearchOption.TopDirectoryOnly).SingleOrDefault(c => c.EndsWith("VERSION"));
+
+        if (versionFile == null)
         {
-            if (!_diskProvider.FolderExists("/etc.defaults/"))
+            return null;
+        }
+
+        var version = "";
+        var major = "";
+        var minor = "0";
+
+        var fileContent = _diskProvider.ReadAllText(versionFile);
+        var lines = Regex.Split(fileContent, "\r\n|\r|\n");
+
+        foreach (var line in lines)
+        {
+            var parts = line.Split('=');
+            if (parts.Length >= 2)
             {
-                return null;
-            }
+                var key = parts[0];
+                var value = parts[1].Trim('"');
 
-            var versionFile = _diskProvider.GetFiles("/etc.defaults/", SearchOption.TopDirectoryOnly).SingleOrDefault(c => c.EndsWith("VERSION"));
-
-            if (versionFile == null)
-            {
-                return null;
-            }
-
-            var version = "";
-            var major = "";
-            var minor = "0";
-
-            var fileContent = _diskProvider.ReadAllText(versionFile);
-            var lines = Regex.Split(fileContent, "\r\n|\r|\n");
-
-            foreach (var line in lines)
-            {
-                var parts = line.Split('=');
-                if (parts.Length >= 2)
+                if (!string.IsNullOrWhiteSpace(value))
                 {
-                    var key = parts[0];
-                    var value = parts[1].Trim('"');
-
-                    if (!string.IsNullOrWhiteSpace(value))
+                    switch (key)
                     {
-                        switch (key)
-                        {
-                            case "productversion":
-                                version = value;
-                                break;
-                            case "majorversion":
-                                major = value;
-                                break;
-                            case "minorversion":
-                                minor = value;
-                                break;
-                        }
+                        case "productversion":
+                            version = value;
+                            break;
+                        case "majorversion":
+                            major = value;
+                            break;
+                        case "minorversion":
+                            minor = value;
+                            break;
                     }
                 }
             }
-
-            if (string.IsNullOrWhiteSpace(version) && !string.IsNullOrWhiteSpace(major))
-            {
-                version = $"{major}.{minor}";
-            }
-
-            return new OsVersionModel(NAME, version, $"{FULL_NAME} {version}");
         }
 
-        public bool Enabled => OsInfo.IsLinux;
+        if (string.IsNullOrWhiteSpace(version) && !string.IsNullOrWhiteSpace(major))
+        {
+            version = $"{major}.{minor}";
+        }
+
+        return new OsVersionModel(NAME, version, $"{FULL_NAME} {version}");
     }
+
+    public bool Enabled => OsInfo.IsLinux;
 }

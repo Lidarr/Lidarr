@@ -1,7 +1,6 @@
-﻿namespace NzbDrone.Core.Download.Clients.DownloadStation.Responses
+﻿namespace NzbDrone.Core.Download.Clients.DownloadStation.Responses;
+
+public class DiskStationAuthResponse
 {
-    public class DiskStationAuthResponse
-    {
-        public string SId { get; set; }
-    }
+    public string SId { get; set; }
 }

@@ -1,11 +1,10 @@
-﻿namespace NzbDrone.Core.Notifications.Pushover
+﻿namespace NzbDrone.Core.Notifications.Pushover;
+
+public enum PushoverPriority
 {
-    public enum PushoverPriority
-    {
-        Silent = -2,
-        Quiet = -1,
-        Normal = 0,
-        High = 1,
-        Emergency = 2
-    }
+    Silent = -2,
+    Quiet = -1,
+    Normal = 0,
+    High = 1,
+    Emergency = 2
 }

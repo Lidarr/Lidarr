@@ -1,10 +1,9 @@
 using NzbDrone.Core.Download.TrackedDownloads;
 
-namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
+namespace NzbDrone.Core.MediaFiles.TrackImport.Manual;
+
+public class ManuallyImportedFile
 {
-    public class ManuallyImportedFile
-    {
-        public TrackedDownload TrackedDownload { get; set; }
-        public ImportResult ImportResult { get; set; }
-    }
+    public TrackedDownload TrackedDownload { get; set; }
+    public ImportResult ImportResult { get; set; }
 }

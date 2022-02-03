@@ -8,106 +8,105 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Qualities;
 
-namespace NzbDrone.Core.Queue
+namespace NzbDrone.Core.Queue;
+
+public interface IQueueService
 {
-    public interface IQueueService
+    List<Queue> GetQueue();
+    Queue Find(int id);
+    void Remove(int id);
+}
+
+public class QueueService : IQueueService, IHandle<TrackedDownloadRefreshedEvent>
+{
+    private readonly IEventAggregator _eventAggregator;
+    private static List<Queue> _queue = new List<Queue>();
+    private readonly IHistoryService _historyService;
+
+    public QueueService(IEventAggregator eventAggregator,
+                        IHistoryService historyService)
     {
-        List<Queue> GetQueue();
-        Queue Find(int id);
-        void Remove(int id);
+        _eventAggregator = eventAggregator;
+        _historyService = historyService;
     }
 
-    public class QueueService : IQueueService, IHandle<TrackedDownloadRefreshedEvent>
+    public List<Queue> GetQueue()
     {
-        private readonly IEventAggregator _eventAggregator;
-        private static List<Queue> _queue = new List<Queue>();
-        private readonly IHistoryService _historyService;
+        return _queue;
+    }
 
-        public QueueService(IEventAggregator eventAggregator,
-                            IHistoryService historyService)
-        {
-            _eventAggregator = eventAggregator;
-            _historyService = historyService;
-        }
+    public Queue Find(int id)
+    {
+        return _queue.SingleOrDefault(q => q.Id == id);
+    }
 
-        public List<Queue> GetQueue()
-        {
-            return _queue;
-        }
+    public void Remove(int id)
+    {
+        _queue.Remove(Find(id));
+    }
 
-        public Queue Find(int id)
+    private IEnumerable<Queue> MapQueue(TrackedDownload trackedDownload)
+    {
+        if (trackedDownload.RemoteAlbum?.Albums != null && trackedDownload.RemoteAlbum.Albums.Any())
         {
-            return _queue.SingleOrDefault(q => q.Id == id);
-        }
-
-        public void Remove(int id)
-        {
-            _queue.Remove(Find(id));
-        }
-
-        private IEnumerable<Queue> MapQueue(TrackedDownload trackedDownload)
-        {
-            if (trackedDownload.RemoteAlbum?.Albums != null && trackedDownload.RemoteAlbum.Albums.Any())
+            foreach (var album in trackedDownload.RemoteAlbum.Albums)
             {
-                foreach (var album in trackedDownload.RemoteAlbum.Albums)
-                {
-                    yield return MapQueueItem(trackedDownload, album);
-                }
-            }
-            else
-            {
-                yield return MapQueueItem(trackedDownload, null);
+                yield return MapQueueItem(trackedDownload, album);
             }
         }
-
-        private Queue MapQueueItem(TrackedDownload trackedDownload, Album album)
+        else
         {
-            bool downloadForced = false;
-            var history = _historyService.Find(trackedDownload.DownloadItem.DownloadId, EntityHistoryEventType.Grabbed).FirstOrDefault();
-            if (history != null && history.Data.ContainsKey("downloadForced"))
-            {
-                downloadForced = bool.Parse(history.Data["downloadForced"]);
-            }
+            yield return MapQueueItem(trackedDownload, null);
+        }
+    }
 
-            var queue = new Queue
-            {
-                Artist = trackedDownload.RemoteAlbum?.Artist,
-                Album = album,
-                Quality = trackedDownload.RemoteAlbum?.ParsedAlbumInfo.Quality ?? new QualityModel(Quality.Unknown),
-                Title = Parser.Parser.RemoveFileExtension(trackedDownload.DownloadItem.Title),
-                Size = trackedDownload.DownloadItem.TotalSize,
-                Sizeleft = trackedDownload.DownloadItem.RemainingSize,
-                Timeleft = trackedDownload.DownloadItem.RemainingTime,
-                Status = trackedDownload.DownloadItem.Status.ToString(),
-                TrackedDownloadStatus = trackedDownload.Status,
-                TrackedDownloadState = trackedDownload.State,
-                StatusMessages = trackedDownload.StatusMessages.ToList(),
-                ErrorMessage = trackedDownload.DownloadItem.Message,
-                RemoteAlbum = trackedDownload.RemoteAlbum,
-                DownloadId = trackedDownload.DownloadItem.DownloadId,
-                Protocol = trackedDownload.Protocol,
-                DownloadClient = trackedDownload.DownloadItem.DownloadClientInfo.Name,
-                Indexer = trackedDownload.Indexer,
-                OutputPath = trackedDownload.DownloadItem.OutputPath.ToString(),
-                DownloadForced = downloadForced
-            };
-
-            queue.Id = HashConverter.GetHashInt31($"trackedDownload-{trackedDownload.DownloadClient}-{trackedDownload.DownloadItem.DownloadId}-album{album?.Id ?? 0}");
-
-            if (queue.Timeleft.HasValue)
-            {
-                queue.EstimatedCompletionTime = DateTime.UtcNow.Add(queue.Timeleft.Value);
-            }
-
-            return queue;
+    private Queue MapQueueItem(TrackedDownload trackedDownload, Album album)
+    {
+        bool downloadForced = false;
+        var history = _historyService.Find(trackedDownload.DownloadItem.DownloadId, EntityHistoryEventType.Grabbed).FirstOrDefault();
+        if (history != null && history.Data.ContainsKey("downloadForced"))
+        {
+            downloadForced = bool.Parse(history.Data["downloadForced"]);
         }
 
-        public void Handle(TrackedDownloadRefreshedEvent message)
-        {
-            _queue = message.TrackedDownloads.OrderBy(c => c.DownloadItem.RemainingTime).SelectMany(MapQueue)
-                            .ToList();
+        var queue = new Queue
+                    {
+                        Artist = trackedDownload.RemoteAlbum?.Artist,
+                        Album = album,
+                        Quality = trackedDownload.RemoteAlbum?.ParsedAlbumInfo.Quality ?? new QualityModel(Quality.Unknown),
+                        Title = Parser.Parser.RemoveFileExtension(trackedDownload.DownloadItem.Title),
+                        Size = trackedDownload.DownloadItem.TotalSize,
+                        Sizeleft = trackedDownload.DownloadItem.RemainingSize,
+                        Timeleft = trackedDownload.DownloadItem.RemainingTime,
+                        Status = trackedDownload.DownloadItem.Status.ToString(),
+                        TrackedDownloadStatus = trackedDownload.Status,
+                        TrackedDownloadState = trackedDownload.State,
+                        StatusMessages = trackedDownload.StatusMessages.ToList(),
+                        ErrorMessage = trackedDownload.DownloadItem.Message,
+                        RemoteAlbum = trackedDownload.RemoteAlbum,
+                        DownloadId = trackedDownload.DownloadItem.DownloadId,
+                        Protocol = trackedDownload.Protocol,
+                        DownloadClient = trackedDownload.DownloadItem.DownloadClientInfo.Name,
+                        Indexer = trackedDownload.Indexer,
+                        OutputPath = trackedDownload.DownloadItem.OutputPath.ToString(),
+                        DownloadForced = downloadForced
+                    };
 
-            _eventAggregator.PublishEvent(new QueueUpdatedEvent());
+        queue.Id = HashConverter.GetHashInt31($"trackedDownload-{trackedDownload.DownloadClient}-{trackedDownload.DownloadItem.DownloadId}-album{album?.Id ?? 0}");
+
+        if (queue.Timeleft.HasValue)
+        {
+            queue.EstimatedCompletionTime = DateTime.UtcNow.Add(queue.Timeleft.Value);
         }
+
+        return queue;
+    }
+
+    public void Handle(TrackedDownloadRefreshedEvent message)
+    {
+        _queue = message.TrackedDownloads.OrderBy(c => c.DownloadItem.RemainingTime).SelectMany(MapQueue)
+                        .ToList();
+
+        _eventAggregator.PublishEvent(new QueueUpdatedEvent());
     }
 }

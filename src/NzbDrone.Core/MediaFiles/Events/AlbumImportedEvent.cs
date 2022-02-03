@@ -3,33 +3,32 @@ using NzbDrone.Common.Messaging;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Music;
 
-namespace NzbDrone.Core.MediaFiles.Events
+namespace NzbDrone.Core.MediaFiles.Events;
+
+public class AlbumImportedEvent : IEvent
 {
-    public class AlbumImportedEvent : IEvent
+    public Artist Artist { get; private set; }
+    public Album Album { get; private set; }
+    public AlbumRelease AlbumRelease { get; private set; }
+    public List<TrackFile> ImportedTracks { get; private set; }
+    public List<TrackFile> OldFiles { get; private set; }
+    public bool NewDownload { get; private set; }
+    public DownloadClientItemClientInfo DownloadClientInfo { get; set; }
+    public string DownloadId { get; private set; }
+
+    public AlbumImportedEvent(Artist artist, Album album, AlbumRelease release, List<TrackFile> importedTracks, List<TrackFile> oldFiles, bool newDownload, DownloadClientItem downloadClientItem)
     {
-        public Artist Artist { get; private set; }
-        public Album Album { get; private set; }
-        public AlbumRelease AlbumRelease { get; private set; }
-        public List<TrackFile> ImportedTracks { get; private set; }
-        public List<TrackFile> OldFiles { get; private set; }
-        public bool NewDownload { get; private set; }
-        public DownloadClientItemClientInfo DownloadClientInfo { get; set; }
-        public string DownloadId { get; private set; }
+        Artist = artist;
+        Album = album;
+        AlbumRelease = release;
+        ImportedTracks = importedTracks;
+        OldFiles = oldFiles;
+        NewDownload = newDownload;
 
-        public AlbumImportedEvent(Artist artist, Album album, AlbumRelease release, List<TrackFile> importedTracks, List<TrackFile> oldFiles, bool newDownload, DownloadClientItem downloadClientItem)
+        if (downloadClientItem != null)
         {
-            Artist = artist;
-            Album = album;
-            AlbumRelease = release;
-            ImportedTracks = importedTracks;
-            OldFiles = oldFiles;
-            NewDownload = newDownload;
-
-            if (downloadClientItem != null)
-            {
-                DownloadClientInfo = downloadClientItem.DownloadClientInfo;
-                DownloadId = downloadClientItem.DownloadId;
-            }
+            DownloadClientInfo = downloadClientItem.DownloadClientInfo;
+            DownloadId = downloadClientItem.DownloadId;
         }
     }
 }

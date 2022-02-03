@@ -10,40 +10,67 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.SignalR;
 
-namespace Lidarr.Api.V1.Tracks
+namespace Lidarr.Api.V1.Tracks;
+
+public abstract class TrackControllerWithSignalR : RestControllerWithSignalR<TrackResource, Track>,
+                                                   IHandle<TrackImportedEvent>,
+                                                   IHandle<TrackFileDeletedEvent>
 {
-    public abstract class TrackControllerWithSignalR : RestControllerWithSignalR<TrackResource, Track>,
-            IHandle<TrackImportedEvent>,
-            IHandle<TrackFileDeletedEvent>
+    protected readonly ITrackService _trackService;
+    protected readonly IArtistService _artistService;
+    protected readonly IUpgradableSpecification _upgradableSpecification;
+
+    protected TrackControllerWithSignalR(ITrackService trackService,
+                                         IArtistService artistService,
+                                         IUpgradableSpecification upgradableSpecification,
+                                         IBroadcastSignalRMessage signalRBroadcaster)
+        : base(signalRBroadcaster)
     {
-        protected readonly ITrackService _trackService;
-        protected readonly IArtistService _artistService;
-        protected readonly IUpgradableSpecification _upgradableSpecification;
+        _trackService = trackService;
+        _artistService = artistService;
+        _upgradableSpecification = upgradableSpecification;
+    }
 
-        protected TrackControllerWithSignalR(ITrackService trackService,
-                                           IArtistService artistService,
-                                           IUpgradableSpecification upgradableSpecification,
-                                           IBroadcastSignalRMessage signalRBroadcaster)
-            : base(signalRBroadcaster)
+    public override TrackResource GetResourceById(int id)
+    {
+        var track = _trackService.GetTrack(id);
+        var resource = MapToResource(track, true, true);
+        return resource;
+    }
+
+    protected TrackResource MapToResource(Track track, bool includeArtist, bool includeTrackFile)
+    {
+        var resource = track.ToResource();
+
+        if (includeArtist || includeTrackFile)
         {
-            _trackService = trackService;
-            _artistService = artistService;
-            _upgradableSpecification = upgradableSpecification;
-        }
+            var artist = track.Artist.Value;
 
-        public override TrackResource GetResourceById(int id)
-        {
-            var track = _trackService.GetTrack(id);
-            var resource = MapToResource(track, true, true);
-            return resource;
-        }
-
-        protected TrackResource MapToResource(Track track, bool includeArtist, bool includeTrackFile)
-        {
-            var resource = track.ToResource();
-
-            if (includeArtist || includeTrackFile)
+            if (includeArtist)
             {
+                resource.Artist = artist.ToResource();
+            }
+
+            if (includeTrackFile && track.TrackFileId != 0)
+            {
+                resource.TrackFile = track.TrackFile.Value.ToResource(artist, _upgradableSpecification);
+            }
+        }
+
+        return resource;
+    }
+
+    protected List<TrackResource> MapToResource(List<Track> tracks, bool includeArtist, bool includeTrackFile)
+    {
+        var result = tracks.ToResource();
+
+        if (includeArtist || includeTrackFile)
+        {
+            var artistDict = new Dictionary<int, NzbDrone.Core.Music.Artist>();
+            for (var i = 0; i < tracks.Count; i++)
+            {
+                var track = tracks[i];
+                var resource = result[i];
                 var artist = track.Artist.Value;
 
                 if (includeArtist)
@@ -51,61 +78,33 @@ namespace Lidarr.Api.V1.Tracks
                     resource.Artist = artist.ToResource();
                 }
 
-                if (includeTrackFile && track.TrackFileId != 0)
+                if (includeTrackFile && tracks[i].TrackFileId != 0)
                 {
-                    resource.TrackFile = track.TrackFile.Value.ToResource(artist, _upgradableSpecification);
+                    resource.TrackFile = tracks[i].TrackFile.Value.ToResource(artist, _upgradableSpecification);
                 }
             }
-
-            return resource;
         }
 
-        protected List<TrackResource> MapToResource(List<Track> tracks, bool includeArtist, bool includeTrackFile)
+        return result;
+    }
+
+    [NonAction]
+    public void Handle(TrackImportedEvent message)
+    {
+        foreach (var track in message.TrackInfo.Tracks)
         {
-            var result = tracks.ToResource();
-
-            if (includeArtist || includeTrackFile)
-            {
-                var artistDict = new Dictionary<int, NzbDrone.Core.Music.Artist>();
-                for (var i = 0; i < tracks.Count; i++)
-                {
-                    var track = tracks[i];
-                    var resource = result[i];
-                    var artist = track.Artist.Value;
-
-                    if (includeArtist)
-                    {
-                        resource.Artist = artist.ToResource();
-                    }
-
-                    if (includeTrackFile && tracks[i].TrackFileId != 0)
-                    {
-                        resource.TrackFile = tracks[i].TrackFile.Value.ToResource(artist, _upgradableSpecification);
-                    }
-                }
-            }
-
-            return result;
+            track.TrackFile = message.ImportedTrack;
+            BroadcastResourceChange(ModelAction.Updated, MapToResource(track, true, true));
         }
+    }
 
-        [NonAction]
-        public void Handle(TrackImportedEvent message)
+    [NonAction]
+    public void Handle(TrackFileDeletedEvent message)
+    {
+        foreach (var track in message.TrackFile.Tracks.Value)
         {
-            foreach (var track in message.TrackInfo.Tracks)
-            {
-                track.TrackFile = message.ImportedTrack;
-                BroadcastResourceChange(ModelAction.Updated, MapToResource(track, true, true));
-            }
-        }
-
-        [NonAction]
-        public void Handle(TrackFileDeletedEvent message)
-        {
-            foreach (var track in message.TrackFile.Tracks.Value)
-            {
-                track.TrackFile = message.TrackFile;
-                BroadcastResourceChange(ModelAction.Updated, MapToResource(track, true, true));
-            }
+            track.TrackFile = message.TrackFile;
+            BroadcastResourceChange(ModelAction.Updated, MapToResource(track, true, true));
         }
     }
 }

@@ -9,68 +9,67 @@ using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Extensions.Logging;
 
-namespace NzbDrone.Core.Datastore.Migration.Framework
+namespace NzbDrone.Core.Datastore.Migration.Framework;
+
+public interface IMigrationController
 {
-    public interface IMigrationController
+    void Migrate(string connectionString, MigrationContext migrationContext);
+}
+
+public class MigrationController : IMigrationController
+{
+    private readonly Logger _logger;
+    private readonly ILoggerProvider _migrationLoggerProvider;
+
+    public MigrationController(Logger logger,
+                               ILoggerProvider migrationLoggerProvider)
     {
-        void Migrate(string connectionString, MigrationContext migrationContext);
+        _logger = logger;
+        _migrationLoggerProvider = migrationLoggerProvider;
     }
 
-    public class MigrationController : IMigrationController
+    public void Migrate(string connectionString, MigrationContext migrationContext)
     {
-        private readonly Logger _logger;
-        private readonly ILoggerProvider _migrationLoggerProvider;
+        var sw = Stopwatch.StartNew();
 
-        public MigrationController(Logger logger,
-                                   ILoggerProvider migrationLoggerProvider)
+        _logger.Info("*** Migrating {0} ***", connectionString);
+
+        var serviceProvider = new ServiceCollection()
+                             .AddLogging(b => b.AddNLog())
+                             .AddFluentMigratorCore()
+                             .ConfigureRunner(
+                                              builder => builder
+                                                        .AddNzbDroneSQLite()
+                                                        .WithGlobalConnectionString(connectionString)
+                                                        .WithMigrationsIn(Assembly.GetExecutingAssembly()))
+                             .Configure<TypeFilterOptions>(opt => opt.Namespace = "NzbDrone.Core.Datastore.Migration")
+                             .Configure<ProcessorOptions>(opt =>
+                                                          {
+                                                              opt.PreviewOnly = false;
+                                                              opt.Timeout = TimeSpan.FromSeconds(60);
+                                                          })
+                             .BuildServiceProvider();
+
+        using (var scope = serviceProvider.CreateScope())
         {
-            _logger = logger;
-            _migrationLoggerProvider = migrationLoggerProvider;
-        }
+            var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
 
-        public void Migrate(string connectionString, MigrationContext migrationContext)
-        {
-            var sw = Stopwatch.StartNew();
+            MigrationContext.Current = migrationContext;
 
-            _logger.Info("*** Migrating {0} ***", connectionString);
-
-            var serviceProvider = new ServiceCollection()
-                .AddLogging(b => b.AddNLog())
-                .AddFluentMigratorCore()
-                .ConfigureRunner(
-                    builder => builder
-                    .AddNzbDroneSQLite()
-                    .WithGlobalConnectionString(connectionString)
-                    .WithMigrationsIn(Assembly.GetExecutingAssembly()))
-                .Configure<TypeFilterOptions>(opt => opt.Namespace = "NzbDrone.Core.Datastore.Migration")
-                .Configure<ProcessorOptions>(opt =>
-                {
-                    opt.PreviewOnly = false;
-                    opt.Timeout = TimeSpan.FromSeconds(60);
-                })
-                .BuildServiceProvider();
-
-            using (var scope = serviceProvider.CreateScope())
+            if (migrationContext.DesiredVersion.HasValue)
             {
-                var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
-
-                MigrationContext.Current = migrationContext;
-
-                if (migrationContext.DesiredVersion.HasValue)
-                {
-                    runner.MigrateUp(migrationContext.DesiredVersion.Value);
-                }
-                else
-                {
-                    runner.MigrateUp();
-                }
-
-                MigrationContext.Current = null;
+                runner.MigrateUp(migrationContext.DesiredVersion.Value);
+            }
+            else
+            {
+                runner.MigrateUp();
             }
 
-            sw.Stop();
-
-            _logger.Debug("Took: {0}", sw.Elapsed);
+            MigrationContext.Current = null;
         }
+
+        sw.Stop();
+
+        _logger.Debug("Took: {0}", sw.Elapsed);
     }
 }

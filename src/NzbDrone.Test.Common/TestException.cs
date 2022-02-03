@@ -1,8 +1,7 @@
 using System;
 
-namespace NzbDrone.Test.Common
+namespace NzbDrone.Test.Common;
+
+public class TestException : Exception
 {
-    public class TestException : Exception
-    {
-    }
 }

@@ -5,32 +5,31 @@ using Lidarr.Http.REST;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.Languages;
 
-namespace Lidarr.Api.V1.Languages
+namespace Lidarr.Api.V1.Languages;
+
+[V1ApiController]
+public class LanguageController : RestController<LanguageResource>
 {
-    [V1ApiController]
-    public class LanguageController : RestController<LanguageResource>
+    public override LanguageResource GetResourceById(int id)
     {
-        public override LanguageResource GetResourceById(int id)
-        {
-            var language = (Language)id;
+        var language = (Language)id;
 
-            return new LanguageResource
-            {
-                Id = (int)language,
-                Name = language.ToString()
-            };
-        }
+        return new LanguageResource
+               {
+                   Id = (int)language,
+                   Name = language.ToString()
+               };
+    }
 
-        [HttpGet]
-        public List<LanguageResource> GetAll()
-        {
-            return Language.All.Select(l => new LanguageResource
-            {
-                Id = (int)l,
-                Name = l.ToString()
-            })
-                              .OrderBy(l => l.Name)
-                              .ToList();
-        }
+    [HttpGet]
+    public List<LanguageResource> GetAll()
+    {
+        return Language.All.Select(l => new LanguageResource
+                                        {
+                                            Id = (int)l,
+                                            Name = l.ToString()
+                                        })
+                       .OrderBy(l => l.Name)
+                       .ToList();
     }
 }

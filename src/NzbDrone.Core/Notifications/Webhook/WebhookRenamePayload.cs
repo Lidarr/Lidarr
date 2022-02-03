@@ -1,7 +1,6 @@
-namespace NzbDrone.Core.Notifications.Webhook
+namespace NzbDrone.Core.Notifications.Webhook;
+
+public class WebhookRenamePayload : WebhookPayload
 {
-    public class WebhookRenamePayload : WebhookPayload
-    {
-        public WebhookArtist Artist { get; set; }
-    }
+    public WebhookArtist Artist { get; set; }
 }

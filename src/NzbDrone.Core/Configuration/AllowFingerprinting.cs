@@ -1,9 +1,8 @@
-namespace NzbDrone.Core.Configuration
+namespace NzbDrone.Core.Configuration;
+
+public enum AllowFingerprinting
 {
-    public enum AllowFingerprinting
-    {
-        Never,
-        NewFiles,
-        AllFiles
-    }
+    Never,
+    NewFiles,
+    AllFiles
 }

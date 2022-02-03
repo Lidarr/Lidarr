@@ -4,85 +4,84 @@ using System.Linq;
 using NLog;
 using NzbDrone.Common.Processes;
 
-namespace NzbDrone.Host
+namespace NzbDrone.Host;
+
+public interface ISingleInstancePolicy
 {
-    public interface ISingleInstancePolicy
+    void PreventStartIfAlreadyRunning();
+    void KillAllOtherInstance();
+    void WarnIfAlreadyRunning();
+}
+
+public class SingleInstancePolicy : ISingleInstancePolicy
+{
+    private readonly IProcessProvider _processProvider;
+    private readonly IBrowserService _browserService;
+    private readonly Logger _logger;
+
+    public SingleInstancePolicy(IProcessProvider processProvider,
+                                IBrowserService browserService,
+                                Logger logger)
     {
-        void PreventStartIfAlreadyRunning();
-        void KillAllOtherInstance();
-        void WarnIfAlreadyRunning();
+        _processProvider = processProvider;
+        _browserService = browserService;
+        _logger = logger;
     }
 
-    public class SingleInstancePolicy : ISingleInstancePolicy
+    public void PreventStartIfAlreadyRunning()
     {
-        private readonly IProcessProvider _processProvider;
-        private readonly IBrowserService _browserService;
-        private readonly Logger _logger;
-
-        public SingleInstancePolicy(IProcessProvider processProvider,
-                                    IBrowserService browserService,
-                                    Logger logger)
+        if (IsAlreadyRunning())
         {
-            _processProvider = processProvider;
-            _browserService = browserService;
-            _logger = logger;
+            _logger.Warn("Another instance of Lidarr is already running.");
+            _browserService.LaunchWebUI();
+            throw new TerminateApplicationException("Another instance is already running");
         }
+    }
 
-        public void PreventStartIfAlreadyRunning()
+    public void KillAllOtherInstance()
+    {
+        foreach (var processId in GetOtherNzbDroneProcessIds())
         {
-            if (IsAlreadyRunning())
-            {
-                _logger.Warn("Another instance of Lidarr is already running.");
-                _browserService.LaunchWebUI();
-                throw new TerminateApplicationException("Another instance is already running");
-            }
+            _processProvider.Kill(processId);
         }
+    }
 
-        public void KillAllOtherInstance()
+    public void WarnIfAlreadyRunning()
+    {
+        if (IsAlreadyRunning())
         {
-            foreach (var processId in GetOtherNzbDroneProcessIds())
-            {
-                _processProvider.Kill(processId);
-            }
+            _logger.Debug("Another instance of Lidarr is already running.");
         }
+    }
 
-        public void WarnIfAlreadyRunning()
+    private bool IsAlreadyRunning()
+    {
+        return GetOtherNzbDroneProcessIds().Any();
+    }
+
+    private List<int> GetOtherNzbDroneProcessIds()
+    {
+        try
         {
-            if (IsAlreadyRunning())
+            var currentId = _processProvider.GetCurrentProcess().Id;
+
+            var otherProcesses = _processProvider.FindProcessByName(ProcessProvider.LIDARR_CONSOLE_PROCESS_NAME)
+                                                 .Union(_processProvider.FindProcessByName(ProcessProvider.LIDARR_PROCESS_NAME))
+                                                 .Select(c => c.Id)
+                                                 .Except(new[] { currentId })
+                                                 .ToList();
+
+            if (otherProcesses.Any())
             {
-                _logger.Debug("Another instance of Lidarr is already running.");
+                _logger.Info("{0} instance(s) of Lidarr are running", otherProcesses.Count);
             }
+
+            return otherProcesses;
         }
-
-        private bool IsAlreadyRunning()
+        catch (Exception ex)
         {
-            return GetOtherNzbDroneProcessIds().Any();
-        }
-
-        private List<int> GetOtherNzbDroneProcessIds()
-        {
-            try
-            {
-                var currentId = _processProvider.GetCurrentProcess().Id;
-
-                var otherProcesses = _processProvider.FindProcessByName(ProcessProvider.LIDARR_CONSOLE_PROCESS_NAME)
-                                                     .Union(_processProvider.FindProcessByName(ProcessProvider.LIDARR_PROCESS_NAME))
-                                                     .Select(c => c.Id)
-                                                     .Except(new[] { currentId })
-                                                     .ToList();
-
-                if (otherProcesses.Any())
-                {
-                    _logger.Info("{0} instance(s) of Lidarr are running", otherProcesses.Count);
-                }
-
-                return otherProcesses;
-            }
-            catch (Exception ex)
-            {
-                _logger.Warn(ex, "Failed to check for multiple instances of Lidarr.");
-                return new List<int>();
-            }
+            _logger.Warn(ex, "Failed to check for multiple instances of Lidarr.");
+            return new List<int>();
         }
     }
 }

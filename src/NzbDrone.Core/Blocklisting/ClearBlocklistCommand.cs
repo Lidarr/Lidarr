@@ -1,9 +1,8 @@
 ﻿using NzbDrone.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Blocklisting
+namespace NzbDrone.Core.Blocklisting;
+
+public class ClearBlocklistCommand : Command
 {
-    public class ClearBlocklistCommand : Command
-    {
-        public override bool SendUpdatesToClient => true;
-    }
+    public override bool SendUpdatesToClient => true;
 }

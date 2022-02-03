@@ -1,9 +1,8 @@
-namespace NzbDrone.Common.EnvironmentInfo
+namespace NzbDrone.Common.EnvironmentInfo;
+
+public enum RuntimeMode
 {
-    public enum RuntimeMode
-    {
-        Console,
-        Service,
-        Tray
-    }
+    Console,
+    Service,
+    Tray
 }

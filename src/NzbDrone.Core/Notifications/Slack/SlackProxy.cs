@@ -3,43 +3,42 @@ using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Notifications.Slack.Payloads;
 
-namespace NzbDrone.Core.Notifications.Slack
+namespace NzbDrone.Core.Notifications.Slack;
+
+public interface ISlackProxy
 {
-    public interface ISlackProxy
+    void SendPayload(SlackPayload payload, SlackSettings settings);
+}
+
+public class SlackProxy : ISlackProxy
+{
+    private readonly IHttpClient _httpClient;
+    private readonly Logger _logger;
+
+    public SlackProxy(IHttpClient httpClient, Logger logger)
     {
-        void SendPayload(SlackPayload payload, SlackSettings settings);
+        _httpClient = httpClient;
+        _logger = logger;
     }
 
-    public class SlackProxy : ISlackProxy
+    public void SendPayload(SlackPayload payload, SlackSettings settings)
     {
-        private readonly IHttpClient _httpClient;
-        private readonly Logger _logger;
-
-        public SlackProxy(IHttpClient httpClient, Logger logger)
+        try
         {
-            _httpClient = httpClient;
-            _logger = logger;
+            var request = new HttpRequestBuilder(settings.WebHookUrl)
+                         .Accept(HttpAccept.Json)
+                         .Build();
+
+            request.Method = HttpMethod.POST;
+            request.Headers.ContentType = "application/json";
+            request.SetContent(payload.ToJson());
+
+            _httpClient.Execute(request);
         }
-
-        public void SendPayload(SlackPayload payload, SlackSettings settings)
+        catch (HttpException ex)
         {
-            try
-            {
-                var request = new HttpRequestBuilder(settings.WebHookUrl)
-                    .Accept(HttpAccept.Json)
-                    .Build();
-
-                request.Method = HttpMethod.POST;
-                request.Headers.ContentType = "application/json";
-                request.SetContent(payload.ToJson());
-
-                _httpClient.Execute(request);
-            }
-            catch (HttpException ex)
-            {
-                _logger.Error(ex, "Unable to post payload {0}", payload);
-                throw new SlackExeption("Unable to post payload", ex);
-            }
+            _logger.Error(ex, "Unable to post payload {0}", payload);
+            throw new SlackExeption("Unable to post payload", ex);
         }
     }
 }

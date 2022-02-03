@@ -4,82 +4,81 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
-namespace NzbDrone.Core.Indexers.Rarbg
+namespace NzbDrone.Core.Indexers.Rarbg;
+
+public class RarbgRequestGenerator : IIndexerRequestGenerator
 {
-    public class RarbgRequestGenerator : IIndexerRequestGenerator
+    private readonly IRarbgTokenProvider _tokenProvider;
+
+    public RarbgSettings Settings { get; set; }
+
+    public RarbgRequestGenerator(IRarbgTokenProvider tokenProvider)
     {
-        private readonly IRarbgTokenProvider _tokenProvider;
+        _tokenProvider = tokenProvider;
+    }
 
-        public RarbgSettings Settings { get; set; }
+    public virtual IndexerPageableRequestChain GetRecentRequests()
+    {
+        var pageableRequests = new IndexerPageableRequestChain();
 
-        public RarbgRequestGenerator(IRarbgTokenProvider tokenProvider)
+        pageableRequests.Add(GetPagedRequests("list", null, null));
+
+        return pageableRequests;
+    }
+
+    public virtual IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
+    {
+        var pageableRequests = new IndexerPageableRequestChain();
+
+        pageableRequests.Add(GetPagedRequests("search", null, "{0}+{1}", searchCriteria.ArtistQuery, searchCriteria.AlbumQuery));
+
+        return pageableRequests;
+    }
+
+    public virtual IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
+    {
+        var pageableRequests = new IndexerPageableRequestChain();
+
+        pageableRequests.Add(GetPagedRequests("search", null, "{0}", searchCriteria.ArtistQuery));
+
+        return pageableRequests;
+    }
+
+    private IEnumerable<IndexerRequest> GetPagedRequests(string mode, int? tvdbId, string query, params object[] args)
+    {
+        var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl)
+                            .Resource("/pubapi_v2.php")
+                            .Accept(HttpAccept.Json);
+
+        if (Settings.CaptchaToken.IsNotNullOrWhiteSpace())
         {
-            _tokenProvider = tokenProvider;
+            requestBuilder.UseSimplifiedUserAgent = true;
+            requestBuilder.SetCookie("cf_clearance", Settings.CaptchaToken);
         }
 
-        public virtual IndexerPageableRequestChain GetRecentRequests()
+        requestBuilder.AddQueryParam("mode", mode);
+
+        if (tvdbId.HasValue)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests("list", null, null));
-
-            return pageableRequests;
+            requestBuilder.AddQueryParam("search_tvdb", tvdbId.Value);
         }
 
-        public virtual IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
+        if (query.IsNotNullOrWhiteSpace())
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests("search", null, "{0}+{1}", searchCriteria.ArtistQuery, searchCriteria.AlbumQuery));
-
-            return pageableRequests;
+            requestBuilder.AddQueryParam("search_string", string.Format(query, args));
         }
 
-        public virtual IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
+        if (!Settings.RankedOnly)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests("search", null, "{0}", searchCriteria.ArtistQuery));
-
-            return pageableRequests;
+            requestBuilder.AddQueryParam("ranked", "0");
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string mode, int? tvdbId, string query, params object[] args)
-        {
-            var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl)
-                .Resource("/pubapi_v2.php")
-                .Accept(HttpAccept.Json);
+        requestBuilder.AddQueryParam("category", "1;23;24;25;26");
+        requestBuilder.AddQueryParam("limit", "100");
+        requestBuilder.AddQueryParam("token", _tokenProvider.GetToken(Settings));
+        requestBuilder.AddQueryParam("format", "json_extended");
+        requestBuilder.AddQueryParam("app_id", BuildInfo.AppName);
 
-            if (Settings.CaptchaToken.IsNotNullOrWhiteSpace())
-            {
-                requestBuilder.UseSimplifiedUserAgent = true;
-                requestBuilder.SetCookie("cf_clearance", Settings.CaptchaToken);
-            }
-
-            requestBuilder.AddQueryParam("mode", mode);
-
-            if (tvdbId.HasValue)
-            {
-                requestBuilder.AddQueryParam("search_tvdb", tvdbId.Value);
-            }
-
-            if (query.IsNotNullOrWhiteSpace())
-            {
-                requestBuilder.AddQueryParam("search_string", string.Format(query, args));
-            }
-
-            if (!Settings.RankedOnly)
-            {
-                requestBuilder.AddQueryParam("ranked", "0");
-            }
-
-            requestBuilder.AddQueryParam("category", "1;23;24;25;26");
-            requestBuilder.AddQueryParam("limit", "100");
-            requestBuilder.AddQueryParam("token", _tokenProvider.GetToken(Settings));
-            requestBuilder.AddQueryParam("format", "json_extended");
-            requestBuilder.AddQueryParam("app_id", BuildInfo.AppName);
-
-            yield return new IndexerRequest(requestBuilder.Build());
-        }
+        yield return new IndexerRequest(requestBuilder.Build());
     }
 }

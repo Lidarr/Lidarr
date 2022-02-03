@@ -14,183 +14,182 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.Extras
+namespace NzbDrone.Core.Extras;
+
+public interface IExtraService
 {
-    public interface IExtraService
+    void ImportTrack(LocalTrack localTrack, TrackFile trackFile, bool isReadOnly);
+}
+
+public class ExtraService : IExtraService,
+                            IHandle<MediaCoversUpdatedEvent>,
+                            IHandle<TrackFolderCreatedEvent>,
+                            IHandle<ArtistScannedEvent>,
+                            IHandle<ArtistRenamedEvent>
+{
+    private readonly IMediaFileService _mediaFileService;
+    private readonly IAlbumService _albumService;
+    private readonly ITrackService _trackService;
+    private readonly IDiskProvider _diskProvider;
+    private readonly IConfigService _configService;
+    private readonly List<IManageExtraFiles> _extraFileManagers;
+    private readonly Logger _logger;
+
+    public ExtraService(IMediaFileService mediaFileService,
+                        IAlbumService albumService,
+                        ITrackService trackService,
+                        IDiskProvider diskProvider,
+                        IConfigService configService,
+                        IEnumerable<IManageExtraFiles> extraFileManagers,
+                        Logger logger)
     {
-        void ImportTrack(LocalTrack localTrack, TrackFile trackFile, bool isReadOnly);
+        _mediaFileService = mediaFileService;
+        _albumService = albumService;
+        _trackService = trackService;
+        _diskProvider = diskProvider;
+        _configService = configService;
+        _extraFileManagers = extraFileManagers.OrderBy(e => e.Order).ToList();
+        _logger = logger;
     }
 
-    public class ExtraService : IExtraService,
-                                IHandle<MediaCoversUpdatedEvent>,
-                                IHandle<TrackFolderCreatedEvent>,
-                                IHandle<ArtistScannedEvent>,
-                                IHandle<ArtistRenamedEvent>
+    public void ImportTrack(LocalTrack localTrack, TrackFile trackFile, bool isReadOnly)
     {
-        private readonly IMediaFileService _mediaFileService;
-        private readonly IAlbumService _albumService;
-        private readonly ITrackService _trackService;
-        private readonly IDiskProvider _diskProvider;
-        private readonly IConfigService _configService;
-        private readonly List<IManageExtraFiles> _extraFileManagers;
-        private readonly Logger _logger;
+        ImportExtraFiles(localTrack, trackFile, isReadOnly);
 
-        public ExtraService(IMediaFileService mediaFileService,
-                            IAlbumService albumService,
-                            ITrackService trackService,
-                            IDiskProvider diskProvider,
-                            IConfigService configService,
-                            IEnumerable<IManageExtraFiles> extraFileManagers,
-                            Logger logger)
+        CreateAfterTrackImport(localTrack.Artist, trackFile);
+    }
+
+    public void ImportExtraFiles(LocalTrack localTrack, TrackFile trackFile, bool isReadOnly)
+    {
+        if (!_configService.ImportExtraFiles)
         {
-            _mediaFileService = mediaFileService;
-            _albumService = albumService;
-            _trackService = trackService;
-            _diskProvider = diskProvider;
-            _configService = configService;
-            _extraFileManagers = extraFileManagers.OrderBy(e => e.Order).ToList();
-            _logger = logger;
+            return;
         }
 
-        public void ImportTrack(LocalTrack localTrack, TrackFile trackFile, bool isReadOnly)
+        var sourcePath = localTrack.Path;
+        var sourceFolder = _diskProvider.GetParentFolder(sourcePath);
+        var sourceFileName = Path.GetFileNameWithoutExtension(sourcePath);
+        var files = _diskProvider.GetFiles(sourceFolder, SearchOption.TopDirectoryOnly);
+
+        var wantedExtensions = _configService.ExtraFileExtensions.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                             .Select(e => e.Trim(' ', '.'))
+                                             .ToList();
+
+        var matchingFilenames = files.Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(sourceFileName, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        var filteredFilenames = new List<string>();
+        var hasNfo = false;
+
+        foreach (var matchingFilename in matchingFilenames)
         {
-            ImportExtraFiles(localTrack, trackFile, isReadOnly);
-
-            CreateAfterTrackImport(localTrack.Artist, trackFile);
-        }
-
-        public void ImportExtraFiles(LocalTrack localTrack, TrackFile trackFile, bool isReadOnly)
-        {
-            if (!_configService.ImportExtraFiles)
+            // Filter out duplicate NFO files
+            if (matchingFilename.EndsWith(".nfo", StringComparison.InvariantCultureIgnoreCase))
             {
-                return;
-            }
-
-            var sourcePath = localTrack.Path;
-            var sourceFolder = _diskProvider.GetParentFolder(sourcePath);
-            var sourceFileName = Path.GetFileNameWithoutExtension(sourcePath);
-            var files = _diskProvider.GetFiles(sourceFolder, SearchOption.TopDirectoryOnly);
-
-            var wantedExtensions = _configService.ExtraFileExtensions.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                                                     .Select(e => e.Trim(' ', '.'))
-                                                                     .ToList();
-
-            var matchingFilenames = files.Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(sourceFileName, StringComparison.InvariantCultureIgnoreCase)).ToList();
-            var filteredFilenames = new List<string>();
-            var hasNfo = false;
-
-            foreach (var matchingFilename in matchingFilenames)
-            {
-                // Filter out duplicate NFO files
-                if (matchingFilename.EndsWith(".nfo", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    if (hasNfo)
-                    {
-                        continue;
-                    }
-
-                    hasNfo = true;
-                }
-
-                filteredFilenames.Add(matchingFilename);
-            }
-
-            foreach (var matchingFilename in filteredFilenames)
-            {
-                var matchingExtension = wantedExtensions.FirstOrDefault(e => matchingFilename.EndsWith(e));
-
-                if (matchingExtension == null)
+                if (hasNfo)
                 {
                     continue;
                 }
 
-                try
-                {
-                    foreach (var extraFileManager in _extraFileManagers)
-                    {
-                        var extension = Path.GetExtension(matchingFilename);
-                        var extraFile = extraFileManager.Import(localTrack.Artist, trackFile, matchingFilename, extension, isReadOnly);
-
-                        if (extraFile != null)
-                        {
-                            break;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.Warn(ex, "Failed to import extra file: {0}", matchingFilename);
-                }
+                hasNfo = true;
             }
+
+            filteredFilenames.Add(matchingFilename);
         }
 
-        private void CreateAfterTrackImport(Artist artist, TrackFile trackFile)
+        foreach (var matchingFilename in filteredFilenames)
         {
-            foreach (var extraFileManager in _extraFileManagers)
+            var matchingExtension = wantedExtensions.FirstOrDefault(e => matchingFilename.EndsWith(e));
+
+            if (matchingExtension == null)
             {
-                extraFileManager.CreateAfterTrackImport(artist, trackFile);
+                continue;
             }
-        }
 
-        public void Handle(MediaCoversUpdatedEvent message)
-        {
-            if (message.Updated)
+            try
             {
-                var artist = message.Artist ?? message.Album.Artist;
-
                 foreach (var extraFileManager in _extraFileManagers)
                 {
-                    extraFileManager.CreateAfterMediaCoverUpdate(artist);
+                    var extension = Path.GetExtension(matchingFilename);
+                    var extraFile = extraFileManager.Import(localTrack.Artist, trackFile, matchingFilename, extension, isReadOnly);
+
+                    if (extraFile != null)
+                    {
+                        break;
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Failed to import extra file: {0}", matchingFilename);
+            }
         }
+    }
 
-        public void Handle(ArtistScannedEvent message)
+    private void CreateAfterTrackImport(Artist artist, TrackFile trackFile)
+    {
+        foreach (var extraFileManager in _extraFileManagers)
         {
-            var artist = message.Artist;
+            extraFileManager.CreateAfterTrackImport(artist, trackFile);
+        }
+    }
 
-            var trackFiles = GetTrackFiles(artist.Id);
+    public void Handle(MediaCoversUpdatedEvent message)
+    {
+        if (message.Updated)
+        {
+            var artist = message.Artist ?? message.Album.Artist;
 
             foreach (var extraFileManager in _extraFileManagers)
             {
-                extraFileManager.CreateAfterArtistScan(artist, trackFiles);
+                extraFileManager.CreateAfterMediaCoverUpdate(artist);
             }
         }
+    }
 
-        public void Handle(TrackFolderCreatedEvent message)
+    public void Handle(ArtistScannedEvent message)
+    {
+        var artist = message.Artist;
+
+        var trackFiles = GetTrackFiles(artist.Id);
+
+        foreach (var extraFileManager in _extraFileManagers)
         {
-            var artist = message.Artist;
-            var album = _albumService.GetAlbum(message.TrackFile.AlbumId);
-
-            foreach (var extraFileManager in _extraFileManagers)
-            {
-                extraFileManager.CreateAfterTrackFolder(artist, album, message.ArtistFolder, message.AlbumFolder);
-            }
+            extraFileManager.CreateAfterArtistScan(artist, trackFiles);
         }
+    }
 
-        public void Handle(ArtistRenamedEvent message)
+    public void Handle(TrackFolderCreatedEvent message)
+    {
+        var artist = message.Artist;
+        var album = _albumService.GetAlbum(message.TrackFile.AlbumId);
+
+        foreach (var extraFileManager in _extraFileManagers)
         {
-            var artist = message.Artist;
-            var trackFiles = GetTrackFiles(artist.Id);
-
-            foreach (var extraFileManager in _extraFileManagers)
-            {
-                extraFileManager.MoveFilesAfterRename(artist, trackFiles);
-            }
+            extraFileManager.CreateAfterTrackFolder(artist, album, message.ArtistFolder, message.AlbumFolder);
         }
+    }
 
-        private List<TrackFile> GetTrackFiles(int artistId)
+    public void Handle(ArtistRenamedEvent message)
+    {
+        var artist = message.Artist;
+        var trackFiles = GetTrackFiles(artist.Id);
+
+        foreach (var extraFileManager in _extraFileManagers)
         {
-            var trackFiles = _mediaFileService.GetFilesByArtist(artistId);
-            var tracks = _trackService.GetTracksByArtist(artistId);
-
-            foreach (var trackFile in trackFiles)
-            {
-                var localTrackFile = trackFile;
-                trackFile.Tracks = tracks.Where(e => e.TrackFileId == localTrackFile.Id).ToList();
-            }
-
-            return trackFiles;
+            extraFileManager.MoveFilesAfterRename(artist, trackFiles);
         }
+    }
+
+    private List<TrackFile> GetTrackFiles(int artistId)
+    {
+        var trackFiles = _mediaFileService.GetFilesByArtist(artistId);
+        var tracks = _trackService.GetTracksByArtist(artistId);
+
+        foreach (var trackFile in trackFiles)
+        {
+            var localTrackFile = trackFile;
+            trackFile.Tracks = tracks.Where(e => e.TrackFileId == localTrackFile.Id).ToList();
+        }
+
+        return trackFiles;
     }
 }

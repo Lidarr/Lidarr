@@ -10,157 +10,156 @@ using NzbDrone.Core.Test.Framework;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.ThingiProvider.Status;
 
-namespace NzbDrone.Core.Test.ThingiProviderTests
+namespace NzbDrone.Core.Test.ThingiProviderTests;
+
+public class MockProviderStatus : ProviderStatusBase
 {
-    public class MockProviderStatus : ProviderStatusBase
+}
+
+public interface IMockProvider : IProvider
+{
+}
+
+public interface IMockProviderStatusRepository : IProviderStatusRepository<MockProviderStatus>
+{
+}
+
+public class MockProviderStatusService : ProviderStatusServiceBase<IMockProvider, MockProviderStatus>
+{
+    public MockProviderStatusService(IMockProviderStatusRepository providerStatusRepository, IEventAggregator eventAggregator, IRuntimeInfo runtimeInfo, Logger logger)
+        : base(providerStatusRepository, eventAggregator, runtimeInfo, logger)
     {
     }
+}
 
-    public interface IMockProvider : IProvider
+public class ProviderStatusServiceFixture : CoreTest<MockProviderStatusService>
+{
+    private DateTime _epoch;
+
+    [SetUp]
+    public void SetUp()
     {
+        _epoch = DateTime.UtcNow;
+
+        Mocker.GetMock<IRuntimeInfo>()
+              .SetupGet(v => v.StartTime)
+              .Returns(_epoch - TimeSpan.FromHours(1));
     }
 
-    public interface IMockProviderStatusRepository : IProviderStatusRepository<MockProviderStatus>
+    private void GivenRecentStartup()
     {
+        Mocker.GetMock<IRuntimeInfo>()
+              .SetupGet(v => v.StartTime)
+              .Returns(_epoch - TimeSpan.FromMinutes(12));
     }
 
-    public class MockProviderStatusService : ProviderStatusServiceBase<IMockProvider, MockProviderStatus>
+    private MockProviderStatus WithStatus(MockProviderStatus status)
     {
-        public MockProviderStatusService(IMockProviderStatusRepository providerStatusRepository, IEventAggregator eventAggregator, IRuntimeInfo runtimeInfo, Logger logger)
-            : base(providerStatusRepository, eventAggregator, runtimeInfo, logger)
-        {
-        }
+        Mocker.GetMock<IMockProviderStatusRepository>()
+              .Setup(v => v.FindByProviderId(1))
+              .Returns(status);
+
+        Mocker.GetMock<IMockProviderStatusRepository>()
+              .Setup(v => v.All())
+              .Returns(new[] { status });
+
+        return status;
     }
 
-    public class ProviderStatusServiceFixture : CoreTest<MockProviderStatusService>
+    private void VerifyUpdate()
     {
-        private DateTime _epoch;
+        Mocker.GetMock<IMockProviderStatusRepository>()
+              .Verify(v => v.Upsert(It.IsAny<MockProviderStatus>()), Times.Once());
+    }
 
-        [SetUp]
-        public void SetUp()
-        {
-            _epoch = DateTime.UtcNow;
+    private void VerifyNoUpdate()
+    {
+        Mocker.GetMock<IMockProviderStatusRepository>()
+              .Verify(v => v.Upsert(It.IsAny<MockProviderStatus>()), Times.Never());
+    }
 
-            Mocker.GetMock<IRuntimeInfo>()
-                .SetupGet(v => v.StartTime)
-                .Returns(_epoch - TimeSpan.FromHours(1));
-        }
+    [Test]
+    public void should_start_backoff_on_first_failure()
+    {
+        WithStatus(new MockProviderStatus());
 
-        private void GivenRecentStartup()
-        {
-            Mocker.GetMock<IRuntimeInfo>()
-                .SetupGet(v => v.StartTime)
-                .Returns(_epoch - TimeSpan.FromMinutes(12));
-        }
+        Subject.RecordFailure(1);
 
-        private MockProviderStatus WithStatus(MockProviderStatus status)
-        {
-            Mocker.GetMock<IMockProviderStatusRepository>()
-                .Setup(v => v.FindByProviderId(1))
-                .Returns(status);
+        VerifyUpdate();
 
-            Mocker.GetMock<IMockProviderStatusRepository>()
-                .Setup(v => v.All())
-                .Returns(new[] { status });
+        var status = Subject.GetBlockedProviders().FirstOrDefault();
+        status.Should().NotBeNull();
+        status.DisabledTill.Should().HaveValue();
+        status.DisabledTill.Value.Should().BeCloseTo(_epoch + TimeSpan.FromMinutes(5), 500);
+    }
 
-            return status;
-        }
+    [Test]
+    public void should_cancel_backoff_on_success()
+    {
+        WithStatus(new MockProviderStatus { EscalationLevel = 2 });
 
-        private void VerifyUpdate()
-        {
-            Mocker.GetMock<IMockProviderStatusRepository>()
-                .Verify(v => v.Upsert(It.IsAny<MockProviderStatus>()), Times.Once());
-        }
+        Subject.RecordSuccess(1);
 
-        private void VerifyNoUpdate()
-        {
-            Mocker.GetMock<IMockProviderStatusRepository>()
-                .Verify(v => v.Upsert(It.IsAny<MockProviderStatus>()), Times.Never());
-        }
+        VerifyUpdate();
 
-        [Test]
-        public void should_start_backoff_on_first_failure()
-        {
-            WithStatus(new MockProviderStatus());
+        var status = Subject.GetBlockedProviders().FirstOrDefault();
+        status.Should().BeNull();
+    }
 
-            Subject.RecordFailure(1);
+    [Test]
+    public void should_not_store_update_if_already_okay()
+    {
+        WithStatus(new MockProviderStatus { EscalationLevel = 0 });
 
-            VerifyUpdate();
+        Subject.RecordSuccess(1);
 
-            var status = Subject.GetBlockedProviders().FirstOrDefault();
-            status.Should().NotBeNull();
-            status.DisabledTill.Should().HaveValue();
-            status.DisabledTill.Value.Should().BeCloseTo(_epoch + TimeSpan.FromMinutes(5), 500);
-        }
+        VerifyNoUpdate();
+    }
 
-        [Test]
-        public void should_cancel_backoff_on_success()
-        {
-            WithStatus(new MockProviderStatus { EscalationLevel = 2 });
+    [Test]
+    public void should_preserve_escalation_on_intermittent_success()
+    {
+        WithStatus(new MockProviderStatus
+                   {
+                       InitialFailure = _epoch - TimeSpan.FromSeconds(20),
+                       MostRecentFailure = _epoch - TimeSpan.FromSeconds(4),
+                       EscalationLevel = 3
+                   });
 
-            Subject.RecordSuccess(1);
+        Subject.RecordSuccess(1);
+        Subject.RecordSuccess(1);
+        Subject.RecordFailure(1);
 
-            VerifyUpdate();
+        var status = Subject.GetBlockedProviders().FirstOrDefault();
+        status.Should().NotBeNull();
+        status.DisabledTill.Should().HaveValue();
+        status.DisabledTill.Value.Should().BeCloseTo(_epoch + TimeSpan.FromMinutes(15), 500);
+    }
 
-            var status = Subject.GetBlockedProviders().FirstOrDefault();
-            status.Should().BeNull();
-        }
+    [Test]
+    public void should_not_escalate_further_than_5_minutes_for_15_min_after_startup()
+    {
+        GivenRecentStartup();
 
-        [Test]
-        public void should_not_store_update_if_already_okay()
-        {
-            WithStatus(new MockProviderStatus { EscalationLevel = 0 });
+        var origStatus = WithStatus(new MockProviderStatus
+                                    {
+                                        InitialFailure = _epoch - TimeSpan.FromMinutes(6),
+                                        MostRecentFailure = _epoch - TimeSpan.FromSeconds(120),
+                                        EscalationLevel = 3
+                                    });
 
-            Subject.RecordSuccess(1);
+        Subject.RecordFailure(1);
+        Subject.RecordFailure(1);
+        Subject.RecordFailure(1);
+        Subject.RecordFailure(1);
+        Subject.RecordFailure(1);
+        Subject.RecordFailure(1);
+        Subject.RecordFailure(1);
 
-            VerifyNoUpdate();
-        }
+        var status = Subject.GetBlockedProviders().FirstOrDefault();
+        status.Should().NotBeNull();
 
-        [Test]
-        public void should_preserve_escalation_on_intermittent_success()
-        {
-            WithStatus(new MockProviderStatus
-            {
-                InitialFailure = _epoch - TimeSpan.FromSeconds(20),
-                MostRecentFailure = _epoch - TimeSpan.FromSeconds(4),
-                EscalationLevel = 3
-            });
-
-            Subject.RecordSuccess(1);
-            Subject.RecordSuccess(1);
-            Subject.RecordFailure(1);
-
-            var status = Subject.GetBlockedProviders().FirstOrDefault();
-            status.Should().NotBeNull();
-            status.DisabledTill.Should().HaveValue();
-            status.DisabledTill.Value.Should().BeCloseTo(_epoch + TimeSpan.FromMinutes(15), 500);
-        }
-
-        [Test]
-        public void should_not_escalate_further_than_5_minutes_for_15_min_after_startup()
-        {
-            GivenRecentStartup();
-
-            var origStatus = WithStatus(new MockProviderStatus
-            {
-                InitialFailure = _epoch - TimeSpan.FromMinutes(6),
-                MostRecentFailure = _epoch - TimeSpan.FromSeconds(120),
-                EscalationLevel = 3
-            });
-
-            Subject.RecordFailure(1);
-            Subject.RecordFailure(1);
-            Subject.RecordFailure(1);
-            Subject.RecordFailure(1);
-            Subject.RecordFailure(1);
-            Subject.RecordFailure(1);
-            Subject.RecordFailure(1);
-
-            var status = Subject.GetBlockedProviders().FirstOrDefault();
-            status.Should().NotBeNull();
-
-            origStatus.EscalationLevel.Should().Be(3);
-            status.DisabledTill.Should().BeCloseTo(_epoch + TimeSpan.FromMinutes(5), 500);
-        }
+        origStatus.EscalationLevel.Should().Be(3);
+        status.DisabledTill.Should().BeCloseTo(_epoch + TimeSpan.FromMinutes(5), 500);
     }
 }

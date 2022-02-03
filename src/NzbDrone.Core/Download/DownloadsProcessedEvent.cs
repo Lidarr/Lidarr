@@ -1,11 +1,10 @@
 ﻿using NzbDrone.Common.Messaging;
 
-namespace NzbDrone.Core.Download
+namespace NzbDrone.Core.Download;
+
+public class DownloadsProcessedEvent : IEvent
 {
-    public class DownloadsProcessedEvent : IEvent
+    public DownloadsProcessedEvent()
     {
-        public DownloadsProcessedEvent()
-        {
-        }
     }
 }

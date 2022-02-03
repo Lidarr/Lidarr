@@ -5,27 +5,26 @@ using NzbDrone.Mono.Disk;
 using NzbDrone.Mono.EnvironmentInfo.VersionAdapters;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Mono.Test.EnvironmentInfo
+namespace NzbDrone.Mono.Test.EnvironmentInfo;
+
+[TestFixture]
+[Platform("Linux")]
+public class ReleaseFileVersionAdapterFixture : TestBase<ReleaseFileVersionAdapter>
 {
-    [TestFixture]
-    [Platform("Linux")]
-    public class ReleaseFileVersionAdapterFixture : TestBase<ReleaseFileVersionAdapter>
+    [SetUp]
+    public void Setup()
     {
-        [SetUp]
-        public void Setup()
-        {
-            NotBsd();
+        NotBsd();
 
-            Mocker.SetConstant<IDiskProvider>(Mocker.Resolve<DiskProvider>());
-        }
+        Mocker.SetConstant<IDiskProvider>(Mocker.Resolve<DiskProvider>());
+    }
 
-        [Test]
-        public void should_get_version_info()
-        {
-            var info = Subject.Read();
-            info.FullName.Should().NotBeNullOrWhiteSpace();
-            info.Name.Should().NotBeNullOrWhiteSpace();
-            info.Version.Should().NotBeNullOrWhiteSpace();
-        }
+    [Test]
+    public void should_get_version_info()
+    {
+        var info = Subject.Read();
+        info.FullName.Should().NotBeNullOrWhiteSpace();
+        info.Name.Should().NotBeNullOrWhiteSpace();
+        info.Version.Should().NotBeNullOrWhiteSpace();
     }
 }

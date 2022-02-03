@@ -1,30 +1,29 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Music
+namespace NzbDrone.Core.Music;
+
+public interface IArtistMetadataService
 {
-    public interface IArtistMetadataService
+    bool Upsert(ArtistMetadata artist);
+    bool UpsertMany(List<ArtistMetadata> artists);
+}
+
+public class ArtistMetadataService : IArtistMetadataService
+{
+    private readonly IArtistMetadataRepository _artistMetadataRepository;
+
+    public ArtistMetadataService(IArtistMetadataRepository artistMetadataRepository)
     {
-        bool Upsert(ArtistMetadata artist);
-        bool UpsertMany(List<ArtistMetadata> artists);
+        _artistMetadataRepository = artistMetadataRepository;
     }
 
-    public class ArtistMetadataService : IArtistMetadataService
+    public bool Upsert(ArtistMetadata artist)
     {
-        private readonly IArtistMetadataRepository _artistMetadataRepository;
+        return _artistMetadataRepository.UpsertMany(new List<ArtistMetadata> { artist });
+    }
 
-        public ArtistMetadataService(IArtistMetadataRepository artistMetadataRepository)
-        {
-            _artistMetadataRepository = artistMetadataRepository;
-        }
-
-        public bool Upsert(ArtistMetadata artist)
-        {
-            return _artistMetadataRepository.UpsertMany(new List<ArtistMetadata> { artist });
-        }
-
-        public bool UpsertMany(List<ArtistMetadata> artists)
-        {
-            return _artistMetadataRepository.UpsertMany(artists);
-        }
+    public bool UpsertMany(List<ArtistMetadata> artists)
+    {
+        return _artistMetadataRepository.UpsertMany(artists);
     }
 }

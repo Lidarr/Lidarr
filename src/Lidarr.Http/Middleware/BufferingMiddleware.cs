@@ -4,27 +4,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Lidarr.Http.Middleware
+namespace Lidarr.Http.Middleware;
+
+public class BufferingMiddleware
 {
-    public class BufferingMiddleware
+    private readonly RequestDelegate _next;
+    private readonly List<string> _urls;
+
+    public BufferingMiddleware(RequestDelegate next, List<string> urls)
     {
-        private readonly RequestDelegate _next;
-        private readonly List<string> _urls;
+        _next = next;
+        _urls = urls;
+    }
 
-        public BufferingMiddleware(RequestDelegate next, List<string> urls)
+    public async Task InvokeAsync(HttpContext context)
+    {
+        if (_urls.Any(p => context.Request.Path.StartsWithSegments(p, StringComparison.OrdinalIgnoreCase)))
         {
-            _next = next;
-            _urls = urls;
+            context.Request.EnableBuffering();
         }
 
-        public async Task InvokeAsync(HttpContext context)
-        {
-            if (_urls.Any(p => context.Request.Path.StartsWithSegments(p, StringComparison.OrdinalIgnoreCase)))
-            {
-                context.Request.EnableBuffering();
-            }
-
-            await _next(context);
-        }
+        await _next(context);
     }
 }

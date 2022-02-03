@@ -11,138 +11,137 @@ using FluentMigrator.Runner.Processors.SQLite;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace NzbDrone.Core.Datastore.Migration.Framework
+namespace NzbDrone.Core.Datastore.Migration.Framework;
+
+public class NzbDroneSQLiteProcessor : SQLiteProcessor
 {
-    public class NzbDroneSQLiteProcessor : SQLiteProcessor
-    {
-        public NzbDroneSQLiteProcessor(SQLiteDbFactory factory,
-                                       SQLiteGenerator generator,
-                                       ILogger<NzbDroneSQLiteProcessor> logger,
-                                       IOptionsSnapshot<ProcessorOptions> options,
-                                       IConnectionStringAccessor connectionStringAccessor,
-                                       IServiceProvider serviceProvider)
+    public NzbDroneSQLiteProcessor(SQLiteDbFactory factory,
+                                   SQLiteGenerator generator,
+                                   ILogger<NzbDroneSQLiteProcessor> logger,
+                                   IOptionsSnapshot<ProcessorOptions> options,
+                                   IConnectionStringAccessor connectionStringAccessor,
+                                   IServiceProvider serviceProvider)
         : base(factory, generator, logger, options, connectionStringAccessor, serviceProvider)
+    {
+    }
+
+    public override void Process(AlterColumnExpression expression)
+    {
+        var tableDefinition = GetTableSchema(expression.TableName);
+
+        var columnDefinitions = tableDefinition.Columns.ToList();
+        var columnIndex = columnDefinitions.FindIndex(c => c.Name == expression.Column.Name);
+
+        if (columnIndex == -1)
         {
+            throw new ApplicationException(string.Format("Column {0} does not exist on table {1}.", expression.Column.Name, expression.TableName));
         }
 
-        public override void Process(AlterColumnExpression expression)
+        columnDefinitions[columnIndex] = expression.Column;
+
+        tableDefinition.Columns = columnDefinitions;
+
+        ProcessAlterTable(tableDefinition);
+    }
+
+    public override void Process(DeleteColumnExpression expression)
+    {
+        var tableDefinition = GetTableSchema(expression.TableName);
+
+        var columnDefinitions = tableDefinition.Columns.ToList();
+        var indexDefinitions = tableDefinition.Indexes.ToList();
+
+        var columnsToRemove = expression.ColumnNames.ToList();
+
+        columnDefinitions.RemoveAll(c => columnsToRemove.Remove(c.Name));
+        indexDefinitions.RemoveAll(i => i.Columns.Any(c => expression.ColumnNames.Contains(c.Name)));
+
+        tableDefinition.Columns = columnDefinitions;
+        tableDefinition.Indexes = indexDefinitions;
+
+        if (columnsToRemove.Any())
         {
-            var tableDefinition = GetTableSchema(expression.TableName);
-
-            var columnDefinitions = tableDefinition.Columns.ToList();
-            var columnIndex = columnDefinitions.FindIndex(c => c.Name == expression.Column.Name);
-
-            if (columnIndex == -1)
-            {
-                throw new ApplicationException(string.Format("Column {0} does not exist on table {1}.", expression.Column.Name, expression.TableName));
-            }
-
-            columnDefinitions[columnIndex] = expression.Column;
-
-            tableDefinition.Columns = columnDefinitions;
-
-            ProcessAlterTable(tableDefinition);
+            throw new ApplicationException(string.Format("Column {0} does not exist on table {1}.", columnsToRemove.First(), expression.TableName));
         }
 
-        public override void Process(DeleteColumnExpression expression)
+        ProcessAlterTable(tableDefinition);
+    }
+
+    public override void Process(RenameColumnExpression expression)
+    {
+        var tableDefinition = GetTableSchema(expression.TableName);
+
+        var oldColumnDefinitions = tableDefinition.Columns.ToList();
+        var columnDefinitions = tableDefinition.Columns.ToList();
+        var columnIndex = columnDefinitions.FindIndex(c => c.Name == expression.OldName);
+
+        if (columnIndex == -1)
         {
-            var tableDefinition = GetTableSchema(expression.TableName);
-
-            var columnDefinitions = tableDefinition.Columns.ToList();
-            var indexDefinitions = tableDefinition.Indexes.ToList();
-
-            var columnsToRemove = expression.ColumnNames.ToList();
-
-            columnDefinitions.RemoveAll(c => columnsToRemove.Remove(c.Name));
-            indexDefinitions.RemoveAll(i => i.Columns.Any(c => expression.ColumnNames.Contains(c.Name)));
-
-            tableDefinition.Columns = columnDefinitions;
-            tableDefinition.Indexes = indexDefinitions;
-
-            if (columnsToRemove.Any())
-            {
-                throw new ApplicationException(string.Format("Column {0} does not exist on table {1}.", columnsToRemove.First(), expression.TableName));
-            }
-
-            ProcessAlterTable(tableDefinition);
+            throw new ApplicationException(string.Format("Column {0} does not exist on table {1}.", expression.OldName, expression.TableName));
         }
 
-        public override void Process(RenameColumnExpression expression)
+        if (columnDefinitions.Any(c => c.Name == expression.NewName))
         {
-            var tableDefinition = GetTableSchema(expression.TableName);
+            throw new ApplicationException(string.Format("Column {0} already exists on table {1}.", expression.NewName, expression.TableName));
+        }
 
-            var oldColumnDefinitions = tableDefinition.Columns.ToList();
-            var columnDefinitions = tableDefinition.Columns.ToList();
-            var columnIndex = columnDefinitions.FindIndex(c => c.Name == expression.OldName);
+        oldColumnDefinitions[columnIndex] = (ColumnDefinition)columnDefinitions[columnIndex].Clone();
+        columnDefinitions[columnIndex].Name = expression.NewName;
 
-            if (columnIndex == -1)
+        foreach (var index in tableDefinition.Indexes)
+        {
+            if (index.Name.StartsWith("IX_"))
             {
-                throw new ApplicationException(string.Format("Column {0} does not exist on table {1}.", expression.OldName, expression.TableName));
+                index.Name = Regex.Replace(index.Name, "(?<=_)" + Regex.Escape(expression.OldName) + "(?=_|$)", Regex.Escape(expression.NewName));
             }
 
-            if (columnDefinitions.Any(c => c.Name == expression.NewName))
+            foreach (var column in index.Columns)
             {
-                throw new ApplicationException(string.Format("Column {0} already exists on table {1}.", expression.NewName, expression.TableName));
-            }
-
-            oldColumnDefinitions[columnIndex] = (ColumnDefinition)columnDefinitions[columnIndex].Clone();
-            columnDefinitions[columnIndex].Name = expression.NewName;
-
-            foreach (var index in tableDefinition.Indexes)
-            {
-                if (index.Name.StartsWith("IX_"))
+                if (column.Name == expression.OldName)
                 {
-                    index.Name = Regex.Replace(index.Name, "(?<=_)" + Regex.Escape(expression.OldName) + "(?=_|$)", Regex.Escape(expression.NewName));
-                }
-
-                foreach (var column in index.Columns)
-                {
-                    if (column.Name == expression.OldName)
-                    {
-                        column.Name = expression.NewName;
-                    }
+                    column.Name = expression.NewName;
                 }
             }
-
-            ProcessAlterTable(tableDefinition, oldColumnDefinitions);
         }
 
-        protected virtual TableDefinition GetTableSchema(string tableName)
-        {
-            var schemaDumper = new SqliteSchemaDumper(this);
-            var schema = schemaDumper.ReadDbSchema();
+        ProcessAlterTable(tableDefinition, oldColumnDefinitions);
+    }
 
-            return schema.Single(v => v.Name == tableName);
+    protected virtual TableDefinition GetTableSchema(string tableName)
+    {
+        var schemaDumper = new SqliteSchemaDumper(this);
+        var schema = schemaDumper.ReadDbSchema();
+
+        return schema.Single(v => v.Name == tableName);
+    }
+
+    protected virtual void ProcessAlterTable(TableDefinition tableDefinition, List<ColumnDefinition> oldColumnDefinitions = null)
+    {
+        var tableName = tableDefinition.Name;
+        var tempTableName = tableName + "_temp";
+
+        var uid = 0;
+        while (TableExists(null, tempTableName))
+        {
+            tempTableName = tableName + "_temp" + uid++;
         }
 
-        protected virtual void ProcessAlterTable(TableDefinition tableDefinition, List<ColumnDefinition> oldColumnDefinitions = null)
+        // What is the cleanest way to do this? Add function to Generator?
+        var quoter = new SQLiteQuoter();
+        var columnsToInsert = string.Join(", ", tableDefinition.Columns.Select(c => quoter.QuoteColumnName(c.Name)));
+        var columnsToFetch = string.Join(", ", (oldColumnDefinitions ?? tableDefinition.Columns).Select(c => quoter.QuoteColumnName(c.Name)));
+
+        Process(new CreateTableExpression() { TableName = tempTableName, Columns = tableDefinition.Columns.ToList() });
+
+        Process(string.Format("INSERT INTO {0} ({1}) SELECT {2} FROM {3}", quoter.QuoteTableName(tempTableName), columnsToInsert, columnsToFetch, quoter.QuoteTableName(tableName)));
+
+        Process(new DeleteTableExpression() { TableName = tableName });
+
+        Process(new RenameTableExpression() { OldName = tempTableName, NewName = tableName });
+
+        foreach (var index in tableDefinition.Indexes)
         {
-            var tableName = tableDefinition.Name;
-            var tempTableName = tableName + "_temp";
-
-            var uid = 0;
-            while (TableExists(null, tempTableName))
-            {
-                tempTableName = tableName + "_temp" + uid++;
-            }
-
-            // What is the cleanest way to do this? Add function to Generator?
-            var quoter = new SQLiteQuoter();
-            var columnsToInsert = string.Join(", ", tableDefinition.Columns.Select(c => quoter.QuoteColumnName(c.Name)));
-            var columnsToFetch = string.Join(", ", (oldColumnDefinitions ?? tableDefinition.Columns).Select(c => quoter.QuoteColumnName(c.Name)));
-
-            Process(new CreateTableExpression() { TableName = tempTableName, Columns = tableDefinition.Columns.ToList() });
-
-            Process(string.Format("INSERT INTO {0} ({1}) SELECT {2} FROM {3}", quoter.QuoteTableName(tempTableName), columnsToInsert, columnsToFetch, quoter.QuoteTableName(tableName)));
-
-            Process(new DeleteTableExpression() { TableName = tableName });
-
-            Process(new RenameTableExpression() { OldName = tempTableName, NewName = tableName });
-
-            foreach (var index in tableDefinition.Indexes)
-            {
-                Process(new CreateIndexExpression() { Index = index });
-            }
+            Process(new CreateIndexExpression() { Index = index });
         }
     }
 }

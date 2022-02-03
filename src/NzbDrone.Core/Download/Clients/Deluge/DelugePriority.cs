@@ -1,8 +1,7 @@
-﻿namespace NzbDrone.Core.Download.Clients.Deluge
+﻿namespace NzbDrone.Core.Download.Clients.Deluge;
+
+public enum DelugePriority
 {
-    public enum DelugePriority
-    {
-        Last = 0,
-        First = 1
-    }
+    Last = 0,
+    First = 1
 }

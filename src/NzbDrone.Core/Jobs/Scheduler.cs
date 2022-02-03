@@ -8,64 +8,63 @@ using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using Timer = System.Timers.Timer;
 
-namespace NzbDrone.Core.Jobs
+namespace NzbDrone.Core.Jobs;
+
+public class Scheduler :
+    IHandle<ApplicationStartedEvent>,
+    IHandle<ApplicationShutdownRequested>
 {
-    public class Scheduler :
-        IHandle<ApplicationStartedEvent>,
-        IHandle<ApplicationShutdownRequested>
+    private readonly ITaskManager _taskManager;
+    private readonly IManageCommandQueue _commandQueueManager;
+    private readonly Logger _logger;
+    private static readonly Timer Timer = new Timer();
+    private static CancellationTokenSource _cancellationTokenSource;
+
+    public Scheduler(ITaskManager taskManager, IManageCommandQueue commandQueueManager, Logger logger)
     {
-        private readonly ITaskManager _taskManager;
-        private readonly IManageCommandQueue _commandQueueManager;
-        private readonly Logger _logger;
-        private static readonly Timer Timer = new Timer();
-        private static CancellationTokenSource _cancellationTokenSource;
+        _taskManager = taskManager;
+        _commandQueueManager = commandQueueManager;
+        _logger = logger;
+    }
 
-        public Scheduler(ITaskManager taskManager, IManageCommandQueue commandQueueManager, Logger logger)
+    private void ExecuteCommands()
+    {
+        try
         {
-            _taskManager = taskManager;
-            _commandQueueManager = commandQueueManager;
-            _logger = logger;
-        }
+            Timer.Enabled = false;
 
-        private void ExecuteCommands()
-        {
-            try
+            var tasks = _taskManager.GetPending().ToList();
+
+            _logger.Trace("Pending Tasks: {0}", tasks.Count);
+
+            foreach (var task in tasks)
             {
-                Timer.Enabled = false;
-
-                var tasks = _taskManager.GetPending().ToList();
-
-                _logger.Trace("Pending Tasks: {0}", tasks.Count);
-
-                foreach (var task in tasks)
-                {
-                    _commandQueueManager.Push(task.TypeName, task.LastExecution, task.LastStartTime, CommandPriority.Low, CommandTrigger.Scheduled);
-                }
-            }
-            finally
-            {
-                if (!_cancellationTokenSource.IsCancellationRequested)
-                {
-                    Timer.Enabled = true;
-                }
+                _commandQueueManager.Push(task.TypeName, task.LastExecution, task.LastStartTime, CommandPriority.Low, CommandTrigger.Scheduled);
             }
         }
-
-        public void Handle(ApplicationStartedEvent message)
+        finally
         {
-            _cancellationTokenSource = new CancellationTokenSource();
-            Timer.Interval = 1000 * 30;
-            Timer.Elapsed += (o, args) => Task.Factory.StartNew(ExecuteCommands, _cancellationTokenSource.Token)
-                .LogExceptions();
-
-            Timer.Start();
+            if (!_cancellationTokenSource.IsCancellationRequested)
+            {
+                Timer.Enabled = true;
+            }
         }
+    }
 
-        public void Handle(ApplicationShutdownRequested message)
-        {
-            _logger.Info("Shutting down scheduler");
-            _cancellationTokenSource.Cancel(true);
-            Timer.Stop();
-        }
+    public void Handle(ApplicationStartedEvent message)
+    {
+        _cancellationTokenSource = new CancellationTokenSource();
+        Timer.Interval = 1000 * 30;
+        Timer.Elapsed += (o, args) => Task.Factory.StartNew(ExecuteCommands, _cancellationTokenSource.Token)
+                                          .LogExceptions();
+
+        Timer.Start();
+    }
+
+    public void Handle(ApplicationShutdownRequested message)
+    {
+        _logger.Info("Shutting down scheduler");
+        _cancellationTokenSource.Cancel(true);
+        Timer.Stop();
     }
 }

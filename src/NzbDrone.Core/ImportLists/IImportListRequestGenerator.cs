@@ -1,7 +1,6 @@
-namespace NzbDrone.Core.ImportLists
+namespace NzbDrone.Core.ImportLists;
+
+public interface IImportListRequestGenerator
 {
-    public interface IImportListRequestGenerator
-    {
-        ImportListPageableRequestChain GetListItems();
-    }
+    ImportListPageableRequestChain GetListItems();
 }

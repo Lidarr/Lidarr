@@ -1,7 +1,6 @@
-﻿namespace NzbDrone.Core.Download.Clients.NzbVortex.Responses
+﻿namespace NzbDrone.Core.Download.Clients.NzbVortex.Responses;
+
+public class NzbVortexVersionResponse : NzbVortexResponseBase
 {
-    public class NzbVortexVersionResponse : NzbVortexResponseBase
-    {
-        public string Version { get; set; }
-    }
+    public string Version { get; set; }
 }

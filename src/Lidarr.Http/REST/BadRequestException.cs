@@ -1,13 +1,12 @@
 using System.Net;
 using Lidarr.Http.Exceptions;
 
-namespace Lidarr.Http.REST
+namespace Lidarr.Http.REST;
+
+public class BadRequestException : ApiException
 {
-    public class BadRequestException : ApiException
+    public BadRequestException(object content = null)
+        : base(HttpStatusCode.BadRequest, content)
     {
-        public BadRequestException(object content = null)
-            : base(HttpStatusCode.BadRequest, content)
-        {
-        }
     }
 }

@@ -10,114 +10,113 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Integration.Test.Client;
 using RestSharp;
 
-namespace NzbDrone.Integration.Test.ApiTests
+namespace NzbDrone.Integration.Test.ApiTests;
+
+[TestFixture]
+public class FileSystemFixture : IntegrationTest
 {
-    [TestFixture]
-    public class FileSystemFixture : IntegrationTest
+    public ClientBase FileSystem;
+
+    private string _file;
+    private string _folder;
+
+    protected override void InitRestClients()
     {
-        public ClientBase FileSystem;
+        base.InitRestClients();
 
-        private string _file;
-        private string _folder;
+        FileSystem = new ClientBase(RestClient, ApiKey, "filesystem");
+    }
 
-        protected override void InitRestClients()
-        {
-            base.InitRestClients();
+    [SetUp]
+    public void SetUp()
+    {
+        _file = Assembly.GetExecutingAssembly().Location;
+        _folder = Path.GetDirectoryName(_file) + Path.DirectorySeparatorChar;
+    }
 
-            FileSystem = new ClientBase(RestClient, ApiKey, "filesystem");
-        }
+    [Test]
+    public void get_filesystem_content_excluding_files()
+    {
+        var request = FileSystem.BuildRequest();
+        request.Method = Method.GET;
+        request.AddQueryParameter("path", _folder);
 
-        [SetUp]
-        public void SetUp()
-        {
-            _file = Assembly.GetExecutingAssembly().Location;
-            _folder = Path.GetDirectoryName(_file) + Path.DirectorySeparatorChar;
-        }
+        var result = FileSystem.Execute<FileSystemResult>(request, HttpStatusCode.OK);
 
-        [Test]
-        public void get_filesystem_content_excluding_files()
-        {
-            var request = FileSystem.BuildRequest();
-            request.Method = Method.GET;
-            request.AddQueryParameter("path", _folder);
+        result.Should().NotBeNull();
+        result.Directories.Should().NotBeNullOrEmpty();
+        result.Files.Should().BeNullOrEmpty();
+    }
 
-            var result = FileSystem.Execute<FileSystemResult>(request, HttpStatusCode.OK);
+    [Test]
+    public void get_filesystem_content_including_files()
+    {
+        var request = FileSystem.BuildRequest();
+        request.Method = Method.GET;
+        request.AddQueryParameter("path", _folder);
+        request.AddQueryParameter("includeFiles", "true");
 
-            result.Should().NotBeNull();
-            result.Directories.Should().NotBeNullOrEmpty();
-            result.Files.Should().BeNullOrEmpty();
-        }
+        var result = FileSystem.Execute<FileSystemResult>(request, HttpStatusCode.OK);
 
-        [Test]
-        public void get_filesystem_content_including_files()
-        {
-            var request = FileSystem.BuildRequest();
-            request.Method = Method.GET;
-            request.AddQueryParameter("path", _folder);
-            request.AddQueryParameter("includeFiles", "true");
+        result.Should().NotBeNull();
+        result.Directories.Should().NotBeNullOrEmpty();
+        result.Files.Should().NotBeNullOrEmpty();
 
-            var result = FileSystem.Execute<FileSystemResult>(request, HttpStatusCode.OK);
+        result.Files.Should().Contain(v => PathEqualityComparer.Instance.Equals(v.Path, _file) && v.Type == FileSystemEntityType.File);
+    }
 
-            result.Should().NotBeNull();
-            result.Directories.Should().NotBeNullOrEmpty();
-            result.Files.Should().NotBeNullOrEmpty();
+    [Test]
+    public void get_entity_type_should_return_file()
+    {
+        var request = FileSystem.BuildRequest("type");
+        request.Method = Method.GET;
+        request.AddQueryParameter("path", _file);
 
-            result.Files.Should().Contain(v => PathEqualityComparer.Instance.Equals(v.Path, _file) && v.Type == FileSystemEntityType.File);
-        }
+        var result = FileSystem.Execute<FileSystemModel>(request, HttpStatusCode.OK);
 
-        [Test]
-        public void get_entity_type_should_return_file()
-        {
-            var request = FileSystem.BuildRequest("type");
-            request.Method = Method.GET;
-            request.AddQueryParameter("path", _file);
+        result.Type.Should().Be(FileSystemEntityType.File);
+    }
 
-            var result = FileSystem.Execute<FileSystemModel>(request, HttpStatusCode.OK);
+    [Test]
+    public void get_entity_type_should_return_folder()
+    {
+        var request = FileSystem.BuildRequest("type");
+        request.Method = Method.GET;
+        request.AddQueryParameter("path", _folder);
 
-            result.Type.Should().Be(FileSystemEntityType.File);
-        }
+        var result = FileSystem.Execute<FileSystemModel>(request, HttpStatusCode.OK);
 
-        [Test]
-        public void get_entity_type_should_return_folder()
-        {
-            var request = FileSystem.BuildRequest("type");
-            request.Method = Method.GET;
-            request.AddQueryParameter("path", _folder);
+        result.Type.Should().Be(FileSystemEntityType.Folder);
+    }
 
-            var result = FileSystem.Execute<FileSystemModel>(request, HttpStatusCode.OK);
+    [Test]
+    public void get_entity_type_should_return_folder_for_unknown()
+    {
+        var request = FileSystem.BuildRequest("type");
+        request.Method = Method.GET;
+        request.AddQueryParameter("path", _file + ".unknown");
 
-            result.Type.Should().Be(FileSystemEntityType.Folder);
-        }
+        var result = FileSystem.Execute<FileSystemModel>(request, HttpStatusCode.OK);
 
-        [Test]
-        public void get_entity_type_should_return_folder_for_unknown()
-        {
-            var request = FileSystem.BuildRequest("type");
-            request.Method = Method.GET;
-            request.AddQueryParameter("path", _file + ".unknown");
+        result.Type.Should().Be(FileSystemEntityType.Folder);
+    }
 
-            var result = FileSystem.Execute<FileSystemModel>(request, HttpStatusCode.OK);
+    [Test]
+    public void get_all_mediafiles()
+    {
+        var tempDir = GetTempDirectory("mediaDir");
+        File.WriteAllText(Path.Combine(tempDir, "somevideo.mp3"), "audio");
 
-            result.Type.Should().Be(FileSystemEntityType.Folder);
-        }
+        var request = FileSystem.BuildRequest("mediafiles");
+        request.Method = Method.GET;
+        request.AddQueryParameter("path", tempDir);
 
-        [Test]
-        public void get_all_mediafiles()
-        {
-            var tempDir = GetTempDirectory("mediaDir");
-            File.WriteAllText(Path.Combine(tempDir, "somevideo.mp3"), "audio");
+        var result = FileSystem.Execute<List<Dictionary<string, string>>>(request, HttpStatusCode.OK);
 
-            var request = FileSystem.BuildRequest("mediafiles");
-            request.Method = Method.GET;
-            request.AddQueryParameter("path", tempDir);
+        result.Should().HaveCount(1);
+        result.First().Should().ContainKey("path");
+        result.First().Should().ContainKey("name");
 
-            var result = FileSystem.Execute<List<Dictionary<string, string>>>(request, HttpStatusCode.OK);
-
-            result.Should().HaveCount(1);
-            result.First().Should().ContainKey("path");
-            result.First().Should().ContainKey("name");
-
-            result.First()["name"].Should().Be("somevideo.mp3");
-        }
+        result.First()["name"].Should().Be("somevideo.mp3");
     }
 }

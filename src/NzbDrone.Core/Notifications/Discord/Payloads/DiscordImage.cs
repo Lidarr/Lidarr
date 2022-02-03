@@ -1,7 +1,6 @@
-namespace NzbDrone.Core.Notifications.Discord.Payloads
+namespace NzbDrone.Core.Notifications.Discord.Payloads;
+
+public class DiscordImage
 {
-    public class DiscordImage
-    {
-        public string Url { get; set; }
-    }
+    public string Url { get; set; }
 }

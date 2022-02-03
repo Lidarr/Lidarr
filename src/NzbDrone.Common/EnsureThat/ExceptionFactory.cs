@@ -1,22 +1,21 @@
 ﻿using System;
 using NLog;
 
-namespace NzbDrone.Common.EnsureThat
+namespace NzbDrone.Common.EnsureThat;
+
+internal static class ExceptionFactory
 {
-    internal static class ExceptionFactory
+    private static readonly Logger Logger = LogManager.GetLogger("ArgumentValidator");
+
+    internal static ArgumentException CreateForParamValidation(string paramName, string message)
     {
-        private static readonly Logger Logger = LogManager.GetLogger("ArgumentValidator");
+        Logger.Warn(message);
+        return new ArgumentException(message, paramName);
+    }
 
-        internal static ArgumentException CreateForParamValidation(string paramName, string message)
-        {
-            Logger.Warn(message);
-            return new ArgumentException(message, paramName);
-        }
-
-        internal static ArgumentNullException CreateForParamNullValidation(string paramName, string message)
-        {
-            Logger.Warn(message);
-            return new ArgumentNullException(paramName, message);
-        }
+    internal static ArgumentNullException CreateForParamNullValidation(string paramName, string message)
+    {
+        Logger.Warn(message);
+        return new ArgumentNullException(paramName, message);
     }
 }

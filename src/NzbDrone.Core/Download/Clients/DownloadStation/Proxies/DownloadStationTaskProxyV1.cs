@@ -5,72 +5,71 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Download.Clients.DownloadStation.Responses;
 
-namespace NzbDrone.Core.Download.Clients.DownloadStation.Proxies
+namespace NzbDrone.Core.Download.Clients.DownloadStation.Proxies;
+
+public class DownloadStationTaskProxyV1 : DiskStationProxyBase, IDownloadStationTaskProxy
 {
-    public class DownloadStationTaskProxyV1 : DiskStationProxyBase, IDownloadStationTaskProxy
+    public DownloadStationTaskProxyV1(IHttpClient httpClient, ICacheManager cacheManager, Logger logger)
+        : base(DiskStationApi.DownloadStationTask, "SYNO.DownloadStation.Task", httpClient, cacheManager, logger)
     {
-        public DownloadStationTaskProxyV1(IHttpClient httpClient, ICacheManager cacheManager, Logger logger)
-            : base(DiskStationApi.DownloadStationTask, "SYNO.DownloadStation.Task", httpClient, cacheManager, logger)
+    }
+
+    public bool IsApiSupported(DownloadStationSettings settings)
+    {
+        return GetApiInfo(settings) != null;
+    }
+
+    public void AddTaskFromData(byte[] data, string filename, string downloadDirectory, DownloadStationSettings settings)
+    {
+        var requestBuilder = BuildRequest(settings, "create", 2, HttpMethod.POST);
+
+        if (downloadDirectory.IsNotNullOrWhiteSpace())
         {
+            requestBuilder.AddFormParameter("destination", downloadDirectory);
         }
 
-        public bool IsApiSupported(DownloadStationSettings settings)
+        requestBuilder.AddFormUpload("file", filename, data);
+
+        var response = ProcessRequest<object>(requestBuilder, $"add task from data {filename}", settings);
+    }
+
+    public void AddTaskFromUrl(string url, string downloadDirectory, DownloadStationSettings settings)
+    {
+        var requestBuilder = BuildRequest(settings, "create", 3);
+        requestBuilder.AddQueryParam("uri", url);
+
+        if (downloadDirectory.IsNotNullOrWhiteSpace())
         {
-            return GetApiInfo(settings) != null;
+            requestBuilder.AddQueryParam("destination", downloadDirectory);
         }
 
-        public void AddTaskFromData(byte[] data, string filename, string downloadDirectory, DownloadStationSettings settings)
+        var response = ProcessRequest<object>(requestBuilder, $"add task from url {url}", settings);
+    }
+
+    public IEnumerable<DownloadStationTask> GetTasks(DownloadStationSettings settings)
+    {
+        try
         {
-            var requestBuilder = BuildRequest(settings, "create", 2, HttpMethod.POST);
+            var requestBuilder = BuildRequest(settings, "list", 1);
+            requestBuilder.AddQueryParam("additional", "detail,transfer");
 
-            if (downloadDirectory.IsNotNullOrWhiteSpace())
-            {
-                requestBuilder.AddFormParameter("destination", downloadDirectory);
-            }
+            var response = ProcessRequest<DownloadStationTaskInfoResponse>(requestBuilder, "get tasks", settings);
 
-            requestBuilder.AddFormUpload("file", filename, data);
-
-            var response = ProcessRequest<object>(requestBuilder, $"add task from data {filename}", settings);
+            return response.Data.Tasks;
         }
-
-        public void AddTaskFromUrl(string url, string downloadDirectory, DownloadStationSettings settings)
+        catch (DownloadClientException e)
         {
-            var requestBuilder = BuildRequest(settings, "create", 3);
-            requestBuilder.AddQueryParam("uri", url);
-
-            if (downloadDirectory.IsNotNullOrWhiteSpace())
-            {
-                requestBuilder.AddQueryParam("destination", downloadDirectory);
-            }
-
-            var response = ProcessRequest<object>(requestBuilder, $"add task from url {url}", settings);
+            _logger.Error(e);
+            return new List<DownloadStationTask>();
         }
+    }
 
-        public IEnumerable<DownloadStationTask> GetTasks(DownloadStationSettings settings)
-        {
-            try
-            {
-                var requestBuilder = BuildRequest(settings, "list", 1);
-                requestBuilder.AddQueryParam("additional", "detail,transfer");
+    public void RemoveTask(string downloadId, DownloadStationSettings settings)
+    {
+        var requestBuilder = BuildRequest(settings, "delete", 1);
+        requestBuilder.AddQueryParam("id", downloadId);
+        requestBuilder.AddQueryParam("force_complete", false);
 
-                var response = ProcessRequest<DownloadStationTaskInfoResponse>(requestBuilder, "get tasks", settings);
-
-                return response.Data.Tasks;
-            }
-            catch (DownloadClientException e)
-            {
-                _logger.Error(e);
-                return new List<DownloadStationTask>();
-            }
-        }
-
-        public void RemoveTask(string downloadId, DownloadStationSettings settings)
-        {
-            var requestBuilder = BuildRequest(settings, "delete", 1);
-            requestBuilder.AddQueryParam("id", downloadId);
-            requestBuilder.AddQueryParam("force_complete", false);
-
-            var response = ProcessRequest<object>(requestBuilder, $"remove item {downloadId}", settings);
-        }
+        var response = ProcessRequest<object>(requestBuilder, $"remove item {downloadId}", settings);
     }
 }

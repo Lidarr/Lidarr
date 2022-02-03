@@ -1,16 +1,15 @@
 using FluentMigrator;
 using NzbDrone.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace NzbDrone.Core.Datastore.Migration;
+
+[Migration(27)]
+public class add_import_exclusions : NzbDroneMigrationBase
 {
-    [Migration(27)]
-    public class add_import_exclusions : NzbDroneMigrationBase
+    protected override void MainDbUpgrade()
     {
-        protected override void MainDbUpgrade()
-        {
-            Create.TableForModel("ImportListExclusions")
-                  .WithColumn("ForeignId").AsString().NotNullable().Unique()
-                  .WithColumn("Name").AsString().NotNullable();
-        }
+        Create.TableForModel("ImportListExclusions")
+              .WithColumn("ForeignId").AsString().NotNullable().Unique()
+              .WithColumn("Name").AsString().NotNullable();
     }
 }

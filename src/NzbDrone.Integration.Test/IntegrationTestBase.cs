@@ -30,376 +30,375 @@ using NzbDrone.Test.Common.Categories;
 using RestSharp;
 using RestSharp.Serializers.SystemTextJson;
 
-namespace NzbDrone.Integration.Test
+namespace NzbDrone.Integration.Test;
+
+[IntegrationTest]
+public abstract class IntegrationTestBase
 {
-    [IntegrationTest]
-    public abstract class IntegrationTestBase
+    protected RestClient RestClient { get; private set; }
+
+    public ClientBase<BlocklistResource> Blocklist;
+    public CommandClient Commands;
+    public ClientBase<TaskResource> Tasks;
+    public DownloadClientClient DownloadClients;
+    public AlbumClient Albums;
+    public TrackClient Tracks;
+    public ClientBase<HistoryResource> History;
+    public ClientBase<HostConfigResource> HostConfig;
+    public IndexerClient Indexers;
+    public LogsClient Logs;
+    public ClientBase<NamingConfigResource> NamingConfig;
+    public NotificationClient Notifications;
+    public ClientBase<QualityProfileResource> Profiles;
+    public ReleaseClient Releases;
+    public ReleasePushClient ReleasePush;
+    public ClientBase<RootFolderResource> RootFolders;
+    public ArtistClient Artist;
+    public ClientBase<TagResource> Tags;
+    public ClientBase<AlbumResource> WantedMissing;
+    public ClientBase<AlbumResource> WantedCutoffUnmet;
+
+    private List<SignalRMessage> _signalRReceived;
+
+    private HubConnection _signalrConnection;
+
+    protected IEnumerable<SignalRMessage> SignalRMessages => _signalRReceived;
+
+    public IntegrationTestBase()
     {
-        protected RestClient RestClient { get; private set; }
+        new StartupContext();
 
-        public ClientBase<BlocklistResource> Blocklist;
-        public CommandClient Commands;
-        public ClientBase<TaskResource> Tasks;
-        public DownloadClientClient DownloadClients;
-        public AlbumClient Albums;
-        public TrackClient Tracks;
-        public ClientBase<HistoryResource> History;
-        public ClientBase<HostConfigResource> HostConfig;
-        public IndexerClient Indexers;
-        public LogsClient Logs;
-        public ClientBase<NamingConfigResource> NamingConfig;
-        public NotificationClient Notifications;
-        public ClientBase<QualityProfileResource> Profiles;
-        public ReleaseClient Releases;
-        public ReleasePushClient ReleasePush;
-        public ClientBase<RootFolderResource> RootFolders;
-        public ArtistClient Artist;
-        public ClientBase<TagResource> Tags;
-        public ClientBase<AlbumResource> WantedMissing;
-        public ClientBase<AlbumResource> WantedCutoffUnmet;
+        LogManager.Configuration = new LoggingConfiguration();
+        var consoleTarget = new ConsoleTarget { Layout = "${level}: ${message} ${exception}" };
+        LogManager.Configuration.AddTarget(consoleTarget.GetType().Name, consoleTarget);
+        LogManager.Configuration.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, consoleTarget));
+    }
 
-        private List<SignalRMessage> _signalRReceived;
+    public string TempDirectory { get; private set; }
 
-        private HubConnection _signalrConnection;
+    public abstract string ArtistRootFolder { get; }
 
-        protected IEnumerable<SignalRMessage> SignalRMessages => _signalRReceived;
+    protected abstract string RootUrl { get; }
 
-        public IntegrationTestBase()
+    protected abstract string ApiKey { get; }
+
+    protected abstract void StartTestTarget();
+
+    protected abstract void InitializeTestTarget();
+
+    protected abstract void StopTestTarget();
+
+    [OneTimeSetUp]
+    public void SmokeTestSetup()
+    {
+        StartTestTarget();
+        InitRestClients();
+        InitializeTestTarget();
+    }
+
+    protected virtual void InitRestClients()
+    {
+        RestClient = new RestClient(RootUrl + "api/v1/");
+        RestClient.AddDefaultHeader("Authentication", ApiKey);
+        RestClient.AddDefaultHeader("X-Api-Key", ApiKey);
+        RestClient.UseSystemTextJson();
+
+        Blocklist = new ClientBase<BlocklistResource>(RestClient, ApiKey);
+        Commands = new CommandClient(RestClient, ApiKey);
+        Tasks = new ClientBase<TaskResource>(RestClient, ApiKey, "system/task");
+        DownloadClients = new DownloadClientClient(RestClient, ApiKey);
+        Albums = new AlbumClient(RestClient, ApiKey);
+        Tracks = new TrackClient(RestClient, ApiKey);
+        History = new ClientBase<HistoryResource>(RestClient, ApiKey);
+        HostConfig = new ClientBase<HostConfigResource>(RestClient, ApiKey, "config/host");
+        Indexers = new IndexerClient(RestClient, ApiKey);
+        Logs = new LogsClient(RestClient, ApiKey);
+        NamingConfig = new ClientBase<NamingConfigResource>(RestClient, ApiKey, "config/naming");
+        Notifications = new NotificationClient(RestClient, ApiKey);
+        Profiles = new ClientBase<QualityProfileResource>(RestClient, ApiKey);
+        Releases = new ReleaseClient(RestClient, ApiKey);
+        ReleasePush = new ReleasePushClient(RestClient, ApiKey);
+        RootFolders = new ClientBase<RootFolderResource>(RestClient, ApiKey);
+        Artist = new ArtistClient(RestClient, ApiKey);
+        Tags = new ClientBase<TagResource>(RestClient, ApiKey);
+        WantedMissing = new ClientBase<AlbumResource>(RestClient, ApiKey, "wanted/missing");
+        WantedCutoffUnmet = new ClientBase<AlbumResource>(RestClient, ApiKey, "wanted/cutoff");
+    }
+
+    [OneTimeTearDown]
+    public void SmokeTestTearDown()
+    {
+        StopTestTarget();
+    }
+
+    [SetUp]
+    public void IntegrationSetUp()
+    {
+        TempDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, "_test_" + TestBase.GetUID());
+
+        // Wait for things to get quiet, otherwise the previous test might influence the current one.
+        Commands.WaitAll();
+    }
+
+    [TearDown]
+    public async Task IntegrationTearDown()
+    {
+        if (_signalrConnection != null)
         {
-            new StartupContext();
+            await _signalrConnection.StopAsync();
 
-            LogManager.Configuration = new LoggingConfiguration();
-            var consoleTarget = new ConsoleTarget { Layout = "${level}: ${message} ${exception}" };
-            LogManager.Configuration.AddTarget(consoleTarget.GetType().Name, consoleTarget);
-            LogManager.Configuration.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, consoleTarget));
-        }
-
-        public string TempDirectory { get; private set; }
-
-        public abstract string ArtistRootFolder { get; }
-
-        protected abstract string RootUrl { get; }
-
-        protected abstract string ApiKey { get; }
-
-        protected abstract void StartTestTarget();
-
-        protected abstract void InitializeTestTarget();
-
-        protected abstract void StopTestTarget();
-
-        [OneTimeSetUp]
-        public void SmokeTestSetup()
-        {
-            StartTestTarget();
-            InitRestClients();
-            InitializeTestTarget();
-        }
-
-        protected virtual void InitRestClients()
-        {
-            RestClient = new RestClient(RootUrl + "api/v1/");
-            RestClient.AddDefaultHeader("Authentication", ApiKey);
-            RestClient.AddDefaultHeader("X-Api-Key", ApiKey);
-            RestClient.UseSystemTextJson();
-
-            Blocklist = new ClientBase<BlocklistResource>(RestClient, ApiKey);
-            Commands = new CommandClient(RestClient, ApiKey);
-            Tasks = new ClientBase<TaskResource>(RestClient, ApiKey, "system/task");
-            DownloadClients = new DownloadClientClient(RestClient, ApiKey);
-            Albums = new AlbumClient(RestClient, ApiKey);
-            Tracks = new TrackClient(RestClient, ApiKey);
-            History = new ClientBase<HistoryResource>(RestClient, ApiKey);
-            HostConfig = new ClientBase<HostConfigResource>(RestClient, ApiKey, "config/host");
-            Indexers = new IndexerClient(RestClient, ApiKey);
-            Logs = new LogsClient(RestClient, ApiKey);
-            NamingConfig = new ClientBase<NamingConfigResource>(RestClient, ApiKey, "config/naming");
-            Notifications = new NotificationClient(RestClient, ApiKey);
-            Profiles = new ClientBase<QualityProfileResource>(RestClient, ApiKey);
-            Releases = new ReleaseClient(RestClient, ApiKey);
-            ReleasePush = new ReleasePushClient(RestClient, ApiKey);
-            RootFolders = new ClientBase<RootFolderResource>(RestClient, ApiKey);
-            Artist = new ArtistClient(RestClient, ApiKey);
-            Tags = new ClientBase<TagResource>(RestClient, ApiKey);
-            WantedMissing = new ClientBase<AlbumResource>(RestClient, ApiKey, "wanted/missing");
-            WantedCutoffUnmet = new ClientBase<AlbumResource>(RestClient, ApiKey, "wanted/cutoff");
-        }
-
-        [OneTimeTearDown]
-        public void SmokeTestTearDown()
-        {
-            StopTestTarget();
-        }
-
-        [SetUp]
-        public void IntegrationSetUp()
-        {
-            TempDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, "_test_" + TestBase.GetUID());
-
-            // Wait for things to get quiet, otherwise the previous test might influence the current one.
-            Commands.WaitAll();
-        }
-
-        [TearDown]
-        public async Task IntegrationTearDown()
-        {
-            if (_signalrConnection != null)
-            {
-                await _signalrConnection.StopAsync();
-
-                _signalrConnection = null;
-                _signalRReceived = new List<SignalRMessage>();
-            }
-
-            if (Directory.Exists(TempDirectory))
-            {
-                try
-                {
-                    Directory.Delete(TempDirectory, true);
-                }
-                catch
-                {
-                }
-            }
-        }
-
-        public string GetTempDirectory(params string[] args)
-        {
-            var path = Path.Combine(TempDirectory, Path.Combine(args));
-
-            Directory.CreateDirectory(path);
-
-            return path;
-        }
-
-        protected async Task ConnectSignalR()
-        {
+            _signalrConnection = null;
             _signalRReceived = new List<SignalRMessage>();
-            _signalrConnection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:8686/signalr/messages", options =>
-                    {
-                        options.AccessTokenProvider = () => Task.FromResult(ApiKey);
-                    })
-                .Build();
-
-            var cts = new CancellationTokenSource();
-
-            _signalrConnection.Closed += e =>
-            {
-                cts.Cancel();
-                return Task.CompletedTask;
-            };
-
-            _signalrConnection.On<SignalRMessage>("receiveMessage", (message) =>
-            {
-                _signalRReceived.Add(message);
-            });
-
-            var connected = false;
-            var retryCount = 0;
-
-            while (!connected)
-            {
-                try
-                {
-                    await _signalrConnection.StartAsync();
-                    connected = true;
-                    break;
-                }
-                catch
-                {
-                    if (retryCount > 25)
-                    {
-                        Assert.Fail("Couldn't establish signalR connection");
-                    }
-                }
-
-                retryCount++;
-                Thread.Sleep(200);
-            }
         }
 
-        public static void WaitForCompletion(Func<bool> predicate, int timeout = 10000, int interval = 500)
+        if (Directory.Exists(TempDirectory))
         {
-            var count = timeout / interval;
-            for (var i = 0; i < count; i++)
+            try
             {
-                if (predicate())
-                {
-                    return;
-                }
+                Directory.Delete(TempDirectory, true);
+            }
+            catch
+            {
+            }
+        }
+    }
 
-                Thread.Sleep(interval);
+    public string GetTempDirectory(params string[] args)
+    {
+        var path = Path.Combine(TempDirectory, Path.Combine(args));
+
+        Directory.CreateDirectory(path);
+
+        return path;
+    }
+
+    protected async Task ConnectSignalR()
+    {
+        _signalRReceived = new List<SignalRMessage>();
+        _signalrConnection = new HubConnectionBuilder()
+                            .WithUrl("http://localhost:8686/signalr/messages", options =>
+                                                                               {
+                                                                                   options.AccessTokenProvider = () => Task.FromResult(ApiKey);
+                                                                               })
+                            .Build();
+
+        var cts = new CancellationTokenSource();
+
+        _signalrConnection.Closed += e =>
+                                     {
+                                         cts.Cancel();
+                                         return Task.CompletedTask;
+                                     };
+
+        _signalrConnection.On<SignalRMessage>("receiveMessage", (message) =>
+                                                                {
+                                                                    _signalRReceived.Add(message);
+                                                                });
+
+        var connected = false;
+        var retryCount = 0;
+
+        while (!connected)
+        {
+            try
+            {
+                await _signalrConnection.StartAsync();
+                connected = true;
+                break;
+            }
+            catch
+            {
+                if (retryCount > 25)
+                {
+                    Assert.Fail("Couldn't establish signalR connection");
+                }
             }
 
+            retryCount++;
+            Thread.Sleep(200);
+        }
+    }
+
+    public static void WaitForCompletion(Func<bool> predicate, int timeout = 10000, int interval = 500)
+    {
+        var count = timeout / interval;
+        for (var i = 0; i < count; i++)
+        {
             if (predicate())
             {
                 return;
             }
 
-            Assert.Fail("Timed on wait");
+            Thread.Sleep(interval);
         }
 
-        public ArtistResource EnsureArtist(string lidarrId, string artistName, bool? monitored = null)
+        if (predicate())
         {
-            var result = Artist.All().FirstOrDefault(v => v.ForeignArtistId == lidarrId);
+            return;
+        }
 
-            if (result == null)
+        Assert.Fail("Timed on wait");
+    }
+
+    public ArtistResource EnsureArtist(string lidarrId, string artistName, bool? monitored = null)
+    {
+        var result = Artist.All().FirstOrDefault(v => v.ForeignArtistId == lidarrId);
+
+        if (result == null)
+        {
+            var lookup = Artist.Lookup("lidarr:" + lidarrId);
+            var artist = lookup.First();
+            artist.QualityProfileId = 1;
+            artist.MetadataProfileId = 1;
+            artist.Path = Path.Combine(ArtistRootFolder, artist.ArtistName);
+            artist.Monitored = true;
+            artist.AddOptions = new Core.Music.AddArtistOptions();
+            Directory.CreateDirectory(artist.Path);
+
+            result = Artist.Post(artist);
+            Commands.WaitAll();
+            WaitForCompletion(() => Tracks.GetTracksInArtist(result.Id).Count > 0);
+        }
+
+        var changed = false;
+
+        if (result.RootFolderPath != ArtistRootFolder)
+        {
+            changed = true;
+            result.RootFolderPath = ArtistRootFolder;
+            result.Path = Path.Combine(ArtistRootFolder, result.ArtistName);
+        }
+
+        if (monitored.HasValue)
+        {
+            if (result.Monitored != monitored.Value)
             {
-                var lookup = Artist.Lookup("lidarr:" + lidarrId);
-                var artist = lookup.First();
-                artist.QualityProfileId = 1;
-                artist.MetadataProfileId = 1;
-                artist.Path = Path.Combine(ArtistRootFolder, artist.ArtistName);
-                artist.Monitored = true;
-                artist.AddOptions = new Core.Music.AddArtistOptions();
-                Directory.CreateDirectory(artist.Path);
-
-                result = Artist.Post(artist);
-                Commands.WaitAll();
-                WaitForCompletion(() => Tracks.GetTracksInArtist(result.Id).Count > 0);
-            }
-
-            var changed = false;
-
-            if (result.RootFolderPath != ArtistRootFolder)
-            {
+                result.Monitored = monitored.Value;
                 changed = true;
-                result.RootFolderPath = ArtistRootFolder;
-                result.Path = Path.Combine(ArtistRootFolder, result.ArtistName);
-            }
-
-            if (monitored.HasValue)
-            {
-                if (result.Monitored != monitored.Value)
-                {
-                    result.Monitored = monitored.Value;
-                    changed = true;
-                }
-            }
-
-            if (changed)
-            {
-                result.NextAlbum = result.LastAlbum = null;
-                Artist.Put(result);
-            }
-
-            return result;
-        }
-
-        public void EnsureNoArtist(string lidarrId, string artistTitle)
-        {
-            var result = Artist.All().FirstOrDefault(v => v.ForeignArtistId == lidarrId);
-
-            if (result != null)
-            {
-                Artist.Delete(result.Id);
             }
         }
 
-        public void EnsureTrackFile(ArtistResource artist, int albumId, int albumReleaseId, int trackId, Quality quality)
+        if (changed)
         {
-            var result = Tracks.GetTracksInArtist(artist.Id).Single(v => v.Id == trackId);
-
-            if (result.TrackFile == null)
-            {
-                var path = Path.Combine(ArtistRootFolder, artist.ArtistName, "Track.mp3");
-
-                Directory.CreateDirectory(Path.GetDirectoryName(path));
-                File.WriteAllText(path, "Fake Track");
-
-                Commands.PostAndWait(new ManualImportCommand
-                {
-                    Files = new List<ManualImportFile>
-                    {
-                            new ManualImportFile
-                            {
-                                Path = path,
-                                ArtistId = artist.Id,
-                                AlbumId = albumId,
-                                AlbumReleaseId = albumReleaseId,
-                                TrackIds = new List<int> { trackId },
-                                Quality = new QualityModel(quality)
-                            }
-                    }
-                });
-                Commands.WaitAll();
-
-                var track = Tracks.GetTracksInArtist(artist.Id).Single(x => x.Id == trackId);
-
-                track.TrackFileId.Should().NotBe(0);
-            }
+            result.NextAlbum = result.LastAlbum = null;
+            Artist.Put(result);
         }
 
-        public QualityProfileResource EnsureProfileCutoff(int profileId, string cutoff)
+        return result;
+    }
+
+    public void EnsureNoArtist(string lidarrId, string artistTitle)
+    {
+        var result = Artist.All().FirstOrDefault(v => v.ForeignArtistId == lidarrId);
+
+        if (result != null)
         {
-            var profile = Profiles.Get(profileId);
-            var cutoffItem = profile.Items.First(x => x.Name == cutoff);
+            Artist.Delete(result.Id);
+        }
+    }
 
-            if (profile.Cutoff != cutoffItem.Id)
-            {
-                profile.Cutoff = cutoffItem.Id;
-                profile = Profiles.Put(profile);
-            }
+    public void EnsureTrackFile(ArtistResource artist, int albumId, int albumReleaseId, int trackId, Quality quality)
+    {
+        var result = Tracks.GetTracksInArtist(artist.Id).Single(v => v.Id == trackId);
 
-            return profile;
+        if (result.TrackFile == null)
+        {
+            var path = Path.Combine(ArtistRootFolder, artist.ArtistName, "Track.mp3");
+
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            File.WriteAllText(path, "Fake Track");
+
+            Commands.PostAndWait(new ManualImportCommand
+                                 {
+                                     Files = new List<ManualImportFile>
+                                             {
+                                                 new ManualImportFile
+                                                 {
+                                                     Path = path,
+                                                     ArtistId = artist.Id,
+                                                     AlbumId = albumId,
+                                                     AlbumReleaseId = albumReleaseId,
+                                                     TrackIds = new List<int> { trackId },
+                                                     Quality = new QualityModel(quality)
+                                                 }
+                                             }
+                                 });
+            Commands.WaitAll();
+
+            var track = Tracks.GetTracksInArtist(artist.Id).Single(x => x.Id == trackId);
+
+            track.TrackFileId.Should().NotBe(0);
+        }
+    }
+
+    public QualityProfileResource EnsureProfileCutoff(int profileId, string cutoff)
+    {
+        var profile = Profiles.Get(profileId);
+        var cutoffItem = profile.Items.First(x => x.Name == cutoff);
+
+        if (profile.Cutoff != cutoffItem.Id)
+        {
+            profile.Cutoff = cutoffItem.Id;
+            profile = Profiles.Put(profile);
         }
 
-        public TagResource EnsureTag(string tagLabel)
+        return profile;
+    }
+
+    public TagResource EnsureTag(string tagLabel)
+    {
+        var tag = Tags.All().FirstOrDefault(v => v.Label == tagLabel);
+
+        if (tag == null)
         {
-            var tag = Tags.All().FirstOrDefault(v => v.Label == tagLabel);
-
-            if (tag == null)
-            {
-                tag = Tags.Post(new TagResource { Label = tagLabel });
-            }
-
-            return tag;
+            tag = Tags.Post(new TagResource { Label = tagLabel });
         }
 
-        public void EnsureNoTag(string tagLabel)
-        {
-            var tag = Tags.All().FirstOrDefault(v => v.Label == tagLabel);
+        return tag;
+    }
 
-            if (tag != null)
-            {
-                Tags.Delete(tag.Id);
-            }
+    public void EnsureNoTag(string tagLabel)
+    {
+        var tag = Tags.All().FirstOrDefault(v => v.Label == tagLabel);
+
+        if (tag != null)
+        {
+            Tags.Delete(tag.Id);
+        }
+    }
+
+    public DownloadClientResource EnsureDownloadClient(bool enabled = true)
+    {
+        var client = DownloadClients.All().FirstOrDefault(v => v.Name == "Test UsenetBlackhole");
+
+        if (client == null)
+        {
+            var schema = DownloadClients.Schema().First(v => v.Implementation == "UsenetBlackhole");
+
+            schema.Enable = enabled;
+            schema.Name = "Test UsenetBlackhole";
+            schema.Fields.First(v => v.Name == "watchFolder").Value = GetTempDirectory("Download", "UsenetBlackhole", "Watch");
+            schema.Fields.First(v => v.Name == "nzbFolder").Value = GetTempDirectory("Download", "UsenetBlackhole", "Nzb");
+
+            client = DownloadClients.Post(schema);
+        }
+        else if (client.Enable != enabled)
+        {
+            client.Enable = enabled;
+
+            client = DownloadClients.Put(client);
         }
 
-        public DownloadClientResource EnsureDownloadClient(bool enabled = true)
+        return client;
+    }
+
+    public void EnsureNoDownloadClient()
+    {
+        var clients = DownloadClients.All();
+
+        foreach (var client in clients)
         {
-            var client = DownloadClients.All().FirstOrDefault(v => v.Name == "Test UsenetBlackhole");
-
-            if (client == null)
-            {
-                var schema = DownloadClients.Schema().First(v => v.Implementation == "UsenetBlackhole");
-
-                schema.Enable = enabled;
-                schema.Name = "Test UsenetBlackhole";
-                schema.Fields.First(v => v.Name == "watchFolder").Value = GetTempDirectory("Download", "UsenetBlackhole", "Watch");
-                schema.Fields.First(v => v.Name == "nzbFolder").Value = GetTempDirectory("Download", "UsenetBlackhole", "Nzb");
-
-                client = DownloadClients.Post(schema);
-            }
-            else if (client.Enable != enabled)
-            {
-                client.Enable = enabled;
-
-                client = DownloadClients.Put(client);
-            }
-
-            return client;
-        }
-
-        public void EnsureNoDownloadClient()
-        {
-            var clients = DownloadClients.All();
-
-            foreach (var client in clients)
-            {
-                DownloadClients.Delete(client.Id);
-            }
+            DownloadClients.Delete(client.Id);
         }
     }
 }

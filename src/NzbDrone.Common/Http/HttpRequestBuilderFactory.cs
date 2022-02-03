@@ -1,31 +1,30 @@
-namespace NzbDrone.Common.Http
+namespace NzbDrone.Common.Http;
+
+public interface IHttpRequestBuilderFactory
 {
-    public interface IHttpRequestBuilderFactory
+    HttpRequestBuilder Create();
+}
+
+public class HttpRequestBuilderFactory : IHttpRequestBuilderFactory
+{
+    private HttpRequestBuilder _rootBuilder;
+
+    public HttpRequestBuilderFactory(HttpRequestBuilder rootBuilder)
     {
-        HttpRequestBuilder Create();
+        SetRootBuilder(rootBuilder);
     }
 
-    public class HttpRequestBuilderFactory : IHttpRequestBuilderFactory
+    protected HttpRequestBuilderFactory()
     {
-        private HttpRequestBuilder _rootBuilder;
+    }
 
-        public HttpRequestBuilderFactory(HttpRequestBuilder rootBuilder)
-        {
-            SetRootBuilder(rootBuilder);
-        }
+    protected void SetRootBuilder(HttpRequestBuilder rootBuilder)
+    {
+        _rootBuilder = rootBuilder.Clone();
+    }
 
-        protected HttpRequestBuilderFactory()
-        {
-        }
-
-        protected void SetRootBuilder(HttpRequestBuilder rootBuilder)
-        {
-            _rootBuilder = rootBuilder.Clone();
-        }
-
-        public HttpRequestBuilder Create()
-        {
-            return _rootBuilder.Clone();
-        }
+    public HttpRequestBuilder Create()
+    {
+        return _rootBuilder.Clone();
     }
 }

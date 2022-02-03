@@ -1,36 +1,35 @@
 using System.Collections.Generic;
 using NzbDrone.Core.MetadataSource;
 
-namespace NzbDrone.Core.ImportLists.LidarrLists
+namespace NzbDrone.Core.ImportLists.LidarrLists;
+
+public class LidarrListsRequestGenerator : IImportListRequestGenerator
 {
-    public class LidarrListsRequestGenerator : IImportListRequestGenerator
+    public LidarrListsSettings Settings { get; set; }
+
+    private readonly IMetadataRequestBuilder _requestBulder;
+
+    public LidarrListsRequestGenerator(IMetadataRequestBuilder requestBuilder)
     {
-        public LidarrListsSettings Settings { get; set; }
+        _requestBulder = requestBuilder;
+    }
 
-        private readonly IMetadataRequestBuilder _requestBulder;
+    public virtual ImportListPageableRequestChain GetListItems()
+    {
+        var pageableRequests = new ImportListPageableRequestChain();
 
-        public LidarrListsRequestGenerator(IMetadataRequestBuilder requestBuilder)
-        {
-            _requestBulder = requestBuilder;
-        }
+        pageableRequests.Add(GetPagedRequests());
 
-        public virtual ImportListPageableRequestChain GetListItems()
-        {
-            var pageableRequests = new ImportListPageableRequestChain();
+        return pageableRequests;
+    }
 
-            pageableRequests.Add(GetPagedRequests());
+    private IEnumerable<ImportListRequest> GetPagedRequests()
+    {
+        var request = _requestBulder.GetRequestBuilder()
+                                    .Create()
+                                    .SetSegment("route", "chart/" + Settings.ListId)
+                                    .Build();
 
-            return pageableRequests;
-        }
-
-        private IEnumerable<ImportListRequest> GetPagedRequests()
-        {
-            var request = _requestBulder.GetRequestBuilder()
-                                        .Create()
-                                        .SetSegment("route", "chart/" + Settings.ListId)
-                                        .Build();
-
-            yield return new ImportListRequest(request);
-        }
+        yield return new ImportListRequest(request);
     }
 }

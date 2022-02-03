@@ -1,8 +1,7 @@
 ﻿using NzbDrone.Core.Extras.Files;
 
-namespace NzbDrone.Core.Extras.Others
+namespace NzbDrone.Core.Extras.Others;
+
+public class OtherExtraFile : ExtraFile
 {
-    public class OtherExtraFile : ExtraFile
-    {
-    }
 }

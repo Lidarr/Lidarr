@@ -3,32 +3,31 @@ using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
+namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications;
+
+public class NoMissingOrUnmatchedTracksSpecification : IImportDecisionEngineSpecification<LocalAlbumRelease>
 {
-    public class NoMissingOrUnmatchedTracksSpecification : IImportDecisionEngineSpecification<LocalAlbumRelease>
+    private readonly Logger _logger;
+
+    public NoMissingOrUnmatchedTracksSpecification(Logger logger)
     {
-        private readonly Logger _logger;
+        _logger = logger;
+    }
 
-        public NoMissingOrUnmatchedTracksSpecification(Logger logger)
+    public Decision IsSatisfiedBy(LocalAlbumRelease item, DownloadClientItem downloadClientItem)
+    {
+        if (item.NewDownload && item.TrackMapping.LocalExtra.Count > 0)
         {
-            _logger = logger;
+            _logger.Debug("This release has track files that have not been matched. Skipping {0}", item);
+            return Decision.Reject("Has unmatched tracks");
         }
 
-        public Decision IsSatisfiedBy(LocalAlbumRelease item, DownloadClientItem downloadClientItem)
+        if (item.NewDownload && item.TrackMapping.MBExtra.Count > 0)
         {
-            if (item.NewDownload && item.TrackMapping.LocalExtra.Count > 0)
-            {
-                _logger.Debug("This release has track files that have not been matched. Skipping {0}", item);
-                return Decision.Reject("Has unmatched tracks");
-            }
-
-            if (item.NewDownload && item.TrackMapping.MBExtra.Count > 0)
-            {
-                _logger.Debug("This release is missing tracks. Skipping {0}", item);
-                return Decision.Reject("Has missing tracks");
-            }
-
-            return Decision.Accept();
+            _logger.Debug("This release is missing tracks. Skipping {0}", item);
+            return Decision.Reject("Has missing tracks");
         }
+
+        return Decision.Accept();
     }
 }

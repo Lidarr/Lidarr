@@ -1,10 +1,9 @@
 using NzbDrone.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Indexers
+namespace NzbDrone.Core.Indexers;
+
+public interface IIndexerSettings : IProviderConfig
 {
-    public interface IIndexerSettings : IProviderConfig
-    {
-        string BaseUrl { get; set; }
-        int? EarlyReleaseLimit { get; set; }
-    }
+    string BaseUrl { get; set; }
+    int? EarlyReleaseLimit { get; set; }
 }

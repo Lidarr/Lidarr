@@ -5,43 +5,42 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Qualities;
 
-namespace NzbDrone.Core.Profiles.Qualities
+namespace NzbDrone.Core.Profiles.Qualities;
+
+public class QualityProfileQualityItem : IEmbeddedDocument
 {
-    public class QualityProfileQualityItem : IEmbeddedDocument
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+    public Quality Quality { get; set; }
+    public List<QualityProfileQualityItem> Items { get; set; }
+    public bool Allowed { get; set; }
+
+    public QualityProfileQualityItem()
     {
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public int Id { get; set; }
+        Items = new List<QualityProfileQualityItem>();
+    }
 
-        public string Name { get; set; }
-        public Quality Quality { get; set; }
-        public List<QualityProfileQualityItem> Items { get; set; }
-        public bool Allowed { get; set; }
-
-        public QualityProfileQualityItem()
+    public List<Quality> GetQualities()
+    {
+        if (Quality == null)
         {
-            Items = new List<QualityProfileQualityItem>();
+            return Items.Select(s => s.Quality).ToList();
         }
 
-        public List<Quality> GetQualities()
-        {
-            if (Quality == null)
-            {
-                return Items.Select(s => s.Quality).ToList();
-            }
+        return new List<Quality> { Quality };
+    }
 
-            return new List<Quality> { Quality };
+    public override string ToString()
+    {
+        var qualitiesString = string.Join(", ", GetQualities());
+
+        if (Name.IsNotNullOrWhiteSpace())
+        {
+            return $"{Name} ({qualitiesString})";
         }
 
-        public override string ToString()
-        {
-            var qualitiesString = string.Join(", ", GetQualities());
-
-            if (Name.IsNotNullOrWhiteSpace())
-            {
-                return $"{Name} ({qualitiesString})";
-            }
-
-            return qualitiesString;
-        }
+        return qualitiesString;
     }
 }

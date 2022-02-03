@@ -8,131 +8,130 @@ using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.ImportLists.Exclusions;
 using NzbDrone.Core.MetadataSource;
 
-namespace NzbDrone.Core.Music
+namespace NzbDrone.Core.Music;
+
+public interface IAddAlbumService
 {
-    public interface IAddAlbumService
+    Album AddAlbum(Album album, bool doRefresh = true);
+    List<Album> AddAlbums(List<Album> albums, bool doRefresh = true, bool ignoreErrors = false);
+}
+
+public class AddAlbumService : IAddAlbumService
+{
+    private readonly IArtistService _artistService;
+    private readonly IAddArtistService _addArtistService;
+    private readonly IAlbumService _albumService;
+    private readonly IProvideAlbumInfo _albumInfo;
+    private readonly IImportListExclusionService _importListExclusionService;
+    private readonly Logger _logger;
+
+    public AddAlbumService(IArtistService artistService,
+                           IAddArtistService addArtistService,
+                           IAlbumService albumService,
+                           IProvideAlbumInfo albumInfo,
+                           IImportListExclusionService importListExclusionService,
+                           Logger logger)
     {
-        Album AddAlbum(Album album, bool doRefresh = true);
-        List<Album> AddAlbums(List<Album> albums, bool doRefresh = true, bool ignoreErrors = false);
+        _artistService = artistService;
+        _addArtistService = addArtistService;
+        _albumService = albumService;
+        _albumInfo = albumInfo;
+        _importListExclusionService = importListExclusionService;
+        _logger = logger;
     }
 
-    public class AddAlbumService : IAddAlbumService
+    public Album AddAlbum(Album album, bool doRefresh = true)
     {
-        private readonly IArtistService _artistService;
-        private readonly IAddArtistService _addArtistService;
-        private readonly IAlbumService _albumService;
-        private readonly IProvideAlbumInfo _albumInfo;
-        private readonly IImportListExclusionService _importListExclusionService;
-        private readonly Logger _logger;
+        _logger.Debug($"Adding album {album}");
 
-        public AddAlbumService(IArtistService artistService,
-                               IAddArtistService addArtistService,
-                               IAlbumService albumService,
-                               IProvideAlbumInfo albumInfo,
-                               IImportListExclusionService importListExclusionService,
-                               Logger logger)
+        album = AddSkyhookData(album);
+
+        // Remove any import list exclusions preventing addition
+        _importListExclusionService.Delete(album.ForeignAlbumId);
+        _importListExclusionService.Delete(album.ArtistMetadata.Value.ForeignArtistId);
+
+        // Note it's a manual addition so it's not deleted on next refresh
+        album.AddOptions.AddType = AlbumAddType.Manual;
+
+        // Add the artist if necessary
+        var dbArtist = _artistService.FindById(album.ArtistMetadata.Value.ForeignArtistId);
+        if (dbArtist == null)
         {
-            _artistService = artistService;
-            _addArtistService = addArtistService;
-            _albumService = albumService;
-            _albumInfo = albumInfo;
-            _importListExclusionService = importListExclusionService;
-            _logger = logger;
-        }
+            var artist = album.Artist.Value;
 
-        public Album AddAlbum(Album album, bool doRefresh = true)
-        {
-            _logger.Debug($"Adding album {album}");
+            artist.Metadata.Value.ForeignArtistId = album.ArtistMetadata.Value.ForeignArtistId;
 
-            album = AddSkyhookData(album);
-
-            // Remove any import list exclusions preventing addition
-            _importListExclusionService.Delete(album.ForeignAlbumId);
-            _importListExclusionService.Delete(album.ArtistMetadata.Value.ForeignArtistId);
-
-            // Note it's a manual addition so it's not deleted on next refresh
-            album.AddOptions.AddType = AlbumAddType.Manual;
-
-            // Add the artist if necessary
-            var dbArtist = _artistService.FindById(album.ArtistMetadata.Value.ForeignArtistId);
-            if (dbArtist == null)
+            // if adding and searching for artist, don't trigger album specific search
+            if (artist.AddOptions?.SearchForMissingAlbums ?? false)
             {
-                var artist = album.Artist.Value;
-
-                artist.Metadata.Value.ForeignArtistId = album.ArtistMetadata.Value.ForeignArtistId;
-
-                // if adding and searching for artist, don't trigger album specific search
-                if (artist.AddOptions?.SearchForMissingAlbums ?? false)
-                {
-                    album.AddOptions.SearchForNewAlbum = false;
-                }
-
-                dbArtist = _addArtistService.AddArtist(artist, false);
+                album.AddOptions.SearchForNewAlbum = false;
             }
 
-            album.ArtistMetadataId = dbArtist.ArtistMetadataId;
-            album.Artist = dbArtist;
-            _albumService.AddAlbum(album, doRefresh);
-
-            return album;
+            dbArtist = _addArtistService.AddArtist(artist, false);
         }
 
-        public List<Album> AddAlbums(List<Album> albums, bool doRefresh = true, bool ignoreErrors = false)
+        album.ArtistMetadataId = dbArtist.ArtistMetadataId;
+        album.Artist = dbArtist;
+        _albumService.AddAlbum(album, doRefresh);
+
+        return album;
+    }
+
+    public List<Album> AddAlbums(List<Album> albums, bool doRefresh = true, bool ignoreErrors = false)
+    {
+        var added = DateTime.UtcNow;
+        var addedAlbums = new List<Album>();
+
+        foreach (var a in albums)
         {
-            var added = DateTime.UtcNow;
-            var addedAlbums = new List<Album>();
-
-            foreach (var a in albums)
-            {
-                try
-                {
-                    a.Added = added;
-                    if (addedAlbums.Any(f => f.ForeignAlbumId == a.ForeignAlbumId))
-                    {
-                        _logger.Debug("Musicbrainz ID {0} was not added due to validation failure: Album already exists on list", a.ForeignAlbumId);
-                        continue;
-                    }
-
-                    addedAlbums.Add(AddAlbum(a, doRefresh));
-                }
-                catch (ValidationException ex)
-                {
-                    if (!ignoreErrors)
-                    {
-                        throw;
-                    }
-
-                    _logger.Debug("Musicbrainz ID {0} was not added due to validation failures. {1}", a.ForeignAlbumId, ex.Message);
-                }
-            }
-
-            return addedAlbums;
-        }
-
-        private Album AddSkyhookData(Album newAlbum)
-        {
-            Tuple<string, Album, List<ArtistMetadata>> tuple = null;
             try
             {
-                tuple = _albumInfo.GetAlbumInfo(newAlbum.ForeignAlbumId);
+                a.Added = added;
+                if (addedAlbums.Any(f => f.ForeignAlbumId == a.ForeignAlbumId))
+                {
+                    _logger.Debug("Musicbrainz ID {0} was not added due to validation failure: Album already exists on list", a.ForeignAlbumId);
+                    continue;
+                }
+
+                addedAlbums.Add(AddAlbum(a, doRefresh));
             }
-            catch (AlbumNotFoundException)
+            catch (ValidationException ex)
             {
-                _logger.Error("Album with MusicBrainz Id {0} was not found, it may have been removed from Musicbrainz.", newAlbum.ForeignAlbumId);
+                if (!ignoreErrors)
+                {
+                    throw;
+                }
 
-                throw new ValidationException(new List<ValidationFailure>
-                                              {
-                                                  new ValidationFailure("MusicbrainzId", "An album with this ID was not found", newAlbum.ForeignAlbumId)
-                                              });
+                _logger.Debug("Musicbrainz ID {0} was not added due to validation failures. {1}", a.ForeignAlbumId, ex.Message);
             }
-
-            newAlbum.UseMetadataFrom(tuple.Item2);
-            newAlbum.Added = DateTime.UtcNow;
-
-            var metadata = tuple.Item3.Single(x => x.ForeignArtistId == tuple.Item1);
-            newAlbum.ArtistMetadata = metadata;
-
-            return newAlbum;
         }
+
+        return addedAlbums;
+    }
+
+    private Album AddSkyhookData(Album newAlbum)
+    {
+        Tuple<string, Album, List<ArtistMetadata>> tuple = null;
+        try
+        {
+            tuple = _albumInfo.GetAlbumInfo(newAlbum.ForeignAlbumId);
+        }
+        catch (AlbumNotFoundException)
+        {
+            _logger.Error("Album with MusicBrainz Id {0} was not found, it may have been removed from Musicbrainz.", newAlbum.ForeignAlbumId);
+
+            throw new ValidationException(new List<ValidationFailure>
+                                          {
+                                              new ValidationFailure("MusicbrainzId", "An album with this ID was not found", newAlbum.ForeignAlbumId)
+                                          });
+        }
+
+        newAlbum.UseMetadataFrom(tuple.Item2);
+        newAlbum.Added = DateTime.UtcNow;
+
+        var metadata = tuple.Item3.Single(x => x.ForeignArtistId == tuple.Item1);
+        newAlbum.ArtistMetadata = metadata;
+
+        return newAlbum;
     }
 }

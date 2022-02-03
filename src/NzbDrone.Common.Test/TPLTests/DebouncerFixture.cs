@@ -4,144 +4,143 @@ using FluentAssertions;
 using NUnit.Framework;
 using NzbDrone.Common.TPL;
 
-namespace NzbDrone.Common.Test.TPLTests
+namespace NzbDrone.Common.Test.TPLTests;
+
+[TestFixture]
+[Platform(Exclude = "MacOsX")]
+public class DebouncerFixture
 {
-    [TestFixture]
-    [Platform(Exclude = "MacOsX")]
-    public class DebouncerFixture
+    public class Counter
     {
-        public class Counter
+        public int Count { get; private set; }
+
+        public void Hit()
         {
-            public int Count { get; private set; }
-
-            public void Hit()
-            {
-                Count++;
-            }
+            Count++;
         }
+    }
 
-        [Test]
-        [Retry(3)]
-        public void should_hold_the_call_for_debounce_duration()
-        {
-            var counter = new Counter();
-            var debounceFunction = new Debouncer(counter.Hit, TimeSpan.FromMilliseconds(50));
+    [Test]
+    [Retry(3)]
+    public void should_hold_the_call_for_debounce_duration()
+    {
+        var counter = new Counter();
+        var debounceFunction = new Debouncer(counter.Hit, TimeSpan.FromMilliseconds(50));
 
-            debounceFunction.Execute();
-            debounceFunction.Execute();
-            debounceFunction.Execute();
+        debounceFunction.Execute();
+        debounceFunction.Execute();
+        debounceFunction.Execute();
 
-            counter.Count.Should().Be(0);
+        counter.Count.Should().Be(0);
 
-            Thread.Sleep(100);
+        Thread.Sleep(100);
 
-            counter.Count.Should().Be(1);
-        }
+        counter.Count.Should().Be(1);
+    }
 
-        [Test]
-        [Retry(3)]
-        public void should_wait_for_last_call_if_execute_resets_timer()
-        {
-            var counter = new Counter();
-            var debounceFunction = new Debouncer(counter.Hit, TimeSpan.FromMilliseconds(200), true);
+    [Test]
+    [Retry(3)]
+    public void should_wait_for_last_call_if_execute_resets_timer()
+    {
+        var counter = new Counter();
+        var debounceFunction = new Debouncer(counter.Hit, TimeSpan.FromMilliseconds(200), true);
 
-            debounceFunction.Execute();
+        debounceFunction.Execute();
 
-            Thread.Sleep(100);
+        Thread.Sleep(100);
 
-            debounceFunction.Execute();
+        debounceFunction.Execute();
 
-            Thread.Sleep(150);
+        Thread.Sleep(150);
 
-            counter.Count.Should().Be(0);
+        counter.Count.Should().Be(0);
 
-            Thread.Sleep(100);
+        Thread.Sleep(100);
 
-            counter.Count.Should().Be(1);
-        }
+        counter.Count.Should().Be(1);
+    }
 
-        [Test]
-        [Retry(3)]
-        public void should_throttle_calls()
-        {
-            var counter = new Counter();
-            var debounceFunction = new Debouncer(counter.Hit, TimeSpan.FromMilliseconds(50));
+    [Test]
+    [Retry(3)]
+    public void should_throttle_calls()
+    {
+        var counter = new Counter();
+        var debounceFunction = new Debouncer(counter.Hit, TimeSpan.FromMilliseconds(50));
 
-            debounceFunction.Execute();
-            debounceFunction.Execute();
-            debounceFunction.Execute();
+        debounceFunction.Execute();
+        debounceFunction.Execute();
+        debounceFunction.Execute();
 
-            counter.Count.Should().Be(0);
+        counter.Count.Should().Be(0);
 
-            Thread.Sleep(200);
+        Thread.Sleep(200);
 
-            debounceFunction.Execute();
-            debounceFunction.Execute();
-            debounceFunction.Execute();
+        debounceFunction.Execute();
+        debounceFunction.Execute();
+        debounceFunction.Execute();
 
-            Thread.Sleep(200);
+        Thread.Sleep(200);
 
-            counter.Count.Should().Be(2);
-        }
+        counter.Count.Should().Be(2);
+    }
 
-        [Test]
-        [Retry(3)]
-        public void should_hold_the_call_while_paused()
-        {
-            var counter = new Counter();
-            var debounceFunction = new Debouncer(counter.Hit, TimeSpan.FromMilliseconds(50));
+    [Test]
+    [Retry(3)]
+    public void should_hold_the_call_while_paused()
+    {
+        var counter = new Counter();
+        var debounceFunction = new Debouncer(counter.Hit, TimeSpan.FromMilliseconds(50));
 
-            debounceFunction.Pause();
+        debounceFunction.Pause();
 
-            debounceFunction.Execute();
-            debounceFunction.Execute();
+        debounceFunction.Execute();
+        debounceFunction.Execute();
 
-            Thread.Sleep(100);
+        Thread.Sleep(100);
 
-            counter.Count.Should().Be(0);
+        counter.Count.Should().Be(0);
 
-            debounceFunction.Execute();
-            debounceFunction.Execute();
+        debounceFunction.Execute();
+        debounceFunction.Execute();
 
-            Thread.Sleep(100);
+        Thread.Sleep(100);
 
-            counter.Count.Should().Be(0);
+        counter.Count.Should().Be(0);
 
-            debounceFunction.Resume();
+        debounceFunction.Resume();
 
-            Thread.Sleep(20);
+        Thread.Sleep(20);
 
-            counter.Count.Should().Be(0);
+        counter.Count.Should().Be(0);
 
-            Thread.Sleep(100);
+        Thread.Sleep(100);
 
-            counter.Count.Should().Be(1);
-        }
+        counter.Count.Should().Be(1);
+    }
 
-        [Test]
-        [Retry(3)]
-        public void should_handle_pause_reentrancy()
-        {
-            var counter = new Counter();
-            var debounceFunction = new Debouncer(counter.Hit, TimeSpan.FromMilliseconds(50));
+    [Test]
+    [Retry(3)]
+    public void should_handle_pause_reentrancy()
+    {
+        var counter = new Counter();
+        var debounceFunction = new Debouncer(counter.Hit, TimeSpan.FromMilliseconds(50));
 
-            debounceFunction.Pause();
-            debounceFunction.Pause();
+        debounceFunction.Pause();
+        debounceFunction.Pause();
 
-            debounceFunction.Execute();
-            debounceFunction.Execute();
+        debounceFunction.Execute();
+        debounceFunction.Execute();
 
-            debounceFunction.Resume();
+        debounceFunction.Resume();
 
-            Thread.Sleep(100);
+        Thread.Sleep(100);
 
-            counter.Count.Should().Be(0);
+        counter.Count.Should().Be(0);
 
-            debounceFunction.Resume();
+        debounceFunction.Resume();
 
-            Thread.Sleep(100);
+        Thread.Sleep(100);
 
-            counter.Count.Should().Be(1);
-        }
+        counter.Count.Should().Be(1);
     }
 }

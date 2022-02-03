@@ -5,62 +5,61 @@ using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 
-namespace NzbDrone.Core.ProgressMessaging
+namespace NzbDrone.Core.ProgressMessaging;
+
+public class ProgressMessageTarget : Target, IHandle<ApplicationStartedEvent>
 {
-    public class ProgressMessageTarget : Target, IHandle<ApplicationStartedEvent>
+    private readonly IEventAggregator _eventAggregator;
+    private readonly IManageCommandQueue _commandQueueManager;
+    private static LoggingRule _rule;
+
+    public ProgressMessageTarget(IEventAggregator eventAggregator, IManageCommandQueue commandQueueManager)
     {
-        private readonly IEventAggregator _eventAggregator;
-        private readonly IManageCommandQueue _commandQueueManager;
-        private static LoggingRule _rule;
+        _eventAggregator = eventAggregator;
+        _commandQueueManager = commandQueueManager;
+    }
 
-        public ProgressMessageTarget(IEventAggregator eventAggregator, IManageCommandQueue commandQueueManager)
+    protected override void Write(LogEventInfo logEvent)
+    {
+        var command = ProgressMessageContext.CommandModel;
+
+        if (!IsClientMessage(logEvent, command))
         {
-            _eventAggregator = eventAggregator;
-            _commandQueueManager = commandQueueManager;
+            return;
         }
 
-        protected override void Write(LogEventInfo logEvent)
+        if (!ProgressMessageContext.LockReentrancy())
         {
-            var command = ProgressMessageContext.CommandModel;
-
-            if (!IsClientMessage(logEvent, command))
-            {
-                return;
-            }
-
-            if (!ProgressMessageContext.LockReentrancy())
-            {
-                return;
-            }
-
-            try
-            {
-                _commandQueueManager.SetMessage(command, logEvent.FormattedMessage);
-                _eventAggregator.PublishEvent(new CommandUpdatedEvent(command));
-            }
-            finally
-            {
-                ProgressMessageContext.UnlockReentrancy();
-            }
+            return;
         }
 
-        private bool IsClientMessage(LogEventInfo logEvent, CommandModel command)
+        try
         {
-            if (command == null || !command.Body.SendUpdatesToClient)
-            {
-                return false;
-            }
+            _commandQueueManager.SetMessage(command, logEvent.FormattedMessage);
+            _eventAggregator.PublishEvent(new CommandUpdatedEvent(command));
+        }
+        finally
+        {
+            ProgressMessageContext.UnlockReentrancy();
+        }
+    }
 
-            return logEvent.Properties.ContainsKey("Status");
+    private bool IsClientMessage(LogEventInfo logEvent, CommandModel command)
+    {
+        if (command == null || !command.Body.SendUpdatesToClient)
+        {
+            return false;
         }
 
-        public void Handle(ApplicationStartedEvent message)
-        {
-            _rule = new LoggingRule("*", LogLevel.Trace, this);
+        return logEvent.Properties.ContainsKey("Status");
+    }
 
-            LogManager.Configuration.AddTarget("ProgressMessagingLogger", this);
-            LogManager.Configuration.LoggingRules.Add(_rule);
-            LogManager.ReconfigExistingLoggers();
-        }
+    public void Handle(ApplicationStartedEvent message)
+    {
+        _rule = new LoggingRule("*", LogLevel.Trace, this);
+
+        LogManager.Configuration.AddTarget("ProgressMessagingLogger", this);
+        LogManager.Configuration.LoggingRules.Add(_rule);
+        LogManager.ReconfigExistingLoggers();
     }
 }

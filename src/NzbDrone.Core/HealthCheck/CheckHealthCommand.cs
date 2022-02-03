@@ -1,8 +1,7 @@
 ﻿using NzbDrone.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.HealthCheck
+namespace NzbDrone.Core.HealthCheck;
+
+public class CheckHealthCommand : Command
 {
-    public class CheckHealthCommand : Command
-    {
-    }
 }

@@ -1,6 +1,5 @@
-﻿namespace NzbDrone.Core.Messaging.Commands
+﻿namespace NzbDrone.Core.Messaging.Commands;
+
+public class MessagingCleanupCommand : Command
 {
-    public class MessagingCleanupCommand : Command
-    {
-    }
 }

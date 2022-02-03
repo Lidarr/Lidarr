@@ -7,147 +7,146 @@ using NzbDrone.Common.Exceptions;
 using NzbDrone.Common.Instrumentation;
 using NzbDrone.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore
+namespace NzbDrone.Core.Datastore;
+
+public interface IDbFactory
 {
-    public interface IDbFactory
+    IDatabase Create(MigrationType migrationType = MigrationType.Main);
+    IDatabase Create(MigrationContext migrationContext);
+}
+
+public class DbFactory : IDbFactory
+{
+    private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(DbFactory));
+    private readonly IMigrationController _migrationController;
+    private readonly IConnectionStringFactory _connectionStringFactory;
+    private readonly IDiskProvider _diskProvider;
+    private readonly IRestoreDatabase _restoreDatabaseService;
+
+    static DbFactory()
     {
-        IDatabase Create(MigrationType migrationType = MigrationType.Main);
-        IDatabase Create(MigrationContext migrationContext);
+        InitializeEnvironment();
+
+        TableMapping.Map();
     }
 
-    public class DbFactory : IDbFactory
+    private static void InitializeEnvironment()
     {
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(DbFactory));
-        private readonly IMigrationController _migrationController;
-        private readonly IConnectionStringFactory _connectionStringFactory;
-        private readonly IDiskProvider _diskProvider;
-        private readonly IRestoreDatabase _restoreDatabaseService;
+        // Speed up sqlite3 initialization since we don't use the config file and can't rely on preloading.
+        Environment.SetEnvironmentVariable("No_Expand", "true");
+        Environment.SetEnvironmentVariable("No_SQLiteXmlConfigFile", "true");
+        Environment.SetEnvironmentVariable("No_PreLoadSQLite", "true");
+    }
 
-        static DbFactory()
+    public DbFactory(IMigrationController migrationController,
+                     IConnectionStringFactory connectionStringFactory,
+                     IDiskProvider diskProvider,
+                     IRestoreDatabase restoreDatabaseService)
+    {
+        _migrationController = migrationController;
+        _connectionStringFactory = connectionStringFactory;
+        _diskProvider = diskProvider;
+        _restoreDatabaseService = restoreDatabaseService;
+    }
+
+    public IDatabase Create(MigrationType migrationType = MigrationType.Main)
+    {
+        return Create(new MigrationContext(migrationType));
+    }
+
+    public IDatabase Create(MigrationContext migrationContext)
+    {
+        string connectionString;
+
+        switch (migrationContext.MigrationType)
         {
-            InitializeEnvironment();
+            case MigrationType.Main:
+                {
+                    connectionString = _connectionStringFactory.MainDbConnectionString;
+                    CreateMain(connectionString, migrationContext);
 
-            TableMapping.Map();
+                    break;
+                }
+
+            case MigrationType.Log:
+                {
+                    connectionString = _connectionStringFactory.LogDbConnectionString;
+                    CreateLog(connectionString, migrationContext);
+
+                    break;
+                }
+
+            default:
+                {
+                    throw new ArgumentException("Invalid MigrationType");
+                }
         }
 
-        private static void InitializeEnvironment()
+        var db = new Database(migrationContext.MigrationType.ToString(), () =>
+                                                                         {
+                                                                             var conn = SQLiteFactory.Instance.CreateConnection();
+                                                                             conn.ConnectionString = connectionString;
+                                                                             conn.Open();
+
+                                                                             return conn;
+                                                                         });
+
+        return db;
+    }
+
+    private void CreateMain(string connectionString, MigrationContext migrationContext)
+    {
+        try
         {
-            // Speed up sqlite3 initialization since we don't use the config file and can't rely on preloading.
-            Environment.SetEnvironmentVariable("No_Expand", "true");
-            Environment.SetEnvironmentVariable("No_SQLiteXmlConfigFile", "true");
-            Environment.SetEnvironmentVariable("No_PreLoadSQLite", "true");
+            _restoreDatabaseService.Restore();
+            _migrationController.Migrate(connectionString, migrationContext);
         }
-
-        public DbFactory(IMigrationController migrationController,
-                         IConnectionStringFactory connectionStringFactory,
-                         IDiskProvider diskProvider,
-                         IRestoreDatabase restoreDatabaseService)
+        catch (SQLiteException e)
         {
-            _migrationController = migrationController;
-            _connectionStringFactory = connectionStringFactory;
-            _diskProvider = diskProvider;
-            _restoreDatabaseService = restoreDatabaseService;
-        }
+            var fileName = _connectionStringFactory.GetDatabasePath(connectionString);
 
-        public IDatabase Create(MigrationType migrationType = MigrationType.Main)
-        {
-            return Create(new MigrationContext(migrationType));
-        }
-
-        public IDatabase Create(MigrationContext migrationContext)
-        {
-            string connectionString;
-
-            switch (migrationContext.MigrationType)
+            if (OsInfo.IsOsx)
             {
-                case MigrationType.Main:
-                    {
-                        connectionString = _connectionStringFactory.MainDbConnectionString;
-                        CreateMain(connectionString, migrationContext);
-
-                        break;
-                    }
-
-                case MigrationType.Log:
-                    {
-                        connectionString = _connectionStringFactory.LogDbConnectionString;
-                        CreateLog(connectionString, migrationContext);
-
-                        break;
-                    }
-
-                default:
-                    {
-                        throw new ArgumentException("Invalid MigrationType");
-                    }
+                throw new CorruptDatabaseException("Database file: {0} is corrupt, restore from backup if available. See: https://wiki.servarr.com/lidarr/faq#i-use-lidarr-on-a-mac-and-it-suddenly-stopped-working-what-happened", e, fileName);
             }
 
-            var db = new Database(migrationContext.MigrationType.ToString(), () =>
-            {
-                var conn = SQLiteFactory.Instance.CreateConnection();
-                conn.ConnectionString = connectionString;
-                conn.Open();
-
-                return conn;
-            });
-
-            return db;
+            throw new CorruptDatabaseException("Database file: {0} is corrupt, restore from backup if available. See: https://wiki.servarr.com/lidarr/faq#i-am-getting-an-error-database-disk-image-is-malformed", e, fileName);
         }
-
-        private void CreateMain(string connectionString, MigrationContext migrationContext)
+        catch (Exception e)
         {
+            throw new LidarrStartupException(e, "Error creating main database");
+        }
+    }
+
+    private void CreateLog(string connectionString, MigrationContext migrationContext)
+    {
+        try
+        {
+            _migrationController.Migrate(connectionString, migrationContext);
+        }
+        catch (SQLiteException e)
+        {
+            var fileName = _connectionStringFactory.GetDatabasePath(connectionString);
+
+            Logger.Error(e, "Logging database is corrupt, attempting to recreate it automatically");
+
             try
             {
-                _restoreDatabaseService.Restore();
-                _migrationController.Migrate(connectionString, migrationContext);
+                _diskProvider.DeleteFile(fileName + "-shm");
+                _diskProvider.DeleteFile(fileName + "-wal");
+                _diskProvider.DeleteFile(fileName + "-journal");
+                _diskProvider.DeleteFile(fileName);
             }
-            catch (SQLiteException e)
+            catch (Exception)
             {
-                var fileName = _connectionStringFactory.GetDatabasePath(connectionString);
-
-                if (OsInfo.IsOsx)
-                {
-                    throw new CorruptDatabaseException("Database file: {0} is corrupt, restore from backup if available. See: https://wiki.servarr.com/lidarr/faq#i-use-lidarr-on-a-mac-and-it-suddenly-stopped-working-what-happened", e, fileName);
-                }
-
-                throw new CorruptDatabaseException("Database file: {0} is corrupt, restore from backup if available. See: https://wiki.servarr.com/lidarr/faq#i-am-getting-an-error-database-disk-image-is-malformed", e, fileName);
+                Logger.Error("Unable to recreate logging database automatically. It will need to be removed manually.");
             }
-            catch (Exception e)
-            {
-                throw new LidarrStartupException(e, "Error creating main database");
-            }
+
+            _migrationController.Migrate(connectionString, migrationContext);
         }
-
-        private void CreateLog(string connectionString, MigrationContext migrationContext)
+        catch (Exception e)
         {
-            try
-            {
-                _migrationController.Migrate(connectionString, migrationContext);
-            }
-            catch (SQLiteException e)
-            {
-                var fileName = _connectionStringFactory.GetDatabasePath(connectionString);
-
-                Logger.Error(e, "Logging database is corrupt, attempting to recreate it automatically");
-
-                try
-                {
-                    _diskProvider.DeleteFile(fileName + "-shm");
-                    _diskProvider.DeleteFile(fileName + "-wal");
-                    _diskProvider.DeleteFile(fileName + "-journal");
-                    _diskProvider.DeleteFile(fileName);
-                }
-                catch (Exception)
-                {
-                    Logger.Error("Unable to recreate logging database automatically. It will need to be removed manually.");
-                }
-
-                _migrationController.Migrate(connectionString, migrationContext);
-            }
-            catch (Exception e)
-            {
-                throw new LidarrStartupException(e, "Error creating log database");
-            }
+            throw new LidarrStartupException(e, "Error creating log database");
         }
     }
 }

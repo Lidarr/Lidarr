@@ -1,12 +1,11 @@
 ﻿using NUnit.Framework;
 
-namespace NzbDrone.Test.Common.Categories
+namespace NzbDrone.Test.Common.Categories;
+
+public class ManualTestAttribute : CategoryAttribute
 {
-    public class ManualTestAttribute : CategoryAttribute
+    public ManualTestAttribute()
+        : base("ManualTest")
     {
-        public ManualTestAttribute()
-            : base("ManualTest")
-        {
-        }
     }
 }

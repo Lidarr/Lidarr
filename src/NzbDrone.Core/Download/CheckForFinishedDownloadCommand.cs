@@ -1,8 +1,7 @@
 using NzbDrone.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Download
+namespace NzbDrone.Core.Download;
+
+public class CheckForFinishedDownloadCommand : Command
 {
-    public class CheckForFinishedDownloadCommand : Command
-    {
-    }
 }

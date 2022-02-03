@@ -1,15 +1,14 @@
 using NzbDrone.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Music.Commands
-{
-    public class MoveArtistCommand : Command
-    {
-        public int ArtistId { get; set; }
-        public string SourcePath { get; set; }
-        public string DestinationPath { get; set; }
-        public bool MoveFiles { get; set; }
+namespace NzbDrone.Core.Music.Commands;
 
-        public override bool SendUpdatesToClient => true;
-        public override bool RequiresDiskAccess => true;
-    }
+public class MoveArtistCommand : Command
+{
+    public int ArtistId { get; set; }
+    public string SourcePath { get; set; }
+    public string DestinationPath { get; set; }
+    public bool MoveFiles { get; set; }
+
+    public override bool SendUpdatesToClient => true;
+    public override bool RequiresDiskAccess => true;
 }

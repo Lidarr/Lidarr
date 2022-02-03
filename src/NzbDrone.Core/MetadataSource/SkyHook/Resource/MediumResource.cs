@@ -1,9 +1,8 @@
-namespace NzbDrone.Core.MetadataSource.SkyHook.Resource
+namespace NzbDrone.Core.MetadataSource.SkyHook.Resource;
+
+public class MediumResource
 {
-    public class MediumResource
-    {
-        public string Name { get; set; }
-        public string Format { get; set; }
-        public int Position { get; set; }
-    }
+    public string Name { get; set; }
+    public string Format { get; set; }
+    public int Position { get; set; }
 }

@@ -17,159 +17,158 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music.Commands;
 using NzbDrone.Core.Update.Commands;
 
-namespace NzbDrone.Core.Jobs
+namespace NzbDrone.Core.Jobs;
+
+public interface ITaskManager
 {
-    public interface ITaskManager
+    IList<ScheduledTask> GetPending();
+    List<ScheduledTask> GetAll();
+    DateTime GetNextExecution(Type type);
+}
+
+public class TaskManager : ITaskManager, IHandle<ApplicationStartedEvent>, IHandle<CommandExecutedEvent>, IHandleAsync<ConfigSavedEvent>
+{
+    private readonly IScheduledTaskRepository _scheduledTaskRepository;
+    private readonly IConfigService _configService;
+    private readonly Logger _logger;
+
+    public TaskManager(IScheduledTaskRepository scheduledTaskRepository, IConfigService configService, Logger logger)
     {
-        IList<ScheduledTask> GetPending();
-        List<ScheduledTask> GetAll();
-        DateTime GetNextExecution(Type type);
+        _scheduledTaskRepository = scheduledTaskRepository;
+        _configService = configService;
+        _logger = logger;
     }
 
-    public class TaskManager : ITaskManager, IHandle<ApplicationStartedEvent>, IHandle<CommandExecutedEvent>, IHandleAsync<ConfigSavedEvent>
+    public IList<ScheduledTask> GetPending()
     {
-        private readonly IScheduledTaskRepository _scheduledTaskRepository;
-        private readonly IConfigService _configService;
-        private readonly Logger _logger;
+        return _scheduledTaskRepository.All()
+                                       .Where(c => c.Interval > 0 && c.LastExecution.AddMinutes(c.Interval) < DateTime.UtcNow)
+                                       .ToList();
+    }
 
-        public TaskManager(IScheduledTaskRepository scheduledTaskRepository, IConfigService configService, Logger logger)
+    public List<ScheduledTask> GetAll()
+    {
+        return _scheduledTaskRepository.All().ToList();
+    }
+
+    public DateTime GetNextExecution(Type type)
+    {
+        var scheduledTask = _scheduledTaskRepository.All().Single(v => v.TypeName == type.FullName);
+        return scheduledTask.LastExecution.AddMinutes(scheduledTask.Interval);
+    }
+
+    public void Handle(ApplicationStartedEvent message)
+    {
+        var defaultTasks = new[]
+                           {
+                               new ScheduledTask { Interval = 1, TypeName = typeof(RefreshMonitoredDownloadsCommand).FullName },
+                               new ScheduledTask { Interval = 5, TypeName = typeof(MessagingCleanupCommand).FullName },
+                               new ScheduledTask { Interval = 6 * 60, TypeName = typeof(ApplicationUpdateCheckCommand).FullName },
+                               new ScheduledTask { Interval = 6 * 60, TypeName = typeof(CheckHealthCommand).FullName },
+                               new ScheduledTask { Interval = 24 * 60, TypeName = typeof(RefreshArtistCommand).FullName },
+                               new ScheduledTask { Interval = 24 * 60, TypeName = typeof(RescanFoldersCommand).FullName },
+                               new ScheduledTask { Interval = 24 * 60, TypeName = typeof(HousekeepingCommand).FullName },
+
+                               new ScheduledTask
+                               {
+                                   Interval = GetBackupInterval(),
+                                   TypeName = typeof(BackupCommand).FullName
+                               },
+
+                               new ScheduledTask
+                               {
+                                   Interval = 24 * 60, // TODO: Add a setting?
+                                   TypeName = typeof(ImportListSyncCommand).FullName
+                               },
+
+                               new ScheduledTask
+                               {
+                                   Interval = GetRssSyncInterval(),
+                                   TypeName = typeof(RssSyncCommand).FullName
+                               }
+                           };
+
+        var currentTasks = _scheduledTaskRepository.All().ToList();
+
+        _logger.Trace("Initializing jobs. Available: {0} Existing: {1}", defaultTasks.Count(), currentTasks.Count());
+
+        foreach (var job in currentTasks)
         {
-            _scheduledTaskRepository = scheduledTaskRepository;
-            _configService = configService;
-            _logger = logger;
-        }
-
-        public IList<ScheduledTask> GetPending()
-        {
-            return _scheduledTaskRepository.All()
-                                           .Where(c => c.Interval > 0 && c.LastExecution.AddMinutes(c.Interval) < DateTime.UtcNow)
-                                           .ToList();
-        }
-
-        public List<ScheduledTask> GetAll()
-        {
-            return _scheduledTaskRepository.All().ToList();
-        }
-
-        public DateTime GetNextExecution(Type type)
-        {
-            var scheduledTask = _scheduledTaskRepository.All().Single(v => v.TypeName == type.FullName);
-            return scheduledTask.LastExecution.AddMinutes(scheduledTask.Interval);
-        }
-
-        public void Handle(ApplicationStartedEvent message)
-        {
-            var defaultTasks = new[]
-                {
-                    new ScheduledTask { Interval = 1, TypeName = typeof(RefreshMonitoredDownloadsCommand).FullName },
-                    new ScheduledTask { Interval = 5, TypeName = typeof(MessagingCleanupCommand).FullName },
-                    new ScheduledTask { Interval = 6 * 60, TypeName = typeof(ApplicationUpdateCheckCommand).FullName },
-                    new ScheduledTask { Interval = 6 * 60, TypeName = typeof(CheckHealthCommand).FullName },
-                    new ScheduledTask { Interval = 24 * 60, TypeName = typeof(RefreshArtistCommand).FullName },
-                    new ScheduledTask { Interval = 24 * 60, TypeName = typeof(RescanFoldersCommand).FullName },
-                    new ScheduledTask { Interval = 24 * 60, TypeName = typeof(HousekeepingCommand).FullName },
-
-                    new ScheduledTask
-                    {
-                        Interval = GetBackupInterval(),
-                        TypeName = typeof(BackupCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = 24 * 60, // TODO: Add a setting?
-                        TypeName = typeof(ImportListSyncCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = GetRssSyncInterval(),
-                        TypeName = typeof(RssSyncCommand).FullName
-                    }
-                };
-
-            var currentTasks = _scheduledTaskRepository.All().ToList();
-
-            _logger.Trace("Initializing jobs. Available: {0} Existing: {1}", defaultTasks.Count(), currentTasks.Count());
-
-            foreach (var job in currentTasks)
+            if (!defaultTasks.Any(c => c.TypeName == job.TypeName))
             {
-                if (!defaultTasks.Any(c => c.TypeName == job.TypeName))
-                {
-                    _logger.Trace("Removing job from database '{0}'", job.TypeName);
-                    _scheduledTaskRepository.Delete(job.Id);
-                }
-            }
-
-            foreach (var defaultTask in defaultTasks)
-            {
-                var currentDefinition = currentTasks.SingleOrDefault(c => c.TypeName == defaultTask.TypeName) ?? defaultTask;
-
-                currentDefinition.Interval = defaultTask.Interval;
-
-                if (currentDefinition.Id == 0)
-                {
-                    currentDefinition.LastExecution = DateTime.UtcNow;
-                }
-
-                _scheduledTaskRepository.Upsert(currentDefinition);
+                _logger.Trace("Removing job from database '{0}'", job.TypeName);
+                _scheduledTaskRepository.Delete(job.Id);
             }
         }
 
-        private int GetBackupInterval()
+        foreach (var defaultTask in defaultTasks)
         {
-            var intervalMinutes = _configService.BackupInterval;
+            var currentDefinition = currentTasks.SingleOrDefault(c => c.TypeName == defaultTask.TypeName) ?? defaultTask;
 
-            if (intervalMinutes < 1)
+            currentDefinition.Interval = defaultTask.Interval;
+
+            if (currentDefinition.Id == 0)
             {
-                intervalMinutes = 1;
+                currentDefinition.LastExecution = DateTime.UtcNow;
             }
 
-            if (intervalMinutes > 7)
-            {
-                intervalMinutes = 7;
-            }
+            _scheduledTaskRepository.Upsert(currentDefinition);
+        }
+    }
 
-            return intervalMinutes * 60 * 24;
+    private int GetBackupInterval()
+    {
+        var intervalMinutes = _configService.BackupInterval;
+
+        if (intervalMinutes < 1)
+        {
+            intervalMinutes = 1;
         }
 
-        private int GetRssSyncInterval()
+        if (intervalMinutes > 7)
         {
-            var interval = _configService.RssSyncInterval;
-
-            if (interval > 0 && interval < 10)
-            {
-                return 10;
-            }
-
-            if (interval < 0)
-            {
-                return 0;
-            }
-
-            return interval;
+            intervalMinutes = 7;
         }
 
-        public void Handle(CommandExecutedEvent message)
-        {
-            var scheduledTask = _scheduledTaskRepository.All().SingleOrDefault(c => c.TypeName == message.Command.Body.GetType().FullName);
+        return intervalMinutes * 60 * 24;
+    }
 
-            if (scheduledTask != null && message.Command.Body.UpdateScheduledTask)
-            {
-                _logger.Trace("Updating last run time for: {0}", scheduledTask.TypeName);
-                _scheduledTaskRepository.SetLastExecutionTime(scheduledTask.Id, DateTime.UtcNow, message.Command.StartedAt.Value);
-            }
+    private int GetRssSyncInterval()
+    {
+        var interval = _configService.RssSyncInterval;
+
+        if (interval > 0 && interval < 10)
+        {
+            return 10;
         }
 
-        public void HandleAsync(ConfigSavedEvent message)
+        if (interval < 0)
         {
-            var rss = _scheduledTaskRepository.GetDefinition(typeof(RssSyncCommand));
-            rss.Interval = GetRssSyncInterval();
-
-            var backup = _scheduledTaskRepository.GetDefinition(typeof(BackupCommand));
-            backup.Interval = GetBackupInterval();
-
-            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { rss, backup });
+            return 0;
         }
+
+        return interval;
+    }
+
+    public void Handle(CommandExecutedEvent message)
+    {
+        var scheduledTask = _scheduledTaskRepository.All().SingleOrDefault(c => c.TypeName == message.Command.Body.GetType().FullName);
+
+        if (scheduledTask != null && message.Command.Body.UpdateScheduledTask)
+        {
+            _logger.Trace("Updating last run time for: {0}", scheduledTask.TypeName);
+            _scheduledTaskRepository.SetLastExecutionTime(scheduledTask.Id, DateTime.UtcNow, message.Command.StartedAt.Value);
+        }
+    }
+
+    public void HandleAsync(ConfigSavedEvent message)
+    {
+        var rss = _scheduledTaskRepository.GetDefinition(typeof(RssSyncCommand));
+        rss.Interval = GetRssSyncInterval();
+
+        var backup = _scheduledTaskRepository.GetDefinition(typeof(BackupCommand));
+        backup.Interval = GetBackupInterval();
+
+        _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { rss, backup });
     }
 }

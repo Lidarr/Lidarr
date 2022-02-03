@@ -18,205 +18,204 @@ using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Core.Test.MediaFiles
+namespace NzbDrone.Core.Test.MediaFiles;
+
+[TestFixture]
+public class ImportApprovedTracksFixture : CoreTest<ImportApprovedTracks>
 {
-    [TestFixture]
-    public class ImportApprovedTracksFixture : CoreTest<ImportApprovedTracks>
+    private List<ImportDecision<LocalTrack>> _rejectedDecisions;
+    private List<ImportDecision<LocalTrack>> _approvedDecisions;
+
+    private DownloadClientItem _downloadClientItem;
+    private DownloadClientItemClientInfo _clientInfo;
+
+    [SetUp]
+    public void Setup()
     {
-        private List<ImportDecision<LocalTrack>> _rejectedDecisions;
-        private List<ImportDecision<LocalTrack>> _approvedDecisions;
+        _rejectedDecisions = new List<ImportDecision<LocalTrack>>();
+        _approvedDecisions = new List<ImportDecision<LocalTrack>>();
 
-        private DownloadClientItem _downloadClientItem;
-        private DownloadClientItemClientInfo _clientInfo;
+        var artist = Builder<Artist>.CreateNew()
+                                    .With(e => e.QualityProfile = new QualityProfile { Items = Qualities.QualityFixture.GetDefaultQualities() })
+                                    .With(s => s.Path = @"C:\Test\Music\Alien Ant Farm".AsOsAgnostic())
+                                    .Build();
 
-        [SetUp]
-        public void Setup()
-        {
-            _rejectedDecisions = new List<ImportDecision<LocalTrack>>();
-            _approvedDecisions = new List<ImportDecision<LocalTrack>>();
+        var album = Builder<Album>.CreateNew()
+                                  .With(e => e.Artist = artist)
+                                  .Build();
 
-            var artist = Builder<Artist>.CreateNew()
-                                        .With(e => e.QualityProfile = new QualityProfile { Items = Qualities.QualityFixture.GetDefaultQualities() })
-                                        .With(s => s.Path = @"C:\Test\Music\Alien Ant Farm".AsOsAgnostic())
-                                        .Build();
-
-            var album = Builder<Album>.CreateNew()
-                .With(e => e.Artist = artist)
-                .Build();
-
-            var release = Builder<AlbumRelease>.CreateNew()
-                .With(e => e.AlbumId = album.Id)
-                .With(e => e.Monitored = true)
-                .Build();
-
-            album.AlbumReleases = new List<AlbumRelease> { release };
-
-            var tracks = Builder<Track>.CreateListOfSize(5)
+        var release = Builder<AlbumRelease>.CreateNew()
+                                           .With(e => e.AlbumId = album.Id)
+                                           .With(e => e.Monitored = true)
                                            .Build();
 
-            _rejectedDecisions.Add(new ImportDecision<LocalTrack>(new LocalTrack(), new Rejection("Rejected!")));
-            _rejectedDecisions.Add(new ImportDecision<LocalTrack>(new LocalTrack(), new Rejection("Rejected!")));
-            _rejectedDecisions.Add(new ImportDecision<LocalTrack>(new LocalTrack(), new Rejection("Rejected!")));
+        album.AlbumReleases = new List<AlbumRelease> { release };
 
-            foreach (var track in tracks)
-            {
-                _approvedDecisions.Add(new ImportDecision<LocalTrack>(
-                                           new LocalTrack
-                                           {
-                                               Artist = artist,
-                                               Album = album,
-                                               Release = release,
-                                               Tracks = new List<Track> { track },
-                                               Path = Path.Combine(artist.Path, "Alien Ant Farm - 01 - Pilot.mp3"),
-                                               Quality = new QualityModel(Quality.MP3_256),
-                                               FileTrackInfo = new ParsedTrackInfo
-                                               {
-                                                   ReleaseGroup = "DRONE"
-                                               }
-                                           }));
-            }
+        var tracks = Builder<Track>.CreateListOfSize(5)
+                                   .Build();
 
-            Mocker.GetMock<IUpgradeMediaFiles>()
-                  .Setup(s => s.UpgradeTrackFile(It.IsAny<TrackFile>(), It.IsAny<LocalTrack>(), It.IsAny<bool>()))
-                  .Returns(new TrackFileMoveResult());
+        _rejectedDecisions.Add(new ImportDecision<LocalTrack>(new LocalTrack(), new Rejection("Rejected!")));
+        _rejectedDecisions.Add(new ImportDecision<LocalTrack>(new LocalTrack(), new Rejection("Rejected!")));
+        _rejectedDecisions.Add(new ImportDecision<LocalTrack>(new LocalTrack(), new Rejection("Rejected!")));
 
-            _clientInfo = Builder<DownloadClientItemClientInfo>.CreateNew().Build();
-            _downloadClientItem = Builder<DownloadClientItem>.CreateNew().With(x => x.DownloadClientInfo = _clientInfo).Build();
-
-            Mocker.GetMock<IMediaFileService>()
-                .Setup(s => s.GetFilesByAlbum(It.IsAny<int>()))
-                .Returns(new List<TrackFile>());
-        }
-
-        [Test]
-        public void should_not_import_any_if_there_are_no_approved_decisions()
+        foreach (var track in tracks)
         {
-            Subject.Import(_rejectedDecisions, false).Where(i => i.Result == ImportResultType.Imported).Should().BeEmpty();
-
-            Mocker.GetMock<IMediaFileService>().Verify(v => v.Add(It.IsAny<TrackFile>()), Times.Never());
+            _approvedDecisions.Add(new ImportDecision<LocalTrack>(
+                                                                  new LocalTrack
+                                                                  {
+                                                                      Artist = artist,
+                                                                      Album = album,
+                                                                      Release = release,
+                                                                      Tracks = new List<Track> { track },
+                                                                      Path = Path.Combine(artist.Path, "Alien Ant Farm - 01 - Pilot.mp3"),
+                                                                      Quality = new QualityModel(Quality.MP3_256),
+                                                                      FileTrackInfo = new ParsedTrackInfo
+                                                                                      {
+                                                                                          ReleaseGroup = "DRONE"
+                                                                                      }
+                                                                  }));
         }
 
-        [Test]
-        public void should_import_each_approved()
-        {
-            Subject.Import(_approvedDecisions, false).Should().HaveCount(5);
-        }
+        Mocker.GetMock<IUpgradeMediaFiles>()
+              .Setup(s => s.UpgradeTrackFile(It.IsAny<TrackFile>(), It.IsAny<LocalTrack>(), It.IsAny<bool>()))
+              .Returns(new TrackFileMoveResult());
 
-        [Test]
-        public void should_only_import_approved()
-        {
-            var all = new List<ImportDecision<LocalTrack>>();
-            all.AddRange(_rejectedDecisions);
-            all.AddRange(_approvedDecisions);
+        _clientInfo = Builder<DownloadClientItemClientInfo>.CreateNew().Build();
+        _downloadClientItem = Builder<DownloadClientItem>.CreateNew().With(x => x.DownloadClientInfo = _clientInfo).Build();
 
-            var result = Subject.Import(all, false);
+        Mocker.GetMock<IMediaFileService>()
+              .Setup(s => s.GetFilesByAlbum(It.IsAny<int>()))
+              .Returns(new List<TrackFile>());
+    }
 
-            result.Should().HaveCount(all.Count);
-            result.Where(i => i.Result == ImportResultType.Imported).Should().HaveCount(_approvedDecisions.Count);
-        }
+    [Test]
+    public void should_not_import_any_if_there_are_no_approved_decisions()
+    {
+        Subject.Import(_rejectedDecisions, false).Where(i => i.Result == ImportResultType.Imported).Should().BeEmpty();
 
-        [Test]
-        public void should_only_import_each_track_once()
-        {
-            var all = new List<ImportDecision<LocalTrack>>();
-            all.AddRange(_approvedDecisions);
-            all.Add(new ImportDecision<LocalTrack>(_approvedDecisions.First().Item));
+        Mocker.GetMock<IMediaFileService>().Verify(v => v.Add(It.IsAny<TrackFile>()), Times.Never());
+    }
 
-            var result = Subject.Import(all, false);
+    [Test]
+    public void should_import_each_approved()
+    {
+        Subject.Import(_approvedDecisions, false).Should().HaveCount(5);
+    }
 
-            result.Where(i => i.Result == ImportResultType.Imported).Should().HaveCount(_approvedDecisions.Count);
-        }
+    [Test]
+    public void should_only_import_approved()
+    {
+        var all = new List<ImportDecision<LocalTrack>>();
+        all.AddRange(_rejectedDecisions);
+        all.AddRange(_approvedDecisions);
 
-        [Test]
-        public void should_move_new_downloads()
-        {
-            Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true);
+        var result = Subject.Import(all, false);
 
-            Mocker.GetMock<IUpgradeMediaFiles>()
-                  .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, false),
-                          Times.Once());
-        }
+        result.Should().HaveCount(all.Count);
+        result.Where(i => i.Result == ImportResultType.Imported).Should().HaveCount(_approvedDecisions.Count);
+    }
 
-        [Test]
-        public void should_publish_TrackImportedEvent_for_new_downloads()
-        {
-            Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true);
+    [Test]
+    public void should_only_import_each_track_once()
+    {
+        var all = new List<ImportDecision<LocalTrack>>();
+        all.AddRange(_approvedDecisions);
+        all.Add(new ImportDecision<LocalTrack>(_approvedDecisions.First().Item));
 
-            Mocker.GetMock<IEventAggregator>()
-                .Verify(v => v.PublishEvent(It.IsAny<TrackImportedEvent>()), Times.Once());
-        }
+        var result = Subject.Import(all, false);
 
-        [Test]
-        public void should_not_move_existing_files()
-        {
-            var track = _approvedDecisions.First();
-            track.Item.ExistingFile = true;
-            Subject.Import(new List<ImportDecision<LocalTrack>> { track }, false);
+        result.Where(i => i.Result == ImportResultType.Imported).Should().HaveCount(_approvedDecisions.Count);
+    }
 
-            Mocker.GetMock<IUpgradeMediaFiles>()
-                  .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, false),
-                          Times.Never());
-        }
+    [Test]
+    public void should_move_new_downloads()
+    {
+        Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true);
 
-        [Test]
-        public void should_import_larger_files_first()
-        {
-            var fileDecision = _approvedDecisions.First();
-            fileDecision.Item.Size = 1.Gigabytes();
+        Mocker.GetMock<IUpgradeMediaFiles>()
+              .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, false),
+                      Times.Once());
+    }
 
-            var sampleDecision = new ImportDecision<LocalTrack>(
-                new LocalTrack
-                {
-                    Artist = fileDecision.Item.Artist,
-                    Album = fileDecision.Item.Album,
-                    Tracks = new List<Track> { fileDecision.Item.Tracks.First() },
-                    Path = @"C:\Test\Music\Alien Ant Farm\Alien Ant Farm - 01 - Pilot.mp3".AsOsAgnostic(),
-                    Quality = new QualityModel(Quality.MP3_256),
-                    Size = 80.Megabytes()
-                });
+    [Test]
+    public void should_publish_TrackImportedEvent_for_new_downloads()
+    {
+        Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true);
 
-            var all = new List<ImportDecision<LocalTrack>>();
-            all.Add(fileDecision);
-            all.Add(sampleDecision);
+        Mocker.GetMock<IEventAggregator>()
+              .Verify(v => v.PublishEvent(It.IsAny<TrackImportedEvent>()), Times.Once());
+    }
 
-            var results = Subject.Import(all, false);
+    [Test]
+    public void should_not_move_existing_files()
+    {
+        var track = _approvedDecisions.First();
+        track.Item.ExistingFile = true;
+        Subject.Import(new List<ImportDecision<LocalTrack>> { track }, false);
 
-            results.Should().HaveCount(all.Count);
-            results.Should().ContainSingle(d => d.Result == ImportResultType.Imported);
-            results.Should().ContainSingle(d => d.Result == ImportResultType.Imported && d.ImportDecision.Item.Size == fileDecision.Item.Size);
-        }
+        Mocker.GetMock<IUpgradeMediaFiles>()
+              .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, false),
+                      Times.Never());
+    }
 
-        [Test]
-        public void should_copy_when_cannot_move_files_downloads()
-        {
-            Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true, new DownloadClientItem { Title = "Alien.Ant.Farm-Truant", CanMoveFiles = false, DownloadClientInfo = _clientInfo });
+    [Test]
+    public void should_import_larger_files_first()
+    {
+        var fileDecision = _approvedDecisions.First();
+        fileDecision.Item.Size = 1.Gigabytes();
 
-            Mocker.GetMock<IUpgradeMediaFiles>()
-                  .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, true), Times.Once());
-        }
+        var sampleDecision = new ImportDecision<LocalTrack>(
+                                                            new LocalTrack
+                                                            {
+                                                                Artist = fileDecision.Item.Artist,
+                                                                Album = fileDecision.Item.Album,
+                                                                Tracks = new List<Track> { fileDecision.Item.Tracks.First() },
+                                                                Path = @"C:\Test\Music\Alien Ant Farm\Alien Ant Farm - 01 - Pilot.mp3".AsOsAgnostic(),
+                                                                Quality = new QualityModel(Quality.MP3_256),
+                                                                Size = 80.Megabytes()
+                                                            });
 
-        [Test]
-        public void should_use_override_importmode()
-        {
-            Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true, new DownloadClientItem { Title = "Alien.Ant.Farm-Truant", CanMoveFiles = false, DownloadClientInfo = _clientInfo }, ImportMode.Move);
+        var all = new List<ImportDecision<LocalTrack>>();
+        all.Add(fileDecision);
+        all.Add(sampleDecision);
 
-            Mocker.GetMock<IUpgradeMediaFiles>()
-                  .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, false), Times.Once());
-        }
+        var results = Subject.Import(all, false);
 
-        [Test]
-        public void should_delete_existing_trackfiles_with_the_same_path()
-        {
-            Mocker.GetMock<IMediaFileService>()
-                .Setup(s => s.GetFileWithPath(It.IsAny<string>()))
-                .Returns(Builder<TrackFile>.CreateNew().Build());
+        results.Should().HaveCount(all.Count);
+        results.Should().ContainSingle(d => d.Result == ImportResultType.Imported);
+        results.Should().ContainSingle(d => d.Result == ImportResultType.Imported && d.ImportDecision.Item.Size == fileDecision.Item.Size);
+    }
 
-            var track = _approvedDecisions.First();
-            track.Item.ExistingFile = true;
-            Subject.Import(new List<ImportDecision<LocalTrack>> { track }, false);
+    [Test]
+    public void should_copy_when_cannot_move_files_downloads()
+    {
+        Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true, new DownloadClientItem { Title = "Alien.Ant.Farm-Truant", CanMoveFiles = false, DownloadClientInfo = _clientInfo });
 
-            Mocker.GetMock<IMediaFileService>()
-                .Verify(v => v.Delete(It.IsAny<TrackFile>(), DeleteMediaFileReason.ManualOverride), Times.Once());
-        }
+        Mocker.GetMock<IUpgradeMediaFiles>()
+              .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, true), Times.Once());
+    }
+
+    [Test]
+    public void should_use_override_importmode()
+    {
+        Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true, new DownloadClientItem { Title = "Alien.Ant.Farm-Truant", CanMoveFiles = false, DownloadClientInfo = _clientInfo }, ImportMode.Move);
+
+        Mocker.GetMock<IUpgradeMediaFiles>()
+              .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, false), Times.Once());
+    }
+
+    [Test]
+    public void should_delete_existing_trackfiles_with_the_same_path()
+    {
+        Mocker.GetMock<IMediaFileService>()
+              .Setup(s => s.GetFileWithPath(It.IsAny<string>()))
+              .Returns(Builder<TrackFile>.CreateNew().Build());
+
+        var track = _approvedDecisions.First();
+        track.Item.ExistingFile = true;
+        Subject.Import(new List<ImportDecision<LocalTrack>> { track }, false);
+
+        Mocker.GetMock<IMediaFileService>()
+              .Verify(v => v.Delete(It.IsAny<TrackFile>(), DeleteMediaFileReason.ManualOverride), Times.Once());
     }
 }

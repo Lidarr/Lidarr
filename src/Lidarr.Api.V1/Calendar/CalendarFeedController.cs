@@ -11,69 +11,68 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Tags;
 
-namespace Lidarr.Api.V1.Calendar
+namespace Lidarr.Api.V1.Calendar;
+
+[V1FeedController("calendar")]
+public class CalendarFeedController : Controller
 {
-    [V1FeedController("calendar")]
-    public class CalendarFeedController : Controller
+    private readonly IAlbumService _albumService;
+    private readonly IArtistService _artistService;
+    private readonly ITagService _tagService;
+
+    public CalendarFeedController(IAlbumService albumService, IArtistService artistService, ITagService tagService)
     {
-        private readonly IAlbumService _albumService;
-        private readonly IArtistService _artistService;
-        private readonly ITagService _tagService;
+        _albumService = albumService;
+        _artistService = artistService;
+        _tagService = tagService;
+    }
 
-        public CalendarFeedController(IAlbumService albumService, IArtistService artistService, ITagService tagService)
+    [HttpGet("Lidarr.ics")]
+    public IActionResult GetCalendarFeed(int pastDays = 7, int futureDays = 28, string tagList = "", bool unmonitored = false)
+    {
+        var start = DateTime.Today.AddDays(-pastDays);
+        var end = DateTime.Today.AddDays(futureDays);
+        var tags = new List<int>();
+
+        if (tagList.IsNotNullOrWhiteSpace())
         {
-            _albumService = albumService;
-            _artistService = artistService;
-            _tagService = tagService;
+            tags.AddRange(tagList.Split(',').Select(_tagService.GetTag).Select(t => t.Id));
         }
 
-        [HttpGet("Lidarr.ics")]
-        public IActionResult GetCalendarFeed(int pastDays = 7, int futureDays = 28, string tagList = "", bool unmonitored = false)
+        var albums = _albumService.AlbumsBetweenDates(start, end, unmonitored);
+        var calendar = new Ical.Net.Calendar
+                       {
+                           ProductId = "-//lidarr.audio//Lidarr//EN"
+                       };
+
+        var calendarName = "Lidarr Music Schedule";
+        calendar.AddProperty(new CalendarProperty("NAME", calendarName));
+        calendar.AddProperty(new CalendarProperty("X-WR-CALNAME", calendarName));
+
+        foreach (var album in albums.OrderBy(v => v.ReleaseDate.Value))
         {
-            var start = DateTime.Today.AddDays(-pastDays);
-            var end = DateTime.Today.AddDays(futureDays);
-            var tags = new List<int>();
+            var artist = _artistService.GetArtist(album.ArtistId); // Temp fix TODO: Figure out why Album.Artist is not populated during AlbumsBetweenDates Query
 
-            if (tagList.IsNotNullOrWhiteSpace())
+            if (tags.Any() && tags.None(artist.Tags.Contains))
             {
-                tags.AddRange(tagList.Split(',').Select(_tagService.GetTag).Select(t => t.Id));
+                continue;
             }
 
-            var albums = _albumService.AlbumsBetweenDates(start, end, unmonitored);
-            var calendar = new Ical.Net.Calendar
-            {
-                ProductId = "-//lidarr.audio//Lidarr//EN"
-            };
+            var occurrence = calendar.Create<CalendarEvent>();
+            occurrence.Uid = "Lidarr_album_" + album.Id;
 
-            var calendarName = "Lidarr Music Schedule";
-            calendar.AddProperty(new CalendarProperty("NAME", calendarName));
-            calendar.AddProperty(new CalendarProperty("X-WR-CALNAME", calendarName));
+            //occurrence.Status = album.HasFile ? EventStatus.Confirmed : EventStatus.Tentative;
+            occurrence.Description = album.Overview;
+            occurrence.Categories = album.Genres;
 
-            foreach (var album in albums.OrderBy(v => v.ReleaseDate.Value))
-            {
-                var artist = _artistService.GetArtist(album.ArtistId); // Temp fix TODO: Figure out why Album.Artist is not populated during AlbumsBetweenDates Query
+            occurrence.Start = new CalDateTime(album.ReleaseDate.Value.ToLocalTime()) { HasTime = false };
 
-                if (tags.Any() && tags.None(artist.Tags.Contains))
-                {
-                    continue;
-                }
-
-                var occurrence = calendar.Create<CalendarEvent>();
-                occurrence.Uid = "Lidarr_album_" + album.Id;
-
-                //occurrence.Status = album.HasFile ? EventStatus.Confirmed : EventStatus.Tentative;
-                occurrence.Description = album.Overview;
-                occurrence.Categories = album.Genres;
-
-                occurrence.Start = new CalDateTime(album.ReleaseDate.Value.ToLocalTime()) { HasTime = false };
-
-                occurrence.Summary = $"{artist.Name} - {album.Title}";
-            }
-
-            var serializer = (IStringSerializer)new SerializerFactory().Build(calendar.GetType(), new SerializationContext());
-            var icalendar = serializer.SerializeToString(calendar);
-
-            return Content(icalendar, "text/calendar");
+            occurrence.Summary = $"{artist.Name} - {album.Title}";
         }
+
+        var serializer = (IStringSerializer)new SerializerFactory().Build(calendar.GetType(), new SerializationContext());
+        var icalendar = serializer.SerializeToString(calendar);
+
+        return Content(icalendar, "text/calendar");
     }
 }

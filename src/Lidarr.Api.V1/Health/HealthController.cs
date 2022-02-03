@@ -8,35 +8,34 @@ using NzbDrone.Core.HealthCheck;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.SignalR;
 
-namespace Lidarr.Api.V1.Health
-{
-    [V1ApiController]
-    public class HealthController : RestControllerWithSignalR<HealthResource, HealthCheck>,
+namespace Lidarr.Api.V1.Health;
+
+[V1ApiController]
+public class HealthController : RestControllerWithSignalR<HealthResource, HealthCheck>,
                                 IHandle<HealthCheckCompleteEvent>
+{
+    private readonly IHealthCheckService _healthCheckService;
+
+    public HealthController(IBroadcastSignalRMessage signalRBroadcaster, IHealthCheckService healthCheckService)
+        : base(signalRBroadcaster)
     {
-        private readonly IHealthCheckService _healthCheckService;
+        _healthCheckService = healthCheckService;
+    }
 
-        public HealthController(IBroadcastSignalRMessage signalRBroadcaster, IHealthCheckService healthCheckService)
-            : base(signalRBroadcaster)
-        {
-            _healthCheckService = healthCheckService;
-        }
+    public override HealthResource GetResourceById(int id)
+    {
+        throw new NotImplementedException();
+    }
 
-        public override HealthResource GetResourceById(int id)
-        {
-            throw new NotImplementedException();
-        }
+    [HttpGet]
+    public List<HealthResource> GetHealth()
+    {
+        return _healthCheckService.Results().ToResource();
+    }
 
-        [HttpGet]
-        public List<HealthResource> GetHealth()
-        {
-            return _healthCheckService.Results().ToResource();
-        }
-
-        [NonAction]
-        public void Handle(HealthCheckCompleteEvent message)
-        {
-            BroadcastResourceChange(ModelAction.Sync);
-        }
+    [NonAction]
+    public void Handle(HealthCheckCompleteEvent message)
+    {
+        BroadcastResourceChange(ModelAction.Sync);
     }
 }

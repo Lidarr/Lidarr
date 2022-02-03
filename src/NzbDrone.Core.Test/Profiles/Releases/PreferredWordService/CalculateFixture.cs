@@ -8,87 +8,86 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Profiles.Releases;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Profiles.Releases.PreferredWordService
+namespace NzbDrone.Core.Test.Profiles.Releases.PreferredWordService;
+
+[TestFixture]
+public class CalculateFixture : CoreTest<Core.Profiles.Releases.PreferredWordService>
 {
-    [TestFixture]
-    public class CalculateFixture : CoreTest<Core.Profiles.Releases.PreferredWordService>
+    private Artist _artist = null;
+    private List<ReleaseProfile> _releaseProfiles = null;
+    private string _title = "Artist.Name-Album.Title.2018.FLAC.24bit-Lidarr";
+
+    [SetUp]
+    public void Setup()
     {
-        private Artist _artist = null;
-        private List<ReleaseProfile> _releaseProfiles = null;
-        private string _title = "Artist.Name-Album.Title.2018.FLAC.24bit-Lidarr";
+        _artist = Builder<Artist>.CreateNew()
+                                 .With(s => s.Tags = new HashSet<int>(new[] { 1, 2 }))
+                                 .Build();
 
-        [SetUp]
-        public void Setup()
-        {
-            _artist = Builder<Artist>.CreateNew()
-                                     .With(s => s.Tags = new HashSet<int>(new[] { 1, 2 }))
-                                     .Build();
+        _releaseProfiles = new List<ReleaseProfile>();
 
-            _releaseProfiles = new List<ReleaseProfile>();
+        _releaseProfiles.Add(new ReleaseProfile
+                             {
+                                 Preferred = new List<KeyValuePair<string, int>>
+                                             {
+                                                 new KeyValuePair<string, int>("24bit", 5),
+                                                 new KeyValuePair<string, int>("16bit", -10)
+                                             }
+                             });
 
-            _releaseProfiles.Add(new ReleaseProfile
-            {
-                Preferred = new List<KeyValuePair<string, int>>
-                                                 {
-                                                     new KeyValuePair<string, int>("24bit", 5),
-                                                     new KeyValuePair<string, int>("16bit", -10)
-                                                 }
-            });
+        Mocker.GetMock<IReleaseProfileService>()
+              .Setup(s => s.EnabledForTags(It.IsAny<HashSet<int>>(), It.IsAny<int>()))
+              .Returns(_releaseProfiles);
+    }
 
-            Mocker.GetMock<IReleaseProfileService>()
-                  .Setup(s => s.EnabledForTags(It.IsAny<HashSet<int>>(), It.IsAny<int>()))
-                  .Returns(_releaseProfiles);
-        }
+    private void GivenMatchingTerms(params string[] terms)
+    {
+        Mocker.GetMock<ITermMatcherService>()
+              .Setup(s => s.IsMatch(It.IsAny<string>(), _title))
+              .Returns<string, string>((term, title) => terms.Contains(term));
+    }
 
-        private void GivenMatchingTerms(params string[] terms)
-        {
-            Mocker.GetMock<ITermMatcherService>()
-                  .Setup(s => s.IsMatch(It.IsAny<string>(), _title))
-                  .Returns<string, string>((term, title) => terms.Contains(term));
-        }
+    [Test]
+    public void should_return_0_when_there_are_no_release_profiles()
+    {
+        Mocker.GetMock<IReleaseProfileService>()
+              .Setup(s => s.EnabledForTags(It.IsAny<HashSet<int>>(), It.IsAny<int>()))
+              .Returns(new List<ReleaseProfile>());
 
-        [Test]
-        public void should_return_0_when_there_are_no_release_profiles()
-        {
-            Mocker.GetMock<IReleaseProfileService>()
-                  .Setup(s => s.EnabledForTags(It.IsAny<HashSet<int>>(), It.IsAny<int>()))
-                  .Returns(new List<ReleaseProfile>());
+        Subject.Calculate(_artist, _title, 0).Should().Be(0);
+    }
 
-            Subject.Calculate(_artist, _title, 0).Should().Be(0);
-        }
+    [Test]
+    public void should_return_0_when_there_are_no_matching_preferred_words()
+    {
+        GivenMatchingTerms();
 
-        [Test]
-        public void should_return_0_when_there_are_no_matching_preferred_words()
-        {
-            GivenMatchingTerms();
+        Subject.Calculate(_artist, _title, 0).Should().Be(0);
+    }
 
-            Subject.Calculate(_artist, _title, 0).Should().Be(0);
-        }
+    [Test]
+    public void should_calculate_positive_score()
+    {
+        GivenMatchingTerms("24bit");
 
-        [Test]
-        public void should_calculate_positive_score()
-        {
-            GivenMatchingTerms("24bit");
+        Subject.Calculate(_artist, _title, 0).Should().Be(5);
+    }
 
-            Subject.Calculate(_artist, _title, 0).Should().Be(5);
-        }
+    [Test]
+    public void should_calculate_negative_score()
+    {
+        GivenMatchingTerms("16bit");
 
-        [Test]
-        public void should_calculate_negative_score()
-        {
-            GivenMatchingTerms("16bit");
+        Subject.Calculate(_artist, _title, 0).Should().Be(-10);
+    }
 
-            Subject.Calculate(_artist, _title, 0).Should().Be(-10);
-        }
+    [Test]
+    public void should_calculate_using_multiple_profiles()
+    {
+        _releaseProfiles.Add(_releaseProfiles.First());
 
-        [Test]
-        public void should_calculate_using_multiple_profiles()
-        {
-            _releaseProfiles.Add(_releaseProfiles.First());
+        GivenMatchingTerms("24bit");
 
-            GivenMatchingTerms("24bit");
-
-            Subject.Calculate(_artist, _title, 0).Should().Be(10);
-        }
+        Subject.Calculate(_artist, _title, 0).Should().Be(10);
     }
 }

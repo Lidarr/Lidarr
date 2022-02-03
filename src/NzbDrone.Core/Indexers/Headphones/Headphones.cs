@@ -8,72 +8,71 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Parser;
 
-namespace NzbDrone.Core.Indexers.Headphones
+namespace NzbDrone.Core.Indexers.Headphones;
+
+public class Headphones : HttpIndexerBase<HeadphonesSettings>
 {
-    public class Headphones : HttpIndexerBase<HeadphonesSettings>
+    private readonly IHeadphonesCapabilitiesProvider _capabilitiesProvider;
+
+    public override string Name => "Headphones VIP";
+
+    public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
+
+    public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings).DefaultPageSize;
+
+    public override IIndexerRequestGenerator GetRequestGenerator()
     {
-        private readonly IHeadphonesCapabilitiesProvider _capabilitiesProvider;
+        return new HeadphonesRequestGenerator(_capabilitiesProvider)
+               {
+                   PageSize = PageSize,
+                   Settings = Settings
+               };
+    }
 
-        public override string Name => "Headphones VIP";
+    public override IParseIndexerResponse GetParser()
+    {
+        return new HeadphonesRssParser
+               {
+                   Settings = Settings
+               };
+    }
 
-        public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
+    public Headphones(IHeadphonesCapabilitiesProvider capabilitiesProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
+        : base(httpClient, indexerStatusService, configService, parsingService, logger)
+    {
+        _capabilitiesProvider = capabilitiesProvider;
+    }
 
-        public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings).DefaultPageSize;
+    protected override void Test(List<ValidationFailure> failures)
+    {
+        base.Test(failures);
 
-        public override IIndexerRequestGenerator GetRequestGenerator()
+        if (failures.Any())
         {
-            return new HeadphonesRequestGenerator(_capabilitiesProvider)
-            {
-                PageSize = PageSize,
-                Settings = Settings
-            };
+            return;
         }
 
-        public override IParseIndexerResponse GetParser()
+        failures.AddIfNotNull(TestCapabilities());
+    }
+
+    protected virtual ValidationFailure TestCapabilities()
+    {
+        try
         {
-            return new HeadphonesRssParser
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+
+            if (capabilities.SupportedSearchParameters != null && capabilities.SupportedSearchParameters.Contains("q"))
             {
-                Settings = Settings
-            };
-        }
-
-        public Headphones(IHeadphonesCapabilitiesProvider capabilitiesProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
-            : base(httpClient, indexerStatusService, configService, parsingService, logger)
-        {
-            _capabilitiesProvider = capabilitiesProvider;
-        }
-
-        protected override void Test(List<ValidationFailure> failures)
-        {
-            base.Test(failures);
-
-            if (failures.Any())
-            {
-                return;
+                return null;
             }
 
-            failures.AddIfNotNull(TestCapabilities());
+            return new ValidationFailure(string.Empty, "Indexer does not support required search parameters");
         }
-
-        protected virtual ValidationFailure TestCapabilities()
+        catch (Exception ex)
         {
-            try
-            {
-                var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+            _logger.Warn(ex, "Unable to connect to indexer: " + ex.Message);
 
-                if (capabilities.SupportedSearchParameters != null && capabilities.SupportedSearchParameters.Contains("q"))
-                {
-                    return null;
-                }
-
-                return new ValidationFailure(string.Empty, "Indexer does not support required search parameters");
-            }
-            catch (Exception ex)
-            {
-                _logger.Warn(ex, "Unable to connect to indexer: " + ex.Message);
-
-                return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log for more details");
-            }
+            return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log for more details");
         }
     }
 }

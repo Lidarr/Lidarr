@@ -1,21 +1,20 @@
-﻿namespace NzbDrone.Core.ThingiProvider
+﻿namespace NzbDrone.Core.ThingiProvider;
+
+public class ProviderMessage
 {
-    public class ProviderMessage
-    {
-        public string Message { get; set; }
-        public ProviderMessageType Type { get; set; }
+    public string Message { get; set; }
+    public ProviderMessageType Type { get; set; }
 
-        public ProviderMessage(string message, ProviderMessageType type)
-        {
-            Message = message;
-            Type = type;
-        }
-    }
-
-    public enum ProviderMessageType
+    public ProviderMessage(string message, ProviderMessageType type)
     {
-        Info,
-        Warning,
-        Error
+        Message = message;
+        Type = type;
     }
+}
+
+public enum ProviderMessageType
+{
+    Info,
+    Warning,
+    Error
 }

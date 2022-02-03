@@ -1,9 +1,8 @@
-namespace NzbDrone.Core.Configuration
+namespace NzbDrone.Core.Configuration;
+
+public enum RescanAfterRefreshType
 {
-    public enum RescanAfterRefreshType
-    {
-        Always,
-        AfterManual,
-        Never
-    }
+    Always,
+    AfterManual,
+    Never
 }

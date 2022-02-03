@@ -1,9 +1,8 @@
 ﻿using NUnit.Framework;
 
-namespace NzbDrone.Common.Test.Http
+namespace NzbDrone.Common.Test.Http;
+
+[TestFixture]
+public class HttpRequestFixture
 {
-    [TestFixture]
-    public class HttpRequestFixture
-    {
-    }
 }

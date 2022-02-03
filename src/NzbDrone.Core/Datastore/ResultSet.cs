@@ -1,6 +1,5 @@
-﻿namespace NzbDrone.Core.Datastore
+﻿namespace NzbDrone.Core.Datastore;
+
+public class ResultSet
 {
-    public class ResultSet
-    {
-    }
 }

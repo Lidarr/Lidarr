@@ -1,9 +1,8 @@
-﻿namespace NzbDrone.Update
+﻿namespace NzbDrone.Update;
+
+public enum AppType
 {
-    public enum AppType
-    {
-        Normal,
-        Console,
-        Service
-    }
+    Normal,
+    Console,
+    Service
 }

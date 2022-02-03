@@ -3,102 +3,101 @@ using System.Linq;
 using Lidarr.Http.REST;
 using NzbDrone.Core.Profiles.Qualities;
 
-namespace Lidarr.Api.V1.Profiles.Quality
+namespace Lidarr.Api.V1.Profiles.Quality;
+
+public class QualityProfileResource : RestResource
 {
-    public class QualityProfileResource : RestResource
+    public string Name { get; set; }
+    public bool UpgradeAllowed { get; set; }
+    public int Cutoff { get; set; }
+    public List<QualityProfileQualityItemResource> Items { get; set; }
+}
+
+public class QualityProfileQualityItemResource : RestResource
+{
+    public string Name { get; set; }
+    public NzbDrone.Core.Qualities.Quality Quality { get; set; }
+    public List<QualityProfileQualityItemResource> Items { get; set; }
+    public bool Allowed { get; set; }
+
+    public QualityProfileQualityItemResource()
     {
-        public string Name { get; set; }
-        public bool UpgradeAllowed { get; set; }
-        public int Cutoff { get; set; }
-        public List<QualityProfileQualityItemResource> Items { get; set; }
+        Items = new List<QualityProfileQualityItemResource>();
+    }
+}
+
+public static class ProfileResourceMapper
+{
+    public static QualityProfileResource ToResource(this QualityProfile model)
+    {
+        if (model == null)
+        {
+            return null;
+        }
+
+        return new QualityProfileResource
+               {
+                   Id = model.Id,
+                   Name = model.Name,
+                   UpgradeAllowed = model.UpgradeAllowed,
+                   Cutoff = model.Cutoff,
+                   Items = model.Items.ConvertAll(ToResource)
+               };
     }
 
-    public class QualityProfileQualityItemResource : RestResource
+    public static QualityProfileQualityItemResource ToResource(this QualityProfileQualityItem model)
     {
-        public string Name { get; set; }
-        public NzbDrone.Core.Qualities.Quality Quality { get; set; }
-        public List<QualityProfileQualityItemResource> Items { get; set; }
-        public bool Allowed { get; set; }
-
-        public QualityProfileQualityItemResource()
+        if (model == null)
         {
-            Items = new List<QualityProfileQualityItemResource>();
+            return null;
         }
+
+        return new QualityProfileQualityItemResource
+               {
+                   Id = model.Id,
+                   Name = model.Name,
+                   Quality = model.Quality,
+                   Items = model.Items.ConvertAll(ToResource),
+                   Allowed = model.Allowed
+               };
     }
 
-    public static class ProfileResourceMapper
+    public static QualityProfile ToModel(this QualityProfileResource resource)
     {
-        public static QualityProfileResource ToResource(this QualityProfile model)
+        if (resource == null)
         {
-            if (model == null)
-            {
-                return null;
-            }
-
-            return new QualityProfileResource
-            {
-                Id = model.Id,
-                Name = model.Name,
-                UpgradeAllowed = model.UpgradeAllowed,
-                Cutoff = model.Cutoff,
-                Items = model.Items.ConvertAll(ToResource)
-            };
+            return null;
         }
 
-        public static QualityProfileQualityItemResource ToResource(this QualityProfileQualityItem model)
-        {
-            if (model == null)
-            {
-                return null;
-            }
+        return new QualityProfile
+               {
+                   Id = resource.Id,
+                   Name = resource.Name,
+                   UpgradeAllowed = resource.UpgradeAllowed,
+                   Cutoff = resource.Cutoff,
+                   Items = resource.Items.ConvertAll(ToModel)
+               };
+    }
 
-            return new QualityProfileQualityItemResource
-            {
-                Id = model.Id,
-                Name = model.Name,
-                Quality = model.Quality,
-                Items = model.Items.ConvertAll(ToResource),
-                Allowed = model.Allowed
-            };
+    public static QualityProfileQualityItem ToModel(this QualityProfileQualityItemResource resource)
+    {
+        if (resource == null)
+        {
+            return null;
         }
 
-        public static QualityProfile ToModel(this QualityProfileResource resource)
-        {
-            if (resource == null)
-            {
-                return null;
-            }
+        return new QualityProfileQualityItem
+               {
+                   Id = resource.Id,
+                   Name = resource.Name,
+                   Quality = resource.Quality != null ? (NzbDrone.Core.Qualities.Quality)resource.Quality.Id : null,
+                   Items = resource.Items.ConvertAll(ToModel),
+                   Allowed = resource.Allowed
+               };
+    }
 
-            return new QualityProfile
-            {
-                Id = resource.Id,
-                Name = resource.Name,
-                UpgradeAllowed = resource.UpgradeAllowed,
-                Cutoff = resource.Cutoff,
-                Items = resource.Items.ConvertAll(ToModel)
-            };
-        }
-
-        public static QualityProfileQualityItem ToModel(this QualityProfileQualityItemResource resource)
-        {
-            if (resource == null)
-            {
-                return null;
-            }
-
-            return new QualityProfileQualityItem
-            {
-                Id = resource.Id,
-                Name = resource.Name,
-                Quality = resource.Quality != null ? (NzbDrone.Core.Qualities.Quality)resource.Quality.Id : null,
-                Items = resource.Items.ConvertAll(ToModel),
-                Allowed = resource.Allowed
-            };
-        }
-
-        public static List<QualityProfileResource> ToResource(this IEnumerable<QualityProfile> models)
-        {
-            return models.Select(ToResource).ToList();
-        }
+    public static List<QualityProfileResource> ToResource(this IEnumerable<QualityProfile> models)
+    {
+        return models.Select(ToResource).ToList();
     }
 }

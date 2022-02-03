@@ -8,184 +8,183 @@ using NzbDrone.Core.Music.Commands;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Core.Update.Commands;
 
-namespace NzbDrone.Core.Test.Messaging.Commands
+namespace NzbDrone.Core.Test.Messaging.Commands;
+
+[TestFixture]
+public class CommandQueueFixture : CoreTest<CommandQueue>
 {
-    [TestFixture]
-    public class CommandQueueFixture : CoreTest<CommandQueue>
+    private void GivenStartedDiskCommand()
     {
-        private void GivenStartedDiskCommand()
-        {
-            var commandModel = Builder<CommandModel>
-                .CreateNew()
-                .With(c => c.Name = "ProcessMonitoredDownloads")
-                .With(c => c.Body = new ProcessMonitoredDownloadsCommand())
-                .With(c => c.Status = CommandStatus.Started)
-                .Build();
+        var commandModel = Builder<CommandModel>
+                          .CreateNew()
+                          .With(c => c.Name = "ProcessMonitoredDownloads")
+                          .With(c => c.Body = new ProcessMonitoredDownloadsCommand())
+                          .With(c => c.Status = CommandStatus.Started)
+                          .Build();
 
-            Subject.Add(commandModel);
-        }
+        Subject.Add(commandModel);
+    }
 
-        private void GivenStartedTypeExclusiveCommand()
-        {
-            var commandModel = Builder<CommandModel>
-                .CreateNew()
-                .With(c => c.Name = "ImportListSync")
-                .With(c => c.Body = new ImportListSyncCommand())
-                .With(c => c.Status = CommandStatus.Started)
-                .Build();
+    private void GivenStartedTypeExclusiveCommand()
+    {
+        var commandModel = Builder<CommandModel>
+                          .CreateNew()
+                          .With(c => c.Name = "ImportListSync")
+                          .With(c => c.Body = new ImportListSyncCommand())
+                          .With(c => c.Status = CommandStatus.Started)
+                          .Build();
 
-            Subject.Add(commandModel);
-        }
+        Subject.Add(commandModel);
+    }
 
-        private void GivenStartedExclusiveCommand()
-        {
-            var commandModel = Builder<CommandModel>
-                .CreateNew()
-                .With(c => c.Name = "ApplicationUpdate")
-                .With(c => c.Body = new ApplicationUpdateCommand())
-                .With(c => c.Status = CommandStatus.Started)
-                .Build();
+    private void GivenStartedExclusiveCommand()
+    {
+        var commandModel = Builder<CommandModel>
+                          .CreateNew()
+                          .With(c => c.Name = "ApplicationUpdate")
+                          .With(c => c.Body = new ApplicationUpdateCommand())
+                          .With(c => c.Status = CommandStatus.Started)
+                          .Build();
 
-            Subject.Add(commandModel);
-        }
+        Subject.Add(commandModel);
+    }
 
-        [Test]
-        public void should_not_return_disk_access_command_if_another_running()
-        {
-            GivenStartedDiskCommand();
+    [Test]
+    public void should_not_return_disk_access_command_if_another_running()
+    {
+        GivenStartedDiskCommand();
 
-            var newCommandModel = Builder<CommandModel>
-                .CreateNew()
-                .With(c => c.Name = "ProcessMonitoredDownloads")
-                .With(c => c.Body = new ProcessMonitoredDownloadsCommand())
-                .Build();
+        var newCommandModel = Builder<CommandModel>
+                             .CreateNew()
+                             .With(c => c.Name = "ProcessMonitoredDownloads")
+                             .With(c => c.Body = new ProcessMonitoredDownloadsCommand())
+                             .Build();
 
-            Subject.Add(newCommandModel);
+        Subject.Add(newCommandModel);
 
-            Subject.TryGet(out var command);
+        Subject.TryGet(out var command);
 
-            command.Should().BeNull();
-        }
+        command.Should().BeNull();
+    }
 
-        [Test]
-        public void should_not_return_type_exclusive_command_if_another_running()
-        {
-            GivenStartedTypeExclusiveCommand();
+    [Test]
+    public void should_not_return_type_exclusive_command_if_another_running()
+    {
+        GivenStartedTypeExclusiveCommand();
 
-            var newCommandModel = Builder<CommandModel>
-                .CreateNew()
-                .With(c => c.Name = "ImportListSync")
-                .With(c => c.Body = new ImportListSyncCommand())
-                .Build();
+        var newCommandModel = Builder<CommandModel>
+                             .CreateNew()
+                             .With(c => c.Name = "ImportListSync")
+                             .With(c => c.Body = new ImportListSyncCommand())
+                             .Build();
 
-            Subject.Add(newCommandModel);
+        Subject.Add(newCommandModel);
 
-            Subject.TryGet(out var command);
+        Subject.TryGet(out var command);
 
-            command.Should().BeNull();
-        }
+        command.Should().BeNull();
+    }
 
-        [Test]
-        public void should_not_return_type_exclusive_command_if_another_and_disk_access_command_running()
-        {
-            GivenStartedTypeExclusiveCommand();
-            GivenStartedDiskCommand();
+    [Test]
+    public void should_not_return_type_exclusive_command_if_another_and_disk_access_command_running()
+    {
+        GivenStartedTypeExclusiveCommand();
+        GivenStartedDiskCommand();
 
-            var newCommandModel = Builder<CommandModel>
-                .CreateNew()
-                .With(c => c.Name = "ImportListSync")
-                .With(c => c.Body = new ImportListSyncCommand())
-                .Build();
+        var newCommandModel = Builder<CommandModel>
+                             .CreateNew()
+                             .With(c => c.Name = "ImportListSync")
+                             .With(c => c.Body = new ImportListSyncCommand())
+                             .Build();
 
-            Subject.Add(newCommandModel);
+        Subject.Add(newCommandModel);
 
-            Subject.TryGet(out var command);
+        Subject.TryGet(out var command);
 
-            command.Should().BeNull();
-        }
+        command.Should().BeNull();
+    }
 
-        [Test]
-        public void should_return_type_exclusive_command_if_another_not_running()
-        {
-            GivenStartedDiskCommand();
+    [Test]
+    public void should_return_type_exclusive_command_if_another_not_running()
+    {
+        GivenStartedDiskCommand();
 
-            var newCommandModel = Builder<CommandModel>
-                .CreateNew()
-                .With(c => c.Name = "ImportListSync")
-                .With(c => c.Body = new ImportListSyncCommand())
-                .Build();
+        var newCommandModel = Builder<CommandModel>
+                             .CreateNew()
+                             .With(c => c.Name = "ImportListSync")
+                             .With(c => c.Body = new ImportListSyncCommand())
+                             .Build();
 
-            Subject.Add(newCommandModel);
+        Subject.Add(newCommandModel);
 
-            Subject.TryGet(out var command);
+        Subject.TryGet(out var command);
 
-            command.Should().NotBeNull();
-            command.Status.Should().Be(CommandStatus.Started);
-        }
+        command.Should().NotBeNull();
+        command.Status.Should().Be(CommandStatus.Started);
+    }
 
-        [Test]
-        public void should_return_regular_command_if_type_exclusive_command_running()
-        {
-            GivenStartedTypeExclusiveCommand();
+    [Test]
+    public void should_return_regular_command_if_type_exclusive_command_running()
+    {
+        GivenStartedTypeExclusiveCommand();
 
-            var newCommandModel = Builder<CommandModel>
-                .CreateNew()
-                .With(c => c.Name = "RefreshArtist")
-                .With(c => c.Body = new RefreshArtistCommand())
-                .Build();
+        var newCommandModel = Builder<CommandModel>
+                             .CreateNew()
+                             .With(c => c.Name = "RefreshArtist")
+                             .With(c => c.Body = new RefreshArtistCommand())
+                             .Build();
 
-            Subject.Add(newCommandModel);
+        Subject.Add(newCommandModel);
 
-            Subject.TryGet(out var command);
+        Subject.TryGet(out var command);
 
-            command.Should().NotBeNull();
-            command.Status.Should().Be(CommandStatus.Started);
-        }
+        command.Should().NotBeNull();
+        command.Status.Should().Be(CommandStatus.Started);
+    }
 
-        [Test]
-        public void should_not_return_exclusive_command_if_any_running()
-        {
-            GivenStartedDiskCommand();
+    [Test]
+    public void should_not_return_exclusive_command_if_any_running()
+    {
+        GivenStartedDiskCommand();
 
-            var newCommandModel = Builder<CommandModel>
-                .CreateNew()
-                .With(c => c.Name = "ApplicationUpdate")
-                .With(c => c.Body = new ApplicationUpdateCommand())
-                .Build();
+        var newCommandModel = Builder<CommandModel>
+                             .CreateNew()
+                             .With(c => c.Name = "ApplicationUpdate")
+                             .With(c => c.Body = new ApplicationUpdateCommand())
+                             .Build();
 
-            Subject.Add(newCommandModel);
+        Subject.Add(newCommandModel);
 
-            Subject.TryGet(out var command);
+        Subject.TryGet(out var command);
 
-            command.Should().BeNull();
-        }
+        command.Should().BeNull();
+    }
 
-        [Test]
-        public void should_not_return_any_command_if_exclusive_running()
-        {
-            GivenStartedExclusiveCommand();
+    [Test]
+    public void should_not_return_any_command_if_exclusive_running()
+    {
+        GivenStartedExclusiveCommand();
 
-            var newCommandModel = Builder<CommandModel>
-                .CreateNew()
-                .With(c => c.Name = "RefreshArtist")
-                .With(c => c.Body = new RefreshArtistCommand())
-                .Build();
+        var newCommandModel = Builder<CommandModel>
+                             .CreateNew()
+                             .With(c => c.Name = "RefreshArtist")
+                             .With(c => c.Body = new RefreshArtistCommand())
+                             .Build();
 
-            Subject.Add(newCommandModel);
+        Subject.Add(newCommandModel);
 
-            Subject.TryGet(out var command);
+        Subject.TryGet(out var command);
 
-            command.Should().BeNull();
-        }
+        command.Should().BeNull();
+    }
 
-        [Test]
-        public void should_return_null_if_nothing_queued()
-        {
-            GivenStartedDiskCommand();
+    [Test]
+    public void should_return_null_if_nothing_queued()
+    {
+        GivenStartedDiskCommand();
 
-            Subject.TryGet(out var command);
+        Subject.TryGet(out var command);
 
-            command.Should().BeNull();
-        }
+        command.Should().BeNull();
     }
 }

@@ -1,11 +1,10 @@
-namespace NzbDrone.Core.Notifications.Prowl
+namespace NzbDrone.Core.Notifications.Prowl;
+
+public enum ProwlPriority
 {
-    public enum ProwlPriority
-    {
-        VeryLow = -2,
-        Low = -1,
-        Normal = 0,
-        High = 1,
-        Emergency = 2
-    }
+    VeryLow = -2,
+    Low = -1,
+    Normal = 0,
+    High = 1,
+    Emergency = 2
 }

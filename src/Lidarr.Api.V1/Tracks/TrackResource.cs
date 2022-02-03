@@ -6,65 +6,64 @@ using Lidarr.Http.REST;
 using Newtonsoft.Json;
 using NzbDrone.Core.Music;
 
-namespace Lidarr.Api.V1.Tracks
+namespace Lidarr.Api.V1.Tracks;
+
+public class TrackResource : RestResource
 {
-    public class TrackResource : RestResource
+    public int ArtistId { get; set; }
+    public int TrackFileId { get; set; }
+    public int AlbumId { get; set; }
+    public bool Explicit { get; set; }
+    public int AbsoluteTrackNumber { get; set; }
+    public string TrackNumber { get; set; }
+    public string Title { get; set; }
+    public int Duration { get; set; }
+    public TrackFileResource TrackFile { get; set; }
+    public int MediumNumber { get; set; }
+    public bool HasFile { get; set; }
+
+    public ArtistResource Artist { get; set; }
+    public Ratings Ratings { get; set; }
+
+    //Hiding this so people don't think its usable (only used to set the initial state)
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+    public bool Grabbed { get; set; }
+}
+
+public static class TrackResourceMapper
+{
+    public static TrackResource ToResource(this Track model)
     {
-        public int ArtistId { get; set; }
-        public int TrackFileId { get; set; }
-        public int AlbumId { get; set; }
-        public bool Explicit { get; set; }
-        public int AbsoluteTrackNumber { get; set; }
-        public string TrackNumber { get; set; }
-        public string Title { get; set; }
-        public int Duration { get; set; }
-        public TrackFileResource TrackFile { get; set; }
-        public int MediumNumber { get; set; }
-        public bool HasFile { get; set; }
+        if (model == null)
+        {
+            return null;
+        }
 
-        public ArtistResource Artist { get; set; }
-        public Ratings Ratings { get; set; }
+        return new TrackResource
+               {
+                   Id = model.Id,
 
-        //Hiding this so people don't think its usable (only used to set the initial state)
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool Grabbed { get; set; }
+                   ArtistId = model.Artist.Value.Id,
+                   TrackFileId = model.TrackFileId,
+                   AlbumId = model.AlbumId,
+                   Explicit = model.Explicit,
+                   AbsoluteTrackNumber = model.AbsoluteTrackNumber,
+                   TrackNumber = model.TrackNumber,
+                   Title = model.Title,
+                   Duration = model.Duration,
+                   MediumNumber = model.MediumNumber,
+                   HasFile = model.HasFile,
+                   Ratings = model.Ratings,
+               };
     }
 
-    public static class TrackResourceMapper
+    public static List<TrackResource> ToResource(this IEnumerable<Track> models)
     {
-        public static TrackResource ToResource(this Track model)
+        if (models == null)
         {
-            if (model == null)
-            {
-                return null;
-            }
-
-            return new TrackResource
-            {
-                Id = model.Id,
-
-                ArtistId = model.Artist.Value.Id,
-                TrackFileId = model.TrackFileId,
-                AlbumId = model.AlbumId,
-                Explicit = model.Explicit,
-                AbsoluteTrackNumber = model.AbsoluteTrackNumber,
-                TrackNumber = model.TrackNumber,
-                Title = model.Title,
-                Duration = model.Duration,
-                MediumNumber = model.MediumNumber,
-                HasFile = model.HasFile,
-                Ratings = model.Ratings,
-            };
+            return null;
         }
 
-        public static List<TrackResource> ToResource(this IEnumerable<Track> models)
-        {
-            if (models == null)
-            {
-                return null;
-            }
-
-            return models.Select(ToResource).ToList();
-        }
+        return models.Select(ToResource).ToList();
     }
 }

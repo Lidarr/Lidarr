@@ -7,56 +7,55 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.MusicTests.ArtistRepositoryTests
+namespace NzbDrone.Core.Test.MusicTests.ArtistRepositoryTests;
+
+[TestFixture]
+
+public class ArtistMetadataRepositoryFixture : DbTest<ArtistMetadataRepository, ArtistMetadata>
 {
-    [TestFixture]
+    private ArtistMetadataRepository _artistMetadataRepo;
+    private List<ArtistMetadata> _metadataList;
 
-    public class ArtistMetadataRepositoryFixture : DbTest<ArtistMetadataRepository, ArtistMetadata>
+    [SetUp]
+    public void Setup()
     {
-        private ArtistMetadataRepository _artistMetadataRepo;
-        private List<ArtistMetadata> _metadataList;
+        _artistMetadataRepo = Mocker.Resolve<ArtistMetadataRepository>();
+        _metadataList = Builder<ArtistMetadata>.CreateListOfSize(10).All().With(x => x.Id = 0).BuildList();
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            _artistMetadataRepo = Mocker.Resolve<ArtistMetadataRepository>();
-            _metadataList = Builder<ArtistMetadata>.CreateListOfSize(10).All().With(x => x.Id = 0).BuildList();
-        }
+    [Test]
+    public void upsert_many_should_insert_list_of_new()
+    {
+        var updated = _artistMetadataRepo.UpsertMany(_metadataList);
+        AllStoredModels.Should().HaveCount(_metadataList.Count);
+        updated.Should().BeTrue();
+    }
 
-        [Test]
-        public void upsert_many_should_insert_list_of_new()
-        {
-            var updated = _artistMetadataRepo.UpsertMany(_metadataList);
-            AllStoredModels.Should().HaveCount(_metadataList.Count);
-            updated.Should().BeTrue();
-        }
+    [Test]
+    public void upsert_many_should_upsert_existing_with_id_0()
+    {
+        var clone = _metadataList.JsonClone();
+        var updated = _artistMetadataRepo.UpsertMany(clone);
 
-        [Test]
-        public void upsert_many_should_upsert_existing_with_id_0()
-        {
-            var clone = _metadataList.JsonClone();
-            var updated = _artistMetadataRepo.UpsertMany(clone);
+        updated.Should().BeTrue();
+        AllStoredModels.Should().HaveCount(_metadataList.Count);
 
-            updated.Should().BeTrue();
-            AllStoredModels.Should().HaveCount(_metadataList.Count);
+        updated = _artistMetadataRepo.UpsertMany(_metadataList);
+        updated.Should().BeFalse();
+        AllStoredModels.Should().HaveCount(_metadataList.Count);
+    }
 
-            updated = _artistMetadataRepo.UpsertMany(_metadataList);
-            updated.Should().BeFalse();
-            AllStoredModels.Should().HaveCount(_metadataList.Count);
-        }
+    [Test]
+    public void upsert_many_should_upsert_mixed_list_of_old_and_new()
+    {
+        var clone = _metadataList.Take(5).ToList().JsonClone();
+        var updated = _artistMetadataRepo.UpsertMany(clone);
 
-        [Test]
-        public void upsert_many_should_upsert_mixed_list_of_old_and_new()
-        {
-            var clone = _metadataList.Take(5).ToList().JsonClone();
-            var updated = _artistMetadataRepo.UpsertMany(clone);
+        updated.Should().BeTrue();
+        AllStoredModels.Should().HaveCount(clone.Count);
 
-            updated.Should().BeTrue();
-            AllStoredModels.Should().HaveCount(clone.Count);
-
-            updated = _artistMetadataRepo.UpsertMany(_metadataList);
-            updated.Should().BeTrue();
-            AllStoredModels.Should().HaveCount(_metadataList.Count);
-        }
+        updated = _artistMetadataRepo.UpsertMany(_metadataList);
+        updated.Should().BeTrue();
+        AllStoredModels.Should().HaveCount(_metadataList.Count);
     }
 }

@@ -1,44 +1,43 @@
-namespace NzbDrone.Core.Organizer
+namespace NzbDrone.Core.Organizer;
+
+public interface INamingConfigService
 {
-    public interface INamingConfigService
+    NamingConfig GetConfig();
+    void Save(NamingConfig namingConfig);
+}
+
+public class NamingConfigService : INamingConfigService
+{
+    private readonly INamingConfigRepository _repository;
+
+    public NamingConfigService(INamingConfigRepository repository)
     {
-        NamingConfig GetConfig();
-        void Save(NamingConfig namingConfig);
+        _repository = repository;
     }
 
-    public class NamingConfigService : INamingConfigService
+    public NamingConfig GetConfig()
     {
-        private readonly INamingConfigRepository _repository;
+        var config = _repository.SingleOrDefault();
 
-        public NamingConfigService(INamingConfigRepository repository)
+        if (config == null)
         {
-            _repository = repository;
-        }
-
-        public NamingConfig GetConfig()
-        {
-            var config = _repository.SingleOrDefault();
-
-            if (config == null)
+            lock (_repository)
             {
-                lock (_repository)
-                {
-                    config = _repository.SingleOrDefault();
+                config = _repository.SingleOrDefault();
 
-                    if (config == null)
-                    {
-                        _repository.Insert(NamingConfig.Default);
-                        config = _repository.Single();
-                    }
+                if (config == null)
+                {
+                    _repository.Insert(NamingConfig.Default);
+                    config = _repository.Single();
                 }
             }
-
-            return config;
         }
 
-        public void Save(NamingConfig namingConfig)
-        {
-            _repository.Upsert(namingConfig);
-        }
+        return config;
+    }
+
+    public void Save(NamingConfig namingConfig)
+    {
+        _repository.Upsert(namingConfig);
     }
 }

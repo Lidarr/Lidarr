@@ -1,9 +1,8 @@
-namespace NzbDrone.Core.Validation
-{
-    public class NzbDroneValidationState
-    {
-        public static NzbDroneValidationState Warning = new NzbDroneValidationState { IsWarning = true };
+namespace NzbDrone.Core.Validation;
 
-        public bool IsWarning { get; set; }
-    }
+public class NzbDroneValidationState
+{
+    public static NzbDroneValidationState Warning = new NzbDroneValidationState { IsWarning = true };
+
+    public bool IsWarning { get; set; }
 }

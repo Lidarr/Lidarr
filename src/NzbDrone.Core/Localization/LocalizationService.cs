@@ -13,176 +13,175 @@ using NzbDrone.Core.Languages;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 
-namespace NzbDrone.Core.Localization
+namespace NzbDrone.Core.Localization;
+
+public interface ILocalizationService
 {
-    public interface ILocalizationService
+    Dictionary<string, string> GetLocalizationDictionary();
+    string GetLocalizedString(string phrase);
+    string GetLocalizedString(string phrase, string language);
+}
+
+public class LocalizationService : ILocalizationService, IHandleAsync<ConfigSavedEvent>
+{
+    private const string DefaultCulture = "en";
+
+    private readonly ICached<Dictionary<string, string>> _cache;
+
+    private readonly IConfigService _configService;
+    private readonly IAppFolderInfo _appFolderInfo;
+    private readonly Logger _logger;
+
+    public LocalizationService(IConfigService configService,
+                               IAppFolderInfo appFolderInfo,
+                               ICacheManager cacheManager,
+                               Logger logger)
     {
-        Dictionary<string, string> GetLocalizationDictionary();
-        string GetLocalizedString(string phrase);
-        string GetLocalizedString(string phrase, string language);
+        _configService = configService;
+        _appFolderInfo = appFolderInfo;
+        _cache = cacheManager.GetCache<Dictionary<string, string>>(typeof(Dictionary<string, string>), "localization");
+        _logger = logger;
     }
 
-    public class LocalizationService : ILocalizationService, IHandleAsync<ConfigSavedEvent>
+    public Dictionary<string, string> GetLocalizationDictionary()
     {
-        private const string DefaultCulture = "en";
+        var language = GetSetLanguageFileName();
 
-        private readonly ICached<Dictionary<string, string>> _cache;
+        return GetLocalizationDictionary(language);
+    }
 
-        private readonly IConfigService _configService;
-        private readonly IAppFolderInfo _appFolderInfo;
-        private readonly Logger _logger;
+    public string GetLocalizedString(string phrase)
+    {
+        var language = GetSetLanguageFileName();
 
-        public LocalizationService(IConfigService configService,
-                                   IAppFolderInfo appFolderInfo,
-                                   ICacheManager cacheManager,
-                                   Logger logger)
+        return GetLocalizedString(phrase, language);
+    }
+
+    public string GetLocalizedString(string phrase, string language)
+    {
+        if (string.IsNullOrEmpty(phrase))
         {
-            _configService = configService;
-            _appFolderInfo = appFolderInfo;
-            _cache = cacheManager.GetCache<Dictionary<string, string>>(typeof(Dictionary<string, string>), "localization");
-            _logger = logger;
+            throw new ArgumentNullException(nameof(phrase));
         }
 
-        public Dictionary<string, string> GetLocalizationDictionary()
+        if (language.IsNullOrWhiteSpace())
         {
-            var language = GetSetLanguageFileName();
-
-            return GetLocalizationDictionary(language);
+            language = GetSetLanguageFileName();
         }
 
-        public string GetLocalizedString(string phrase)
+        if (language == null)
         {
-            var language = GetSetLanguageFileName();
-
-            return GetLocalizedString(phrase, language);
+            language = DefaultCulture;
         }
 
-        public string GetLocalizedString(string phrase, string language)
+        var dictionary = GetLocalizationDictionary(language);
+
+        if (dictionary.TryGetValue(phrase, out var value))
         {
-            if (string.IsNullOrEmpty(phrase))
-            {
-                throw new ArgumentNullException(nameof(phrase));
-            }
-
-            if (language.IsNullOrWhiteSpace())
-            {
-                language = GetSetLanguageFileName();
-            }
-
-            if (language == null)
-            {
-                language = DefaultCulture;
-            }
-
-            var dictionary = GetLocalizationDictionary(language);
-
-            if (dictionary.TryGetValue(phrase, out var value))
-            {
-                return value;
-            }
-
-            return phrase;
+            return value;
         }
 
-        private string GetSetLanguageFileName()
+        return phrase;
+    }
+
+    private string GetSetLanguageFileName()
+    {
+        var isoLanguage = IsoLanguages.Get((Language)_configService.UILanguage);
+        var language = isoLanguage.TwoLetterCode;
+
+        if (isoLanguage.CountryCode.IsNotNullOrWhiteSpace())
         {
-            var isoLanguage = IsoLanguages.Get((Language)_configService.UILanguage);
-            var language = isoLanguage.TwoLetterCode;
-
-            if (isoLanguage.CountryCode.IsNotNullOrWhiteSpace())
-            {
-                language = string.Format("{0}_{1}", language, isoLanguage.CountryCode);
-            }
-
-            return language;
+            language = string.Format("{0}_{1}", language, isoLanguage.CountryCode);
         }
 
-        private Dictionary<string, string> GetLocalizationDictionary(string language)
+        return language;
+    }
+
+    private Dictionary<string, string> GetLocalizationDictionary(string language)
+    {
+        if (string.IsNullOrEmpty(language))
         {
-            if (string.IsNullOrEmpty(language))
-            {
-                throw new ArgumentNullException(nameof(language));
-            }
-
-            var startupFolder = _appFolderInfo.StartUpFolder;
-
-            var prefix = Path.Combine(startupFolder, "Localization", "Core");
-            var key = prefix + language;
-
-            return _cache.Get("localization", () => GetDictionary(prefix, language, DefaultCulture + ".json").GetAwaiter().GetResult());
+            throw new ArgumentNullException(nameof(language));
         }
 
-        private async Task<Dictionary<string, string>> GetDictionary(string prefix, string culture, string baseFilename)
+        var startupFolder = _appFolderInfo.StartUpFolder;
+
+        var prefix = Path.Combine(startupFolder, "Localization", "Core");
+        var key = prefix + language;
+
+        return _cache.Get("localization", () => GetDictionary(prefix, language, DefaultCulture + ".json").GetAwaiter().GetResult());
+    }
+
+    private async Task<Dictionary<string, string>> GetDictionary(string prefix, string culture, string baseFilename)
+    {
+        if (string.IsNullOrEmpty(culture))
         {
-            if (string.IsNullOrEmpty(culture))
-            {
-                throw new ArgumentNullException(nameof(culture));
-            }
-
-            var dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-            var baseFilenamePath = Path.Combine(prefix, baseFilename);
-
-            var alternativeFilenamePath = Path.Combine(prefix, GetResourceFilename(culture));
-
-            await CopyInto(dictionary, baseFilenamePath).ConfigureAwait(false);
-
-            if (culture.Contains("_"))
-            {
-                var languageBaseFilenamePath = Path.Combine(prefix, GetResourceFilename(culture.Split('_')[0]));
-                await CopyInto(dictionary, languageBaseFilenamePath).ConfigureAwait(false);
-            }
-
-            await CopyInto(dictionary, alternativeFilenamePath).ConfigureAwait(false);
-
-            return dictionary;
+            throw new ArgumentNullException(nameof(culture));
         }
 
-        private async Task CopyInto(IDictionary<string, string> dictionary, string resourcePath)
-        {
-            if (!File.Exists(resourcePath))
-            {
-                _logger.Error("Missing translation/culture resource: {0}", resourcePath);
-                return;
-            }
+        var dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-            using (var fs = File.OpenRead(resourcePath))
+        var baseFilenamePath = Path.Combine(prefix, baseFilename);
+
+        var alternativeFilenamePath = Path.Combine(prefix, GetResourceFilename(culture));
+
+        await CopyInto(dictionary, baseFilenamePath).ConfigureAwait(false);
+
+        if (culture.Contains("_"))
+        {
+            var languageBaseFilenamePath = Path.Combine(prefix, GetResourceFilename(culture.Split('_')[0]));
+            await CopyInto(dictionary, languageBaseFilenamePath).ConfigureAwait(false);
+        }
+
+        await CopyInto(dictionary, alternativeFilenamePath).ConfigureAwait(false);
+
+        return dictionary;
+    }
+
+    private async Task CopyInto(IDictionary<string, string> dictionary, string resourcePath)
+    {
+        if (!File.Exists(resourcePath))
+        {
+            _logger.Error("Missing translation/culture resource: {0}", resourcePath);
+            return;
+        }
+
+        using (var fs = File.OpenRead(resourcePath))
+        {
+            if (fs != null)
             {
-                if (fs != null)
+                var dict = await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(fs);
+
+                foreach (var key in dict.Keys)
                 {
-                    var dict = await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(fs);
-
-                    foreach (var key in dict.Keys)
-                    {
-                        dictionary[key] = dict[key];
-                    }
+                    dictionary[key] = dict[key];
                 }
-                else
-                {
-                    _logger.Error("Missing translation/culture resource: {0}", resourcePath);
-                }
-            }
-        }
-
-        private static string GetResourceFilename(string culture)
-        {
-            var parts = culture.Split('_');
-
-            if (parts.Length == 2)
-            {
-                culture = parts[0].ToLowerInvariant() + "_" + parts[1].ToUpperInvariant();
             }
             else
             {
-                culture = culture.ToLowerInvariant();
+                _logger.Error("Missing translation/culture resource: {0}", resourcePath);
             }
-
-            return culture + ".json";
         }
+    }
 
-        public void HandleAsync(ConfigSavedEvent message)
+    private static string GetResourceFilename(string culture)
+    {
+        var parts = culture.Split('_');
+
+        if (parts.Length == 2)
         {
-            _cache.Clear();
+            culture = parts[0].ToLowerInvariant() + "_" + parts[1].ToUpperInvariant();
         }
+        else
+        {
+            culture = culture.ToLowerInvariant();
+        }
+
+        return culture + ".json";
+    }
+
+    public void HandleAsync(ConfigSavedEvent message)
+    {
+        _cache.Clear();
     }
 }

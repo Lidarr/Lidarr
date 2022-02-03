@@ -1,8 +1,7 @@
 ﻿using NzbDrone.Test.Common;
 
-namespace NzbDrone.Common.Test.DiskTests
+namespace NzbDrone.Common.Test.DiskTests;
+
+public class IsParentPathFixture : TestBase
 {
-    public class IsParentPathFixture : TestBase
-    {
-    }
 }

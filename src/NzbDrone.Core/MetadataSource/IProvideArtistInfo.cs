@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using NzbDrone.Core.Music;
 
-namespace NzbDrone.Core.MetadataSource
+namespace NzbDrone.Core.MetadataSource;
+
+public interface IProvideArtistInfo
 {
-    public interface IProvideArtistInfo
-    {
-        Artist GetArtistInfo(string lidarrId, int metadataProfileId);
-        HashSet<string> GetChangedArtists(DateTime startTime);
-    }
+    Artist GetArtistInfo(string lidarrId, int metadataProfileId);
+    HashSet<string> GetChangedArtists(DateTime startTime);
 }

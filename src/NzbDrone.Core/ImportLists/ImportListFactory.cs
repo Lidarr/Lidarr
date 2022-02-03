@@ -7,81 +7,80 @@ using NzbDrone.Common.Composition;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
 
-namespace NzbDrone.Core.ImportLists
+namespace NzbDrone.Core.ImportLists;
+
+public interface IImportListFactory : IProviderFactory<IImportList, ImportListDefinition>
 {
-    public interface IImportListFactory : IProviderFactory<IImportList, ImportListDefinition>
+    List<IImportList> AutomaticAddEnabled(bool filterBlockedImportLists = true);
+}
+
+public class ImportListFactory : ProviderFactory<IImportList, ImportListDefinition>, IImportListFactory
+{
+    private readonly IImportListStatusService _importListStatusService;
+    private readonly Logger _logger;
+
+    public ImportListFactory(IImportListStatusService importListStatusService,
+                             IImportListRepository providerRepository,
+                             IEnumerable<IImportList> providers,
+                             IServiceProvider container,
+                             IEventAggregator eventAggregator,
+                             Logger logger)
+        : base(providerRepository, providers, container, eventAggregator, logger)
     {
-        List<IImportList> AutomaticAddEnabled(bool filterBlockedImportLists = true);
+        _importListStatusService = importListStatusService;
+        _logger = logger;
     }
 
-    public class ImportListFactory : ProviderFactory<IImportList, ImportListDefinition>, IImportListFactory
+    protected override List<ImportListDefinition> Active()
     {
-        private readonly IImportListStatusService _importListStatusService;
-        private readonly Logger _logger;
+        return base.Active().Where(c => c.Enable).ToList();
+    }
 
-        public ImportListFactory(IImportListStatusService importListStatusService,
-                              IImportListRepository providerRepository,
-                              IEnumerable<IImportList> providers,
-                              IServiceProvider container,
-                              IEventAggregator eventAggregator,
-                              Logger logger)
-            : base(providerRepository, providers, container, eventAggregator, logger)
+    public override void SetProviderCharacteristics(IImportList provider, ImportListDefinition definition)
+    {
+        base.SetProviderCharacteristics(provider, definition);
+
+        definition.ListType = provider.ListType;
+    }
+
+    public List<IImportList> AutomaticAddEnabled(bool filterBlockedImportLists = true)
+    {
+        var enabledImportLists = GetAvailableProviders().Where(n => ((ImportListDefinition)n.Definition).EnableAutomaticAdd);
+
+        if (filterBlockedImportLists)
         {
-            _importListStatusService = importListStatusService;
-            _logger = logger;
+            return FilterBlockedImportLists(enabledImportLists).ToList();
         }
 
-        protected override List<ImportListDefinition> Active()
+        return enabledImportLists.ToList();
+    }
+
+    private IEnumerable<IImportList> FilterBlockedImportLists(IEnumerable<IImportList> importLists)
+    {
+        var blockedImportLists = _importListStatusService.GetBlockedProviders().ToDictionary(v => v.ProviderId, v => v);
+
+        foreach (var importList in importLists)
         {
-            return base.Active().Where(c => c.Enable).ToList();
-        }
-
-        public override void SetProviderCharacteristics(IImportList provider, ImportListDefinition definition)
-        {
-            base.SetProviderCharacteristics(provider, definition);
-
-            definition.ListType = provider.ListType;
-        }
-
-        public List<IImportList> AutomaticAddEnabled(bool filterBlockedImportLists = true)
-        {
-            var enabledImportLists = GetAvailableProviders().Where(n => ((ImportListDefinition)n.Definition).EnableAutomaticAdd);
-
-            if (filterBlockedImportLists)
+            ImportListStatus blockedImportListStatus;
+            if (blockedImportLists.TryGetValue(importList.Definition.Id, out blockedImportListStatus))
             {
-                return FilterBlockedImportLists(enabledImportLists).ToList();
+                _logger.Debug("Temporarily ignoring import list {0} till {1} due to recent failures.", importList.Definition.Name, blockedImportListStatus.DisabledTill.Value.ToLocalTime());
+                continue;
             }
 
-            return enabledImportLists.ToList();
+            yield return importList;
         }
+    }
 
-        private IEnumerable<IImportList> FilterBlockedImportLists(IEnumerable<IImportList> importLists)
+    public override ValidationResult Test(ImportListDefinition definition)
+    {
+        var result = base.Test(definition);
+
+        if ((result == null || result.IsValid) && definition.Id != 0)
         {
-            var blockedImportLists = _importListStatusService.GetBlockedProviders().ToDictionary(v => v.ProviderId, v => v);
-
-            foreach (var importList in importLists)
-            {
-                ImportListStatus blockedImportListStatus;
-                if (blockedImportLists.TryGetValue(importList.Definition.Id, out blockedImportListStatus))
-                {
-                    _logger.Debug("Temporarily ignoring import list {0} till {1} due to recent failures.", importList.Definition.Name, blockedImportListStatus.DisabledTill.Value.ToLocalTime());
-                    continue;
-                }
-
-                yield return importList;
-            }
+            _importListStatusService.RecordSuccess(definition.Id);
         }
 
-        public override ValidationResult Test(ImportListDefinition definition)
-        {
-            var result = base.Test(definition);
-
-            if ((result == null || result.IsValid) && definition.Id != 0)
-            {
-                _importListStatusService.RecordSuccess(definition.Id);
-            }
-
-            return result;
-        }
+        return result;
     }
 }

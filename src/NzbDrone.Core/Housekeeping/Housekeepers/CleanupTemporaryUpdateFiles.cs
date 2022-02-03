@@ -2,27 +2,26 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace NzbDrone.Core.Housekeeping.Housekeepers;
+
+public class CleanupTemporaryUpdateFiles : IHousekeepingTask
 {
-    public class CleanupTemporaryUpdateFiles : IHousekeepingTask
+    private readonly IDiskProvider _diskProvider;
+    private readonly IAppFolderInfo _appFolderInfo;
+
+    public CleanupTemporaryUpdateFiles(IDiskProvider diskProvider, IAppFolderInfo appFolderInfo)
     {
-        private readonly IDiskProvider _diskProvider;
-        private readonly IAppFolderInfo _appFolderInfo;
+        _diskProvider = diskProvider;
+        _appFolderInfo = appFolderInfo;
+    }
 
-        public CleanupTemporaryUpdateFiles(IDiskProvider diskProvider, IAppFolderInfo appFolderInfo)
+    public void Clean()
+    {
+        var updateSandboxFolder = _appFolderInfo.GetUpdateSandboxFolder();
+
+        if (_diskProvider.FolderExists(updateSandboxFolder))
         {
-            _diskProvider = diskProvider;
-            _appFolderInfo = appFolderInfo;
-        }
-
-        public void Clean()
-        {
-            var updateSandboxFolder = _appFolderInfo.GetUpdateSandboxFolder();
-
-            if (_diskProvider.FolderExists(updateSandboxFolder))
-            {
-                _diskProvider.DeleteFolder(updateSandboxFolder, true);
-            }
+            _diskProvider.DeleteFolder(updateSandboxFolder, true);
         }
     }
 }

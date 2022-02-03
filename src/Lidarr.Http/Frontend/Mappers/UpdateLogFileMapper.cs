@@ -4,29 +4,28 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 
-namespace Lidarr.Http.Frontend.Mappers
+namespace Lidarr.Http.Frontend.Mappers;
+
+public class UpdateLogFileMapper : StaticResourceMapperBase
 {
-    public class UpdateLogFileMapper : StaticResourceMapperBase
+    private readonly IAppFolderInfo _appFolderInfo;
+
+    public UpdateLogFileMapper(IAppFolderInfo appFolderInfo, IDiskProvider diskProvider, Logger logger)
+        : base(diskProvider, logger)
     {
-        private readonly IAppFolderInfo _appFolderInfo;
+        _appFolderInfo = appFolderInfo;
+    }
 
-        public UpdateLogFileMapper(IAppFolderInfo appFolderInfo, IDiskProvider diskProvider, Logger logger)
-            : base(diskProvider, logger)
-        {
-            _appFolderInfo = appFolderInfo;
-        }
+    public override string Map(string resourceUrl)
+    {
+        var path = resourceUrl.Replace('/', Path.DirectorySeparatorChar);
+        path = Path.GetFileName(path);
 
-        public override string Map(string resourceUrl)
-        {
-            var path = resourceUrl.Replace('/', Path.DirectorySeparatorChar);
-            path = Path.GetFileName(path);
+        return Path.Combine(_appFolderInfo.GetUpdateLogFolder(), path);
+    }
 
-            return Path.Combine(_appFolderInfo.GetUpdateLogFolder(), path);
-        }
-
-        public override bool CanHandle(string resourceUrl)
-        {
-            return resourceUrl.StartsWith("/updatelogfile/") && resourceUrl.EndsWith(".txt");
-        }
+    public override bool CanHandle(string resourceUrl)
+    {
+        return resourceUrl.StartsWith("/updatelogfile/") && resourceUrl.EndsWith(".txt");
     }
 }

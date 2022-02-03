@@ -1,6 +1,5 @@
-namespace NzbDrone.Common.Messaging
+namespace NzbDrone.Common.Messaging;
+
+public interface IMessage
 {
-    public interface IMessage
-    {
-    }
 }

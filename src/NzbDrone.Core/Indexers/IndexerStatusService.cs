@@ -4,37 +4,36 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider.Status;
 
-namespace NzbDrone.Core.Indexers
-{
-    public interface IIndexerStatusService : IProviderStatusServiceBase<IndexerStatus>
-    {
-        ReleaseInfo GetLastRssSyncReleaseInfo(int indexerId);
+namespace NzbDrone.Core.Indexers;
 
-        void UpdateRssSyncStatus(int indexerId, ReleaseInfo releaseInfo);
+public interface IIndexerStatusService : IProviderStatusServiceBase<IndexerStatus>
+{
+    ReleaseInfo GetLastRssSyncReleaseInfo(int indexerId);
+
+    void UpdateRssSyncStatus(int indexerId, ReleaseInfo releaseInfo);
+}
+
+public class IndexerStatusService : ProviderStatusServiceBase<IIndexer, IndexerStatus>, IIndexerStatusService
+{
+    public IndexerStatusService(IIndexerStatusRepository providerStatusRepository, IEventAggregator eventAggregator, IRuntimeInfo runtimeInfo, Logger logger)
+        : base(providerStatusRepository, eventAggregator, runtimeInfo, logger)
+    {
     }
 
-    public class IndexerStatusService : ProviderStatusServiceBase<IIndexer, IndexerStatus>, IIndexerStatusService
+    public ReleaseInfo GetLastRssSyncReleaseInfo(int indexerId)
     {
-        public IndexerStatusService(IIndexerStatusRepository providerStatusRepository, IEventAggregator eventAggregator, IRuntimeInfo runtimeInfo, Logger logger)
-            : base(providerStatusRepository, eventAggregator, runtimeInfo, logger)
+        return GetProviderStatus(indexerId).LastRssSyncReleaseInfo;
+    }
+
+    public void UpdateRssSyncStatus(int indexerId, ReleaseInfo releaseInfo)
+    {
+        lock (_syncRoot)
         {
-        }
+            var status = GetProviderStatus(indexerId);
 
-        public ReleaseInfo GetLastRssSyncReleaseInfo(int indexerId)
-        {
-            return GetProviderStatus(indexerId).LastRssSyncReleaseInfo;
-        }
+            status.LastRssSyncReleaseInfo = releaseInfo;
 
-        public void UpdateRssSyncStatus(int indexerId, ReleaseInfo releaseInfo)
-        {
-            lock (_syncRoot)
-            {
-                var status = GetProviderStatus(indexerId);
-
-                status.LastRssSyncReleaseInfo = releaseInfo;
-
-                _providerStatusRepository.Upsert(status);
-            }
+            _providerStatusRepository.Upsert(status);
         }
     }
 }

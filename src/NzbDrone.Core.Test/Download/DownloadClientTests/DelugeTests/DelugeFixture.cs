@@ -10,322 +10,321 @@ using NzbDrone.Core.Download.Clients.Deluge;
 using NzbDrone.Core.MediaFiles.TorrentInfo;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.DelugeTests
+namespace NzbDrone.Core.Test.Download.DownloadClientTests.DelugeTests;
+
+[TestFixture]
+public class DelugeFixture : DownloadClientFixtureBase<Deluge>
 {
-    [TestFixture]
-    public class DelugeFixture : DownloadClientFixtureBase<Deluge>
+    protected DelugeTorrent _queued;
+    protected DelugeTorrent _downloading;
+    protected DelugeTorrent _failed;
+    protected DelugeTorrent _completed;
+    protected DelugeTorrent _seeding;
+
+    [SetUp]
+    public void Setup()
     {
-        protected DelugeTorrent _queued;
-        protected DelugeTorrent _downloading;
-        protected DelugeTorrent _failed;
-        protected DelugeTorrent _completed;
-        protected DelugeTorrent _seeding;
+        Subject.Definition = new DownloadClientDefinition();
+        Subject.Definition.Settings = new DelugeSettings()
+                                      {
+                                          MusicCategory = null
+                                      };
 
-        [SetUp]
-        public void Setup()
+        _queued = new DelugeTorrent
+                  {
+                      Hash = "HASH",
+                      IsFinished = false,
+                      State = DelugeTorrentStatus.Queued,
+                      Name = _title,
+                      Size = 1000,
+                      BytesDownloaded = 0,
+                      Progress = 0.0,
+                      DownloadPath = "somepath"
+                  };
+
+        _downloading = new DelugeTorrent
+                       {
+                           Hash = "HASH",
+                           IsFinished = false,
+                           State = DelugeTorrentStatus.Downloading,
+                           Name = _title,
+                           Size = 1000,
+                           BytesDownloaded = 100,
+                           Progress = 10.0,
+                           DownloadPath = "somepath"
+                       };
+
+        _failed = new DelugeTorrent
+                  {
+                      Hash = "HASH",
+                      IsFinished = false,
+                      State = DelugeTorrentStatus.Error,
+                      Name = _title,
+                      Size = 1000,
+                      BytesDownloaded = 100,
+                      Progress = 10.0,
+                      Message = "Error",
+                      DownloadPath = "somepath"
+                  };
+
+        _completed = new DelugeTorrent
+                     {
+                         Hash = "HASH",
+                         IsFinished = true,
+                         State = DelugeTorrentStatus.Paused,
+                         Name = _title,
+                         Size = 1000,
+                         BytesDownloaded = 1000,
+                         Progress = 100.0,
+                         DownloadPath = "somepath",
+                         IsAutoManaged = true,
+                         StopAtRatio = true,
+                         StopRatio = 1.0,
+                         Ratio = 1.5
+                     };
+
+        Mocker.GetMock<ITorrentFileInfoReader>()
+              .Setup(s => s.GetHashFromTorrentFile(It.IsAny<byte[]>()))
+              .Returns("CBC2F069FE8BB2F544EAE707D75BCD3DE9DCF951");
+
+        Mocker.GetMock<IHttpClient>()
+              .Setup(s => s.Get(It.IsAny<HttpRequest>()))
+              .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new byte[0]));
+    }
+
+    protected void GivenFailedDownload()
+    {
+        Mocker.GetMock<IDelugeProxy>()
+              .Setup(s => s.AddTorrentFromMagnet(It.IsAny<string>(), It.IsAny<DelugeSettings>()))
+              .Throws<InvalidOperationException>();
+
+        Mocker.GetMock<IDelugeProxy>()
+              .Setup(s => s.AddTorrentFromFile(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<DelugeSettings>()))
+              .Throws<InvalidOperationException>();
+    }
+
+    protected void GivenSuccessfulDownload()
+    {
+        Mocker.GetMock<IHttpClient>()
+              .Setup(s => s.Get(It.IsAny<HttpRequest>()))
+              .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new byte[1000]));
+
+        Mocker.GetMock<IDelugeProxy>()
+              .Setup(s => s.AddTorrentFromMagnet(It.IsAny<string>(), It.IsAny<DelugeSettings>()))
+              .Returns("CBC2F069FE8BB2F544EAE707D75BCD3DE9DCF951".ToLower())
+              .Callback(PrepareClientToReturnQueuedItem);
+
+        Mocker.GetMock<IDelugeProxy>()
+              .Setup(s => s.AddTorrentFromFile(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<DelugeSettings>()))
+              .Returns("CBC2F069FE8BB2F544EAE707D75BCD3DE9DCF951".ToLower())
+              .Callback(PrepareClientToReturnQueuedItem);
+    }
+
+    protected virtual void GivenTorrents(List<DelugeTorrent> torrents)
+    {
+        if (torrents == null)
         {
-            Subject.Definition = new DownloadClientDefinition();
-            Subject.Definition.Settings = new DelugeSettings()
-            {
-                MusicCategory = null
-            };
-
-            _queued = new DelugeTorrent
-            {
-                Hash = "HASH",
-                IsFinished = false,
-                State = DelugeTorrentStatus.Queued,
-                Name = _title,
-                Size = 1000,
-                BytesDownloaded = 0,
-                Progress = 0.0,
-                DownloadPath = "somepath"
-            };
-
-            _downloading = new DelugeTorrent
-            {
-                Hash = "HASH",
-                IsFinished = false,
-                State = DelugeTorrentStatus.Downloading,
-                Name = _title,
-                Size = 1000,
-                BytesDownloaded = 100,
-                Progress = 10.0,
-                DownloadPath = "somepath"
-            };
-
-            _failed = new DelugeTorrent
-            {
-                Hash = "HASH",
-                IsFinished = false,
-                State = DelugeTorrentStatus.Error,
-                Name = _title,
-                Size = 1000,
-                BytesDownloaded = 100,
-                Progress = 10.0,
-                Message = "Error",
-                DownloadPath = "somepath"
-            };
-
-            _completed = new DelugeTorrent
-            {
-                Hash = "HASH",
-                IsFinished = true,
-                State = DelugeTorrentStatus.Paused,
-                Name = _title,
-                Size = 1000,
-                BytesDownloaded = 1000,
-                Progress = 100.0,
-                DownloadPath = "somepath",
-                IsAutoManaged = true,
-                StopAtRatio = true,
-                StopRatio = 1.0,
-                Ratio = 1.5
-            };
-
-            Mocker.GetMock<ITorrentFileInfoReader>()
-                  .Setup(s => s.GetHashFromTorrentFile(It.IsAny<byte[]>()))
-                  .Returns("CBC2F069FE8BB2F544EAE707D75BCD3DE9DCF951");
-
-            Mocker.GetMock<IHttpClient>()
-                  .Setup(s => s.Get(It.IsAny<HttpRequest>()))
-                  .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new byte[0]));
+            torrents = new List<DelugeTorrent>();
         }
 
-        protected void GivenFailedDownload()
-        {
-            Mocker.GetMock<IDelugeProxy>()
-                .Setup(s => s.AddTorrentFromMagnet(It.IsAny<string>(), It.IsAny<DelugeSettings>()))
-                .Throws<InvalidOperationException>();
+        Mocker.GetMock<IDelugeProxy>()
+              .Setup(s => s.GetTorrents(It.IsAny<DelugeSettings>()))
+              .Returns(torrents.ToArray());
+    }
 
-            Mocker.GetMock<IDelugeProxy>()
-                .Setup(s => s.AddTorrentFromFile(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<DelugeSettings>()))
-                .Throws<InvalidOperationException>();
-        }
+    protected void PrepareClientToReturnQueuedItem()
+    {
+        GivenTorrents(new List<DelugeTorrent>
+                      {
+                          _queued
+                      });
+    }
 
-        protected void GivenSuccessfulDownload()
-        {
-            Mocker.GetMock<IHttpClient>()
-                  .Setup(s => s.Get(It.IsAny<HttpRequest>()))
-                  .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new byte[1000]));
+    protected void PrepareClientToReturnDownloadingItem()
+    {
+        GivenTorrents(new List<DelugeTorrent>
+                      {
+                          _downloading
+                      });
+    }
 
-            Mocker.GetMock<IDelugeProxy>()
-                .Setup(s => s.AddTorrentFromMagnet(It.IsAny<string>(), It.IsAny<DelugeSettings>()))
-                .Returns("CBC2F069FE8BB2F544EAE707D75BCD3DE9DCF951".ToLower())
-                .Callback(PrepareClientToReturnQueuedItem);
+    protected void PrepareClientToReturnFailedItem()
+    {
+        GivenTorrents(new List<DelugeTorrent>
+                      {
+                          _failed
+                      });
+    }
 
-            Mocker.GetMock<IDelugeProxy>()
-                .Setup(s => s.AddTorrentFromFile(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<DelugeSettings>()))
-                .Returns("CBC2F069FE8BB2F544EAE707D75BCD3DE9DCF951".ToLower())
-                .Callback(PrepareClientToReturnQueuedItem);
-        }
+    protected void PrepareClientToReturnCompletedItem()
+    {
+        GivenTorrents(new List<DelugeTorrent>
+                      {
+                          _completed
+                      });
+    }
 
-        protected virtual void GivenTorrents(List<DelugeTorrent> torrents)
-        {
-            if (torrents == null)
-            {
-                torrents = new List<DelugeTorrent>();
-            }
+    [Test]
+    public void queued_item_should_have_required_properties()
+    {
+        PrepareClientToReturnQueuedItem();
+        var item = Subject.GetItems().Single();
+        VerifyQueued(item);
+    }
 
-            Mocker.GetMock<IDelugeProxy>()
-                .Setup(s => s.GetTorrents(It.IsAny<DelugeSettings>()))
-                .Returns(torrents.ToArray());
-        }
+    [Test]
+    public void downloading_item_should_have_required_properties()
+    {
+        PrepareClientToReturnDownloadingItem();
+        var item = Subject.GetItems().Single();
+        VerifyDownloading(item);
+    }
 
-        protected void PrepareClientToReturnQueuedItem()
-        {
-            GivenTorrents(new List<DelugeTorrent>
-                {
-                    _queued
-                });
-        }
+    [Test]
+    public void failed_item_should_have_required_properties()
+    {
+        PrepareClientToReturnFailedItem();
+        var item = Subject.GetItems().Single();
+        VerifyWarning(item);
+    }
 
-        protected void PrepareClientToReturnDownloadingItem()
-        {
-            GivenTorrents(new List<DelugeTorrent>
-                {
-                    _downloading
-                });
-        }
+    [Test]
+    public void completed_download_should_have_required_properties()
+    {
+        PrepareClientToReturnCompletedItem();
+        var item = Subject.GetItems().Single();
+        VerifyCompleted(item);
 
-        protected void PrepareClientToReturnFailedItem()
-        {
-            GivenTorrents(new List<DelugeTorrent>
-                {
-                    _failed
-                });
-        }
+        item.CanBeRemoved.Should().BeTrue();
+        item.CanMoveFiles.Should().BeTrue();
+    }
 
-        protected void PrepareClientToReturnCompletedItem()
-        {
-            GivenTorrents(new List<DelugeTorrent>
-                {
-                    _completed
-                });
-        }
+    [Test]
+    public void Download_should_return_unique_id()
+    {
+        GivenSuccessfulDownload();
 
-        [Test]
-        public void queued_item_should_have_required_properties()
-        {
-            PrepareClientToReturnQueuedItem();
-            var item = Subject.GetItems().Single();
-            VerifyQueued(item);
-        }
+        var remoteAlbum = CreateRemoteAlbum();
 
-        [Test]
-        public void downloading_item_should_have_required_properties()
-        {
-            PrepareClientToReturnDownloadingItem();
-            var item = Subject.GetItems().Single();
-            VerifyDownloading(item);
-        }
+        var id = Subject.Download(remoteAlbum);
 
-        [Test]
-        public void failed_item_should_have_required_properties()
-        {
-            PrepareClientToReturnFailedItem();
-            var item = Subject.GetItems().Single();
-            VerifyWarning(item);
-        }
+        id.Should().NotBeNullOrEmpty();
+    }
 
-        [Test]
-        public void completed_download_should_have_required_properties()
-        {
-            PrepareClientToReturnCompletedItem();
-            var item = Subject.GetItems().Single();
-            VerifyCompleted(item);
+    [TestCase("magnet:?xt=urn:btih:ZPBPA2P6ROZPKRHK44D5OW6NHXU5Z6KR&tr=udp", "CBC2F069FE8BB2F544EAE707D75BCD3DE9DCF951")]
+    public void Download_should_get_hash_from_magnet_url(string magnetUrl, string expectedHash)
+    {
+        GivenSuccessfulDownload();
 
-            item.CanBeRemoved.Should().BeTrue();
-            item.CanMoveFiles.Should().BeTrue();
-        }
+        var remoteAlbum = CreateRemoteAlbum();
+        remoteAlbum.Release.DownloadUrl = magnetUrl;
 
-        [Test]
-        public void Download_should_return_unique_id()
-        {
-            GivenSuccessfulDownload();
+        var id = Subject.Download(remoteAlbum);
 
-            var remoteAlbum = CreateRemoteAlbum();
+        id.Should().Be(expectedHash);
+    }
 
-            var id = Subject.Download(remoteAlbum);
+    [TestCase(DelugeTorrentStatus.Paused, DownloadItemStatus.Paused)]
+    [TestCase(DelugeTorrentStatus.Checking, DownloadItemStatus.Downloading)]
+    [TestCase(DelugeTorrentStatus.Queued, DownloadItemStatus.Queued)]
+    [TestCase(DelugeTorrentStatus.Downloading, DownloadItemStatus.Downloading)]
+    [TestCase(DelugeTorrentStatus.Seeding, DownloadItemStatus.Downloading)]
+    public void GetItems_should_return_queued_item_as_downloadItemStatus(string apiStatus, DownloadItemStatus expectedItemStatus)
+    {
+        _queued.State = apiStatus;
 
-            id.Should().NotBeNullOrEmpty();
-        }
+        PrepareClientToReturnQueuedItem();
 
-        [TestCase("magnet:?xt=urn:btih:ZPBPA2P6ROZPKRHK44D5OW6NHXU5Z6KR&tr=udp", "CBC2F069FE8BB2F544EAE707D75BCD3DE9DCF951")]
-        public void Download_should_get_hash_from_magnet_url(string magnetUrl, string expectedHash)
-        {
-            GivenSuccessfulDownload();
+        var item = Subject.GetItems().Single();
 
-            var remoteAlbum = CreateRemoteAlbum();
-            remoteAlbum.Release.DownloadUrl = magnetUrl;
+        item.Status.Should().Be(expectedItemStatus);
+    }
 
-            var id = Subject.Download(remoteAlbum);
+    [TestCase(DelugeTorrentStatus.Paused, DownloadItemStatus.Paused)]
+    [TestCase(DelugeTorrentStatus.Checking, DownloadItemStatus.Downloading)]
+    [TestCase(DelugeTorrentStatus.Queued, DownloadItemStatus.Queued)]
+    [TestCase(DelugeTorrentStatus.Downloading, DownloadItemStatus.Downloading)]
+    [TestCase(DelugeTorrentStatus.Seeding, DownloadItemStatus.Downloading)]
+    public void GetItems_should_return_downloading_item_as_downloadItemStatus(string apiStatus, DownloadItemStatus expectedItemStatus)
+    {
+        _downloading.State = apiStatus;
 
-            id.Should().Be(expectedHash);
-        }
+        PrepareClientToReturnDownloadingItem();
 
-        [TestCase(DelugeTorrentStatus.Paused, DownloadItemStatus.Paused)]
-        [TestCase(DelugeTorrentStatus.Checking, DownloadItemStatus.Downloading)]
-        [TestCase(DelugeTorrentStatus.Queued, DownloadItemStatus.Queued)]
-        [TestCase(DelugeTorrentStatus.Downloading, DownloadItemStatus.Downloading)]
-        [TestCase(DelugeTorrentStatus.Seeding, DownloadItemStatus.Downloading)]
-        public void GetItems_should_return_queued_item_as_downloadItemStatus(string apiStatus, DownloadItemStatus expectedItemStatus)
-        {
-            _queued.State = apiStatus;
+        var item = Subject.GetItems().Single();
 
-            PrepareClientToReturnQueuedItem();
+        item.Status.Should().Be(expectedItemStatus);
+    }
 
-            var item = Subject.GetItems().Single();
+    [TestCase(DelugeTorrentStatus.Paused, DownloadItemStatus.Completed)]
+    [TestCase(DelugeTorrentStatus.Checking, DownloadItemStatus.Downloading)]
+    [TestCase(DelugeTorrentStatus.Queued, DownloadItemStatus.Completed)]
+    [TestCase(DelugeTorrentStatus.Seeding, DownloadItemStatus.Completed)]
+    public void GetItems_should_return_completed_item_as_downloadItemStatus(string apiStatus, DownloadItemStatus expectedItemStatus)
+    {
+        _completed.State = apiStatus;
 
-            item.Status.Should().Be(expectedItemStatus);
-        }
+        PrepareClientToReturnCompletedItem();
 
-        [TestCase(DelugeTorrentStatus.Paused, DownloadItemStatus.Paused)]
-        [TestCase(DelugeTorrentStatus.Checking, DownloadItemStatus.Downloading)]
-        [TestCase(DelugeTorrentStatus.Queued, DownloadItemStatus.Queued)]
-        [TestCase(DelugeTorrentStatus.Downloading, DownloadItemStatus.Downloading)]
-        [TestCase(DelugeTorrentStatus.Seeding, DownloadItemStatus.Downloading)]
-        public void GetItems_should_return_downloading_item_as_downloadItemStatus(string apiStatus, DownloadItemStatus expectedItemStatus)
-        {
-            _downloading.State = apiStatus;
+        var item = Subject.GetItems().Single();
 
-            PrepareClientToReturnDownloadingItem();
+        item.Status.Should().Be(expectedItemStatus);
+    }
 
-            var item = Subject.GetItems().Single();
+    [TestCase(0.5, false)]
+    [TestCase(1.01, true)]
+    public void GetItems_should_check_share_ratio_for_moveFiles_and_remove(double ratio, bool canBeRemoved)
+    {
+        _completed.State = DelugeTorrentStatus.Paused;
+        _completed.IsAutoManaged = true;
+        _completed.StopAtRatio = true;
+        _completed.StopRatio = 1.0;
+        _completed.Ratio = ratio;
 
-            item.Status.Should().Be(expectedItemStatus);
-        }
+        PrepareClientToReturnCompletedItem();
 
-        [TestCase(DelugeTorrentStatus.Paused, DownloadItemStatus.Completed)]
-        [TestCase(DelugeTorrentStatus.Checking, DownloadItemStatus.Downloading)]
-        [TestCase(DelugeTorrentStatus.Queued, DownloadItemStatus.Completed)]
-        [TestCase(DelugeTorrentStatus.Seeding, DownloadItemStatus.Completed)]
-        public void GetItems_should_return_completed_item_as_downloadItemStatus(string apiStatus, DownloadItemStatus expectedItemStatus)
-        {
-            _completed.State = apiStatus;
+        var item = Subject.GetItems().Single();
 
-            PrepareClientToReturnCompletedItem();
+        item.Status.Should().Be(DownloadItemStatus.Completed);
+        item.CanMoveFiles.Should().Be(canBeRemoved);
+        item.CanBeRemoved.Should().Be(canBeRemoved);
+    }
 
-            var item = Subject.GetItems().Single();
+    [Test]
+    public void GetItems_should_ignore_items_without_hash()
+    {
+        _downloading.Hash = null;
 
-            item.Status.Should().Be(expectedItemStatus);
-        }
+        GivenTorrents(new List<DelugeTorrent>
+                      {
+                          _downloading,
+                          _queued
+                      });
 
-        [TestCase(0.5, false)]
-        [TestCase(1.01, true)]
-        public void GetItems_should_check_share_ratio_for_moveFiles_and_remove(double ratio, bool canBeRemoved)
-        {
-            _completed.State = DelugeTorrentStatus.Paused;
-            _completed.IsAutoManaged = true;
-            _completed.StopAtRatio = true;
-            _completed.StopRatio = 1.0;
-            _completed.Ratio = ratio;
+        var items = Subject.GetItems().ToList();
 
-            PrepareClientToReturnCompletedItem();
+        items.Should().HaveCount(1);
 
-            var item = Subject.GetItems().Single();
+        items.First().Status.Should().Be(DownloadItemStatus.Queued);
+    }
 
-            item.Status.Should().Be(DownloadItemStatus.Completed);
-            item.CanMoveFiles.Should().Be(canBeRemoved);
-            item.CanBeRemoved.Should().Be(canBeRemoved);
-        }
+    [Test]
+    public void should_return_status_with_outputdirs()
+    {
+        var configItems = new Dictionary<string, object>();
 
-        [Test]
-        public void GetItems_should_ignore_items_without_hash()
-        {
-            _downloading.Hash = null;
+        configItems.Add("download_location", @"C:\Downloads\Downloading\deluge".AsOsAgnostic());
+        configItems.Add("move_completed_path", @"C:\Downloads\Finished\deluge".AsOsAgnostic());
+        configItems.Add("move_completed", true);
 
-            GivenTorrents(new List<DelugeTorrent>
-                {
-                    _downloading,
-                    _queued
-                });
+        Mocker.GetMock<IDelugeProxy>()
+              .Setup(v => v.GetConfig(It.IsAny<DelugeSettings>()))
+              .Returns(configItems);
 
-            var items = Subject.GetItems().ToList();
+        var result = Subject.GetStatus();
 
-            items.Should().HaveCount(1);
-
-            items.First().Status.Should().Be(DownloadItemStatus.Queued);
-        }
-
-        [Test]
-        public void should_return_status_with_outputdirs()
-        {
-            var configItems = new Dictionary<string, object>();
-
-            configItems.Add("download_location", @"C:\Downloads\Downloading\deluge".AsOsAgnostic());
-            configItems.Add("move_completed_path", @"C:\Downloads\Finished\deluge".AsOsAgnostic());
-            configItems.Add("move_completed", true);
-
-            Mocker.GetMock<IDelugeProxy>()
-                .Setup(v => v.GetConfig(It.IsAny<DelugeSettings>()))
-                .Returns(configItems);
-
-            var result = Subject.GetStatus();
-
-            result.IsLocalhost.Should().BeTrue();
-            result.OutputRootFolders.Should().NotBeNull();
-            result.OutputRootFolders.First().Should().Be(@"C:\Downloads\Finished\deluge".AsOsAgnostic());
-        }
+        result.IsLocalhost.Should().BeTrue();
+        result.OutputRootFolders.Should().NotBeNull();
+        result.OutputRootFolders.First().Should().Be(@"C:\Downloads\Finished\deluge".AsOsAgnostic());
     }
 }

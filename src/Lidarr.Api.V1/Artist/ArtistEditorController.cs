@@ -7,92 +7,91 @@ using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Music.Commands;
 
-namespace Lidarr.Api.V1.Artist
+namespace Lidarr.Api.V1.Artist;
+
+[V1ApiController("artist/editor")]
+public class ArtistEditorController : Controller
 {
-    [V1ApiController("artist/editor")]
-    public class ArtistEditorController : Controller
+    private readonly IArtistService _artistService;
+    private readonly IManageCommandQueue _commandQueueManager;
+
+    public ArtistEditorController(IArtistService artistService, IManageCommandQueue commandQueueManager)
     {
-        private readonly IArtistService _artistService;
-        private readonly IManageCommandQueue _commandQueueManager;
+        _artistService = artistService;
+        _commandQueueManager = commandQueueManager;
+    }
 
-        public ArtistEditorController(IArtistService artistService, IManageCommandQueue commandQueueManager)
+    [HttpPut]
+    public IActionResult SaveAll([FromBody] ArtistEditorResource resource)
+    {
+        var artistToUpdate = _artistService.GetArtists(resource.ArtistIds);
+        var artistToMove = new List<BulkMoveArtist>();
+
+        foreach (var artist in artistToUpdate)
         {
-            _artistService = artistService;
-            _commandQueueManager = commandQueueManager;
-        }
-
-        [HttpPut]
-        public IActionResult SaveAll([FromBody] ArtistEditorResource resource)
-        {
-            var artistToUpdate = _artistService.GetArtists(resource.ArtistIds);
-            var artistToMove = new List<BulkMoveArtist>();
-
-            foreach (var artist in artistToUpdate)
+            if (resource.Monitored.HasValue)
             {
-                if (resource.Monitored.HasValue)
-                {
-                    artist.Monitored = resource.Monitored.Value;
-                }
-
-                if (resource.QualityProfileId.HasValue)
-                {
-                    artist.QualityProfileId = resource.QualityProfileId.Value;
-                }
-
-                if (resource.MetadataProfileId.HasValue)
-                {
-                    artist.MetadataProfileId = resource.MetadataProfileId.Value;
-                }
-
-                if (resource.RootFolderPath.IsNotNullOrWhiteSpace())
-                {
-                    artist.RootFolderPath = resource.RootFolderPath;
-                    artistToMove.Add(new BulkMoveArtist
-                    {
-                        ArtistId = artist.Id,
-                        SourcePath = artist.Path
-                    });
-                }
-
-                if (resource.Tags != null)
-                {
-                    var newTags = resource.Tags;
-                    var applyTags = resource.ApplyTags;
-
-                    switch (applyTags)
-                    {
-                        case ApplyTags.Add:
-                            newTags.ForEach(t => artist.Tags.Add(t));
-                            break;
-                        case ApplyTags.Remove:
-                            newTags.ForEach(t => artist.Tags.Remove(t));
-                            break;
-                        case ApplyTags.Replace:
-                            artist.Tags = new HashSet<int>(newTags);
-                            break;
-                    }
-                }
+                artist.Monitored = resource.Monitored.Value;
             }
 
-            if (artistToMove.Any())
+            if (resource.QualityProfileId.HasValue)
             {
-                _commandQueueManager.Push(new BulkMoveArtistCommand
-                {
-                    DestinationRootFolder = resource.RootFolderPath,
-                    Artist = artistToMove,
-                    MoveFiles = resource.MoveFiles
-                });
+                artist.QualityProfileId = resource.QualityProfileId.Value;
             }
 
-            return Accepted(_artistService.UpdateArtists(artistToUpdate, !resource.MoveFiles).ToResource());
+            if (resource.MetadataProfileId.HasValue)
+            {
+                artist.MetadataProfileId = resource.MetadataProfileId.Value;
+            }
+
+            if (resource.RootFolderPath.IsNotNullOrWhiteSpace())
+            {
+                artist.RootFolderPath = resource.RootFolderPath;
+                artistToMove.Add(new BulkMoveArtist
+                                 {
+                                     ArtistId = artist.Id,
+                                     SourcePath = artist.Path
+                                 });
+            }
+
+            if (resource.Tags != null)
+            {
+                var newTags = resource.Tags;
+                var applyTags = resource.ApplyTags;
+
+                switch (applyTags)
+                {
+                    case ApplyTags.Add:
+                        newTags.ForEach(t => artist.Tags.Add(t));
+                        break;
+                    case ApplyTags.Remove:
+                        newTags.ForEach(t => artist.Tags.Remove(t));
+                        break;
+                    case ApplyTags.Replace:
+                        artist.Tags = new HashSet<int>(newTags);
+                        break;
+                }
+            }
         }
 
-        [HttpDelete]
-        public object DeleteArtist([FromBody] ArtistEditorResource resource)
+        if (artistToMove.Any())
         {
-            _artistService.DeleteArtists(resource.ArtistIds, resource.DeleteFiles);
-
-            return new object();
+            _commandQueueManager.Push(new BulkMoveArtistCommand
+                                      {
+                                          DestinationRootFolder = resource.RootFolderPath,
+                                          Artist = artistToMove,
+                                          MoveFiles = resource.MoveFiles
+                                      });
         }
+
+        return Accepted(_artistService.UpdateArtists(artistToUpdate, !resource.MoveFiles).ToResource());
+    }
+
+    [HttpDelete]
+    public object DeleteArtist([FromBody] ArtistEditorResource resource)
+    {
+        _artistService.DeleteArtists(resource.ArtistIds, resource.DeleteFiles);
+
+        return new object();
     }
 }

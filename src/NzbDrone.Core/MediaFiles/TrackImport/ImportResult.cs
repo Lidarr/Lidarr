@@ -3,37 +3,36 @@ using System.Linq;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.MediaFiles.TrackImport
+namespace NzbDrone.Core.MediaFiles.TrackImport;
+
+public class ImportResult
 {
-    public class ImportResult
+    public ImportDecision<LocalTrack> ImportDecision { get; private set; }
+    public List<string> Errors { get; private set; }
+
+    public ImportResultType Result
     {
-        public ImportDecision<LocalTrack> ImportDecision { get; private set; }
-        public List<string> Errors { get; private set; }
-
-        public ImportResultType Result
+        get
         {
-            get
+            if (Errors.Any())
             {
-                if (Errors.Any())
+                if (ImportDecision.Approved)
                 {
-                    if (ImportDecision.Approved)
-                    {
-                        return ImportResultType.Skipped;
-                    }
-
-                    return ImportResultType.Rejected;
+                    return ImportResultType.Skipped;
                 }
 
-                return ImportResultType.Imported;
+                return ImportResultType.Rejected;
             }
-        }
 
-        public ImportResult(ImportDecision<LocalTrack> importDecision, params string[] errors)
-        {
-            Ensure.That(importDecision, () => importDecision).IsNotNull();
-
-            ImportDecision = importDecision;
-            Errors = errors.ToList();
+            return ImportResultType.Imported;
         }
+    }
+
+    public ImportResult(ImportDecision<LocalTrack> importDecision, params string[] errors)
+    {
+        Ensure.That(importDecision, () => importDecision).IsNotNull();
+
+        ImportDecision = importDecision;
+        Errors = errors.ToList();
     }
 }

@@ -1,40 +1,39 @@
 ﻿using NzbDrone.Core.Extras.Metadata;
 
-namespace Lidarr.Api.V1.Metadata
+namespace Lidarr.Api.V1.Metadata;
+
+public class MetadataResource : ProviderResource<MetadataResource>
 {
-    public class MetadataResource : ProviderResource<MetadataResource>
+    public bool Enable { get; set; }
+}
+
+public class MetadataResourceMapper : ProviderResourceMapper<MetadataResource, MetadataDefinition>
+{
+    public override MetadataResource ToResource(MetadataDefinition definition)
     {
-        public bool Enable { get; set; }
+        if (definition == null)
+        {
+            return null;
+        }
+
+        var resource = base.ToResource(definition);
+
+        resource.Enable = definition.Enable;
+
+        return resource;
     }
 
-    public class MetadataResourceMapper : ProviderResourceMapper<MetadataResource, MetadataDefinition>
+    public override MetadataDefinition ToModel(MetadataResource resource)
     {
-        public override MetadataResource ToResource(MetadataDefinition definition)
+        if (resource == null)
         {
-            if (definition == null)
-            {
-                return null;
-            }
-
-            var resource = base.ToResource(definition);
-
-            resource.Enable = definition.Enable;
-
-            return resource;
+            return null;
         }
 
-        public override MetadataDefinition ToModel(MetadataResource resource)
-        {
-            if (resource == null)
-            {
-                return null;
-            }
+        var definition = base.ToModel(resource);
 
-            var definition = base.ToModel(resource);
+        definition.Enable = resource.Enable;
 
-            definition.Enable = resource.Enable;
-
-            return definition;
-        }
+        return definition;
     }
 }

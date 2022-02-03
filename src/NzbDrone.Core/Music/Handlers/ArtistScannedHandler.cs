@@ -4,57 +4,56 @@ using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Music
+namespace NzbDrone.Core.Music;
+
+public class ArtistScannedHandler : IHandle<ArtistScannedEvent>,
+                                    IHandle<ArtistScanSkippedEvent>
 {
-    public class ArtistScannedHandler : IHandle<ArtistScannedEvent>,
-                                        IHandle<ArtistScanSkippedEvent>
+    private readonly IAlbumMonitoredService _albumMonitoredService;
+    private readonly IArtistService _artistService;
+    private readonly IManageCommandQueue _commandQueueManager;
+    private readonly IAlbumAddedService _albumAddedService;
+    private readonly Logger _logger;
+
+    public ArtistScannedHandler(IAlbumMonitoredService albumMonitoredService,
+                                IArtistService artistService,
+                                IManageCommandQueue commandQueueManager,
+                                IAlbumAddedService albumAddedService,
+                                Logger logger)
     {
-        private readonly IAlbumMonitoredService _albumMonitoredService;
-        private readonly IArtistService _artistService;
-        private readonly IManageCommandQueue _commandQueueManager;
-        private readonly IAlbumAddedService _albumAddedService;
-        private readonly Logger _logger;
+        _albumMonitoredService = albumMonitoredService;
+        _artistService = artistService;
+        _commandQueueManager = commandQueueManager;
+        _albumAddedService = albumAddedService;
+        _logger = logger;
+    }
 
-        public ArtistScannedHandler(IAlbumMonitoredService albumMonitoredService,
-                                    IArtistService artistService,
-                                    IManageCommandQueue commandQueueManager,
-                                    IAlbumAddedService albumAddedService,
-                                    Logger logger)
+    private void HandleScanEvents(Artist artist)
+    {
+        if (artist.AddOptions != null)
         {
-            _albumMonitoredService = albumMonitoredService;
-            _artistService = artistService;
-            _commandQueueManager = commandQueueManager;
-            _albumAddedService = albumAddedService;
-            _logger = logger;
-        }
+            _logger.Info("[{0}] was recently added, performing post-add actions", artist.Name);
+            _albumMonitoredService.SetAlbumMonitoredStatus(artist, artist.AddOptions);
 
-        private void HandleScanEvents(Artist artist)
-        {
-            if (artist.AddOptions != null)
+            if (artist.AddOptions.SearchForMissingAlbums)
             {
-                _logger.Info("[{0}] was recently added, performing post-add actions", artist.Name);
-                _albumMonitoredService.SetAlbumMonitoredStatus(artist, artist.AddOptions);
-
-                if (artist.AddOptions.SearchForMissingAlbums)
-                {
-                    _commandQueueManager.Push(new MissingAlbumSearchCommand(artist.Id));
-                }
-
-                artist.AddOptions = null;
-                _artistService.RemoveAddOptions(artist);
+                _commandQueueManager.Push(new MissingAlbumSearchCommand(artist.Id));
             }
 
-            _albumAddedService.SearchForRecentlyAdded(artist.Id);
+            artist.AddOptions = null;
+            _artistService.RemoveAddOptions(artist);
         }
 
-        public void Handle(ArtistScannedEvent message)
-        {
-            HandleScanEvents(message.Artist);
-        }
+        _albumAddedService.SearchForRecentlyAdded(artist.Id);
+    }
 
-        public void Handle(ArtistScanSkippedEvent message)
-        {
-            HandleScanEvents(message.Artist);
-        }
+    public void Handle(ArtistScannedEvent message)
+    {
+        HandleScanEvents(message.Artist);
+    }
+
+    public void Handle(ArtistScanSkippedEvent message)
+    {
+        HandleScanEvents(message.Artist);
     }
 }

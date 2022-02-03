@@ -9,14 +9,14 @@ using NzbDrone.Core.Validation;
 using NzbDrone.Core.Validation.Paths;
 using NzbDrone.SignalR;
 
-namespace Lidarr.Api.V1.RootFolders
-{
-    [V1ApiController]
-    public class RootFolderController : RestControllerWithSignalR<RootFolderResource, RootFolder>
-    {
-        private readonly IRootFolderService _rootFolderService;
+namespace Lidarr.Api.V1.RootFolders;
 
-        public RootFolderController(IRootFolderService rootFolderService,
+[V1ApiController]
+public class RootFolderController : RestControllerWithSignalR<RootFolderResource, RootFolder>
+{
+    private readonly IRootFolderService _rootFolderService;
+
+    public RootFolderController(IRootFolderService rootFolderService,
                                 IBroadcastSignalRMessage signalRBroadcaster,
                                 RootFolderValidator rootFolderValidator,
                                 PathExistsValidator pathExistsValidator,
@@ -27,71 +27,70 @@ namespace Lidarr.Api.V1.RootFolders
                                 FolderWritableValidator folderWritableValidator,
                                 QualityProfileExistsValidator qualityProfileExistsValidator,
                                 MetadataProfileExistsValidator metadataProfileExistsValidator)
-            : base(signalRBroadcaster)
+        : base(signalRBroadcaster)
+    {
+        _rootFolderService = rootFolderService;
+
+        SharedValidator.RuleFor(c => c.Path)
+                       .Cascade(CascadeMode.StopOnFirstFailure)
+                       .IsValidPath()
+                       .SetValidator(mappedNetworkDriveValidator)
+                       .SetValidator(startupFolderValidator)
+                       .SetValidator(recycleBinValidator)
+                       .SetValidator(pathExistsValidator)
+                       .SetValidator(systemFolderValidator)
+                       .SetValidator(folderWritableValidator);
+
+        PostValidator.RuleFor(c => c.Path)
+                     .SetValidator(rootFolderValidator);
+
+        SharedValidator.RuleFor(c => c.Name)
+                       .NotEmpty();
+
+        SharedValidator.RuleFor(c => c.DefaultMetadataProfileId)
+                       .SetValidator(metadataProfileExistsValidator);
+
+        SharedValidator.RuleFor(c => c.DefaultQualityProfileId)
+                       .SetValidator(qualityProfileExistsValidator);
+    }
+
+    public override RootFolderResource GetResourceById(int id)
+    {
+        return _rootFolderService.Get(id).ToResource();
+    }
+
+    [RestPostById]
+    public ActionResult<RootFolderResource> CreateRootFolder(RootFolderResource rootFolderResource)
+    {
+        var model = rootFolderResource.ToModel();
+
+        return Created(_rootFolderService.Add(model).Id);
+    }
+
+    [RestPutById]
+    public ActionResult<RootFolderResource> UpdateRootFolder(RootFolderResource rootFolderResource)
+    {
+        var model = rootFolderResource.ToModel();
+
+        if (model.Path != rootFolderResource.Path)
         {
-            _rootFolderService = rootFolderService;
-
-            SharedValidator.RuleFor(c => c.Path)
-                .Cascade(CascadeMode.StopOnFirstFailure)
-                .IsValidPath()
-                .SetValidator(mappedNetworkDriveValidator)
-                .SetValidator(startupFolderValidator)
-                .SetValidator(recycleBinValidator)
-                .SetValidator(pathExistsValidator)
-                .SetValidator(systemFolderValidator)
-                .SetValidator(folderWritableValidator);
-
-            PostValidator.RuleFor(c => c.Path)
-                .SetValidator(rootFolderValidator);
-
-            SharedValidator.RuleFor(c => c.Name)
-                .NotEmpty();
-
-            SharedValidator.RuleFor(c => c.DefaultMetadataProfileId)
-                .SetValidator(metadataProfileExistsValidator);
-
-            SharedValidator.RuleFor(c => c.DefaultQualityProfileId)
-                .SetValidator(qualityProfileExistsValidator);
+            throw new BadRequestException("Cannot edit root folder path");
         }
 
-        public override RootFolderResource GetResourceById(int id)
-        {
-            return _rootFolderService.Get(id).ToResource();
-        }
+        _rootFolderService.Update(model);
 
-        [RestPostById]
-        public ActionResult<RootFolderResource> CreateRootFolder(RootFolderResource rootFolderResource)
-        {
-            var model = rootFolderResource.ToModel();
+        return Accepted(model.Id);
+    }
 
-            return Created(_rootFolderService.Add(model).Id);
-        }
+    [HttpGet]
+    public List<RootFolderResource> GetRootFolders()
+    {
+        return _rootFolderService.AllWithSpaceStats().ToResource();
+    }
 
-        [RestPutById]
-        public ActionResult<RootFolderResource> UpdateRootFolder(RootFolderResource rootFolderResource)
-        {
-            var model = rootFolderResource.ToModel();
-
-            if (model.Path != rootFolderResource.Path)
-            {
-                throw new BadRequestException("Cannot edit root folder path");
-            }
-
-            _rootFolderService.Update(model);
-
-            return Accepted(model.Id);
-        }
-
-        [HttpGet]
-        public List<RootFolderResource> GetRootFolders()
-        {
-            return _rootFolderService.AllWithSpaceStats().ToResource();
-        }
-
-        [RestDeleteById]
-        public void DeleteFolder(int id)
-        {
-            _rootFolderService.Remove(id);
-        }
+    [RestDeleteById]
+    public void DeleteFolder(int id)
+    {
+        _rootFolderService.Remove(id);
     }
 }

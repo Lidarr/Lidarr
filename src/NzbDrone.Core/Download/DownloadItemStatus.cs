@@ -1,12 +1,11 @@
-﻿namespace NzbDrone.Core.Download
+﻿namespace NzbDrone.Core.Download;
+
+public enum DownloadItemStatus
 {
-    public enum DownloadItemStatus
-    {
-        Queued = 0,
-        Paused = 1,
-        Downloading = 2,
-        Completed = 3,
-        Failed = 4,
-        Warning = 5
-    }
+    Queued = 0,
+    Paused = 1,
+    Downloading = 2,
+    Completed = 3,
+    Failed = 4,
+    Warning = 5
 }

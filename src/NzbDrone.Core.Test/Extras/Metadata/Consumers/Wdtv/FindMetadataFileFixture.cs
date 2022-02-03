@@ -8,45 +8,44 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Core.Test.Extras.Metadata.Consumers.Wdtv
+namespace NzbDrone.Core.Test.Extras.Metadata.Consumers.Wdtv;
+
+[TestFixture]
+public class FindMetadataFileFixture : CoreTest<WdtvMetadata>
 {
-    [TestFixture]
-    public class FindMetadataFileFixture : CoreTest<WdtvMetadata>
+    private Artist _artist;
+
+    [SetUp]
+    public void Setup()
     {
-        private Artist _artist;
+        _artist = Builder<Artist>.CreateNew()
+                                 .With(s => s.Path = @"C:\Test\Music\The.Artist".AsOsAgnostic())
+                                 .Build();
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            _artist = Builder<Artist>.CreateNew()
-                                     .With(s => s.Path = @"C:\Test\Music\The.Artist".AsOsAgnostic())
-                                     .Build();
-        }
+    [Test]
+    public void should_return_null_if_filename_is_not_handled()
+    {
+        var path = Path.Combine(_artist.Path, "file.jpg");
 
-        [Test]
-        public void should_return_null_if_filename_is_not_handled()
-        {
-            var path = Path.Combine(_artist.Path, "file.jpg");
+        Subject.FindMetadataFile(_artist, path).Should().BeNull();
+    }
 
-            Subject.FindMetadataFile(_artist, path).Should().BeNull();
-        }
+    [TestCase(".xml", MetadataType.TrackMetadata)]
+    public void should_return_metadata_for_track_if_valid_file_for_track(string extension, MetadataType type)
+    {
+        var path = Path.Combine(_artist.Path, "the.artist.s01e01.track" + extension);
 
-        [TestCase(".xml", MetadataType.TrackMetadata)]
-        public void should_return_metadata_for_track_if_valid_file_for_track(string extension, MetadataType type)
-        {
-            var path = Path.Combine(_artist.Path, "the.artist.s01e01.track" + extension);
+        Subject.FindMetadataFile(_artist, path).Type.Should().Be(type);
+    }
 
-            Subject.FindMetadataFile(_artist, path).Type.Should().Be(type);
-        }
+    [Ignore("Need Updated")]
+    [TestCase(".xml")]
+    [TestCase(".metathumb")]
+    public void should_return_null_if_not_valid_file_for_track(string extension)
+    {
+        var path = Path.Combine(_artist.Path, "the.artist.track" + extension);
 
-        [Ignore("Need Updated")]
-        [TestCase(".xml")]
-        [TestCase(".metathumb")]
-        public void should_return_null_if_not_valid_file_for_track(string extension)
-        {
-            var path = Path.Combine(_artist.Path, "the.artist.track" + extension);
-
-            Subject.FindMetadataFile(_artist, path).Should().BeNull();
-        }
+        Subject.FindMetadataFile(_artist, path).Should().BeNull();
     }
 }

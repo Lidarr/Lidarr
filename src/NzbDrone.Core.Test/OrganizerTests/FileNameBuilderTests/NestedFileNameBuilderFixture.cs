@@ -11,49 +11,49 @@ using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
+namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests;
+
+public class NestedFileNameBuilderFixture : CoreTest<FileNameBuilder>
 {
-    public class NestedFileNameBuilderFixture : CoreTest<FileNameBuilder>
+    private Artist _artist;
+    private Album _album;
+    private Medium _medium;
+    private Medium _medium2;
+    private AlbumRelease _release;
+    private Track _track1;
+    private TrackFile _trackFile;
+    private NamingConfig _namingConfig;
+
+    [SetUp]
+    public void Setup()
     {
-        private Artist _artist;
-        private Album _album;
-        private Medium _medium;
-        private Medium _medium2;
-        private AlbumRelease _release;
-        private Track _track1;
-        private TrackFile _trackFile;
-        private NamingConfig _namingConfig;
+        _artist = Builder<Artist>
+                 .CreateNew()
+                 .With(s => s.Name = "Linkin Park")
+                 .With(s => s.Metadata = new ArtistMetadata
+                                         {
+                                             Disambiguation = "US Rock Band",
+                                             Name = "Linkin Park"
+                                         })
+                 .Build();
 
-        [SetUp]
-        public void Setup()
-        {
-            _artist = Builder<Artist>
-                    .CreateNew()
-                    .With(s => s.Name = "Linkin Park")
-                    .With(s => s.Metadata = new ArtistMetadata
-                    {
-                        Disambiguation = "US Rock Band",
-                        Name = "Linkin Park"
-                    })
-                    .Build();
+        _medium = Builder<Medium>
+                 .CreateNew()
+                 .With(m => m.Number = 3)
+                 .Build();
 
-            _medium = Builder<Medium>
-                .CreateNew()
-                .With(m => m.Number = 3)
-                .Build();
+        _medium2 = Builder<Medium>
+                  .CreateNew()
+                  .With(m => m.Number = 4)
+                  .Build();
 
-            _medium2 = Builder<Medium>
-                .CreateNew()
-                .With(m => m.Number = 4)
-                .Build();
+        _release = Builder<AlbumRelease>
+                  .CreateNew()
+                  .With(s => s.Media = new List<Medium> { _medium })
+                  .With(s => s.Monitored = true)
+                  .Build();
 
-            _release = Builder<AlbumRelease>
-                .CreateNew()
-                .With(s => s.Media = new List<Medium> { _medium })
-                .With(s => s.Monitored = true)
-                .Build();
-
-            _album = Builder<Album>
+        _album = Builder<Album>
                 .CreateNew()
                 .With(s => s.Title = "Hybrid Theory")
                 .With(s => s.ReleaseDate = new DateTime(2020, 1, 15))
@@ -61,74 +61,73 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
                 .With(s => s.Disambiguation = "The Best Album")
                 .Build();
 
-            _namingConfig = NamingConfig.Default;
-            _namingConfig.RenameTracks = true;
+        _namingConfig = NamingConfig.Default;
+        _namingConfig.RenameTracks = true;
 
-            Mocker.GetMock<INamingConfigService>()
-                  .Setup(c => c.GetConfig()).Returns(_namingConfig);
+        Mocker.GetMock<INamingConfigService>()
+              .Setup(c => c.GetConfig()).Returns(_namingConfig);
 
-            _track1 = Builder<Track>.CreateNew()
-                            .With(e => e.Title = "City Sushi")
-                            .With(e => e.AbsoluteTrackNumber = 6)
-                            .With(e => e.AlbumRelease = _release)
-                            .With(e => e.MediumNumber = _medium.Number)
-                            .Build();
+        _track1 = Builder<Track>.CreateNew()
+                                .With(e => e.Title = "City Sushi")
+                                .With(e => e.AbsoluteTrackNumber = 6)
+                                .With(e => e.AlbumRelease = _release)
+                                .With(e => e.MediumNumber = _medium.Number)
+                                .Build();
 
-            _trackFile = Builder<TrackFile>.CreateNew()
-                .With(e => e.Quality = new QualityModel(Quality.MP3_256))
-                .With(e => e.ReleaseGroup = "LidarrTest")
-                .With(e => e.MediaInfo = new Parser.Model.MediaInfoModel
-                {
-                    AudioBitrate = 320,
-                    AudioBits = 16,
-                    AudioChannels = 2,
-                    AudioFormat = "Flac Audio",
-                    AudioSampleRate = 44100
-                }).Build();
+        _trackFile = Builder<TrackFile>.CreateNew()
+                                       .With(e => e.Quality = new QualityModel(Quality.MP3_256))
+                                       .With(e => e.ReleaseGroup = "LidarrTest")
+                                       .With(e => e.MediaInfo = new Parser.Model.MediaInfoModel
+                                                                {
+                                                                    AudioBitrate = 320,
+                                                                    AudioBits = 16,
+                                                                    AudioChannels = 2,
+                                                                    AudioFormat = "Flac Audio",
+                                                                    AudioSampleRate = 44100
+                                                                }).Build();
 
-            Mocker.GetMock<IQualityDefinitionService>()
-                .Setup(v => v.Get(Moq.It.IsAny<Quality>()))
-                .Returns<Quality>(v => Quality.DefaultQualityDefinitions.First(c => c.Quality == v));
-        }
+        Mocker.GetMock<IQualityDefinitionService>()
+              .Setup(v => v.Get(Moq.It.IsAny<Quality>()))
+              .Returns<Quality>(v => Quality.DefaultQualityDefinitions.First(c => c.Quality == v));
+    }
 
-        [Test]
-        public void should_build_nested_standard_track_filename_with_forward_slash()
-        {
-            _namingConfig.StandardTrackFormat = "{Album Title} {(Release Year)}/{Artist Name} - {track:00} [{Quality Title}] {[Quality Proper]}";
+    [Test]
+    public void should_build_nested_standard_track_filename_with_forward_slash()
+    {
+        _namingConfig.StandardTrackFormat = "{Album Title} {(Release Year)}/{Artist Name} - {track:00} [{Quality Title}] {[Quality Proper]}";
 
-            Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
-                   .Should().Be("Hybrid Theory (2020)\\Linkin Park - 06 [MP3-256]".AsOsAgnostic());
-        }
+        Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
+               .Should().Be("Hybrid Theory (2020)\\Linkin Park - 06 [MP3-256]".AsOsAgnostic());
+    }
 
-        [Test]
-        public void should_build_nested_standard_track_filename_with_back_slash()
-        {
-            _namingConfig.StandardTrackFormat = "{Album Title} {(Release Year)}\\{Artist Name} - {track:00} [{Quality Title}] {[Quality Proper]}";
+    [Test]
+    public void should_build_nested_standard_track_filename_with_back_slash()
+    {
+        _namingConfig.StandardTrackFormat = "{Album Title} {(Release Year)}\\{Artist Name} - {track:00} [{Quality Title}] {[Quality Proper]}";
 
-            Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
-                   .Should().Be("Hybrid Theory (2020)\\Linkin Park - 06 [MP3-256]".AsOsAgnostic());
-        }
+        Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
+               .Should().Be("Hybrid Theory (2020)\\Linkin Park - 06 [MP3-256]".AsOsAgnostic());
+    }
 
-        [Test]
-        public void should_build_nested_multi_track_filename_with_forward_slash()
-        {
-            _namingConfig.MultiDiscTrackFormat = "{Album Title} {(Release Year)}/CD {medium:00}/{Artist Name} - {track:00} [{Quality Title}] {[Quality Proper]}";
+    [Test]
+    public void should_build_nested_multi_track_filename_with_forward_slash()
+    {
+        _namingConfig.MultiDiscTrackFormat = "{Album Title} {(Release Year)}/CD {medium:00}/{Artist Name} - {track:00} [{Quality Title}] {[Quality Proper]}";
 
-            _release.Media.Add(_medium2);
+        _release.Media.Add(_medium2);
 
-            Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
-                   .Should().Be("Hybrid Theory (2020)\\CD 03\\Linkin Park - 06 [MP3-256]".AsOsAgnostic());
-        }
+        Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
+               .Should().Be("Hybrid Theory (2020)\\CD 03\\Linkin Park - 06 [MP3-256]".AsOsAgnostic());
+    }
 
-        [Test]
-        public void should_build_nested_multi_track_filename_with_back_slash()
-        {
-            _namingConfig.MultiDiscTrackFormat = "{Album Title} {(Release Year)}\\CD {medium:00}\\{Artist Name} - {track:00} [{Quality Title}] {[Quality Proper]}";
+    [Test]
+    public void should_build_nested_multi_track_filename_with_back_slash()
+    {
+        _namingConfig.MultiDiscTrackFormat = "{Album Title} {(Release Year)}\\CD {medium:00}\\{Artist Name} - {track:00} [{Quality Title}] {[Quality Proper]}";
 
-            _release.Media.Add(_medium2);
+        _release.Media.Add(_medium2);
 
-            Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
-                   .Should().Be("Hybrid Theory (2020)\\CD 03\\Linkin Park - 06 [MP3-256]".AsOsAgnostic());
-        }
+        Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
+               .Should().Be("Hybrid Theory (2020)\\CD 03\\Linkin Park - 06 [MP3-256]".AsOsAgnostic());
     }
 }

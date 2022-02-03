@@ -1,30 +1,29 @@
 using System.Security.Cryptography;
 using NzbDrone.Common.Disk;
 
-namespace NzbDrone.Common.Crypto
+namespace NzbDrone.Common.Crypto;
+
+public interface IHashProvider
 {
-    public interface IHashProvider
+    byte[] ComputeMd5(string path);
+}
+
+public class HashProvider : IHashProvider
+{
+    private readonly IDiskProvider _diskProvider;
+
+    public HashProvider(IDiskProvider diskProvider)
     {
-        byte[] ComputeMd5(string path);
+        _diskProvider = diskProvider;
     }
 
-    public class HashProvider : IHashProvider
+    public byte[] ComputeMd5(string path)
     {
-        private readonly IDiskProvider _diskProvider;
-
-        public HashProvider(IDiskProvider diskProvider)
+        using (var md5 = MD5.Create())
         {
-            _diskProvider = diskProvider;
-        }
-
-        public byte[] ComputeMd5(string path)
-        {
-            using (var md5 = MD5.Create())
+            using (var stream = _diskProvider.OpenReadStream(path))
             {
-                using (var stream = _diskProvider.OpenReadStream(path))
-                {
-                    return md5.ComputeHash(stream);
-                }
+                return md5.ComputeHash(stream);
             }
         }
     }

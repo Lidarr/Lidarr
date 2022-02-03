@@ -2,34 +2,33 @@ using System.Threading.Tasks;
 using Lidarr.Http.Extensions;
 using Microsoft.AspNetCore.Http;
 
-namespace Lidarr.Http.Middleware
+namespace Lidarr.Http.Middleware;
+
+public class CacheHeaderMiddleware
 {
-    public class CacheHeaderMiddleware
+    private readonly RequestDelegate _next;
+    private readonly ICacheableSpecification _cacheableSpecification;
+
+    public CacheHeaderMiddleware(RequestDelegate next, ICacheableSpecification cacheableSpecification)
     {
-        private readonly RequestDelegate _next;
-        private readonly ICacheableSpecification _cacheableSpecification;
+        _next = next;
+        _cacheableSpecification = cacheableSpecification;
+    }
 
-        public CacheHeaderMiddleware(RequestDelegate next, ICacheableSpecification cacheableSpecification)
+    public async Task InvokeAsync(HttpContext context)
+    {
+        if (context.Request.Method != "OPTIONS")
         {
-            _next = next;
-            _cacheableSpecification = cacheableSpecification;
-        }
-
-        public async Task InvokeAsync(HttpContext context)
-        {
-            if (context.Request.Method != "OPTIONS")
+            if (_cacheableSpecification.IsCacheable(context.Request))
             {
-                if (_cacheableSpecification.IsCacheable(context.Request))
-                {
-                    context.Response.Headers.EnableCache();
-                }
-                else
-                {
-                    context.Response.Headers.DisableCache();
-                }
+                context.Response.Headers.EnableCache();
             }
-
-            await _next(context);
+            else
+            {
+                context.Response.Headers.DisableCache();
+            }
         }
+
+        await _next(context);
     }
 }

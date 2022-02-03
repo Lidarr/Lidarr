@@ -1,57 +1,56 @@
 using System.Numerics;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Download.Clients.QBittorrent
+namespace NzbDrone.Core.Download.Clients.QBittorrent;
+
+// torrent properties from the list returned by /query/torrents
+public class QBittorrentTorrent
 {
-    // torrent properties from the list returned by /query/torrents
-    public class QBittorrentTorrent
-    {
-        public string Hash { get; set; } // Torrent hash
+    public string Hash { get; set; } // Torrent hash
 
-        public string Name { get; set; } // Torrent name
+    public string Name { get; set; } // Torrent name
 
-        public long Size { get; set; } // Torrent size (bytes)
+    public long Size { get; set; } // Torrent size (bytes)
 
-        public double Progress { get; set; } // Torrent progress (%/100)
+    public double Progress { get; set; } // Torrent progress (%/100)
 
-        public BigInteger Eta { get; set; } // Torrent ETA (seconds)
+    public BigInteger Eta { get; set; } // Torrent ETA (seconds)
 
-        public string State { get; set; } // Torrent state. See possible values here below
+    public string State { get; set; } // Torrent state. See possible values here below
 
-        public string Label { get; set; } // Label of the torrent
-        public string Category { get; set; } // Category of the torrent (3.3.5+)
+    public string Label { get; set; } // Label of the torrent
+    public string Category { get; set; } // Category of the torrent (3.3.5+)
 
-        [JsonProperty(PropertyName = "save_path")]
-        public string SavePath { get; set; } // Torrent save path
+    [JsonProperty(PropertyName = "save_path")]
+    public string SavePath { get; set; } // Torrent save path
 
-        [JsonProperty(PropertyName = "content_path")]
-        public string ContentPath { get; set; } // Torrent save path
+    [JsonProperty(PropertyName = "content_path")]
+    public string ContentPath { get; set; } // Torrent save path
 
-        public float Ratio { get; set; } // Torrent share ratio
+    public float Ratio { get; set; } // Torrent share ratio
 
-        [JsonProperty(PropertyName = "ratio_limit")] // Per torrent seeding ratio limit (-2 = use global, -1 = unlimited)
-        public float RatioLimit { get; set; } = -2;
+    [JsonProperty(PropertyName = "ratio_limit")] // Per torrent seeding ratio limit (-2 = use global, -1 = unlimited)
+    public float RatioLimit { get; set; } = -2;
 
-        [JsonProperty(PropertyName = "seeding_time")]
-        public long? SeedingTime { get; set; } // Torrent seeding time (not provided by the list api)
+    [JsonProperty(PropertyName = "seeding_time")]
+    public long? SeedingTime { get; set; } // Torrent seeding time (not provided by the list api)
 
-        [JsonProperty(PropertyName = "seeding_time_limit")] // Per torrent seeding time limit (-2 = use global, -1 = unlimited)
-        public long SeedingTimeLimit { get; set; } = -2;
-    }
+    [JsonProperty(PropertyName = "seeding_time_limit")] // Per torrent seeding time limit (-2 = use global, -1 = unlimited)
+    public long SeedingTimeLimit { get; set; } = -2;
+}
 
-    public class QBittorrentTorrentProperties
-    {
-        public string Hash { get; set; } // Torrent hash
+public class QBittorrentTorrentProperties
+{
+    public string Hash { get; set; } // Torrent hash
 
-        [JsonProperty(PropertyName = "save_path")]
-        public string SavePath { get; set; }
+    [JsonProperty(PropertyName = "save_path")]
+    public string SavePath { get; set; }
 
-        [JsonProperty(PropertyName = "seeding_time")]
-        public long SeedingTime { get; set; } // Torrent seeding time
-    }
+    [JsonProperty(PropertyName = "seeding_time")]
+    public long SeedingTime { get; set; } // Torrent seeding time
+}
 
-    public class QBittorrentTorrentFile
-    {
-        public string Name { get; set; }
-    }
+public class QBittorrentTorrentFile
+{
+    public string Name { get; set; }
 }

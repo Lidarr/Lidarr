@@ -1,13 +1,12 @@
 using Lidarr.Api.V1.Indexers;
 using RestSharp;
 
-namespace NzbDrone.Integration.Test.Client
+namespace NzbDrone.Integration.Test.Client;
+
+public class ReleasePushClient : ClientBase<ReleaseResource>
 {
-    public class ReleasePushClient : ClientBase<ReleaseResource>
+    public ReleasePushClient(IRestClient restClient, string apiKey)
+        : base(restClient, apiKey, "release/push")
     {
-        public ReleasePushClient(IRestClient restClient, string apiKey)
-            : base(restClient, apiKey, "release/push")
-        {
-        }
     }
 }

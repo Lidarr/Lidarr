@@ -3,29 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace NzbDrone.Common.Extensions
+namespace NzbDrone.Common.Extensions;
+
+public static class XmlExtensions
 {
-    public static class XmlExtensions
+    public static IEnumerable<XElement> FindDecendants(this XContainer container, string localName)
     {
-        public static IEnumerable<XElement> FindDecendants(this XContainer container, string localName)
+        return container.Descendants().Where(c => c.Name.LocalName.Equals(localName, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    public static bool TryGetAttributeValue(this XElement element, string name, out string value)
+    {
+        var attr = element.Attribute(name);
+
+        if (attr != null)
         {
-            return container.Descendants().Where(c => c.Name.LocalName.Equals(localName, StringComparison.InvariantCultureIgnoreCase));
+            value = attr.Value;
+            return true;
         }
-
-        public static bool TryGetAttributeValue(this XElement element, string name, out string value)
+        else
         {
-            var attr = element.Attribute(name);
-
-            if (attr != null)
-            {
-                value = attr.Value;
-                return true;
-            }
-            else
-            {
-                value = null;
-                return false;
-            }
+            value = null;
+            return false;
         }
     }
 }

@@ -1,33 +1,32 @@
 ﻿using System;
 using System.Data;
 
-namespace NzbDrone.Core.Datastore
+namespace NzbDrone.Core.Datastore;
+
+public interface IMainDatabase : IDatabase
 {
-    public interface IMainDatabase : IDatabase
+}
+
+public class MainDatabase : IMainDatabase
+{
+    private readonly IDatabase _database;
+
+    public MainDatabase(IDatabase database)
     {
+        _database = database;
     }
 
-    public class MainDatabase : IMainDatabase
+    public IDbConnection OpenConnection()
     {
-        private readonly IDatabase _database;
+        return _database.OpenConnection();
+    }
 
-        public MainDatabase(IDatabase database)
-        {
-            _database = database;
-        }
+    public Version Version => _database.Version;
 
-        public IDbConnection OpenConnection()
-        {
-            return _database.OpenConnection();
-        }
+    public int Migration => _database.Migration;
 
-        public Version Version => _database.Version;
-
-        public int Migration => _database.Migration;
-
-        public void Vacuum()
-        {
-            _database.Vacuum();
-        }
+    public void Vacuum()
+    {
+        _database.Vacuum();
     }
 }

@@ -1,30 +1,29 @@
 using System.Diagnostics;
 using NzbDrone.Common.EnsureThat.Resources;
 
-namespace NzbDrone.Common.EnsureThat
+namespace NzbDrone.Common.EnsureThat;
+
+public static class EnsureBoolExtensions
 {
-    public static class EnsureBoolExtensions
+    [DebuggerStepThrough]
+    public static Param<bool> IsTrue(this Param<bool> param)
     {
-        [DebuggerStepThrough]
-        public static Param<bool> IsTrue(this Param<bool> param)
+        if (!param.Value)
         {
-            if (!param.Value)
-            {
-                throw ExceptionFactory.CreateForParamValidation(param.Name, ExceptionMessages.EnsureExtensions_IsNotTrue);
-            }
-
-            return param;
+            throw ExceptionFactory.CreateForParamValidation(param.Name, ExceptionMessages.EnsureExtensions_IsNotTrue);
         }
 
-        [DebuggerStepThrough]
-        public static Param<bool> IsFalse(this Param<bool> param)
-        {
-            if (param.Value)
-            {
-                throw ExceptionFactory.CreateForParamValidation(param.Name, ExceptionMessages.EnsureExtensions_IsNotFalse);
-            }
+        return param;
+    }
 
-            return param;
+    [DebuggerStepThrough]
+    public static Param<bool> IsFalse(this Param<bool> param)
+    {
+        if (param.Value)
+        {
+            throw ExceptionFactory.CreateForParamValidation(param.Name, ExceptionMessages.EnsureExtensions_IsNotFalse);
         }
+
+        return param;
     }
 }

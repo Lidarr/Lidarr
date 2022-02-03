@@ -1,8 +1,7 @@
-namespace NzbDrone.Core.MediaFiles
+namespace NzbDrone.Core.MediaFiles;
+
+public enum FileDateType
 {
-    public enum FileDateType
-    {
-        None = 0,
-        AlbumReleaseDate = 1
-    }
+    None = 0,
+    AlbumReleaseDate = 1
 }

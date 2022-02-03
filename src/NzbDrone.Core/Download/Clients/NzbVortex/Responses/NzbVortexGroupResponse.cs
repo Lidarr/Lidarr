@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace NzbDrone.Core.Download.Clients.NzbVortex.Responses
+namespace NzbDrone.Core.Download.Clients.NzbVortex.Responses;
+
+public class NzbVortexGroupResponse : NzbVortexResponseBase
 {
-    public class NzbVortexGroupResponse : NzbVortexResponseBase
-    {
-        public List<NzbVortexGroup> Groups { get; set; }
-    }
+    public List<NzbVortexGroup> Groups { get; set; }
 }

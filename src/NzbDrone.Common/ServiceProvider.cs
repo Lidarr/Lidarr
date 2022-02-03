@@ -7,225 +7,224 @@ using NzbDrone.Common.Exceptions;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Processes;
 
-namespace NzbDrone.Common
+namespace NzbDrone.Common;
+
+public interface IServiceProvider
 {
-    public interface IServiceProvider
+    bool ServiceExist(string name);
+    bool IsServiceRunning(string name);
+    void Install(string serviceName);
+    void Uninstall(string serviceName);
+    void Run(ServiceBase service);
+    ServiceController GetService(string serviceName);
+    void Stop(string serviceName);
+    void Start(string serviceName);
+    ServiceControllerStatus GetStatus(string serviceName);
+    void Restart(string serviceName);
+    void SetPermissions(string serviceName);
+}
+
+public class ServiceProvider : IServiceProvider
+{
+    public const string SERVICE_NAME = "Lidarr";
+
+    private readonly IProcessProvider _processProvider;
+    private readonly Logger _logger;
+
+    public ServiceProvider(IProcessProvider processProvider, Logger logger)
     {
-        bool ServiceExist(string name);
-        bool IsServiceRunning(string name);
-        void Install(string serviceName);
-        void Uninstall(string serviceName);
-        void Run(ServiceBase service);
-        ServiceController GetService(string serviceName);
-        void Stop(string serviceName);
-        void Start(string serviceName);
-        ServiceControllerStatus GetStatus(string serviceName);
-        void Restart(string serviceName);
-        void SetPermissions(string serviceName);
+        _processProvider = processProvider;
+        _logger = logger;
     }
 
-    public class ServiceProvider : IServiceProvider
+    public virtual bool ServiceExist(string name)
     {
-        public const string SERVICE_NAME = "Lidarr";
+        _logger.Debug("Checking if service {0} exists.", name);
+        return
+            ServiceController.GetServices().Any(
+                                                s => string.Equals(s.ServiceName, name, StringComparison.InvariantCultureIgnoreCase));
+    }
 
-        private readonly IProcessProvider _processProvider;
-        private readonly Logger _logger;
+    public virtual bool IsServiceRunning(string name)
+    {
+        _logger.Debug("Checking if '{0}' service is running", name);
 
-        public ServiceProvider(IProcessProvider processProvider, Logger logger)
+        var service = ServiceController.GetServices()
+                                       .SingleOrDefault(s => string.Equals(s.ServiceName, name, StringComparison.InvariantCultureIgnoreCase));
+
+        return service != null && (
+                                      service.Status != ServiceControllerStatus.Stopped ||
+                                      service.Status == ServiceControllerStatus.StopPending ||
+                                      service.Status == ServiceControllerStatus.Paused ||
+                                      service.Status == ServiceControllerStatus.PausePending);
+    }
+
+    public virtual void Install(string serviceName)
+    {
+        _logger.Info("Installing service '{0}'", serviceName);
+
+        var args = $"create {serviceName} " +
+                   $"DisplayName= \"{serviceName}\" " +
+                   $"binpath= \"{Process.GetCurrentProcess().MainModule.FileName}\" " +
+                   "start= auto " +
+                   "depend= EventLog/Tcpip/http " +
+                   "obj= \"NT AUTHORITY\\LocalService\"";
+
+        _logger.Info(args);
+
+        var installOutput = _processProvider.StartAndCapture("sc.exe", args);
+
+        if (installOutput.ExitCode != 0)
         {
-            _processProvider = processProvider;
-            _logger = logger;
+            _logger.Error($"Failed to install service: {installOutput.Lines.Select(x => x.Content).ConcatToString("\n")}");
+            throw new ServiceProviderException("Failed to install service");
         }
 
-        public virtual bool ServiceExist(string name)
+        _logger.Info(installOutput.Lines.Select(x => x.Content).ConcatToString("\n"));
+
+        var descOutput = _processProvider.StartAndCapture("sc.exe", $"description {serviceName} \"Lidarr Application Server\"");
+        if (descOutput.ExitCode != 0)
         {
-            _logger.Debug("Checking if service {0} exists.", name);
-            return
-                ServiceController.GetServices().Any(
-                    s => string.Equals(s.ServiceName, name, StringComparison.InvariantCultureIgnoreCase));
+            _logger.Error($"Failed to install service: {descOutput.Lines.Select(x => x.Content).ConcatToString("\n")}");
+            throw new ServiceProviderException("Failed to install service");
         }
 
-        public virtual bool IsServiceRunning(string name)
+        _logger.Info(descOutput.Lines.Select(x => x.Content).ConcatToString("\n"));
+
+        _logger.Info("Service Has installed successfully.");
+    }
+
+    public virtual void Uninstall(string serviceName)
+    {
+        _logger.Info("Uninstalling {0} service", serviceName);
+
+        Stop(serviceName);
+
+        var output = _processProvider.StartAndCapture("sc.exe", $"delete {serviceName}");
+        _logger.Info(output.Lines.Select(x => x.Content).ConcatToString("\n"));
+
+        _logger.Info("{0} successfully uninstalled", serviceName);
+    }
+
+    public virtual void Run(ServiceBase service)
+    {
+        ServiceBase.Run(service);
+    }
+
+    public virtual ServiceController GetService(string serviceName)
+    {
+        return ServiceController.GetServices().FirstOrDefault(c => string.Equals(c.ServiceName, serviceName, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    public virtual void Stop(string serviceName)
+    {
+        _logger.Info("Stopping {0} Service...", serviceName);
+        var service = GetService(serviceName);
+        if (service == null)
         {
-            _logger.Debug("Checking if '{0}' service is running", name);
-
-            var service = ServiceController.GetServices()
-                .SingleOrDefault(s => string.Equals(s.ServiceName, name, StringComparison.InvariantCultureIgnoreCase));
-
-            return service != null && (
-                service.Status != ServiceControllerStatus.Stopped ||
-                service.Status == ServiceControllerStatus.StopPending ||
-                service.Status == ServiceControllerStatus.Paused ||
-                service.Status == ServiceControllerStatus.PausePending);
+            _logger.Warn("Unable to stop {0}. no service with that name exists.", serviceName);
+            return;
         }
 
-        public virtual void Install(string serviceName)
+        _logger.Info("Service is currently {0}", service.Status);
+
+        if (service.Status != ServiceControllerStatus.Stopped)
         {
-            _logger.Info("Installing service '{0}'", serviceName);
+            service.Stop();
+            service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(60));
 
-            var args = $"create {serviceName} " +
-                $"DisplayName= \"{serviceName}\" " +
-                $"binpath= \"{Process.GetCurrentProcess().MainModule.FileName}\" " +
-                "start= auto " +
-                "depend= EventLog/Tcpip/http " +
-                "obj= \"NT AUTHORITY\\LocalService\"";
-
-            _logger.Info(args);
-
-            var installOutput = _processProvider.StartAndCapture("sc.exe", args);
-
-            if (installOutput.ExitCode != 0)
-            {
-                _logger.Error($"Failed to install service: {installOutput.Lines.Select(x => x.Content).ConcatToString("\n")}");
-                throw new ServiceProviderException("Failed to install service");
-            }
-
-            _logger.Info(installOutput.Lines.Select(x => x.Content).ConcatToString("\n"));
-
-            var descOutput = _processProvider.StartAndCapture("sc.exe", $"description {serviceName} \"Lidarr Application Server\"");
-            if (descOutput.ExitCode != 0)
-            {
-                _logger.Error($"Failed to install service: {descOutput.Lines.Select(x => x.Content).ConcatToString("\n")}");
-                throw new ServiceProviderException("Failed to install service");
-            }
-
-            _logger.Info(descOutput.Lines.Select(x => x.Content).ConcatToString("\n"));
-
-            _logger.Info("Service Has installed successfully.");
-        }
-
-        public virtual void Uninstall(string serviceName)
-        {
-            _logger.Info("Uninstalling {0} service", serviceName);
-
-            Stop(serviceName);
-
-            var output = _processProvider.StartAndCapture("sc.exe", $"delete {serviceName}");
-            _logger.Info(output.Lines.Select(x => x.Content).ConcatToString("\n"));
-
-            _logger.Info("{0} successfully uninstalled", serviceName);
-        }
-
-        public virtual void Run(ServiceBase service)
-        {
-            ServiceBase.Run(service);
-        }
-
-        public virtual ServiceController GetService(string serviceName)
-        {
-            return ServiceController.GetServices().FirstOrDefault(c => string.Equals(c.ServiceName, serviceName, StringComparison.InvariantCultureIgnoreCase));
-        }
-
-        public virtual void Stop(string serviceName)
-        {
-            _logger.Info("Stopping {0} Service...", serviceName);
-            var service = GetService(serviceName);
-            if (service == null)
-            {
-                _logger.Warn("Unable to stop {0}. no service with that name exists.", serviceName);
-                return;
-            }
-
-            _logger.Info("Service is currently {0}", service.Status);
-
-            if (service.Status != ServiceControllerStatus.Stopped)
-            {
-                service.Stop();
-                service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(60));
-
-                service.Refresh();
-                if (service.Status == ServiceControllerStatus.Stopped)
-                {
-                    _logger.Info("{0} has stopped successfully.", serviceName);
-                }
-                else
-                {
-                    _logger.Error("Service stop request has timed out. {0}", service.Status);
-                }
-            }
-            else
-            {
-                _logger.Warn("Service {0} is already in stopped state.", service.ServiceName);
-            }
-        }
-
-        public ServiceControllerStatus GetStatus(string serviceName)
-        {
-            return GetService(serviceName).Status;
-        }
-
-        public void Start(string serviceName)
-        {
-            _logger.Info("Starting {0} Service...", serviceName);
-            var service = GetService(serviceName);
-            if (service == null)
-            {
-                _logger.Warn("Unable to start '{0}' no service with that name exists.", serviceName);
-                return;
-            }
-
-            if (service.Status != ServiceControllerStatus.Paused && service.Status != ServiceControllerStatus.Stopped)
-            {
-                _logger.Warn("Service is in a state that can't be started. Current status: {0}", service.Status);
-            }
-
-            service.Start();
-
-            service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(60));
             service.Refresh();
-
-            if (service.Status == ServiceControllerStatus.Running)
+            if (service.Status == ServiceControllerStatus.Stopped)
             {
-                _logger.Info("{0} has started successfully.", serviceName);
+                _logger.Info("{0} has stopped successfully.", serviceName);
             }
             else
             {
-                _logger.Error("Service start request has timed out. {0}", service.Status);
+                _logger.Error("Service stop request has timed out. {0}", service.Status);
             }
         }
-
-        public void Restart(string serviceName)
+        else
         {
-            var args = string.Format("/C net.exe stop \"{0}\" && net.exe start \"{0}\"", serviceName);
+            _logger.Warn("Service {0} is already in stopped state.", service.ServiceName);
+        }
+    }
 
-            _processProvider.Start("cmd.exe", args);
+    public ServiceControllerStatus GetStatus(string serviceName)
+    {
+        return GetService(serviceName).Status;
+    }
+
+    public void Start(string serviceName)
+    {
+        _logger.Info("Starting {0} Service...", serviceName);
+        var service = GetService(serviceName);
+        if (service == null)
+        {
+            _logger.Warn("Unable to start '{0}' no service with that name exists.", serviceName);
+            return;
         }
 
-        public void SetPermissions(string serviceName)
+        if (service.Status != ServiceControllerStatus.Paused && service.Status != ServiceControllerStatus.Stopped)
         {
-            var dacls = GetServiceDacls(serviceName);
-            SetServiceDacls(serviceName, dacls);
+            _logger.Warn("Service is in a state that can't be started. Current status: {0}", service.Status);
         }
 
-        private string GetServiceDacls(string serviceName)
+        service.Start();
+
+        service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(60));
+        service.Refresh();
+
+        if (service.Status == ServiceControllerStatus.Running)
         {
-            var output = _processProvider.StartAndCapture("sc.exe", $"sdshow {serviceName}");
+            _logger.Info("{0} has started successfully.", serviceName);
+        }
+        else
+        {
+            _logger.Error("Service start request has timed out. {0}", service.Status);
+        }
+    }
 
-            var dacls = output.Standard.Select(s => s.Content).Where(s => s.IsNotNullOrWhiteSpace()).ToList();
+    public void Restart(string serviceName)
+    {
+        var args = string.Format("/C net.exe stop \"{0}\" && net.exe start \"{0}\"", serviceName);
 
-            if (dacls.Count == 1)
-            {
-                return dacls[0];
-            }
+        _processProvider.Start("cmd.exe", args);
+    }
 
-            throw new ArgumentException("Invalid DACL output");
+    public void SetPermissions(string serviceName)
+    {
+        var dacls = GetServiceDacls(serviceName);
+        SetServiceDacls(serviceName, dacls);
+    }
+
+    private string GetServiceDacls(string serviceName)
+    {
+        var output = _processProvider.StartAndCapture("sc.exe", $"sdshow {serviceName}");
+
+        var dacls = output.Standard.Select(s => s.Content).Where(s => s.IsNotNullOrWhiteSpace()).ToList();
+
+        if (dacls.Count == 1)
+        {
+            return dacls[0];
         }
 
-        private void SetServiceDacls(string serviceName, string dacls)
+        throw new ArgumentException("Invalid DACL output");
+    }
+
+    private void SetServiceDacls(string serviceName, string dacls)
+    {
+        const string authenticatedUsersDacl = "(A;;CCLCSWRPWPLOCRRC;;;AU)";
+
+        if (dacls.Contains(authenticatedUsersDacl))
         {
-            const string authenticatedUsersDacl = "(A;;CCLCSWRPWPLOCRRC;;;AU)";
-
-            if (dacls.Contains(authenticatedUsersDacl))
-            {
-                // Permssions already set
-                return;
-            }
-
-            var indexOfS = dacls.IndexOf("S:", StringComparison.InvariantCultureIgnoreCase);
-
-            dacls = indexOfS == -1 ? $"{dacls}{authenticatedUsersDacl}" : dacls.Insert(indexOfS, authenticatedUsersDacl);
-
-            _processProvider.Start("sc.exe", $"sdset {serviceName} {dacls}").WaitForExit();
+            // Permssions already set
+            return;
         }
+
+        var indexOfS = dacls.IndexOf("S:", StringComparison.InvariantCultureIgnoreCase);
+
+        dacls = indexOfS == -1 ? $"{dacls}{authenticatedUsersDacl}" : dacls.Insert(indexOfS, authenticatedUsersDacl);
+
+        _processProvider.Start("sc.exe", $"sdset {serviceName} {dacls}").WaitForExit();
     }
 }

@@ -5,39 +5,38 @@ using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 
-namespace NzbDrone.Core.HealthCheck.Checks
+namespace NzbDrone.Core.HealthCheck.Checks;
+
+public class PackageGlobalMessageCheck : HealthCheckBase
 {
-    public class PackageGlobalMessageCheck : HealthCheckBase
+    private readonly IDeploymentInfoProvider _deploymentInfoProvider;
+
+    public PackageGlobalMessageCheck(IDeploymentInfoProvider deploymentInfoProvider)
     {
-        private readonly IDeploymentInfoProvider _deploymentInfoProvider;
+        _deploymentInfoProvider = deploymentInfoProvider;
+    }
 
-        public PackageGlobalMessageCheck(IDeploymentInfoProvider deploymentInfoProvider)
+    public override HealthCheck Check()
+    {
+        if (_deploymentInfoProvider.PackageGlobalMessage.IsNullOrWhiteSpace())
         {
-            _deploymentInfoProvider = deploymentInfoProvider;
+            return new HealthCheck(GetType());
         }
 
-        public override HealthCheck Check()
+        var message = _deploymentInfoProvider.PackageGlobalMessage;
+        HealthCheckResult result = HealthCheckResult.Notice;
+
+        if (message.StartsWith("Error:"))
         {
-            if (_deploymentInfoProvider.PackageGlobalMessage.IsNullOrWhiteSpace())
-            {
-                return new HealthCheck(GetType());
-            }
-
-            var message = _deploymentInfoProvider.PackageGlobalMessage;
-            HealthCheckResult result = HealthCheckResult.Notice;
-
-            if (message.StartsWith("Error:"))
-            {
-                message = message.Substring(6);
-                result = HealthCheckResult.Error;
-            }
-            else if (message.StartsWith("Warn:"))
-            {
-                message = message.Substring(5);
-                result = HealthCheckResult.Warning;
-            }
-
-            return new HealthCheck(GetType(), result, message, "#package_maintainer_message");
+            message = message.Substring(6);
+            result = HealthCheckResult.Error;
         }
+        else if (message.StartsWith("Warn:"))
+        {
+            message = message.Substring(5);
+            result = HealthCheckResult.Warning;
+        }
+
+        return new HealthCheck(GetType(), result, message, "#package_maintainer_message");
     }
 }

@@ -5,111 +5,110 @@ using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Notifications.MediaBrowser.Model;
 
-namespace NzbDrone.Core.Notifications.Emby
+namespace NzbDrone.Core.Notifications.Emby;
+
+public class MediaBrowserProxy
 {
-    public class MediaBrowserProxy
+    private readonly IHttpClient _httpClient;
+    private readonly Logger _logger;
+
+    public MediaBrowserProxy(IHttpClient httpClient, Logger logger)
     {
-        private readonly IHttpClient _httpClient;
-        private readonly Logger _logger;
+        _httpClient = httpClient;
+        _logger = logger;
+    }
 
-        public MediaBrowserProxy(IHttpClient httpClient, Logger logger)
-        {
-            _httpClient = httpClient;
-            _logger = logger;
-        }
+    public void Notify(MediaBrowserSettings settings, string title, string message)
+    {
+        var path = "/Notifications/Admin";
+        var request = BuildRequest(path, settings);
+        request.Headers.ContentType = "application/json";
+        request.Method = HttpMethod.POST;
 
-        public void Notify(MediaBrowserSettings settings, string title, string message)
+        request.SetContent(new
+                           {
+                               Name = title,
+                               Description = message,
+                               ImageUrl = "https://raw.github.com/lidarr/Lidarr/develop/Logo/64.png"
+                           }.ToJson());
+
+        ProcessRequest(request, settings);
+    }
+
+    public void Update(MediaBrowserSettings settings, List<string> musicCollectionPaths)
+    {
+        string path;
+        HttpRequest request;
+
+        if (musicCollectionPaths.Any())
         {
-            var path = "/Notifications/Admin";
-            var request = BuildRequest(path, settings);
+            path = "/Library/Media/Updated";
+            request = BuildRequest(path, settings);
             request.Headers.ContentType = "application/json";
-            request.Method = HttpMethod.POST;
+
+            var updateInfo = new List<EmbyMediaUpdateInfo>();
+
+            foreach (var colPath in musicCollectionPaths)
+            {
+                updateInfo.Add(new EmbyMediaUpdateInfo
+                               {
+                                   Path = colPath,
+                                   UpdateType = "Created"
+                               });
+            }
 
             request.SetContent(new
-            {
-                Name = title,
-                Description = message,
-                ImageUrl = "https://raw.github.com/lidarr/Lidarr/develop/Logo/64.png"
-            }.ToJson());
-
-            ProcessRequest(request, settings);
+                               {
+                                   Updates = updateInfo
+                               }.ToJson());
         }
-
-        public void Update(MediaBrowserSettings settings, List<string> musicCollectionPaths)
+        else
         {
-            string path;
-            HttpRequest request;
-
-            if (musicCollectionPaths.Any())
-            {
-                path = "/Library/Media/Updated";
-                request = BuildRequest(path, settings);
-                request.Headers.ContentType = "application/json";
-
-                var updateInfo = new List<EmbyMediaUpdateInfo>();
-
-                foreach (var colPath in musicCollectionPaths)
-                {
-                    updateInfo.Add(new EmbyMediaUpdateInfo
-                    {
-                        Path = colPath,
-                        UpdateType = "Created"
-                    });
-                }
-
-                request.SetContent(new
-                {
-                    Updates = updateInfo
-                }.ToJson());
-            }
-            else
-            {
-                path = "/Library/Refresh";
-                request = BuildRequest(path, settings);
-            }
-
-            request.Method = HttpMethod.POST;
-
-            ProcessRequest(request, settings);
+            path = "/Library/Refresh";
+            request = BuildRequest(path, settings);
         }
 
-        private string ProcessRequest(HttpRequest request, MediaBrowserSettings settings)
-        {
-            request.Headers.Add("X-MediaBrowser-Token", settings.ApiKey);
+        request.Method = HttpMethod.POST;
 
-            var response = _httpClient.Execute(request);
+        ProcessRequest(request, settings);
+    }
 
-            _logger.Trace("Response: {0}", response.Content);
+    private string ProcessRequest(HttpRequest request, MediaBrowserSettings settings)
+    {
+        request.Headers.Add("X-MediaBrowser-Token", settings.ApiKey);
 
-            CheckForError(response);
+        var response = _httpClient.Execute(request);
 
-            return response.Content;
-        }
+        _logger.Trace("Response: {0}", response.Content);
 
-        private HttpRequest BuildRequest(string path, MediaBrowserSettings settings)
-        {
-            var scheme = settings.UseSsl ? "https" : "http";
-            var url = $@"{scheme}://{settings.Address}/mediabrowser";
+        CheckForError(response);
 
-            return new HttpRequestBuilder(url).Resource(path).Build();
-        }
+        return response.Content;
+    }
 
-        private void CheckForError(HttpResponse response)
-        {
-            _logger.Debug("Looking for error in response: {0}", response);
+    private HttpRequest BuildRequest(string path, MediaBrowserSettings settings)
+    {
+        var scheme = settings.UseSsl ? "https" : "http";
+        var url = $@"{scheme}://{settings.Address}/mediabrowser";
 
-            //TODO: actually check for the error
-        }
+        return new HttpRequestBuilder(url).Resource(path).Build();
+    }
 
-        public List<EmbyMediaFolder> GetArtist(MediaBrowserSettings settings)
-        {
-            var path = "/Library/MediaFolders";
-            var request = BuildRequest(path, settings);
-            request.Method = HttpMethod.GET;
+    private void CheckForError(HttpResponse response)
+    {
+        _logger.Debug("Looking for error in response: {0}", response);
 
-            var response = ProcessRequest(request, settings);
+        //TODO: actually check for the error
+    }
 
-            return Json.Deserialize<EmbyMediaFoldersResponse>(response).Items;
-        }
+    public List<EmbyMediaFolder> GetArtist(MediaBrowserSettings settings)
+    {
+        var path = "/Library/MediaFolders";
+        var request = BuildRequest(path, settings);
+        request.Method = HttpMethod.GET;
+
+        var response = ProcessRequest(request, settings);
+
+        return Json.Deserialize<EmbyMediaFoldersResponse>(response).Items;
     }
 }

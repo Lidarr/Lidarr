@@ -9,109 +9,108 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 
-namespace NzbDrone.Core.Extras.Files
+namespace NzbDrone.Core.Extras.Files;
+
+public interface IManageExtraFiles
 {
-    public interface IManageExtraFiles
+    int Order { get; }
+    IEnumerable<ExtraFile> CreateAfterMediaCoverUpdate(Artist artist);
+    IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<TrackFile> trackFiles);
+    IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, TrackFile trackFile);
+    IEnumerable<ExtraFile> CreateAfterTrackFolder(Artist artist, Album album, string artistFolder, string albumFolder);
+    IEnumerable<ExtraFile> MoveFilesAfterRename(Artist artist, List<TrackFile> trackFiles);
+    ExtraFile Import(Artist artist, TrackFile trackFile, string path, string extension, bool readOnly);
+}
+
+public abstract class ExtraFileManager<TExtraFile> : IManageExtraFiles
+    where TExtraFile : ExtraFile, new()
+{
+    private readonly IConfigService _configService;
+    private readonly IDiskProvider _diskProvider;
+    private readonly IDiskTransferService _diskTransferService;
+    private readonly Logger _logger;
+
+    public ExtraFileManager(IConfigService configService,
+                            IDiskProvider diskProvider,
+                            IDiskTransferService diskTransferService,
+                            Logger logger)
     {
-        int Order { get; }
-        IEnumerable<ExtraFile> CreateAfterMediaCoverUpdate(Artist artist);
-        IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<TrackFile> trackFiles);
-        IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, TrackFile trackFile);
-        IEnumerable<ExtraFile> CreateAfterTrackFolder(Artist artist, Album album, string artistFolder, string albumFolder);
-        IEnumerable<ExtraFile> MoveFilesAfterRename(Artist artist, List<TrackFile> trackFiles);
-        ExtraFile Import(Artist artist, TrackFile trackFile, string path, string extension, bool readOnly);
+        _configService = configService;
+        _diskProvider = diskProvider;
+        _diskTransferService = diskTransferService;
+        _logger = logger;
     }
 
-    public abstract class ExtraFileManager<TExtraFile> : IManageExtraFiles
-        where TExtraFile : ExtraFile, new()
+    public abstract int Order { get; }
+    public abstract IEnumerable<ExtraFile> CreateAfterMediaCoverUpdate(Artist artist);
+    public abstract IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<TrackFile> trackFiles);
+    public abstract IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, TrackFile trackFile);
+    public abstract IEnumerable<ExtraFile> CreateAfterTrackFolder(Artist artist, Album album, string artistFolder, string albumFolder);
+    public abstract IEnumerable<ExtraFile> MoveFilesAfterRename(Artist artist, List<TrackFile> trackFiles);
+    public abstract ExtraFile Import(Artist artist, TrackFile trackFile, string path, string extension, bool readOnly);
+
+    protected TExtraFile ImportFile(Artist artist, TrackFile trackFile, string path, bool readOnly, string extension, string fileNameSuffix = null)
     {
-        private readonly IConfigService _configService;
-        private readonly IDiskProvider _diskProvider;
-        private readonly IDiskTransferService _diskTransferService;
-        private readonly Logger _logger;
+        var newFolder = Path.GetDirectoryName(trackFile.Path);
+        var filenameBuilder = new StringBuilder(Path.GetFileNameWithoutExtension(trackFile.Path));
 
-        public ExtraFileManager(IConfigService configService,
-                                IDiskProvider diskProvider,
-                                IDiskTransferService diskTransferService,
-                                Logger logger)
+        if (fileNameSuffix.IsNotNullOrWhiteSpace())
         {
-            _configService = configService;
-            _diskProvider = diskProvider;
-            _diskTransferService = diskTransferService;
-            _logger = logger;
+            filenameBuilder.Append(fileNameSuffix);
         }
 
-        public abstract int Order { get; }
-        public abstract IEnumerable<ExtraFile> CreateAfterMediaCoverUpdate(Artist artist);
-        public abstract IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<TrackFile> trackFiles);
-        public abstract IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, TrackFile trackFile);
-        public abstract IEnumerable<ExtraFile> CreateAfterTrackFolder(Artist artist, Album album, string artistFolder, string albumFolder);
-        public abstract IEnumerable<ExtraFile> MoveFilesAfterRename(Artist artist, List<TrackFile> trackFiles);
-        public abstract ExtraFile Import(Artist artist, TrackFile trackFile, string path, string extension, bool readOnly);
+        filenameBuilder.Append(extension);
 
-        protected TExtraFile ImportFile(Artist artist, TrackFile trackFile, string path, bool readOnly, string extension, string fileNameSuffix = null)
+        var newFileName = Path.Combine(newFolder, filenameBuilder.ToString());
+        var transferMode = TransferMode.Move;
+
+        if (readOnly)
         {
-            var newFolder = Path.GetDirectoryName(trackFile.Path);
-            var filenameBuilder = new StringBuilder(Path.GetFileNameWithoutExtension(trackFile.Path));
-
-            if (fileNameSuffix.IsNotNullOrWhiteSpace())
-            {
-                filenameBuilder.Append(fileNameSuffix);
-            }
-
-            filenameBuilder.Append(extension);
-
-            var newFileName = Path.Combine(newFolder, filenameBuilder.ToString());
-            var transferMode = TransferMode.Move;
-
-            if (readOnly)
-            {
-                transferMode = _configService.CopyUsingHardlinks ? TransferMode.HardLinkOrCopy : TransferMode.Copy;
-            }
-
-            _diskTransferService.TransferFile(path, newFileName, transferMode, true);
-
-            return new TExtraFile
-            {
-                ArtistId = artist.Id,
-                AlbumId = trackFile.AlbumId,
-                TrackFileId = trackFile.Id,
-                RelativePath = artist.Path.GetRelativePath(newFileName),
-                Extension = extension
-            };
+            transferMode = _configService.CopyUsingHardlinks ? TransferMode.HardLinkOrCopy : TransferMode.Copy;
         }
 
-        protected TExtraFile MoveFile(Artist artist, TrackFile trackFile, TExtraFile extraFile, string fileNameSuffix = null)
+        _diskTransferService.TransferFile(path, newFileName, transferMode, true);
+
+        return new TExtraFile
+               {
+                   ArtistId = artist.Id,
+                   AlbumId = trackFile.AlbumId,
+                   TrackFileId = trackFile.Id,
+                   RelativePath = artist.Path.GetRelativePath(newFileName),
+                   Extension = extension
+               };
+    }
+
+    protected TExtraFile MoveFile(Artist artist, TrackFile trackFile, TExtraFile extraFile, string fileNameSuffix = null)
+    {
+        var newFolder = Path.GetDirectoryName(trackFile.Path);
+        var filenameBuilder = new StringBuilder(Path.GetFileNameWithoutExtension(trackFile.Path));
+
+        if (fileNameSuffix.IsNotNullOrWhiteSpace())
         {
-            var newFolder = Path.GetDirectoryName(trackFile.Path);
-            var filenameBuilder = new StringBuilder(Path.GetFileNameWithoutExtension(trackFile.Path));
-
-            if (fileNameSuffix.IsNotNullOrWhiteSpace())
-            {
-                filenameBuilder.Append(fileNameSuffix);
-            }
-
-            filenameBuilder.Append(extraFile.Extension);
-
-            var existingFileName = Path.Combine(artist.Path, extraFile.RelativePath);
-            var newFileName = Path.Combine(newFolder, filenameBuilder.ToString());
-
-            if (newFileName.PathNotEquals(existingFileName))
-            {
-                try
-                {
-                    _diskProvider.MoveFile(existingFileName, newFileName);
-                    extraFile.RelativePath = artist.Path.GetRelativePath(newFileName);
-
-                    return extraFile;
-                }
-                catch (Exception ex)
-                {
-                    _logger.Warn(ex, "Unable to move file after rename: {0}", existingFileName);
-                }
-            }
-
-            return null;
+            filenameBuilder.Append(fileNameSuffix);
         }
+
+        filenameBuilder.Append(extraFile.Extension);
+
+        var existingFileName = Path.Combine(artist.Path, extraFile.RelativePath);
+        var newFileName = Path.Combine(newFolder, filenameBuilder.ToString());
+
+        if (newFileName.PathNotEquals(existingFileName))
+        {
+            try
+            {
+                _diskProvider.MoveFile(existingFileName, newFileName);
+                extraFile.RelativePath = artist.Path.GetRelativePath(newFileName);
+
+                return extraFile;
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Unable to move file after rename: {0}", existingFileName);
+            }
+        }
+
+        return null;
     }
 }

@@ -1,16 +1,15 @@
 ﻿using System;
 
-namespace NzbDrone.Core.Notifications.Xbmc
-{
-    public class XbmcJsonException : Exception
-    {
-        public XbmcJsonException()
-        {
-        }
+namespace NzbDrone.Core.Notifications.Xbmc;
 
-        public XbmcJsonException(string message)
-            : base(message)
-        {
-        }
+public class XbmcJsonException : Exception
+{
+    public XbmcJsonException()
+    {
+    }
+
+    public XbmcJsonException(string message)
+        : base(message)
+    {
     }
 }

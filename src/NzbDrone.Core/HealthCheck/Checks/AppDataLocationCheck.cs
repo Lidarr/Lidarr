@@ -1,26 +1,25 @@
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 
-namespace NzbDrone.Core.HealthCheck.Checks
+namespace NzbDrone.Core.HealthCheck.Checks;
+
+public class AppDataLocationCheck : HealthCheckBase
 {
-    public class AppDataLocationCheck : HealthCheckBase
+    private readonly IAppFolderInfo _appFolderInfo;
+
+    public AppDataLocationCheck(IAppFolderInfo appFolderInfo)
     {
-        private readonly IAppFolderInfo _appFolderInfo;
+        _appFolderInfo = appFolderInfo;
+    }
 
-        public AppDataLocationCheck(IAppFolderInfo appFolderInfo)
+    public override HealthCheck Check()
+    {
+        if (_appFolderInfo.StartUpFolder.IsParentPath(_appFolderInfo.AppDataFolder) ||
+            _appFolderInfo.StartUpFolder.PathEquals(_appFolderInfo.AppDataFolder))
         {
-            _appFolderInfo = appFolderInfo;
+            return new HealthCheck(GetType(), HealthCheckResult.Warning, "Updating will not be possible to prevent deleting AppData on Update");
         }
 
-        public override HealthCheck Check()
-        {
-            if (_appFolderInfo.StartUpFolder.IsParentPath(_appFolderInfo.AppDataFolder) ||
-                _appFolderInfo.StartUpFolder.PathEquals(_appFolderInfo.AppDataFolder))
-            {
-                return new HealthCheck(GetType(), HealthCheckResult.Warning, "Updating will not be possible to prevent deleting AppData on Update");
-            }
-
-            return new HealthCheck(GetType());
-        }
+        return new HealthCheck(GetType());
     }
 }

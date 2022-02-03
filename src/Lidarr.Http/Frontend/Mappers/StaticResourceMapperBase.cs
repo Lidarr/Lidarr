@@ -6,50 +6,49 @@ using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
 
-namespace Lidarr.Http.Frontend.Mappers
+namespace Lidarr.Http.Frontend.Mappers;
+
+public abstract class StaticResourceMapperBase : IMapHttpRequestsToDisk
 {
-    public abstract class StaticResourceMapperBase : IMapHttpRequestsToDisk
+    private readonly IDiskProvider _diskProvider;
+    private readonly Logger _logger;
+    private readonly StringComparison _caseSensitive;
+    private readonly IContentTypeProvider _mimeTypeProvider;
+
+    protected StaticResourceMapperBase(IDiskProvider diskProvider, Logger logger)
     {
-        private readonly IDiskProvider _diskProvider;
-        private readonly Logger _logger;
-        private readonly StringComparison _caseSensitive;
-        private readonly IContentTypeProvider _mimeTypeProvider;
+        _diskProvider = diskProvider;
+        _logger = logger;
 
-        protected StaticResourceMapperBase(IDiskProvider diskProvider, Logger logger)
+        _mimeTypeProvider = new FileExtensionContentTypeProvider();
+        _caseSensitive = RuntimeInfo.IsProduction ? DiskProviderBase.PathStringComparison : StringComparison.OrdinalIgnoreCase;
+    }
+
+    public abstract string Map(string resourceUrl);
+
+    public abstract bool CanHandle(string resourceUrl);
+
+    public FileStreamResult GetResponse(string resourceUrl)
+    {
+        var filePath = Map(resourceUrl);
+
+        if (_diskProvider.FileExists(filePath, _caseSensitive))
         {
-            _diskProvider = diskProvider;
-            _logger = logger;
-
-            _mimeTypeProvider = new FileExtensionContentTypeProvider();
-            _caseSensitive = RuntimeInfo.IsProduction ? DiskProviderBase.PathStringComparison : StringComparison.OrdinalIgnoreCase;
-        }
-
-        public abstract string Map(string resourceUrl);
-
-        public abstract bool CanHandle(string resourceUrl);
-
-        public FileStreamResult GetResponse(string resourceUrl)
-        {
-            var filePath = Map(resourceUrl);
-
-            if (_diskProvider.FileExists(filePath, _caseSensitive))
+            if (!_mimeTypeProvider.TryGetContentType(filePath, out var contentType))
             {
-                if (!_mimeTypeProvider.TryGetContentType(filePath, out var contentType))
-                {
-                    contentType = "application/octet-stream";
-                }
-
-                return new FileStreamResult(GetContentStream(filePath), contentType);
+                contentType = "application/octet-stream";
             }
 
-            _logger.Warn("File {0} not found", filePath);
-
-            return null;
+            return new FileStreamResult(GetContentStream(filePath), contentType);
         }
 
-        protected virtual Stream GetContentStream(string filePath)
-        {
-            return File.OpenRead(filePath);
-        }
+        _logger.Warn("File {0} not found", filePath);
+
+        return null;
+    }
+
+    protected virtual Stream GetContentStream(string filePath)
+    {
+        return File.OpenRead(filePath);
     }
 }

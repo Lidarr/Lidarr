@@ -1,8 +1,7 @@
-﻿namespace NzbDrone.Common.Http
+﻿namespace NzbDrone.Common.Http;
+
+public interface IHttpRequestInterceptor
 {
-    public interface IHttpRequestInterceptor
-    {
-        HttpRequest PreRequest(HttpRequest request);
-        HttpResponse PostResponse(HttpResponse response);
-    }
+    HttpRequest PreRequest(HttpRequest request);
+    HttpResponse PostResponse(HttpResponse response);
 }

@@ -10,102 +10,101 @@ using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Core.Test.ProviderTests.DiskScanProviderTests
+namespace NzbDrone.Core.Test.ProviderTests.DiskScanProviderTests;
+
+public class GetAudioFilesFixture : CoreTest<DiskScanService>
 {
-    public class GetAudioFilesFixture : CoreTest<DiskScanService>
+    private readonly string _path = @"C:\Test\".AsOsAgnostic();
+    private string[] _fileNames;
+
+    [SetUp]
+    public void Setup()
     {
-        private readonly string _path = @"C:\Test\".AsOsAgnostic();
-        private string[] _fileNames;
+        _fileNames = new[]
+                     {
+                         @"30 Rock1.mp3",
+                         @"30 Rock2.flac",
+                         @"30 Rock3.ogg",
+                         @"30 Rock4.m4a",
+                         @"30 Rock.avi",
+                         @"movie.exe",
+                         @"movie"
+                     };
 
-        [SetUp]
-        public void Setup()
+        Mocker.GetMock<IDiskProvider>()
+              .Setup(s => s.GetFileInfos(It.IsAny<string>(), It.IsAny<SearchOption>()))
+              .Returns(new List<IFileInfo>());
+    }
+
+    private IEnumerable<string> GetFiles(string folder, string subFolder = "")
+    {
+        return _fileNames.Select(f => Path.Combine(folder, subFolder, f));
+    }
+
+    private void GivenFiles(IEnumerable<string> files)
+    {
+        var filesToReturn = files.Select(x => (FileInfoBase)new FileInfo(x)).ToList<IFileInfo>();
+
+        foreach (var file in filesToReturn)
         {
-            _fileNames = new[]
-                        {
-                            @"30 Rock1.mp3",
-                            @"30 Rock2.flac",
-                            @"30 Rock3.ogg",
-                            @"30 Rock4.m4a",
-                            @"30 Rock.avi",
-                            @"movie.exe",
-                            @"movie"
-                        };
-
-            Mocker.GetMock<IDiskProvider>()
-                .Setup(s => s.GetFileInfos(It.IsAny<string>(), It.IsAny<SearchOption>()))
-                .Returns(new List<IFileInfo>());
+            TestLogger.Debug(file.Name);
         }
 
-        private IEnumerable<string> GetFiles(string folder, string subFolder = "")
-        {
-            return _fileNames.Select(f => Path.Combine(folder, subFolder, f));
-        }
+        Mocker.GetMock<IDiskProvider>()
+              .Setup(s => s.GetFileInfos(It.IsAny<string>(), SearchOption.AllDirectories))
+              .Returns(filesToReturn);
+    }
 
-        private void GivenFiles(IEnumerable<string> files)
-        {
-            var filesToReturn = files.Select(x => (FileInfoBase)new FileInfo(x)).ToList<IFileInfo>();
+    [Test]
+    public void should_check_all_directories()
+    {
+        Subject.GetAudioFiles(_path);
 
-            foreach (var file in filesToReturn)
-            {
-                TestLogger.Debug(file.Name);
-            }
+        Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.AllDirectories), Times.Once());
+        Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.TopDirectoryOnly), Times.Never());
+    }
 
-            Mocker.GetMock<IDiskProvider>()
-                  .Setup(s => s.GetFileInfos(It.IsAny<string>(), SearchOption.AllDirectories))
-                  .Returns(filesToReturn);
-        }
+    [Test]
+    public void should_check_all_directories_when_allDirectories_is_true()
+    {
+        Subject.GetAudioFiles(_path, true);
 
-        [Test]
-        public void should_check_all_directories()
-        {
-            Subject.GetAudioFiles(_path);
+        Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.AllDirectories), Times.Once());
+        Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.TopDirectoryOnly), Times.Never());
+    }
 
-            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.AllDirectories), Times.Once());
-            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.TopDirectoryOnly), Times.Never());
-        }
+    [Test]
+    public void should_check_top_level_directory_only_when_allDirectories_is_false()
+    {
+        Subject.GetAudioFiles(_path, false);
 
-        [Test]
-        public void should_check_all_directories_when_allDirectories_is_true()
-        {
-            Subject.GetAudioFiles(_path, true);
+        Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.AllDirectories), Times.Never());
+        Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.TopDirectoryOnly), Times.Once());
+    }
 
-            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.AllDirectories), Times.Once());
-            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.TopDirectoryOnly), Times.Never());
-        }
+    [Test]
+    public void should_return_audio_files_only()
+    {
+        GivenFiles(GetFiles(_path));
 
-        [Test]
-        public void should_check_top_level_directory_only_when_allDirectories_is_false()
-        {
-            Subject.GetAudioFiles(_path, false);
+        Subject.GetAudioFiles(_path).Should().HaveCount(4);
+    }
 
-            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.AllDirectories), Times.Never());
-            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.TopDirectoryOnly), Times.Once());
-        }
+    [TestCase("Extras")]
+    [TestCase("@eadir")]
+    [TestCase("extrafanart")]
+    [TestCase("Plex Versions")]
+    [TestCase(".secret")]
+    [TestCase(".hidden")]
+    [TestCase(".unwanted")]
+    public void should_filter_certain_sub_folders(string subFolder)
+    {
+        var files = GetFiles(_path).ToList();
+        var specialFiles = GetFiles(_path, subFolder).ToList();
+        var allFiles = files.Concat(specialFiles);
 
-        [Test]
-        public void should_return_audio_files_only()
-        {
-            GivenFiles(GetFiles(_path));
-
-            Subject.GetAudioFiles(_path).Should().HaveCount(4);
-        }
-
-        [TestCase("Extras")]
-        [TestCase("@eadir")]
-        [TestCase("extrafanart")]
-        [TestCase("Plex Versions")]
-        [TestCase(".secret")]
-        [TestCase(".hidden")]
-        [TestCase(".unwanted")]
-        public void should_filter_certain_sub_folders(string subFolder)
-        {
-            var files = GetFiles(_path).ToList();
-            var specialFiles = GetFiles(_path, subFolder).ToList();
-            var allFiles = files.Concat(specialFiles);
-
-            var filteredFiles = Subject.FilterPaths(_path, allFiles);
-            filteredFiles.Should().NotContain(specialFiles);
-            filteredFiles.Count.Should().BeGreaterThan(0);
-        }
+        var filteredFiles = Subject.FilterPaths(_path, allFiles);
+        filteredFiles.Should().NotContain(specialFiles);
+        filteredFiles.Count.Should().BeGreaterThan(0);
     }
 }

@@ -14,90 +14,89 @@ using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
+namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole;
+
+[TestFixture]
+public class ScanWatchFolderFixture : CoreTest<ScanWatchFolder>
 {
-    [TestFixture]
-    public class ScanWatchFolderFixture : CoreTest<ScanWatchFolder>
+    protected readonly string _title = "Radiohead - Scotch Mist [2008-FLAC-Lossless]";
+    protected string _completedDownloadFolder = @"c:\blackhole\completed".AsOsAgnostic();
+
+    protected void GivenCompletedItem()
     {
-        protected readonly string _title = "Radiohead - Scotch Mist [2008-FLAC-Lossless]";
-        protected string _completedDownloadFolder = @"c:\blackhole\completed".AsOsAgnostic();
+        var targetDir = Path.Combine(_completedDownloadFolder, _title);
+        Mocker.GetMock<IDiskProvider>()
+              .Setup(c => c.GetDirectories(_completedDownloadFolder))
+              .Returns(new[] { targetDir });
 
-        protected void GivenCompletedItem()
+        Mocker.GetMock<IDiskProvider>()
+              .Setup(c => c.GetFiles(targetDir, SearchOption.AllDirectories))
+              .Returns(new[] { Path.Combine(targetDir, "somefile.flac") });
+
+        Mocker.GetMock<IDiskProvider>()
+              .Setup(c => c.GetFileSize(It.IsAny<string>()))
+              .Returns(1000000);
+
+        Mocker.GetMock<IDiskScanService>().Setup(c => c.FilterPaths(It.IsAny<string>(), It.IsAny<IEnumerable<string>>()))
+              .Returns<string, IEnumerable<string>>((b, s) => s.ToList());
+
+        Mocker.GetMock<IDiskScanService>().Setup(c => c.FilterFiles(It.IsAny<string>(), It.IsAny<IEnumerable<IFileInfo>>()))
+              .Returns<string, IEnumerable<IFileInfo>>((b, s) => s.ToList());
+    }
+
+    protected void GivenChangedItem()
+    {
+        var currentSize = Mocker.GetMock<IDiskProvider>().Object.GetFileSize("abc");
+
+        Mocker.GetMock<IDiskProvider>()
+              .Setup(c => c.GetFileSize(It.IsAny<string>()))
+              .Returns(currentSize + 1);
+    }
+
+    private void VerifySingleItem(DownloadItemStatus status)
+    {
+        var items = Subject.GetItems(_completedDownloadFolder, TimeSpan.FromMilliseconds(50)).ToList();
+
+        items.Count.Should().Be(1);
+        items.First().Status.Should().Be(status);
+    }
+
+    [Test]
+    public void GetItems_should_considered_locked_files_queued()
+    {
+        GivenCompletedItem();
+
+        Mocker.GetMock<IDiskProvider>()
+              .Setup(c => c.IsFileLocked(It.IsAny<string>()))
+              .Returns(true);
+
+        Thread.Sleep(60);
+
+        VerifySingleItem(DownloadItemStatus.Downloading);
+    }
+
+    [Test]
+    public void GetItems_should_considered_changing_files_queued()
+    {
+        GivenCompletedItem();
+
+        VerifySingleItem(DownloadItemStatus.Downloading);
+
+        // If we keep changing the file every 20ms we should stay Downloading.
+        for (int i = 0; i < 10; i++)
         {
-            var targetDir = Path.Combine(_completedDownloadFolder, _title);
-            Mocker.GetMock<IDiskProvider>()
-                .Setup(c => c.GetDirectories(_completedDownloadFolder))
-                .Returns(new[] { targetDir });
+            TestLogger.Info("Iteration {0}", i);
 
-            Mocker.GetMock<IDiskProvider>()
-                .Setup(c => c.GetFiles(targetDir, SearchOption.AllDirectories))
-                .Returns(new[] { Path.Combine(targetDir, "somefile.flac") });
-
-            Mocker.GetMock<IDiskProvider>()
-                .Setup(c => c.GetFileSize(It.IsAny<string>()))
-                .Returns(1000000);
-
-            Mocker.GetMock<IDiskScanService>().Setup(c => c.FilterPaths(It.IsAny<string>(), It.IsAny<IEnumerable<string>>()))
-                .Returns<string, IEnumerable<string>>((b, s) => s.ToList());
-
-            Mocker.GetMock<IDiskScanService>().Setup(c => c.FilterFiles(It.IsAny<string>(), It.IsAny<IEnumerable<IFileInfo>>()))
-                .Returns<string, IEnumerable<IFileInfo>>((b, s) => s.ToList());
-        }
-
-        protected void GivenChangedItem()
-        {
-            var currentSize = Mocker.GetMock<IDiskProvider>().Object.GetFileSize("abc");
-
-            Mocker.GetMock<IDiskProvider>()
-                .Setup(c => c.GetFileSize(It.IsAny<string>()))
-                .Returns(currentSize + 1);
-        }
-
-        private void VerifySingleItem(DownloadItemStatus status)
-        {
-            var items = Subject.GetItems(_completedDownloadFolder, TimeSpan.FromMilliseconds(50)).ToList();
-
-            items.Count.Should().Be(1);
-            items.First().Status.Should().Be(status);
-        }
-
-        [Test]
-        public void GetItems_should_considered_locked_files_queued()
-        {
-            GivenCompletedItem();
-
-            Mocker.GetMock<IDiskProvider>()
-                .Setup(c => c.IsFileLocked(It.IsAny<string>()))
-                .Returns(true);
-
-            Thread.Sleep(60);
+            GivenChangedItem();
 
             VerifySingleItem(DownloadItemStatus.Downloading);
+
+            Thread.Sleep(10);
         }
 
-        [Test]
-        public void GetItems_should_considered_changing_files_queued()
-        {
-            GivenCompletedItem();
+        // Until it remains unchanged for >=50ms.
+        Thread.Sleep(60);
 
-            VerifySingleItem(DownloadItemStatus.Downloading);
-
-            // If we keep changing the file every 20ms we should stay Downloading.
-            for (int i = 0; i < 10; i++)
-            {
-                TestLogger.Info("Iteration {0}", i);
-
-                GivenChangedItem();
-
-                VerifySingleItem(DownloadItemStatus.Downloading);
-
-                Thread.Sleep(10);
-            }
-
-            // Until it remains unchanged for >=50ms.
-            Thread.Sleep(60);
-
-            VerifySingleItem(DownloadItemStatus.Completed);
-        }
+        VerifySingleItem(DownloadItemStatus.Completed);
     }
 }

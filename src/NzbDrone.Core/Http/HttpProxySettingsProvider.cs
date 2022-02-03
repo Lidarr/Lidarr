@@ -4,55 +4,54 @@ using NzbDrone.Common.Http;
 using NzbDrone.Common.Http.Proxy;
 using NzbDrone.Core.Configuration;
 
-namespace NzbDrone.Core.Http
+namespace NzbDrone.Core.Http;
+
+public class HttpProxySettingsProvider : IHttpProxySettingsProvider
 {
-    public class HttpProxySettingsProvider : IHttpProxySettingsProvider
+    private readonly IConfigService _configService;
+
+    public HttpProxySettingsProvider(IConfigService configService)
     {
-        private readonly IConfigService _configService;
+        _configService = configService;
+    }
 
-        public HttpProxySettingsProvider(IConfigService configService)
+    public HttpProxySettings GetProxySettings(HttpUri uri)
+    {
+        var proxySettings = GetProxySettings();
+        if (proxySettings == null)
         {
-            _configService = configService;
+            return null;
         }
 
-        public HttpProxySettings GetProxySettings(HttpUri uri)
+        if (ShouldProxyBeBypassed(proxySettings, uri))
         {
-            var proxySettings = GetProxySettings();
-            if (proxySettings == null)
-            {
-                return null;
-            }
-
-            if (ShouldProxyBeBypassed(proxySettings, uri))
-            {
-                return null;
-            }
-
-            return proxySettings;
+            return null;
         }
 
-        public HttpProxySettings GetProxySettings()
-        {
-            if (!_configService.ProxyEnabled)
-            {
-                return null;
-            }
+        return proxySettings;
+    }
 
-            return new HttpProxySettings(_configService.ProxyType,
-                                _configService.ProxyHostname,
-                                _configService.ProxyPort,
-                                _configService.ProxyBypassFilter,
-                                _configService.ProxyBypassLocalAddresses,
-                                _configService.ProxyUsername,
-                                _configService.ProxyPassword);
+    public HttpProxySettings GetProxySettings()
+    {
+        if (!_configService.ProxyEnabled)
+        {
+            return null;
         }
 
-        public bool ShouldProxyBeBypassed(HttpProxySettings proxySettings, HttpUri url)
-        {
-            //We are utilizing the WebProxy implementation here to save us having to re-implement it. This way we use Microsofts implementation
-            var proxy = new WebProxy(proxySettings.Host + ":" + proxySettings.Port, proxySettings.BypassLocalAddress, proxySettings.BypassListAsArray);
+        return new HttpProxySettings(_configService.ProxyType,
+                                     _configService.ProxyHostname,
+                                     _configService.ProxyPort,
+                                     _configService.ProxyBypassFilter,
+                                     _configService.ProxyBypassLocalAddresses,
+                                     _configService.ProxyUsername,
+                                     _configService.ProxyPassword);
+    }
 
-            return proxy.IsBypassed((Uri)url);
-        }
+    public bool ShouldProxyBeBypassed(HttpProxySettings proxySettings, HttpUri url)
+    {
+        //We are utilizing the WebProxy implementation here to save us having to re-implement it. This way we use Microsofts implementation
+        var proxy = new WebProxy(proxySettings.Host + ":" + proxySettings.Port, proxySettings.BypassLocalAddress, proxySettings.BypassListAsArray);
+
+        return proxy.IsBypassed((Uri)url);
     }
 }

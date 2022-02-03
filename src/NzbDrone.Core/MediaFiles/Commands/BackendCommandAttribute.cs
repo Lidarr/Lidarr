@@ -1,8 +1,7 @@
 using System;
 
-namespace NzbDrone.Core.MediaFiles.Commands
+namespace NzbDrone.Core.MediaFiles.Commands;
+
+public class BackendCommandAttribute : Attribute
 {
-    public class BackendCommandAttribute : Attribute
-    {
-    }
 }

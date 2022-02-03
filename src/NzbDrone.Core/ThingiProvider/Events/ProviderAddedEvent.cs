@@ -1,14 +1,13 @@
 using NzbDrone.Common.Messaging;
 
-namespace NzbDrone.Core.ThingiProvider.Events
-{
-    public class ProviderAddedEvent<TProvider> : IEvent
-    {
-        public ProviderDefinition Definition { get; private set; }
+namespace NzbDrone.Core.ThingiProvider.Events;
 
-        public ProviderAddedEvent(ProviderDefinition definition)
-        {
-            Definition = definition;
-        }
+public class ProviderAddedEvent<TProvider> : IEvent
+{
+    public ProviderDefinition Definition { get; private set; }
+
+    public ProviderAddedEvent(ProviderDefinition definition)
+    {
+        Definition = definition;
     }
 }

@@ -1,40 +1,39 @@
 using NzbDrone.Common.EnvironmentInfo;
 
-namespace NzbDrone.Common.Http
+namespace NzbDrone.Common.Http;
+
+public interface IUserAgentBuilder
 {
-    public interface IUserAgentBuilder
+    string GetUserAgent(bool simplified = false);
+}
+
+public class UserAgentBuilder : IUserAgentBuilder
+{
+    private readonly string _userAgentSimplified;
+    private readonly string _userAgent;
+
+    public string GetUserAgent(bool simplified)
     {
-        string GetUserAgent(bool simplified = false);
+        if (simplified)
+        {
+            return _userAgentSimplified;
+        }
+
+        return _userAgent;
     }
 
-    public class UserAgentBuilder : IUserAgentBuilder
+    public UserAgentBuilder(IOsInfo osInfo)
     {
-        private readonly string _userAgentSimplified;
-        private readonly string _userAgent;
+        var osName = OsInfo.Os.ToString();
 
-        public string GetUserAgent(bool simplified)
+        if (!string.IsNullOrWhiteSpace(osInfo.Name))
         {
-            if (simplified)
-            {
-                return _userAgentSimplified;
-            }
-
-            return _userAgent;
+            osName = osInfo.Name.ToLower();
         }
 
-        public UserAgentBuilder(IOsInfo osInfo)
-        {
-            var osName = OsInfo.Os.ToString();
+        var osVersion = osInfo.Version?.ToLower();
 
-            if (!string.IsNullOrWhiteSpace(osInfo.Name))
-            {
-                osName = osInfo.Name.ToLower();
-            }
-
-            var osVersion = osInfo.Version?.ToLower();
-
-            _userAgent = $"{BuildInfo.AppName}/{BuildInfo.Version} ({osName} {osVersion})";
-            _userAgentSimplified = $"{BuildInfo.AppName}/{BuildInfo.Version.ToString(2)}";
-        }
+        _userAgent = $"{BuildInfo.AppName}/{BuildInfo.Version} ({osName} {osVersion})";
+        _userAgentSimplified = $"{BuildInfo.AppName}/{BuildInfo.Version.ToString(2)}";
     }
 }

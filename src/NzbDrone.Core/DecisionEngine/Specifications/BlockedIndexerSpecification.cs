@@ -7,40 +7,39 @@ using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications
+namespace NzbDrone.Core.DecisionEngine.Specifications;
+
+public class BlockedIndexerSpecification : IDecisionEngineSpecification
 {
-    public class BlockedIndexerSpecification : IDecisionEngineSpecification
+    private readonly IIndexerStatusService _indexerStatusService;
+    private readonly Logger _logger;
+
+    private readonly ICachedDictionary<IndexerStatus> _blockedIndexerCache;
+
+    public BlockedIndexerSpecification(IIndexerStatusService indexerStatusService, ICacheManager cacheManager, Logger logger)
     {
-        private readonly IIndexerStatusService _indexerStatusService;
-        private readonly Logger _logger;
+        _indexerStatusService = indexerStatusService;
+        _logger = logger;
 
-        private readonly ICachedDictionary<IndexerStatus> _blockedIndexerCache;
+        _blockedIndexerCache = cacheManager.GetCacheDictionary(GetType(), "blocked", FetchBlockedIndexer, TimeSpan.FromSeconds(15));
+    }
 
-        public BlockedIndexerSpecification(IIndexerStatusService indexerStatusService, ICacheManager cacheManager, Logger logger)
+    public SpecificationPriority Priority => SpecificationPriority.Database;
+    public RejectionType Type => RejectionType.Temporary;
+
+    public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
+    {
+        var status = _blockedIndexerCache.Find(subject.Release.IndexerId.ToString());
+        if (status != null)
         {
-            _indexerStatusService = indexerStatusService;
-            _logger = logger;
-
-            _blockedIndexerCache = cacheManager.GetCacheDictionary(GetType(), "blocked", FetchBlockedIndexer, TimeSpan.FromSeconds(15));
+            return Decision.Reject($"Indexer {subject.Release.Indexer} is blocked till {status.DisabledTill} due to failures, cannot grab release.");
         }
 
-        public SpecificationPriority Priority => SpecificationPriority.Database;
-        public RejectionType Type => RejectionType.Temporary;
+        return Decision.Accept();
+    }
 
-        public virtual Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
-        {
-            var status = _blockedIndexerCache.Find(subject.Release.IndexerId.ToString());
-            if (status != null)
-            {
-                return Decision.Reject($"Indexer {subject.Release.Indexer} is blocked till {status.DisabledTill} due to failures, cannot grab release.");
-            }
-
-            return Decision.Accept();
-        }
-
-        private IDictionary<string, IndexerStatus> FetchBlockedIndexer()
-        {
-            return _indexerStatusService.GetBlockedProviders().ToDictionary(v => v.ProviderId.ToString());
-        }
+    private IDictionary<string, IndexerStatus> FetchBlockedIndexer()
+    {
+        return _indexerStatusService.GetBlockedProviders().ToDictionary(v => v.ProviderId.ToString());
     }
 }

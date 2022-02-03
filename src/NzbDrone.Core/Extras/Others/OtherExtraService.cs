@@ -8,75 +8,74 @@ using NzbDrone.Core.Extras.Files;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 
-namespace NzbDrone.Core.Extras.Others
+namespace NzbDrone.Core.Extras.Others;
+
+public class OtherExtraService : ExtraFileManager<OtherExtraFile>
 {
-    public class OtherExtraService : ExtraFileManager<OtherExtraFile>
+    private readonly IOtherExtraFileService _otherExtraFileService;
+    private readonly IMediaFileAttributeService _mediaFileAttributeService;
+
+    public OtherExtraService(IConfigService configService,
+                             IDiskProvider diskProvider,
+                             IDiskTransferService diskTransferService,
+                             IOtherExtraFileService otherExtraFileService,
+                             IMediaFileAttributeService mediaFileAttributeService,
+                             Logger logger)
+        : base(configService, diskProvider, diskTransferService, logger)
     {
-        private readonly IOtherExtraFileService _otherExtraFileService;
-        private readonly IMediaFileAttributeService _mediaFileAttributeService;
+        _otherExtraFileService = otherExtraFileService;
+        _mediaFileAttributeService = mediaFileAttributeService;
+    }
 
-        public OtherExtraService(IConfigService configService,
-                                 IDiskProvider diskProvider,
-                                 IDiskTransferService diskTransferService,
-                                 IOtherExtraFileService otherExtraFileService,
-                                 IMediaFileAttributeService mediaFileAttributeService,
-                                 Logger logger)
-            : base(configService, diskProvider, diskTransferService, logger)
+    public override int Order => 2;
+
+    public override IEnumerable<ExtraFile> CreateAfterMediaCoverUpdate(Artist artist)
+    {
+        return Enumerable.Empty<ExtraFile>();
+    }
+
+    public override IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<TrackFile> trackFiles)
+    {
+        return Enumerable.Empty<ExtraFile>();
+    }
+
+    public override IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, TrackFile trackFile)
+    {
+        return Enumerable.Empty<ExtraFile>();
+    }
+
+    public override IEnumerable<ExtraFile> CreateAfterTrackFolder(Artist artist, Album album, string artistFolder, string albumFolder)
+    {
+        return Enumerable.Empty<ExtraFile>();
+    }
+
+    public override IEnumerable<ExtraFile> MoveFilesAfterRename(Artist artist, List<TrackFile> trackFiles)
+    {
+        var extraFiles = _otherExtraFileService.GetFilesByArtist(artist.Id);
+        var movedFiles = new List<OtherExtraFile>();
+
+        foreach (var trackFile in trackFiles)
         {
-            _otherExtraFileService = otherExtraFileService;
-            _mediaFileAttributeService = mediaFileAttributeService;
-        }
+            var extraFilesForTrackFile = extraFiles.Where(m => m.TrackFileId == trackFile.Id).ToList();
 
-        public override int Order => 2;
-
-        public override IEnumerable<ExtraFile> CreateAfterMediaCoverUpdate(Artist artist)
-        {
-            return Enumerable.Empty<ExtraFile>();
-        }
-
-        public override IEnumerable<ExtraFile> CreateAfterArtistScan(Artist artist, List<TrackFile> trackFiles)
-        {
-            return Enumerable.Empty<ExtraFile>();
-        }
-
-        public override IEnumerable<ExtraFile> CreateAfterTrackImport(Artist artist, TrackFile trackFile)
-        {
-            return Enumerable.Empty<ExtraFile>();
-        }
-
-        public override IEnumerable<ExtraFile> CreateAfterTrackFolder(Artist artist, Album album, string artistFolder, string albumFolder)
-        {
-            return Enumerable.Empty<ExtraFile>();
-        }
-
-        public override IEnumerable<ExtraFile> MoveFilesAfterRename(Artist artist, List<TrackFile> trackFiles)
-        {
-            var extraFiles = _otherExtraFileService.GetFilesByArtist(artist.Id);
-            var movedFiles = new List<OtherExtraFile>();
-
-            foreach (var trackFile in trackFiles)
+            foreach (var extraFile in extraFilesForTrackFile)
             {
-                var extraFilesForTrackFile = extraFiles.Where(m => m.TrackFileId == trackFile.Id).ToList();
-
-                foreach (var extraFile in extraFilesForTrackFile)
-                {
-                    movedFiles.AddIfNotNull(MoveFile(artist, trackFile, extraFile));
-                }
+                movedFiles.AddIfNotNull(MoveFile(artist, trackFile, extraFile));
             }
-
-            _otherExtraFileService.Upsert(movedFiles);
-
-            return movedFiles;
         }
 
-        public override ExtraFile Import(Artist artist, TrackFile trackFile, string path, string extension, bool readOnly)
-        {
-            var extraFile = ImportFile(artist, trackFile, path, readOnly, extension, null);
+        _otherExtraFileService.Upsert(movedFiles);
 
-            _mediaFileAttributeService.SetFilePermissions(path);
-            _otherExtraFileService.Upsert(extraFile);
+        return movedFiles;
+    }
 
-            return extraFile;
-        }
+    public override ExtraFile Import(Artist artist, TrackFile trackFile, string path, string extension, bool readOnly)
+    {
+        var extraFile = ImportFile(artist, trackFile, path, readOnly, extension, null);
+
+        _mediaFileAttributeService.SetFilePermissions(path);
+        _otherExtraFileService.Upsert(extraFile);
+
+        return extraFile;
     }
 }

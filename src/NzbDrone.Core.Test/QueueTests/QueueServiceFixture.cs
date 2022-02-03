@@ -13,66 +13,65 @@ using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Queue;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.QueueTests
+namespace NzbDrone.Core.Test.QueueTests;
+
+[TestFixture]
+public class QueueServiceFixture : CoreTest<QueueService>
 {
-    [TestFixture]
-    public class QueueServiceFixture : CoreTest<QueueService>
+    private List<TrackedDownload> _trackedDownloads;
+
+    [SetUp]
+    public void SetUp()
     {
-        private List<TrackedDownload> _trackedDownloads;
+        var downloadClientInfo = Builder<DownloadClientItemClientInfo>.CreateNew().Build();
 
-        [SetUp]
-        public void SetUp()
-        {
-            var downloadClientInfo = Builder<DownloadClientItemClientInfo>.CreateNew().Build();
+        var downloadItem = Builder<NzbDrone.Core.Download.DownloadClientItem>.CreateNew()
+                                                                             .With(v => v.RemainingTime = TimeSpan.FromSeconds(10))
+                                                                             .With(v => v.DownloadClientInfo = downloadClientInfo)
+                                                                             .Build();
 
-            var downloadItem = Builder<NzbDrone.Core.Download.DownloadClientItem>.CreateNew()
-                .With(v => v.RemainingTime = TimeSpan.FromSeconds(10))
-                .With(v => v.DownloadClientInfo = downloadClientInfo)
-                .Build();
+        var artist = Builder<Artist>.CreateNew()
+                                    .Build();
 
-            var artist = Builder<Artist>.CreateNew()
-                .Build();
+        var albums = Builder<Album>.CreateListOfSize(3)
+                                   .All()
+                                   .With(e => e.ArtistId = artist.Id)
+                                   .Build();
 
-            var albums = Builder<Album>.CreateListOfSize(3)
-                .All()
-                .With(e => e.ArtistId = artist.Id)
-                .Build();
+        var remoteAlbum = Builder<RemoteAlbum>.CreateNew()
+                                              .With(r => r.Artist = artist)
+                                              .With(r => r.Albums = new List<Album>(albums))
+                                              .With(r => r.ParsedAlbumInfo = new ParsedAlbumInfo())
+                                              .Build();
 
-            var remoteAlbum = Builder<RemoteAlbum>.CreateNew()
-                .With(r => r.Artist = artist)
-                .With(r => r.Albums = new List<Album>(albums))
-                .With(r => r.ParsedAlbumInfo = new ParsedAlbumInfo())
-                .Build();
+        _trackedDownloads = Builder<TrackedDownload>.CreateListOfSize(1)
+                                                    .All()
+                                                    .With(v => v.DownloadItem = downloadItem)
+                                                    .With(v => v.RemoteAlbum = remoteAlbum)
+                                                    .Build()
+                                                    .ToList();
 
-            _trackedDownloads = Builder<TrackedDownload>.CreateListOfSize(1)
-                .All()
-                .With(v => v.DownloadItem = downloadItem)
-                .With(v => v.RemoteAlbum = remoteAlbum)
-                .Build()
-                .ToList();
+        var historyItem = Builder<EntityHistory>.CreateNew()
+                                                .Build();
 
-            var historyItem = Builder<EntityHistory>.CreateNew()
-                .Build();
+        Mocker.GetMock<IHistoryService>()
+              .Setup(c => c.Find(It.IsAny<string>(), EntityHistoryEventType.Grabbed)).Returns(
+                                                                                              new List<EntityHistory> { historyItem });
+    }
 
-            Mocker.GetMock<IHistoryService>()
-                .Setup(c => c.Find(It.IsAny<string>(), EntityHistoryEventType.Grabbed)).Returns(
-                    new List<EntityHistory> { historyItem });
-        }
+    [Test]
+    public void queue_items_should_have_id()
+    {
+        Subject.Handle(new TrackedDownloadRefreshedEvent(_trackedDownloads));
 
-        [Test]
-        public void queue_items_should_have_id()
-        {
-            Subject.Handle(new TrackedDownloadRefreshedEvent(_trackedDownloads));
+        var queue = Subject.GetQueue();
 
-            var queue = Subject.GetQueue();
+        queue.Should().HaveCount(3);
 
-            queue.Should().HaveCount(3);
+        queue.All(v => v.Id > 0).Should().BeTrue();
 
-            queue.All(v => v.Id > 0).Should().BeTrue();
+        var distinct = queue.Select(v => v.Id).Distinct().ToArray();
 
-            var distinct = queue.Select(v => v.Id).Distinct().ToArray();
-
-            distinct.Should().HaveCount(3);
-        }
+        distinct.Should().HaveCount(3);
     }
 }

@@ -1,9 +1,8 @@
-namespace NzbDrone.Core.Notifications.Plex.PlexTv
+namespace NzbDrone.Core.Notifications.Plex.PlexTv;
+
+public class PlexTvPinResponse
 {
-    public class PlexTvPinResponse
-    {
-        public int Id { get; set; }
-        public string Code { get; set; }
-        public string AuthToken { get; set; }
-    }
+    public int Id { get; set; }
+    public string Code { get; set; }
+    public string AuthToken { get; set; }
 }

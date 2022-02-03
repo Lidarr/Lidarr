@@ -1,22 +1,21 @@
-namespace NzbDrone.Core.Download.Clients.Sabnzbd
+namespace NzbDrone.Core.Download.Clients.Sabnzbd;
+
+public enum SabnzbdDownloadStatus
 {
-    public enum SabnzbdDownloadStatus
-    {
-        Grabbing,
-        Queued,
-        Paused,
-        Checking,
-        Downloading,
-        QuickCheck,
-        Verifying,
-        Repairing,
-        Fetching,       // Fetching additional blocks
-        Extracting,
-        Moving,
-        Running,        // Running PP Script
-        Completed,
-        Failed,
-        Deleted,
-        Propagating
-    }
+    Grabbing,
+    Queued,
+    Paused,
+    Checking,
+    Downloading,
+    QuickCheck,
+    Verifying,
+    Repairing,
+    Fetching,       // Fetching additional blocks
+    Extracting,
+    Moving,
+    Running,        // Running PP Script
+    Completed,
+    Failed,
+    Deleted,
+    Propagating
 }

@@ -1,55 +1,54 @@
 using System;
 
-namespace NzbDrone.Core.Profiles.Qualities
+namespace NzbDrone.Core.Profiles.Qualities;
+
+public class QualityIndex : IComparable, IComparable<QualityIndex>
 {
-    public class QualityIndex : IComparable, IComparable<QualityIndex>
+    public int Index { get; set; }
+    public int GroupIndex { get; set; }
+
+    public QualityIndex()
     {
-        public int Index { get; set; }
-        public int GroupIndex { get; set; }
+        Index = 0;
+        GroupIndex = 0;
+    }
 
-        public QualityIndex()
+    public QualityIndex(int index)
+    {
+        Index = index;
+        GroupIndex = 0;
+    }
+
+    public QualityIndex(int index, int groupIndex)
+    {
+        Index = index;
+        GroupIndex = groupIndex;
+    }
+
+    public int CompareTo(object obj)
+    {
+        return CompareTo((QualityIndex)obj, true);
+    }
+
+    public int CompareTo(QualityIndex other)
+    {
+        return CompareTo(other, true);
+    }
+
+    public int CompareTo(QualityIndex right, bool respectGroupOrder)
+    {
+        if (right == null)
         {
-            Index = 0;
-            GroupIndex = 0;
+            return 1;
         }
 
-        public QualityIndex(int index)
+        var indexCompare = Index.CompareTo(right.Index);
+
+        if (respectGroupOrder && indexCompare == 0)
         {
-            Index = index;
-            GroupIndex = 0;
+            return GroupIndex.CompareTo(right.GroupIndex);
         }
 
-        public QualityIndex(int index, int groupIndex)
-        {
-            Index = index;
-            GroupIndex = groupIndex;
-        }
-
-        public int CompareTo(object obj)
-        {
-            return CompareTo((QualityIndex)obj, true);
-        }
-
-        public int CompareTo(QualityIndex other)
-        {
-            return CompareTo(other, true);
-        }
-
-        public int CompareTo(QualityIndex right, bool respectGroupOrder)
-        {
-            if (right == null)
-            {
-                return 1;
-            }
-
-            var indexCompare = Index.CompareTo(right.Index);
-
-            if (respectGroupOrder && indexCompare == 0)
-            {
-                return GroupIndex.CompareTo(right.GroupIndex);
-            }
-
-            return indexCompare;
-        }
+        return indexCompare;
     }
 }

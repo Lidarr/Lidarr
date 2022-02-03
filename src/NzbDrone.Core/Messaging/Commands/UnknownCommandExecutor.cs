@@ -1,19 +1,18 @@
 ﻿using NLog;
 
-namespace NzbDrone.Core.Messaging.Commands
+namespace NzbDrone.Core.Messaging.Commands;
+
+public class UnknownCommandExecutor : IExecute<UnknownCommand>
 {
-    public class UnknownCommandExecutor : IExecute<UnknownCommand>
+    private readonly Logger _logger;
+
+    public UnknownCommandExecutor(Logger logger)
     {
-        private readonly Logger _logger;
+        _logger = logger;
+    }
 
-        public UnknownCommandExecutor(Logger logger)
-        {
-            _logger = logger;
-        }
-
-        public void Execute(UnknownCommand message)
-        {
-            _logger.Debug("Ignoring unknown command {0}", message.ContractName);
-        }
+    public void Execute(UnknownCommand message)
+    {
+        _logger.Debug("Ignoring unknown command {0}", message.ContractName);
     }
 }

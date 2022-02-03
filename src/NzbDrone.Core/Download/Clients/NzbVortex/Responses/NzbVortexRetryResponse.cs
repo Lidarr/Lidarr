@@ -1,12 +1,11 @@
 ﻿using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Download.Clients.NzbVortex.Responses
-{
-    public class NzbVortexRetryResponse
-    {
-        public bool Status { get; set; }
+namespace NzbDrone.Core.Download.Clients.NzbVortex.Responses;
 
-        [JsonProperty(PropertyName = "nzo_id")]
-        public string Id { get; set; }
-    }
+public class NzbVortexRetryResponse
+{
+    public bool Status { get; set; }
+
+    [JsonProperty(PropertyName = "nzo_id")]
+    public string Id { get; set; }
 }

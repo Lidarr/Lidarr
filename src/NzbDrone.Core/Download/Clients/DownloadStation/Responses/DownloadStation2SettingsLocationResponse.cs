@@ -1,7 +1,6 @@
-﻿namespace NzbDrone.Core.Download.Clients.DownloadStation.Responses
+﻿namespace NzbDrone.Core.Download.Clients.DownloadStation.Responses;
+
+public class DownloadStation2SettingsLocationResponse
 {
-    public class DownloadStation2SettingsLocationResponse
-    {
-        public string Default_Destination { get; set; }
-    }
+    public string Default_Destination { get; set; }
 }

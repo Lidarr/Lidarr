@@ -5,52 +5,51 @@ using Lidarr.Http.REST;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.CustomFilters;
 
-namespace Lidarr.Api.V1.CustomFilters
+namespace Lidarr.Api.V1.CustomFilters;
+
+public class CustomFilterResource : RestResource
 {
-    public class CustomFilterResource : RestResource
+    public string Type { get; set; }
+    public string Label { get; set; }
+    public List<ExpandoObject> Filters { get; set; }
+}
+
+public static class CustomFilterResourceMapper
+{
+    public static CustomFilterResource ToResource(this CustomFilter model)
     {
-        public string Type { get; set; }
-        public string Label { get; set; }
-        public List<ExpandoObject> Filters { get; set; }
+        if (model == null)
+        {
+            return null;
+        }
+
+        return new CustomFilterResource
+               {
+                   Id = model.Id,
+                   Type = model.Type,
+                   Label = model.Label,
+                   Filters = STJson.Deserialize<List<ExpandoObject>>(model.Filters)
+               };
     }
 
-    public static class CustomFilterResourceMapper
+    public static CustomFilter ToModel(this CustomFilterResource resource)
     {
-        public static CustomFilterResource ToResource(this CustomFilter model)
+        if (resource == null)
         {
-            if (model == null)
-            {
-                return null;
-            }
-
-            return new CustomFilterResource
-            {
-                Id = model.Id,
-                Type = model.Type,
-                Label = model.Label,
-                Filters = STJson.Deserialize<List<ExpandoObject>>(model.Filters)
-            };
+            return null;
         }
 
-        public static CustomFilter ToModel(this CustomFilterResource resource)
-        {
-            if (resource == null)
-            {
-                return null;
-            }
+        return new CustomFilter
+               {
+                   Id = resource.Id,
+                   Type = resource.Type,
+                   Label = resource.Label,
+                   Filters = STJson.ToJson(resource.Filters)
+               };
+    }
 
-            return new CustomFilter
-            {
-                Id = resource.Id,
-                Type = resource.Type,
-                Label = resource.Label,
-                Filters = STJson.ToJson(resource.Filters)
-            };
-        }
-
-        public static List<CustomFilterResource> ToResource(this IEnumerable<CustomFilter> filters)
-        {
-            return filters.Select(ToResource).ToList();
-        }
+    public static List<CustomFilterResource> ToResource(this IEnumerable<CustomFilter> filters)
+    {
+        return filters.Select(ToResource).ToList();
     }
 }

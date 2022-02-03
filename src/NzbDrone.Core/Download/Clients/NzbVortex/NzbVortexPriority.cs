@@ -1,9 +1,8 @@
-﻿namespace NzbDrone.Core.Download.Clients.NzbVortex
+﻿namespace NzbDrone.Core.Download.Clients.NzbVortex;
+
+public enum NzbVortexPriority
 {
-    public enum NzbVortexPriority
-    {
-        Low = -1,
-        Normal = 0,
-        High = 1,
-    }
+    Low = -1,
+    Normal = 0,
+    High = 1,
 }

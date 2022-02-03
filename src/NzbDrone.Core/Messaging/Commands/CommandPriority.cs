@@ -1,9 +1,8 @@
-﻿namespace NzbDrone.Core.Messaging.Commands
+﻿namespace NzbDrone.Core.Messaging.Commands;
+
+public enum CommandPriority
 {
-    public enum CommandPriority
-    {
-        Low = -1,
-        Normal = 0,
-        High = 1
-    }
+    Low = -1,
+    Normal = 0,
+    High = 1
 }

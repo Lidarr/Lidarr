@@ -1,34 +1,33 @@
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
-namespace NzbDrone.Core.Indexers
+namespace NzbDrone.Core.Indexers;
+
+public class RssIndexerRequestGenerator : IIndexerRequestGenerator
 {
-    public class RssIndexerRequestGenerator : IIndexerRequestGenerator
+    private readonly string _baseUrl;
+
+    public RssIndexerRequestGenerator(string baseUrl)
     {
-        private readonly string _baseUrl;
+        _baseUrl = baseUrl;
+    }
 
-        public RssIndexerRequestGenerator(string baseUrl)
-        {
-            _baseUrl = baseUrl;
-        }
+    public virtual IndexerPageableRequestChain GetRecentRequests()
+    {
+        var pageableRequests = new IndexerPageableRequestChain();
 
-        public virtual IndexerPageableRequestChain GetRecentRequests()
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
+        pageableRequests.Add(new[] { new IndexerRequest(_baseUrl, HttpAccept.Rss) });
 
-            pageableRequests.Add(new[] { new IndexerRequest(_baseUrl, HttpAccept.Rss) });
+        return pageableRequests;
+    }
 
-            return pageableRequests;
-        }
+    public virtual IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
+    {
+        throw new System.NotImplementedException();
+    }
 
-        public virtual IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public virtual IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
-        {
-            throw new System.NotImplementedException();
-        }
+    public virtual IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
+    {
+        throw new System.NotImplementedException();
     }
 }

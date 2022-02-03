@@ -1,9 +1,8 @@
 ﻿using NzbDrone.Core.Datastore;
 
-namespace NzbDrone.Core.Tags
+namespace NzbDrone.Core.Tags;
+
+public class Tag : ModelBase
 {
-    public class Tag : ModelBase
-    {
-        public string Label { get; set; }
-    }
+    public string Label { get; set; }
 }

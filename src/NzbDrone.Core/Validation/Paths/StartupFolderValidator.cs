@@ -2,26 +2,25 @@
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 
-namespace NzbDrone.Core.Validation.Paths
+namespace NzbDrone.Core.Validation.Paths;
+
+public class StartupFolderValidator : PropertyValidator
 {
-    public class StartupFolderValidator : PropertyValidator
+    private readonly IAppFolderInfo _appFolderInfo;
+
+    public StartupFolderValidator(IAppFolderInfo appFolderInfo)
+        : base("Path cannot be an ancestor of the start up folder")
     {
-        private readonly IAppFolderInfo _appFolderInfo;
+        _appFolderInfo = appFolderInfo;
+    }
 
-        public StartupFolderValidator(IAppFolderInfo appFolderInfo)
-            : base("Path cannot be an ancestor of the start up folder")
+    protected override bool IsValid(PropertyValidatorContext context)
+    {
+        if (context.PropertyValue == null)
         {
-            _appFolderInfo = appFolderInfo;
+            return true;
         }
 
-        protected override bool IsValid(PropertyValidatorContext context)
-        {
-            if (context.PropertyValue == null)
-            {
-                return true;
-            }
-
-            return !_appFolderInfo.StartUpFolder.IsParentPath(context.PropertyValue.ToString());
-        }
+        return !_appFolderInfo.StartUpFolder.IsParentPath(context.PropertyValue.ToString());
     }
 }

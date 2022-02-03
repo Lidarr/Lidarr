@@ -1,8 +1,7 @@
-﻿namespace NzbDrone.Core.Download.Clients.Nzbget
+﻿namespace NzbDrone.Core.Download.Clients.Nzbget;
+
+public class NzbgetConfigItem
 {
-    public class NzbgetConfigItem
-    {
-        public string Name { get; set; }
-        public string Value { get; set; }
-    }
+    public string Name { get; set; }
+    public string Value { get; set; }
 }

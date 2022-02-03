@@ -4,26 +4,25 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Download.Clients.RTorrent;
 using NzbDrone.Core.Validation.Paths;
 
-namespace NzbDrone.Core.Download.Clients.rTorrent
-{
-    public interface IRTorrentDirectoryValidator
-    {
-        ValidationResult Validate(RTorrentSettings instance);
-    }
+namespace NzbDrone.Core.Download.Clients.rTorrent;
 
-    public class RTorrentDirectoryValidator : AbstractValidator<RTorrentSettings>, IRTorrentDirectoryValidator
+public interface IRTorrentDirectoryValidator
+{
+    ValidationResult Validate(RTorrentSettings instance);
+}
+
+public class RTorrentDirectoryValidator : AbstractValidator<RTorrentSettings>, IRTorrentDirectoryValidator
+{
+    public RTorrentDirectoryValidator(RootFolderValidator rootFolderValidator,
+                                      PathExistsValidator pathExistsValidator,
+                                      MappedNetworkDriveValidator mappedNetworkDriveValidator)
     {
-        public RTorrentDirectoryValidator(RootFolderValidator rootFolderValidator,
-                                          PathExistsValidator pathExistsValidator,
-                                          MappedNetworkDriveValidator mappedNetworkDriveValidator)
-        {
-            RuleFor(c => c.MusicDirectory).Cascade(CascadeMode.StopOnFirstFailure)
-                                       .IsValidPath()
-                                       .SetValidator(rootFolderValidator)
-                                       .SetValidator(mappedNetworkDriveValidator)
-                                       .SetValidator(pathExistsValidator)
-                                       .When(c => c.MusicDirectory.IsNotNullOrWhiteSpace())
-                                       .When(c => c.Host == "localhost" || c.Host == "127.0.0.1");
-        }
+        RuleFor(c => c.MusicDirectory).Cascade(CascadeMode.StopOnFirstFailure)
+                                      .IsValidPath()
+                                      .SetValidator(rootFolderValidator)
+                                      .SetValidator(mappedNetworkDriveValidator)
+                                      .SetValidator(pathExistsValidator)
+                                      .When(c => c.MusicDirectory.IsNotNullOrWhiteSpace())
+                                      .When(c => c.Host == "localhost" || c.Host == "127.0.0.1");
     }
 }

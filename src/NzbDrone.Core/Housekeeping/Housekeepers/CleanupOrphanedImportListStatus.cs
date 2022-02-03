@@ -1,28 +1,27 @@
 using Dapper;
 using NzbDrone.Core.Datastore;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace NzbDrone.Core.Housekeeping.Housekeepers;
+
+public class CleanupOrphanedImportListStatus : IHousekeepingTask
 {
-    public class CleanupOrphanedImportListStatus : IHousekeepingTask
+    private readonly IMainDatabase _database;
+
+    public CleanupOrphanedImportListStatus(IMainDatabase database)
     {
-        private readonly IMainDatabase _database;
+        _database = database;
+    }
 
-        public CleanupOrphanedImportListStatus(IMainDatabase database)
+    public void Clean()
+    {
+        using (var mapper = _database.OpenConnection())
         {
-            _database = database;
-        }
-
-        public void Clean()
-        {
-            using (var mapper = _database.OpenConnection())
-            {
-                mapper.Execute(@"DELETE FROM ImportListStatus
+            mapper.Execute(@"DELETE FROM ImportListStatus
                                      WHERE Id IN (
                                      SELECT ImportListStatus.Id FROM ImportListStatus
                                      LEFT OUTER JOIN ImportLists
                                      ON ImportListStatus.ProviderId = ImportLists.Id
                                      WHERE ImportLists.Id IS NULL)");
-            }
         }
     }
 }

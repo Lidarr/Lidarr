@@ -1,69 +1,68 @@
 using System;
 
-namespace NzbDrone.Common.TPL
+namespace NzbDrone.Common.TPL;
+
+public class Debouncer
 {
-    public class Debouncer
+    private readonly Action _action;
+    private readonly System.Timers.Timer _timer;
+    private readonly bool _executeRestartsTimer;
+
+    private volatile int _paused;
+    private volatile bool _triggered;
+
+    public Debouncer(Action action, TimeSpan debounceDuration, bool executeRestartsTimer = false)
     {
-        private readonly Action _action;
-        private readonly System.Timers.Timer _timer;
-        private readonly bool _executeRestartsTimer;
+        _action = action;
+        _timer = new System.Timers.Timer(debounceDuration.TotalMilliseconds);
+        _timer.Elapsed += timer_Elapsed;
+        _executeRestartsTimer = executeRestartsTimer;
+    }
 
-        private volatile int _paused;
-        private volatile bool _triggered;
-
-        public Debouncer(Action action, TimeSpan debounceDuration, bool executeRestartsTimer = false)
+    private void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_paused == 0)
         {
-            _action = action;
-            _timer = new System.Timers.Timer(debounceDuration.TotalMilliseconds);
-            _timer.Elapsed += timer_Elapsed;
-            _executeRestartsTimer = executeRestartsTimer;
+            _triggered = false;
+            _timer.Stop();
+            _action();
         }
+    }
 
-        private void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+    public void Execute()
+    {
+        lock (_timer)
         {
+            _triggered = true;
+            if (_executeRestartsTimer)
+            {
+                _timer.Stop();
+            }
+
             if (_paused == 0)
             {
-                _triggered = false;
-                _timer.Stop();
-                _action();
+                _timer.Start();
             }
         }
+    }
 
-        public void Execute()
+    public void Pause()
+    {
+        lock (_timer)
         {
-            lock (_timer)
-            {
-                _triggered = true;
-                if (_executeRestartsTimer)
-                {
-                    _timer.Stop();
-                }
-
-                if (_paused == 0)
-                {
-                    _timer.Start();
-                }
-            }
+            _paused++;
+            _timer.Stop();
         }
+    }
 
-        public void Pause()
+    public void Resume()
+    {
+        lock (_timer)
         {
-            lock (_timer)
+            _paused--;
+            if (_paused == 0 && _triggered)
             {
-                _paused++;
-                _timer.Stop();
-            }
-        }
-
-        public void Resume()
-        {
-            lock (_timer)
-            {
-                _paused--;
-                if (_paused == 0 && _triggered)
-                {
-                    _timer.Start();
-                }
+                _timer.Start();
             }
         }
     }

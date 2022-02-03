@@ -1,29 +1,28 @@
 using System.Collections.Generic;
 using NzbDrone.Core.Datastore;
 
-namespace NzbDrone.Core.Music
+namespace NzbDrone.Core.Music;
+
+public class MonitoringOptions : IEmbeddedDocument
 {
-    public class MonitoringOptions : IEmbeddedDocument
+    public MonitoringOptions()
     {
-        public MonitoringOptions()
-        {
-            AlbumsToMonitor = new List<string>();
-        }
-
-        public MonitorTypes Monitor { get; set; }
-        public List<string> AlbumsToMonitor { get; set; }
-        public bool Monitored { get; set; }
+        AlbumsToMonitor = new List<string>();
     }
 
-    public enum MonitorTypes
-    {
-        All,
-        Future,
-        Missing,
-        Existing,
-        Latest,
-        First,
-        None,
-        Unknown
-    }
+    public MonitorTypes Monitor { get; set; }
+    public List<string> AlbumsToMonitor { get; set; }
+    public bool Monitored { get; set; }
+}
+
+public enum MonitorTypes
+{
+    All,
+    Future,
+    Missing,
+    Existing,
+    Latest,
+    First,
+    None,
+    Unknown
 }

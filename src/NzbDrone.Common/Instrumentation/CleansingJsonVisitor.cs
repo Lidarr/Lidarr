@@ -1,44 +1,43 @@
 ﻿using Newtonsoft.Json.Linq;
 using NzbDrone.Common.Serializer;
 
-namespace NzbDrone.Common.Instrumentation
+namespace NzbDrone.Common.Instrumentation;
+
+public class CleansingJsonVisitor : JsonVisitor
 {
-    public class CleansingJsonVisitor : JsonVisitor
+    public override void Visit(JArray json)
     {
-        public override void Visit(JArray json)
+        for (var i = 0; i < json.Count; i++)
         {
-            for (var i = 0; i < json.Count; i++)
+            if (json[i].Type == JTokenType.String)
             {
-                if (json[i].Type == JTokenType.String)
-                {
-                    var text = json[i].Value<string>();
-                    json[i] = new JValue(CleanseLogMessage.Cleanse(text));
-                }
-            }
-
-            foreach (JToken token in json)
-            {
-                Visit(token);
+                var text = json[i].Value<string>();
+                json[i] = new JValue(CleanseLogMessage.Cleanse(text));
             }
         }
 
-        public override void Visit(JProperty property)
+        foreach (JToken token in json)
         {
-            if (property.Value.Type == JTokenType.String)
-            {
-                property.Value = CleanseValue(property.Value as JValue);
-            }
-            else
-            {
-                base.Visit(property);
-            }
+            Visit(token);
         }
+    }
 
-        private JValue CleanseValue(JValue value)
+    public override void Visit(JProperty property)
+    {
+        if (property.Value.Type == JTokenType.String)
         {
-            var text = value.Value<string>();
-            var cleansed = CleanseLogMessage.Cleanse(text);
-            return new JValue(cleansed);
+            property.Value = CleanseValue(property.Value as JValue);
         }
+        else
+        {
+            base.Visit(property);
+        }
+    }
+
+    private JValue CleanseValue(JValue value)
+    {
+        var text = value.Value<string>();
+        var cleansed = CleanseLogMessage.Cleanse(text);
+        return new JValue(cleansed);
     }
 }

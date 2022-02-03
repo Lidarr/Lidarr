@@ -1,10 +1,9 @@
-﻿namespace NzbDrone.Core.IndexerSearch.Definitions
+﻿namespace NzbDrone.Core.IndexerSearch.Definitions;
+
+public class ArtistSearchCriteria : SearchCriteriaBase
 {
-    public class ArtistSearchCriteria : SearchCriteriaBase
+    public override string ToString()
     {
-        public override string ToString()
-        {
-            return $"[{Artist.Name}]";
-        }
+        return $"[{Artist.Name}]";
     }
 }

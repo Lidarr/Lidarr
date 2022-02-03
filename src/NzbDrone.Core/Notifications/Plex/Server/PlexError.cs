@@ -1,7 +1,6 @@
-namespace NzbDrone.Core.Notifications.Plex.Server
+namespace NzbDrone.Core.Notifications.Plex.Server;
+
+public class PlexError
 {
-    public class PlexError
-    {
-        public string Error { get; set; }
-    }
+    public string Error { get; set; }
 }

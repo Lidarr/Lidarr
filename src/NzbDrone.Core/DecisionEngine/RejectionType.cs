@@ -1,8 +1,7 @@
-﻿namespace NzbDrone.Core.DecisionEngine
+﻿namespace NzbDrone.Core.DecisionEngine;
+
+public enum RejectionType
 {
-    public enum RejectionType
-    {
-        Permanent = 0,
-        Temporary = 1
-    }
+    Permanent = 0,
+    Temporary = 1
 }

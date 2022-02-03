@@ -2,21 +2,20 @@ using System;
 using System.Text;
 using NzbDrone.Core.Indexers.Newznab;
 
-namespace NzbDrone.Core.Indexers.Headphones
+namespace NzbDrone.Core.Indexers.Headphones;
+
+public class HeadphonesRssParser : NewznabRssParser
 {
-    public class HeadphonesRssParser : NewznabRssParser
+    public HeadphonesSettings Settings { get; set; }
+
+    public HeadphonesRssParser()
     {
-        public HeadphonesSettings Settings { get; set; }
+        PreferredEnclosureMimeTypes = UsenetEnclosureMimeTypes;
+        UseEnclosureUrl = true;
+    }
 
-        public HeadphonesRssParser()
-        {
-            PreferredEnclosureMimeTypes = UsenetEnclosureMimeTypes;
-            UseEnclosureUrl = true;
-        }
-
-        protected override string GetBasicAuth()
-        {
-            return Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1").GetBytes($"{Settings.Username}:{Settings.Password}"));
-        }
+    protected override string GetBasicAuth()
+    {
+        return Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1").GetBytes($"{Settings.Username}:{Settings.Password}"));
     }
 }

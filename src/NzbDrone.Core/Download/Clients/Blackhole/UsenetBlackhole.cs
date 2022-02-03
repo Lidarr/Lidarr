@@ -11,95 +11,94 @@ using NzbDrone.Core.Organizer;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.RemotePathMappings;
 
-namespace NzbDrone.Core.Download.Clients.Blackhole
+namespace NzbDrone.Core.Download.Clients.Blackhole;
+
+public class UsenetBlackhole : UsenetClientBase<UsenetBlackholeSettings>
 {
-    public class UsenetBlackhole : UsenetClientBase<UsenetBlackholeSettings>
+    private readonly IScanWatchFolder _scanWatchFolder;
+
+    public TimeSpan ScanGracePeriod { get; set; }
+
+    public UsenetBlackhole(IScanWatchFolder scanWatchFolder,
+                           IHttpClient httpClient,
+                           IConfigService configService,
+                           IDiskProvider diskProvider,
+                           IRemotePathMappingService remotePathMappingService,
+                           IValidateNzbs nzbValidationService,
+                           Logger logger)
+        : base(httpClient, configService, diskProvider, remotePathMappingService, nzbValidationService, logger)
     {
-        private readonly IScanWatchFolder _scanWatchFolder;
+        _scanWatchFolder = scanWatchFolder;
 
-        public TimeSpan ScanGracePeriod { get; set; }
+        ScanGracePeriod = TimeSpan.FromSeconds(30);
+    }
 
-        public UsenetBlackhole(IScanWatchFolder scanWatchFolder,
-                               IHttpClient httpClient,
-                               IConfigService configService,
-                               IDiskProvider diskProvider,
-                               IRemotePathMappingService remotePathMappingService,
-                               IValidateNzbs nzbValidationService,
-                               Logger logger)
-            : base(httpClient, configService, diskProvider, remotePathMappingService, nzbValidationService, logger)
+    protected override string AddFromNzbFile(RemoteAlbum remoteAlbum, string filename, byte[] fileContent)
+    {
+        var title = remoteAlbum.Release.Title;
+
+        title = FileNameBuilder.CleanFileName(title);
+
+        var filepath = Path.Combine(Settings.NzbFolder, title + ".nzb");
+
+        using (var stream = _diskProvider.OpenWriteStream(filepath))
         {
-            _scanWatchFolder = scanWatchFolder;
-
-            ScanGracePeriod = TimeSpan.FromSeconds(30);
+            stream.Write(fileContent, 0, fileContent.Length);
         }
 
-        protected override string AddFromNzbFile(RemoteAlbum remoteAlbum, string filename, byte[] fileContent)
+        _logger.Debug("NZB Download succeeded, saved to: {0}", filepath);
+
+        return null;
+    }
+
+    public override string Name => "Usenet Blackhole";
+
+    public override IEnumerable<DownloadClientItem> GetItems()
+    {
+        foreach (var item in _scanWatchFolder.GetItems(Settings.WatchFolder, ScanGracePeriod))
         {
-            var title = remoteAlbum.Release.Title;
+            yield return new DownloadClientItem
+                         {
+                             DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this),
+                             DownloadId = Definition.Name + "_" + item.DownloadId,
+                             Category = "Lidarr",
+                             Title = item.Title,
 
-            title = FileNameBuilder.CleanFileName(title);
+                             TotalSize = item.TotalSize,
+                             RemainingTime = item.RemainingTime,
 
-            var filepath = Path.Combine(Settings.NzbFolder, title + ".nzb");
+                             OutputPath = item.OutputPath,
 
-            using (var stream = _diskProvider.OpenWriteStream(filepath))
-            {
-                stream.Write(fileContent, 0, fileContent.Length);
-            }
+                             Status = item.Status,
 
-            _logger.Debug("NZB Download succeeded, saved to: {0}", filepath);
+                             CanBeRemoved = true,
+                             CanMoveFiles = true
+                         };
+        }
+    }
 
-            return null;
+    public override void RemoveItem(DownloadClientItem item, bool deleteData)
+    {
+        if (!deleteData)
+        {
+            throw new NotSupportedException("Blackhole cannot remove DownloadItem without deleting the data as well, ignoring.");
         }
 
-        public override string Name => "Usenet Blackhole";
+        DeleteItemData(item);
+    }
 
-        public override IEnumerable<DownloadClientItem> GetItems()
-        {
-            foreach (var item in _scanWatchFolder.GetItems(Settings.WatchFolder, ScanGracePeriod))
-            {
-                yield return new DownloadClientItem
-                {
-                    DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this),
-                    DownloadId = Definition.Name + "_" + item.DownloadId,
-                    Category = "Lidarr",
-                    Title = item.Title,
+    public override DownloadClientInfo GetStatus()
+    {
+        return new DownloadClientInfo
+               {
+                   IsLocalhost = true,
+                   OutputRootFolders = new List<OsPath> { new OsPath(Settings.WatchFolder) }
+               };
+    }
 
-                    TotalSize = item.TotalSize,
-                    RemainingTime = item.RemainingTime,
-
-                    OutputPath = item.OutputPath,
-
-                    Status = item.Status,
-
-                    CanBeRemoved = true,
-                    CanMoveFiles = true
-                };
-            }
-        }
-
-        public override void RemoveItem(DownloadClientItem item, bool deleteData)
-        {
-            if (!deleteData)
-            {
-                throw new NotSupportedException("Blackhole cannot remove DownloadItem without deleting the data as well, ignoring.");
-            }
-
-            DeleteItemData(item);
-        }
-
-        public override DownloadClientInfo GetStatus()
-        {
-            return new DownloadClientInfo
-            {
-                IsLocalhost = true,
-                OutputRootFolders = new List<OsPath> { new OsPath(Settings.WatchFolder) }
-            };
-        }
-
-        protected override void Test(List<ValidationFailure> failures)
-        {
-            failures.AddIfNotNull(TestFolder(Settings.NzbFolder, "NzbFolder"));
-            failures.AddIfNotNull(TestFolder(Settings.WatchFolder, "WatchFolder"));
-        }
+    protected override void Test(List<ValidationFailure> failures)
+    {
+        failures.AddIfNotNull(TestFolder(Settings.NzbFolder, "NzbFolder"));
+        failures.AddIfNotNull(TestFolder(Settings.WatchFolder, "WatchFolder"));
     }
 }

@@ -11,122 +11,121 @@ using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Backup;
 
-namespace Lidarr.Api.V1.System.Backup
+namespace Lidarr.Api.V1.System.Backup;
+
+[V1ApiController("system/backup")]
+public class BackupController : Controller
 {
-    [V1ApiController("system/backup")]
-    public class BackupController : Controller
-    {
-        private readonly IBackupService _backupService;
-        private readonly IAppFolderInfo _appFolderInfo;
-        private readonly IDiskProvider _diskProvider;
+    private readonly IBackupService _backupService;
+    private readonly IAppFolderInfo _appFolderInfo;
+    private readonly IDiskProvider _diskProvider;
 
-        private static readonly List<string> ValidExtensions = new List<string> { ".zip", ".db", ".xml" };
+    private static readonly List<string> ValidExtensions = new List<string> { ".zip", ".db", ".xml" };
 
-        public BackupController(IBackupService backupService,
+    public BackupController(IBackupService backupService,
                             IAppFolderInfo appFolderInfo,
                             IDiskProvider diskProvider)
+    {
+        _backupService = backupService;
+        _appFolderInfo = appFolderInfo;
+        _diskProvider = diskProvider;
+    }
+
+    [HttpGet]
+    public List<BackupResource> GetBackupFiles()
+    {
+        var backups = _backupService.GetBackups();
+
+        return backups.Select(b => new BackupResource
+                                   {
+                                       Id = GetBackupId(b),
+                                       Name = b.Name,
+                                       Path = $"/backup/{b.Type.ToString().ToLower()}/{b.Name}",
+                                       Type = b.Type,
+                                       Time = b.Time
+                                   })
+                      .OrderByDescending(b => b.Time)
+                      .ToList();
+    }
+
+    [RestDeleteById]
+    public void DeleteBackup(int id)
+    {
+        var backup = GetBackup(id);
+        var path = GetBackupPath(backup);
+
+        if (!_diskProvider.FileExists(path))
         {
-            _backupService = backupService;
-            _appFolderInfo = appFolderInfo;
-            _diskProvider = diskProvider;
+            throw new NotFoundException();
         }
 
-        [HttpGet]
-        public List<BackupResource> GetBackupFiles()
-        {
-            var backups = _backupService.GetBackups();
+        _diskProvider.DeleteFile(path);
+    }
 
-            return backups.Select(b => new BackupResource
-            {
-                Id = GetBackupId(b),
-                Name = b.Name,
-                Path = $"/backup/{b.Type.ToString().ToLower()}/{b.Name}",
-                Type = b.Type,
-                Time = b.Time
-            })
-                                       .OrderByDescending(b => b.Time)
-                                       .ToList();
+    [HttpPost("restore/{id:int}")]
+    public object Restore(int id)
+    {
+        var backup = GetBackup(id);
+
+        if (backup == null)
+        {
+            throw new NotFoundException();
         }
 
-        [RestDeleteById]
-        public void DeleteBackup(int id)
+        var path = GetBackupPath(backup);
+
+        _backupService.Restore(path);
+
+        return new
+               {
+                   RestartRequired = true
+               };
+    }
+
+    [HttpPost("restore/upload")]
+    public object UploadAndRestore()
+    {
+        var files = Request.Form.Files;
+
+        if (files.Empty())
         {
-            var backup = GetBackup(id);
-            var path = GetBackupPath(backup);
-
-            if (!_diskProvider.FileExists(path))
-            {
-                throw new NotFoundException();
-            }
-
-            _diskProvider.DeleteFile(path);
+            throw new BadRequestException("file must be provided");
         }
 
-        [HttpPost("restore/{id:int}")]
-        public object Restore(int id)
+        var file = files.First();
+        var extension = Path.GetExtension(file.FileName);
+
+        if (!ValidExtensions.Contains(extension))
         {
-            var backup = GetBackup(id);
-
-            if (backup == null)
-            {
-                throw new NotFoundException();
-            }
-
-            var path = GetBackupPath(backup);
-
-            _backupService.Restore(path);
-
-            return new
-            {
-                RestartRequired = true
-            };
+            throw new UnsupportedMediaTypeException($"Invalid extension, must be one of: {ValidExtensions.Join(", ")}");
         }
 
-        [HttpPost("restore/upload")]
-        public object UploadAndRestore()
-        {
-            var files = Request.Form.Files;
+        var path = Path.Combine(_appFolderInfo.TempFolder, $"lidarr_backup_restore{extension}");
 
-            if (files.Empty())
-            {
-                throw new BadRequestException("file must be provided");
-            }
+        _diskProvider.SaveStream(file.OpenReadStream(), path);
+        _backupService.Restore(path);
 
-            var file = files.First();
-            var extension = Path.GetExtension(file.FileName);
+        // Cleanup restored file
+        _diskProvider.DeleteFile(path);
 
-            if (!ValidExtensions.Contains(extension))
-            {
-                throw new UnsupportedMediaTypeException($"Invalid extension, must be one of: {ValidExtensions.Join(", ")}");
-            }
+        return new
+               {
+                   RestartRequired = true
+               };
+    }
 
-            var path = Path.Combine(_appFolderInfo.TempFolder, $"lidarr_backup_restore{extension}");
+    private string GetBackupPath(NzbDrone.Core.Backup.Backup backup)
+    {
+        return Path.Combine(_backupService.GetBackupFolder(backup.Type), backup.Name);
+    }
 
-            _diskProvider.SaveStream(file.OpenReadStream(), path);
-            _backupService.Restore(path);
+    private int GetBackupId(NzbDrone.Core.Backup.Backup backup)
+    {
+        return HashConverter.GetHashInt31($"backup-{backup.Type}-{backup.Name}");
+    }
 
-            // Cleanup restored file
-            _diskProvider.DeleteFile(path);
-
-            return new
-            {
-                RestartRequired = true
-            };
-        }
-
-        private string GetBackupPath(NzbDrone.Core.Backup.Backup backup)
-        {
-            return Path.Combine(_backupService.GetBackupFolder(backup.Type), backup.Name);
-        }
-
-        private int GetBackupId(NzbDrone.Core.Backup.Backup backup)
-        {
-            return HashConverter.GetHashInt31($"backup-{backup.Type}-{backup.Name}");
-        }
-
-        private NzbDrone.Core.Backup.Backup GetBackup(int id)
-        {
-            return _backupService.GetBackups().SingleOrDefault(b => GetBackupId(b) == id);
-        }
+    private NzbDrone.Core.Backup.Backup GetBackup(int id)
+    {
+        return _backupService.GetBackups().SingleOrDefault(b => GetBackupId(b) == id);
     }
 }

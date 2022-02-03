@@ -3,49 +3,48 @@ using System.Text.RegularExpressions;
 using NzbDrone.Common.Cache;
 using NzbDrone.Core.Profiles.Releases.TermMatchers;
 
-namespace NzbDrone.Core.Profiles.Releases
+namespace NzbDrone.Core.Profiles.Releases;
+
+public interface ITermMatcherService
 {
-    public interface ITermMatcherService
+    bool IsMatch(string term, string value);
+    string MatchingTerm(string term, string value);
+}
+
+public class TermMatcherService : ITermMatcherService
+{
+    private ICached<ITermMatcher> _matcherCache;
+
+    public TermMatcherService(ICacheManager cacheManager)
     {
-        bool IsMatch(string term, string value);
-        string MatchingTerm(string term, string value);
+        _matcherCache = cacheManager.GetCache<ITermMatcher>(GetType());
     }
 
-    public class TermMatcherService : ITermMatcherService
+    public bool IsMatch(string term, string value)
     {
-        private ICached<ITermMatcher> _matcherCache;
+        return GetMatcher(term).IsMatch(value);
+    }
 
-        public TermMatcherService(ICacheManager cacheManager)
+    public string MatchingTerm(string term, string value)
+    {
+        return GetMatcher(term).MatchingTerm(value);
+    }
+
+    public ITermMatcher GetMatcher(string term)
+    {
+        return _matcherCache.Get(term, () => CreateMatcherInternal(term), TimeSpan.FromHours(24));
+    }
+
+    private ITermMatcher CreateMatcherInternal(string term)
+    {
+        Regex regex;
+        if (PerlRegexFactory.TryCreateRegex(term, out regex))
         {
-            _matcherCache = cacheManager.GetCache<ITermMatcher>(GetType());
+            return new RegexTermMatcher(regex);
         }
-
-        public bool IsMatch(string term, string value)
+        else
         {
-            return GetMatcher(term).IsMatch(value);
-        }
-
-        public string MatchingTerm(string term, string value)
-        {
-            return GetMatcher(term).MatchingTerm(value);
-        }
-
-        public ITermMatcher GetMatcher(string term)
-        {
-            return _matcherCache.Get(term, () => CreateMatcherInternal(term), TimeSpan.FromHours(24));
-        }
-
-        private ITermMatcher CreateMatcherInternal(string term)
-        {
-            Regex regex;
-            if (PerlRegexFactory.TryCreateRegex(term, out regex))
-            {
-                return new RegexTermMatcher(regex);
-            }
-            else
-            {
-                return new CaseInsensitiveTermMatcher(term);
-            }
+            return new CaseInsensitiveTermMatcher(term);
         }
     }
 }

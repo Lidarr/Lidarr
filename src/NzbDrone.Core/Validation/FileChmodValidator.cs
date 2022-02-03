@@ -1,26 +1,25 @@
 using FluentValidation.Validators;
 using NzbDrone.Common.Disk;
 
-namespace NzbDrone.Core.Validation
+namespace NzbDrone.Core.Validation;
+
+public class FolderChmodValidator : PropertyValidator
 {
-    public class FolderChmodValidator : PropertyValidator
+    private readonly IDiskProvider _diskProvider;
+
+    public FolderChmodValidator(IDiskProvider diskProvider)
+        : base("Must contain a valid Unix permissions octal")
     {
-        private readonly IDiskProvider _diskProvider;
+        _diskProvider = diskProvider;
+    }
 
-        public FolderChmodValidator(IDiskProvider diskProvider)
-            : base("Must contain a valid Unix permissions octal")
+    protected override bool IsValid(PropertyValidatorContext context)
+    {
+        if (context.PropertyValue == null)
         {
-            _diskProvider = diskProvider;
+            return false;
         }
 
-        protected override bool IsValid(PropertyValidatorContext context)
-        {
-            if (context.PropertyValue == null)
-            {
-                return false;
-            }
-
-            return _diskProvider.IsValidFolderPermissionMask(context.PropertyValue.ToString());
-        }
+        return _diskProvider.IsValidFolderPermissionMask(context.PropertyValue.ToString());
     }
 }

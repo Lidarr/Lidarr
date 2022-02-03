@@ -2,41 +2,40 @@ using System;
 using System.IO;
 using NLog;
 
-namespace NzbDrone.Update.UpdateEngine
+namespace NzbDrone.Update.UpdateEngine;
+
+public interface IDetectExistingVersion
 {
-    public interface IDetectExistingVersion
+    string GetExistingVersion(string targetFolder);
+}
+
+public class DetectExistingVersion : IDetectExistingVersion
+{
+    private readonly Logger _logger;
+
+    public DetectExistingVersion(Logger logger)
     {
-        string GetExistingVersion(string targetFolder);
+        _logger = logger;
     }
 
-    public class DetectExistingVersion : IDetectExistingVersion
+    public string GetExistingVersion(string targetFolder)
     {
-        private readonly Logger _logger;
-
-        public DetectExistingVersion(Logger logger)
+        try
         {
-            _logger = logger;
+            var targetExecutable = Path.Combine(targetFolder, "Lidarr.exe");
+
+            if (File.Exists(targetExecutable))
+            {
+                var versionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(targetExecutable);
+
+                return versionInfo.FileVersion;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.Warn(ex, "Failed to get existing version from {0}", targetFolder);
         }
 
-        public string GetExistingVersion(string targetFolder)
-        {
-            try
-            {
-                var targetExecutable = Path.Combine(targetFolder, "Lidarr.exe");
-
-                if (File.Exists(targetExecutable))
-                {
-                    var versionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(targetExecutable);
-
-                    return versionInfo.FileVersion;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Warn(ex, "Failed to get existing version from {0}", targetFolder);
-            }
-
-            return "(unknown)";
-        }
+        return "(unknown)";
     }
 }

@@ -3,26 +3,25 @@ using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
+namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications;
+
+public class ReleaseWantedSpecification : IImportDecisionEngineSpecification<LocalAlbumRelease>
 {
-    public class ReleaseWantedSpecification : IImportDecisionEngineSpecification<LocalAlbumRelease>
+    private readonly Logger _logger;
+
+    public ReleaseWantedSpecification(Logger logger)
     {
-        private readonly Logger _logger;
+        _logger = logger;
+    }
 
-        public ReleaseWantedSpecification(Logger logger)
+    public Decision IsSatisfiedBy(LocalAlbumRelease item, DownloadClientItem downloadClientItem)
+    {
+        if (item.AlbumRelease.Monitored || item.AlbumRelease.Album.Value.AnyReleaseOk)
         {
-            _logger = logger;
+            return Decision.Accept();
         }
 
-        public Decision IsSatisfiedBy(LocalAlbumRelease item, DownloadClientItem downloadClientItem)
-        {
-            if (item.AlbumRelease.Monitored || item.AlbumRelease.Album.Value.AnyReleaseOk)
-            {
-                return Decision.Accept();
-            }
-
-            _logger.Debug("AlbumRelease {0} was not requested", item);
-            return Decision.Reject("Album release not requested");
-        }
+        _logger.Debug("AlbumRelease {0} was not requested", item);
+        return Decision.Reject("Album release not requested");
     }
 }

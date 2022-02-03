@@ -4,29 +4,28 @@ using Lidarr.Http.REST;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.Tags;
 
-namespace Lidarr.Api.V1.Tags
+namespace Lidarr.Api.V1.Tags;
+
+[V1ApiController("tag/detail")]
+public class TagDetailsController : RestController<TagDetailsResource>
 {
-    [V1ApiController("tag/detail")]
-    public class TagDetailsController : RestController<TagDetailsResource>
+    private readonly ITagService _tagService;
+
+    public TagDetailsController(ITagService tagService)
     {
-        private readonly ITagService _tagService;
+        _tagService = tagService;
+    }
 
-        public TagDetailsController(ITagService tagService)
-        {
-            _tagService = tagService;
-        }
+    public override TagDetailsResource GetResourceById(int id)
+    {
+        return _tagService.Details(id).ToResource();
+    }
 
-        public override TagDetailsResource GetResourceById(int id)
-        {
-            return _tagService.Details(id).ToResource();
-        }
+    [HttpGet]
+    public List<TagDetailsResource> GetAll()
+    {
+        var tags = _tagService.Details().ToResource();
 
-        [HttpGet]
-        public List<TagDetailsResource> GetAll()
-        {
-            var tags = _tagService.Details().ToResource();
-
-            return tags;
-        }
+        return tags;
     }
 }

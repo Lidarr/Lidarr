@@ -4,17 +4,16 @@ using NzbDrone.Core.Extras.Files;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 
-namespace NzbDrone.Core.Extras.Lyrics
-{
-    public interface ILyricFileService : IExtraFileService<LyricFile>
-    {
-    }
+namespace NzbDrone.Core.Extras.Lyrics;
 
-    public class LyricFileService : ExtraFileService<LyricFile>, ILyricFileService
+public interface ILyricFileService : IExtraFileService<LyricFile>
+{
+}
+
+public class LyricFileService : ExtraFileService<LyricFile>, ILyricFileService
+{
+    public LyricFileService(IExtraFileRepository<LyricFile> repository, IArtistService artistService, IDiskProvider diskProvider, IRecycleBinProvider recycleBinProvider, Logger logger)
+        : base(repository, artistService, diskProvider, recycleBinProvider, logger)
     {
-        public LyricFileService(IExtraFileRepository<LyricFile> repository, IArtistService artistService, IDiskProvider diskProvider, IRecycleBinProvider recycleBinProvider, Logger logger)
-            : base(repository, artistService, diskProvider, recycleBinProvider, logger)
-        {
-        }
     }
 }

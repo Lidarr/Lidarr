@@ -3,71 +3,70 @@ using System.Linq;
 using Lidarr.Http.REST;
 using NzbDrone.Core.Profiles.Releases;
 
-namespace Lidarr.Api.V1.Profiles.Release
-{
-    public class ReleaseProfileResource : RestResource
-    {
-        public bool Enabled { get; set; }
-        public string Required { get; set; }
-        public string Ignored { get; set; }
-        public List<KeyValuePair<string, int>> Preferred { get; set; }
-        public bool IncludePreferredWhenRenaming { get; set; }
-        public int IndexerId { get; set; }
-        public HashSet<int> Tags { get; set; }
+namespace Lidarr.Api.V1.Profiles.Release;
 
-        public ReleaseProfileResource()
+public class ReleaseProfileResource : RestResource
+{
+    public bool Enabled { get; set; }
+    public string Required { get; set; }
+    public string Ignored { get; set; }
+    public List<KeyValuePair<string, int>> Preferred { get; set; }
+    public bool IncludePreferredWhenRenaming { get; set; }
+    public int IndexerId { get; set; }
+    public HashSet<int> Tags { get; set; }
+
+    public ReleaseProfileResource()
+    {
+        Tags = new HashSet<int>();
+    }
+}
+
+public static class RestrictionResourceMapper
+{
+    public static ReleaseProfileResource ToResource(this ReleaseProfile model)
+    {
+        if (model == null)
         {
-            Tags = new HashSet<int>();
+            return null;
         }
+
+        return new ReleaseProfileResource
+               {
+                   Id = model.Id,
+
+                   Enabled = model.Enabled,
+                   Required = model.Required,
+                   Ignored = model.Ignored,
+                   Preferred = model.Preferred,
+                   IncludePreferredWhenRenaming = model.IncludePreferredWhenRenaming,
+                   IndexerId = model.IndexerId,
+                   Tags = new HashSet<int>(model.Tags)
+               };
     }
 
-    public static class RestrictionResourceMapper
+    public static ReleaseProfile ToModel(this ReleaseProfileResource resource)
     {
-        public static ReleaseProfileResource ToResource(this ReleaseProfile model)
+        if (resource == null)
         {
-            if (model == null)
-            {
-                return null;
-            }
-
-            return new ReleaseProfileResource
-            {
-                Id = model.Id,
-
-                Enabled = model.Enabled,
-                Required = model.Required,
-                Ignored = model.Ignored,
-                Preferred = model.Preferred,
-                IncludePreferredWhenRenaming = model.IncludePreferredWhenRenaming,
-                IndexerId = model.IndexerId,
-                Tags = new HashSet<int>(model.Tags)
-            };
+            return null;
         }
 
-        public static ReleaseProfile ToModel(this ReleaseProfileResource resource)
-        {
-            if (resource == null)
-            {
-                return null;
-            }
+        return new ReleaseProfile
+               {
+                   Id = resource.Id,
 
-            return new ReleaseProfile
-            {
-                Id = resource.Id,
+                   Enabled = resource.Enabled,
+                   Required = resource.Required,
+                   Ignored = resource.Ignored,
+                   Preferred = resource.Preferred,
+                   IncludePreferredWhenRenaming = resource.IncludePreferredWhenRenaming,
+                   IndexerId = resource.IndexerId,
+                   Tags = new HashSet<int>(resource.Tags)
+               };
+    }
 
-                Enabled = resource.Enabled,
-                Required = resource.Required,
-                Ignored = resource.Ignored,
-                Preferred = resource.Preferred,
-                IncludePreferredWhenRenaming = resource.IncludePreferredWhenRenaming,
-                IndexerId = resource.IndexerId,
-                Tags = new HashSet<int>(resource.Tags)
-            };
-        }
-
-        public static List<ReleaseProfileResource> ToResource(this IEnumerable<ReleaseProfile> models)
-        {
-            return models.Select(ToResource).ToList();
-        }
+    public static List<ReleaseProfileResource> ToResource(this IEnumerable<ReleaseProfile> models)
+    {
+        return models.Select(ToResource).ToList();
     }
 }

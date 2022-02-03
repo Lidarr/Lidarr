@@ -8,86 +8,85 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NzbDrone.Core.Configuration;
 
-namespace Lidarr.Http.Authentication
-{
-    public class ApiKeyAuthenticationOptions : AuthenticationSchemeOptions
-    {
-        public const string DefaultScheme = "API Key";
-        public string Scheme => DefaultScheme;
-        public string AuthenticationType = DefaultScheme;
+namespace Lidarr.Http.Authentication;
 
-        public string HeaderName { get; set; }
-        public string QueryName { get; set; }
+public class ApiKeyAuthenticationOptions : AuthenticationSchemeOptions
+{
+    public const string DefaultScheme = "API Key";
+    public string Scheme => DefaultScheme;
+    public string AuthenticationType = DefaultScheme;
+
+    public string HeaderName { get; set; }
+    public string QueryName { get; set; }
+}
+
+public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthenticationOptions>
+{
+    private readonly string _apiKey;
+
+    public ApiKeyAuthenticationHandler(IOptionsMonitor<ApiKeyAuthenticationOptions> options,
+                                       ILoggerFactory logger,
+                                       UrlEncoder encoder,
+                                       ISystemClock clock,
+                                       IConfigFileProvider config)
+        : base(options, logger, encoder, clock)
+    {
+        _apiKey = config.ApiKey;
     }
 
-    public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthenticationOptions>
+    private string ParseApiKey()
     {
-        private readonly string _apiKey;
-
-        public ApiKeyAuthenticationHandler(IOptionsMonitor<ApiKeyAuthenticationOptions> options,
-            ILoggerFactory logger,
-            UrlEncoder encoder,
-            ISystemClock clock,
-            IConfigFileProvider config)
-            : base(options, logger, encoder, clock)
+        // Try query parameter
+        if (Request.Query.TryGetValue(Options.QueryName, out var value))
         {
-            _apiKey = config.ApiKey;
+            return value.FirstOrDefault();
         }
 
-        private string ParseApiKey()
+        // No ApiKey query parameter found try headers
+        if (Request.Headers.TryGetValue(Options.HeaderName, out var headerValue))
         {
-            // Try query parameter
-            if (Request.Query.TryGetValue(Options.QueryName, out var value))
-            {
-                return value.FirstOrDefault();
-            }
-
-            // No ApiKey query parameter found try headers
-            if (Request.Headers.TryGetValue(Options.HeaderName, out var headerValue))
-            {
-                return headerValue.FirstOrDefault();
-            }
-
-            return Request.Headers["Authorization"].FirstOrDefault()?.Replace("Bearer ", "");
+            return headerValue.FirstOrDefault();
         }
 
-        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+        return Request.Headers["Authorization"].FirstOrDefault()?.Replace("Bearer ", "");
+    }
+
+    protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+    {
+        var providedApiKey = ParseApiKey();
+
+        if (string.IsNullOrWhiteSpace(providedApiKey))
         {
-            var providedApiKey = ParseApiKey();
-
-            if (string.IsNullOrWhiteSpace(providedApiKey))
-            {
-                return Task.FromResult(AuthenticateResult.NoResult());
-            }
-
-            if (_apiKey == providedApiKey)
-            {
-                var claims = new List<Claim>
-                {
-                    new Claim("ApiKey", "true")
-                };
-
-                var identity = new ClaimsIdentity(claims, Options.AuthenticationType);
-                var identities = new List<ClaimsIdentity> { identity };
-                var principal = new ClaimsPrincipal(identities);
-                var ticket = new AuthenticationTicket(principal, Options.Scheme);
-
-                return Task.FromResult(AuthenticateResult.Success(ticket));
-            }
-
             return Task.FromResult(AuthenticateResult.NoResult());
         }
 
-        protected override Task HandleChallengeAsync(AuthenticationProperties properties)
+        if (_apiKey == providedApiKey)
         {
-            Response.StatusCode = 401;
-            return Task.CompletedTask;
+            var claims = new List<Claim>
+                         {
+                             new Claim("ApiKey", "true")
+                         };
+
+            var identity = new ClaimsIdentity(claims, Options.AuthenticationType);
+            var identities = new List<ClaimsIdentity> { identity };
+            var principal = new ClaimsPrincipal(identities);
+            var ticket = new AuthenticationTicket(principal, Options.Scheme);
+
+            return Task.FromResult(AuthenticateResult.Success(ticket));
         }
 
-        protected override Task HandleForbiddenAsync(AuthenticationProperties properties)
-        {
-            Response.StatusCode = 403;
-            return Task.CompletedTask;
-        }
+        return Task.FromResult(AuthenticateResult.NoResult());
+    }
+
+    protected override Task HandleChallengeAsync(AuthenticationProperties properties)
+    {
+        Response.StatusCode = 401;
+        return Task.CompletedTask;
+    }
+
+    protected override Task HandleForbiddenAsync(AuthenticationProperties properties)
+    {
+        Response.StatusCode = 403;
+        return Task.CompletedTask;
     }
 }

@@ -1,10 +1,9 @@
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Download.Clients.Flood.Types
+namespace NzbDrone.Core.Download.Clients.Flood.Types;
+
+public sealed class TorrentContent
 {
-    public sealed class TorrentContent
-    {
-        [JsonProperty(PropertyName = "path")]
-        public string Path { get; set; }
-    }
+    [JsonProperty(PropertyName = "path")]
+    public string Path { get; set; }
 }

@@ -6,63 +6,62 @@ using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using IServiceProvider = NzbDrone.Common.IServiceProvider;
 
-namespace NzbDrone.Core.Lifecycle
+namespace NzbDrone.Core.Lifecycle;
+
+public interface ILifecycleService
 {
-    public interface ILifecycleService
+    void Shutdown();
+    void Restart();
+}
+
+public class LifecycleService : ILifecycleService, IExecute<ShutdownCommand>, IExecute<RestartCommand>
+{
+    private readonly IEventAggregator _eventAggregator;
+    private readonly IRuntimeInfo _runtimeInfo;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly Logger _logger;
+
+    public LifecycleService(IEventAggregator eventAggregator,
+                            IRuntimeInfo runtimeInfo,
+                            IServiceProvider serviceProvider,
+                            Logger logger)
     {
-        void Shutdown();
-        void Restart();
+        _eventAggregator = eventAggregator;
+        _runtimeInfo = runtimeInfo;
+        _serviceProvider = serviceProvider;
+        _logger = logger;
     }
 
-    public class LifecycleService : ILifecycleService, IExecute<ShutdownCommand>, IExecute<RestartCommand>
+    public void Shutdown()
     {
-        private readonly IEventAggregator _eventAggregator;
-        private readonly IRuntimeInfo _runtimeInfo;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly Logger _logger;
+        _logger.Info("Shutdown requested.");
+        _eventAggregator.PublishEvent(new ApplicationShutdownRequested());
 
-        public LifecycleService(IEventAggregator eventAggregator,
-                                IRuntimeInfo runtimeInfo,
-                                IServiceProvider serviceProvider,
-                                Logger logger)
+        if (_runtimeInfo.IsWindowsService)
         {
-            _eventAggregator = eventAggregator;
-            _runtimeInfo = runtimeInfo;
-            _serviceProvider = serviceProvider;
-            _logger = logger;
+            _serviceProvider.Stop(ServiceProvider.SERVICE_NAME);
         }
+    }
 
-        public void Shutdown()
+    public void Restart()
+    {
+        _logger.Info("Restart requested.");
+
+        _eventAggregator.PublishEvent(new ApplicationShutdownRequested(true));
+
+        if (_runtimeInfo.IsWindowsService)
         {
-            _logger.Info("Shutdown requested.");
-            _eventAggregator.PublishEvent(new ApplicationShutdownRequested());
-
-            if (_runtimeInfo.IsWindowsService)
-            {
-                _serviceProvider.Stop(ServiceProvider.SERVICE_NAME);
-            }
+            _serviceProvider.Restart(ServiceProvider.SERVICE_NAME);
         }
+    }
 
-        public void Restart()
-        {
-            _logger.Info("Restart requested.");
+    public void Execute(ShutdownCommand message)
+    {
+        Shutdown();
+    }
 
-            _eventAggregator.PublishEvent(new ApplicationShutdownRequested(true));
-
-            if (_runtimeInfo.IsWindowsService)
-            {
-                _serviceProvider.Restart(ServiceProvider.SERVICE_NAME);
-            }
-        }
-
-        public void Execute(ShutdownCommand message)
-        {
-            Shutdown();
-        }
-
-        public void Execute(RestartCommand message)
-        {
-            Restart();
-        }
+    public void Execute(RestartCommand message)
+    {
+        Restart();
     }
 }

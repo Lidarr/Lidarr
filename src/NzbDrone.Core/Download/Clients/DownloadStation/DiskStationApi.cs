@@ -1,14 +1,13 @@
-﻿namespace NzbDrone.Core.Download.Clients.DownloadStation
+﻿namespace NzbDrone.Core.Download.Clients.DownloadStation;
+
+public enum DiskStationApi
 {
-    public enum DiskStationApi
-    {
-        Info,
-        Auth,
-        DownloadStationInfo,
-        DownloadStationTask,
-        DownloadStation2Task,
-        DownloadStation2SettingsLocation,
-        FileStationList,
-        DSMInfo,
-    }
+    Info,
+    Auth,
+    DownloadStationInfo,
+    DownloadStationTask,
+    DownloadStation2Task,
+    DownloadStation2SettingsLocation,
+    FileStationList,
+    DSMInfo,
 }

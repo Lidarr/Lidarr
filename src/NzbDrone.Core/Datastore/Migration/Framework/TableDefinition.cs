@@ -18,32 +18,31 @@ using System.Linq;
 using FluentMigrator.Infrastructure.Extensions;
 using FluentMigrator.Model;
 
-namespace NzbDrone.Core.Datastore.Migration.Framework
+namespace NzbDrone.Core.Datastore.Migration.Framework;
+
+public class TableDefinition : ICloneable
 {
-    public class TableDefinition : ICloneable
+    public TableDefinition()
     {
-        public TableDefinition()
-        {
-            Columns = new List<ColumnDefinition>();
-            ForeignKeys = new List<ForeignKeyDefinition>();
-            Indexes = new List<IndexDefinition>();
-        }
+        Columns = new List<ColumnDefinition>();
+        ForeignKeys = new List<ForeignKeyDefinition>();
+        Indexes = new List<IndexDefinition>();
+    }
 
-        public virtual string Name { get; set; }
-        public virtual string SchemaName { get; set; }
-        public virtual ICollection<ColumnDefinition> Columns { get; set; }
-        public virtual ICollection<ForeignKeyDefinition> ForeignKeys { get; set; }
-        public virtual ICollection<IndexDefinition> Indexes { get; set; }
+    public virtual string Name { get; set; }
+    public virtual string SchemaName { get; set; }
+    public virtual ICollection<ColumnDefinition> Columns { get; set; }
+    public virtual ICollection<ForeignKeyDefinition> ForeignKeys { get; set; }
+    public virtual ICollection<IndexDefinition> Indexes { get; set; }
 
-        public object Clone()
-        {
-            return new TableDefinition
-            {
-                Name = Name,
-                SchemaName = SchemaName,
-                Columns = Columns.CloneAll().ToList(),
-                Indexes = Indexes.CloneAll().ToList()
-            };
-        }
+    public object Clone()
+    {
+        return new TableDefinition
+               {
+                   Name = Name,
+                   SchemaName = SchemaName,
+                   Columns = Columns.CloneAll().ToList(),
+                   Indexes = Indexes.CloneAll().ToList()
+               };
     }
 }

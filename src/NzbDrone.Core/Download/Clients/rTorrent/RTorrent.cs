@@ -17,271 +17,270 @@ using NzbDrone.Core.RemotePathMappings;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.RTorrent
+namespace NzbDrone.Core.Download.Clients.RTorrent;
+
+public class RTorrent : TorrentClientBase<RTorrentSettings>
 {
-    public class RTorrent : TorrentClientBase<RTorrentSettings>
+    private readonly IRTorrentProxy _proxy;
+    private readonly IRTorrentDirectoryValidator _rTorrentDirectoryValidator;
+    private readonly IDownloadSeedConfigProvider _downloadSeedConfigProvider;
+    private readonly string _imported_view = string.Concat(BuildInfo.AppName.ToLower(), "_imported");
+
+    public RTorrent(IRTorrentProxy proxy,
+                    ITorrentFileInfoReader torrentFileInfoReader,
+                    IHttpClient httpClient,
+                    IConfigService configService,
+                    IDiskProvider diskProvider,
+                    IRemotePathMappingService remotePathMappingService,
+                    IDownloadSeedConfigProvider downloadSeedConfigProvider,
+                    IRTorrentDirectoryValidator rTorrentDirectoryValidator,
+                    Logger logger)
+        : base(torrentFileInfoReader, httpClient, configService, diskProvider, remotePathMappingService, logger)
     {
-        private readonly IRTorrentProxy _proxy;
-        private readonly IRTorrentDirectoryValidator _rTorrentDirectoryValidator;
-        private readonly IDownloadSeedConfigProvider _downloadSeedConfigProvider;
-        private readonly string _imported_view = string.Concat(BuildInfo.AppName.ToLower(), "_imported");
+        _proxy = proxy;
+        _rTorrentDirectoryValidator = rTorrentDirectoryValidator;
+        _downloadSeedConfigProvider = downloadSeedConfigProvider;
+    }
 
-        public RTorrent(IRTorrentProxy proxy,
-                        ITorrentFileInfoReader torrentFileInfoReader,
-                        IHttpClient httpClient,
-                        IConfigService configService,
-                        IDiskProvider diskProvider,
-                        IRemotePathMappingService remotePathMappingService,
-                        IDownloadSeedConfigProvider downloadSeedConfigProvider,
-                        IRTorrentDirectoryValidator rTorrentDirectoryValidator,
-                        Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, remotePathMappingService, logger)
+    public override void MarkItemAsImported(DownloadClientItem downloadClientItem)
+    {
+        // set post-import category
+        if (Settings.MusicImportedCategory.IsNotNullOrWhiteSpace() &&
+            Settings.MusicImportedCategory != Settings.MusicCategory)
         {
-            _proxy = proxy;
-            _rTorrentDirectoryValidator = rTorrentDirectoryValidator;
-            _downloadSeedConfigProvider = downloadSeedConfigProvider;
-        }
-
-        public override void MarkItemAsImported(DownloadClientItem downloadClientItem)
-        {
-            // set post-import category
-            if (Settings.MusicImportedCategory.IsNotNullOrWhiteSpace() &&
-                Settings.MusicImportedCategory != Settings.MusicCategory)
-            {
-                try
-                {
-                    _proxy.SetTorrentLabel(downloadClientItem.DownloadId.ToLower(), Settings.MusicImportedCategory, Settings);
-                }
-                catch (Exception ex)
-                {
-                    _logger.Warn(ex,
-                        "Failed to set torrent post-import label \"{0}\" for {1} in rTorrent. Does the label exist?",
-                        Settings.MusicImportedCategory,
-                        downloadClientItem.Title);
-                }
-            }
-
-            // Set post-import view
             try
             {
-                _proxy.PushTorrentUniqueView(downloadClientItem.DownloadId.ToLower(), _imported_view, Settings);
+                _proxy.SetTorrentLabel(downloadClientItem.DownloadId.ToLower(), Settings.MusicImportedCategory, Settings);
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, "Failed to set torrent post-import view \"{0}\" for {1} in rTorrent.", _imported_view, downloadClientItem.Title);
+                _logger.Warn(ex,
+                             "Failed to set torrent post-import label \"{0}\" for {1} in rTorrent. Does the label exist?",
+                             Settings.MusicImportedCategory,
+                             downloadClientItem.Title);
             }
         }
 
-        protected override string AddFromMagnetLink(RemoteAlbum remoteAlbum, string hash, string magnetLink)
+        // Set post-import view
+        try
         {
-            var priority = (RTorrentPriority)(remoteAlbum.IsRecentAlbum() ? Settings.RecentTvPriority : Settings.OlderTvPriority);
+            _proxy.PushTorrentUniqueView(downloadClientItem.DownloadId.ToLower(), _imported_view, Settings);
+        }
+        catch (Exception ex)
+        {
+            _logger.Warn(ex, "Failed to set torrent post-import view \"{0}\" for {1} in rTorrent.", _imported_view, downloadClientItem.Title);
+        }
+    }
 
-            _proxy.AddTorrentFromUrl(magnetLink, Settings.MusicCategory, priority, Settings.MusicDirectory, Settings);
+    protected override string AddFromMagnetLink(RemoteAlbum remoteAlbum, string hash, string magnetLink)
+    {
+        var priority = (RTorrentPriority)(remoteAlbum.IsRecentAlbum() ? Settings.RecentTvPriority : Settings.OlderTvPriority);
 
-            var tries = 10;
-            var retryDelay = 500;
+        _proxy.AddTorrentFromUrl(magnetLink, Settings.MusicCategory, priority, Settings.MusicDirectory, Settings);
 
-            // Wait a bit for the magnet to be resolved.
-            if (!WaitForTorrent(hash, tries, retryDelay))
-            {
-                _logger.Warn("rTorrent could not resolve magnet within {0} seconds, download may remain stuck: {1}.", tries * retryDelay / 1000, magnetLink);
+        var tries = 10;
+        var retryDelay = 500;
 
-                return hash;
-            }
+        // Wait a bit for the magnet to be resolved.
+        if (!WaitForTorrent(hash, tries, retryDelay))
+        {
+            _logger.Warn("rTorrent could not resolve magnet within {0} seconds, download may remain stuck: {1}.", tries * retryDelay / 1000, magnetLink);
 
             return hash;
         }
 
-        protected override string AddFromTorrentFile(RemoteAlbum remoteAlbum, string hash, string filename, byte[] fileContent)
+        return hash;
+    }
+
+    protected override string AddFromTorrentFile(RemoteAlbum remoteAlbum, string hash, string filename, byte[] fileContent)
+    {
+        var priority = (RTorrentPriority)(remoteAlbum.IsRecentAlbum() ? Settings.RecentTvPriority : Settings.OlderTvPriority);
+
+        _proxy.AddTorrentFromFile(filename, fileContent, Settings.MusicCategory, priority, Settings.MusicDirectory, Settings);
+
+        var tries = 10;
+        var retryDelay = 500;
+        if (!WaitForTorrent(hash, tries, retryDelay))
         {
-            var priority = (RTorrentPriority)(remoteAlbum.IsRecentAlbum() ? Settings.RecentTvPriority : Settings.OlderTvPriority);
+            _logger.Debug("rTorrent didn't add the torrent within {0} seconds: {1}.", tries * retryDelay / 1000, filename);
 
-            _proxy.AddTorrentFromFile(filename, fileContent, Settings.MusicCategory, priority, Settings.MusicDirectory, Settings);
-
-            var tries = 10;
-            var retryDelay = 500;
-            if (!WaitForTorrent(hash, tries, retryDelay))
-            {
-                _logger.Debug("rTorrent didn't add the torrent within {0} seconds: {1}.", tries * retryDelay / 1000, filename);
-
-                throw new ReleaseDownloadException(remoteAlbum.Release, "Downloading torrent failed");
-            }
-
-            return hash;
+            throw new ReleaseDownloadException(remoteAlbum.Release, "Downloading torrent failed");
         }
 
-        public override string Name => "rTorrent";
+        return hash;
+    }
 
-        public override ProviderMessage Message => new ProviderMessage("Lidarr is unable to remove torrents that have finished seeding when using rTorrent", ProviderMessageType.Warning);
+    public override string Name => "rTorrent";
 
-        public override IEnumerable<DownloadClientItem> GetItems()
+    public override ProviderMessage Message => new ProviderMessage("Lidarr is unable to remove torrents that have finished seeding when using rTorrent", ProviderMessageType.Warning);
+
+    public override IEnumerable<DownloadClientItem> GetItems()
+    {
+        var torrents = _proxy.GetTorrents(Settings);
+
+        _logger.Debug("Retrieved metadata of {0} torrents in client", torrents.Count);
+
+        var items = new List<DownloadClientItem>();
+        foreach (RTorrentTorrent torrent in torrents)
         {
-            var torrents = _proxy.GetTorrents(Settings);
-
-            _logger.Debug("Retrieved metadata of {0} torrents in client", torrents.Count);
-
-            var items = new List<DownloadClientItem>();
-            foreach (RTorrentTorrent torrent in torrents)
+            // Don't concern ourselves with categories other than specified
+            if (Settings.MusicCategory.IsNotNullOrWhiteSpace() && torrent.Category != Settings.MusicCategory)
             {
-                // Don't concern ourselves with categories other than specified
-                if (Settings.MusicCategory.IsNotNullOrWhiteSpace() && torrent.Category != Settings.MusicCategory)
-                {
-                    continue;
-                }
-
-                if (torrent.Path.StartsWith("."))
-                {
-                    throw new DownloadClientException("Download paths must be absolute. Please specify variable \"directory\" in rTorrent.");
-                }
-
-                var item = new DownloadClientItem();
-                item.DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this);
-                item.Title = torrent.Name;
-                item.DownloadId = torrent.Hash;
-                item.OutputPath = _remotePathMappingService.RemapRemoteToLocal(Settings.Host, new OsPath(torrent.Path));
-                item.TotalSize = torrent.TotalSize;
-                item.RemainingSize = torrent.RemainingSize;
-                item.Category = torrent.Category;
-                item.SeedRatio = torrent.Ratio;
-
-                if (torrent.DownRate > 0)
-                {
-                    var secondsLeft = torrent.RemainingSize / torrent.DownRate;
-                    item.RemainingTime = TimeSpan.FromSeconds(secondsLeft);
-                }
-                else
-                {
-                    item.RemainingTime = TimeSpan.Zero;
-                }
-
-                if (torrent.IsFinished)
-                {
-                    item.Status = DownloadItemStatus.Completed;
-                }
-                else if (torrent.IsActive)
-                {
-                    item.Status = DownloadItemStatus.Downloading;
-                }
-                else if (!torrent.IsActive)
-                {
-                    item.Status = DownloadItemStatus.Paused;
-                }
-
-                // Grab cached seedConfig
-                var seedConfig = _downloadSeedConfigProvider.GetSeedConfiguration(torrent.Hash);
-
-                // Check if torrent is finished and if it exceeds cached seedConfig
-                item.CanMoveFiles = item.CanBeRemoved =
-                    torrent.IsFinished && seedConfig != null &&
-                    (
-                        (torrent.Ratio / 1000.0) >= seedConfig.Ratio ||
-                        (DateTimeOffset.Now - DateTimeOffset.FromUnixTimeSeconds(torrent.FinishedTime)) >= seedConfig.SeedTime);
-
-                items.Add(item);
+                continue;
             }
 
-            return items;
+            if (torrent.Path.StartsWith("."))
+            {
+                throw new DownloadClientException("Download paths must be absolute. Please specify variable \"directory\" in rTorrent.");
+            }
+
+            var item = new DownloadClientItem();
+            item.DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this);
+            item.Title = torrent.Name;
+            item.DownloadId = torrent.Hash;
+            item.OutputPath = _remotePathMappingService.RemapRemoteToLocal(Settings.Host, new OsPath(torrent.Path));
+            item.TotalSize = torrent.TotalSize;
+            item.RemainingSize = torrent.RemainingSize;
+            item.Category = torrent.Category;
+            item.SeedRatio = torrent.Ratio;
+
+            if (torrent.DownRate > 0)
+            {
+                var secondsLeft = torrent.RemainingSize / torrent.DownRate;
+                item.RemainingTime = TimeSpan.FromSeconds(secondsLeft);
+            }
+            else
+            {
+                item.RemainingTime = TimeSpan.Zero;
+            }
+
+            if (torrent.IsFinished)
+            {
+                item.Status = DownloadItemStatus.Completed;
+            }
+            else if (torrent.IsActive)
+            {
+                item.Status = DownloadItemStatus.Downloading;
+            }
+            else if (!torrent.IsActive)
+            {
+                item.Status = DownloadItemStatus.Paused;
+            }
+
+            // Grab cached seedConfig
+            var seedConfig = _downloadSeedConfigProvider.GetSeedConfiguration(torrent.Hash);
+
+            // Check if torrent is finished and if it exceeds cached seedConfig
+            item.CanMoveFiles = item.CanBeRemoved =
+                                    torrent.IsFinished && seedConfig != null &&
+                                    (
+                                        (torrent.Ratio / 1000.0) >= seedConfig.Ratio ||
+                                        (DateTimeOffset.Now - DateTimeOffset.FromUnixTimeSeconds(torrent.FinishedTime)) >= seedConfig.SeedTime);
+
+            items.Add(item);
         }
 
-        public override void RemoveItem(DownloadClientItem item, bool deleteData)
-        {
-            if (deleteData)
-            {
-                DeleteItemData(item);
-            }
+        return items;
+    }
 
-            _proxy.RemoveTorrent(item.DownloadId, Settings);
+    public override void RemoveItem(DownloadClientItem item, bool deleteData)
+    {
+        if (deleteData)
+        {
+            DeleteItemData(item);
         }
 
-        public override DownloadClientInfo GetStatus()
-        {
-            // XXX: This function's correctness has not been considered
-            var status = new DownloadClientInfo
-            {
-                IsLocalhost = Settings.Host == "127.0.0.1" || Settings.Host == "localhost"
-            };
+        _proxy.RemoveTorrent(item.DownloadId, Settings);
+    }
 
-            return status;
+    public override DownloadClientInfo GetStatus()
+    {
+        // XXX: This function's correctness has not been considered
+        var status = new DownloadClientInfo
+                     {
+                         IsLocalhost = Settings.Host == "127.0.0.1" || Settings.Host == "localhost"
+                     };
+
+        return status;
+    }
+
+    protected override void Test(List<ValidationFailure> failures)
+    {
+        failures.AddIfNotNull(TestConnection());
+        if (failures.HasErrors())
+        {
+            return;
         }
 
-        protected override void Test(List<ValidationFailure> failures)
-        {
-            failures.AddIfNotNull(TestConnection());
-            if (failures.HasErrors())
-            {
-                return;
-            }
+        failures.AddIfNotNull(TestGetTorrents());
+        failures.AddIfNotNull(TestDirectory());
+    }
 
-            failures.AddIfNotNull(TestGetTorrents());
-            failures.AddIfNotNull(TestDirectory());
+    private ValidationFailure TestConnection()
+    {
+        try
+        {
+            var version = _proxy.GetVersion(Settings);
+
+            if (new Version(version) < new Version("0.9.0"))
+            {
+                return new ValidationFailure(string.Empty, "rTorrent version should be at least 0.9.0. Version reported is {0}", version);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Failed to test rTorrent");
+
+            return new NzbDroneValidationFailure("Host", "Unable to connect to rTorrent")
+                   {
+                       DetailedDescription = ex.Message
+                   };
         }
 
-        private ValidationFailure TestConnection()
+        return null;
+    }
+
+    private ValidationFailure TestGetTorrents()
+    {
+        try
         {
-            try
-            {
-                var version = _proxy.GetVersion(Settings);
+            _proxy.GetTorrents(Settings);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Failed to get torrents");
+            return new NzbDroneValidationFailure(string.Empty, "Failed to get the list of torrents: " + ex.Message);
+        }
 
-                if (new Version(version) < new Version("0.9.0"))
-                {
-                    return new ValidationFailure(string.Empty, "rTorrent version should be at least 0.9.0. Version reported is {0}", version);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Failed to test rTorrent");
+        return null;
+    }
 
-                return new NzbDroneValidationFailure("Host", "Unable to connect to rTorrent")
-                       {
-                           DetailedDescription = ex.Message
-                       };
-            }
+    private ValidationFailure TestDirectory()
+    {
+        var result = _rTorrentDirectoryValidator.Validate(Settings);
 
+        if (result.IsValid)
+        {
             return null;
         }
 
-        private ValidationFailure TestGetTorrents()
+        return result.Errors.First();
+    }
+
+    private bool WaitForTorrent(string hash, int tries, int retryDelay)
+    {
+        for (var i = 0; i < tries; i++)
         {
-            try
+            if (_proxy.HasHashTorrent(hash, Settings))
             {
-                _proxy.GetTorrents(Settings);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Failed to get torrents");
-                return new NzbDroneValidationFailure(string.Empty, "Failed to get the list of torrents: " + ex.Message);
+                return true;
             }
 
-            return null;
+            Thread.Sleep(retryDelay);
         }
 
-        private ValidationFailure TestDirectory()
-        {
-            var result = _rTorrentDirectoryValidator.Validate(Settings);
+        _logger.Debug("Could not find hash {0} in {1} tries at {2} ms intervals.", hash, tries, retryDelay);
 
-            if (result.IsValid)
-            {
-                return null;
-            }
-
-            return result.Errors.First();
-        }
-
-        private bool WaitForTorrent(string hash, int tries, int retryDelay)
-        {
-            for (var i = 0; i < tries; i++)
-            {
-                if (_proxy.HasHashTorrent(hash, Settings))
-                {
-                    return true;
-                }
-
-                Thread.Sleep(retryDelay);
-            }
-
-            _logger.Debug("Could not find hash {0} in {1} tries at {2} ms intervals.", hash, tries, retryDelay);
-
-            return false;
-        }
+        return false;
     }
 }

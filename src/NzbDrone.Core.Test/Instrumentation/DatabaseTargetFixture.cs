@@ -10,115 +10,114 @@ using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Core.Test.Instrumentation
+namespace NzbDrone.Core.Test.Instrumentation;
+
+[TestFixture]
+public class DatabaseTargetFixture : DbTest<DatabaseTarget, Log>
 {
-    [TestFixture]
-    public class DatabaseTargetFixture : DbTest<DatabaseTarget, Log>
+    private static string _uniqueMessage;
+    private Logger _logger;
+
+    protected override MigrationType MigrationType => MigrationType.Log;
+
+    [SetUp]
+    public void Setup()
     {
-        private static string _uniqueMessage;
-        private Logger _logger;
+        Mocker.Resolve<ILogRepository, LogRepository>();
+        Mocker.Resolve<DatabaseTarget>().Register();
 
-        protected override MigrationType MigrationType => MigrationType.Log;
+        LogManager.ReconfigExistingLoggers();
 
-        [SetUp]
-        public void Setup()
+        _logger = NzbDroneLogger.GetLogger(this);
+
+        _uniqueMessage = "Unique message: " + Guid.NewGuid();
+    }
+
+    [Test]
+    public void write_log()
+    {
+        _logger.Info(_uniqueMessage);
+
+        Thread.Sleep(1000);
+
+        StoredModel.Message.Should().Be(_uniqueMessage);
+        VerifyLog(StoredModel, LogLevel.Info);
+    }
+
+    [Test]
+    public void write_long_log()
+    {
+        var message = string.Empty;
+        for (int i = 0; i < 100; i++)
         {
-            Mocker.Resolve<ILogRepository, LogRepository>();
-            Mocker.Resolve<DatabaseTarget>().Register();
-
-            LogManager.ReconfigExistingLoggers();
-
-            _logger = NzbDroneLogger.GetLogger(this);
-
-            _uniqueMessage = "Unique message: " + Guid.NewGuid();
+            message += Guid.NewGuid();
         }
 
-        [Test]
-        public void write_log()
-        {
-            _logger.Info(_uniqueMessage);
+        _logger.Info(message);
 
-            Thread.Sleep(1000);
+        Thread.Sleep(1000);
 
-            StoredModel.Message.Should().Be(_uniqueMessage);
-            VerifyLog(StoredModel, LogLevel.Info);
-        }
+        StoredModel.Message.Should().HaveLength(message.Length);
+        StoredModel.Message.Should().Be(message);
+        VerifyLog(StoredModel, LogLevel.Info);
+    }
 
-        [Test]
-        public void write_long_log()
-        {
-            var message = string.Empty;
-            for (int i = 0; i < 100; i++)
-            {
-                message += Guid.NewGuid();
-            }
+    [Test]
+    public void write_log_exception()
+    {
+        var ex = new InvalidOperationException("Fake Exception");
 
-            _logger.Info(message);
+        _logger.Error(ex, _uniqueMessage);
 
-            Thread.Sleep(1000);
+        Thread.Sleep(1000);
 
-            StoredModel.Message.Should().HaveLength(message.Length);
-            StoredModel.Message.Should().Be(message);
-            VerifyLog(StoredModel, LogLevel.Info);
-        }
+        VerifyLog(StoredModel, LogLevel.Error);
+        StoredModel.Message.Should().Be(_uniqueMessage + ": " + ex.Message);
+        StoredModel.ExceptionType.Should().Be(ex.GetType().ToString());
+        StoredModel.Exception.Should().Be(ex.ToString());
 
-        [Test]
-        public void write_log_exception()
-        {
-            var ex = new InvalidOperationException("Fake Exception");
+        ExceptionVerification.ExpectedErrors(1);
+    }
 
-            _logger.Error(ex, _uniqueMessage);
+    [Test]
+    public void exception_log_with_no_message_should_use_exceptions_message()
+    {
+        var ex = new InvalidOperationException("Fake Exception");
+        _uniqueMessage = string.Empty;
 
-            Thread.Sleep(1000);
+        _logger.Error(ex, _uniqueMessage);
 
-            VerifyLog(StoredModel, LogLevel.Error);
-            StoredModel.Message.Should().Be(_uniqueMessage + ": " + ex.Message);
-            StoredModel.ExceptionType.Should().Be(ex.GetType().ToString());
-            StoredModel.Exception.Should().Be(ex.ToString());
+        Thread.Sleep(1000);
 
-            ExceptionVerification.ExpectedErrors(1);
-        }
+        StoredModel.Message.Should().Be(ex.Message);
 
-        [Test]
-        public void exception_log_with_no_message_should_use_exceptions_message()
-        {
-            var ex = new InvalidOperationException("Fake Exception");
-            _uniqueMessage = string.Empty;
+        VerifyLog(StoredModel, LogLevel.Error);
 
-            _logger.Error(ex, _uniqueMessage);
+        ExceptionVerification.ExpectedErrors(1);
+    }
 
-            Thread.Sleep(1000);
+    [Test]
+    public void null_string_as_arg_should_not_fail()
+    {
+        var epFile = new TrackFile();
+        _logger.Debug("File {0} no longer exists on disk. removing from database.", epFile.Path);
 
-            StoredModel.Message.Should().Be(ex.Message);
+        Thread.Sleep(1000);
 
-            VerifyLog(StoredModel, LogLevel.Error);
+        epFile.Path.Should().BeNull();
+    }
 
-            ExceptionVerification.ExpectedErrors(1);
-        }
+    [TearDown]
+    public void Teardown()
+    {
+        Mocker.Resolve<DatabaseTarget>().UnRegister();
+    }
 
-        [Test]
-        public void null_string_as_arg_should_not_fail()
-        {
-            var epFile = new TrackFile();
-            _logger.Debug("File {0} no longer exists on disk. removing from database.", epFile.Path);
-
-            Thread.Sleep(1000);
-
-            epFile.Path.Should().BeNull();
-        }
-
-        [TearDown]
-        public void Teardown()
-        {
-            Mocker.Resolve<DatabaseTarget>().UnRegister();
-        }
-
-        private void VerifyLog(Log logItem, LogLevel level)
-        {
-            logItem.Time.Should().BeWithin(TimeSpan.FromSeconds(2));
-            logItem.Logger.Should().Be(GetType().Name);
-            logItem.Level.Should().Be(level.Name);
-            _logger.Name.Should().EndWith(logItem.Logger);
-        }
+    private void VerifyLog(Log logItem, LogLevel level)
+    {
+        logItem.Time.Should().BeWithin(TimeSpan.FromSeconds(2));
+        logItem.Logger.Should().Be(GetType().Name);
+        logItem.Level.Should().Be(level.Name);
+        _logger.Name.Should().EndWith(logItem.Logger);
     }
 }

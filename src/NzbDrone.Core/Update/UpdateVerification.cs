@@ -1,30 +1,29 @@
 ﻿using System;
 using NzbDrone.Common.Disk;
 
-namespace NzbDrone.Core.Update
+namespace NzbDrone.Core.Update;
+
+public interface IVerifyUpdates
 {
-    public interface IVerifyUpdates
+    bool Verify(UpdatePackage updatePackage, string packagePath);
+}
+
+public class UpdateVerification : IVerifyUpdates
+{
+    private readonly IDiskProvider _diskProvider;
+
+    public UpdateVerification(IDiskProvider diskProvider)
     {
-        bool Verify(UpdatePackage updatePackage, string packagePath);
+        _diskProvider = diskProvider;
     }
 
-    public class UpdateVerification : IVerifyUpdates
+    public bool Verify(UpdatePackage updatePackage, string packagePath)
     {
-        private readonly IDiskProvider _diskProvider;
-
-        public UpdateVerification(IDiskProvider diskProvider)
+        using (var fileStream = _diskProvider.OpenReadStream(packagePath))
         {
-            _diskProvider = diskProvider;
-        }
+            var hash = fileStream.SHA256Hash();
 
-        public bool Verify(UpdatePackage updatePackage, string packagePath)
-        {
-            using (var fileStream = _diskProvider.OpenReadStream(packagePath))
-            {
-                var hash = fileStream.SHA256Hash();
-
-                return hash.Equals(updatePackage.Hash, StringComparison.CurrentCultureIgnoreCase);
-            }
+            return hash.Equals(updatePackage.Hash, StringComparison.CurrentCultureIgnoreCase);
         }
     }
 }

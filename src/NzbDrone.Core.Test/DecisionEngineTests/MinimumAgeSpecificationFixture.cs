@@ -7,58 +7,57 @@ using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.DecisionEngineTests
+namespace NzbDrone.Core.Test.DecisionEngineTests;
+
+[TestFixture]
+
+public class MinimumAgeSpecificationFixture : CoreTest<MinimumAgeSpecification>
 {
-    [TestFixture]
+    private RemoteAlbum _remoteAlbum;
 
-    public class MinimumAgeSpecificationFixture : CoreTest<MinimumAgeSpecification>
+    [SetUp]
+    public void Setup()
     {
-        private RemoteAlbum _remoteAlbum;
+        _remoteAlbum = new RemoteAlbum
+                       {
+                           Release = new ReleaseInfo() { DownloadProtocol = DownloadProtocol.Usenet }
+                       };
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            _remoteAlbum = new RemoteAlbum
-            {
-                Release = new ReleaseInfo() { DownloadProtocol = DownloadProtocol.Usenet }
-            };
-        }
+    private void WithMinimumAge(int minutes)
+    {
+        Mocker.GetMock<IConfigService>().SetupGet(c => c.MinimumAge).Returns(minutes);
+    }
 
-        private void WithMinimumAge(int minutes)
-        {
-            Mocker.GetMock<IConfigService>().SetupGet(c => c.MinimumAge).Returns(minutes);
-        }
+    private void WithAge(int minutes)
+    {
+        _remoteAlbum.Release.PublishDate = DateTime.UtcNow.AddMinutes(-minutes);
+    }
 
-        private void WithAge(int minutes)
-        {
-            _remoteAlbum.Release.PublishDate = DateTime.UtcNow.AddMinutes(-minutes);
-        }
+    [Test]
+    public void should_return_true_when_minimum_age_is_set_to_zero()
+    {
+        WithMinimumAge(0);
+        WithAge(100);
 
-        [Test]
-        public void should_return_true_when_minimum_age_is_set_to_zero()
-        {
-            WithMinimumAge(0);
-            WithAge(100);
+        Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
+    }
 
-            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
-        }
+    [Test]
+    public void should_return_true_when_age_is_greater_than_minimum_age()
+    {
+        WithMinimumAge(30);
+        WithAge(100);
 
-        [Test]
-        public void should_return_true_when_age_is_greater_than_minimum_age()
-        {
-            WithMinimumAge(30);
-            WithAge(100);
+        Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
+    }
 
-            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
-        }
+    [Test]
+    public void should_return_false_when_age_is_less_than_minimum_age()
+    {
+        WithMinimumAge(30);
+        WithAge(10);
 
-        [Test]
-        public void should_return_false_when_age_is_less_than_minimum_age()
-        {
-            WithMinimumAge(30);
-            WithAge(10);
-
-            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
-        }
+        Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
     }
 }

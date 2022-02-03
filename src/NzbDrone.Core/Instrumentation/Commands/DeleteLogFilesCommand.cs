@@ -1,9 +1,8 @@
 ﻿using NzbDrone.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Instrumentation.Commands
+namespace NzbDrone.Core.Instrumentation.Commands;
+
+public class DeleteLogFilesCommand : Command
 {
-    public class DeleteLogFilesCommand : Command
-    {
-        public override bool SendUpdatesToClient => true;
-    }
+    public override bool SendUpdatesToClient => true;
 }

@@ -1,7 +1,6 @@
-﻿namespace NzbDrone.Core.Download.Clients.NzbVortex.Responses
+﻿namespace NzbDrone.Core.Download.Clients.NzbVortex.Responses;
+
+public class NzbVortexAuthNonceResponse
 {
-    public class NzbVortexAuthNonceResponse
-    {
-        public string AuthNonce { get; set; }
-    }
+    public string AuthNonce { get; set; }
 }

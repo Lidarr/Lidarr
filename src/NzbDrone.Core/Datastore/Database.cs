@@ -4,73 +4,72 @@ using Dapper;
 using NLog;
 using NzbDrone.Common.Instrumentation;
 
-namespace NzbDrone.Core.Datastore
+namespace NzbDrone.Core.Datastore;
+
+public interface IDatabase
 {
-    public interface IDatabase
+    IDbConnection OpenConnection();
+    Version Version { get; }
+    int Migration { get; }
+    void Vacuum();
+}
+
+public class Database : IDatabase
+{
+    private readonly string _databaseName;
+    private readonly Func<IDbConnection> _datamapperFactory;
+
+    private readonly Logger _logger = NzbDroneLogger.GetLogger(typeof(Database));
+
+    public Database(string databaseName, Func<IDbConnection> datamapperFactory)
     {
-        IDbConnection OpenConnection();
-        Version Version { get; }
-        int Migration { get; }
-        void Vacuum();
+        _databaseName = databaseName;
+        _datamapperFactory = datamapperFactory;
     }
 
-    public class Database : IDatabase
+    public IDbConnection OpenConnection()
     {
-        private readonly string _databaseName;
-        private readonly Func<IDbConnection> _datamapperFactory;
+        return _datamapperFactory();
+    }
 
-        private readonly Logger _logger = NzbDroneLogger.GetLogger(typeof(Database));
-
-        public Database(string databaseName, Func<IDbConnection> datamapperFactory)
+    public Version Version
+    {
+        get
         {
-            _databaseName = databaseName;
-            _datamapperFactory = datamapperFactory;
-        }
-
-        public IDbConnection OpenConnection()
-        {
-            return _datamapperFactory();
-        }
-
-        public Version Version
-        {
-            get
+            using (var db = _datamapperFactory())
             {
-                using (var db = _datamapperFactory())
-                {
-                    var version = db.QueryFirstOrDefault<string>("SELECT sqlite_version()");
-                    return new Version(version);
-                }
+                var version = db.QueryFirstOrDefault<string>("SELECT sqlite_version()");
+                return new Version(version);
             }
         }
+    }
 
-        public int Migration
+    public int Migration
+    {
+        get
         {
-            get
+            using (var db = _datamapperFactory())
             {
-                using (var db = _datamapperFactory())
-                {
-                    return db.QueryFirstOrDefault<int>("SELECT version from VersionInfo ORDER BY version DESC LIMIT 1");
-                }
+                return db.QueryFirstOrDefault<int>("SELECT version from VersionInfo ORDER BY version DESC LIMIT 1");
             }
         }
+    }
 
-        public void Vacuum()
+    public void Vacuum()
+    {
+        try
         {
-            try
+            _logger.Info("Vacuuming {0} database", _databaseName);
+            using (var db = _datamapperFactory())
             {
-                _logger.Info("Vacuuming {0} database", _databaseName);
-                using (var db = _datamapperFactory())
-                {
-                    db.Execute("Vacuum;");
-                }
+                db.Execute("Vacuum;");
+            }
 
-                _logger.Info("{0} database compressed", _databaseName);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e, "An Error occurred while vacuuming database.");
-            }
+            _logger.Info("{0} database compressed", _databaseName);
+        }
+        catch (Exception e)
+        {
+            _logger.Error(e, "An Error occurred while vacuuming database.");
         }
     }
 }

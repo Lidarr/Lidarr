@@ -1,10 +1,9 @@
-namespace NzbDrone.Core.Configuration
+namespace NzbDrone.Core.Configuration;
+
+public enum WriteAudioTagsType
 {
-    public enum WriteAudioTagsType
-    {
-        No,
-        NewFiles,
-        AllFiles,
-        Sync
-    }
+    No,
+    NewFiles,
+    AllFiles,
+    Sync
 }

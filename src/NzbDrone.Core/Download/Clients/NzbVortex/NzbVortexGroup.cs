@@ -1,7 +1,6 @@
-﻿namespace NzbDrone.Core.Download.Clients.NzbVortex
+﻿namespace NzbDrone.Core.Download.Clients.NzbVortex;
+
+public class NzbVortexGroup
 {
-    public class NzbVortexGroup
-    {
-        public string GroupName { get; set; }
-    }
+    public string GroupName { get; set; }
 }

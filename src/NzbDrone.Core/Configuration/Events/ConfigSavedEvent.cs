@@ -1,8 +1,7 @@
 ﻿using NzbDrone.Common.Messaging;
 
-namespace NzbDrone.Core.Configuration.Events
+namespace NzbDrone.Core.Configuration.Events;
+
+public class ConfigSavedEvent : IEvent
 {
-    public class ConfigSavedEvent : IEvent
-    {
-    }
 }

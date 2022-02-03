@@ -1,17 +1,16 @@
 using System;
 
-namespace Lidarr.Http.REST.Attributes
-{
-    [AttributeUsage(AttributeTargets.Method)]
-    public class SkipValidationAttribute : Attribute
-    {
-        public SkipValidationAttribute(bool skip = true, bool skipShared = true)
-        {
-            Skip = skip;
-            SkipShared = skipShared;
-        }
+namespace Lidarr.Http.REST.Attributes;
 
-        public bool Skip { get; }
-        public bool SkipShared { get;  }
+[AttributeUsage(AttributeTargets.Method)]
+public class SkipValidationAttribute : Attribute
+{
+    public SkipValidationAttribute(bool skip = true, bool skipShared = true)
+    {
+        Skip = skip;
+        SkipShared = skipShared;
     }
+
+    public bool Skip { get; }
+    public bool SkipShared { get;  }
 }

@@ -9,107 +9,106 @@ using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.Music;
 using NzbDrone.SignalR;
 
-namespace Lidarr.Api.V1.Albums
+namespace Lidarr.Api.V1.Albums;
+
+public abstract class AlbumControllerWithSignalR : RestControllerWithSignalR<AlbumResource, Album>
 {
-    public abstract class AlbumControllerWithSignalR : RestControllerWithSignalR<AlbumResource, Album>
+    protected readonly IAlbumService _albumService;
+    protected readonly IArtistStatisticsService _artistStatisticsService;
+    protected readonly IUpgradableSpecification _qualityUpgradableSpecification;
+    protected readonly IMapCoversToLocal _coverMapper;
+
+    protected AlbumControllerWithSignalR(IAlbumService albumService,
+                                         IArtistStatisticsService artistStatisticsService,
+                                         IMapCoversToLocal coverMapper,
+                                         IUpgradableSpecification qualityUpgradableSpecification,
+                                         IBroadcastSignalRMessage signalRBroadcaster)
+        : base(signalRBroadcaster)
     {
-        protected readonly IAlbumService _albumService;
-        protected readonly IArtistStatisticsService _artistStatisticsService;
-        protected readonly IUpgradableSpecification _qualityUpgradableSpecification;
-        protected readonly IMapCoversToLocal _coverMapper;
+        _albumService = albumService;
+        _artistStatisticsService = artistStatisticsService;
+        _coverMapper = coverMapper;
+        _qualityUpgradableSpecification = qualityUpgradableSpecification;
+    }
 
-        protected AlbumControllerWithSignalR(IAlbumService albumService,
-                                           IArtistStatisticsService artistStatisticsService,
-                                           IMapCoversToLocal coverMapper,
-                                           IUpgradableSpecification qualityUpgradableSpecification,
-                                           IBroadcastSignalRMessage signalRBroadcaster)
-            : base(signalRBroadcaster)
+    public override AlbumResource GetResourceById(int id)
+    {
+        var album = _albumService.GetAlbum(id);
+        var resource = MapToResource(album, true);
+        return resource;
+    }
+
+    protected AlbumResource MapToResource(Album album, bool includeArtist)
+    {
+        var resource = album.ToResource();
+
+        if (includeArtist)
         {
-            _albumService = albumService;
-            _artistStatisticsService = artistStatisticsService;
-            _coverMapper = coverMapper;
-            _qualityUpgradableSpecification = qualityUpgradableSpecification;
+            var artist = album.Artist.Value;
+
+            resource.Artist = artist.ToResource();
         }
 
-        public override AlbumResource GetResourceById(int id)
-        {
-            var album = _albumService.GetAlbum(id);
-            var resource = MapToResource(album, true);
-            return resource;
-        }
+        FetchAndLinkAlbumStatistics(resource);
+        MapCoversToLocal(resource);
 
-        protected AlbumResource MapToResource(Album album, bool includeArtist)
-        {
-            var resource = album.ToResource();
+        return resource;
+    }
 
-            if (includeArtist)
+    protected List<AlbumResource> MapToResource(List<Album> albums, bool includeArtist)
+    {
+        var result = albums.ToResource();
+
+        if (includeArtist)
+        {
+            var artistDict = new Dictionary<int, NzbDrone.Core.Music.Artist>();
+            for (var i = 0; i < albums.Count; i++)
             {
-                var artist = album.Artist.Value;
+                var album = albums[i];
+                var resource = result[i];
+                var artist = artistDict.GetValueOrDefault(albums[i].ArtistMetadataId) ?? album.Artist?.Value;
+                artistDict[artist.ArtistMetadataId] = artist;
 
                 resource.Artist = artist.ToResource();
             }
-
-            FetchAndLinkAlbumStatistics(resource);
-            MapCoversToLocal(resource);
-
-            return resource;
         }
 
-        protected List<AlbumResource> MapToResource(List<Album> albums, bool includeArtist)
+        var artistStats = _artistStatisticsService.ArtistStatistics();
+        LinkArtistStatistics(result, artistStats);
+        MapCoversToLocal(result.ToArray());
+
+        return result;
+    }
+
+    private void FetchAndLinkAlbumStatistics(AlbumResource resource)
+    {
+        LinkArtistStatistics(resource, _artistStatisticsService.ArtistStatistics(resource.ArtistId));
+    }
+
+    private void LinkArtistStatistics(List<AlbumResource> resources, List<ArtistStatistics> artistStatistics)
+    {
+        foreach (var album in resources)
         {
-            var result = albums.ToResource();
-
-            if (includeArtist)
-            {
-                var artistDict = new Dictionary<int, NzbDrone.Core.Music.Artist>();
-                for (var i = 0; i < albums.Count; i++)
-                {
-                    var album = albums[i];
-                    var resource = result[i];
-                    var artist = artistDict.GetValueOrDefault(albums[i].ArtistMetadataId) ?? album.Artist?.Value;
-                    artistDict[artist.ArtistMetadataId] = artist;
-
-                    resource.Artist = artist.ToResource();
-                }
-            }
-
-            var artistStats = _artistStatisticsService.ArtistStatistics();
-            LinkArtistStatistics(result, artistStats);
-            MapCoversToLocal(result.ToArray());
-
-            return result;
+            var stats = artistStatistics.SingleOrDefault(ss => ss.ArtistId == album.ArtistId);
+            LinkArtistStatistics(album, stats);
         }
+    }
 
-        private void FetchAndLinkAlbumStatistics(AlbumResource resource)
+    private void LinkArtistStatistics(AlbumResource resource, ArtistStatistics artistStatistics)
+    {
+        if (artistStatistics?.AlbumStatistics != null)
         {
-            LinkArtistStatistics(resource, _artistStatisticsService.ArtistStatistics(resource.ArtistId));
+            var dictAlbumStats = artistStatistics.AlbumStatistics.ToDictionary(v => v.AlbumId);
+
+            resource.Statistics = dictAlbumStats.GetValueOrDefault(resource.Id).ToResource();
         }
+    }
 
-        private void LinkArtistStatistics(List<AlbumResource> resources, List<ArtistStatistics> artistStatistics)
+    private void MapCoversToLocal(params AlbumResource[] albums)
+    {
+        foreach (var albumResource in albums)
         {
-            foreach (var album in resources)
-            {
-                var stats = artistStatistics.SingleOrDefault(ss => ss.ArtistId == album.ArtistId);
-                LinkArtistStatistics(album, stats);
-            }
-        }
-
-        private void LinkArtistStatistics(AlbumResource resource, ArtistStatistics artistStatistics)
-        {
-            if (artistStatistics?.AlbumStatistics != null)
-            {
-                var dictAlbumStats = artistStatistics.AlbumStatistics.ToDictionary(v => v.AlbumId);
-
-                resource.Statistics = dictAlbumStats.GetValueOrDefault(resource.Id).ToResource();
-            }
-        }
-
-        private void MapCoversToLocal(params AlbumResource[] albums)
-        {
-            foreach (var albumResource in albums)
-            {
-                _coverMapper.ConvertToLocalUrls(albumResource.Id, MediaCoverEntity.Album, albumResource.Images);
-            }
+            _coverMapper.ConvertToLocalUrls(albumResource.Id, MediaCoverEntity.Album, albumResource.Images);
         }
     }
 }

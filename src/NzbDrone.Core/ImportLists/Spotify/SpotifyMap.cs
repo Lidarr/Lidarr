@@ -1,8 +1,7 @@
-namespace NzbDrone.Core.ImportLists.Spotify
+namespace NzbDrone.Core.ImportLists.Spotify;
+
+public class SpotifyMap
 {
-    public class SpotifyMap
-    {
-        public string SpotifyId { get; set; }
-        public string MusicbrainzId { get; set; }
-    }
+    public string SpotifyId { get; set; }
+    public string MusicbrainzId { get; set; }
 }

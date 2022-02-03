@@ -1,9 +1,8 @@
-namespace NzbDrone.Test.Common
+namespace NzbDrone.Test.Common;
+
+public enum TestLogOutput
 {
-    public enum TestLogOutput
-    {
-        Console = 0,
-        File = 1,
-        None = 2
-    }
+    Console = 0,
+    File = 1,
+    None = 2
 }

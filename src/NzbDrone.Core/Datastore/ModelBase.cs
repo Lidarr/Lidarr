@@ -1,10 +1,9 @@
 ﻿using System.Diagnostics;
 
-namespace NzbDrone.Core.Datastore
+namespace NzbDrone.Core.Datastore;
+
+[DebuggerDisplay("{GetType()} ID = {Id}")]
+public abstract class ModelBase
 {
-    [DebuggerDisplay("{GetType()} ID = {Id}")]
-    public abstract class ModelBase
-    {
-        public int Id { get; set; }
-    }
+    public int Id { get; set; }
 }

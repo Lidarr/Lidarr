@@ -1,8 +1,7 @@
-namespace NzbDrone.Core.Music
+namespace NzbDrone.Core.Music;
+
+public enum ArtistStatusType
 {
-    public enum ArtistStatusType
-    {
-        Continuing = 0,
-        Ended = 1
-    }
+    Continuing = 0,
+    Ended = 1
 }

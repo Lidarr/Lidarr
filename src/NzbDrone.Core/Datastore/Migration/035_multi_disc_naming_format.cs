@@ -1,15 +1,14 @@
 using FluentMigrator;
 using NzbDrone.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace NzbDrone.Core.Datastore.Migration;
+
+[Migration(35)]
+public class multi_disc_naming_format : NzbDroneMigrationBase
 {
-    [Migration(35)]
-    public class multi_disc_naming_format : NzbDroneMigrationBase
+    protected override void MainDbUpgrade()
     {
-        protected override void MainDbUpgrade()
-        {
-            Alter.Table("NamingConfig").AddColumn("MultiDiscTrackFormat").AsString().Nullable();
-            Execute.Sql("UPDATE NamingConfig SET MultiDiscTrackFormat = '{Medium Format} {medium:00}/{Artist Name} - {Album Title} - {track:00} - {Track Title}'");
-        }
+        Alter.Table("NamingConfig").AddColumn("MultiDiscTrackFormat").AsString().Nullable();
+        Execute.Sql("UPDATE NamingConfig SET MultiDiscTrackFormat = '{Medium Format} {medium:00}/{Artist Name} - {Album Title} - {track:00} - {Track Title}'");
     }
 }

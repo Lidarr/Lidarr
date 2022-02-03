@@ -1,16 +1,15 @@
 ﻿using System;
 
-namespace NzbDrone.Core.Notifications.Pushover
-{
-    public class InvalidResponseException : Exception
-    {
-        public InvalidResponseException()
-        {
-        }
+namespace NzbDrone.Core.Notifications.Pushover;
 
-        public InvalidResponseException(string message)
-            : base(message)
-        {
-        }
+public class InvalidResponseException : Exception
+{
+    public InvalidResponseException()
+    {
+    }
+
+    public InvalidResponseException(string message)
+        : base(message)
+    {
     }
 }

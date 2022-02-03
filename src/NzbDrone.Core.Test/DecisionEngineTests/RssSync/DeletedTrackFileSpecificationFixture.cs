@@ -16,140 +16,139 @@ using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync
+namespace NzbDrone.Core.Test.DecisionEngineTests.RssSync;
+
+[TestFixture]
+public class DeletedTrackFileSpecificationFixture : CoreTest<DeletedTrackFileSpecification>
 {
-    [TestFixture]
-    public class DeletedTrackFileSpecificationFixture : CoreTest<DeletedTrackFileSpecification>
+    private RemoteAlbum _parseResultMulti;
+    private RemoteAlbum _parseResultSingle;
+    private TrackFile _firstFile;
+    private TrackFile _secondFile;
+
+    [SetUp]
+    public void Setup()
     {
-        private RemoteAlbum _parseResultMulti;
-        private RemoteAlbum _parseResultSingle;
-        private TrackFile _firstFile;
-        private TrackFile _secondFile;
-
-        [SetUp]
-        public void Setup()
-        {
-            _firstFile =
-                new TrackFile
-                {
-                    Id = 1,
-                    Path = "/My.Artist.S01E01.mp3",
-                    Quality = new QualityModel(Quality.FLAC, new Revision(version: 1)),
-                    DateAdded = DateTime.Now,
-                    AlbumId = 1
-                };
-            _secondFile =
-                new TrackFile
-                {
-                    Id = 2,
-                    Path = "/My.Artist.S01E02.mp3",
-                    Quality = new QualityModel(Quality.FLAC, new Revision(version: 1)),
-                    DateAdded = DateTime.Now,
-                    AlbumId = 2
-                };
-
-            var singleAlbumList = new List<Album> { new Album { Id = 1 } };
-            var doubleAlbumList = new List<Album>
+        _firstFile =
+            new TrackFile
             {
-                new Album { Id = 1 },
-                new Album { Id = 2 }
+                Id = 1,
+                Path = "/My.Artist.S01E01.mp3",
+                Quality = new QualityModel(Quality.FLAC, new Revision(version: 1)),
+                DateAdded = DateTime.Now,
+                AlbumId = 1
+            };
+        _secondFile =
+            new TrackFile
+            {
+                Id = 2,
+                Path = "/My.Artist.S01E02.mp3",
+                Quality = new QualityModel(Quality.FLAC, new Revision(version: 1)),
+                DateAdded = DateTime.Now,
+                AlbumId = 2
             };
 
-            var firstTrack = new Track { TrackFile = _firstFile, TrackFileId = 1, AlbumId = 1 };
-            var secondTrack = new Track { TrackFile = _secondFile, TrackFileId = 2, AlbumId = 2 };
+        var singleAlbumList = new List<Album> { new Album { Id = 1 } };
+        var doubleAlbumList = new List<Album>
+                              {
+                                  new Album { Id = 1 },
+                                  new Album { Id = 2 }
+                              };
 
-            var fakeArtist = Builder<Artist>.CreateNew()
-                         .With(c => c.QualityProfile = new QualityProfile { Cutoff = Quality.FLAC.Id })
-                         .With(c => c.Path = @"C:\Music\My.Artist".AsOsAgnostic())
-                         .Build();
+        var firstTrack = new Track { TrackFile = _firstFile, TrackFileId = 1, AlbumId = 1 };
+        var secondTrack = new Track { TrackFile = _secondFile, TrackFileId = 2, AlbumId = 2 };
 
-            _parseResultMulti = new RemoteAlbum
-            {
-                Artist = fakeArtist,
-                ParsedAlbumInfo = new ParsedAlbumInfo { Quality = new QualityModel(Quality.MP3_256, new Revision(version: 2)) },
-                Albums = doubleAlbumList
-            };
+        var fakeArtist = Builder<Artist>.CreateNew()
+                                        .With(c => c.QualityProfile = new QualityProfile { Cutoff = Quality.FLAC.Id })
+                                        .With(c => c.Path = @"C:\Music\My.Artist".AsOsAgnostic())
+                                        .Build();
 
-            _parseResultSingle = new RemoteAlbum
-            {
-                Artist = fakeArtist,
-                ParsedAlbumInfo = new ParsedAlbumInfo { Quality = new QualityModel(Quality.MP3_256, new Revision(version: 2)) },
-                Albums = singleAlbumList
-            };
+        _parseResultMulti = new RemoteAlbum
+                            {
+                                Artist = fakeArtist,
+                                ParsedAlbumInfo = new ParsedAlbumInfo { Quality = new QualityModel(Quality.MP3_256, new Revision(version: 2)) },
+                                Albums = doubleAlbumList
+                            };
 
-            GivenUnmonitorDeletedTracks(true);
-        }
+        _parseResultSingle = new RemoteAlbum
+                             {
+                                 Artist = fakeArtist,
+                                 ParsedAlbumInfo = new ParsedAlbumInfo { Quality = new QualityModel(Quality.MP3_256, new Revision(version: 2)) },
+                                 Albums = singleAlbumList
+                             };
 
-        private void GivenUnmonitorDeletedTracks(bool enabled)
-        {
-            Mocker.GetMock<IConfigService>()
-                  .SetupGet(v => v.AutoUnmonitorPreviouslyDownloadedTracks)
-                  .Returns(enabled);
-        }
+        GivenUnmonitorDeletedTracks(true);
+    }
 
-        private void SetupMediaFile(List<TrackFile> files)
-        {
-            Mocker.GetMock<IMediaFileService>()
-                              .Setup(v => v.GetFilesByAlbum(It.IsAny<int>()))
-                              .Returns(files);
-        }
+    private void GivenUnmonitorDeletedTracks(bool enabled)
+    {
+        Mocker.GetMock<IConfigService>()
+              .SetupGet(v => v.AutoUnmonitorPreviouslyDownloadedTracks)
+              .Returns(enabled);
+    }
 
-        private void WithExistingFile(TrackFile trackFile)
-        {
-            var path = trackFile.Path;
+    private void SetupMediaFile(List<TrackFile> files)
+    {
+        Mocker.GetMock<IMediaFileService>()
+              .Setup(v => v.GetFilesByAlbum(It.IsAny<int>()))
+              .Returns(files);
+    }
 
-            Mocker.GetMock<IDiskProvider>()
-                  .Setup(v => v.FileExists(path))
-                  .Returns(true);
-        }
+    private void WithExistingFile(TrackFile trackFile)
+    {
+        var path = trackFile.Path;
 
-        [Test]
-        public void should_return_true_when_unmonitor_deleted_tracks_is_off()
-        {
-            GivenUnmonitorDeletedTracks(false);
+        Mocker.GetMock<IDiskProvider>()
+              .Setup(v => v.FileExists(path))
+              .Returns(true);
+    }
 
-            Subject.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeTrue();
-        }
+    [Test]
+    public void should_return_true_when_unmonitor_deleted_tracks_is_off()
+    {
+        GivenUnmonitorDeletedTracks(false);
 
-        [Test]
-        public void should_return_true_when_searching()
-        {
-            Subject.IsSatisfiedBy(_parseResultSingle, new ArtistSearchCriteria()).Accepted.Should().BeTrue();
-        }
+        Subject.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeTrue();
+    }
 
-        [Test]
-        public void should_return_true_if_file_exists()
-        {
-            WithExistingFile(_firstFile);
-            SetupMediaFile(new List<TrackFile> { _firstFile });
+    [Test]
+    public void should_return_true_when_searching()
+    {
+        Subject.IsSatisfiedBy(_parseResultSingle, new ArtistSearchCriteria()).Accepted.Should().BeTrue();
+    }
 
-            Subject.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeTrue();
-        }
+    [Test]
+    public void should_return_true_if_file_exists()
+    {
+        WithExistingFile(_firstFile);
+        SetupMediaFile(new List<TrackFile> { _firstFile });
 
-        [Test]
-        public void should_return_false_if_file_is_missing()
-        {
-            SetupMediaFile(new List<TrackFile> { _firstFile });
-            Subject.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeFalse();
-        }
+        Subject.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeTrue();
+    }
 
-        [Test]
-        public void should_return_true_if_both_of_multiple_episode_exist()
-        {
-            WithExistingFile(_firstFile);
-            WithExistingFile(_secondFile);
-            SetupMediaFile(new List<TrackFile> { _firstFile, _secondFile });
+    [Test]
+    public void should_return_false_if_file_is_missing()
+    {
+        SetupMediaFile(new List<TrackFile> { _firstFile });
+        Subject.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeFalse();
+    }
 
-            Subject.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeTrue();
-        }
+    [Test]
+    public void should_return_true_if_both_of_multiple_episode_exist()
+    {
+        WithExistingFile(_firstFile);
+        WithExistingFile(_secondFile);
+        SetupMediaFile(new List<TrackFile> { _firstFile, _secondFile });
 
-        [Test]
-        public void should_return_false_if_one_of_multiple_episode_is_missing()
-        {
-            WithExistingFile(_firstFile);
-            SetupMediaFile(new List<TrackFile> { _firstFile, _secondFile });
+        Subject.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeTrue();
+    }
 
-            Subject.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
-        }
+    [Test]
+    public void should_return_false_if_one_of_multiple_episode_is_missing()
+    {
+        WithExistingFile(_firstFile);
+        SetupMediaFile(new List<TrackFile> { _firstFile, _secondFile });
+
+        Subject.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
     }
 }

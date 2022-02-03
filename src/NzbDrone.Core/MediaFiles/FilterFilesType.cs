@@ -1,9 +1,8 @@
-namespace NzbDrone.Core.MediaFiles
+namespace NzbDrone.Core.MediaFiles;
+
+public enum FilterFilesType
 {
-    public enum FilterFilesType
-    {
-        None,
-        Matched,
-        Known
-    }
+    None,
+    Matched,
+    Known
 }

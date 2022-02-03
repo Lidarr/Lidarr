@@ -1,7 +1,6 @@
-﻿namespace NzbDrone.Core.HealthCheck
+﻿namespace NzbDrone.Core.HealthCheck;
+
+public interface ICheckOnCondition<TEvent>
 {
-    public interface ICheckOnCondition<TEvent>
-    {
-        bool ShouldCheckOnEvent(TEvent message);
-    }
+    bool ShouldCheckOnEvent(TEvent message);
 }

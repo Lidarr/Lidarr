@@ -1,8 +1,7 @@
-namespace NzbDrone.Core.Profiles.Releases.TermMatchers
+namespace NzbDrone.Core.Profiles.Releases.TermMatchers;
+
+public interface ITermMatcher
 {
-    public interface ITermMatcher
-    {
-        bool IsMatch(string value);
-        string MatchingTerm(string value);
-    }
+    bool IsMatch(string value);
+    string MatchingTerm(string value);
 }

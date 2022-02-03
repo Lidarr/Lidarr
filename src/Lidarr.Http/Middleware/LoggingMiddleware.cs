@@ -8,85 +8,84 @@ using Microsoft.AspNetCore.Http;
 using NLog;
 using NzbDrone.Common.Extensions;
 
-namespace Lidarr.Http.Middleware
+namespace Lidarr.Http.Middleware;
+
+public class LoggingMiddleware
 {
-    public class LoggingMiddleware
+    private static readonly Logger _loggerHttp = LogManager.GetLogger("Http");
+    private static readonly Logger _loggerApi = LogManager.GetLogger("Api");
+    private static int _requestSequenceID;
+
+    private readonly LidarrErrorPipeline _errorHandler;
+    private readonly RequestDelegate _next;
+
+    public LoggingMiddleware(RequestDelegate next,
+                             LidarrErrorPipeline errorHandler)
     {
-        private static readonly Logger _loggerHttp = LogManager.GetLogger("Http");
-        private static readonly Logger _loggerApi = LogManager.GetLogger("Api");
-        private static int _requestSequenceID;
+        _next = next;
+        _errorHandler = errorHandler;
+    }
 
-        private readonly LidarrErrorPipeline _errorHandler;
-        private readonly RequestDelegate _next;
+    public async Task InvokeAsync(HttpContext context)
+    {
+        LogStart(context);
 
-        public LoggingMiddleware(RequestDelegate next,
-            LidarrErrorPipeline errorHandler)
+        await _next(context);
+
+        LogEnd(context);
+    }
+
+    private void LogStart(HttpContext context)
+    {
+        var id = Interlocked.Increment(ref _requestSequenceID);
+
+        context.Items["ApiRequestSequenceID"] = id;
+        context.Items["ApiRequestStartTime"] = DateTime.UtcNow;
+
+        var reqPath = GetRequestPathAndQuery(context.Request);
+
+        _loggerHttp.Trace("Req: {0} [{1}] {2} (from {3})", id, context.Request.Method, reqPath, GetOrigin(context));
+    }
+
+    private void LogEnd(HttpContext context)
+    {
+        var id = (int)context.Items["ApiRequestSequenceID"];
+        var startTime = (DateTime)context.Items["ApiRequestStartTime"];
+
+        var endTime = DateTime.UtcNow;
+        var duration = endTime - startTime;
+
+        var reqPath = GetRequestPathAndQuery(context.Request);
+
+        _loggerHttp.Trace("Res: {0} [{1}] {2}: {3}.{4} ({5} ms)", id, context.Request.Method, reqPath, context.Response.StatusCode, (HttpStatusCode)context.Response.StatusCode, (int)duration.TotalMilliseconds);
+
+        if (context.Request.IsApiRequest())
         {
-            _next = next;
-            _errorHandler = errorHandler;
+            _loggerApi.Debug("[{0}] {1}: {2}.{3} ({4} ms)", context.Request.Method, reqPath, context.Response.StatusCode, (HttpStatusCode)context.Response.StatusCode, (int)duration.TotalMilliseconds);
         }
+    }
 
-        public async Task InvokeAsync(HttpContext context)
+    private static string GetRequestPathAndQuery(HttpRequest request)
+    {
+        if (request.QueryString.Value.IsNotNullOrWhiteSpace() && request.QueryString.Value != "?")
         {
-            LogStart(context);
-
-            await _next(context);
-
-            LogEnd(context);
+            return string.Concat(request.Path, request.QueryString);
         }
-
-        private void LogStart(HttpContext context)
+        else
         {
-            var id = Interlocked.Increment(ref _requestSequenceID);
-
-            context.Items["ApiRequestSequenceID"] = id;
-            context.Items["ApiRequestStartTime"] = DateTime.UtcNow;
-
-            var reqPath = GetRequestPathAndQuery(context.Request);
-
-            _loggerHttp.Trace("Req: {0} [{1}] {2} (from {3})", id, context.Request.Method, reqPath, GetOrigin(context));
+            return request.Path;
         }
+    }
 
-        private void LogEnd(HttpContext context)
+    private static string GetOrigin(HttpContext context)
+    {
+        if (context.Request.Headers["UserAgent"].ToString().IsNullOrWhiteSpace())
         {
-            var id = (int)context.Items["ApiRequestSequenceID"];
-            var startTime = (DateTime)context.Items["ApiRequestStartTime"];
-
-            var endTime = DateTime.UtcNow;
-            var duration = endTime - startTime;
-
-            var reqPath = GetRequestPathAndQuery(context.Request);
-
-            _loggerHttp.Trace("Res: {0} [{1}] {2}: {3}.{4} ({5} ms)", id, context.Request.Method, reqPath, context.Response.StatusCode, (HttpStatusCode)context.Response.StatusCode, (int)duration.TotalMilliseconds);
-
-            if (context.Request.IsApiRequest())
-            {
-                _loggerApi.Debug("[{0}] {1}: {2}.{3} ({4} ms)", context.Request.Method, reqPath, context.Response.StatusCode, (HttpStatusCode)context.Response.StatusCode, (int)duration.TotalMilliseconds);
-            }
+            return context.GetRemoteIP();
         }
-
-        private static string GetRequestPathAndQuery(HttpRequest request)
+        else
         {
-            if (request.QueryString.Value.IsNotNullOrWhiteSpace() && request.QueryString.Value != "?")
-            {
-                return string.Concat(request.Path, request.QueryString);
-            }
-            else
-            {
-                return request.Path;
-            }
-        }
-
-        private static string GetOrigin(HttpContext context)
-        {
-            if (context.Request.Headers["UserAgent"].ToString().IsNullOrWhiteSpace())
-            {
-                return context.GetRemoteIP();
-            }
-            else
-            {
-                return $"{context.GetRemoteIP()} {context.Request.Headers["UserAgent"]}";
-            }
+            return $"{context.GetRemoteIP()} {context.Request.Headers["UserAgent"]}";
         }
     }
 }

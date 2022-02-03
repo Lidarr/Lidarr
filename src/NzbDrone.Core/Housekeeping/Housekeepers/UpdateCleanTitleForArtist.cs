@@ -2,30 +2,29 @@ using System.Linq;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace NzbDrone.Core.Housekeeping.Housekeepers;
+
+public class UpdateCleanTitleForArtist : IHousekeepingTask
 {
-    public class UpdateCleanTitleForArtist : IHousekeepingTask
+    private readonly IArtistRepository _artistRepository;
+
+    public UpdateCleanTitleForArtist(IArtistRepository artistRepository)
     {
-        private readonly IArtistRepository _artistRepository;
+        _artistRepository = artistRepository;
+    }
 
-        public UpdateCleanTitleForArtist(IArtistRepository artistRepository)
-        {
-            _artistRepository = artistRepository;
-        }
+    public void Clean()
+    {
+        var artists = _artistRepository.All().ToList();
 
-        public void Clean()
-        {
-            var artists = _artistRepository.All().ToList();
-
-            artists.ForEach(s =>
-            {
-                var cleanName = s.Name.CleanArtistName();
-                if (s.CleanName != cleanName)
-                {
-                    s.CleanName = cleanName;
-                    _artistRepository.Update(s);
-                }
-            });
-        }
+        artists.ForEach(s =>
+                        {
+                            var cleanName = s.Name.CleanArtistName();
+                            if (s.CleanName != cleanName)
+                            {
+                                s.CleanName = cleanName;
+                                _artistRepository.Update(s);
+                            }
+                        });
     }
 }

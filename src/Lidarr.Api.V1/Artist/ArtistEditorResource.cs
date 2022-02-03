@@ -1,24 +1,23 @@
 using System.Collections.Generic;
 
-namespace Lidarr.Api.V1.Artist
-{
-    public class ArtistEditorResource
-    {
-        public List<int> ArtistIds { get; set; }
-        public bool? Monitored { get; set; }
-        public int? QualityProfileId { get; set; }
-        public int? MetadataProfileId { get; set; }
-        public string RootFolderPath { get; set; }
-        public List<int> Tags { get; set; }
-        public ApplyTags ApplyTags { get; set; }
-        public bool MoveFiles { get; set; }
-        public bool DeleteFiles { get; set; }
-    }
+namespace Lidarr.Api.V1.Artist;
 
-    public enum ApplyTags
-    {
-        Add,
-        Remove,
-        Replace
-    }
+public class ArtistEditorResource
+{
+    public List<int> ArtistIds { get; set; }
+    public bool? Monitored { get; set; }
+    public int? QualityProfileId { get; set; }
+    public int? MetadataProfileId { get; set; }
+    public string RootFolderPath { get; set; }
+    public List<int> Tags { get; set; }
+    public ApplyTags ApplyTags { get; set; }
+    public bool MoveFiles { get; set; }
+    public bool DeleteFiles { get; set; }
+}
+
+public enum ApplyTags
+{
+    Add,
+    Remove,
+    Replace
 }

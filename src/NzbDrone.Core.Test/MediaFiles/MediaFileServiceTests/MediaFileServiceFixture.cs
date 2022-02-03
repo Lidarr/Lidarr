@@ -8,58 +8,57 @@ using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.MediaFiles.TrackFileMovingServiceTests
+namespace NzbDrone.Core.Test.MediaFiles.TrackFileMovingServiceTests;
+
+[TestFixture]
+public class MediaFileServiceFixture : CoreTest<MediaFileService>
 {
-    [TestFixture]
-    public class MediaFileServiceFixture : CoreTest<MediaFileService>
+    private Album _album;
+    private List<TrackFile> _trackFiles;
+
+    [SetUp]
+    public void Setup()
     {
-        private Album _album;
-        private List<TrackFile> _trackFiles;
+        _album = Builder<Album>.CreateNew()
+                               .Build();
 
-        [SetUp]
-        public void Setup()
-        {
-            _album = Builder<Album>.CreateNew()
-                         .Build();
+        _trackFiles = Builder<TrackFile>.CreateListOfSize(3)
+                                        .TheFirst(2)
+                                        .With(f => f.AlbumId = _album.Id)
+                                        .TheNext(1)
+                                        .With(f => f.AlbumId = 0)
+                                        .Build().ToList();
+    }
 
-            _trackFiles = Builder<TrackFile>.CreateListOfSize(3)
-                                               .TheFirst(2)
-                                               .With(f => f.AlbumId = _album.Id)
-                                               .TheNext(1)
-                                               .With(f => f.AlbumId = 0)
-                                               .Build().ToList();
-        }
+    [Test]
+    public void should_throw_trackFileDeletedEvent_for_each_mapped_track_on_deletemany()
+    {
+        Subject.DeleteMany(_trackFiles, DeleteMediaFileReason.Manual);
 
-        [Test]
-        public void should_throw_trackFileDeletedEvent_for_each_mapped_track_on_deletemany()
-        {
-            Subject.DeleteMany(_trackFiles, DeleteMediaFileReason.Manual);
+        VerifyEventPublished<TrackFileDeletedEvent>(Times.Exactly(2));
+    }
 
-            VerifyEventPublished<TrackFileDeletedEvent>(Times.Exactly(2));
-        }
+    [Test]
+    public void should_throw_trackFileDeletedEvent_for_mapped_track_on_delete()
+    {
+        Subject.Delete(_trackFiles[0], DeleteMediaFileReason.Manual);
 
-        [Test]
-        public void should_throw_trackFileDeletedEvent_for_mapped_track_on_delete()
-        {
-            Subject.Delete(_trackFiles[0], DeleteMediaFileReason.Manual);
+        VerifyEventPublished<TrackFileDeletedEvent>(Times.Once());
+    }
 
-            VerifyEventPublished<TrackFileDeletedEvent>(Times.Once());
-        }
+    [Test]
+    public void should_throw_trackFileAddedEvent_for_each_track_added_on_addmany()
+    {
+        Subject.AddMany(_trackFiles);
 
-        [Test]
-        public void should_throw_trackFileAddedEvent_for_each_track_added_on_addmany()
-        {
-            Subject.AddMany(_trackFiles);
+        VerifyEventPublished<TrackFileAddedEvent>(Times.Exactly(3));
+    }
 
-            VerifyEventPublished<TrackFileAddedEvent>(Times.Exactly(3));
-        }
+    [Test]
+    public void should_throw_trackFileAddedEvent_for_track_added()
+    {
+        Subject.Add(_trackFiles[0]);
 
-        [Test]
-        public void should_throw_trackFileAddedEvent_for_track_added()
-        {
-            Subject.Add(_trackFiles[0]);
-
-            VerifyEventPublished<TrackFileAddedEvent>(Times.Once());
-        }
+        VerifyEventPublished<TrackFileAddedEvent>(Times.Once());
     }
 }

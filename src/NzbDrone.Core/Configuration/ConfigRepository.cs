@@ -2,38 +2,37 @@ using System.Linq;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Configuration
+namespace NzbDrone.Core.Configuration;
+
+public interface IConfigRepository : IBasicRepository<Config>
 {
-    public interface IConfigRepository : IBasicRepository<Config>
+    Config Get(string key);
+    Config Upsert(string key, string value);
+}
+
+public class ConfigRepository : BasicRepository<Config>, IConfigRepository
+{
+    public ConfigRepository(IMainDatabase database, IEventAggregator eventAggregator)
+        : base(database, eventAggregator)
     {
-        Config Get(string key);
-        Config Upsert(string key, string value);
     }
 
-    public class ConfigRepository : BasicRepository<Config>, IConfigRepository
+    public Config Get(string key)
     {
-        public ConfigRepository(IMainDatabase database, IEventAggregator eventAggregator)
-            : base(database, eventAggregator)
+        return Query(c => c.Key == key).SingleOrDefault();
+    }
+
+    public Config Upsert(string key, string value)
+    {
+        var dbValue = Get(key);
+
+        if (dbValue == null)
         {
+            return Insert(new Config { Key = key, Value = value });
         }
 
-        public Config Get(string key)
-        {
-            return Query(c => c.Key == key).SingleOrDefault();
-        }
+        dbValue.Value = value;
 
-        public Config Upsert(string key, string value)
-        {
-            var dbValue = Get(key);
-
-            if (dbValue == null)
-            {
-                return Insert(new Config { Key = key, Value = value });
-            }
-
-            dbValue.Value = value;
-
-            return Update(dbValue);
-        }
+        return Update(dbValue);
     }
 }

@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
 
-namespace NzbDrone.SignalR
+namespace NzbDrone.SignalR;
+
+public interface IBroadcastSignalRMessage
 {
-    public interface IBroadcastSignalRMessage
-    {
-        bool IsConnected { get; }
-        Task BroadcastMessage(SignalRMessage message);
-    }
+    bool IsConnected { get; }
+    Task BroadcastMessage(SignalRMessage message);
 }

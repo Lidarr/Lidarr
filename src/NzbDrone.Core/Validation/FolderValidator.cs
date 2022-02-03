@@ -1,23 +1,22 @@
 ﻿using FluentValidation.Validators;
 using NzbDrone.Common.Extensions;
 
-namespace NzbDrone.Core.Validation
+namespace NzbDrone.Core.Validation;
+
+public class FolderValidator : PropertyValidator
 {
-    public class FolderValidator : PropertyValidator
+    public FolderValidator()
+        : base("Invalid Path")
     {
-        public FolderValidator()
-            : base("Invalid Path")
+    }
+
+    protected override bool IsValid(PropertyValidatorContext context)
+    {
+        if (context.PropertyValue == null)
         {
+            return false;
         }
 
-        protected override bool IsValid(PropertyValidatorContext context)
-        {
-            if (context.PropertyValue == null)
-            {
-                return false;
-            }
-
-            return context.PropertyValue.ToString().IsPathValid();
-        }
+        return context.PropertyValue.ToString().IsPathValid();
     }
 }

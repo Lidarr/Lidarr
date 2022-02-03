@@ -1,9 +1,8 @@
-﻿namespace NzbDrone.Core.Authentication
+﻿namespace NzbDrone.Core.Authentication;
+
+public enum AuthenticationType
 {
-    public enum AuthenticationType
-    {
-        None = 0,
-        Basic = 1,
-        Forms = 2
-    }
+    None = 0,
+    Basic = 1,
+    Forms = 2
 }

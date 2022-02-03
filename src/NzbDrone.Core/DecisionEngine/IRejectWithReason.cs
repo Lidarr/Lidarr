@@ -1,7 +1,6 @@
-namespace NzbDrone.Core.DecisionEngine
+namespace NzbDrone.Core.DecisionEngine;
+
+public interface IRejectWithReason
 {
-    public interface IRejectWithReason
-    {
-        string RejectionReason { get; }
-    }
+    string RejectionReason { get; }
 }

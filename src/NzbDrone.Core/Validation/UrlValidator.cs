@@ -2,31 +2,30 @@
 using FluentValidation.Validators;
 using NzbDrone.Common.Extensions;
 
-namespace NzbDrone.Core.Validation
+namespace NzbDrone.Core.Validation;
+
+public static class UrlValidation
 {
-    public static class UrlValidation
+    public static IRuleBuilderOptions<T, string> IsValidUrl<T>(this IRuleBuilder<T, string> ruleBuilder)
     {
-        public static IRuleBuilderOptions<T, string> IsValidUrl<T>(this IRuleBuilder<T, string> ruleBuilder)
-        {
-            return ruleBuilder.SetValidator(new UrlValidator());
-        }
+        return ruleBuilder.SetValidator(new UrlValidator());
+    }
+}
+
+public class UrlValidator : PropertyValidator
+{
+    public UrlValidator()
+        : base("Invalid Url")
+    {
     }
 
-    public class UrlValidator : PropertyValidator
+    protected override bool IsValid(PropertyValidatorContext context)
     {
-        public UrlValidator()
-            : base("Invalid Url")
+        if (context.PropertyValue == null)
         {
+            return false;
         }
 
-        protected override bool IsValid(PropertyValidatorContext context)
-        {
-            if (context.PropertyValue == null)
-            {
-                return false;
-            }
-
-            return context.PropertyValue.ToString().IsValidUrl();
-        }
+        return context.PropertyValue.ToString().IsValidUrl();
     }
 }

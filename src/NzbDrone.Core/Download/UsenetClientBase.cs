@@ -11,82 +11,81 @@ using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.RemotePathMappings;
 using NzbDrone.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Download
+namespace NzbDrone.Core.Download;
+
+public abstract class UsenetClientBase<TSettings> : DownloadClientBase<TSettings>
+    where TSettings : IProviderConfig, new()
 {
-    public abstract class UsenetClientBase<TSettings> : DownloadClientBase<TSettings>
-        where TSettings : IProviderConfig, new()
+    protected readonly IHttpClient _httpClient;
+    private readonly IValidateNzbs _nzbValidationService;
+
+    protected UsenetClientBase(IHttpClient httpClient,
+                               IConfigService configService,
+                               IDiskProvider diskProvider,
+                               IRemotePathMappingService remotePathMappingService,
+                               IValidateNzbs nzbValidationService,
+                               Logger logger)
+        : base(configService, diskProvider, remotePathMappingService, logger)
     {
-        protected readonly IHttpClient _httpClient;
-        private readonly IValidateNzbs _nzbValidationService;
+        _httpClient = httpClient;
+        _nzbValidationService = nzbValidationService;
+    }
 
-        protected UsenetClientBase(IHttpClient httpClient,
-                                   IConfigService configService,
-                                   IDiskProvider diskProvider,
-                                   IRemotePathMappingService remotePathMappingService,
-                                   IValidateNzbs nzbValidationService,
-                                   Logger logger)
-            : base(configService, diskProvider, remotePathMappingService, logger)
+    public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
+
+    protected abstract string AddFromNzbFile(RemoteAlbum remoteAlbum, string filename, byte[] fileContent);
+
+    public override string Download(RemoteAlbum remoteAlbum)
+    {
+        var url = remoteAlbum.Release.DownloadUrl;
+        var filename = FileNameBuilder.CleanFileName(remoteAlbum.Release.Title) + ".nzb";
+
+        byte[] nzbData;
+
+        try
         {
-            _httpClient = httpClient;
-            _nzbValidationService = nzbValidationService;
+            var nzbDataRequest = new HttpRequest(url);
+            nzbDataRequest.RateLimitKey = remoteAlbum?.Release?.IndexerId.ToString();
+
+            // TODO: Look into moving download request handling to indexer
+            if (remoteAlbum.Release.BasicAuthString.IsNotNullOrWhiteSpace())
+            {
+                nzbDataRequest.Headers.Set("Authorization", "Basic " + remoteAlbum.Release.BasicAuthString);
+            }
+
+            nzbData = _httpClient.Get(nzbDataRequest).ResponseData;
+
+            _logger.Debug("Downloaded nzb for release '{0}' finished ({1} bytes from {2})", remoteAlbum.Release.Title, nzbData.Length, url);
         }
-
-        public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
-
-        protected abstract string AddFromNzbFile(RemoteAlbum remoteAlbum, string filename, byte[] fileContent);
-
-        public override string Download(RemoteAlbum remoteAlbum)
+        catch (HttpException ex)
         {
-            var url = remoteAlbum.Release.DownloadUrl;
-            var filename = FileNameBuilder.CleanFileName(remoteAlbum.Release.Title) + ".nzb";
-
-            byte[] nzbData;
-
-            try
+            if (ex.Response.StatusCode == HttpStatusCode.NotFound)
             {
-                var nzbDataRequest = new HttpRequest(url);
-                nzbDataRequest.RateLimitKey = remoteAlbum?.Release?.IndexerId.ToString();
-
-                // TODO: Look into moving download request handling to indexer
-                if (remoteAlbum.Release.BasicAuthString.IsNotNullOrWhiteSpace())
-                {
-                    nzbDataRequest.Headers.Set("Authorization", "Basic " + remoteAlbum.Release.BasicAuthString);
-                }
-
-                nzbData = _httpClient.Get(nzbDataRequest).ResponseData;
-
-                _logger.Debug("Downloaded nzb for release '{0}' finished ({1} bytes from {2})", remoteAlbum.Release.Title, nzbData.Length, url);
+                _logger.Error(ex, "Downloading nzb file for album '{0}' failed since it no longer exists ({1})", remoteAlbum.Release.Title, url);
+                throw new ReleaseUnavailableException(remoteAlbum.Release, "Downloading nzb failed", ex);
             }
-            catch (HttpException ex)
+
+            if ((int)ex.Response.StatusCode == 429)
             {
-                if (ex.Response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    _logger.Error(ex, "Downloading nzb file for album '{0}' failed since it no longer exists ({1})", remoteAlbum.Release.Title, url);
-                    throw new ReleaseUnavailableException(remoteAlbum.Release, "Downloading nzb failed", ex);
-                }
-
-                if ((int)ex.Response.StatusCode == 429)
-                {
-                    _logger.Error("API Grab Limit reached for {0}", url);
-                }
-                else
-                {
-                    _logger.Error(ex, "Downloading nzb for release '{0}' failed ({1})", remoteAlbum.Release.Title, url);
-                }
-
-                throw new ReleaseDownloadException(remoteAlbum.Release, "Downloading nzb failed", ex);
+                _logger.Error("API Grab Limit reached for {0}", url);
             }
-            catch (WebException ex)
+            else
             {
                 _logger.Error(ex, "Downloading nzb for release '{0}' failed ({1})", remoteAlbum.Release.Title, url);
-
-                throw new ReleaseDownloadException(remoteAlbum.Release, "Downloading nzb failed", ex);
             }
 
-            _nzbValidationService.Validate(filename, nzbData);
-
-            _logger.Info("Adding report [{0}] to the queue.", remoteAlbum.Release.Title);
-            return AddFromNzbFile(remoteAlbum, filename, nzbData);
+            throw new ReleaseDownloadException(remoteAlbum.Release, "Downloading nzb failed", ex);
         }
+        catch (WebException ex)
+        {
+            _logger.Error(ex, "Downloading nzb for release '{0}' failed ({1})", remoteAlbum.Release.Title, url);
+
+            throw new ReleaseDownloadException(remoteAlbum.Release, "Downloading nzb failed", ex);
+        }
+
+        _nzbValidationService.Validate(filename, nzbData);
+
+        _logger.Info("Adding report [{0}] to the queue.", remoteAlbum.Release.Title);
+        return AddFromNzbFile(remoteAlbum, filename, nzbData);
     }
 }

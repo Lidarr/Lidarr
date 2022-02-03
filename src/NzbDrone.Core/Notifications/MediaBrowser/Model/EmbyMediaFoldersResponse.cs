@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Notifications.MediaBrowser.Model
+namespace NzbDrone.Core.Notifications.MediaBrowser.Model;
+
+public class EmbyMediaFoldersResponse
 {
-    public class EmbyMediaFoldersResponse
-    {
-        public List<EmbyMediaFolder> Items { get; set; }
-    }
+    public List<EmbyMediaFolder> Items { get; set; }
 }

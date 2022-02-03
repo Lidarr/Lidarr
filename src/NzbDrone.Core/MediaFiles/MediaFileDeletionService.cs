@@ -12,163 +12,162 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Music.Events;
 
-namespace NzbDrone.Core.MediaFiles
+namespace NzbDrone.Core.MediaFiles;
+
+public interface IDeleteMediaFiles
 {
-    public interface IDeleteMediaFiles
+    void DeleteTrackFile(Artist artist, TrackFile trackFile);
+    void DeleteTrackFile(TrackFile trackFile, string subfolder = "");
+}
+
+public class MediaFileDeletionService : IDeleteMediaFiles,
+                                        IHandleAsync<ArtistsDeletedEvent>,
+                                        IHandleAsync<AlbumDeletedEvent>,
+                                        IHandle<TrackFileDeletedEvent>
+{
+    private readonly IDiskProvider _diskProvider;
+    private readonly IRecycleBinProvider _recycleBinProvider;
+    private readonly IMediaFileService _mediaFileService;
+    private readonly IArtistService _artistService;
+    private readonly IConfigService _configService;
+    private readonly Logger _logger;
+
+    public MediaFileDeletionService(IDiskProvider diskProvider,
+                                    IRecycleBinProvider recycleBinProvider,
+                                    IMediaFileService mediaFileService,
+                                    IArtistService artistService,
+                                    IConfigService configService,
+                                    Logger logger)
     {
-        void DeleteTrackFile(Artist artist, TrackFile trackFile);
-        void DeleteTrackFile(TrackFile trackFile, string subfolder = "");
+        _diskProvider = diskProvider;
+        _recycleBinProvider = recycleBinProvider;
+        _mediaFileService = mediaFileService;
+        _artistService = artistService;
+        _configService = configService;
+        _logger = logger;
     }
 
-    public class MediaFileDeletionService : IDeleteMediaFiles,
-                                            IHandleAsync<ArtistsDeletedEvent>,
-                                            IHandleAsync<AlbumDeletedEvent>,
-                                            IHandle<TrackFileDeletedEvent>
+    public void DeleteTrackFile(Artist artist, TrackFile trackFile)
     {
-        private readonly IDiskProvider _diskProvider;
-        private readonly IRecycleBinProvider _recycleBinProvider;
-        private readonly IMediaFileService _mediaFileService;
-        private readonly IArtistService _artistService;
-        private readonly IConfigService _configService;
-        private readonly Logger _logger;
+        var fullPath = trackFile.Path;
+        var rootFolder = _diskProvider.GetParentFolder(artist.Path);
 
-        public MediaFileDeletionService(IDiskProvider diskProvider,
-                                        IRecycleBinProvider recycleBinProvider,
-                                        IMediaFileService mediaFileService,
-                                        IArtistService artistService,
-                                        IConfigService configService,
-                                        Logger logger)
+        if (!_diskProvider.FolderExists(rootFolder))
         {
-            _diskProvider = diskProvider;
-            _recycleBinProvider = recycleBinProvider;
-            _mediaFileService = mediaFileService;
-            _artistService = artistService;
-            _configService = configService;
-            _logger = logger;
+            _logger.Warn("Artist's root folder ({0}) doesn't exist.", rootFolder);
+            throw new NzbDroneClientException(HttpStatusCode.Conflict, "Artist's root folder ({0}) doesn't exist.", rootFolder);
         }
 
-        public void DeleteTrackFile(Artist artist, TrackFile trackFile)
+        if (_diskProvider.GetDirectories(rootFolder).Empty())
         {
-            var fullPath = trackFile.Path;
-            var rootFolder = _diskProvider.GetParentFolder(artist.Path);
-
-            if (!_diskProvider.FolderExists(rootFolder))
-            {
-                _logger.Warn("Artist's root folder ({0}) doesn't exist.", rootFolder);
-                throw new NzbDroneClientException(HttpStatusCode.Conflict, "Artist's root folder ({0}) doesn't exist.", rootFolder);
-            }
-
-            if (_diskProvider.GetDirectories(rootFolder).Empty())
-            {
-                _logger.Warn("Artist's root folder ({0}) is empty.", rootFolder);
-                throw new NzbDroneClientException(HttpStatusCode.Conflict, "Artist's root folder ({0}) is empty.", rootFolder);
-            }
-
-            if (_diskProvider.FolderExists(artist.Path))
-            {
-                var subfolder = _diskProvider.GetParentFolder(artist.Path).GetRelativePath(_diskProvider.GetParentFolder(fullPath));
-                DeleteTrackFile(trackFile, subfolder);
-            }
-            else
-            {
-                // delete from db even if the artist folder is missing
-                _mediaFileService.Delete(trackFile, DeleteMediaFileReason.Manual);
-            }
+            _logger.Warn("Artist's root folder ({0}) is empty.", rootFolder);
+            throw new NzbDroneClientException(HttpStatusCode.Conflict, "Artist's root folder ({0}) is empty.", rootFolder);
         }
 
-        public void DeleteTrackFile(TrackFile trackFile, string subfolder = "")
+        if (_diskProvider.FolderExists(artist.Path))
         {
-            var fullPath = trackFile.Path;
-
-            if (_diskProvider.FileExists(fullPath))
-            {
-                _logger.Info("Deleting track file: {0}", fullPath);
-
-                try
-                {
-                    _recycleBinProvider.DeleteFile(fullPath, subfolder);
-                }
-                catch (Exception e)
-                {
-                    _logger.Error(e, "Unable to delete track file");
-                    throw new NzbDroneClientException(HttpStatusCode.InternalServerError, "Unable to delete track file");
-                }
-            }
-
-            // Delete the track file from the database to clean it up even if the file was already deleted
+            var subfolder = _diskProvider.GetParentFolder(artist.Path).GetRelativePath(_diskProvider.GetParentFolder(fullPath));
+            DeleteTrackFile(trackFile, subfolder);
+        }
+        else
+        {
+            // delete from db even if the artist folder is missing
             _mediaFileService.Delete(trackFile, DeleteMediaFileReason.Manual);
         }
+    }
 
-        public void HandleAsync(ArtistsDeletedEvent message)
+    public void DeleteTrackFile(TrackFile trackFile, string subfolder = "")
+    {
+        var fullPath = trackFile.Path;
+
+        if (_diskProvider.FileExists(fullPath))
         {
-            if (message.DeleteFiles)
+            _logger.Info("Deleting track file: {0}", fullPath);
+
+            try
             {
-                var artists = message.Artists;
-                var allArtists = _artistService.AllArtistPaths();
-
-                foreach (var artist in artists)
-                {
-                    foreach (var s in allArtists)
-                    {
-                        if (s.Key == artist.Id)
-                        {
-                            continue;
-                        }
-
-                        if (artist.Path.IsParentPath(s.Value))
-                        {
-                            _logger.Error("Artist path: '{0}' is a parent of another artist, not deleting files.", artist.Path);
-                            return;
-                        }
-
-                        if (artist.Path.PathEquals(s.Value))
-                        {
-                            _logger.Error("Artist path: '{0}' is the same as another artist, not deleting files.", artist.Path);
-                            return;
-                        }
-                    }
-
-                    if (_diskProvider.FolderExists(artist.Path))
-                    {
-                        _recycleBinProvider.DeleteFolder(artist.Path);
-                    }
-                }
+                _recycleBinProvider.DeleteFile(fullPath, subfolder);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Unable to delete track file");
+                throw new NzbDroneClientException(HttpStatusCode.InternalServerError, "Unable to delete track file");
             }
         }
 
-        public void HandleAsync(AlbumDeletedEvent message)
+        // Delete the track file from the database to clean it up even if the file was already deleted
+        _mediaFileService.Delete(trackFile, DeleteMediaFileReason.Manual);
+    }
+
+    public void HandleAsync(ArtistsDeletedEvent message)
+    {
+        if (message.DeleteFiles)
         {
-            if (message.DeleteFiles)
+            var artists = message.Artists;
+            var allArtists = _artistService.AllArtistPaths();
+
+            foreach (var artist in artists)
             {
-                var files = _mediaFileService.GetFilesByAlbum(message.Album.Id);
-                foreach (var file in files)
+                foreach (var s in allArtists)
                 {
-                    _recycleBinProvider.DeleteFile(file.Path);
+                    if (s.Key == artist.Id)
+                    {
+                        continue;
+                    }
+
+                    if (artist.Path.IsParentPath(s.Value))
+                    {
+                        _logger.Error("Artist path: '{0}' is a parent of another artist, not deleting files.", artist.Path);
+                        return;
+                    }
+
+                    if (artist.Path.PathEquals(s.Value))
+                    {
+                        _logger.Error("Artist path: '{0}' is the same as another artist, not deleting files.", artist.Path);
+                        return;
+                    }
+                }
+
+                if (_diskProvider.FolderExists(artist.Path))
+                {
+                    _recycleBinProvider.DeleteFolder(artist.Path);
                 }
             }
         }
+    }
 
-        [EventHandleOrder(EventHandleOrder.Last)]
-        public void Handle(TrackFileDeletedEvent message)
+    public void HandleAsync(AlbumDeletedEvent message)
+    {
+        if (message.DeleteFiles)
         {
-            if (message.Reason == DeleteMediaFileReason.Upgrade)
+            var files = _mediaFileService.GetFilesByAlbum(message.Album.Id);
+            foreach (var file in files)
             {
-                return;
+                _recycleBinProvider.DeleteFile(file.Path);
             }
+        }
+    }
 
-            if (_configService.DeleteEmptyFolders)
+    [EventHandleOrder(EventHandleOrder.Last)]
+    public void Handle(TrackFileDeletedEvent message)
+    {
+        if (message.Reason == DeleteMediaFileReason.Upgrade)
+        {
+            return;
+        }
+
+        if (_configService.DeleteEmptyFolders)
+        {
+            var artist = message.TrackFile.Artist.Value;
+            var albumFolder = message.TrackFile.Path.GetParentPath();
+
+            if (_diskProvider.GetFiles(artist.Path, SearchOption.AllDirectories).Empty())
             {
-                var artist = message.TrackFile.Artist.Value;
-                var albumFolder = message.TrackFile.Path.GetParentPath();
-
-                if (_diskProvider.GetFiles(artist.Path, SearchOption.AllDirectories).Empty())
-                {
-                    _diskProvider.DeleteFolder(artist.Path, true);
-                }
-                else if (_diskProvider.GetFiles(albumFolder, SearchOption.AllDirectories).Empty())
-                {
-                    _diskProvider.RemoveEmptySubfolders(albumFolder);
-                }
+                _diskProvider.DeleteFolder(artist.Path, true);
+            }
+            else if (_diskProvider.GetFiles(albumFolder, SearchOption.AllDirectories).Empty())
+            {
+                _diskProvider.RemoveEmptySubfolders(albumFolder);
             }
         }
     }

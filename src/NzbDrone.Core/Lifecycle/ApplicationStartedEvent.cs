@@ -1,8 +1,7 @@
 ﻿using NzbDrone.Common.Messaging;
 
-namespace NzbDrone.Core.Lifecycle
+namespace NzbDrone.Core.Lifecycle;
+
+public class ApplicationStartedEvent : IEvent
 {
-    public class ApplicationStartedEvent : IEvent
-    {
-    }
 }

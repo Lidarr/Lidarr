@@ -1,14 +1,13 @@
 ﻿using FluentMigrator;
 using NzbDrone.Core.Datastore.Migration.Framework;
 
-namespace NzbDrone.Core.Datastore.Migration
+namespace NzbDrone.Core.Datastore.Migration;
+
+[Migration(044)]
+public class add_priority_to_indexers : NzbDroneMigrationBase
 {
-    [Migration(044)]
-    public class add_priority_to_indexers : NzbDroneMigrationBase
+    protected override void MainDbUpgrade()
     {
-        protected override void MainDbUpgrade()
-        {
-            Alter.Table("Indexers").AddColumn("Priority").AsInt32().NotNullable().WithDefaultValue(25);
-        }
+        Alter.Table("Indexers").AddColumn("Priority").AsInt32().NotNullable().WithDefaultValue(25);
     }
 }

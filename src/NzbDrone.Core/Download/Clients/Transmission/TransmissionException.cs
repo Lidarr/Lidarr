@@ -1,10 +1,9 @@
-﻿namespace NzbDrone.Core.Download.Clients.Transmission
+﻿namespace NzbDrone.Core.Download.Clients.Transmission;
+
+public class TransmissionException : DownloadClientException
 {
-    public class TransmissionException : DownloadClientException
+    public TransmissionException(string message)
+        : base(message)
     {
-        public TransmissionException(string message)
-            : base(message)
-        {
-        }
     }
 }

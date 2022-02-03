@@ -1,7 +1,6 @@
-namespace NzbDrone.Core.Notifications.Webhook
+namespace NzbDrone.Core.Notifications.Webhook;
+
+public class WebhookPayload
 {
-    public class WebhookPayload
-    {
-        public WebhookEventType EventType { get; set; }
-    }
+    public WebhookEventType EventType { get; set; }
 }

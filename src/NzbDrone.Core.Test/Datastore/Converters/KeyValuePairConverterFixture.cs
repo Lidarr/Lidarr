@@ -5,42 +5,41 @@ using NUnit.Framework;
 using NzbDrone.Core.Datastore.Converters;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Datastore.Converters
+namespace NzbDrone.Core.Test.Datastore.Converters;
+
+[TestFixture]
+public class KeyValuePairConverterFixture : CoreTest<EmbeddedDocumentConverter<List<KeyValuePair<string, int>>>>
 {
-    [TestFixture]
-    public class KeyValuePairConverterFixture : CoreTest<EmbeddedDocumentConverter<List<KeyValuePair<string, int>>>>
+    private SQLiteParameter _param;
+
+    [SetUp]
+    public void Setup()
     {
-        private SQLiteParameter _param;
+        _param = new SQLiteParameter();
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            _param = new SQLiteParameter();
-        }
+    [Test]
+    public void should_serialize_in_camel_case()
+    {
+        var items = new List<KeyValuePair<string, int>>
+                    {
+                        new KeyValuePair<string, int>("word", 1)
+                    };
 
-        [Test]
-        public void should_serialize_in_camel_case()
-        {
-            var items = new List<KeyValuePair<string, int>>
-            {
-                new KeyValuePair<string, int>("word", 1)
-            };
+        Subject.SetValue(_param, items);
 
-            Subject.SetValue(_param, items);
+        var result = (string)_param.Value;
 
-            var result = (string)_param.Value;
+        // Otherwise we run into grief compiling on windows and running on linux
+        result = result.Replace("\r", "").Replace("\n", "").Replace(" ", "");
 
-            // Otherwise we run into grief compiling on windows and running on linux
-            result = result.Replace("\r", "").Replace("\n", "").Replace(" ", "");
+        result.Should().Be(@"[{""key"":""word"",""value"":1}]");
+    }
 
-            result.Should().Be(@"[{""key"":""word"",""value"":1}]");
-        }
-
-        [TestCase(@"[{""key"": ""deluxe"", ""value"": 10 }]")]
-        [TestCase(@"[{""Key"": ""deluxe"", ""Value"": 10 }]")]
-        public void should_deserialize_case_insensitive(string input)
-        {
-            Subject.Parse(input).Should().BeEquivalentTo(new List<KeyValuePair<string, int>> { new KeyValuePair<string, int>("deluxe", 10) });
-        }
+    [TestCase(@"[{""key"": ""deluxe"", ""value"": 10 }]")]
+    [TestCase(@"[{""Key"": ""deluxe"", ""Value"": 10 }]")]
+    public void should_deserialize_case_insensitive(string input)
+    {
+        Subject.Parse(input).Should().BeEquivalentTo(new List<KeyValuePair<string, int>> { new KeyValuePair<string, int>("deluxe", 10) });
     }
 }

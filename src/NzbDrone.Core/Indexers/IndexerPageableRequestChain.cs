@@ -1,54 +1,53 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NzbDrone.Core.Indexers
+namespace NzbDrone.Core.Indexers;
+
+public class IndexerPageableRequestChain
 {
-    public class IndexerPageableRequestChain
+    private List<List<IndexerPageableRequest>> _chains;
+
+    public IndexerPageableRequestChain()
     {
-        private List<List<IndexerPageableRequest>> _chains;
+        _chains = new List<List<IndexerPageableRequest>>();
+        _chains.Add(new List<IndexerPageableRequest>());
+    }
 
-        public IndexerPageableRequestChain()
+    public int Tiers => _chains.Count;
+
+    public IEnumerable<IndexerPageableRequest> GetAllTiers()
+    {
+        return _chains.SelectMany(v => v);
+    }
+
+    public IEnumerable<IndexerPageableRequest> GetTier(int index)
+    {
+        return _chains[index];
+    }
+
+    public void Add(IEnumerable<IndexerRequest> request)
+    {
+        if (request == null)
         {
-            _chains = new List<List<IndexerPageableRequest>>();
-            _chains.Add(new List<IndexerPageableRequest>());
+            return;
         }
 
-        public int Tiers => _chains.Count;
+        _chains.Last().Add(new IndexerPageableRequest(request));
+    }
 
-        public IEnumerable<IndexerPageableRequest> GetAllTiers()
+    public void AddTier(IEnumerable<IndexerRequest> request)
+    {
+        AddTier();
+        Add(request);
+    }
+
+    public void AddTier()
+    {
+        if (_chains.Last().Count == 0)
         {
-            return _chains.SelectMany(v => v);
+            return;
         }
 
-        public IEnumerable<IndexerPageableRequest> GetTier(int index)
-        {
-            return _chains[index];
-        }
-
-        public void Add(IEnumerable<IndexerRequest> request)
-        {
-            if (request == null)
-            {
-                return;
-            }
-
-            _chains.Last().Add(new IndexerPageableRequest(request));
-        }
-
-        public void AddTier(IEnumerable<IndexerRequest> request)
-        {
-            AddTier();
-            Add(request);
-        }
-
-        public void AddTier()
-        {
-            if (_chains.Last().Count == 0)
-            {
-                return;
-            }
-
-            _chains.Add(new List<IndexerPageableRequest>());
-        }
+        _chains.Add(new List<IndexerPageableRequest>());
     }
 }

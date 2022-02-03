@@ -3,44 +3,43 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
-namespace NzbDrone.Core.Indexers.TorrentRss
+namespace NzbDrone.Core.Indexers.TorrentRss;
+
+public class TorrentRssIndexerRequestGenerator : IIndexerRequestGenerator
 {
-    public class TorrentRssIndexerRequestGenerator : IIndexerRequestGenerator
+    public TorrentRssIndexerSettings Settings { get; set; }
+
+    public virtual IndexerPageableRequestChain GetRecentRequests()
     {
-        public TorrentRssIndexerSettings Settings { get; set; }
+        var pageableRequests = new IndexerPageableRequestChain();
 
-        public virtual IndexerPageableRequestChain GetRecentRequests()
+        pageableRequests.Add(GetRssRequests(null));
+
+        return pageableRequests;
+    }
+
+    public virtual IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public virtual IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private IEnumerable<IndexerRequest> GetRssRequests(string searchParameters)
+    {
+        var request = new IndexerRequest(Settings.BaseUrl.Trim().TrimEnd('/'), HttpAccept.Rss);
+
+        if (Settings.Cookie.IsNotNullOrWhiteSpace())
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetRssRequests(null));
-
-            return pageableRequests;
-        }
-
-        public virtual IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public virtual IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        private IEnumerable<IndexerRequest> GetRssRequests(string searchParameters)
-        {
-            var request = new IndexerRequest(Settings.BaseUrl.Trim().TrimEnd('/'), HttpAccept.Rss);
-
-            if (Settings.Cookie.IsNotNullOrWhiteSpace())
+            foreach (var cookie in HttpHeader.ParseCookies(Settings.Cookie))
             {
-                foreach (var cookie in HttpHeader.ParseCookies(Settings.Cookie))
-                {
-                    request.HttpRequest.Cookies[cookie.Key] = cookie.Value;
-                }
+                request.HttpRequest.Cookies[cookie.Key] = cookie.Value;
             }
-
-            yield return request;
         }
+
+        yield return request;
     }
 }

@@ -1,8 +1,7 @@
-namespace NzbDrone.Core.Notifications.MediaBrowser.Model
+namespace NzbDrone.Core.Notifications.MediaBrowser.Model;
+
+public class EmbyMediaFolder
 {
-    public class EmbyMediaFolder
-    {
-        public string Path { get; set; }
-        public string CollectionType { get; set; }
-    }
+    public string Path { get; set; }
+    public string CollectionType { get; set; }
 }

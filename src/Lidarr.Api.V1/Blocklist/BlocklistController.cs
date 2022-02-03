@@ -5,39 +5,38 @@ using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.Blocklisting;
 using NzbDrone.Core.Datastore;
 
-namespace Lidarr.Api.V1.Blocklist
+namespace Lidarr.Api.V1.Blocklist;
+
+[V1ApiController]
+public class BlocklistController : Controller
 {
-    [V1ApiController]
-    public class BlocklistController : Controller
+    private readonly IBlocklistService _blocklistService;
+
+    public BlocklistController(IBlocklistService blocklistService)
     {
-        private readonly IBlocklistService _blocklistService;
+        _blocklistService = blocklistService;
+    }
 
-        public BlocklistController(IBlocklistService blocklistService)
-        {
-            _blocklistService = blocklistService;
-        }
+    [HttpGet]
+    public PagingResource<BlocklistResource> GetBlocklist()
+    {
+        var pagingResource = Request.ReadPagingResourceFromRequest<BlocklistResource>();
+        var pagingSpec = pagingResource.MapToPagingSpec<BlocklistResource, NzbDrone.Core.Blocklisting.Blocklist>("date", SortDirection.Descending);
 
-        [HttpGet]
-        public PagingResource<BlocklistResource> GetBlocklist()
-        {
-            var pagingResource = Request.ReadPagingResourceFromRequest<BlocklistResource>();
-            var pagingSpec = pagingResource.MapToPagingSpec<BlocklistResource, NzbDrone.Core.Blocklisting.Blocklist>("date", SortDirection.Descending);
+        return pagingSpec.ApplyToPage(_blocklistService.Paged, BlocklistResourceMapper.MapToResource);
+    }
 
-            return pagingSpec.ApplyToPage(_blocklistService.Paged, BlocklistResourceMapper.MapToResource);
-        }
+    [RestDeleteById]
+    public void DeleteBlocklist(int id)
+    {
+        _blocklistService.Delete(id);
+    }
 
-        [RestDeleteById]
-        public void DeleteBlocklist(int id)
-        {
-            _blocklistService.Delete(id);
-        }
+    [HttpDelete("bulk")]
+    public object Remove([FromBody] BlocklistBulkResource resource)
+    {
+        _blocklistService.Delete(resource.Ids);
 
-        [HttpDelete("bulk")]
-        public object Remove([FromBody] BlocklistBulkResource resource)
-        {
-            _blocklistService.Delete(resource.Ids);
-
-            return new { };
-        }
+        return new { };
     }
 }

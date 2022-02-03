@@ -22,87 +22,86 @@ using NzbDrone.SignalR;
 using NzbDrone.Test.Common;
 using IServiceProvider = System.IServiceProvider;
 
-namespace NzbDrone.App.Test
+namespace NzbDrone.App.Test;
+
+[TestFixture]
+public class ContainerFixture : TestBase
 {
-    [TestFixture]
-    public class ContainerFixture : TestBase
+    private IServiceProvider _container;
+
+    [SetUp]
+    public void SetUp()
     {
-        private IServiceProvider _container;
+        var args = new StartupContext("first", "second");
 
-        [SetUp]
-        public void SetUp()
-        {
-            var args = new StartupContext("first", "second");
+        var container = new Container(rules => rules.WithNzbDroneRules())
+                       .AutoAddServices(Bootstrap.ASSEMBLIES)
+                       .AddNzbDroneLogger()
+                       .AddDummyDatabase()
+                       .AddStartupContext(args);
 
-            var container = new Container(rules => rules.WithNzbDroneRules())
-                .AutoAddServices(Bootstrap.ASSEMBLIES)
-                .AddNzbDroneLogger()
-                .AddDummyDatabase()
-                .AddStartupContext(args);
+        // dummy lifetime and broadcaster so tests resolve
+        container.RegisterInstance<IHostLifetime>(new Mock<IHostLifetime>().Object);
+        container.RegisterInstance<IBroadcastSignalRMessage>(new Mock<IBroadcastSignalRMessage>().Object);
 
-            // dummy lifetime and broadcaster so tests resolve
-            container.RegisterInstance<IHostLifetime>(new Mock<IHostLifetime>().Object);
-            container.RegisterInstance<IBroadcastSignalRMessage>(new Mock<IBroadcastSignalRMessage>().Object);
+        _container = container.GetServiceProvider();
+    }
 
-            _container = container.GetServiceProvider();
-        }
+    [Test]
+    public void should_be_able_to_resolve_indexers()
+    {
+        _container.GetRequiredService<IEnumerable<IIndexer>>().Should().NotBeEmpty();
+    }
 
-        [Test]
-        public void should_be_able_to_resolve_indexers()
-        {
-            _container.GetRequiredService<IEnumerable<IIndexer>>().Should().NotBeEmpty();
-        }
+    [Test]
+    public void should_be_able_to_resolve_downloadclients()
+    {
+        _container.GetRequiredService<IEnumerable<IDownloadClient>>().Should().NotBeEmpty();
+    }
 
-        [Test]
-        public void should_be_able_to_resolve_downloadclients()
-        {
-            _container.GetRequiredService<IEnumerable<IDownloadClient>>().Should().NotBeEmpty();
-        }
+    [Test]
+    public void container_should_inject_itself()
+    {
+        var factory = _container.GetRequiredService<IServiceFactory>();
 
-        [Test]
-        public void container_should_inject_itself()
-        {
-            var factory = _container.GetRequiredService<IServiceFactory>();
+        factory.Build<IIndexerFactory>().Should().NotBeNull();
+    }
 
-            factory.Build<IIndexerFactory>().Should().NotBeNull();
-        }
+    [Test]
+    public void should_resolve_command_executor_by_name()
+    {
+        var genericExecutor = typeof(IExecute<>).MakeGenericType(typeof(RssSyncCommand));
 
-        [Test]
-        public void should_resolve_command_executor_by_name()
-        {
-            var genericExecutor = typeof(IExecute<>).MakeGenericType(typeof(RssSyncCommand));
+        var executor = _container.GetRequiredService(genericExecutor);
 
-            var executor = _container.GetRequiredService(genericExecutor);
+        executor.Should().NotBeNull();
+        executor.Should().BeAssignableTo<IExecute<RssSyncCommand>>();
+    }
 
-            executor.Should().NotBeNull();
-            executor.Should().BeAssignableTo<IExecute<RssSyncCommand>>();
-        }
+    [Test]
+    public void should_return_same_instance_via_resolve_and_resolveall()
+    {
+        var first = (DownloadMonitoringService)_container.GetRequiredService<IHandle<TrackedDownloadsRemovedEvent>>();
+        var second = _container.GetServices<IHandle<TrackedDownloadsRemovedEvent>>().OfType<DownloadMonitoringService>().Single();
 
-        [Test]
-        public void should_return_same_instance_via_resolve_and_resolveall()
-        {
-            var first = (DownloadMonitoringService)_container.GetRequiredService<IHandle<TrackedDownloadsRemovedEvent>>();
-            var second = _container.GetServices<IHandle<TrackedDownloadsRemovedEvent>>().OfType<DownloadMonitoringService>().Single();
+        first.Should().BeSameAs(second);
+    }
 
-            first.Should().BeSameAs(second);
-        }
+    [Test]
+    public void should_return_same_instance_of_singletons_by_same_interface()
+    {
+        var first = _container.GetServices<IHandle<TrackedDownloadsRemovedEvent>>().OfType<DownloadMonitoringService>().Single();
+        var second = _container.GetServices<IHandle<TrackedDownloadsRemovedEvent>>().OfType<DownloadMonitoringService>().Single();
 
-        [Test]
-        public void should_return_same_instance_of_singletons_by_same_interface()
-        {
-            var first = _container.GetServices<IHandle<TrackedDownloadsRemovedEvent>>().OfType<DownloadMonitoringService>().Single();
-            var second = _container.GetServices<IHandle<TrackedDownloadsRemovedEvent>>().OfType<DownloadMonitoringService>().Single();
+        first.Should().BeSameAs(second);
+    }
 
-            first.Should().BeSameAs(second);
-        }
+    [Test]
+    public void should_return_same_instance_of_singletons_by_different_interfaces()
+    {
+        var first = _container.GetServices<IHandle<AlbumGrabbedEvent>>().OfType<DownloadMonitoringService>().Single();
+        var second = (DownloadMonitoringService)_container.GetRequiredService<IExecute<RefreshMonitoredDownloadsCommand>>();
 
-        [Test]
-        public void should_return_same_instance_of_singletons_by_different_interfaces()
-        {
-            var first = _container.GetServices<IHandle<AlbumGrabbedEvent>>().OfType<DownloadMonitoringService>().Single();
-            var second = (DownloadMonitoringService)_container.GetRequiredService<IExecute<RefreshMonitoredDownloadsCommand>>();
-
-            first.Should().BeSameAs(second);
-        }
+        first.Should().BeSameAs(second);
     }
 }

@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Notifications.PushBullet
+namespace NzbDrone.Core.Notifications.PushBullet;
+
+public class PushBulletDevicesResponse
 {
-    public class PushBulletDevicesResponse
-    {
-        public List<PushBulletDevice> Devices { get; set; }
-    }
+    public List<PushBulletDevice> Devices { get; set; }
 }

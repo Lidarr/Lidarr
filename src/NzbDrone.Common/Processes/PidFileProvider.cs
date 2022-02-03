@@ -4,41 +4,40 @@ using NLog;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Exceptions;
 
-namespace NzbDrone.Common.Processes
+namespace NzbDrone.Common.Processes;
+
+public interface IProvidePidFile
 {
-    public interface IProvidePidFile
+    void Write();
+}
+
+public class PidFileProvider : IProvidePidFile
+{
+    private readonly IAppFolderInfo _appFolderInfo;
+    private readonly Logger _logger;
+
+    public PidFileProvider(IAppFolderInfo appFolderInfo, Logger logger)
     {
-        void Write();
+        _appFolderInfo = appFolderInfo;
+        _logger = logger;
     }
 
-    public class PidFileProvider : IProvidePidFile
+    public void Write()
     {
-        private readonly IAppFolderInfo _appFolderInfo;
-        private readonly Logger _logger;
-
-        public PidFileProvider(IAppFolderInfo appFolderInfo, Logger logger)
+        if (OsInfo.IsWindows)
         {
-            _appFolderInfo = appFolderInfo;
-            _logger = logger;
+            return;
         }
 
-        public void Write()
+        var filename = Path.Combine(_appFolderInfo.AppDataFolder, "lidarr.pid");
+        try
         {
-            if (OsInfo.IsWindows)
-            {
-                return;
-            }
-
-            var filename = Path.Combine(_appFolderInfo.AppDataFolder, "lidarr.pid");
-            try
-            {
-                File.WriteAllText(filename, ProcessProvider.GetCurrentProcessId().ToString());
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Unable to write PID file {0}", filename);
-                throw new LidarrStartupException(ex, "Unable to write PID file {0}", filename);
-            }
+            File.WriteAllText(filename, ProcessProvider.GetCurrentProcessId().ToString());
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Unable to write PID file {0}", filename);
+            throw new LidarrStartupException(ex, "Unable to write PID file {0}", filename);
         }
     }
 }

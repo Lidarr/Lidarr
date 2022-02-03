@@ -3,38 +3,38 @@ using System.IO;
 using NLog;
 using NzbDrone.Core.Datastore;
 
-namespace NzbDrone.Core.Backup
+namespace NzbDrone.Core.Backup;
+
+public interface IMakeDatabaseBackup
 {
-    public interface IMakeDatabaseBackup
+    void BackupDatabase(IDatabase database, string targetDirectory);
+}
+
+public class MakeDatabaseBackup : IMakeDatabaseBackup
+{
+    private readonly Logger _logger;
+
+    public MakeDatabaseBackup(Logger logger)
     {
-        void BackupDatabase(IDatabase database, string targetDirectory);
+        _logger = logger;
     }
 
-    public class MakeDatabaseBackup : IMakeDatabaseBackup
+    public void BackupDatabase(IDatabase database, string targetDirectory)
     {
-        private readonly Logger _logger;
-
-        public MakeDatabaseBackup(Logger logger)
+        var sourceConnectionString = "";
+        using (var db = database.OpenConnection())
         {
-            _logger = logger;
+            sourceConnectionString = db.ConnectionString;
         }
 
-        public void BackupDatabase(IDatabase database, string targetDirectory)
-        {
-            var sourceConnectionString = "";
-            using (var db = database.OpenConnection())
-            {
-                sourceConnectionString = db.ConnectionString;
-            }
+        var backupConnectionStringBuilder = new SQLiteConnectionStringBuilder(sourceConnectionString);
 
-            var backupConnectionStringBuilder = new SQLiteConnectionStringBuilder(sourceConnectionString);
+        backupConnectionStringBuilder.DataSource = Path.Combine(targetDirectory, Path.GetFileName(backupConnectionStringBuilder.DataSource));
 
-            backupConnectionStringBuilder.DataSource = Path.Combine(targetDirectory, Path.GetFileName(backupConnectionStringBuilder.DataSource));
+        // We MUST use journal mode instead of WAL coz WAL has issues when page sizes change. This should also automatically deal with the -journal and -wal files during restore.
+        backupConnectionStringBuilder.JournalMode = SQLiteJournalModeEnum.Truncate;
 
-            // We MUST use journal mode instead of WAL coz WAL has issues when page sizes change. This should also automatically deal with the -journal and -wal files during restore.
-            backupConnectionStringBuilder.JournalMode = SQLiteJournalModeEnum.Truncate;
-
-            using (var sourceConnection = (SQLiteConnection)SQLiteFactory.Instance.CreateConnection())
+        using (var sourceConnection = (SQLiteConnection)SQLiteFactory.Instance.CreateConnection())
             using (var backupConnection = (SQLiteConnection)SQLiteFactory.Instance.CreateConnection())
             {
                 sourceConnection.ConnectionString = sourceConnectionString;
@@ -55,6 +55,5 @@ namespace NzbDrone.Core.Backup
                 // Make sure there are no lingering connections.
                 SQLiteConnection.ClearAllPools();
             }
-        }
     }
 }

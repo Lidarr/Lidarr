@@ -1,8 +1,7 @@
 using NzbDrone.Core.Extras.Files;
 
-namespace NzbDrone.Core.Extras.Lyrics
+namespace NzbDrone.Core.Extras.Lyrics;
+
+public class LyricFile : ExtraFile
 {
-    public class LyricFile : ExtraFile
-    {
-    }
 }

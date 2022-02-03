@@ -7,74 +7,73 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 
-namespace Lidarr.Api.V1.MediaCovers
+namespace Lidarr.Api.V1.MediaCovers;
+
+[V1ApiController]
+public class MediaCoverController : Controller
 {
-    [V1ApiController]
-    public class MediaCoverController : Controller
+    private static readonly Regex RegexResizedImage = new Regex(@"-\d+(?=\.(jpg|png|gif)$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+    private readonly IAppFolderInfo _appFolderInfo;
+    private readonly IDiskProvider _diskProvider;
+    private readonly IContentTypeProvider _mimeTypeProvider;
+
+    public MediaCoverController(IAppFolderInfo appFolderInfo, IDiskProvider diskProvider)
     {
-        private static readonly Regex RegexResizedImage = new Regex(@"-\d+(?=\.(jpg|png|gif)$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        _appFolderInfo = appFolderInfo;
+        _diskProvider = diskProvider;
+        _mimeTypeProvider = new FileExtensionContentTypeProvider();
+    }
 
-        private readonly IAppFolderInfo _appFolderInfo;
-        private readonly IDiskProvider _diskProvider;
-        private readonly IContentTypeProvider _mimeTypeProvider;
+    [HttpGet(@"artist/{artistId:int}/{filename:regex((.+)\.(jpg|png|gif))}")]
+    public IActionResult GetArtistMediaCover(int artistId, string filename)
+    {
+        var filePath = Path.Combine(_appFolderInfo.GetAppDataPath(), "MediaCover", artistId.ToString(), filename);
 
-        public MediaCoverController(IAppFolderInfo appFolderInfo, IDiskProvider diskProvider)
+        if (!_diskProvider.FileExists(filePath) || _diskProvider.GetFileSize(filePath) == 0)
         {
-            _appFolderInfo = appFolderInfo;
-            _diskProvider = diskProvider;
-            _mimeTypeProvider = new FileExtensionContentTypeProvider();
-        }
-
-        [HttpGet(@"artist/{artistId:int}/{filename:regex((.+)\.(jpg|png|gif))}")]
-        public IActionResult GetArtistMediaCover(int artistId, string filename)
-        {
-            var filePath = Path.Combine(_appFolderInfo.GetAppDataPath(), "MediaCover", artistId.ToString(), filename);
-
-            if (!_diskProvider.FileExists(filePath) || _diskProvider.GetFileSize(filePath) == 0)
+            // Return the full sized image if someone requests a non-existing resized one.
+            // TODO: This code can be removed later once everyone had the update for a while.
+            var basefilePath = RegexResizedImage.Replace(filePath, "");
+            if (basefilePath == filePath || !_diskProvider.FileExists(basefilePath))
             {
-                // Return the full sized image if someone requests a non-existing resized one.
-                // TODO: This code can be removed later once everyone had the update for a while.
-                var basefilePath = RegexResizedImage.Replace(filePath, "");
-                if (basefilePath == filePath || !_diskProvider.FileExists(basefilePath))
-                {
-                    return NotFound();
-                }
-
-                filePath = basefilePath;
+                return NotFound();
             }
 
-            return PhysicalFile(filePath, GetContentType(filePath));
+            filePath = basefilePath;
         }
 
-        [HttpGet(@"album/{albumId:int}/{filename:regex((.+)\.(jpg|png|gif))}")]
-        public IActionResult GetAlbumMediaCover(int albumId, string filename)
+        return PhysicalFile(filePath, GetContentType(filePath));
+    }
+
+    [HttpGet(@"album/{albumId:int}/{filename:regex((.+)\.(jpg|png|gif))}")]
+    public IActionResult GetAlbumMediaCover(int albumId, string filename)
+    {
+        var filePath = Path.Combine(_appFolderInfo.GetAppDataPath(), "MediaCover", "Albums", albumId.ToString(), filename);
+
+        if (!_diskProvider.FileExists(filePath) || _diskProvider.GetFileSize(filePath) == 0)
         {
-            var filePath = Path.Combine(_appFolderInfo.GetAppDataPath(), "MediaCover", "Albums", albumId.ToString(), filename);
-
-            if (!_diskProvider.FileExists(filePath) || _diskProvider.GetFileSize(filePath) == 0)
+            // Return the full sized image if someone requests a non-existing resized one.
+            // TODO: This code can be removed later once everyone had the update for a while.
+            var basefilePath = RegexResizedImage.Replace(filePath, "");
+            if (basefilePath == filePath || !_diskProvider.FileExists(basefilePath))
             {
-                // Return the full sized image if someone requests a non-existing resized one.
-                // TODO: This code can be removed later once everyone had the update for a while.
-                var basefilePath = RegexResizedImage.Replace(filePath, "");
-                if (basefilePath == filePath || !_diskProvider.FileExists(basefilePath))
-                {
-                    return NotFound();
-                }
-
-                filePath = basefilePath;
+                return NotFound();
             }
 
-            return PhysicalFile(filePath, GetContentType(filePath));
+            filePath = basefilePath;
         }
 
-        private string GetContentType(string filePath)
+        return PhysicalFile(filePath, GetContentType(filePath));
+    }
+
+    private string GetContentType(string filePath)
+    {
+        if (!_mimeTypeProvider.TryGetContentType(filePath, out var contentType))
         {
-            if (!_mimeTypeProvider.TryGetContentType(filePath, out var contentType))
-            {
-                contentType = "application/octet-stream";
-            }
-
-            return contentType;
+            contentType = "application/octet-stream";
         }
+
+        return contentType;
     }
 }

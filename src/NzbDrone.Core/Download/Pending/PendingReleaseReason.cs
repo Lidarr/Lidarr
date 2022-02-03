@@ -1,9 +1,8 @@
-namespace NzbDrone.Core.Download.Pending
+namespace NzbDrone.Core.Download.Pending;
+
+public enum PendingReleaseReason
 {
-    public enum PendingReleaseReason
-    {
-        Delay = 0,
-        DownloadClientUnavailable = 1,
-        Fallback = 2
-    }
+    Delay = 0,
+    DownloadClientUnavailable = 1,
+    Fallback = 2
 }

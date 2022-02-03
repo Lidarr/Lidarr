@@ -7,81 +7,80 @@ using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Indexers.Gazelle;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
-namespace NzbDrone.Core.Indexers.Redacted
+namespace NzbDrone.Core.Indexers.Redacted;
+
+public class RedactedRequestGenerator : IIndexerRequestGenerator
 {
-    public class RedactedRequestGenerator : IIndexerRequestGenerator
+    public RedactedSettings Settings { get; set; }
+
+    public IHttpClient HttpClient { get; set; }
+    public Logger Logger { get; set; }
+
+    public virtual IndexerPageableRequestChain GetRecentRequests()
     {
-        public RedactedSettings Settings { get; set; }
+        var pageableRequests = new IndexerPageableRequestChain();
 
-        public IHttpClient HttpClient { get; set; }
-        public Logger Logger { get; set; }
+        pageableRequests.Add(GetRequest(null));
 
-        public virtual IndexerPageableRequestChain GetRecentRequests()
+        return pageableRequests;
+    }
+
+    public IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
+    {
+        var pageableRequests = new IndexerPageableRequestChain();
+        pageableRequests.Add(GetRequest(string.Format("&artistname={0}&groupname={1}", searchCriteria.ArtistQuery, searchCriteria.AlbumQuery)));
+        return pageableRequests;
+    }
+
+    public IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
+    {
+        var pageableRequests = new IndexerPageableRequestChain();
+        pageableRequests.Add(GetRequest(string.Format("&artistname={0}", searchCriteria.ArtistQuery)));
+        return pageableRequests;
+    }
+
+    public void Authenticate()
+    {
+        var index = GetIndex();
+
+        if (index == null ||
+            index.Status.IsNullOrWhiteSpace() ||
+            index.Status != "success" ||
+            index.Response.Passkey.IsNullOrWhiteSpace())
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetRequest(null));
-
-            return pageableRequests;
+            Logger.Debug("Redacted authentication failed.");
+            throw new Exception("Failed to authenticate with Redacted.");
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(string.Format("&artistname={0}&groupname={1}", searchCriteria.ArtistQuery, searchCriteria.AlbumQuery)));
-            return pageableRequests;
-        }
+        Logger.Debug("Redacted authentication succeeded.");
 
-        public IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(string.Format("&artistname={0}", searchCriteria.ArtistQuery)));
-            return pageableRequests;
-        }
+        Settings.PassKey = index.Response.Passkey;
+    }
 
-        public void Authenticate()
-        {
-            var index = GetIndex();
+    private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
+    {
+        var req = RequestBuilder()
+                 .Resource($"ajax.php?action=browse&searchstr={searchParameters}")
+                 .Build();
 
-            if (index == null ||
-                index.Status.IsNullOrWhiteSpace() ||
-                index.Status != "success" ||
-                index.Response.Passkey.IsNullOrWhiteSpace())
-            {
-                Logger.Debug("Redacted authentication failed.");
-                throw new Exception("Failed to authenticate with Redacted.");
-            }
+        yield return new IndexerRequest(req);
+    }
 
-            Logger.Debug("Redacted authentication succeeded.");
+    private GazelleAuthResponse GetIndex()
+    {
+        var request = RequestBuilder().Resource("ajax.php?action=index").Build();
 
-            Settings.PassKey = index.Response.Passkey;
-        }
+        var indexResponse = HttpClient.Execute(request);
 
-        private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
-        {
-            var req = RequestBuilder()
-                .Resource($"ajax.php?action=browse&searchstr={searchParameters}")
-                .Build();
+        var result = Json.Deserialize<GazelleAuthResponse>(indexResponse.Content);
 
-            yield return new IndexerRequest(req);
-        }
+        return result;
+    }
 
-        private GazelleAuthResponse GetIndex()
-        {
-            var request = RequestBuilder().Resource("ajax.php?action=index").Build();
-
-            var indexResponse = HttpClient.Execute(request);
-
-            var result = Json.Deserialize<GazelleAuthResponse>(indexResponse.Content);
-
-            return result;
-        }
-
-        private HttpRequestBuilder RequestBuilder()
-        {
-            return new HttpRequestBuilder($"{Settings.BaseUrl.Trim().TrimEnd('/')}")
-                .Accept(HttpAccept.Json)
-                .SetHeader("Authorization", Settings.ApiKey);
-        }
+    private HttpRequestBuilder RequestBuilder()
+    {
+        return new HttpRequestBuilder($"{Settings.BaseUrl.Trim().TrimEnd('/')}")
+              .Accept(HttpAccept.Json)
+              .SetHeader("Authorization", Settings.ApiKey);
     }
 }

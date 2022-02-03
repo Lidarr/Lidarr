@@ -9,89 +9,88 @@ using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music.Events;
 
-namespace NzbDrone.Core.Music
+namespace NzbDrone.Core.Music;
+
+public interface IAlbumAddedService
 {
-    public interface IAlbumAddedService
+    void SearchForRecentlyAdded(int artistId);
+}
+
+public class AlbumAddedService : IHandle<AlbumInfoRefreshedEvent>, IAlbumAddedService
+{
+    private readonly IManageCommandQueue _commandQueueManager;
+    private readonly IAlbumService _albumService;
+    private readonly Logger _logger;
+    private readonly ICached<List<int>> _addedAlbumsCache;
+
+    public AlbumAddedService(ICacheManager cacheManager,
+                             IManageCommandQueue commandQueueManager,
+                             IAlbumService albumService,
+                             Logger logger)
     {
-        void SearchForRecentlyAdded(int artistId);
+        _commandQueueManager = commandQueueManager;
+        _albumService = albumService;
+        _logger = logger;
+        _addedAlbumsCache = cacheManager.GetCache<List<int>>(GetType());
     }
 
-    public class AlbumAddedService : IHandle<AlbumInfoRefreshedEvent>, IAlbumAddedService
+    public void SearchForRecentlyAdded(int artistId)
     {
-        private readonly IManageCommandQueue _commandQueueManager;
-        private readonly IAlbumService _albumService;
-        private readonly Logger _logger;
-        private readonly ICached<List<int>> _addedAlbumsCache;
+        var allAlbums = _albumService.GetAlbumsByArtist(artistId);
+        var toSearch = allAlbums.Where(x => x.AddOptions.SearchForNewAlbum).ToList();
 
-        public AlbumAddedService(ICacheManager cacheManager,
-                                   IManageCommandQueue commandQueueManager,
-                                   IAlbumService albumService,
-                                   Logger logger)
+        if (toSearch.Any())
         {
-            _commandQueueManager = commandQueueManager;
-            _albumService = albumService;
-            _logger = logger;
-            _addedAlbumsCache = cacheManager.GetCache<List<int>>(GetType());
+            toSearch.ForEach(x => x.AddOptions.SearchForNewAlbum = false);
+
+            _albumService.SetAddOptions(toSearch);
         }
 
-        public void SearchForRecentlyAdded(int artistId)
+        var recentlyAddedIds = _addedAlbumsCache.Find(artistId.ToString());
+        if (recentlyAddedIds != null)
         {
-            var allAlbums = _albumService.GetAlbumsByArtist(artistId);
-            var toSearch = allAlbums.Where(x => x.AddOptions.SearchForNewAlbum).ToList();
-
-            if (toSearch.Any())
-            {
-                toSearch.ForEach(x => x.AddOptions.SearchForNewAlbum = false);
-
-                _albumService.SetAddOptions(toSearch);
-            }
-
-            var recentlyAddedIds = _addedAlbumsCache.Find(artistId.ToString());
-            if (recentlyAddedIds != null)
-            {
-                toSearch.AddRange(allAlbums.Where(x => recentlyAddedIds.Contains(x.Id)));
-            }
-
-            if (toSearch.Any())
-            {
-                _commandQueueManager.Push(new AlbumSearchCommand(toSearch.Select(e => e.Id).ToList()));
-            }
-
-            _addedAlbumsCache.Remove(artistId.ToString());
+            toSearch.AddRange(allAlbums.Where(x => recentlyAddedIds.Contains(x.Id)));
         }
 
-        public void Handle(AlbumInfoRefreshedEvent message)
+        if (toSearch.Any())
         {
-            if (message.Artist.AddOptions == null)
+            _commandQueueManager.Push(new AlbumSearchCommand(toSearch.Select(e => e.Id).ToList()));
+        }
+
+        _addedAlbumsCache.Remove(artistId.ToString());
+    }
+
+    public void Handle(AlbumInfoRefreshedEvent message)
+    {
+        if (message.Artist.AddOptions == null)
+        {
+            if (!message.Artist.Monitored)
             {
-                if (!message.Artist.Monitored)
-                {
-                    _logger.Debug("Artist is not monitored");
-                    return;
-                }
-
-                if (message.Added.Empty())
-                {
-                    _logger.Debug("No new albums, skipping search");
-                    return;
-                }
-
-                if (message.Added.None(a => a.ReleaseDate.HasValue))
-                {
-                    _logger.Debug("No new albums have an release date");
-                    return;
-                }
-
-                var previouslyReleased = message.Added.Where(a => a.ReleaseDate.HasValue && a.ReleaseDate.Value.Before(DateTime.UtcNow.AddDays(1)) && a.Monitored).ToList();
-
-                if (previouslyReleased.Empty())
-                {
-                    _logger.Debug("Newly added albums all release in the future");
-                    return;
-                }
-
-                _addedAlbumsCache.Set(message.Artist.Id.ToString(), previouslyReleased.Select(e => e.Id).ToList());
+                _logger.Debug("Artist is not monitored");
+                return;
             }
+
+            if (message.Added.Empty())
+            {
+                _logger.Debug("No new albums, skipping search");
+                return;
+            }
+
+            if (message.Added.None(a => a.ReleaseDate.HasValue))
+            {
+                _logger.Debug("No new albums have an release date");
+                return;
+            }
+
+            var previouslyReleased = message.Added.Where(a => a.ReleaseDate.HasValue && a.ReleaseDate.Value.Before(DateTime.UtcNow.AddDays(1)) && a.Monitored).ToList();
+
+            if (previouslyReleased.Empty())
+            {
+                _logger.Debug("Newly added albums all release in the future");
+                return;
+            }
+
+            _addedAlbumsCache.Set(message.Artist.Id.ToString(), previouslyReleased.Select(e => e.Id).ToList());
         }
     }
 }

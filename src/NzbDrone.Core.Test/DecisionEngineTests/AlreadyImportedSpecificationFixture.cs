@@ -14,187 +14,186 @@ using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.DecisionEngineTests
+namespace NzbDrone.Core.Test.DecisionEngineTests;
+
+[TestFixture]
+public class AlreadyImportedSpecificationFixture : CoreTest<AlreadyImportedSpecification>
 {
-    [TestFixture]
-    public class AlreadyImportedSpecificationFixture : CoreTest<AlreadyImportedSpecification>
+    private const int FIRST_ALBUM_ID = 1;
+    private const string TITLE = "Some.Artist-Some.Album-2018-320kbps-CD-Lidarr";
+
+    private Artist _artist;
+    private QualityModel _mp3;
+    private QualityModel _flac;
+    private RemoteAlbum _remoteAlbum;
+    private List<EntityHistory> _history;
+    private TrackFile _firstFile;
+
+    [SetUp]
+    public void Setup()
     {
-        private const int FIRST_ALBUM_ID = 1;
-        private const string TITLE = "Some.Artist-Some.Album-2018-320kbps-CD-Lidarr";
+        var singleAlbumList = new List<Album>
+                              {
+                                  new Album
+                                  {
+                                      Id = FIRST_ALBUM_ID,
+                                      Title = "Some Album"
+                                  }
+                              };
 
-        private Artist _artist;
-        private QualityModel _mp3;
-        private QualityModel _flac;
-        private RemoteAlbum _remoteAlbum;
-        private List<EntityHistory> _history;
-        private TrackFile _firstFile;
+        _artist = Builder<Artist>.CreateNew()
+                                 .Build();
 
-        [SetUp]
-        public void Setup()
-        {
-            var singleAlbumList = new List<Album>
-                                    {
-                                        new Album
-                                        {
-                                            Id = FIRST_ALBUM_ID,
-                                            Title = "Some Album"
-                                        }
-                                    };
+        _firstFile = new TrackFile { Quality = new QualityModel(Quality.FLAC, new Revision(version: 2)), DateAdded = DateTime.Now };
 
-            _artist = Builder<Artist>.CreateNew()
-                                     .Build();
+        _mp3 = new QualityModel(Quality.MP3_320, new Revision(version: 1));
+        _flac = new QualityModel(Quality.FLAC, new Revision(version: 1));
 
-            _firstFile = new TrackFile { Quality = new QualityModel(Quality.FLAC, new Revision(version: 2)), DateAdded = DateTime.Now };
+        _remoteAlbum = new RemoteAlbum
+                       {
+                           Artist = _artist,
+                           ParsedAlbumInfo = new ParsedAlbumInfo { Quality = _mp3 },
+                           Albums = singleAlbumList,
+                           Release = Builder<ReleaseInfo>.CreateNew()
+                                                         .Build()
+                       };
 
-            _mp3 = new QualityModel(Quality.MP3_320, new Revision(version: 1));
-            _flac = new QualityModel(Quality.FLAC, new Revision(version: 1));
+        _history = new List<EntityHistory>();
 
-            _remoteAlbum = new RemoteAlbum
-            {
-                Artist = _artist,
-                ParsedAlbumInfo = new ParsedAlbumInfo { Quality = _mp3 },
-                Albums = singleAlbumList,
-                Release = Builder<ReleaseInfo>.CreateNew()
-                                              .Build()
-            };
+        Mocker.GetMock<IConfigService>()
+              .SetupGet(s => s.EnableCompletedDownloadHandling)
+              .Returns(true);
 
-            _history = new List<EntityHistory>();
+        Mocker.GetMock<IHistoryService>()
+              .Setup(s => s.GetByAlbum(It.IsAny<int>(), null))
+              .Returns(_history);
 
-            Mocker.GetMock<IConfigService>()
-                  .SetupGet(s => s.EnableCompletedDownloadHandling)
-                  .Returns(true);
+        Mocker.GetMock<IMediaFileService>()
+              .Setup(c => c.GetFilesByAlbum(It.IsAny<int>()))
+              .Returns(new List<TrackFile> { _firstFile });
+    }
 
-            Mocker.GetMock<IHistoryService>()
-                  .Setup(s => s.GetByAlbum(It.IsAny<int>(), null))
-                  .Returns(_history);
+    private void GivenCdhDisabled()
+    {
+        Mocker.GetMock<IConfigService>()
+              .SetupGet(s => s.EnableCompletedDownloadHandling)
+              .Returns(false);
+    }
 
-            Mocker.GetMock<IMediaFileService>()
-                  .Setup(c => c.GetFilesByAlbum(It.IsAny<int>()))
-                  .Returns(new List<TrackFile> { _firstFile });
-        }
+    private void GivenHistoryItem(string downloadId, string sourceTitle, QualityModel quality, EntityHistoryEventType eventType)
+    {
+        _history.Add(new EntityHistory
+                     {
+                         DownloadId = downloadId,
+                         SourceTitle = sourceTitle,
+                         Quality = quality,
+                         Date = DateTime.UtcNow,
+                         EventType = eventType
+                     });
+    }
 
-        private void GivenCdhDisabled()
-        {
-            Mocker.GetMock<IConfigService>()
-                  .SetupGet(s => s.EnableCompletedDownloadHandling)
-                  .Returns(false);
-        }
+    [Test]
+    public void should_be_accepted_if_CDH_is_disabled()
+    {
+        GivenCdhDisabled();
 
-        private void GivenHistoryItem(string downloadId, string sourceTitle, QualityModel quality, EntityHistoryEventType eventType)
-        {
-            _history.Add(new EntityHistory
-            {
-                DownloadId = downloadId,
-                SourceTitle = sourceTitle,
-                Quality = quality,
-                Date = DateTime.UtcNow,
-                EventType = eventType
-            });
-        }
+        Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
+    }
 
-        [Test]
-        public void should_be_accepted_if_CDH_is_disabled()
-        {
-            GivenCdhDisabled();
+    [Test]
+    public void should_be_accepted_if_album_does_not_have_a_file()
+    {
+        Mocker.GetMock<IMediaFileService>()
+              .Setup(c => c.GetFilesByAlbum(It.IsAny<int>()))
+              .Returns(new List<TrackFile> { });
 
-            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
-        }
+        Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
+    }
 
-        [Test]
-        public void should_be_accepted_if_album_does_not_have_a_file()
-        {
-            Mocker.GetMock<IMediaFileService>()
-                .Setup(c => c.GetFilesByAlbum(It.IsAny<int>()))
-                .Returns(new List<TrackFile> { });
+    [Test]
+    public void should_be_accepted_if_album_does_not_have_grabbed_event()
+    {
+        Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
+    }
 
-            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
-        }
+    [Test]
+    public void should_be_accepted_if_album_does_not_have_imported_event()
+    {
+        GivenHistoryItem(Guid.NewGuid().ToString().ToUpper(), TITLE, _mp3, EntityHistoryEventType.Grabbed);
 
-        [Test]
-        public void should_be_accepted_if_album_does_not_have_grabbed_event()
-        {
-            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
-        }
+        Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
+    }
 
-        [Test]
-        public void should_be_accepted_if_album_does_not_have_imported_event()
-        {
-            GivenHistoryItem(Guid.NewGuid().ToString().ToUpper(), TITLE, _mp3, EntityHistoryEventType.Grabbed);
+    [Test]
+    public void should_be_accepted_if_grabbed_and_imported_quality_is_the_same()
+    {
+        var downloadId = Guid.NewGuid().ToString().ToUpper();
 
-            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
-        }
+        GivenHistoryItem(downloadId, TITLE, _mp3, EntityHistoryEventType.Grabbed);
+        GivenHistoryItem(downloadId, TITLE, _mp3, EntityHistoryEventType.DownloadImported);
 
-        [Test]
-        public void should_be_accepted_if_grabbed_and_imported_quality_is_the_same()
-        {
-            var downloadId = Guid.NewGuid().ToString().ToUpper();
+        Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
+    }
 
-            GivenHistoryItem(downloadId, TITLE, _mp3, EntityHistoryEventType.Grabbed);
-            GivenHistoryItem(downloadId, TITLE, _mp3, EntityHistoryEventType.DownloadImported);
+    [Test]
+    public void should_be_rejected_if_grabbed_download_id_matches_release_torrent_hash()
+    {
+        var downloadId = Guid.NewGuid().ToString().ToUpper();
 
-            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
-        }
+        GivenHistoryItem(downloadId, TITLE, _mp3, EntityHistoryEventType.Grabbed);
+        GivenHistoryItem(downloadId, TITLE, _flac, EntityHistoryEventType.DownloadImported);
 
-        [Test]
-        public void should_be_rejected_if_grabbed_download_id_matches_release_torrent_hash()
-        {
-            var downloadId = Guid.NewGuid().ToString().ToUpper();
+        _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
+                                                   .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)
+                                                   .With(t => t.InfoHash = downloadId)
+                                                   .Build();
 
-            GivenHistoryItem(downloadId, TITLE, _mp3, EntityHistoryEventType.Grabbed);
-            GivenHistoryItem(downloadId, TITLE, _flac, EntityHistoryEventType.DownloadImported);
+        Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
+    }
 
-            _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
-                                                         .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)
-                                                         .With(t => t.InfoHash = downloadId)
-                                                         .Build();
+    [Test]
+    public void should_be_accepted_if_release_torrent_hash_is_null()
+    {
+        var downloadId = Guid.NewGuid().ToString().ToUpper();
 
-            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
-        }
+        GivenHistoryItem(downloadId, TITLE, _mp3, EntityHistoryEventType.Grabbed);
+        GivenHistoryItem(downloadId, TITLE, _flac, EntityHistoryEventType.DownloadImported);
 
-        [Test]
-        public void should_be_accepted_if_release_torrent_hash_is_null()
-        {
-            var downloadId = Guid.NewGuid().ToString().ToUpper();
+        _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
+                                                   .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)
+                                                   .With(t => t.InfoHash = null)
+                                                   .Build();
 
-            GivenHistoryItem(downloadId, TITLE, _mp3, EntityHistoryEventType.Grabbed);
-            GivenHistoryItem(downloadId, TITLE, _flac, EntityHistoryEventType.DownloadImported);
+        Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
+    }
 
-            _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
-                                                         .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)
-                                                         .With(t => t.InfoHash = null)
-                                                         .Build();
+    [Test]
+    public void should_be_accepted_if_release_torrent_hash_is_null_and_downloadId_is_null()
+    {
+        GivenHistoryItem(null, TITLE, _mp3, EntityHistoryEventType.Grabbed);
+        GivenHistoryItem(null, TITLE, _flac, EntityHistoryEventType.DownloadImported);
 
-            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
-        }
+        _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
+                                                   .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)
+                                                   .With(t => t.InfoHash = null)
+                                                   .Build();
 
-        [Test]
-        public void should_be_accepted_if_release_torrent_hash_is_null_and_downloadId_is_null()
-        {
-            GivenHistoryItem(null, TITLE, _mp3, EntityHistoryEventType.Grabbed);
-            GivenHistoryItem(null, TITLE, _flac, EntityHistoryEventType.DownloadImported);
+        Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
+    }
 
-            _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
-                                                         .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)
-                                                         .With(t => t.InfoHash = null)
-                                                         .Build();
+    [Test]
+    public void should_be_rejected_if_release_title_matches_grabbed_event_source_title()
+    {
+        var downloadId = Guid.NewGuid().ToString().ToUpper();
 
-            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
-        }
+        GivenHistoryItem(downloadId, TITLE, _mp3, EntityHistoryEventType.Grabbed);
+        GivenHistoryItem(downloadId, TITLE, _flac, EntityHistoryEventType.DownloadImported);
 
-        [Test]
-        public void should_be_rejected_if_release_title_matches_grabbed_event_source_title()
-        {
-            var downloadId = Guid.NewGuid().ToString().ToUpper();
+        _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
+                                                   .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)
+                                                   .With(t => t.InfoHash = downloadId)
+                                                   .Build();
 
-            GivenHistoryItem(downloadId, TITLE, _mp3, EntityHistoryEventType.Grabbed);
-            GivenHistoryItem(downloadId, TITLE, _flac, EntityHistoryEventType.DownloadImported);
-
-            _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
-                                                         .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)
-                                                         .With(t => t.InfoHash = downloadId)
-                                                         .Build();
-
-            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
-        }
+        Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
     }
 }

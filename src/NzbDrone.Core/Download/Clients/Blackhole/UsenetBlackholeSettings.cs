@@ -4,30 +4,29 @@ using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 using NzbDrone.Core.Validation.Paths;
 
-namespace NzbDrone.Core.Download.Clients.Blackhole
+namespace NzbDrone.Core.Download.Clients.Blackhole;
+
+public class UsenetBlackholeSettingsValidator : AbstractValidator<UsenetBlackholeSettings>
 {
-    public class UsenetBlackholeSettingsValidator : AbstractValidator<UsenetBlackholeSettings>
+    public UsenetBlackholeSettingsValidator()
     {
-        public UsenetBlackholeSettingsValidator()
-        {
-            RuleFor(c => c.NzbFolder).IsValidPath();
-            RuleFor(c => c.WatchFolder).IsValidPath();
-        }
+        RuleFor(c => c.NzbFolder).IsValidPath();
+        RuleFor(c => c.WatchFolder).IsValidPath();
     }
+}
 
-    public class UsenetBlackholeSettings : IProviderConfig
+public class UsenetBlackholeSettings : IProviderConfig
+{
+    private static readonly UsenetBlackholeSettingsValidator Validator = new UsenetBlackholeSettingsValidator();
+
+    [FieldDefinition(0, Label = "Nzb Folder", Type = FieldType.Path, HelpText = "Folder in which Lidarr will store the .nzb file")]
+    public string NzbFolder { get; set; }
+
+    [FieldDefinition(1, Label = "Watch Folder", Type = FieldType.Path, HelpText = "Folder from which Lidarr should import completed downloads")]
+    public string WatchFolder { get; set; }
+
+    public NzbDroneValidationResult Validate()
     {
-        private static readonly UsenetBlackholeSettingsValidator Validator = new UsenetBlackholeSettingsValidator();
-
-        [FieldDefinition(0, Label = "Nzb Folder", Type = FieldType.Path, HelpText = "Folder in which Lidarr will store the .nzb file")]
-        public string NzbFolder { get; set; }
-
-        [FieldDefinition(1, Label = "Watch Folder", Type = FieldType.Path, HelpText = "Folder from which Lidarr should import completed downloads")]
-        public string WatchFolder { get; set; }
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
+        return new NzbDroneValidationResult(Validator.Validate(this));
     }
 }

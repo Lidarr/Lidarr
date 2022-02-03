@@ -1,8 +1,7 @@
 ﻿using NzbDrone.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Extras.Metadata
+namespace NzbDrone.Core.Extras.Metadata;
+
+public class MetadataDefinition : ProviderDefinition
 {
-    public class MetadataDefinition : ProviderDefinition
-    {
-    }
 }

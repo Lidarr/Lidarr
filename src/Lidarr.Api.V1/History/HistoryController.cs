@@ -12,104 +12,103 @@ using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.History;
 
-namespace Lidarr.Api.V1.History
-{
-    [V1ApiController]
-    public class HistoryController : Controller
-    {
-        private readonly IHistoryService _historyService;
-        private readonly IUpgradableSpecification _upgradableSpecification;
-        private readonly IFailedDownloadService _failedDownloadService;
+namespace Lidarr.Api.V1.History;
 
-        public HistoryController(IHistoryService historyService,
+[V1ApiController]
+public class HistoryController : Controller
+{
+    private readonly IHistoryService _historyService;
+    private readonly IUpgradableSpecification _upgradableSpecification;
+    private readonly IFailedDownloadService _failedDownloadService;
+
+    public HistoryController(IHistoryService historyService,
                              IUpgradableSpecification upgradableSpecification,
                              IFailedDownloadService failedDownloadService)
+    {
+        _historyService = historyService;
+        _upgradableSpecification = upgradableSpecification;
+        _failedDownloadService = failedDownloadService;
+    }
+
+    protected HistoryResource MapToResource(EntityHistory model, bool includeArtist, bool includeAlbum, bool includeTrack)
+    {
+        var resource = model.ToResource();
+
+        if (includeArtist)
         {
-            _historyService = historyService;
-            _upgradableSpecification = upgradableSpecification;
-            _failedDownloadService = failedDownloadService;
+            resource.Artist = model.Artist.ToResource();
         }
 
-        protected HistoryResource MapToResource(EntityHistory model, bool includeArtist, bool includeAlbum, bool includeTrack)
+        if (includeAlbum)
         {
-            var resource = model.ToResource();
-
-            if (includeArtist)
-            {
-                resource.Artist = model.Artist.ToResource();
-            }
-
-            if (includeAlbum)
-            {
-                resource.Album = model.Album.ToResource();
-            }
-
-            if (includeTrack)
-            {
-                resource.Track = model.Track.ToResource();
-            }
-
-            if (model.Artist != null)
-            {
-                resource.QualityCutoffNotMet = _upgradableSpecification.QualityCutoffNotMet(model.Artist.QualityProfile.Value, model.Quality);
-            }
-
-            return resource;
+            resource.Album = model.Album.ToResource();
         }
 
-        [HttpGet]
-        public PagingResource<HistoryResource> GetHistory(bool includeArtist = false, bool includeAlbum = false, bool includeTrack = false)
+        if (includeTrack)
         {
-            var pagingResource = Request.ReadPagingResourceFromRequest<HistoryResource>();
-            var pagingSpec = pagingResource.MapToPagingSpec<HistoryResource, EntityHistory>("date", SortDirection.Descending);
-
-            var eventTypeFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "eventType");
-            var albumIdFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "albumId");
-            var downloadIdFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "downloadId");
-
-            if (eventTypeFilter != null)
-            {
-                var filterValue = (EntityHistoryEventType)Convert.ToInt32(eventTypeFilter.Value);
-                pagingSpec.FilterExpressions.Add(v => v.EventType == filterValue);
-            }
-
-            if (albumIdFilter != null)
-            {
-                var albumId = Convert.ToInt32(albumIdFilter.Value);
-                pagingSpec.FilterExpressions.Add(h => h.AlbumId == albumId);
-            }
-
-            if (downloadIdFilter != null)
-            {
-                var downloadId = downloadIdFilter.Value;
-                pagingSpec.FilterExpressions.Add(h => h.DownloadId == downloadId);
-            }
-
-            return pagingSpec.ApplyToPage(_historyService.Paged, h => MapToResource(h, includeArtist, includeAlbum, includeTrack));
+            resource.Track = model.Track.ToResource();
         }
 
-        [HttpGet("since")]
-        public List<HistoryResource> GetHistorySince(DateTime date, EntityHistoryEventType? eventType = null, bool includeArtist = false, bool includeAlbum = false, bool includeTrack = false)
+        if (model.Artist != null)
         {
-            return _historyService.Since(date, eventType).Select(h => MapToResource(h, includeArtist, includeAlbum, includeTrack)).ToList();
+            resource.QualityCutoffNotMet = _upgradableSpecification.QualityCutoffNotMet(model.Artist.QualityProfile.Value, model.Quality);
         }
 
-        [HttpGet("artist")]
-        public List<HistoryResource> GetArtistHistory(int artistId, int? albumId = null, EntityHistoryEventType? eventType = null, bool includeArtist = false, bool includeAlbum = false, bool includeTrack = false)
-        {
-            if (albumId.HasValue)
-            {
-                return _historyService.GetByAlbum(albumId.Value, eventType).Select(h => MapToResource(h, includeArtist, includeAlbum, includeTrack)).ToList();
-            }
+        return resource;
+    }
 
-            return _historyService.GetByArtist(artistId, eventType).Select(h => MapToResource(h, includeArtist, includeAlbum, includeTrack)).ToList();
+    [HttpGet]
+    public PagingResource<HistoryResource> GetHistory(bool includeArtist = false, bool includeAlbum = false, bool includeTrack = false)
+    {
+        var pagingResource = Request.ReadPagingResourceFromRequest<HistoryResource>();
+        var pagingSpec = pagingResource.MapToPagingSpec<HistoryResource, EntityHistory>("date", SortDirection.Descending);
+
+        var eventTypeFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "eventType");
+        var albumIdFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "albumId");
+        var downloadIdFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "downloadId");
+
+        if (eventTypeFilter != null)
+        {
+            var filterValue = (EntityHistoryEventType)Convert.ToInt32(eventTypeFilter.Value);
+            pagingSpec.FilterExpressions.Add(v => v.EventType == filterValue);
         }
 
-        [HttpPost("failed/{id}")]
-        public object MarkAsFailed([FromRoute] int id)
+        if (albumIdFilter != null)
         {
-            _failedDownloadService.MarkAsFailed(id);
-            return new { };
+            var albumId = Convert.ToInt32(albumIdFilter.Value);
+            pagingSpec.FilterExpressions.Add(h => h.AlbumId == albumId);
         }
+
+        if (downloadIdFilter != null)
+        {
+            var downloadId = downloadIdFilter.Value;
+            pagingSpec.FilterExpressions.Add(h => h.DownloadId == downloadId);
+        }
+
+        return pagingSpec.ApplyToPage(_historyService.Paged, h => MapToResource(h, includeArtist, includeAlbum, includeTrack));
+    }
+
+    [HttpGet("since")]
+    public List<HistoryResource> GetHistorySince(DateTime date, EntityHistoryEventType? eventType = null, bool includeArtist = false, bool includeAlbum = false, bool includeTrack = false)
+    {
+        return _historyService.Since(date, eventType).Select(h => MapToResource(h, includeArtist, includeAlbum, includeTrack)).ToList();
+    }
+
+    [HttpGet("artist")]
+    public List<HistoryResource> GetArtistHistory(int artistId, int? albumId = null, EntityHistoryEventType? eventType = null, bool includeArtist = false, bool includeAlbum = false, bool includeTrack = false)
+    {
+        if (albumId.HasValue)
+        {
+            return _historyService.GetByAlbum(albumId.Value, eventType).Select(h => MapToResource(h, includeArtist, includeAlbum, includeTrack)).ToList();
+        }
+
+        return _historyService.GetByArtist(artistId, eventType).Select(h => MapToResource(h, includeArtist, includeAlbum, includeTrack)).ToList();
+    }
+
+    [HttpPost("failed/{id}")]
+    public object MarkAsFailed([FromRoute] int id)
+    {
+        _failedDownloadService.MarkAsFailed(id);
+        return new { };
     }
 }

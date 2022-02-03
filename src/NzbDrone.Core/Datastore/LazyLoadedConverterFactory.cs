@@ -3,87 +3,86 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace NzbDrone.Core.Datastore
+namespace NzbDrone.Core.Datastore;
+
+public class LazyLoadedConverterFactory : JsonConverterFactory
 {
-    public class LazyLoadedConverterFactory : JsonConverterFactory
+    public override bool CanConvert(Type typeToConvert)
     {
-        public override bool CanConvert(Type typeToConvert)
+        if (!typeToConvert.IsGenericType)
         {
-            if (!typeToConvert.IsGenericType)
-            {
-                return false;
-            }
-
-            return typeToConvert.GetGenericTypeDefinition() == typeof(LazyLoaded<>);
+            return false;
         }
 
-        public override JsonConverter CreateConverter(Type type, JsonSerializerOptions options)
-        {
-            var childType = type.GetGenericArguments()[0];
+        return typeToConvert.GetGenericTypeDefinition() == typeof(LazyLoaded<>);
+    }
 
-            return (JsonConverter)Activator.CreateInstance(
-                typeof(LazyLoadedConverter<>).MakeGenericType(childType),
-                BindingFlags.Instance | BindingFlags.Public,
-                binder: null,
-                args: new object[] { options },
-                culture: null);
+    public override JsonConverter CreateConverter(Type type, JsonSerializerOptions options)
+    {
+        var childType = type.GetGenericArguments()[0];
+
+        return (JsonConverter)Activator.CreateInstance(
+                                                       typeof(LazyLoadedConverter<>).MakeGenericType(childType),
+                                                       BindingFlags.Instance | BindingFlags.Public,
+                                                       binder: null,
+                                                       args: new object[] { options },
+                                                       culture: null);
+    }
+
+    private class LazyLoadedConverter<TChild> : JsonConverter<LazyLoaded<TChild>>
+    {
+        private readonly JsonConverter<TChild> _childConverter;
+        private readonly Type _childType;
+
+        public LazyLoadedConverter(JsonSerializerOptions options)
+        {
+            // For performance, use the existing converter if available.
+            _childConverter = (JsonConverter<TChild>)options
+               .GetConverter(typeof(TChild));
+
+            // Cache the type.
+            _childType = typeof(TChild);
         }
 
-        private class LazyLoadedConverter<TChild> : JsonConverter<LazyLoaded<TChild>>
+        public override LazyLoaded<TChild> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            private readonly JsonConverter<TChild> _childConverter;
-            private readonly Type _childType;
-
-            public LazyLoadedConverter(JsonSerializerOptions options)
+            TChild value;
+            if (_childConverter != null)
             {
-                // For performance, use the existing converter if available.
-                _childConverter = (JsonConverter<TChild>)options
-                    .GetConverter(typeof(TChild));
-
-                // Cache the type.
-                _childType = typeof(TChild);
+                reader.Read();
+                value = _childConverter.Read(ref reader, _childType, options);
+            }
+            else
+            {
+                value = JsonSerializer.Deserialize<TChild>(ref reader, options);
             }
 
-            public override LazyLoaded<TChild> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            if (value != null)
             {
-                TChild value;
+                return new LazyLoaded<TChild>(value);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public override void Write(Utf8JsonWriter writer, LazyLoaded<TChild> value, JsonSerializerOptions options)
+        {
+            if (value.IsLoaded)
+            {
                 if (_childConverter != null)
                 {
-                    reader.Read();
-                    value = _childConverter.Read(ref reader, _childType, options);
+                    _childConverter.Write(writer, value.Value, options);
                 }
                 else
                 {
-                    value = JsonSerializer.Deserialize<TChild>(ref reader, options);
-                }
-
-                if (value != null)
-                {
-                    return new LazyLoaded<TChild>(value);
-                }
-                else
-                {
-                    return null;
+                    JsonSerializer.Serialize(writer, value.Value, options);
                 }
             }
-
-            public override void Write(Utf8JsonWriter writer, LazyLoaded<TChild> value, JsonSerializerOptions options)
+            else
             {
-                if (value.IsLoaded)
-                {
-                    if (_childConverter != null)
-                    {
-                        _childConverter.Write(writer, value.Value, options);
-                    }
-                    else
-                    {
-                        JsonSerializer.Serialize(writer, value.Value, options);
-                    }
-                }
-                else
-                {
-                    writer.WriteNullValue();
-                }
+                writer.WriteNullValue();
             }
         }
     }

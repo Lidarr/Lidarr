@@ -7,54 +7,53 @@ using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.Authentication;
 using NzbDrone.Core.Configuration;
 
-namespace Lidarr.Http.Authentication
+namespace Lidarr.Http.Authentication;
+
+[AllowAnonymous]
+[ApiController]
+public class AuthenticationController : Controller
 {
-    [AllowAnonymous]
-    [ApiController]
-    public class AuthenticationController : Controller
+    private readonly IAuthenticationService _authService;
+    private readonly IConfigFileProvider _configFileProvider;
+
+    public AuthenticationController(IAuthenticationService authService, IConfigFileProvider configFileProvider)
     {
-        private readonly IAuthenticationService _authService;
-        private readonly IConfigFileProvider _configFileProvider;
+        _authService = authService;
+        _configFileProvider = configFileProvider;
+    }
 
-        public AuthenticationController(IAuthenticationService authService, IConfigFileProvider configFileProvider)
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromForm] LoginResource resource, [FromQuery] string returnUrl = null)
+    {
+        var user = _authService.Login(HttpContext.Request, resource.Username, resource.Password);
+
+        if (user == null)
         {
-            _authService = authService;
-            _configFileProvider = configFileProvider;
+            return Redirect($"~/login?returnUrl={returnUrl}&loginFailed=true");
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromForm] LoginResource resource, [FromQuery] string returnUrl = null)
-        {
-            var user = _authService.Login(HttpContext.Request, resource.Username, resource.Password);
+        var claims = new List<Claim>
+                     {
+                         new Claim("user", user.Username),
+                         new Claim("identifier", user.Identifier.ToString()),
+                         new Claim("AuthType", AuthenticationType.Forms.ToString())
+                     };
 
-            if (user == null)
-            {
-                return Redirect($"~/login?returnUrl={returnUrl}&loginFailed=true");
-            }
+        var authProperties = new AuthenticationProperties
+                             {
+                                 IsPersistent = resource.RememberMe == "on"
+                             };
 
-            var claims = new List<Claim>
-            {
-                new Claim("user", user.Username),
-                new Claim("identifier", user.Identifier.ToString()),
-                new Claim("AuthType", AuthenticationType.Forms.ToString())
-            };
+        await HttpContext.SignInAsync(AuthenticationType.Forms.ToString(), new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", "user", "identifier")), authProperties);
 
-            var authProperties = new AuthenticationProperties
-            {
-                IsPersistent = resource.RememberMe == "on"
-            };
+        return Redirect(_configFileProvider.UrlBase + "/");
+    }
 
-            await HttpContext.SignInAsync(AuthenticationType.Forms.ToString(), new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", "user", "identifier")), authProperties);
-
-            return Redirect(_configFileProvider.UrlBase + "/");
-        }
-
-        [HttpGet("logout")]
-        public async Task<IActionResult> Logout()
-        {
-            _authService.Logout(HttpContext);
-            await HttpContext.SignOutAsync(AuthenticationType.Forms.ToString());
-            return Redirect(_configFileProvider.UrlBase + "/");
-        }
+    [HttpGet("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        _authService.Logout(HttpContext);
+        await HttpContext.SignOutAsync(AuthenticationType.Forms.ToString());
+        return Redirect(_configFileProvider.UrlBase + "/");
     }
 }

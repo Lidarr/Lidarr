@@ -1,9 +1,8 @@
-namespace NzbDrone.Core.Qualities
+namespace NzbDrone.Core.Qualities;
+
+public enum ProperDownloadTypes
 {
-    public enum ProperDownloadTypes
-    {
-        PreferAndUpgrade,
-        DoNotUpgrade,
-        DoNotPrefer
-    }
+    PreferAndUpgrade,
+    DoNotUpgrade,
+    DoNotPrefer
 }

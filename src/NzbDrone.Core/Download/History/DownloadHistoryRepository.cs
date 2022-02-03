@@ -3,29 +3,28 @@ using System.Linq;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Download.History
+namespace NzbDrone.Core.Download.History;
+
+public interface IDownloadHistoryRepository : IBasicRepository<DownloadHistory>
 {
-    public interface IDownloadHistoryRepository : IBasicRepository<DownloadHistory>
+    List<DownloadHistory> FindByDownloadId(string downloadId);
+    void DeleteByArtistIds(List<int> artistIds);
+}
+
+public class DownloadHistoryRepository : BasicRepository<DownloadHistory>, IDownloadHistoryRepository
+{
+    public DownloadHistoryRepository(IMainDatabase database, IEventAggregator eventAggregator)
+        : base(database, eventAggregator)
     {
-        List<DownloadHistory> FindByDownloadId(string downloadId);
-        void DeleteByArtistIds(List<int> artistIds);
     }
 
-    public class DownloadHistoryRepository : BasicRepository<DownloadHistory>, IDownloadHistoryRepository
+    public List<DownloadHistory> FindByDownloadId(string downloadId)
     {
-        public DownloadHistoryRepository(IMainDatabase database, IEventAggregator eventAggregator)
-            : base(database, eventAggregator)
-        {
-        }
+        return Query(x => x.DownloadId == downloadId).OrderByDescending(h => h.Date).ToList();
+    }
 
-        public List<DownloadHistory> FindByDownloadId(string downloadId)
-        {
-            return Query(x => x.DownloadId == downloadId).OrderByDescending(h => h.Date).ToList();
-        }
-
-        public void DeleteByArtistIds(List<int> artistIds)
-        {
-            Delete(r => artistIds.Contains(r.ArtistId));
-        }
+    public void DeleteByArtistIds(List<int> artistIds)
+    {
+        Delete(r => artistIds.Contains(r.ArtistId));
     }
 }

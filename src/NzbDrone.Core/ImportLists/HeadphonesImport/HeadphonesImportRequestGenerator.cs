@@ -1,33 +1,32 @@
 using System.Collections.Generic;
 using NzbDrone.Common.Http;
 
-namespace NzbDrone.Core.ImportLists.HeadphonesImport
+namespace NzbDrone.Core.ImportLists.HeadphonesImport;
+
+public class HeadphonesImportRequestGenerator : IImportListRequestGenerator
 {
-    public class HeadphonesImportRequestGenerator : IImportListRequestGenerator
+    public HeadphonesImportSettings Settings { get; set; }
+
+    public int MaxPages { get; set; }
+    public int PageSize { get; set; }
+
+    public HeadphonesImportRequestGenerator()
     {
-        public HeadphonesImportSettings Settings { get; set; }
+        MaxPages = 1;
+        PageSize = 1000;
+    }
 
-        public int MaxPages { get; set; }
-        public int PageSize { get; set; }
+    public virtual ImportListPageableRequestChain GetListItems()
+    {
+        var pageableRequests = new ImportListPageableRequestChain();
 
-        public HeadphonesImportRequestGenerator()
-        {
-            MaxPages = 1;
-            PageSize = 1000;
-        }
+        pageableRequests.Add(GetPagedRequests());
 
-        public virtual ImportListPageableRequestChain GetListItems()
-        {
-            var pageableRequests = new ImportListPageableRequestChain();
+        return pageableRequests;
+    }
 
-            pageableRequests.Add(GetPagedRequests());
-
-            return pageableRequests;
-        }
-
-        private IEnumerable<ImportListRequest> GetPagedRequests()
-        {
-            yield return new ImportListRequest(string.Format("{0}/api?cmd=getIndex&apikey={1}", Settings.BaseUrl.TrimEnd('/'), Settings.ApiKey), HttpAccept.Json);
-        }
+    private IEnumerable<ImportListRequest> GetPagedRequests()
+    {
+        yield return new ImportListRequest(string.Format("{0}/api?cmd=getIndex&apikey={1}", Settings.BaseUrl.TrimEnd('/'), Settings.ApiKey), HttpAccept.Json);
     }
 }

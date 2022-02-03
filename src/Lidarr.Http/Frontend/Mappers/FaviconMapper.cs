@@ -4,37 +4,36 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Core.Configuration;
 
-namespace Lidarr.Http.Frontend.Mappers
+namespace Lidarr.Http.Frontend.Mappers;
+
+public class FaviconMapper : StaticResourceMapperBase
 {
-    public class FaviconMapper : StaticResourceMapperBase
+    private readonly IAppFolderInfo _appFolderInfo;
+    private readonly IConfigFileProvider _configFileProvider;
+
+    public FaviconMapper(IAppFolderInfo appFolderInfo, IDiskProvider diskProvider, IConfigFileProvider configFileProvider, Logger logger)
+        : base(diskProvider, logger)
     {
-        private readonly IAppFolderInfo _appFolderInfo;
-        private readonly IConfigFileProvider _configFileProvider;
+        _appFolderInfo = appFolderInfo;
+        _configFileProvider = configFileProvider;
+    }
 
-        public FaviconMapper(IAppFolderInfo appFolderInfo, IDiskProvider diskProvider, IConfigFileProvider configFileProvider, Logger logger)
-            : base(diskProvider, logger)
+    public override string Map(string resourceUrl)
+    {
+        var fileName = "favicon.ico";
+
+        if (BuildInfo.IsDebug)
         {
-            _appFolderInfo = appFolderInfo;
-            _configFileProvider = configFileProvider;
+            fileName = "favicon-debug.ico";
         }
 
-        public override string Map(string resourceUrl)
-        {
-            var fileName = "favicon.ico";
+        var path = Path.Combine("Content", "Images", "Icons", fileName);
 
-            if (BuildInfo.IsDebug)
-            {
-                fileName = "favicon-debug.ico";
-            }
+        return Path.Combine(_appFolderInfo.StartUpFolder, _configFileProvider.UiFolder, path);
+    }
 
-            var path = Path.Combine("Content", "Images", "Icons", fileName);
-
-            return Path.Combine(_appFolderInfo.StartUpFolder, _configFileProvider.UiFolder, path);
-        }
-
-        public override bool CanHandle(string resourceUrl)
-        {
-            return resourceUrl.Equals("/favicon.ico");
-        }
+    public override bool CanHandle(string resourceUrl)
+    {
+        return resourceUrl.Equals("/favicon.ico");
     }
 }

@@ -12,186 +12,185 @@ using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.RemotePathMappings;
 using NzbDrone.Core.Validation;
 
-namespace NzbDrone.Core.Download.Clients.Hadouken
+namespace NzbDrone.Core.Download.Clients.Hadouken;
+
+public class Hadouken : TorrentClientBase<HadoukenSettings>
 {
-    public class Hadouken : TorrentClientBase<HadoukenSettings>
+    private readonly IHadoukenProxy _proxy;
+
+    public Hadouken(IHadoukenProxy proxy,
+                    ITorrentFileInfoReader torrentFileInfoReader,
+                    IHttpClient httpClient,
+                    IConfigService configService,
+                    IDiskProvider diskProvider,
+                    IRemotePathMappingService remotePathMappingService,
+                    Logger logger)
+        : base(torrentFileInfoReader, httpClient, configService, diskProvider, remotePathMappingService, logger)
     {
-        private readonly IHadoukenProxy _proxy;
+        _proxy = proxy;
+    }
 
-        public Hadouken(IHadoukenProxy proxy,
-                        ITorrentFileInfoReader torrentFileInfoReader,
-                        IHttpClient httpClient,
-                        IConfigService configService,
-                        IDiskProvider diskProvider,
-                        IRemotePathMappingService remotePathMappingService,
-                        Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, remotePathMappingService, logger)
+    public override string Name => "Hadouken";
+
+    public override IEnumerable<DownloadClientItem> GetItems()
+    {
+        var torrents = _proxy.GetTorrents(Settings);
+
+        var items = new List<DownloadClientItem>();
+
+        foreach (var torrent in torrents)
         {
-            _proxy = proxy;
-        }
-
-        public override string Name => "Hadouken";
-
-        public override IEnumerable<DownloadClientItem> GetItems()
-        {
-            var torrents = _proxy.GetTorrents(Settings);
-
-            var items = new List<DownloadClientItem>();
-
-            foreach (var torrent in torrents)
+            if (Settings.Category.IsNotNullOrWhiteSpace() && torrent.Label != Settings.Category)
             {
-                if (Settings.Category.IsNotNullOrWhiteSpace() && torrent.Label != Settings.Category)
-                {
-                    continue;
-                }
-
-                var outputPath = _remotePathMappingService.RemapRemoteToLocal(Settings.Host, new OsPath(torrent.SavePath));
-                var eta = TimeSpan.FromSeconds(0);
-
-                if (torrent.DownloadRate > 0 && torrent.TotalSize > 0)
-                {
-                    eta = TimeSpan.FromSeconds(torrent.TotalSize / (double)torrent.DownloadRate);
-                }
-
-                var item = new DownloadClientItem
-                {
-                    DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this),
-                    DownloadId = torrent.InfoHash.ToUpper(),
-                    OutputPath = outputPath + torrent.Name,
-                    RemainingSize = torrent.TotalSize - torrent.DownloadedBytes,
-                    RemainingTime = eta,
-                    Title = torrent.Name,
-                    TotalSize = torrent.TotalSize,
-                    SeedRatio = torrent.DownloadedBytes <= 0 ? 0 :
-                        (double)torrent.UploadedBytes / torrent.DownloadedBytes
-                };
-
-                if (!string.IsNullOrEmpty(torrent.Error))
-                {
-                    item.Status = DownloadItemStatus.Warning;
-                    item.Message = torrent.Error;
-                }
-                else if (torrent.IsFinished && torrent.State != HadoukenTorrentState.CheckingFiles)
-                {
-                    item.Status = DownloadItemStatus.Completed;
-                }
-                else if (torrent.State == HadoukenTorrentState.QueuedForChecking)
-                {
-                    item.Status = DownloadItemStatus.Queued;
-                }
-                else if (torrent.State == HadoukenTorrentState.Paused)
-                {
-                    item.Status = DownloadItemStatus.Paused;
-                }
-                else
-                {
-                    item.Status = DownloadItemStatus.Downloading;
-                }
-
-                item.CanMoveFiles = item.CanBeRemoved = torrent.IsFinished && torrent.State == HadoukenTorrentState.Paused;
-
-                items.Add(item);
+                continue;
             }
 
-            return items;
-        }
+            var outputPath = _remotePathMappingService.RemapRemoteToLocal(Settings.Host, new OsPath(torrent.SavePath));
+            var eta = TimeSpan.FromSeconds(0);
 
-        public override void RemoveItem(DownloadClientItem item, bool deleteData)
-        {
-            if (deleteData)
+            if (torrent.DownloadRate > 0 && torrent.TotalSize > 0)
             {
-                _proxy.RemoveTorrentAndData(Settings, item.DownloadId);
+                eta = TimeSpan.FromSeconds(torrent.TotalSize / (double)torrent.DownloadRate);
+            }
+
+            var item = new DownloadClientItem
+                       {
+                           DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this),
+                           DownloadId = torrent.InfoHash.ToUpper(),
+                           OutputPath = outputPath + torrent.Name,
+                           RemainingSize = torrent.TotalSize - torrent.DownloadedBytes,
+                           RemainingTime = eta,
+                           Title = torrent.Name,
+                           TotalSize = torrent.TotalSize,
+                           SeedRatio = torrent.DownloadedBytes <= 0 ? 0 :
+                                           (double)torrent.UploadedBytes / torrent.DownloadedBytes
+                       };
+
+            if (!string.IsNullOrEmpty(torrent.Error))
+            {
+                item.Status = DownloadItemStatus.Warning;
+                item.Message = torrent.Error;
+            }
+            else if (torrent.IsFinished && torrent.State != HadoukenTorrentState.CheckingFiles)
+            {
+                item.Status = DownloadItemStatus.Completed;
+            }
+            else if (torrent.State == HadoukenTorrentState.QueuedForChecking)
+            {
+                item.Status = DownloadItemStatus.Queued;
+            }
+            else if (torrent.State == HadoukenTorrentState.Paused)
+            {
+                item.Status = DownloadItemStatus.Paused;
             }
             else
             {
-                _proxy.RemoveTorrent(Settings, item.DownloadId);
+                item.Status = DownloadItemStatus.Downloading;
             }
+
+            item.CanMoveFiles = item.CanBeRemoved = torrent.IsFinished && torrent.State == HadoukenTorrentState.Paused;
+
+            items.Add(item);
         }
 
-        public override DownloadClientInfo GetStatus()
+        return items;
+    }
+
+    public override void RemoveItem(DownloadClientItem item, bool deleteData)
+    {
+        if (deleteData)
         {
-            var config = _proxy.GetConfig(Settings);
-            var destDir = new OsPath(config.GetValueOrDefault("bittorrent.defaultSavePath") as string);
-
-            var status = new DownloadClientInfo
-            {
-                IsLocalhost = Settings.Host == "127.0.0.1" || Settings.Host == "localhost"
-            };
-
-            if (!destDir.IsEmpty)
-            {
-                status.OutputRootFolders = new List<OsPath> { _remotePathMappingService.RemapRemoteToLocal(Settings.Host, destDir) };
-            }
-
-            return status;
+            _proxy.RemoveTorrentAndData(Settings, item.DownloadId);
         }
-
-        protected override void Test(List<ValidationFailure> failures)
+        else
         {
-            failures.AddIfNotNull(TestConnection());
-            if (failures.HasErrors())
-            {
-                return;
-            }
-
-            failures.AddIfNotNull(TestGetTorrents());
+            _proxy.RemoveTorrent(Settings, item.DownloadId);
         }
+    }
 
-        protected override string AddFromMagnetLink(RemoteAlbum remoteAlbum, string hash, string magnetLink)
+    public override DownloadClientInfo GetStatus()
+    {
+        var config = _proxy.GetConfig(Settings);
+        var destDir = new OsPath(config.GetValueOrDefault("bittorrent.defaultSavePath") as string);
+
+        var status = new DownloadClientInfo
+                     {
+                         IsLocalhost = Settings.Host == "127.0.0.1" || Settings.Host == "localhost"
+                     };
+
+        if (!destDir.IsEmpty)
         {
-            _proxy.AddTorrentUri(Settings, magnetLink);
-
-            return hash.ToUpper();
+            status.OutputRootFolders = new List<OsPath> { _remotePathMappingService.RemapRemoteToLocal(Settings.Host, destDir) };
         }
 
-        protected override string AddFromTorrentFile(RemoteAlbum remoteAlbum, string hash, string filename, byte[] fileContent)
+        return status;
+    }
+
+    protected override void Test(List<ValidationFailure> failures)
+    {
+        failures.AddIfNotNull(TestConnection());
+        if (failures.HasErrors())
         {
-            return _proxy.AddTorrentFile(Settings, fileContent).ToUpper();
+            return;
         }
 
-        private ValidationFailure TestConnection()
+        failures.AddIfNotNull(TestGetTorrents());
+    }
+
+    protected override string AddFromMagnetLink(RemoteAlbum remoteAlbum, string hash, string magnetLink)
+    {
+        _proxy.AddTorrentUri(Settings, magnetLink);
+
+        return hash.ToUpper();
+    }
+
+    protected override string AddFromTorrentFile(RemoteAlbum remoteAlbum, string hash, string filename, byte[] fileContent)
+    {
+        return _proxy.AddTorrentFile(Settings, fileContent).ToUpper();
+    }
+
+    private ValidationFailure TestConnection()
+    {
+        try
         {
-            try
-            {
-                var sysInfo = _proxy.GetSystemInfo(Settings);
-                var version = new Version(sysInfo.Versions["hadouken"]);
+            var sysInfo = _proxy.GetSystemInfo(Settings);
+            var version = new Version(sysInfo.Versions["hadouken"]);
 
-                if (version < new Version("5.1"))
-                {
-                    return new ValidationFailure(string.Empty,
-                        "Old Hadouken client with unsupported API, need 5.1 or higher");
-                }
-            }
-            catch (DownloadClientAuthenticationException ex)
+            if (version < new Version("5.1"))
             {
-                _logger.Error(ex, "Unable to authenticate");
-
-                return new NzbDroneValidationFailure("Password", "Authentication failed");
+                return new ValidationFailure(string.Empty,
+                                             "Old Hadouken client with unsupported API, need 5.1 or higher");
             }
-            catch (Exception ex)
-            {
-                return new NzbDroneValidationFailure("Host", "Unable to connect to Hadouken")
-                       {
-                           DetailedDescription = ex.Message
-                       };
-            }
-
-            return null;
         }
-
-        private ValidationFailure TestGetTorrents()
+        catch (DownloadClientAuthenticationException ex)
         {
-            try
-            {
-                _proxy.GetTorrents(Settings);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Unable to validate");
-                return new NzbDroneValidationFailure(string.Empty, "Failed to get the list of torrents: " + ex.Message);
-            }
+            _logger.Error(ex, "Unable to authenticate");
 
-            return null;
+            return new NzbDroneValidationFailure("Password", "Authentication failed");
         }
+        catch (Exception ex)
+        {
+            return new NzbDroneValidationFailure("Host", "Unable to connect to Hadouken")
+                   {
+                       DetailedDescription = ex.Message
+                   };
+        }
+
+        return null;
+    }
+
+    private ValidationFailure TestGetTorrents()
+    {
+        try
+        {
+            _proxy.GetTorrents(Settings);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Unable to validate");
+            return new NzbDroneValidationFailure(string.Empty, "Failed to get the list of torrents: " + ex.Message);
+        }
+
+        return null;
     }
 }

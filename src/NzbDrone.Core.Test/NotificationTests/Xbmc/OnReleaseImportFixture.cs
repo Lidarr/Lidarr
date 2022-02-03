@@ -9,63 +9,62 @@ using NzbDrone.Core.Notifications;
 using NzbDrone.Core.Notifications.Xbmc;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.NotificationTests.Xbmc
+namespace NzbDrone.Core.Test.NotificationTests.Xbmc;
+
+[TestFixture]
+public class OnReleaseImportFixture : CoreTest<Notifications.Xbmc.Xbmc>
 {
-    [TestFixture]
-    public class OnReleaseImportFixture : CoreTest<Notifications.Xbmc.Xbmc>
+    private AlbumDownloadMessage _albumDownloadMessage;
+
+    [SetUp]
+    public void Setup()
     {
-        private AlbumDownloadMessage _albumDownloadMessage;
+        var artist = Builder<Artist>.CreateNew()
+                                    .Build();
 
-        [SetUp]
-        public void Setup()
-        {
-            var artist = Builder<Artist>.CreateNew()
-                                        .Build();
+        var trackFile = Builder<TrackFile>.CreateNew()
+                                          .Build();
 
-            var trackFile = Builder<TrackFile>.CreateNew()
-                                                   .Build();
+        _albumDownloadMessage = Builder<AlbumDownloadMessage>.CreateNew()
+                                                             .With(d => d.Artist = artist)
+                                                             .With(d => d.TrackFiles = new List<TrackFile> { trackFile })
+                                                             .With(d => d.OldFiles = new List<TrackFile>())
+                                                             .Build();
 
-            _albumDownloadMessage = Builder<AlbumDownloadMessage>.CreateNew()
-                .With(d => d.Artist = artist)
-                .With(d => d.TrackFiles = new List<TrackFile> { trackFile })
-                .With(d => d.OldFiles = new List<TrackFile>())
-                .Build();
+        Subject.Definition = new NotificationDefinition();
+        Subject.Definition.Settings = new XbmcSettings
+                                      {
+                                          UpdateLibrary = true
+                                      };
+    }
 
-            Subject.Definition = new NotificationDefinition();
-            Subject.Definition.Settings = new XbmcSettings
-            {
-                UpdateLibrary = true
-            };
-        }
+    private void GivenOldFiles()
+    {
+        _albumDownloadMessage.OldFiles = Builder<TrackFile>.CreateListOfSize(1)
+                                                           .Build()
+                                                           .ToList();
 
-        private void GivenOldFiles()
-        {
-            _albumDownloadMessage.OldFiles = Builder<TrackFile>.CreateListOfSize(1)
-                                                            .Build()
-                                                            .ToList();
+        Subject.Definition.Settings = new XbmcSettings
+                                      {
+                                          UpdateLibrary = true,
+                                          CleanLibrary = true
+                                      };
+    }
 
-            Subject.Definition.Settings = new XbmcSettings
-            {
-                UpdateLibrary = true,
-                CleanLibrary = true
-            };
-        }
+    [Test]
+    public void should_not_clean_if_no_episode_was_replaced()
+    {
+        Subject.OnReleaseImport(_albumDownloadMessage);
 
-        [Test]
-        public void should_not_clean_if_no_episode_was_replaced()
-        {
-            Subject.OnReleaseImport(_albumDownloadMessage);
+        Mocker.GetMock<IXbmcService>().Verify(v => v.Clean(It.IsAny<XbmcSettings>()), Times.Never());
+    }
 
-            Mocker.GetMock<IXbmcService>().Verify(v => v.Clean(It.IsAny<XbmcSettings>()), Times.Never());
-        }
+    [Test]
+    public void should_clean_if_episode_was_replaced()
+    {
+        GivenOldFiles();
+        Subject.OnReleaseImport(_albumDownloadMessage);
 
-        [Test]
-        public void should_clean_if_episode_was_replaced()
-        {
-            GivenOldFiles();
-            Subject.OnReleaseImport(_albumDownloadMessage);
-
-            Mocker.GetMock<IXbmcService>().Verify(v => v.Clean(It.IsAny<XbmcSettings>()), Times.Once());
-        }
+        Mocker.GetMock<IXbmcService>().Verify(v => v.Clean(It.IsAny<XbmcSettings>()), Times.Once());
     }
 }

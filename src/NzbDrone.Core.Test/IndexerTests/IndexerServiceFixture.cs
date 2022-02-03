@@ -8,38 +8,37 @@ using NzbDrone.Core.Indexers.Omgwtfnzbs;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.IndexerTests
+namespace NzbDrone.Core.Test.IndexerTests;
+
+public class IndexerServiceFixture : DbTest<IndexerFactory, IndexerDefinition>
 {
-    public class IndexerServiceFixture : DbTest<IndexerFactory, IndexerDefinition>
+    private List<IIndexer> _indexers;
+
+    [SetUp]
+    public void Setup()
     {
-        private List<IIndexer> _indexers;
+        _indexers = new List<IIndexer>();
 
-        [SetUp]
-        public void Setup()
-        {
-            _indexers = new List<IIndexer>();
+        _indexers.Add(Mocker.Resolve<Newznab>());
+        _indexers.Add(Mocker.Resolve<Omgwtfnzbs>());
 
-            _indexers.Add(Mocker.Resolve<Newznab>());
-            _indexers.Add(Mocker.Resolve<Omgwtfnzbs>());
+        Mocker.SetConstant<IEnumerable<IIndexer>>(_indexers);
+    }
 
-            Mocker.SetConstant<IEnumerable<IIndexer>>(_indexers);
-        }
+    [Test]
+    public void should_remove_missing_indexers_on_startup()
+    {
+        var repo = Mocker.Resolve<IndexerRepository>();
 
-        [Test]
-        public void should_remove_missing_indexers_on_startup()
-        {
-            var repo = Mocker.Resolve<IndexerRepository>();
+        Mocker.SetConstant<IIndexerRepository>(repo);
 
-            Mocker.SetConstant<IIndexerRepository>(repo);
+        var existingIndexers = Builder<IndexerDefinition>.CreateNew().BuildNew();
+        existingIndexers.ConfigContract = typeof(NewznabSettings).Name;
 
-            var existingIndexers = Builder<IndexerDefinition>.CreateNew().BuildNew();
-            existingIndexers.ConfigContract = typeof(NewznabSettings).Name;
+        repo.Insert(existingIndexers);
 
-            repo.Insert(existingIndexers);
+        Subject.Handle(new ApplicationStartedEvent());
 
-            Subject.Handle(new ApplicationStartedEvent());
-
-            AllStoredModels.Should().NotContain(c => c.Id == existingIndexers.Id);
-        }
+        AllStoredModels.Should().NotContain(c => c.Id == existingIndexers.Id);
     }
 }

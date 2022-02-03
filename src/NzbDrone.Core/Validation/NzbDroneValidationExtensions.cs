@@ -3,39 +3,38 @@ using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
 
-namespace NzbDrone.Core.Validation
+namespace NzbDrone.Core.Validation;
+
+public static class NzbDroneValidationExtensions
 {
-    public static class NzbDroneValidationExtensions
+    public static NzbDroneValidationResult Filter(this NzbDroneValidationResult result, params string[] fields)
     {
-        public static NzbDroneValidationResult Filter(this NzbDroneValidationResult result, params string[] fields)
-        {
-            var failures = result.Failures.Where(v => fields.Contains(v.PropertyName)).ToArray();
+        var failures = result.Failures.Where(v => fields.Contains(v.PropertyName)).ToArray();
 
-            return new NzbDroneValidationResult(failures);
+        return new NzbDroneValidationResult(failures);
+    }
+
+    public static void ThrowOnError(this NzbDroneValidationResult result)
+    {
+        if (!result.IsValid)
+        {
+            throw new ValidationException(result.Errors);
         }
+    }
 
-        public static void ThrowOnError(this NzbDroneValidationResult result)
+    public static bool HasErrors(this List<ValidationFailure> list)
+    {
+        foreach (var item in list)
         {
-            if (!result.IsValid)
+            var extended = item as NzbDroneValidationFailure;
+            if (extended != null && extended.IsWarning)
             {
-                throw new ValidationException(result.Errors);
-            }
-        }
-
-        public static bool HasErrors(this List<ValidationFailure> list)
-        {
-            foreach (var item in list)
-            {
-                var extended = item as NzbDroneValidationFailure;
-                if (extended != null && extended.IsWarning)
-                {
-                    continue;
-                }
-
-                return true;
+                continue;
             }
 
-            return false;
+            return true;
         }
+
+        return false;
     }
 }

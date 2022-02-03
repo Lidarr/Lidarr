@@ -1,9 +1,8 @@
-﻿namespace NzbDrone.Core.Messaging.Commands
+﻿namespace NzbDrone.Core.Messaging.Commands;
+
+public enum CommandTrigger
 {
-    public enum CommandTrigger
-    {
-        Unspecified = 0,
-        Manual = 1,
-        Scheduled = 2
-    }
+    Unspecified = 0,
+    Manual = 1,
+    Scheduled = 2
 }

@@ -6,51 +6,50 @@ using NzbDrone.Common.Composition;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Extras.Metadata
+namespace NzbDrone.Core.Extras.Metadata;
+
+public interface IMetadataFactory : IProviderFactory<IMetadata, MetadataDefinition>
 {
-    public interface IMetadataFactory : IProviderFactory<IMetadata, MetadataDefinition>
+    List<IMetadata> Enabled();
+}
+
+public class MetadataFactory : ProviderFactory<IMetadata, MetadataDefinition>, IMetadataFactory
+{
+    private readonly IMetadataRepository _providerRepository;
+
+    public MetadataFactory(IMetadataRepository providerRepository, IEnumerable<IMetadata> providers, IServiceProvider container, IEventAggregator eventAggregator, Logger logger)
+        : base(providerRepository, providers, container, eventAggregator, logger)
     {
-        List<IMetadata> Enabled();
+        _providerRepository = providerRepository;
     }
 
-    public class MetadataFactory : ProviderFactory<IMetadata, MetadataDefinition>, IMetadataFactory
+    protected override void InitializeProviders()
     {
-        private readonly IMetadataRepository _providerRepository;
+        var definitions = new List<MetadataDefinition>();
 
-        public MetadataFactory(IMetadataRepository providerRepository, IEnumerable<IMetadata> providers, IServiceProvider container, IEventAggregator eventAggregator, Logger logger)
-            : base(providerRepository, providers, container, eventAggregator, logger)
+        foreach (var provider in _providers)
         {
-            _providerRepository = providerRepository;
+            definitions.Add(new MetadataDefinition
+                            {
+                                Enable = false,
+                                Name = provider.Name,
+                                Implementation = provider.GetType().Name,
+                                Settings = (IProviderConfig)Activator.CreateInstance(provider.ConfigContract)
+                            });
         }
 
-        protected override void InitializeProviders()
+        var currentProviders = All();
+
+        var newProviders = definitions.Where(def => currentProviders.All(c => c.Implementation != def.Implementation)).ToList();
+
+        if (newProviders.Any())
         {
-            var definitions = new List<MetadataDefinition>();
-
-            foreach (var provider in _providers)
-            {
-                definitions.Add(new MetadataDefinition
-                {
-                    Enable = false,
-                    Name = provider.Name,
-                    Implementation = provider.GetType().Name,
-                    Settings = (IProviderConfig)Activator.CreateInstance(provider.ConfigContract)
-                });
-            }
-
-            var currentProviders = All();
-
-            var newProviders = definitions.Where(def => currentProviders.All(c => c.Implementation != def.Implementation)).ToList();
-
-            if (newProviders.Any())
-            {
-                _providerRepository.InsertMany(newProviders.Cast<MetadataDefinition>().ToList());
-            }
+            _providerRepository.InsertMany(newProviders.Cast<MetadataDefinition>().ToList());
         }
+    }
 
-        public List<IMetadata> Enabled()
-        {
-            return GetAvailableProviders().Where(n => ((MetadataDefinition)n.Definition).Enable).ToList();
-        }
+    public List<IMetadata> Enabled()
+    {
+        return GetAvailableProviders().Where(n => ((MetadataDefinition)n.Definition).Enable).ToList();
     }
 }

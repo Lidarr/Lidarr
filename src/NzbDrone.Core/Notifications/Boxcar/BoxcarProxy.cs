@@ -5,92 +5,91 @@ using NLog;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Http;
 
-namespace NzbDrone.Core.Notifications.Boxcar
+namespace NzbDrone.Core.Notifications.Boxcar;
+
+public interface IBoxcarProxy
 {
-    public interface IBoxcarProxy
+    void SendNotification(string title, string message, BoxcarSettings settings);
+    ValidationFailure Test(BoxcarSettings settings);
+}
+
+public class BoxcarProxy : IBoxcarProxy
+{
+    private const string URL = "https://new.boxcar.io/api/notifications";
+    private readonly IHttpClient _httpClient;
+    private readonly Logger _logger;
+
+    public BoxcarProxy(IHttpClient httpClient, Logger logger)
     {
-        void SendNotification(string title, string message, BoxcarSettings settings);
-        ValidationFailure Test(BoxcarSettings settings);
+        _httpClient = httpClient;
+        _logger = logger;
     }
 
-    public class BoxcarProxy : IBoxcarProxy
+    public void SendNotification(string title, string message, BoxcarSettings settings)
     {
-        private const string URL = "https://new.boxcar.io/api/notifications";
-        private readonly IHttpClient _httpClient;
-        private readonly Logger _logger;
-
-        public BoxcarProxy(IHttpClient httpClient, Logger logger)
+        try
         {
-            _httpClient = httpClient;
-            _logger = logger;
+            ProcessNotification(title, message, settings);
         }
-
-        public void SendNotification(string title, string message, BoxcarSettings settings)
+        catch (BoxcarException ex)
         {
-            try
-            {
-                ProcessNotification(title, message, settings);
-            }
-            catch (BoxcarException ex)
-            {
-                _logger.Error(ex, "Unable to send message");
-                throw new BoxcarException("Unable to send Boxcar notifications");
-            }
+            _logger.Error(ex, "Unable to send message");
+            throw new BoxcarException("Unable to send Boxcar notifications");
         }
+    }
 
-        public ValidationFailure Test(BoxcarSettings settings)
+    public ValidationFailure Test(BoxcarSettings settings)
+    {
+        try
         {
-            try
-            {
-                const string title = "Test Notification";
-                const string body = "This is a test message from Lidarr";
+            const string title = "Test Notification";
+            const string body = "This is a test message from Lidarr";
 
-                SendNotification(title, body, settings);
-                return null;
-            }
-            catch (HttpException ex)
-            {
-                if (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    _logger.Error(ex, "Access Token is invalid");
-                    return new ValidationFailure("Token", "Access Token is invalid");
-                }
-
-                _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("Token", "Unable to send test message");
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("", "Unable to send test message");
-            }
+            SendNotification(title, body, settings);
+            return null;
         }
-
-        private void ProcessNotification(string title, string message, BoxcarSettings settings)
+        catch (HttpException ex)
         {
-            try
+            if (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
             {
-                var requestBuilder = new HttpRequestBuilder(URL).Post();
-
-                var request = requestBuilder.AddFormParameter("user_credentials", settings.Token)
-                    .AddFormParameter("notification[title]", title)
-                    .AddFormParameter("notification[long_message]", message)
-                    .AddFormParameter("notification[source_name]", BuildInfo.AppName)
-                    .AddFormParameter("notification[icon_url]", "https://raw.githubusercontent.com/Lidarr/Lidarr/develop/Logo/64.png")
-                    .Build();
-
-                _httpClient.Post(request);
+                _logger.Error(ex, "Access Token is invalid");
+                return new ValidationFailure("Token", "Access Token is invalid");
             }
-            catch (HttpException ex)
+
+            _logger.Error(ex, "Unable to send test message");
+            return new ValidationFailure("Token", "Unable to send test message");
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Unable to send test message");
+            return new ValidationFailure("", "Unable to send test message");
+        }
+    }
+
+    private void ProcessNotification(string title, string message, BoxcarSettings settings)
+    {
+        try
+        {
+            var requestBuilder = new HttpRequestBuilder(URL).Post();
+
+            var request = requestBuilder.AddFormParameter("user_credentials", settings.Token)
+                                        .AddFormParameter("notification[title]", title)
+                                        .AddFormParameter("notification[long_message]", message)
+                                        .AddFormParameter("notification[source_name]", BuildInfo.AppName)
+                                        .AddFormParameter("notification[icon_url]", "https://raw.githubusercontent.com/Lidarr/Lidarr/develop/Logo/64.png")
+                                        .Build();
+
+            _httpClient.Post(request);
+        }
+        catch (HttpException ex)
+        {
+            if (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
             {
-                if (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    _logger.Error(ex, "Access Token is invalid");
-                    throw;
-                }
-
-                throw new BoxcarException("Unable to send text message: " + ex.Message, ex);
+                _logger.Error(ex, "Access Token is invalid");
+                throw;
             }
+
+            throw new BoxcarException("Unable to send text message: " + ex.Message, ex);
         }
     }
 }

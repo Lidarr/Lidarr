@@ -5,45 +5,44 @@ using NzbDrone.Core.Housekeeping.Housekeepers;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
+namespace NzbDrone.Core.Test.Housekeeping.Housekeepers;
+
+[TestFixture]
+public class UpdateCleanTitleForArtistFixture : CoreTest<UpdateCleanTitleForArtist>
 {
-    [TestFixture]
-    public class UpdateCleanTitleForArtistFixture : CoreTest<UpdateCleanTitleForArtist>
+    [Test]
+    public void should_update_clean_title()
     {
-        [Test]
-        public void should_update_clean_title()
-        {
-            var artist = Builder<Artist>.CreateNew()
-                                        .With(s => s.Name = "Full Name")
-                                        .With(s => s.CleanName = "unclean")
-                                        .Build();
+        var artist = Builder<Artist>.CreateNew()
+                                    .With(s => s.Name = "Full Name")
+                                    .With(s => s.CleanName = "unclean")
+                                    .Build();
 
-            Mocker.GetMock<IArtistRepository>()
-                 .Setup(s => s.All())
-                 .Returns(new[] { artist });
+        Mocker.GetMock<IArtistRepository>()
+              .Setup(s => s.All())
+              .Returns(new[] { artist });
 
-            Subject.Clean();
+        Subject.Clean();
 
-            Mocker.GetMock<IArtistRepository>()
-                .Verify(v => v.Update(It.Is<Artist>(s => s.CleanName == "fullname")), Times.Once());
-        }
+        Mocker.GetMock<IArtistRepository>()
+              .Verify(v => v.Update(It.Is<Artist>(s => s.CleanName == "fullname")), Times.Once());
+    }
 
-        [Test]
-        public void should_not_update_unchanged_title()
-        {
-            var artist = Builder<Artist>.CreateNew()
-                                        .With(s => s.Name = "Full Name")
-                                        .With(s => s.CleanName = "fullname")
-                                        .Build();
+    [Test]
+    public void should_not_update_unchanged_title()
+    {
+        var artist = Builder<Artist>.CreateNew()
+                                    .With(s => s.Name = "Full Name")
+                                    .With(s => s.CleanName = "fullname")
+                                    .Build();
 
-            Mocker.GetMock<IArtistRepository>()
-                 .Setup(s => s.All())
-                 .Returns(new[] { artist });
+        Mocker.GetMock<IArtistRepository>()
+              .Setup(s => s.All())
+              .Returns(new[] { artist });
 
-            Subject.Clean();
+        Subject.Clean();
 
-            Mocker.GetMock<IArtistRepository>()
-                .Verify(v => v.Update(It.Is<Artist>(s => s.CleanName == "fullname")), Times.Never());
-        }
+        Mocker.GetMock<IArtistRepository>()
+              .Verify(v => v.Update(It.Is<Artist>(s => s.CleanName == "fullname")), Times.Never());
     }
 }

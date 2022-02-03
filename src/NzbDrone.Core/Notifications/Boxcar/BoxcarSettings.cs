@@ -3,26 +3,25 @@ using NzbDrone.Core.Annotations;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
-namespace NzbDrone.Core.Notifications.Boxcar
+namespace NzbDrone.Core.Notifications.Boxcar;
+
+public class BoxcarSettingsValidator : AbstractValidator<BoxcarSettings>
 {
-    public class BoxcarSettingsValidator : AbstractValidator<BoxcarSettings>
+    public BoxcarSettingsValidator()
     {
-        public BoxcarSettingsValidator()
-        {
-            RuleFor(c => c.Token).NotEmpty();
-        }
+        RuleFor(c => c.Token).NotEmpty();
     }
+}
 
-    public class BoxcarSettings : IProviderConfig
+public class BoxcarSettings : IProviderConfig
+{
+    private static readonly BoxcarSettingsValidator Validator = new BoxcarSettingsValidator();
+
+    [FieldDefinition(0, Label = "Access Token", Privacy = PrivacyLevel.ApiKey, HelpText = "Your Access Token, from your Boxcar account settings: https://new.boxcar.io/account/edit", HelpLink = "https://new.boxcar.io/account/edit")]
+    public string Token { get; set; }
+
+    public NzbDroneValidationResult Validate()
     {
-        private static readonly BoxcarSettingsValidator Validator = new BoxcarSettingsValidator();
-
-        [FieldDefinition(0, Label = "Access Token", Privacy = PrivacyLevel.ApiKey, HelpText = "Your Access Token, from your Boxcar account settings: https://new.boxcar.io/account/edit", HelpLink = "https://new.boxcar.io/account/edit")]
-        public string Token { get; set; }
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
+        return new NzbDroneValidationResult(Validator.Validate(this));
     }
 }

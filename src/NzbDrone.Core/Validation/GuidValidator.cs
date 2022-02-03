@@ -1,23 +1,22 @@
 using System;
 using FluentValidation.Validators;
 
-namespace NzbDrone.Core.Validation
+namespace NzbDrone.Core.Validation;
+
+public class GuidValidator : PropertyValidator
 {
-    public class GuidValidator : PropertyValidator
+    public GuidValidator()
+        : base("String is not a valid Guid")
     {
-        public GuidValidator()
-            : base("String is not a valid Guid")
+    }
+
+    protected override bool IsValid(PropertyValidatorContext context)
+    {
+        if (context.PropertyValue == null)
         {
+            return false;
         }
 
-        protected override bool IsValid(PropertyValidatorContext context)
-        {
-            if (context.PropertyValue == null)
-            {
-                return false;
-            }
-
-            return Guid.TryParse(context.PropertyValue.ToString(), out Guid guidOutput);
-        }
+        return Guid.TryParse(context.PropertyValue.ToString(), out Guid guidOutput);
     }
 }

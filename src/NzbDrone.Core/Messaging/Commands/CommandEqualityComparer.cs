@@ -2,78 +2,77 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NzbDrone.Core.Messaging.Commands
-{
-    public class CommandEqualityComparer : IEqualityComparer<Command>
-    {
-        public static readonly CommandEqualityComparer Instance = new CommandEqualityComparer();
+namespace NzbDrone.Core.Messaging.Commands;
 
-        private CommandEqualityComparer()
+public class CommandEqualityComparer : IEqualityComparer<Command>
+{
+    public static readonly CommandEqualityComparer Instance = new CommandEqualityComparer();
+
+    private CommandEqualityComparer()
+    {
+    }
+
+    public bool Equals(Command x, Command y)
+    {
+        if (x.GetType() != y.GetType())
         {
+            return false;
         }
 
-        public bool Equals(Command x, Command y)
+        var xProperties = x.GetType().GetProperties();
+        var yProperties = y.GetType().GetProperties();
+
+        foreach (var xProperty in xProperties)
         {
-            if (x.GetType() != y.GetType())
+            if (xProperty.Name == "Id")
+            {
+                continue;
+            }
+
+            if (xProperty.DeclaringType == typeof(Command))
+            {
+                continue;
+            }
+
+            var yProperty = yProperties.Single(p => p.Name == xProperty.Name);
+
+            var xValue = xProperty.GetValue(x, null);
+            var yValue = yProperty.GetValue(y, null);
+
+            if (xValue == null && yValue == null)
+            {
+                return true;
+            }
+
+            if (xValue == null || yValue == null)
             {
                 return false;
             }
 
-            var xProperties = x.GetType().GetProperties();
-            var yProperties = y.GetType().GetProperties();
-
-            foreach (var xProperty in xProperties)
+            if (typeof(IEnumerable).IsAssignableFrom(xProperty.PropertyType))
             {
-                if (xProperty.Name == "Id")
-                {
-                    continue;
-                }
+                var xValueCollection = ((IEnumerable)xValue).Cast<object>();
+                var yValueCollection = ((IEnumerable)yValue).Cast<object>();
 
-                if (xProperty.DeclaringType == typeof(Command))
-                {
-                    continue;
-                }
+                var xNotY = xValueCollection.Except(yValueCollection);
+                var yNotX = yValueCollection.Except(xValueCollection);
 
-                var yProperty = yProperties.Single(p => p.Name == xProperty.Name);
-
-                var xValue = xProperty.GetValue(x, null);
-                var yValue = yProperty.GetValue(y, null);
-
-                if (xValue == null && yValue == null)
-                {
-                    return true;
-                }
-
-                if (xValue == null || yValue == null)
-                {
-                    return false;
-                }
-
-                if (typeof(IEnumerable).IsAssignableFrom(xProperty.PropertyType))
-                {
-                    var xValueCollection = ((IEnumerable)xValue).Cast<object>();
-                    var yValueCollection = ((IEnumerable)yValue).Cast<object>();
-
-                    var xNotY = xValueCollection.Except(yValueCollection);
-                    var yNotX = yValueCollection.Except(xValueCollection);
-
-                    if (xNotY.Any() || yNotX.Any())
-                    {
-                        return false;
-                    }
-                }
-                else if (!xValue.Equals(yValue))
+                if (xNotY.Any() || yNotX.Any())
                 {
                     return false;
                 }
             }
-
-            return true;
+            else if (!xValue.Equals(yValue))
+            {
+                return false;
+            }
         }
 
-        public int GetHashCode(Command obj)
-        {
-            return obj.GetHashCode();
-        }
+        return true;
+    }
+
+    public int GetHashCode(Command obj)
+    {
+        return obj.GetHashCode();
     }
 }

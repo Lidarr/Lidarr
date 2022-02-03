@@ -2,51 +2,50 @@ using System;
 using System.Collections.Generic;
 using NzbDrone.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Music.Commands
-{
-    public class BulkMoveArtistCommand : Command
-    {
-        public List<BulkMoveArtist> Artist { get; set; }
-        public string DestinationRootFolder { get; set; }
-        public bool MoveFiles { get; set; }
+namespace NzbDrone.Core.Music.Commands;
 
-        public override bool SendUpdatesToClient => true;
-        public override bool RequiresDiskAccess => true;
+public class BulkMoveArtistCommand : Command
+{
+    public List<BulkMoveArtist> Artist { get; set; }
+    public string DestinationRootFolder { get; set; }
+    public bool MoveFiles { get; set; }
+
+    public override bool SendUpdatesToClient => true;
+    public override bool RequiresDiskAccess => true;
+}
+
+public class BulkMoveArtist : IEquatable<BulkMoveArtist>
+{
+    public int ArtistId { get; set; }
+    public string SourcePath { get; set; }
+
+    public bool Equals(BulkMoveArtist other)
+    {
+        if (other == null)
+        {
+            return false;
+        }
+
+        return ArtistId.Equals(other.ArtistId);
     }
 
-    public class BulkMoveArtist : IEquatable<BulkMoveArtist>
+    public override bool Equals(object obj)
     {
-        public int ArtistId { get; set; }
-        public string SourcePath { get; set; }
-
-        public bool Equals(BulkMoveArtist other)
+        if (obj == null)
         {
-            if (other == null)
-            {
-                return false;
-            }
-
-            return ArtistId.Equals(other.ArtistId);
+            return false;
         }
 
-        public override bool Equals(object obj)
+        if (obj.GetType() != GetType())
         {
-            if (obj == null)
-            {
-                return false;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return ArtistId.Equals(((BulkMoveArtist)obj).ArtistId);
+            return false;
         }
 
-        public override int GetHashCode()
-        {
-            return ArtistId.GetHashCode();
-        }
+        return ArtistId.Equals(((BulkMoveArtist)obj).ArtistId);
+    }
+
+    public override int GetHashCode()
+    {
+        return ArtistId.GetHashCode();
     }
 }

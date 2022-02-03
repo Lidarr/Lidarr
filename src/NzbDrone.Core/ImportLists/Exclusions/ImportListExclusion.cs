@@ -1,10 +1,9 @@
 using NzbDrone.Core.Datastore;
 
-namespace NzbDrone.Core.ImportLists.Exclusions
+namespace NzbDrone.Core.ImportLists.Exclusions;
+
+public class ImportListExclusion : ModelBase
 {
-    public class ImportListExclusion : ModelBase
-    {
-        public string ForeignId { get; set; }
-        public string Name { get; set; }
-    }
+    public string ForeignId { get; set; }
+    public string Name { get; set; }
 }

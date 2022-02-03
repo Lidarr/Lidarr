@@ -1,25 +1,24 @@
 using FluentValidation.Validators;
 
-namespace NzbDrone.Core.ImportLists.Exclusions
+namespace NzbDrone.Core.ImportLists.Exclusions;
+
+public class ImportListExclusionExistsValidator : PropertyValidator
 {
-    public class ImportListExclusionExistsValidator : PropertyValidator
+    private readonly IImportListExclusionService _importListExclusionService;
+
+    public ImportListExclusionExistsValidator(IImportListExclusionService importListExclusionService)
+        : base("This exclusion has already been added.")
     {
-        private readonly IImportListExclusionService _importListExclusionService;
+        _importListExclusionService = importListExclusionService;
+    }
 
-        public ImportListExclusionExistsValidator(IImportListExclusionService importListExclusionService)
-            : base("This exclusion has already been added.")
+    protected override bool IsValid(PropertyValidatorContext context)
+    {
+        if (context.PropertyValue == null)
         {
-            _importListExclusionService = importListExclusionService;
+            return true;
         }
 
-        protected override bool IsValid(PropertyValidatorContext context)
-        {
-            if (context.PropertyValue == null)
-            {
-                return true;
-            }
-
-            return !_importListExclusionService.All().Exists(s => s.ForeignId == context.PropertyValue.ToString());
-        }
+        return !_importListExclusionService.All().Exists(s => s.ForeignId == context.PropertyValue.ToString());
     }
 }

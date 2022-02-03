@@ -1,8 +1,7 @@
 ﻿using NzbDrone.Common.Messaging;
 
-namespace NzbDrone.Core.Tags
+namespace NzbDrone.Core.Tags;
+
+public class TagsUpdatedEvent : IEvent
 {
-    public class TagsUpdatedEvent : IEvent
-    {
-    }
 }

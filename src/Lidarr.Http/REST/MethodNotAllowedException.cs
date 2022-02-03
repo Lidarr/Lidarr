@@ -1,13 +1,12 @@
 using System.Net;
 using Lidarr.Http.Exceptions;
 
-namespace Lidarr.Http.REST
+namespace Lidarr.Http.REST;
+
+public class MethodNotAllowedException : ApiException
 {
-    public class MethodNotAllowedException : ApiException
+    public MethodNotAllowedException(object content = null)
+        : base(HttpStatusCode.MethodNotAllowed, content)
     {
-        public MethodNotAllowedException(object content = null)
-            : base(HttpStatusCode.MethodNotAllowed, content)
-        {
-        }
     }
 }

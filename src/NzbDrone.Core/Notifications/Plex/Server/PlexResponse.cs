@@ -1,7 +1,6 @@
-namespace NzbDrone.Core.Notifications.Plex.Server
+namespace NzbDrone.Core.Notifications.Plex.Server;
+
+public class PlexResponse<T>
 {
-    public class PlexResponse<T>
-    {
-        public T MediaContainer { get; set; }
-    }
+    public T MediaContainer { get; set; }
 }

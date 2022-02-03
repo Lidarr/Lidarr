@@ -1,9 +1,8 @@
-﻿namespace NzbDrone.Core.Notifications.Xbmc.Model
+﻿namespace NzbDrone.Core.Notifications.Xbmc.Model;
+
+public class XbmcJsonResult<T>
 {
-    public class XbmcJsonResult<T>
-    {
-        public string Id { get; set; }
-        public string JsonRpc { get; set; }
-        public T Result { get; set; }
-    }
+    public string Id { get; set; }
+    public string JsonRpc { get; set; }
+    public T Result { get; set; }
 }

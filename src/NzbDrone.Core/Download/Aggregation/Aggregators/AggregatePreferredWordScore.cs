@@ -1,22 +1,21 @@
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Profiles.Releases;
 
-namespace NzbDrone.Core.Download.Aggregation.Aggregators
+namespace NzbDrone.Core.Download.Aggregation.Aggregators;
+
+public class AggregatePreferredWordScore : IAggregateRemoteAlbum
 {
-    public class AggregatePreferredWordScore : IAggregateRemoteAlbum
+    private readonly IPreferredWordService _preferredWordServiceCalculator;
+
+    public AggregatePreferredWordScore(IPreferredWordService preferredWordServiceCalculator)
     {
-        private readonly IPreferredWordService _preferredWordServiceCalculator;
+        _preferredWordServiceCalculator = preferredWordServiceCalculator;
+    }
 
-        public AggregatePreferredWordScore(IPreferredWordService preferredWordServiceCalculator)
-        {
-            _preferredWordServiceCalculator = preferredWordServiceCalculator;
-        }
+    public RemoteAlbum Aggregate(RemoteAlbum remoteAlbum)
+    {
+        remoteAlbum.PreferredWordScore = _preferredWordServiceCalculator.Calculate(remoteAlbum.Artist, remoteAlbum.Release.Title, remoteAlbum.Release.IndexerId);
 
-        public RemoteAlbum Aggregate(RemoteAlbum remoteAlbum)
-        {
-            remoteAlbum.PreferredWordScore = _preferredWordServiceCalculator.Calculate(remoteAlbum.Artist, remoteAlbum.Release.Title, remoteAlbum.Release.IndexerId);
-
-            return remoteAlbum;
-        }
+        return remoteAlbum;
     }
 }

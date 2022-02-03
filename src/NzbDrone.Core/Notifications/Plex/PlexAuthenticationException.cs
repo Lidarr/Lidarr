@@ -1,15 +1,14 @@
-﻿namespace NzbDrone.Core.Notifications.Plex
-{
-    public class PlexAuthenticationException : PlexException
-    {
-        public PlexAuthenticationException(string message)
-            : base(message)
-        {
-        }
+﻿namespace NzbDrone.Core.Notifications.Plex;
 
-        public PlexAuthenticationException(string message, params object[] args)
-            : base(message, args)
-        {
-        }
+public class PlexAuthenticationException : PlexException
+{
+    public PlexAuthenticationException(string message)
+        : base(message)
+    {
+    }
+
+    public PlexAuthenticationException(string message, params object[] args)
+        : base(message, args)
+    {
     }
 }

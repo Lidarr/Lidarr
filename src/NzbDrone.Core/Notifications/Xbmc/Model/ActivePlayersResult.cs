@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace NzbDrone.Core.Notifications.Xbmc.Model
+namespace NzbDrone.Core.Notifications.Xbmc.Model;
+
+public class ActivePlayersResult
 {
-    public class ActivePlayersResult
-    {
-        public string Id { get; set; }
-        public string JsonRpc { get; set; }
-        public List<ActivePlayer> Result { get; set; }
-    }
+    public string Id { get; set; }
+    public string JsonRpc { get; set; }
+    public List<ActivePlayer> Result { get; set; }
 }

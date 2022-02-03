@@ -1,8 +1,7 @@
 using System;
 
-namespace NzbDrone.Core.Messaging.Commands
+namespace NzbDrone.Core.Messaging.Commands;
+
+public class BackendCommandAttribute : Attribute
 {
-    public class BackendCommandAttribute : Attribute
-    {
-    }
 }

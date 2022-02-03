@@ -1,9 +1,8 @@
-﻿namespace NzbDrone.Core.MediaFiles.TrackImport
+﻿namespace NzbDrone.Core.MediaFiles.TrackImport;
+
+public enum ImportResultType
 {
-    public enum ImportResultType
-    {
-        Imported,
-        Rejected,
-        Skipped
-    }
+    Imported,
+    Rejected,
+    Skipped
 }

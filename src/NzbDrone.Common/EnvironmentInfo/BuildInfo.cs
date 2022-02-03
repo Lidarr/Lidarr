@@ -3,54 +3,53 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace NzbDrone.Common.EnvironmentInfo
+namespace NzbDrone.Common.EnvironmentInfo;
+
+public static class BuildInfo
 {
-    public static class BuildInfo
+    static BuildInfo()
     {
-        static BuildInfo()
+        var assembly = Assembly.GetExecutingAssembly();
+
+        Version = assembly.GetName().Version;
+
+        var attributes = assembly.GetCustomAttributes(true);
+
+        Branch = "unknown";
+
+        var config = attributes.OfType<AssemblyConfigurationAttribute>().FirstOrDefault();
+        if (config != null)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-
-            Version = assembly.GetName().Version;
-
-            var attributes = assembly.GetCustomAttributes(true);
-
-            Branch = "unknown";
-
-            var config = attributes.OfType<AssemblyConfigurationAttribute>().FirstOrDefault();
-            if (config != null)
-            {
-                Branch = config.Configuration;
-            }
-
-            Release = $"{Version}-{Branch}";
+            Branch = config.Configuration;
         }
 
-        public static string AppName { get; } = "Lidarr";
+        Release = $"{Version}-{Branch}";
+    }
 
-        public static Version Version { get; }
-        public static string Branch { get; }
-        public static string Release { get; }
+    public static string AppName { get; } = "Lidarr";
 
-        public static DateTime BuildDateTime
+    public static Version Version { get; }
+    public static string Branch { get; }
+    public static string Release { get; }
+
+    public static DateTime BuildDateTime
+    {
+        get
         {
-            get
-            {
-                var fileLocation = Assembly.GetCallingAssembly().Location;
-                return new FileInfo(fileLocation).LastWriteTimeUtc;
-            }
+            var fileLocation = Assembly.GetCallingAssembly().Location;
+            return new FileInfo(fileLocation).LastWriteTimeUtc;
         }
+    }
 
-        public static bool IsDebug
+    public static bool IsDebug
+    {
+        get
         {
-            get
-            {
 #if DEBUG
-                return true;
+            return true;
 #else
                 return false;
 #endif
-            }
         }
     }
 }

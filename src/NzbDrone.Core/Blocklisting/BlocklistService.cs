@@ -10,160 +10,159 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music.Events;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.Blocklisting
+namespace NzbDrone.Core.Blocklisting;
+
+public interface IBlocklistService
 {
-    public interface IBlocklistService
+    bool Blocklisted(int artistId, ReleaseInfo release);
+    PagingSpec<Blocklist> Paged(PagingSpec<Blocklist> pagingSpec);
+    void Delete(int id);
+    void Delete(List<int> ids);
+}
+
+public class BlocklistService : IBlocklistService,
+
+                                IExecute<ClearBlocklistCommand>,
+                                IHandle<DownloadFailedEvent>,
+                                IHandleAsync<ArtistsDeletedEvent>
+{
+    private readonly IBlocklistRepository _blocklistRepository;
+
+    public BlocklistService(IBlocklistRepository blocklistRepository)
     {
-        bool Blocklisted(int artistId, ReleaseInfo release);
-        PagingSpec<Blocklist> Paged(PagingSpec<Blocklist> pagingSpec);
-        void Delete(int id);
-        void Delete(List<int> ids);
+        _blocklistRepository = blocklistRepository;
     }
 
-    public class BlocklistService : IBlocklistService,
-
-                                    IExecute<ClearBlocklistCommand>,
-                                    IHandle<DownloadFailedEvent>,
-                                    IHandleAsync<ArtistsDeletedEvent>
+    public bool Blocklisted(int artistId, ReleaseInfo release)
     {
-        private readonly IBlocklistRepository _blocklistRepository;
+        var blocklistedByTitle = _blocklistRepository.BlocklistedByTitle(artistId, release.Title);
 
-        public BlocklistService(IBlocklistRepository blocklistRepository)
+        if (release.DownloadProtocol == DownloadProtocol.Torrent)
         {
-            _blocklistRepository = blocklistRepository;
-        }
+            var torrentInfo = release as TorrentInfo;
 
-        public bool Blocklisted(int artistId, ReleaseInfo release)
-        {
-            var blocklistedByTitle = _blocklistRepository.BlocklistedByTitle(artistId, release.Title);
-
-            if (release.DownloadProtocol == DownloadProtocol.Torrent)
+            if (torrentInfo == null)
             {
-                var torrentInfo = release as TorrentInfo;
-
-                if (torrentInfo == null)
-                {
-                    return false;
-                }
-
-                if (torrentInfo.InfoHash.IsNullOrWhiteSpace())
-                {
-                    return blocklistedByTitle.Where(b => b.Protocol == DownloadProtocol.Torrent)
-                                             .Any(b => SameTorrent(b, torrentInfo));
-                }
-
-                var blocklistedByTorrentInfohash = _blocklistRepository.BlocklistedByTorrentInfoHash(artistId, torrentInfo.InfoHash);
-
-                return blocklistedByTorrentInfohash.Any(b => SameTorrent(b, torrentInfo));
+                return false;
             }
 
-            return blocklistedByTitle.Where(b => b.Protocol == DownloadProtocol.Usenet)
-                                     .Any(b => SameNzb(b, release));
-        }
-
-        public PagingSpec<Blocklist> Paged(PagingSpec<Blocklist> pagingSpec)
-        {
-            return _blocklistRepository.GetPaged(pagingSpec);
-        }
-
-        public void Delete(int id)
-        {
-            _blocklistRepository.Delete(id);
-        }
-
-        public void Delete(List<int> ids)
-        {
-            _blocklistRepository.DeleteMany(ids);
-        }
-
-        private bool SameNzb(Blocklist item, ReleaseInfo release)
-        {
-            if (item.PublishedDate == release.PublishDate)
+            if (torrentInfo.InfoHash.IsNullOrWhiteSpace())
             {
-                return true;
+                return blocklistedByTitle.Where(b => b.Protocol == DownloadProtocol.Torrent)
+                                         .Any(b => SameTorrent(b, torrentInfo));
             }
 
-            if (!HasSameIndexer(item, release.Indexer) &&
-                HasSamePublishedDate(item, release.PublishDate) &&
-                HasSameSize(item, release.Size))
-            {
-                return true;
-            }
+            var blocklistedByTorrentInfohash = _blocklistRepository.BlocklistedByTorrentInfoHash(artistId, torrentInfo.InfoHash);
 
-            return false;
+            return blocklistedByTorrentInfohash.Any(b => SameTorrent(b, torrentInfo));
         }
 
-        private bool SameTorrent(Blocklist item, TorrentInfo release)
+        return blocklistedByTitle.Where(b => b.Protocol == DownloadProtocol.Usenet)
+                                 .Any(b => SameNzb(b, release));
+    }
+
+    public PagingSpec<Blocklist> Paged(PagingSpec<Blocklist> pagingSpec)
+    {
+        return _blocklistRepository.GetPaged(pagingSpec);
+    }
+
+    public void Delete(int id)
+    {
+        _blocklistRepository.Delete(id);
+    }
+
+    public void Delete(List<int> ids)
+    {
+        _blocklistRepository.DeleteMany(ids);
+    }
+
+    private bool SameNzb(Blocklist item, ReleaseInfo release)
+    {
+        if (item.PublishedDate == release.PublishDate)
         {
-            if (release.InfoHash.IsNotNullOrWhiteSpace())
-            {
-                return release.InfoHash.Equals(item.TorrentInfoHash);
-            }
-
-            return item.Indexer.Equals(release.Indexer, StringComparison.InvariantCultureIgnoreCase);
+            return true;
         }
 
-        private bool HasSameIndexer(Blocklist item, string indexer)
+        if (!HasSameIndexer(item, release.Indexer) &&
+            HasSamePublishedDate(item, release.PublishDate) &&
+            HasSameSize(item, release.Size))
         {
-            if (item.Indexer.IsNullOrWhiteSpace())
-            {
-                return true;
-            }
-
-            return item.Indexer.Equals(indexer, StringComparison.InvariantCultureIgnoreCase);
+            return true;
         }
 
-        private bool HasSamePublishedDate(Blocklist item, DateTime publishedDate)
+        return false;
+    }
+
+    private bool SameTorrent(Blocklist item, TorrentInfo release)
+    {
+        if (release.InfoHash.IsNotNullOrWhiteSpace())
         {
-            if (!item.PublishedDate.HasValue)
-            {
-                return true;
-            }
-
-            return item.PublishedDate.Value.AddMinutes(-2) <= publishedDate &&
-                   item.PublishedDate.Value.AddMinutes(2) >= publishedDate;
+            return release.InfoHash.Equals(item.TorrentInfoHash);
         }
 
-        private bool HasSameSize(Blocklist item, long size)
+        return item.Indexer.Equals(release.Indexer, StringComparison.InvariantCultureIgnoreCase);
+    }
+
+    private bool HasSameIndexer(Blocklist item, string indexer)
+    {
+        if (item.Indexer.IsNullOrWhiteSpace())
         {
-            if (!item.Size.HasValue)
-            {
-                return true;
-            }
-
-            var difference = Math.Abs(item.Size.Value - size);
-
-            return difference <= 2.Megabytes();
+            return true;
         }
 
-        public void Execute(ClearBlocklistCommand message)
+        return item.Indexer.Equals(indexer, StringComparison.InvariantCultureIgnoreCase);
+    }
+
+    private bool HasSamePublishedDate(Blocklist item, DateTime publishedDate)
+    {
+        if (!item.PublishedDate.HasValue)
         {
-            _blocklistRepository.Purge();
+            return true;
         }
 
-        public void Handle(DownloadFailedEvent message)
+        return item.PublishedDate.Value.AddMinutes(-2) <= publishedDate &&
+               item.PublishedDate.Value.AddMinutes(2) >= publishedDate;
+    }
+
+    private bool HasSameSize(Blocklist item, long size)
+    {
+        if (!item.Size.HasValue)
         {
-            var blocklist = new Blocklist
-            {
-                ArtistId = message.ArtistId,
-                AlbumIds = message.AlbumIds,
-                SourceTitle = message.SourceTitle,
-                Quality = message.Quality,
-                Date = DateTime.UtcNow,
-                PublishedDate = DateTime.Parse(message.Data.GetValueOrDefault("publishedDate")),
-                Size = long.Parse(message.Data.GetValueOrDefault("size", "0")),
-                Indexer = message.Data.GetValueOrDefault("indexer"),
-                Protocol = (DownloadProtocol)Convert.ToInt32(message.Data.GetValueOrDefault("protocol")),
-                Message = message.Message,
-                TorrentInfoHash = message.Data.GetValueOrDefault("torrentInfoHash")
-            };
-
-            _blocklistRepository.Insert(blocklist);
+            return true;
         }
 
-        public void HandleAsync(ArtistsDeletedEvent message)
-        {
-            _blocklistRepository.DeleteForArtists(message.Artists.Select(x => x.Id).ToList());
-        }
+        var difference = Math.Abs(item.Size.Value - size);
+
+        return difference <= 2.Megabytes();
+    }
+
+    public void Execute(ClearBlocklistCommand message)
+    {
+        _blocklistRepository.Purge();
+    }
+
+    public void Handle(DownloadFailedEvent message)
+    {
+        var blocklist = new Blocklist
+                        {
+                            ArtistId = message.ArtistId,
+                            AlbumIds = message.AlbumIds,
+                            SourceTitle = message.SourceTitle,
+                            Quality = message.Quality,
+                            Date = DateTime.UtcNow,
+                            PublishedDate = DateTime.Parse(message.Data.GetValueOrDefault("publishedDate")),
+                            Size = long.Parse(message.Data.GetValueOrDefault("size", "0")),
+                            Indexer = message.Data.GetValueOrDefault("indexer"),
+                            Protocol = (DownloadProtocol)Convert.ToInt32(message.Data.GetValueOrDefault("protocol")),
+                            Message = message.Message,
+                            TorrentInfoHash = message.Data.GetValueOrDefault("torrentInfoHash")
+                        };
+
+        _blocklistRepository.Insert(blocklist);
+    }
+
+    public void HandleAsync(ArtistsDeletedEvent message)
+    {
+        _blocklistRepository.DeleteForArtists(message.Artists.Select(x => x.Id).ToList());
     }
 }

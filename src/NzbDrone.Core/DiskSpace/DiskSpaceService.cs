@@ -7,86 +7,85 @@ using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Core.RootFolders;
 
-namespace NzbDrone.Core.DiskSpace
+namespace NzbDrone.Core.DiskSpace;
+
+public interface IDiskSpaceService
 {
-    public interface IDiskSpaceService
+    List<DiskSpace> GetFreeSpace();
+}
+
+public class DiskSpaceService : IDiskSpaceService
+{
+    private readonly IDiskProvider _diskProvider;
+    private readonly IRootFolderService _rootFolderService;
+    private readonly Logger _logger;
+
+    private static readonly Regex _regexSpecialDrive = new Regex("^/var/lib/(docker|rancher|kubelet)(/|$)|^/(boot|etc)(/|$)|/docker(/var)?/aufs(/|$)", RegexOptions.Compiled);
+
+    public DiskSpaceService(IDiskProvider diskProvider,
+                            IRootFolderService rootFolderService,
+                            Logger logger)
     {
-        List<DiskSpace> GetFreeSpace();
+        _diskProvider = diskProvider;
+        _rootFolderService = rootFolderService;
+        _logger = logger;
     }
 
-    public class DiskSpaceService : IDiskSpaceService
+    public List<DiskSpace> GetFreeSpace()
     {
-        private readonly IDiskProvider _diskProvider;
-        private readonly IRootFolderService _rootFolderService;
-        private readonly Logger _logger;
+        var importantRootFolders = _rootFolderService.All().Select(x => x.Path).ToList();
 
-        private static readonly Regex _regexSpecialDrive = new Regex("^/var/lib/(docker|rancher|kubelet)(/|$)|^/(boot|etc)(/|$)|/docker(/var)?/aufs(/|$)", RegexOptions.Compiled);
+        var optionalRootFolders = GetFixedDisksRootPaths().Except(importantRootFolders).Distinct().ToList();
 
-        public DiskSpaceService(IDiskProvider diskProvider,
-                                IRootFolderService rootFolderService,
-                                Logger logger)
+        var diskSpace = GetDiskSpace(importantRootFolders).Concat(GetDiskSpace(optionalRootFolders, true)).ToList();
+
+        return diskSpace;
+    }
+
+    private IEnumerable<string> GetFixedDisksRootPaths()
+    {
+        return _diskProvider.GetMounts()
+                            .Where(d => d.DriveType == DriveType.Fixed)
+                            .Where(d => !_regexSpecialDrive.IsMatch(d.RootDirectory))
+                            .Select(d => d.RootDirectory);
+    }
+
+    private IEnumerable<DiskSpace> GetDiskSpace(IEnumerable<string> paths, bool suppressWarnings = false)
+    {
+        foreach (var path in paths)
         {
-            _diskProvider = diskProvider;
-            _rootFolderService = rootFolderService;
-            _logger = logger;
-        }
+            DiskSpace diskSpace = null;
 
-        public List<DiskSpace> GetFreeSpace()
-        {
-            var importantRootFolders = _rootFolderService.All().Select(x => x.Path).ToList();
-
-            var optionalRootFolders = GetFixedDisksRootPaths().Except(importantRootFolders).Distinct().ToList();
-
-            var diskSpace = GetDiskSpace(importantRootFolders).Concat(GetDiskSpace(optionalRootFolders, true)).ToList();
-
-            return diskSpace;
-        }
-
-        private IEnumerable<string> GetFixedDisksRootPaths()
-        {
-            return _diskProvider.GetMounts()
-                .Where(d => d.DriveType == DriveType.Fixed)
-                .Where(d => !_regexSpecialDrive.IsMatch(d.RootDirectory))
-                .Select(d => d.RootDirectory);
-        }
-
-        private IEnumerable<DiskSpace> GetDiskSpace(IEnumerable<string> paths, bool suppressWarnings = false)
-        {
-            foreach (var path in paths)
+            try
             {
-                DiskSpace diskSpace = null;
+                var freeSpace = _diskProvider.GetAvailableSpace(path);
+                var totalSpace = _diskProvider.GetTotalSize(path);
 
-                try
+                if (!freeSpace.HasValue || !totalSpace.HasValue)
                 {
-                    var freeSpace = _diskProvider.GetAvailableSpace(path);
-                    var totalSpace = _diskProvider.GetTotalSize(path);
-
-                    if (!freeSpace.HasValue || !totalSpace.HasValue)
-                    {
-                        continue;
-                    }
-
-                    diskSpace = new DiskSpace
-                    {
-                        Path = path,
-                        FreeSpace = freeSpace.Value,
-                        TotalSpace = totalSpace.Value
-                    };
-
-                    diskSpace.Label = _diskProvider.GetVolumeLabel(path);
-                }
-                catch (Exception ex)
-                {
-                    if (!suppressWarnings)
-                    {
-                        _logger.Warn(ex, "Unable to get free space for: " + path);
-                    }
+                    continue;
                 }
 
-                if (diskSpace != null)
+                diskSpace = new DiskSpace
+                            {
+                                Path = path,
+                                FreeSpace = freeSpace.Value,
+                                TotalSpace = totalSpace.Value
+                            };
+
+                diskSpace.Label = _diskProvider.GetVolumeLabel(path);
+            }
+            catch (Exception ex)
+            {
+                if (!suppressWarnings)
                 {
-                    yield return diskSpace;
+                    _logger.Warn(ex, "Unable to get free space for: " + path);
                 }
+            }
+
+            if (diskSpace != null)
+            {
+                yield return diskSpace;
             }
         }
     }

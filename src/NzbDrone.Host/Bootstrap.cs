@@ -24,37 +24,37 @@ using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Datastore.Extensions;
 
-namespace NzbDrone.Host
+namespace NzbDrone.Host;
+
+public static class Bootstrap
 {
-    public static class Bootstrap
+    private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(Bootstrap));
+
+    public static readonly List<string> ASSEMBLIES = new List<string>
+                                                     {
+                                                         "Lidarr.Host",
+                                                         "Lidarr.Core",
+                                                         "Lidarr.SignalR",
+                                                         "Lidarr.Api.V1",
+                                                         "Lidarr.Http"
+                                                     };
+
+    public static void Start(string[] args, Action<IHostBuilder> trayCallback = null)
     {
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(Bootstrap));
-
-        public static readonly List<string> ASSEMBLIES = new List<string>
+        try
         {
-            "Lidarr.Host",
-            "Lidarr.Core",
-            "Lidarr.SignalR",
-            "Lidarr.Api.V1",
-            "Lidarr.Http"
-        };
+            Logger.Info("Starting Lidarr - {0} - Version {1}", Assembly.GetCallingAssembly().Location, Assembly.GetExecutingAssembly().GetName().Version);
 
-        public static void Start(string[] args, Action<IHostBuilder> trayCallback = null)
-        {
-            try
+            var startupContext = new StartupContext(args);
+
+            LongPathSupport.Enable();
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            var appMode = GetApplicationMode(startupContext);
+
+            switch (appMode)
             {
-                Logger.Info("Starting Lidarr - {0} - Version {1}", Assembly.GetCallingAssembly().Location, Assembly.GetExecutingAssembly().GetName().Version);
-
-                var startupContext = new StartupContext(args);
-
-                LongPathSupport.Enable();
-                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
-                var appMode = GetApplicationMode(startupContext);
-
-                switch (appMode)
-                {
-                    case ApplicationModes.Service:
+                case ApplicationModes.Service:
                     {
                         Logger.Debug("Service selected");
 
@@ -62,7 +62,7 @@ namespace NzbDrone.Host
                         break;
                     }
 
-                    case ApplicationModes.Interactive:
+                case ApplicationModes.Interactive:
                     {
                         Logger.Debug(trayCallback != null ? "Tray selected" : "Console selected");
                         var builder = CreateConsoleHostBuilder(args, startupContext);
@@ -76,160 +76,159 @@ namespace NzbDrone.Host
                         break;
                     }
 
-                    // Utility mode
-                    default:
+                // Utility mode
+                default:
                     {
                         new Container(rules => rules.WithNzbDroneRules())
-                            .AutoAddServices(ASSEMBLIES)
-                            .AddNzbDroneLogger()
-                            .AddStartupContext(startupContext)
-                            .Resolve<UtilityModeRouter>()
-                            .Route(appMode);
+                           .AutoAddServices(ASSEMBLIES)
+                           .AddNzbDroneLogger()
+                           .AddStartupContext(startupContext)
+                           .Resolve<UtilityModeRouter>()
+                           .Route(appMode);
                         break;
                     }
-                }
-            }
-            catch (InvalidConfigFileException ex)
-            {
-                throw new LidarrStartupException(ex);
-            }
-            catch (AccessDeniedConfigFileException ex)
-            {
-                throw new LidarrStartupException(ex);
-            }
-            catch (TerminateApplicationException ex)
-            {
-                Logger.Info(ex.Message);
-                LogManager.Configuration = null;
             }
         }
-
-        public static IHostBuilder CreateConsoleHostBuilder(string[] args, StartupContext context)
+        catch (InvalidConfigFileException ex)
         {
-            var config = GetConfiguration(context);
-
-            var bindAddress = config.GetValue(nameof(ConfigFileProvider.BindAddress), "*");
-            var port = config.GetValue(nameof(ConfigFileProvider.Port), 8686);
-            var sslPort = config.GetValue(nameof(ConfigFileProvider.SslPort), 6868);
-            var enableSsl = config.GetValue(nameof(ConfigFileProvider.EnableSsl), false);
-            var sslCertPath = config.GetValue<string>(nameof(ConfigFileProvider.SslCertPath));
-            var sslCertPassword = config.GetValue<string>(nameof(ConfigFileProvider.SslCertPassword));
-
-            var urls = new List<string> { BuildUrl("http", bindAddress, port) };
-
-            if (enableSsl && sslCertPath.IsNotNullOrWhiteSpace())
-            {
-                urls.Add(BuildUrl("https", bindAddress, sslPort));
-            }
-
-            return new HostBuilder()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseServiceProviderFactory(new DryIocServiceProviderFactory(new Container(rules => rules.WithNzbDroneRules())))
-                .ConfigureContainer<IContainer>(c =>
-                {
-                    c.AutoAddServices(Bootstrap.ASSEMBLIES)
-                        .AddNzbDroneLogger()
-                        .AddDatabase()
-                        .AddStartupContext(context);
-                })
-                .ConfigureWebHost(builder =>
-                {
-                    builder.UseConfiguration(config);
-                    builder.UseUrls(urls.ToArray());
-                    builder.UseKestrel(options =>
-                    {
-                        if (enableSsl && sslCertPath.IsNotNullOrWhiteSpace())
-                        {
-                            options.ConfigureHttpsDefaults(configureOptions =>
-                            {
-                                configureOptions.ServerCertificate = ValidateSslCertificate(sslCertPath, sslCertPassword);
-                            });
-                        }
-                    });
-                    builder.ConfigureKestrel(serverOptions =>
-                    {
-                        serverOptions.AllowSynchronousIO = true;
-                        serverOptions.Limits.MaxRequestBodySize = null;
-                    });
-                    builder.UseStartup<Startup>();
-                });
+            throw new LidarrStartupException(ex);
         }
-
-        public static ApplicationModes GetApplicationMode(IStartupContext startupContext)
+        catch (AccessDeniedConfigFileException ex)
         {
-            if (startupContext.Help)
-            {
-                return ApplicationModes.Help;
-            }
-
-            if (OsInfo.IsWindows && startupContext.RegisterUrl)
-            {
-                return ApplicationModes.RegisterUrl;
-            }
-
-            if (OsInfo.IsWindows && startupContext.InstallService)
-            {
-                return ApplicationModes.InstallService;
-            }
-
-            if (OsInfo.IsWindows && startupContext.UninstallService)
-            {
-                return ApplicationModes.UninstallService;
-            }
-
-            // IsWindowsService can throw sometimes, so wrap it
-            var isWindowsService = false;
-            try
-            {
-                isWindowsService = WindowsServiceHelpers.IsWindowsService();
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, "Failed to get service status");
-            }
-
-            if (OsInfo.IsWindows && isWindowsService)
-            {
-                return ApplicationModes.Service;
-            }
-
-            return ApplicationModes.Interactive;
+            throw new LidarrStartupException(ex);
         }
-
-        private static IConfiguration GetConfiguration(StartupContext context)
+        catch (TerminateApplicationException ex)
         {
-            var appFolder = new AppFolderInfo(context);
-            return new ConfigurationBuilder()
-                .AddXmlFile(appFolder.GetConfigPath(), optional: true, reloadOnChange: false)
-                .AddInMemoryCollection(new List<KeyValuePair<string, string>> { new ("dataProtectionFolder", appFolder.GetDataProtectionPath()) })
-                .Build();
+            Logger.Info(ex.Message);
+            LogManager.Configuration = null;
         }
+    }
 
-        private static string BuildUrl(string scheme, string bindAddress, int port)
+    public static IHostBuilder CreateConsoleHostBuilder(string[] args, StartupContext context)
+    {
+        var config = GetConfiguration(context);
+
+        var bindAddress = config.GetValue(nameof(ConfigFileProvider.BindAddress), "*");
+        var port = config.GetValue(nameof(ConfigFileProvider.Port), 8686);
+        var sslPort = config.GetValue(nameof(ConfigFileProvider.SslPort), 6868);
+        var enableSsl = config.GetValue(nameof(ConfigFileProvider.EnableSsl), false);
+        var sslCertPath = config.GetValue<string>(nameof(ConfigFileProvider.SslCertPath));
+        var sslCertPassword = config.GetValue<string>(nameof(ConfigFileProvider.SslCertPassword));
+
+        var urls = new List<string> { BuildUrl("http", bindAddress, port) };
+
+        if (enableSsl && sslCertPath.IsNotNullOrWhiteSpace())
         {
-            return $"{scheme}://{bindAddress}:{port}";
+            urls.Add(BuildUrl("https", bindAddress, sslPort));
         }
 
-        private static X509Certificate2 ValidateSslCertificate(string cert, string password)
+        return new HostBuilder()
+              .UseContentRoot(Directory.GetCurrentDirectory())
+              .UseServiceProviderFactory(new DryIocServiceProviderFactory(new Container(rules => rules.WithNzbDroneRules())))
+              .ConfigureContainer<IContainer>(c =>
+                                              {
+                                                  c.AutoAddServices(Bootstrap.ASSEMBLIES)
+                                                   .AddNzbDroneLogger()
+                                                   .AddDatabase()
+                                                   .AddStartupContext(context);
+                                              })
+              .ConfigureWebHost(builder =>
+                                {
+                                    builder.UseConfiguration(config);
+                                    builder.UseUrls(urls.ToArray());
+                                    builder.UseKestrel(options =>
+                                                       {
+                                                           if (enableSsl && sslCertPath.IsNotNullOrWhiteSpace())
+                                                           {
+                                                               options.ConfigureHttpsDefaults(configureOptions =>
+                                                                                              {
+                                                                                                  configureOptions.ServerCertificate = ValidateSslCertificate(sslCertPath, sslCertPassword);
+                                                                                              });
+                                                           }
+                                                       });
+                                    builder.ConfigureKestrel(serverOptions =>
+                                                             {
+                                                                 serverOptions.AllowSynchronousIO = true;
+                                                                 serverOptions.Limits.MaxRequestBodySize = null;
+                                                             });
+                                    builder.UseStartup<Startup>();
+                                });
+    }
+
+    public static ApplicationModes GetApplicationMode(IStartupContext startupContext)
+    {
+        if (startupContext.Help)
         {
-            X509Certificate2 certificate;
-
-            try
-            {
-                certificate = new X509Certificate2(cert, password, X509KeyStorageFlags.DefaultKeySet);
-            }
-            catch (CryptographicException ex)
-            {
-                if (ex.HResult == 0x2 || ex.HResult == 0x2006D080)
-                {
-                    throw new LidarrStartupException(ex,
-                        $"The SSL certificate file {cert} does not exist");
-                }
-
-                throw new LidarrStartupException(ex);
-            }
-
-            return certificate;
+            return ApplicationModes.Help;
         }
+
+        if (OsInfo.IsWindows && startupContext.RegisterUrl)
+        {
+            return ApplicationModes.RegisterUrl;
+        }
+
+        if (OsInfo.IsWindows && startupContext.InstallService)
+        {
+            return ApplicationModes.InstallService;
+        }
+
+        if (OsInfo.IsWindows && startupContext.UninstallService)
+        {
+            return ApplicationModes.UninstallService;
+        }
+
+        // IsWindowsService can throw sometimes, so wrap it
+        var isWindowsService = false;
+        try
+        {
+            isWindowsService = WindowsServiceHelpers.IsWindowsService();
+        }
+        catch (Exception e)
+        {
+            Logger.Error(e, "Failed to get service status");
+        }
+
+        if (OsInfo.IsWindows && isWindowsService)
+        {
+            return ApplicationModes.Service;
+        }
+
+        return ApplicationModes.Interactive;
+    }
+
+    private static IConfiguration GetConfiguration(StartupContext context)
+    {
+        var appFolder = new AppFolderInfo(context);
+        return new ConfigurationBuilder()
+              .AddXmlFile(appFolder.GetConfigPath(), optional: true, reloadOnChange: false)
+              .AddInMemoryCollection(new List<KeyValuePair<string, string>> { new ("dataProtectionFolder", appFolder.GetDataProtectionPath()) })
+              .Build();
+    }
+
+    private static string BuildUrl(string scheme, string bindAddress, int port)
+    {
+        return $"{scheme}://{bindAddress}:{port}";
+    }
+
+    private static X509Certificate2 ValidateSslCertificate(string cert, string password)
+    {
+        X509Certificate2 certificate;
+
+        try
+        {
+            certificate = new X509Certificate2(cert, password, X509KeyStorageFlags.DefaultKeySet);
+        }
+        catch (CryptographicException ex)
+        {
+            if (ex.HResult == 0x2 || ex.HResult == 0x2006D080)
+            {
+                throw new LidarrStartupException(ex,
+                                                 $"The SSL certificate file {cert} does not exist");
+            }
+
+            throw new LidarrStartupException(ex);
+        }
+
+        return certificate;
     }
 }

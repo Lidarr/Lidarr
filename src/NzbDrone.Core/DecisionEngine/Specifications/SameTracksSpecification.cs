@@ -3,33 +3,32 @@ using System.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Music;
 
-namespace NzbDrone.Core.DecisionEngine.Specifications
+namespace NzbDrone.Core.DecisionEngine.Specifications;
+
+public class SameTracksSpecification
 {
-    public class SameTracksSpecification
+    private readonly ITrackService _trackService;
+
+    public SameTracksSpecification(ITrackService trackService)
     {
-        private readonly ITrackService _trackService;
+        _trackService = trackService;
+    }
 
-        public SameTracksSpecification(ITrackService trackService)
+    public bool IsSatisfiedBy(List<Track> tracks)
+    {
+        var trackIds = tracks.SelectList(e => e.Id);
+        var trackFileIds = tracks.Where(c => c.TrackFileId != 0).Select(c => c.TrackFileId).Distinct();
+
+        foreach (var trackFileId in trackFileIds)
         {
-            _trackService = trackService;
-        }
+            var tracksInFile = _trackService.GetTracksByFileId(trackFileId);
 
-        public bool IsSatisfiedBy(List<Track> tracks)
-        {
-            var trackIds = tracks.SelectList(e => e.Id);
-            var trackFileIds = tracks.Where(c => c.TrackFileId != 0).Select(c => c.TrackFileId).Distinct();
-
-            foreach (var trackFileId in trackFileIds)
+            if (tracksInFile.Select(e => e.Id).Except(trackIds).Any())
             {
-                var tracksInFile = _trackService.GetTracksByFileId(trackFileId);
-
-                if (tracksInFile.Select(e => e.Id).Except(trackIds).Any())
-                {
-                    return false;
-                }
+                return false;
             }
-
-            return true;
         }
+
+        return true;
     }
 }

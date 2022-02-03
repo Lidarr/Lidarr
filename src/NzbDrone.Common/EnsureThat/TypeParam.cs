@@ -1,15 +1,14 @@
 using System;
 
-namespace NzbDrone.Common.EnsureThat
-{
-    public class TypeParam : Param
-    {
-        public readonly Type Type;
+namespace NzbDrone.Common.EnsureThat;
 
-        internal TypeParam(string name, Type type)
-            : base(name)
-        {
-            Type = type;
-        }
+public class TypeParam : Param
+{
+    public readonly Type Type;
+
+    internal TypeParam(string name, Type type)
+        : base(name)
+    {
+        Type = type;
     }
 }

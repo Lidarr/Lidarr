@@ -4,37 +4,36 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider.Status;
 
-namespace NzbDrone.Core.ImportLists
-{
-    public interface IImportListStatusService : IProviderStatusServiceBase<ImportListStatus>
-    {
-        ImportListItemInfo GetLastSyncListInfo(int importListId);
+namespace NzbDrone.Core.ImportLists;
 
-        void UpdateListSyncStatus(int importListId, ImportListItemInfo listItemInfo);
+public interface IImportListStatusService : IProviderStatusServiceBase<ImportListStatus>
+{
+    ImportListItemInfo GetLastSyncListInfo(int importListId);
+
+    void UpdateListSyncStatus(int importListId, ImportListItemInfo listItemInfo);
+}
+
+public class ImportListStatusService : ProviderStatusServiceBase<IImportList, ImportListStatus>, IImportListStatusService
+{
+    public ImportListStatusService(IImportListStatusRepository providerStatusRepository, IEventAggregator eventAggregator, IRuntimeInfo runtimeInfo, Logger logger)
+        : base(providerStatusRepository, eventAggregator, runtimeInfo, logger)
+    {
     }
 
-    public class ImportListStatusService : ProviderStatusServiceBase<IImportList, ImportListStatus>, IImportListStatusService
+    public ImportListItemInfo GetLastSyncListInfo(int importListId)
     {
-        public ImportListStatusService(IImportListStatusRepository providerStatusRepository, IEventAggregator eventAggregator, IRuntimeInfo runtimeInfo, Logger logger)
-            : base(providerStatusRepository, eventAggregator, runtimeInfo, logger)
+        return GetProviderStatus(importListId).LastSyncListInfo;
+    }
+
+    public void UpdateListSyncStatus(int importListId, ImportListItemInfo listItemInfo)
+    {
+        lock (_syncRoot)
         {
-        }
+            var status = GetProviderStatus(importListId);
 
-        public ImportListItemInfo GetLastSyncListInfo(int importListId)
-        {
-            return GetProviderStatus(importListId).LastSyncListInfo;
-        }
+            status.LastSyncListInfo = listItemInfo;
 
-        public void UpdateListSyncStatus(int importListId, ImportListItemInfo listItemInfo)
-        {
-            lock (_syncRoot)
-            {
-                var status = GetProviderStatus(importListId);
-
-                status.LastSyncListInfo = listItemInfo;
-
-                _providerStatusRepository.Upsert(status);
-            }
+            _providerStatusRepository.Upsert(status);
         }
     }
 }

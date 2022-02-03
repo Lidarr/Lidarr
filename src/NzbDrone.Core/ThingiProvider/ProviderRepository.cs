@@ -8,42 +8,42 @@ using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Messaging.Events;
 
-namespace NzbDrone.Core.ThingiProvider
+namespace NzbDrone.Core.ThingiProvider;
+
+public class ProviderRepository<TProviderDefinition> : BasicRepository<TProviderDefinition>, IProviderRepository<TProviderDefinition>
+    where TProviderDefinition : ProviderDefinition,
+    new()
 {
-    public class ProviderRepository<TProviderDefinition> : BasicRepository<TProviderDefinition>, IProviderRepository<TProviderDefinition>
-        where TProviderDefinition : ProviderDefinition,
-            new()
+    protected readonly JsonSerializerOptions _serializerSettings;
+
+    protected ProviderRepository(IMainDatabase database, IEventAggregator eventAggregator)
+        : base(database, eventAggregator)
     {
-        protected readonly JsonSerializerOptions _serializerSettings;
+        var serializerSettings = new JsonSerializerOptions
+                                 {
+                                     AllowTrailingCommas = true,
+                                     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                                     PropertyNameCaseInsensitive = true,
+                                     DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+                                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                     WriteIndented = true
+                                 };
 
-        protected ProviderRepository(IMainDatabase database, IEventAggregator eventAggregator)
-            : base(database, eventAggregator)
-        {
-            var serializerSettings = new JsonSerializerOptions
-            {
-                AllowTrailingCommas = true,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                PropertyNameCaseInsensitive = true,
-                DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                WriteIndented = true
-            };
+        serializerSettings.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, true));
+        serializerSettings.Converters.Add(new STJTimeSpanConverter());
+        serializerSettings.Converters.Add(new STJUtcConverter());
 
-            serializerSettings.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, true));
-            serializerSettings.Converters.Add(new STJTimeSpanConverter());
-            serializerSettings.Converters.Add(new STJUtcConverter());
+        _serializerSettings = serializerSettings;
+    }
 
-            _serializerSettings = serializerSettings;
-        }
+    protected override List<TProviderDefinition> Query(SqlBuilder builder)
+    {
+        var type = typeof(TProviderDefinition);
+        var sql = builder.Select(type).AddSelectTemplate(type);
 
-        protected override List<TProviderDefinition> Query(SqlBuilder builder)
-        {
-            var type = typeof(TProviderDefinition);
-            var sql = builder.Select(type).AddSelectTemplate(type);
+        var results = new List<TProviderDefinition>();
 
-            var results = new List<TProviderDefinition>();
-
-            using (var conn = _database.OpenConnection())
+        using (var conn = _database.OpenConnection())
             using (var reader = conn.ExecuteReader(sql.RawSql, sql.Parameters))
             {
                 var parser = reader.GetRowParser<TProviderDefinition>(typeof(TProviderDefinition));
@@ -68,7 +68,6 @@ namespace NzbDrone.Core.ThingiProvider
                 }
             }
 
-            return results;
-        }
+        return results;
     }
 }

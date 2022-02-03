@@ -4,44 +4,43 @@ using Lidarr.Api.V1.Artist;
 using NUnit.Framework;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Integration.Test.ApiTests
+namespace NzbDrone.Integration.Test.ApiTests;
+
+[TestFixture]
+public class ArtistEditorFixture : IntegrationTest
 {
-    [TestFixture]
-    public class ArtistEditorFixture : IntegrationTest
+    private void GivenExistingArtist()
     {
-        private void GivenExistingArtist()
+        WaitForCompletion(() => Profiles.All().Count > 0);
+
+        foreach (var name in new[] { "Alien Ant Farm", "Kiss" })
         {
-            WaitForCompletion(() => Profiles.All().Count > 0);
+            var newArtist = Artist.Lookup(name).First();
 
-            foreach (var name in new[] { "Alien Ant Farm", "Kiss" })
-            {
-                var newArtist = Artist.Lookup(name).First();
+            newArtist.QualityProfileId = 1;
+            newArtist.MetadataProfileId = 1;
+            newArtist.Path = string.Format(@"C:\Test\{0}", name).AsOsAgnostic();
 
-                newArtist.QualityProfileId = 1;
-                newArtist.MetadataProfileId = 1;
-                newArtist.Path = string.Format(@"C:\Test\{0}", name).AsOsAgnostic();
-
-                Artist.Post(newArtist);
-            }
+            Artist.Post(newArtist);
         }
+    }
 
-        [Test]
-        public void should_be_able_to_update_multiple_artist()
-        {
-            GivenExistingArtist();
+    [Test]
+    public void should_be_able_to_update_multiple_artist()
+    {
+        GivenExistingArtist();
 
-            var artist = Artist.All();
+        var artist = Artist.All();
 
-            var artistEditor = new ArtistEditorResource
-            {
-                QualityProfileId = 2,
-                ArtistIds = artist.Select(o => o.Id).ToList()
-            };
+        var artistEditor = new ArtistEditorResource
+                           {
+                               QualityProfileId = 2,
+                               ArtistIds = artist.Select(o => o.Id).ToList()
+                           };
 
-            var result = Artist.Editor(artistEditor);
+        var result = Artist.Editor(artistEditor);
 
-            result.Should().HaveCount(2);
-            result.TrueForAll(s => s.QualityProfileId == 2).Should().BeTrue();
-        }
+        result.Should().HaveCount(2);
+        result.TrueForAll(s => s.QualityProfileId == 2).Should().BeTrue();
     }
 }

@@ -8,76 +8,75 @@ using NUnit.Framework;
 using NzbDrone.Core.Messaging.Commands;
 using RestSharp;
 
-namespace NzbDrone.Integration.Test.Client
-{
-    public class SimpleCommandResource : RestResource
-    {
-        public string Name { get; set; }
-        public string CommandName { get; set; }
-        public string Message { get; set; }
-        public CommandPriority Priority { get; set; }
-        public CommandStatus Status { get; set; }
-        public DateTime Queued { get; set; }
-        public DateTime? Started { get; set; }
-        public DateTime? Ended { get; set; }
-        public TimeSpan? Duration { get; set; }
-        public string Exception { get; set; }
-        public CommandTrigger Trigger { get; set; }
+namespace NzbDrone.Integration.Test.Client;
 
-        [JsonIgnore]
-        public Command Body { get; set; }
-        [JsonProperty("body")]
-        public Command BodyReadOnly
-        {
-            get { return Body; }
-        }
+public class SimpleCommandResource : RestResource
+{
+    public string Name { get; set; }
+    public string CommandName { get; set; }
+    public string Message { get; set; }
+    public CommandPriority Priority { get; set; }
+    public CommandStatus Status { get; set; }
+    public DateTime Queued { get; set; }
+    public DateTime? Started { get; set; }
+    public DateTime? Ended { get; set; }
+    public TimeSpan? Duration { get; set; }
+    public string Exception { get; set; }
+    public CommandTrigger Trigger { get; set; }
+
+    [JsonIgnore]
+    public Command Body { get; set; }
+    [JsonProperty("body")]
+    public Command BodyReadOnly
+    {
+        get { return Body; }
+    }
+}
+
+public class CommandClient : ClientBase<SimpleCommandResource>
+{
+    public CommandClient(IRestClient restClient, string apiKey)
+        : base(restClient, apiKey, "command")
+    {
     }
 
-    public class CommandClient : ClientBase<SimpleCommandResource>
+    public SimpleCommandResource PostAndWait<T>(T command)
+        where T : Command, new()
     {
-        public CommandClient(IRestClient restClient, string apiKey)
-        : base(restClient, apiKey, "command")
-        {
-        }
+        var request = BuildRequest();
+        request.AddJsonBody(command);
+        var result = Post<SimpleCommandResource>(request);
+        result.Id.Should().NotBe(0);
 
-        public SimpleCommandResource PostAndWait<T>(T command)
-            where T : Command, new()
+        for (var i = 0; i < 50; i++)
         {
-            var request = BuildRequest();
-            request.AddJsonBody(command);
-            var result = Post<SimpleCommandResource>(request);
-            result.Id.Should().NotBe(0);
-
-            for (var i = 0; i < 50; i++)
+            if (result.Status == CommandStatus.Completed)
             {
-                if (result.Status == CommandStatus.Completed)
-                {
-                    return result;
-                }
-
-                Thread.Sleep(500);
-                result = Get(result.Id);
+                return result;
             }
 
-            Assert.Fail("Command failed");
-            return result;
+            Thread.Sleep(500);
+            result = Get(result.Id);
         }
 
-        public void WaitAll()
-        {
-            var resources = All();
-            for (var i = 0; i < 120; i++)
-            {
-                if (!resources.Any(v => v.Status == CommandStatus.Queued || v.Status == CommandStatus.Started))
-                {
-                    return;
-                }
+        Assert.Fail("Command failed");
+        return result;
+    }
 
-                Thread.Sleep(500);
-                resources = All();
+    public void WaitAll()
+    {
+        var resources = All();
+        for (var i = 0; i < 120; i++)
+        {
+            if (!resources.Any(v => v.Status == CommandStatus.Queued || v.Status == CommandStatus.Started))
+            {
+                return;
             }
 
-            Assert.Fail("Commands still processing");
+            Thread.Sleep(500);
+            resources = All();
         }
+
+        Assert.Fail("Commands still processing");
     }
 }

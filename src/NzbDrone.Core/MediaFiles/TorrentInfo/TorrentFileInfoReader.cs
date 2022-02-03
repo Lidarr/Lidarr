@@ -1,17 +1,16 @@
 ﻿using MonoTorrent;
 
-namespace NzbDrone.Core.MediaFiles.TorrentInfo
-{
-    public interface ITorrentFileInfoReader
-    {
-        string GetHashFromTorrentFile(byte[] fileContents);
-    }
+namespace NzbDrone.Core.MediaFiles.TorrentInfo;
 
-    public class TorrentFileInfoReader : ITorrentFileInfoReader
+public interface ITorrentFileInfoReader
+{
+    string GetHashFromTorrentFile(byte[] fileContents);
+}
+
+public class TorrentFileInfoReader : ITorrentFileInfoReader
+{
+    public string GetHashFromTorrentFile(byte[] fileContents)
     {
-        public string GetHashFromTorrentFile(byte[] fileContents)
-        {
-            return Torrent.Load(fileContents).InfoHash.ToHex();
-        }
+        return Torrent.Load(fileContents).InfoHash.ToHex();
     }
 }

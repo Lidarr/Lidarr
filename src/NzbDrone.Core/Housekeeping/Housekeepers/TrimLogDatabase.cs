@@ -1,19 +1,18 @@
 ﻿using NzbDrone.Core.Instrumentation;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace NzbDrone.Core.Housekeeping.Housekeepers;
+
+public class TrimLogDatabase : IHousekeepingTask
 {
-    public class TrimLogDatabase : IHousekeepingTask
+    private readonly ILogRepository _logRepo;
+
+    public TrimLogDatabase(ILogRepository logRepo)
     {
-        private readonly ILogRepository _logRepo;
+        _logRepo = logRepo;
+    }
 
-        public TrimLogDatabase(ILogRepository logRepo)
-        {
-            _logRepo = logRepo;
-        }
-
-        public void Clean()
-        {
-            _logRepo.Trim();
-        }
+    public void Clean()
+    {
+        _logRepo.Trim();
     }
 }

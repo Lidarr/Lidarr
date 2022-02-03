@@ -6,58 +6,57 @@ using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.Profiles.Metadata;
 
-namespace Lidarr.Api.V1.Profiles.Metadata
+namespace Lidarr.Api.V1.Profiles.Metadata;
+
+[V1ApiController]
+public class MetadataProfileController : RestController<MetadataProfileResource>
 {
-    [V1ApiController]
-    public class MetadataProfileController : RestController<MetadataProfileResource>
+    private readonly IMetadataProfileService _profileService;
+
+    public MetadataProfileController(IMetadataProfileService profileService)
     {
-        private readonly IMetadataProfileService _profileService;
+        _profileService = profileService;
 
-        public MetadataProfileController(IMetadataProfileService profileService)
-        {
-            _profileService = profileService;
+        SharedValidator.RuleFor(c => c.Name).NotEqual("None").WithMessage("'None' is a reserved profile name").NotEmpty();
+        SharedValidator.RuleFor(c => c.PrimaryAlbumTypes).MustHaveAllowedPrimaryType();
+        SharedValidator.RuleFor(c => c.SecondaryAlbumTypes).MustHaveAllowedSecondaryType();
+        SharedValidator.RuleFor(c => c.ReleaseStatuses).MustHaveAllowedReleaseStatus();
+    }
 
-            SharedValidator.RuleFor(c => c.Name).NotEqual("None").WithMessage("'None' is a reserved profile name").NotEmpty();
-            SharedValidator.RuleFor(c => c.PrimaryAlbumTypes).MustHaveAllowedPrimaryType();
-            SharedValidator.RuleFor(c => c.SecondaryAlbumTypes).MustHaveAllowedSecondaryType();
-            SharedValidator.RuleFor(c => c.ReleaseStatuses).MustHaveAllowedReleaseStatus();
-        }
+    [RestPostById]
+    public ActionResult<MetadataProfileResource> Create(MetadataProfileResource resource)
+    {
+        var model = resource.ToModel();
+        model = _profileService.Add(model);
+        return Created(model.Id);
+    }
 
-        [RestPostById]
-        public ActionResult<MetadataProfileResource> Create(MetadataProfileResource resource)
-        {
-            var model = resource.ToModel();
-            model = _profileService.Add(model);
-            return Created(model.Id);
-        }
+    [RestDeleteById]
+    public void DeleteProfile(int id)
+    {
+        _profileService.Delete(id);
+    }
 
-        [RestDeleteById]
-        public void DeleteProfile(int id)
-        {
-            _profileService.Delete(id);
-        }
+    [RestPutById]
+    public ActionResult<MetadataProfileResource> Update(MetadataProfileResource resource)
+    {
+        var model = resource.ToModel();
 
-        [RestPutById]
-        public ActionResult<MetadataProfileResource> Update(MetadataProfileResource resource)
-        {
-            var model = resource.ToModel();
+        _profileService.Update(model);
 
-            _profileService.Update(model);
+        return Accepted(model.Id);
+    }
 
-            return Accepted(model.Id);
-        }
+    public override MetadataProfileResource GetResourceById(int id)
+    {
+        return _profileService.Get(id).ToResource();
+    }
 
-        public override MetadataProfileResource GetResourceById(int id)
-        {
-            return _profileService.Get(id).ToResource();
-        }
+    [HttpGet]
+    public List<MetadataProfileResource> GetAll()
+    {
+        var profiles = _profileService.All().ToResource();
 
-        [HttpGet]
-        public List<MetadataProfileResource> GetAll()
-        {
-            var profiles = _profileService.All().ToResource();
-
-            return profiles;
-        }
+        return profiles;
     }
 }

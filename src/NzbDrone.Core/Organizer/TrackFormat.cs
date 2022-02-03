@@ -1,8 +1,7 @@
-﻿namespace NzbDrone.Core.Organizer
+﻿namespace NzbDrone.Core.Organizer;
+
+public class AbsoluteTrackFormat
 {
-    public class AbsoluteTrackFormat
-    {
-        public string Separator { get; set; }
-        public string AbsoluteTrackPattern { get; set; }
-    }
+    public string Separator { get; set; }
+    public string AbsoluteTrackPattern { get; set; }
 }

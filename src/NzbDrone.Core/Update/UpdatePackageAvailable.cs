@@ -1,8 +1,7 @@
-﻿namespace NzbDrone.Core.Update
+﻿namespace NzbDrone.Core.Update;
+
+public class UpdatePackageAvailable
 {
-    public class UpdatePackageAvailable
-    {
-        public bool Available { get; set; }
-        public UpdatePackage UpdatePackage { get; set; }
-    }
+    public bool Available { get; set; }
+    public UpdatePackage UpdatePackage { get; set; }
 }

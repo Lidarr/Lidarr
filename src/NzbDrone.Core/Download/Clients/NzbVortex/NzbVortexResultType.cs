@@ -1,9 +1,8 @@
-﻿namespace NzbDrone.Core.Download.Clients.NzbVortex
+﻿namespace NzbDrone.Core.Download.Clients.NzbVortex;
+
+public enum NzbVortexResultType
 {
-    public enum NzbVortexResultType
-    {
-        Ok,
-        NotLoggedIn,
-        UnknownCommand
-    }
+    Ok,
+    NotLoggedIn,
+    UnknownCommand
 }

@@ -1,36 +1,35 @@
 using NzbDrone.Common.EnvironmentInfo;
 
-namespace NzbDrone.Host.AccessControl
+namespace NzbDrone.Host.AccessControl;
+
+public interface IRemoteAccessAdapter
 {
-    public interface IRemoteAccessAdapter
+    void MakeAccessible(bool passive);
+}
+
+public class RemoteAccessAdapter : IRemoteAccessAdapter
+{
+    private readonly IRuntimeInfo _runtimeInfo;
+    private readonly IFirewallAdapter _firewallAdapter;
+
+    public RemoteAccessAdapter(IRuntimeInfo runtimeInfo,
+                               IFirewallAdapter firewallAdapter)
     {
-        void MakeAccessible(bool passive);
+        _runtimeInfo = runtimeInfo;
+        _firewallAdapter = firewallAdapter;
     }
 
-    public class RemoteAccessAdapter : IRemoteAccessAdapter
+    public void MakeAccessible(bool passive)
     {
-        private readonly IRuntimeInfo _runtimeInfo;
-        private readonly IFirewallAdapter _firewallAdapter;
-
-        public RemoteAccessAdapter(IRuntimeInfo runtimeInfo,
-                                   IFirewallAdapter firewallAdapter)
+        if (OsInfo.IsWindows)
         {
-            _runtimeInfo = runtimeInfo;
-            _firewallAdapter = firewallAdapter;
-        }
-
-        public void MakeAccessible(bool passive)
-        {
-            if (OsInfo.IsWindows)
+            if (_runtimeInfo.IsAdmin)
             {
-                if (_runtimeInfo.IsAdmin)
-                {
-                    _firewallAdapter.MakeAccessible();
-                }
-                else if (!passive)
-                {
-                    throw new RemoteAccessException("Failed to register URLs for Lidarr. Lidarr will not be accessible remotely");
-                }
+                _firewallAdapter.MakeAccessible();
+            }
+            else if (!passive)
+            {
+                throw new RemoteAccessException("Failed to register URLs for Lidarr. Lidarr will not be accessible remotely");
             }
         }
     }

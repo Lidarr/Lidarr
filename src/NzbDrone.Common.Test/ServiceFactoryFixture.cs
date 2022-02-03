@@ -15,32 +15,31 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Host;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Common.Test
+namespace NzbDrone.Common.Test;
+
+[TestFixture]
+public class ServiceFactoryFixture : TestBase<ServiceFactory>
 {
-    [TestFixture]
-    public class ServiceFactoryFixture : TestBase<ServiceFactory>
+    [Test]
+    public void event_handlers_should_be_unique()
     {
-        [Test]
-        public void event_handlers_should_be_unique()
-        {
-            var container = new Container(rules => rules.WithNzbDroneRules())
-                .AddNzbDroneLogger()
-                .AutoAddServices(Bootstrap.ASSEMBLIES)
-                .AddDummyDatabase()
-                .AddStartupContext(new StartupContext("first", "second"));
+        var container = new Container(rules => rules.WithNzbDroneRules())
+                       .AddNzbDroneLogger()
+                       .AutoAddServices(Bootstrap.ASSEMBLIES)
+                       .AddDummyDatabase()
+                       .AddStartupContext(new StartupContext("first", "second"));
 
-            container.RegisterInstance<IHostLifetime>(new Mock<IHostLifetime>().Object);
+        container.RegisterInstance<IHostLifetime>(new Mock<IHostLifetime>().Object);
 
-            var serviceProvider = container.GetServiceProvider();
+        var serviceProvider = container.GetServiceProvider();
 
-            serviceProvider.GetRequiredService<IAppFolderFactory>().Register();
+        serviceProvider.GetRequiredService<IAppFolderFactory>().Register();
 
-            Mocker.SetConstant<System.IServiceProvider>(serviceProvider);
+        Mocker.SetConstant<System.IServiceProvider>(serviceProvider);
 
-            var handlers = Subject.BuildAll<IHandle<ApplicationStartedEvent>>()
-                                  .Select(c => c.GetType().FullName);
+        var handlers = Subject.BuildAll<IHandle<ApplicationStartedEvent>>()
+                              .Select(c => c.GetType().FullName);
 
-            handlers.Should().OnlyHaveUniqueItems();
-        }
+        handlers.Should().OnlyHaveUniqueItems();
     }
 }

@@ -1,8 +1,7 @@
 ﻿using NzbDrone.Common.Messaging;
 
-namespace NzbDrone.Core.Queue
+namespace NzbDrone.Core.Queue;
+
+public class QueueUpdatedEvent : IEvent
 {
-    public class QueueUpdatedEvent : IEvent
-    {
-    }
 }

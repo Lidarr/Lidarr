@@ -8,64 +8,63 @@ using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.MetadataSource;
 
-namespace Lidarr.Api.V1.Search
+namespace Lidarr.Api.V1.Search;
+
+[V1ApiController]
+public class SearchController : Controller
 {
-    [V1ApiController]
-    public class SearchController : Controller
+    private readonly ISearchForNewEntity _searchProxy;
+
+    public SearchController(ISearchForNewEntity searchProxy)
     {
-        private readonly ISearchForNewEntity _searchProxy;
+        _searchProxy = searchProxy;
+    }
 
-        public SearchController(ISearchForNewEntity searchProxy)
-        {
-            _searchProxy = searchProxy;
-        }
+    [HttpGet]
+    public object Search([FromQuery] string term)
+    {
+        var searchResults = _searchProxy.SearchForNewEntity(term);
+        return MapToResource(searchResults).ToList();
+    }
 
-        [HttpGet]
-        public object Search([FromQuery] string term)
+    private static IEnumerable<SearchResource> MapToResource(IEnumerable<object> results)
+    {
+        int id = 1;
+        foreach (var result in results)
         {
-            var searchResults = _searchProxy.SearchForNewEntity(term);
-            return MapToResource(searchResults).ToList();
-        }
+            var resource = new SearchResource();
+            resource.Id = id++;
 
-        private static IEnumerable<SearchResource> MapToResource(IEnumerable<object> results)
-        {
-            int id = 1;
-            foreach (var result in results)
+            if (result is NzbDrone.Core.Music.Artist)
             {
-                var resource = new SearchResource();
-                resource.Id = id++;
+                var artist = (NzbDrone.Core.Music.Artist)result;
+                resource.Artist = artist.ToResource();
+                resource.ForeignId = artist.ForeignArtistId;
 
-                if (result is NzbDrone.Core.Music.Artist)
+                var poster = artist.Metadata.Value.Images.FirstOrDefault(c => c.CoverType == MediaCoverTypes.Poster);
+                if (poster != null)
                 {
-                    var artist = (NzbDrone.Core.Music.Artist)result;
-                    resource.Artist = artist.ToResource();
-                    resource.ForeignId = artist.ForeignArtistId;
-
-                    var poster = artist.Metadata.Value.Images.FirstOrDefault(c => c.CoverType == MediaCoverTypes.Poster);
-                    if (poster != null)
-                    {
-                        resource.Artist.RemotePoster = poster.Url;
-                    }
+                    resource.Artist.RemotePoster = poster.Url;
                 }
-                else if (result is NzbDrone.Core.Music.Album)
-                {
-                    var album = (NzbDrone.Core.Music.Album)result;
-                    resource.Album = album.ToResource();
-                    resource.ForeignId = album.ForeignAlbumId;
-
-                    var cover = album.Images.FirstOrDefault(c => c.CoverType == MediaCoverTypes.Cover);
-                    if (cover != null)
-                    {
-                        resource.Album.RemoteCover = cover.Url;
-                    }
-                }
-                else
-                {
-                    throw new NotImplementedException("Bad response from search all proxy");
-                }
-
-                yield return resource;
             }
+            else if (result is NzbDrone.Core.Music.Album)
+            {
+                var album = (NzbDrone.Core.Music.Album)result;
+                resource.Album = album.ToResource();
+                resource.ForeignId = album.ForeignAlbumId;
+
+                var cover = album.Images.FirstOrDefault(c => c.CoverType == MediaCoverTypes.Cover);
+                if (cover != null)
+                {
+                    resource.Album.RemoteCover = cover.Url;
+                }
+            }
+            else
+            {
+                throw new NotImplementedException("Bad response from search all proxy");
+            }
+
+            yield return resource;
         }
     }
 }

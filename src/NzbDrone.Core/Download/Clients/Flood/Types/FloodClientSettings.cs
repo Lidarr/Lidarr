@@ -1,7 +1,6 @@
-namespace NzbDrone.Core.Download.Clients.Flood.Types
+namespace NzbDrone.Core.Download.Clients.Flood.Types;
+
+public class FloodClientSettings
 {
-    public class FloodClientSettings
-    {
-        public string DirectoryDefault { get; set; }
-    }
+    public string DirectoryDefault { get; set; }
 }

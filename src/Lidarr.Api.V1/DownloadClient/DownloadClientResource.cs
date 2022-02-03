@@ -1,53 +1,52 @@
 ﻿using NzbDrone.Core.Download;
 using NzbDrone.Core.Indexers;
 
-namespace Lidarr.Api.V1.DownloadClient
+namespace Lidarr.Api.V1.DownloadClient;
+
+public class DownloadClientResource : ProviderResource<DownloadClientResource>
 {
-    public class DownloadClientResource : ProviderResource<DownloadClientResource>
+    public bool Enable { get; set; }
+    public DownloadProtocol Protocol { get; set; }
+    public int Priority { get; set; }
+    public bool RemoveCompletedDownloads { get; set; }
+    public bool RemoveFailedDownloads { get; set; }
+}
+
+public class DownloadClientResourceMapper : ProviderResourceMapper<DownloadClientResource, DownloadClientDefinition>
+{
+    public override DownloadClientResource ToResource(DownloadClientDefinition definition)
     {
-        public bool Enable { get; set; }
-        public DownloadProtocol Protocol { get; set; }
-        public int Priority { get; set; }
-        public bool RemoveCompletedDownloads { get; set; }
-        public bool RemoveFailedDownloads { get; set; }
+        if (definition == null)
+        {
+            return null;
+        }
+
+        var resource = base.ToResource(definition);
+
+        resource.Enable = definition.Enable;
+        resource.Protocol = definition.Protocol;
+        resource.Priority = definition.Priority;
+        resource.RemoveCompletedDownloads = definition.RemoveCompletedDownloads;
+        resource.RemoveFailedDownloads = definition.RemoveFailedDownloads;
+
+        return resource;
     }
 
-    public class DownloadClientResourceMapper : ProviderResourceMapper<DownloadClientResource, DownloadClientDefinition>
+    public override DownloadClientDefinition ToModel(DownloadClientResource resource)
     {
-        public override DownloadClientResource ToResource(DownloadClientDefinition definition)
+        if (resource == null)
         {
-            if (definition == null)
-            {
-                return null;
-            }
-
-            var resource = base.ToResource(definition);
-
-            resource.Enable = definition.Enable;
-            resource.Protocol = definition.Protocol;
-            resource.Priority = definition.Priority;
-            resource.RemoveCompletedDownloads = definition.RemoveCompletedDownloads;
-            resource.RemoveFailedDownloads = definition.RemoveFailedDownloads;
-
-            return resource;
+            return null;
         }
 
-        public override DownloadClientDefinition ToModel(DownloadClientResource resource)
-        {
-            if (resource == null)
-            {
-                return null;
-            }
+        var definition = base.ToModel(resource);
 
-            var definition = base.ToModel(resource);
+        definition.Enable = resource.Enable;
+        definition.Protocol = resource.Protocol;
+        definition.Priority = resource.Priority;
+        definition.RemoveCompletedDownloads = resource.RemoveCompletedDownloads;
+        definition.RemoveFailedDownloads = resource.RemoveFailedDownloads;
 
-            definition.Enable = resource.Enable;
-            definition.Protocol = resource.Protocol;
-            definition.Priority = resource.Priority;
-            definition.RemoveCompletedDownloads = resource.RemoveCompletedDownloads;
-            definition.RemoveFailedDownloads = resource.RemoveFailedDownloads;
-
-            return definition;
-        }
+        return definition;
     }
 }

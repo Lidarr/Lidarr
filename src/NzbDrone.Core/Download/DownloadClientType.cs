@@ -1,10 +1,9 @@
-namespace NzbDrone.Core.Download
+namespace NzbDrone.Core.Download;
+
+public enum DownloadClientType
 {
-    public enum DownloadClientType
-    {
-        Sabnzbd = 0,
-        Blackhole = 1,
-        Pneumatic = 2,
-        Nzbget = 3
-    }
+    Sabnzbd = 0,
+    Blackhole = 1,
+    Pneumatic = 2,
+    Nzbget = 3
 }

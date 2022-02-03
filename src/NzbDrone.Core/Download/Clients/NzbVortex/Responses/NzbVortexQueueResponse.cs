@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace NzbDrone.Core.Download.Clients.NzbVortex.Responses
+namespace NzbDrone.Core.Download.Clients.NzbVortex.Responses;
+
+public class NzbVortexQueueResponse : NzbVortexResponseBase
 {
-    public class NzbVortexQueueResponse : NzbVortexResponseBase
-    {
-        [JsonProperty(PropertyName = "nzbs")]
-        public List<NzbVortexQueueItem> Items { get; set; }
-    }
+    [JsonProperty(PropertyName = "nzbs")]
+    public List<NzbVortexQueueItem> Items { get; set; }
 }

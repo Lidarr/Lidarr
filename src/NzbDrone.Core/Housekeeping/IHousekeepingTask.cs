@@ -1,7 +1,6 @@
-namespace NzbDrone.Core.Housekeeping
+namespace NzbDrone.Core.Housekeeping;
+
+public interface IHousekeepingTask
 {
-    public interface IHousekeepingTask
-    {
-        void Clean();
-    }
+    void Clean();
 }

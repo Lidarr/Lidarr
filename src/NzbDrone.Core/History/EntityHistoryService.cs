@@ -14,396 +14,395 @@ using NzbDrone.Core.Music.Events;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Qualities;
 
-namespace NzbDrone.Core.History
+namespace NzbDrone.Core.History;
+
+public interface IHistoryService
 {
-    public interface IHistoryService
+    PagingSpec<EntityHistory> Paged(PagingSpec<EntityHistory> pagingSpec);
+    EntityHistory MostRecentForAlbum(int albumId);
+    EntityHistory MostRecentForDownloadId(string downloadId);
+    EntityHistory Get(int historyId);
+    List<EntityHistory> GetByArtist(int artistId, EntityHistoryEventType? eventType);
+    List<EntityHistory> GetByAlbum(int albumId, EntityHistoryEventType? eventType);
+    List<EntityHistory> Find(string downloadId, EntityHistoryEventType eventType);
+    List<EntityHistory> FindByDownloadId(string downloadId);
+    string FindDownloadId(TrackImportedEvent trackedDownload);
+    List<EntityHistory> Since(DateTime date, EntityHistoryEventType? eventType);
+    void UpdateMany(IList<EntityHistory> items);
+}
+
+public class EntityHistoryService : IHistoryService,
+                                    IHandle<AlbumGrabbedEvent>,
+                                    IHandle<AlbumImportIncompleteEvent>,
+                                    IHandle<TrackImportedEvent>,
+                                    IHandle<DownloadFailedEvent>,
+                                    IHandle<DownloadCompletedEvent>,
+                                    IHandle<TrackFileDeletedEvent>,
+                                    IHandle<TrackFileRenamedEvent>,
+                                    IHandle<TrackFileRetaggedEvent>,
+                                    IHandle<ArtistsDeletedEvent>,
+                                    IHandle<DownloadIgnoredEvent>
+{
+    private readonly IHistoryRepository _historyRepository;
+    private readonly Logger _logger;
+
+    public EntityHistoryService(IHistoryRepository historyRepository, Logger logger)
     {
-        PagingSpec<EntityHistory> Paged(PagingSpec<EntityHistory> pagingSpec);
-        EntityHistory MostRecentForAlbum(int albumId);
-        EntityHistory MostRecentForDownloadId(string downloadId);
-        EntityHistory Get(int historyId);
-        List<EntityHistory> GetByArtist(int artistId, EntityHistoryEventType? eventType);
-        List<EntityHistory> GetByAlbum(int albumId, EntityHistoryEventType? eventType);
-        List<EntityHistory> Find(string downloadId, EntityHistoryEventType eventType);
-        List<EntityHistory> FindByDownloadId(string downloadId);
-        string FindDownloadId(TrackImportedEvent trackedDownload);
-        List<EntityHistory> Since(DateTime date, EntityHistoryEventType? eventType);
-        void UpdateMany(IList<EntityHistory> items);
+        _historyRepository = historyRepository;
+        _logger = logger;
     }
 
-    public class EntityHistoryService : IHistoryService,
-                                  IHandle<AlbumGrabbedEvent>,
-                                  IHandle<AlbumImportIncompleteEvent>,
-                                  IHandle<TrackImportedEvent>,
-                                  IHandle<DownloadFailedEvent>,
-                                  IHandle<DownloadCompletedEvent>,
-                                  IHandle<TrackFileDeletedEvent>,
-                                  IHandle<TrackFileRenamedEvent>,
-                                  IHandle<TrackFileRetaggedEvent>,
-                                  IHandle<ArtistsDeletedEvent>,
-                                  IHandle<DownloadIgnoredEvent>
+    public PagingSpec<EntityHistory> Paged(PagingSpec<EntityHistory> pagingSpec)
     {
-        private readonly IHistoryRepository _historyRepository;
-        private readonly Logger _logger;
+        return _historyRepository.GetPaged(pagingSpec);
+    }
 
-        public EntityHistoryService(IHistoryRepository historyRepository, Logger logger)
+    public EntityHistory MostRecentForAlbum(int albumId)
+    {
+        return _historyRepository.MostRecentForAlbum(albumId);
+    }
+
+    public EntityHistory MostRecentForDownloadId(string downloadId)
+    {
+        return _historyRepository.MostRecentForDownloadId(downloadId);
+    }
+
+    public EntityHistory Get(int historyId)
+    {
+        return _historyRepository.Get(historyId);
+    }
+
+    public List<EntityHistory> GetByArtist(int artistId, EntityHistoryEventType? eventType)
+    {
+        return _historyRepository.GetByArtist(artistId, eventType);
+    }
+
+    public List<EntityHistory> GetByAlbum(int albumId, EntityHistoryEventType? eventType)
+    {
+        return _historyRepository.GetByAlbum(albumId, eventType);
+    }
+
+    public List<EntityHistory> Find(string downloadId, EntityHistoryEventType eventType)
+    {
+        return _historyRepository.FindByDownloadId(downloadId).Where(c => c.EventType == eventType).ToList();
+    }
+
+    public List<EntityHistory> FindByDownloadId(string downloadId)
+    {
+        return _historyRepository.FindByDownloadId(downloadId);
+    }
+
+    public string FindDownloadId(TrackImportedEvent trackedDownload)
+    {
+        _logger.Debug("Trying to find downloadId for {0} from history", trackedDownload.ImportedTrack.Path);
+
+        var albumIds = trackedDownload.TrackInfo.Tracks.Select(c => c.AlbumId).ToList();
+
+        var allHistory = _historyRepository.FindDownloadHistory(trackedDownload.TrackInfo.Artist.Id, trackedDownload.ImportedTrack.Quality);
+
+        //Find download related items for these episdoes
+        var albumsHistory = allHistory.Where(h => albumIds.Contains(h.AlbumId)).ToList();
+
+        var processedDownloadId = albumsHistory
+                                 .Where(c => c.EventType != EntityHistoryEventType.Grabbed && c.DownloadId != null)
+                                 .Select(c => c.DownloadId);
+
+        var stillDownloading = albumsHistory.Where(c => c.EventType == EntityHistoryEventType.Grabbed && !processedDownloadId.Contains(c.DownloadId)).ToList();
+
+        string downloadId = null;
+
+        if (stillDownloading.Any())
         {
-            _historyRepository = historyRepository;
-            _logger = logger;
-        }
-
-        public PagingSpec<EntityHistory> Paged(PagingSpec<EntityHistory> pagingSpec)
-        {
-            return _historyRepository.GetPaged(pagingSpec);
-        }
-
-        public EntityHistory MostRecentForAlbum(int albumId)
-        {
-            return _historyRepository.MostRecentForAlbum(albumId);
-        }
-
-        public EntityHistory MostRecentForDownloadId(string downloadId)
-        {
-            return _historyRepository.MostRecentForDownloadId(downloadId);
-        }
-
-        public EntityHistory Get(int historyId)
-        {
-            return _historyRepository.Get(historyId);
-        }
-
-        public List<EntityHistory> GetByArtist(int artistId, EntityHistoryEventType? eventType)
-        {
-            return _historyRepository.GetByArtist(artistId, eventType);
-        }
-
-        public List<EntityHistory> GetByAlbum(int albumId, EntityHistoryEventType? eventType)
-        {
-            return _historyRepository.GetByAlbum(albumId, eventType);
-        }
-
-        public List<EntityHistory> Find(string downloadId, EntityHistoryEventType eventType)
-        {
-            return _historyRepository.FindByDownloadId(downloadId).Where(c => c.EventType == eventType).ToList();
-        }
-
-        public List<EntityHistory> FindByDownloadId(string downloadId)
-        {
-            return _historyRepository.FindByDownloadId(downloadId);
-        }
-
-        public string FindDownloadId(TrackImportedEvent trackedDownload)
-        {
-            _logger.Debug("Trying to find downloadId for {0} from history", trackedDownload.ImportedTrack.Path);
-
-            var albumIds = trackedDownload.TrackInfo.Tracks.Select(c => c.AlbumId).ToList();
-
-            var allHistory = _historyRepository.FindDownloadHistory(trackedDownload.TrackInfo.Artist.Id, trackedDownload.ImportedTrack.Quality);
-
-            //Find download related items for these episdoes
-            var albumsHistory = allHistory.Where(h => albumIds.Contains(h.AlbumId)).ToList();
-
-            var processedDownloadId = albumsHistory
-                .Where(c => c.EventType != EntityHistoryEventType.Grabbed && c.DownloadId != null)
-                .Select(c => c.DownloadId);
-
-            var stillDownloading = albumsHistory.Where(c => c.EventType == EntityHistoryEventType.Grabbed && !processedDownloadId.Contains(c.DownloadId)).ToList();
-
-            string downloadId = null;
-
-            if (stillDownloading.Any())
+            foreach (var matchingHistory in trackedDownload.TrackInfo.Tracks.Select(e => stillDownloading.Where(c => c.AlbumId == e.AlbumId).ToList()))
             {
-                foreach (var matchingHistory in trackedDownload.TrackInfo.Tracks.Select(e => stillDownloading.Where(c => c.AlbumId == e.AlbumId).ToList()))
+                if (matchingHistory.Count != 1)
                 {
-                    if (matchingHistory.Count != 1)
-                    {
-                        return null;
-                    }
-
-                    var newDownloadId = matchingHistory.Single().DownloadId;
-
-                    if (downloadId == null || downloadId == newDownloadId)
-                    {
-                        downloadId = newDownloadId;
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-            }
-
-            return downloadId;
-        }
-
-        public void Handle(AlbumGrabbedEvent message)
-        {
-            foreach (var album in message.Album.Albums)
-            {
-                var history = new EntityHistory
-                {
-                    EventType = EntityHistoryEventType.Grabbed,
-                    Date = DateTime.UtcNow,
-                    Quality = message.Album.ParsedAlbumInfo.Quality,
-                    SourceTitle = message.Album.Release.Title,
-                    ArtistId = album.ArtistId,
-                    AlbumId = album.Id,
-                    DownloadId = message.DownloadId
-                };
-
-                history.Data.Add("Indexer", message.Album.Release.Indexer);
-                history.Data.Add("NzbInfoUrl", message.Album.Release.InfoUrl);
-                history.Data.Add("ReleaseGroup", message.Album.ParsedAlbumInfo.ReleaseGroup);
-                history.Data.Add("Age", message.Album.Release.Age.ToString());
-                history.Data.Add("AgeHours", message.Album.Release.AgeHours.ToString());
-                history.Data.Add("AgeMinutes", message.Album.Release.AgeMinutes.ToString());
-                history.Data.Add("PublishedDate", message.Album.Release.PublishDate.ToString("s") + "Z");
-                history.Data.Add("DownloadClient", message.DownloadClient);
-                history.Data.Add("Size", message.Album.Release.Size.ToString());
-                history.Data.Add("DownloadUrl", message.Album.Release.DownloadUrl);
-                history.Data.Add("Guid", message.Album.Release.Guid);
-                history.Data.Add("Protocol", ((int)message.Album.Release.DownloadProtocol).ToString());
-                history.Data.Add("DownloadForced", (!message.Album.DownloadAllowed).ToString());
-
-                if (!message.Album.ParsedAlbumInfo.ReleaseHash.IsNullOrWhiteSpace())
-                {
-                    history.Data.Add("ReleaseHash", message.Album.ParsedAlbumInfo.ReleaseHash);
+                    return null;
                 }
 
-                var torrentRelease = message.Album.Release as TorrentInfo;
+                var newDownloadId = matchingHistory.Single().DownloadId;
 
-                if (torrentRelease != null)
+                if (downloadId == null || downloadId == newDownloadId)
                 {
-                    history.Data.Add("TorrentInfoHash", torrentRelease.InfoHash);
+                    downloadId = newDownloadId;
                 }
-
-                _historyRepository.Insert(history);
-            }
-        }
-
-        public void Handle(AlbumImportIncompleteEvent message)
-        {
-            foreach (var album in message.TrackedDownload.RemoteAlbum.Albums)
-            {
-                var history = new EntityHistory
+                else
                 {
-                    EventType = EntityHistoryEventType.AlbumImportIncomplete,
-                    Date = DateTime.UtcNow,
-                    Quality = message.TrackedDownload.RemoteAlbum.ParsedAlbumInfo?.Quality ?? new QualityModel(),
-                    SourceTitle = message.TrackedDownload.DownloadItem.Title,
-                    ArtistId = album.ArtistId,
-                    AlbumId = album.Id,
-                    DownloadId = message.TrackedDownload.DownloadItem.DownloadId
-                };
-
-                history.Data.Add("StatusMessages", message.TrackedDownload.StatusMessages.ToJson());
-                _historyRepository.Insert(history);
+                    return null;
+                }
             }
         }
 
-        public void Handle(TrackImportedEvent message)
+        return downloadId;
+    }
+
+    public void Handle(AlbumGrabbedEvent message)
+    {
+        foreach (var album in message.Album.Albums)
         {
-            if (!message.NewDownload)
+            var history = new EntityHistory
+                          {
+                              EventType = EntityHistoryEventType.Grabbed,
+                              Date = DateTime.UtcNow,
+                              Quality = message.Album.ParsedAlbumInfo.Quality,
+                              SourceTitle = message.Album.Release.Title,
+                              ArtistId = album.ArtistId,
+                              AlbumId = album.Id,
+                              DownloadId = message.DownloadId
+                          };
+
+            history.Data.Add("Indexer", message.Album.Release.Indexer);
+            history.Data.Add("NzbInfoUrl", message.Album.Release.InfoUrl);
+            history.Data.Add("ReleaseGroup", message.Album.ParsedAlbumInfo.ReleaseGroup);
+            history.Data.Add("Age", message.Album.Release.Age.ToString());
+            history.Data.Add("AgeHours", message.Album.Release.AgeHours.ToString());
+            history.Data.Add("AgeMinutes", message.Album.Release.AgeMinutes.ToString());
+            history.Data.Add("PublishedDate", message.Album.Release.PublishDate.ToString("s") + "Z");
+            history.Data.Add("DownloadClient", message.DownloadClient);
+            history.Data.Add("Size", message.Album.Release.Size.ToString());
+            history.Data.Add("DownloadUrl", message.Album.Release.DownloadUrl);
+            history.Data.Add("Guid", message.Album.Release.Guid);
+            history.Data.Add("Protocol", ((int)message.Album.Release.DownloadProtocol).ToString());
+            history.Data.Add("DownloadForced", (!message.Album.DownloadAllowed).ToString());
+
+            if (!message.Album.ParsedAlbumInfo.ReleaseHash.IsNullOrWhiteSpace())
             {
-                return;
+                history.Data.Add("ReleaseHash", message.Album.ParsedAlbumInfo.ReleaseHash);
             }
 
-            var downloadId = message.DownloadId;
+            var torrentRelease = message.Album.Release as TorrentInfo;
 
-            if (downloadId.IsNullOrWhiteSpace())
+            if (torrentRelease != null)
             {
-                downloadId = FindDownloadId(message);
+                history.Data.Add("TorrentInfoHash", torrentRelease.InfoHash);
             }
 
-            foreach (var track in message.TrackInfo.Tracks)
-            {
-                var history = new EntityHistory
-                {
-                    EventType = EntityHistoryEventType.TrackFileImported,
-                    Date = DateTime.UtcNow,
-                    Quality = message.TrackInfo.Quality,
-                    SourceTitle = message.ImportedTrack.SceneName ?? Path.GetFileNameWithoutExtension(message.TrackInfo.Path),
-                    ArtistId = message.TrackInfo.Artist.Id,
-                    AlbumId = message.TrackInfo.Album.Id,
-                    TrackId = track.Id,
-                    DownloadId = downloadId
-                };
-
-                //Won't have a value since we publish this event before saving to DB.
-                //history.Data.Add("FileId", message.ImportedEpisode.Id.ToString());
-                history.Data.Add("DroppedPath", message.TrackInfo.Path);
-                history.Data.Add("ImportedPath", message.ImportedTrack.Path);
-                history.Data.Add("DownloadClient", message.DownloadClientInfo.Name);
-
-                _historyRepository.Insert(history);
-            }
+            _historyRepository.Insert(history);
         }
+    }
 
-        public void Handle(DownloadFailedEvent message)
+    public void Handle(AlbumImportIncompleteEvent message)
+    {
+        foreach (var album in message.TrackedDownload.RemoteAlbum.Albums)
         {
-            foreach (var albumId in message.AlbumIds)
-            {
-                var history = new EntityHistory
-                {
-                    EventType = EntityHistoryEventType.DownloadFailed,
-                    Date = DateTime.UtcNow,
-                    Quality = message.Quality,
-                    SourceTitle = message.SourceTitle,
-                    ArtistId = message.ArtistId,
-                    AlbumId = albumId,
-                    DownloadId = message.DownloadId
-                };
+            var history = new EntityHistory
+                          {
+                              EventType = EntityHistoryEventType.AlbumImportIncomplete,
+                              Date = DateTime.UtcNow,
+                              Quality = message.TrackedDownload.RemoteAlbum.ParsedAlbumInfo?.Quality ?? new QualityModel(),
+                              SourceTitle = message.TrackedDownload.DownloadItem.Title,
+                              ArtistId = album.ArtistId,
+                              AlbumId = album.Id,
+                              DownloadId = message.TrackedDownload.DownloadItem.DownloadId
+                          };
 
-                history.Data.Add("DownloadClient", message.DownloadClient);
-                history.Data.Add("Message", message.Message);
-
-                _historyRepository.Insert(history);
-            }
+            history.Data.Add("StatusMessages", message.TrackedDownload.StatusMessages.ToJson());
+            _historyRepository.Insert(history);
         }
+    }
 
-        public void Handle(DownloadCompletedEvent message)
+    public void Handle(TrackImportedEvent message)
+    {
+        if (!message.NewDownload)
         {
-            foreach (var album in message.TrackedDownload.RemoteAlbum.Albums)
-            {
-                var history = new EntityHistory
-                {
-                    EventType = EntityHistoryEventType.DownloadImported,
-                    Date = DateTime.UtcNow,
-                    Quality = message.TrackedDownload.RemoteAlbum.ParsedAlbumInfo?.Quality ?? new QualityModel(),
-                    SourceTitle = message.TrackedDownload.DownloadItem.Title,
-                    ArtistId = album.ArtistId,
-                    AlbumId = album.Id,
-                    DownloadId = message.TrackedDownload.DownloadItem.DownloadId
-                };
-
-                _historyRepository.Insert(history);
-            }
+            return;
         }
 
-        public void Handle(TrackFileDeletedEvent message)
+        var downloadId = message.DownloadId;
+
+        if (downloadId.IsNullOrWhiteSpace())
         {
-            if (message.Reason == DeleteMediaFileReason.NoLinkedEpisodes)
-            {
-                _logger.Debug("Removing track file from DB as part of cleanup routine, not creating history event.");
-                return;
-            }
-            else if (message.Reason == DeleteMediaFileReason.ManualOverride)
-            {
-                _logger.Debug("Removing track file from DB as part of manual override of existing file, not creating history event.");
-                return;
-            }
-
-            foreach (var track in message.TrackFile.Tracks.Value)
-            {
-                var history = new EntityHistory
-                {
-                    EventType = EntityHistoryEventType.TrackFileDeleted,
-                    Date = DateTime.UtcNow,
-                    Quality = message.TrackFile.Quality,
-                    SourceTitle = message.TrackFile.Path,
-                    ArtistId = message.TrackFile.Artist.Value.Id,
-                    AlbumId = message.TrackFile.AlbumId,
-                    TrackId = track.Id,
-                };
-
-                history.Data.Add("Reason", message.Reason.ToString());
-
-                _historyRepository.Insert(history);
-            }
+            downloadId = FindDownloadId(message);
         }
 
-        public void Handle(TrackFileRenamedEvent message)
+        foreach (var track in message.TrackInfo.Tracks)
         {
-            var sourcePath = message.OriginalPath;
-            var path = message.TrackFile.Path;
+            var history = new EntityHistory
+                          {
+                              EventType = EntityHistoryEventType.TrackFileImported,
+                              Date = DateTime.UtcNow,
+                              Quality = message.TrackInfo.Quality,
+                              SourceTitle = message.ImportedTrack.SceneName ?? Path.GetFileNameWithoutExtension(message.TrackInfo.Path),
+                              ArtistId = message.TrackInfo.Artist.Id,
+                              AlbumId = message.TrackInfo.Album.Id,
+                              TrackId = track.Id,
+                              DownloadId = downloadId
+                          };
 
-            foreach (var track in message.TrackFile.Tracks.Value)
-            {
-                var history = new EntityHistory
-                {
-                    EventType = EntityHistoryEventType.TrackFileRenamed,
-                    Date = DateTime.UtcNow,
-                    Quality = message.TrackFile.Quality,
-                    SourceTitle = message.OriginalPath,
-                    ArtistId = message.TrackFile.Artist.Value.Id,
-                    AlbumId = message.TrackFile.AlbumId,
-                    TrackId = track.Id,
-                };
+            //Won't have a value since we publish this event before saving to DB.
+            //history.Data.Add("FileId", message.ImportedEpisode.Id.ToString());
+            history.Data.Add("DroppedPath", message.TrackInfo.Path);
+            history.Data.Add("ImportedPath", message.ImportedTrack.Path);
+            history.Data.Add("DownloadClient", message.DownloadClientInfo.Name);
 
-                history.Data.Add("SourcePath", sourcePath);
-                history.Data.Add("Path", path);
-
-                _historyRepository.Insert(history);
-            }
+            _historyRepository.Insert(history);
         }
+    }
 
-        public void Handle(TrackFileRetaggedEvent message)
+    public void Handle(DownloadFailedEvent message)
+    {
+        foreach (var albumId in message.AlbumIds)
         {
-            var path = message.TrackFile.Path;
+            var history = new EntityHistory
+                          {
+                              EventType = EntityHistoryEventType.DownloadFailed,
+                              Date = DateTime.UtcNow,
+                              Quality = message.Quality,
+                              SourceTitle = message.SourceTitle,
+                              ArtistId = message.ArtistId,
+                              AlbumId = albumId,
+                              DownloadId = message.DownloadId
+                          };
 
-            foreach (var track in message.TrackFile.Tracks.Value)
-            {
-                var history = new EntityHistory
-                {
-                    EventType = EntityHistoryEventType.TrackFileRetagged,
-                    Date = DateTime.UtcNow,
-                    Quality = message.TrackFile.Quality,
-                    SourceTitle = path,
-                    ArtistId = message.TrackFile.Artist.Value.Id,
-                    AlbumId = message.TrackFile.AlbumId,
-                    TrackId = track.Id,
-                };
+            history.Data.Add("DownloadClient", message.DownloadClient);
+            history.Data.Add("Message", message.Message);
 
-                history.Data.Add("TagsScrubbed", message.Scrubbed.ToString());
-                history.Data.Add("Diff", message.Diff.Select(x => new
-                {
-                    Field = x.Key,
-                    OldValue = x.Value.Item1,
-                    NewValue = x.Value.Item2
-                }).ToJson());
-
-                _historyRepository.Insert(history);
-            }
+            _historyRepository.Insert(history);
         }
+    }
 
-        public void Handle(ArtistsDeletedEvent message)
+    public void Handle(DownloadCompletedEvent message)
+    {
+        foreach (var album in message.TrackedDownload.RemoteAlbum.Albums)
         {
-            _historyRepository.DeleteForArtists(message.Artists.Select(x => x.Id).ToList());
-        }
+            var history = new EntityHistory
+                          {
+                              EventType = EntityHistoryEventType.DownloadImported,
+                              Date = DateTime.UtcNow,
+                              Quality = message.TrackedDownload.RemoteAlbum.ParsedAlbumInfo?.Quality ?? new QualityModel(),
+                              SourceTitle = message.TrackedDownload.DownloadItem.Title,
+                              ArtistId = album.ArtistId,
+                              AlbumId = album.Id,
+                              DownloadId = message.TrackedDownload.DownloadItem.DownloadId
+                          };
 
-        public void Handle(DownloadIgnoredEvent message)
+            _historyRepository.Insert(history);
+        }
+    }
+
+    public void Handle(TrackFileDeletedEvent message)
+    {
+        if (message.Reason == DeleteMediaFileReason.NoLinkedEpisodes)
         {
-            var historyToAdd = new List<EntityHistory>();
-            foreach (var albumId in message.AlbumIds)
-            {
-                var history = new EntityHistory
-                {
-                    EventType = EntityHistoryEventType.DownloadIgnored,
-                    Date = DateTime.UtcNow,
-                    Quality = message.Quality,
-                    SourceTitle = message.SourceTitle,
-                    ArtistId = message.ArtistId,
-                    AlbumId = albumId,
-                    DownloadId = message.DownloadId
-                };
-
-                history.Data.Add("DownloadClient", message.DownloadClientInfo.Name);
-                history.Data.Add("Message", message.Message);
-
-                historyToAdd.Add(history);
-            }
-
-            _historyRepository.InsertMany(historyToAdd);
+            _logger.Debug("Removing track file from DB as part of cleanup routine, not creating history event.");
+            return;
         }
-
-        public List<EntityHistory> Since(DateTime date, EntityHistoryEventType? eventType)
+        else if (message.Reason == DeleteMediaFileReason.ManualOverride)
         {
-            return _historyRepository.Since(date, eventType);
+            _logger.Debug("Removing track file from DB as part of manual override of existing file, not creating history event.");
+            return;
         }
 
-        public void UpdateMany(IList<EntityHistory> items)
+        foreach (var track in message.TrackFile.Tracks.Value)
         {
-            _historyRepository.UpdateMany(items);
+            var history = new EntityHistory
+                          {
+                              EventType = EntityHistoryEventType.TrackFileDeleted,
+                              Date = DateTime.UtcNow,
+                              Quality = message.TrackFile.Quality,
+                              SourceTitle = message.TrackFile.Path,
+                              ArtistId = message.TrackFile.Artist.Value.Id,
+                              AlbumId = message.TrackFile.AlbumId,
+                              TrackId = track.Id,
+                          };
+
+            history.Data.Add("Reason", message.Reason.ToString());
+
+            _historyRepository.Insert(history);
         }
+    }
+
+    public void Handle(TrackFileRenamedEvent message)
+    {
+        var sourcePath = message.OriginalPath;
+        var path = message.TrackFile.Path;
+
+        foreach (var track in message.TrackFile.Tracks.Value)
+        {
+            var history = new EntityHistory
+                          {
+                              EventType = EntityHistoryEventType.TrackFileRenamed,
+                              Date = DateTime.UtcNow,
+                              Quality = message.TrackFile.Quality,
+                              SourceTitle = message.OriginalPath,
+                              ArtistId = message.TrackFile.Artist.Value.Id,
+                              AlbumId = message.TrackFile.AlbumId,
+                              TrackId = track.Id,
+                          };
+
+            history.Data.Add("SourcePath", sourcePath);
+            history.Data.Add("Path", path);
+
+            _historyRepository.Insert(history);
+        }
+    }
+
+    public void Handle(TrackFileRetaggedEvent message)
+    {
+        var path = message.TrackFile.Path;
+
+        foreach (var track in message.TrackFile.Tracks.Value)
+        {
+            var history = new EntityHistory
+                          {
+                              EventType = EntityHistoryEventType.TrackFileRetagged,
+                              Date = DateTime.UtcNow,
+                              Quality = message.TrackFile.Quality,
+                              SourceTitle = path,
+                              ArtistId = message.TrackFile.Artist.Value.Id,
+                              AlbumId = message.TrackFile.AlbumId,
+                              TrackId = track.Id,
+                          };
+
+            history.Data.Add("TagsScrubbed", message.Scrubbed.ToString());
+            history.Data.Add("Diff", message.Diff.Select(x => new
+                                                              {
+                                                                  Field = x.Key,
+                                                                  OldValue = x.Value.Item1,
+                                                                  NewValue = x.Value.Item2
+                                                              }).ToJson());
+
+            _historyRepository.Insert(history);
+        }
+    }
+
+    public void Handle(ArtistsDeletedEvent message)
+    {
+        _historyRepository.DeleteForArtists(message.Artists.Select(x => x.Id).ToList());
+    }
+
+    public void Handle(DownloadIgnoredEvent message)
+    {
+        var historyToAdd = new List<EntityHistory>();
+        foreach (var albumId in message.AlbumIds)
+        {
+            var history = new EntityHistory
+                          {
+                              EventType = EntityHistoryEventType.DownloadIgnored,
+                              Date = DateTime.UtcNow,
+                              Quality = message.Quality,
+                              SourceTitle = message.SourceTitle,
+                              ArtistId = message.ArtistId,
+                              AlbumId = albumId,
+                              DownloadId = message.DownloadId
+                          };
+
+            history.Data.Add("DownloadClient", message.DownloadClientInfo.Name);
+            history.Data.Add("Message", message.Message);
+
+            historyToAdd.Add(history);
+        }
+
+        _historyRepository.InsertMany(historyToAdd);
+    }
+
+    public List<EntityHistory> Since(DateTime date, EntityHistoryEventType? eventType)
+    {
+        return _historyRepository.Since(date, eventType);
+    }
+
+    public void UpdateMany(IList<EntityHistory> items)
+    {
+        _historyRepository.UpdateMany(items);
     }
 }

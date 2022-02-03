@@ -1,22 +1,21 @@
 using NzbDrone.Core.Datastore;
 
-namespace NzbDrone.Core.Music
+namespace NzbDrone.Core.Music;
+
+public class AddAlbumOptions : IEmbeddedDocument
 {
-    public class AddAlbumOptions : IEmbeddedDocument
+    public AddAlbumOptions()
     {
-        public AddAlbumOptions()
-        {
-            // default in case not set in db
-            AddType = AlbumAddType.Automatic;
-        }
-
-        public AlbumAddType AddType { get; set; }
-        public bool SearchForNewAlbum { get; set; }
+        // default in case not set in db
+        AddType = AlbumAddType.Automatic;
     }
 
-    public enum AlbumAddType
-    {
-        Automatic,
-        Manual
-    }
+    public AlbumAddType AddType { get; set; }
+    public bool SearchForNewAlbum { get; set; }
+}
+
+public enum AlbumAddType
+{
+    Automatic,
+    Manual
 }

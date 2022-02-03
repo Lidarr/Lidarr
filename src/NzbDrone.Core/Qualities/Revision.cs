@@ -1,163 +1,162 @@
 using System;
 using System.Text;
 
-namespace NzbDrone.Core.Qualities
+namespace NzbDrone.Core.Qualities;
+
+public class Revision : IEquatable<Revision>, IComparable<Revision>
 {
-    public class Revision : IEquatable<Revision>, IComparable<Revision>
+    public Revision()
     {
-        public Revision()
+        Version = 1;
+    }
+
+    public Revision(int version = 1, int real = 0, bool isRepack = false)
+    {
+        Version = version;
+        Real = real;
+        IsRepack = isRepack;
+    }
+
+    public int Version { get; set; }
+    public int Real { get; set; }
+    public bool IsRepack { get; set; }
+
+    public bool Equals(Revision other)
+    {
+        if (ReferenceEquals(null, other))
         {
-            Version = 1;
+            return false;
         }
 
-        public Revision(int version = 1, int real = 0, bool isRepack = false)
+        return other.Version.Equals(Version) && other.Real.Equals(Real);
+    }
+
+    public int CompareTo(Revision other)
+    {
+        if (Real > other.Real)
         {
-            Version = version;
-            Real = real;
-            IsRepack = isRepack;
+            return 1;
         }
 
-        public int Version { get; set; }
-        public int Real { get; set; }
-        public bool IsRepack { get; set; }
-
-        public bool Equals(Revision other)
+        if (Real < other.Real)
         {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            return other.Version.Equals(Version) && other.Real.Equals(Real);
+            return -1;
         }
 
-        public int CompareTo(Revision other)
+        if (Version > other.Version)
         {
-            if (Real > other.Real)
-            {
-                return 1;
-            }
-
-            if (Real < other.Real)
-            {
-                return -1;
-            }
-
-            if (Version > other.Version)
-            {
-                return 1;
-            }
-
-            if (Version < other.Version)
-            {
-                return -1;
-            }
-
-            return 0;
+            return 1;
         }
 
-        public override string ToString()
+        if (Version < other.Version)
         {
-            var sb = new StringBuilder();
-
-            sb.AppendFormat("v{0}", Version);
-
-            if (Real > 0)
-            {
-                sb.AppendFormat(" Real:{0}", Real);
-            }
-
-            return sb.ToString();
+            return -1;
         }
 
-        public override int GetHashCode()
+        return 0;
+    }
+
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+
+        sb.AppendFormat("v{0}", Version);
+
+        if (Real > 0)
         {
-            return Version ^ Real << 8;
+            sb.AppendFormat(" Real:{0}", Real);
         }
 
-        public override bool Equals(object obj)
+        return sb.ToString();
+    }
+
+    public override int GetHashCode()
+    {
+        return Version ^ Real << 8;
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj))
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            return Equals(obj as Revision);
+            return false;
         }
 
-        public static bool operator ==(Revision left, Revision right)
+        if (ReferenceEquals(this, obj))
         {
-            return Equals(left, right);
+            return true;
         }
 
-        public static bool operator !=(Revision left, Revision right)
+        return Equals(obj as Revision);
+    }
+
+    public static bool operator ==(Revision left, Revision right)
+    {
+        return Equals(left, right);
+    }
+
+    public static bool operator !=(Revision left, Revision right)
+    {
+        return !Equals(left, right);
+    }
+
+    public static bool operator >(Revision left, Revision right)
+    {
+        if (ReferenceEquals(null, left))
         {
-            return !Equals(left, right);
+            return false;
         }
 
-        public static bool operator >(Revision left, Revision right)
+        if (ReferenceEquals(null, right))
         {
-            if (ReferenceEquals(null, left))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(null, right))
-            {
-                return true;
-            }
-
-            return left.CompareTo(right) > 0;
+            return true;
         }
 
-        public static bool operator <(Revision left, Revision right)
+        return left.CompareTo(right) > 0;
+    }
+
+    public static bool operator <(Revision left, Revision right)
+    {
+        if (ReferenceEquals(null, left))
         {
-            if (ReferenceEquals(null, left))
-            {
-                return true;
-            }
-
-            if (ReferenceEquals(null, right))
-            {
-                return false;
-            }
-
-            return left.CompareTo(right) < 0;
+            return true;
         }
 
-        public static bool operator >=(Revision left, Revision right)
+        if (ReferenceEquals(null, right))
         {
-            if (ReferenceEquals(null, left))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(null, right))
-            {
-                return true;
-            }
-
-            return left.CompareTo(right) >= 0;
+            return false;
         }
 
-        public static bool operator <=(Revision left, Revision right)
+        return left.CompareTo(right) < 0;
+    }
+
+    public static bool operator >=(Revision left, Revision right)
+    {
+        if (ReferenceEquals(null, left))
         {
-            if (ReferenceEquals(null, left))
-            {
-                return true;
-            }
-
-            if (ReferenceEquals(null, right))
-            {
-                return false;
-            }
-
-            return left.CompareTo(right) <= 0;
+            return false;
         }
+
+        if (ReferenceEquals(null, right))
+        {
+            return true;
+        }
+
+        return left.CompareTo(right) >= 0;
+    }
+
+    public static bool operator <=(Revision left, Revision right)
+    {
+        if (ReferenceEquals(null, left))
+        {
+            return true;
+        }
+
+        if (ReferenceEquals(null, right))
+        {
+            return false;
+        }
+
+        return left.CompareTo(right) <= 0;
     }
 }

@@ -1,12 +1,11 @@
-namespace NzbDrone.Host
+namespace NzbDrone.Host;
+
+public enum ApplicationModes
 {
-    public enum ApplicationModes
-    {
-        Interactive,
-        Help,
-        InstallService,
-        UninstallService,
-        Service,
-        RegisterUrl
-    }
+    Interactive,
+    Help,
+    InstallService,
+    UninstallService,
+    Service,
+    RegisterUrl
 }

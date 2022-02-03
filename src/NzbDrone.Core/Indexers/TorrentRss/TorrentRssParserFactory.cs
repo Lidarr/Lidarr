@@ -4,62 +4,61 @@ using NzbDrone.Common.Cache;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Indexers.Exceptions;
 
-namespace NzbDrone.Core.Indexers.TorrentRss
+namespace NzbDrone.Core.Indexers.TorrentRss;
+
+public interface ITorrentRssParserFactory
 {
-    public interface ITorrentRssParserFactory
+    TorrentRssParser GetParser(TorrentRssIndexerSettings settings);
+}
+
+public class TorrentRssParserFactory : ITorrentRssParserFactory
+{
+    protected readonly Logger _logger;
+
+    private readonly ICached<TorrentRssIndexerParserSettings> _settingsCache;
+
+    private readonly ITorrentRssSettingsDetector _torrentRssSettingsDetector;
+
+    public TorrentRssParserFactory(ICacheManager cacheManager, ITorrentRssSettingsDetector torrentRssSettingsDetector, Logger logger)
     {
-        TorrentRssParser GetParser(TorrentRssIndexerSettings settings);
+        _settingsCache = cacheManager.GetCache<TorrentRssIndexerParserSettings>(GetType());
+        _torrentRssSettingsDetector = torrentRssSettingsDetector;
+        _logger = logger;
     }
 
-    public class TorrentRssParserFactory : ITorrentRssParserFactory
+    public TorrentRssParser GetParser(TorrentRssIndexerSettings indexerSettings)
     {
-        protected readonly Logger _logger;
+        var key = indexerSettings.ToJson();
+        var parserSettings = _settingsCache.Get(key, () => DetectParserSettings(indexerSettings), TimeSpan.FromDays(7));
 
-        private readonly ICached<TorrentRssIndexerParserSettings> _settingsCache;
-
-        private readonly ITorrentRssSettingsDetector _torrentRssSettingsDetector;
-
-        public TorrentRssParserFactory(ICacheManager cacheManager, ITorrentRssSettingsDetector torrentRssSettingsDetector, Logger logger)
+        if (parserSettings.UseEZTVFormat)
         {
-            _settingsCache = cacheManager.GetCache<TorrentRssIndexerParserSettings>(GetType());
-            _torrentRssSettingsDetector = torrentRssSettingsDetector;
-            _logger = logger;
+            return new EzrssTorrentRssParser();
+        }
+        else
+        {
+            return new TorrentRssParser
+                   {
+                       UseGuidInfoUrl = false,
+                       ParseSeedersInDescription = parserSettings.ParseSeedersInDescription,
+
+                       UseEnclosureUrl = parserSettings.UseEnclosureUrl,
+                       UseEnclosureLength = parserSettings.UseEnclosureLength,
+                       ParseSizeInDescription = parserSettings.ParseSizeInDescription,
+                       SizeElementName = parserSettings.SizeElementName
+                   };
+        }
+    }
+
+    private TorrentRssIndexerParserSettings DetectParserSettings(TorrentRssIndexerSettings indexerSettings)
+    {
+        var settings = _torrentRssSettingsDetector.Detect(indexerSettings);
+
+        if (settings == null)
+        {
+            throw new UnsupportedFeedException("Could not parse feed from {0}", indexerSettings.BaseUrl);
         }
 
-        public TorrentRssParser GetParser(TorrentRssIndexerSettings indexerSettings)
-        {
-            var key = indexerSettings.ToJson();
-            var parserSettings = _settingsCache.Get(key, () => DetectParserSettings(indexerSettings), TimeSpan.FromDays(7));
-
-            if (parserSettings.UseEZTVFormat)
-            {
-                return new EzrssTorrentRssParser();
-            }
-            else
-            {
-                return new TorrentRssParser
-                {
-                    UseGuidInfoUrl = false,
-                    ParseSeedersInDescription = parserSettings.ParseSeedersInDescription,
-
-                    UseEnclosureUrl = parserSettings.UseEnclosureUrl,
-                    UseEnclosureLength = parserSettings.UseEnclosureLength,
-                    ParseSizeInDescription = parserSettings.ParseSizeInDescription,
-                    SizeElementName = parserSettings.SizeElementName
-                };
-            }
-        }
-
-        private TorrentRssIndexerParserSettings DetectParserSettings(TorrentRssIndexerSettings indexerSettings)
-        {
-            var settings = _torrentRssSettingsDetector.Detect(indexerSettings);
-
-            if (settings == null)
-            {
-                throw new UnsupportedFeedException("Could not parse feed from {0}", indexerSettings.BaseUrl);
-            }
-
-            return settings;
-        }
+        return settings;
     }
 }

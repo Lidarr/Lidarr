@@ -3,29 +3,28 @@ using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Download.Clients.DownloadStation.Responses;
 
-namespace NzbDrone.Core.Download.Clients.DownloadStation.Proxies
+namespace NzbDrone.Core.Download.Clients.DownloadStation.Proxies;
+
+public interface IDSMInfoProxy
 {
-    public interface IDSMInfoProxy
+    string GetSerialNumber(DownloadStationSettings settings);
+}
+
+public class DSMInfoProxy : DiskStationProxyBase, IDSMInfoProxy
+{
+    public DSMInfoProxy(IHttpClient httpClient, ICacheManager cacheManager, Logger logger)
+        : base(DiskStationApi.DSMInfo, "SYNO.DSM.Info", httpClient, cacheManager, logger)
     {
-        string GetSerialNumber(DownloadStationSettings settings);
     }
 
-    public class DSMInfoProxy : DiskStationProxyBase, IDSMInfoProxy
+    public string GetSerialNumber(DownloadStationSettings settings)
     {
-        public DSMInfoProxy(IHttpClient httpClient, ICacheManager cacheManager, Logger logger)
-            : base(DiskStationApi.DSMInfo, "SYNO.DSM.Info", httpClient, cacheManager, logger)
-        {
-        }
+        var info = GetApiInfo(settings);
 
-        public string GetSerialNumber(DownloadStationSettings settings)
-        {
-            var info = GetApiInfo(settings);
+        var requestBuilder = BuildRequest(settings, "getinfo", info.MinVersion);
 
-            var requestBuilder = BuildRequest(settings, "getinfo", info.MinVersion);
+        var response = ProcessRequest<DSMInfoResponse>(requestBuilder, "get serial number", settings);
 
-            var response = ProcessRequest<DSMInfoResponse>(requestBuilder, "get serial number", settings);
-
-            return response.Data.SerialNumber;
-        }
+        return response.Data.SerialNumber;
     }
 }

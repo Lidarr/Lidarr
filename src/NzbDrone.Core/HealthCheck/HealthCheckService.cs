@@ -9,152 +9,151 @@ using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 
-namespace NzbDrone.Core.HealthCheck
+namespace NzbDrone.Core.HealthCheck;
+
+public interface IHealthCheckService
 {
-    public interface IHealthCheckService
+    List<HealthCheck> Results();
+}
+
+public class HealthCheckService : IHealthCheckService,
+                                  IExecute<CheckHealthCommand>,
+                                  IHandleAsync<ApplicationStartedEvent>,
+                                  IHandleAsync<IEvent>
+{
+    private readonly IProvideHealthCheck[] _healthChecks;
+    private readonly IProvideHealthCheck[] _startupHealthChecks;
+    private readonly IProvideHealthCheck[] _scheduledHealthChecks;
+    private readonly Dictionary<Type, IEventDrivenHealthCheck[]> _eventDrivenHealthChecks;
+    private readonly IServerSideNotificationService _serverSideNotificationService;
+    private readonly IEventAggregator _eventAggregator;
+    private readonly ICacheManager _cacheManager;
+    private readonly Logger _logger;
+
+    private readonly ICached<HealthCheck> _healthCheckResults;
+
+    public HealthCheckService(IEnumerable<IProvideHealthCheck> healthChecks,
+                              IServerSideNotificationService serverSideNotificationService,
+                              IEventAggregator eventAggregator,
+                              ICacheManager cacheManager,
+                              Logger logger)
     {
-        List<HealthCheck> Results();
+        _healthChecks = healthChecks.ToArray();
+        _serverSideNotificationService = serverSideNotificationService;
+        _eventAggregator = eventAggregator;
+        _cacheManager = cacheManager;
+        _logger = logger;
+
+        _healthCheckResults = _cacheManager.GetCache<HealthCheck>(GetType());
+
+        _startupHealthChecks = _healthChecks.Where(v => v.CheckOnStartup).ToArray();
+        _scheduledHealthChecks = _healthChecks.Where(v => v.CheckOnSchedule).ToArray();
+        _eventDrivenHealthChecks = GetEventDrivenHealthChecks();
     }
 
-    public class HealthCheckService : IHealthCheckService,
-                                      IExecute<CheckHealthCommand>,
-                                      IHandleAsync<ApplicationStartedEvent>,
-                                      IHandleAsync<IEvent>
+    public List<HealthCheck> Results()
     {
-        private readonly IProvideHealthCheck[] _healthChecks;
-        private readonly IProvideHealthCheck[] _startupHealthChecks;
-        private readonly IProvideHealthCheck[] _scheduledHealthChecks;
-        private readonly Dictionary<Type, IEventDrivenHealthCheck[]> _eventDrivenHealthChecks;
-        private readonly IServerSideNotificationService _serverSideNotificationService;
-        private readonly IEventAggregator _eventAggregator;
-        private readonly ICacheManager _cacheManager;
-        private readonly Logger _logger;
+        return _healthCheckResults.Values.ToList();
+    }
 
-        private readonly ICached<HealthCheck> _healthCheckResults;
+    private Dictionary<Type, IEventDrivenHealthCheck[]> GetEventDrivenHealthChecks()
+    {
+        return _healthChecks
+              .SelectMany(h => h.GetType().GetAttributes<CheckOnAttribute>().Select(a =>
+                                                                                    {
+                                                                                        var eventDrivenType = typeof(EventDrivenHealthCheck<>).MakeGenericType(a.EventType);
+                                                                                        var eventDriven = (IEventDrivenHealthCheck)Activator.CreateInstance(eventDrivenType, h, a.Condition);
 
-        public HealthCheckService(IEnumerable<IProvideHealthCheck> healthChecks,
-                                  IServerSideNotificationService serverSideNotificationService,
-                                  IEventAggregator eventAggregator,
-                                  ICacheManager cacheManager,
-                                  Logger logger)
+                                                                                        return Tuple.Create(a.EventType, eventDriven);
+                                                                                    }))
+              .GroupBy(t => t.Item1, t => t.Item2)
+              .ToDictionary(g => g.Key, g => g.ToArray());
+    }
+
+    private void PerformHealthCheck(IProvideHealthCheck[] healthChecks, IEvent message = null)
+    {
+        var results = new List<HealthCheck>();
+
+        foreach (var healthCheck in healthChecks)
         {
-            _healthChecks = healthChecks.ToArray();
-            _serverSideNotificationService = serverSideNotificationService;
-            _eventAggregator = eventAggregator;
-            _cacheManager = cacheManager;
-            _logger = logger;
-
-            _healthCheckResults = _cacheManager.GetCache<HealthCheck>(GetType());
-
-            _startupHealthChecks = _healthChecks.Where(v => v.CheckOnStartup).ToArray();
-            _scheduledHealthChecks = _healthChecks.Where(v => v.CheckOnSchedule).ToArray();
-            _eventDrivenHealthChecks = GetEventDrivenHealthChecks();
-        }
-
-        public List<HealthCheck> Results()
-        {
-            return _healthCheckResults.Values.ToList();
-        }
-
-        private Dictionary<Type, IEventDrivenHealthCheck[]> GetEventDrivenHealthChecks()
-        {
-            return _healthChecks
-                .SelectMany(h => h.GetType().GetAttributes<CheckOnAttribute>().Select(a =>
-                {
-                    var eventDrivenType = typeof(EventDrivenHealthCheck<>).MakeGenericType(a.EventType);
-                    var eventDriven = (IEventDrivenHealthCheck)Activator.CreateInstance(eventDrivenType, h, a.Condition);
-
-                    return Tuple.Create(a.EventType, eventDriven);
-                }))
-                .GroupBy(t => t.Item1, t => t.Item2)
-                .ToDictionary(g => g.Key, g => g.ToArray());
-        }
-
-        private void PerformHealthCheck(IProvideHealthCheck[] healthChecks, IEvent message = null)
-        {
-            var results = new List<HealthCheck>();
-
-            foreach (var healthCheck in healthChecks)
+            if (healthCheck is IProvideHealthCheckWithMessage && message != null)
             {
-                if (healthCheck is IProvideHealthCheckWithMessage && message != null)
-                {
-                    results.Add(((IProvideHealthCheckWithMessage)healthCheck).Check(message));
-                }
-                else
-                {
-                    results.Add(healthCheck.Check());
-                }
-            }
-
-            results.AddRange(_serverSideNotificationService.GetServerChecks());
-
-            foreach (var result in results)
-            {
-                if (result.Type == HealthCheckResult.Ok)
-                {
-                    _healthCheckResults.Remove(result.Source.Name);
-                }
-                else
-                {
-                    if (_healthCheckResults.Find(result.Source.Name) == null)
-                    {
-                        _eventAggregator.PublishEvent(new HealthCheckFailedEvent(result));
-                    }
-
-                    _healthCheckResults.Set(result.Source.Name, result);
-                }
-            }
-
-            _eventAggregator.PublishEvent(new HealthCheckCompleteEvent());
-        }
-
-        public void Execute(CheckHealthCommand message)
-        {
-            if (message.Trigger == CommandTrigger.Manual)
-            {
-                PerformHealthCheck(_healthChecks);
+                results.Add(((IProvideHealthCheckWithMessage)healthCheck).Check(message));
             }
             else
             {
-                PerformHealthCheck(_scheduledHealthChecks);
+                results.Add(healthCheck.Check());
             }
         }
 
-        public void HandleAsync(ApplicationStartedEvent message)
+        results.AddRange(_serverSideNotificationService.GetServerChecks());
+
+        foreach (var result in results)
         {
-            PerformHealthCheck(_startupHealthChecks);
-        }
-
-        public void HandleAsync(IEvent message)
-        {
-            if (message is HealthCheckCompleteEvent)
+            if (result.Type == HealthCheckResult.Ok)
             {
-                return;
+                _healthCheckResults.Remove(result.Source.Name);
             }
-
-            IEventDrivenHealthCheck[] checks;
-            if (!_eventDrivenHealthChecks.TryGetValue(message.GetType(), out checks))
+            else
             {
-                return;
-            }
-
-            var filteredChecks = new List<IProvideHealthCheck>();
-            var healthCheckResults = _healthCheckResults.Values.ToList();
-
-            foreach (var eventDrivenHealthCheck in checks)
-            {
-                var healthCheckType = eventDrivenHealthCheck.HealthCheck.GetType();
-                var previouslyFailed = healthCheckResults.Any(r => r.Source == healthCheckType);
-
-                if (eventDrivenHealthCheck.ShouldExecute(message, previouslyFailed))
+                if (_healthCheckResults.Find(result.Source.Name) == null)
                 {
-                    filteredChecks.Add(eventDrivenHealthCheck.HealthCheck);
-                    continue;
+                    _eventAggregator.PublishEvent(new HealthCheckFailedEvent(result));
                 }
-            }
 
-            // TODO: Add debounce
-            PerformHealthCheck(filteredChecks.ToArray(), message);
+                _healthCheckResults.Set(result.Source.Name, result);
+            }
         }
+
+        _eventAggregator.PublishEvent(new HealthCheckCompleteEvent());
+    }
+
+    public void Execute(CheckHealthCommand message)
+    {
+        if (message.Trigger == CommandTrigger.Manual)
+        {
+            PerformHealthCheck(_healthChecks);
+        }
+        else
+        {
+            PerformHealthCheck(_scheduledHealthChecks);
+        }
+    }
+
+    public void HandleAsync(ApplicationStartedEvent message)
+    {
+        PerformHealthCheck(_startupHealthChecks);
+    }
+
+    public void HandleAsync(IEvent message)
+    {
+        if (message is HealthCheckCompleteEvent)
+        {
+            return;
+        }
+
+        IEventDrivenHealthCheck[] checks;
+        if (!_eventDrivenHealthChecks.TryGetValue(message.GetType(), out checks))
+        {
+            return;
+        }
+
+        var filteredChecks = new List<IProvideHealthCheck>();
+        var healthCheckResults = _healthCheckResults.Values.ToList();
+
+        foreach (var eventDrivenHealthCheck in checks)
+        {
+            var healthCheckType = eventDrivenHealthCheck.HealthCheck.GetType();
+            var previouslyFailed = healthCheckResults.Any(r => r.Source == healthCheckType);
+
+            if (eventDrivenHealthCheck.ShouldExecute(message, previouslyFailed))
+            {
+                filteredChecks.Add(eventDrivenHealthCheck.HealthCheck);
+                continue;
+            }
+        }
+
+        // TODO: Add debounce
+        PerformHealthCheck(filteredChecks.ToArray(), message);
     }
 }

@@ -1,31 +1,30 @@
 using System;
 using System.Net;
 
-namespace Lidarr.Http.Exceptions
+namespace Lidarr.Http.Exceptions;
+
+public abstract class ApiException : Exception
 {
-    public abstract class ApiException : Exception
+    public object Content { get; private set; }
+
+    public HttpStatusCode StatusCode { get; private set; }
+
+    protected ApiException(HttpStatusCode statusCode, object content = null)
+        : base(GetMessage(statusCode, content))
     {
-        public object Content { get; private set; }
+        StatusCode = statusCode;
+        Content = content;
+    }
 
-        public HttpStatusCode StatusCode { get; private set; }
+    private static string GetMessage(HttpStatusCode statusCode, object content)
+    {
+        var result = statusCode.ToString();
 
-        protected ApiException(HttpStatusCode statusCode, object content = null)
-            : base(GetMessage(statusCode, content))
+        if (content != null)
         {
-            StatusCode = statusCode;
-            Content = content;
+            result = $"{result}: {content}";
         }
 
-        private static string GetMessage(HttpStatusCode statusCode, object content)
-        {
-            var result = statusCode.ToString();
-
-            if (content != null)
-            {
-                result = $"{result}: {content}";
-            }
-
-            return result;
-        }
+        return result;
     }
 }

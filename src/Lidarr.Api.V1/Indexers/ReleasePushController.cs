@@ -12,91 +12,90 @@ using NzbDrone.Core.Download;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 
-namespace Lidarr.Api.V1.Indexers
-{
-    [V1ApiController("release/push")]
-    public class ReleasePushController : ReleaseControllerBase
-    {
-        private readonly IMakeDownloadDecision _downloadDecisionMaker;
-        private readonly IProcessDownloadDecisions _downloadDecisionProcessor;
-        private readonly IIndexerFactory _indexerFactory;
-        private readonly Logger _logger;
+namespace Lidarr.Api.V1.Indexers;
 
-        public ReleasePushController(IMakeDownloadDecision downloadDecisionMaker,
+[V1ApiController("release/push")]
+public class ReleasePushController : ReleaseControllerBase
+{
+    private readonly IMakeDownloadDecision _downloadDecisionMaker;
+    private readonly IProcessDownloadDecisions _downloadDecisionProcessor;
+    private readonly IIndexerFactory _indexerFactory;
+    private readonly Logger _logger;
+
+    public ReleasePushController(IMakeDownloadDecision downloadDecisionMaker,
                                  IProcessDownloadDecisions downloadDecisionProcessor,
                                  IIndexerFactory indexerFactory,
                                  Logger logger)
-        {
-            _downloadDecisionMaker = downloadDecisionMaker;
-            _downloadDecisionProcessor = downloadDecisionProcessor;
-            _indexerFactory = indexerFactory;
-            _logger = logger;
+    {
+        _downloadDecisionMaker = downloadDecisionMaker;
+        _downloadDecisionProcessor = downloadDecisionProcessor;
+        _indexerFactory = indexerFactory;
+        _logger = logger;
 
-            PostValidator.RuleFor(s => s.Title).NotEmpty();
-            PostValidator.RuleFor(s => s.DownloadUrl).NotEmpty();
-            PostValidator.RuleFor(s => s.Protocol).NotEmpty();
-            PostValidator.RuleFor(s => s.PublishDate).NotEmpty();
+        PostValidator.RuleFor(s => s.Title).NotEmpty();
+        PostValidator.RuleFor(s => s.DownloadUrl).NotEmpty();
+        PostValidator.RuleFor(s => s.Protocol).NotEmpty();
+        PostValidator.RuleFor(s => s.PublishDate).NotEmpty();
+    }
+
+    [HttpPost]
+    public ActionResult<ReleaseResource> Create(ReleaseResource release)
+    {
+        _logger.Info("Release pushed: {0} - {1}", release.Title, release.DownloadUrl);
+
+        ValidateResource(release);
+
+        var info = release.ToModel();
+
+        info.Guid = "PUSH-" + info.DownloadUrl;
+
+        ResolveIndexer(info);
+
+        var decisions = _downloadDecisionMaker.GetRssDecision(new List<ReleaseInfo> { info });
+        _downloadDecisionProcessor.ProcessDecisions(decisions);
+
+        var firstDecision = decisions.FirstOrDefault();
+
+        if (firstDecision?.RemoteAlbum.ParsedAlbumInfo == null)
+        {
+            throw new ValidationException(new List<ValidationFailure> { new ValidationFailure("Title", "Unable to parse", release.Title) });
         }
 
-        [HttpPost]
-        public ActionResult<ReleaseResource> Create(ReleaseResource release)
+        return MapDecisions(new[] { firstDecision }).First();
+    }
+
+    private void ResolveIndexer(ReleaseInfo release)
+    {
+        if (release.IndexerId == 0 && release.Indexer.IsNotNullOrWhiteSpace())
         {
-            _logger.Info("Release pushed: {0} - {1}", release.Title, release.DownloadUrl);
-
-            ValidateResource(release);
-
-            var info = release.ToModel();
-
-            info.Guid = "PUSH-" + info.DownloadUrl;
-
-            ResolveIndexer(info);
-
-            var decisions = _downloadDecisionMaker.GetRssDecision(new List<ReleaseInfo> { info });
-            _downloadDecisionProcessor.ProcessDecisions(decisions);
-
-            var firstDecision = decisions.FirstOrDefault();
-
-            if (firstDecision?.RemoteAlbum.ParsedAlbumInfo == null)
+            var indexer = _indexerFactory.All().FirstOrDefault(v => v.Name == release.Indexer);
+            if (indexer != null)
             {
-                throw new ValidationException(new List<ValidationFailure> { new ValidationFailure("Title", "Unable to parse", release.Title) });
-            }
-
-            return MapDecisions(new[] { firstDecision }).First();
-        }
-
-        private void ResolveIndexer(ReleaseInfo release)
-        {
-            if (release.IndexerId == 0 && release.Indexer.IsNotNullOrWhiteSpace())
-            {
-                var indexer = _indexerFactory.All().FirstOrDefault(v => v.Name == release.Indexer);
-                if (indexer != null)
-                {
-                    release.IndexerId = indexer.Id;
-                    _logger.Debug("Push Release {0} associated with indexer {1} - {2}.", release.Title, release.IndexerId, release.Indexer);
-                }
-                else
-                {
-                    _logger.Debug("Push Release {0} not associated with unknown indexer {1}.", release.Title, release.Indexer);
-                }
-            }
-            else if (release.IndexerId != 0 && release.Indexer.IsNullOrWhiteSpace())
-            {
-                try
-                {
-                    var indexer = _indexerFactory.Get(release.IndexerId);
-                    release.Indexer = indexer.Name;
-                    _logger.Debug("Push Release {0} associated with indexer {1} - {2}.", release.Title, release.IndexerId, release.Indexer);
-                }
-                catch (ModelNotFoundException)
-                {
-                    _logger.Debug("Push Release {0} not associated with unknown indexer {1}.", release.Title, release.IndexerId);
-                    release.IndexerId = 0;
-                }
+                release.IndexerId = indexer.Id;
+                _logger.Debug("Push Release {0} associated with indexer {1} - {2}.", release.Title, release.IndexerId, release.Indexer);
             }
             else
             {
-                _logger.Debug("Push Release {0} not associated with an indexer.", release.Title);
+                _logger.Debug("Push Release {0} not associated with unknown indexer {1}.", release.Title, release.Indexer);
             }
+        }
+        else if (release.IndexerId != 0 && release.Indexer.IsNullOrWhiteSpace())
+        {
+            try
+            {
+                var indexer = _indexerFactory.Get(release.IndexerId);
+                release.Indexer = indexer.Name;
+                _logger.Debug("Push Release {0} associated with indexer {1} - {2}.", release.Title, release.IndexerId, release.Indexer);
+            }
+            catch (ModelNotFoundException)
+            {
+                _logger.Debug("Push Release {0} not associated with unknown indexer {1}.", release.Title, release.IndexerId);
+                release.IndexerId = 0;
+            }
+        }
+        else
+        {
+            _logger.Debug("Push Release {0} not associated with an indexer.", release.Title);
         }
     }
 }

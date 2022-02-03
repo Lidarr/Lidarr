@@ -3,80 +3,79 @@ using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Music;
 
-namespace NzbDrone.Core.Notifications.Emby
+namespace NzbDrone.Core.Notifications.Emby;
+
+public class MediaBrowser : NotificationBase<MediaBrowserSettings>
 {
-    public class MediaBrowser : NotificationBase<MediaBrowserSettings>
+    private readonly IMediaBrowserService _mediaBrowserService;
+
+    public MediaBrowser(IMediaBrowserService mediaBrowserService)
     {
-        private readonly IMediaBrowserService _mediaBrowserService;
+        _mediaBrowserService = mediaBrowserService;
+    }
 
-        public MediaBrowser(IMediaBrowserService mediaBrowserService)
+    public override string Link => "https://emby.media/";
+    public override string Name => "Emby (Media Browser)";
+
+    public override void OnGrab(GrabMessage grabMessage)
+    {
+        if (Settings.Notify)
         {
-            _mediaBrowserService = mediaBrowserService;
+            _mediaBrowserService.Notify(Settings, ALBUM_GRABBED_TITLE_BRANDED, grabMessage.Message);
+        }
+    }
+
+    public override void OnReleaseImport(AlbumDownloadMessage message)
+    {
+        if (Settings.Notify)
+        {
+            _mediaBrowserService.Notify(Settings, ALBUM_DOWNLOADED_TITLE_BRANDED, message.Message);
         }
 
-        public override string Link => "https://emby.media/";
-        public override string Name => "Emby (Media Browser)";
-
-        public override void OnGrab(GrabMessage grabMessage)
+        if (Settings.UpdateLibrary)
         {
-            if (Settings.Notify)
-            {
-                _mediaBrowserService.Notify(Settings, ALBUM_GRABBED_TITLE_BRANDED, grabMessage.Message);
-            }
+            _mediaBrowserService.Update(Settings, message.Artist);
         }
+    }
 
-        public override void OnReleaseImport(AlbumDownloadMessage message)
+    public override void OnRename(Artist artist)
+    {
+        if (Settings.UpdateLibrary)
         {
-            if (Settings.Notify)
-            {
-                _mediaBrowserService.Notify(Settings, ALBUM_DOWNLOADED_TITLE_BRANDED, message.Message);
-            }
-
-            if (Settings.UpdateLibrary)
-            {
-                _mediaBrowserService.Update(Settings, message.Artist);
-            }
+            _mediaBrowserService.Update(Settings, artist);
         }
+    }
 
-        public override void OnRename(Artist artist)
+    public override void OnHealthIssue(HealthCheck.HealthCheck message)
+    {
+        if (Settings.Notify)
         {
-            if (Settings.UpdateLibrary)
-            {
-                _mediaBrowserService.Update(Settings, artist);
-            }
+            _mediaBrowserService.Notify(Settings, HEALTH_ISSUE_TITLE_BRANDED, message.Message);
         }
+    }
 
-        public override void OnHealthIssue(HealthCheck.HealthCheck message)
+    public override void OnTrackRetag(TrackRetagMessage message)
+    {
+        if (Settings.Notify)
         {
-            if (Settings.Notify)
-            {
-                _mediaBrowserService.Notify(Settings, HEALTH_ISSUE_TITLE_BRANDED, message.Message);
-            }
+            _mediaBrowserService.Notify(Settings, TRACK_RETAGGED_TITLE_BRANDED, message.Message);
         }
+    }
 
-        public override void OnTrackRetag(TrackRetagMessage message)
+    public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
+    {
+        if (Settings.Notify)
         {
-            if (Settings.Notify)
-            {
-                _mediaBrowserService.Notify(Settings, TRACK_RETAGGED_TITLE_BRANDED, message.Message);
-            }
+            _mediaBrowserService.Notify(Settings, APPLICATION_UPDATE_TITLE_BRANDED, updateMessage.Message);
         }
+    }
 
-        public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
-        {
-            if (Settings.Notify)
-            {
-                _mediaBrowserService.Notify(Settings, APPLICATION_UPDATE_TITLE_BRANDED, updateMessage.Message);
-            }
-        }
+    public override ValidationResult Test()
+    {
+        var failures = new List<ValidationFailure>();
 
-        public override ValidationResult Test()
-        {
-            var failures = new List<ValidationFailure>();
+        failures.AddIfNotNull(_mediaBrowserService.Test(Settings));
 
-            failures.AddIfNotNull(_mediaBrowserService.Test(Settings));
-
-            return new ValidationResult(failures);
-        }
+        return new ValidationResult(failures);
     }
 }

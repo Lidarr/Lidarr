@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Net;
 
-namespace NzbDrone.Common.Http
+namespace NzbDrone.Common.Http;
+
+public class GZipWebClient : WebClient
 {
-    public class GZipWebClient : WebClient
+    protected override WebRequest GetWebRequest(Uri address)
     {
-        protected override WebRequest GetWebRequest(Uri address)
-        {
-            var request = (HttpWebRequest)base.GetWebRequest(address);
-            request.AutomaticDecompression = DecompressionMethods.GZip;
-            return request;
-        }
+        var request = (HttpWebRequest)base.GetWebRequest(address);
+        request.AutomaticDecompression = DecompressionMethods.GZip;
+        return request;
     }
 }

@@ -4,73 +4,72 @@ using System.Linq;
 using NLog;
 using NzbDrone.Core.MediaFiles;
 
-namespace NzbDrone.Core.Music
+namespace NzbDrone.Core.Music;
+
+public interface IRefreshTrackService
 {
-    public interface IRefreshTrackService
+    bool RefreshTrackInfo(List<Track> add, List<Track> update, List<Tuple<Track, Track>> merge, List<Track> delete, List<Track> upToDate, List<Track> remoteTracks, bool forceUpdateFileTags);
+}
+
+public class RefreshTrackService : IRefreshTrackService
+{
+    private readonly ITrackService _trackService;
+    private readonly IAudioTagService _audioTagService;
+    private readonly Logger _logger;
+
+    public RefreshTrackService(ITrackService trackService,
+                               IAudioTagService audioTagService,
+                               Logger logger)
     {
-        bool RefreshTrackInfo(List<Track> add, List<Track> update, List<Tuple<Track, Track>> merge, List<Track> delete, List<Track> upToDate, List<Track> remoteTracks, bool forceUpdateFileTags);
+        _trackService = trackService;
+        _audioTagService = audioTagService;
+        _logger = logger;
     }
 
-    public class RefreshTrackService : IRefreshTrackService
+    public bool RefreshTrackInfo(List<Track> add, List<Track> update, List<Tuple<Track, Track>> merge, List<Track> delete, List<Track> upToDate, List<Track> remoteTracks, bool forceUpdateFileTags)
     {
-        private readonly ITrackService _trackService;
-        private readonly IAudioTagService _audioTagService;
-        private readonly Logger _logger;
+        var updateList = new List<Track>();
 
-        public RefreshTrackService(ITrackService trackService,
-                                   IAudioTagService audioTagService,
-                                   Logger logger)
+        // for tracks that need updating, just grab the remote track and set db ids
+        foreach (var track in update)
         {
-            _trackService = trackService;
-            _audioTagService = audioTagService;
-            _logger = logger;
+            var remoteTrack = remoteTracks.Single(e => e.ForeignTrackId == track.ForeignTrackId);
+            track.UseMetadataFrom(remoteTrack);
+
+            // make sure title is not null
+            track.Title = track.Title ?? "Unknown";
+            updateList.Add(track);
         }
 
-        public bool RefreshTrackInfo(List<Track> add, List<Track> update, List<Tuple<Track, Track>> merge, List<Track> delete, List<Track> upToDate, List<Track> remoteTracks, bool forceUpdateFileTags)
+        // Move trackfiles from merged entities into new one
+        foreach (var item in merge)
         {
-            var updateList = new List<Track>();
+            var trackToMerge = item.Item1;
+            var mergeTarget = item.Item2;
 
-            // for tracks that need updating, just grab the remote track and set db ids
-            foreach (var track in update)
+            if (mergeTarget.TrackFileId == 0)
             {
-                var remoteTrack = remoteTracks.Single(e => e.ForeignTrackId == track.ForeignTrackId);
-                track.UseMetadataFrom(remoteTrack);
-
-                // make sure title is not null
-                track.Title = track.Title ?? "Unknown";
-                updateList.Add(track);
+                mergeTarget.TrackFileId = trackToMerge.TrackFileId;
             }
 
-            // Move trackfiles from merged entities into new one
-            foreach (var item in merge)
+            if (!updateList.Contains(mergeTarget))
             {
-                var trackToMerge = item.Item1;
-                var mergeTarget = item.Item2;
-
-                if (mergeTarget.TrackFileId == 0)
-                {
-                    mergeTarget.TrackFileId = trackToMerge.TrackFileId;
-                }
-
-                if (!updateList.Contains(mergeTarget))
-                {
-                    updateList.Add(mergeTarget);
-                }
+                updateList.Add(mergeTarget);
             }
-
-            _trackService.DeleteMany(delete.Concat(merge.Select(x => x.Item1)).ToList());
-            _trackService.UpdateMany(updateList);
-
-            var tagsToUpdate = updateList;
-            if (forceUpdateFileTags)
-            {
-                _logger.Debug("Forcing tag update due to Artist/Album/Release updates");
-                tagsToUpdate = updateList.Concat(upToDate).ToList();
-            }
-
-            _audioTagService.SyncTags(tagsToUpdate);
-
-            return add.Any() || delete.Any() || updateList.Any() || merge.Any();
         }
+
+        _trackService.DeleteMany(delete.Concat(merge.Select(x => x.Item1)).ToList());
+        _trackService.UpdateMany(updateList);
+
+        var tagsToUpdate = updateList;
+        if (forceUpdateFileTags)
+        {
+            _logger.Debug("Forcing tag update due to Artist/Album/Release updates");
+            tagsToUpdate = updateList.Concat(upToDate).ToList();
+        }
+
+        _audioTagService.SyncTags(tagsToUpdate);
+
+        return add.Any() || delete.Any() || updateList.Any() || merge.Any();
     }
 }

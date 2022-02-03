@@ -18,333 +18,332 @@ using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Core.Test.MediaFiles
+namespace NzbDrone.Core.Test.MediaFiles;
+
+[TestFixture]
+public class DownloadedTracksImportServiceFixture : FileSystemTest<DownloadedTracksImportService>
 {
-    [TestFixture]
-    public class DownloadedTracksImportServiceFixture : FileSystemTest<DownloadedTracksImportService>
+    private string _droneFactory = "c:\\drop\\".AsOsAgnostic();
+    private string[] _subFolders = new[] { "c:\\drop\\foldername".AsOsAgnostic() };
+    private string[] _audioFiles = new[] { "c:\\drop\\foldername\\01 the first track.ext".AsOsAgnostic() };
+
+    private TrackedDownload _trackedDownload;
+
+    [SetUp]
+    public void Setup()
     {
-        private string _droneFactory = "c:\\drop\\".AsOsAgnostic();
-        private string[] _subFolders = new[] { "c:\\drop\\foldername".AsOsAgnostic() };
-        private string[] _audioFiles = new[] { "c:\\drop\\foldername\\01 the first track.ext".AsOsAgnostic() };
+        GivenAudioFiles(_audioFiles, 10);
 
-        private TrackedDownload _trackedDownload;
+        Mocker.GetMock<IDiskScanService>().Setup(c => c.GetAudioFiles(It.IsAny<string>(), It.IsAny<bool>()))
+              .Returns(_audioFiles.Select(x => DiskProvider.GetFileInfo(x)).ToArray());
 
-        [SetUp]
-        public void Setup()
+        Mocker.GetMock<IDiskScanService>().Setup(c => c.FilterFiles(It.IsAny<string>(), It.IsAny<IEnumerable<IFileInfo>>()))
+              .Returns<string, IEnumerable<IFileInfo>>((b, s) => s.ToList());
+
+        Mocker.GetMock<IImportApprovedTracks>()
+              .Setup(s => s.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), true, null, ImportMode.Auto))
+              .Returns(new List<ImportResult>());
+
+        var downloadItem = Builder<DownloadClientItem>.CreateNew()
+                                                      .With(v => v.DownloadId = "sab1")
+                                                      .With(v => v.Status = DownloadItemStatus.Downloading)
+                                                      .Build();
+
+        var remoteAlbum = Builder<RemoteAlbum>.CreateNew()
+                                              .With(v => v.Artist = new Artist())
+                                              .Build();
+
+        _trackedDownload = new TrackedDownload
+                           {
+                               DownloadItem = downloadItem,
+                               RemoteAlbum = remoteAlbum,
+                               State = TrackedDownloadState.Downloading
+                           };
+    }
+
+    private void GivenAudioFiles(string[] files, long filesize)
+    {
+        foreach (var file in files)
         {
-            GivenAudioFiles(_audioFiles, 10);
+            FileSystem.AddFile(file, new MockFileData("".PadRight((int)filesize)));
+        }
+    }
 
-            Mocker.GetMock<IDiskScanService>().Setup(c => c.GetAudioFiles(It.IsAny<string>(), It.IsAny<bool>()))
-                .Returns(_audioFiles.Select(x => DiskProvider.GetFileInfo(x)).ToArray());
+    private void GivenValidArtist()
+    {
+        Mocker.GetMock<IParsingService>()
+              .Setup(s => s.GetArtist(It.IsAny<string>()))
+              .Returns(Builder<Artist>.CreateNew().Build());
+    }
 
-            Mocker.GetMock<IDiskScanService>().Setup(c => c.FilterFiles(It.IsAny<string>(), It.IsAny<IEnumerable<IFileInfo>>()))
-                  .Returns<string, IEnumerable<IFileInfo>>((b, s) => s.ToList());
+    private void GivenSuccessfulImport()
+    {
+        var localTrack = new LocalTrack();
 
-            Mocker.GetMock<IImportApprovedTracks>()
-                  .Setup(s => s.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), true, null, ImportMode.Auto))
-                  .Returns(new List<ImportResult>());
+        var imported = new List<ImportDecision<LocalTrack>>();
+        imported.Add(new ImportDecision<LocalTrack>(localTrack));
 
-            var downloadItem = Builder<DownloadClientItem>.CreateNew()
-                .With(v => v.DownloadId = "sab1")
-                .With(v => v.Status = DownloadItemStatus.Downloading)
-                .Build();
+        Mocker.GetMock<IMakeImportDecision>()
+              .Setup(v => v.GetImportDecisions(It.IsAny<List<IFileInfo>>(), It.IsAny<IdentificationOverrides>(), It.IsAny<ImportDecisionMakerInfo>(), It.IsAny<ImportDecisionMakerConfig>()))
+              .Returns(imported);
 
-            var remoteAlbum = Builder<RemoteAlbum>.CreateNew()
-                .With(v => v.Artist = new Artist())
-                .Build();
+        Mocker.GetMock<IImportApprovedTracks>()
+              .Setup(s => s.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), It.IsAny<bool>(), It.IsAny<DownloadClientItem>(), It.IsAny<ImportMode>()))
+              .Returns(imported.Select(i => new ImportResult(i)).ToList())
+              .Callback(() => WasImportedResponse());
+    }
 
-            _trackedDownload = new TrackedDownload
-            {
-                DownloadItem = downloadItem,
-                RemoteAlbum = remoteAlbum,
-                State = TrackedDownloadState.Downloading
-            };
+    private void WasImportedResponse()
+    {
+        Mocker.GetMock<IDiskScanService>().Setup(c => c.GetAudioFiles(It.IsAny<string>(), It.IsAny<bool>()))
+              .Returns(new IFileInfo[0]);
+    }
+
+    [Test]
+    public void should_search_for_artist_using_folder_name()
+    {
+        Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
+
+        Mocker.GetMock<IParsingService>().Verify(c => c.GetArtist("foldername"), Times.Once());
+    }
+
+    [Test]
+    public void should_skip_if_file_is_in_use_by_another_process()
+    {
+        GivenValidArtist();
+
+        foreach (var file in _audioFiles)
+        {
+            FileSystem.AddFile(file, new MockFileData("".PadRight(10)) { AllowedFileShare = FileShare.None });
         }
 
-        private void GivenAudioFiles(string[] files, long filesize)
-        {
-            foreach (var file in files)
-            {
-                FileSystem.AddFile(file, new MockFileData("".PadRight((int)filesize)));
-            }
-        }
-
-        private void GivenValidArtist()
-        {
-            Mocker.GetMock<IParsingService>()
-                  .Setup(s => s.GetArtist(It.IsAny<string>()))
-                  .Returns(Builder<Artist>.CreateNew().Build());
-        }
-
-        private void GivenSuccessfulImport()
-        {
-            var localTrack = new LocalTrack();
-
-            var imported = new List<ImportDecision<LocalTrack>>();
-            imported.Add(new ImportDecision<LocalTrack>(localTrack));
-
-            Mocker.GetMock<IMakeImportDecision>()
-                  .Setup(v => v.GetImportDecisions(It.IsAny<List<IFileInfo>>(), It.IsAny<IdentificationOverrides>(), It.IsAny<ImportDecisionMakerInfo>(), It.IsAny<ImportDecisionMakerConfig>()))
-                  .Returns(imported);
-
-            Mocker.GetMock<IImportApprovedTracks>()
-                  .Setup(s => s.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), It.IsAny<bool>(), It.IsAny<DownloadClientItem>(), It.IsAny<ImportMode>()))
-                  .Returns(imported.Select(i => new ImportResult(i)).ToList())
-                  .Callback(() => WasImportedResponse());
-        }
-
-        private void WasImportedResponse()
-        {
-            Mocker.GetMock<IDiskScanService>().Setup(c => c.GetAudioFiles(It.IsAny<string>(), It.IsAny<bool>()))
-                  .Returns(new IFileInfo[0]);
-        }
-
-        [Test]
-        public void should_search_for_artist_using_folder_name()
-        {
-            Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
-
-            Mocker.GetMock<IParsingService>().Verify(c => c.GetArtist("foldername"), Times.Once());
-        }
-
-        [Test]
-        public void should_skip_if_file_is_in_use_by_another_process()
-        {
-            GivenValidArtist();
-
-            foreach (var file in _audioFiles)
-            {
-                FileSystem.AddFile(file, new MockFileData("".PadRight(10)) { AllowedFileShare = FileShare.None });
-            }
-
-            Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
-
-            VerifyNoImport();
-        }
+        Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
 
-        [Test]
-        public void should_skip_if_no_artist_found()
-        {
-            Mocker.GetMock<IParsingService>().Setup(c => c.GetArtist("foldername")).Returns((Artist)null);
-
-            Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
-
-            Mocker.GetMock<IMakeImportDecision>()
-                  .Verify(c => c.GetImportDecisions(It.IsAny<List<IFileInfo>>(), It.IsAny<IdentificationOverrides>(), It.IsAny<ImportDecisionMakerInfo>(), It.IsAny<ImportDecisionMakerConfig>()),
-                          Times.Never());
-
-            VerifyNoImport();
-        }
-
-        [Test]
-        public void should_not_import_if_folder_is_a_artist_path()
-        {
-            GivenValidArtist();
-
-            Mocker.GetMock<IArtistService>()
-                  .Setup(s => s.ArtistPathExists(It.IsAny<string>()))
-                  .Returns(true);
-
-            Mocker.GetMock<IDiskScanService>()
-                  .Setup(c => c.GetAudioFiles(It.IsAny<string>(), It.IsAny<bool>()))
-                  .Returns(new IFileInfo[0]);
+        VerifyNoImport();
+    }
 
-            Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
+    [Test]
+    public void should_skip_if_no_artist_found()
+    {
+        Mocker.GetMock<IParsingService>().Setup(c => c.GetArtist("foldername")).Returns((Artist)null);
 
-            Mocker.GetMock<IDiskScanService>()
-                  .Verify(v => v.GetAudioFiles(It.IsAny<string>(), true), Times.Never());
+        Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
 
-            ExceptionVerification.ExpectedWarns(1);
-        }
+        Mocker.GetMock<IMakeImportDecision>()
+              .Verify(c => c.GetImportDecisions(It.IsAny<List<IFileInfo>>(), It.IsAny<IdentificationOverrides>(), It.IsAny<ImportDecisionMakerInfo>(), It.IsAny<ImportDecisionMakerConfig>()),
+                      Times.Never());
 
-        [Test]
-        public void should_not_delete_folder_if_no_files_were_imported()
-        {
-            Mocker.GetMock<IImportApprovedTracks>()
-                  .Setup(s => s.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), false, null, ImportMode.Auto))
-                  .Returns(new List<ImportResult>());
+        VerifyNoImport();
+    }
 
-            Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
+    [Test]
+    public void should_not_import_if_folder_is_a_artist_path()
+    {
+        GivenValidArtist();
 
-            Mocker.GetMock<IDiskProvider>()
-                  .Verify(v => v.GetFolderSize(It.IsAny<string>()), Times.Never());
-        }
+        Mocker.GetMock<IArtistService>()
+              .Setup(s => s.ArtistPathExists(It.IsAny<string>()))
+              .Returns(true);
 
-        [Test]
-        public void should_not_delete_folder_if_files_were_imported_and_audio_files_remain()
-        {
-            GivenValidArtist();
+        Mocker.GetMock<IDiskScanService>()
+              .Setup(c => c.GetAudioFiles(It.IsAny<string>(), It.IsAny<bool>()))
+              .Returns(new IFileInfo[0]);
 
-            var localTrack = new LocalTrack();
+        Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
 
-            var imported = new List<ImportDecision<LocalTrack>>();
-            imported.Add(new ImportDecision<LocalTrack>(localTrack));
+        Mocker.GetMock<IDiskScanService>()
+              .Verify(v => v.GetAudioFiles(It.IsAny<string>(), true), Times.Never());
 
-            Mocker.GetMock<IMakeImportDecision>()
-                  .Setup(v => v.GetImportDecisions(It.IsAny<List<IFileInfo>>(), It.IsAny<IdentificationOverrides>(), It.IsAny<ImportDecisionMakerInfo>(), It.IsAny<ImportDecisionMakerConfig>()))
-                  .Returns(imported);
+        ExceptionVerification.ExpectedWarns(1);
+    }
 
-            Mocker.GetMock<IImportApprovedTracks>()
-                  .Setup(s => s.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), true, null, ImportMode.Auto))
-                  .Returns(imported.Select(i => new ImportResult(i)).ToList());
+    [Test]
+    public void should_not_delete_folder_if_no_files_were_imported()
+    {
+        Mocker.GetMock<IImportApprovedTracks>()
+              .Setup(s => s.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), false, null, ImportMode.Auto))
+              .Returns(new List<ImportResult>());
 
-            Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
+        Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
 
-            Mocker.GetMock<IDiskProvider>()
-                  .Verify(v => v.DeleteFolder(It.IsAny<string>(), true), Times.Never());
+        Mocker.GetMock<IDiskProvider>()
+              .Verify(v => v.GetFolderSize(It.IsAny<string>()), Times.Never());
+    }
 
-            ExceptionVerification.ExpectedWarns(1);
-        }
+    [Test]
+    public void should_not_delete_folder_if_files_were_imported_and_audio_files_remain()
+    {
+        GivenValidArtist();
 
-        [TestCase("_UNPACK_")]
-        [TestCase("_FAILED_")]
-        public void should_remove_unpack_from_folder_name(string prefix)
-        {
-            var folderName = "Alien Ant Farm - Truant (2003)";
-            FileSystem.AddDirectory(string.Format(@"C:\drop\{0}{1}", prefix, folderName).AsOsAgnostic());
+        var localTrack = new LocalTrack();
 
-            Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
+        var imported = new List<ImportDecision<LocalTrack>>();
+        imported.Add(new ImportDecision<LocalTrack>(localTrack));
 
-            Mocker.GetMock<IParsingService>()
-                .Verify(v => v.GetArtist(folderName), Times.Once());
+        Mocker.GetMock<IMakeImportDecision>()
+              .Setup(v => v.GetImportDecisions(It.IsAny<List<IFileInfo>>(), It.IsAny<IdentificationOverrides>(), It.IsAny<ImportDecisionMakerInfo>(), It.IsAny<ImportDecisionMakerConfig>()))
+              .Returns(imported);
 
-            Mocker.GetMock<IParsingService>()
-                .Verify(v => v.GetArtist(It.Is<string>(s => s.StartsWith(prefix))), Times.Never());
-        }
+        Mocker.GetMock<IImportApprovedTracks>()
+              .Setup(s => s.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), true, null, ImportMode.Auto))
+              .Returns(imported.Select(i => new ImportResult(i)).ToList());
 
-        [Test]
-        public void should_return_importresult_on_unknown_artist()
-        {
-            var fileName = @"C:\folder\file.mkv".AsOsAgnostic();
-            FileSystem.AddFile(fileName, new MockFileData(string.Empty));
+        Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
 
-            var result = Subject.ProcessPath(fileName);
+        Mocker.GetMock<IDiskProvider>()
+              .Verify(v => v.DeleteFolder(It.IsAny<string>(), true), Times.Never());
 
-            result.Should().HaveCount(1);
-            result.First().ImportDecision.Should().NotBeNull();
-            result.First().ImportDecision.Item.Should().NotBeNull();
-            result.First().ImportDecision.Item.Path.Should().Be(fileName);
-            result.First().Result.Should().Be(ImportResultType.Rejected);
-        }
+        ExceptionVerification.ExpectedWarns(1);
+    }
 
-        [Test]
-        public void should_not_delete_if_there_is_large_rar_file()
-        {
-            GivenValidArtist();
+    [TestCase("_UNPACK_")]
+    [TestCase("_FAILED_")]
+    public void should_remove_unpack_from_folder_name(string prefix)
+    {
+        var folderName = "Alien Ant Farm - Truant (2003)";
+        FileSystem.AddDirectory(string.Format(@"C:\drop\{0}{1}", prefix, folderName).AsOsAgnostic());
 
-            var localTrack = new LocalTrack();
+        Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
 
-            var imported = new List<ImportDecision<LocalTrack>>();
-            imported.Add(new ImportDecision<LocalTrack>(localTrack));
+        Mocker.GetMock<IParsingService>()
+              .Verify(v => v.GetArtist(folderName), Times.Once());
 
-            Mocker.GetMock<IMakeImportDecision>()
-                  .Setup(v => v.GetImportDecisions(It.IsAny<List<IFileInfo>>(), It.IsAny<IdentificationOverrides>(), It.IsAny<ImportDecisionMakerInfo>(), It.IsAny<ImportDecisionMakerConfig>()))
-                  .Returns(imported);
+        Mocker.GetMock<IParsingService>()
+              .Verify(v => v.GetArtist(It.Is<string>(s => s.StartsWith(prefix))), Times.Never());
+    }
 
-            Mocker.GetMock<IImportApprovedTracks>()
-                  .Setup(s => s.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), true, null, ImportMode.Auto))
-                  .Returns(imported.Select(i => new ImportResult(i)).ToList());
+    [Test]
+    public void should_return_importresult_on_unknown_artist()
+    {
+        var fileName = @"C:\folder\file.mkv".AsOsAgnostic();
+        FileSystem.AddFile(fileName, new MockFileData(string.Empty));
 
-            GivenAudioFiles(new[] { _audioFiles.First().Replace(".ext", ".rar") }, 15.Megabytes());
+        var result = Subject.ProcessPath(fileName);
 
-            Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
+        result.Should().HaveCount(1);
+        result.First().ImportDecision.Should().NotBeNull();
+        result.First().ImportDecision.Item.Should().NotBeNull();
+        result.First().ImportDecision.Item.Path.Should().Be(fileName);
+        result.First().Result.Should().Be(ImportResultType.Rejected);
+    }
 
-            DiskProvider.FolderExists(_subFolders[0]).Should().BeTrue();
+    [Test]
+    public void should_not_delete_if_there_is_large_rar_file()
+    {
+        GivenValidArtist();
 
-            ExceptionVerification.ExpectedWarns(1);
-        }
+        var localTrack = new LocalTrack();
 
-        [Test]
-        public void should_not_process_if_file_and_folder_do_not_exist()
-        {
-            var folderName = @"C:\media\ba09030e-1234-1234-1234-123456789abc\[HorribleSubs] Maria the Virgin Witch - 09 [720p]".AsOsAgnostic();
+        var imported = new List<ImportDecision<LocalTrack>>();
+        imported.Add(new ImportDecision<LocalTrack>(localTrack));
 
-            Subject.ProcessPath(folderName).Should().BeEmpty();
+        Mocker.GetMock<IMakeImportDecision>()
+              .Setup(v => v.GetImportDecisions(It.IsAny<List<IFileInfo>>(), It.IsAny<IdentificationOverrides>(), It.IsAny<ImportDecisionMakerInfo>(), It.IsAny<ImportDecisionMakerConfig>()))
+              .Returns(imported);
 
-            Mocker.GetMock<IParsingService>()
-                .Verify(v => v.GetArtist(It.IsAny<string>()), Times.Never());
+        Mocker.GetMock<IImportApprovedTracks>()
+              .Setup(s => s.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), true, null, ImportMode.Auto))
+              .Returns(imported.Select(i => new ImportResult(i)).ToList());
 
-            ExceptionVerification.ExpectedErrors(1);
-        }
+        GivenAudioFiles(new[] { _audioFiles.First().Replace(".ext", ".rar") }, 15.Megabytes());
 
-        [Test]
-        public void should_not_delete_if_no_files_were_imported()
-        {
-            GivenValidArtist();
+        Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
 
-            var localTrack = new LocalTrack();
+        DiskProvider.FolderExists(_subFolders[0]).Should().BeTrue();
 
-            var imported = new List<ImportDecision<LocalTrack>>();
-            imported.Add(new ImportDecision<LocalTrack>(localTrack));
+        ExceptionVerification.ExpectedWarns(1);
+    }
 
-            Mocker.GetMock<IMakeImportDecision>()
-                  .Setup(v => v.GetImportDecisions(It.IsAny<List<IFileInfo>>(), It.IsAny<IdentificationOverrides>(), It.IsAny<ImportDecisionMakerInfo>(), It.IsAny<ImportDecisionMakerConfig>()))
-                  .Returns(imported);
+    [Test]
+    public void should_not_process_if_file_and_folder_do_not_exist()
+    {
+        var folderName = @"C:\media\ba09030e-1234-1234-1234-123456789abc\[HorribleSubs] Maria the Virgin Witch - 09 [720p]".AsOsAgnostic();
 
-            Mocker.GetMock<IImportApprovedTracks>()
-                  .Setup(s => s.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), true, null, ImportMode.Auto))
-                  .Returns(new List<ImportResult>());
+        Subject.ProcessPath(folderName).Should().BeEmpty();
 
-            Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
+        Mocker.GetMock<IParsingService>()
+              .Verify(v => v.GetArtist(It.IsAny<string>()), Times.Never());
 
-            DiskProvider.FolderExists(_subFolders[0]).Should().BeTrue();
+        ExceptionVerification.ExpectedErrors(1);
+    }
 
-            Mocker.GetMock<IDiskProvider>()
-                  .Verify(v => v.DeleteFolder(It.IsAny<string>(), true), Times.Never());
-        }
+    [Test]
+    public void should_not_delete_if_no_files_were_imported()
+    {
+        GivenValidArtist();
 
-        [Test]
-        public void should_not_delete_folder_after_import()
-        {
-            GivenValidArtist();
+        var localTrack = new LocalTrack();
 
-            GivenSuccessfulImport();
+        var imported = new List<ImportDecision<LocalTrack>>();
+        imported.Add(new ImportDecision<LocalTrack>(localTrack));
 
-            _trackedDownload.DownloadItem.CanMoveFiles = false;
+        Mocker.GetMock<IMakeImportDecision>()
+              .Setup(v => v.GetImportDecisions(It.IsAny<List<IFileInfo>>(), It.IsAny<IdentificationOverrides>(), It.IsAny<ImportDecisionMakerInfo>(), It.IsAny<ImportDecisionMakerConfig>()))
+              .Returns(imported);
 
-            Subject.ProcessPath(_droneFactory, ImportMode.Auto, _trackedDownload.RemoteAlbum.Artist, _trackedDownload.DownloadItem);
+        Mocker.GetMock<IImportApprovedTracks>()
+              .Setup(s => s.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), true, null, ImportMode.Auto))
+              .Returns(new List<ImportResult>());
 
-            DiskProvider.FolderExists(_subFolders[0]).Should().BeTrue();
-        }
+        Subject.ProcessRootFolder(DiskProvider.GetDirectoryInfo(_droneFactory));
 
-        [Test]
-        public void should_delete_folder_if_importmode_move()
-        {
-            GivenValidArtist();
+        DiskProvider.FolderExists(_subFolders[0]).Should().BeTrue();
 
-            GivenSuccessfulImport();
+        Mocker.GetMock<IDiskProvider>()
+              .Verify(v => v.DeleteFolder(It.IsAny<string>(), true), Times.Never());
+    }
 
-            _trackedDownload.DownloadItem.CanMoveFiles = false;
+    [Test]
+    public void should_not_delete_folder_after_import()
+    {
+        GivenValidArtist();
 
-            Subject.ProcessPath(_droneFactory, ImportMode.Move, _trackedDownload.RemoteAlbum.Artist, _trackedDownload.DownloadItem);
+        GivenSuccessfulImport();
 
-            DiskProvider.FolderExists(_subFolders[0]).Should().BeFalse();
-        }
+        _trackedDownload.DownloadItem.CanMoveFiles = false;
 
-        [Test]
-        public void should_not_delete_folder_if_importmode_copy()
-        {
-            GivenValidArtist();
+        Subject.ProcessPath(_droneFactory, ImportMode.Auto, _trackedDownload.RemoteAlbum.Artist, _trackedDownload.DownloadItem);
 
-            GivenSuccessfulImport();
+        DiskProvider.FolderExists(_subFolders[0]).Should().BeTrue();
+    }
 
-            _trackedDownload.DownloadItem.CanMoveFiles = true;
+    [Test]
+    public void should_delete_folder_if_importmode_move()
+    {
+        GivenValidArtist();
 
-            Subject.ProcessPath(_droneFactory, ImportMode.Copy, _trackedDownload.RemoteAlbum.Artist, _trackedDownload.DownloadItem);
+        GivenSuccessfulImport();
 
-            DiskProvider.FolderExists(_subFolders[0]).Should().BeTrue();
-        }
+        _trackedDownload.DownloadItem.CanMoveFiles = false;
 
-        private void VerifyNoImport()
-        {
-            Mocker.GetMock<IImportApprovedTracks>().Verify(c => c.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), true, null, ImportMode.Auto),
-                Times.Never());
-        }
+        Subject.ProcessPath(_droneFactory, ImportMode.Move, _trackedDownload.RemoteAlbum.Artist, _trackedDownload.DownloadItem);
 
-        private void VerifyImport()
-        {
-            Mocker.GetMock<IImportApprovedTracks>().Verify(c => c.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), true, null, ImportMode.Auto),
-                Times.Once());
-        }
+        DiskProvider.FolderExists(_subFolders[0]).Should().BeFalse();
+    }
+
+    [Test]
+    public void should_not_delete_folder_if_importmode_copy()
+    {
+        GivenValidArtist();
+
+        GivenSuccessfulImport();
+
+        _trackedDownload.DownloadItem.CanMoveFiles = true;
+
+        Subject.ProcessPath(_droneFactory, ImportMode.Copy, _trackedDownload.RemoteAlbum.Artist, _trackedDownload.DownloadItem);
+
+        DiskProvider.FolderExists(_subFolders[0]).Should().BeTrue();
+    }
+
+    private void VerifyNoImport()
+    {
+        Mocker.GetMock<IImportApprovedTracks>().Verify(c => c.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), true, null, ImportMode.Auto),
+                                                       Times.Never());
+    }
+
+    private void VerifyImport()
+    {
+        Mocker.GetMock<IImportApprovedTracks>().Verify(c => c.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), true, null, ImportMode.Auto),
+                                                       Times.Once());
     }
 }

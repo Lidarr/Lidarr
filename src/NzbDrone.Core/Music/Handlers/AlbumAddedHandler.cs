@@ -3,34 +3,33 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music.Commands;
 using NzbDrone.Core.Music.Events;
 
-namespace NzbDrone.Core.Music
+namespace NzbDrone.Core.Music;
+
+public class AlbumAddedHandler : IHandle<AlbumAddedEvent>
 {
-    public class AlbumAddedHandler : IHandle<AlbumAddedEvent>
+    private readonly ICheckIfArtistShouldBeRefreshed _checkIfArtistShouldBeRefreshed;
+    private readonly IManageCommandQueue _commandQueueManager;
+
+    public AlbumAddedHandler(ICheckIfArtistShouldBeRefreshed checkIfArtistShouldBeRefreshed,
+                             IManageCommandQueue commandQueueManager)
     {
-        private readonly ICheckIfArtistShouldBeRefreshed _checkIfArtistShouldBeRefreshed;
-        private readonly IManageCommandQueue _commandQueueManager;
+        _checkIfArtistShouldBeRefreshed = checkIfArtistShouldBeRefreshed;
+        _commandQueueManager = commandQueueManager;
+    }
 
-        public AlbumAddedHandler(ICheckIfArtistShouldBeRefreshed checkIfArtistShouldBeRefreshed,
-                                 IManageCommandQueue commandQueueManager)
+    public void Handle(AlbumAddedEvent message)
+    {
+        if (message.DoRefresh)
         {
-            _checkIfArtistShouldBeRefreshed = checkIfArtistShouldBeRefreshed;
-            _commandQueueManager = commandQueueManager;
-        }
+            var artist = message.Album.Artist.Value;
 
-        public void Handle(AlbumAddedEvent message)
-        {
-            if (message.DoRefresh)
+            if (_checkIfArtistShouldBeRefreshed.ShouldRefresh(artist))
             {
-                var artist = message.Album.Artist.Value;
-
-                if (_checkIfArtistShouldBeRefreshed.ShouldRefresh(artist))
-                {
-                    _commandQueueManager.Push(new RefreshArtistCommand(artist.Id));
-                }
-                else
-                {
-                    _commandQueueManager.Push(new RefreshAlbumCommand(message.Album.Id, true));
-                }
+                _commandQueueManager.Push(new RefreshArtistCommand(artist.Id));
+            }
+            else
+            {
+                _commandQueueManager.Push(new RefreshAlbumCommand(message.Album.Id, true));
             }
         }
     }

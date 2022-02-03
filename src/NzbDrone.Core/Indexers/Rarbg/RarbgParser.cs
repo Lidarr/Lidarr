@@ -5,76 +5,75 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.Indexers.Rarbg
+namespace NzbDrone.Core.Indexers.Rarbg;
+
+public class RarbgParser : IParseIndexerResponse
 {
-    public class RarbgParser : IParseIndexerResponse
+    private static readonly Regex RegexGuid = new Regex(@"^magnet:\?xt=urn:btih:([a-f0-9]+)", RegexOptions.Compiled);
+
+    public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
     {
-        private static readonly Regex RegexGuid = new Regex(@"^magnet:\?xt=urn:btih:([a-f0-9]+)", RegexOptions.Compiled);
+        var results = new List<ReleaseInfo>();
 
-        public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
+        switch (indexerResponse.HttpResponse.StatusCode)
         {
-            var results = new List<ReleaseInfo>();
-
-            switch (indexerResponse.HttpResponse.StatusCode)
-            {
-                default:
-                    if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
-                    {
-                        throw new IndexerException(indexerResponse, "Indexer API call returned an unexpected StatusCode [{0}]", indexerResponse.HttpResponse.StatusCode);
-                    }
-
-                    break;
-            }
-
-            var jsonResponse = new HttpResponse<RarbgResponse>(indexerResponse.HttpResponse);
-
-            if (jsonResponse.Resource.error_code.HasValue)
-            {
-                if (jsonResponse.Resource.error_code == 20 || jsonResponse.Resource.error_code == 8)
+            default:
+                if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
                 {
-                    // No results found
-                    return results;
+                    throw new IndexerException(indexerResponse, "Indexer API call returned an unexpected StatusCode [{0}]", indexerResponse.HttpResponse.StatusCode);
                 }
 
-                throw new IndexerException(indexerResponse, "Indexer API call returned error {0}: {1}", jsonResponse.Resource.error_code, jsonResponse.Resource.error);
-            }
+                break;
+        }
 
-            if (jsonResponse.Resource.torrent_results == null)
+        var jsonResponse = new HttpResponse<RarbgResponse>(indexerResponse.HttpResponse);
+
+        if (jsonResponse.Resource.error_code.HasValue)
+        {
+            if (jsonResponse.Resource.error_code == 20 || jsonResponse.Resource.error_code == 8)
             {
+                // No results found
                 return results;
             }
 
-            foreach (var torrent in jsonResponse.Resource.torrent_results)
-            {
-                var torrentInfo = new TorrentInfo();
+            throw new IndexerException(indexerResponse, "Indexer API call returned error {0}: {1}", jsonResponse.Resource.error_code, jsonResponse.Resource.error);
+        }
 
-                torrentInfo.Guid = GetGuid(torrent);
-                torrentInfo.Title = torrent.title;
-                torrentInfo.Size = torrent.size;
-                torrentInfo.DownloadUrl = torrent.download;
-                torrentInfo.InfoUrl = torrent.info_page + "&app_id=Lidarr";
-                torrentInfo.PublishDate = torrent.pubdate.ToUniversalTime();
-                torrentInfo.Seeders = torrent.seeders;
-                torrentInfo.Peers = torrent.leechers + torrent.seeders;
-
-                results.Add(torrentInfo);
-            }
-
+        if (jsonResponse.Resource.torrent_results == null)
+        {
             return results;
         }
 
-        private string GetGuid(RarbgTorrent torrent)
+        foreach (var torrent in jsonResponse.Resource.torrent_results)
         {
-            var match = RegexGuid.Match(torrent.download);
+            var torrentInfo = new TorrentInfo();
 
-            if (match.Success)
-            {
-                return string.Format("rarbg-{0}", match.Groups[1].Value);
-            }
-            else
-            {
-                return string.Format("rarbg-{0}", torrent.download);
-            }
+            torrentInfo.Guid = GetGuid(torrent);
+            torrentInfo.Title = torrent.title;
+            torrentInfo.Size = torrent.size;
+            torrentInfo.DownloadUrl = torrent.download;
+            torrentInfo.InfoUrl = torrent.info_page + "&app_id=Lidarr";
+            torrentInfo.PublishDate = torrent.pubdate.ToUniversalTime();
+            torrentInfo.Seeders = torrent.seeders;
+            torrentInfo.Peers = torrent.leechers + torrent.seeders;
+
+            results.Add(torrentInfo);
+        }
+
+        return results;
+    }
+
+    private string GetGuid(RarbgTorrent torrent)
+    {
+        var match = RegexGuid.Match(torrent.download);
+
+        if (match.Success)
+        {
+            return string.Format("rarbg-{0}", match.Groups[1].Value);
+        }
+        else
+        {
+            return string.Format("rarbg-{0}", torrent.download);
         }
     }
 }

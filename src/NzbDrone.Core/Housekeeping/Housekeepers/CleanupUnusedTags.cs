@@ -4,38 +4,37 @@ using System.Linq;
 using Dapper;
 using NzbDrone.Core.Datastore;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace NzbDrone.Core.Housekeeping.Housekeepers;
+
+public class CleanupUnusedTags : IHousekeepingTask
 {
-    public class CleanupUnusedTags : IHousekeepingTask
+    private readonly IMainDatabase _database;
+
+    public CleanupUnusedTags(IMainDatabase database)
     {
-        private readonly IMainDatabase _database;
+        _database = database;
+    }
 
-        public CleanupUnusedTags(IMainDatabase database)
+    public void Clean()
+    {
+        using (var mapper = _database.OpenConnection())
         {
-            _database = database;
+            var usedTags = new[] { "Artists", "Notifications", "DelayProfiles", "ReleaseProfiles" }
+                          .SelectMany(v => GetUsedTags(v, mapper))
+                          .Distinct()
+                          .ToArray();
+
+            var usedTagsList = string.Join(",", usedTags.Select(d => d.ToString()).ToArray());
+
+            mapper.Execute($"DELETE FROM Tags WHERE NOT Id IN ({usedTagsList})");
         }
+    }
 
-        public void Clean()
-        {
-            using (var mapper = _database.OpenConnection())
-            {
-                var usedTags = new[] { "Artists", "Notifications", "DelayProfiles", "ReleaseProfiles" }
-                .SelectMany(v => GetUsedTags(v, mapper))
+    private int[] GetUsedTags(string table, IDbConnection mapper)
+    {
+        return mapper.Query<List<int>>($"SELECT DISTINCT Tags FROM {table} WHERE NOT Tags = '[]'")
+                     .SelectMany(x => x)
                      .Distinct()
                      .ToArray();
-
-                var usedTagsList = string.Join(",", usedTags.Select(d => d.ToString()).ToArray());
-
-                mapper.Execute($"DELETE FROM Tags WHERE NOT Id IN ({usedTagsList})");
-            }
-        }
-
-        private int[] GetUsedTags(string table, IDbConnection mapper)
-        {
-            return mapper.Query<List<int>>($"SELECT DISTINCT Tags FROM {table} WHERE NOT Tags = '[]'")
-                .SelectMany(x => x)
-                .Distinct()
-                .ToArray();
-        }
     }
 }

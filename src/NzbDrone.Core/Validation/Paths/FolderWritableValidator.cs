@@ -2,26 +2,25 @@
 using FluentValidation.Validators;
 using NzbDrone.Common.Disk;
 
-namespace NzbDrone.Core.Validation.Paths
+namespace NzbDrone.Core.Validation.Paths;
+
+public class FolderWritableValidator : PropertyValidator
 {
-    public class FolderWritableValidator : PropertyValidator
+    private readonly IDiskProvider _diskProvider;
+
+    public FolderWritableValidator(IDiskProvider diskProvider)
+        : base($"Folder is not writable by user {Environment.UserName}")
     {
-        private readonly IDiskProvider _diskProvider;
+        _diskProvider = diskProvider;
+    }
 
-        public FolderWritableValidator(IDiskProvider diskProvider)
-            : base($"Folder is not writable by user {Environment.UserName}")
+    protected override bool IsValid(PropertyValidatorContext context)
+    {
+        if (context.PropertyValue == null)
         {
-            _diskProvider = diskProvider;
+            return false;
         }
 
-        protected override bool IsValid(PropertyValidatorContext context)
-        {
-            if (context.PropertyValue == null)
-            {
-                return false;
-            }
-
-            return _diskProvider.FolderWritable(context.PropertyValue.ToString());
-        }
+        return _diskProvider.FolderWritable(context.PropertyValue.ToString());
     }
 }

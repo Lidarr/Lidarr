@@ -6,44 +6,43 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Qualities;
 
-namespace NzbDrone.Core.MediaFiles
+namespace NzbDrone.Core.MediaFiles;
+
+public class TrackFile : ModelBase
 {
-    public class TrackFile : ModelBase
+    // these are model properties
+    public string Path { get; set; }
+    public long Size { get; set; }
+    public DateTime Modified { get; set; }
+    public DateTime DateAdded { get; set; }
+    public string SceneName { get; set; }
+    public string ReleaseGroup { get; set; }
+    public QualityModel Quality { get; set; }
+    public MediaInfoModel MediaInfo { get; set; }
+    public int AlbumId { get; set; }
+
+    // These are queried from the database
+    public LazyLoaded<List<Track>> Tracks { get; set; }
+    public LazyLoaded<Artist> Artist { get; set; }
+    public LazyLoaded<Album> Album { get; set; }
+
+    public override string ToString()
     {
-        // these are model properties
-        public string Path { get; set; }
-        public long Size { get; set; }
-        public DateTime Modified { get; set; }
-        public DateTime DateAdded { get; set; }
-        public string SceneName { get; set; }
-        public string ReleaseGroup { get; set; }
-        public QualityModel Quality { get; set; }
-        public MediaInfoModel MediaInfo { get; set; }
-        public int AlbumId { get; set; }
+        return string.Format("[{0}] {1}", Id, Path);
+    }
 
-        // These are queried from the database
-        public LazyLoaded<List<Track>> Tracks { get; set; }
-        public LazyLoaded<Artist> Artist { get; set; }
-        public LazyLoaded<Album> Album { get; set; }
-
-        public override string ToString()
+    public string GetSceneOrFileName()
+    {
+        if (SceneName.IsNotNullOrWhiteSpace())
         {
-            return string.Format("[{0}] {1}", Id, Path);
+            return SceneName;
         }
 
-        public string GetSceneOrFileName()
+        if (Path.IsNotNullOrWhiteSpace())
         {
-            if (SceneName.IsNotNullOrWhiteSpace())
-            {
-                return SceneName;
-            }
-
-            if (Path.IsNotNullOrWhiteSpace())
-            {
-                return System.IO.Path.GetFileName(Path);
-            }
-
-            return string.Empty;
+            return System.IO.Path.GetFileName(Path);
         }
+
+        return string.Empty;
     }
 }

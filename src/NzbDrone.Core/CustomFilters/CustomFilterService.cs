@@ -1,49 +1,48 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NzbDrone.Core.CustomFilters
+namespace NzbDrone.Core.CustomFilters;
+
+public interface ICustomFilterService
 {
-    public interface ICustomFilterService
+    CustomFilter Add(CustomFilter customFilter);
+    List<CustomFilter> All();
+    void Delete(int id);
+    CustomFilter Get(int id);
+    CustomFilter Update(CustomFilter customFilter);
+}
+
+public class CustomFilterService : ICustomFilterService
+{
+    private readonly ICustomFilterRepository _repo;
+
+    public CustomFilterService(ICustomFilterRepository repo)
     {
-        CustomFilter Add(CustomFilter customFilter);
-        List<CustomFilter> All();
-        void Delete(int id);
-        CustomFilter Get(int id);
-        CustomFilter Update(CustomFilter customFilter);
+        _repo = repo;
     }
 
-    public class CustomFilterService : ICustomFilterService
+    public CustomFilter Add(CustomFilter customFilter)
     {
-        private readonly ICustomFilterRepository _repo;
+        return _repo.Insert(customFilter);
+    }
 
-        public CustomFilterService(ICustomFilterRepository repo)
-        {
-            _repo = repo;
-        }
+    public CustomFilter Update(CustomFilter customFilter)
+    {
+        return _repo.Update(customFilter);
+    }
 
-        public CustomFilter Add(CustomFilter customFilter)
-        {
-            return _repo.Insert(customFilter);
-        }
+    public void Delete(int id)
+    {
+        _repo.Delete(id);
+    }
 
-        public CustomFilter Update(CustomFilter customFilter)
-        {
-            return _repo.Update(customFilter);
-        }
+    public CustomFilter Get(int id)
+    {
+        return _repo.Get(id);
+    }
 
-        public void Delete(int id)
-        {
-            _repo.Delete(id);
-        }
-
-        public CustomFilter Get(int id)
-        {
-            return _repo.Get(id);
-        }
-
-        public List<CustomFilter> All()
-        {
-            return _repo.All().ToList();
-        }
+    public List<CustomFilter> All()
+    {
+        return _repo.All().ToList();
     }
 }

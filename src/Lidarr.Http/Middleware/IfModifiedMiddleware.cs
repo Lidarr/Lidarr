@@ -4,40 +4,39 @@ using Lidarr.Http.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 
-namespace Lidarr.Http.Middleware
+namespace Lidarr.Http.Middleware;
+
+public class IfModifiedMiddleware
 {
-    public class IfModifiedMiddleware
+    private readonly RequestDelegate _next;
+    private readonly ICacheableSpecification _cacheableSpecification;
+    private readonly IContentTypeProvider _mimeTypeProvider;
+
+    public IfModifiedMiddleware(RequestDelegate next, ICacheableSpecification cacheableSpecification)
     {
-        private readonly RequestDelegate _next;
-        private readonly ICacheableSpecification _cacheableSpecification;
-        private readonly IContentTypeProvider _mimeTypeProvider;
+        _next = next;
+        _cacheableSpecification = cacheableSpecification;
 
-        public IfModifiedMiddleware(RequestDelegate next, ICacheableSpecification cacheableSpecification)
+        _mimeTypeProvider = new FileExtensionContentTypeProvider();
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        if (_cacheableSpecification.IsCacheable(context.Request) && context.Request.Headers["IfModifiedSince"].Any())
         {
-            _next = next;
-            _cacheableSpecification = cacheableSpecification;
+            context.Response.StatusCode = 304;
+            context.Response.Headers.EnableCache();
 
-            _mimeTypeProvider = new FileExtensionContentTypeProvider();
-        }
-
-        public async Task InvokeAsync(HttpContext context)
-        {
-            if (_cacheableSpecification.IsCacheable(context.Request) && context.Request.Headers["IfModifiedSince"].Any())
+            if (!_mimeTypeProvider.TryGetContentType(context.Request.Path.ToString(), out var mimeType))
             {
-                context.Response.StatusCode = 304;
-                context.Response.Headers.EnableCache();
-
-                if (!_mimeTypeProvider.TryGetContentType(context.Request.Path.ToString(), out var mimeType))
-                {
-                    mimeType = "application/octet-stream";
-                }
-
-                context.Response.ContentType = mimeType;
-
-                return;
+                mimeType = "application/octet-stream";
             }
 
-            await _next(context);
+            context.Response.ContentType = mimeType;
+
+            return;
         }
+
+        await _next(context);
     }
 }

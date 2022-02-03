@@ -9,271 +9,270 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.ImportListTests
+namespace NzbDrone.Core.Test.ImportListTests;
+
+public class ImportListSyncServiceFixture : CoreTest<ImportListSyncService>
 {
-    public class ImportListSyncServiceFixture : CoreTest<ImportListSyncService>
+    private List<ImportListItemInfo> _importListReports;
+
+    [SetUp]
+    public void SetUp()
     {
-        private List<ImportListItemInfo> _importListReports;
+        var importListItem1 = new ImportListItemInfo
+                              {
+                                  Artist = "Linkin Park"
+                              };
 
-        [SetUp]
-        public void SetUp()
-        {
-            var importListItem1 = new ImportListItemInfo
-            {
-                Artist = "Linkin Park"
-            };
+        _importListReports = new List<ImportListItemInfo> { importListItem1 };
 
-            _importListReports = new List<ImportListItemInfo> { importListItem1 };
+        Mocker.GetMock<IFetchAndParseImportList>()
+              .Setup(v => v.Fetch())
+              .Returns(_importListReports);
 
-            Mocker.GetMock<IFetchAndParseImportList>()
-                .Setup(v => v.Fetch())
-                .Returns(_importListReports);
+        Mocker.GetMock<ISearchForNewArtist>()
+              .Setup(v => v.SearchForNewArtist(It.IsAny<string>()))
+              .Returns(new List<Artist>());
 
-            Mocker.GetMock<ISearchForNewArtist>()
-                .Setup(v => v.SearchForNewArtist(It.IsAny<string>()))
-                .Returns(new List<Artist>());
+        Mocker.GetMock<ISearchForNewAlbum>()
+              .Setup(v => v.SearchForNewAlbum(It.IsAny<string>(), It.IsAny<string>()))
+              .Returns(new List<Album>());
 
-            Mocker.GetMock<ISearchForNewAlbum>()
-                .Setup(v => v.SearchForNewAlbum(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(new List<Album>());
+        Mocker.GetMock<IImportListFactory>()
+              .Setup(v => v.Get(It.IsAny<int>()))
+              .Returns(new ImportListDefinition { ShouldMonitor = ImportListMonitorType.SpecificAlbum });
 
-            Mocker.GetMock<IImportListFactory>()
-                .Setup(v => v.Get(It.IsAny<int>()))
-                .Returns(new ImportListDefinition { ShouldMonitor = ImportListMonitorType.SpecificAlbum });
+        Mocker.GetMock<IFetchAndParseImportList>()
+              .Setup(v => v.Fetch())
+              .Returns(_importListReports);
 
-            Mocker.GetMock<IFetchAndParseImportList>()
-                .Setup(v => v.Fetch())
-                .Returns(_importListReports);
+        Mocker.GetMock<IImportListExclusionService>()
+              .Setup(v => v.All())
+              .Returns(new List<ImportListExclusion>());
 
-            Mocker.GetMock<IImportListExclusionService>()
-                .Setup(v => v.All())
-                .Returns(new List<ImportListExclusion>());
+        Mocker.GetMock<IAddArtistService>()
+              .Setup(v => v.AddArtists(It.IsAny<List<Artist>>(), false, true))
+              .Returns((List<Artist> artists, bool doRefresh, bool ignoreErrors) => artists);
 
-            Mocker.GetMock<IAddArtistService>()
-                .Setup(v => v.AddArtists(It.IsAny<List<Artist>>(), false, true))
-                .Returns((List<Artist> artists, bool doRefresh, bool ignoreErrors) => artists);
+        Mocker.GetMock<IAddAlbumService>()
+              .Setup(v => v.AddAlbums(It.IsAny<List<Album>>(), false, true))
+              .Returns((List<Album> albums, bool doRefresh, bool ignoreErrors) => albums);
+    }
 
-            Mocker.GetMock<IAddAlbumService>()
-                .Setup(v => v.AddAlbums(It.IsAny<List<Album>>(), false, true))
-                .Returns((List<Album> albums, bool doRefresh, bool ignoreErrors) => albums);
-        }
+    private void WithAlbum()
+    {
+        _importListReports.First().Album = "Meteora";
+    }
 
-        private void WithAlbum()
-        {
-            _importListReports.First().Album = "Meteora";
-        }
+    private void WithArtistId()
+    {
+        _importListReports.First().ArtistMusicBrainzId = "f59c5520-5f46-4d2c-b2c4-822eabf53419";
+    }
 
-        private void WithArtistId()
-        {
-            _importListReports.First().ArtistMusicBrainzId = "f59c5520-5f46-4d2c-b2c4-822eabf53419";
-        }
+    private void WithAlbumId()
+    {
+        _importListReports.First().AlbumMusicBrainzId = "09474d62-17dd-3a4f-98fb-04c65f38a479";
+    }
 
-        private void WithAlbumId()
-        {
-            _importListReports.First().AlbumMusicBrainzId = "09474d62-17dd-3a4f-98fb-04c65f38a479";
-        }
+    private void WithExistingArtist()
+    {
+        Mocker.GetMock<IArtistService>()
+              .Setup(v => v.FindById(_importListReports.First().ArtistMusicBrainzId))
+              .Returns(new Artist { ForeignArtistId = _importListReports.First().ArtistMusicBrainzId });
+    }
 
-        private void WithExistingArtist()
-        {
-            Mocker.GetMock<IArtistService>()
-                .Setup(v => v.FindById(_importListReports.First().ArtistMusicBrainzId))
-                .Returns(new Artist { ForeignArtistId = _importListReports.First().ArtistMusicBrainzId });
-        }
+    private void WithExistingAlbum()
+    {
+        Mocker.GetMock<IAlbumService>()
+              .Setup(v => v.FindById(_importListReports.First().AlbumMusicBrainzId))
+              .Returns(new Album { ForeignAlbumId = _importListReports.First().AlbumMusicBrainzId });
+    }
 
-        private void WithExistingAlbum()
-        {
-            Mocker.GetMock<IAlbumService>()
-                .Setup(v => v.FindById(_importListReports.First().AlbumMusicBrainzId))
-                .Returns(new Album { ForeignAlbumId = _importListReports.First().AlbumMusicBrainzId });
-        }
+    private void WithExcludedArtist()
+    {
+        Mocker.GetMock<IImportListExclusionService>()
+              .Setup(v => v.All())
+              .Returns(new List<ImportListExclusion>
+                       {
+                           new ImportListExclusion
+                           {
+                               ForeignId = "f59c5520-5f46-4d2c-b2c4-822eabf53419"
+                           }
+                       });
+    }
 
-        private void WithExcludedArtist()
-        {
-            Mocker.GetMock<IImportListExclusionService>()
-                .Setup(v => v.All())
-                .Returns(new List<ImportListExclusion>
-                {
-                    new ImportListExclusion
-                    {
-                        ForeignId = "f59c5520-5f46-4d2c-b2c4-822eabf53419"
-                    }
-                });
-        }
+    private void WithExcludedAlbum()
+    {
+        Mocker.GetMock<IImportListExclusionService>()
+              .Setup(v => v.All())
+              .Returns(new List<ImportListExclusion>
+                       {
+                           new ImportListExclusion
+                           {
+                               ForeignId = "09474d62-17dd-3a4f-98fb-04c65f38a479"
+                           }
+                       });
+    }
 
-        private void WithExcludedAlbum()
-        {
-            Mocker.GetMock<IImportListExclusionService>()
-                .Setup(v => v.All())
-                .Returns(new List<ImportListExclusion>
-                {
-                    new ImportListExclusion
-                    {
-                        ForeignId = "09474d62-17dd-3a4f-98fb-04c65f38a479"
-                    }
-                });
-        }
+    private void WithMonitorType(ImportListMonitorType monitor)
+    {
+        Mocker.GetMock<IImportListFactory>()
+              .Setup(v => v.Get(It.IsAny<int>()))
+              .Returns(new ImportListDefinition { ShouldMonitor = monitor });
+    }
 
-        private void WithMonitorType(ImportListMonitorType monitor)
-        {
-            Mocker.GetMock<IImportListFactory>()
-                .Setup(v => v.Get(It.IsAny<int>()))
-                .Returns(new ImportListDefinition { ShouldMonitor = monitor });
-        }
+    [Test]
+    public void should_search_if_artist_title_and_no_artist_id()
+    {
+        Subject.Execute(new ImportListSyncCommand());
 
-        [Test]
-        public void should_search_if_artist_title_and_no_artist_id()
-        {
-            Subject.Execute(new ImportListSyncCommand());
+        Mocker.GetMock<ISearchForNewArtist>()
+              .Verify(v => v.SearchForNewArtist(It.IsAny<string>()), Times.Once());
+    }
 
-            Mocker.GetMock<ISearchForNewArtist>()
-                .Verify(v => v.SearchForNewArtist(It.IsAny<string>()), Times.Once());
-        }
+    [Test]
+    public void should_not_search_if_artist_title_and_artist_id()
+    {
+        WithArtistId();
+        Subject.Execute(new ImportListSyncCommand());
 
-        [Test]
-        public void should_not_search_if_artist_title_and_artist_id()
-        {
-            WithArtistId();
-            Subject.Execute(new ImportListSyncCommand());
+        Mocker.GetMock<ISearchForNewArtist>()
+              .Verify(v => v.SearchForNewArtist(It.IsAny<string>()), Times.Never());
+    }
 
-            Mocker.GetMock<ISearchForNewArtist>()
-                .Verify(v => v.SearchForNewArtist(It.IsAny<string>()), Times.Never());
-        }
+    [Test]
+    public void should_search_if_album_title_and_no_album_id()
+    {
+        WithAlbum();
+        Subject.Execute(new ImportListSyncCommand());
 
-        [Test]
-        public void should_search_if_album_title_and_no_album_id()
-        {
-            WithAlbum();
-            Subject.Execute(new ImportListSyncCommand());
+        Mocker.GetMock<ISearchForNewAlbum>()
+              .Verify(v => v.SearchForNewAlbum(It.IsAny<string>(), It.IsAny<string>()), Times.Once());
+    }
 
-            Mocker.GetMock<ISearchForNewAlbum>()
-                .Verify(v => v.SearchForNewAlbum(It.IsAny<string>(), It.IsAny<string>()), Times.Once());
-        }
+    [Test]
+    public void should_not_search_if_album_title_and_album_id()
+    {
+        WithArtistId();
+        WithAlbumId();
+        Subject.Execute(new ImportListSyncCommand());
 
-        [Test]
-        public void should_not_search_if_album_title_and_album_id()
-        {
-            WithArtistId();
-            WithAlbumId();
-            Subject.Execute(new ImportListSyncCommand());
+        Mocker.GetMock<ISearchForNewAlbum>()
+              .Verify(v => v.SearchForNewAlbum(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+    }
 
-            Mocker.GetMock<ISearchForNewAlbum>()
-                .Verify(v => v.SearchForNewAlbum(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
-        }
+    [Test]
+    public void should_not_search_if_all_info()
+    {
+        WithArtistId();
+        WithAlbum();
+        WithAlbumId();
+        Subject.Execute(new ImportListSyncCommand());
 
-        [Test]
-        public void should_not_search_if_all_info()
-        {
-            WithArtistId();
-            WithAlbum();
-            WithAlbumId();
-            Subject.Execute(new ImportListSyncCommand());
+        Mocker.GetMock<ISearchForNewArtist>()
+              .Verify(v => v.SearchForNewArtist(It.IsAny<string>()), Times.Never());
 
-            Mocker.GetMock<ISearchForNewArtist>()
-                .Verify(v => v.SearchForNewArtist(It.IsAny<string>()), Times.Never());
+        Mocker.GetMock<ISearchForNewAlbum>()
+              .Verify(v => v.SearchForNewAlbum(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+    }
 
-            Mocker.GetMock<ISearchForNewAlbum>()
-                .Verify(v => v.SearchForNewAlbum(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
-        }
+    [Test]
+    public void should_not_add_if_existing_artist()
+    {
+        WithArtistId();
+        WithExistingArtist();
 
-        [Test]
-        public void should_not_add_if_existing_artist()
-        {
-            WithArtistId();
-            WithExistingArtist();
+        Subject.Execute(new ImportListSyncCommand());
 
-            Subject.Execute(new ImportListSyncCommand());
+        Mocker.GetMock<IAddArtistService>()
+              .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 0), false, It.IsAny<bool>()));
+    }
 
-            Mocker.GetMock<IAddArtistService>()
-                .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 0), false, It.IsAny<bool>()));
-        }
+    [Test]
+    public void should_not_add_if_existing_album()
+    {
+        WithAlbumId();
+        WithExistingAlbum();
 
-        [Test]
-        public void should_not_add_if_existing_album()
-        {
-            WithAlbumId();
-            WithExistingAlbum();
+        Subject.Execute(new ImportListSyncCommand());
 
-            Subject.Execute(new ImportListSyncCommand());
+        Mocker.GetMock<IAddArtistService>()
+              .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 0), false, It.IsAny<bool>()));
+    }
 
-            Mocker.GetMock<IAddArtistService>()
-                .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 0), false, It.IsAny<bool>()));
-        }
+    [Test]
+    public void should_add_if_existing_artist_but_new_album()
+    {
+        WithAlbumId();
+        WithExistingArtist();
 
-        [Test]
-        public void should_add_if_existing_artist_but_new_album()
-        {
-            WithAlbumId();
-            WithExistingArtist();
+        Subject.Execute(new ImportListSyncCommand());
 
-            Subject.Execute(new ImportListSyncCommand());
+        Mocker.GetMock<IAddAlbumService>()
+              .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 1), false, It.IsAny<bool>()));
+    }
 
-            Mocker.GetMock<IAddAlbumService>()
-                .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 1), false, It.IsAny<bool>()));
-        }
+    [TestCase(ImportListMonitorType.None, false)]
+    [TestCase(ImportListMonitorType.SpecificAlbum, true)]
+    [TestCase(ImportListMonitorType.EntireArtist, true)]
+    public void should_add_if_not_existing_artist(ImportListMonitorType monitor, bool expectedArtistMonitored)
+    {
+        WithArtistId();
+        WithMonitorType(monitor);
 
-        [TestCase(ImportListMonitorType.None, false)]
-        [TestCase(ImportListMonitorType.SpecificAlbum, true)]
-        [TestCase(ImportListMonitorType.EntireArtist, true)]
-        public void should_add_if_not_existing_artist(ImportListMonitorType monitor, bool expectedArtistMonitored)
-        {
-            WithArtistId();
-            WithMonitorType(monitor);
+        Subject.Execute(new ImportListSyncCommand());
 
-            Subject.Execute(new ImportListSyncCommand());
+        Mocker.GetMock<IAddArtistService>()
+              .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 1 && t.First().Monitored == expectedArtistMonitored), false, It.IsAny<bool>()));
+    }
 
-            Mocker.GetMock<IAddArtistService>()
-                .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 1 && t.First().Monitored == expectedArtistMonitored), false, It.IsAny<bool>()));
-        }
+    [TestCase(ImportListMonitorType.None, false)]
+    [TestCase(ImportListMonitorType.SpecificAlbum, true)]
+    [TestCase(ImportListMonitorType.EntireArtist, true)]
+    public void should_add_if_not_existing_album(ImportListMonitorType monitor, bool expectedAlbumMonitored)
+    {
+        WithAlbumId();
+        WithMonitorType(monitor);
 
-        [TestCase(ImportListMonitorType.None, false)]
-        [TestCase(ImportListMonitorType.SpecificAlbum, true)]
-        [TestCase(ImportListMonitorType.EntireArtist, true)]
-        public void should_add_if_not_existing_album(ImportListMonitorType monitor, bool expectedAlbumMonitored)
-        {
-            WithAlbumId();
-            WithMonitorType(monitor);
+        Subject.Execute(new ImportListSyncCommand());
 
-            Subject.Execute(new ImportListSyncCommand());
+        Mocker.GetMock<IAddAlbumService>()
+              .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 1 && t.First().Monitored == expectedAlbumMonitored), false, It.IsAny<bool>()));
+    }
 
-            Mocker.GetMock<IAddAlbumService>()
-                .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 1 && t.First().Monitored == expectedAlbumMonitored), false, It.IsAny<bool>()));
-        }
+    [Test]
+    public void should_not_add_artist_if_excluded_artist()
+    {
+        WithArtistId();
+        WithExcludedArtist();
 
-        [Test]
-        public void should_not_add_artist_if_excluded_artist()
-        {
-            WithArtistId();
-            WithExcludedArtist();
+        Subject.Execute(new ImportListSyncCommand());
 
-            Subject.Execute(new ImportListSyncCommand());
+        Mocker.GetMock<IAddArtistService>()
+              .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 0), false, It.IsAny<bool>()));
+    }
 
-            Mocker.GetMock<IAddArtistService>()
-                .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 0), false, It.IsAny<bool>()));
-        }
+    [Test]
+    public void should_not_add_album_if_excluded_album()
+    {
+        WithAlbumId();
+        WithExcludedAlbum();
 
-        [Test]
-        public void should_not_add_album_if_excluded_album()
-        {
-            WithAlbumId();
-            WithExcludedAlbum();
+        Subject.Execute(new ImportListSyncCommand());
 
-            Subject.Execute(new ImportListSyncCommand());
+        Mocker.GetMock<IAddAlbumService>()
+              .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 0), false, It.IsAny<bool>()));
+    }
 
-            Mocker.GetMock<IAddAlbumService>()
-                .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 0), false, It.IsAny<bool>()));
-        }
+    [Test]
+    public void should_not_add_album_if_excluded_artist()
+    {
+        WithAlbumId();
+        WithArtistId();
+        WithExcludedArtist();
 
-        [Test]
-        public void should_not_add_album_if_excluded_artist()
-        {
-            WithAlbumId();
-            WithArtistId();
-            WithExcludedArtist();
+        Subject.Execute(new ImportListSyncCommand());
 
-            Subject.Execute(new ImportListSyncCommand());
-
-            Mocker.GetMock<IAddAlbumService>()
-                .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 0), false, It.IsAny<bool>()));
-        }
+        Mocker.GetMock<IAddAlbumService>()
+              .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 0), false, It.IsAny<bool>()));
     }
 }

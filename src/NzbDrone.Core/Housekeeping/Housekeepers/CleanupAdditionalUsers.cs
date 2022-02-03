@@ -1,26 +1,25 @@
 ﻿using Dapper;
 using NzbDrone.Core.Datastore;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace NzbDrone.Core.Housekeeping.Housekeepers;
+
+public class CleanupAdditionalUsers : IHousekeepingTask
 {
-    public class CleanupAdditionalUsers : IHousekeepingTask
+    private readonly IMainDatabase _database;
+
+    public CleanupAdditionalUsers(IMainDatabase database)
     {
-        private readonly IMainDatabase _database;
+        _database = database;
+    }
 
-        public CleanupAdditionalUsers(IMainDatabase database)
+    public void Clean()
+    {
+        using (var mapper = _database.OpenConnection())
         {
-            _database = database;
-        }
-
-        public void Clean()
-        {
-            using (var mapper = _database.OpenConnection())
-            {
-                mapper.Execute(@"DELETE FROM Users
+            mapper.Execute(@"DELETE FROM Users
                                  WHERE ID NOT IN (
                                  SELECT ID FROM Users
                                  LIMIT 1)");
-            }
         }
     }
 }

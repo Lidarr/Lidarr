@@ -4,69 +4,68 @@ using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 
-namespace NzbDrone.Core.Notifications.Pushover
+namespace NzbDrone.Core.Notifications.Pushover;
+
+public interface IPushoverProxy
 {
-    public interface IPushoverProxy
+    void SendNotification(string title, string message, PushoverSettings settings);
+    ValidationFailure Test(PushoverSettings settings);
+}
+
+public class PushoverProxy : IPushoverProxy
+{
+    private const string URL = "https://api.pushover.net/1/messages.json";
+    private readonly IHttpClient _httpClient;
+    private readonly Logger _logger;
+
+    public PushoverProxy(IHttpClient httpClient, Logger logger)
     {
-        void SendNotification(string title, string message, PushoverSettings settings);
-        ValidationFailure Test(PushoverSettings settings);
+        _httpClient = httpClient;
+        _logger = logger;
     }
 
-    public class PushoverProxy : IPushoverProxy
+    public void SendNotification(string title, string message, PushoverSettings settings)
     {
-        private const string URL = "https://api.pushover.net/1/messages.json";
-        private readonly IHttpClient _httpClient;
-        private readonly Logger _logger;
+        var requestBuilder = new HttpRequestBuilder(URL).Post();
 
-        public PushoverProxy(IHttpClient httpClient, Logger logger)
+        requestBuilder.AddFormParameter("token", settings.ApiKey)
+                      .AddFormParameter("user", settings.UserKey)
+                      .AddFormParameter("device", string.Join(",", settings.Devices))
+                      .AddFormParameter("title", title)
+                      .AddFormParameter("message", message)
+                      .AddFormParameter("priority", settings.Priority);
+
+        if ((PushoverPriority)settings.Priority == PushoverPriority.Emergency)
         {
-            _httpClient = httpClient;
-            _logger = logger;
+            requestBuilder.AddFormParameter("retry", settings.Retry);
+            requestBuilder.AddFormParameter("expire", settings.Expire);
         }
 
-        public void SendNotification(string title, string message, PushoverSettings settings)
+        if (!settings.Sound.IsNullOrWhiteSpace())
         {
-            var requestBuilder = new HttpRequestBuilder(URL).Post();
-
-            requestBuilder.AddFormParameter("token", settings.ApiKey)
-                          .AddFormParameter("user", settings.UserKey)
-                          .AddFormParameter("device", string.Join(",", settings.Devices))
-                          .AddFormParameter("title", title)
-                          .AddFormParameter("message", message)
-                          .AddFormParameter("priority", settings.Priority);
-
-            if ((PushoverPriority)settings.Priority == PushoverPriority.Emergency)
-            {
-                requestBuilder.AddFormParameter("retry", settings.Retry);
-                requestBuilder.AddFormParameter("expire", settings.Expire);
-            }
-
-            if (!settings.Sound.IsNullOrWhiteSpace())
-            {
-                requestBuilder.AddFormParameter("sound", settings.Sound);
-            }
-
-            var request = requestBuilder.Build();
-
-            _httpClient.Post(request);
+            requestBuilder.AddFormParameter("sound", settings.Sound);
         }
 
-        public ValidationFailure Test(PushoverSettings settings)
+        var request = requestBuilder.Build();
+
+        _httpClient.Post(request);
+    }
+
+    public ValidationFailure Test(PushoverSettings settings)
+    {
+        try
         {
-            try
-            {
-                const string title = "Test Notification";
-                const string body = "This is a test message from Lidarr";
+            const string title = "Test Notification";
+            const string body = "This is a test message from Lidarr";
 
-                SendNotification(title, body, settings);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("ApiKey", "Unable to send test message");
-            }
-
-            return null;
+            SendNotification(title, body, settings);
         }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Unable to send test message");
+            return new ValidationFailure("ApiKey", "Unable to send test message");
+        }
+
+        return null;
     }
 }

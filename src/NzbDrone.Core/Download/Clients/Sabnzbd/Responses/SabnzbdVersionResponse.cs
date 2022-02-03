@@ -1,7 +1,6 @@
-﻿namespace NzbDrone.Core.Download.Clients.Sabnzbd.Responses
+﻿namespace NzbDrone.Core.Download.Clients.Sabnzbd.Responses;
+
+public class SabnzbdVersionResponse
 {
-    public class SabnzbdVersionResponse
-    {
-        public string Version { get; set; }
-    }
+    public string Version { get; set; }
 }

@@ -1,15 +1,14 @@
 ﻿using NzbDrone.Common.Messaging;
 using NzbDrone.Core.Download;
 
-namespace NzbDrone.Core.Indexers
-{
-    public class RssSyncCompleteEvent : IEvent
-    {
-        public ProcessedDecisions ProcessedDecisions { get; private set; }
+namespace NzbDrone.Core.Indexers;
 
-        public RssSyncCompleteEvent(ProcessedDecisions processedDecisions)
-        {
-            ProcessedDecisions = processedDecisions;
-        }
+public class RssSyncCompleteEvent : IEvent
+{
+    public ProcessedDecisions ProcessedDecisions { get; private set; }
+
+    public RssSyncCompleteEvent(ProcessedDecisions processedDecisions)
+    {
+        ProcessedDecisions = processedDecisions;
     }
 }

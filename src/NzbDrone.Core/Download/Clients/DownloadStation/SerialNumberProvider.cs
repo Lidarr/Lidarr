@@ -5,45 +5,44 @@ using NzbDrone.Common.Crypto;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Download.Clients.DownloadStation.Proxies;
 
-namespace NzbDrone.Core.Download.Clients.DownloadStation
+namespace NzbDrone.Core.Download.Clients.DownloadStation;
+
+public interface ISerialNumberProvider
 {
-    public interface ISerialNumberProvider
+    string GetSerialNumber(DownloadStationSettings settings);
+}
+
+public class SerialNumberProvider : ISerialNumberProvider
+{
+    private readonly IDSMInfoProxy _proxy;
+    private readonly ILogger _logger;
+    private ICached<string> _cache;
+
+    public SerialNumberProvider(ICacheManager cacheManager,
+                                IDSMInfoProxy proxy,
+                                Logger logger)
     {
-        string GetSerialNumber(DownloadStationSettings settings);
+        _proxy = proxy;
+        _cache = cacheManager.GetCache<string>(GetType());
+        _logger = logger;
     }
 
-    public class SerialNumberProvider : ISerialNumberProvider
+    public string GetSerialNumber(DownloadStationSettings settings)
     {
-        private readonly IDSMInfoProxy _proxy;
-        private readonly ILogger _logger;
-        private ICached<string> _cache;
-
-        public SerialNumberProvider(ICacheManager cacheManager,
-                                    IDSMInfoProxy proxy,
-                                    Logger logger)
+        try
         {
-            _proxy = proxy;
-            _cache = cacheManager.GetCache<string>(GetType());
-            _logger = logger;
+            return _cache.Get(settings.Host, () => GetHashedSerialNumber(settings), TimeSpan.FromMinutes(5));
         }
-
-        public string GetSerialNumber(DownloadStationSettings settings)
+        catch (Exception ex)
         {
-            try
-            {
-                return _cache.Get(settings.Host, () => GetHashedSerialNumber(settings), TimeSpan.FromMinutes(5));
-            }
-            catch (Exception ex)
-            {
-                _logger.Warn(ex, "Could not get the serial number from Download Station {0}:{1}", settings.Host, settings.Port);
-                throw;
-            }
+            _logger.Warn(ex, "Could not get the serial number from Download Station {0}:{1}", settings.Host, settings.Port);
+            throw;
         }
+    }
 
-        private string GetHashedSerialNumber(DownloadStationSettings settings)
-        {
-            var serialNumber = _proxy.GetSerialNumber(settings);
-            return HashConverter.GetHash(serialNumber).ToHexString();
-        }
+    private string GetHashedSerialNumber(DownloadStationSettings settings)
+    {
+        var serialNumber = _proxy.GetSerialNumber(settings);
+        return HashConverter.GetHash(serialNumber).ToHexString();
     }
 }

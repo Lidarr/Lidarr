@@ -6,80 +6,79 @@ using NzbDrone.Common.Messaging;
 using NzbDrone.Core.HealthCheck;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.HealthCheck
+namespace NzbDrone.Core.Test.HealthCheck;
+
+public class HealthCheckServiceFixture : CoreTest<HealthCheckService>
 {
-    public class HealthCheckServiceFixture : CoreTest<HealthCheckService>
+    private FakeHealthCheck _healthCheck;
+
+    [SetUp]
+    public void SetUp()
     {
-        private FakeHealthCheck _healthCheck;
+        _healthCheck = new FakeHealthCheck();
 
-        [SetUp]
-        public void SetUp()
-        {
-            _healthCheck = new FakeHealthCheck();
+        Mocker.SetConstant<IEnumerable<IProvideHealthCheck>>(new[] { _healthCheck });
+        Mocker.SetConstant<ICacheManager>(Mocker.Resolve<CacheManager>());
 
-            Mocker.SetConstant<IEnumerable<IProvideHealthCheck>>(new[] { _healthCheck });
-            Mocker.SetConstant<ICacheManager>(Mocker.Resolve<CacheManager>());
-
-            Mocker.GetMock<IServerSideNotificationService>()
-                .Setup(v => v.GetServerChecks())
-                .Returns(new List<Core.HealthCheck.HealthCheck>());
-        }
-
-        [Test]
-        public void should_not_execute_conditional()
-        {
-            Subject.HandleAsync(new FakeEvent());
-
-            _healthCheck.Executed.Should().BeFalse();
-        }
-
-        [Test]
-        public void should_execute_conditional()
-        {
-            Subject.HandleAsync(new FakeEvent() { ShouldExecute = true });
-
-            _healthCheck.Executed.Should().BeTrue();
-        }
-
-        [Test]
-        public void should_execute_unconditional()
-        {
-            Subject.HandleAsync(new FakeEvent2());
-
-            _healthCheck.Executed.Should().BeTrue();
-        }
+        Mocker.GetMock<IServerSideNotificationService>()
+              .Setup(v => v.GetServerChecks())
+              .Returns(new List<Core.HealthCheck.HealthCheck>());
     }
 
-    public class FakeEvent : IEvent
+    [Test]
+    public void should_not_execute_conditional()
     {
-        public bool ShouldExecute { get; set; }
+        Subject.HandleAsync(new FakeEvent());
+
+        _healthCheck.Executed.Should().BeFalse();
     }
 
-    public class FakeEvent2 : IEvent
+    [Test]
+    public void should_execute_conditional()
     {
-        public bool ShouldExecute { get; set; }
+        Subject.HandleAsync(new FakeEvent() { ShouldExecute = true });
+
+        _healthCheck.Executed.Should().BeTrue();
     }
 
-    [CheckOn(typeof(FakeEvent))]
-    [CheckOn(typeof(FakeEvent2))]
-    public class FakeHealthCheck : IProvideHealthCheck, ICheckOnCondition<FakeEvent>
+    [Test]
+    public void should_execute_unconditional()
     {
-        public bool CheckOnStartup => false;
-        public bool CheckOnSchedule => false;
+        Subject.HandleAsync(new FakeEvent2());
 
-        public bool Executed { get; set; }
-        public bool Checked { get; set; }
+        _healthCheck.Executed.Should().BeTrue();
+    }
+}
 
-        public Core.HealthCheck.HealthCheck Check()
-        {
-            Executed = true;
+public class FakeEvent : IEvent
+{
+    public bool ShouldExecute { get; set; }
+}
 
-            return new Core.HealthCheck.HealthCheck(GetType());
-        }
+public class FakeEvent2 : IEvent
+{
+    public bool ShouldExecute { get; set; }
+}
 
-        public bool ShouldCheckOnEvent(FakeEvent message)
-        {
-            return message.ShouldExecute;
-        }
+[CheckOn(typeof(FakeEvent))]
+[CheckOn(typeof(FakeEvent2))]
+public class FakeHealthCheck : IProvideHealthCheck, ICheckOnCondition<FakeEvent>
+{
+    public bool CheckOnStartup => false;
+    public bool CheckOnSchedule => false;
+
+    public bool Executed { get; set; }
+    public bool Checked { get; set; }
+
+    public Core.HealthCheck.HealthCheck Check()
+    {
+        Executed = true;
+
+        return new Core.HealthCheck.HealthCheck(GetType());
+    }
+
+    public bool ShouldCheckOnEvent(FakeEvent message)
+    {
+        return message.ShouldExecute;
     }
 }

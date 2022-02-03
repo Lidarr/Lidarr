@@ -1,15 +1,14 @@
-namespace NzbDrone.Core.Update
-{
-    public class UpdateFolderNotWritableException : UpdateFailedException
-    {
-        public UpdateFolderNotWritableException(string message, params object[] args)
-            : base(message, args)
-        {
-        }
+namespace NzbDrone.Core.Update;
 
-        public UpdateFolderNotWritableException(string message)
-            : base(message)
-        {
-        }
+public class UpdateFolderNotWritableException : UpdateFailedException
+{
+    public UpdateFolderNotWritableException(string message, params object[] args)
+        : base(message, args)
+    {
+    }
+
+    public UpdateFolderNotWritableException(string message)
+        : base(message)
+    {
     }
 }

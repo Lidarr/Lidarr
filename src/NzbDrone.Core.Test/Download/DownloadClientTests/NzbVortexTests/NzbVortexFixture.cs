@@ -14,299 +14,298 @@ using NzbDrone.Core.Download.Clients.NzbVortex.Responses;
 using NzbDrone.Core.RemotePathMappings;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Core.Test.Download.DownloadClientTests.NzbVortexTests
+namespace NzbDrone.Core.Test.Download.DownloadClientTests.NzbVortexTests;
+
+[TestFixture]
+public class NzbVortexFixture : DownloadClientFixtureBase<NzbVortex>
 {
-    [TestFixture]
-    public class NzbVortexFixture : DownloadClientFixtureBase<NzbVortex>
+    private NzbVortexQueueItem _queued;
+    private NzbVortexQueueItem _failed;
+    private NzbVortexQueueItem _completed;
+
+    [SetUp]
+    public void Setup()
     {
-        private NzbVortexQueueItem _queued;
-        private NzbVortexQueueItem _failed;
-        private NzbVortexQueueItem _completed;
-
-        [SetUp]
-        public void Setup()
-        {
-            Subject.Definition = new DownloadClientDefinition();
-            Subject.Definition.Settings = new NzbVortexSettings
-            {
-                Host = "127.0.0.1",
-                Port = 2222,
-                ApiKey = "1234-ABCD",
-                MusicCategory = "Music",
-                RecentTvPriority = (int)NzbgetPriority.High
-            };
-
-            _queued = new NzbVortexQueueItem
-            {
-                Id = RandomNumber,
-                DownloadedSize = 1000,
-                TotalDownloadSize = 10,
-                GroupName = "Music",
-                UiTitle = "Fall Out Boy-Make America Psycho Again-CD-FLAC-2015-FORSAKEN"
-            };
-
-            _failed = new NzbVortexQueueItem
-            {
-                DownloadedSize = 1000,
-                TotalDownloadSize = 1000,
-                GroupName = "Music",
-                UiTitle = "Fall Out Boy-Make America Psycho Again-CD-FLAC-2015-FORSAKEN",
-                DestinationPath = "somedirectory",
-                State = NzbVortexStateType.UncompressFailed,
-            };
-
-            _completed = new NzbVortexQueueItem
-            {
-                DownloadedSize = 1000,
-                TotalDownloadSize = 1000,
-                GroupName = "Music",
-                UiTitle = "Fall Out Boy-Make America Psycho Again-CD-FLAC-2015-FORSAKEN",
-                DestinationPath = "/remote/mount/music/Fall Out Boy-Make America Psycho Again-CD-FLAC-2015-FORSAKEN",
-                State = NzbVortexStateType.Done
-            };
-        }
-
-        protected void GivenFailedDownload()
-        {
-            Mocker.GetMock<INzbVortexProxy>()
-                .Setup(s => s.DownloadNzb(It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<NzbVortexSettings>()))
-                .Returns((string)null);
-        }
-
-        protected void GivenSuccessfulDownload()
-        {
-            Mocker.GetMock<INzbVortexProxy>()
-                .Setup(s => s.DownloadNzb(It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<NzbVortexSettings>()))
-                .Returns(Guid.NewGuid().ToString().Replace("-", ""));
-        }
-
-        protected virtual void GivenQueue(NzbVortexQueueItem queue)
-        {
-            var list = new List<NzbVortexQueueItem>();
-
-            list.AddIfNotNull(queue);
-
-            Mocker.GetMock<INzbVortexProxy>()
-                .Setup(s => s.GetQueue(It.IsAny<int>(), It.IsAny<NzbVortexSettings>()))
-                .Returns(list);
-        }
-
-        [Test]
-        public void GetItems_should_return_no_items_when_queue_is_empty()
-        {
-            GivenQueue(null);
-
-            Subject.GetItems().Should().BeEmpty();
-        }
-
-        [Test]
-        public void queued_item_should_have_required_properties()
-        {
-            GivenQueue(_queued);
-
-            var result = Subject.GetItems().Single();
-
-            VerifyQueued(result);
-
-            result.CanBeRemoved.Should().BeTrue();
-            result.CanMoveFiles.Should().BeTrue();
-        }
-
-        [Test]
-        public void paused_item_should_have_required_properties()
-        {
-            _queued.IsPaused = true;
-            GivenQueue(_queued);
-
-            var result = Subject.GetItems().Single();
-
-            VerifyPaused(result);
+        Subject.Definition = new DownloadClientDefinition();
+        Subject.Definition.Settings = new NzbVortexSettings
+                                      {
+                                          Host = "127.0.0.1",
+                                          Port = 2222,
+                                          ApiKey = "1234-ABCD",
+                                          MusicCategory = "Music",
+                                          RecentTvPriority = (int)NzbgetPriority.High
+                                      };
+
+        _queued = new NzbVortexQueueItem
+                  {
+                      Id = RandomNumber,
+                      DownloadedSize = 1000,
+                      TotalDownloadSize = 10,
+                      GroupName = "Music",
+                      UiTitle = "Fall Out Boy-Make America Psycho Again-CD-FLAC-2015-FORSAKEN"
+                  };
+
+        _failed = new NzbVortexQueueItem
+                  {
+                      DownloadedSize = 1000,
+                      TotalDownloadSize = 1000,
+                      GroupName = "Music",
+                      UiTitle = "Fall Out Boy-Make America Psycho Again-CD-FLAC-2015-FORSAKEN",
+                      DestinationPath = "somedirectory",
+                      State = NzbVortexStateType.UncompressFailed,
+                  };
+
+        _completed = new NzbVortexQueueItem
+                     {
+                         DownloadedSize = 1000,
+                         TotalDownloadSize = 1000,
+                         GroupName = "Music",
+                         UiTitle = "Fall Out Boy-Make America Psycho Again-CD-FLAC-2015-FORSAKEN",
+                         DestinationPath = "/remote/mount/music/Fall Out Boy-Make America Psycho Again-CD-FLAC-2015-FORSAKEN",
+                         State = NzbVortexStateType.Done
+                     };
+    }
+
+    protected void GivenFailedDownload()
+    {
+        Mocker.GetMock<INzbVortexProxy>()
+              .Setup(s => s.DownloadNzb(It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<NzbVortexSettings>()))
+              .Returns((string)null);
+    }
+
+    protected void GivenSuccessfulDownload()
+    {
+        Mocker.GetMock<INzbVortexProxy>()
+              .Setup(s => s.DownloadNzb(It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<NzbVortexSettings>()))
+              .Returns(Guid.NewGuid().ToString().Replace("-", ""));
+    }
+
+    protected virtual void GivenQueue(NzbVortexQueueItem queue)
+    {
+        var list = new List<NzbVortexQueueItem>();
+
+        list.AddIfNotNull(queue);
+
+        Mocker.GetMock<INzbVortexProxy>()
+              .Setup(s => s.GetQueue(It.IsAny<int>(), It.IsAny<NzbVortexSettings>()))
+              .Returns(list);
+    }
+
+    [Test]
+    public void GetItems_should_return_no_items_when_queue_is_empty()
+    {
+        GivenQueue(null);
+
+        Subject.GetItems().Should().BeEmpty();
+    }
+
+    [Test]
+    public void queued_item_should_have_required_properties()
+    {
+        GivenQueue(_queued);
+
+        var result = Subject.GetItems().Single();
+
+        VerifyQueued(result);
+
+        result.CanBeRemoved.Should().BeTrue();
+        result.CanMoveFiles.Should().BeTrue();
+    }
+
+    [Test]
+    public void paused_item_should_have_required_properties()
+    {
+        _queued.IsPaused = true;
+        GivenQueue(_queued);
+
+        var result = Subject.GetItems().Single();
+
+        VerifyPaused(result);
+
+        result.CanBeRemoved.Should().BeTrue();
+        result.CanMoveFiles.Should().BeTrue();
+    }
+
+    [Test]
+    public void downloading_item_should_have_required_properties()
+    {
+        _queued.State = NzbVortexStateType.Downloading;
+        GivenQueue(_queued);
 
-            result.CanBeRemoved.Should().BeTrue();
-            result.CanMoveFiles.Should().BeTrue();
-        }
+        var result = Subject.GetItems().Single();
 
-        [Test]
-        public void downloading_item_should_have_required_properties()
-        {
-            _queued.State = NzbVortexStateType.Downloading;
-            GivenQueue(_queued);
+        VerifyDownloading(result);
 
-            var result = Subject.GetItems().Single();
+        result.CanBeRemoved.Should().BeTrue();
+        result.CanMoveFiles.Should().BeTrue();
+    }
 
-            VerifyDownloading(result);
+    [Test]
+    public void completed_download_should_have_required_properties()
+    {
+        GivenQueue(_completed);
 
-            result.CanBeRemoved.Should().BeTrue();
-            result.CanMoveFiles.Should().BeTrue();
-        }
+        var result = Subject.GetItems().Single();
 
-        [Test]
-        public void completed_download_should_have_required_properties()
-        {
-            GivenQueue(_completed);
+        VerifyCompleted(result);
 
-            var result = Subject.GetItems().Single();
+        result.CanBeRemoved.Should().BeTrue();
+        result.CanMoveFiles.Should().BeTrue();
+    }
 
-            VerifyCompleted(result);
+    [Test]
+    public void failed_item_should_have_required_properties()
+    {
+        GivenQueue(_failed);
 
-            result.CanBeRemoved.Should().BeTrue();
-            result.CanMoveFiles.Should().BeTrue();
-        }
+        var result = Subject.GetItems().Single();
 
-        [Test]
-        public void failed_item_should_have_required_properties()
-        {
-            GivenQueue(_failed);
+        VerifyFailed(result);
 
-            var result = Subject.GetItems().Single();
+        result.CanBeRemoved.Should().BeTrue();
+        result.CanMoveFiles.Should().BeTrue();
+    }
 
-            VerifyFailed(result);
+    [Test]
+    public void should_report_UncompressFailed_as_failed()
+    {
+        _queued.State = NzbVortexStateType.UncompressFailed;
+        GivenQueue(_failed);
 
-            result.CanBeRemoved.Should().BeTrue();
-            result.CanMoveFiles.Should().BeTrue();
-        }
+        var items = Subject.GetItems();
 
-        [Test]
-        public void should_report_UncompressFailed_as_failed()
-        {
-            _queued.State = NzbVortexStateType.UncompressFailed;
-            GivenQueue(_failed);
+        items.First().Status.Should().Be(DownloadItemStatus.Failed);
+    }
 
-            var items = Subject.GetItems();
+    [Test]
+    public void should_report_CheckFailedDataCorrupt_as_failed()
+    {
+        _queued.State = NzbVortexStateType.CheckFailedDataCorrupt;
+        GivenQueue(_failed);
 
-            items.First().Status.Should().Be(DownloadItemStatus.Failed);
-        }
+        var result = Subject.GetItems().Single();
 
-        [Test]
-        public void should_report_CheckFailedDataCorrupt_as_failed()
-        {
-            _queued.State = NzbVortexStateType.CheckFailedDataCorrupt;
-            GivenQueue(_failed);
+        result.Status.Should().Be(DownloadItemStatus.Failed);
+    }
 
-            var result = Subject.GetItems().Single();
+    [Test]
+    public void should_report_BadlyEncoded_as_failed()
+    {
+        _queued.State = NzbVortexStateType.BadlyEncoded;
+        GivenQueue(_failed);
 
-            result.Status.Should().Be(DownloadItemStatus.Failed);
-        }
+        var items = Subject.GetItems();
 
-        [Test]
-        public void should_report_BadlyEncoded_as_failed()
-        {
-            _queued.State = NzbVortexStateType.BadlyEncoded;
-            GivenQueue(_failed);
+        items.First().Status.Should().Be(DownloadItemStatus.Failed);
+    }
 
-            var items = Subject.GetItems();
+    [Test]
+    public void Download_should_return_unique_id()
+    {
+        GivenSuccessfulDownload();
 
-            items.First().Status.Should().Be(DownloadItemStatus.Failed);
-        }
+        var remoteAlbum = CreateRemoteAlbum();
 
-        [Test]
-        public void Download_should_return_unique_id()
-        {
-            GivenSuccessfulDownload();
+        var id = Subject.Download(remoteAlbum);
 
-            var remoteAlbum = CreateRemoteAlbum();
+        id.Should().NotBeNullOrEmpty();
+    }
 
-            var id = Subject.Download(remoteAlbum);
+    [Test]
+    public void Download_should_throw_if_failed()
+    {
+        GivenFailedDownload();
 
-            id.Should().NotBeNullOrEmpty();
-        }
+        var remoteAlbum = CreateRemoteAlbum();
 
-        [Test]
-        public void Download_should_throw_if_failed()
-        {
-            GivenFailedDownload();
+        Assert.Throws<DownloadClientException>(() => Subject.Download(remoteAlbum));
+    }
 
-            var remoteAlbum = CreateRemoteAlbum();
+    [Test]
+    public void GetItems_should_ignore_downloads_from_other_categories()
+    {
+        _completed.GroupName = "mycat";
 
-            Assert.Throws<DownloadClientException>(() => Subject.Download(remoteAlbum));
-        }
+        GivenQueue(null);
 
-        [Test]
-        public void GetItems_should_ignore_downloads_from_other_categories()
-        {
-            _completed.GroupName = "mycat";
+        var items = Subject.GetItems();
 
-            GivenQueue(null);
+        items.Should().BeEmpty();
+    }
 
-            var items = Subject.GetItems();
+    [Test]
+    public void should_remap_storage_if_mounted()
+    {
+        Mocker.GetMock<IRemotePathMappingService>()
+              .Setup(v => v.RemapRemoteToLocal("127.0.0.1", It.IsAny<OsPath>()))
+              .Returns(new OsPath(@"O:\mymount\Fall Out Boy-Make America Psycho Again-CD-FLAC-2015-FORSAKEN".AsOsAgnostic()));
 
-            items.Should().BeEmpty();
-        }
+        GivenQueue(_completed);
 
-        [Test]
-        public void should_remap_storage_if_mounted()
-        {
-            Mocker.GetMock<IRemotePathMappingService>()
-                  .Setup(v => v.RemapRemoteToLocal("127.0.0.1", It.IsAny<OsPath>()))
-                  .Returns(new OsPath(@"O:\mymount\Fall Out Boy-Make America Psycho Again-CD-FLAC-2015-FORSAKEN".AsOsAgnostic()));
+        var result = Subject.GetItems().Single();
 
-            GivenQueue(_completed);
+        result.OutputPath.Should().Be(@"O:\mymount\Fall Out Boy-Make America Psycho Again-CD-FLAC-2015-FORSAKEN".AsOsAgnostic());
+    }
 
-            var result = Subject.GetItems().Single();
+    [Test]
+    public void should_get_files_if_completed_download_is_not_in_a_job_folder()
+    {
+        Mocker.GetMock<IRemotePathMappingService>()
+              .Setup(v => v.RemapRemoteToLocal("127.0.0.1", It.IsAny<OsPath>()))
+              .Returns(new OsPath(@"O:\mymount\".AsOsAgnostic()));
 
-            result.OutputPath.Should().Be(@"O:\mymount\Fall Out Boy-Make America Psycho Again-CD-FLAC-2015-FORSAKEN".AsOsAgnostic());
-        }
+        Mocker.GetMock<INzbVortexProxy>()
+              .Setup(s => s.GetFiles(It.IsAny<int>(), It.IsAny<NzbVortexSettings>()))
+              .Returns(new List<NzbVortexFile> { new NzbVortexFile { FileName = "Fall Out Boy - Make America Psyco Again - Track 1.flac" } });
 
-        [Test]
-        public void should_get_files_if_completed_download_is_not_in_a_job_folder()
-        {
-            Mocker.GetMock<IRemotePathMappingService>()
-                  .Setup(v => v.RemapRemoteToLocal("127.0.0.1", It.IsAny<OsPath>()))
-                  .Returns(new OsPath(@"O:\mymount\".AsOsAgnostic()));
+        _completed.State = NzbVortexStateType.Done;
+        GivenQueue(_completed);
 
-            Mocker.GetMock<INzbVortexProxy>()
-                  .Setup(s => s.GetFiles(It.IsAny<int>(), It.IsAny<NzbVortexSettings>()))
-                  .Returns(new List<NzbVortexFile> { new NzbVortexFile { FileName = "Fall Out Boy - Make America Psyco Again - Track 1.flac" } });
+        var result = Subject.GetItems().Single();
 
-            _completed.State = NzbVortexStateType.Done;
-            GivenQueue(_completed);
+        result.OutputPath.Should().Be(@"O:\mymount\Fall Out Boy - Make America Psyco Again - Track 1.flac".AsOsAgnostic());
+    }
 
-            var result = Subject.GetItems().Single();
+    [Test]
+    public void should_be_warning_if_more_than_one_file_is_not_in_a_job_folder()
+    {
+        Mocker.GetMock<IRemotePathMappingService>()
+              .Setup(v => v.RemapRemoteToLocal("127.0.0.1", It.IsAny<OsPath>()))
+              .Returns(new OsPath(@"O:\mymount\".AsOsAgnostic()));
 
-            result.OutputPath.Should().Be(@"O:\mymount\Fall Out Boy - Make America Psyco Again - Track 1.flac".AsOsAgnostic());
-        }
+        Mocker.GetMock<INzbVortexProxy>()
+              .Setup(s => s.GetFiles(It.IsAny<int>(), It.IsAny<NzbVortexSettings>()))
+              .Returns(new List<NzbVortexFile>
+                       {
+                           new NzbVortexFile { FileName = "Fall Out Boy - Make America Psyco Again - Track 1.flac" },
+                           new NzbVortexFile { FileName = "Fall Out Boy-Make America Psycho Again-CD-FLAC-2015-FORSAKEN.nfo" }
+                       });
 
-        [Test]
-        public void should_be_warning_if_more_than_one_file_is_not_in_a_job_folder()
-        {
-            Mocker.GetMock<IRemotePathMappingService>()
-                  .Setup(v => v.RemapRemoteToLocal("127.0.0.1", It.IsAny<OsPath>()))
-                  .Returns(new OsPath(@"O:\mymount\".AsOsAgnostic()));
+        _completed.State = NzbVortexStateType.Done;
+        GivenQueue(_completed);
 
-            Mocker.GetMock<INzbVortexProxy>()
-                  .Setup(s => s.GetFiles(It.IsAny<int>(), It.IsAny<NzbVortexSettings>()))
-                  .Returns(new List<NzbVortexFile>
-                           {
-                               new NzbVortexFile { FileName = "Fall Out Boy - Make America Psyco Again - Track 1.flac" },
-                               new NzbVortexFile { FileName = "Fall Out Boy-Make America Psycho Again-CD-FLAC-2015-FORSAKEN.nfo" }
-                           });
+        var result = Subject.GetItems().Single();
 
-            _completed.State = NzbVortexStateType.Done;
-            GivenQueue(_completed);
+        result.Status.Should().Be(DownloadItemStatus.Warning);
+    }
 
-            var result = Subject.GetItems().Single();
+    [TestCase("1.0", false)]
+    [TestCase("2.2", false)]
+    [TestCase("2.3", true)]
+    [TestCase("2.4", true)]
+    [TestCase("3.0", true)]
+    public void should_test_api_version(string version, bool expected)
+    {
+        Mocker.GetMock<INzbVortexProxy>()
+              .Setup(v => v.GetGroups(It.IsAny<NzbVortexSettings>()))
+              .Returns(new List<NzbVortexGroup> { new NzbVortexGroup { GroupName = ((NzbVortexSettings)Subject.Definition.Settings).MusicCategory } });
 
-            result.Status.Should().Be(DownloadItemStatus.Warning);
-        }
+        Mocker.GetMock<INzbVortexProxy>()
+              .Setup(v => v.GetApiVersion(It.IsAny<NzbVortexSettings>()))
+              .Returns(new NzbVortexApiVersionResponse { ApiLevel = version });
 
-        [TestCase("1.0", false)]
-        [TestCase("2.2", false)]
-        [TestCase("2.3", true)]
-        [TestCase("2.4", true)]
-        [TestCase("3.0", true)]
-        public void should_test_api_version(string version, bool expected)
-        {
-            Mocker.GetMock<INzbVortexProxy>()
-                .Setup(v => v.GetGroups(It.IsAny<NzbVortexSettings>()))
-                .Returns(new List<NzbVortexGroup> { new NzbVortexGroup { GroupName = ((NzbVortexSettings)Subject.Definition.Settings).MusicCategory } });
+        var error = Subject.Test();
 
-            Mocker.GetMock<INzbVortexProxy>()
-                .Setup(v => v.GetApiVersion(It.IsAny<NzbVortexSettings>()))
-                .Returns(new NzbVortexApiVersionResponse { ApiLevel = version });
-
-            var error = Subject.Test();
-
-            error.IsValid.Should().Be(expected);
-        }
+        error.IsValid.Should().Be(expected);
     }
 }

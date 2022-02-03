@@ -1,22 +1,22 @@
 ﻿using Dapper;
 using NzbDrone.Core.Datastore;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace NzbDrone.Core.Housekeeping.Housekeepers;
+
+public class CleanupAbsolutePathMetadataFiles : IHousekeepingTask
 {
-    public class CleanupAbsolutePathMetadataFiles : IHousekeepingTask
+    private readonly IMainDatabase _database;
+
+    public CleanupAbsolutePathMetadataFiles(IMainDatabase database)
     {
-        private readonly IMainDatabase _database;
+        _database = database;
+    }
 
-        public CleanupAbsolutePathMetadataFiles(IMainDatabase database)
+    public void Clean()
+    {
+        using (var mapper = _database.OpenConnection())
         {
-            _database = database;
-        }
-
-        public void Clean()
-        {
-            using (var mapper = _database.OpenConnection())
-            {
-                mapper.Execute(@"DELETE FROM MetadataFiles
+            mapper.Execute(@"DELETE FROM MetadataFiles
                                      WHERE Id IN (
                                          SELECT Id FROM MetadataFiles
                                          WHERE RelativePath
@@ -26,7 +26,6 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
                                          OR RelativePath
                                          LIKE '/%'
                                      )");
-            }
         }
     }
 }

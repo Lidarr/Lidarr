@@ -8,46 +8,45 @@ using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 
-namespace Lidarr.Api.V1.Logs
-{
-    [V1ApiController("log/file/update")]
-    public class UpdateLogFileController : LogFileControllerBase
-    {
-        private readonly IAppFolderInfo _appFolderInfo;
-        private readonly IDiskProvider _diskProvider;
+namespace Lidarr.Api.V1.Logs;
 
-        public UpdateLogFileController(IAppFolderInfo appFolderInfo,
+[V1ApiController("log/file/update")]
+public class UpdateLogFileController : LogFileControllerBase
+{
+    private readonly IAppFolderInfo _appFolderInfo;
+    private readonly IDiskProvider _diskProvider;
+
+    public UpdateLogFileController(IAppFolderInfo appFolderInfo,
                                    IDiskProvider diskProvider,
                                    IConfigFileProvider configFileProvider)
-            : base(diskProvider, configFileProvider, "update")
+        : base(diskProvider, configFileProvider, "update")
+    {
+        _appFolderInfo = appFolderInfo;
+        _diskProvider = diskProvider;
+    }
+
+    protected override IEnumerable<string> GetLogFiles()
+    {
+        if (!_diskProvider.FolderExists(_appFolderInfo.GetUpdateLogFolder()))
         {
-            _appFolderInfo = appFolderInfo;
-            _diskProvider = diskProvider;
+            return Enumerable.Empty<string>();
         }
 
-        protected override IEnumerable<string> GetLogFiles()
-        {
-            if (!_diskProvider.FolderExists(_appFolderInfo.GetUpdateLogFolder()))
-            {
-                return Enumerable.Empty<string>();
-            }
+        return _diskProvider.GetFiles(_appFolderInfo.GetUpdateLogFolder(), SearchOption.TopDirectoryOnly)
+                            .Where(f => Regex.IsMatch(Path.GetFileName(f), LOGFILE_ROUTE.TrimStart('/'), RegexOptions.IgnoreCase))
+                            .ToList();
+    }
 
-            return _diskProvider.GetFiles(_appFolderInfo.GetUpdateLogFolder(), SearchOption.TopDirectoryOnly)
-                                     .Where(f => Regex.IsMatch(Path.GetFileName(f), LOGFILE_ROUTE.TrimStart('/'), RegexOptions.IgnoreCase))
-                                     .ToList();
-        }
+    protected override string GetLogFilePath(string filename)
+    {
+        return Path.Combine(_appFolderInfo.GetUpdateLogFolder(), filename);
+    }
 
-        protected override string GetLogFilePath(string filename)
+    protected override string DownloadUrlRoot
+    {
+        get
         {
-            return Path.Combine(_appFolderInfo.GetUpdateLogFolder(), filename);
-        }
-
-        protected override string DownloadUrlRoot
-        {
-            get
-            {
-                return "updatelogfile";
-            }
+            return "updatelogfile";
         }
     }
 }

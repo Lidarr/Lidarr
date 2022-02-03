@@ -3,46 +3,45 @@ using System.Linq;
 using Lidarr.Http.REST;
 using NzbDrone.Core.Tags;
 
-namespace Lidarr.Api.V1.Tags
+namespace Lidarr.Api.V1.Tags;
+
+public class TagResource : RestResource
 {
-    public class TagResource : RestResource
+    public string Label { get; set; }
+}
+
+public static class TagResourceMapper
+{
+    public static TagResource ToResource(this Tag model)
     {
-        public string Label { get; set; }
+        if (model == null)
+        {
+            return null;
+        }
+
+        return new TagResource
+               {
+                   Id = model.Id,
+                   Label = model.Label
+               };
     }
 
-    public static class TagResourceMapper
+    public static Tag ToModel(this TagResource resource)
     {
-        public static TagResource ToResource(this Tag model)
+        if (resource == null)
         {
-            if (model == null)
-            {
-                return null;
-            }
-
-            return new TagResource
-            {
-                Id = model.Id,
-                Label = model.Label
-            };
+            return null;
         }
 
-        public static Tag ToModel(this TagResource resource)
-        {
-            if (resource == null)
-            {
-                return null;
-            }
+        return new Tag
+               {
+                   Id = resource.Id,
+                   Label = resource.Label
+               };
+    }
 
-            return new Tag
-            {
-                Id = resource.Id,
-                Label = resource.Label
-            };
-        }
-
-        public static List<TagResource> ToResource(this IEnumerable<Tag> models)
-        {
-            return models.Select(ToResource).ToList();
-        }
+    public static List<TagResource> ToResource(this IEnumerable<Tag> models)
+    {
+        return models.Select(ToResource).ToList();
     }
 }

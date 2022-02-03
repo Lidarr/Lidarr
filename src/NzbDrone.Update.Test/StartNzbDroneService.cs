@@ -9,34 +9,33 @@ using NzbDrone.Test.Common;
 using NzbDrone.Update.UpdateEngine;
 using IServiceProvider = NzbDrone.Common.IServiceProvider;
 
-namespace NzbDrone.Update.Test
+namespace NzbDrone.Update.Test;
+
+[TestFixture]
+public class StartNzbDroneServiceFixture : TestBase<StartNzbDrone>
 {
-    [TestFixture]
-    public class StartNzbDroneServiceFixture : TestBase<StartNzbDrone>
+    [Test]
+    public void should_start_service_if_app_type_was_serivce()
     {
-        [Test]
-        public void should_start_service_if_app_type_was_serivce()
-        {
-            string targetFolder = "c:\\Lidarr\\".AsOsAgnostic();
+        string targetFolder = "c:\\Lidarr\\".AsOsAgnostic();
 
-            Subject.Start(AppType.Service, targetFolder);
+        Subject.Start(AppType.Service, targetFolder);
 
-            Mocker.GetMock<IServiceProvider>().Verify(c => c.Start(ServiceProvider.SERVICE_NAME), Times.Once());
-        }
+        Mocker.GetMock<IServiceProvider>().Verify(c => c.Start(ServiceProvider.SERVICE_NAME), Times.Once());
+    }
 
-        [Test]
-        public void should_start_console_if_app_type_was_service_but_start_failed_because_of_permissions()
-        {
-            string targetFolder = "c:\\Lidarr\\".AsOsAgnostic();
-            string targetProcess = "c:\\Lidarr\\Lidarr.Console".AsOsAgnostic().ProcessNameToExe();
+    [Test]
+    public void should_start_console_if_app_type_was_service_but_start_failed_because_of_permissions()
+    {
+        string targetFolder = "c:\\Lidarr\\".AsOsAgnostic();
+        string targetProcess = "c:\\Lidarr\\Lidarr.Console".AsOsAgnostic().ProcessNameToExe();
 
-            Mocker.GetMock<IServiceProvider>().Setup(c => c.Start(ServiceProvider.SERVICE_NAME)).Throws(new InvalidOperationException());
+        Mocker.GetMock<IServiceProvider>().Setup(c => c.Start(ServiceProvider.SERVICE_NAME)).Throws(new InvalidOperationException());
 
-            Subject.Start(AppType.Service, targetFolder);
+        Subject.Start(AppType.Service, targetFolder);
 
-            Mocker.GetMock<IProcessProvider>().Verify(c => c.SpawnNewProcess(targetProcess, "/" + StartupContext.NO_BROWSER, null, false), Times.Once());
+        Mocker.GetMock<IProcessProvider>().Verify(c => c.SpawnNewProcess(targetProcess, "/" + StartupContext.NO_BROWSER, null, false), Times.Once());
 
-            ExceptionVerification.ExpectedWarns(1);
-        }
+        ExceptionVerification.ExpectedWarns(1);
     }
 }

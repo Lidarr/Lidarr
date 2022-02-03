@@ -1,9 +1,8 @@
-namespace Lidarr.Api.V1.Artist
+namespace Lidarr.Api.V1.Artist;
+
+public class AlternateTitleResource
 {
-    public class AlternateTitleResource
-    {
-        public string Title { get; set; }
-        public int? SeasonNumber { get; set; }
-        public int? SceneSeasonNumber { get; set; }
-    }
+    public string Title { get; set; }
+    public int? SeasonNumber { get; set; }
+    public int? SceneSeasonNumber { get; set; }
 }

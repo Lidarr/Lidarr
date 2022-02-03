@@ -1,26 +1,25 @@
 ﻿using FluentValidation.Validators;
 using NzbDrone.Core.Music;
 
-namespace NzbDrone.Core.Validation.Paths
+namespace NzbDrone.Core.Validation.Paths;
+
+public class ArtistExistsValidator : PropertyValidator
 {
-    public class ArtistExistsValidator : PropertyValidator
+    private readonly IArtistService _artistService;
+
+    public ArtistExistsValidator(IArtistService artistService)
+        : base("This artist has already been added.")
     {
-        private readonly IArtistService _artistService;
+        _artistService = artistService;
+    }
 
-        public ArtistExistsValidator(IArtistService artistService)
-            : base("This artist has already been added.")
+    protected override bool IsValid(PropertyValidatorContext context)
+    {
+        if (context.PropertyValue == null)
         {
-            _artistService = artistService;
+            return true;
         }
 
-        protected override bool IsValid(PropertyValidatorContext context)
-        {
-            if (context.PropertyValue == null)
-            {
-                return true;
-            }
-
-            return !_artistService.GetAllArtists().Exists(s => s.Metadata.Value.ForeignArtistId == context.PropertyValue.ToString());
-        }
+        return !_artistService.GetAllArtists().Exists(s => s.Metadata.Value.ForeignArtistId == context.PropertyValue.ToString());
     }
 }

@@ -4,42 +4,41 @@ using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Profiles.Qualities;
 using NzbDrone.Core.Qualities;
 
-namespace NzbDrone.Core.Music
+namespace NzbDrone.Core.Music;
+
+public interface IAlbumCutoffService
 {
-    public interface IAlbumCutoffService
+    PagingSpec<Album> AlbumsWhereCutoffUnmet(PagingSpec<Album> pagingSpec);
+}
+
+public class AlbumCutoffService : IAlbumCutoffService
+{
+    private readonly IAlbumRepository _albumRepository;
+    private readonly IProfileService _profileService;
+
+    public AlbumCutoffService(IAlbumRepository albumRepository, IProfileService profileService)
     {
-        PagingSpec<Album> AlbumsWhereCutoffUnmet(PagingSpec<Album> pagingSpec);
+        _albumRepository = albumRepository;
+        _profileService = profileService;
     }
 
-    public class AlbumCutoffService : IAlbumCutoffService
+    public PagingSpec<Album> AlbumsWhereCutoffUnmet(PagingSpec<Album> pagingSpec)
     {
-        private readonly IAlbumRepository _albumRepository;
-        private readonly IProfileService _profileService;
+        var qualitiesBelowCutoff = new List<QualitiesBelowCutoff>();
+        var profiles = _profileService.All();
 
-        public AlbumCutoffService(IAlbumRepository albumRepository, IProfileService profileService)
+        //Get all items less than the cutoff
+        foreach (var profile in profiles)
         {
-            _albumRepository = albumRepository;
-            _profileService = profileService;
-        }
+            var cutoffIndex = profile.GetIndex(profile.Cutoff);
+            var belowCutoff = profile.Items.Take(cutoffIndex.Index).ToList();
 
-        public PagingSpec<Album> AlbumsWhereCutoffUnmet(PagingSpec<Album> pagingSpec)
-        {
-            var qualitiesBelowCutoff = new List<QualitiesBelowCutoff>();
-            var profiles = _profileService.All();
-
-            //Get all items less than the cutoff
-            foreach (var profile in profiles)
+            if (belowCutoff.Any())
             {
-                var cutoffIndex = profile.GetIndex(profile.Cutoff);
-                var belowCutoff = profile.Items.Take(cutoffIndex.Index).ToList();
-
-                if (belowCutoff.Any())
-                {
-                    qualitiesBelowCutoff.Add(new QualitiesBelowCutoff(profile.Id, belowCutoff.SelectMany(i => i.GetQualities().Select(q => q.Id))));
-                }
+                qualitiesBelowCutoff.Add(new QualitiesBelowCutoff(profile.Id, belowCutoff.SelectMany(i => i.GetQualities().Select(q => q.Id))));
             }
-
-            return _albumRepository.AlbumsWhereCutoffUnmet(pagingSpec, qualitiesBelowCutoff);
         }
+
+        return _albumRepository.AlbumsWhereCutoffUnmet(pagingSpec, qualitiesBelowCutoff);
     }
 }

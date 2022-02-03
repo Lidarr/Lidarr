@@ -4,54 +4,53 @@ using FluentValidation.Validators;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
 
-namespace NzbDrone.Core.Validation.Paths
+namespace NzbDrone.Core.Validation.Paths;
+
+public class MappedNetworkDriveValidator : PropertyValidator
 {
-    public class MappedNetworkDriveValidator : PropertyValidator
+    private readonly IRuntimeInfo _runtimeInfo;
+    private readonly IDiskProvider _diskProvider;
+
+    private static readonly Regex DriveRegex = new Regex(@"[a-z]\:\\", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+    public MappedNetworkDriveValidator(IRuntimeInfo runtimeInfo, IDiskProvider diskProvider)
+        : base("Mapped Network Drive and Windows Service")
     {
-        private readonly IRuntimeInfo _runtimeInfo;
-        private readonly IDiskProvider _diskProvider;
+        _runtimeInfo = runtimeInfo;
+        _diskProvider = diskProvider;
+    }
 
-        private static readonly Regex DriveRegex = new Regex(@"[a-z]\:\\", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        public MappedNetworkDriveValidator(IRuntimeInfo runtimeInfo, IDiskProvider diskProvider)
-            : base("Mapped Network Drive and Windows Service")
+    protected override bool IsValid(PropertyValidatorContext context)
+    {
+        if (context.PropertyValue == null)
         {
-            _runtimeInfo = runtimeInfo;
-            _diskProvider = diskProvider;
+            return false;
         }
 
-        protected override bool IsValid(PropertyValidatorContext context)
+        if (OsInfo.IsNotWindows)
         {
-            if (context.PropertyValue == null)
-            {
-                return false;
-            }
-
-            if (OsInfo.IsNotWindows)
-            {
-                return true;
-            }
-
-            if (!_runtimeInfo.IsWindowsService)
-            {
-                return true;
-            }
-
-            var path = context.PropertyValue.ToString();
-
-            if (!DriveRegex.IsMatch(path))
-            {
-                return true;
-            }
-
-            var mount = _diskProvider.GetMount(path);
-
-            if (mount != null && mount.DriveType == DriveType.Network)
-            {
-                return false;
-            }
-
             return true;
         }
+
+        if (!_runtimeInfo.IsWindowsService)
+        {
+            return true;
+        }
+
+        var path = context.PropertyValue.ToString();
+
+        if (!DriveRegex.IsMatch(path))
+        {
+            return true;
+        }
+
+        var mount = _diskProvider.GetMount(path);
+
+        if (mount != null && mount.DriveType == DriveType.Network)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

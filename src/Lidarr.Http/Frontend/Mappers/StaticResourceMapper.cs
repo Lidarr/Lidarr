@@ -4,45 +4,44 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Core.Configuration;
 
-namespace Lidarr.Http.Frontend.Mappers
+namespace Lidarr.Http.Frontend.Mappers;
+
+public class StaticResourceMapper : StaticResourceMapperBase
 {
-    public class StaticResourceMapper : StaticResourceMapperBase
+    private readonly IAppFolderInfo _appFolderInfo;
+    private readonly IConfigFileProvider _configFileProvider;
+
+    public StaticResourceMapper(IAppFolderInfo appFolderInfo, IDiskProvider diskProvider, IConfigFileProvider configFileProvider, Logger logger)
+        : base(diskProvider, logger)
     {
-        private readonly IAppFolderInfo _appFolderInfo;
-        private readonly IConfigFileProvider _configFileProvider;
+        _appFolderInfo = appFolderInfo;
+        _configFileProvider = configFileProvider;
+    }
 
-        public StaticResourceMapper(IAppFolderInfo appFolderInfo, IDiskProvider diskProvider, IConfigFileProvider configFileProvider, Logger logger)
-            : base(diskProvider, logger)
+    public override string Map(string resourceUrl)
+    {
+        var path = resourceUrl.Replace('/', Path.DirectorySeparatorChar);
+        path = path.Trim(Path.DirectorySeparatorChar);
+
+        return Path.Combine(_appFolderInfo.StartUpFolder, _configFileProvider.UiFolder, path);
+    }
+
+    public override bool CanHandle(string resourceUrl)
+    {
+        resourceUrl = resourceUrl.ToLowerInvariant();
+
+        if (resourceUrl.StartsWith("/content/images/icons/manifest") ||
+            resourceUrl.StartsWith("/content/images/icons/browserconfig"))
         {
-            _appFolderInfo = appFolderInfo;
-            _configFileProvider = configFileProvider;
+            return false;
         }
 
-        public override string Map(string resourceUrl)
-        {
-            var path = resourceUrl.Replace('/', Path.DirectorySeparatorChar);
-            path = path.Trim(Path.DirectorySeparatorChar);
-
-            return Path.Combine(_appFolderInfo.StartUpFolder, _configFileProvider.UiFolder, path);
-        }
-
-        public override bool CanHandle(string resourceUrl)
-        {
-            resourceUrl = resourceUrl.ToLowerInvariant();
-
-            if (resourceUrl.StartsWith("/content/images/icons/manifest") ||
-                resourceUrl.StartsWith("/content/images/icons/browserconfig"))
-            {
-                return false;
-            }
-
-            return resourceUrl.StartsWith("/content") ||
-                   (resourceUrl.EndsWith(".js") && !resourceUrl.EndsWith("initialize.js")) ||
-                   resourceUrl.EndsWith(".map") ||
-                   resourceUrl.EndsWith(".css") ||
-                   (resourceUrl.EndsWith(".ico") && !resourceUrl.Equals("/favicon.ico")) ||
-                   resourceUrl.EndsWith(".swf") ||
-                   resourceUrl.EndsWith("oauth.html");
-        }
+        return resourceUrl.StartsWith("/content") ||
+               (resourceUrl.EndsWith(".js") && !resourceUrl.EndsWith("initialize.js")) ||
+               resourceUrl.EndsWith(".map") ||
+               resourceUrl.EndsWith(".css") ||
+               (resourceUrl.EndsWith(".ico") && !resourceUrl.Equals("/favicon.ico")) ||
+               resourceUrl.EndsWith(".swf") ||
+               resourceUrl.EndsWith("oauth.html");
     }
 }

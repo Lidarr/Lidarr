@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.Indexers
+namespace NzbDrone.Core.Indexers;
+
+public interface IParseIndexerResponse
 {
-    public interface IParseIndexerResponse
-    {
-        IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse);
-    }
+    IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse);
 }

@@ -1,32 +1,31 @@
-﻿namespace NzbDrone.Core.Download.Clients.DownloadStation
+﻿namespace NzbDrone.Core.Download.Clients.DownloadStation;
+
+public class DiskStationApiInfo
 {
-    public class DiskStationApiInfo
+    private string _path;
+
+    public int MaxVersion { get; set; }
+
+    public int MinVersion { get; set; }
+
+    public DiskStationApi Type { get; set; }
+
+    public string Name { get; set; }
+
+    public bool NeedsAuthentication { get; set; }
+
+    public string Path
     {
-        private string _path;
-
-        public int MaxVersion { get; set; }
-
-        public int MinVersion { get; set; }
-
-        public DiskStationApi Type { get; set; }
-
-        public string Name { get; set; }
-
-        public bool NeedsAuthentication { get; set; }
-
-        public string Path
+        get
         {
-            get
-            {
-                return _path;
-            }
+            return _path;
+        }
 
-            set
+        set
+        {
+            if (!string.IsNullOrEmpty(value))
             {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    _path = value.TrimStart(new char[] { '/', '\\' });
-                }
+                _path = value.TrimStart(new char[] { '/', '\\' });
             }
         }
     }

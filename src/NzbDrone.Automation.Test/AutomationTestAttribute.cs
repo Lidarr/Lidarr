@@ -1,12 +1,11 @@
 ﻿using NUnit.Framework;
 
-namespace NzbDrone.Automation.Test
+namespace NzbDrone.Automation.Test;
+
+public class AutomationTestAttribute : CategoryAttribute
 {
-    public class AutomationTestAttribute : CategoryAttribute
+    public AutomationTestAttribute()
+        : base("AutomationTest")
     {
-        public AutomationTestAttribute()
-            : base("AutomationTest")
-        {
-        }
     }
 }

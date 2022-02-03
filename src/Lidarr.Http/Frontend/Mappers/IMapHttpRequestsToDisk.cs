@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Lidarr.Http.Frontend.Mappers
+namespace Lidarr.Http.Frontend.Mappers;
+
+public interface IMapHttpRequestsToDisk
 {
-    public interface IMapHttpRequestsToDisk
-    {
-        string Map(string resourceUrl);
-        bool CanHandle(string resourceUrl);
-        FileStreamResult GetResponse(string resourceUrl);
-    }
+    string Map(string resourceUrl);
+    bool CanHandle(string resourceUrl);
+    FileStreamResult GetResponse(string resourceUrl);
 }

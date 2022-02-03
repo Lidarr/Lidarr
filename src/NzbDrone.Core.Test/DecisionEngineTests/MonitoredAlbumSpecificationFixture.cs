@@ -8,132 +8,131 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.DecisionEngineTests
+namespace NzbDrone.Core.Test.DecisionEngineTests;
+
+[TestFixture]
+
+public class MonitoredAlbumSpecificationFixture : CoreTest<MonitoredAlbumSpecification>
 {
-    [TestFixture]
+    private MonitoredAlbumSpecification _monitoredAlbumSpecification;
 
-    public class MonitoredAlbumSpecificationFixture : CoreTest<MonitoredAlbumSpecification>
+    private RemoteAlbum _parseResultMulti;
+    private RemoteAlbum _parseResultSingle;
+    private Artist _fakeArtist;
+    private Album _firstAlbum;
+    private Album _secondAlbum;
+
+    [SetUp]
+    public void Setup()
     {
-        private MonitoredAlbumSpecification _monitoredAlbumSpecification;
+        _monitoredAlbumSpecification = Mocker.Resolve<MonitoredAlbumSpecification>();
 
-        private RemoteAlbum _parseResultMulti;
-        private RemoteAlbum _parseResultSingle;
-        private Artist _fakeArtist;
-        private Album _firstAlbum;
-        private Album _secondAlbum;
+        _fakeArtist = Builder<Artist>.CreateNew()
+                                     .With(c => c.Monitored = true)
+                                     .Build();
 
-        [SetUp]
-        public void Setup()
-        {
-            _monitoredAlbumSpecification = Mocker.Resolve<MonitoredAlbumSpecification>();
+        _firstAlbum = new Album { Monitored = true };
+        _secondAlbum = new Album { Monitored = true };
 
-            _fakeArtist = Builder<Artist>.CreateNew()
-                .With(c => c.Monitored = true)
-                .Build();
+        var singleAlbumList = new List<Album> { _firstAlbum };
+        var doubleAlbumList = new List<Album> { _firstAlbum, _secondAlbum };
 
-            _firstAlbum = new Album { Monitored = true };
-            _secondAlbum = new Album { Monitored = true };
+        _parseResultMulti = new RemoteAlbum
+                            {
+                                Artist = _fakeArtist,
+                                Albums = doubleAlbumList
+                            };
 
-            var singleAlbumList = new List<Album> { _firstAlbum };
-            var doubleAlbumList = new List<Album> { _firstAlbum, _secondAlbum };
+        _parseResultSingle = new RemoteAlbum
+                             {
+                                 Artist = _fakeArtist,
+                                 Albums = singleAlbumList
+                             };
+    }
 
-            _parseResultMulti = new RemoteAlbum
-            {
-                Artist = _fakeArtist,
-                Albums = doubleAlbumList
-            };
+    private void WithFirstAlbumUnmonitored()
+    {
+        _firstAlbum.Monitored = false;
+    }
 
-            _parseResultSingle = new RemoteAlbum
-            {
-                Artist = _fakeArtist,
-                Albums = singleAlbumList
-            };
-        }
+    private void WithSecondAlbumUnmonitored()
+    {
+        _secondAlbum.Monitored = false;
+    }
 
-        private void WithFirstAlbumUnmonitored()
-        {
-            _firstAlbum.Monitored = false;
-        }
+    [Test]
+    public void setup_should_return_monitored_album_should_return_true()
+    {
+        _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeTrue();
+        _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeTrue();
+    }
 
-        private void WithSecondAlbumUnmonitored()
-        {
-            _secondAlbum.Monitored = false;
-        }
+    [Test]
+    public void not_monitored_artist_should_be_skipped()
+    {
+        _fakeArtist.Monitored = false;
+        _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
+    }
 
-        [Test]
-        public void setup_should_return_monitored_album_should_return_true()
-        {
-            _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeTrue();
-            _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeTrue();
-        }
+    [Test]
+    public void only_album_not_monitored_should_return_false()
+    {
+        WithFirstAlbumUnmonitored();
+        _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeFalse();
+    }
 
-        [Test]
-        public void not_monitored_artist_should_be_skipped()
-        {
-            _fakeArtist.Monitored = false;
-            _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
-        }
+    [Test]
+    public void both_albums_not_monitored_should_return_false()
+    {
+        WithFirstAlbumUnmonitored();
+        WithSecondAlbumUnmonitored();
+        _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
+    }
 
-        [Test]
-        public void only_album_not_monitored_should_return_false()
-        {
-            WithFirstAlbumUnmonitored();
-            _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeFalse();
-        }
+    [Test]
+    public void only_first_album_not_monitored_should_return_false()
+    {
+        WithFirstAlbumUnmonitored();
+        _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
+    }
 
-        [Test]
-        public void both_albums_not_monitored_should_return_false()
-        {
-            WithFirstAlbumUnmonitored();
-            WithSecondAlbumUnmonitored();
-            _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
-        }
+    [Test]
+    public void only_second_album_not_monitored_should_return_false()
+    {
+        WithSecondAlbumUnmonitored();
+        _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
+    }
 
-        [Test]
-        public void only_first_album_not_monitored_should_return_false()
-        {
-            WithFirstAlbumUnmonitored();
-            _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
-        }
+    [Test]
+    public void should_return_true_for_single_album_search()
+    {
+        _fakeArtist.Monitored = false;
+        _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultSingle, new AlbumSearchCriteria()).Accepted.Should().BeTrue();
+    }
 
-        [Test]
-        public void only_second_album_not_monitored_should_return_false()
-        {
-            WithSecondAlbumUnmonitored();
-            _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
-        }
+    [Test]
+    public void should_return_true_if_album_is_not_monitored_and_monitoredEpisodesOnly_flag_is_false()
+    {
+        WithFirstAlbumUnmonitored();
+        _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultSingle, new AlbumSearchCriteria { MonitoredEpisodesOnly = false }).Accepted.Should().BeTrue();
+    }
 
-        [Test]
-        public void should_return_true_for_single_album_search()
-        {
-            _fakeArtist.Monitored = false;
-            _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultSingle, new AlbumSearchCriteria()).Accepted.Should().BeTrue();
-        }
+    [Test]
+    public void should_return_false_if_album_is_not_monitored_and_monitoredEpisodesOnly_flag_is_true()
+    {
+        WithFirstAlbumUnmonitored();
+        _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultSingle, new AlbumSearchCriteria { MonitoredEpisodesOnly = true }).Accepted.Should().BeFalse();
+    }
 
-        [Test]
-        public void should_return_true_if_album_is_not_monitored_and_monitoredEpisodesOnly_flag_is_false()
-        {
-            WithFirstAlbumUnmonitored();
-            _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultSingle, new AlbumSearchCriteria { MonitoredEpisodesOnly = false }).Accepted.Should().BeTrue();
-        }
+    [Test]
+    public void should_return_false_if_all_albums_are_not_monitored_for_discography_pack_release()
+    {
+        WithSecondAlbumUnmonitored();
+        _parseResultMulti.ParsedAlbumInfo = new ParsedAlbumInfo()
+                                            {
+                                                Discography = true
+                                            };
 
-        [Test]
-        public void should_return_false_if_album_is_not_monitored_and_monitoredEpisodesOnly_flag_is_true()
-        {
-            WithFirstAlbumUnmonitored();
-            _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultSingle, new AlbumSearchCriteria { MonitoredEpisodesOnly = true }).Accepted.Should().BeFalse();
-        }
-
-        [Test]
-        public void should_return_false_if_all_albums_are_not_monitored_for_discography_pack_release()
-        {
-            WithSecondAlbumUnmonitored();
-            _parseResultMulti.ParsedAlbumInfo = new ParsedAlbumInfo()
-            {
-                Discography = true
-            };
-
-            _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
-        }
+        _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
     }
 }

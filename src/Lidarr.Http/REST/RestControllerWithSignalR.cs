@@ -5,102 +5,101 @@ using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.SignalR;
 
-namespace Lidarr.Http.REST
+namespace Lidarr.Http.REST;
+
+public abstract class RestControllerWithSignalR<TResource, TModel> : RestController<TResource>, IHandle<ModelEvent<TModel>>
+    where TResource : RestResource, new()
+    where TModel : ModelBase, new()
 {
-    public abstract class RestControllerWithSignalR<TResource, TModel> : RestController<TResource>, IHandle<ModelEvent<TModel>>
-        where TResource : RestResource, new()
-        where TModel : ModelBase, new()
+    protected string Resource { get; }
+    private readonly IBroadcastSignalRMessage _signalRBroadcaster;
+
+    protected RestControllerWithSignalR(IBroadcastSignalRMessage signalRBroadcaster)
     {
-        protected string Resource { get; }
-        private readonly IBroadcastSignalRMessage _signalRBroadcaster;
+        _signalRBroadcaster = signalRBroadcaster;
 
-        protected RestControllerWithSignalR(IBroadcastSignalRMessage signalRBroadcaster)
+        var apiAttribute = GetType().GetCustomAttribute<VersionedApiControllerAttribute>();
+        if (apiAttribute != null && apiAttribute.Resource != VersionedApiControllerAttribute.CONTROLLER_RESOURCE)
         {
-            _signalRBroadcaster = signalRBroadcaster;
+            Resource = apiAttribute.Resource;
+        }
+        else
+        {
+            Resource = new TResource().ResourceName.Trim('/');
+        }
+    }
 
-            var apiAttribute = GetType().GetCustomAttribute<VersionedApiControllerAttribute>();
-            if (apiAttribute != null && apiAttribute.Resource != VersionedApiControllerAttribute.CONTROLLER_RESOURCE)
-            {
-                Resource = apiAttribute.Resource;
-            }
-            else
-            {
-                Resource = new TResource().ResourceName.Trim('/');
-            }
+    [NonAction]
+    public void Handle(ModelEvent<TModel> message)
+    {
+        if (!_signalRBroadcaster.IsConnected)
+        {
+            return;
         }
 
-        [NonAction]
-        public void Handle(ModelEvent<TModel> message)
+        if (message.Action == ModelAction.Deleted || message.Action == ModelAction.Sync)
         {
-            if (!_signalRBroadcaster.IsConnected)
-            {
-                return;
-            }
-
-            if (message.Action == ModelAction.Deleted || message.Action == ModelAction.Sync)
-            {
-                BroadcastResourceChange(message.Action);
-            }
-
-            BroadcastResourceChange(message.Action, message.Model.Id);
+            BroadcastResourceChange(message.Action);
         }
 
-        protected void BroadcastResourceChange(ModelAction action, int id)
-        {
-            if (!_signalRBroadcaster.IsConnected)
-            {
-                return;
-            }
+        BroadcastResourceChange(message.Action, message.Model.Id);
+    }
 
-            if (action == ModelAction.Deleted)
-            {
-                BroadcastResourceChange(action, new TResource { Id = id });
-            }
-            else
-            {
-                var resource = GetResourceById(id);
-                BroadcastResourceChange(action, resource);
-            }
+    protected void BroadcastResourceChange(ModelAction action, int id)
+    {
+        if (!_signalRBroadcaster.IsConnected)
+        {
+            return;
         }
 
-        protected void BroadcastResourceChange(ModelAction action, TResource resource)
+        if (action == ModelAction.Deleted)
         {
-            if (!_signalRBroadcaster.IsConnected || resource == null)
-            {
-                return;
-            }
+            BroadcastResourceChange(action, new TResource { Id = id });
+        }
+        else
+        {
+            var resource = GetResourceById(id);
+            BroadcastResourceChange(action, resource);
+        }
+    }
 
-            if (GetType().Namespace.Contains("V1"))
-            {
-                var signalRMessage = new SignalRMessage
-                {
-                    Name = Resource,
-                    Body = new ResourceChangeMessage<TResource>(resource, action),
-                    Action = action
-                };
-
-                _signalRBroadcaster.BroadcastMessage(signalRMessage);
-            }
+    protected void BroadcastResourceChange(ModelAction action, TResource resource)
+    {
+        if (!_signalRBroadcaster.IsConnected || resource == null)
+        {
+            return;
         }
 
-        protected void BroadcastResourceChange(ModelAction action)
+        if (GetType().Namespace.Contains("V1"))
         {
-            if (!_signalRBroadcaster.IsConnected)
-            {
-                return;
-            }
+            var signalRMessage = new SignalRMessage
+                                 {
+                                     Name = Resource,
+                                     Body = new ResourceChangeMessage<TResource>(resource, action),
+                                     Action = action
+                                 };
 
-            if (GetType().Namespace.Contains("V1"))
-            {
-                var signalRMessage = new SignalRMessage
-                {
-                    Name = Resource,
-                    Body = new ResourceChangeMessage<TResource>(action),
-                    Action = action
-                };
+            _signalRBroadcaster.BroadcastMessage(signalRMessage);
+        }
+    }
 
-                _signalRBroadcaster.BroadcastMessage(signalRMessage);
-            }
+    protected void BroadcastResourceChange(ModelAction action)
+    {
+        if (!_signalRBroadcaster.IsConnected)
+        {
+            return;
+        }
+
+        if (GetType().Namespace.Contains("V1"))
+        {
+            var signalRMessage = new SignalRMessage
+                                 {
+                                     Name = Resource,
+                                     Body = new ResourceChangeMessage<TResource>(action),
+                                     Action = action
+                                 };
+
+            _signalRBroadcaster.BroadcastMessage(signalRMessage);
         }
     }
 }

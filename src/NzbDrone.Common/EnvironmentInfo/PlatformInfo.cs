@@ -1,54 +1,53 @@
 using System;
 
-namespace NzbDrone.Common.EnvironmentInfo
+namespace NzbDrone.Common.EnvironmentInfo;
+
+public enum PlatformType
 {
-    public enum PlatformType
+    DotNet = 0,
+    Mono = 1,
+    NetCore = 2
+}
+
+public interface IPlatformInfo
+{
+    Version Version { get; }
+}
+
+public class PlatformInfo : IPlatformInfo
+{
+    private static PlatformType _platform;
+    private static Version _version;
+
+    static PlatformInfo()
     {
-        DotNet = 0,
-        Mono = 1,
-        NetCore = 2
+        _platform = PlatformType.NetCore;
+        _version = Environment.Version;
     }
 
-    public interface IPlatformInfo
+    public static PlatformType Platform => _platform;
+    public static bool IsDotNet => Platform == PlatformType.DotNet;
+    public static bool IsNetCore => Platform == PlatformType.NetCore;
+
+    public static string PlatformName
     {
-        Version Version { get; }
-    }
-
-    public class PlatformInfo : IPlatformInfo
-    {
-        private static PlatformType _platform;
-        private static Version _version;
-
-        static PlatformInfo()
+        get
         {
-            _platform = PlatformType.NetCore;
-            _version = Environment.Version;
-        }
-
-        public static PlatformType Platform => _platform;
-        public static bool IsDotNet => Platform == PlatformType.DotNet;
-        public static bool IsNetCore => Platform == PlatformType.NetCore;
-
-        public static string PlatformName
-        {
-            get
+            if (IsDotNet)
             {
-                if (IsDotNet)
-                {
-                    return ".NET";
-                }
-                else
-                {
-                    return ".NET Core";
-                }
+                return ".NET";
+            }
+            else
+            {
+                return ".NET Core";
             }
         }
+    }
 
-        public Version Version => _version;
+    public Version Version => _version;
 
-        public static Version GetVersion()
-        {
-            return _version;
-        }
+    public static Version GetVersion()
+    {
+        return _version;
     }
 }

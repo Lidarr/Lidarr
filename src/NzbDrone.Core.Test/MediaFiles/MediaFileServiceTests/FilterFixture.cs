@@ -12,264 +12,263 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Core.Test.MediaFiles.MediaFileServiceTests
+namespace NzbDrone.Core.Test.MediaFiles.MediaFileServiceTests;
+
+[TestFixture]
+public class FilterFixture : FileSystemTest<MediaFileService>
 {
-    [TestFixture]
-    public class FilterFixture : FileSystemTest<MediaFileService>
+    private DateTime _lastWrite = new DateTime(2019, 1, 1);
+
+    private List<IFileInfo> GivenFiles(string[] files)
     {
-        private DateTime _lastWrite = new DateTime(2019, 1, 1);
-
-        private List<IFileInfo> GivenFiles(string[] files)
+        foreach (var file in files)
         {
-            foreach (var file in files)
-            {
-                FileSystem.AddFile(file, new MockFileData(string.Empty) { LastWriteTime = _lastWrite });
-            }
-
-            return files.Select(x => DiskProvider.GetFileInfo(x)).ToList();
+            FileSystem.AddFile(file, new MockFileData(string.Empty) { LastWriteTime = _lastWrite });
         }
 
-        [TestCase(FilterFilesType.Known)]
-        [TestCase(FilterFilesType.Matched)]
-        public void filter_should_return_all_files_if_no_existing_files(FilterFilesType filter)
-        {
-            var files = GivenFiles(new[]
-                {
-                    "C:\\file1.avi".AsOsAgnostic(),
-                    "C:\\file2.avi".AsOsAgnostic(),
-                    "C:\\file3.avi".AsOsAgnostic()
-                });
+        return files.Select(x => DiskProvider.GetFileInfo(x)).ToList();
+    }
 
-            Mocker.GetMock<IMediaFileRepository>()
-                .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
-                .Returns(new List<TrackFile>());
+    [TestCase(FilterFilesType.Known)]
+    [TestCase(FilterFilesType.Matched)]
+    public void filter_should_return_all_files_if_no_existing_files(FilterFilesType filter)
+    {
+        var files = GivenFiles(new[]
+                               {
+                                   "C:\\file1.avi".AsOsAgnostic(),
+                                   "C:\\file2.avi".AsOsAgnostic(),
+                                   "C:\\file3.avi".AsOsAgnostic()
+                               });
 
-            Subject.FilterUnchangedFiles(files, filter).Should().BeEquivalentTo(files);
-        }
+        Mocker.GetMock<IMediaFileRepository>()
+              .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
+              .Returns(new List<TrackFile>());
 
-        [TestCase(FilterFilesType.Known)]
-        [TestCase(FilterFilesType.Matched)]
-        public void filter_should_return_nothing_if_all_files_exist(FilterFilesType filter)
-        {
-            var files = GivenFiles(new[]
-                {
-                    "C:\\file1.avi".AsOsAgnostic(),
-                    "C:\\file2.avi".AsOsAgnostic(),
-                    "C:\\file3.avi".AsOsAgnostic()
-                });
+        Subject.FilterUnchangedFiles(files, filter).Should().BeEquivalentTo(files);
+    }
 
-            Mocker.GetMock<IMediaFileRepository>()
-                .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
-                .Returns(files.Select(f => new TrackFile
-                {
-                    Path = f.FullName,
-                    Modified = _lastWrite
-                }).ToList());
+    [TestCase(FilterFilesType.Known)]
+    [TestCase(FilterFilesType.Matched)]
+    public void filter_should_return_nothing_if_all_files_exist(FilterFilesType filter)
+    {
+        var files = GivenFiles(new[]
+                               {
+                                   "C:\\file1.avi".AsOsAgnostic(),
+                                   "C:\\file2.avi".AsOsAgnostic(),
+                                   "C:\\file3.avi".AsOsAgnostic()
+                               });
 
-            Subject.FilterUnchangedFiles(files, filter).Should().BeEmpty();
-        }
+        Mocker.GetMock<IMediaFileRepository>()
+              .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
+              .Returns(files.Select(f => new TrackFile
+                                         {
+                                             Path = f.FullName,
+                                             Modified = _lastWrite
+                                         }).ToList());
 
-        [TestCase(FilterFilesType.Known)]
-        [TestCase(FilterFilesType.Matched)]
-        public void filter_should_not_return_existing_files(FilterFilesType filter)
-        {
-            var files = GivenFiles(new[]
-                {
-                    "C:\\file1.avi".AsOsAgnostic(),
-                    "C:\\file2.avi".AsOsAgnostic(),
-                    "C:\\file3.avi".AsOsAgnostic()
-                });
+        Subject.FilterUnchangedFiles(files, filter).Should().BeEmpty();
+    }
 
-            Mocker.GetMock<IMediaFileRepository>()
-                .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
-                .Returns(new List<TrackFile>
-                {
-                    new TrackFile
-                    {
-                        Path = "C:\\file2.avi".AsOsAgnostic(),
-                        Modified = _lastWrite
-                    }
-                });
+    [TestCase(FilterFilesType.Known)]
+    [TestCase(FilterFilesType.Matched)]
+    public void filter_should_not_return_existing_files(FilterFilesType filter)
+    {
+        var files = GivenFiles(new[]
+                               {
+                                   "C:\\file1.avi".AsOsAgnostic(),
+                                   "C:\\file2.avi".AsOsAgnostic(),
+                                   "C:\\file3.avi".AsOsAgnostic()
+                               });
 
-            Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(2);
-            Subject.FilterUnchangedFiles(files, filter).Select(x => x.FullName).Should().NotContain("C:\\file2.avi".AsOsAgnostic());
-        }
+        Mocker.GetMock<IMediaFileRepository>()
+              .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
+              .Returns(new List<TrackFile>
+                       {
+                           new TrackFile
+                           {
+                               Path = "C:\\file2.avi".AsOsAgnostic(),
+                               Modified = _lastWrite
+                           }
+                       });
 
-        [TestCase(FilterFilesType.Known)]
-        [TestCase(FilterFilesType.Matched)]
-        public void filter_should_return_none_existing_files_ignoring_case(FilterFilesType filter)
-        {
-            WindowsOnly();
+        Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(2);
+        Subject.FilterUnchangedFiles(files, filter).Select(x => x.FullName).Should().NotContain("C:\\file2.avi".AsOsAgnostic());
+    }
 
-            var files = GivenFiles(new[]
-                {
-                    "C:\\file1.avi".AsOsAgnostic(),
-                    "C:\\FILE2.avi".AsOsAgnostic(),
-                    "C:\\file3.avi".AsOsAgnostic()
-                });
+    [TestCase(FilterFilesType.Known)]
+    [TestCase(FilterFilesType.Matched)]
+    public void filter_should_return_none_existing_files_ignoring_case(FilterFilesType filter)
+    {
+        WindowsOnly();
 
-            Mocker.GetMock<IMediaFileRepository>()
-                .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
-                .Returns(new List<TrackFile>
-                {
-                    new TrackFile
-                    {
-                        Path = "C:\\file2.avi".AsOsAgnostic(),
-                        Modified = _lastWrite
-                    }
-                });
+        var files = GivenFiles(new[]
+                               {
+                                   "C:\\file1.avi".AsOsAgnostic(),
+                                   "C:\\FILE2.avi".AsOsAgnostic(),
+                                   "C:\\file3.avi".AsOsAgnostic()
+                               });
 
-            Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(2);
-            Subject.FilterUnchangedFiles(files, filter).Select(x => x.FullName).Should().NotContain("C:\\file2.avi".AsOsAgnostic());
-        }
+        Mocker.GetMock<IMediaFileRepository>()
+              .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
+              .Returns(new List<TrackFile>
+                       {
+                           new TrackFile
+                           {
+                               Path = "C:\\file2.avi".AsOsAgnostic(),
+                               Modified = _lastWrite
+                           }
+                       });
 
-        [TestCase(FilterFilesType.Known)]
-        [TestCase(FilterFilesType.Matched)]
-        public void filter_should_return_none_existing_files_not_ignoring_case(FilterFilesType filter)
-        {
-            PosixOnly();
+        Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(2);
+        Subject.FilterUnchangedFiles(files, filter).Select(x => x.FullName).Should().NotContain("C:\\file2.avi".AsOsAgnostic());
+    }
 
-            var files = GivenFiles(new[]
-                {
-                    "C:\\file1.avi".AsOsAgnostic(),
-                    "C:\\FILE2.avi".AsOsAgnostic(),
-                    "C:\\file3.avi".AsOsAgnostic()
-                });
+    [TestCase(FilterFilesType.Known)]
+    [TestCase(FilterFilesType.Matched)]
+    public void filter_should_return_none_existing_files_not_ignoring_case(FilterFilesType filter)
+    {
+        PosixOnly();
 
-            Mocker.GetMock<IMediaFileRepository>()
-                .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
-                .Returns(new List<TrackFile>
-                {
-                    new TrackFile
-                    {
-                        Path = "C:\\file2.avi".AsOsAgnostic(),
-                        Modified = _lastWrite
-                    }
-                });
+        var files = GivenFiles(new[]
+                               {
+                                   "C:\\file1.avi".AsOsAgnostic(),
+                                   "C:\\FILE2.avi".AsOsAgnostic(),
+                                   "C:\\file3.avi".AsOsAgnostic()
+                               });
 
-            Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(3);
-        }
+        Mocker.GetMock<IMediaFileRepository>()
+              .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
+              .Returns(new List<TrackFile>
+                       {
+                           new TrackFile
+                           {
+                               Path = "C:\\file2.avi".AsOsAgnostic(),
+                               Modified = _lastWrite
+                           }
+                       });
 
-        [TestCase(FilterFilesType.Known)]
-        [TestCase(FilterFilesType.Matched)]
-        public void filter_should_not_change_casing(FilterFilesType filter)
-        {
-            var files = GivenFiles(new[]
-                {
-                    "C:\\FILE1.avi".AsOsAgnostic()
-                });
+        Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(3);
+    }
 
-            Mocker.GetMock<IMediaFileRepository>()
-                .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
-                .Returns(new List<TrackFile>());
+    [TestCase(FilterFilesType.Known)]
+    [TestCase(FilterFilesType.Matched)]
+    public void filter_should_not_change_casing(FilterFilesType filter)
+    {
+        var files = GivenFiles(new[]
+                               {
+                                   "C:\\FILE1.avi".AsOsAgnostic()
+                               });
 
-            Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(1);
-            Subject.FilterUnchangedFiles(files, filter).Select(x => x.FullName).Should().NotContain(files.First().FullName.ToLower());
-            Subject.FilterUnchangedFiles(files, filter).Should().Contain(files.First());
-        }
+        Mocker.GetMock<IMediaFileRepository>()
+              .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
+              .Returns(new List<TrackFile>());
 
-        [TestCase(FilterFilesType.Known)]
-        [TestCase(FilterFilesType.Matched)]
-        public void filter_should_not_return_existing_file_if_size_unchanged(FilterFilesType filter)
-        {
-            FileSystem.AddFile("C:\\file1.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
-            FileSystem.AddFile("C:\\file2.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
-            FileSystem.AddFile("C:\\file3.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
+        Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(1);
+        Subject.FilterUnchangedFiles(files, filter).Select(x => x.FullName).Should().NotContain(files.First().FullName.ToLower());
+        Subject.FilterUnchangedFiles(files, filter).Should().Contain(files.First());
+    }
 
-            var files = FileSystem.AllFiles.Select(x => DiskProvider.GetFileInfo(x)).ToList();
+    [TestCase(FilterFilesType.Known)]
+    [TestCase(FilterFilesType.Matched)]
+    public void filter_should_not_return_existing_file_if_size_unchanged(FilterFilesType filter)
+    {
+        FileSystem.AddFile("C:\\file1.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
+        FileSystem.AddFile("C:\\file2.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
+        FileSystem.AddFile("C:\\file3.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
 
-            Mocker.GetMock<IMediaFileRepository>()
-                .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
-                .Returns(new List<TrackFile>
-                {
-                    new TrackFile
-                    {
-                        Path = "C:\\file2.avi".AsOsAgnostic(),
-                        Size = 10,
-                        Modified = _lastWrite
-                    }
-                });
+        var files = FileSystem.AllFiles.Select(x => DiskProvider.GetFileInfo(x)).ToList();
 
-            Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(2);
-            Subject.FilterUnchangedFiles(files, filter).Select(x => x.FullName).Should().NotContain("C:\\file2.avi".AsOsAgnostic());
-        }
+        Mocker.GetMock<IMediaFileRepository>()
+              .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
+              .Returns(new List<TrackFile>
+                       {
+                           new TrackFile
+                           {
+                               Path = "C:\\file2.avi".AsOsAgnostic(),
+                               Size = 10,
+                               Modified = _lastWrite
+                           }
+                       });
 
-        [TestCase(FilterFilesType.Matched)]
-        public void filter_unmatched_should_return_existing_file_if_unmatched(FilterFilesType filter)
-        {
-            FileSystem.AddFile("C:\\file1.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
-            FileSystem.AddFile("C:\\file2.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
-            FileSystem.AddFile("C:\\file3.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
+        Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(2);
+        Subject.FilterUnchangedFiles(files, filter).Select(x => x.FullName).Should().NotContain("C:\\file2.avi".AsOsAgnostic());
+    }
 
-            var files = FileSystem.AllFiles.Select(x => DiskProvider.GetFileInfo(x)).ToList();
+    [TestCase(FilterFilesType.Matched)]
+    public void filter_unmatched_should_return_existing_file_if_unmatched(FilterFilesType filter)
+    {
+        FileSystem.AddFile("C:\\file1.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
+        FileSystem.AddFile("C:\\file2.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
+        FileSystem.AddFile("C:\\file3.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
 
-            Mocker.GetMock<IMediaFileRepository>()
-                .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
-                .Returns(new List<TrackFile>
-                {
-                    new TrackFile
-                    {
-                        Path = "C:\\file2.avi".AsOsAgnostic(),
-                        Size = 10,
-                        Modified = _lastWrite,
-                        Tracks = new List<Track>()
-                    }
-                });
+        var files = FileSystem.AllFiles.Select(x => DiskProvider.GetFileInfo(x)).ToList();
 
-            Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(3);
-            Subject.FilterUnchangedFiles(files, filter).Select(x => x.FullName).Should().Contain("C:\\file2.avi".AsOsAgnostic());
-        }
+        Mocker.GetMock<IMediaFileRepository>()
+              .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
+              .Returns(new List<TrackFile>
+                       {
+                           new TrackFile
+                           {
+                               Path = "C:\\file2.avi".AsOsAgnostic(),
+                               Size = 10,
+                               Modified = _lastWrite,
+                               Tracks = new List<Track>()
+                           }
+                       });
 
-        [TestCase(FilterFilesType.Matched)]
-        public void filter_unmatched_should_not_return_existing_file_if_matched(FilterFilesType filter)
-        {
-            FileSystem.AddFile("C:\\file1.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
-            FileSystem.AddFile("C:\\file2.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
-            FileSystem.AddFile("C:\\file3.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
+        Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(3);
+        Subject.FilterUnchangedFiles(files, filter).Select(x => x.FullName).Should().Contain("C:\\file2.avi".AsOsAgnostic());
+    }
 
-            var files = FileSystem.AllFiles.Select(x => DiskProvider.GetFileInfo(x)).ToList();
+    [TestCase(FilterFilesType.Matched)]
+    public void filter_unmatched_should_not_return_existing_file_if_matched(FilterFilesType filter)
+    {
+        FileSystem.AddFile("C:\\file1.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
+        FileSystem.AddFile("C:\\file2.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
+        FileSystem.AddFile("C:\\file3.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
 
-            Mocker.GetMock<IMediaFileRepository>()
-                .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
-                .Returns(new List<TrackFile>
-                {
-                    new TrackFile
-                    {
-                        Path = "C:\\file2.avi".AsOsAgnostic(),
-                        Size = 10,
-                        Modified = _lastWrite,
-                        Tracks = Builder<Track>.CreateListOfSize(1).Build() as List<Track>
-                    }
-                });
+        var files = FileSystem.AllFiles.Select(x => DiskProvider.GetFileInfo(x)).ToList();
 
-            Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(2);
-            Subject.FilterUnchangedFiles(files, filter).Select(x => x.FullName).Should().NotContain("C:\\file2.avi".AsOsAgnostic());
-        }
+        Mocker.GetMock<IMediaFileRepository>()
+              .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
+              .Returns(new List<TrackFile>
+                       {
+                           new TrackFile
+                           {
+                               Path = "C:\\file2.avi".AsOsAgnostic(),
+                               Size = 10,
+                               Modified = _lastWrite,
+                               Tracks = Builder<Track>.CreateListOfSize(1).Build() as List<Track>
+                           }
+                       });
 
-        [TestCase(FilterFilesType.Known)]
-        [TestCase(FilterFilesType.Matched)]
-        public void filter_should_return_existing_file_if_size_changed(FilterFilesType filter)
-        {
-            FileSystem.AddFile("C:\\file1.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
-            FileSystem.AddFile("C:\\file2.avi".AsOsAgnostic(), new MockFileData("".PadRight(11)) { LastWriteTime = _lastWrite });
-            FileSystem.AddFile("C:\\file3.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
+        Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(2);
+        Subject.FilterUnchangedFiles(files, filter).Select(x => x.FullName).Should().NotContain("C:\\file2.avi".AsOsAgnostic());
+    }
 
-            var files = FileSystem.AllFiles.Select(x => DiskProvider.GetFileInfo(x)).ToList();
+    [TestCase(FilterFilesType.Known)]
+    [TestCase(FilterFilesType.Matched)]
+    public void filter_should_return_existing_file_if_size_changed(FilterFilesType filter)
+    {
+        FileSystem.AddFile("C:\\file1.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
+        FileSystem.AddFile("C:\\file2.avi".AsOsAgnostic(), new MockFileData("".PadRight(11)) { LastWriteTime = _lastWrite });
+        FileSystem.AddFile("C:\\file3.avi".AsOsAgnostic(), new MockFileData("".PadRight(10)) { LastWriteTime = _lastWrite });
 
-            Mocker.GetMock<IMediaFileRepository>()
-                .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
-                .Returns(new List<TrackFile>
-                {
-                    new TrackFile
-                    {
-                        Path = "C:\\file2.avi".AsOsAgnostic(),
-                        Size = 10,
-                        Modified = _lastWrite
-                    }
-                });
+        var files = FileSystem.AllFiles.Select(x => DiskProvider.GetFileInfo(x)).ToList();
 
-            Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(3);
-            Subject.FilterUnchangedFiles(files, filter).Select(x => x.FullName).Should().Contain("C:\\file2.avi".AsOsAgnostic());
-        }
+        Mocker.GetMock<IMediaFileRepository>()
+              .Setup(c => c.GetFileWithPath(It.IsAny<List<string>>()))
+              .Returns(new List<TrackFile>
+                       {
+                           new TrackFile
+                           {
+                               Path = "C:\\file2.avi".AsOsAgnostic(),
+                               Size = 10,
+                               Modified = _lastWrite
+                           }
+                       });
+
+        Subject.FilterUnchangedFiles(files, filter).Should().HaveCount(3);
+        Subject.FilterUnchangedFiles(files, filter).Select(x => x.FullName).Should().Contain("C:\\file2.avi".AsOsAgnostic());
     }
 }

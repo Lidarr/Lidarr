@@ -1,10 +1,9 @@
-namespace NzbDrone.Core.ImportLists
+namespace NzbDrone.Core.ImportLists;
+
+public enum ImportListType
 {
-    public enum ImportListType
-    {
-        Program,
-        Spotify,
-        LastFm,
-        Other
-    }
+    Program,
+    Spotify,
+    LastFm,
+    Other
 }

@@ -1,9 +1,8 @@
-﻿namespace NzbDrone.Common.Http.Proxy
+﻿namespace NzbDrone.Common.Http.Proxy;
+
+public enum ProxyType
 {
-    public enum ProxyType
-    {
-        Http,
-        Socks4,
-        Socks5
-    }
+    Http,
+    Socks4,
+    Socks5
 }

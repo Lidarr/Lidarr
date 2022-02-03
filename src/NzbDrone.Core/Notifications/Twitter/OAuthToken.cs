@@ -1,8 +1,7 @@
-namespace NzbDrone.Core.Notifications.Twitter
+namespace NzbDrone.Core.Notifications.Twitter;
+
+public class OAuthToken
 {
-    public class OAuthToken
-    {
-        public string AccessToken { get; set; }
-        public string AccessTokenSecret { get; set; }
-    }
+    public string AccessToken { get; set; }
+    public string AccessTokenSecret { get; set; }
 }

@@ -1,15 +1,14 @@
 ﻿using NzbDrone.Common.Messaging;
 using NzbDrone.Core.Music;
 
-namespace NzbDrone.Core.MediaFiles.Events
-{
-    public class ArtistRenamedEvent : IEvent
-    {
-        public Artist Artist { get; private set; }
+namespace NzbDrone.Core.MediaFiles.Events;
 
-        public ArtistRenamedEvent(Artist artist)
-        {
-            Artist = artist;
-        }
+public class ArtistRenamedEvent : IEvent
+{
+    public Artist Artist { get; private set; }
+
+    public ArtistRenamedEvent(Artist artist)
+    {
+        Artist = artist;
     }
 }

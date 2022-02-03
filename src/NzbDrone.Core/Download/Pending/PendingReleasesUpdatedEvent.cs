@@ -1,8 +1,7 @@
 ﻿using NzbDrone.Common.Messaging;
 
-namespace NzbDrone.Core.Download.Pending
+namespace NzbDrone.Core.Download.Pending;
+
+public class PendingReleasesUpdatedEvent : IEvent
 {
-    public class PendingReleasesUpdatedEvent : IEvent
-    {
-    }
 }

@@ -1,8 +1,7 @@
-namespace NzbDrone.Core.Notifications.MediaBrowser.Model
+namespace NzbDrone.Core.Notifications.MediaBrowser.Model;
+
+public class EmbyMediaUpdateInfo
 {
-    public class EmbyMediaUpdateInfo
-    {
-        public string Path { get; set; }
-        public string UpdateType { get; set; }
-    }
+    public string Path { get; set; }
+    public string UpdateType { get; set; }
 }

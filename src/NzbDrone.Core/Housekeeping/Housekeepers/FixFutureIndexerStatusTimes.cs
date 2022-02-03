@@ -1,12 +1,11 @@
 ﻿using NzbDrone.Core.Indexers;
 
-namespace NzbDrone.Core.Housekeeping.Housekeepers
+namespace NzbDrone.Core.Housekeeping.Housekeepers;
+
+public class FixFutureIndexerStatusTimes : FixFutureProviderStatusTimes<IndexerStatus>, IHousekeepingTask
 {
-    public class FixFutureIndexerStatusTimes : FixFutureProviderStatusTimes<IndexerStatus>, IHousekeepingTask
+    public FixFutureIndexerStatusTimes(IIndexerStatusRepository indexerStatusRepository)
+        : base(indexerStatusRepository)
     {
-        public FixFutureIndexerStatusTimes(IIndexerStatusRepository indexerStatusRepository)
-            : base(indexerStatusRepository)
-        {
-        }
     }
 }

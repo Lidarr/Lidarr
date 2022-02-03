@@ -4,63 +4,62 @@ using NLog;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Music
+namespace NzbDrone.Core.Music;
+
+public interface IArtistMetadataRepository : IBasicRepository<ArtistMetadata>
 {
-    public interface IArtistMetadataRepository : IBasicRepository<ArtistMetadata>
+    List<ArtistMetadata> FindById(List<string> foreignIds);
+    bool UpsertMany(List<ArtistMetadata> data);
+}
+
+public class ArtistMetadataRepository : BasicRepository<ArtistMetadata>, IArtistMetadataRepository
+{
+    private readonly Logger _logger;
+
+    public ArtistMetadataRepository(IMainDatabase database, IEventAggregator eventAggregator, Logger logger)
+        : base(database, eventAggregator)
     {
-        List<ArtistMetadata> FindById(List<string> foreignIds);
-        bool UpsertMany(List<ArtistMetadata> data);
+        _logger = logger;
     }
 
-    public class ArtistMetadataRepository : BasicRepository<ArtistMetadata>, IArtistMetadataRepository
+    public List<ArtistMetadata> FindById(List<string> foreignIds)
     {
-        private readonly Logger _logger;
+        return Query(x => Enumerable.Contains(foreignIds, x.ForeignArtistId));
+    }
 
-        public ArtistMetadataRepository(IMainDatabase database, IEventAggregator eventAggregator, Logger logger)
-            : base(database, eventAggregator)
+    public bool UpsertMany(List<ArtistMetadata> data)
+    {
+        var existingMetadata = FindById(data.Select(x => x.ForeignArtistId).ToList());
+        var updateMetadataList = new List<ArtistMetadata>();
+        var addMetadataList = new List<ArtistMetadata>();
+        int upToDateMetadataCount = 0;
+
+        foreach (var meta in data)
         {
-            _logger = logger;
-        }
-
-        public List<ArtistMetadata> FindById(List<string> foreignIds)
-        {
-            return Query(x => Enumerable.Contains(foreignIds, x.ForeignArtistId));
-        }
-
-        public bool UpsertMany(List<ArtistMetadata> data)
-        {
-            var existingMetadata = FindById(data.Select(x => x.ForeignArtistId).ToList());
-            var updateMetadataList = new List<ArtistMetadata>();
-            var addMetadataList = new List<ArtistMetadata>();
-            int upToDateMetadataCount = 0;
-
-            foreach (var meta in data)
+            var existing = existingMetadata.SingleOrDefault(x => x.ForeignArtistId == meta.ForeignArtistId);
+            if (existing != null)
             {
-                var existing = existingMetadata.SingleOrDefault(x => x.ForeignArtistId == meta.ForeignArtistId);
-                if (existing != null)
+                meta.UseDbFieldsFrom(existing);
+                if (!meta.Equals(existing))
                 {
-                    meta.UseDbFieldsFrom(existing);
-                    if (!meta.Equals(existing))
-                    {
-                        updateMetadataList.Add(meta);
-                    }
-                    else
-                    {
-                        upToDateMetadataCount++;
-                    }
+                    updateMetadataList.Add(meta);
                 }
                 else
                 {
-                    addMetadataList.Add(meta);
+                    upToDateMetadataCount++;
                 }
             }
-
-            UpdateMany(updateMetadataList);
-            InsertMany(addMetadataList);
-
-            _logger.Debug($"{upToDateMetadataCount} artist metadata up to date; Updating {updateMetadataList.Count}, Adding {addMetadataList.Count} artist metadata entries.");
-
-            return updateMetadataList.Count > 0 || addMetadataList.Count > 0;
+            else
+            {
+                addMetadataList.Add(meta);
+            }
         }
+
+        UpdateMany(updateMetadataList);
+        InsertMany(addMetadataList);
+
+        _logger.Debug($"{upToDateMetadataCount} artist metadata up to date; Updating {updateMetadataList.Count}, Adding {addMetadataList.Count} artist metadata entries.");
+
+        return updateMetadataList.Count > 0 || addMetadataList.Count > 0;
     }
 }

@@ -6,120 +6,119 @@ using ICSharpCode.SharpZipLib.Tar;
 using ICSharpCode.SharpZipLib.Zip;
 using NLog;
 
-namespace NzbDrone.Common
+namespace NzbDrone.Common;
+
+public interface IArchiveService
 {
-    public interface IArchiveService
+    void Extract(string compressedFile, string destination);
+    void CreateZip(string path, params string[] files);
+}
+
+public class ArchiveService : IArchiveService
+{
+    private readonly Logger _logger;
+
+    public ArchiveService(Logger logger)
     {
-        void Extract(string compressedFile, string destination);
-        void CreateZip(string path, params string[] files);
+        _logger = logger;
     }
 
-    public class ArchiveService : IArchiveService
+    public void Extract(string compressedFile, string destination)
     {
-        private readonly Logger _logger;
+        _logger.Debug("Extracting archive [{0}] to [{1}]", compressedFile, destination);
 
-        public ArchiveService(Logger logger)
+        if (compressedFile.EndsWith(".zip", StringComparison.InvariantCultureIgnoreCase))
         {
-            _logger = logger;
+            ExtractZip(compressedFile, destination);
+        }
+        else
+        {
+            ExtractTgz(compressedFile, destination);
         }
 
-        public void Extract(string compressedFile, string destination)
+        _logger.Debug("Extraction complete.");
+    }
+
+    public void CreateZip(string path, params string[] files)
+    {
+        using (var zipFile = ZipFile.Create(path))
         {
-            _logger.Debug("Extracting archive [{0}] to [{1}]", compressedFile, destination);
+            zipFile.BeginUpdate();
 
-            if (compressedFile.EndsWith(".zip", StringComparison.InvariantCultureIgnoreCase))
+            foreach (var file in files)
             {
-                ExtractZip(compressedFile, destination);
-            }
-            else
-            {
-                ExtractTgz(compressedFile, destination);
+                zipFile.Add(file, Path.GetFileName(file));
             }
 
-            _logger.Debug("Extraction complete.");
+            zipFile.CommitUpdate();
         }
+    }
 
-        public void CreateZip(string path, params string[] files)
+    private void ExtractZip(string compressedFile, string destination)
+    {
+        using (var fileStream = File.OpenRead(compressedFile))
         {
-            using (var zipFile = ZipFile.Create(path))
-            {
-                zipFile.BeginUpdate();
+            var zipFile = new ZipFile(fileStream);
 
-                foreach (var file in files)
+            _logger.Debug("Validating Archive {0}", compressedFile);
+
+            if (!zipFile.TestArchive(true, TestStrategy.FindFirstError, OnZipError))
+            {
+                throw new IOException(string.Format("File {0} failed archive validation.", compressedFile));
+            }
+
+            foreach (ZipEntry zipEntry in zipFile)
+            {
+                if (!zipEntry.IsFile)
                 {
-                    zipFile.Add(file, Path.GetFileName(file));
+                    continue; // Ignore directories
                 }
 
-                zipFile.CommitUpdate();
-            }
-        }
+                string entryFileName = zipEntry.Name;
 
-        private void ExtractZip(string compressedFile, string destination)
-        {
-            using (var fileStream = File.OpenRead(compressedFile))
-            {
-                var zipFile = new ZipFile(fileStream);
+                // to remove the folder from the entry:- entryFileName = Path.GetFileName(entryFileName);
+                // Optionally match entrynames against a selection list here to skip as desired.
+                // The unpacked length is available in the zipEntry.Size property.
+                byte[] buffer = new byte[4096]; // 4K is optimum
+                Stream zipStream = zipFile.GetInputStream(zipEntry);
 
-                _logger.Debug("Validating Archive {0}", compressedFile);
-
-                if (!zipFile.TestArchive(true, TestStrategy.FindFirstError, OnZipError))
+                // Manipulate the output filename here as desired.
+                string fullZipToPath = Path.Combine(destination, entryFileName);
+                string directoryName = Path.GetDirectoryName(fullZipToPath);
+                if (directoryName.Length > 0)
                 {
-                    throw new IOException(string.Format("File {0} failed archive validation.", compressedFile));
+                    Directory.CreateDirectory(directoryName);
                 }
 
-                foreach (ZipEntry zipEntry in zipFile)
+                // Unzip file in buffered chunks. This is just as fast as unpacking to a buffer the full size
+                // of the file, but does not waste memory.
+                // The "using" will close the stream even if an exception occurs.
+                using (FileStream streamWriter = File.Create(fullZipToPath))
                 {
-                    if (!zipEntry.IsFile)
-                    {
-                        continue; // Ignore directories
-                    }
-
-                    string entryFileName = zipEntry.Name;
-
-                    // to remove the folder from the entry:- entryFileName = Path.GetFileName(entryFileName);
-                    // Optionally match entrynames against a selection list here to skip as desired.
-                    // The unpacked length is available in the zipEntry.Size property.
-                    byte[] buffer = new byte[4096]; // 4K is optimum
-                    Stream zipStream = zipFile.GetInputStream(zipEntry);
-
-                    // Manipulate the output filename here as desired.
-                    string fullZipToPath = Path.Combine(destination, entryFileName);
-                    string directoryName = Path.GetDirectoryName(fullZipToPath);
-                    if (directoryName.Length > 0)
-                    {
-                        Directory.CreateDirectory(directoryName);
-                    }
-
-                    // Unzip file in buffered chunks. This is just as fast as unpacking to a buffer the full size
-                    // of the file, but does not waste memory.
-                    // The "using" will close the stream even if an exception occurs.
-                    using (FileStream streamWriter = File.Create(fullZipToPath))
-                    {
-                        StreamUtils.Copy(zipStream, streamWriter, buffer);
-                    }
+                    StreamUtils.Copy(zipStream, streamWriter, buffer);
                 }
             }
         }
+    }
 
-        private void ExtractTgz(string compressedFile, string destination)
+    private void ExtractTgz(string compressedFile, string destination)
+    {
+        Stream inStream = File.OpenRead(compressedFile);
+        Stream gzipStream = new GZipInputStream(inStream);
+
+        TarArchive tarArchive = TarArchive.CreateInputTarArchive(gzipStream, null);
+        tarArchive.ExtractContents(destination);
+        tarArchive.Close();
+
+        gzipStream.Close();
+        inStream.Close();
+    }
+
+    private void OnZipError(TestStatus status, string message)
+    {
+        if (!string.IsNullOrWhiteSpace(message))
         {
-            Stream inStream = File.OpenRead(compressedFile);
-            Stream gzipStream = new GZipInputStream(inStream);
-
-            TarArchive tarArchive = TarArchive.CreateInputTarArchive(gzipStream, null);
-            tarArchive.ExtractContents(destination);
-            tarArchive.Close();
-
-            gzipStream.Close();
-            inStream.Close();
-        }
-
-        private void OnZipError(TestStatus status, string message)
-        {
-            if (!string.IsNullOrWhiteSpace(message))
-            {
-                _logger.Error("File {0} failed zip validation. {1}", status.File.Name, message);
-            }
+            _logger.Error("File {0} failed zip validation. {1}", status.File.Name, message);
         }
     }
 }

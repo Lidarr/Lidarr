@@ -1,36 +1,35 @@
 ﻿using System;
 using NzbDrone.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.ProgressMessaging
+namespace NzbDrone.Core.ProgressMessaging;
+
+public static class ProgressMessageContext
 {
-    public static class ProgressMessageContext
+    [ThreadStatic]
+    private static CommandModel _commandModel;
+
+    [ThreadStatic]
+    private static bool _reentrancyLock;
+
+    public static CommandModel CommandModel
     {
-        [ThreadStatic]
-        private static CommandModel _commandModel;
+        get { return _commandModel; }
+        set { _commandModel = value; }
+    }
 
-        [ThreadStatic]
-        private static bool _reentrancyLock;
-
-        public static CommandModel CommandModel
+    public static bool LockReentrancy()
+    {
+        if (_reentrancyLock)
         {
-            get { return _commandModel; }
-            set { _commandModel = value; }
+            return false;
         }
 
-        public static bool LockReentrancy()
-        {
-            if (_reentrancyLock)
-            {
-                return false;
-            }
+        _reentrancyLock = true;
+        return true;
+    }
 
-            _reentrancyLock = true;
-            return true;
-        }
-
-        public static void UnlockReentrancy()
-        {
-            _reentrancyLock = false;
-        }
+    public static void UnlockReentrancy()
+    {
+        _reentrancyLock = false;
     }
 }

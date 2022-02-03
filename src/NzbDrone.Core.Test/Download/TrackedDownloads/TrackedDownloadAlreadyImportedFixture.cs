@@ -9,123 +9,122 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.Download.TrackedDownloads
+namespace NzbDrone.Core.Test.Download.TrackedDownloads;
+
+[TestFixture]
+public class TrackedDownloadAlreadyImportedFixture : CoreTest<TrackedDownloadAlreadyImported>
 {
-    [TestFixture]
-    public class TrackedDownloadAlreadyImportedFixture : CoreTest<TrackedDownloadAlreadyImported>
+    private List<Album> _albums;
+    private TrackedDownload _trackedDownload;
+    private List<EntityHistory> _historyItems;
+
+    [SetUp]
+    public void Setup()
     {
-        private List<Album> _albums;
-        private TrackedDownload _trackedDownload;
-        private List<EntityHistory> _historyItems;
+        _albums = new List<Album>();
 
-        [SetUp]
-        public void Setup()
+        var remoteAlbum = Builder<RemoteAlbum>.CreateNew()
+                                              .With(r => r.Albums = _albums)
+                                              .Build();
+
+        var downloadItem = Builder<DownloadClientItem>.CreateNew().Build();
+
+        _trackedDownload = Builder<TrackedDownload>.CreateNew()
+                                                   .With(t => t.RemoteAlbum = remoteAlbum)
+                                                   .With(t => t.DownloadItem = downloadItem)
+                                                   .Build();
+
+        _historyItems = new List<EntityHistory>();
+    }
+
+    public void GivenEpisodes(int count)
+    {
+        _albums.AddRange(Builder<Album>.CreateListOfSize(count)
+                                       .BuildList());
+    }
+
+    public void GivenHistoryForEpisode(Album episode, params EntityHistoryEventType[] eventTypes)
+    {
+        foreach (var eventType in eventTypes)
         {
-            _albums = new List<Album>();
-
-            var remoteAlbum = Builder<RemoteAlbum>.CreateNew()
-                                                      .With(r => r.Albums = _albums)
-                                                      .Build();
-
-            var downloadItem = Builder<DownloadClientItem>.CreateNew().Build();
-
-            _trackedDownload = Builder<TrackedDownload>.CreateNew()
-                                                       .With(t => t.RemoteAlbum = remoteAlbum)
-                                                       .With(t => t.DownloadItem = downloadItem)
-                                                       .Build();
-
-            _historyItems = new List<EntityHistory>();
+            _historyItems.Add(
+                              Builder<EntityHistory>.CreateNew()
+                                                    .With(h => h.AlbumId = episode.Id)
+                                                    .With(h => h.EventType = eventType)
+                                                    .Build());
         }
+    }
 
-        public void GivenEpisodes(int count)
-        {
-            _albums.AddRange(Builder<Album>.CreateListOfSize(count)
-                                               .BuildList());
-        }
+    [Test]
+    public void should_return_false_if_there_is_no_history()
+    {
+        GivenEpisodes(1);
 
-        public void GivenHistoryForEpisode(Album episode, params EntityHistoryEventType[] eventTypes)
-        {
-            foreach (var eventType in eventTypes)
-            {
-                _historyItems.Add(
-                    Builder<EntityHistory>.CreateNew()
-                                            .With(h => h.AlbumId = episode.Id)
-                                            .With(h => h.EventType = eventType)
-                                            .Build());
-            }
-        }
+        Subject.IsImported(_trackedDownload, _historyItems)
+               .Should()
+               .BeFalse();
+    }
 
-        [Test]
-        public void should_return_false_if_there_is_no_history()
-        {
-            GivenEpisodes(1);
+    [Test]
+    public void should_return_false_if_single_episode_download_is_not_imported()
+    {
+        GivenEpisodes(1);
 
-            Subject.IsImported(_trackedDownload, _historyItems)
-                   .Should()
-                   .BeFalse();
-        }
+        GivenHistoryForEpisode(_albums[0], EntityHistoryEventType.Grabbed);
 
-        [Test]
-        public void should_return_false_if_single_episode_download_is_not_imported()
-        {
-            GivenEpisodes(1);
+        Subject.IsImported(_trackedDownload, _historyItems)
+               .Should()
+               .BeFalse();
+    }
 
-            GivenHistoryForEpisode(_albums[0], EntityHistoryEventType.Grabbed);
+    [Test]
+    public void should_return_false_if_no_episode_in_multi_episode_download_is_imported()
+    {
+        GivenEpisodes(2);
 
-            Subject.IsImported(_trackedDownload, _historyItems)
-                   .Should()
-                   .BeFalse();
-        }
+        GivenHistoryForEpisode(_albums[0], EntityHistoryEventType.Grabbed);
+        GivenHistoryForEpisode(_albums[1], EntityHistoryEventType.Grabbed);
 
-        [Test]
-        public void should_return_false_if_no_episode_in_multi_episode_download_is_imported()
-        {
-            GivenEpisodes(2);
+        Subject.IsImported(_trackedDownload, _historyItems)
+               .Should()
+               .BeFalse();
+    }
 
-            GivenHistoryForEpisode(_albums[0], EntityHistoryEventType.Grabbed);
-            GivenHistoryForEpisode(_albums[1], EntityHistoryEventType.Grabbed);
+    [Test]
+    public void should_should_return_false_if_only_one_episode_in_multi_episode_download_is_imported()
+    {
+        GivenEpisodes(2);
 
-            Subject.IsImported(_trackedDownload, _historyItems)
-                   .Should()
-                   .BeFalse();
-        }
+        GivenHistoryForEpisode(_albums[0], EntityHistoryEventType.DownloadImported, EntityHistoryEventType.Grabbed);
+        GivenHistoryForEpisode(_albums[1], EntityHistoryEventType.Grabbed);
 
-        [Test]
-        public void should_should_return_false_if_only_one_episode_in_multi_episode_download_is_imported()
-        {
-            GivenEpisodes(2);
+        Subject.IsImported(_trackedDownload, _historyItems)
+               .Should()
+               .BeFalse();
+    }
 
-            GivenHistoryForEpisode(_albums[0], EntityHistoryEventType.DownloadImported, EntityHistoryEventType.Grabbed);
-            GivenHistoryForEpisode(_albums[1], EntityHistoryEventType.Grabbed);
+    [Test]
+    public void should_return_true_if_single_episode_download_is_imported()
+    {
+        GivenEpisodes(1);
 
-            Subject.IsImported(_trackedDownload, _historyItems)
-                   .Should()
-                   .BeFalse();
-        }
+        GivenHistoryForEpisode(_albums[0], EntityHistoryEventType.DownloadImported, EntityHistoryEventType.Grabbed);
 
-        [Test]
-        public void should_return_true_if_single_episode_download_is_imported()
-        {
-            GivenEpisodes(1);
+        Subject.IsImported(_trackedDownload, _historyItems)
+               .Should()
+               .BeTrue();
+    }
 
-            GivenHistoryForEpisode(_albums[0], EntityHistoryEventType.DownloadImported, EntityHistoryEventType.Grabbed);
+    [Test]
+    public void should_return_true_if_multi_episode_download_is_imported()
+    {
+        GivenEpisodes(2);
 
-            Subject.IsImported(_trackedDownload, _historyItems)
-                   .Should()
-                   .BeTrue();
-        }
+        GivenHistoryForEpisode(_albums[0], EntityHistoryEventType.DownloadImported, EntityHistoryEventType.Grabbed);
+        GivenHistoryForEpisode(_albums[1], EntityHistoryEventType.DownloadImported, EntityHistoryEventType.Grabbed);
 
-        [Test]
-        public void should_return_true_if_multi_episode_download_is_imported()
-        {
-            GivenEpisodes(2);
-
-            GivenHistoryForEpisode(_albums[0], EntityHistoryEventType.DownloadImported, EntityHistoryEventType.Grabbed);
-            GivenHistoryForEpisode(_albums[1], EntityHistoryEventType.DownloadImported, EntityHistoryEventType.Grabbed);
-
-            Subject.IsImported(_trackedDownload, _historyItems)
-                   .Should()
-                   .BeTrue();
-        }
+        Subject.IsImported(_trackedDownload, _historyItems)
+               .Should()
+               .BeTrue();
     }
 }

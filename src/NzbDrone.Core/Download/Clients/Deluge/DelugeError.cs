@@ -1,8 +1,7 @@
-﻿namespace NzbDrone.Core.Download.Clients.Deluge
+﻿namespace NzbDrone.Core.Download.Clients.Deluge;
+
+public class DelugeError
 {
-    public class DelugeError
-    {
-        public string Message { get; set; }
-        public int Code { get; set; }
-    }
+    public string Message { get; set; }
+    public int Code { get; set; }
 }

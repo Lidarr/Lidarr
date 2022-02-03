@@ -9,54 +9,53 @@ using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common.Categories;
 
-namespace NzbDrone.Core.Test.IndexerTests.IntegrationTests
+namespace NzbDrone.Core.Test.IndexerTests.IntegrationTests;
+
+[IntegrationTest]
+public class IndexerIntegrationTests : CoreTest
 {
-    [IntegrationTest]
-    public class IndexerIntegrationTests : CoreTest
+    private AlbumSearchCriteria _albumSearchCriteria;
+
+    [SetUp]
+    public void SetUp()
     {
-        private AlbumSearchCriteria _albumSearchCriteria;
+        UseRealHttp();
 
-        [SetUp]
-        public void SetUp()
+        _albumSearchCriteria = new AlbumSearchCriteria()
+                               {
+                               };
+    }
+
+    private void ValidateTorrentResult(IList<ReleaseInfo> reports, bool hasSize = false, bool hasInfoUrl = false, bool hasMagnet = false)
+    {
+        reports.Should().OnlyContain(c => c.GetType() == typeof(TorrentInfo));
+
+        ValidateResult(reports, hasSize, hasInfoUrl);
+
+        reports.Should().OnlyContain(c => c.DownloadProtocol == DownloadProtocol.Torrent);
+
+        if (hasMagnet)
         {
-            UseRealHttp();
+            reports.Cast<TorrentInfo>().Should().OnlyContain(c => c.MagnetUrl.StartsWith("magnet:"));
+        }
+    }
 
-            _albumSearchCriteria = new AlbumSearchCriteria()
-            {
-            };
+    private void ValidateResult(IList<ReleaseInfo> reports, bool hasSize = false, bool hasInfoUrl = false)
+    {
+        reports.Should().NotBeEmpty();
+        reports.Should().OnlyContain(c => c.Title.IsNotNullOrWhiteSpace());
+        reports.Should().OnlyContain(c => c.PublishDate.Year > 2000);
+        reports.Should().OnlyContain(c => c.DownloadUrl.IsNotNullOrWhiteSpace());
+        reports.Should().OnlyContain(c => c.DownloadUrl.StartsWith("http"));
+
+        if (hasInfoUrl)
+        {
+            reports.Should().OnlyContain(c => c.InfoUrl.IsNotNullOrWhiteSpace());
         }
 
-        private void ValidateTorrentResult(IList<ReleaseInfo> reports, bool hasSize = false, bool hasInfoUrl = false, bool hasMagnet = false)
+        if (hasSize)
         {
-            reports.Should().OnlyContain(c => c.GetType() == typeof(TorrentInfo));
-
-            ValidateResult(reports, hasSize, hasInfoUrl);
-
-            reports.Should().OnlyContain(c => c.DownloadProtocol == DownloadProtocol.Torrent);
-
-            if (hasMagnet)
-            {
-                reports.Cast<TorrentInfo>().Should().OnlyContain(c => c.MagnetUrl.StartsWith("magnet:"));
-            }
-        }
-
-        private void ValidateResult(IList<ReleaseInfo> reports, bool hasSize = false, bool hasInfoUrl = false)
-        {
-            reports.Should().NotBeEmpty();
-            reports.Should().OnlyContain(c => c.Title.IsNotNullOrWhiteSpace());
-            reports.Should().OnlyContain(c => c.PublishDate.Year > 2000);
-            reports.Should().OnlyContain(c => c.DownloadUrl.IsNotNullOrWhiteSpace());
-            reports.Should().OnlyContain(c => c.DownloadUrl.StartsWith("http"));
-
-            if (hasInfoUrl)
-            {
-                reports.Should().OnlyContain(c => c.InfoUrl.IsNotNullOrWhiteSpace());
-            }
-
-            if (hasSize)
-            {
-                reports.Should().OnlyContain(c => c.Size > 0);
-            }
+            reports.Should().OnlyContain(c => c.Size > 0);
         }
     }
 }

@@ -1,12 +1,11 @@
 using NzbDrone.Core.Messaging.Commands;
 
-namespace NzbDrone.Core.Update.Commands
-{
-    public class ApplicationUpdateCommand : Command
-    {
-        public override bool SendUpdatesToClient => true;
-        public override bool IsExclusive => true;
+namespace NzbDrone.Core.Update.Commands;
 
-        public override string CompletionMessage => null;
-    }
+public class ApplicationUpdateCommand : Command
+{
+    public override bool SendUpdatesToClient => true;
+    public override bool IsExclusive => true;
+
+    public override string CompletionMessage => null;
 }

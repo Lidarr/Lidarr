@@ -1,10 +1,9 @@
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider.Status;
 
-namespace NzbDrone.Core.Indexers
+namespace NzbDrone.Core.Indexers;
+
+public class IndexerStatus : ProviderStatusBase
 {
-    public class IndexerStatus : ProviderStatusBase
-    {
-        public ReleaseInfo LastRssSyncReleaseInfo { get; set; }
-    }
+    public ReleaseInfo LastRssSyncReleaseInfo { get; set; }
 }

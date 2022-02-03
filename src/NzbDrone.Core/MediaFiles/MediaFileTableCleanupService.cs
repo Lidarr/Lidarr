@@ -5,44 +5,43 @@ using NzbDrone.Common;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Music;
 
-namespace NzbDrone.Core.MediaFiles
+namespace NzbDrone.Core.MediaFiles;
+
+public interface IMediaFileTableCleanupService
 {
-    public interface IMediaFileTableCleanupService
+    void Clean(string folder, List<string> filesOnDisk);
+}
+
+public class MediaFileTableCleanupService : IMediaFileTableCleanupService
+{
+    private readonly IMediaFileService _mediaFileService;
+    private readonly ITrackService _trackService;
+    private readonly Logger _logger;
+
+    public MediaFileTableCleanupService(IMediaFileService mediaFileService,
+                                        ITrackService trackService,
+                                        Logger logger)
     {
-        void Clean(string folder, List<string> filesOnDisk);
+        _mediaFileService = mediaFileService;
+        _trackService = trackService;
+        _logger = logger;
     }
 
-    public class MediaFileTableCleanupService : IMediaFileTableCleanupService
+    public void Clean(string folder, List<string> filesOnDisk)
     {
-        private readonly IMediaFileService _mediaFileService;
-        private readonly ITrackService _trackService;
-        private readonly Logger _logger;
+        var dbFiles = _mediaFileService.GetFilesWithBasePath(folder);
 
-        public MediaFileTableCleanupService(IMediaFileService mediaFileService,
-                                            ITrackService trackService,
-                                            Logger logger)
-        {
-            _mediaFileService = mediaFileService;
-            _trackService = trackService;
-            _logger = logger;
-        }
+        // get files in database that are missing on disk and remove from database
+        var missingFiles = dbFiles.ExceptBy(x => x.Path, filesOnDisk, x => x, PathEqualityComparer.Instance).ToList();
 
-        public void Clean(string folder, List<string> filesOnDisk)
-        {
-            var dbFiles = _mediaFileService.GetFilesWithBasePath(folder);
+        _logger.Debug("The following files no longer exist on disk, removing from db:\n{0}",
+                      string.Join("\n", missingFiles.Select(x => x.Path)));
 
-            // get files in database that are missing on disk and remove from database
-            var missingFiles = dbFiles.ExceptBy(x => x.Path, filesOnDisk, x => x, PathEqualityComparer.Instance).ToList();
+        _mediaFileService.DeleteMany(missingFiles, DeleteMediaFileReason.MissingFromDisk);
 
-            _logger.Debug("The following files no longer exist on disk, removing from db:\n{0}",
-                          string.Join("\n", missingFiles.Select(x => x.Path)));
-
-            _mediaFileService.DeleteMany(missingFiles, DeleteMediaFileReason.MissingFromDisk);
-
-            // get any tracks matched to these trackfiles and unlink them
-            var orphanedTracks = _trackService.GetTracksByFileId(missingFiles.Select(x => x.Id));
-            orphanedTracks.ForEach(x => x.TrackFileId = 0);
-            _trackService.SetFileIds(orphanedTracks);
-        }
+        // get any tracks matched to these trackfiles and unlink them
+        var orphanedTracks = _trackService.GetTracksByFileId(missingFiles.Select(x => x.Id));
+        orphanedTracks.ForEach(x => x.TrackFileId = 0);
+        _trackService.SetFileIds(orphanedTracks);
     }
 }

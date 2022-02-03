@@ -1,8 +1,7 @@
-﻿namespace NzbDrone.Core.Download.Clients.NzbVortex
+﻿namespace NzbDrone.Core.Download.Clients.NzbVortex;
+
+public enum NzbVortexLoginResultType
 {
-    public enum NzbVortexLoginResultType
-    {
-        Successful,
-        Failed
-    }
+    Successful,
+    Failed
 }

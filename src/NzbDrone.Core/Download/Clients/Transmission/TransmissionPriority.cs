@@ -1,8 +1,7 @@
-﻿namespace NzbDrone.Core.Download.Clients.Transmission
+﻿namespace NzbDrone.Core.Download.Clients.Transmission;
+
+public enum TransmissionPriority
 {
-    public enum TransmissionPriority
-    {
-        Last = 0,
-        First = 1
-    }
+    Last = 0,
+    First = 1
 }

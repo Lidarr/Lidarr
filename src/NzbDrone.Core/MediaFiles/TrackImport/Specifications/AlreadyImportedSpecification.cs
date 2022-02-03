@@ -7,61 +7,60 @@ using NzbDrone.Core.History;
 using NzbDrone.Core.MediaFiles.TrackImport;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Specifications
+namespace NzbDrone.Core.MediaFiles.EpisodeImport.Specifications;
+
+public class AlreadyImportedSpecification : IImportDecisionEngineSpecification<LocalAlbumRelease>
 {
-    public class AlreadyImportedSpecification : IImportDecisionEngineSpecification<LocalAlbumRelease>
+    private readonly IHistoryService _historyService;
+    private readonly Logger _logger;
+
+    public AlreadyImportedSpecification(IHistoryService historyService,
+                                        Logger logger)
     {
-        private readonly IHistoryService _historyService;
-        private readonly Logger _logger;
+        _historyService = historyService;
+        _logger = logger;
+    }
 
-        public AlreadyImportedSpecification(IHistoryService historyService,
-                                            Logger logger)
+    public SpecificationPriority Priority => SpecificationPriority.Database;
+
+    public Decision IsSatisfiedBy(LocalAlbumRelease localAlbumRelease, DownloadClientItem downloadClientItem)
+    {
+        if (downloadClientItem == null)
         {
-            _historyService = historyService;
-            _logger = logger;
-        }
-
-        public SpecificationPriority Priority => SpecificationPriority.Database;
-
-        public Decision IsSatisfiedBy(LocalAlbumRelease localAlbumRelease, DownloadClientItem downloadClientItem)
-        {
-            if (downloadClientItem == null)
-            {
-                _logger.Debug("No download client information is available, skipping");
-                return Decision.Accept();
-            }
-
-            var albumRelease = localAlbumRelease.AlbumRelease;
-
-            if (!albumRelease.Tracks.Value.Any(x => x.HasFile))
-            {
-                _logger.Debug("Skipping already imported check for album without files");
-                return Decision.Accept();
-            }
-
-            var albumHistory = _historyService.GetByAlbum(albumRelease.AlbumId, null);
-            var lastImported = albumHistory.FirstOrDefault(h => h.EventType == EntityHistoryEventType.DownloadImported);
-            var lastGrabbed = albumHistory.FirstOrDefault(h => h.EventType == EntityHistoryEventType.Grabbed);
-
-            if (lastImported == null)
-            {
-                _logger.Trace("Track file has not been imported");
-                return Decision.Accept();
-            }
-
-            if (lastGrabbed != null && lastGrabbed.Date.After(lastImported.Date))
-            {
-                _logger.Trace("Track file was grabbed again after importing");
-                return Decision.Accept();
-            }
-
-            if (lastImported.DownloadId == downloadClientItem.DownloadId)
-            {
-                _logger.Debug("Album previously imported at {0}", lastImported.Date);
-                return Decision.Reject("Album already imported at {0}", lastImported.Date);
-            }
-
+            _logger.Debug("No download client information is available, skipping");
             return Decision.Accept();
         }
+
+        var albumRelease = localAlbumRelease.AlbumRelease;
+
+        if (!albumRelease.Tracks.Value.Any(x => x.HasFile))
+        {
+            _logger.Debug("Skipping already imported check for album without files");
+            return Decision.Accept();
+        }
+
+        var albumHistory = _historyService.GetByAlbum(albumRelease.AlbumId, null);
+        var lastImported = albumHistory.FirstOrDefault(h => h.EventType == EntityHistoryEventType.DownloadImported);
+        var lastGrabbed = albumHistory.FirstOrDefault(h => h.EventType == EntityHistoryEventType.Grabbed);
+
+        if (lastImported == null)
+        {
+            _logger.Trace("Track file has not been imported");
+            return Decision.Accept();
+        }
+
+        if (lastGrabbed != null && lastGrabbed.Date.After(lastImported.Date))
+        {
+            _logger.Trace("Track file was grabbed again after importing");
+            return Decision.Accept();
+        }
+
+        if (lastImported.DownloadId == downloadClientItem.DownloadId)
+        {
+            _logger.Debug("Album previously imported at {0}", lastImported.Date);
+            return Decision.Reject("Album already imported at {0}", lastImported.Date);
+        }
+
+        return Decision.Accept();
     }
 }
