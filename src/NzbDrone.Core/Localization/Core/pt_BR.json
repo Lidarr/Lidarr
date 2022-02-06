@@ -265,7 +265,7 @@
     "Folder": "Pasta",
     "Folders": "Pastas",
     "ForeignIdHelpText": "A ID do Musicbrainz para o autor/livro a excluir",
-    "ForMoreInformationOnTheIndividualDownloadClientsClickOnTheInfoButtons": "Para saber mais sobre os clientes de download individuais, clique nos botões de informações.",
+    "ForMoreInformationOnTheIndividualDownloadClientsClickOnTheInfoButtons": "Para mais informações sobre clientes de download individuais, clique nos botões para mais informações.",
     "ForMoreInformationOnTheIndividualIndexersClickOnTheInfoButtons": "Para saber mais sobre cada indexador, clique nos botões de informações.",
     "ForMoreInformationOnTheIndividualListsClickOnTheInfoButtons": "Para saber mais sobre cada lista, clique nos botões de informação.",
     "FutureDays": "Próximos dias",
@@ -329,7 +329,7 @@
     "IsTagUsedCannotBeDeletedWhileInUse": "Não pode ser excluído durante o uso",
     "Label": "Rótulo",
     "LaunchBrowserHelpText": " Abrir o navegador Web e navegar até a página inicial do Readarr ao iniciar o aplicativo.",
-    "LidarrSupportsAnyDownloadClientThatUsesTheNewznabStandardAsWellAsOtherDownloadClientsListedBelow": "O Readarr oferece suporte a qualquer cliente de download que usa o padrão Newznab, além de outros clientes de download, listados abaixo.",
+    "LidarrSupportsAnyDownloadClientThatUsesTheNewznabStandardAsWellAsOtherDownloadClientsListedBelow": "Lidarr suporta muitos clientes de download torrent e usenet.",
     "LidarrSupportsAnyIndexerThatUsesTheNewznabStandardAsWellAsOtherIndexersListedBelow": "O Radarr oferece suporte a qualquer indexador que usa o padrão Newznab, além de outros indexadores, listados abaixo.",
     "LogLevelvalueTraceTraceLoggingShouldOnlyBeEnabledTemporarily": "O registro de rastreamento deve ser ativado apenas temporariamente",
     "LongDateFormat": "Formato longo da data",
@@ -688,5 +688,11 @@
     "OnApplicationUpdate": "Ao Atualizar o Aplicativo",
     "OnRename": "Ao Renomear",
     "OnTrackRetag": "Ao Re-etiquetar Faixa",
-    "OnUpgrade": "Ao Atualizar"
+    "OnUpgrade": "Ao Atualizar",
+    "OnDownloadFailure": "Na Falha do Download",
+    "OnGrab": "Ao Baixar",
+    "OnReleaseImport": "Ao Importar Lançamento",
+    "OnImportFailure": "Ao Falhar na Importação",
+    "OnHealthIssue": "Quando Problema de Sáude",
+    "ExpandBroadcastByDefaultHelpText": "Transmissão"
 }
