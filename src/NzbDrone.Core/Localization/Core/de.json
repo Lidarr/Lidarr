@@ -498,5 +498,6 @@
     "DeleteImportList": "Importliste löschen",
     "Album": "Album",
     "AlbumHasNotAired": "Album nicht veröffentlicht",
-    "AlbumIsDownloading": "Album wird heruntergeladen"
+    "AlbumIsDownloading": "Album wird heruntergeladen",
+    "AllAlbums": "Alle Alben"
 }
