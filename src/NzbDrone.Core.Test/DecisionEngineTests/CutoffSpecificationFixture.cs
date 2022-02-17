@@ -19,7 +19,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
              new QualityProfile
              {
                  Cutoff = Quality.MP3_256.Id,
-                 Items = Qualities.QualityFixture.GetDefaultQualities()
+                 Items = Qualities.QualityFixture.GetDefaultQualities(),
+                 UpgradeAllowed = true
              },
              new List<QualityModel> { new QualityModel(Quality.MP3_192, new Revision(version: 2)) },
              new List<CustomFormat>()).Should().BeTrue();
@@ -32,7 +33,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             new QualityProfile
             {
                 Cutoff = Quality.MP3_256.Id,
-                Items = Qualities.QualityFixture.GetDefaultQualities()
+                Items = Qualities.QualityFixture.GetDefaultQualities(),
+                UpgradeAllowed = true
             },
             new List<QualityModel> { new QualityModel(Quality.MP3_256, new Revision(version: 2)) },
             new List<CustomFormat>()).Should().BeFalse();
@@ -45,7 +47,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             new QualityProfile
             {
                 Cutoff = Quality.MP3_256.Id,
-                Items = Qualities.QualityFixture.GetDefaultQualities()
+                Items = Qualities.QualityFixture.GetDefaultQualities(),
+                UpgradeAllowed = true
             },
             new List<QualityModel> { new QualityModel(Quality.MP3_320, new Revision(version: 2)) },
             new List<CustomFormat>()).Should().BeFalse();
@@ -58,7 +61,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             new QualityProfile
             {
                 Cutoff = Quality.MP3_320.Id,
-                Items = Qualities.QualityFixture.GetDefaultQualities()
+                Items = Qualities.QualityFixture.GetDefaultQualities(),
+                UpgradeAllowed = true
             },
             new List<QualityModel> { new QualityModel(Quality.MP3_320, new Revision(version: 1)) },
             new List<CustomFormat>(),
@@ -72,7 +76,8 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             new QualityProfile
             {
                 Cutoff = Quality.MP3_320.Id,
-                Items = Qualities.QualityFixture.GetDefaultQualities()
+                Items = Qualities.QualityFixture.GetDefaultQualities(),
+                UpgradeAllowed = true
             },
             new List<QualityModel> { new QualityModel(Quality.MP3_320, new Revision(version: 2)) },
             new List<CustomFormat>(),
@@ -86,6 +91,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             {
                 Cutoff = Quality.MP3_320.Id,
                 Items = Qualities.QualityFixture.GetDefaultQualities(),
+                UpgradeAllowed = true
             };
 
             Subject.CutoffNotMet(
