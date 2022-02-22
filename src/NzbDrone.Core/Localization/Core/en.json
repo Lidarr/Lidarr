@@ -76,7 +76,7 @@
   "CancelMessageText": "Are you sure you want to cancel this pending task?",
   "CatalogNumber": "Catalog Number",
   "CertificateValidation": "Certificate Validation",
-  "CertificateValidationHelpText": "Change how strict HTTPS certification validation is",
+  "CertificateValidationHelpText": "Change how strict HTTPS certification validation is. Do not change unless you understand the risks.",
   "ChangeFileDate": "Change File Date",
   "ChangeHasNotBeenSavedYet": "Change has not been saved yet",
   "ChmodFolder": "chmod Folder",
