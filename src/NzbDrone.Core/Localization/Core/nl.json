@@ -315,7 +315,7 @@
     "UnmonitoredHelpText": "Voeg onbewaakte films toe aan de iCal informatiestrrom",
     "UpdateAutomaticallyHelpText": "Download en installeer updates automatisch. Je zal nog steeds kunnen installeren vanuit Systeem: Updates",
     "UpdateMechanismHelpText": "Gebruik het ingebouwde updatemechanisme of een extern script",
-    "45MinutesFourtyFive": "60 Minuten: {0}",
+    "45MinutesFourtyFive": "45 Minuten: {0}",
     "60MinutesSixty": "60 Minuten: {0}",
     "APIKey": "API-sleutel",
     "About": "Over",
@@ -469,8 +469,9 @@
     "WeekColumnHeader": "Week Kolom Koptekst",
     "Year": "Jaar",
     "YesCancel": "Ja, Annuleren",
-    "20MinutesTwenty": "60 Minuten: {0}",
+    "20MinutesTwenty": "20 Minuten: {0}",
     "Label": "Label",
     "Scheduled": "Gepland",
-    "Score": "Score"
+    "Score": "Score",
+    "AddMissing": "Voeg ontbrekende toe"
 }
