@@ -490,5 +490,10 @@
     "UnableToLoadDownloadClients": "Non riesco a caricare i client di download",
     "UnableToLoadTags": "Non riesco a caricare i tag",
     "Usenet": "Usenet",
-    "SorryThatAlbumCannotBeFound": "Mi spiace, impossibile trovare il film."
+    "SorryThatAlbumCannotBeFound": "Mi spiace, impossibile trovare il film.",
+    "ArtistClickToChangeAlbum": "Fare clic per modificare l'album",
+    "Artist": "Artista",
+    "Artists": "Artisti",
+    "AutomaticallySwitchRelease": "Cambia automaticamente la release",
+    "BackupIntervalHelpText": "Intervallo per eseguire il backup del DB Lidarr e delle impostazioni"
 }

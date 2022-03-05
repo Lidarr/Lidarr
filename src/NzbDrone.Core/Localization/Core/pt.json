@@ -16,5 +16,11 @@
     "DownloadFailedCheckDownloadClientForMoreDetails": "Falha na transferência: verifique o cliente de transferências para obter mais detalhes",
     "DownloadFailedInterp": "Falha na transferência: {0}",
     "EnableCompletedDownloadHandlingHelpText": "Importar automaticamente as transferências concluídas do cliente de transferências",
-    "LogFiles": "Ficheiros de log"
+    "LogFiles": "Ficheiros de log",
+    "MediaInfo": "Informações de multimédia",
+    "MinimumAgeHelpText": "Somente Usenet: Tempo de vida mínimo em minutos, dos NZBs, para que sejam capturados. Use isto para dar às novas versões tempo de propagar-se no seu fornecedor de Usenet.",
+    "Duration": "Duração",
+    "LocalPath": "Caminho Local",
+    "Logging": "guardar nos registos",
+    "MediaManagementSettings": "Definições de gestão de multimédia"
 }
