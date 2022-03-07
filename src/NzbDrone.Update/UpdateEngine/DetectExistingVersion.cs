@@ -22,13 +22,13 @@ namespace NzbDrone.Update.UpdateEngine
         {
             try
             {
-                var targetExecutable = Path.Combine(targetFolder, "Lidarr.exe");
+                var targetExecutable = Path.Combine(targetFolder, "Lidarr.dll");
 
                 if (File.Exists(targetExecutable))
                 {
                     var versionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(targetExecutable);
 
-                    return versionInfo.FileVersion;
+                    return versionInfo.ProductVersion;
                 }
             }
             catch (Exception ex)
