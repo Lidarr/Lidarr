@@ -300,8 +300,7 @@ namespace NzbDrone.Core.Download.Pending
 
                 List<Album> albums;
 
-                RemoteAlbum knownRemoteAlbum;
-                if (knownRemoteAlbums != null && knownRemoteAlbums.TryGetValue(release.Release.Title, out knownRemoteAlbum))
+                if (knownRemoteAlbums != null && knownRemoteAlbums.TryGetValue(release.Release.Title, out var knownRemoteAlbum))
                 {
                     albums = knownRemoteAlbum.Albums;
                 }
@@ -313,6 +312,7 @@ namespace NzbDrone.Core.Download.Pending
                 release.RemoteAlbum = new RemoteAlbum
                 {
                     Artist = artist,
+                    ArtistMatchType = release.AdditionalInfo?.ArtistMatchType ?? ArtistMatchType.Unknown,
                     Albums = albums,
                     ParsedAlbumInfo = release.ParsedAlbumInfo,
                     Release = release.Release
@@ -336,7 +336,11 @@ namespace NzbDrone.Core.Download.Pending
                 Release = decision.RemoteAlbum.Release,
                 Title = decision.RemoteAlbum.Release.Title,
                 Added = DateTime.UtcNow,
-                Reason = reason
+                Reason = reason,
+                AdditionalInfo = new PendingReleaseAdditionalInfo
+                {
+                    ArtistMatchType = decision.RemoteAlbum.ArtistMatchType
+                }
             });
 
             _eventAggregator.PublishEvent(new PendingReleasesUpdatedEvent());

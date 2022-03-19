@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Parser.Model
         public TorrentSeedConfiguration SeedConfiguration { get; set; }
         public List<CustomFormat> CustomFormats { get; set; }
         public int CustomFormatScore { get; set; }
+        public ArtistMatchType ArtistMatchType { get; set; }
 
         public RemoteAlbum()
         {

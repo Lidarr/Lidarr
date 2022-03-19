@@ -103,7 +103,15 @@ namespace NzbDrone.Core.Parser
                 ParsedAlbumInfo = parsedAlbumInfo,
             };
 
-            var artist = GetArtist(parsedAlbumInfo, searchCriteria);
+            Artist artist = null;
+
+            var artistMatch = FindArtist(parsedAlbumInfo, searchCriteria);
+
+            if (artistMatch != null)
+            {
+                artist = artistMatch.Artist;
+                remoteAlbum.ArtistMatchType = artistMatch.MatchType;
+            }
 
             if (artist == null)
             {
@@ -188,7 +196,7 @@ namespace NzbDrone.Core.Parser
             };
         }
 
-        private Artist GetArtist(ParsedAlbumInfo parsedAlbumInfo, SearchCriteriaBase searchCriteria)
+        private FindArtistResult FindArtist(ParsedAlbumInfo parsedAlbumInfo, SearchCriteriaBase searchCriteria)
         {
             Artist artist = null;
 
@@ -196,16 +204,27 @@ namespace NzbDrone.Core.Parser
             {
                 if (searchCriteria.Artist.CleanName == parsedAlbumInfo.ArtistName.CleanArtistName())
                 {
-                    return searchCriteria.Artist;
+                    return new FindArtistResult(searchCriteria.Artist, ArtistMatchType.Title);
                 }
             }
 
+            var matchType = ArtistMatchType.Unknown;
             artist = _artistService.FindByName(parsedAlbumInfo.ArtistName);
+
+            if (artist != null)
+            {
+                matchType = ArtistMatchType.Title;
+            }
 
             if (artist == null)
             {
                 _logger.Debug("Trying inexact artist match for {0}", parsedAlbumInfo.ArtistName);
                 artist = _artistService.FindByNameInexact(parsedAlbumInfo.ArtistName);
+
+                if (artist != null)
+                {
+                    matchType = ArtistMatchType.Title;
+                }
             }
 
             if (artist == null)
@@ -214,7 +233,7 @@ namespace NzbDrone.Core.Parser
                 return null;
             }
 
-            return artist;
+            return new FindArtistResult(artist, matchType);
         }
 
         public Album GetLocalAlbum(string filename, Artist artist)

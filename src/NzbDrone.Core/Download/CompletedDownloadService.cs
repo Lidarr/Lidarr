@@ -14,6 +14,7 @@ using NzbDrone.Core.MediaFiles.TrackImport;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser;
+using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Download
 {
@@ -93,8 +94,13 @@ namespace NzbDrone.Core.Download
 
                 if (artist == null)
                 {
-                    trackedDownload.Warn("Artist name mismatch, automatic import is not possible.");
-                    return;
+                    Enum.TryParse(historyItem.Data.GetValueOrDefault(EntityHistory.ARTIST_MATCH_TYPE, ArtistMatchType.Unknown.ToString()), out ArtistMatchType artistMatchType);
+
+                    if (artistMatchType == ArtistMatchType.Id)
+                    {
+                        trackedDownload.Warn("Found matching artist via grab history, but release was matched to artist by ID. Automatic import is not possible.");
+                        return;
+                    }
                 }
             }
 

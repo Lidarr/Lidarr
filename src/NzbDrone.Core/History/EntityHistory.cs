@@ -9,6 +9,7 @@ namespace NzbDrone.Core.History
     public class EntityHistory : ModelBase
     {
         public const string DOWNLOAD_CLIENT = "downloadClient";
+        public const string ARTIST_MATCH_TYPE = "artistMatchType";
 
         public EntityHistory()
         {

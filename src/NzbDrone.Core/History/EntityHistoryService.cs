@@ -165,6 +165,7 @@ namespace NzbDrone.Core.History
                 history.Data.Add("Protocol", ((int)message.Album.Release.DownloadProtocol).ToString());
                 history.Data.Add("DownloadForced", (!message.Album.DownloadAllowed).ToString());
                 history.Data.Add("CustomFormatScore", message.Album.CustomFormatScore.ToString());
+                history.Data.Add("ArtistMatchType", message.Album.ArtistMatchType.ToString());
 
                 if (!message.Album.ParsedAlbumInfo.ReleaseHash.IsNullOrWhiteSpace())
                 {
