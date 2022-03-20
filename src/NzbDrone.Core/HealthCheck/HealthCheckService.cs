@@ -160,8 +160,6 @@ namespace NzbDrone.Core.HealthCheck
                 }
 
                 _isRunningHealthChecksAfterGracePeriod = false;
-
-                return;
             }
 
             IEventDrivenHealthCheck[] checks;
