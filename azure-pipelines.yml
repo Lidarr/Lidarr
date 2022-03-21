@@ -494,8 +494,10 @@ stages:
           buildType: 'current'
           artifactName: $(artifactName)
           targetPath: $(testsFolder)
-      - bash: find ${TESTSFOLDER} -name "Lidarr.Test.Dummy" -exec chmod a+x {} \;
-        displayName: Make Test Dummy Executable
+      - bash: |
+          find ${TESTSFOLDER} -name "Lidarr.Test.Dummy" -exec chmod a+x {} \;
+          chmod a+x _tests/fpcalc
+        displayName: Make fpcalc and Test Dummy Executable
         condition: and(succeeded(), ne(variables['osName'], 'Windows'))
       - bash: |
           chmod a+x ${TESTSFOLDER}/test.sh
