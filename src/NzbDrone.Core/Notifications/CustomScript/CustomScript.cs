@@ -5,6 +5,7 @@ using System.Linq;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Processes;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Music;
@@ -176,22 +177,33 @@ namespace NzbDrone.Core.Notifications.CustomScript
                 failures.Add(new NzbDroneValidationFailure("Path", "File does not exist"));
             }
 
-            try
+            foreach (var systemFolder in SystemFolders.GetSystemFolders())
             {
-                var environmentVariables = new StringDictionary();
-                environmentVariables.Add("Lidarr_EventType", "Test");
-
-                var processOutput = ExecuteScript(environmentVariables);
-
-                if (processOutput.ExitCode != 0)
+                if (systemFolder.IsParentPath(Settings.Path))
                 {
-                    failures.Add(new NzbDroneValidationFailure(string.Empty, $"Script exited with code: {processOutput.ExitCode}"));
+                    failures.Add(new NzbDroneValidationFailure("Path", $"Must not be a descendant of '{systemFolder}'"));
                 }
             }
-            catch (Exception ex)
+
+            if (failures.Empty())
             {
-                _logger.Error(ex);
-                failures.Add(new NzbDroneValidationFailure(string.Empty, ex.Message));
+                try
+                {
+                    var environmentVariables = new StringDictionary();
+                    environmentVariables.Add("Lidarr_EventType", "Test");
+
+                    var processOutput = ExecuteScript(environmentVariables);
+
+                    if (processOutput.ExitCode != 0)
+                    {
+                        failures.Add(new NzbDroneValidationFailure(string.Empty, $"Script exited with code: {processOutput.ExitCode}"));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                    failures.Add(new NzbDroneValidationFailure(string.Empty, ex.Message));
+                }
             }
 
             return new ValidationResult(failures);
