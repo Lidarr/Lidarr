@@ -77,6 +77,11 @@ export const defaultState = {
       isVisible: false
     },
     {
+      name: 'sourceTitle',
+      label: 'Source Title',
+      isVisible: false
+    },
+    {
       name: 'details',
       columnLabel: 'Details',
       isVisible: true,

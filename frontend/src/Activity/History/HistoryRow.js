@@ -178,6 +178,16 @@ class HistoryRow extends Component {
               );
             }
 
+            if (name === 'sourceTitle') {
+              return (
+                <TableRowCell
+                  key={name}
+                >
+                  {sourceTitle}
+                </TableRowCell>
+              );
+            }
+
             if (name === 'details') {
               return (
                 <TableRowCell
