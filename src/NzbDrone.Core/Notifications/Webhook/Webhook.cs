@@ -63,6 +63,11 @@ namespace NzbDrone.Core.Notifications.Webhook
                 DownloadId = message.DownloadId
             };
 
+            if (message.OldFiles.Any())
+            {
+                payload.DeletedFiles = message.OldFiles.ConvertAll(x => new WebhookTrackFile(x));
+            }
+
             _proxy.SendWebhook(payload, Settings);
         }
 
