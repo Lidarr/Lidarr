@@ -60,7 +60,8 @@ class ArtistIndexOverviews extends Component {
       columnCount: 1,
       posterWidth: 238,
       posterHeight: 238,
-      rowHeight: calculateRowHeight(238, null, props.isSmallScreen, {})
+      rowHeight: calculateRowHeight(238, null, props.isSmallScreen, {}),
+      scrollRestored: false
     };
 
     this._grid = null;
@@ -77,7 +78,8 @@ class ArtistIndexOverviews extends Component {
 
     const {
       width,
-      rowHeight
+      rowHeight,
+      scrollRestored
     } = this.state;
 
     if (prevProps.sortKey !== sortKey ||
@@ -93,6 +95,11 @@ class ArtistIndexOverviews extends Component {
       this._grid.recomputeGridSize();
     }
 
+    if (this._grid && scrollTop !== 0 && !scrollRestored) {
+      this.setState({ scrollRestored: true });
+      this._grid.scrollToPosition({ scrollTop });
+    }
+
     if (jumpToCharacter != null && jumpToCharacter !== prevProps.jumpToCharacter) {
       const index = getIndexOfFirstCharacter(items, jumpToCharacter);
 
@@ -103,10 +110,6 @@ class ArtistIndexOverviews extends Component {
           columnIndex: 0
         });
       }
-    }
-
-    if (this._grid && scrollTop !== 0) {
-      this._grid.scrollToPosition({ scrollTop });
     }
   }
 

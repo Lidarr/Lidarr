@@ -37,7 +37,8 @@ class VirtualTable extends Component {
     super(props, context);
 
     this.state = {
-      width: 0
+      width: 0,
+      scrollRestored: false
     };
 
     this._grid = null;
@@ -52,7 +53,8 @@ class VirtualTable extends Component {
     } = this.props;
 
     const {
-      width
+      width,
+      scrollRestored
     } = this.state;
 
     if (this._grid &&
@@ -63,15 +65,16 @@ class VirtualTable extends Component {
       this._grid.recomputeGridSize();
     }
 
+    if (this._grid && scrollTop !== undefined && scrollTop !== 0 && !scrollRestored) {
+      this.setState({ scrollRestored: true });
+      this._grid.scrollToPosition({ scrollTop });
+    }
+
     if (scrollIndex != null && scrollIndex !== prevProps.scrollIndex) {
       this._grid.scrollToCell({
         rowIndex: scrollIndex,
         columnIndex: 0
       });
-    }
-
-    if (this._grid && scrollTop !== undefined && scrollTop !== 0) {
-      this._grid.scrollToPosition({ scrollTop });
     }
   }
 

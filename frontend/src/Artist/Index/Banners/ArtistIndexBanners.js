@@ -100,7 +100,8 @@ class ArtistIndexBanners extends Component {
       columnCount: 1,
       bannerWidth: 476,
       bannerHeight: 88,
-      rowHeight: calculateRowHeight(88, null, props.isSmallScreen, {})
+      rowHeight: calculateRowHeight(88, null, props.isSmallScreen, {}),
+      scrollRestored: false
     };
 
     this._isInitialized = false;
@@ -120,7 +121,8 @@ class ArtistIndexBanners extends Component {
       width,
       columnWidth,
       columnCount,
-      rowHeight
+      rowHeight,
+      scrollRestored
     } = this.state;
 
     if (prevProps.sortKey !== sortKey ||
@@ -138,6 +140,11 @@ class ArtistIndexBanners extends Component {
       this._grid.recomputeGridSize();
     }
 
+    if (this._grid && scrollTop !== 0 && !scrollRestored) {
+      this.setState({ scrollRestored: true });
+      this._grid.scrollToPosition({ scrollTop });
+    }
+
     if (jumpToCharacter != null && jumpToCharacter !== prevProps.jumpToCharacter) {
       const index = getIndexOfFirstCharacter(items, jumpToCharacter);
 
@@ -151,9 +158,6 @@ class ArtistIndexBanners extends Component {
       }
     }
 
-    if (this._grid && scrollTop !== 0) {
-      this._grid.scrollToPosition({ scrollTop });
-    }
   }
 
   //
