@@ -82,6 +82,11 @@ namespace NzbDrone.Core.Datastore.Migration
                             downloadHistoryData.Add("downloadClient", data["downloadClient"]);
                         }
 
+                        if (data.ContainsKey("statusMessages"))
+                        {
+                            downloadHistoryData.Add("statusMessages", data["statusMessages"]);
+                        }
+
                         using (var updateCmd = conn.CreateCommand())
                         {
                             updateCmd.Transaction = tran;

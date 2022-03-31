@@ -138,6 +138,12 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                 {
                     var state = GetStateFromHistory(downloadHistory.EventType);
                     trackedDownload.State = state;
+
+                    if (downloadHistory.EventType == DownloadHistoryEventType.DownloadImportIncomplete)
+                    {
+                        var messages = Json.Deserialize<List<TrackedDownloadStatusMessage>>(downloadHistory.Data["statusMessages"]).ToArray();
+                        trackedDownload.Warn(messages);
+                    }
                 }
 
                 if (historyItems.Any())
