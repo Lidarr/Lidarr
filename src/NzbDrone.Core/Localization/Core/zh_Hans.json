@@ -1,1 +1,13 @@
-{}
+{
+    "20MinutesTwenty": "20 分钟: {0}",
+    "45MinutesFourtyFive": "45 分钟: {0}",
+    "60MinutesSixty": "60 分钟: {0}",
+    "About": "关于",
+    "AddingTag": "添加标签",
+    "ApplyTags": "‎应用‎‎标签‎",
+    "ApplyTagsHelpTexts2": "‎添加‎‎：将标签‎‎添加到‎‎现有的标签‎‎列表中‎",
+    "ApplyTagsHelpTexts3": "‎移除‎‎：‎‎移除‎‎输入的标签‎",
+    "ApplyTagsHelpTexts4": "‎替换‎‎：‎‎将标记替换为‎‎输入的标记（不输入任何标记以‎‎清除‎‎所有标记）‎",
+    "Actions": "行为",
+    "AppDataDirectory": "‎应用程序数据‎‎目录‎"
+}

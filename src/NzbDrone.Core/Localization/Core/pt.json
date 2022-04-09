@@ -22,5 +22,20 @@
     "Duration": "Duração",
     "LocalPath": "Caminho Local",
     "Logging": "guardar nos registos",
-    "MediaManagementSettings": "Definições de gestão de multimédia"
+    "MediaManagementSettings": "Definições de gestão de multimédia",
+    "OnApplicationUpdate": "Quando a aplicação atualizar",
+    "OnApplicationUpdateHelpText": "Quando a aplicação atualizar",
+    "RemoveDownloadsAlert": "As definições de remoção foram movidas para as respetivas definições de cada Cliente de Transferências na tabela acima.",
+    "SSLCertPassword": "Palavra-passe do certificado SSL",
+    "RemoveCompleted": "Eliminação Completa",
+    "RemoveFailed": "Remoção Falhou",
+    "OpenBrowserOnStart": "Abrir browser ao iniciar",
+    "Password": "Palavra-passe",
+    "RecycleBinCleanupDaysHelpTextWarning": "Ficheiros na reciclagem serão eliminados automaticamente após o número de dias selecionado",
+    "Tags": "Etiquetas",
+    "Username": "Nome de utilizador",
+    "Docker": "Docker",
+    "ProxyPasswordHelpText": "Apenas insira o utilizador e a palavra-passe caso seja requerido. Caso contrário, deixe em branco.",
+    "ProxyUsernameHelpText": "Apenas insira o utilizador e a palavra-passe caso seja requerido. Caso contrário, deixe em branco.",
+    "RemotePath": "Caminho Remoto"
 }
