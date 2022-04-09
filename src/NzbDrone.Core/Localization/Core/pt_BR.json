@@ -127,7 +127,7 @@
     "UnmonitoredHelpText": "Incluir filmes não monitorados no feed do iCal",
     "UpdateAll": "Atualizar tudo",
     "UpdateAutomaticallyHelpText": "Baixar e instalar atualizações automaticamente. Você ainda poderá instalar a partir de Sistema: Atualizações",
-    "UpdateMechanismHelpText": "Usar o atualizador embutido do Radarr ou um script",
+    "UpdateMechanismHelpText": "Usar o atualizador integrado do Lidarr ou um script",
     "Updates": "Atualizações",
     "UpdateScriptPathHelpText": "Caminho para um script personalizado que usa um pacote de atualização extraído e lida com o restante do processo de atualização",
     "UpdatingIsDisabledInsideADockerContainerUpdateTheContainerImageInstead": "A atualização está desabilitada no contêiner do Docker. Atualize a imagem do contêiner.",
@@ -575,7 +575,7 @@
     "LogFiles": "Arquivos de log",
     "Logging": "Registro em log",
     "LogLevel": "Nível do log",
-    "Logs": "Logs",
+    "Logs": "Registros",
     "MinimumFreeSpaceWhenImportingHelpText": "Impedir a importação se deixar menos do que esta quantidade de espaço em disco disponível",
     "MinimumLimits": "Limites mínimos",
     "Missing": "Ausente",
@@ -694,5 +694,8 @@
     "OnReleaseImport": "Ao Importar Lançamento",
     "OnImportFailure": "Ao Falhar na Importação",
     "OnHealthIssue": "Quando Problema de Sáude",
-    "ExpandBroadcastByDefaultHelpText": "Transmissão"
+    "ExpandBroadcastByDefaultHelpText": "Transmissão",
+    "MassAlbumsSearchWarning": "Tem certeza de que deseja pesquisar todos os '{0}' álbuns ausentes?",
+    "MassAlbumsCutoffUnmetWarning": "Tem certeza de que deseja pesquisar todos os álbuns '{0}' que não atingiram o corte?",
+    "ThisCannotBeCancelled": "Isso não pode ser cancelado uma vez iniciado sem desabilitar todos os seus indexadores."
 }
