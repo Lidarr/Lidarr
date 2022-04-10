@@ -5,6 +5,7 @@ import { sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import updateSectionState from 'Utilities/State/updateSectionState';
+import naturalExpansion from 'Utilities/String/naturalExpansion';
 import { set, update, updateItem } from './baseActions';
 import createFetchHandler from './Creators/createFetchHandler';
 import createHandleActions from './Creators/createHandleActions';
@@ -40,7 +41,7 @@ export const defaultState = {
     path: function(item, direction) {
       const path = item.path;
 
-      return path.toLowerCase();
+      return naturalExpansion(path.toLowerCase());
     },
 
     artist: function(item, direction) {
