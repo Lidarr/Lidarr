@@ -131,6 +131,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_TrackFile_Id", trackFile.Id.ToString());
             environmentVariables.Add("Lidarr_TrackFile_TrackCount", trackFile.Tracks.Value.Count.ToString());
             environmentVariables.Add("Lidarr_TrackFile_Path", trackFile.Path);
+            environmentVariables.Add("Lidarr_TrackFile_TrackIds", string.Join(",", trackFile.Tracks.Value.Select(e => e.Id)));
             environmentVariables.Add("Lidarr_TrackFile_TrackNumbers", string.Join(",", trackFile.Tracks.Value.Select(e => e.TrackNumber)));
             environmentVariables.Add("Lidarr_TrackFile_TrackTitles", string.Join("|", trackFile.Tracks.Value.Select(e => e.Title)));
             environmentVariables.Add("Lidarr_TrackFile_Quality", trackFile.Quality.Quality.Name);
