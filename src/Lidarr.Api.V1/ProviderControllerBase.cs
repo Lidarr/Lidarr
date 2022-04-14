@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
+using Lidarr.Http.Extensions;
 using Lidarr.Http.REST;
 using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
@@ -60,7 +61,7 @@ namespace Lidarr.Api.V1
         [RestPostById]
         public ActionResult<TProviderResource> CreateProvider(TProviderResource providerResource)
         {
-            var providerDefinition = GetDefinition(providerResource, false);
+            var providerDefinition = GetDefinition(providerResource, true, false, false);
 
             if (providerDefinition.Enable)
             {
@@ -75,11 +76,11 @@ namespace Lidarr.Api.V1
         [RestPutById]
         public ActionResult<TProviderResource> UpdateProvider(TProviderResource providerResource)
         {
-            var providerDefinition = GetDefinition(providerResource, false);
-            var existingDefinition = _providerFactory.Get(providerDefinition.Id);
+            var providerDefinition = GetDefinition(providerResource, true, false, false);
+            var forceSave = Request.GetBooleanQueryParameter("forceSave");
 
-            // Only test existing definitions if it was previously disabled
-            if (providerDefinition.Enable && !existingDefinition.Enable)
+            // Only test existing definitions if it is enabled and forceSave isn't set.
+            if (providerDefinition.Enable && !forceSave)
             {
                 Test(providerDefinition, false);
             }
@@ -89,11 +90,11 @@ namespace Lidarr.Api.V1
             return Accepted(providerResource.Id);
         }
 
-        private TProviderDefinition GetDefinition(TProviderResource providerResource, bool includeWarnings = false, bool validate = true)
+        private TProviderDefinition GetDefinition(TProviderResource providerResource, bool validate, bool includeWarnings, bool forceValidate)
         {
             var definition = _resourceMapper.ToModel(providerResource);
 
-            if (validate)
+            if (validate && (definition.Enable || forceValidate))
             {
                 Validate(definition, includeWarnings);
             }
@@ -113,7 +114,7 @@ namespace Lidarr.Api.V1
         {
             var defaultDefinitions = _providerFactory.GetDefaultDefinitions().OrderBy(p => p.ImplementationName).ToList();
 
-            var result = new List<TProviderResource>(defaultDefinitions.Count());
+            var result = new List<TProviderResource>(defaultDefinitions.Count);
 
             foreach (var providerDefinition in defaultDefinitions)
             {
@@ -134,7 +135,7 @@ namespace Lidarr.Api.V1
         [HttpPost("test")]
         public object Test([FromBody] TProviderResource providerResource)
         {
-            var providerDefinition = GetDefinition(providerResource, true);
+            var providerDefinition = GetDefinition(providerResource, true, true, true);
 
             Test(providerDefinition, true);
 
@@ -167,7 +168,7 @@ namespace Lidarr.Api.V1
         [HttpPost("action/{name}")]
         public IActionResult RequestAction(string name, [FromBody] TProviderResource resource)
         {
-            var providerDefinition = GetDefinition(resource, true, false);
+            var providerDefinition = GetDefinition(resource, false, false, false);
 
             var query = Request.Query.ToDictionary(x => x.Key, x => x.Value.ToString());
 
@@ -192,12 +193,7 @@ namespace Lidarr.Api.V1
 
         protected void VerifyValidationResult(ValidationResult validationResult, bool includeWarnings)
         {
-            var result = validationResult as NzbDroneValidationResult;
-
-            if (result == null)
-            {
-                result = new NzbDroneValidationResult(validationResult.Errors);
-            }
+            var result = new NzbDroneValidationResult(validationResult.Errors);
 
             if (includeWarnings && (!result.IsValid || result.HasWarnings))
             {

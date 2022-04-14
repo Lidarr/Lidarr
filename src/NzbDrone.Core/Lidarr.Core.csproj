@@ -3,26 +3,26 @@
     <TargetFrameworks>net6.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.78" />
-    <PackageReference Include="System.Text.Json" Version="6.0.1" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="System.Text.Json" Version="6.0.3" />
     <PackageReference Include="System.Memory" Version="4.5.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
-    <PackageReference Include="FluentMigrator.Runner" Version="4.0.0-alpha.268" />
-    <PackageReference Include="FluentMigrator.Runner.SQLite" Version="4.0.0-alpha.268" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+    <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
+    <PackageReference Include="FluentMigrator.Runner.SQLite" Version="3.3.2" />
     <PackageReference Include="FluentValidation" Version="8.6.2" />
-    <PackageReference Include="MailKit" Version="2.11.1" />
+    <PackageReference Include="MailKit" Version="2.15.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NLog" Version="4.7.9" />
-    <PackageReference Include="NLog.Extensions.Logging" Version="1.7.2" />
+    <PackageReference Include="NLog" Version="4.7.14" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />
     <PackageReference Include="System.IO.Abstractions" Version="13.2.29" />
     <PackageReference Include="TagLibSharp-Lidarr" Version="2.2.0.27" />
     <PackageReference Include="Kveer.XmlRPC" Version="1.1.1" />
     <PackageReference Include="SpotifyAPI.Web" Version="4.2.2" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
     <PackageReference Include="Equ" Version="2.3.0" />
-    <PackageReference Include="MonoTorrent" Version="1.0.29" />
+    <PackageReference Include="MonoTorrent" Version="2.0.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Common\Lidarr.Common.csproj" />

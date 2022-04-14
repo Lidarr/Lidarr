@@ -12,15 +12,5 @@ namespace Lidarr.Api.V1.Notifications
             : base(notificationFactory, "notification", ResourceMapper)
         {
         }
-
-        protected override void Validate(NotificationDefinition definition, bool includeWarnings)
-        {
-            if (!definition.Enable)
-            {
-                return;
-            }
-
-            base.Validate(definition, includeWarnings);
-        }
     }
 }

@@ -22,15 +22,5 @@ namespace Lidarr.Api.V1.ImportLists
             SharedValidator.RuleFor(c => c.QualityProfileId).SetValidator(qualityProfileExistsValidator);
             SharedValidator.RuleFor(c => c.MetadataProfileId).SetValidator(metadataProfileExistsValidator);
         }
-
-        protected override void Validate(ImportListDefinition definition, bool includeWarnings)
-        {
-            if (!definition.Enable)
-            {
-                return;
-            }
-
-            base.Validate(definition, includeWarnings);
-        }
     }
 }

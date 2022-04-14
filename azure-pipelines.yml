@@ -7,14 +7,20 @@ variables:
   outputFolder: './_output'
   artifactsFolder: './_artifacts'
   testsFolder: './_tests'
+  yarnCacheFolder: $(Pipeline.Workspace)/.yarn
+  nugetCacheFolder: $(Pipeline.Workspace)/.nuget/packages
   majorVersion: '1.0.0'
   minorVersion: $[counter('minorVersion', 1076)]
   lidarrVersion: '$(majorVersion).$(minorVersion)'
   buildName: '$(Build.SourceBranchName).$(lidarrVersion)'
   sentryOrg: 'servarr'
   sentryUrl: 'https://sentry.servarr.com'
-  dotnetVersion: '6.0.101'
-  yarnCacheFolder: $(Pipeline.Workspace)/.yarn
+  dotnetVersion: '6.0.201'
+  nodeVersion: '16.X'
+  innoVersion: '6.2.0'
+  windowsImage: 'windows-2022'
+  linuxImage: 'ubuntu-20.04'
+  macImage: 'macOS-11'
 
 trigger:
   branches:
@@ -29,6 +35,7 @@ pr:
   paths:
     exclude:
     - src/NzbDrone.Core/Localization/Core
+    - src/Lidarr.Api.*/openapi.json
 
 stages:
   - stage: Setup
@@ -37,7 +44,7 @@ stages:
     - job:
       displayName: Build Variables
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
       steps:
       # Set the build name properly.  The 'name' property won't recursively expand so hack here:
       - bash: echo "##vso[build.updatebuildnumber]$LIDARRVERSION"
@@ -63,15 +70,15 @@ stages:
         matrix:
           Linux:
             osName: 'Linux'
-            imageName: 'ubuntu-18.04'
+            imageName: ${{ variables.linuxImage }}
             enableAnalysis: 'true'
           Mac:
             osName: 'Mac'
-            imageName: 'macos-10.15'
+            imageName: ${{ variables.macImage }}
             enableAnalysis: 'false'
           Windows:
             osName: 'Windows'
-            imageName: 'windows-2019'
+            imageName: ${{ variables.windowsImage }}
             enableAnalysis: 'false'
 
       pool:
@@ -141,20 +148,20 @@ stages:
         matrix:
           Linux:
             osName: 'Linux'
-            imageName: 'ubuntu-18.04'
+            imageName: ${{ variables.linuxImage }}
           Mac:
             osName: 'Mac'
-            imageName: 'macos-10.15'
+            imageName: ${{ variables.macImage }}
           Windows:
             osName: 'Windows'
-            imageName: 'windows-2019'
+            imageName: ${{ variables.windowsImage }}
       pool:
         vmImage: $(imageName)
       steps:
       - task: NodeTool@0
         displayName: Set Node.js version
         inputs:
-          versionSpec: '12.x'
+          versionSpec: $(nodeVersion)
       - checkout: self
         submodules: true
         fetchDepth: 1
@@ -183,7 +190,7 @@ stages:
     - job: Windows_Installer
       displayName: Create Installer
       pool:
-        vmImage: 'windows-2019'
+        vmImage: ${{ variables.windowsImage }}
       steps:
       - checkout: self
         fetchDepth: 1
@@ -199,16 +206,11 @@ stages:
           artifactName: WindowsFrontend
           targetPath: _output
         displayName: Fetch Frontend
-      - bash: ./build.sh --packages
-        displayName: Create Packages
       - bash: |
-          setup/inno/ISCC.exe setup/lidarr.iss //DFramework=net6.0 //DRuntime=win-x86
-          cp setup/output/Lidarr.*windows.net6.0.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/Lidarr.${BUILDNAME}.windows-core-x86-installer.exe
-        displayName: Create .NET Core Windows installer
-      - bash: |
-          setup/inno/ISCC.exe setup/lidarr.iss //DFramework=net6.0 //DRuntime=win-x64
-          cp setup/output/Lidarr.*windows.net6.0.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/Lidarr.${BUILDNAME}.windows-core-x64-installer.exe
-        displayName: Create .NET Core Windows installer
+          ./build.sh --packages --installer
+          cp setup/output/Lidarr.*win-x64.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/Lidarr.${BUILDNAME}.windows-core-x64-installer.exe
+          cp setup/output/Lidarr.*win-x86.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/Lidarr.${BUILDNAME}.windows-core-x86-installer.exe
+        displayName: Create Installers
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: 'WindowsInstaller'
         displayName: Publish Installer
@@ -221,7 +223,7 @@ stages:
     - job: Other_Packages
       displayName: Create Standard Packages
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
       steps:
       - checkout: self
         fetchDepth: 1
@@ -259,21 +261,14 @@ stages:
           includeRootFolder: false
           rootFolderOrFile: $(artifactsFolder)/win-x86/net6.0
       - task: ArchiveFiles@2
-        displayName: Create MacOS Core X64 app
+        displayName: Create MacOS x64 Core app
         inputs:
           archiveFile: '$(Build.ArtifactStagingDirectory)/Lidarr.$(buildName).osx-app-core-x64.zip'
           archiveType: 'zip'
           includeRootFolder: false
           rootFolderOrFile: $(artifactsFolder)/osx-x64-app/net6.0
       - task: ArchiveFiles@2
-        displayName: Create MacOS Core Arm64 app
-        inputs:
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Lidarr.$(buildName).osx-app-core-arm64.zip'
-          archiveType: 'zip'
-          includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/osx-arm64-app/net6.0
-      - task: ArchiveFiles@2
-        displayName: Create MacOS Core X64 tar
+        displayName: Create MacOS x64 Core tar
         inputs:
           archiveFile: '$(Build.ArtifactStagingDirectory)/Lidarr.$(buildName).osx-core-x64.tar.gz'
           archiveType: 'tar'
@@ -281,7 +276,14 @@ stages:
           includeRootFolder: false
           rootFolderOrFile: $(artifactsFolder)/osx-x64/net6.0
       - task: ArchiveFiles@2
-        displayName: Create ARM64 Linux Core tar
+        displayName: Create MacOS arm64 Core app
+        inputs:
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Lidarr.$(buildName).osx-app-core-arm64.zip'
+          archiveType: 'zip'
+          includeRootFolder: false
+          rootFolderOrFile: $(artifactsFolder)/osx-arm64-app/net6.0
+      - task: ArchiveFiles@2
+        displayName: Create MacOS arm64 Core tar
         inputs:
           archiveFile: '$(Build.ArtifactStagingDirectory)/Lidarr.$(buildName).osx-core-arm64.tar.gz'
           archiveType: 'tar'
@@ -382,7 +384,7 @@ stages:
     jobs:
     - job: Prepare
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
       steps:
       - checkout: none
       - task: DownloadPipelineArtifact@2
@@ -406,17 +408,17 @@ stages:
             osName: 'Mac'
             testName: 'MacCore'
             poolName: 'Azure Pipelines'
-            imageName: 'macos-10.15'
+            imageName: ${{ variables.macImage }}
           WindowsCore:
             osName: 'Windows'
             testName: 'WindowsCore'
             poolName: 'Azure Pipelines'
-            imageName: 'windows-2019'
+            imageName: ${{ variables.windowsImage }}
           LinuxCore:
             osName: 'Linux'
             testName: 'LinuxCore'
             poolName: 'Azure Pipelines'
-            imageName: 'ubuntu-18.04'
+            imageName: ${{ variables.linuxImage }}
           FreebsdCore:
             osName: 'Linux'
             testName: 'FreebsdCore'
@@ -476,7 +478,7 @@ stages:
             containerImage: ghcr.io/servarr/testimages:alpine
 
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
       
       container: $[ variables['containerImage'] ]
 
@@ -516,7 +518,7 @@ stages:
     jobs:
     - job: Prepare
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
       steps:
       - checkout: none
       - task: DownloadPipelineArtifact@2
@@ -536,17 +538,17 @@ stages:
           MacCore:
             osName: 'Mac'
             testName: 'MacCore'
-            imageName: 'macos-10.15'
+            imageName: ${{ variables.macImage }}
             pattern: 'Lidarr.*.osx-core-x64.tar.gz'
           WindowsCore:
             osName: 'Windows'
             testName: 'WindowsCore'
-            imageName: 'windows-2019'
+            imageName: ${{ variables.windowsImage }}
             pattern: 'Lidarr.*.windows-core-x64.zip'
           LinuxCore:
             osName: 'Linux'
             testName: 'LinuxCore'
-            imageName: 'ubuntu-18.04'
+            imageName: ${{ variables.linuxImage }}
             pattern: 'Lidarr.*.linux-core-x64.tar.gz'
 
       pool:
@@ -651,7 +653,7 @@ stages:
             pattern: 'Lidarr.*.linux-musl-core-x64.tar.gz'
 
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
 
       container: $[ variables['containerImage'] ]
 
@@ -707,16 +709,19 @@ stages:
         matrix:
           Linux:
             osName: 'Linux'
-            imageName: 'ubuntu-18.04'
+            imageName: ${{ variables.linuxImage }}
             pattern: 'Lidarr.*.linux-core-x64.tar.gz'
+            failBuild: true
           Mac:
             osName: 'Mac'
-            imageName: 'macos-10.15'
+            imageName: ${{ variables.macImage }}
             pattern: 'Lidarr.*.osx-core-x64.tar.gz'
+            failBuild: true
           Windows:
             osName: 'Windows'
-            imageName: 'windows-2019'
+            imageName: ${{ variables.windowsImage }}
             pattern: 'Lidarr.*.windows-core-x64.zip'
+            failBuild: true
 
       pool:
         vmImage: $(imageName)
@@ -779,7 +784,7 @@ stages:
     jobs:
     - job: Prepare
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
       steps:
       - checkout: none
       - task: DownloadPipelineArtifact@2
@@ -796,17 +801,17 @@ stages:
         matrix:
           Linux:
             osName: 'Linux'
-            imageName: 'ubuntu-18.04'
+            imageName: ${{ variables.linuxImage }}
           Windows:
             osName: 'Windows'
-            imageName: 'windows-2019'
+            imageName: ${{ variables.windowsImage }}
       pool:
         vmImage: $(imageName)
       steps:
       - task: NodeTool@0
         displayName: Set Node.js version
         inputs:
-          versionSpec: '12.x'
+          versionSpec: $(nodeVersion)
       - checkout: self
         submodules: true
         fetchDepth: 1
@@ -827,7 +832,7 @@ stages:
       displayName: Frontend
       condition: eq(variables['System.PullRequest.IsFork'], 'False')
       pool:
-        vmImage: windows-2019
+        vmImage: ${{ variables.windowsImage }}
       steps:
       - checkout: self # Need history for Sonar analysis
       - task: SonarCloudPrepare@1
@@ -843,6 +848,60 @@ stages:
           cliProjectVersion: '$(lidarrVersion)'
           cliSources: './frontend'
       - task: SonarCloudAnalyze@1
+      
+    - job: Api_Docs
+      displayName: API Docs
+      dependsOn: Prepare
+      condition: |
+        and
+        (
+          and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop')),
+          and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
+        )
+
+      pool:
+        vmImage: ${{ variables.windowsImage }}
+
+      steps:
+      - task: UseDotNet@2
+        displayName: 'Install .net core'
+        inputs:
+          version: $(dotnetVersion)
+      - checkout: self
+        submodules: true
+        persistCredentials: true
+        fetchDepth: 1    
+      - bash: ./docs.sh Windows
+        displayName: Create openapi.json
+      - bash: |
+          git config --global user.email "development@lidarr.audio"
+          git config --global user.name "Servarr"
+          git checkout -b api-docs
+          git add .
+          git status
+          if git status | grep modified
+          then
+            git commit -am 'Automated API Docs update'
+            git push -f --set-upstream origin api-docs
+            curl -X POST -H "Authorization: token ${GITHUBTOKEN}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/lidarr/lidarr/pulls -d '{"head":"api-docs","base":"develop","title":"Update API docs"}'
+          else
+            echo "No changes since last run"
+          fi
+        displayName: Commit API Doc Change
+        continueOnError: true
+        env:
+          GITHUBTOKEN: $(githubToken)
+      - task: CopyFiles@2
+        displayName: 'Copy openapi.json to: $(Build.ArtifactStagingDirectory)'
+        inputs:
+          SourceFolder: '$(Build.SourcesDirectory)'
+          Contents: |
+            **/*openapi.json
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/api_docs'
+      - publish: $(Build.ArtifactStagingDirectory)/api_docs
+        artifact: 'APIDocs'
+        displayName: Publish API Docs Bundle
+        condition: and(succeeded(), eq(variables['System.JobAttempt'], '1'))
 
     - job: Analyze_Backend
       displayName: Backend
@@ -854,7 +913,7 @@ stages:
         EnableAnalyzers: 'false'
 
       pool:
-        vmImage: windows-2019
+        vmImage: ${{ variables.windowsImage }}
 
       steps:
       - task: UseDotNet@2
@@ -876,7 +935,7 @@ stages:
           projectVersion: '$(lidarrVersion)'
           extraProperties: |
             sonar.exclusions=**/obj/**,**/*.dll,**/NzbDrone.Core.Test/Files/**/*,./frontend/**,**/ExternalModules/**,./src/Libraries/**
-            sonar.coverage.exclusions=**/Lidarr.Api.V1/**/*,**/MonoTorrent/**/*,**/Marr.Data/**/*
+            sonar.coverage.exclusions=**/Lidarr.Api.V1/**/*
             sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/CoverageResults/**/coverage.opencover.xml
             sonar.cs.nunit.reportsPaths=$(Build.SourcesDirectory)/TestResult.xml
       - bash: |
@@ -911,7 +970,7 @@ stages:
     - job:
       displayName: Discord Notification
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
       steps:
         - task: DownloadPipelineArtifact@2
           continueOnError: true

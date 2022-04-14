@@ -20,8 +20,9 @@ namespace NzbDrone.Core.Datastore.Migration.Framework
                                        ILogger<NzbDroneSQLiteProcessor> logger,
                                        IOptionsSnapshot<ProcessorOptions> options,
                                        IConnectionStringAccessor connectionStringAccessor,
-                                       IServiceProvider serviceProvider)
-        : base(factory, generator, logger, options, connectionStringAccessor, serviceProvider)
+                                       IServiceProvider serviceProvider,
+                                       SQLiteQuoter sqliteQuoter)
+        : base(factory, generator, logger, options, connectionStringAccessor, serviceProvider, sqliteQuoter)
         {
         }
 
