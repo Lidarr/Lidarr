@@ -12,7 +12,7 @@
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
     <PackageReference Include="FluentValidation" Version="8.6.2" />
     <PackageReference Include="Ical.Net" Version="4.2.0" />
-    <PackageReference Include="NLog" Version="4.7.9" />
+    <PackageReference Include="NLog" Version="4.7.14" />
     <PackageReference Include="System.IO.Abstractions" Version="13.2.29" />
   </ItemGroup>
 </Project>

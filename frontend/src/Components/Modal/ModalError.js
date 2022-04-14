@@ -36,7 +36,8 @@ function ModalError(props) {
           Close
         </Button>
       </ModalFooter>
-    </ModalContent>);
+    </ModalContent>
+  );
 }
 
 ModalError.propTypes = {

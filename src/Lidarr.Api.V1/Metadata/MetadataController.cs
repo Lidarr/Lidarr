@@ -12,15 +12,5 @@ namespace Lidarr.Api.V1.Metadata
             : base(metadataFactory, "metadata", ResourceMapper)
         {
         }
-
-        protected override void Validate(MetadataDefinition definition, bool includeWarnings)
-        {
-            if (!definition.Enable)
-            {
-                return;
-            }
-
-            base.Validate(definition, includeWarnings);
-        }
     }
 }
