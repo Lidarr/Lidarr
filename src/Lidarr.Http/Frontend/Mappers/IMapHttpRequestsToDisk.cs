@@ -6,6 +6,6 @@ namespace Lidarr.Http.Frontend.Mappers
     {
         string Map(string resourceUrl);
         bool CanHandle(string resourceUrl);
-        FileStreamResult GetResponse(string resourceUrl);
+        IActionResult GetResponse(string resourceUrl);
     }
 }

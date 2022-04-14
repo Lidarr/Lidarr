@@ -45,6 +45,7 @@ namespace NzbDrone.Core.MediaCover
 
         public MediaCoverTypes CoverType { get; set; }
         public string Extension { get; private set; }
+        public string RemoteUrl { get; set; }
 
         public MediaCover()
         {

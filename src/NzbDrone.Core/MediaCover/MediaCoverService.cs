@@ -30,6 +30,7 @@ namespace NzbDrone.Core.MediaCover
         IHandleAsync<AlbumDeletedEvent>,
         IMapCoversToLocal
     {
+        private readonly IMediaCoverProxy _mediaCoverProxy;
         private readonly IImageResizer _resizer;
         private readonly IAlbumService _albumService;
         private readonly IHttpClient _httpClient;
@@ -45,7 +46,8 @@ namespace NzbDrone.Core.MediaCover
         // So limit the number of concurrent resizing tasks
         private static SemaphoreSlim _semaphore = new SemaphoreSlim((int)Math.Ceiling(Environment.ProcessorCount / 2.0));
 
-        public MediaCoverService(IImageResizer resizer,
+        public MediaCoverService(IMediaCoverProxy mediaCoverProxy,
+                                 IImageResizer resizer,
                                  IAlbumService albumService,
                                  IHttpClient httpClient,
                                  IDiskProvider diskProvider,
@@ -55,6 +57,7 @@ namespace NzbDrone.Core.MediaCover
                                  IEventAggregator eventAggregator,
                                  Logger logger)
         {
+            _mediaCoverProxy = mediaCoverProxy;
             _resizer = resizer;
             _albumService = albumService;
             _httpClient = httpClient;
@@ -83,23 +86,37 @@ namespace NzbDrone.Core.MediaCover
 
         public void ConvertToLocalUrls(int entityId, MediaCoverEntity coverEntity, IEnumerable<MediaCover> covers)
         {
-            foreach (var mediaCover in covers)
+            if (entityId == 0)
             {
-                var filePath = GetCoverPath(entityId, coverEntity, mediaCover.CoverType, mediaCover.Extension, null);
-
-                if (coverEntity == MediaCoverEntity.Album)
+                // Artist isn't in Lidarr yet, map via a proxy to circument referrer issues
+                foreach (var mediaCover in covers)
                 {
-                    mediaCover.Url = _configFileProvider.UrlBase + @"/MediaCover/Albums/" + entityId + "/" + mediaCover.CoverType.ToString().ToLower() + mediaCover.Extension;
+                    mediaCover.RemoteUrl = mediaCover.Url;
+                    mediaCover.Url = _mediaCoverProxy.RegisterUrl(mediaCover.RemoteUrl);
                 }
-                else
+            }
+            else
+            {
+                foreach (var mediaCover in covers)
                 {
-                    mediaCover.Url = _configFileProvider.UrlBase + @"/MediaCover/" + entityId + "/" + mediaCover.CoverType.ToString().ToLower() + mediaCover.Extension;
-                }
+                    var filePath = GetCoverPath(entityId, coverEntity, mediaCover.CoverType, mediaCover.Extension, null);
 
-                if (_diskProvider.FileExists(filePath))
-                {
-                    var lastWrite = _diskProvider.FileGetLastWrite(filePath);
-                    mediaCover.Url += "?lastWrite=" + lastWrite.Ticks;
+                    mediaCover.RemoteUrl = mediaCover.Url;
+
+                    if (coverEntity == MediaCoverEntity.Album)
+                    {
+                        mediaCover.Url = _configFileProvider.UrlBase + @"/MediaCover/Albums/" + entityId + "/" + mediaCover.CoverType.ToString().ToLower() + mediaCover.Extension;
+                    }
+                    else
+                    {
+                        mediaCover.Url = _configFileProvider.UrlBase + @"/MediaCover/" + entityId + "/" + mediaCover.CoverType.ToString().ToLower() + mediaCover.Extension;
+                    }
+
+                    if (_diskProvider.FileExists(filePath))
+                    {
+                        var lastWrite = _diskProvider.FileGetLastWrite(filePath);
+                        mediaCover.Url += "?lastWrite=" + lastWrite.Ticks;
+                    }
                 }
             }
         }
@@ -135,6 +152,10 @@ namespace NzbDrone.Core.MediaCover
                         DownloadCover(artist, cover, serverFileHeaders.LastModified ?? DateTime.Now);
                         updated = true;
                     }
+                }
+                catch (HttpException e)
+                {
+                    _logger.Warn("Couldn't download media cover for {0}. {1}", artist, e.Message);
                 }
                 catch (WebException e)
                 {
