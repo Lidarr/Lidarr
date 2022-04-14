@@ -11,10 +11,12 @@ namespace Lidarr.Api.V1.Albums
     public class AlbumLookupController : Controller
     {
         private readonly ISearchForNewAlbum _searchProxy;
+        private readonly IMapCoversToLocal _coverMapper;
 
-        public AlbumLookupController(ISearchForNewAlbum searchProxy)
+        public AlbumLookupController(ISearchForNewAlbum searchProxy, IMapCoversToLocal coverMapper)
         {
             _searchProxy = searchProxy;
+            _coverMapper = coverMapper;
         }
 
         [HttpGet]
@@ -24,15 +26,18 @@ namespace Lidarr.Api.V1.Albums
             return MapToResource(searchResults).ToList();
         }
 
-        private static IEnumerable<AlbumResource> MapToResource(IEnumerable<NzbDrone.Core.Music.Album> albums)
+        private IEnumerable<AlbumResource> MapToResource(IEnumerable<NzbDrone.Core.Music.Album> albums)
         {
             foreach (var currentAlbum in albums)
             {
                 var resource = currentAlbum.ToResource();
+
+                _coverMapper.ConvertToLocalUrls(resource.Id, MediaCoverEntity.Album, resource.Images);
+
                 var cover = currentAlbum.Images.FirstOrDefault(c => c.CoverType == MediaCoverTypes.Cover);
                 if (cover != null)
                 {
-                    resource.RemoteCover = cover.Url;
+                    resource.RemoteCover = cover.RemoteUrl;
                 }
 
                 yield return resource;

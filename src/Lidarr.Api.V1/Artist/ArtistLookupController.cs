@@ -11,10 +11,12 @@ namespace Lidarr.Api.V1.Artist
     public class ArtistLookupController : Controller
     {
         private readonly ISearchForNewArtist _searchProxy;
+        private readonly IMapCoversToLocal _coverMapper;
 
-        public ArtistLookupController(ISearchForNewArtist searchProxy)
+        public ArtistLookupController(ISearchForNewArtist searchProxy, IMapCoversToLocal coverMapper)
         {
             _searchProxy = searchProxy;
+            _coverMapper = coverMapper;
         }
 
         [HttpGet]
@@ -24,15 +26,18 @@ namespace Lidarr.Api.V1.Artist
             return MapToResource(searchResults).ToList();
         }
 
-        private static IEnumerable<ArtistResource> MapToResource(IEnumerable<NzbDrone.Core.Music.Artist> artist)
+        private IEnumerable<ArtistResource> MapToResource(IEnumerable<NzbDrone.Core.Music.Artist> artist)
         {
             foreach (var currentArtist in artist)
             {
                 var resource = currentArtist.ToResource();
+
+                _coverMapper.ConvertToLocalUrls(resource.Id, MediaCoverEntity.Artist, resource.Images);
+
                 var poster = currentArtist.Metadata.Value.Images.FirstOrDefault(c => c.CoverType == MediaCoverTypes.Poster);
                 if (poster != null)
                 {
-                    resource.RemotePoster = poster.Url;
+                    resource.RemotePoster = poster.RemoteUrl;
                 }
 
                 yield return resource;

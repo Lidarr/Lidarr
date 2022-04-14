@@ -59,7 +59,7 @@ namespace Lidarr.Http.Frontend
 
                 if (result != null)
                 {
-                    if (result.ContentType == "text/html")
+                    if ((result as FileResult)?.ContentType == "text/html")
                     {
                         Response.Headers.DisableCache();
                     }

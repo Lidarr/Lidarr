@@ -291,7 +291,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             foreach (var albumImport in albumImports)
             {
                 var release = albumImport.First().ImportDecision.Item.Release;
-                var album = albumImport.First().ImportDecision.Item.Album;
+                var album = _albumService.GetAlbum(albumImport.First().ImportDecision.Item.Album.Id);
                 var artist = albumImport.First().ImportDecision.Item.Artist;
 
                 if (albumImport.Where(e => e.Errors.Count == 0).ToList().Count > 0 && artist != null && album != null)
