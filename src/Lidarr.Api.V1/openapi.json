@@ -3,11 +3,29 @@
   "info": {
     "title": "Lidarr",
     "description": "Lidarr API docs",
-    "version": "1.0.0",
-    "contact": {
-      "url": "https://lidarr.audio"
+    "license": {
+      "name": "GPL-3.0",
+      "url": "https://github.com/Lidarr/Lidarr/blob/develop/LICENSE"
     },
+    "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "{protocol}://{hostpath}",
+      "variables": {
+        "protocol": {
+          "default": "http",
+          "enum": [
+            "http",
+            "https"
+          ]
+        },
+        "hostpath": {
+          "default": "localhost:8686"
+        }
+      }
+    }
+  ],
   "paths": {
     "/api/v1/album": {
       "get": {
@@ -986,7 +1004,7 @@
         }
       }
     },
-    "/api/v1/calendar/lidarr.ics": {
+    "/feed/v1/calendar/lidarr.ics": {
       "get": {
         "tags": [
           "CalendarFeed"
@@ -2407,7 +2425,7 @@
             "name": "eventType",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/HistoryEventType"
+              "$ref": "#/components/schemas/EntityHistoryEventType"
             }
           },
           {
@@ -2494,7 +2512,7 @@
             "name": "eventType",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/HistoryEventType"
+              "$ref": "#/components/schemas/EntityHistoryEventType"
             }
           },
           {
@@ -2555,33 +2573,22 @@
         }
       }
     },
-    "/api/v1/history/failed": {
+    "/api/v1/history/failed/{id}": {
       "post": {
         "tags": [
           "History"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "integer",
-                "format": "int32"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "integer",
-                "format": "int32"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "integer",
-                "format": "int32"
-              }
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Success"
@@ -3698,6 +3705,113 @@
         }
       }
     },
+    "/api/v1/language/{id}": {
+      "get": {
+        "tags": [
+          "Language"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LanguageResource"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LanguageResource"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LanguageResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/language": {
+      "get": {
+        "tags": [
+          "Language"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LanguageResource"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LanguageResource"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LanguageResource"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/localization": {
+      "get": {
+        "tags": [
+          "Localization"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/log": {
       "get": {
         "tags": [
@@ -3776,6 +3890,7 @@
             "in": "path",
             "required": true,
             "schema": {
+              "pattern": "[-.a-zA-Z0-9]+?\\.txt",
               "type": "string"
             }
           }
@@ -3923,6 +4038,7 @@
             "in": "path",
             "required": true,
             "schema": {
+              "pattern": "(.+)\\.(jpg|png|gif)",
               "type": "string"
             }
           }
@@ -3954,6 +4070,7 @@
             "in": "path",
             "required": true,
             "schema": {
+              "pattern": "(.+)\\.(jpg|png|gif)",
               "type": "string"
             }
           }
@@ -7255,6 +7372,7 @@
             "in": "path",
             "required": true,
             "schema": {
+              "pattern": "^(?!api/).*",
               "type": "string"
             }
           }
@@ -7299,6 +7417,7 @@
             "in": "path",
             "required": true,
             "schema": {
+              "pattern": "^(?!(api|feed)/).*",
               "type": "string"
             }
           }
@@ -8310,6 +8429,7 @@
             "in": "path",
             "required": true,
             "schema": {
+              "pattern": "[-.a-zA-Z0-9]+?\\.txt",
               "type": "string"
             }
           }
@@ -8848,23 +8968,6 @@
         },
         "additionalProperties": false
       },
-      "AlbumsMonitoredResource": {
-        "type": "object",
-        "properties": {
-          "albumIds": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "nullable": true
-          },
-          "monitored": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
       "AlbumStatisticsResource": {
         "type": "object",
         "properties": {
@@ -8925,6 +9028,23 @@
           },
           "monitoringOptions": {
             "$ref": "#/components/schemas/MonitoringOptions"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AlbumsMonitoredResource": {
+        "type": "object",
+        "properties": {
+          "albumIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "monitored": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -9406,6 +9526,10 @@
           "type": {
             "$ref": "#/components/schemas/BackupType"
           },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
           "time": {
             "type": "string",
             "format": "date-time"
@@ -9793,13 +9917,7 @@
           "enableCompletedDownloadHandling": {
             "type": "boolean"
           },
-          "removeCompletedDownloads": {
-            "type": "boolean"
-          },
           "autoRedownloadFailed": {
-            "type": "boolean"
-          },
-          "removeFailedDownloads": {
             "type": "boolean"
           }
         },
@@ -9867,6 +9985,12 @@
           "priority": {
             "type": "integer",
             "format": "int32"
+          },
+          "removeCompletedDownloads": {
+            "type": "boolean"
+          },
+          "removeFailedDownloads": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -9876,6 +10000,22 @@
           "unknown",
           "usenet",
           "torrent"
+        ],
+        "type": "string"
+      },
+      "EntityHistoryEventType": {
+        "enum": [
+          "unknown",
+          "grabbed",
+          "artistFolderImported",
+          "trackFileImported",
+          "downloadFailed",
+          "trackFileDeleted",
+          "trackFileRenamed",
+          "albumImportIncomplete",
+          "downloadImported",
+          "trackFileRetagged",
+          "downloadIgnored"
         ],
         "type": "string"
       },
@@ -9978,22 +10118,6 @@
         },
         "additionalProperties": false
       },
-      "HistoryEventType": {
-        "enum": [
-          "unknown",
-          "grabbed",
-          "artistFolderImported",
-          "trackFileImported",
-          "downloadFailed",
-          "trackFileDeleted",
-          "trackFileRenamed",
-          "albumImportIncomplete",
-          "downloadImported",
-          "trackFileRetagged",
-          "downloadIgnored"
-        ],
-        "type": "string"
-      },
       "HistoryResource": {
         "type": "object",
         "properties": {
@@ -10032,12 +10156,13 @@
             "nullable": true
           },
           "eventType": {
-            "$ref": "#/components/schemas/HistoryEventType"
+            "$ref": "#/components/schemas/EntityHistoryEventType"
           },
           "data": {
             "type": "object",
             "additionalProperties": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "nullable": true
           },
@@ -10492,6 +10617,25 @@
         },
         "additionalProperties": false
       },
+      "LanguageResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "nameLower": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Links": {
         "type": "object",
         "properties": {
@@ -10692,6 +10836,10 @@
             "type": "string",
             "nullable": true,
             "readOnly": true
+          },
+          "remoteUrl": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -11055,6 +11203,19 @@
         },
         "additionalProperties": false
       },
+      "MonitorTypes": {
+        "enum": [
+          "all",
+          "future",
+          "missing",
+          "existing",
+          "latest",
+          "first",
+          "none",
+          "unknown"
+        ],
+        "type": "string"
+      },
       "MonitoringOptions": {
         "type": "object",
         "properties": {
@@ -11073,19 +11234,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "MonitorTypes": {
-        "enum": [
-          "all",
-          "future",
-          "missing",
-          "existing",
-          "latest",
-          "first",
-          "none",
-          "unknown"
-        ],
-        "type": "string"
       },
       "NamingConfigResource": {
         "type": "object",
@@ -11216,6 +11364,9 @@
           "onTrackRetag": {
             "type": "boolean"
           },
+          "onApplicationUpdate": {
+            "type": "boolean"
+          },
           "supportsOnGrab": {
             "type": "boolean"
           },
@@ -11243,6 +11394,9 @@
           "supportsOnTrackRetag": {
             "type": "boolean"
           },
+          "supportsOnApplicationUpdate": {
+            "type": "boolean"
+          },
           "testCommand": {
             "type": "string",
             "nullable": true
@@ -11259,6 +11413,33 @@
           },
           "value": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ParseResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "parsedAlbumInfo": {
+            "$ref": "#/components/schemas/ParsedAlbumInfo"
+          },
+          "artist": {
+            "$ref": "#/components/schemas/ArtistResource"
+          },
+          "albums": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlbumResource"
+            },
             "nullable": true
           }
         },
@@ -11403,33 +11584,6 @@
           },
           "releaseHash": {
             "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ParseResource": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "parsedAlbumInfo": {
-            "$ref": "#/components/schemas/ParsedAlbumInfo"
-          },
-          "artist": {
-            "$ref": "#/components/schemas/ArtistResource"
-          },
-          "albums": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AlbumResource"
-            },
             "nullable": true
           }
         },
@@ -12400,13 +12554,11 @@
         "properties": {
           "key": {
             "type": "string",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           },
           "value": {
             "type": "integer",
-            "format": "int32",
-            "readOnly": true
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -12539,8 +12691,7 @@
         "properties": {
           "ticks": {
             "type": "integer",
-            "format": "int64",
-            "readOnly": true
+            "format": "int64"
           },
           "days": {
             "type": "integer",
@@ -12684,44 +12835,6 @@
           },
           "album": {
             "$ref": "#/components/schemas/Album"
-          }
-        },
-        "additionalProperties": false
-      },
-      "TrackedDownloadState": {
-        "enum": [
-          "downloading",
-          "downloadFailed",
-          "downloadFailedPending",
-          "importPending",
-          "importing",
-          "importFailed",
-          "imported",
-          "ignored"
-        ],
-        "type": "string"
-      },
-      "TrackedDownloadStatus": {
-        "enum": [
-          "ok",
-          "warning",
-          "error"
-        ],
-        "type": "string"
-      },
-      "TrackedDownloadStatusMessage": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "messages": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -12884,6 +12997,14 @@
             "type": "integer",
             "format": "int32"
           },
+          "foreignTrackId": {
+            "type": "string",
+            "nullable": true
+          },
+          "foreignRecordingId": {
+            "type": "string",
+            "nullable": true
+          },
           "trackFileId": {
             "type": "integer",
             "format": "int32"
@@ -12933,6 +13054,44 @@
         },
         "additionalProperties": false
       },
+      "TrackedDownloadState": {
+        "enum": [
+          "downloading",
+          "downloadFailed",
+          "downloadFailedPending",
+          "importPending",
+          "importing",
+          "importFailed",
+          "imported",
+          "ignored"
+        ],
+        "type": "string"
+      },
+      "TrackedDownloadStatus": {
+        "enum": [
+          "ok",
+          "warning",
+          "error"
+        ],
+        "type": "string"
+      },
+      "TrackedDownloadStatusMessage": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "UiConfigResource": {
         "type": "object",
         "properties": {
@@ -12965,6 +13124,10 @@
           },
           "enableColorImpairedMode": {
             "type": "boolean"
+          },
+          "uiLanguage": {
+            "type": "integer",
+            "format": "int32"
           },
           "expandAlbumByDefault": {
             "type": "boolean"
@@ -13043,6 +13206,11 @@
           "installed": {
             "type": "boolean"
           },
+          "installedOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "installable": {
             "type": "boolean"
           },
@@ -13104,6 +13272,28 @@
         ],
         "type": "string"
       }
+    },
+    "securitySchemes": {
+      "X-Api-Key": {
+        "type": "apiKey",
+        "description": "Apikey passed as header",
+        "name": "X-Api-Key",
+        "in": "header"
+      },
+      "apikey": {
+        "type": "apiKey",
+        "description": "Apikey passed as header",
+        "name": "apikey",
+        "in": "query"
+      }
     }
-  }
+  },
+  "security": [
+    {
+      "X-Api-Key": [ ]
+    },
+    {
+      "apikey": [ ]
+    }
+  ]
 }
