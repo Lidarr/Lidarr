@@ -11,6 +11,8 @@ namespace Lidarr.Api.V1.Tracks
     public class TrackResource : RestResource
     {
         public int ArtistId { get; set; }
+        public string ForeignTrackId { get; set; }
+        public string ForeignRecordingId { get; set; }
         public int TrackFileId { get; set; }
         public int AlbumId { get; set; }
         public bool Explicit { get; set; }
@@ -44,6 +46,8 @@ namespace Lidarr.Api.V1.Tracks
                 Id = model.Id,
 
                 ArtistId = model.Artist.Value.Id,
+                ForeignTrackId = model.ForeignTrackId,
+                ForeignRecordingId = model.ForeignRecordingId,
                 TrackFileId = model.TrackFileId,
                 AlbumId = model.AlbumId,
                 Explicit = model.Explicit,
