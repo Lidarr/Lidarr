@@ -124,7 +124,7 @@ function InteractiveSearch(props) {
 
       {
         !isFetching && error ?
-          <div>
+          <div className={styles.blankpad}>
             {translate('UnableToLoadInteractiveSearch')}
           </div> :
           null
@@ -132,7 +132,7 @@ function InteractiveSearch(props) {
 
       {
         !isFetching && isPopulated && !totalReleasesCount ?
-          <div>
+          <div className={styles.blankpad}>
             {translate('NoResults')}
           </div> :
           null
@@ -140,7 +140,7 @@ function InteractiveSearch(props) {
 
       {
         !!totalReleasesCount && isPopulated && !items.length ?
-          <div>
+          <div className={styles.blankpad}>
             {translate('AllResultsFiltered')}
           </div> :
           null
