@@ -69,7 +69,7 @@
     "AutomaticallySwitchRelease": "Trocar Automaticamente de Lançamento",
     "BackupNow": "Fazer Backup",
     "RemotePathHelpText": "Caminho raiz para o diretório que o cliente de download acessa",
-    "CertificateValidationHelpText": "Mudar o quão estrito a validação da certificação HTTPS é",
+    "CertificateValidationHelpText": "Mudar o quão rigorosa é a validação de certificação HTTPS. Não mude a menos que você entenda os riscos.",
     "BackupRetentionHelpText": "Backups automáticos anteriores ao período de retenção serão limpos automaticamente",
     "Backups": "Backups",
     "BindAddress": "Fixar Endereço",

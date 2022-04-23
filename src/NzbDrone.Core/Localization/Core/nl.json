@@ -350,7 +350,7 @@
     "ShortDateFormat": "Korte Datumnotatie",
     "ShowCutoffUnmetIconHelpText": "Toon icoon voor bestanden waarbij de drempel niet behaald werd",
     "ShowDateAdded": "Toon Datum Toegevoegd",
-    "ShowMonitored": "Toon Bewaakte",
+    "ShowMonitored": "Toon Gemonitorde",
     "ShowMonitoredHelpText": "Toon bewakingsstatus onder de poster",
     "Size": " Grootte",
     "SkipFreeSpaceCheck": "Vrije schijfruimte controle overslaan",
@@ -473,5 +473,8 @@
     "Label": "Label",
     "Scheduled": "Gepland",
     "Score": "Score",
-    "AddMissing": "Voeg ontbrekende toe"
+    "AddMissing": "Voeg ontbrekende toe",
+    "OnApplicationUpdateHelpText": "Bij applicatie update",
+    "Duration": "Duur",
+    "OnApplicationUpdate": "Bij applicatie update"
 }
