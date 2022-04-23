@@ -9,5 +9,18 @@
     "ApplyTagsHelpTexts3": "‎移除‎‎：‎‎移除‎‎输入的标签‎",
     "ApplyTagsHelpTexts4": "‎替换‎‎：‎‎将标记替换为‎‎输入的标记（不输入任何标记以‎‎清除‎‎所有标记）‎",
     "Actions": "行为",
-    "AppDataDirectory": "‎应用程序数据‎‎目录‎"
+    "AppDataDirectory": "‎应用程序数据‎‎目录‎",
+    "Authentication": "认证",
+    "BackupNow": "立即备份",
+    "BackupRetentionHelpText": "超过保留时间的自动备份将被自动清除",
+    "Backups": "备份",
+    "BindAddress": "绑定地址",
+    "Branch": "",
+    "BypassProxyForLocalAddresses": "不代理本地 IP 地址",
+    "Clear": "清除",
+    "ChangeHasNotBeenSavedYet": "设置未保存",
+    "CertificateValidation": "证书认证",
+    "Cancel": "取消",
+    "CloneProfile": "复制配置文件",
+    "Automatic": "自动化"
 }
