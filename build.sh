@@ -206,7 +206,10 @@ PackageWindows()
     local folder=$artifactsFolder/$runtime/$framework/Lidarr
     
     PackageFiles "$folder" "$framework" "$runtime"
-    cp -r $outputFolder/$framework-windows/$runtime/publish/* $folder
+
+    if [ "$os" = "windows" ]; then
+        cp -r $outputFolder/$framework-windows/$runtime/publish/* $folder
+    fi
 
     echo "Removing Lidarr.Mono"
     rm -f $folder/Lidarr.Mono.*
