@@ -34,6 +34,11 @@ namespace Lidarr.Api.V1.Artist
                     artist.Monitored = resource.Monitored.Value;
                 }
 
+                if (resource.MonitorNewItems.HasValue)
+                {
+                    artist.MonitorNewItems = resource.MonitorNewItems.Value;
+                }
+
                 if (resource.QualityProfileId.HasValue)
                 {
                     artist.QualityProfileId = resource.QualityProfileId.Value;

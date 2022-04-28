@@ -337,6 +337,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                     artist.MetadataProfileId = rootFolder.DefaultMetadataProfileId;
                     artist.QualityProfileId = rootFolder.DefaultQualityProfileId;
                     artist.Monitored = rootFolder.DefaultMonitorOption != MonitorTypes.None;
+                    artist.MonitorNewItems = rootFolder.DefaultNewItemMonitorOption;
                     artist.Tags = rootFolder.DefaultTags;
                     artist.AddOptions = new AddArtistOptions
                     {

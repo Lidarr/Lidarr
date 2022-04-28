@@ -3,6 +3,7 @@ function getNewArtist(artist, payload) {
   const {
     rootFolderPath,
     monitor,
+    monitorNewItems,
     qualityProfileId,
     metadataProfileId,
     artistType,
@@ -17,6 +18,7 @@ function getNewArtist(artist, payload) {
 
   artist.addOptions = addOptions;
   artist.monitored = true;
+  artist.monitorNewItems = monitorNewItems;
   artist.qualityProfileId = qualityProfileId;
   artist.metadataProfileId = metadataProfileId;
   artist.rootFolderPath = rootFolderPath;

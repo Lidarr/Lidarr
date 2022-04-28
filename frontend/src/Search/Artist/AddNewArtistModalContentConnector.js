@@ -57,6 +57,7 @@ class AddNewArtistModalContentConnector extends Component {
       foreignArtistId,
       rootFolderPath,
       monitor,
+      monitorNewItems,
       qualityProfileId,
       metadataProfileId,
       tags
@@ -66,6 +67,7 @@ class AddNewArtistModalContentConnector extends Component {
       foreignArtistId,
       rootFolderPath: rootFolderPath.value,
       monitor: monitor.value,
+      monitorNewItems: monitorNewItems.value,
       qualityProfileId: qualityProfileId.value,
       metadataProfileId: metadataProfileId.value,
       tags: tags.value,
@@ -91,6 +93,7 @@ AddNewArtistModalContentConnector.propTypes = {
   foreignArtistId: PropTypes.string.isRequired,
   rootFolderPath: PropTypes.object,
   monitor: PropTypes.object.isRequired,
+  monitorNewItems: PropTypes.object.isRequired,
   qualityProfileId: PropTypes.object,
   metadataProfileId: PropTypes.object,
   tags: PropTypes.object.isRequired,

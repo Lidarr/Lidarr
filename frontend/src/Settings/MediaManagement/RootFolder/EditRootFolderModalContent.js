@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ArtistMetadataProfilePopoverContent from 'AddArtist/ArtistMetadataProfilePopoverContent';
 import ArtistMonitoringOptionsPopoverContent from 'AddArtist/ArtistMonitoringOptionsPopoverContent';
+import ArtistMonitorNewItemsOptionsPopoverContent from 'AddArtist/ArtistMonitorNewItemsOptionsPopoverContent';
 import Form from 'Components/Form/Form';
 import FormGroup from 'Components/Form/FormGroup';
 import FormInputGroup from 'Components/Form/FormInputGroup';
@@ -43,6 +44,7 @@ function EditRootFolderModalContent(props) {
     defaultQualityProfileId,
     defaultMetadataProfileId,
     defaultMonitorOption,
+    defaultNewItemMonitorOption,
     defaultTags
   } = item;
 
@@ -99,7 +101,7 @@ function EditRootFolderModalContent(props) {
 
               <FormGroup>
                 <FormLabel>
-                  Monitor
+                  {translate('Monitor')}
 
                   <Popover
                     anchor={
@@ -122,6 +124,31 @@ function EditRootFolderModalContent(props) {
                   helpText={translate('DefaultMonitorOptionHelpText')}
                 />
 
+              </FormGroup>
+
+              <FormGroup>
+                <FormLabel>
+                  {translate('MonitorNewItems')}
+                  <Popover
+                    anchor={
+                      <Icon
+                        className={styles.labelIcon}
+                        name={icons.INFO}
+                      />
+                    }
+                    title={translate('MonitorNewItems')}
+                    body={<ArtistMonitorNewItemsOptionsPopoverContent />}
+                    position={tooltipPositions.RIGHT}
+                  />
+                </FormLabel>
+
+                <FormInputGroup
+                  type={inputTypes.MONITOR_NEW_ITEMS_SELECT}
+                  name="defaultNewItemMonitorOption"
+                  {...defaultNewItemMonitorOption}
+                  onChange={onInputChange}
+                  helpText={translate('MonitorNewItemsHelpText')}
+                />
               </FormGroup>
 
               <FormGroup>

@@ -35,6 +35,7 @@ namespace NzbDrone.Core.Music
         private readonly IHistoryService _historyService;
         private readonly IRootFolderService _rootFolderService;
         private readonly ICheckIfArtistShouldBeRefreshed _checkIfArtistShouldBeRefreshed;
+        private readonly IMonitorNewAlbumService _monitorNewAlbumService;
         private readonly IConfigService _configService;
         private readonly IImportListExclusionService _importListExclusionService;
         private readonly Logger _logger;
@@ -50,6 +51,7 @@ namespace NzbDrone.Core.Music
                                     IHistoryService historyService,
                                     IRootFolderService rootFolderService,
                                     ICheckIfArtistShouldBeRefreshed checkIfArtistShouldBeRefreshed,
+                                    IMonitorNewAlbumService monitorNewAlbumService,
                                     IConfigService configService,
                                     IImportListExclusionService importListExclusionService,
                                     Logger logger)
@@ -65,6 +67,7 @@ namespace NzbDrone.Core.Music
             _historyService = historyService;
             _rootFolderService = rootFolderService;
             _checkIfArtistShouldBeRefreshed = checkIfArtistShouldBeRefreshed;
+            _monitorNewAlbumService = monitorNewAlbumService;
             _configService = configService;
             _importListExclusionService = importListExclusionService;
             _logger = logger;
@@ -236,6 +239,15 @@ namespace NzbDrone.Core.Music
             local.Artist = entity;
             local.ArtistMetadata = entity.Metadata.Value;
             local.ArtistMetadataId = entity.Metadata.Value.Id;
+        }
+
+        protected override void ProcessChildren(Artist entity, SortedChildren children)
+        {
+            foreach (var album in children.Added)
+            {
+                // all existing child albums count as updated as we don't have proper data yet.
+                album.Monitored = _monitorNewAlbumService.ShouldMonitorNewAlbum(album, children.Updated, entity.MonitorNewItems);
+            }
         }
 
         protected override void AddChildren(List<Album> children)

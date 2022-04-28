@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import MoveArtistModal from 'Artist/MoveArtist/MoveArtistModal';
 import MetadataProfileSelectInputConnector from 'Components/Form/MetadataProfileSelectInputConnector';
+import MonitorNewItemsSelectInput from 'Components/Form/MonitorNewItemsSelectInput';
 import QualityProfileSelectInputConnector from 'Components/Form/QualityProfileSelectInputConnector';
 import RootFolderSelectInputConnector from 'Components/Form/RootFolderSelectInputConnector';
 import SelectInput from 'Components/Form/SelectInput';
@@ -26,6 +27,7 @@ class ArtistEditorFooter extends Component {
 
     this.state = {
       monitored: NO_CHANGE,
+      monitorNewItems: NO_CHANGE,
       qualityProfileId: NO_CHANGE,
       metadataProfileId: NO_CHANGE,
       rootFolderPath: NO_CHANGE,
@@ -46,6 +48,7 @@ class ArtistEditorFooter extends Component {
     if (prevProps.isSaving && !isSaving && !saveError) {
       this.setState({
         monitored: NO_CHANGE,
+        monitorNewItems: NO_CHANGE,
         qualityProfileId: NO_CHANGE,
         metadataProfileId: NO_CHANGE,
         rootFolderPath: NO_CHANGE,
@@ -146,6 +149,7 @@ class ArtistEditorFooter extends Component {
 
     const {
       monitored,
+      monitorNewItems,
       qualityProfileId,
       metadataProfileId,
       rootFolderPath,
@@ -174,6 +178,21 @@ class ArtistEditorFooter extends Component {
             name="monitored"
             value={monitored}
             values={monitoredOptions}
+            isDisabled={!selectedCount}
+            onChange={this.onInputChange}
+          />
+        </div>
+
+        <div className={styles.inputContainer}>
+          <ArtistEditorFooterLabel
+            label={translate('MonitorNewItems')}
+            isSaving={isSaving && monitored !== NO_CHANGE}
+          />
+
+          <MonitorNewItemsSelectInput
+            name="monitorNewItems"
+            value={monitorNewItems}
+            includeNoChange={true}
             isDisabled={!selectedCount}
             onChange={this.onInputChange}
           />

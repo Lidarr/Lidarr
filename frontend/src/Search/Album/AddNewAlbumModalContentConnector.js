@@ -85,6 +85,7 @@ class AddNewAlbumModalContentConnector extends Component {
       foreignAlbumId,
       rootFolderPath,
       monitor,
+      monitorNewItems,
       qualityProfileId,
       metadataProfileId,
       tags
@@ -94,6 +95,7 @@ class AddNewAlbumModalContentConnector extends Component {
       foreignAlbumId,
       rootFolderPath: rootFolderPath.value,
       monitor: monitor.value,
+      monitorNewItems: monitorNewItems.value,
       qualityProfileId: qualityProfileId.value,
       metadataProfileId: metadataProfileId.value,
       tags: tags.value,
@@ -120,6 +122,7 @@ AddNewAlbumModalContentConnector.propTypes = {
   foreignAlbumId: PropTypes.string.isRequired,
   rootFolderPath: PropTypes.object,
   monitor: PropTypes.object.isRequired,
+  monitorNewItems: PropTypes.object.isRequired,
   qualityProfileId: PropTypes.object,
   metadataProfileId: PropTypes.object,
   noneMetadataProfileId: PropTypes.number.isRequired,

@@ -1,3 +1,4 @@
+using NzbDrone.Core.Music;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.ImportLists
@@ -6,6 +7,7 @@ namespace NzbDrone.Core.ImportLists
     {
         public bool EnableAutomaticAdd { get; set; }
         public ImportListMonitorType ShouldMonitor { get; set; }
+        public NewItemMonitorTypes MonitorNewItems { get; set; }
         public int ProfileId { get; set; }
         public int MetadataProfileId { get; set; }
         public string RootFolderPath { get; set; }
