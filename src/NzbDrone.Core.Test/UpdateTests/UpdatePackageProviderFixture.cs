@@ -24,6 +24,7 @@ namespace NzbDrone.Core.Test.UpdateTests
             Subject.GetLatestUpdate("nightly", new Version(10, 0)).Should().BeNull();
         }
 
+        [Ignore("Pending linux-x86 release")]
         [Test]
         public void finds_update_when_version_lower()
         {
@@ -40,6 +41,7 @@ namespace NzbDrone.Core.Test.UpdateTests
             Subject.GetLatestUpdate("invalid_branch", new Version(0, 2)).Should().NotBeNull();
         }
 
+        [Ignore("Pending linux-x86 release")]
         [Test]
         public void should_get_recent_updates()
         {
