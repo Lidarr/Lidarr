@@ -33,7 +33,7 @@
     "@fortawesome/free-regular-svg-icons": "6.1.0",
     "@fortawesome/free-solid-svg-icons": "6.1.0",
     "@fortawesome/react-fontawesome": "0.1.18",
-    "@microsoft/signalr": "6.0.3",
+    "@microsoft/signalr": "6.0.4",
     "@sentry/browser": "6.18.2",
     "@sentry/integrations": "6.18.2",
     "ansi-colors": "4.1.1",
