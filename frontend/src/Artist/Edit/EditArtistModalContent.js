@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ArtistMetadataProfilePopoverContent from 'AddArtist/ArtistMetadataProfilePopoverContent';
+import ArtistMonitorNewItemsOptionsPopoverContent from 'AddArtist/ArtistMonitorNewItemsOptionsPopoverContent';
 import MoveArtistModal from 'Artist/MoveArtist/MoveArtistModal';
 import Form from 'Components/Form/Form';
 import FormGroup from 'Components/Form/FormGroup';
@@ -73,6 +74,7 @@ class EditArtistModalContent extends Component {
 
     const {
       monitored,
+      monitorNewItems,
       qualityProfileId,
       metadataProfileId,
       path,
@@ -97,6 +99,31 @@ class EditArtistModalContent extends Component {
                 name="monitored"
                 helpText={translate('MonitoredHelpText')}
                 {...monitored}
+                onChange={onInputChange}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <FormLabel>
+                {translate('MonitorNewItems')}
+                <Popover
+                  anchor={
+                    <Icon
+                      className={styles.labelIcon}
+                      name={icons.INFO}
+                    />
+                  }
+                  title={translate('MonitorNewItems')}
+                  body={<ArtistMonitorNewItemsOptionsPopoverContent />}
+                  position={tooltipPositions.RIGHT}
+                />
+              </FormLabel>
+
+              <FormInputGroup
+                type={inputTypes.MONITOR_NEW_ITEMS_SELECT}
+                name="monitorNewItems"
+                helpText={translate('MonitorNewItemsHelpText')}
+                {...monitorNewItems}
                 onChange={onInputChange}
               />
             </FormGroup>

@@ -13,6 +13,7 @@ namespace Lidarr.Api.V1.RootFolders
         public int DefaultMetadataProfileId { get; set; }
         public int DefaultQualityProfileId { get; set; }
         public MonitorTypes DefaultMonitorOption { get; set; }
+        public NewItemMonitorTypes DefaultNewItemMonitorOption { get; set; }
         public HashSet<int> DefaultTags { get; set; }
 
         public bool Accessible { get; set; }
@@ -38,6 +39,7 @@ namespace Lidarr.Api.V1.RootFolders
                 DefaultMetadataProfileId = model.DefaultMetadataProfileId,
                 DefaultQualityProfileId = model.DefaultQualityProfileId,
                 DefaultMonitorOption = model.DefaultMonitorOption,
+                DefaultNewItemMonitorOption = model.DefaultNewItemMonitorOption,
                 DefaultTags = model.DefaultTags,
 
                 Accessible = model.Accessible,
@@ -62,7 +64,8 @@ namespace Lidarr.Api.V1.RootFolders
                 DefaultMetadataProfileId = resource.DefaultMetadataProfileId,
                 DefaultQualityProfileId = resource.DefaultQualityProfileId,
                 DefaultMonitorOption = resource.DefaultMonitorOption,
-                DefaultTags = resource.DefaultTags
+                DefaultNewItemMonitorOption = resource.DefaultNewItemMonitorOption,
+                DefaultTags = resource.DefaultTags,
             };
         }
 

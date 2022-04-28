@@ -74,6 +74,10 @@ namespace NzbDrone.Core.Test.MusicTests
             Mocker.GetMock<IRootFolderService>()
                 .Setup(x => x.All())
                 .Returns(new List<RootFolder>());
+
+            Mocker.GetMock<IMonitorNewAlbumService>()
+                .Setup(x => x.ShouldMonitorNewAlbum(It.IsAny<Album>(), It.IsAny<List<Album>>(), It.IsAny<NewItemMonitorTypes>()))
+                .Returns(true);
         }
 
         private void GivenNewArtistInfo(Artist artist)
@@ -143,7 +147,30 @@ namespace NzbDrone.Core.Test.MusicTests
         }
 
         [Test]
-        public void should_log_error_and_delete_if_musicbrainz_id_not_found_and_artist_has_no_files()
+        public void should_call_new_album_monitor_service_when_adding_album()
+        {
+            var newAlbum = Builder<Album>.CreateNew()
+                .With(x => x.Id = 0)
+                .With(x => x.ForeignAlbumId = "3")
+                .Build();
+            _remoteAlbums.Add(newAlbum);
+
+            var newAuthorInfo = _artist.JsonClone();
+            newAuthorInfo.Metadata = _artist.Metadata.Value.JsonClone();
+            newAuthorInfo.Albums = _remoteAlbums;
+
+            GivenNewArtistInfo(newAuthorInfo);
+            GivenAlbumsForRefresh(_albums);
+            AllowArtistUpdate();
+
+            Subject.Execute(new RefreshArtistCommand(_artist.Id));
+
+            Mocker.GetMock<IMonitorNewAlbumService>()
+                .Verify(x => x.ShouldMonitorNewAlbum(newAlbum, _albums, _artist.MonitorNewItems), Times.Once());
+        }
+
+        [Test]
+        public void should_log_error_and_delete_if_musicbrainz_id_not_found_and_author_has_no_files()
         {
             Mocker.GetMock<IArtistService>()
                 .Setup(x => x.DeleteArtist(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()));

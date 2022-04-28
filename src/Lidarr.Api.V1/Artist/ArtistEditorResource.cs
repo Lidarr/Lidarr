@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NzbDrone.Core.Music;
 
 namespace Lidarr.Api.V1.Artist
 {
@@ -6,6 +7,7 @@ namespace Lidarr.Api.V1.Artist
     {
         public List<int> ArtistIds { get; set; }
         public bool? Monitored { get; set; }
+        public NewItemMonitorTypes? MonitorNewItems { get; set; }
         public int? QualityProfileId { get; set; }
         public int? MetadataProfileId { get; set; }
         public string RootFolderPath { get; set; }

@@ -103,10 +103,8 @@ namespace NzbDrone.Core.Music
             local.AlbumRelease = entity;
             local.AlbumReleaseId = entity.Id;
             local.ArtistMetadataId = remote.ArtistMetadata.Value.Id;
-            remote.Id = local.Id;
-            remote.TrackFileId = local.TrackFileId;
-            remote.AlbumReleaseId = local.AlbumReleaseId;
-            remote.ArtistMetadataId = local.ArtistMetadataId;
+
+            remote.UseDbFieldsFrom(local);
         }
 
         protected override void AddChildren(List<Track> children)

@@ -102,7 +102,8 @@ export const actionHandlers = handleThunks({
     const {
       artistIds,
       monitored,
-      monitor
+      monitor,
+      monitorNewItems
     } = payload;
 
     const artist = [];
@@ -127,7 +128,8 @@ export const actionHandlers = handleThunks({
       method: 'POST',
       data: JSON.stringify({
         artist,
-        monitoringOptions: { monitor }
+        monitoringOptions: { monitor },
+        monitorNewItems
       }),
       dataType: 'json'
     }).request;

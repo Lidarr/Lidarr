@@ -14,6 +14,7 @@ import IndexerSelectInputConnector from './IndexerSelectInputConnector';
 import KeyValueListInput from './KeyValueListInput';
 import MetadataProfileSelectInputConnector from './MetadataProfileSelectInputConnector';
 import MonitorAlbumsSelectInput from './MonitorAlbumsSelectInput';
+import MonitorNewItemsSelectInput from './MonitorNewItemsSelectInput';
 import NumberInput from './NumberInput';
 import OAuthInputConnector from './OAuthInputConnector';
 import PasswordInput from './PasswordInput';
@@ -51,6 +52,9 @@ function getComponent(type) {
 
     case inputTypes.MONITOR_ALBUMS_SELECT:
       return MonitorAlbumsSelectInput;
+
+    case inputTypes.MONITOR_NEW_ITEMS_SELECT:
+      return MonitorNewItemsSelectInput;
 
     case inputTypes.NUMBER:
       return NumberInput;

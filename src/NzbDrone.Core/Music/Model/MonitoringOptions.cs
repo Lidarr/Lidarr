@@ -14,16 +14,4 @@ namespace NzbDrone.Core.Music
         public List<string> AlbumsToMonitor { get; set; }
         public bool Monitored { get; set; }
     }
-
-    public enum MonitorTypes
-    {
-        All,
-        Future,
-        Missing,
-        Existing,
-        Latest,
-        First,
-        None,
-        Unknown
-    }
 }

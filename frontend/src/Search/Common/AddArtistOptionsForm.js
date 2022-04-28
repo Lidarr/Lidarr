@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ArtistMetadataProfilePopoverContent from 'AddArtist/ArtistMetadataProfilePopoverContent';
 import ArtistMonitoringOptionsPopoverContent from 'AddArtist/ArtistMonitoringOptionsPopoverContent';
+import ArtistMonitorNewItemsOptionsPopoverContent from 'AddArtist/ArtistMonitorNewItemsOptionsPopoverContent';
 import Form from 'Components/Form/Form';
 import FormGroup from 'Components/Form/FormGroup';
 import FormInputGroup from 'Components/Form/FormInputGroup';
@@ -32,6 +33,7 @@ class AddArtistOptionsForm extends Component {
     const {
       rootFolderPath,
       monitor,
+      monitorNewItems,
       qualityProfileId,
       metadataProfileId,
       includeNoneMetadataProfile,
@@ -76,8 +78,34 @@ class AddArtistOptionsForm extends Component {
           <FormInputGroup
             type={inputTypes.MONITOR_ALBUMS_SELECT}
             name="monitor"
+            helpText={translate('MonitoringOptionsHelpText')}
             onChange={onInputChange}
             {...monitor}
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <FormLabel>
+            {translate('MonitorNewItems')}
+            <Popover
+              anchor={
+                <Icon
+                  className={styles.labelIcon}
+                  name={icons.INFO}
+                />
+              }
+              title={translate('MonitorNewItems')}
+              body={<ArtistMonitorNewItemsOptionsPopoverContent />}
+              position={tooltipPositions.RIGHT}
+            />
+          </FormLabel>
+
+          <FormInputGroup
+            type={inputTypes.MONITOR_NEW_ITEMS_SELECT}
+            name="monitorNewItems"
+            helpText={translate('MonitorNewItemsHelpText')}
+            {...monitorNewItems}
+            onChange={onInputChange}
           />
         </FormGroup>
 
@@ -143,6 +171,7 @@ class AddArtistOptionsForm extends Component {
 AddArtistOptionsForm.propTypes = {
   rootFolderPath: PropTypes.object,
   monitor: PropTypes.object.isRequired,
+  monitorNewItems: PropTypes.string.isRequired,
   qualityProfileId: PropTypes.object,
   metadataProfileId: PropTypes.object,
   showMetadataProfile: PropTypes.bool.isRequired,
