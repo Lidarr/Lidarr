@@ -684,6 +684,7 @@
   "PortNumber": "Port Number",
   "PosterSize": "Poster Size",
   "PreferAndUpgrade": "Prefer and Upgrade",
+  "PreferProtocol": "Prefer {preferredProtocol}",
   "PreferTorrent": "Prefer Torrent",
   "PreferUsenet": "Prefer Usenet",
   "PreferredProtocol": "Preferred Protocol",
