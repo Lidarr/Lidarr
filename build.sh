@@ -68,7 +68,7 @@ Build()
 
     slnFile=src/Lidarr.sln
 
-    if [ $os = "windows" ]; then
+    if [ $os == "windows" ]; then
         platform=Windows
     else
         platform=Posix
