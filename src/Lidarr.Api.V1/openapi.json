@@ -9028,6 +9028,9 @@
           },
           "monitoringOptions": {
             "$ref": "#/components/schemas/MonitoringOptions"
+          },
+          "monitorNewItems": {
+            "$ref": "#/components/schemas/NewItemMonitorTypes"
           }
         },
         "additionalProperties": false
@@ -9086,6 +9089,9 @@
           },
           "monitored": {
             "type": "boolean"
+          },
+          "monitorNewItems": {
+            "$ref": "#/components/schemas/NewItemMonitorTypes"
           },
           "lastInfoSync": {
             "type": "string",
@@ -9161,6 +9167,9 @@
           "monitored": {
             "type": "boolean",
             "nullable": true
+          },
+          "monitorNewItems": {
+            "$ref": "#/components/schemas/NewItemMonitorTypes"
           },
           "qualityProfileId": {
             "type": "integer",
@@ -9399,6 +9408,9 @@
           },
           "monitored": {
             "type": "boolean"
+          },
+          "monitorNewItems": {
+            "$ref": "#/components/schemas/NewItemMonitorTypes"
           },
           "rootFolderPath": {
             "type": "string",
@@ -10472,6 +10484,9 @@
             "type": "string",
             "nullable": true
           },
+          "monitorNewItems": {
+            "$ref": "#/components/schemas/NewItemMonitorTypes"
+          },
           "qualityProfileId": {
             "type": "integer",
             "format": "int32"
@@ -11282,6 +11297,14 @@
           }
         },
         "additionalProperties": false
+      },
+      "NewItemMonitorTypes": {
+        "enum": [
+          "all",
+          "none",
+          "new"
+        ],
+        "type": "string"
       },
       "NotificationResource": {
         "type": "object",
@@ -12479,6 +12502,9 @@
           },
           "defaultMonitorOption": {
             "$ref": "#/components/schemas/MonitorTypes"
+          },
+          "defaultNewItemMonitorOption": {
+            "$ref": "#/components/schemas/NewItemMonitorTypes"
           },
           "defaultTags": {
             "uniqueItems": true,
