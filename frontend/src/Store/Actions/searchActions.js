@@ -4,6 +4,7 @@ import { batchActions } from 'redux-batched-actions';
 import { createThunk, handleThunks } from 'Store/thunks';
 import getNewAlbum from 'Utilities/Album/getNewAlbum';
 import getNewArtist from 'Utilities/Artist/getNewArtist';
+import monitorNewItemsOptions from 'Utilities/Artist/monitorNewItemsOptions';
 import monitorOptions from 'Utilities/Artist/monitorOptions';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import getSectionState from 'Utilities/State/getSectionState';
@@ -32,6 +33,7 @@ export const defaultState = {
   defaults: {
     rootFolderPath: '',
     monitor: monitorOptions[0].key,
+    monitorNewItems: monitorNewItemsOptions[0].key,
     qualityProfileId: 0,
     metadataProfileId: 0,
     tags: []
