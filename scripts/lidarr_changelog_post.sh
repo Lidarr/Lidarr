@@ -1,7 +1,8 @@
 #!/bin/bash
+
 # Generate a Markdown change log of pull requests from commits between two tags
 scriptDir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-ghRepo="Prowlarr"
+ghRepo="Lidarr"
 #branch="develop"
 #read -r -p "What Repo?: " ghRepo
 #read -r -p "What Org?: [Default:$ghRepo]" ghOrg
@@ -31,20 +32,24 @@ changelogDir="$baseDir/changelogs/"
 templateDir="$changelogDir/templates/"
 # Get a list of all tags in reverse order
 # Assumes the tags are in version format like v1.2.3
-gitTags=$(git ls-remote -t --exit-code --refs --sort='-v:refname' "$ghRepoUrl" | sed -E 's/^[[:xdigit:]]+[[:space:]]+refs\/tags\/(.+)/\1/g')
+## gitTags=$(git ls-remote -t --exit-code --refs --sort='-v:refname' "$ghRepoUrl" | sed -E 's/^[[:xdigit:]]+[[:space:]]+refs\/tags\/(.+)/\1/g')
 
 # Make the tags an array
 
 # shellcheck disable=SC2206
-tags=($gitTags)
+## tags=($gitTags)
 
-latestTag=${tags[0]}
-previousTag=${tags[1]}
+# Prompt for Tags due to bad Tags on GH (Sonarr v2)
+# Commented out automation
+##latestTag=${tags[0]}
+##previousTag=${tags[1]}
+read -r -p "Enter Latest Tag:" latestTag
+read -r -p "Enter Previous Tag:" previousTag
 
 # Get a log of commits that occurred between two tags
 # See Pretty format placeholders at https://git-scm.com/docs/pretty-formats
 # -i -E --grep="(Fixed:|New:)"'
-commits=$(git log --pretty=format:' - %s%n' "$previousTag".."$latestTag")
+commits=$(git log --pretty=format:" - %s%n" -i -E --grep="(Fixed:|New:)" "$previousTag".."$latestTag")
 # Store our changelog in a variable to be saved to a file at the end
 markdown="# New ${branchType^} Release"
 markdown+='\n\n'
