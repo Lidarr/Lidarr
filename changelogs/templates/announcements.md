@@ -1,0 +1,8 @@
+- Automated API Documentation Updates recently implemented
+- At long last, a new Lidarr `develop` / beta release
+- ** Known Issues **
+  - Linux users map experience errors such as:
+    - `You have an old version of fpcalc. Please upgrade to 1.4.3.`
+    - `An error occurred trying to start process '/opt/Lidarr/fpcalc' with working directory '/'. Permission denied`
+  - A fix will be out soon, but this can be fixed by setting fpcalc to be executable `chmod +x /opt/Lidarr/fpcalc`
+  - Note that for the fix `sudo` may be required or your path to Lidarr's binary folder may be different depending on your environment and setup.

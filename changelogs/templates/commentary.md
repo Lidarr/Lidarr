@@ -1,0 +1,6 @@
+- [Lidarr](https://lidarr.audio/donate), [Prowlarr](https://prowlarr.com/donate), [Radarr](https://radarr.video/donate), [Readarr](https://readarr.com/donate) now accept direct bitcoin donations
+- [Readarr official beta on `develop` announced](https://www.reddit.com/r/Readarr/comments/sxvj8y/new_beta_release_develop_v0101248/)
+- Radarr Postgres Database Support in `nightly` and `develop`
+- Prowlarr Postgres Database Support in `nightly` and `develop`
+- [Lidarr Postgres Database Support in development (Draft PR#2625)](https://github.com/Lidarr/Lidarr/pull/2625)
+- [Lidarr UDP Syslog Support in  in development (Draft PR#2655)](https://github.com/Lidarr/Lidarr/pull/2655)
