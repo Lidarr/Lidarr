@@ -141,7 +141,6 @@ namespace NzbDrone.Core.HealthCheck
 
             // If we haven't previously re-run health checks after startup grace period run startup checks again and track so they aren't run again.
             // Return early after re-running checks to avoid triggering checks multiple times.
-
             if (!_hasRunHealthChecksAfterGracePeriod && !_isRunningHealthChecksAfterGracePeriod && DateTime.UtcNow > _startupGracePeriodEndTime)
             {
                 _isRunningHealthChecksAfterGracePeriod = true;

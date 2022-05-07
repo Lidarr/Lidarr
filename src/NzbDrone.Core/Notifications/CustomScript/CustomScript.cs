@@ -8,6 +8,7 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Processes;
 using NzbDrone.Common.Serializer;
+using NzbDrone.Core.HealthCheck;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;

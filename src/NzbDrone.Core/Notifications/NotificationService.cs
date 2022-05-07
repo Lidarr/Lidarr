@@ -204,7 +204,6 @@ namespace NzbDrone.Core.Notifications
         {
             // Don't send health check notifications during the start up grace period,
             // once that duration expires they they'll be retested and fired off if necessary.
-
             if (message.IsInStartupGraceperiod)
             {
                 return;
