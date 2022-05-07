@@ -11,9 +11,11 @@ A reminder about the `develop` and `nightly` branches
 
 # Announcements
 
+- Lidarr Wiki has moved to WikiJS on the [Servarr Wiki](https://wiki.servarr.com/lidarr)
+  - Contributions for the Lidarr wiki are strongly encouraged as it needs work to match the detail that the other \*Arrs have
 - Automated API Documentation Updates recently implemented
 - At long last, a new Lidarr `develop` / beta release
-- ** Known Issues **
+- **Known Issues**
   - Linux users map experience errors such as:
     - `You have an old version of fpcalc. Please upgrade to 1.4.3.`
     - `An error occurred trying to start process '/opt/Lidarr/fpcalc' with working directory '/'. Permission denied`
