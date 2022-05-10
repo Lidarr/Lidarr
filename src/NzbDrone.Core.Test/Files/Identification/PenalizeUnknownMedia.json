@@ -114,6 +114,13 @@
               "name": "Compilation"
             },
             "allowed": false
+          },
+          {
+            "secondaryAlbumType": {
+              "id": 11,
+              "name": "Audio drama"
+            },
+            "allowed": false
           }
         ],
         "releaseStatuses": [

@@ -652,6 +652,8 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                     return SecondaryAlbumType.Mixtape;
                 case "demo":
                     return SecondaryAlbumType.Demo;
+                case "audio drama":
+                    return SecondaryAlbumType.Audiodrama;
                 default:
                     return SecondaryAlbumType.Studio;
             }
