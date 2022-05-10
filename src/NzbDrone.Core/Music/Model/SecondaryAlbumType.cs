@@ -76,6 +76,7 @@ namespace NzbDrone.Core.Music
         public static SecondaryAlbumType DJMix => new SecondaryAlbumType(8, "DJ-mix");
         public static SecondaryAlbumType Mixtape => new SecondaryAlbumType(9, "Mixtape/Street");
         public static SecondaryAlbumType Demo => new SecondaryAlbumType(10, "Demo");
+        public static SecondaryAlbumType Audiodrama => new SecondaryAlbumType(11, "Audio drama");
 
         public static readonly List<SecondaryAlbumType> All = new List<SecondaryAlbumType>
         {
@@ -88,7 +89,8 @@ namespace NzbDrone.Core.Music
             Remix,
             DJMix,
             Mixtape,
-            Demo
+            Demo,
+            Audiodrama
         };
 
         public static SecondaryAlbumType FindById(int id)

@@ -114,6 +114,13 @@
               "name": "Studio"
             },
             "allowed": true
+          },
+          {
+            "secondaryAlbumType": {
+              "id": 11,
+              "name": "Audio drama"
+            },
+            "allowed": false
           }
         ],
         "releaseStatuses": [
