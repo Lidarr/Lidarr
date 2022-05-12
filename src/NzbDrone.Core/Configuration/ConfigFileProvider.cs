@@ -41,6 +41,7 @@ namespace NzbDrone.Core.Configuration
         string SslCertPassword { get; }
         string UrlBase { get; }
         string UiFolder { get; }
+        string InstanceName { get; }
         bool UpdateAutomatically { get; }
         UpdateMechanism UpdateMechanism { get; }
         string UpdateScriptPath { get; }
@@ -203,6 +204,7 @@ namespace NzbDrone.Core.Configuration
         }
 
         public string UiFolder => BuildInfo.IsDebug ? Path.Combine("..", "UI") : "UI";
+        public string InstanceName => GetValue("InstanceName", BuildInfo.AppName);
 
         public bool UpdateAutomatically => GetValueBoolean("UpdateAutomatically", false, false);
 
@@ -211,6 +213,7 @@ namespace NzbDrone.Core.Configuration
         public string UpdateScriptPath => GetValue("UpdateScriptPath", "", false);
 
         public string SyslogServer => GetValue("SyslogServer", "", persist: false);
+
         public int SyslogPort => GetValueInt("SyslogPort", 514, persist: false);
 
         public int GetValueInt(string key, int defaultValue, bool persist = true)
