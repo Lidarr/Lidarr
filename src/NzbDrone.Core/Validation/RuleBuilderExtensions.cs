@@ -61,5 +61,11 @@ namespace NzbDrone.Core.Validation
         {
             return ruleBuilder.WithState(v => NzbDroneValidationState.Warning);
         }
+
+        public static IRuleBuilderOptions<T, string> ContainsLidarr<T>(this IRuleBuilder<T, string> ruleBuilder)
+        {
+            ruleBuilder.SetValidator(new NotEmptyValidator(null));
+            return ruleBuilder.SetValidator(new RegularExpressionValidator("lidarr", RegexOptions.IgnoreCase)).WithMessage("Must contain lidarr");
+        }
     }
 }

@@ -276,6 +276,8 @@
   "IndexerPriority": "Indexer Priority",
   "Indexers": "Indexers",
   "IndexerSettings": "Indexer Settings",
+  "InstanceName": "Instance Name",
+  "InstanceNameHelpText": "Instance name in tab and for Syslog app name",
   "InteractiveSearch": "Interactive Search",
   "Interval": "Interval",
   "IsCutoffCutoff": "Cutoff",
