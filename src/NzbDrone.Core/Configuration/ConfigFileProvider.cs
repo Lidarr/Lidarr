@@ -47,6 +47,7 @@ namespace NzbDrone.Core.Configuration
         string UpdateScriptPath { get; }
         string SyslogServer { get; }
         int SyslogPort { get; }
+        string SyslogLevel { get; }
     }
 
     public class ConfigFileProvider : IConfigFileProvider
@@ -215,6 +216,8 @@ namespace NzbDrone.Core.Configuration
         public string SyslogServer => GetValue("SyslogServer", "", persist: false);
 
         public int SyslogPort => GetValueInt("SyslogPort", 514, persist: false);
+
+        public string SyslogLevel => GetValue("SyslogLevel", LogLevel, false).ToLowerInvariant();
 
         public int GetValueInt(string key, int defaultValue, bool persist = true)
         {
