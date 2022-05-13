@@ -19,7 +19,7 @@ namespace NzbDrone.Core.ImportLists.LastFm
 
         public LastFmTagSettings()
         {
-            BaseUrl = "http://ws.audioscrobbler.com/2.0/?method=tag.gettopartists";
+            BaseUrl = "https://ws.audioscrobbler.com/2.0/?method=tag.gettopartists";
             ApiKey = "204c76646d6020eee36bbc51a2fcd810";
             Count = 25;
         }
