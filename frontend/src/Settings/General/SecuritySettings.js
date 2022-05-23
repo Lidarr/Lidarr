@@ -17,6 +17,11 @@ const authenticationMethodOptions = [
   { key: 'forms', value: 'Forms (Login Page)' }
 ];
 
+const authenticationRequiredOptions = [
+  { key: 'enabled', value: 'Enabled' },
+  { key: 'disabledForLocalAddresses', value: 'Disabled for Local Addresses' }
+];
+
 const certificateValidationOptions = [
   { key: 'enabled', value: 'Enabled' },
   { key: 'disabledForLocalAddresses', value: 'Disabled for Local Addresses' },
@@ -68,6 +73,7 @@ class SecuritySettings extends Component {
 
     const {
       authenticationMethod,
+      authenticationRequired,
       username,
       password,
       apiKey,
@@ -94,7 +100,24 @@ class SecuritySettings extends Component {
         </FormGroup>
 
         {
-          authenticationEnabled &&
+          authenticationEnabled ?
+            <FormGroup>
+              <FormLabel>Authentication Required</FormLabel>
+
+              <FormInputGroup
+                type={inputTypes.SELECT}
+                name="authenticationRequired"
+                values={authenticationRequiredOptions}
+                helpText="Change which requests authentication is required for. Do not change unless you understand the risks."
+                onChange={onInputChange}
+                {...authenticationRequired}
+              />
+            </FormGroup> :
+            null
+        }
+
+        {
+          authenticationEnabled ?
             <FormGroup>
               <FormLabel>
                 {translate('Username')}
@@ -106,11 +129,12 @@ class SecuritySettings extends Component {
                 onChange={onInputChange}
                 {...username}
               />
-            </FormGroup>
+            </FormGroup> :
+            null
         }
 
         {
-          authenticationEnabled &&
+          authenticationEnabled ?
             <FormGroup>
               <FormLabel>
                 {translate('Password')}
@@ -122,7 +146,8 @@ class SecuritySettings extends Component {
                 onChange={onInputChange}
                 {...password}
               />
-            </FormGroup>
+            </FormGroup> :
+            null
         }
 
         <FormGroup>
