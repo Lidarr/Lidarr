@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NzbDrone.Core.Annotations;
 
 namespace Lidarr.Http.ClientSchema
 {
@@ -18,6 +19,7 @@ namespace Lidarr.Http.ClientSchema
         public string SelectOptionsProviderAction { get; set; }
         public string Section { get; set; }
         public string Hidden { get; set; }
+        public PrivacyLevel Privacy { get; set; }
         public string Placeholder { get; set; }
         public bool IsFloat { get; set; }
 

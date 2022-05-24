@@ -13,6 +13,7 @@ namespace Lidarr.Http.ClientSchema
 {
     public static class SchemaBuilder
     {
+        private const string PRIVATE_VALUE = "********";
         private static Dictionary<Type, FieldMapping[]> _mappings = new Dictionary<Type, FieldMapping[]>();
 
         public static List<Field> ToSchema(object model)
@@ -26,7 +27,15 @@ namespace Lidarr.Http.ClientSchema
             foreach (var mapping in mappings)
             {
                 var field = mapping.Field.Clone();
-                field.Value = mapping.GetterFunc(model);
+
+                if (field.Privacy == PrivacyLevel.ApiKey || field.Privacy == PrivacyLevel.Password)
+                {
+                    field.Value = PRIVATE_VALUE;
+                }
+                else
+                {
+                    field.Value = mapping.GetterFunc(model);
+                }
 
                 result.Add(field);
             }
@@ -34,7 +43,7 @@ namespace Lidarr.Http.ClientSchema
             return result.OrderBy(r => r.Order).ToList();
         }
 
-        public static object ReadFromSchema(List<Field> fields, Type targetType)
+        public static object ReadFromSchema(List<Field> fields, Type targetType, object model)
         {
             Ensure.That(targetType, () => targetType).IsNotNull();
 
@@ -48,16 +57,23 @@ namespace Lidarr.Http.ClientSchema
 
                 if (field != null)
                 {
-                    mapping.SetterFunc(target, field.Value);
+                    // Use the Privacy property from the mapping's field as Privacy may not be set in the API request (nor is it required)
+                    if ((mapping.Field.Privacy == PrivacyLevel.ApiKey || mapping.Field.Privacy == PrivacyLevel.Password) &&
+                        (field.Value?.ToString()?.Equals(PRIVATE_VALUE) ?? false) &&
+                        model != null)
+                    {
+                        var existingValue = mapping.GetterFunc(model);
+
+                        mapping.SetterFunc(target, existingValue);
+                    }
+                    else
+                    {
+                        mapping.SetterFunc(target, field.Value);
+                    }
                 }
             }
 
             return target;
-        }
-
-        public static T ReadFromSchema<T>(List<Field> fields)
-        {
-            return (T)ReadFromSchema(fields, typeof(T));
         }
 
         // Ideally this function should begin a System.Linq.Expression expression tree since it's faster.
@@ -104,6 +120,7 @@ namespace Lidarr.Http.ClientSchema
                         Advanced = fieldAttribute.Advanced,
                         Type = fieldAttribute.Type.ToString().FirstCharToLower(),
                         Section = fieldAttribute.Section,
+                        Privacy = fieldAttribute.Privacy,
                         Placeholder = fieldAttribute.Placeholder
                     };
 
@@ -136,7 +153,7 @@ namespace Lidarr.Http.ClientSchema
                         Field = field,
                         PropertyType = propertyInfo.PropertyType,
                         GetterFunc = t => propertyInfo.GetValue(targetSelector(t), null),
-                        SetterFunc = (t, v) => propertyInfo.SetValue(targetSelector(t), valueConverter(v), null)
+                        SetterFunc = (t, v) => propertyInfo.SetValue(targetSelector(t), v?.GetType() == propertyInfo.PropertyType ? v : valueConverter(v), null)
                     });
                 }
                 else
