@@ -331,14 +331,26 @@ namespace NzbDrone.Integration.Test
             }
         }
 
-        public QualityProfileResource EnsureProfileCutoff(int profileId, string cutoff)
+        public QualityProfileResource EnsureProfileCutoff(int profileId, string cutoff, bool upgradeAllowed)
         {
+            var needsUpdate = false;
             var profile = Profiles.Get(profileId);
             var cutoffItem = profile.Items.First(x => x.Name == cutoff);
 
             if (profile.Cutoff != cutoffItem.Id)
             {
                 profile.Cutoff = cutoffItem.Id;
+                needsUpdate = true;
+            }
+
+            if (profile.UpgradeAllowed != upgradeAllowed)
+            {
+                profile.UpgradeAllowed = upgradeAllowed;
+                needsUpdate = true;
+            }
+
+            if (needsUpdate)
+            {
                 profile = Profiles.Put(profile);
             }
 
