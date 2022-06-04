@@ -20,7 +20,7 @@ function TimeleftCell(props) {
     timeFormat
   } = props;
 
-  if (status === 'Delay') {
+  if (status === 'delay') {
     const date = getRelativeDate(estimatedCompletionTime, shortDateFormat, showRelativeDates);
     const time = formatTime(estimatedCompletionTime, timeFormat, { includeMinuteZero: true });
 
@@ -34,7 +34,7 @@ function TimeleftCell(props) {
     );
   }
 
-  if (status === 'DownloadClientUnavailable') {
+  if (status === 'downloadClientUnavailable') {
     const date = getRelativeDate(estimatedCompletionTime, shortDateFormat, showRelativeDates);
     const time = formatTime(estimatedCompletionTime, timeFormat, { includeMinuteZero: true });
 
@@ -48,7 +48,7 @@ function TimeleftCell(props) {
     );
   }
 
-  if (!timeleft) {
+  if (!timeleft || status === 'completed' || status === 'failed') {
     return (
       <TableRowCell className={styles.timeleft}>
         -
