@@ -55,6 +55,8 @@ namespace NzbDrone.Core.IndexerSearch
 
         public List<DownloadDecision> ArtistSearch(Artist artist, bool missingOnly, bool userInvokedSearch, bool interactiveSearch)
         {
+            var downloadDecisions = new List<DownloadDecision>();
+
             var searchSpec = Get<ArtistSearchCriteria>(artist, userInvokedSearch, interactiveSearch);
             var albums = _albumService.GetAlbumsByArtist(artist.Id);
 
@@ -62,11 +64,16 @@ namespace NzbDrone.Core.IndexerSearch
 
             searchSpec.Albums = albums;
 
-            return Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
+            var decisions = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
+            downloadDecisions.AddRange(decisions);
+
+            return DeDupeDecisions(downloadDecisions);
         }
 
         public List<DownloadDecision> AlbumSearch(Album album, bool missingOnly, bool userInvokedSearch, bool interactiveSearch)
         {
+            var downloadDecisions = new List<DownloadDecision>();
+
             var artist = _artistService.GetArtist(album.ArtistId);
 
             var searchSpec = Get<AlbumSearchCriteria>(artist, new List<Album> { album }, userInvokedSearch, interactiveSearch);
@@ -82,7 +89,10 @@ namespace NzbDrone.Core.IndexerSearch
                 searchSpec.Disambiguation = album.Disambiguation;
             }
 
-            return Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
+            var decisions = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
+            downloadDecisions.AddRange(decisions);
+
+            return DeDupeDecisions(downloadDecisions);
         }
 
         private TSpec Get<TSpec>(Artist artist, List<Album> albums, bool userInvokedSearch, bool interactiveSearch)
@@ -149,6 +159,12 @@ namespace NzbDrone.Core.IndexerSearch
             _logger.Debug("Total of {0} reports were found for {1} from {2} indexers", reports.Count, criteriaBase, indexers.Count);
 
             return _makeDownloadDecision.GetSearchDecision(reports, criteriaBase).ToList();
+        }
+
+        private List<DownloadDecision> DeDupeDecisions(List<DownloadDecision> decisions)
+        {
+            // De-dupe reports by guid so duplicate results aren't returned.
+            return decisions.DistinctBy(d => d.RemoteAlbum.Release.Guid).ToList();
         }
     }
 }
