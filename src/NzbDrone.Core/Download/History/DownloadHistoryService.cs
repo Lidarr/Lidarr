@@ -101,6 +101,12 @@ namespace NzbDrone.Core.Download.History
 
         public void Handle(AlbumGrabbedEvent message)
         {
+            // Don't store grabbed events for clients that don't download IDs
+            if (message.DownloadId.IsNullOrWhiteSpace())
+            {
+                return;
+            }
+
             var history = new DownloadHistory
             {
                 EventType = DownloadHistoryEventType.DownloadGrabbed,
