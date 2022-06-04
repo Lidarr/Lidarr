@@ -70,6 +70,15 @@ namespace NzbDrone.Core.Music
 
             foreach (var s in newArtists)
             {
+                if (s.Path.IsNullOrWhiteSpace())
+                {
+                    _logger.Info("Adding Artist {0} Root Folder Path: [{1}]", s, s.RootFolderPath);
+                }
+                else
+                {
+                    _logger.Info("Adding Artist {0} Path: [{1}]", s, s.Path);
+                }
+
                 try
                 {
                     var artist = AddSkyhookData(s);
