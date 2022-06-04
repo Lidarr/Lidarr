@@ -52,7 +52,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         private readonly IAugmentingService _augmentingService;
         private readonly IIdentificationService _identificationService;
         private readonly IRootFolderService _rootFolderService;
-        private readonly IProfileService _qualityProfileService;
+        private readonly IQualityProfileService _qualityProfileService;
         private readonly Logger _logger;
 
         public ImportDecisionMaker(IEnumerable<IImportDecisionEngineSpecification<LocalTrack>> trackSpecifications,
@@ -62,7 +62,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                                    IAugmentingService augmentingService,
                                    IIdentificationService identificationService,
                                    IRootFolderService rootFolderService,
-                                   IProfileService qualityProfileService,
+                                   IQualityProfileService qualityProfileService,
                                    Logger logger)
         {
             _trackSpecifications = trackSpecifications;

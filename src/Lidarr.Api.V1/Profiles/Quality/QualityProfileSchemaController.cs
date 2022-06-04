@@ -7,9 +7,9 @@ namespace Lidarr.Api.V1.Profiles.Quality
     [V1ApiController("qualityprofile/schema")]
     public class QualityProfileSchemaController : Controller
     {
-        private readonly IProfileService _profileService;
+        private readonly IQualityProfileService _profileService;
 
-        public QualityProfileSchemaController(IProfileService profileService)
+        public QualityProfileSchemaController(IQualityProfileService profileService)
         {
             _profileService = profileService;
         }

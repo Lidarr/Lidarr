@@ -10,7 +10,7 @@ using NzbDrone.Core.RootFolders;
 
 namespace NzbDrone.Core.Profiles.Qualities
 {
-    public interface IProfileService
+    public interface IQualityProfileService
     {
         QualityProfile Add(QualityProfile profile);
         void Update(QualityProfile profile);
@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Profiles.Qualities
         QualityProfile GetDefaultProfile(string name, Quality cutoff = null, params Quality[] allowed);
     }
 
-    public class QualityProfileService : IProfileService, IHandle<ApplicationStartedEvent>
+    public class QualityProfileService : IQualityProfileService, IHandle<ApplicationStartedEvent>
     {
         private readonly IProfileRepository _profileRepository;
         private readonly IArtistService _artistService;
