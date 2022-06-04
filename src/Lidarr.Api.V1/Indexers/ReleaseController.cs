@@ -14,6 +14,7 @@ using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.Profiles.Qualities;
 using NzbDrone.Core.Validation;
 using HttpStatusCode = System.Net.HttpStatusCode;
 
@@ -43,7 +44,9 @@ namespace Lidarr.Api.V1.Indexers
                              IParsingService parsingService,
                              IDownloadService downloadService,
                              ICacheManager cacheManager,
+                             IQualityProfileService qualityProfileService,
                              Logger logger)
+            : base(qualityProfileService)
         {
             _albumService = albumService;
             _artistService = artistService;

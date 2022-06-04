@@ -11,6 +11,7 @@ using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.Profiles.Qualities;
 
 namespace Lidarr.Api.V1.Indexers
 {
@@ -25,7 +26,9 @@ namespace Lidarr.Api.V1.Indexers
         public ReleasePushController(IMakeDownloadDecision downloadDecisionMaker,
                                  IProcessDownloadDecisions downloadDecisionProcessor,
                                  IIndexerFactory indexerFactory,
+                                 IQualityProfileService qualityProfileService,
                                  Logger logger)
+            : base(qualityProfileService)
         {
             _downloadDecisionMaker = downloadDecisionMaker;
             _downloadDecisionProcessor = downloadDecisionProcessor;

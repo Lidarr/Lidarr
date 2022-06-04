@@ -2,11 +2,19 @@ using System;
 using System.Collections.Generic;
 using Lidarr.Http.REST;
 using NzbDrone.Core.DecisionEngine;
+using NzbDrone.Core.Profiles.Qualities;
 
 namespace Lidarr.Api.V1.Indexers
 {
     public abstract class ReleaseControllerBase : RestController<ReleaseResource>
     {
+        private readonly QualityProfile _qualityProfile;
+
+        public ReleaseControllerBase(IQualityProfileService qualityProfileService)
+        {
+            _qualityProfile = qualityProfileService.GetDefaultProfile(string.Empty);
+        }
+
         public override ReleaseResource GetResourceById(int id)
         {
             throw new NotImplementedException();
@@ -32,12 +40,7 @@ namespace Lidarr.Api.V1.Indexers
 
             release.ReleaseWeight = initialWeight;
 
-            if (decision.RemoteAlbum.Artist != null)
-            {
-                release.QualityWeight = decision.RemoteAlbum
-                                                .Artist
-                                                .QualityProfile.Value.GetIndex(release.Quality.Quality).Index * 100;
-            }
+            release.QualityWeight = _qualityProfile.GetIndex(release.Quality.Quality).Index * 100;
 
             release.QualityWeight += release.Quality.Revision.Real * 10;
             release.QualityWeight += release.Quality.Revision.Version;

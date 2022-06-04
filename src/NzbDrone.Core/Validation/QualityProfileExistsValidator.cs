@@ -5,9 +5,9 @@ namespace NzbDrone.Core.Validation
 {
     public class QualityProfileExistsValidator : PropertyValidator
     {
-        private readonly IProfileService _profileService;
+        private readonly IQualityProfileService _profileService;
 
-        public QualityProfileExistsValidator(IProfileService profileService)
+        public QualityProfileExistsValidator(IQualityProfileService profileService)
             : base("Quality Profile does not exist")
         {
             _profileService = profileService;

@@ -14,9 +14,9 @@ namespace NzbDrone.Core.Music
     public class AlbumCutoffService : IAlbumCutoffService
     {
         private readonly IAlbumRepository _albumRepository;
-        private readonly IProfileService _profileService;
+        private readonly IQualityProfileService _profileService;
 
-        public AlbumCutoffService(IAlbumRepository albumRepository, IProfileService profileService)
+        public AlbumCutoffService(IAlbumRepository albumRepository, IQualityProfileService profileService)
         {
             _albumRepository = albumRepository;
             _profileService = profileService;
