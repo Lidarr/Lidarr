@@ -20,7 +20,7 @@ A reminder about the `develop` and `nightly` branches
 - **Lidarr Breaking API Changes**
   - Native ASPCore API Controllers (stricter typing and other small API changes)
 - fpcalc is now bundled and no longer a required dependency
-- [Jackett `/all` is deprecated and no longer supported. The FAQ has warned about this since May 2021.](https://wiki.servarr.com/radarr/faq#jacketts-all-endpoint)
+- [Jackett `/all` is deprecated and no longer supported. The FAQ has warned about this since May 2021.](https://wiki.servarr.com/lidarr/faq#jacketts-all-endpoint)
 - Lidarr is now on .Net6
 - New builds for OSX Arm64, Linux Musl Arm32, and Linux x86
 
