@@ -3,4 +3,4 @@
 - Radarr Postgres Database Support in `nightly` and `develop`
 - Prowlarr Postgres Database Support in `nightly` and `develop`
 - [Lidarr Postgres Database Support in development (Draft PR#2625)](https://github.com/Lidarr/Lidarr/pull/2625)
-- [Lidarr UDP Syslog Support in  in development (Draft PR#2655)](https://github.com/Lidarr/Lidarr/pull/2655)
+- Lidarr (and \*Arrs) Wiki Contributions welcomed and strongly encouraged, simply auth with GitHub
