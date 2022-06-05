@@ -28,13 +28,7 @@ namespace Lidarr.Api.V1.Wanted
         public PagingResource<AlbumResource> GetMissingAlbums(bool includeArtist = false)
         {
             var pagingResource = Request.ReadPagingResourceFromRequest<AlbumResource>();
-            var pagingSpec = new PagingSpec<Album>
-            {
-                Page = pagingResource.Page,
-                PageSize = pagingResource.PageSize,
-                SortKey = pagingResource.SortKey,
-                SortDirection = pagingResource.SortDirection
-            };
+            var pagingSpec = pagingResource.MapToPagingSpec<AlbumResource, Album>("releaseDate", SortDirection.Descending);
 
             var monitoredFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "monitored");
 
