@@ -120,7 +120,7 @@ namespace NzbDrone.Core.Download
             trackedDownload.State = TrackedDownloadState.Importing;
 
             var outputPath = trackedDownload.ImportItem.OutputPath.FullPath;
-            var importResults = _downloadedTracksImportService.ProcessPath(outputPath, ImportMode.Auto, trackedDownload.RemoteAlbum.Artist, trackedDownload.DownloadItem);
+            var importResults = _downloadedTracksImportService.ProcessPath(outputPath, ImportMode.Auto, trackedDownload.RemoteAlbum.Artist, trackedDownload.ImportItem);
 
             if (VerifyImport(trackedDownload, importResults))
             {
