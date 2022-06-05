@@ -2,6 +2,8 @@
 
 Lidarr v1.0.2.2592 has been released on `master`
 
+As you know it's been awhile since the last master release, but that is due to the sheer volume of changes - including breaking changes - with v1, so we wanted to ensure it got a good shake out in testing first.
+
 - **Users who do not wish to be on the alpha `nightly` or beta `develop` testing branches should take advantage of this parity and switch to `master`**
 
 A reminder about the `develop` and `nightly` branches
@@ -13,6 +15,14 @@ A reminder about the `develop` and `nightly` branches
 
 - Automated API Documentation Updates recently implemented
 - At long last, a new Lidarr `master` / stable release
+- **Important Notices**
+- Lidarr v1 no longer builds for mono and mono support has ceased
+- **Lidarr Breaking API Changes**
+  - Native ASPCore API Controllers (stricter typing and other small API changes)
+- fpcalc is now bundled and no longer a required dependency
+- [Jackett `/all` is deprecated and no longer supported. The FAQ has warned about this since May 2021.](https://wiki.servarr.com/radarr/faq#jacketts-all-endpoint)
+- Lidarr is now on .Net6
+- New builds for OSX Arm64, Linux Musl Arm32, and Linux x86
 
 # Additional Commentary
 
