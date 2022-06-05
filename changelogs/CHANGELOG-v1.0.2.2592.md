@@ -32,6 +32,8 @@ A reminder about the `develop` and `nightly` branches
 - Prowlarr Postgres Database Support in `nightly` and `develop`
 - [Lidarr Postgres Database Support in development (Draft PR#2625)](https://github.com/Lidarr/Lidarr/pull/2625)
 - Lidarr (and \*Arrs) Wiki Contributions welcomed and strongly encouraged, simply auth with GitHub
+- [Prowlarr](https://wiki.servarr.com/prowlarr) was beta launched in June 2021 as a Jackett and NZBHydra2 replacement/alternative
+- The [Wiki](https://wiki.servarr.com/radarr) has been switched to WikiJs - As always it is a perpetual work in progress and Contributions are welcome.
 
 # Releases
 
