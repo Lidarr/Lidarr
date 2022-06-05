@@ -239,7 +239,7 @@ A reminder about the `develop` and `nightly` branches
 
 - New: Add rel="noreferrer" to all external links
 
-- New: Add Size column to Activity: Queue [(#2310)](<https://github.com/lidarr/lidarr/pull/2310>
+- New: Add Size column to Activity: Queue [(#2310)](<https://github.com/lidarr/lidarr/pull/2310)
 
 - New: Add Validations for Recycle Bin Folder
 
