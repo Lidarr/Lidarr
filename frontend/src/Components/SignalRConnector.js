@@ -8,7 +8,7 @@ import { fetchArtist } from 'Store/Actions/artistActions';
 import { removeItem, update, updateItem } from 'Store/Actions/baseActions';
 import { fetchCommands, finishCommand, updateCommand } from 'Store/Actions/commandActions';
 import { fetchQueue, fetchQueueDetails } from 'Store/Actions/queueActions';
-import { fetchRootFolders } from 'Store/Actions/settingsActions';
+import { fetchQualityDefinitions, fetchRootFolders } from 'Store/Actions/settingsActions';
 import { fetchHealth } from 'Store/Actions/systemActions';
 import { fetchTagDetails, fetchTags } from 'Store/Actions/tagActions';
 import { repopulatePage } from 'Utilities/pagePopulator';
@@ -47,6 +47,7 @@ const mapDispatchToProps = {
   dispatchRemoveItem: removeItem,
   dispatchFetchArtist: fetchArtist,
   dispatchFetchHealth: fetchHealth,
+  dispatchFetchQualityDefinitions: fetchQualityDefinitions,
   dispatchFetchQueue: fetchQueue,
   dispatchFetchQueueDetails: fetchQueueDetails,
   dispatchFetchRootFolders: fetchRootFolders,
@@ -236,6 +237,10 @@ class SignalRConnector extends Component {
     }
   };
 
+  handleQualitydefinition = () => {
+    this.props.dispatchFetchQualityDefinitions();
+  };
+
   handleQueue = () => {
     if (this.props.isQueuePopulated) {
       this.props.dispatchFetchQueue();
@@ -382,6 +387,7 @@ SignalRConnector.propTypes = {
   dispatchRemoveItem: PropTypes.func.isRequired,
   dispatchFetchArtist: PropTypes.func.isRequired,
   dispatchFetchHealth: PropTypes.func.isRequired,
+  dispatchFetchQualityDefinitions: PropTypes.func.isRequired,
   dispatchFetchQueue: PropTypes.func.isRequired,
   dispatchFetchQueueDetails: PropTypes.func.isRequired,
   dispatchFetchRootFolders: PropTypes.func.isRequired,

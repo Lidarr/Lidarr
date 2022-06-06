@@ -18,6 +18,7 @@ export const RESCAN_FOLDERS = 'RescanFolders';
 export const RETAG_FILES = 'RetagFiles';
 export const RETAG_ARTIST = 'RetagArtist';
 export const RESET_API_KEY = 'ResetApiKey';
+export const RESET_QUALITY_DEFINITIONS = 'ResetQualityDefinitions';
 export const RSS_SYNC = 'RssSync';
 export const SEASON_SEARCH = 'AlbumSearch';
 export const ARTIST_SEARCH = 'ArtistSearch';

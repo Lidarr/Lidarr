@@ -4,16 +4,20 @@ using Lidarr.Http;
 using Lidarr.Http.REST;
 using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
+using NzbDrone.Core.Datastore.Events;
+using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Qualities;
+using NzbDrone.SignalR;
 
 namespace Lidarr.Api.V1.Qualities
 {
     [V1ApiController]
-    public class QualityDefinitionController : RestController<QualityDefinitionResource>
+    public class QualityDefinitionController : RestControllerWithSignalR<QualityDefinitionResource, QualityDefinition>, IHandle<CommandExecutedEvent>
     {
         private readonly IQualityDefinitionService _qualityDefinitionService;
 
-        public QualityDefinitionController(IQualityDefinitionService qualityDefinitionService)
+        public QualityDefinitionController(IQualityDefinitionService qualityDefinitionService, IBroadcastSignalRMessage signalRBroadcaster)
+            : base(signalRBroadcaster)
         {
             _qualityDefinitionService = qualityDefinitionService;
         }
@@ -49,6 +53,15 @@ namespace Lidarr.Api.V1.Qualities
 
             return Accepted(_qualityDefinitionService.All()
                 .ToResource());
+        }
+
+        [NonAction]
+        public void Handle(CommandExecutedEvent message)
+        {
+            if (message.Command.Name == "ResetQualityDefinitions")
+            {
+                BroadcastResourceChange(ModelAction.Sync);
+            }
         }
     }
 }
