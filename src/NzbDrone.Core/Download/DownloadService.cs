@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Download
             Ensure.That(remoteAlbum.Albums, () => remoteAlbum.Albums).HasItems();
 
             var downloadTitle = remoteAlbum.Release.Title;
-            var downloadClient = _downloadClientProvider.GetDownloadClient(remoteAlbum.Release.DownloadProtocol);
+            var downloadClient = _downloadClientProvider.GetDownloadClient(remoteAlbum.Release.DownloadProtocol, remoteAlbum.Release.IndexerId);
 
             if (downloadClient == null)
             {

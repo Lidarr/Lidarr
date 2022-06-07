@@ -14,6 +14,7 @@ export const QUALITY_PROFILE_SELECT = 'qualityProfileSelect';
 export const METADATA_PROFILE_SELECT = 'metadataProfileSelect';
 export const ALBUM_RELEASE_SELECT = 'albumReleaseSelect';
 export const INDEXER_SELECT = 'indexerSelect';
+export const DOWNLOAD_CLIENT_SELECT = 'downloadClientSelect';
 export const ROOT_FOLDER_SELECT = 'rootFolderSelect';
 export const SELECT = 'select';
 export const SERIES_TYPE_SELECT = 'artistTypeSelect';
@@ -41,6 +42,7 @@ export const all = [
   METADATA_PROFILE_SELECT,
   ALBUM_RELEASE_SELECT,
   INDEXER_SELECT,
+  DOWNLOAD_CLIENT_SELECT,
   ROOT_FOLDER_SELECT,
   SELECT,
   DYNAMIC_SELECT,
