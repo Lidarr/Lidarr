@@ -2,20 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
+using DryIoc;
 using Moq;
-using Moq.Language.Flow;
 using NzbDrone.Common.Composition;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Test.Common.AutoMoq.Unity;
-using Unity;
-using Unity.Resolution;
-
-[assembly: InternalsVisibleTo("AutoMoq.Tests")]
 
 namespace NzbDrone.Test.Common.AutoMoq
 {
@@ -23,41 +17,29 @@ namespace NzbDrone.Test.Common.AutoMoq
     public class AutoMoqer
     {
         public readonly MockBehavior DefaultBehavior = MockBehavior.Default;
-        public Type ResolveType;
-        private IUnityContainer _container;
-        private IDictionary<Type, object> _registeredMocks;
+        private readonly IContainer _container;
+        private readonly IDictionary<Type, object> _registeredMocks = new Dictionary<Type, object>();
 
         public AutoMoqer()
         {
-            SetupAutoMoqer(new UnityContainer());
-        }
+            _container = CreateTestContainer(new Container(rules => rules.WithMicrosoftDependencyInjectionRules().WithDefaultReuse(Reuse.Singleton)));
 
-        public AutoMoqer(MockBehavior defaultBehavior)
-        {
-            DefaultBehavior = defaultBehavior;
-            SetupAutoMoqer(new UnityContainer());
-        }
+            LoadPlatformLibrary();
 
-        public AutoMoqer(IUnityContainer container)
-        {
-            SetupAutoMoqer(container);
+            AssemblyLoader.RegisterSQLiteResolver();
         }
 
         public virtual T Resolve<T>()
         {
-            ResolveType = typeof(T);
             var result = _container.Resolve<T>();
             SetConstant(result);
-            ResolveType = null;
             return result;
         }
 
-        public virtual T Resolve<T>(string name, params ResolverOverride[] resolverOverrides)
+        public virtual T Resolve<T>(object serviceKey)
         {
-            ResolveType = typeof(T);
-            var result = _container.Resolve<T>(name, resolverOverrides);
+            var result = _container.Resolve<T>(serviceKey: serviceKey);
             SetConstant(result);
-            ResolveType = null;
             return result;
         }
 
@@ -70,8 +52,7 @@ namespace NzbDrone.Test.Common.AutoMoq
         public virtual Mock<T> GetMock<T>(MockBehavior behavior)
             where T : class
         {
-            ResolveType = null;
-            var type = GetTheMockType<T>();
+            var type = typeof(T);
             if (GetMockHasNotBeenCalledForThisType(type))
             {
                 CreateANewMockAndRegisterIt<T>(type, behavior);
@@ -89,88 +70,61 @@ namespace NzbDrone.Test.Common.AutoMoq
 
         public virtual void SetMock(Type type, Mock mock)
         {
-            if (_registeredMocks.ContainsKey(type) == false)
+            if (GetMockHasNotBeenCalledForThisType(type))
             {
                 _registeredMocks.Add(type, mock);
             }
 
             if (mock != null)
             {
-                _container.RegisterInstance(type, mock.Object);
+                _container.RegisterInstance(type, mock.Object, ifAlreadyRegistered: IfAlreadyRegistered.Replace);
             }
         }
 
         public virtual void SetConstant<T>(T instance)
         {
-            _container.RegisterInstance(instance);
+            _container.RegisterInstance(instance, ifAlreadyRegistered: IfAlreadyRegistered.Replace);
             SetMock(instance.GetType(), null);
         }
 
-        public ISetup<T> Setup<T>(Expression<Action<T>> expression)
-            where T : class
+        private IContainer CreateTestContainer(IContainer container)
         {
-            return GetMock<T>().Setup(expression);
-        }
+            var c = container.CreateChild(IfAlreadyRegistered.Replace,
+                container.Rules
+                    .WithDynamicRegistration((serviceType, serviceKey) =>
+                    {
+                        // ignore services with non-default key
+                        if (serviceKey != null)
+                        {
+                            return null;
+                        }
 
-        public ISetup<T, TResult> Setup<T, TResult>(Expression<Func<T, TResult>> expression)
-            where T : class
-        {
-            return GetMock<T>().Setup(expression);
-        }
+                        if (serviceType == typeof(object))
+                        {
+                            return null;
+                        }
 
-        public void Verify<T>(Expression<Action<T>> expression)
-            where T : class
-        {
-            GetMock<T>().Verify(expression);
-        }
+                        if (serviceType.IsGenericType && serviceType.IsOpenGeneric())
+                        {
+                            return null;
+                        }
 
-        public void Verify<T>(Expression<Action<T>> expression, string failMessage)
-            where T : class
-        {
-            GetMock<T>().Verify(expression, failMessage);
-        }
+                        // get the Mock object for the abstract class or interface
+                        if (serviceType.IsInterface || serviceType.IsAbstract)
+                        {
+                            return new[] { new DynamicRegistration(GetMockFactory(serviceType), IfAlreadyRegistered.Keep) };
+                        }
 
-        public void Verify<T>(Expression<Action<T>> expression, Times times)
-            where T : class
-        {
-            GetMock<T>().Verify(expression, times);
-        }
+                        // concrete types
+                        var concreteTypeFactory = serviceType.ToFactory(Reuse.Singleton, FactoryMethod.ConstructorWithResolvableArgumentsIncludingNonPublic);
 
-        public void Verify<T>(Expression<Action<T>> expression, Times times, string failMessage)
-            where T : class
-        {
-            GetMock<T>().Verify(expression, times, failMessage);
-        }
+                        return new[] { new DynamicRegistration(concreteTypeFactory) };
+                    },
+                    DynamicRegistrationFlags.Service | DynamicRegistrationFlags.AsFallback));
 
-        public void VerifyAllMocks()
-        {
-            foreach (var registeredMock in _registeredMocks)
-            {
-                var mock = registeredMock.Value as Mock;
-                if (mock != null)
-                {
-                    mock.VerifyAll();
-                }
-            }
-        }
+            c.Register(typeof(Mock<>), Reuse.Singleton, FactoryMethod.DefaultConstructor());
 
-        private void SetupAutoMoqer(IUnityContainer container)
-        {
-            _container = container;
-            container.RegisterInstance(this);
-
-            _registeredMocks = new Dictionary<Type, object>();
-
-            RegisterPlatformLibrary(container);
-            AddTheAutoMockingContainerExtensionToTheContainer(container);
-
-            AssemblyLoader.RegisterSQLiteResolver();
-        }
-
-        private static void AddTheAutoMockingContainerExtensionToTheContainer(IUnityContainer container)
-        {
-            container.AddNewExtension<AutoMockingContainerExtension>();
-            return;
+            return c;
         }
 
         private Mock<T> TheRegisteredMockForThisType<T>(Type type)
@@ -189,16 +143,21 @@ namespace NzbDrone.Test.Common.AutoMoq
 
         private bool GetMockHasNotBeenCalledForThisType(Type type)
         {
-            return _registeredMocks.ContainsKey(type) == false;
+            return !_registeredMocks.ContainsKey(type);
         }
 
-        private static Type GetTheMockType<T>()
-            where T : class
+        private DelegateFactory GetMockFactory(Type serviceType)
         {
-            return typeof(T);
+            var mockType = typeof(Mock<>).MakeGenericType(serviceType);
+            return new DelegateFactory(r =>
+            {
+                var mock = (Mock)r.Resolve(mockType);
+                SetMock(serviceType, mock);
+                return mock.Object;
+            }, Reuse.Singleton);
         }
 
-        private void RegisterPlatformLibrary(IUnityContainer container)
+        private void LoadPlatformLibrary()
         {
             var assemblyName = "Lidarr.Windows";
 
@@ -208,20 +167,25 @@ namespace NzbDrone.Test.Common.AutoMoq
             }
 
             var types = Assembly.Load(assemblyName).GetTypes();
+            var diskProvider = types.SingleOrDefault(x => x.Name == "DiskProvider");
 
-            // This allows us to resolve the platform specific disk provider in FileSystemTest
-            var diskProvider = types.Where(x => x.Name == "DiskProvider").SingleOrDefault();
-            container.RegisterType(typeof(IDiskProvider), diskProvider, "ActualDiskProvider");
+            // The standard dynamic mock registrations, explicit so DryIoC doesn't get confused when we add alternatives
+            _container.Register(typeof(IFileSystem), GetMockFactory(typeof(IFileSystem)));
+            _container.Register(typeof(IDiskProvider), GetMockFactory(typeof(IDiskProvider)));
 
-            // This seems to be required now so that Unity can resolve the extra arguments to the
-            // Mono DiskProvider.  I don't understand why we need this now but didn't before.
-            // It's auto registering everything in the assembly with Ixxx -> xxx.
-            types.Except(new[] { diskProvider }).Where(t => t.GetInterfaces().Any(i => i.Name == "I" + t.Name)).ToList()
-                .ForEach(t => container.RegisterType(t.GetInterface("I" + t.Name, false), t));
+            // A concrete registration from the platform library using a mock filesystem
+            _container.RegisterInstance<IFileSystem>(new MockFileSystem(), serviceKey: FileSystemType.Mock);
+            _container.Register(typeof(IDiskProvider),
+                diskProvider,
+                made: Parameters.Of.Type<IFileSystem>(serviceKey: FileSystemType.Mock),
+                serviceKey: FileSystemType.Mock);
 
-            // This tells the mocker to resolve IFileSystem using an actual filesystem (and not a mock)
-            // if not specified, giving the old behaviour before we switched to System.IO.Abstractions.
-            SetConstant<IFileSystem>(new FileSystem());
+            // A concrete registration from the platform library using the actual filesystem
+            _container.Register<IFileSystem, FileSystem>(serviceKey: FileSystemType.Actual);
+            _container.Register(typeof(IDiskProvider),
+                diskProvider,
+                made: Parameters.Of.Type<IFileSystem>(serviceKey: FileSystemType.Actual),
+                serviceKey: FileSystemType.Actual);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+using System.IO.Abstractions;
+using FluentAssertions;
 using NUnit.Framework;
 using NzbDrone.Common.Disk;
 using NzbDrone.Mono.Disk;
@@ -16,6 +17,7 @@ namespace NzbDrone.Mono.Test.EnvironmentInfo
         {
             NotBsd();
 
+            Mocker.SetConstant<IFileSystem>(new FileSystem());
             Mocker.SetConstant<IDiskProvider>(Mocker.Resolve<DiskProvider>());
         }
 

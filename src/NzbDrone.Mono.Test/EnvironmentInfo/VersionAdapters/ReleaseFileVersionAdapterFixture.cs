@@ -1,4 +1,5 @@
-﻿using System.IO;
+using System.IO;
+using System.IO.Abstractions;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -20,6 +21,7 @@ namespace NzbDrone.Mono.Test.EnvironmentInfo.VersionAdapters
         {
             NotBsd();
 
+            Mocker.SetConstant<IFileSystem>(new FileSystem());
             Mocker.SetConstant<IDiskProvider>(Mocker.Resolve<DiskProvider>());
             var info = Subject.Read();
             info.FullName.Should().NotBeNullOrWhiteSpace();

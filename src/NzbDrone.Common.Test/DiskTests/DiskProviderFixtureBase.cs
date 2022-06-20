@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.IO.Abstractions;
 using FluentAssertions;
 using NUnit.Framework;
 using NzbDrone.Common.Disk;
@@ -10,6 +11,12 @@ namespace NzbDrone.Common.Test.DiskTests
     public abstract class DiskProviderFixtureBase<TSubject> : TestBase<TSubject>
         where TSubject : class, IDiskProvider
     {
+        [SetUp]
+        public void BaseSetup()
+        {
+            Mocker.SetConstant<IFileSystem>(new FileSystem());
+        }
+
         [Test]
         public void writealltext_should_truncate_existing()
         {
