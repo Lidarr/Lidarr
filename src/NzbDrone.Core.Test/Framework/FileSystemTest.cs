@@ -1,7 +1,8 @@
-﻿using System.IO.Abstractions.TestingHelpers;
+using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
 using NUnit.Framework;
 using NzbDrone.Common.Disk;
-using Unity.Resolution;
+using NzbDrone.Test.Common.AutoMoq;
 
 namespace NzbDrone.Core.Test.Framework
 {
@@ -14,12 +15,9 @@ namespace NzbDrone.Core.Test.Framework
         [SetUp]
         public void FileSystemTestSetup()
         {
-            FileSystem = new MockFileSystem();
+            FileSystem = (MockFileSystem)Mocker.Resolve<IFileSystem>(FileSystemType.Mock);
 
-            DiskProvider = Mocker.Resolve<IDiskProvider>("ActualDiskProvider", new ResolverOverride[]
-            {
-                    new ParameterOverride("fileSystem", FileSystem)
-            });
+            DiskProvider = Mocker.Resolve<IDiskProvider>(FileSystemType.Mock);
         }
     }
 }

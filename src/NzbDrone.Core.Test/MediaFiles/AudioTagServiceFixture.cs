@@ -13,6 +13,7 @@ using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
+using NzbDrone.Test.Common.AutoMoq;
 
 namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
 {
@@ -55,9 +56,7 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         [SetUp]
         public void Setup()
         {
-            _diskProvider = Mocker.Resolve<IDiskProvider>("ActualDiskProvider");
-
-            Mocker.SetConstant<IDiskProvider>(_diskProvider);
+            _diskProvider = Mocker.Resolve<IDiskProvider>(FileSystemType.Actual);
 
             Mocker.GetMock<IConfigService>()
                 .Setup(x => x.WriteAudioTags)
