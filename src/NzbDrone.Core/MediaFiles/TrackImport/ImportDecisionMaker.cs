@@ -141,8 +141,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
         public List<ImportDecision<LocalTrack>> GetImportDecisions(List<IFileInfo> musicFiles, IdentificationOverrides idOverrides, ImportDecisionMakerInfo itemInfo, ImportDecisionMakerConfig config)
         {
-            idOverrides = idOverrides ?? new IdentificationOverrides();
-            itemInfo = itemInfo ?? new ImportDecisionMakerInfo();
+            idOverrides ??= new IdentificationOverrides();
+            itemInfo ??= new ImportDecisionMakerInfo();
 
             var trackData = GetLocalTracks(musicFiles, itemInfo.DownloadClientItem, itemInfo.ParsedTrackInfo, config.Filter);
             var localTracks = trackData.Item1;
@@ -152,24 +152,44 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
             var releases = _identificationService.Identify(localTracks, idOverrides, config);
 
-            foreach (var release in releases)
+            var albums = releases.GroupBy(x => x.AlbumRelease?.Album?.Value.ForeignAlbumId);
+
+            // group releases that are identified as the same album
+            foreach (var album in albums)
             {
-                // make sure the appropriate quality profile is set for the release artist
-                // in case it's a new artist
-                EnsureData(release);
-                release.NewDownload = config.NewDownload;
+                var albumDecisions = new List<ImportDecision<LocalAlbumRelease>>();
 
-                var releaseDecision = GetDecision(release, itemInfo.DownloadClientItem);
-
-                foreach (var localTrack in release.LocalTracks)
+                foreach (var release in album)
                 {
-                    if (releaseDecision.Approved)
+                    // make sure the appropriate quality profile is set for the release artist
+                    // in case it's a new artist
+                    EnsureData(release);
+                    release.NewDownload = config.NewDownload;
+
+                    albumDecisions.Add(GetDecision(release, itemInfo.DownloadClientItem));
+                }
+
+                // if multiple album releases accepted, reject all but one with most tracks
+                var acceptedReleases = albumDecisions
+                    .Where(x => x.Approved)
+                    .OrderByDescending(x => x.Item.TrackCount);
+                foreach (var decision in acceptedReleases.Skip(1))
+                {
+                    decision.Reject(new Rejection("Multiple versions of an album not supported"));
+                }
+
+                foreach (var releaseDecision in albumDecisions)
+                {
+                    foreach (var localTrack in releaseDecision.Item.LocalTracks)
                     {
-                        decisions.AddIfNotNull(GetDecision(localTrack, itemInfo.DownloadClientItem));
-                    }
-                    else
-                    {
-                        decisions.Add(new ImportDecision<LocalTrack>(localTrack, releaseDecision.Rejections.ToArray()));
+                        if (releaseDecision.Approved)
+                        {
+                            decisions.AddIfNotNull(GetDecision(localTrack, itemInfo.DownloadClientItem));
+                        }
+                        else
+                        {
+                            decisions.Add(new ImportDecision<LocalTrack>(localTrack, releaseDecision.Rejections.ToArray()));
+                        }
                     }
                 }
             }

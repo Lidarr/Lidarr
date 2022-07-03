@@ -273,6 +273,41 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
         }
 
         [Test]
+        public void should_reject_more_than_one_version_of_an_album()
+        {
+            GivenAugmentationSuccess();
+
+            GivenAudioFiles(new[]
+            {
+                @"C:\Test\Unsorted\release1\track1.mp3".AsOsAgnostic(),
+                @"C:\Test\Unsorted\release2\track1.mp3".AsOsAgnostic()
+            });
+
+            Mocker.GetMock<IIdentificationService>()
+                .Setup(s => s.Identify(It.IsAny<List<LocalTrack>>(), It.IsAny<IdentificationOverrides>(), It.IsAny<ImportDecisionMakerConfig>()))
+                .Returns((List<LocalTrack> tracks, IdentificationOverrides idOverrides, ImportDecisionMakerConfig config) =>
+                {
+                    var ret1 = new LocalAlbumRelease(tracks.Take(1).ToList());
+                    ret1.AlbumRelease = _albumRelease;
+
+                    var ret2 = new LocalAlbumRelease(tracks.Skip(1).ToList());
+                    var albumRelease2 = Builder<AlbumRelease>.CreateNew()
+                        .With(x => x.Album = _album)
+                        .With(x => x.ForeignReleaseId = "anotherid")
+                        .Build();
+                    ret2.AlbumRelease = albumRelease2;
+
+                    return new List<LocalAlbumRelease> { ret1, ret2 };
+                });
+
+            GivenSpecifications(_pass1);
+
+            var result = Subject.GetImportDecisions(_fileInfos, null, null, _idConfig);
+            result.Count(x => x.Approved).Should().Be(1);
+            result.Count(x => !x.Approved).Should().Be(1);
+        }
+
+        [Test]
         public void should_have_same_number_of_rejections_as_specs_that_failed()
         {
             GivenAugmentationSuccess();
