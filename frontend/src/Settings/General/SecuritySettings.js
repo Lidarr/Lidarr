@@ -11,10 +11,33 @@ import ConfirmModal from 'Components/Modal/ConfirmModal';
 import { icons, inputTypes, kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 
+export const authenticationRequiredWarning = 'To prevent remote access without authentication, Radarr now requires authentication to be enabled. You can optionally disable authentication from local addresses.';
+
 const authenticationMethodOptions = [
-  { key: 'none', value: 'None' },
-  { key: 'basic', value: 'Basic (Browser Popup)' },
-  { key: 'forms', value: 'Forms (Login Page)' }
+  {
+    key: 'none',
+    get value() {
+      return translate('None');
+    },
+    isDisabled: true
+  },
+  {
+    key: 'basic',
+    get value() {
+      return translate('AuthBasic');
+    }
+  },
+  {
+    key: 'forms',
+    get value() {
+      return translate('AuthForm');
+    }
+  }
+];
+
+export const authenticationRequiredOptions = [
+  { key: 'enabled', value: 'Enabled' },
+  { key: 'disabledForLocalAddresses', value: 'Disabled for Local Addresses' }
 ];
 
 const certificateValidationOptions = [
@@ -68,6 +91,7 @@ class SecuritySettings extends Component {
 
     const {
       authenticationMethod,
+      authenticationRequired,
       username,
       password,
       apiKey,
@@ -88,13 +112,31 @@ class SecuritySettings extends Component {
             name="authenticationMethod"
             values={authenticationMethodOptions}
             helpText={translate('AuthenticationMethodHelpText')}
+            helpTextWarning={authenticationRequiredWarning}
             onChange={onInputChange}
             {...authenticationMethod}
           />
         </FormGroup>
 
         {
-          authenticationEnabled &&
+          authenticationEnabled ?
+            <FormGroup>
+              <FormLabel>Authentication Required</FormLabel>
+
+              <FormInputGroup
+                type={inputTypes.SELECT}
+                name="authenticationRequired"
+                values={authenticationRequiredOptions}
+                helpText="Change which requests authentication is required for. Do not change unless you understand the risks."
+                onChange={onInputChange}
+                {...authenticationRequired}
+              />
+            </FormGroup> :
+            null
+        }
+
+        {
+          authenticationEnabled ?
             <FormGroup>
               <FormLabel>
                 {translate('Username')}
@@ -106,11 +148,12 @@ class SecuritySettings extends Component {
                 onChange={onInputChange}
                 {...username}
               />
-            </FormGroup>
+            </FormGroup> :
+            null
         }
 
         {
-          authenticationEnabled &&
+          authenticationEnabled ?
             <FormGroup>
               <FormLabel>
                 {translate('Password')}
@@ -122,7 +165,8 @@ class SecuritySettings extends Component {
                 onChange={onInputChange}
                 {...password}
               />
-            </FormGroup>
+            </FormGroup> :
+            null
         }
 
         <FormGroup>
