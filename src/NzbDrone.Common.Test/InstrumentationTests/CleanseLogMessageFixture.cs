@@ -85,7 +85,7 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         [TestCase(@"tracker"":""http://xxx.yyy/announce.php?passkey=9pr04sg601233210imaveql2tyu8xyui"",""info"":""http://xxx.yyy/info?a=b""")]
 
         // Webhooks - Notifiarr
-        [TestCase(@"https://xxx.yyy/api/v1/notification/lidarr/9pr04sg6-0123-3210-imav-eql2tyu8xyui")]
+        [TestCase(@"https://xxx.yyy/api/v1/notification/lidarr/mySecret")]
 
         // Discord
         [TestCase(@"https://discord.com/api/webhooks/mySecret")]
