@@ -41,9 +41,9 @@ namespace NzbDrone.Core.Music
                 if (monitoredAlbums.Any())
                 {
                     ToggleAlbumsMonitoredState(
-                        albums.Where(s => monitoredAlbums.Any(t => t == s.ForeignAlbumId)), true);
+                        albums.Where(s => monitoredAlbums.Contains(s.ForeignAlbumId)), true);
                     ToggleAlbumsMonitoredState(
-                        albums.Where(s => monitoredAlbums.Any(t => t != s.ForeignAlbumId)), false);
+                        albums.Where(s => !monitoredAlbums.Contains(s.ForeignAlbumId)), false);
                 }
                 else
                 {
