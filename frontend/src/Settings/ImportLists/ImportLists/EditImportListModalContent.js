@@ -75,6 +75,7 @@ function EditImportListModalContent(props) {
     name,
     enableAutomaticAdd,
     shouldMonitor,
+    shouldMonitorExisting,
     shouldSearch,
     rootFolderPath,
     monitorNewItems,
@@ -173,12 +174,28 @@ function EditImportListModalContent(props) {
                 </FormGroup>
 
                 <FormGroup>
-                  <FormLabel>Search for New Items</FormLabel>
+                  <FormLabel>
+                    {translate('ShouldMonitorExisting')}
+                  </FormLabel>
+
+                  <FormInputGroup
+                    type={inputTypes.CHECK}
+                    name="shouldMonitorExisting"
+                    helpText={translate('ShouldMonitorExistingHelpText')}
+                    {...shouldMonitorExisting}
+                    onChange={onInputChange}
+                  />
+                </FormGroup>
+
+                <FormGroup>
+                  <FormLabel>
+                    {translate('ShouldSearch')}
+                  </FormLabel>
 
                   <FormInputGroup
                     type={inputTypes.CHECK}
                     name="shouldSearch"
-                    helpText={'Search indexers for newly added items.  Use with caution for large lists.'}
+                    helpText={translate('ShouldSearchHelpText')}
                     {...shouldSearch}
                     onChange={onInputChange}
                   />
