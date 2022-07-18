@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -243,8 +244,9 @@ namespace NzbDrone.Core.ImportLists
                     }
                 };
 
-                if (importList.ShouldMonitor == ImportListMonitorType.SpecificAlbum)
+                if (importList.ShouldMonitor == ImportListMonitorType.SpecificAlbum && toAddArtist.AddOptions != null)
                 {
+                    Debug.Assert(toAddArtist.Id == 0, "new artist added but ID is not 0");
                     toAddArtist.AddOptions.AlbumsToMonitor.Add(toAdd.ForeignAlbumId);
                 }
 
