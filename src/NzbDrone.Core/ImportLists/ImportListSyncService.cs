@@ -221,7 +221,7 @@ namespace NzbDrone.Core.ImportLists
                     Tags = importList.Tags,
                     AddOptions = new AddArtistOptions
                     {
-                        SearchForMissingAlbums = monitored,
+                        SearchForMissingAlbums = importList.ShouldSearch,
                         Monitored = monitored,
                         Monitor = monitored ? MonitorTypes.All : MonitorTypes.None
                     }
@@ -240,7 +240,7 @@ namespace NzbDrone.Core.ImportLists
                     Artist = toAddArtist,
                     AddOptions = new AddAlbumOptions
                     {
-                        SearchForNewAlbum = monitored
+                        SearchForNewAlbum = importList.ShouldSearch
                     }
                 };
 
@@ -321,7 +321,7 @@ namespace NzbDrone.Core.ImportLists
                 Tags = importList.Tags,
                 AddOptions = new AddArtistOptions
                 {
-                    SearchForMissingAlbums = monitored,
+                    SearchForMissingAlbums = importList.ShouldSearch,
                     Monitored = monitored,
                     Monitor = monitored ? MonitorTypes.All : MonitorTypes.None
                 }

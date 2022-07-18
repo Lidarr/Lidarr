@@ -55,7 +55,8 @@ class ImportList extends Component {
     const {
       id,
       name,
-      enableAutomaticAdd
+      enableAutomaticAdd,
+      shouldSearch
     } = this.props;
 
     return (
@@ -76,6 +77,12 @@ class ImportList extends Component {
               </Label>
           }
 
+          {
+            shouldSearch &&
+              <Label kind={kinds.SUCCESS}>
+                Automatic Search
+              </Label>
+          }
         </div>
 
         <EditImportListModalConnector
@@ -103,6 +110,7 @@ ImportList.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   enableAutomaticAdd: PropTypes.bool.isRequired,
+  shouldSearch: PropTypes.bool.isRequired,
   onConfirmDeleteImportList: PropTypes.func.isRequired
 };
 
