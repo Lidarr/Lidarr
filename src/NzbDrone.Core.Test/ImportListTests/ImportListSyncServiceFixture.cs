@@ -73,6 +73,18 @@ namespace NzbDrone.Core.Test.ImportListTests
             _importListReports.First().AlbumMusicBrainzId = "09474d62-17dd-3a4f-98fb-04c65f38a479";
         }
 
+        private void WithSecondBook()
+        {
+            var importListItem2 = new ImportListItemInfo
+            {
+                Artist = "Linkin Park",
+                ArtistMusicBrainzId = "f59c5520-5f46-4d2c-b2c4-822eabf53419",
+                Album = "Meteora 2",
+                AlbumMusicBrainzId = "madeup"
+            };
+            _importListReports.Add(importListItem2);
+        }
+
         private void WithExistingArtist()
         {
             Mocker.GetMock<IArtistService>()
@@ -274,6 +286,29 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<IAddAlbumService>()
                 .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 0), false, It.IsAny<bool>()));
+        }
+
+        [TestCase(ImportListMonitorType.None, 0, false)]
+        [TestCase(ImportListMonitorType.SpecificAlbum, 2, true)]
+        [TestCase(ImportListMonitorType.EntireArtist, 0, true)]
+        public void should_add_two_albums(ImportListMonitorType monitor, int expectedAlbumsMonitored, bool expectedArtistMonitored)
+        {
+            WithAlbum();
+            WithAlbumId();
+            WithSecondBook();
+            WithArtistId();
+            WithMonitorType(monitor);
+
+            Subject.Execute(new ImportListSyncCommand());
+
+            Mocker.GetMock<IAddAlbumService>()
+                .Verify(v => v.AddAlbums(It.Is<List<Album>>(t => t.Count == 2), false, true));
+            Mocker.GetMock<IAddArtistService>()
+                .Verify(v => v.AddArtists(It.Is<List<Artist>>(t => t.Count == 1 &&
+                                                                   t.First().AddOptions.AlbumsToMonitor.Count == expectedAlbumsMonitored &&
+                                                                   t.First().Monitored == expectedArtistMonitored),
+                    false,
+                    true));
         }
     }
 }
