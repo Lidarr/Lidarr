@@ -89,14 +89,14 @@ namespace NzbDrone.Core.Test.ImportListTests
         {
             Mocker.GetMock<IArtistService>()
                 .Setup(v => v.FindById(_importListReports.First().ArtistMusicBrainzId))
-                .Returns(new Artist { ForeignArtistId = _importListReports.First().ArtistMusicBrainzId });
+                .Returns(new Artist { Id = 1, ForeignArtistId = _importListReports.First().ArtistMusicBrainzId });
         }
 
         private void WithExistingAlbum()
         {
             Mocker.GetMock<IAlbumService>()
                 .Setup(v => v.FindById(_importListReports.First().AlbumMusicBrainzId))
-                .Returns(new Album { ForeignAlbumId = _importListReports.First().AlbumMusicBrainzId });
+                .Returns(new Album { Id = 1, ForeignAlbumId = _importListReports.First().AlbumMusicBrainzId });
         }
 
         private void WithExcludedArtist()
@@ -215,6 +215,7 @@ namespace NzbDrone.Core.Test.ImportListTests
         public void should_add_if_existing_artist_but_new_album()
         {
             WithAlbumId();
+            WithArtistId();
             WithExistingArtist();
 
             Subject.Execute(new ImportListSyncCommand());
