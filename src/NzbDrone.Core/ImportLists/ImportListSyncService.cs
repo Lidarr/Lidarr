@@ -5,6 +5,7 @@ using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.ImportLists.Exclusions;
+using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.MetadataSource;
@@ -189,18 +190,35 @@ namespace NzbDrone.Core.ImportLists
                     if (!existingAlbum.Monitored)
                     {
                         _albumService.SetAlbumMonitored(existingAlbum.Id, true);
+
+                        if (importList.ShouldMonitor == ImportListMonitorType.SpecificAlbum)
+                        {
+                            _commandQueueManager.Push(new AlbumSearchCommand(new List<int> { existingAlbum.Id }));
+                        }
                     }
 
                     var existingArtist = existingAlbum.Artist.Value;
+                    var doSearch = false;
+
                     if (importList.ShouldMonitor == ImportListMonitorType.EntireArtist)
                     {
-                        _albumService.SetMonitored(existingArtist.Albums.Value.Select(x => x.Id), true);
+                        if (existingArtist.Albums.Value.Any(x => !x.Monitored))
+                        {
+                            doSearch = true;
+                            _albumService.SetMonitored(existingArtist.Albums.Value.Select(x => x.Id), true);
+                        }
                     }
 
                     if (!existingArtist.Monitored)
                     {
+                        doSearch = true;
                         existingArtist.Monitored = true;
                         _artistService.UpdateArtist(existingArtist);
+                    }
+
+                    if (doSearch)
+                    {
+                        _commandQueueManager.Push(new MissingAlbumSearchCommand(existingArtist.Id));
                     }
                 }
 
@@ -240,7 +258,7 @@ namespace NzbDrone.Core.ImportLists
                     Artist = toAddArtist,
                     AddOptions = new AddAlbumOptions
                     {
-                        SearchForNewAlbum = importList.ShouldSearch
+                        SearchForNewAlbum = importList.ShouldSearch && toAddArtist.Id > 0
                     }
                 };
 
