@@ -7,6 +7,7 @@ namespace Lidarr.Api.V1.ImportLists
     {
         public bool EnableAutomaticAdd { get; set; }
         public ImportListMonitorType ShouldMonitor { get; set; }
+        public bool ShouldMonitorExisting { get; set; }
         public bool ShouldSearch { get; set; }
         public string RootFolderPath { get; set; }
         public NewItemMonitorTypes MonitorNewItems { get; set; }
@@ -29,6 +30,7 @@ namespace Lidarr.Api.V1.ImportLists
 
             resource.EnableAutomaticAdd = definition.EnableAutomaticAdd;
             resource.ShouldMonitor = definition.ShouldMonitor;
+            resource.ShouldMonitorExisting = definition.ShouldMonitorExisting;
             resource.ShouldSearch = definition.ShouldSearch;
             resource.RootFolderPath = definition.RootFolderPath;
             resource.MonitorNewItems = definition.MonitorNewItems;
@@ -51,6 +53,7 @@ namespace Lidarr.Api.V1.ImportLists
 
             definition.EnableAutomaticAdd = resource.EnableAutomaticAdd;
             definition.ShouldMonitor = resource.ShouldMonitor;
+            definition.ShouldMonitorExisting = resource.ShouldMonitorExisting;
             definition.ShouldSearch = resource.ShouldSearch;
             definition.RootFolderPath = resource.RootFolderPath;
             definition.MonitorNewItems = resource.MonitorNewItems;

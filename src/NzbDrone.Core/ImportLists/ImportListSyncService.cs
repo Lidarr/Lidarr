@@ -184,7 +184,7 @@ namespace NzbDrone.Core.ImportLists
             {
                 _logger.Debug("{0} [{1}] Rejected, Album Exists in DB.  Ensuring Album and Artist monitored.", report.AlbumMusicBrainzId, report.Album);
 
-                if (importList.ShouldMonitor != ImportListMonitorType.None)
+                if (importList.ShouldMonitorExisting && importList.ShouldMonitor != ImportListMonitorType.None)
                 {
                     if (!existingAlbum.Monitored)
                     {
@@ -288,7 +288,7 @@ namespace NzbDrone.Core.ImportLists
             {
                 _logger.Debug("{0} [{1}] Rejected, artist exists in DB.  Ensuring artist monitored", report.ArtistMusicBrainzId, report.Artist);
 
-                if (!existingArtist.Monitored)
+                if (importList.ShouldMonitorExisting && !existingArtist.Monitored)
                 {
                     existingArtist.Monitored = true;
                     _artistService.UpdateArtist(existingArtist);
