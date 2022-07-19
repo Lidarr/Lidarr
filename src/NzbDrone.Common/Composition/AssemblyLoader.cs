@@ -9,17 +9,38 @@ using NzbDrone.Common.EnvironmentInfo;
 
 namespace NzbDrone.Common.Composition
 {
-    public class AssemblyLoader
+    public static class AssemblyLoader
     {
+        private static readonly string[] BaseAssemblies =
+        {
+            "Lidarr.Host",
+            "Lidarr.Core",
+            "Lidarr.SignalR",
+            "Lidarr.Api.V1",
+            "Lidarr.Http"
+        };
+
+        private static readonly string[] UpdateAssemblies = { "Lidarr.Update" };
+
         static AssemblyLoader()
         {
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(ContainerResolveEventHandler);
             RegisterSQLiteResolver();
         }
 
-        public static IList<Assembly> Load(IList<string> assemblyNames)
+        public static List<Assembly> LoadBaseAssemblies()
         {
-            var toLoad = assemblyNames.ToList();
+            return Load(BaseAssemblies);
+        }
+
+        public static List<Assembly> LoadUpdateAssemblies()
+        {
+            return Load(UpdateAssemblies);
+        }
+
+        private static List<Assembly> Load(IList<string> assemblies)
+        {
+            var toLoad = assemblies.ToList();
             toLoad.Add("Lidarr.Common");
             toLoad.Add(OsInfo.IsWindows ? "Lidarr.Windows" : "Lidarr.Mono");
 

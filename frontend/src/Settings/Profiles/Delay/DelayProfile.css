@@ -7,8 +7,12 @@
   line-height: 30px;
 }
 
-.column {
+.name {
   flex: 0 0 200px;
+}
+
+.fillcolumn {
+  flex: 1 0 0;
 }
 
 .actions {
