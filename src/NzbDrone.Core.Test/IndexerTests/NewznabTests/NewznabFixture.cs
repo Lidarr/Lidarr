@@ -56,7 +56,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             var releaseInfo = releases.First();
 
             releaseInfo.Title.Should().Be("Brainstorm-Scary Creatures-CD-FLAC-2016-NBFLAC");
-            releaseInfo.DownloadProtocol.Should().Be(DownloadProtocol.Usenet);
+            releaseInfo.DownloadProtocol.Should().Be(nameof(UsenetDownloadProtocol));
             releaseInfo.DownloadUrl.Should().Be("http://api.nzbgeek.info/api?t=get&id=38884827e1e56b9336278a449e0a38ec&apikey=xxx");
             releaseInfo.InfoUrl.Should().Be("https://nzbgeek.info/geekseek.php?guid=38884827e1e56b9336278a449e0a38ec");
             releaseInfo.CommentUrl.Should().Be("https://nzbgeek.info/geekseek.php?guid=38884827e1e56b9336278a449e0a38ec");

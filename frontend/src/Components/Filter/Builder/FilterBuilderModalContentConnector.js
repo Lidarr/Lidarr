@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { deleteCustomFilter, saveCustomFilter } from 'Store/Actions/customFilterActions';
+import { fetchDownloadClients, fetchIndexers } from 'Store/Actions/settingsActions';
 import FilterBuilderModalContent from './FilterBuilderModalContent';
 
 function createMapStateToProps() {
@@ -9,7 +10,11 @@ function createMapStateToProps() {
     (state, { id }) => id,
     (state) => state.customFilters.isSaving,
     (state) => state.customFilters.saveError,
-    (customFilters, id, isSaving, saveError) => {
+    (state) => state.settings.downloadClients.isPopulated,
+    (state) => state.settings.indexers.isPopulated,
+    (customFilters, id, isSaving, saveError, downloadClientsPopulated, indexersPopulated) => {
+      const isPopulated = downloadClientsPopulated && indexersPopulated;
+
       if (id) {
         const customFilter = customFilters.find((c) => c.id === id);
 
@@ -19,7 +24,8 @@ function createMapStateToProps() {
           filters: customFilter.filters,
           customFilters,
           isSaving,
-          saveError
+          saveError,
+          isPopulated
         };
       }
 
@@ -28,7 +34,8 @@ function createMapStateToProps() {
         filters: [],
         customFilters,
         isSaving,
-        saveError
+        saveError,
+        isPopulated
       };
     }
   );
@@ -36,7 +43,9 @@ function createMapStateToProps() {
 
 const mapDispatchToProps = {
   onSaveCustomFilterPress: saveCustomFilter,
-  dispatchDeleteCustomFilter: deleteCustomFilter
+  dispatchDeleteCustomFilter: deleteCustomFilter,
+  dispatchFetchDownloadClients: fetchDownloadClients,
+  dispatchFetchIndexers: fetchIndexers
 };
 
 export default connect(createMapStateToProps, mapDispatchToProps)(FilterBuilderModalContent);
