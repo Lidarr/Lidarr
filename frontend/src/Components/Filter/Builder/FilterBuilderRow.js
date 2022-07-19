@@ -13,7 +13,7 @@ import HistoryEventTypeFilterBuilderRowValue from './HistoryEventTypeFilterBuild
 import IndexerFilterBuilderRowValueConnector from './IndexerFilterBuilderRowValueConnector';
 import MetadataProfileFilterBuilderRowValue from './MetadataProfileFilterBuilderRowValue';
 import MonitorNewItemsFilterBuilderRowValue from './MonitorNewItemsFilterBuilderRowValue';
-import ProtocolFilterBuilderRowValue from './ProtocolFilterBuilderRowValue';
+import ProtocolFilterBuilderRowValue from './ProtocolFilterBuilderRowValueConnector';
 import QualityFilterBuilderRowValueConnector from './QualityFilterBuilderRowValueConnector';
 import QualityProfileFilterBuilderRowValue from './QualityProfileFilterBuilderRowValue';
 import TagFilterBuilderRowValueConnector from './TagFilterBuilderRowValueConnector';

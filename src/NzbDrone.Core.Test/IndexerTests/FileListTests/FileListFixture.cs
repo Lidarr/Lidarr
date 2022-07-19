@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
             var torrentInfo = releases.First() as TorrentInfo;
 
             torrentInfo.Title.Should().Be("Mankind.Divided.2019.S01E01.1080p.WEB-DL");
-            torrentInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
+            torrentInfo.DownloadProtocol.Should().Be(nameof(TorrentDownloadProtocol));
             torrentInfo.DownloadUrl.Should().Be("https://filelist.io/download.php?id=1234&passkey=somepass");
             torrentInfo.InfoUrl.Should().Be("https://filelist.io/details.php?id=1234");
             torrentInfo.CommentUrl.Should().BeNullOrEmpty();

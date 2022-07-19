@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers
         protected readonly Logger _logger;
 
         public abstract string Name { get; }
-        public abstract DownloadProtocol Protocol { get; }
+        public abstract string Protocol { get; }
         public int Priority { get; set; }
 
         public abstract bool SupportsRss { get; }

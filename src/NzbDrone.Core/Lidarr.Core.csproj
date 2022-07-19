@@ -31,7 +31,10 @@
     <PackageReference Include="MonoTorrent" Version="2.0.7" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NzbDrone.Common\Lidarr.Common.csproj" />
+    <ProjectReference Include="..\NzbDrone.Common\Lidarr.Common.csproj">
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Localization\Core\**">

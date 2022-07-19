@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Common;
+using NzbDrone.Common.Composition;
 using NzbDrone.Common.Composition.Extensions;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Instrumentation.Extensions;
@@ -20,7 +21,6 @@ using NzbDrone.Core.Download.TrackedDownloads;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Host;
 using NzbDrone.SignalR;
 using NzbDrone.Test.Common;
 using IServiceProvider = System.IServiceProvider;
@@ -37,8 +37,9 @@ namespace NzbDrone.App.Test
         {
             var args = new StartupContext("first", "second");
 
+            var assemblies = AssemblyLoader.LoadBaseAssemblies();
             var container = new Container(rules => rules.WithNzbDroneRules())
-                .AutoAddServices(Bootstrap.ASSEMBLIES)
+                .AutoAddServices(assemblies)
                 .AddNzbDroneLogger()
                 .AddDummyDatabase()
                 .AddStartupContext(args);
