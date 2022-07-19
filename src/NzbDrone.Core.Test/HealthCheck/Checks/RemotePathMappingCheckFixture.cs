@@ -10,6 +10,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Download.Clients;
 using NzbDrone.Core.HealthCheck.Checks;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Localization;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Events;
@@ -41,7 +42,12 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         {
             _downloadItem = new DownloadClientItem
             {
-                DownloadClientInfo = new DownloadClientItemClientInfo { Name = "Test" },
+                DownloadClientInfo = new DownloadClientItemClientInfo
+                {
+                    Protocol = nameof(UsenetDownloadProtocol),
+                    Id = 1,
+                    Name = "Test"
+                },
                 DownloadId = "TestId",
                 OutputPath = new OsPath(_downloadItemPath)
             };
