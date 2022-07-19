@@ -3,77 +3,15 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { saveDelayProfile, setDelayProfileValue } from 'Store/Actions/settingsActions';
-import selectSettings from 'Store/Selectors/selectSettings';
+import { fetchDelayProfileSchema, saveDelayProfile, setDelayProfileValue } from 'Store/Actions/settingsActions';
+import createProviderSettingsSelector from 'Store/Selectors/createProviderSettingsSelector';
 import EditDelayProfileModalContent from './EditDelayProfileModalContent';
-
-const newDelayProfile = {
-  enableUsenet: true,
-  enableTorrent: true,
-  preferredProtocol: 'usenet',
-  usenetDelay: 0,
-  torrentDelay: 0,
-  bypassIfHighestQuality: false,
-  bypassIfAboveCustomFormatScore: false,
-  minimumCustomFormatScore: 0,
-  tags: []
-};
-
-function createDelayProfileSelector() {
-  return createSelector(
-    (state, { id }) => id,
-    (state) => state.settings.delayProfiles,
-    (id, delayProfiles) => {
-      const {
-        isFetching,
-        error,
-        isSaving,
-        saveError,
-        pendingChanges,
-        items
-      } = delayProfiles;
-
-      const profile = id ? _.find(items, { id }) : newDelayProfile;
-      const settings = selectSettings(profile, pendingChanges, saveError);
-
-      return {
-        id,
-        isFetching,
-        error,
-        isSaving,
-        saveError,
-        item: settings.settings,
-        ...settings
-      };
-    }
-  );
-}
 
 function createMapStateToProps() {
   return createSelector(
-    createDelayProfileSelector(),
+    createProviderSettingsSelector('delayProfiles'),
     (delayProfile) => {
-      const enableUsenet = delayProfile.item.enableUsenet.value;
-      const enableTorrent = delayProfile.item.enableTorrent.value;
-      const preferredProtocol = delayProfile.item.preferredProtocol.value;
-      let protocol = 'preferUsenet';
-
-      if (preferredProtocol === 'usenet') {
-        protocol = 'preferUsenet';
-      } else {
-        protocol = 'preferTorrent';
-      }
-
-      if (!enableUsenet) {
-        protocol = 'onlyTorrent';
-      }
-
-      if (!enableTorrent) {
-        protocol = 'onlyUsenet';
-      }
-
       return {
-        protocol,
         ...delayProfile
       };
     }
@@ -81,6 +19,7 @@ function createMapStateToProps() {
 }
 
 const mapDispatchToProps = {
+  fetchDelayProfileSchema,
   setDelayProfileValue,
   saveDelayProfile
 };
@@ -90,14 +29,19 @@ class EditDelayProfileModalContentConnector extends Component {
   //
   // Lifecycle
 
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      dragIndex: null,
+      dropIndex: null,
+      dropPosition: null
+    };
+  }
+
   componentDidMount() {
-    if (!this.props.id) {
-      Object.keys(newDelayProfile).forEach((name) => {
-        this.props.setDelayProfileValue({
-          name,
-          value: newDelayProfile[name]
-        });
-      });
+    if (!this.props.id && !this.props.isPopulated) {
+      this.props.fetchDelayProfileSchema();
     }
   }
 
@@ -114,35 +58,77 @@ class EditDelayProfileModalContentConnector extends Component {
     this.props.setDelayProfileValue({ name, value });
   };
 
-  onProtocolChange = ({ value }) => {
-    switch (value) {
-      case 'preferUsenet':
-        this.props.setDelayProfileValue({ name: 'enableUsenet', value: true });
-        this.props.setDelayProfileValue({ name: 'enableTorrent', value: true });
-        this.props.setDelayProfileValue({ name: 'preferredProtocol', value: 'usenet' });
-        break;
-      case 'preferTorrent':
-        this.props.setDelayProfileValue({ name: 'enableUsenet', value: true });
-        this.props.setDelayProfileValue({ name: 'enableTorrent', value: true });
-        this.props.setDelayProfileValue({ name: 'preferredProtocol', value: 'torrent' });
-        break;
-      case 'onlyUsenet':
-        this.props.setDelayProfileValue({ name: 'enableUsenet', value: true });
-        this.props.setDelayProfileValue({ name: 'enableTorrent', value: false });
-        this.props.setDelayProfileValue({ name: 'preferredProtocol', value: 'usenet' });
-        break;
-      case 'onlyTorrent':
-        this.props.setDelayProfileValue({ name: 'enableUsenet', value: false });
-        this.props.setDelayProfileValue({ name: 'enableTorrent', value: true });
-        this.props.setDelayProfileValue({ name: 'preferredProtocol', value: 'torrent' });
-        break;
-      default:
-        throw Error(`Unknown protocol option: ${value}`);
+  onSavePress = () => {
+    this.props.saveDelayProfile({ id: this.props.id });
+  };
+
+  onDownloadProtocolItemFieldChange = (protocol, name, value) => {
+    const delayProfile = _.cloneDeep(this.props.item);
+    const items = delayProfile.items.value;
+    const item = _.find(delayProfile.items.value, (i) => i.protocol === protocol);
+
+    item[name] = value;
+
+    this.props.setDelayProfileValue({
+      name: 'items',
+      value: items
+    });
+  };
+
+  onDownloadProtocolItemDragMove = ({ dragIndex, dropIndex, dropPosition }) => {
+    if (
+      (dropPosition === 'below' && dropIndex + 1 === dragIndex) ||
+      (dropPosition === 'above' && dropIndex - 1 === dragIndex)
+    ) {
+      if (
+        this.state.dragIndex != null &&
+        this.state.dropIndex != null &&
+        this.state.dropPosition != null
+      ) {
+        this.setState({
+          dragIndex: null,
+          dropIndex: null,
+          dropPosition: null
+        });
+      }
+
+      return;
+    }
+
+    if (this.state.dragIndex !== dragIndex ||
+        this.state.dropIndex !== dropIndex ||
+        this.state.dropPosition !== dropPosition) {
+      this.setState({
+        dragIndex,
+        dropIndex,
+        dropPosition
+      });
     }
   };
 
-  onSavePress = () => {
-    this.props.saveDelayProfile({ id: this.props.id });
+  onDownloadProtocolItemDragEnd = (didDrop) => {
+    const {
+      dragIndex,
+      dropIndex
+    } = this.state;
+
+    if (didDrop && dropIndex !== null) {
+      const delayProfile = _.cloneDeep(this.props.item);
+      const items = delayProfile.items.value;
+      const item = items.splice(dragIndex, 1)[0];
+
+      items.splice(dropIndex, 0, item);
+
+      this.props.setDelayProfileValue({
+        name: 'items',
+        value: items
+      });
+    }
+
+    this.setState({
+      dragIndex: null,
+      dropIndex: null
+    });
   };
 
   //
@@ -151,10 +137,13 @@ class EditDelayProfileModalContentConnector extends Component {
   render() {
     return (
       <EditDelayProfileModalContent
+        {...this.state}
         {...this.props}
         onSavePress={this.onSavePress}
         onInputChange={this.onInputChange}
-        onProtocolChange={this.onProtocolChange}
+        onDownloadProtocolItemFieldChange={this.onDownloadProtocolItemFieldChange}
+        onDownloadProtocolItemDragMove={this.onDownloadProtocolItemDragMove}
+        onDownloadProtocolItemDragEnd={this.onDownloadProtocolItemDragEnd}
       />
     );
   }
@@ -162,9 +151,11 @@ class EditDelayProfileModalContentConnector extends Component {
 
 EditDelayProfileModalContentConnector.propTypes = {
   id: PropTypes.number,
+  isPopulated: PropTypes.bool.isRequired,
   isSaving: PropTypes.bool.isRequired,
   saveError: PropTypes.object,
   item: PropTypes.object.isRequired,
+  fetchDelayProfileSchema: PropTypes.func.isRequired,
   setDelayProfileValue: PropTypes.func.isRequired,
   saveDelayProfile: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired

@@ -66,8 +66,9 @@ namespace Lidarr.Api.V1.Commands
                     ? CommandPriority.High
                     : CommandPriority.Normal;
 
-                var command = STJson.Deserialize(body, commandType) as Command;
+                dynamic command = STJson.Deserialize(body, commandType);
 
+                command.Trigger = CommandTrigger.Manual;
                 command.SuppressMessages = !command.SendUpdatesToClient;
                 command.SendUpdatesToClient = true;
                 command.ClientUserAgent = Request.Headers["UserAgent"];

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
@@ -5,6 +6,7 @@ using FluentValidation.Results;
 using Lidarr.Http;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
+using NzbDrone.Common.Composition;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.DecisionEngine;
@@ -22,6 +24,7 @@ namespace Lidarr.Api.V1.Indexers
         private readonly IProcessDownloadDecisions _downloadDecisionProcessor;
         private readonly IIndexerFactory _indexerFactory;
         private readonly IDownloadClientFactory _downloadClientFactory;
+        private readonly KnownTypes _knownTypes;
         private readonly Logger _logger;
 
         private static readonly object PushLock = new object();
@@ -31,6 +34,7 @@ namespace Lidarr.Api.V1.Indexers
                                  IIndexerFactory indexerFactory,
                                  IDownloadClientFactory downloadClientFactory,
                                  IQualityProfileService qualityProfileService,
+                                 KnownTypes knownTypes,
                                  Logger logger)
             : base(qualityProfileService)
         {
@@ -38,6 +42,7 @@ namespace Lidarr.Api.V1.Indexers
             _downloadDecisionProcessor = downloadDecisionProcessor;
             _indexerFactory = indexerFactory;
             _downloadClientFactory = downloadClientFactory;
+            _knownTypes = knownTypes;
             _logger = logger;
 
             PostValidator.RuleFor(s => s.Title).NotEmpty();
@@ -59,6 +64,7 @@ namespace Lidarr.Api.V1.Indexers
 
             info.Guid = "PUSH-" + info.DownloadUrl;
 
+            ResolveDownloadProtocol(info);
             ResolveIndexer(info);
 
             var downloadClientId = ResolveDownloadClientId(release);
@@ -137,6 +143,21 @@ namespace Lidarr.Api.V1.Indexers
             }
 
             return release.DownloadClientId;
+        }
+
+        private void ResolveDownloadProtocol(ReleaseInfo release)
+        {
+            var knownDownloadProtocols = _knownTypes.GetImplementations(typeof(IDownloadProtocol)).ToArray();
+
+            if (knownDownloadProtocols.Any(downloadProtocol => downloadProtocol.Name == release.DownloadProtocol))
+            {
+                return;
+            }
+
+            var downloadProtocol = knownDownloadProtocols
+                .Single(c => c.Name.Replace("DownloadProtocol", "").Equals(release.DownloadProtocol, StringComparison.InvariantCultureIgnoreCase));
+
+            release.DownloadProtocol = downloadProtocol.Name;
         }
     }
 }
