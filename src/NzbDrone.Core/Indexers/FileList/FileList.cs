@@ -8,7 +8,7 @@ namespace NzbDrone.Core.Indexers.FileList
     public class FileList : HttpIndexerBase<FileListSettings>
     {
         public override string Name => "FileList";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override string Protocol => nameof(TorrentDownloadProtocol);
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
 

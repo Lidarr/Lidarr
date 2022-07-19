@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Test.IndexerTests
             {
                 Release = new ReleaseInfo
                 {
-                    DownloadProtocol = DownloadProtocol.Torrent,
+                    DownloadProtocol = nameof(TorrentDownloadProtocol),
                     IndexerId = 0
                 }
             });
@@ -49,7 +49,7 @@ namespace NzbDrone.Core.Test.IndexerTests
             {
                 Release = new ReleaseInfo()
                 {
-                    DownloadProtocol = DownloadProtocol.Torrent,
+                    DownloadProtocol = nameof(TorrentDownloadProtocol),
                     IndexerId = 1
                 },
                 ParsedAlbumInfo = new ParsedAlbumInfo

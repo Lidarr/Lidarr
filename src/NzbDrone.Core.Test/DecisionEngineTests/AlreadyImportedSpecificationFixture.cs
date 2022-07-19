@@ -144,7 +144,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             GivenHistoryItem(downloadId, TITLE, _flac, EntityHistoryEventType.DownloadImported);
 
             _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
-                                                         .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)
+                                                         .With(t => t.DownloadProtocol = nameof(TorrentDownloadProtocol))
                                                          .With(t => t.InfoHash = downloadId)
                                                          .Build();
 
@@ -160,7 +160,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             GivenHistoryItem(downloadId, TITLE, _flac, EntityHistoryEventType.DownloadImported);
 
             _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
-                                                         .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)
+                                                         .With(t => t.DownloadProtocol = nameof(TorrentDownloadProtocol))
                                                          .With(t => t.InfoHash = null)
                                                          .Build();
 
@@ -174,7 +174,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             GivenHistoryItem(null, TITLE, _flac, EntityHistoryEventType.DownloadImported);
 
             _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
-                                                         .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)
+                                                         .With(t => t.DownloadProtocol = nameof(TorrentDownloadProtocol))
                                                          .With(t => t.InfoHash = null)
                                                          .Build();
 
@@ -190,7 +190,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             GivenHistoryItem(downloadId, TITLE, _flac, EntityHistoryEventType.DownloadImported);
 
             _remoteAlbum.Release = Builder<TorrentInfo>.CreateNew()
-                                                         .With(t => t.DownloadProtocol = DownloadProtocol.Torrent)
+                                                         .With(t => t.DownloadProtocol = nameof(TorrentDownloadProtocol))
                                                          .With(t => t.InfoHash = downloadId)
                                                          .Build();
 

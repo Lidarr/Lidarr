@@ -9,7 +9,7 @@ namespace NzbDrone.Core.Indexers.IPTorrents
     {
         public override string Name => "IP Torrents";
 
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override string Protocol => nameof(TorrentDownloadProtocol);
         public override bool SupportsSearch => false;
         public override int PageSize => 0;
 

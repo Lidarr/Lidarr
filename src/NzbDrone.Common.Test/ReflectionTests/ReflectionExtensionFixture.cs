@@ -1,4 +1,3 @@
-using System.Reflection;
 using FluentAssertions;
 using NUnit.Framework;
 using NzbDrone.Common.Reflection;
@@ -12,7 +11,7 @@ namespace NzbDrone.Common.Test.ReflectionTests
         [Test]
         public void should_get_properties_from_models()
         {
-            var models = Assembly.Load("Lidarr.Core").ImplementationsOf<ModelBase>();
+            var models = Reflection.ReflectionExtensions.ImplementationsOf<ModelBase>();
 
             foreach (var model in models)
             {
@@ -23,7 +22,7 @@ namespace NzbDrone.Common.Test.ReflectionTests
         [Test]
         public void should_be_able_to_get_implementations()
         {
-            var models = Assembly.Load("Lidarr.Core").ImplementationsOf<ModelBase>();
+            var models = Reflection.ReflectionExtensions.ImplementationsOf<ModelBase>();
 
             models.Should().NotBeEmpty();
         }

@@ -79,7 +79,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
                 var release = subject.Release;
 
-                if (release.DownloadProtocol == DownloadProtocol.Torrent)
+                if (release.DownloadProtocol == nameof(TorrentDownloadProtocol))
                 {
                     var torrentInfo = release as TorrentInfo;
 
