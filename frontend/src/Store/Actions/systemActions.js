@@ -70,6 +70,13 @@ export const defaultState = {
     items: []
   },
 
+  plugins: {
+    isFetching: false,
+    isPopulated: false,
+    error: null,
+    items: []
+  },
+
   logs: {
     isFetching: false,
     isPopulated: false,
@@ -199,6 +206,8 @@ export const DELETE_BACKUP = 'system/backups/deleteBackup';
 
 export const FETCH_UPDATES = 'system/updates/fetchUpdates';
 
+export const FETCH_INSTALLED_PLUGINS = 'system/plugins/fetchInstalledPlugins';
+
 export const FETCH_LOGS = 'system/logs/fetchLogs';
 export const GOTO_FIRST_LOGS_PAGE = 'system/logs/gotoLogsFirstPage';
 export const GOTO_PREVIOUS_LOGS_PAGE = 'system/logs/gotoLogsPreviousPage';
@@ -232,6 +241,8 @@ export const clearRestoreBackup = createAction(CLEAR_RESTORE_BACKUP);
 export const deleteBackup = createThunk(DELETE_BACKUP);
 
 export const fetchUpdates = createThunk(FETCH_UPDATES);
+
+export const fetchInstalledPlugins = createThunk(FETCH_INSTALLED_PLUGINS);
 
 export const fetchLogs = createThunk(FETCH_LOGS);
 export const gotoLogsFirstPage = createThunk(GOTO_FIRST_LOGS_PAGE);
@@ -326,6 +337,7 @@ export const actionHandlers = handleThunks({
   [DELETE_BACKUP]: createRemoveItemHandler(backupsSection, '/system/backup'),
 
   [FETCH_UPDATES]: createFetchHandler('system.updates', '/update'),
+  [FETCH_INSTALLED_PLUGINS]: createFetchHandler('system.plugins', '/system/plugins'),
   [FETCH_LOG_FILES]: createFetchHandler('system.logFiles', '/log/file'),
   [FETCH_UPDATE_LOG_FILES]: createFetchHandler('system.updateLogFiles', '/log/file/update'),
 

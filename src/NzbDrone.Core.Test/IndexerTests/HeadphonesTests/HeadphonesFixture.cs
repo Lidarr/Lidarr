@@ -53,7 +53,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HeadphonesTests
             var releaseInfo = releases.First() as ReleaseInfo;
 
             releaseInfo.Title.Should().Be("Lady Gaga Born This Way 2CD FLAC 2011 WRE");
-            releaseInfo.DownloadProtocol.Should().Be(DownloadProtocol.Usenet);
+            releaseInfo.DownloadProtocol.Should().Be(nameof(UsenetDownloadProtocol));
             releaseInfo.DownloadUrl.Should().Be("https://indexer.codeshy.com/api?t=g&guid=123456&apikey=123456789");
             releaseInfo.BasicAuthString.Should().Be("dXNlcjpwYXNz");
             releaseInfo.Indexer.Should().Be(Subject.Definition.Name);

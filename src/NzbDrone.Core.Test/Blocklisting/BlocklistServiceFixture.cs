@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Core.Blocklisting;
 using NzbDrone.Core.Download;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
 
@@ -30,8 +31,10 @@ namespace NzbDrone.Core.Test.Blocklisting
             _event.Data.Add("publishedDate", DateTime.UtcNow.ToString("s") + "Z");
             _event.Data.Add("size", "1000");
             _event.Data.Add("indexer", "nzbs.org");
-            _event.Data.Add("protocol", "1");
+            _event.Data.Add("protocol", nameof(UsenetDownloadProtocol));
             _event.Data.Add("message", "Marked as failed");
+
+            Mocker.SetConstant<IBlocklistForProtocol>(Mocker.Resolve<UsenetBlocklist>());
         }
 
         [Test]

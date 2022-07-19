@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WafflesTests
             var releaseInfo = releases.First();
 
             releaseInfo.Title.Should().Be("Coldplay - Kaleidoscope EP (FLAC HD) [2017-Web-FLAC-Lossless]");
-            releaseInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
+            releaseInfo.DownloadProtocol.Should().Be(nameof(TorrentDownloadProtocol));
             releaseInfo.DownloadUrl.Should().Be("https://waffles.ch/download.php/xxx/1166992/" +
                 "Coldplay%20-%20Kaleidoscope%20EP%20%28FLAC%20HD%29%20%5B2017-Web-FLAC-Lossless%5D.torrent?passkey=123456789&uid=xxx&rss=1");
             releaseInfo.InfoUrl.Should().Be("https://waffles.ch/details.php?id=1166992&hit=1");

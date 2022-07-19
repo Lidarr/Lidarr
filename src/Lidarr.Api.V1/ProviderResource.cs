@@ -63,7 +63,7 @@ namespace Lidarr.Api.V1
                 Tags = resource.Tags
             };
 
-            var configContract = ReflectionExtensions.CoreAssembly.FindTypeByName(definition.ConfigContract);
+            var configContract = ReflectionExtensions.FindTypeByName(definition.ConfigContract);
             definition.Settings = (IProviderConfig)SchemaBuilder.ReadFromSchema(resource.Fields, configContract);
 
             return definition;

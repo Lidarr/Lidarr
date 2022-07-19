@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NyaaTests
             var torrentInfo = releases.First() as TorrentInfo;
 
             torrentInfo.Title.Should().Be("[TSRaws] Futsuu no Joshikousei ga [Locodol] Yattemita. #07 (TBS).ts");
-            torrentInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
+            torrentInfo.DownloadProtocol.Should().Be(nameof(TorrentDownloadProtocol));
             torrentInfo.DownloadUrl.Should().Be("https://www.nyaa.se/?page=download&tid=587750");
             torrentInfo.InfoUrl.Should().Be("https://www.nyaa.se/?page=view&tid=587750");
             torrentInfo.CommentUrl.Should().BeNullOrEmpty();

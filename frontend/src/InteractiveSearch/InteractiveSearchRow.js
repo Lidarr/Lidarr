@@ -153,7 +153,7 @@ class InteractiveSearchRow extends Component {
 
         <TableRowCell className={styles.peers}>
           {
-            protocol === 'torrent' &&
+            protocol === 'TorrentDownloadProtocol' &&
               <Peers
                 seeders={seeders}
                 leechers={leechers}

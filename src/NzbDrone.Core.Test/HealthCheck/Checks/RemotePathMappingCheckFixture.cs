@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
             {
                 DownloadClientInfo = new DownloadClientItemClientInfo
                 {
-                    Protocol = DownloadProtocol.Usenet,
+                    Protocol = nameof(UsenetDownloadProtocol),
                     Id = 1,
                     Name = "Test"
                 },

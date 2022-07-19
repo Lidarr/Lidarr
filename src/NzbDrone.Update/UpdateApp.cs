@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DryIoc;
 using NLog;
+using NzbDrone.Common.Composition;
 using NzbDrone.Common.Composition.Extensions;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
@@ -36,8 +37,9 @@ namespace NzbDrone.Update
 
                 Logger.Info("Starting Lidarr Update Client");
 
+                var assemblies = AssemblyLoader.LoadUpdateAssemblies();
                 var container = new Container(rules => rules.WithNzbDroneRules())
-                    .AutoAddServices(new List<string> { "Lidarr.Update" })
+                    .AutoAddServices(assemblies)
                     .AddNzbDroneLogger()
                     .AddStartupContext(startupContext);
 

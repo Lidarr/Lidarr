@@ -3,23 +3,43 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
-using System.Text;
-using System.Threading.Tasks;
 using NzbDrone.Common.EnvironmentInfo;
 
 namespace NzbDrone.Common.Composition
 {
-    public class AssemblyLoader
+    public static class AssemblyLoader
     {
+        private static readonly string[] BaseAssemblies =
+        {
+            "Lidarr.Host",
+            "Lidarr.Core",
+            "Lidarr.SignalR",
+            "Lidarr.Api.V1",
+            "Lidarr.Http"
+        };
+
+        private static readonly string[] UpdateAssemblies = { "Lidarr.Update" };
+
         static AssemblyLoader()
         {
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(ContainerResolveEventHandler);
             RegisterSQLiteResolver();
         }
 
-        public static IEnumerable<Assembly> Load(IEnumerable<string> assemblies)
+        public static List<Assembly> LoadBaseAssemblies()
+        {
+            return Load(BaseAssemblies);
+        }
+
+        public static List<Assembly> LoadUpdateAssemblies()
+        {
+            return Load(UpdateAssemblies);
+        }
+
+        private static List<Assembly> Load(IEnumerable<string> assemblies)
         {
             var toLoad = assemblies.ToList();
             toLoad.Add("Lidarr.Common");
@@ -28,7 +48,7 @@ namespace NzbDrone.Common.Composition
             var startupPath = AppDomain.CurrentDomain.BaseDirectory;
 
             return toLoad.Select(x =>
-                AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.Combine(startupPath, $"{x}.dll")));
+                AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.Combine(startupPath, $"{x}.dll"))).ToList();
         }
 
         private static Assembly ContainerResolveEventHandler(object sender, ResolveEventArgs args)

@@ -35,6 +35,13 @@ class FilterBuilderModalContent extends Component {
     };
   }
 
+  componentDidMount() {
+    if (!this.props.isPopulated) {
+      this.props.dispatchFetchDownloadClients();
+      this.props.dispatchFetchIndexers();
+    }
+  }
+
   componentDidUpdate(prevProps) {
     const {
       id,
@@ -218,9 +225,12 @@ FilterBuilderModalContent.propTypes = {
   customFilters: PropTypes.arrayOf(PropTypes.object).isRequired,
   isSaving: PropTypes.bool.isRequired,
   saveError: PropTypes.object,
+  isPopulated: PropTypes.bool.isRequired,
   dispatchDeleteCustomFilter: PropTypes.func.isRequired,
   onSaveCustomFilterPress: PropTypes.func.isRequired,
   dispatchSetFilter: PropTypes.func.isRequired,
+  dispatchFetchDownloadClients: PropTypes.func.isRequired,
+  dispatchFetchIndexers: PropTypes.func.isRequired,
   onCancelPress: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired
 };

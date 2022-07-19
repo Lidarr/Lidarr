@@ -9,7 +9,7 @@ import DateFilterBuilderRowValue from './DateFilterBuilderRowValue';
 import FilterBuilderRowValueConnector from './FilterBuilderRowValueConnector';
 import IndexerFilterBuilderRowValueConnector from './IndexerFilterBuilderRowValueConnector';
 import MetadataProfileFilterBuilderRowValueConnector from './MetadataProfileFilterBuilderRowValueConnector';
-import ProtocolFilterBuilderRowValue from './ProtocolFilterBuilderRowValue';
+import ProtocolFilterBuilderRowValue from './ProtocolFilterBuilderRowValueConnector';
 import QualityFilterBuilderRowValueConnector from './QualityFilterBuilderRowValueConnector';
 import QualityProfileFilterBuilderRowValueConnector from './QualityProfileFilterBuilderRowValueConnector';
 import TagFilterBuilderRowValueConnector from './TagFilterBuilderRowValueConnector';

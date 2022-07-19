@@ -24,6 +24,7 @@ namespace NzbDrone.Common.Extensions
         private static readonly string UPDATE_BACKUP_APPDATA_FOLDER_NAME = "lidarr_appdata_backup" + Path.DirectorySeparatorChar;
         private static readonly string UPDATE_CLIENT_FOLDER_NAME = "Lidarr.Update" + Path.DirectorySeparatorChar;
         private static readonly string UPDATE_LOG_FOLDER_NAME = "UpdateLogs" + Path.DirectorySeparatorChar;
+        private static readonly string PLUGIN_FOLDER_NAME = "plugins";
 
         private static readonly Regex PARENT_PATH_END_SLASH_REGEX = new Regex(@"(?<!:)\\$", RegexOptions.Compiled);
 
@@ -299,6 +300,26 @@ namespace NzbDrone.Common.Extensions
         public static string GetConfigPath(this IAppFolderInfo appFolderInfo)
         {
             return Path.Combine(GetAppDataPath(appFolderInfo), APP_CONFIG_FILE);
+        }
+
+        public static string GetPluginPath(this IAppFolderInfo appFolderInfo)
+        {
+            return Path.Combine(GetAppDataPath(appFolderInfo), PLUGIN_FOLDER_NAME);
+        }
+
+        public static List<string> GetPluginAssemblies(this IAppFolderInfo appFolderInfo)
+        {
+            var pluginFolder = appFolderInfo.GetPluginPath();
+
+            if (!Directory.Exists(pluginFolder))
+            {
+                return new List<string>();
+            }
+
+            return Directory.GetDirectories(pluginFolder)
+                .SelectMany(owner => Directory.GetDirectories(owner)
+                    .SelectMany(folder => Directory.GetFiles(folder, "Lidarr.Plugin.*.dll").ToList()))
+                .ToList();
         }
 
         public static string GetMediaCoverPath(this IAppFolderInfo appFolderInfo)

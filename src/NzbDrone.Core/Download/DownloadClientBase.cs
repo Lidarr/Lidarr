@@ -5,7 +5,6 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.RemotePathMappings;
 using NzbDrone.Core.ThingiProvider;
@@ -54,10 +53,7 @@ namespace NzbDrone.Core.Download
             return GetType().Name;
         }
 
-        public abstract DownloadProtocol Protocol
-        {
-            get;
-        }
+        public abstract string Protocol { get; }
 
         public abstract string Download(RemoteAlbum remoteAlbum);
         public abstract IEnumerable<DownloadClientItem> GetItems();

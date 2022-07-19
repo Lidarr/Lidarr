@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
 using NLog;
@@ -10,7 +11,7 @@ namespace NzbDrone.Core.Indexers.Redacted
     public class Redacted : HttpIndexerBase<RedactedSettings>
     {
         public override string Name => "Redacted";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override string Protocol => nameof(TorrentDownloadProtocol);
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
         public override int PageSize => 50;

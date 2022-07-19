@@ -13,6 +13,7 @@ using Lidarr.Api.V1.DownloadClient;
 using Lidarr.Api.V1.History;
 using Lidarr.Api.V1.Profiles.Quality;
 using Lidarr.Api.V1.RootFolders;
+using Lidarr.Api.V1.System.Plugins;
 using Lidarr.Api.V1.System.Tasks;
 using Lidarr.Api.V1.Tags;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -49,6 +50,7 @@ namespace NzbDrone.Integration.Test
         public LogsClient Logs;
         public ClientBase<NamingConfigResource> NamingConfig;
         public NotificationClient Notifications;
+        public ClientBase<PluginResource> Plugins;
         public ClientBase<QualityProfileResource> Profiles;
         public ReleaseClient Releases;
         public ReleasePushClient ReleasePush;
@@ -115,6 +117,7 @@ namespace NzbDrone.Integration.Test
             Logs = new LogsClient(RestClient, ApiKey);
             NamingConfig = new ClientBase<NamingConfigResource>(RestClient, ApiKey, "config/naming");
             Notifications = new NotificationClient(RestClient, ApiKey);
+            Plugins = new ClientBase<PluginResource>(RestClient, ApiKey, "system/plugins");
             Profiles = new ClientBase<QualityProfileResource>(RestClient, ApiKey);
             Releases = new ReleaseClient(RestClient, ApiKey);
             ReleasePush = new ReleasePushClient(RestClient, ApiKey);

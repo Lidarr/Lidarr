@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using FluentValidation;
 using Lidarr.Http;
 using Lidarr.Http.REST;
@@ -21,16 +22,8 @@ namespace Lidarr.Api.V1.Profiles.Delay
             SharedValidator.RuleFor(d => d.Tags).NotEmpty().When(d => d.Id != 1);
             SharedValidator.RuleFor(d => d.Tags).EmptyCollection<DelayProfileResource, int>().When(d => d.Id == 1);
             SharedValidator.RuleFor(d => d.Tags).SetValidator(tagInUseValidator);
-            SharedValidator.RuleFor(d => d.UsenetDelay).GreaterThanOrEqualTo(0);
-            SharedValidator.RuleFor(d => d.TorrentDelay).GreaterThanOrEqualTo(0);
-
-            SharedValidator.RuleFor(d => d).Custom((delayProfile, context) =>
-            {
-                if (!delayProfile.EnableUsenet && !delayProfile.EnableTorrent)
-                {
-                    context.AddFailure("Either Usenet or Torrent should be enabled");
-                }
-            });
+            SharedValidator.RuleFor(d => d.Items).Must(items => items.All(x => x.Delay >= 0)).WithMessage("Protocols cannot have a negative delay");
+            SharedValidator.RuleFor(d => d.Items).Must(items => items.Any(x => x.Allowed)).WithMessage("At least one protocol must be enabled");
         }
 
         [RestPostById]
