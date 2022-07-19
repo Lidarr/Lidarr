@@ -10,7 +10,7 @@ namespace NzbDrone.Core.Download
 {
     public interface IProvideDownloadClient
     {
-        IDownloadClient GetDownloadClient(DownloadProtocol downloadProtocol, int indexerId = 0, bool filterBlockedClients = false, HashSet<int> tags = null);
+        IDownloadClient GetDownloadClient(string downloadProtocol, int indexerId = 0, bool filterBlockedClients = false, HashSet<int> tags = null);
         IEnumerable<IDownloadClient> GetDownloadClients(bool filterBlockedClients = false);
         IDownloadClient Get(int id);
     }
@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Download
             _lastUsedDownloadClient = cacheManager.GetCache<int>(GetType(), "lastDownloadClientId");
         }
 
-        public IDownloadClient GetDownloadClient(DownloadProtocol downloadProtocol, int indexerId = 0, bool filterBlockedClients = false, HashSet<int> tags = null)
+        public IDownloadClient GetDownloadClient(string downloadProtocol, int indexerId = 0, bool filterBlockedClients = false, HashSet<int> tags = null)
         {
             // Tags aren't required, but download clients with tags should not be picked unless there is at least one matching tag.
             // Defaulting to an empty HashSet ensures this is always checked.

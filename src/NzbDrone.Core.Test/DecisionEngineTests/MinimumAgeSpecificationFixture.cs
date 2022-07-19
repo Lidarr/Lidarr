@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         {
             _remoteAlbum = new RemoteAlbum
             {
-                Release = new ReleaseInfo() { DownloadProtocol = DownloadProtocol.Usenet }
+                Release = new ReleaseInfo() { DownloadProtocol = nameof(UsenetDownloadProtocol) }
             };
         }
 
