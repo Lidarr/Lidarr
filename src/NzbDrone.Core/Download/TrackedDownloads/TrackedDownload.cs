@@ -1,5 +1,4 @@
 using System;
-using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Download.TrackedDownloads
@@ -13,7 +12,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
         public TrackedDownloadStatus Status { get; private set; }
         public RemoteAlbum RemoteAlbum { get; set; }
         public TrackedDownloadStatusMessage[] StatusMessages { get; private set; }
-        public DownloadProtocol Protocol { get; set; }
+        public string Protocol { get; set; }
         public string Indexer { get; set; }
         public DateTime? Added { get; set; }
         public bool IsTrackable { get; set; }

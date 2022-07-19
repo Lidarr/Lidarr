@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentleechTests
             var torrentInfo = releases.First() as TorrentInfo;
 
             torrentInfo.Title.Should().Be("Classic Car Rescue S02E04 720p HDTV x264-C4TV");
-            torrentInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
+            torrentInfo.DownloadProtocol.Should().Be(nameof(TorrentDownloadProtocol));
             torrentInfo.DownloadUrl.Should().Be("http://www.torrentleech.org/rss/download/513575/1234/Classic.Car.Rescue.S02E04.720p.HDTV.x264-C4TV.torrent");
             torrentInfo.InfoUrl.Should().Be("http://www.torrentleech.org/torrent/513575");
             torrentInfo.CommentUrl.Should().Be("http://www.torrentleech.org/torrent/513575#comments");
