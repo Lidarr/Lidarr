@@ -32,8 +32,8 @@ namespace NzbDrone.Core.Test.Download
                 .Returns(_downloadClients);
 
             Mocker.GetMock<IProvideDownloadClient>()
-                .Setup(v => v.GetDownloadClient(It.IsAny<DownloadProtocol>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<HashSet<int>>()))
-                .Returns<DownloadProtocol, int, bool, HashSet<int>>((v, i, f, t) => _downloadClients.FirstOrDefault(d => d.Protocol == v));
+                .Setup(v => v.GetDownloadClient(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<HashSet<int>>()))
+                .Returns<string, int, bool, HashSet<int>>((v, i, f, t) => _downloadClients.FirstOrDefault(d => d.Protocol == v));
 
             var episodes = Builder<Album>.CreateListOfSize(2)
                 .TheFirst(1).With(s => s.Id = 12)
@@ -42,7 +42,7 @@ namespace NzbDrone.Core.Test.Download
                 .Build().ToList();
 
             var releaseInfo = Builder<ReleaseInfo>.CreateNew()
-                .With(v => v.DownloadProtocol = DownloadProtocol.Usenet)
+                .With(v => v.DownloadProtocol = nameof(UsenetDownloadProtocol))
                 .With(v => v.DownloadUrl = "http://test.site/download1.ext")
                 .Build();
 
@@ -60,7 +60,7 @@ namespace NzbDrone.Core.Test.Download
 
             _downloadClients.Add(mock.Object);
 
-            mock.SetupGet(v => v.Protocol).Returns(DownloadProtocol.Usenet);
+            mock.SetupGet(v => v.Protocol).Returns(nameof(UsenetDownloadProtocol));
 
             return mock;
         }
@@ -72,7 +72,7 @@ namespace NzbDrone.Core.Test.Download
 
             _downloadClients.Add(mock.Object);
 
-            mock.SetupGet(v => v.Protocol).Returns(DownloadProtocol.Torrent);
+            mock.SetupGet(v => v.Protocol).Returns(nameof(TorrentDownloadProtocol));
 
             return mock;
         }
@@ -247,7 +247,7 @@ namespace NzbDrone.Core.Test.Download
             var mockTorrent = WithTorrentClient();
             var mockUsenet = WithUsenetClient();
 
-            _parseResult.Release.DownloadProtocol = DownloadProtocol.Torrent;
+            _parseResult.Release.DownloadProtocol = nameof(TorrentDownloadProtocol);
 
             await Subject.DownloadReport(_parseResult);
 

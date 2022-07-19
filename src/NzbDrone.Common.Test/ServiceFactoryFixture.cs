@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
+using NzbDrone.Common.Composition;
 using NzbDrone.Common.Composition.Extensions;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Instrumentation.Extensions;
@@ -14,7 +15,6 @@ using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Datastore.Extensions;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Host;
 using NzbDrone.Test.Common;
 
 namespace NzbDrone.Common.Test
@@ -25,9 +25,10 @@ namespace NzbDrone.Common.Test
         [Test]
         public void event_handlers_should_be_unique()
         {
+            var assemblies = AssemblyLoader.LoadBaseAssemblies();
             var container = new Container(rules => rules.WithNzbDroneRules())
                 .AddNzbDroneLogger()
-                .AutoAddServices(Bootstrap.ASSEMBLIES)
+                .AutoAddServices(assemblies)
                 .AddDummyDatabase()
                 .AddStartupContext(new StartupContext("first", "second"));
 

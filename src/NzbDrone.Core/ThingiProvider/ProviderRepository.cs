@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Dapper;
+using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Reflection;
 using NzbDrone.Common.Serializer;
@@ -15,10 +16,15 @@ namespace NzbDrone.Core.ThingiProvider
             new()
     {
         protected readonly JsonSerializerOptions _serializerSettings;
+        private readonly Logger _logger;
 
-        protected ProviderRepository(IMainDatabase database, IEventAggregator eventAggregator)
+        protected ProviderRepository(IMainDatabase database,
+                                     IEventAggregator eventAggregator,
+                                     Logger logger)
             : base(database, eventAggregator)
         {
+            _logger = logger;
+
             var serializerSettings = new JsonSerializerOptions
             {
                 AllowTrailingCommas = true,
@@ -53,7 +59,14 @@ namespace NzbDrone.Core.ThingiProvider
                 {
                     var body = reader.IsDBNull(settingsIndex) ? null : reader.GetString(settingsIndex);
                     var item = parser(reader);
-                    var impType = typeof(IProviderConfig).Assembly.FindTypeByName(item.ConfigContract);
+                    var impType = ReflectionExtensions.FindTypeByName(item.ConfigContract);
+
+                    // If the type is missing
+                    if (impType == null)
+                    {
+                        _logger.Warn($"Skipping provider of unknown type {item.ConfigContract}");
+                        continue;
+                    }
 
                     if (body.IsNullOrWhiteSpace() || impType == null)
                     {
