@@ -70,7 +70,7 @@ namespace NzbDrone.Core.ImportLists
 
         private List<Album> SyncList(ImportListDefinition definition)
         {
-            _logger.ProgressInfo(string.Format("Starting Import List Refresh for List {0}", definition.Name));
+            _logger.ProgressInfo("Starting Import List Refresh for List {0}", definition.Name);
 
             var rssReleases = _listFetcherAndParser.FetchSingleList(definition);
 
@@ -292,7 +292,7 @@ namespace NzbDrone.Core.ImportLists
             var existingArtist = _artistService.FindById(report.ArtistMusicBrainzId);
 
             // Check to see if artist excluded
-            var excludedArtist = listExclusions.Where(s => s.ForeignId == report.ArtistMusicBrainzId).SingleOrDefault();
+            var excludedArtist = listExclusions.SingleOrDefault(s => s.ForeignId == report.ArtistMusicBrainzId);
 
             // Check to see if artist in import
             var existingImportArtist = artistsToAdd.Find(i => i.ForeignArtistId == report.ArtistMusicBrainzId);
@@ -353,16 +353,7 @@ namespace NzbDrone.Core.ImportLists
 
         public void Execute(ImportListSyncCommand message)
         {
-            List<Album> processed;
-
-            if (message.DefinitionId.HasValue)
-            {
-                processed = SyncList(_importListFactory.Get(message.DefinitionId.Value));
-            }
-            else
-            {
-                processed = SyncAll();
-            }
+            var processed = message.DefinitionId.HasValue ? SyncList(_importListFactory.Get(message.DefinitionId.Value)) : SyncAll();
 
             _eventAggregator.PublishEvent(new ImportListSyncCompleteEvent(processed));
         }
