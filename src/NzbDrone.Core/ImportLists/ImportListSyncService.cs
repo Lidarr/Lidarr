@@ -119,7 +119,18 @@ namespace NzbDrone.Core.ImportLists
                 }
             }
 
+            if (artistsToAdd.Count > 0)
+            {
+                _logger.ProgressInfo($"Adding {artistsToAdd.Count} artists");
+            }
+
             var addedArtists = _addArtistService.AddArtists(artistsToAdd, false, true);
+
+            if (albumsToAdd.Count > 0)
+            {
+                _logger.ProgressInfo($"Adding {albumsToAdd.Count} albums");
+            }
+
             var addedAlbums = _addAlbumService.AddAlbums(albumsToAdd, false, true);
 
             var message = string.Format($"Import List Sync Completed. Items found: {reports.Count}, Artists added: {addedArtists.Count}, Albums added: {addedAlbums.Count}");
