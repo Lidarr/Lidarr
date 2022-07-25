@@ -161,14 +161,11 @@ namespace NzbDrone.Core.ImportLists
             // Check to see if album in DB
             var existingAlbum = _albumService.FindById(report.AlbumMusicBrainzId);
 
-            if (existingAlbum != null)
-            {
-                _logger.Debug("{0} [{1}] Rejected, Album Exists in DB", report.AlbumMusicBrainzId, report.Album);
-                return;
-            }
-
             // Check to see if album excluded
             var excludedAlbum = listExclusions.SingleOrDefault(s => s.ForeignId == report.AlbumMusicBrainzId);
+
+            // Check to see if artist excluded
+            var excludedArtist = listExclusions.SingleOrDefault(s => s.ForeignId == report.ArtistMusicBrainzId);
 
             if (excludedAlbum != null)
             {
@@ -176,12 +173,36 @@ namespace NzbDrone.Core.ImportLists
                 return;
             }
 
-            // Check to see if artist excluded
-            var excludedArtist = listExclusions.SingleOrDefault(s => s.ForeignId == report.ArtistMusicBrainzId);
-
             if (excludedArtist != null)
             {
                 _logger.Debug("{0} [{1}] Rejected due to list exlcusion for parent artist", report.AlbumMusicBrainzId, report.Album);
+                return;
+            }
+
+            if (existingAlbum != null)
+            {
+                _logger.Debug("{0} [{1}] Rejected, Album Exists in DB.  Ensuring Album and Artist monitored.", report.AlbumMusicBrainzId, report.Album);
+
+                if (importList.ShouldMonitor != ImportListMonitorType.None)
+                {
+                    if (!existingAlbum.Monitored)
+                    {
+                        _albumService.SetAlbumMonitored(existingAlbum.Id, true);
+                    }
+
+                    var existingArtist = existingAlbum.Artist.Value;
+                    if (importList.ShouldMonitor == ImportListMonitorType.EntireArtist)
+                    {
+                        _albumService.SetMonitored(existingArtist.Albums.Value.Select(x => x.Id), true);
+                    }
+
+                    if (!existingArtist.Monitored)
+                    {
+                        existingArtist.Monitored = true;
+                        _artistService.UpdateArtist(existingArtist);
+                    }
+                }
+
                 return;
             }
 
@@ -242,18 +263,25 @@ namespace NzbDrone.Core.ImportLists
             // Check to see if artist in DB
             var existingArtist = _artistService.FindById(report.ArtistMusicBrainzId);
 
-            if (existingArtist != null)
-            {
-                _logger.Debug("{0} [{1}] Rejected, Artist Exists in DB", report.ArtistMusicBrainzId, report.Artist);
-                return;
-            }
-
             // Check to see if artist excluded
             var excludedArtist = listExclusions.Where(s => s.ForeignId == report.ArtistMusicBrainzId).SingleOrDefault();
 
             if (excludedArtist != null)
             {
                 _logger.Debug("{0} [{1}] Rejected due to list exlcusion", report.ArtistMusicBrainzId, report.Artist);
+                return;
+            }
+
+            if (existingArtist != null)
+            {
+                _logger.Debug("{0} [{1}] Rejected, Author Exists in DB.  Ensuring Author monitored", report.ArtistMusicBrainzId, report.Artist);
+
+                if (!existingArtist.Monitored)
+                {
+                    existingArtist.Monitored = true;
+                    _artistService.UpdateArtist(existingArtist);
+                }
+
                 return;
             }
 
