@@ -8,6 +8,7 @@ namespace NzbDrone.Core.ImportLists
         public bool EnableAutomaticAdd { get; set; }
         public ImportListMonitorType ShouldMonitor { get; set; }
         public NewItemMonitorTypes MonitorNewItems { get; set; }
+        public bool ShouldSearch { get; set; }
         public int ProfileId { get; set; }
         public int MetadataProfileId { get; set; }
         public string RootFolderPath { get; set; }
