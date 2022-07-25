@@ -30,21 +30,28 @@ namespace NzbDrone.Core.ImportLists.Lidarr
 
         public override IList<ImportListItemInfo> Fetch()
         {
-            var artists = new List<ImportListItemInfo>();
+            var artistsAndAlbums = new List<ImportListItemInfo>();
 
             try
             {
+                var remoteAlbums = _lidarrV1Proxy.GetAlbums(Settings);
                 var remoteArtists = _lidarrV1Proxy.GetArtists(Settings);
 
-                foreach (var remoteArtist in remoteArtists)
+                var artistDict = remoteArtists.ToDictionary(x => x.Id);
+
+                foreach (var remoteAlbum in remoteAlbums)
                 {
+                    var remoteArtist = remoteArtists[remoteAlbum.ArtistId];
                     if ((!Settings.ProfileIds.Any() || Settings.ProfileIds.Contains(remoteArtist.QualityProfileId)) &&
-                        (!Settings.TagIds.Any() || Settings.TagIds.Any(x => remoteArtist.Tags.Any(y => y == x))))
+                        (!Settings.TagIds.Any() || Settings.TagIds.Any(x => remoteArtist.Tags.Any(y => y == x))) &&
+                         remoteAlbum.Monitored && remoteArtist.Monitored)
                     {
-                        artists.Add(new ImportListItemInfo
+                        artistsAndAlbums.Add(new ImportListItemInfo
                         {
                             ArtistMusicBrainzId = remoteArtist.ForeignArtistId,
-                            Artist = remoteArtist.ArtistName
+                            Artist = remoteArtist.ArtistName,
+                            AlbumMusicBrainzId = remoteAlbum.ForeignAlbumId,
+                            Album = remoteAlbum.Title
                         });
                     }
                 }
@@ -56,7 +63,7 @@ namespace NzbDrone.Core.ImportLists.Lidarr
                 _importListStatusService.RecordFailure(Definition.Id);
             }
 
-            return CleanupListItems(artists);
+            return CleanupListItems(artistsAndAlbums);
         }
 
         public override object RequestAction(string action, IDictionary<string, string> query)
