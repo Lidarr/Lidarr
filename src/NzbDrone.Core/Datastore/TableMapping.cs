@@ -195,6 +195,11 @@ namespace NzbDrone.Core.Datastore
             Mapper.Entity<DownloadHistory>("DownloadHistory").RegisterModel();
 
             Mapper.Entity<UpdateHistory>("UpdateHistory").RegisterModel();
+
+            Mapper.Entity<Playlist>("Playlists").RegisterModel()
+                  .Ignore(p => p.Items);
+
+            Mapper.Entity<PlaylistEntry>("PlaylistEntries").RegisterModel();
         }
 
         private static void RegisterMappers()
