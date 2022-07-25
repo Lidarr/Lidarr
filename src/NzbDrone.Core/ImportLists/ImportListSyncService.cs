@@ -233,6 +233,7 @@ namespace NzbDrone.Core.ImportLists
                 var toAddArtist = new Artist
                 {
                     Monitored = monitored,
+                    MonitorNewItems = importList.MonitorNewItems,
                     RootFolderPath = importList.RootFolderPath,
                     QualityProfileId = importList.ProfileId,
                     MetadataProfileId = importList.MetadataProfileId,
