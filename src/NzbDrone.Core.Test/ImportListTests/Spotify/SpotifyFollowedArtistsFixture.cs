@@ -5,7 +5,6 @@ using NUnit.Framework;
 using NzbDrone.Core.ImportLists.Spotify;
 using NzbDrone.Core.Test.Framework;
 using SpotifyAPI.Web;
-using SpotifyAPI.Web.Models;
 
 namespace NzbDrone.Core.Test.ImportListTests
 {
@@ -13,15 +12,15 @@ namespace NzbDrone.Core.Test.ImportListTests
     public class SpotifyFollowedArtistsFixture : CoreTest<SpotifyFollowedArtists>
     {
         // placeholder, we don't use real API
-        private readonly SpotifyWebAPI _api = null;
+        private readonly SpotifyClient _api = null;
 
         [Test]
         public void should_not_throw_if_followed_is_null()
         {
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetFollowedArtists(It.IsAny<SpotifyFollowedArtists>(),
-                                                It.IsAny<SpotifyWebAPI>()))
-                .Returns(default(FollowedArtists));
+                                                It.IsAny<SpotifyClient>()))
+                .Returns(default(FollowedArtistsResponse));
 
             var result = Subject.Fetch(_api);
 
@@ -31,14 +30,14 @@ namespace NzbDrone.Core.Test.ImportListTests
         [Test]
         public void should_not_throw_if_followed_artists_is_null()
         {
-            var followed = new FollowedArtists
+            var followed = new FollowedArtistsResponse
             {
                 Artists = null
             };
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetFollowedArtists(It.IsAny<SpotifyFollowedArtists>(),
-                                                It.IsAny<SpotifyWebAPI>()))
+                                                It.IsAny<SpotifyClient>()))
                 .Returns(followed);
 
             var result = Subject.Fetch(_api);
@@ -49,9 +48,9 @@ namespace NzbDrone.Core.Test.ImportListTests
         [Test]
         public void should_not_throw_if_followed_artist_items_is_null()
         {
-            var followed = new FollowedArtists
+            var followed = new FollowedArtistsResponse
             {
-                Artists = new CursorPaging<FullArtist>
+                Artists = new CursorPaging<FullArtist, FollowedArtistsResponse>
                 {
                     Items = null
                 }
@@ -59,7 +58,7 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetFollowedArtists(It.IsAny<SpotifyFollowedArtists>(),
-                                                It.IsAny<SpotifyWebAPI>()))
+                                                It.IsAny<SpotifyClient>()))
                 .Returns(followed);
 
             var result = Subject.Fetch(_api);
@@ -71,9 +70,9 @@ namespace NzbDrone.Core.Test.ImportListTests
         [Test]
         public void should_not_throw_if_artist_is_null()
         {
-            var followed = new FollowedArtists
+            var followed = new FollowedArtistsResponse
             {
-                Artists = new CursorPaging<FullArtist>
+                Artists = new CursorPaging<FullArtist, FollowedArtistsResponse>
                 {
                     Items = new List<FullArtist>
                     {
@@ -84,7 +83,7 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetFollowedArtists(It.IsAny<SpotifyFollowedArtists>(),
-                                                It.IsAny<SpotifyWebAPI>()))
+                                                It.IsAny<SpotifyClient>()))
                 .Returns(followed);
 
             var result = Subject.Fetch(_api);
@@ -96,9 +95,9 @@ namespace NzbDrone.Core.Test.ImportListTests
         [Test]
         public void should_parse_followed_artist()
         {
-            var followed = new FollowedArtists
+            var followed = new FollowedArtistsResponse
             {
-                Artists = new CursorPaging<FullArtist>
+                Artists = new CursorPaging<FullArtist, FollowedArtistsResponse>
                 {
                     Items = new List<FullArtist>
                     {
@@ -112,7 +111,7 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetFollowedArtists(It.IsAny<SpotifyFollowedArtists>(),
-                                                It.IsAny<SpotifyWebAPI>()))
+                                                It.IsAny<SpotifyClient>()))
                 .Returns(followed);
 
             var result = Subject.Fetch(_api);
@@ -123,9 +122,9 @@ namespace NzbDrone.Core.Test.ImportListTests
         [Test]
         public void should_not_throw_if_get_next_page_returns_null()
         {
-            var followed = new FollowedArtists
+            var followed = new FollowedArtistsResponse
             {
-                Artists = new CursorPaging<FullArtist>
+                Artists = new CursorPaging<FullArtist, FollowedArtistsResponse>
                 {
                     Items = new List<FullArtist>
                     {
@@ -140,14 +139,14 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetFollowedArtists(It.IsAny<SpotifyFollowedArtists>(),
-                                                It.IsAny<SpotifyWebAPI>()))
+                                                It.IsAny<SpotifyClient>()))
                 .Returns(followed);
 
             Mocker.GetMock<ISpotifyProxy>()
                 .Setup(x => x.GetNextPage(It.IsAny<SpotifyFollowedArtists>(),
-                                          It.IsAny<SpotifyWebAPI>(),
-                                          It.IsAny<FollowedArtists>()))
-                .Returns(default(FollowedArtists));
+                                          It.IsAny<SpotifyClient>(),
+                                          It.IsAny<FollowedArtistsResponse>()))
+                .Returns(default(FollowedArtistsResponse));
 
             var result = Subject.Fetch(_api);
 
@@ -155,8 +154,8 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>()
                 .Verify(v => v.GetNextPage(It.IsAny<SpotifyFollowedArtists>(),
-                                           It.IsAny<SpotifyWebAPI>(),
-                                           It.IsAny<FollowedArtists>()),
+                                           It.IsAny<SpotifyClient>(),
+                                           It.IsAny<FollowedArtistsResponse>()),
                         Times.Once());
         }
 
@@ -164,9 +163,9 @@ namespace NzbDrone.Core.Test.ImportListTests
         [TestCase("")]
         public void should_skip_bad_artist_names(string name)
         {
-            var followed = new FollowedArtists
+            var followed = new FollowedArtistsResponse
             {
-                Artists = new CursorPaging<FullArtist>
+                Artists = new CursorPaging<FullArtist, FollowedArtistsResponse>
                 {
                     Items = new List<FullArtist>
                     {
@@ -180,7 +179,7 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetFollowedArtists(It.IsAny<SpotifyFollowedArtists>(),
-                                                It.IsAny<SpotifyWebAPI>()))
+                                                It.IsAny<SpotifyClient>()))
                 .Returns(followed);
 
             var result = Subject.Fetch(_api);

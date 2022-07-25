@@ -10,7 +10,6 @@ namespace NzbDrone.Core.ImportLists.Spotify
     {
         public SpotifySettingsBaseValidator()
         {
-            RuleFor(c => c.AccessToken).NotEmpty();
             RuleFor(c => c.RefreshToken).NotEmpty();
             RuleFor(c => c.Expires).NotEmpty();
         }

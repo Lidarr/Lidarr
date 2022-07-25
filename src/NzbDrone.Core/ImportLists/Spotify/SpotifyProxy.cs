@@ -1,28 +1,28 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using NLog;
 using SpotifyAPI.Web;
-using SpotifyAPI.Web.Enums;
-using SpotifyAPI.Web.Models;
 
 namespace NzbDrone.Core.ImportLists.Spotify
 {
     public interface ISpotifyProxy
     {
-        PrivateProfile GetPrivateProfile<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api)
+        PrivateUser GetPrivateProfile<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api)
             where TSettings : SpotifySettingsBase<TSettings>, new();
-        Paging<SimplePlaylist> GetUserPlaylists<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, string id)
+        Paging<SimplePlaylist> GetUserPlaylists<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api, string id)
             where TSettings : SpotifySettingsBase<TSettings>, new();
-        FollowedArtists GetFollowedArtists<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api)
+        FollowedArtistsResponse GetFollowedArtists<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api)
             where TSettings : SpotifySettingsBase<TSettings>, new();
-        Paging<SavedAlbum> GetSavedAlbums<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api)
+        Paging<SavedAlbum> GetSavedAlbums<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api)
             where TSettings : SpotifySettingsBase<TSettings>, new();
-        FullPlaylist GetPlaylist<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, string id, string fields)
+        FullPlaylist GetPlaylist<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api, string id, List<string> fields)
             where TSettings : SpotifySettingsBase<TSettings>, new();
-        Paging<T> GetNextPage<T, TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, Paging<T> item)
+        Paging<T> GetNextPage<T, TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api, Paging<T> item)
             where TSettings : SpotifySettingsBase<TSettings>, new();
-        FollowedArtists GetNextPage<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, FollowedArtists item)
+        FollowedArtistsResponse GetNextPage<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api, FollowedArtistsResponse item)
             where TSettings : SpotifySettingsBase<TSettings>, new();
-        SearchItem SearchItems<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, string query, SearchType type)
+        SearchResponse SearchItems<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api, string query, SearchRequest.Types type)
             where TSettings : SpotifySettingsBase<TSettings>, new();
     }
 
@@ -35,83 +35,64 @@ namespace NzbDrone.Core.ImportLists.Spotify
             _logger = logger;
         }
 
-        public PrivateProfile GetPrivateProfile<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api)
+        public PrivateUser GetPrivateProfile<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api)
             where TSettings : SpotifySettingsBase<TSettings>, new()
         {
-            return Execute(list, api, x => x.GetPrivateProfile());
+            return Execute(list, api, x => x.UserProfile.Current());
         }
 
-        public Paging<SimplePlaylist> GetUserPlaylists<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, string id)
+        public Paging<SimplePlaylist> GetUserPlaylists<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api, string id)
             where TSettings : SpotifySettingsBase<TSettings>, new()
         {
-            return Execute(list, api, x => x.GetUserPlaylists(id));
+            return Execute(list, api, x => x.Playlists.GetUsers(id));
         }
 
-        public FollowedArtists GetFollowedArtists<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api)
+        public FollowedArtistsResponse GetFollowedArtists<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api)
             where TSettings : SpotifySettingsBase<TSettings>, new()
         {
-            return Execute(list, api, x => x.GetFollowedArtists(FollowType.Artist, 50));
+            return Execute(list, api, x => x.Follow.OfCurrentUser(new FollowOfCurrentUserRequest { Limit = 50 }));
         }
 
-        public Paging<SavedAlbum> GetSavedAlbums<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api)
+        public Paging<SavedAlbum> GetSavedAlbums<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api)
             where TSettings : SpotifySettingsBase<TSettings>, new()
         {
-            return Execute(list, api, x => x.GetSavedAlbums(50));
+            return Execute(list, api, x => x.Library.GetAlbums(new LibraryAlbumsRequest { Limit = 50 }));
         }
 
-        public FullPlaylist GetPlaylist<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, string id, string fields)
+        public FullPlaylist GetPlaylist<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api, string id, List<string> fields)
             where TSettings : SpotifySettingsBase<TSettings>, new()
         {
-            return Execute(list, api, x => x.GetPlaylist(id, fields: fields));
-        }
-
-        public Paging<T> GetNextPage<T, TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, Paging<T> item)
-            where TSettings : SpotifySettingsBase<TSettings>, new()
-        {
-            return Execute(list, api, (x) => x.GetNextPage(item));
-        }
-
-        public FollowedArtists GetNextPage<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, FollowedArtists item)
-            where TSettings : SpotifySettingsBase<TSettings>, new()
-        {
-            return Execute(list, api, (x) => x.GetNextPage<FollowedArtists, FullArtist>(item.Artists));
-        }
-
-        public SearchItem SearchItems<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, string query, SearchType type)
-            where TSettings : SpotifySettingsBase<TSettings>, new()
-        {
-            return Execute(list, api, (x) => x.SearchItems(query, type));
-        }
-
-        public T Execute<T, TSettings>(SpotifyImportListBase<TSettings> list, SpotifyWebAPI api, Func<SpotifyWebAPI, T> method, bool allowReauth = true)
-            where T : BasicModel
-            where TSettings : SpotifySettingsBase<TSettings>, new()
-        {
-            T result = method(api);
-            if (result.HasError())
+            var request = new PlaylistGetRequest(PlaylistGetRequest.AdditionalTypes.Track);
+            foreach (var field in fields)
             {
-                // If unauthorized, refresh token and try again
-                if (result.Error.Status == 401)
-                {
-                    if (allowReauth)
-                    {
-                        _logger.Debug("Spotify authorization error, refreshing token and retrying");
-                        list.RefreshToken();
-                        api.AccessToken = list.AccessToken;
-                        return Execute(list, api, method, false);
-                    }
-                    else
-                    {
-                        throw new SpotifyAuthorizationException(result.Error.Message);
-                    }
-                }
-                else
-                {
-                    throw new SpotifyException("[{0}] {1}", result.Error.Status, result.Error.Message);
-                }
+                request.Fields.Add(field);
             }
 
-            return result;
+            return Execute(list, api, x => x.Playlists.Get(id, request));
+        }
+
+        public Paging<T> GetNextPage<T, TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api, Paging<T> item)
+            where TSettings : SpotifySettingsBase<TSettings>, new()
+        {
+            return Execute(list, api, (x) => x.NextPage(item));
+        }
+
+        public FollowedArtistsResponse GetNextPage<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api, FollowedArtistsResponse item)
+            where TSettings : SpotifySettingsBase<TSettings>, new()
+        {
+            return Execute(list, api, (x) => x.NextPage(item.Artists));
+        }
+
+        public SearchResponse SearchItems<TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api, string query, SearchRequest.Types type)
+            where TSettings : SpotifySettingsBase<TSettings>, new()
+        {
+            return Execute(list, api, (x) => x.Search.Item(new SearchRequest(type, query)));
+        }
+
+        public T Execute<T, TSettings>(SpotifyImportListBase<TSettings> list, SpotifyClient api, Func<SpotifyClient, Task<T>> method)
+            where TSettings : SpotifySettingsBase<TSettings>, new()
+        {
+            return method(api).GetAwaiter().GetResult();
         }
     }
 }

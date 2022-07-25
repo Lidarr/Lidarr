@@ -7,7 +7,6 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MetadataSource;
 using NzbDrone.Core.Parser;
 using SpotifyAPI.Web;
-using SpotifyAPI.Web.Models;
 
 namespace NzbDrone.Core.ImportLists.Spotify
 {
@@ -32,7 +31,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
         public override string Name => "Spotify Saved Albums";
 
-        public override IList<SpotifyImportListItemInfo> Fetch(SpotifyWebAPI api)
+        public override IList<SpotifyImportListItemInfo> Fetch(SpotifyClient api)
         {
             var result = new List<SpotifyImportListItemInfo>();
 
@@ -52,7 +51,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
                     result.AddIfNotNull(ParseSavedAlbum(savedAlbum));
                 }
 
-                if (!savedAlbums.HasNextPage())
+                if (savedAlbums.Next == null)
                 {
                     break;
                 }

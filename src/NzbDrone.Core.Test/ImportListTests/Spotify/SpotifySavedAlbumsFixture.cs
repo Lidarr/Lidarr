@@ -5,7 +5,6 @@ using NUnit.Framework;
 using NzbDrone.Core.ImportLists.Spotify;
 using NzbDrone.Core.Test.Framework;
 using SpotifyAPI.Web;
-using SpotifyAPI.Web.Models;
 
 namespace NzbDrone.Core.Test.ImportListTests
 {
@@ -13,14 +12,14 @@ namespace NzbDrone.Core.Test.ImportListTests
     public class SpotifySavedAlbumsFixture : CoreTest<SpotifySavedAlbums>
     {
         // placeholder, we don't use real API
-        private readonly SpotifyWebAPI _api = null;
+        private readonly SpotifyClient _api = null;
 
         [Test]
         public void should_not_throw_if_saved_albums_is_null()
         {
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetSavedAlbums(It.IsAny<SpotifySavedAlbums>(),
-                                                It.IsAny<SpotifyWebAPI>()))
+                                                It.IsAny<SpotifyClient>()))
                 .Returns(default(Paging<SavedAlbum>));
 
             var result = Subject.Fetch(_api);
@@ -38,7 +37,7 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetSavedAlbums(It.IsAny<SpotifySavedAlbums>(),
-                                                It.IsAny<SpotifyWebAPI>()))
+                                                It.IsAny<SpotifyClient>()))
                 .Returns(savedAlbums);
 
             var result = Subject.Fetch(_api);
@@ -59,7 +58,7 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetSavedAlbums(It.IsAny<SpotifySavedAlbums>(),
-                                                It.IsAny<SpotifyWebAPI>()))
+                                                It.IsAny<SpotifyClient>()))
                 .Returns(savedAlbums);
 
             var result = Subject.Fetch(_api);
@@ -93,7 +92,7 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetSavedAlbums(It.IsAny<SpotifySavedAlbums>(),
-                                                It.IsAny<SpotifyWebAPI>()))
+                                                It.IsAny<SpotifyClient>()))
                 .Returns(savedAlbums);
 
             var result = Subject.Fetch(_api);
@@ -128,12 +127,12 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetSavedAlbums(It.IsAny<SpotifySavedAlbums>(),
-                                                It.IsAny<SpotifyWebAPI>()))
+                                                It.IsAny<SpotifyClient>()))
                 .Returns(savedAlbums);
 
             Mocker.GetMock<ISpotifyProxy>()
                 .Setup(x => x.GetNextPage(It.IsAny<SpotifyFollowedArtists>(),
-                                          It.IsAny<SpotifyWebAPI>(),
+                                          It.IsAny<SpotifyClient>(),
                                           It.IsAny<Paging<SavedAlbum>>()))
                 .Returns(default(Paging<SavedAlbum>));
 
@@ -143,7 +142,7 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>()
                 .Verify(x => x.GetNextPage(It.IsAny<SpotifySavedAlbums>(),
-                                           It.IsAny<SpotifyWebAPI>(),
+                                           It.IsAny<SpotifyClient>(),
                                            It.IsAny<Paging<SavedAlbum>>()),
                         Times.Once());
         }
@@ -176,7 +175,7 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetSavedAlbums(It.IsAny<SpotifySavedAlbums>(),
-                                                It.IsAny<SpotifyWebAPI>()))
+                                                It.IsAny<SpotifyClient>()))
                 .Returns(savedAlbums);
 
             var result = Subject.Fetch(_api);

@@ -11,13 +11,12 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Validation;
 using SpotifyAPI.Web;
-using SpotifyAPI.Web.Enums;
-using SpotifyAPI.Web.Models;
 
 namespace NzbDrone.Core.ImportLists.Spotify
 {
     public class SpotifyPlaylist : SpotifyImportListBase<SpotifyPlaylistSettings>
     {
+        private readonly List<string> _fields = new () { "id", "name", "tracks.next", "tracks.items(track(type, name, artists(id, name), album(id, album_type, name, release_date, release_date_precision, artists(id, name))))" };
         private readonly IPlaylistService _playlistService;
 
         public SpotifyPlaylist(ISpotifyProxy spotifyProxy,
@@ -36,18 +35,18 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
         public override string Name => "Spotify Playlists";
 
-        public override IList<SpotifyImportListItemInfo> Fetch(SpotifyWebAPI api)
+        public override IList<SpotifyImportListItemInfo> Fetch(SpotifyClient api)
         {
             return Settings.PlaylistIds.SelectMany(x => Fetch(api, x)).ToList();
         }
 
-        public IList<SpotifyImportListItemInfo> Fetch(SpotifyWebAPI api, string playlistId)
+        public IList<SpotifyImportListItemInfo> Fetch(SpotifyClient api, string playlistId)
         {
             var result = new List<SpotifyImportListItemInfo>();
 
             _logger.Trace($"Processing playlist {playlistId}");
 
-            var playlist = _spotifyProxy.GetPlaylist(this, api, playlistId, "id, name, tracks.next, tracks.items(track(name, artists(id, name), album(id, album_type, name, release_date, release_date_precision, artists(id, name))))");
+            var playlist = _spotifyProxy.GetPlaylist(this, api, playlistId, _fields);
             var playlistTracks = playlist?.Tracks;
             int order = 0;
 
@@ -63,7 +62,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
                     result.AddIfNotNull(ParsePlaylistTrack(api, playlistTrack, playlistId, playlist.Name, ref order));
                 }
 
-                if (!playlistTracks.HasNextPage())
+                if (playlistTracks.Next == null)
                 {
                     break;
                 }
@@ -103,17 +102,19 @@ namespace NzbDrone.Core.ImportLists.Spotify
             }
         }
 
-        private SpotifyPlaylistItemInfo ParsePlaylistTrack(SpotifyWebAPI api, PlaylistTrack playlistTrack, string playlistId, string playlistName, ref int order)
+        private SpotifyPlaylistItemInfo ParsePlaylistTrack(SpotifyClient api, PlaylistTrack<IPlayableItem> playableItem, string playlistId, string playlistName, ref int order)
         {
+            var track = playableItem.Track as FullTrack;
+
             // From spotify docs: "Note, a track object may be null. This can happen if a track is no longer available."
-            if (playlistTrack?.Track?.Album == null)
+            if (track?.Album == null)
             {
                 return null;
             }
 
-            var album = playlistTrack.Track.Album;
-            var trackName = playlistTrack.Track.Name;
-            var artistName = album.Artists?.FirstOrDefault()?.Name ?? playlistTrack.Track?.Artists?.FirstOrDefault()?.Name;
+            var album = track.Album;
+            var trackName = track.Name;
+            var artistName = album.Artists?.FirstOrDefault()?.Name ?? track?.Artists?.FirstOrDefault()?.Name;
 
             if (artistName.IsNullOrWhiteSpace())
             {
@@ -124,10 +125,9 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
             if (album.AlbumType == "single")
             {
-                album = GetBestAlbum(api, artistName, trackName) ?? album;
+                album = GetBestAlbum(api, artistName, trackName, album.TotalTracks) ?? album;
+                _logger.Trace($"revised type: {album.AlbumType}");
             }
-
-            _logger.Trace($"revised type: {album.AlbumType}");
 
             var albumName = album.Name;
 
@@ -143,25 +143,41 @@ namespace NzbDrone.Core.ImportLists.Spotify
                 Album = album.Name,
                 AlbumSpotifyId = album.Id,
                 PlaylistTitle = playlistName,
-                TrackTitle = playlistTrack.Track.Name,
+                TrackTitle = track.Name,
                 Order = ++order,
                 ReleaseDate = ParseSpotifyDate(album.ReleaseDate, album.ReleaseDatePrecision)
             };
         }
 
-        private SimpleAlbum GetBestAlbum(SpotifyWebAPI api, string artistName, string trackName)
+        private SimpleAlbum GetBestAlbum(SpotifyClient api, string artistName, string trackName, int currentTrackCount)
         {
             _logger.Trace($"Finding full album for {artistName}: {trackName}");
-            var search = _spotifyProxy.SearchItems(this, api, $"artist:\"{artistName}\" track:\"{trackName}\"", SearchType.Track);
+            var search = _spotifyProxy.SearchItems(this, api, $"artist:\"{artistName}\" track:\"{trackName}\"", SearchRequest.Types.Track);
 
-            return search?.Tracks?.Items?.FirstOrDefault(x => x?.Album?.AlbumType == "album" && !(x?.Album?.Artists?.Any(a => a.Name == "Various Artists") ?? false))?.Album;
+            var result = search?.Tracks?.Items?.FirstOrDefault(x => x?.Album?.AlbumType == "album" && IsAcceptableAlbumOrSingle(x, artistName, trackName))?.Album ??
+                         search?.Tracks?.Items?.FirstOrDefault(x => x?.Album?.AlbumType == "single" && x.Album.TotalTracks > 3 && x.Album.TotalTracks > currentTrackCount && IsAcceptableAlbumOrSingle(x, artistName, trackName))?.Album;
+
+            if (result != null)
+            {
+                _logger.Trace($"Found {result.AlbumType} {result.Name} by {result.Artists.FirstOrDefault()?.Name}");
+            }
+
+            return result;
+        }
+
+        private bool IsAcceptableAlbumOrSingle(FullTrack x, string artistName, string trackName)
+        {
+            return x.Name == trackName &&
+                (x.Artists?.Any(a => a.Name == artistName) ?? false) &&
+                !(x.Album.Artists?.Any(a => a.Name == "Various Artists") ?? false) &&
+                ParseSpotifyDate(x?.Album.ReleaseDate, x.Album.ReleaseDatePrecision) <= DateTime.UtcNow;
         }
 
         public override object RequestAction(string action, IDictionary<string, string> query)
         {
             if (action == "getPlaylists")
             {
-                if (Settings.AccessToken.IsNullOrWhiteSpace())
+                if (Settings.RefreshToken.IsNullOrWhiteSpace())
                 {
                     return new
                     {
@@ -169,53 +185,51 @@ namespace NzbDrone.Core.ImportLists.Spotify
                     };
                 }
 
-                Settings.Validate().Filter("AccessToken").ThrowOnError();
+                Settings.Validate().Filter("RefreshToken").ThrowOnError();
 
-                using (var api = GetApi())
+                var api = GetApi();
+                try
                 {
-                    try
+                    var profile = _spotifyProxy.GetPrivateProfile(this, api);
+                    var playlistPage = _spotifyProxy.GetUserPlaylists(this, api, profile.Id);
+                    _logger.Trace($"Got {playlistPage.Total} playlists");
+
+                    var playlists = new List<SimplePlaylist>();
+                    while (true)
                     {
-                        var profile = _spotifyProxy.GetPrivateProfile(this, api);
-                        var playlistPage = _spotifyProxy.GetUserPlaylists(this, api, profile.Id);
-                        _logger.Trace($"Got {playlistPage.Total} playlists");
-
-                        var playlists = new List<SimplePlaylist>(playlistPage.Total);
-                        while (true)
+                        if (playlistPage == null)
                         {
-                            if (playlistPage == null)
-                            {
-                                break;
-                            }
-
-                            playlists.AddRange(playlistPage.Items);
-
-                            if (!playlistPage.HasNextPage())
-                            {
-                                break;
-                            }
-
-                            playlistPage = _spotifyProxy.GetNextPage(this, api, playlistPage);
+                            break;
                         }
 
-                        return new
+                        playlists.AddRange(playlistPage.Items);
+
+                        if (playlistPage.Next == null)
                         {
-                            options = new
-                            {
-                                user = profile.DisplayName,
-                                playlists = playlists.OrderBy(p => p.Name)
-                                    .Select(p => new
-                                    {
-                                        id = p.Id,
-                                        name = p.Name
-                                    })
-                            }
-                        };
+                            break;
+                        }
+
+                        playlistPage = _spotifyProxy.GetNextPage(this, api, playlistPage);
                     }
-                    catch (Exception ex)
+
+                    return new
                     {
-                        _logger.Warn(ex, "Error fetching playlists from Spotify");
-                        return new { };
-                    }
+                        options = new
+                        {
+                            user = profile.DisplayName,
+                            playlists = playlists.OrderBy(p => p.Name)
+                                .Select(p => new
+                                {
+                                    id = p.Id,
+                                    name = p.Name
+                                })
+                        }
+                    };
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "Error fetching playlists from Spotify");
+                    return new { };
                 }
             }
             else

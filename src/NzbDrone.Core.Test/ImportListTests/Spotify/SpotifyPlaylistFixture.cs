@@ -5,7 +5,6 @@ using NUnit.Framework;
 using NzbDrone.Core.ImportLists.Spotify;
 using NzbDrone.Core.Test.Framework;
 using SpotifyAPI.Web;
-using SpotifyAPI.Web.Models;
 
 namespace NzbDrone.Core.Test.ImportListTests
 {
@@ -13,16 +12,16 @@ namespace NzbDrone.Core.Test.ImportListTests
     public class SpotifyPlaylistFixture : CoreTest<SpotifyPlaylist>
     {
         // placeholder, we don't use real API
-        private readonly SpotifyWebAPI _api = null;
+        private readonly SpotifyClient _api = null;
 
         [Test]
         public void should_not_throw_if_playlist_tracks_is_null()
         {
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetPlaylist(It.IsAny<SpotifyPlaylist>(),
-                                         It.IsAny<SpotifyWebAPI>(),
+                                         It.IsAny<SpotifyClient>(),
                                          It.IsAny<string>(),
-                                         It.IsAny<string>()))
+                                         It.IsAny<List<string>>()))
                 .Returns(default(FullPlaylist));
 
             var result = Subject.Fetch(_api, "playlistid");
@@ -33,16 +32,16 @@ namespace NzbDrone.Core.Test.ImportListTests
         [Test]
         public void should_not_throw_if_playlist_tracks_items_is_null()
         {
-            var playlistTracks = new Paging<PlaylistTrack>
+            var playlistTracks = new Paging<PlaylistTrack<IPlayableItem>>
             {
                 Items = null
             };
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetPlaylist(It.IsAny<SpotifyPlaylist>(),
-                                         It.IsAny<SpotifyWebAPI>(),
+                                         It.IsAny<SpotifyClient>(),
                                          It.IsAny<string>(),
-                                         It.IsAny<string>()))
+                                         It.IsAny<List<string>>()))
                 .Returns(new FullPlaylist { Tracks = playlistTracks });
 
             var result = Subject.Fetch(_api, "playlistid");
@@ -53,9 +52,9 @@ namespace NzbDrone.Core.Test.ImportListTests
         [Test]
         public void should_not_throw_if_playlist_track_is_null()
         {
-            var playlistTracks = new Paging<PlaylistTrack>
+            var playlistTracks = new Paging<PlaylistTrack<IPlayableItem>>
             {
-                Items = new List<PlaylistTrack>
+                Items = new List<PlaylistTrack<IPlayableItem>>
                 {
                     null
                 }
@@ -63,9 +62,9 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetPlaylist(It.IsAny<SpotifyPlaylist>(),
-                                         It.IsAny<SpotifyWebAPI>(),
+                                         It.IsAny<SpotifyClient>(),
                                          It.IsAny<string>(),
-                                         It.IsAny<string>()))
+                                         It.IsAny<List<string>>()))
                 .Returns(new FullPlaylist { Tracks = playlistTracks });
 
             var result = Subject.Fetch(_api, "playlistid");
@@ -76,11 +75,11 @@ namespace NzbDrone.Core.Test.ImportListTests
         [Test]
         public void should_use_album_artist_when_it_exists()
         {
-            var playlistTracks = new Paging<PlaylistTrack>
+            var playlistTracks = new Paging<PlaylistTrack<IPlayableItem>>
             {
-                Items = new List<PlaylistTrack>
+                Items = new List<PlaylistTrack<IPlayableItem>>
                 {
-                    new PlaylistTrack
+                    new PlaylistTrack<IPlayableItem>
                     {
                         Track = new FullTrack
                         {
@@ -109,9 +108,9 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetPlaylist(It.IsAny<SpotifyPlaylist>(),
-                                         It.IsAny<SpotifyWebAPI>(),
+                                         It.IsAny<SpotifyClient>(),
                                          It.IsAny<string>(),
-                                         It.IsAny<string>()))
+                                         It.IsAny<List<string>>()))
                 .Returns(new FullPlaylist { Tracks = playlistTracks });
 
             var result = Subject.Fetch(_api, "playlistid");
@@ -123,11 +122,11 @@ namespace NzbDrone.Core.Test.ImportListTests
         [Test]
         public void should_fall_back_to_track_artist_if_album_artist_missing()
         {
-            var playlistTracks = new Paging<PlaylistTrack>
+            var playlistTracks = new Paging<PlaylistTrack<IPlayableItem>>
             {
-                Items = new List<PlaylistTrack>
+                Items = new List<PlaylistTrack<IPlayableItem>>
                 {
-                    new PlaylistTrack
+                    new PlaylistTrack<IPlayableItem>
                     {
                         Track = new FullTrack
                         {
@@ -156,9 +155,9 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetPlaylist(It.IsAny<SpotifyPlaylist>(),
-                                         It.IsAny<SpotifyWebAPI>(),
+                                         It.IsAny<SpotifyClient>(),
                                          It.IsAny<string>(),
-                                         It.IsAny<string>()))
+                                         It.IsAny<List<string>>()))
                 .Returns(new FullPlaylist { Tracks = playlistTracks });
 
             var result = Subject.Fetch(_api, "playlistid");
@@ -172,11 +171,11 @@ namespace NzbDrone.Core.Test.ImportListTests
         [TestCase(null, "TrackArtist", null)]
         public void should_skip_bad_artist_or_album_names(string albumArtistName, string trackArtistName, string albumName)
         {
-            var playlistTracks = new Paging<PlaylistTrack>
+            var playlistTracks = new Paging<PlaylistTrack<IPlayableItem>>
             {
-                Items = new List<PlaylistTrack>
+                Items = new List<PlaylistTrack<IPlayableItem>>
                 {
-                    new PlaylistTrack
+                    new PlaylistTrack<IPlayableItem>
                     {
                         Track = new FullTrack
                         {
@@ -205,9 +204,9 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetPlaylist(It.IsAny<SpotifyPlaylist>(),
-                                         It.IsAny<SpotifyWebAPI>(),
+                                         It.IsAny<SpotifyClient>(),
                                          It.IsAny<string>(),
-                                         It.IsAny<string>()))
+                                         It.IsAny<List<string>>()))
                 .Returns(new FullPlaylist { Tracks = playlistTracks });
 
             var result = Subject.Fetch(_api, "playlistid");
@@ -218,11 +217,11 @@ namespace NzbDrone.Core.Test.ImportListTests
         [Test]
         public void should_not_throw_if_get_next_page_returns_null()
         {
-            var playlistTracks = new Paging<PlaylistTrack>
+            var playlistTracks = new Paging<PlaylistTrack<IPlayableItem>>
             {
-                Items = new List<PlaylistTrack>
+                Items = new List<PlaylistTrack<IPlayableItem>>
                 {
-                    new PlaylistTrack
+                    new PlaylistTrack<IPlayableItem>
                     {
                         Track = new FullTrack
                         {
@@ -252,16 +251,16 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>().
                 Setup(x => x.GetPlaylist(It.IsAny<SpotifyPlaylist>(),
-                                         It.IsAny<SpotifyWebAPI>(),
+                                         It.IsAny<SpotifyClient>(),
                                          It.IsAny<string>(),
-                                         It.IsAny<string>()))
+                                         It.IsAny<List<string>>()))
                 .Returns(new FullPlaylist { Tracks = playlistTracks });
 
             Mocker.GetMock<ISpotifyProxy>()
                 .Setup(x => x.GetNextPage(It.IsAny<SpotifyFollowedArtists>(),
-                                          It.IsAny<SpotifyWebAPI>(),
-                                          It.IsAny<Paging<PlaylistTrack>>()))
-                .Returns(default(Paging<PlaylistTrack>));
+                                          It.IsAny<SpotifyClient>(),
+                                          It.IsAny<Paging<PlaylistTrack<IPlayableItem>>>()))
+                .Returns(default(Paging<PlaylistTrack<IPlayableItem>>));
 
             var result = Subject.Fetch(_api, "playlistid");
 
@@ -269,8 +268,8 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<ISpotifyProxy>()
                 .Verify(x => x.GetNextPage(It.IsAny<SpotifyPlaylist>(),
-                                           It.IsAny<SpotifyWebAPI>(),
-                                           It.IsAny<Paging<PlaylistTrack>>()),
+                                           It.IsAny<SpotifyClient>(),
+                                           It.IsAny<Paging<PlaylistTrack<IPlayableItem>>>()),
                         Times.Once());
         }
     }

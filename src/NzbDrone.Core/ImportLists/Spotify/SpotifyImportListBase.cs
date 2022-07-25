@@ -15,7 +15,6 @@ using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Validation;
 using SpotifyAPI.Web;
-using SpotifyAPI.Web.Models;
 
 namespace NzbDrone.Core.ImportLists.Spotify
 {
@@ -48,7 +47,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
         public string AccessToken => Settings.AccessToken;
 
-        public void RefreshToken()
+        public AuthorizationCodeRefreshResponse RefreshToken()
         {
             _logger.Trace("Refreshing Token");
 
@@ -60,52 +59,64 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
             try
             {
-                var response = _httpClient.Get<Token>(request);
+                var response = _httpClient.Get<SpotifyAuthorizationCodeRefreshResponse>(request);
 
-                if (response != null && response.Resource != null)
+                if (response?.Resource != null)
                 {
                     var token = response.Resource;
+
                     Settings.AccessToken = token.AccessToken;
-                    Settings.Expires = DateTime.UtcNow.AddSeconds(token.ExpiresIn);
-                    Settings.RefreshToken = token.RefreshToken != null ? token.RefreshToken : Settings.RefreshToken;
+                    Settings.Expires = token.CreatedAt.AddSeconds(token.ExpiresIn);
 
                     if (Definition.Id > 0)
                     {
                         _importListRepository.UpdateSettings((ImportListDefinition)Definition);
                     }
+
+                    return new AuthorizationCodeRefreshResponse
+                    {
+                        AccessToken = token.AccessToken,
+                        TokenType = token.TokenType,
+                        ExpiresIn = token.ExpiresIn,
+                        Scope = token.Scope
+                    };
                 }
             }
             catch (HttpException)
             {
                 _logger.Warn($"Error refreshing spotify access token");
             }
+
+            return null;
         }
 
-        public SpotifyWebAPI GetApi()
+        public SpotifyClient GetApi()
         {
-            Settings.Validate().Filter("AccessToken", "RefreshToken").ThrowOnError();
+            Settings.Validate().Filter("RefreshToken").ThrowOnError();
             _logger.Trace($"Access token expires at {Settings.Expires}");
 
-            if (Settings.Expires < DateTime.UtcNow.AddMinutes(5))
-            {
-                RefreshToken();
-            }
-
-            return new SpotifyWebAPI
+            var token = new AuthorizationCodeTokenResponse
             {
                 AccessToken = Settings.AccessToken,
+                ExpiresIn = (int)(Settings.Expires - DateTime.UtcNow).TotalSeconds,
+                RefreshToken = Settings.RefreshToken,
                 TokenType = "Bearer"
             };
+
+            var config = SpotifyClientConfig.CreateDefault()
+                .WithAuthenticator(new SpotifyAuthenticator(token, RefreshToken))
+                .WithRetryHandler(new SpotifyRetryHandler(token));
+
+            return new SpotifyClient(config);
         }
 
         public override IList<ImportListItemInfo> Fetch()
         {
             IList<SpotifyImportListItemInfo> releases;
-            using (var api = GetApi())
-            {
-                _logger.Debug("Starting spotify import list sync");
-                releases = Fetch(api);
-            }
+            var api = GetApi();
+
+            _logger.Debug("Starting spotify import list sync");
+            releases = Fetch(api);
 
             // map to musicbrainz ids
             releases = MapSpotifyReleases(releases);
@@ -115,7 +126,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
             return CleanupListItems(releases);
         }
 
-        public abstract IList<SpotifyImportListItemInfo> Fetch(SpotifyWebAPI api);
+        public abstract IList<SpotifyImportListItemInfo> Fetch(SpotifyClient api);
 
         protected DateTime ParseSpotifyDate(string date, string precision)
         {
@@ -134,7 +145,6 @@ namespace NzbDrone.Core.ImportLists.Spotify
                 case "month":
                     format = "yyyy-MM";
                     break;
-                case "day":
                 default:
                     format = "yyyy-MM-dd";
                     break;
@@ -307,12 +317,10 @@ namespace NzbDrone.Core.ImportLists.Spotify
         {
             try
             {
-                using (var api = GetApi())
-                {
-                    var profile = _spotifyProxy.GetPrivateProfile(this, api);
-                    _logger.Debug($"Connected to spotify profile {profile.DisplayName} [{profile.Id}]");
-                    return null;
-                }
+                var api = GetApi();
+                var profile = _spotifyProxy.GetPrivateProfile(this, api);
+                _logger.Debug($"Connected to spotify profile {profile.DisplayName} [{profile.Id}]");
+                return null;
             }
             catch (SpotifyAuthorizationException ex)
             {

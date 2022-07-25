@@ -6,7 +6,6 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MetadataSource;
 using NzbDrone.Core.Parser;
 using SpotifyAPI.Web;
-using SpotifyAPI.Web.Models;
 
 namespace NzbDrone.Core.ImportLists.Spotify
 {
@@ -31,7 +30,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
         public override string Name => "Spotify Followed Artists";
 
-        public override IList<SpotifyImportListItemInfo> Fetch(SpotifyWebAPI api)
+        public override IList<SpotifyImportListItemInfo> Fetch(SpotifyClient api)
         {
             var result = new List<SpotifyImportListItemInfo>();
 
@@ -50,7 +49,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
                     result.AddIfNotNull(ParseFullArtist(artist));
                 }
 
-                if (!artists.HasNext())
+                if (artists.Next == null)
                 {
                     break;
                 }
