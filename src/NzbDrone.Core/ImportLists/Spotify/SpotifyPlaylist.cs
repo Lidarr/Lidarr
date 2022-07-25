@@ -104,7 +104,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
         private SpotifyPlaylistItemInfo ParsePlaylistTrack(SpotifyClient api, PlaylistTrack<IPlayableItem> playableItem, string playlistId, string playlistName, ref int order)
         {
-            var track = playableItem.Track as FullTrack;
+            var track = playableItem?.Track as FullTrack;
 
             // From spotify docs: "Note, a track object may be null. This can happen if a track is no longer available."
             if (track?.Album == null)
