@@ -149,7 +149,7 @@ namespace NzbDrone.Test.Common.AutoMoq
         private DelegateFactory GetMockFactory(Type serviceType)
         {
             var mockType = typeof(Mock<>).MakeGenericType(serviceType);
-            return new DelegateFactory(r =>
+            return DelegateFactory.Of(r =>
             {
                 var mock = (Mock)r.Resolve(mockType);
                 SetMock(serviceType, mock);
