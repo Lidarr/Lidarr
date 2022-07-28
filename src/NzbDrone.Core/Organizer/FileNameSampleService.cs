@@ -34,12 +34,14 @@ namespace NzbDrone.Core.Organizer
             {
                 Name = "The Artist Name",
                 Disambiguation = "US Rock Band",
-                Genres = new List<string> { "Pop" }
+                Genres = new List<string> { "Pop" },
+                ForeignArtistId = "db92a151-1ac2-438b-bc43-b82e149ddd50"
             };
 
             _standardArtist = new Artist
             {
-                Metadata = artistMetadata
+                Metadata = artistMetadata,
+                ForeignArtistId = artistMetadata.ForeignArtistId,
             };
 
             _standardAlbum = new Album
@@ -48,7 +50,8 @@ namespace NzbDrone.Core.Organizer
                 ReleaseDate = System.DateTime.Today,
                 AlbumType = "Album",
                 Disambiguation = "The Best Album",
-                Genres = new List<string> { "Rock" }
+                Genres = new List<string> { "Rock" },
+                ForeignAlbumId = "082c6aff-a7cc-36e0-a960-35a578ecd937"
             };
 
             _singleRelease = new AlbumRelease
