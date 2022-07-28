@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
         private AlbumRelease _release;
         private Track _track1;
         private Track _mixTrack1;
+        private Track _unknownTrack;
         private TrackFile _trackFile;
         private NamingConfig _namingConfig;
 
@@ -41,6 +43,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
                         Name = "Linkin Park",
                         Genres = new List<string> { "Rock" }
                     })
+                    .With(s => s.ForeignArtistId = Guid.NewGuid().ToString())
                     .Build();
 
             _variousArtists = Builder<Artist>
@@ -50,6 +53,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
                 {
                     Name = "Various Artists"
                 })
+                .With(s => s.ForeignArtistId = null)
                 .Build();
 
             _medium = Builder<Medium>
@@ -69,12 +73,14 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
                 .With(s => s.AlbumType = "Album")
                 .With(s => s.Disambiguation = "The Best Album")
                 .With(s => s.Genres = new List<string> { "Rock" })
+                .With(s => s.ForeignAlbumId = Guid.NewGuid().ToString())
                 .Build();
 
             _mixAlbum = Builder<Album>
                 .CreateNew()
                 .With(s => s.Title = "Cool Music")
                 .With(s => s.AlbumType = "Album")
+                .With(s => s.ForeignAlbumId = null)
                 .Build();
 
             _namingConfig = NamingConfig.Default;
@@ -97,6 +103,13 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
                 .With(e => e.AlbumRelease = _release)
                 .With(e => e.MediumNumber = _medium.Number)
                 .With(e => e.ArtistMetadata = _artist.Metadata)
+                .Build();
+
+            _unknownTrack = Builder<Track>.CreateNew()
+                .With(e => e.Title = "(Intermission)")
+                .With(e => e.AbsoluteTrackNumber = 3)
+                .With(e => e.AlbumRelease = _release)
+                .With(e => e.MediumNumber = _medium.Number)
                 .Build();
 
             _trackFile = Builder<TrackFile>.CreateNew()
@@ -222,6 +235,24 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
         }
 
         [Test]
+        public void should_replace_Artist_space_MbId()
+        {
+            _namingConfig.StandardTrackFormat = "{Artist MbId}";
+
+            Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
+                   .Should().Be(_artist.ForeignArtistId);
+        }
+
+        [Test]
+        public void should_replace_Artist_MbId_null()
+        {
+            _namingConfig.StandardTrackFormat = "{Artist MbId}";
+
+            Subject.BuildTrackFileName(new List<Track> { _track1 }, _variousArtists, _mixAlbum, _trackFile)
+                   .Should().Be(string.Empty);
+        }
+
+        [Test]
         public void should_replace_Album_space_Title()
         {
             _namingConfig.StandardTrackFormat = "{Album Title}";
@@ -322,6 +353,24 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
         }
 
         [Test]
+        public void should_replace_Album_space_MbId()
+        {
+            _namingConfig.StandardTrackFormat = "{Album MbId}";
+
+            Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
+                   .Should().Be(_album.ForeignAlbumId);
+        }
+
+        [Test]
+        public void should_replace_Album_MbId_null()
+        {
+            _namingConfig.StandardTrackFormat = "{Album MbId}";
+
+            Subject.BuildTrackFileName(new List<Track> { _track1 }, _variousArtists, _mixAlbum, _trackFile)
+                   .Should().Be(string.Empty);
+        }
+
+        [Test]
         public void should_replace_track_title()
         {
             _namingConfig.StandardTrackFormat = "{Track Title}";
@@ -357,6 +406,24 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
 
             Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
                    .Should().Be("01");
+        }
+
+        [Test]
+        public void should_replace_Track_space_Artist_MbId()
+        {
+            _namingConfig.StandardTrackFormat = "{Track ArtistMbId}";
+
+            Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
+                   .Should().Be(_track1.ArtistMetadata?.Value?.ForeignArtistId);
+        }
+
+        [Test]
+        public void should_replace_Track_Artist_MbId_null()
+        {
+            _namingConfig.StandardTrackFormat = "{Track ArtistMbId}";
+
+            Subject.BuildTrackFileName(new List<Track> { _unknownTrack }, _variousArtists, _mixAlbum, _trackFile)
+                   .Should().Be(string.Empty);
         }
 
         [Test]

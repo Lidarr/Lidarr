@@ -49,7 +49,9 @@ const artistTokens = [
 
   { token: '{Artist Disambiguation}', example: 'Disambiguation' },
 
-  { token: '{Artist Genre}', example: 'Pop' }
+  { token: '{Artist Genre}', example: 'Pop' },
+
+  { token: '{Artist MbId}', example: 'db92a151-1ac2-438b-bc43-b82e149ddd50' }
 ];
 
 const albumTokens = [
@@ -63,7 +65,9 @@ const albumTokens = [
 
   { token: '{Album Disambiguation}', example: 'Disambiguation' },
 
-  { token: '{Album Genre}', example: 'Rock' }
+  { token: '{Album Genre}', example: 'Rock' },
+
+  { token: '{Album MbId}', example: '082c6aff-a7cc-36e0-a960-35a578ecd937' }
 ];
 
 const mediumTokens = [
@@ -92,7 +96,8 @@ const trackTitleTokens = [
 const trackArtistTokens = [
   { token: '{Track ArtistName}', example: 'Artist Name' },
   { token: '{Track ArtistNameThe}', example: 'Artist Name, The' },
-  { token: '{Track ArtistCleanName}', example: 'Artist Name' }
+  { token: '{Track ArtistCleanName}', example: 'Artist Name' },
+  { token: '{Track ArtistMbId}', example: 'db92a151-1ac2-438b-bc43-b82e149ddd50' }
 ];
 
 const qualityTokens = [
