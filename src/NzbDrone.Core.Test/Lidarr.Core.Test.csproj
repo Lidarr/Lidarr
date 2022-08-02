@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NBuilder" Version="6.1.0" />
-    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="13.2.29" />
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="17.0.24" />
     <PackageReference Include="AutoFixture" Version="4.17.0" />
   </ItemGroup>
   <ItemGroup>
