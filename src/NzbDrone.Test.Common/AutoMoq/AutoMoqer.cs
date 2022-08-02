@@ -109,6 +109,11 @@ namespace NzbDrone.Test.Common.AutoMoq
                             return null;
                         }
 
+                        if (serviceType == typeof(System.Text.Json.Serialization.JsonConverter))
+                        {
+                            return null;
+                        }
+
                         // get the Mock object for the abstract class or interface
                         if (serviceType.IsInterface || serviceType.IsAbstract)
                         {
@@ -149,7 +154,7 @@ namespace NzbDrone.Test.Common.AutoMoq
         private DelegateFactory GetMockFactory(Type serviceType)
         {
             var mockType = typeof(Mock<>).MakeGenericType(serviceType);
-            return new DelegateFactory(r =>
+            return DelegateFactory.Of(r =>
             {
                 var mock = (Mock)r.Resolve(mockType);
                 SetMock(serviceType, mock);
