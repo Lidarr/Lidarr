@@ -168,12 +168,12 @@ function EditIndexerModalContent(props) {
                 advancedSettings={advancedSettings}
                 isAdvanced={true}
               >
-                <FormLabel>DownloadClient</FormLabel>
+                <FormLabel>{translate('DownloadClient')}</FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.DOWNLOAD_CLIENT_SELECT}
                   name="downloadClientId"
-                  helpText={'Specify which download client is used for grabs from this indexer'}
+                  helpText={translate('IndexerDownloadClientHelpText')}
                   {...downloadClientId}
                   includeAny={true}
                   protocol={protocol.value}

@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import TextInput from 'Components/Form/TextInput';
 import Icon from 'Components/Icon';
 import Button from 'Components/Link/Button';
-import Link from 'Components/Link/Link';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
@@ -166,11 +165,11 @@ class AddNewItem extends Component {
           {
             !isFetching && !error && !items.length && !!term &&
               <div className={styles.message}>
-                <div className={styles.noResults}>Couldn't find any results for '{term}'</div>
+                <div className={styles.noResults}>
+                  {translate('CouldntFindAnyResultsForTerm', [term])}
+                </div>
                 <div>
-                  You can also search using the
-                  <Link to="https://musicbrainz.org/search"> MusicBrainz ID </Link>
-                  of an artist or release group e.g. lidarr:cc197bad-dc9c-440d-a5b5-d52ba2e14234
+                  {translate('YouCanAlsoSearch')}
                 </div>
               </div>
           }
@@ -178,11 +177,11 @@ class AddNewItem extends Component {
           {
             !term &&
               <div className={styles.message}>
-                <div className={styles.helpText}>It's easy to add a new artist, just start typing the name of the artist you want to add.</div>
+                <div className={styles.helpText}>
+                  {translate('ItsEasyToAddANewArtistJustStartTypingTheNameOfTheArtistYouWantToAdd')}
+                </div>
                 <div>
-                  You can also search using the
-                  <Link to="https://musicbrainz.org/search"> MusicBrainz ID </Link>
-                  of an artist e.g. lidarr:cc197bad-dc9c-440d-a5b5-d52ba2e14234
+                  {translate('YouCanAlsoSearchArtist')}
                 </div>
               </div>
           }

@@ -8,42 +8,42 @@ function ArtistMonitoringOptionsPopoverContent() {
   return (
     <>
       <Alert>
-        This is a one time adjustment to set which albums are monitored
+        {translate('MonitorOneTimeAdjustmentAlert')}
       </Alert>
       <DescriptionList>
         <DescriptionListItem
           title={translate('AllAlbums')}
-          data={translate('AllAlbumsData')}
+          data={translate('MonitorAllAlbumsData')}
         />
 
         <DescriptionListItem
           title={translate('FutureAlbums')}
-          data={translate('FutureAlbumsData')}
+          data={translate('MonitorFutureAlbumsData')}
         />
 
         <DescriptionListItem
           title={translate('MissingAlbums')}
-          data={translate('MissingAlbumsData')}
+          data={translate('MonitorMissingAlbumsData')}
         />
 
         <DescriptionListItem
           title={translate('ExistingAlbums')}
-          data={translate('ExistingAlbumsData')}
+          data={translate('MonitorExistingAlbumsData')}
         />
 
         <DescriptionListItem
           title={translate('FirstAlbum')}
-          data={translate('FirstAlbumData')}
+          data={translate('MonitorFirstAlbumData')}
         />
 
         <DescriptionListItem
           title={translate('LatestAlbum')}
-          data={translate('LatestAlbumData')}
+          data={translate('MonitorLatestAlbumData')}
         />
 
         <DescriptionListItem
           title={translate('None')}
-          data={translate('NoneData')}
+          data={translate('MonitorNoneData')}
         />
       </DescriptionList>
     </>
