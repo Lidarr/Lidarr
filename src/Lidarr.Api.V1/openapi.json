@@ -10484,6 +10484,12 @@
           "shouldMonitor": {
             "$ref": "#/components/schemas/ImportListMonitorType"
           },
+          "shouldMonitorExisting": {
+            "type": "boolean"
+          },
+          "shouldSearch": {
+            "type": "boolean"
+          },
           "rootFolderPath": {
             "type": "string",
             "nullable": true
