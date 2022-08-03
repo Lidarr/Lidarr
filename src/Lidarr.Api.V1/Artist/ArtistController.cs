@@ -31,6 +31,7 @@ namespace Lidarr.Api.V1.Artist
                                 IHandle<AlbumEditedEvent>,
                                 IHandle<AlbumDeletedEvent>,
                                 IHandle<TrackFileDeletedEvent>,
+                                IHandle<ArtistAddedEvent>,
                                 IHandle<ArtistUpdatedEvent>,
                                 IHandle<ArtistEditedEvent>,
                                 IHandle<ArtistsDeletedEvent>,
@@ -282,6 +283,12 @@ namespace Lidarr.Api.V1.Artist
             }
 
             BroadcastResourceChange(ModelAction.Updated, GetArtistResource(message.TrackFile.Artist.Value));
+        }
+
+        [NonAction]
+        public void Handle(ArtistAddedEvent message)
+        {
+            BroadcastResourceChange(ModelAction.Updated, GetArtistResource(message.Artist));
         }
 
         [NonAction]
