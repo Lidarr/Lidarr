@@ -14,6 +14,7 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.MetadataSource;
 using NzbDrone.Core.Music.Commands;
 using NzbDrone.Core.Music.Events;
+using NzbDrone.Core.RootFolders;
 
 namespace NzbDrone.Core.Music
 {
@@ -27,6 +28,7 @@ namespace NzbDrone.Core.Music
     {
         private readonly IAlbumService _albumService;
         private readonly IArtistService _artistService;
+        private readonly IRootFolderService _rootFolderService;
         private readonly IAddArtistService _addArtistService;
         private readonly IReleaseService _releaseService;
         private readonly IProvideAlbumInfo _albumInfo;
@@ -41,6 +43,7 @@ namespace NzbDrone.Core.Music
 
         public RefreshAlbumService(IAlbumService albumService,
                                    IArtistService artistService,
+                                   IRootFolderService rootFolderService,
                                    IAddArtistService addArtistService,
                                    IArtistMetadataService artistMetadataService,
                                    IReleaseService releaseService,
@@ -57,6 +60,7 @@ namespace NzbDrone.Core.Music
         {
             _albumService = albumService;
             _artistService = artistService;
+            _rootFolderService = rootFolderService;
             _addArtistService = addArtistService;
             _releaseService = releaseService;
             _albumInfo = albumInfo;
@@ -123,7 +127,7 @@ namespace NzbDrone.Core.Music
                     Metadata = remote.ArtistMetadata.Value,
                     MetadataProfileId = oldArtist.MetadataProfileId,
                     QualityProfileId = oldArtist.QualityProfileId,
-                    RootFolderPath = oldArtist.RootFolderPath,
+                    RootFolderPath = _rootFolderService.GetBestRootFolderPath(oldArtist.Path),
                     Monitored = oldArtist.Monitored,
                     Tags = oldArtist.Tags
                 };

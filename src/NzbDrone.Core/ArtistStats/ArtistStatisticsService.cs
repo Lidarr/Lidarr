@@ -15,12 +15,14 @@ namespace NzbDrone.Core.ArtistStats
     }
 
     public class ArtistStatisticsService : IArtistStatisticsService,
+        IHandle<ArtistAddedEvent>,
         IHandle<ArtistUpdatedEvent>,
         IHandle<ArtistsDeletedEvent>,
         IHandle<AlbumAddedEvent>,
         IHandle<AlbumDeletedEvent>,
         IHandle<AlbumImportedEvent>,
         IHandle<AlbumEditedEvent>,
+        IHandle<AlbumUpdatedEvent>,
         IHandle<TrackFileDeletedEvent>
     {
         private readonly IArtistStatisticsRepository _artistStatisticsRepository;
@@ -69,6 +71,13 @@ namespace NzbDrone.Core.ArtistStats
         }
 
         [EventHandleOrder(EventHandleOrder.First)]
+        public void Handle(ArtistAddedEvent message)
+        {
+            _cache.Remove("AllArtists");
+            _cache.Remove(message.Artist.Id.ToString());
+        }
+
+        [EventHandleOrder(EventHandleOrder.First)]
         public void Handle(ArtistUpdatedEvent message)
         {
             _cache.Remove("AllArtists");
@@ -109,6 +118,13 @@ namespace NzbDrone.Core.ArtistStats
 
         [EventHandleOrder(EventHandleOrder.First)]
         public void Handle(AlbumEditedEvent message)
+        {
+            _cache.Remove("AllArtists");
+            _cache.Remove(message.Album.ArtistId.ToString());
+        }
+
+        [EventHandleOrder(EventHandleOrder.First)]
+        public void Handle(AlbumUpdatedEvent message)
         {
             _cache.Remove("AllArtists");
             _cache.Remove(message.Album.ArtistId.ToString());
