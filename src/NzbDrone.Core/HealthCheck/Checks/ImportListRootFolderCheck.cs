@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Common.Disk;
-using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.ImportLists;
 using NzbDrone.Core.Localization;
@@ -33,8 +31,6 @@ namespace NzbDrone.Core.HealthCheck.Checks
         {
             var importLists = _importListFactory.All();
             var missingRootFolders = new Dictionary<string, List<ImportListDefinition>>();
-
-            Console.WriteLine(importLists.ToArray().ToJson());
 
             foreach (var importList in importLists)
             {

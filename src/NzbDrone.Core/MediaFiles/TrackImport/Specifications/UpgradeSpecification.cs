@@ -24,18 +24,18 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
             _logger = logger;
         }
 
-        public Decision IsSatisfiedBy(LocalTrack item, DownloadClientItem downloadClientItem)
+        public Decision IsSatisfiedBy(LocalTrack localTrack, DownloadClientItem downloadClientItem)
         {
-            if (!item.Tracks.Any(e => e.TrackFileId > 0))
+            if (!localTrack.Tracks.Any(e => e.TrackFileId > 0))
             {
                 // No existing tracks, skip.  This guards against new artists not having a QualityProfile.
                 return Decision.Accept();
             }
 
             var downloadPropersAndRepacks = _configService.DownloadPropersAndRepacks;
-            var qualityComparer = new QualityModelComparer(item.Artist.QualityProfile);
+            var qualityComparer = new QualityModelComparer(localTrack.Artist.QualityProfile);
 
-            foreach (var track in item.Tracks.Where(e => e.TrackFileId > 0))
+            foreach (var track in localTrack.Tracks.Where(e => e.TrackFileId > 0))
             {
                 var trackFile = track.TrackFile.Value;
 
@@ -45,18 +45,18 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
                     continue;
                 }
 
-                var qualityCompare = qualityComparer.Compare(item.Quality.Quality, trackFile.Quality.Quality);
+                var qualityCompare = qualityComparer.Compare(localTrack.Quality.Quality, trackFile.Quality.Quality);
 
                 if (qualityCompare < 0)
                 {
-                    _logger.Debug("This file isn't a quality upgrade for all tracks. Skipping {0}", item.Path);
-                    return Decision.Reject("Not an upgrade for existing track file(s)");
+                    _logger.Debug("This file isn't a quality upgrade for all tracks. New Quality is {0}. Skipping {1}", localTrack.Quality.Quality, localTrack.Path);
+                    return Decision.Reject("Not an upgrade for existing track file(s). New Quality is {0}", localTrack.Quality.Quality);
                 }
 
                 if (qualityCompare == 0 && downloadPropersAndRepacks != ProperDownloadTypes.DoNotPrefer &&
-                    item.Quality.Revision.CompareTo(trackFile.Quality.Revision) < 0)
+                    localTrack.Quality.Revision.CompareTo(trackFile.Quality.Revision) < 0)
                 {
-                    _logger.Debug("This file isn't a quality upgrade for all tracks. Skipping {0}", item.Path);
+                    _logger.Debug("This file isn't a quality upgrade for all tracks. Skipping {0}", localTrack.Path);
                     return Decision.Reject("Not an upgrade for existing track file(s)");
                 }
             }
