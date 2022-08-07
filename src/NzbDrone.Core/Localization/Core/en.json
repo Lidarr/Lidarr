@@ -41,6 +41,8 @@
   "APIKey": "API Key",
   "ApiKeyHelpTextWarning": "Requires restart to take effect",
   "AppDataDirectory": "AppData directory",
+  "ApplicationURL": "Application URL",
+  "ApplicationUrlHelpText": "This application's external URL including http(s)://, port and URL base",
   "ApplyTags": "Apply Tags",
   "ApplyTagsHelpTexts1": "How to apply tags to the selected artist",
   "ApplyTagsHelpTexts2": "Add: Add the tags the existing list of tags",
