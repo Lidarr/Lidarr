@@ -21,6 +21,7 @@ function HostSettings(props) {
     port,
     urlBase,
     instanceName,
+    applicationUrl,
     enableSsl,
     sslPort,
     sslCertPath,
@@ -93,6 +94,21 @@ function HostSettings(props) {
           helpTextWarning={translate('RestartRequiredHelpTextWarning')}
           onChange={onInputChange}
           {...instanceName}
+        />
+      </FormGroup>
+
+      <FormGroup
+        advancedSettings={advancedSettings}
+        isAdvanced={true}
+      >
+        <FormLabel>Application URL</FormLabel>
+
+        <FormInputGroup
+          type={inputTypes.TEXT}
+          name="applicationUrl"
+          helpText="This application's external URL including http(s)://, port and URL base"
+          onChange={onInputChange}
+          {...applicationUrl}
         />
       </FormGroup>
 
