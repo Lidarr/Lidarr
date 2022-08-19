@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                     Name = "Music",
                     Subcategories = new List<NewznabCategory>
                     {
-                        new NewznabCategory { Id = 3040, Name = "Loseless" },
+                        new NewznabCategory { Id = 3040, Name = "Lossless" },
                         new NewznabCategory { Id = 3010, Name = "MP3" },
                         new NewznabCategory { Id = 3050, Name = "Other" },
                         new NewznabCategory { Id = 3030, Name = "Audiobook" }
