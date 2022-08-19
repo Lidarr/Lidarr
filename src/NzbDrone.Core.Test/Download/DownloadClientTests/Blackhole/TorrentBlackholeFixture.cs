@@ -104,7 +104,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
             torrentInfo.Title = remoteAlbum.Release.Title;
             torrentInfo.DownloadUrl = remoteAlbum.Release.DownloadUrl;
             torrentInfo.DownloadProtocol = remoteAlbum.Release.DownloadProtocol;
-            torrentInfo.MagnetUrl = "magnet:?xt=urn:btih:755248817d32b00cc853e633ecdc48e4c21bff15&dn=Artist.Album.FLAC.loseless-DEFiNE%5Brartv%5D&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710&tr=udp%3A%2F%2F9.rarbg.to%3A2710";
+            torrentInfo.MagnetUrl = "magnet:?xt=urn:btih:755248817d32b00cc853e633ecdc48e4c21bff15&dn=Artist.Album.FLAC.lossless-DEFiNE%5Brartv%5D&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710&tr=udp%3A%2F%2F9.rarbg.to%3A2710";
 
             remoteAlbum.Release = torrentInfo;
 
