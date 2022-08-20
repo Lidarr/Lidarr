@@ -285,9 +285,9 @@ namespace NzbDrone.Core.MediaFiles
 
                 return new List<ImportResult>
                        {
-                           new ImportResult(new ImportDecision(new LocalEpisode { Path = fileInfo.FullName },
-                               new Rejection($"Invalid video file, unsupported extension: '{extension}'")),
-                               $"Invalid video file, unsupported extension: '{extension}'")
+                           new ImportResult(new ImportDecision(new LocalTrack { Path = fileInfo.FullName },
+                               new Rejection($"Invalid audio file, unsupported extension: '{extension}'")),
+                               $"Invalid audio file, unsupported extension: '{extension}'")
                        };
             }
 
