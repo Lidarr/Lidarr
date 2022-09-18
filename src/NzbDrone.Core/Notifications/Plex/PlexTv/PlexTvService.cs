@@ -1,6 +1,8 @@
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using NzbDrone.Common.Cache;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
@@ -12,17 +14,20 @@ namespace NzbDrone.Core.Notifications.Plex.PlexTv
         PlexTvPinUrlResponse GetPinUrl();
         PlexTvSignInUrlResponse GetSignInUrl(string callbackUrl, int pinId, string pinCode);
         string GetAuthToken(int pinId);
+        void Ping(string authToken);
     }
 
     public class PlexTvService : IPlexTvService
     {
         private readonly IPlexTvProxy _proxy;
         private readonly IConfigService _configService;
+        private readonly ICached<bool> _cache;
 
-        public PlexTvService(IPlexTvProxy proxy, IConfigService configService)
+        public PlexTvService(IPlexTvProxy proxy, IConfigService configService, ICacheManager cacheManager)
         {
             _proxy = proxy;
             _configService = configService;
+            _cache = cacheManager.GetCache<bool>(GetType());
         }
 
         public PlexTvPinUrlResponse GetPinUrl()
@@ -80,6 +85,12 @@ namespace NzbDrone.Core.Notifications.Plex.PlexTv
             var authToken = _proxy.GetAuthToken(_configService.PlexClientIdentifier, pinId);
 
             return authToken;
+        }
+
+        public void Ping(string authToken)
+        {
+            // Ping plex.tv if we haven't done so in the last 24 hours for this auth token.
+            _cache.Get(authToken, () => _proxy.Ping(_configService.PlexClientIdentifier, authToken), TimeSpan.FromHours(24));
         }
     }
 }
