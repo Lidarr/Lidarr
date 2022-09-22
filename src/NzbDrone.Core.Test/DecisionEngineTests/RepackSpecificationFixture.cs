@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
@@ -243,6 +245,89 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
                    .Accepted
                    .Should()
                    .BeFalse();
+        }
+
+        [Test]
+        public void should_return_true_when_repacks_are_not_preferred()
+        {
+            Mocker.GetMock<IConfigService>()
+            .Setup(s => s.DownloadPropersAndRepacks)
+            .Returns(ProperDownloadTypes.DoNotPrefer);
+
+            _trackFiles.Select(c =>
+            {
+                c.ReleaseGroup = "";
+                return c;
+            }).ToList();
+
+            _trackFiles.Select(c =>
+            {
+                c.Quality = new QualityModel(Quality.FLAC);
+                return c;
+            }).ToList();
+
+            var remoteAlbum = Builder<RemoteAlbum>.CreateNew()
+                                                      .With(e => e.ParsedAlbumInfo = _parsedAlbumInfo)
+                                                      .With(e => e.Albums = _albums)
+                                                      .Build();
+
+            Subject.IsSatisfiedBy(remoteAlbum, null).Accepted.Should().BeTrue();
+        }
+
+        [Test]
+        public void should_return_true_when_repack_but_auto_download_repacks_is_true()
+        {
+            Mocker.GetMock<IConfigService>()
+            .Setup(s => s.DownloadPropersAndRepacks)
+            .Returns(ProperDownloadTypes.PreferAndUpgrade);
+
+            _parsedAlbumInfo.Quality.Revision.IsRepack = true;
+
+            _trackFiles.Select(c =>
+            {
+                c.ReleaseGroup = "Lidarr";
+                return c;
+            }).ToList();
+            _trackFiles.Select(c =>
+            {
+                c.Quality = new QualityModel(Quality.FLAC);
+                return c;
+            }).ToList();
+
+            var remoteAlbum = Builder<RemoteAlbum>.CreateNew()
+                                                      .With(e => e.ParsedAlbumInfo = _parsedAlbumInfo)
+                                                      .With(e => e.Albums = _albums)
+                                                      .Build();
+
+            Subject.IsSatisfiedBy(remoteAlbum, null).Accepted.Should().BeTrue();
+        }
+
+        [Test]
+        public void should_return_false_when_repack_but_auto_download_repacks_is_false()
+        {
+            Mocker.GetMock<IConfigService>()
+            .Setup(s => s.DownloadPropersAndRepacks)
+            .Returns(ProperDownloadTypes.DoNotUpgrade);
+
+            _parsedAlbumInfo.Quality.Revision.IsRepack = true;
+
+            _trackFiles.Select(c =>
+            {
+                c.ReleaseGroup = "Lidarr";
+                return c;
+            }).ToList();
+            _trackFiles.Select(c =>
+            {
+                c.Quality = new QualityModel(Quality.FLAC);
+                return c;
+            }).ToList();
+
+            var remoteAlbum = Builder<RemoteAlbum>.CreateNew()
+                                                      .With(e => e.ParsedAlbumInfo = _parsedAlbumInfo)
+                                                      .With(e => e.Albums = _albums)
+                                                      .Build();
+
+            Subject.IsSatisfiedBy(remoteAlbum, null).Accepted.Should().BeFalse();
         }
     }
 }
