@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using NLog;
-using NLog.Fluent;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation;
 using NzbDrone.Common.Instrumentation.Extensions;
@@ -441,11 +440,11 @@ namespace NzbDrone.Core.MediaFiles
             }
             catch (Exception ex)
             {
-                Logger.Warn()
-                    .Exception(ex)
-                    .Message($"Tag writing failed for {path}")
-                    .WriteSentryWarn("Tag writing failed")
-                    .Write();
+                Logger.ForWarnEvent()
+                      .Exception(ex)
+                      .Message($"Tag writing failed for {path}")
+                      .WriteSentryWarn("Tag writing failed")
+                      .Log();
             }
             finally
             {

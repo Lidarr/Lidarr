@@ -6,7 +6,7 @@
   <ItemGroup>
     <PackageReference Include="DryIoc.dll" Version="5.1.0" />
     <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="6.0.2" />
-    <PackageReference Include="NLog" Version="4.7.14" />
+    <PackageReference Include="NLog" Version="5.0.4" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Common\Lidarr.Common.csproj" />
