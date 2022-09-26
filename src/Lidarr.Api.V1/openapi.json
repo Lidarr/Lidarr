@@ -12646,6 +12646,14 @@
             },
             "nullable": true
           },
+          "indexerIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
           "artistIds": {
             "type": "array",
             "items": {
