@@ -172,7 +172,7 @@ namespace Lidarr.Api.V1.Queue
                 case "status":
                     return q => q.Status;
                 case "artists.sortName":
-                    return q => q.Artist?.SortName ?? string.Empty;
+                    return q => q.Artist?.SortName ?? q.Title;
                 case "title":
                     return q => q.Title;
                 case "album":
