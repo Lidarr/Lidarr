@@ -23,7 +23,10 @@ namespace Lidarr.Api.V1.Parse
 
             if (parsedAlbumInfo == null)
             {
-                return null;
+                return new ParseResource
+                {
+                    Title = title
+                };
             }
 
             var remoteAlbum = _parsingService.Map(parsedAlbumInfo);
