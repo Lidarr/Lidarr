@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Common.Extensions;
@@ -94,7 +95,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
                 AddAudioPageableRequests(pageableRequests,
                     searchCriteria,
-                    NewsnabifyTitle($"&artist={artistQuery}&album={albumQuery}"));
+                    $"&artist={NewsnabifyTitle(artistQuery)}&album={NewsnabifyTitle(albumQuery)}");
             }
 
             if (SupportsSearch)
@@ -107,7 +108,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 pageableRequests.Add(GetPagedRequests(MaxPages,
                     Settings.Categories,
                     "search",
-                    NewsnabifyTitle($"&q={artistQuery}+{albumQuery}")));
+                    $"&q={NewsnabifyTitle($"{artistQuery}+{albumQuery}")}"));
             }
 
             return pageableRequests;
@@ -123,7 +124,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
                 AddAudioPageableRequests(pageableRequests,
                     searchCriteria,
-                    NewsnabifyTitle($"&artist={queryTitle}"));
+                    $"&artist={NewsnabifyTitle(queryTitle)}");
             }
 
             if (SupportsSearch)
@@ -134,7 +135,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 pageableRequests.Add(GetPagedRequests(MaxPages,
                         Settings.Categories,
                         "search",
-                        NewsnabifyTitle($"&q={queryTitle}")));
+                        $"&q={NewsnabifyTitle(queryTitle)}"));
             }
 
             return pageableRequests;
@@ -180,7 +181,8 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         private static string NewsnabifyTitle(string title)
         {
-            return title.Replace("+", "%20");
+            title = title.Replace("+", " ");
+            return Uri.EscapeDataString(title);
         }
     }
 }
