@@ -22,6 +22,7 @@ function TagDetailsModalContent(props) {
     importLists,
     notifications,
     releaseProfiles,
+    indexers,
     onModalClose,
     onDeleteTagPress
   } = props;
@@ -41,7 +42,7 @@ function TagDetailsModalContent(props) {
         }
 
         {
-          !!artist.length &&
+          artist.length ?
             <FieldSet legend={translate('Artists')}>
               {
                 artist.map((item) => {
@@ -52,11 +53,12 @@ function TagDetailsModalContent(props) {
                   );
                 })
               }
-            </FieldSet>
+            </FieldSet> :
+            null
         }
 
         {
-          !!delayProfiles.length &&
+          delayProfiles.length ?
             <FieldSet legend={translate('DelayProfile')}>
               {
                 delayProfiles.map((item) => {
@@ -81,11 +83,12 @@ function TagDetailsModalContent(props) {
                   );
                 })
               }
-            </FieldSet>
+            </FieldSet> :
+            null
         }
 
         {
-          !!notifications.length &&
+          notifications.length ?
             <FieldSet legend={translate('Connections')}>
               {
                 notifications.map((item) => {
@@ -96,11 +99,12 @@ function TagDetailsModalContent(props) {
                   );
                 })
               }
-            </FieldSet>
+            </FieldSet> :
+            null
         }
 
         {
-          !!importLists.length &&
+          importLists.length ?
             <FieldSet legend={translate('ImportLists')}>
               {
                 importLists.map((item) => {
@@ -111,11 +115,12 @@ function TagDetailsModalContent(props) {
                   );
                 })
               }
-            </FieldSet>
+            </FieldSet> :
+            null
         }
 
         {
-          !!releaseProfiles.length &&
+          releaseProfiles.length ?
             <FieldSet legend={translate('ReleaseProfiles')}>
               {
                 releaseProfiles.map((item) => {
@@ -157,7 +162,24 @@ function TagDetailsModalContent(props) {
                   );
                 })
               }
-            </FieldSet>
+            </FieldSet> :
+            null
+        }
+
+        {
+          indexers.length ?
+            <FieldSet legend="Indexers">
+              {
+                indexers.map((item) => {
+                  return (
+                    <div key={item.id}>
+                      {item.name}
+                    </div>
+                  );
+                })
+              }
+            </FieldSet> :
+            null
         }
       </ModalBody>
 
@@ -192,6 +214,7 @@ TagDetailsModalContent.propTypes = {
   importLists: PropTypes.arrayOf(PropTypes.object).isRequired,
   notifications: PropTypes.arrayOf(PropTypes.object).isRequired,
   releaseProfiles: PropTypes.arrayOf(PropTypes.object).isRequired,
+  indexers: PropTypes.arrayOf(PropTypes.object).isRequired,
   onModalClose: PropTypes.func.isRequired,
   onDeleteTagPress: PropTypes.func.isRequired
 };

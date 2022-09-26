@@ -57,6 +57,7 @@ class Tag extends Component {
       importListIds,
       notificationIds,
       restrictionIds,
+      indexerIds,
       artistIds
     } = this.props;
 
@@ -70,6 +71,7 @@ class Tag extends Component {
       importListIds.length ||
       notificationIds.length ||
       restrictionIds.length ||
+      indexerIds.length ||
       artistIds.length
     );
 
@@ -87,38 +89,50 @@ class Tag extends Component {
           isTagUsed &&
             <div>
               {
-                !!artistIds.length &&
+                artistIds.length ?
                   <div>
                     {artistIds.length} artists
-                  </div>
+                  </div> :
+                  null
               }
 
               {
-                !!delayProfileIds.length &&
+                delayProfileIds.length ?
                   <div>
                     {delayProfileIds.length} delay profile{delayProfileIds.length > 1 && 's'}
-                  </div>
+                  </div> :
+                  null
               }
 
               {
-                !!importListIds.length &&
+                importListIds.length ?
                   <div>
                     {importListIds.length} import list{importListIds.length > 1 && 's'}
-                  </div>
+                  </div> :
+                  null
               }
 
               {
-                !!notificationIds.length &&
+                notificationIds.length ?
                   <div>
                     {notificationIds.length} connection{notificationIds.length > 1 && 's'}
-                  </div>
+                  </div> :
+                  null
               }
 
               {
-                !!restrictionIds.length &&
+                restrictionIds.length ?
                   <div>
                     {restrictionIds.length} restriction{restrictionIds.length > 1 && 's'}
-                  </div>
+                  </div> :
+                  null
+              }
+              {
+                indexerIds.length ?
+                  <div>
+                    {indexerIds.length} indexer{indexerIds.length > 1 && 's'}
+                  </div> :
+                  null
               }
             </div>
         }
@@ -138,6 +152,7 @@ class Tag extends Component {
           importListIds={importListIds}
           notificationIds={notificationIds}
           restrictionIds={restrictionIds}
+          indexerIds={indexerIds}
           isOpen={isDetailsModalOpen}
           onModalClose={this.onDetailsModalClose}
           onDeleteTagPress={this.onDeleteTagPress}
@@ -164,6 +179,7 @@ Tag.propTypes = {
   importListIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   notificationIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   restrictionIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+  indexerIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   artistIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   onConfirmDeleteTag: PropTypes.func.isRequired
 };
@@ -173,6 +189,7 @@ Tag.defaultProps = {
   importListIds: [],
   notificationIds: [],
   restrictionIds: [],
+  indexerIds: [],
   artistIds: []
 };
 

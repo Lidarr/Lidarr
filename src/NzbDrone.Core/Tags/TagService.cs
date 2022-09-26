@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.ImportLists;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Notifications;
@@ -33,6 +34,7 @@ namespace NzbDrone.Core.Tags
         private readonly IReleaseProfileService _releaseProfileService;
         private readonly IArtistService _artistService;
         private readonly IRootFolderService _rootFolderService;
+        private readonly IIndexerFactory _indexerService;
 
         public TagService(ITagRepository repo,
                           IEventAggregator eventAggregator,
@@ -41,7 +43,8 @@ namespace NzbDrone.Core.Tags
                           INotificationFactory notificationFactory,
                           IReleaseProfileService releaseProfileService,
                           IArtistService artistService,
-                          IRootFolderService rootFolderService)
+                          IRootFolderService rootFolderService,
+                          IIndexerFactory indexerService)
         {
             _repo = repo;
             _eventAggregator = eventAggregator;
@@ -51,6 +54,7 @@ namespace NzbDrone.Core.Tags
             _releaseProfileService = releaseProfileService;
             _artistService = artistService;
             _rootFolderService = rootFolderService;
+            _indexerService = indexerService;
         }
 
         public Tag GetTag(int tagId)
@@ -79,6 +83,7 @@ namespace NzbDrone.Core.Tags
             var restrictions = _releaseProfileService.AllForTag(tagId);
             var artist = _artistService.AllForTag(tagId);
             var rootFolders = _rootFolderService.AllForTag(tagId);
+            var indexers = _indexerService.AllForTag(tagId);
 
             return new TagDetails
             {
@@ -89,7 +94,8 @@ namespace NzbDrone.Core.Tags
                 NotificationIds = notifications.Select(c => c.Id).ToList(),
                 RestrictionIds = restrictions.Select(c => c.Id).ToList(),
                 ArtistIds = artist.Select(c => c.Id).ToList(),
-                RootFolderIds = rootFolders.Select(c => c.Id).ToList()
+                RootFolderIds = rootFolders.Select(c => c.Id).ToList(),
+                IndexerIds = indexers.Select(c => c.Id).ToList()
             };
         }
 
@@ -102,6 +108,7 @@ namespace NzbDrone.Core.Tags
             var restrictions = _releaseProfileService.All();
             var artists = _artistService.GetAllArtists();
             var rootFolders = _rootFolderService.All();
+            var indexers = _indexerService.All();
 
             var details = new List<TagDetails>();
 
@@ -116,7 +123,8 @@ namespace NzbDrone.Core.Tags
                     NotificationIds = notifications.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList(),
                     RestrictionIds = restrictions.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList(),
                     ArtistIds = artists.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList(),
-                    RootFolderIds = rootFolders.Where(c => c.DefaultTags.Contains(tag.Id)).Select(c => c.Id).ToList()
+                    RootFolderIds = rootFolders.Where(c => c.DefaultTags.Contains(tag.Id)).Select(c => c.Id).ToList(),
+                    IndexerIds = indexers.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList()
                 });
             }
 
