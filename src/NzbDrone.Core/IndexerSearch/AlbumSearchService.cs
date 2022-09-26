@@ -17,21 +17,21 @@ namespace NzbDrone.Core.IndexerSearch
                                IExecute<MissingAlbumSearchCommand>,
                                IExecute<CutoffUnmetAlbumSearchCommand>
     {
-        private readonly ISearchForNzb _nzbSearchService;
+        private readonly ISearchForReleases _releaseSearchService;
         private readonly IAlbumService _albumService;
         private readonly IAlbumCutoffService _albumCutoffService;
         private readonly IQueueService _queueService;
         private readonly IProcessDownloadDecisions _processDownloadDecisions;
         private readonly Logger _logger;
 
-        public AlbumSearchService(ISearchForNzb nzbSearchService,
+        public AlbumSearchService(ISearchForReleases nzbSearchService,
             IAlbumService albumService,
             IAlbumCutoffService albumCutoffService,
             IQueueService queueService,
             IProcessDownloadDecisions processDownloadDecisions,
             Logger logger)
         {
-            _nzbSearchService = nzbSearchService;
+            _releaseSearchService = nzbSearchService;
             _albumService = albumService;
             _albumCutoffService = albumCutoffService;
             _queueService = queueService;
@@ -47,7 +47,7 @@ namespace NzbDrone.Core.IndexerSearch
             foreach (var album in albums)
             {
                 List<DownloadDecision> decisions;
-                decisions = _nzbSearchService.AlbumSearch(album.Id, false, userInvokedSearch, false);
+                decisions = _releaseSearchService.AlbumSearch(album.Id, false, userInvokedSearch, false);
                 var processed = _processDownloadDecisions.ProcessDecisions(decisions);
 
                 downloadedCount += processed.Grabbed.Count;
@@ -61,7 +61,7 @@ namespace NzbDrone.Core.IndexerSearch
             foreach (var albumId in message.AlbumIds)
             {
                 var decisions =
-                    _nzbSearchService.AlbumSearch(albumId, false, message.Trigger == CommandTrigger.Manual, false);
+                    _releaseSearchService.AlbumSearch(albumId, false, message.Trigger == CommandTrigger.Manual, false);
                 var processed = _processDownloadDecisions.ProcessDecisions(decisions);
 
                 _logger.ProgressInfo("Album search completed. {0} reports downloaded.", processed.Grabbed.Count);

@@ -26,7 +26,7 @@ namespace Lidarr.Api.V1.Indexers
         private readonly IAlbumService _albumService;
         private readonly IArtistService _artistService;
         private readonly IFetchAndParseRss _rssFetcherAndParser;
-        private readonly ISearchForNzb _nzbSearchService;
+        private readonly ISearchForReleases _releaseSearchService;
         private readonly IMakeDownloadDecision _downloadDecisionMaker;
         private readonly IPrioritizeDownloadDecision _prioritizeDownloadDecision;
         private readonly IParsingService _parsingService;
@@ -38,7 +38,7 @@ namespace Lidarr.Api.V1.Indexers
         public ReleaseController(IAlbumService albumService,
                              IArtistService artistService,
                              IFetchAndParseRss rssFetcherAndParser,
-                             ISearchForNzb nzbSearchService,
+                             ISearchForReleases nzbSearchService,
                              IMakeDownloadDecision downloadDecisionMaker,
                              IPrioritizeDownloadDecision prioritizeDownloadDecision,
                              IParsingService parsingService,
@@ -51,7 +51,7 @@ namespace Lidarr.Api.V1.Indexers
             _albumService = albumService;
             _artistService = artistService;
             _rssFetcherAndParser = rssFetcherAndParser;
-            _nzbSearchService = nzbSearchService;
+            _releaseSearchService = nzbSearchService;
             _downloadDecisionMaker = downloadDecisionMaker;
             _prioritizeDownloadDecision = prioritizeDownloadDecision;
             _parsingService = parsingService;
@@ -157,7 +157,7 @@ namespace Lidarr.Api.V1.Indexers
         {
             try
             {
-                var decisions = _nzbSearchService.AlbumSearch(albumId, true, true, true);
+                var decisions = _releaseSearchService.AlbumSearch(albumId, true, true, true);
                 var prioritizedDecisions = _prioritizeDownloadDecision.PrioritizeDecisions(decisions);
 
                 return MapDecisions(prioritizedDecisions);
@@ -173,7 +173,7 @@ namespace Lidarr.Api.V1.Indexers
         {
             try
             {
-                var decisions = _nzbSearchService.ArtistSearch(artistId, false, true, true);
+                var decisions = _releaseSearchService.ArtistSearch(artistId, false, true, true);
                 var prioritizedDecisions = _prioritizeDownloadDecision.PrioritizeDecisions(decisions);
 
                 return MapDecisions(prioritizedDecisions);
