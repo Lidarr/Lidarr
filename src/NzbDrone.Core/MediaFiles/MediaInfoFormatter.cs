@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using NLog;
-using NLog.Fluent;
 using NzbDrone.Common.Instrumentation;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Parser;
@@ -65,10 +64,10 @@ namespace NzbDrone.Core.MediaFiles
             }
             else
             {
-                Logger.Debug()
-                    .Message("Unknown audio format: '{0}'.", string.Join(", ", mediaInfo.AudioFormat))
-                    .WriteSentryWarn("UnknownAudioFormat", mediaInfo.AudioFormat)
-                    .Write();
+                Logger.ForDebugEvent()
+                      .Message("Unknown audio format: '{0}'.", string.Join(", ", mediaInfo.AudioFormat))
+                      .WriteSentryWarn("UnknownAudioFormat", mediaInfo.AudioFormat)
+                      .Log();
 
                 return "Unknown";
             }

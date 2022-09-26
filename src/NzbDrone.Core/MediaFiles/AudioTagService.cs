@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NLog.Fluent;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Configuration;
@@ -161,11 +160,11 @@ namespace NzbDrone.Core.MediaFiles
             }
             catch (Exception ex)
             {
-                _logger.Warn()
-                    .Exception(ex)
-                    .Message($"Tag removal failed for {path}")
-                    .WriteSentryWarn("Tag removal failed")
-                    .Write();
+                _logger.ForWarnEvent()
+                       .Exception(ex)
+                       .Message($"Tag removal failed for {path}")
+                       .WriteSentryWarn("Tag removal failed")
+                       .Log();
             }
             finally
             {

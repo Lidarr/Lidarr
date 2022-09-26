@@ -34,6 +34,8 @@ namespace NzbDrone.Common.Instrumentation
 
             var appFolderInfo = new AppFolderInfo(startupContext);
 
+            RegisterGlobalFilters();
+
             if (Debugger.IsAttached)
             {
                 RegisterDebugger();
@@ -99,6 +101,16 @@ namespace NzbDrone.Common.Instrumentation
             var loggingRule = new LoggingRule("*", LogLevel.Trace, target);
             LogManager.Configuration.AddTarget("debugger", target);
             LogManager.Configuration.LoggingRules.Add(loggingRule);
+        }
+
+        private static void RegisterGlobalFilters()
+        {
+            LogManager.Setup().LoadConfiguration(c =>
+            {
+                c.ForLogger("Microsoft.Hosting.Lifetime*").WriteToNil(LogLevel.Info);
+                c.ForLogger("System*").WriteToNil(LogLevel.Warn);
+                c.ForLogger("Microsoft*").WriteToNil(LogLevel.Warn);
+            });
         }
 
         private static void RegisterConsole()
