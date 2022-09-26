@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
         {
             using (var mapper = _database.OpenConnection())
             {
-                var usedTags = new[] { "Artists", "Notifications", "DelayProfiles", "ReleaseProfiles" }
+                var usedTags = new[] { "Artists", "Notifications", "DelayProfiles", "ReleaseProfiles", "ImportLists", "Indexers" }
                 .SelectMany(v => GetUsedTags(v, mapper))
                      .Distinct()
                      .ToArray();
@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
 
         private int[] GetUsedTags(string table, IDbConnection mapper)
         {
-            return mapper.Query<List<int>>($"SELECT DISTINCT Tags FROM {table} WHERE NOT Tags = '[]'")
+            return mapper.Query<List<int>>($"SELECT DISTINCT Tags FROM {table} WHERE NOT Tags = '[]' AND NOT Tags IS NULL")
                 .SelectMany(x => x)
                 .Distinct()
                 .ToArray();
