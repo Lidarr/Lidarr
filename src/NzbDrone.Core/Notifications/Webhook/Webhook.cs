@@ -87,7 +87,8 @@ namespace NzbDrone.Core.Notifications.Webhook
             var payload = new WebhookRetagPayload
             {
                 EventType = WebhookEventType.Retag,
-                Artist = new WebhookArtist(message.Artist)
+                Artist = new WebhookArtist(message.Artist),
+                TrackFile = new WebhookTrackFile(message.TrackFile)
             };
 
             _proxy.SendWebhook(payload, Settings);
