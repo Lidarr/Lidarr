@@ -432,7 +432,7 @@
   "PreviewRetag": "Preview Retag",
   "PrimaryAlbumTypes": "Primary Album Types",
   "PrimaryTypes": "Primary Types",
-  "PriorityHelpText": "Indexer Priority from 1 (Highest) to 50 (Lowest). Default: 25.",
+  "PriorityHelpText": "Indexer Priority from 1 (Highest) to 50 (Lowest). Default: 25. Used when grabbing releases as a tiebreaker for otherwise equal releases, Lidarr will still use all enabled indexers for RSS Sync and Searching.",
   "Profiles": "Profiles",
   "Proper": "Proper",
   "PropersAndRepacks": "Propers and Repacks",
