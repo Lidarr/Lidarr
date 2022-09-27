@@ -197,6 +197,7 @@ namespace NzbDrone.Core.History
                 };
 
                 history.Data.Add("StatusMessages", message.TrackedDownload.StatusMessages.ToJson());
+                history.Data.Add("ReleaseGroup", message.TrackedDownload?.RemoteAlbum?.ParsedAlbumInfo?.ReleaseGroup);
                 _historyRepository.Insert(history);
             }
         }
@@ -234,6 +235,7 @@ namespace NzbDrone.Core.History
                 history.Data.Add("DroppedPath", message.TrackInfo.Path);
                 history.Data.Add("ImportedPath", message.ImportedTrack.Path);
                 history.Data.Add("DownloadClient", message.DownloadClientInfo.Name);
+                history.Data.Add("ReleaseGroup", message.TrackInfo.ReleaseGroup);
 
                 _historyRepository.Insert(history);
             }
@@ -276,6 +278,8 @@ namespace NzbDrone.Core.History
                     DownloadId = message.TrackedDownload.DownloadItem.DownloadId
                 };
 
+                history.Data.Add("ReleaseGroup", message.TrackedDownload?.RemoteAlbum?.ParsedAlbumInfo?.ReleaseGroup);
+
                 _historyRepository.Insert(history);
             }
         }
@@ -307,6 +311,7 @@ namespace NzbDrone.Core.History
                 };
 
                 history.Data.Add("Reason", message.Reason.ToString());
+                history.Data.Add("ReleaseGroup", message.TrackFile.ReleaseGroup);
 
                 _historyRepository.Insert(history);
             }
@@ -332,6 +337,7 @@ namespace NzbDrone.Core.History
 
                 history.Data.Add("SourcePath", sourcePath);
                 history.Data.Add("Path", path);
+                history.Data.Add("ReleaseGroup", message.TrackFile.ReleaseGroup);
 
                 _historyRepository.Insert(history);
             }
@@ -355,6 +361,7 @@ namespace NzbDrone.Core.History
                 };
 
                 history.Data.Add("TagsScrubbed", message.Scrubbed.ToString());
+                history.Data.Add("ReleaseGroup", message.TrackFile.ReleaseGroup);
                 history.Data.Add("Diff", message.Diff.Select(x => new
                 {
                     Field = x.Key,
@@ -388,6 +395,7 @@ namespace NzbDrone.Core.History
                 };
 
                 history.Data.Add("DownloadClient", message.DownloadClientInfo.Name);
+                history.Data.Add("ReleaseGroup", message.TrackedDownload?.RemoteAlbum?.ParsedAlbumInfo?.ReleaseGroup);
                 history.Data.Add("Message", message.Message);
 
                 historyToAdd.Add(history);
