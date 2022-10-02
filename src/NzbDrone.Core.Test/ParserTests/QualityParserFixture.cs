@@ -100,6 +100,7 @@ namespace NzbDrone.Core.Test.ParserTests
         }
 
         [TestCase("Kendrick Lamar - DAMN (2017) FLAC", null, 0)]
+        [TestCase("Kid_Cudi-Entergalactic-WEBFLAC-2022-NACHOS", null, 0)]
         [TestCase("Alicia Keys - Vault Playlist Vol. 1 (2017) [FLAC CD]", null, 0)]
         [TestCase("Gorillaz - Humanz (Deluxe) - lossless FLAC Tracks - 2017 - CDrip", null, 0)]
         [TestCase("David Bowie - Blackstar (2016) [FLAC]", null, 0)]
@@ -117,6 +118,7 @@ namespace NzbDrone.Core.Test.ParserTests
 
         [TestCase("Beck.-.Guero.2005.[2016.Remastered].24bit.96kHz.LOSSLESS.FLAC", null, 0, 0)]
         [TestCase("[R.E.M - Lifes Rich Pageant(1986) [24bit192kHz 2016 Remaster]LOSSLESS FLAC]", null, 0, 0)]
+        [TestCase("Kid_Cudi-Entergalactic-24BIT-WEBFLAC-2022-NACHOS", null, 0, 0)]
         [TestCase("", "Flac Audio", 5057, 24)]
         public void should_parse_flac_24bit_quality(string title, string desc, int bitrate, int sampleSize)
         {
