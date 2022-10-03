@@ -5,6 +5,7 @@ namespace NzbDrone.Core.ImportLists
         Program,
         Spotify,
         LastFm,
-        Other
+        Other,
+        Advanced
     }
 }
