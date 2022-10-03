@@ -112,7 +112,7 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
 
         public override string Name => "rTorrent";
 
-        public override ProviderMessage Message => new ProviderMessage("Lidarr is unable to remove torrents that have finished seeding when using rTorrent", ProviderMessageType.Warning);
+        public override ProviderMessage Message => new ProviderMessage($"rTorrent will not pause torrents when they meet the seed criteria. Lidarr will handle automatic removal of torrents based on the current seed criteria in Settings->Indexers only when Remove Completed is enabled.  After importing it will also set \"{_imported_view}\" as an rTorrent view, which can be used in rTorrent scripts to customize behavior.", ProviderMessageType.Info);
 
         public override IEnumerable<DownloadClientItem> GetItems()
         {
