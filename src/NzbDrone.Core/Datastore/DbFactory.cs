@@ -1,5 +1,6 @@
 using System;
 using System.Data.SQLite;
+using System.Net.Sockets;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
@@ -112,6 +113,37 @@ namespace NzbDrone.Core.Datastore
                 }
 
                 throw new CorruptDatabaseException("Database file: {0} is corrupt, restore from backup if available. See: https://wiki.servarr.com/lidarr/faq#i-am-getting-an-error-database-disk-image-is-malformed", e, fileName);
+            }
+            catch (NpgsqlException e)
+            {
+                if (e.InnerException is SocketException)
+                {
+                    var retryCount = 3;
+
+                    while (true)
+                    {
+                        Logger.Error(e, "Failure to connect to Postgres DB, {0} retries remaining", retryCount);
+
+                        try
+                        {
+                            _migrationController.Migrate(connectionString, migrationContext);
+                        }
+                        catch (Exception ex)
+                        {
+                            if (--retryCount > 0)
+                            {
+                                System.Threading.Thread.Sleep(5000);
+                                continue;
+                            }
+
+                            throw new RadarrStartupException(ex, "Error creating main database");
+                        }
+                    }
+                }
+                else
+                {
+                    throw new RadarrStartupException(e, "Error creating main database");
+                }
             }
             catch (Exception e)
             {
