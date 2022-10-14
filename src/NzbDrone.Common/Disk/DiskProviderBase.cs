@@ -506,7 +506,13 @@ namespace NzbDrone.Common.Disk
 
             var di = _fileSystem.DirectoryInfo.FromDirectoryName(path);
 
-            return di.GetFiles("*", searchOption).ToList();
+            var enumerationOpts = new EnumerationOptions
+            {
+                IgnoreInaccessible = true,
+                RecurseSubdirectories = searchOption == SearchOption.AllDirectories
+            };
+
+            return di.EnumerateFiles("*", enumerationOpts).ToList();
         }
 
         public IFileInfo GetFileInfo(string path)
