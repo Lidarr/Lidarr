@@ -9,7 +9,7 @@ $hoverScale: 1.05;
 
   &:hover {
     z-index: 2;
-    box-shadow: 0 0 12px $black;
+    box-shadow: 0 0 12px var(--black);
     transition: all 200ms ease-in;
 
     .controls {
@@ -27,7 +27,7 @@ $hoverScale: 1.05;
   composes: link from '~Components/Link/Link.css';
 
   display: block;
-  background-color: $defaultColor;
+  background-color: var(--defaultColor);
 }
 
 .nextAiring {
@@ -39,8 +39,8 @@ $hoverScale: 1.05;
 .title {
   @add-mixin truncate;
 
-  background-color: $defaultColor;
-  color: $white;
+  background-color: var(--defaultColor);
+  color: var(--white);
   text-align: center;
   font-size: $smallFontSize;
 }
@@ -53,8 +53,8 @@ $hoverScale: 1.05;
   height: 0;
   border-width: 0 25px 25px 0;
   border-style: solid;
-  border-color: transparent $dangerColor transparent transparent;
-  color: $white;
+  border-color: transparent var(--dangerColor) transparent transparent;
+  color: var(--white);
 }
 
 .controls {
@@ -64,7 +64,7 @@ $hoverScale: 1.05;
   z-index: 3;
   border-radius: 4px;
   background-color: #216044;
-  color: $white;
+  color: var(--white);
   font-size: $smallFontSize;
   opacity: 0;
   transition: opacity 0;

@@ -10,9 +10,10 @@ import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import { inputTypes } from 'Helpers/Props';
 import SettingsToolbarConnector from 'Settings/SettingsToolbarConnector';
-import translate from 'Utilities/String/translate';
 import themes from 'Styles/Themes';
 import titleCase from 'Utilities/String/titleCase';
+import translate from 'Utilities/String/translate';
+import styles from './UISettings.css';
 
 export const firstDayOfWeekOptions = [
   { key: 0, value: 'Sunday' },
@@ -198,8 +199,8 @@ class UISettings extends Component {
                   </FormGroup>
 
                   <FormLabel>
-                      {translate('EnableColorImpairedMode')}
-                    </FormLabel>
+                    {translate('EnableColorImpairedMode')}
+                  </FormLabel>
 
                   <FormGroup>
                     <FormLabel>Enable Color-Impaired Mode</FormLabel>

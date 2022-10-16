@@ -5,11 +5,7 @@
 }
 
 .isActiveItem {
-<<<<<<< HEAD
-  border-left: 3px solid $themeBlue;
-=======
   border-left: 3px solid var(--themeAlternateBlue);
->>>>>>> 2291f3e00 (New: Native Theme Engine)
 }
 
 .link {

@@ -52,12 +52,7 @@ $hoverScale: 1.05;
 .title {
   @add-mixin truncate;
 
-<<<<<<< HEAD:frontend/src/Artist/Index/Posters/ArtistIndexPoster.css
-  background-color: $defaultColor;
-  color: $white;
-=======
   background-color: var(--seriesBackgroundColor);
->>>>>>> 2291f3e00 (New: Native Theme Engine):frontend/src/Series/Index/Posters/SeriesIndexPoster.css
   text-align: center;
   font-size: $smallFontSize;
 }

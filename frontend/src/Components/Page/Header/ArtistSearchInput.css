@@ -82,11 +82,7 @@
 }
 
 .highlighted {
-<<<<<<< HEAD:frontend/src/Components/Page/Header/ArtistSearchInput.css
-  background-color: $primaryHoverBackgroundColor;
-=======
   background-color: var(--themeLightColor);
->>>>>>> 2291f3e00 (New: Native Theme Engine):frontend/src/Components/Page/Header/SeriesSearchInput.css
 }
 
 .sectionTitle {

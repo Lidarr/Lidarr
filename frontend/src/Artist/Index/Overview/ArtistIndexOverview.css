@@ -3,7 +3,7 @@ $hoverScale: 1.05;
 .container {
   &:hover {
     .content {
-      background-color: $tableRowHoverBackgroundColor;
+      background-color: var(--tableRowHoverBackgroundColor);
     }
   }
 }

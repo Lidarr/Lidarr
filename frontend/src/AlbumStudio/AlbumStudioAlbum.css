@@ -17,9 +17,9 @@
   padding: 0 4px;
   border-width: 0 1px;
   border-style: solid;
-  border-color: $borderColor;
-  background-color: $white;
-  color: $defaultColor;
+  border-color: var(--borderColor);
+  background-color: var(--white);
+  color: var(--defaultColor);
 }
 
 .tracks {

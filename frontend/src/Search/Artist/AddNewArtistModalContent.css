@@ -24,7 +24,7 @@
 
 .disambiguation {
   margin-bottom: 20px;
-  color: $disabledColor;
+  color: var(--disabledColor);
   font-weight: 300;
   font-size: 20px;
 }
