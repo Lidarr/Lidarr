@@ -126,7 +126,7 @@ namespace NzbDrone.Update.UpdateEngine
                     _diskTransferService.MirrorFolder(_appFolderInfo.GetUpdatePackageFolder(), installationFolder);
 
                     // Set executable flag on Lidarr app and bundled fpcalc
-                    if (OsInfo.IsOsx || (OsInfo.IsLinux && PlatformInfo.IsNetCore))
+                    if (OsInfo.IsOsx || OsInfo.IsLinux)
                     {
                         _diskProvider.SetFilePermissions(Path.Combine(installationFolder, "Lidarr"), "755", null);
                         _diskProvider.SetFilePermissions(Path.Combine(installationFolder, "fpcalc"), "755", null);
