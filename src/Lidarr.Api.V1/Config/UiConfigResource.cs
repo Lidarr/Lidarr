@@ -23,11 +23,12 @@ namespace Lidarr.Api.V1.Config
         public bool ExpandEPByDefault { get; set; }
         public bool ExpandBroadcastByDefault { get; set; }
         public bool ExpandOtherByDefault { get; set; }
+        public string Theme { get; set; }
     }
 
     public static class UiConfigResourceMapper
     {
-        public static UiConfigResource ToResource(IConfigService model)
+        public static UiConfigResource ToResource(IConfigFileProvider config, IConfigService model)
         {
             return new UiConfigResource
             {
@@ -46,7 +47,8 @@ namespace Lidarr.Api.V1.Config
                 ExpandSingleByDefault = model.ExpandSingleByDefault,
                 ExpandEPByDefault = model.ExpandEPByDefault,
                 ExpandBroadcastByDefault = model.ExpandBroadcastByDefault,
-                ExpandOtherByDefault = model.ExpandOtherByDefault
+                ExpandOtherByDefault = model.ExpandOtherByDefault,
+                Theme = config.Theme
             };
         }
     }

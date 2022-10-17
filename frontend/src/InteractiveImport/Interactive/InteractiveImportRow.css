@@ -25,5 +25,5 @@
 .additionalFile {
   composes: row from '~Components/Table/TableRow.css';
 
-  color: $disabledColor;
+  color: var(--disabledColor);
 }

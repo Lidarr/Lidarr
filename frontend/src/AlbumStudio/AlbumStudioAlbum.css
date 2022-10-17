@@ -3,9 +3,9 @@
   align-items: stretch;
   overflow: hidden;
   margin: 2px 4px;
-  border: 1px solid $borderColor;
+  border: 1px solid var(--borderColor);
   border-radius: 4px;
-  background-color: #eee;
+  background-color: var(--seasonBackgroundColor);
   cursor: default;
 }
 
@@ -17,15 +17,15 @@
   padding: 0 4px;
   border-width: 0 1px;
   border-style: solid;
-  border-color: $borderColor;
-  background-color: $white;
-  color: $defaultColor;
+  border-color: var(--borderColor);
+  background-color: var(--white);
+  color: var(--defaultColor);
 }
 
 .tracks {
   padding: 0 4px;
-  background-color: $white;
-  color: $defaultColor;
+  background-color: var(--episodesBackgroundColor);
+  color: var(--defaultColor);
 }
 
 .allTracks {

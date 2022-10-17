@@ -10,6 +10,8 @@ import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import { inputTypes } from 'Helpers/Props';
 import SettingsToolbarConnector from 'Settings/SettingsToolbarConnector';
+import themes from 'Styles/Themes';
+import titleCase from 'Utilities/String/titleCase';
 import translate from 'Utilities/String/translate';
 import styles from './UISettings.css';
 
@@ -62,6 +64,8 @@ class UISettings extends Component {
     } = this.props;
 
     const uiLanguages = languages.filter((item) => item.value !== 'Original');
+    const themeOptions = Object.keys(themes)
+      .map((theme) => ({ key: theme, value: titleCase(theme) }));
 
     return (
       <PageContent title={translate('UISettings')}>
@@ -183,9 +187,23 @@ class UISettings extends Component {
                   legend={translate('Style')}
                 >
                   <FormGroup>
-                    <FormLabel>
-                      {translate('EnableColorImpairedMode')}
-                    </FormLabel>
+                    <FormLabel>Theme</FormLabel>
+                    <FormInputGroup
+                      type={inputTypes.SELECT}
+                      name="theme"
+                      helpText="Change Application UI Theme, Inspired by Theme.Park"
+                      values={themeOptions}
+                      onChange={onInputChange}
+                      {...settings.theme}
+                    />
+                  </FormGroup>
+
+                  <FormLabel>
+                    {translate('EnableColorImpairedMode')}
+                  </FormLabel>
+
+                  <FormGroup>
+                    <FormLabel>Enable Color-Impaired Mode</FormLabel>
                     <FormInputGroup
                       type={inputTypes.CHECK}
                       name="enableColorImpairedMode"
