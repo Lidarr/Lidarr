@@ -111,6 +111,7 @@ export default {
         selectedSchema.onImportFailure = selectedSchema.supportsOnImportFailure;
         selectedSchema.onTrackRetag = selectedSchema.supportsOnTrackRetag;
         selectedSchema.onApplicationUpdate = selectedSchema.supportsOnApplicationUpdate;
+        selectedSchema.onManualInteractionRequired = selectedSchema.supportsOnManualInteractionRequired;
 
         return selectedSchema;
       });

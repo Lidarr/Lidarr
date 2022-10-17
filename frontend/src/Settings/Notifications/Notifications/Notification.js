@@ -67,6 +67,7 @@ class Notification extends Component {
       onImportFailure,
       onTrackRetag,
       onApplicationUpdate,
+      onManualInteractionRequired,
       supportsOnGrab,
       supportsOnReleaseImport,
       supportsOnUpgrade,
@@ -78,7 +79,8 @@ class Notification extends Component {
       supportsOnDownloadFailure,
       supportsOnImportFailure,
       supportsOnTrackRetag,
-      supportsOnApplicationUpdate
+      supportsOnApplicationUpdate,
+      supportsOnManualInteractionRequired
     } = this.props;
 
     return (
@@ -177,14 +179,22 @@ class Notification extends Component {
         }
 
         {
-          !onGrab && !onReleaseImport && !onRename && !onTrackRetag && !onAlbumDelete && !onArtistDelete &&
-            !onHealthIssue && !onHealthRestored && !onDownloadFailure && !onImportFailure && !onApplicationUpdate &&
-              <Label
-                kind={kinds.DISABLED}
-                outline={true}
-              >
-                {translate('Disabled')}
-              </Label>
+          supportsOnManualInteractionRequired && onManualInteractionRequired ?
+            <Label kind={kinds.SUCCESS}>
+              {translate('OnManualInteractionRequired')}
+            </Label> :
+            null
+        }
+
+        {
+          !onGrab && !onReleaseImport && !onRename && !onTrackRetag && !onAlbumDelete && !onArtistDelete && !onHealthIssue && !onHealthRestored && !onDownloadFailure && !onImportFailure && !onApplicationUpdate && !onManualInteractionRequired ?
+            <Label
+              kind={kinds.DISABLED}
+              outline={true}
+            >
+              {translate('Disabled')}
+            </Label> :
+            null
         }
 
         <EditNotificationModalConnector
@@ -223,6 +233,7 @@ Notification.propTypes = {
   onImportFailure: PropTypes.bool.isRequired,
   onTrackRetag: PropTypes.bool.isRequired,
   onApplicationUpdate: PropTypes.bool.isRequired,
+  onManualInteractionRequired: PropTypes.bool.isRequired,
   supportsOnGrab: PropTypes.bool.isRequired,
   supportsOnReleaseImport: PropTypes.bool.isRequired,
   supportsOnUpgrade: PropTypes.bool.isRequired,
@@ -235,6 +246,7 @@ Notification.propTypes = {
   supportsOnImportFailure: PropTypes.bool.isRequired,
   supportsOnTrackRetag: PropTypes.bool.isRequired,
   supportsOnApplicationUpdate: PropTypes.bool.isRequired,
+  supportsOnManualInteractionRequired: PropTypes.bool.isRequired,
   onConfirmDeleteNotification: PropTypes.func.isRequired
 };
 

@@ -16,6 +16,7 @@ namespace NzbDrone.Core.Notifications
         public bool OnImportFailure { get; set; }
         public bool OnTrackRetag { get; set; }
         public bool OnApplicationUpdate { get; set; }
+        public bool OnManualInteractionRequired { get; set; }
         public bool SupportsOnGrab { get; set; }
         public bool SupportsOnReleaseImport { get; set; }
         public bool SupportsOnUpgrade { get; set; }
@@ -29,7 +30,8 @@ namespace NzbDrone.Core.Notifications
         public bool SupportsOnImportFailure { get; set; }
         public bool SupportsOnTrackRetag { get; set; }
         public bool SupportsOnApplicationUpdate { get; set; }
+        public bool SupportsOnManualInteractionRequired { get; set; }
 
-        public override bool Enable => OnGrab || OnReleaseImport || (OnReleaseImport && OnUpgrade) || OnAlbumDelete || OnArtistDelete || OnHealthIssue || OnHealthRestored || OnDownloadFailure || OnImportFailure || OnTrackRetag || OnApplicationUpdate;
+        public override bool Enable => OnGrab || OnReleaseImport || (OnReleaseImport && OnUpgrade) || OnAlbumDelete || OnArtistDelete || OnHealthIssue || OnHealthRestored || OnDownloadFailure || OnImportFailure || OnTrackRetag || OnApplicationUpdate || OnManualInteractionRequired;
     }
 }

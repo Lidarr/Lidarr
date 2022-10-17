@@ -22,6 +22,7 @@ namespace NzbDrone.Core.Notifications
         List<INotification> OnImportFailureEnabled();
         List<INotification> OnTrackRetagEnabled();
         List<INotification> OnApplicationUpdateEnabled();
+        List<INotification> OnManualInteractionEnabled();
     }
 
     public class NotificationFactory : ProviderFactory<INotification, NotificationDefinition>, INotificationFactory
@@ -91,6 +92,11 @@ namespace NzbDrone.Core.Notifications
             return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnApplicationUpdate).ToList();
         }
 
+        public List<INotification> OnManualInteractionEnabled()
+        {
+            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnManualInteractionRequired).ToList();
+        }
+
         public override void SetProviderCharacteristics(INotification provider, NotificationDefinition definition)
         {
             base.SetProviderCharacteristics(provider, definition);
@@ -107,6 +113,7 @@ namespace NzbDrone.Core.Notifications
             definition.SupportsOnImportFailure = provider.SupportsOnImportFailure;
             definition.SupportsOnTrackRetag = provider.SupportsOnTrackRetag;
             definition.SupportsOnApplicationUpdate = provider.SupportsOnApplicationUpdate;
+            definition.SupportsOnManualInteractionRequired = provider.SupportsOnManualInteractionRequired;
         }
     }
 }

@@ -68,6 +68,11 @@ namespace NzbDrone.Core.Notifications.Gotify
             SendNotification(APPLICATION_UPDATE_TITLE, updateMessage.Message, null);
         }
 
+        public override void OnManualInteractionRequired(ManualInteractionRequiredMessage message)
+        {
+            SendNotification(MANUAL_INTERACTION_REQUIRED_TITLE, message.Message, message.Artist);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();

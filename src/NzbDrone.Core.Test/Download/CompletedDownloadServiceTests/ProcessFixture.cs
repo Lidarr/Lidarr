@@ -50,8 +50,8 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
                   .Returns((DownloadClientItem item, DownloadClientItem previous) => item);
 
             Mocker.GetMock<IHistoryService>()
-                  .Setup(s => s.MostRecentForDownloadId(_trackedDownload.DownloadItem.DownloadId))
-                  .Returns(new EntityHistory());
+                  .Setup(s => s.FindByDownloadId(_trackedDownload.DownloadItem.DownloadId))
+                  .Returns(new List<EntityHistory>());
 
             Mocker.GetMock<IParsingService>()
                   .Setup(s => s.GetArtist("Drone.S01E01.HDTV"))
@@ -70,8 +70,8 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
         private void GivenNoGrabbedHistory()
         {
             Mocker.GetMock<IHistoryService>()
-                .Setup(s => s.MostRecentForDownloadId(_trackedDownload.DownloadItem.DownloadId))
-                .Returns((EntityHistory)null);
+                .Setup(s => s.FindByDownloadId(_trackedDownload.DownloadItem.DownloadId))
+                .Returns(new List<EntityHistory>());
         }
 
         private void GivenArtistMatch()
@@ -86,8 +86,11 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
             _trackedDownload.DownloadItem.DownloadId = "1234";
             _trackedDownload.DownloadItem.Title = "Droned Pilot"; // Set a badly named download
             Mocker.GetMock<IHistoryService>()
-                  .Setup(s => s.MostRecentForDownloadId(It.Is<string>(i => i == "1234")))
-                  .Returns(new EntityHistory() { SourceTitle = "Droned S01E01" });
+                  .Setup(s => s.FindByDownloadId(It.Is<string>(i => i == "1234")))
+                  .Returns(new List<EntityHistory>
+                  {
+                      new EntityHistory() { SourceTitle = "Droned S01E01", EventType = EntityHistoryEventType.Grabbed }
+                  });
 
             Mocker.GetMock<IParsingService>()
                   .Setup(s => s.GetArtist(It.IsAny<string>()))
@@ -150,9 +153,6 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
         {
             GivenABadlyNamedDownload();
             _trackedDownload.RemoteAlbum.Artist = null;
-
-            Mocker.GetMock<IHistoryService>()
-                  .Setup(s => s.MostRecentForDownloadId(It.Is<string>(i => i == "1234")));
 
             Subject.Check(_trackedDownload);
 

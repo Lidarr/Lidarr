@@ -15,6 +15,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                                              IExecute<CheckForFinishedDownloadCommand>,
                                              IHandle<AlbumGrabbedEvent>,
                                              IHandle<TrackImportedEvent>,
+                                             IHandle<ManualInteractionRequiredEvent>,
                                              IHandle<DownloadsProcessedEvent>,
                                              IHandle<TrackedDownloadsRemovedEvent>
     {
@@ -162,6 +163,11 @@ namespace NzbDrone.Core.Download.TrackedDownloads
         }
 
         public void Handle(AlbumGrabbedEvent message)
+        {
+            _refreshDebounce.Execute();
+        }
+
+        public void Handle(ManualInteractionRequiredEvent message)
         {
             _refreshDebounce.Execute();
         }

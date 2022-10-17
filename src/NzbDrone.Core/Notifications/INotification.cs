@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Notifications
         void OnHealthIssue(HealthCheck.HealthCheck healthCheck);
         void OnHealthRestored(HealthCheck.HealthCheck previousCheck);
         void OnApplicationUpdate(ApplicationUpdateMessage updateMessage);
+        void OnManualInteractionRequired(ManualInteractionRequiredMessage message);
         void OnDownloadFailure(DownloadFailedMessage message);
         void OnImportFailure(AlbumDownloadMessage message);
         void OnTrackRetag(TrackRetagMessage message);
@@ -30,6 +31,7 @@ namespace NzbDrone.Core.Notifications
         bool SupportsOnHealthIssue { get; }
         bool SupportsOnHealthRestored { get; }
         bool SupportsOnApplicationUpdate { get; }
+        bool SupportsOnManualInteractionRequired { get; }
         bool SupportsOnDownloadFailure { get; }
         bool SupportsOnImportFailure { get; }
         bool SupportsOnTrackRetag { get; }

@@ -17,6 +17,7 @@ namespace Lidarr.Api.V1.Notifications
         public bool OnImportFailure { get; set; }
         public bool OnTrackRetag { get; set; }
         public bool OnApplicationUpdate { get; set; }
+        public bool OnManualInteractionRequired { get; set; }
         public bool SupportsOnGrab { get; set; }
         public bool SupportsOnReleaseImport { get; set; }
         public bool SupportsOnUpgrade { get; set; }
@@ -30,6 +31,7 @@ namespace Lidarr.Api.V1.Notifications
         public bool SupportsOnImportFailure { get; set; }
         public bool SupportsOnTrackRetag { get; set; }
         public bool SupportsOnApplicationUpdate { get; set; }
+        public bool SupportsOnManualInteractionRequired { get; set; }
         public string TestCommand { get; set; }
     }
 
@@ -56,6 +58,7 @@ namespace Lidarr.Api.V1.Notifications
             resource.OnImportFailure = definition.OnImportFailure;
             resource.OnTrackRetag = definition.OnTrackRetag;
             resource.OnApplicationUpdate = definition.OnApplicationUpdate;
+            resource.OnManualInteractionRequired = definition.OnManualInteractionRequired;
             resource.SupportsOnGrab = definition.SupportsOnGrab;
             resource.SupportsOnReleaseImport = definition.SupportsOnReleaseImport;
             resource.SupportsOnUpgrade = definition.SupportsOnUpgrade;
@@ -69,6 +72,7 @@ namespace Lidarr.Api.V1.Notifications
             resource.SupportsOnImportFailure = definition.SupportsOnImportFailure;
             resource.SupportsOnTrackRetag = definition.SupportsOnTrackRetag;
             resource.SupportsOnApplicationUpdate = definition.SupportsOnApplicationUpdate;
+            resource.SupportsOnManualInteractionRequired = definition.SupportsOnManualInteractionRequired;
 
             return resource;
         }
@@ -94,6 +98,7 @@ namespace Lidarr.Api.V1.Notifications
             definition.OnImportFailure = resource.OnImportFailure;
             definition.OnTrackRetag = resource.OnTrackRetag;
             definition.OnApplicationUpdate = resource.OnApplicationUpdate;
+            definition.OnManualInteractionRequired = resource.OnManualInteractionRequired;
             definition.SupportsOnGrab = resource.SupportsOnGrab;
             definition.SupportsOnReleaseImport = resource.SupportsOnReleaseImport;
             definition.SupportsOnUpgrade = resource.SupportsOnUpgrade;
@@ -107,6 +112,7 @@ namespace Lidarr.Api.V1.Notifications
             definition.SupportsOnImportFailure = resource.SupportsOnImportFailure;
             definition.SupportsOnTrackRetag = resource.SupportsOnTrackRetag;
             definition.SupportsOnApplicationUpdate = resource.SupportsOnApplicationUpdate;
+            definition.SupportsOnManualInteractionRequired = resource.SupportsOnManualInteractionRequired;
 
             return definition;
         }

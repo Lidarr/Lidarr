@@ -20,6 +20,7 @@ namespace NzbDrone.Core.Notifications
         protected const string IMPORT_FAILURE_TITLE = "Import Failed";
         protected const string TRACK_RETAGGED_TITLE = "Track File Tags Updated";
         protected const string APPLICATION_UPDATE_TITLE = "Application Updated";
+        protected const string MANUAL_INTERACTION_REQUIRED_TITLE = "Manual Interaction";
 
         protected const string ALBUM_GRABBED_TITLE_BRANDED = "Lidarr - " + ALBUM_GRABBED_TITLE;
         protected const string ALBUM_DOWNLOADED_TITLE_BRANDED = "Lidarr - " + ALBUM_DOWNLOADED_TITLE;
@@ -31,6 +32,7 @@ namespace NzbDrone.Core.Notifications
         protected const string IMPORT_FAILURE_TITLE_BRANDED = "Lidarr - " + IMPORT_FAILURE_TITLE;
         protected const string TRACK_RETAGGED_TITLE_BRANDED = "Lidarr - " + TRACK_RETAGGED_TITLE;
         protected const string APPLICATION_UPDATE_TITLE_BRANDED = "Lidarr - " + APPLICATION_UPDATE_TITLE;
+        protected const string MANUAL_INTERACTION_REQUIRED_TITLE_BRANDED = "Lidarr - " + MANUAL_INTERACTION_REQUIRED_TITLE;
 
         public abstract string Name { get; }
 
@@ -89,6 +91,10 @@ namespace NzbDrone.Core.Notifications
         {
         }
 
+        public virtual void OnManualInteractionRequired(ManualInteractionRequiredMessage message)
+        {
+        }
+
         public virtual void ProcessQueue()
         {
         }
@@ -105,6 +111,7 @@ namespace NzbDrone.Core.Notifications
         public bool SupportsOnImportFailure => HasConcreteImplementation("OnImportFailure");
         public bool SupportsOnTrackRetag => HasConcreteImplementation("OnTrackRetag");
         public bool SupportsOnApplicationUpdate => HasConcreteImplementation("OnApplicationUpdate");
+        public bool SupportsOnManualInteractionRequired => HasConcreteImplementation("OnManualInteractionRequired");
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 

@@ -103,6 +103,11 @@ namespace NzbDrone.Core.Test.NotificationTests
             {
                 TestLogger.Info("OnApplicationUpdate was called");
             }
+
+            public override void OnManualInteractionRequired(ManualInteractionRequiredMessage message)
+            {
+                TestLogger.Info("OnManualInteractionRequired was called");
+            }
         }
 
         private class TestNotificationWithNoEvents : NotificationBase<TestSetting>
@@ -143,6 +148,7 @@ namespace NzbDrone.Core.Test.NotificationTests
             notification.SupportsOnImportFailure.Should().BeTrue();
             notification.SupportsOnTrackRetag.Should().BeTrue();
             notification.SupportsOnApplicationUpdate.Should().BeTrue();
+            notification.SupportsOnManualInteractionRequired.Should().BeTrue();
             notification.SupportsOnAlbumDelete.Should().BeTrue();
             notification.SupportsOnArtistDelete.Should().BeTrue();
         }
@@ -162,6 +168,7 @@ namespace NzbDrone.Core.Test.NotificationTests
             notification.SupportsOnImportFailure.Should().BeFalse();
             notification.SupportsOnTrackRetag.Should().BeFalse();
             notification.SupportsOnApplicationUpdate.Should().BeFalse();
+            notification.SupportsOnManualInteractionRequired.Should().BeFalse();
             notification.SupportsOnAlbumDelete.Should().BeFalse();
             notification.SupportsOnArtistDelete.Should().BeFalse();
         }

@@ -194,6 +194,28 @@ namespace NzbDrone.Core.Notifications.Webhook
             };
         }
 
+        protected WebhookManualInteractionPayload BuildManualInteractionRequiredPayload(ManualInteractionRequiredMessage message)
+        {
+            var remoteAlbum = message.RemoteAlbum;
+            var quality = message.Quality;
+
+            return new WebhookManualInteractionPayload
+            {
+                EventType = WebhookEventType.ManualInteractionRequired,
+                InstanceName = _configFileProvider.InstanceName,
+                ApplicationUrl = _configService.ApplicationUrl,
+                Artist = new WebhookArtist(message.Artist),
+                Albums = remoteAlbum.Albums.Select(x => new WebhookAlbum(x)).ToList(),
+                DownloadInfo = new WebhookDownloadClientItem(quality, message.TrackedDownload.DownloadItem),
+                DownloadClient = message.DownloadClientName,
+                DownloadClientType = message.DownloadClientType,
+                DownloadId = message.DownloadId,
+
+                // CustomFormatInfo = new WebhookCustomFormatInfo(remoteAlbum.CustomFormats, remoteAlbum.CustomFormatScore),
+                // Release = new WebhookGrabbedRelease(message.Release)
+            };
+        }
+
         protected WebhookPayload BuildTestPayload()
         {
             return new WebhookGrabPayload

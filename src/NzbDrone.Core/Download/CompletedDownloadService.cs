@@ -69,7 +69,8 @@ namespace NzbDrone.Core.Download
                 return;
             }
 
-            var historyItem = _historyService.MostRecentForDownloadId(trackedDownload.DownloadItem.DownloadId);
+            var grabbedHistories = _historyService.FindByDownloadId(trackedDownload.DownloadItem.DownloadId).Where(h => h.EventType == EntityHistoryEventType.Grabbed).ToList();
+            var historyItem = grabbedHistories.MaxBy(h => h.Date);
 
             if (historyItem == null && trackedDownload.DownloadItem.Category.IsNullOrWhiteSpace())
             {
