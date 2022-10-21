@@ -6,6 +6,7 @@
     <PackageReference Include="NBuilder" Version="6.1.0" />
     <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="17.0.24" />
     <PackageReference Include="AutoFixture" Version="4.17.0" />
+    <PackageReference Include="System.Data.SQLite.Core.Servarr" Version="1.0.118-22" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Test.Common\Lidarr.Test.Common.csproj" />
