@@ -78,6 +78,7 @@ namespace NzbDrone.Core.Test.ParserTests
         [TestCase("Ricardo Arjona - APNEA (Single 2014) (320 kbps)", null, 0)]
         [TestCase("Kehlani - SweetSexySavage (Deluxe Edition) (2017) 320", null, 0)]
         [TestCase("Anderson Paak - Malibu (320)(2016)", null, 0)]
+        [TestCase("Zeynep_Erbay-Flashlights_On_Love-WEB-2022-BABAS", null, 0)]
         [TestCase("", "MPEG Version 1 Audio, Layer 3", 320)]
         public void should_parse_mp3_320_quality(string title, string desc, int bitrate)
         {

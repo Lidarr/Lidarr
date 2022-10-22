@@ -43,6 +43,9 @@ namespace NzbDrone.Core.Parser
         private static readonly Regex CodecRegex = new Regex(@"\b(?:(?<MP1>MPEG Version \d(.5)? Audio, Layer 1|MP1)|(?<MP2>MPEG Version \d(.5)? Audio, Layer 2|MP2)|(?<MP3VBR>MP3.*VBR|MPEG Version \d(.5)? Audio, Layer 3 vbr)|(?<MP3CBR>MP3|MPEG Version \d(.5)? Audio, Layer 3)|(?<FLAC>(web)?flac)|(?<WAVPACK>wavpack|wv)|(?<ALAC>alac)|(?<WMA>WMA\d?)|(?<WAV>WAV|PCM)|(?<AAC>M4A|M4P|M4B|AAC|mp4a|MPEG-4 Audio(?!.*alac))|(?<OGG>OGG|OGA|Vorbis))\b|(?<APE>monkey's audio|[\[|\(].*\bape\b.*[\]|\)])|(?<OPUS>Opus Version \d(.5)? Audio|[\[|\(].*\bopus\b.*[\]|\)])",
                                                                   RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        private static readonly Regex WebRegex = new Regex(@"\b(?<web>WEB)(?:\b|$|[ .])",
+                                                        RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         public static QualityModel ParseQuality(string name, string desc, int fileBitrate, int fileSampleSize = 0)
         {
             Logger.Debug("Trying to parse quality for {0}", name);
@@ -219,7 +222,14 @@ namespace NzbDrone.Core.Parser
                     }
                     else
                     {
-                        result.Quality = Quality.Unknown;
+                        if (WebRegex.IsMatch(normalizedName))
+                        {
+                            result.Quality = Quality.MP3_320;
+                        }
+                        else
+                        {
+                            result.Quality = Quality.Unknown;
+                        }
                     }
 
                     break;
