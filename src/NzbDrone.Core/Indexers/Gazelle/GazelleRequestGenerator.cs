@@ -30,7 +30,16 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(string.Format("&artistname={0}&groupname={1}", searchCriteria.CleanArtistQuery, searchCriteria.CleanAlbumQuery)));
+
+            if (searchCriteria.CleanArtistQuery == "VA")
+            {
+                pageableRequests.Add(GetRequest(string.Format("&groupname={0}", searchCriteria.CleanAlbumQuery)));
+            }
+            else
+            {
+                pageableRequests.Add(GetRequest(string.Format("&artistname={0}&groupname={1}", searchCriteria.CleanArtistQuery, searchCriteria.CleanAlbumQuery)));
+            }
+
             return pageableRequests;
         }
 
