@@ -93,9 +93,16 @@ namespace NzbDrone.Core.Indexers.Newznab
                 var artistQuery = AudioTextSearchEngine == "raw" ? searchCriteria.ArtistQuery : searchCriteria.CleanArtistQuery;
                 var albumQuery = AudioTextSearchEngine == "raw" ? searchCriteria.AlbumQuery : searchCriteria.CleanAlbumQuery;
 
+                var searchQuery = $"&artist={NewsnabifyTitle(artistQuery)}&album={NewsnabifyTitle(albumQuery)}";
+
+                if (artistQuery == albumQuery && searchCriteria.AlbumYear > 0)
+                {
+                    searchQuery = $"&artist={NewsnabifyTitle(artistQuery)}&album={NewsnabifyTitle(albumQuery)}&year={searchCriteria.AlbumYear}";
+                }
+
                 AddAudioPageableRequests(pageableRequests,
                     searchCriteria,
-                    $"&artist={NewsnabifyTitle(artistQuery)}&album={NewsnabifyTitle(albumQuery)}");
+                    searchQuery);
             }
 
             if (SupportsSearch)
@@ -105,10 +112,17 @@ namespace NzbDrone.Core.Indexers.Newznab
                 var artistQuery = TextSearchEngine == "raw" ? searchCriteria.ArtistQuery : searchCriteria.CleanArtistQuery;
                 var albumQuery = TextSearchEngine == "raw" ? searchCriteria.AlbumQuery : searchCriteria.CleanAlbumQuery;
 
+                var searchQuery = $"{artistQuery}+{albumQuery}";
+
+                if (artistQuery == albumQuery)
+                {
+                    searchQuery = $"{artistQuery}+{albumQuery}+{searchCriteria.AlbumYear}";
+                }
+
                 pageableRequests.Add(GetPagedRequests(MaxPages,
                     Settings.Categories,
                     "search",
-                    $"&q={NewsnabifyTitle($"{artistQuery}+{albumQuery}")}"));
+                    $"&q={NewsnabifyTitle(searchQuery)}"));
             }
 
             return pageableRequests;
