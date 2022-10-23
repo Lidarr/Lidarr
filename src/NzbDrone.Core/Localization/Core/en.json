@@ -386,7 +386,7 @@
   "NoMinimumForAnyRuntime": "No minimum for any runtime",
   "None": "None",
   "NoneData": "No albums will be monitored",
-  "NoTagsHaveBeenAddedYetAddTagsToLinkArtistsWithDelayProfilesRestrictionsOrNotificationsClickLinkTohttpswikiservarrcomlidarrsettingstagshereLinkToFindOutMoreAboutTagsInLidarr": "No tags have been added yet. Add tags to link artists with delay profiles, restrictions, or notifications. Click <Link to='https://wiki.servarr.com/lidarr/settings#tags'>here</Link> to find out more about tags in Lidarr.",
+  "NoTagsHaveBeenAddedYet": "No tags have been added yet",
   "NotificationTriggers": "Notification Triggers",
   "NoUpdatesAreAvailable": "No updates are available",
   "OnApplicationUpdate": "On Application Update",

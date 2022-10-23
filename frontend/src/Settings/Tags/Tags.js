@@ -15,7 +15,7 @@ function Tags(props) {
   if (!items.length) {
     return (
       <div>
-        {translate('NoTagsHaveBeenAddedYetAddTagsToLinkArtistsWithDelayProfilesRestrictionsOrNotificationsClickLinkTohttpswikiservarrcomlidarrsettingstagshereLinkToFindOutMoreAboutTagsInLidarr')}
+        {translate('NoTagsHaveBeenAddedYet')}
       </div>
     );
   }
