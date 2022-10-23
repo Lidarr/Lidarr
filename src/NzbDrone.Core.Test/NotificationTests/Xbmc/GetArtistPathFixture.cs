@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DryIoc.ImTools;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
@@ -17,6 +18,7 @@ namespace NzbDrone.Core.Test.NotificationTests.Xbmc
         private XbmcSettings _settings;
         private Music.Artist _artist;
         private List<KodiArtist> _xbmcArtist;
+        private List<KodiSource> _xbmcSources;
 
         [SetUp]
         public void Setup()
@@ -27,14 +29,25 @@ namespace NzbDrone.Core.Test.NotificationTests.Xbmc
             _xbmcArtist = Builder<KodiArtist>.CreateListOfSize(3)
                                          .All()
                                          .With(s => s.MusicbrainzArtistId = new List<string> { "0" })
+                                         .With(s => s.SourceId = new List<int> { 1 })
                                          .TheFirst(1)
                                          .With(s => s.MusicbrainzArtistId = new List<string> { MB_ID.ToString() })
                                          .Build()
                                          .ToList();
 
+            _xbmcSources = Builder<KodiSource>.CreateListOfSize(1)
+                             .All()
+                             .With(s => s.SourceId = _xbmcArtist.First().SourceId.First())
+                             .Build()
+                             .ToList();
+
             Mocker.GetMock<IXbmcJsonApiProxy>()
                   .Setup(s => s.GetArtist(_settings))
                   .Returns(_xbmcArtist);
+
+            Mocker.GetMock<IXbmcJsonApiProxy>()
+                  .Setup(s => s.GetSources(_settings))
+                  .Returns(_xbmcSources);
         }
 
         private void GivenMatchingMusicbrainzId()
@@ -77,7 +90,7 @@ namespace NzbDrone.Core.Test.NotificationTests.Xbmc
         {
             GivenMatchingMusicbrainzId();
 
-            Subject.GetArtistPath(_settings, _artist).Should().Be(_xbmcArtist.First().File);
+            Subject.GetArtistPath(_settings, _artist).Should().Be(_xbmcSources.First().File);
         }
 
         [Test]
@@ -85,7 +98,7 @@ namespace NzbDrone.Core.Test.NotificationTests.Xbmc
         {
             GivenMatchingTitle();
 
-            Subject.GetArtistPath(_settings, _artist).Should().Be(_xbmcArtist.First().File);
+            Subject.GetArtistPath(_settings, _artist).Should().Be(_xbmcSources.First().File);
         }
     }
 }

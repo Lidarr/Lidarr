@@ -3,6 +3,7 @@ using System.Linq;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.Notifications.Xbmc.Model;
 
 namespace NzbDrone.Core.Notifications.Xbmc
 {
@@ -70,7 +71,16 @@ namespace NzbDrone.Core.Notifications.Xbmc
                 return musicBrainzId == artist.Metadata.Value.ForeignArtistId || s.Label == artist.Name;
             });
 
-            return matchingArtist?.File;
+            KodiSource matchingSource = null;
+
+            if (matchingArtist != null && matchingArtist.SourceId.Any())
+            {
+                var allSources = _proxy.GetSources(settings);
+
+                matchingSource = allSources.FirstOrDefault(s => s.SourceId == matchingArtist.SourceId.FirstOrDefault());
+            }
+
+            return matchingSource?.File;
         }
 
         private void UpdateLibrary(XbmcSettings settings, Artist artist)

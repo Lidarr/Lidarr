@@ -15,6 +15,7 @@ namespace NzbDrone.Core.Notifications.Xbmc
         void CleanLibrary(XbmcSettings settings);
         List<ActivePlayer> GetActivePlayers(XbmcSettings settings);
         List<KodiArtist> GetArtist(XbmcSettings settings);
+        List<KodiSource> GetSources(XbmcSettings settings);
     }
 
     public class XbmcJsonApiProxy : IXbmcJsonApiProxy
@@ -68,9 +69,16 @@ namespace NzbDrone.Core.Notifications.Xbmc
 
         public List<KodiArtist> GetArtist(XbmcSettings settings)
         {
-            var response = ProcessRequest(settings, "AudioLibrary.GetArtists", new List<string> { "properties", "musicbrainzartistid" });
+            var response = ProcessRequest(settings, "AudioLibrary.GetArtists", true, new List<string> { "sourceid", "musicbrainzartistid" });
 
             return Json.Deserialize<ArtistResponse>(response).Result.Artists;
+        }
+
+        public List<KodiSource> GetSources(XbmcSettings settings)
+        {
+            var response = ProcessRequest(settings, "AudioLibrary.GetSources", new List<string> { "file" });
+
+            return Json.Deserialize<SourceResponse>(response).Result.Sources;
         }
 
         private string ProcessRequest(XbmcSettings settings, string method, params object[] parameters)
