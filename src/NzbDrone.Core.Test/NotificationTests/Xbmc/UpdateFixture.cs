@@ -16,6 +16,7 @@ namespace NzbDrone.Core.Test.NotificationTests.Xbmc
         private const string MB_ID = "9f4e41c3-2648-428e-b8c7-dc10465b49ac";
         private XbmcSettings _settings;
         private List<KodiArtist> _xbmcArtist;
+        private List<KodiSource> _xbmcSources;
 
         [SetUp]
         public void Setup()
@@ -26,14 +27,25 @@ namespace NzbDrone.Core.Test.NotificationTests.Xbmc
             _xbmcArtist = Builder<KodiArtist>.CreateListOfSize(3)
                 .TheFirst(1)
                 .With(s => s.MusicbrainzArtistId = new List<string> { MB_ID.ToString() })
+                .With(s => s.SourceId = new List<int> { 1 })
                 .TheNext(2)
                 .With(s => s.MusicbrainzArtistId = new List<string>())
                 .Build()
                 .ToList();
 
+            _xbmcSources = Builder<KodiSource>.CreateListOfSize(1)
+                 .All()
+                 .With(s => s.SourceId = _xbmcArtist.First().SourceId.First())
+                 .Build()
+                 .ToList();
+
             Mocker.GetMock<IXbmcJsonApiProxy>()
                   .Setup(s => s.GetArtist(_settings))
                   .Returns(_xbmcArtist);
+
+            Mocker.GetMock<IXbmcJsonApiProxy>()
+                  .Setup(s => s.GetSources(_settings))
+                  .Returns(_xbmcSources);
 
             Mocker.GetMock<IXbmcJsonApiProxy>()
                   .Setup(s => s.GetActivePlayers(_settings))
