@@ -208,10 +208,17 @@ namespace NzbDrone.Core.MediaFiles
                 return;
             }
 
-            var newTags = GetTrackMetadata(trackfile);
             var path = trackfile.Path;
+            var oldTags = ReadAudioTag(path);
+            var newTags = GetTrackMetadata(trackfile);
 
-            var diff = ReadAudioTag(path).Diff(newTags);
+            // We don't overwrite image when new image is null
+            if (newTags.ImageFile == null && !_configService.ScrubAudioTags)
+            {
+                newTags.ImageSize = oldTags.ImageSize;
+            }
+
+            var diff = oldTags.Diff(newTags);
 
             _rootFolderWatchingService.ReportFileSystemChangeBeginning(path);
 
@@ -350,6 +357,13 @@ namespace NzbDrone.Core.MediaFiles
 
                 var oldTags = ReadAudioTag(f.Path);
                 var newTags = GetTrackMetadata(f);
+
+                // We don't overwrite image when new image is null
+                if (newTags.ImageFile == null && !_configService.ScrubAudioTags)
+                {
+                    newTags.ImageSize = oldTags.ImageSize;
+                }
+
                 var diff = oldTags.Diff(newTags);
 
                 if (diff.Any())
