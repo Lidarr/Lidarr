@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -68,7 +68,6 @@ namespace NzbDrone.Core.Organizer
         public IllegalCharactersValidator()
             : base("Contains illegal characters: {InvalidCharacters}")
         {
-
         }
 
         protected override bool IsValid(PropertyValidatorContext context)
