@@ -217,7 +217,7 @@ namespace NzbDrone.Common
 
             if (dacls.Contains(authenticatedUsersDacl))
             {
-                // Permssions already set
+                // Permissions already set
                 return;
             }
 

@@ -99,7 +99,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex, "Unknown error occured in RemotePathMapping HealthCheck");
+                    _logger.Error(ex, "Unknown error occurred in RemotePathMapping HealthCheck");
                 }
             }
 
@@ -130,11 +130,11 @@ namespace NzbDrone.Core.HealthCheck.Checks
                     {
                         // If the file doesn't exist but TrackInfo is not null then the message is coming from
                         // ImportApprovedTracks and the file must have been removed part way through processing
-                        return new HealthCheck(GetType(), HealthCheckResult.Error, $"File {trackPath} was removed part way though procesing.");
+                        return new HealthCheck(GetType(), HealthCheckResult.Error, $"File {trackPath} was removed part way through processing.");
                     }
                 }
 
-                // If the previous case did not match then the failure occured in DownloadedTracksImportService,
+                // If the previous case did not match then the failure occurred in DownloadedTracksImportService,
                 // while trying to locate the files reported by the download client
                 var client = _downloadClientProvider.Get(failureMessage.DownloadClientInfo.Id);
                 try
@@ -191,7 +191,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex, "Unknown error occured in RemotePathMapping HealthCheck");
+                    _logger.Error(ex, "Unknown error occurred in RemotePathMapping HealthCheck");
                 }
 
                 return new HealthCheck(GetType());

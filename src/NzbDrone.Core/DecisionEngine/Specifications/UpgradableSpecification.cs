@@ -52,7 +52,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                     return ProfileComparisonResult.Equal;
                 }
 
-                // Quality Treated as Equal if Propers are not Prefered
+                // Quality Treated as Equal if Propers are not Preferred
                 if (_configService.DownloadPropersAndRepacks == ProperDownloadTypes.DoNotPrefer &&
                     newQuality.Revision.CompareTo(currentQualities.Min(q => q.Revision)) > 0)
                 {

@@ -68,7 +68,7 @@ namespace NzbDrone.Core.Parser
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Somthing went wrong detecting fpcalc");
+                _logger.Error(ex, "Something went wrong detecting fpcalc");
             }
         }
 

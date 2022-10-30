@@ -123,7 +123,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 album.AlbumReleases = _releaseService.SetMonitored(newRelease);
 
                 // Publish album edited event.
-                // Deliberatly don't put in the old album since we don't want to trigger an ArtistScan.
+                // Deliberately don't put in the old album since we don't want to trigger an ArtistScan.
                 _eventAggregator.PublishEvent(new AlbumEditedEvent(album, album));
             }
 
