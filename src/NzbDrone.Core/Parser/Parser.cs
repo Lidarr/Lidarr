@@ -123,7 +123,7 @@ namespace NzbDrone.Core.Parser
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             //Artist - Year - Album
-            // Hypen with no or more spaces between artist/album/year
+            // Hyphen with no or more spaces between artist/album/year
             new Regex(@"^(?:(?<artist>.+?)(?:-))(?<releaseyear>\d{4})(?:-)(?<album>[^-]+)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
         };
@@ -617,7 +617,7 @@ namespace NzbDrone.Core.Parser
             var artistName = matchCollection[0].Groups["artist"].Value./*Removed for cases like Will.I.Am Replace('.', ' ').*/Replace('_', ' ');
             artistName = RequestInfoRegex.Replace(artistName, "").Trim(' ');
 
-            // Coppied from Radarr (https://github.com/Radarr/Radarr/blob/develop/src/NzbDrone.Core/Parser/Parser.cs)
+            // Copied from Radarr (https://github.com/Radarr/Radarr/blob/develop/src/NzbDrone.Core/Parser/Parser.cs)
             // TODO: Split into separate method and write unit tests for.
             var parts = artistName.Split('.');
             artistName = "";

@@ -25,7 +25,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
             // Prevent imports to artists that are no longer inside a root folder Lidarr manages
             var artist = item.AlbumRelease.Album.Value.Artist.Value;
 
-            // a new artist will have empty path, and will end up having path assinged based on file location
+            // a new artist will have empty path, and will end up having path assigned based on file location
             var pathToCheck = artist.Path.IsNotNullOrWhiteSpace() ? artist.Path : item.LocalTracks.First().Path.GetParentPath();
 
             if (_rootFolderService.GetBestRootFolder(pathToCheck) == null)

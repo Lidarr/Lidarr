@@ -50,7 +50,7 @@ class SelectAlbumReleaseModalContent extends Component {
           scrollDirection={scrollDirections.NONE}
         >
           <Alert>
-            Overrriding a release here will <b>disable automatic release selection</b> for that album in future.
+            Overriding a release here will <b>disable automatic release selection</b> for that album in future.
           </Alert>
 
           <Scroller className={styles.scroller}>

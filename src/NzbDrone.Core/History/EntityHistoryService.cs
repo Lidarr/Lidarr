@@ -100,7 +100,7 @@ namespace NzbDrone.Core.History
 
             var allHistory = _historyRepository.FindDownloadHistory(trackedDownload.TrackInfo.Artist.Id, trackedDownload.ImportedTrack.Quality);
 
-            //Find download related items for these episdoes
+            //Find download related items for these episodes
             var albumsHistory = allHistory.Where(h => albumIds.Contains(h.AlbumId)).ToList();
 
             var processedDownloadId = albumsHistory
