@@ -30,14 +30,7 @@ namespace NzbDrone.Core.Notifications.Notifiarr
 
         public void SendNotification(StringDictionary message, NotifiarrSettings settings)
         {
-            try
-            {
                 ProcessNotification(message, settings);
-            }
-            catch (NotifiarrException ex)
-            {
-                throw ex;
-            }
         }
 
         public ValidationFailure Test(NotifiarrSettings settings)
