@@ -10300,6 +10300,10 @@
             "type": "string",
             "nullable": true
           },
+          "applicationUrl": {
+            "type": "string",
+            "nullable": true
+          },
           "updateAutomatically": {
             "type": "boolean"
           },
