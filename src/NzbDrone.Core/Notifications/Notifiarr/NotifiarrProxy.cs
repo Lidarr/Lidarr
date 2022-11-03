@@ -16,7 +16,7 @@ namespace NzbDrone.Core.Notifications.Notifiarr
 
     public class NotifiarrProxy : INotifiarrProxy
     {
-        private const string URL = "https://notfiarr.com";
+        private const string URL = "https://notifiarr.com";
         private readonly IHttpClient _httpClient;
         private readonly IConfigFileProvider _configFileProvider;
         private readonly Logger _logger;
@@ -30,15 +30,7 @@ namespace NzbDrone.Core.Notifications.Notifiarr
 
         public void SendNotification(StringDictionary message, NotifiarrSettings settings)
         {
-            try
-            {
                 ProcessNotification(message, settings);
-            }
-            catch (NotifiarrException ex)
-            {
-                _logger.Error(ex, ex.Message);
-                throw new NotifiarrException(ex.Message);
-            }
         }
 
         public ValidationFailure Test(NotifiarrSettings settings)
@@ -101,9 +93,9 @@ namespace NzbDrone.Core.Notifications.Notifiarr
                     case 523:
                     case 524:
                         _logger.Error(ex, "Cloudflare Related HTTP Error - Unable to send notification");
-                        throw new NotifiarrException("Cloudflare Related HTTP Error  - Unable to send notification", ex);
+                        throw new NotifiarrException("Cloudflare Related HTTP Error - Unable to send notification", ex);
                     default:
-                        _logger.Error(ex, "Unknown HTTP  Error - Unable to send notification");
+                        _logger.Error(ex, "Unknown HTTP Error - Unable to send notification");
                         throw new NotifiarrException("Unknown HTTP Error - Unable to send notification", ex);
                 }
             }
