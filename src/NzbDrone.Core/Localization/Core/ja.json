@@ -148,7 +148,6 @@
     "QualityProfiles": "品質プロファイル",
     "QualitySettings": "品質設定",
     "Queue": "キュー",
-    "Radarr": "ラダー",
     "ReadTheWikiForMoreInformation": "詳細については、Wikiをお読みください",
     "Real": "リアル",
     "Reason": "理由",
@@ -466,5 +465,13 @@
     "WeekColumnHeader": "週の列ヘッダー",
     "Year": "年",
     "YesCancel": "はい、キャンセル",
-    "AlreadyInYourLibrary": "すでにライブラリにあります"
+    "AlreadyInYourLibrary": "すでにライブラリにあります",
+    "ThisCannotBeCancelled": "Whisparrを再起動せずに一度開始すると、これをキャンセルすることはできません。",
+    "OnGrab": "グラブで",
+    "OnHealthIssue": "健康問題について",
+    "OnRename": "名前の変更について",
+    "OnUpgrade": "アップグレード時",
+    "Tracks": "痕跡",
+    "NETCore": ".NET Core",
+    "MonoVersion": "モノバージョン"
 }

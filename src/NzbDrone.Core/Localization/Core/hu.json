@@ -414,7 +414,6 @@
     "LatestAlbum": "Legújabb album",
     "LatestAlbumData": "Monitorozza a legújabb albumokat és a jövőbeli albumokat",
     "LaunchBrowserHelpText": " Nyisson meg egy böngészőt, és az alkalmazás indításakor lépjen a Lidarr kezdőlapjára.",
-    "Lidarr": "Lidarr",
     "LidarrSupportsAnyIndexerThatUsesTheNewznabStandardAsWellAsOtherIndexersListedBelow": "A Lidarr minden olyan indexelőt támogat, amely a Newznab szabványt használja, valamint az alább felsorolt egyéb indexelőket.",
     "LidarrSupportsMultipleListsForImportingAlbumsAndArtistsIntoTheDatabase": "A Lidarr több listát is támogat az albumok és előadók adatbázisba történő importálásához.",
     "LidarrTags": "Lidarr Címkék",
@@ -615,8 +614,6 @@
     "Quality": "Minőség",
     "QualityProfile": "Minőségi Profil",
     "QualityProfiles": "Minőségi profilok",
-    "Radarr": "Radarr",
-    "Readarr": "Readarr",
     "Real": "Valódi",
     "Reorder": "Átrendezés",
     "ReplaceIllegalCharacters": "Az illegális karakterek cseréje",
@@ -697,5 +694,11 @@
     "OnImportFailure": "Importálási hiba esetén",
     "MassAlbumsSearchWarning": "Biztos benne, hogy megkeresi az összes \"{0}\" hiányzó albumot?",
     "MassAlbumsCutoffUnmetWarning": "Biztosan megkeresi az összes „{0}” Küszöbhatár alatti albumot?",
-    "ThisCannotBeCancelled": "Ezt folyamatot az összes indexelő letiltása nélkül nem lehet visszavonni, ha egyszer elindult."
+    "ThisCannotBeCancelled": "Ezt folyamatot az összes indexelő letiltása nélkül nem lehet visszavonni, ha egyszer elindult.",
+    "AddedArtistSettings": "Szerzői beállítások hozzáadva",
+    "ImportListSpecificSettings": "Listaspecifikus beállítások importálása",
+    "MonoVersion": "Mono Verzió",
+    "MonitorAlbumExistingOnlyWarning": "Ez az egyes könyvek felügyelt beállításának egyszeri módosítása.  A Szerző/Szerkesztés alatti lehetőség segítségével szabályozhatja, hogy mi történjen az újonnan hozzáadott könyvekkel",
+    "MonitoringOptionsHelpText": "Mely könyveket érdemes figyelni a szerző hozzáadása után (egyszeri módosítás)",
+    "MonitorNewItemsHelpText": "Milyen új könyveket kell figyelni"
 }
