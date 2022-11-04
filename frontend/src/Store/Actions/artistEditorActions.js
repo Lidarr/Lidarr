@@ -3,6 +3,7 @@ import { batchActions } from 'redux-batched-actions';
 import { filterBuilderTypes, filterBuilderValueTypes, sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
+import translate from 'Utilities/String/translate';
 import { filterPredicates, filters, sortPredicates } from './artistActions';
 import { set, updateItem } from './baseActions';
 import createHandleActions from './Creators/createHandleActions';
@@ -34,44 +35,44 @@ export const defaultState = {
   columns: [
     {
       name: 'status',
-      columnLabel: 'Status',
+      columnLabel: translate('Status'),
       isSortable: true,
       isVisible: true,
       isModifiable: false
     },
     {
       name: 'sortName',
-      label: 'Name',
+      label: translate('Name'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'qualityProfileId',
-      label: 'Quality Profile',
+      label: translate('QualityProfile'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'metadataProfileId',
-      label: 'Metadata Profile',
+      label: translate('MetadataProfile'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'path',
-      label: 'Path',
+      label: translate('Path'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'sizeOnDisk',
-      label: 'Size on Disk',
+      label: translate('SizeOnDisk'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'tags',
-      label: 'Tags',
+      label: translate('Tags'),
       isSortable: false,
       isVisible: true
     }
@@ -80,47 +81,47 @@ export const defaultState = {
   filterBuilderProps: [
     {
       name: 'monitored',
-      label: 'Monitored',
+      label: translate('Monitored'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.BOOL
     },
     {
       name: 'status',
-      label: 'Status',
+      label: translate('Status'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.ARTIST_STATUS
     },
     {
       name: 'qualityProfileId',
-      label: 'Quality Profile',
+      label: translate('QualityProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.QUALITY_PROFILE
     },
     {
       name: 'metadataProfileId',
-      label: 'Metadata Profile',
+      label: translate('MetadataProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.METADATA_PROFILE
     },
     {
       name: 'path',
-      label: 'Path',
+      label: translate('Path'),
       type: filterBuilderTypes.STRING
     },
     {
       name: 'rootFolderPath',
-      label: 'Root Folder Path',
+      label: translate('RootFolderPath'),
       type: filterBuilderTypes.EXACT
     },
     {
       name: 'sizeOnDisk',
-      label: 'Size on Disk',
+      label: translate('SizeOnDisk'),
       type: filterBuilderTypes.NUMBER,
       valueType: filterBuilderValueTypes.BYTES
     },
     {
       name: 'tags',
-      label: 'Tags',
+      label: translate('Tags'),
       type: filterBuilderTypes.ARRAY,
       valueType: filterBuilderValueTypes.TAG
     }

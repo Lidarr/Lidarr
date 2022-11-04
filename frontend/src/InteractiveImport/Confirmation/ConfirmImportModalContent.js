@@ -9,6 +9,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 function formatAlbumFiles(items, album) {
 
@@ -73,7 +74,7 @@ class ConfirmImportModalContent extends Component {
         {
           !isFetching && isPopulated &&
             <ModalHeader>
-              Are you sure?
+              {translate('AreYouSure')}
             </ModalHeader>
         }
 
@@ -105,14 +106,14 @@ class ConfirmImportModalContent extends Component {
           !isFetching && isPopulated &&
             <ModalFooter>
               <Button onPress={onModalClose}>
-                Cancel
+                {translate('Cancel')}
               </Button>
 
               <Button
                 kind={kinds.DANGER}
                 onPress={onConfirmImportPress}
               >
-                Proceed
+                {translate('Proceed')}
               </Button>
 
             </ModalFooter>

@@ -8,6 +8,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import FilterBuilderRow from './FilterBuilderRow';
 import styles from './FilterBuilderModalContent.css';
 
@@ -151,7 +152,7 @@ class FilterBuilderModalContent extends Component {
         <ModalBody>
           <div className={styles.labelContainer}>
             <div className={styles.label}>
-              Label
+              {translate('Label')}
             </div>
 
             <div className={styles.labelInputContainer}>
@@ -165,7 +166,7 @@ class FilterBuilderModalContent extends Component {
             </div>
           </div>
 
-          <div className={styles.label}>Filters</div>
+          <div className={styles.label}>{translate('Filters')}</div>
 
           <div className={styles.rows}>
             {
@@ -192,7 +193,7 @@ class FilterBuilderModalContent extends Component {
 
         <ModalFooter>
           <Button onPress={onCancelPress}>
-            Cancel
+            {translate('Cancel')}
           </Button>
 
           <SpinnerErrorButton
@@ -200,7 +201,7 @@ class FilterBuilderModalContent extends Component {
             error={saveError}
             onPress={this.onSaveFilterPress}
           >
-            Save
+            {translate('Save')}
           </SpinnerErrorButton>
         </ModalFooter>
       </ModalContent>

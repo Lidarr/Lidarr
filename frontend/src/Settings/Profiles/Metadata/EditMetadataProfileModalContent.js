@@ -46,7 +46,7 @@ function EditMetadataProfileModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        {id ? 'Edit Metadata Profile' : 'Add Metadata Profile'}
+        {id ? translate('EditMetadataProfile') : translate('AddMetadataProfile')}
       </ModalHeader>
 
       <ModalBody>
@@ -117,7 +117,7 @@ function EditMetadataProfileModalContent(props) {
                 isDisabled={isInUse}
                 onPress={onDeleteMetadataProfilePress}
               >
-                Delete
+                {translate('Delete')}
               </Button>
             </div>
         }
@@ -125,7 +125,7 @@ function EditMetadataProfileModalContent(props) {
         <Button
           onPress={onModalClose}
         >
-          Cancel
+          {translate('Cancel')}
         </Button>
 
         <SpinnerErrorButton
@@ -133,7 +133,7 @@ function EditMetadataProfileModalContent(props) {
           error={saveError}
           onPress={onSavePress}
         >
-          Save
+          {translate('Save')}
         </SpinnerErrorButton>
       </ModalFooter>
     </ModalContent>

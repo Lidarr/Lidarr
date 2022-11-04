@@ -160,14 +160,14 @@ class OrganizePreviewModalContent extends Component {
           <Button
             onPress={onModalClose}
           >
-            Cancel
+            {translate('Cancel')}
           </Button>
 
           <Button
             kind={kinds.PRIMARY}
             onPress={this.onOrganizePress}
           >
-            Organize
+            {translate('Organize')}
           </Button>
         </ModalFooter>
       </ModalContent>

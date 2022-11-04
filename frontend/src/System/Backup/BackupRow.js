@@ -76,14 +76,14 @@ class BackupRow extends Component {
     } = this.state;
 
     let iconClassName = icons.SCHEDULED;
-    let iconTooltip = translate('IconTooltip');
+    let iconTooltip = translate('Scheduled');
 
     if (type === 'manual') {
       iconClassName = icons.INTERACTIVE;
-      iconTooltip = 'Manual';
+      iconTooltip = translate('Manual');
     } else if (type === 'update') {
       iconClassName = icons.UPDATE;
-      iconTooltip = 'Before update';
+      iconTooltip = translate('BeforeUpdate');
     }
 
     return (

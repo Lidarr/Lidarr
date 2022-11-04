@@ -18,22 +18,22 @@ import styles from './SelectAlbumModalContent.css';
 const columns = [
   {
     name: 'title',
-    label: 'Album Title',
+    label: translate('AlbumTitle'),
     isVisible: true
   },
   {
     name: 'albumType',
-    label: 'Album Type',
+    label: translate('AlbumType'),
     isVisible: true
   },
   {
     name: 'releaseDate',
-    label: 'Release Date',
+    label: translate('ReleaseDate'),
     isVisible: true
   },
   {
     name: 'status',
-    label: 'Album Status',
+    label: translate('AlbumStatus'),
     isVisible: true
   }
 ];
@@ -124,7 +124,7 @@ class SelectAlbumModalContent extends Component {
 
         <ModalFooter>
           <Button onPress={onModalClose}>
-            Cancel
+            {translate('Cancel')}
           </Button>
         </ModalFooter>
       </ModalContent>

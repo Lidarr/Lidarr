@@ -43,7 +43,7 @@ function EditReleaseProfileModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        {id ? 'Edit Release Profile' : 'Add Release Profile'}
+        {id ? translate('EditReleaseProfile') : translate('AddReleaseProfile')}
       </ModalHeader>
 
       <ModalBody>
@@ -170,14 +170,14 @@ function EditReleaseProfileModalContent(props) {
               kind={kinds.DANGER}
               onPress={onDeleteReleaseProfilePress}
             >
-              Delete
+              {translate('Delete')}
             </Button>
         }
 
         <Button
           onPress={onModalClose}
         >
-          Cancel
+          {translate('Cancel')}
         </Button>
 
         <SpinnerErrorButton
@@ -185,7 +185,7 @@ function EditReleaseProfileModalContent(props) {
           error={saveError}
           onPress={onSavePress}
         >
-          Save
+          {translate('Save')}
         </SpinnerErrorButton>
       </ModalFooter>
     </ModalContent>

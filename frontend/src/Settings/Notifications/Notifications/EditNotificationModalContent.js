@@ -48,7 +48,7 @@ function EditNotificationModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        {`${id ? 'Edit' : 'Add'} Connection - ${implementationName}`}
+        {`${id ? translate('EditConnection') : translate('AddConnection')} - ${implementationName}`}
       </ModalHeader>
 
       <ModalBody>
@@ -136,7 +136,7 @@ function EditNotificationModalContent(props) {
               kind={kinds.DANGER}
               onPress={onDeleteNotificationPress}
             >
-              Delete
+              {translate('Delete')}
             </Button>
         }
 
@@ -145,13 +145,13 @@ function EditNotificationModalContent(props) {
           error={saveError}
           onPress={onTestPress}
         >
-          Test
+          {translate('Test')}
         </SpinnerErrorButton>
 
         <Button
           onPress={onModalClose}
         >
-          Cancel
+          {translate('Cancel')}
         </Button>
 
         <SpinnerErrorButton
@@ -159,7 +159,7 @@ function EditNotificationModalContent(props) {
           error={saveError}
           onPress={onSavePress}
         >
-          Save
+          {translate('Save')}
         </SpinnerErrorButton>
       </ModalFooter>
     </ModalContent>

@@ -53,7 +53,7 @@ function EditIndexerModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        {`${id ? 'Edit' : 'Add'} Indexer - ${implementationName}`}
+        {`${id ? translate('EditIndexer') : translate('AddIndexer')} - ${implementationName}`}
       </ModalHeader>
 
       <ModalBody>
@@ -204,7 +204,7 @@ function EditIndexerModalContent(props) {
               kind={kinds.DANGER}
               onPress={onDeleteIndexerPress}
             >
-              Delete
+              {translate('Delete')}
             </Button>
         }
 
@@ -213,13 +213,13 @@ function EditIndexerModalContent(props) {
           error={saveError}
           onPress={onTestPress}
         >
-          Test
+          {translate('Test')}
         </SpinnerErrorButton>
 
         <Button
           onPress={onModalClose}
         >
-          Cancel
+          {translate('Cancel')}
         </Button>
 
         <SpinnerErrorButton
@@ -227,7 +227,7 @@ function EditIndexerModalContent(props) {
           error={saveError}
           onPress={onSavePress}
         >
-          Save
+          {translate('Save')}
         </SpinnerErrorButton>
       </ModalFooter>
     </ModalContent>

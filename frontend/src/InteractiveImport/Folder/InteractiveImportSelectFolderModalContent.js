@@ -10,17 +10,18 @@ import ModalHeader from 'Components/Modal/ModalHeader';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import { icons, kinds, sizes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import RecentFolderRow from './RecentFolderRow';
 import styles from './InteractiveImportSelectFolderModalContent.css';
 
 const recentFoldersColumns = [
   {
     name: 'folder',
-    label: 'Folder'
+    label: translate('Folder')
   },
   {
     name: 'lastUsed',
-    label: 'Last Used'
+    label: translate('LastUsed')
   },
   {
     name: 'actions',
@@ -75,7 +76,7 @@ class InteractiveImportSelectFolderModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Manual Import - Select Folder
+          {translate('ManualImport')} - {translate('SelectFolder')}
         </ModalHeader>
 
         <ModalBody>
@@ -124,7 +125,7 @@ class InteractiveImportSelectFolderModalContent extends Component {
                   name={icons.QUICK}
                 />
 
-                Move Automatically
+                {translate('MoveAutomatically')}
               </Button>
             </div>
 
@@ -141,7 +142,7 @@ class InteractiveImportSelectFolderModalContent extends Component {
                   name={icons.INTERACTIVE}
                 />
 
-                Interactive Import
+                {translate('InteractiveImport')}
               </Button>
             </div>
           </div>
@@ -149,7 +150,7 @@ class InteractiveImportSelectFolderModalContent extends Component {
 
         <ModalFooter>
           <Button onPress={onModalClose}>
-            Cancel
+            {translate('Cancel')}
           </Button>
         </ModalFooter>
       </ModalContent>

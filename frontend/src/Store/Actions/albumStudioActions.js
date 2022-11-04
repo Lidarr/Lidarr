@@ -2,6 +2,7 @@ import { createAction } from 'redux-actions';
 import { filterBuilderTypes, filterBuilderValueTypes, sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
+import translate from 'Utilities/String/translate';
 import { fetchAlbums } from './albumActions';
 import { filterPredicates, filters } from './artistActions';
 import { set } from './baseActions';
@@ -31,41 +32,41 @@ export const defaultState = {
   filterBuilderProps: [
     {
       name: 'monitored',
-      label: 'Monitored',
+      label: translate('Monitored'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.BOOL
     },
     {
       name: 'status',
-      label: 'Status',
+      label: translate('Status'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.ARTIST_STATUS
     },
     {
       name: 'artistType',
-      label: 'Artist Type',
+      label: translate('ArtistType'),
       type: filterBuilderTypes.EXACT
     },
     {
       name: 'qualityProfileId',
-      label: 'Quality Profile',
+      label: translate('QualityProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.QUALITY_PROFILE
     },
     {
       name: 'metadataProfileId',
-      label: 'Metadata Profile',
+      label: translate('MetadataProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.METADATA_PROFILE
     },
     {
       name: 'rootFolderPath',
-      label: 'Root Folder Path',
+      label: translate('Root Folder Path'),
       type: filterBuilderTypes.EXACT
     },
     {
       name: 'tags',
-      label: 'Tags',
+      label: translate('Tags'),
       type: filterBuilderTypes.ARRAY,
       valueType: filterBuilderValueTypes.TAG
     }

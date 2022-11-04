@@ -8,6 +8,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { icons, kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './OrganizeArtistModalContent.css';
 
 function OrganizeArtistModalContent(props) {
@@ -20,7 +21,7 @@ function OrganizeArtistModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        Organize Selected Artist
+        {translate('OrganizeArtist')}
       </ModalHeader>
 
       <ModalBody>
@@ -51,14 +52,14 @@ function OrganizeArtistModalContent(props) {
 
       <ModalFooter>
         <Button onPress={onModalClose}>
-          Cancel
+          {translate('Cancel')}
         </Button>
 
         <Button
           kind={kinds.DANGER}
           onPress={onOrganizeArtistPress}
         >
-          Organize
+          {translate('Organize')}
         </Button>
       </ModalFooter>
     </ModalContent>

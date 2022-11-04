@@ -18,32 +18,32 @@ const columns = [
   },
   {
     name: 'album',
-    label: 'Album',
+    label: translate('Album'),
     isVisible: true
   },
   {
     name: 'sourceTitle',
-    label: 'Source Title',
+    label: translate('SourceTitle'),
     isVisible: true
   },
   {
     name: 'quality',
-    label: 'Quality',
+    label: translate('Quality'),
     isVisible: true
   },
   {
     name: 'date',
-    label: 'Date',
+    label: translate('Date'),
     isVisible: true
   },
   {
     name: 'details',
-    label: 'Details',
+    label: translate('Details'),
     isVisible: true
   },
   {
     name: 'actions',
-    label: 'Actions',
+    label: translate('Actions'),
     isVisible: true
   }
 ];

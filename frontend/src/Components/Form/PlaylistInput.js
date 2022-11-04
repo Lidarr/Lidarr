@@ -8,6 +8,7 @@ import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import TableRow from 'Components/Table/TableRow';
 import tagShape from 'Helpers/Props/Shapes/tagShape';
+import translate from 'Utilities/String/translate';
 import getSelectedIds from 'Utilities/Table/getSelectedIds';
 import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
@@ -16,7 +17,7 @@ import styles from './PlaylistInput.css';
 const columns = [
   {
     name: 'name',
-    label: 'Playlist',
+    label: translate('Playlist'),
     isSortable: false,
     isVisible: true
   }

@@ -187,23 +187,19 @@ class UISettings extends Component {
                   legend={translate('Style')}
                 >
                   <FormGroup>
-                    <FormLabel>Theme</FormLabel>
+                    <FormLabel>{translate('Theme')}</FormLabel>
                     <FormInputGroup
                       type={inputTypes.SELECT}
                       name="theme"
-                      helpText="Change Application UI Theme, Inspired by Theme.Park"
+                      helpText={translate('ThemeHelpText')}
                       values={themeOptions}
                       onChange={onInputChange}
                       {...settings.theme}
                     />
                   </FormGroup>
 
-                  <FormLabel>
-                    {translate('EnableColorImpairedMode')}
-                  </FormLabel>
-
                   <FormGroup>
-                    <FormLabel>Enable Color-Impaired Mode</FormLabel>
+                    <FormLabel>{translate('EnableColorImpairedMode')}</FormLabel>
                     <FormInputGroup
                       type={inputTypes.CHECK}
                       name="enableColorImpairedMode"

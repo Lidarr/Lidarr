@@ -5,6 +5,7 @@ import albumEntities from 'Album/albumEntities';
 import { sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
+import translate from 'Utilities/String/translate';
 import { removeItem, set, updateItem } from './baseActions';
 import createFetchHandler from './Creators/createFetchHandler';
 import createHandleActions from './Creators/createHandleActions';
@@ -43,32 +44,32 @@ export const defaultState = {
   columns: [
     {
       name: 'path',
-      label: 'Path',
+      label: translate('Path'),
       isSortable: true,
       isVisible: true,
       isModifiable: false
     },
     {
       name: 'size',
-      label: 'Size',
+      label: translate('Size'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'dateAdded',
-      label: 'Date Added',
+      label: translate('DateAdded'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'quality',
-      label: 'Quality',
+      label: translate('Quality'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'actions',
-      columnLabel: 'Actions',
+      columnLabel: translate('Actions'),
       isVisible: true,
       isModifiable: false
     }

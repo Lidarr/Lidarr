@@ -1,6 +1,7 @@
 import { createAction } from 'redux-actions';
 import { filterBuilderTypes, filterBuilderValueTypes, filterTypePredicates, sortDirections } from 'Helpers/Props';
 import sortByName from 'Utilities/Array/sortByName';
+import translate from 'Utilities/String/translate';
 import { filterPredicates, filters, sortPredicates } from './artistActions';
 import createHandleActions from './Creators/createHandleActions';
 import createSetClientSideCollectionFilterReducer from './Creators/Reducers/createSetClientSideCollectionFilterReducer';
@@ -61,105 +62,105 @@ export const defaultState = {
   columns: [
     {
       name: 'status',
-      columnLabel: 'Status',
+      columnLabel: translate('Status'),
       isSortable: true,
       isVisible: true,
       isModifiable: false
     },
     {
       name: 'sortName',
-      label: 'Artist Name',
+      label: translate('ArtistName'),
       isSortable: true,
       isVisible: true,
       isModifiable: false
     },
     {
       name: 'artistType',
-      label: 'Type',
+      label: translate('Type'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'qualityProfileId',
-      label: 'Quality Profile',
+      label: translate('QualityProfile'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'metadataProfileId',
-      label: 'Metadata Profile',
+      label: translate('MetadataProfile'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'nextAlbum',
-      label: 'Next Album',
+      label: translate('NextAlbum'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'lastAlbum',
-      label: 'Last Album',
+      label: translate('LastAlbum'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'added',
-      label: 'Added',
+      label: translate('Added'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'albumCount',
-      label: 'Albums',
+      label: translate('Albums'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'trackProgress',
-      label: 'Tracks',
+      label: translate('Tracks'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'trackCount',
-      label: 'Track Count',
+      label: translate('TrackCount'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'path',
-      label: 'Path',
+      label: translate('Path'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'sizeOnDisk',
-      label: 'Size on Disk',
+      label: translate('SizeOnDisk'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'genres',
-      label: 'Genres',
+      label: translate('Genres'),
       isSortable: false,
       isVisible: false
     },
     {
       name: 'ratings',
-      label: 'Rating',
+      label: translate('Rating'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'tags',
-      label: 'Tags',
+      label: translate('Tags'),
       isSortable: false,
       isVisible: false
     },
     {
       name: 'actions',
-      columnLabel: 'Actions',
+      columnLabel: translate('Actions'),
       isVisible: true,
       isModifiable: false
     }
@@ -242,70 +243,70 @@ export const defaultState = {
   filterBuilderProps: [
     {
       name: 'monitored',
-      label: 'Monitored',
+      label: translate('Monitored'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.BOOL
     },
     {
       name: 'status',
-      label: 'Status',
+      label: translate('Status'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.ARTIST_STATUS
     },
     {
       name: 'qualityProfileId',
-      label: 'Quality Profile',
+      label: translate('QualityProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.QUALITY_PROFILE
     },
     {
       name: 'metadataProfileId',
-      label: 'Metadata Profile',
+      label: translate('MetadataProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.METADATA_PROFILE
     },
     {
       name: 'nextAlbum',
-      label: 'Next Album',
+      label: translate('NextAlbum'),
       type: filterBuilderTypes.DATE,
       valueType: filterBuilderValueTypes.DATE
     },
     {
       name: 'lastAlbum',
-      label: 'Last Album',
+      label: translate('LastAlbum'),
       type: filterBuilderTypes.DATE,
       valueType: filterBuilderValueTypes.DATE
     },
     {
       name: 'added',
-      label: 'Added',
+      label: translate('Added'),
       type: filterBuilderTypes.DATE,
       valueType: filterBuilderValueTypes.DATE
     },
     {
       name: 'albumCount',
-      label: 'Album Count',
+      label: translate('AlbumCount'),
       type: filterBuilderTypes.NUMBER
     },
     {
       name: 'trackProgress',
-      label: 'Track Progress',
+      label: translate('TrackProgress'),
       type: filterBuilderTypes.NUMBER
     },
     {
       name: 'path',
-      label: 'Path',
+      label: translate('Path'),
       type: filterBuilderTypes.STRING
     },
     {
       name: 'sizeOnDisk',
-      label: 'Size on Disk',
+      label: translate('SizeOnDisk'),
       type: filterBuilderTypes.NUMBER,
       valueType: filterBuilderValueTypes.BYTES
     },
     {
       name: 'genres',
-      label: 'Genres',
+      label: translate('Genres'),
       type: filterBuilderTypes.ARRAY,
       optionsSelector: function(items) {
         const tagList = items.reduce((acc, artist) => {
@@ -324,12 +325,12 @@ export const defaultState = {
     },
     {
       name: 'ratings',
-      label: 'Rating',
+      label: translate('Rating'),
       type: filterBuilderTypes.NUMBER
     },
     {
       name: 'tags',
-      label: 'Tags',
+      label: translate('Tags'),
       type: filterBuilderTypes.ARRAY,
       valueType: filterBuilderValueTypes.TAG
     }

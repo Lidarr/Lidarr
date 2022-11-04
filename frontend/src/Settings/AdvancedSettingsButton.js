@@ -45,7 +45,7 @@ function AdvancedSettingsButton(props) {
 
       <div className={styles.labelContainer}>
         <div className={styles.label}>
-          {advancedSettings ? 'Hide Advanced' : 'Show Advanced'}
+          {advancedSettings ? translate('HideAdvanced') : translate('ShowAdvanced')}
         </div>
       </div>
     </Link>

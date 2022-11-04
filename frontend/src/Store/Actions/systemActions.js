@@ -121,12 +121,12 @@ export const defaultState = {
     filters: [
       {
         key: 'all',
-        label: 'All',
+        label: translate('All'),
         filters: []
       },
       {
         key: 'info',
-        label: 'Info',
+        label: translate('Info'),
         filters: [
           {
             key: 'level',
@@ -137,7 +137,7 @@ export const defaultState = {
       },
       {
         key: 'warn',
-        label: 'Warn',
+        label: translate('Warn'),
         filters: [
           {
             key: 'level',
@@ -148,7 +148,7 @@ export const defaultState = {
       },
       {
         key: 'error',
-        label: 'Error',
+        label: translate('Error'),
         filters: [
           {
             key: 'level',

@@ -7,6 +7,7 @@ import PageMenuButton from 'Components/Menu/PageMenuButton';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import { align, icons, sortDirections } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import InteractiveSearchFilterModalConnector from './InteractiveSearchFilterModalConnector';
 import InteractiveSearchRow from './InteractiveSearchRow';
 import styles from './InteractiveSearch.css';
@@ -14,43 +15,43 @@ import styles from './InteractiveSearch.css';
 const columns = [
   {
     name: 'protocol',
-    label: 'Source',
+    label: translate('Source'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'age',
-    label: 'Age',
+    label: translate('Age'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'title',
-    label: 'Title',
+    label: translate('Title'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'indexer',
-    label: 'Indexer',
+    label: translate('Indexer'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'size',
-    label: 'Size',
+    label: translate('Size'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'peers',
-    label: 'Peers',
+    label: translate('Peers'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'qualityWeight',
-    label: 'Quality',
+    label: translate('Quality'),
     isSortable: true,
     isVisible: true
   },
@@ -58,7 +59,7 @@ const columns = [
     name: 'preferredWordScore',
     label: React.createElement(Icon, {
       name: icons.SCORE,
-      title: 'Preferred word score'
+      title: translate('PreferredWordScore')
     }),
     isSortable: true,
     isVisible: true
@@ -67,7 +68,7 @@ const columns = [
     name: 'rejections',
     label: React.createElement(Icon, {
       name: icons.DANGER,
-      title: 'Rejections'
+      title: translate('rejections')
     }),
     isSortable: true,
     fixedSortDirection: sortDirections.ASCENDING,
@@ -125,7 +126,7 @@ function InteractiveSearch(props) {
       {
         !isFetching && error ?
           <div>
-            Unable to load results for this album search. Try again later
+            {translate('UnableToLoadInteractiveSearch')}
           </div> :
           null
       }
@@ -133,7 +134,7 @@ function InteractiveSearch(props) {
       {
         !isFetching && isPopulated && !totalReleasesCount ?
           <div>
-            No results found
+            {translate('NoResults')}
           </div> :
           null
       }
@@ -141,7 +142,7 @@ function InteractiveSearch(props) {
       {
         !!totalReleasesCount && isPopulated && !items.length ?
           <div>
-            All results are hidden by the applied filter
+            {translate('AllResultsFiltered')}
           </div> :
           null
       }
@@ -177,7 +178,7 @@ function InteractiveSearch(props) {
       {
         totalReleasesCount !== items.length && !!items.length ?
           <div className={styles.filteredMessage}>
-            Some results are hidden by the applied filter
+            {translate('SomeResultsFiltered')}
           </div> :
           null
       }

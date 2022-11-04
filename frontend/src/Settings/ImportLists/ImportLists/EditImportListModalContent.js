@@ -28,17 +28,17 @@ function ImportListMonitoringOptionsPopoverContent() {
     <DescriptionList>
       <DescriptionListItem
         title={translate('None')}
-        data="Do not monitor artists or albums"
+        data={translate('NoneMonitoringOptionHelpText')}
       />
 
       <DescriptionListItem
         title={translate('SpecificAlbum')}
-        data="Monitor artists but only monitor albums explicitly included in the list"
+        data={translate('SecificMonitoringOptionHelpText')}
       />
 
       <DescriptionListItem
         title={translate('AllArtistAlbums')}
-        data="Monitor artists and all albums for each artist included on the import list"
+        data={translate('AllMonitoringOptionHelpText')}
       />
     </DescriptionList>
   );
@@ -47,9 +47,9 @@ function ImportListMonitoringOptionsPopoverContent() {
 function EditImportListModalContent(props) {
 
   const monitorOptions = [
-    { key: 'none', value: 'None' },
-    { key: 'specificAlbum', value: 'Specific Album' },
-    { key: 'entireArtist', value: 'All Artist Albums' }
+    { key: 'none', value: translate('None') },
+    { key: 'specificAlbum', value: translate('SpecificAlbum') },
+    { key: 'entireArtist', value: translate('All Artist Albums') }
   ];
 
   const {
@@ -89,7 +89,7 @@ function EditImportListModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        {id ? 'Edit List' : 'Add List'}
+        {id ? translate('EditList') : translate('AddList')}
       </ModalHeader>
 
       <ModalBody>
@@ -318,7 +318,7 @@ function EditImportListModalContent(props) {
               kind={kinds.DANGER}
               onPress={onDeleteImportListPress}
             >
-              Delete
+              {translate('Delete')}
             </Button>
         }
 
@@ -327,13 +327,13 @@ function EditImportListModalContent(props) {
           error={saveError}
           onPress={onTestPress}
         >
-          Test
+          {translate('Test')}
         </SpinnerErrorButton>
 
         <Button
           onPress={onModalClose}
         >
-          Cancel
+          {translate('Cancel')}
         </Button>
 
         <SpinnerErrorButton
@@ -341,7 +341,7 @@ function EditImportListModalContent(props) {
           error={saveError}
           onPress={onSavePress}
         >
-          Save
+          {translate('Save')}
         </SpinnerErrorButton>
       </ModalFooter>
     </ModalContent>

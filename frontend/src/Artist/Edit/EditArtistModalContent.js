@@ -211,14 +211,14 @@ class EditArtistModalContent extends Component {
           <Button
             onPress={onModalClose}
           >
-            Cancel
+            {translate('Cancel')}
           </Button>
 
           <SpinnerButton
             isSpinning={isSaving}
             onPress={this.onSavePress}
           >
-            Save
+            {translate('Save')}
           </SpinnerButton>
         </ModalFooter>
 

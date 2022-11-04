@@ -19,12 +19,12 @@ import LogFilesTableRow from './LogFilesTableRow';
 const columns = [
   {
     name: 'filename',
-    label: 'Filename',
+    label: translate('Filename'),
     isVisible: true
   },
   {
     name: 'lastWriteTime',
-    label: 'Last Write Time',
+    label: translate('LastWriteTime'),
     isVisible: true
   },
   {

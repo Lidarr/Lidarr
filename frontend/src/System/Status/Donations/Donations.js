@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import FieldSet from 'Components/FieldSet';
 import Link from 'Components/Link/Link';
+import translate from 'Utilities/String/translate';
 import styles from '../styles.css';
 
 class Donations extends Component {
@@ -10,7 +11,7 @@ class Donations extends Component {
 
   render() {
     return (
-      <FieldSet legend='Donations'>
+      <FieldSet legend={translate('Donations')}>
         <div className={styles.logoContainer} title="Radarr">
           <Link to="https://radarr.video/donate">
             <img

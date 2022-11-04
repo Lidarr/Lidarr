@@ -5,6 +5,7 @@ import { filterTypePredicates, filterTypes, sortDirections } from 'Helpers/Props
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import dateFilterPredicate from 'Utilities/Date/dateFilterPredicate';
+import translate from 'Utilities/String/translate';
 import { updateItem } from './baseActions';
 import createFetchHandler from './Creators/createFetchHandler';
 import createHandleActions from './Creators/createHandleActions';
@@ -20,12 +21,12 @@ export const section = 'artist';
 export const filters = [
   {
     key: 'all',
-    label: 'All',
+    label: translate('All'),
     filters: []
   },
   {
     key: 'monitored',
-    label: 'Monitored Only',
+    label: translate('MonitoredOnly'),
     filters: [
       {
         key: 'monitored',
@@ -36,7 +37,7 @@ export const filters = [
   },
   {
     key: 'unmonitored',
-    label: 'Unmonitored Only',
+    label: translate('UnmonitoredOnly'),
     filters: [
       {
         key: 'monitored',
@@ -47,7 +48,7 @@ export const filters = [
   },
   {
     key: 'continuing',
-    label: 'Continuing Only',
+    label: translate('ContinuingOnly'),
     filters: [
       {
         key: 'status',
@@ -58,7 +59,7 @@ export const filters = [
   },
   {
     key: 'ended',
-    label: 'Ended Only',
+    label: translate('EndedOnly'),
     filters: [
       {
         key: 'status',
@@ -69,7 +70,7 @@ export const filters = [
   },
   {
     key: 'missing',
-    label: 'Missing Tracks',
+    label: translate('MissingTracks'),
     filters: [
       {
         key: 'missing',

@@ -35,7 +35,7 @@ function EditMetadataModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        Edit {name.value} Metadata
+        {translate('EditMetadata')} - {name.value}
       </ModalHeader>
 
       <ModalBody>
@@ -75,7 +75,7 @@ function EditMetadataModalContent(props) {
         <Button
           onPress={onModalClose}
         >
-          Cancel
+          {translate('Cancel')}
         </Button>
 
         <SpinnerErrorButton
@@ -83,7 +83,7 @@ function EditMetadataModalContent(props) {
           error={saveError}
           onPress={onSavePress}
         >
-          Save
+          {translate('Save')}
         </SpinnerErrorButton>
       </ModalFooter>
     </ModalContent>

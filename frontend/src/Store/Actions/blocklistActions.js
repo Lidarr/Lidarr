@@ -4,6 +4,7 @@ import { sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import serverSideCollectionHandlers from 'Utilities/serverSideCollectionHandlers';
+import translate from 'Utilities/String/translate';
 import { set, updateItem } from './baseActions';
 import createHandleActions from './Creators/createHandleActions';
 import createRemoveItemHandler from './Creators/createRemoveItemHandler';
@@ -32,36 +33,36 @@ export const defaultState = {
   columns: [
     {
       name: 'artists.sortName',
-      label: 'Artist Name',
+      label: translate('ArtistName'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'sourceTitle',
-      label: 'Source Title',
+      label: translate('SourceTitle'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'quality',
-      label: 'Quality',
+      label: translate('Quality'),
       isVisible: true
     },
     {
       name: 'date',
-      label: 'Date',
+      label: translate('Date'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'indexer',
-      label: 'Indexer',
+      label: translate('Indexer'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'actions',
-      columnLabel: 'Actions',
+      columnLabel: translate('Actions'),
       isVisible: true,
       isModifiable: false
     }

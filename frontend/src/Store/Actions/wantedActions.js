@@ -2,6 +2,7 @@ import { createAction } from 'redux-actions';
 import { filterTypes, sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import serverSideCollectionHandlers from 'Utilities/serverSideCollectionHandlers';
+import translate from 'Utilities/String/translate';
 import createBatchToggleAlbumMonitoredHandler from './Creators/createBatchToggleAlbumMonitoredHandler';
 import createHandleActions from './Creators/createHandleActions';
 import createServerSideCollectionHandlers from './Creators/createServerSideCollectionHandlers';
@@ -29,25 +30,25 @@ export const defaultState = {
     columns: [
       {
         name: 'artists.sortName',
-        label: 'Artist Name',
+        label: translate('ArtistName'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'albums.title',
-        label: 'Album Title',
+        label: translate('AlbumTitle'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'albumType',
-        label: 'Album Type',
+        label: translate('AlbumType'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'releaseDate',
-        label: 'Release Date',
+        label: translate('ReleaseDate'),
         isSortable: true,
         isVisible: true
       },
@@ -58,7 +59,7 @@ export const defaultState = {
       // },
       {
         name: 'actions',
-        columnLabel: 'Actions',
+        columnLabel: translate('Actions'),
         isVisible: true,
         isModifiable: false
       }
@@ -69,7 +70,7 @@ export const defaultState = {
     filters: [
       {
         key: 'monitored',
-        label: 'Monitored',
+        label: translate('Monitored'),
         filters: [
           {
             key: 'monitored',
@@ -80,7 +81,7 @@ export const defaultState = {
       },
       {
         key: 'unmonitored',
-        label: 'Unmonitored',
+        label: translate('Unmonitored'),
         filters: [
           {
             key: 'monitored',
@@ -103,25 +104,25 @@ export const defaultState = {
     columns: [
       {
         name: 'artists.sortName',
-        label: 'Artist Name',
+        label: translate('ArtistName'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'albums.title',
-        label: 'Album Title',
+        label: translate('AlbumTitle'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'albumType',
-        label: 'Album Type',
+        label: translate('AlbumType'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'releaseDate',
-        label: 'Release Date',
+        label: translate('ReleaseDate'),
         isSortable: true,
         isVisible: true
       },
@@ -132,7 +133,7 @@ export const defaultState = {
       // },
       {
         name: 'actions',
-        columnLabel: 'Actions',
+        columnLabel: translate('Actions'),
         isVisible: true,
         isModifiable: false
       }
@@ -143,7 +144,7 @@ export const defaultState = {
     filters: [
       {
         key: 'monitored',
-        label: 'Monitored',
+        label: translate('Monitored'),
         filters: [
           {
             key: 'monitored',
@@ -154,7 +155,7 @@ export const defaultState = {
       },
       {
         key: 'unmonitored',
-        label: 'Unmonitored',
+        label: translate('Unmonitored'),
         filters: [
           {
             key: 'monitored',

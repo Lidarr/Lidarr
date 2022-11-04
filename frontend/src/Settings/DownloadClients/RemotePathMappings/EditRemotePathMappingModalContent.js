@@ -41,7 +41,7 @@ function EditRemotePathMappingModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        {id ? 'Edit Remote Path Mapping' : 'Add Remote Path Mapping'}
+        {id ? translate('EditRemotePathMapping') : translate('AddRemotePathMapping')}
       </ModalHeader>
 
       <ModalBody className={styles.body}>
@@ -114,14 +114,14 @@ function EditRemotePathMappingModalContent(props) {
               kind={kinds.DANGER}
               onPress={onDeleteRemotePathMappingPress}
             >
-              Delete
+              {translate('Delete')}
             </Button>
         }
 
         <Button
           onPress={onModalClose}
         >
-          Cancel
+          {translate('Cancel')}
         </Button>
 
         <SpinnerErrorButton
@@ -129,7 +129,7 @@ function EditRemotePathMappingModalContent(props) {
           error={saveError}
           onPress={onSavePress}
         >
-          Save
+          {translate('Save')}
         </SpinnerErrorButton>
       </ModalFooter>
     </ModalContent>

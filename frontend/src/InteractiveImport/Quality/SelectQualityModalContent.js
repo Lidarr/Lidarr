@@ -81,7 +81,7 @@ class SelectQualityModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Manual Import - Select Quality
+          {translate('ManualImport')} - {translate('SelectQuality')}
         </ModalHeader>
 
         <ModalBody>
@@ -145,14 +145,14 @@ class SelectQualityModalContent extends Component {
 
         <ModalFooter>
           <Button onPress={onModalClose}>
-            Cancel
+            {translate('Cancel')}
           </Button>
 
           <Button
             kind={kinds.SUCCESS}
             onPress={this.onQualitySelect}
           >
-            Select Quality
+            {translate('SelectQuality')}
           </Button>
         </ModalFooter>
       </ModalContent>

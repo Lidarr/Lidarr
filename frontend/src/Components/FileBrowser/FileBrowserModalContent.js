@@ -21,12 +21,12 @@ import styles from './FileBrowserModalContent.css';
 const columns = [
   {
     name: 'type',
-    label: 'Type',
+    label: translate('Type'),
     isVisible: true
   },
   {
     name: 'name',
-    label: 'Name',
+    label: translate('Name'),
     isVisible: true
   }
 ];
@@ -226,13 +226,13 @@ class FileBrowserModalContent extends Component {
           <Button
             onPress={onModalClose}
           >
-            Cancel
+            {translate('Cancel')}
           </Button>
 
           <Button
             onPress={this.onOkPress}
           >
-            Ok
+            {translate('Ok')}
           </Button>
         </ModalFooter>
       </ModalContent>

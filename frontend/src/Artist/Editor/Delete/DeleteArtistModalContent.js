@@ -9,6 +9,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './DeleteArtistModalContent.css';
 
 class DeleteArtistModalContent extends Component {
@@ -51,7 +52,7 @@ class DeleteArtistModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Delete Selected Artist
+          {translate('DeleteArtist')}
         </ModalHeader>
 
         <ModalBody>
@@ -99,14 +100,14 @@ class DeleteArtistModalContent extends Component {
 
         <ModalFooter>
           <Button onPress={onModalClose}>
-            Cancel
+            {translate('Cancel')}
           </Button>
 
           <Button
             kind={kinds.DANGER}
             onPress={this.onDeleteArtistConfirmed}
           >
-            Delete
+            {translate('Delete')}
           </Button>
         </ModalFooter>
       </ModalContent>

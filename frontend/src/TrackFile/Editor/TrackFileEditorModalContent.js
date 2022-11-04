@@ -25,17 +25,17 @@ import styles from './TrackFileEditorModalContent.css';
 const columns = [
   {
     name: 'trackNumber',
-    label: 'Track',
+    label: translate('Track'),
     isVisible: true
   },
   {
     name: 'path',
-    label: 'Path',
+    label: translate('Path'),
     isVisible: true
   },
   {
     name: 'quality',
-    label: 'Quality',
+    label: translate('Quality'),
     isVisible: true
   }
 ];
@@ -230,7 +230,7 @@ class TrackFileEditorModalContent extends Component {
           <Button
             onPress={onModalClose}
           >
-            Close
+            {translate('Close')}
           </Button>
         </ModalFooter>
 

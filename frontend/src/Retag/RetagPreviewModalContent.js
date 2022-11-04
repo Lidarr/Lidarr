@@ -89,7 +89,7 @@ class RetagPreviewModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Write Metadata Tags
+          {translate('WriteMetadataTags')}
         </ModalHeader>
 
         <ModalBody>
@@ -156,14 +156,14 @@ class RetagPreviewModalContent extends Component {
           <Button
             onPress={onModalClose}
           >
-            Cancel
+            {translate('Cancel')}
           </Button>
 
           <Button
             kind={kinds.PRIMARY}
             onPress={this.onRetagPress}
           >
-            Retag
+            {translate('Retag')}
           </Button>
         </ModalFooter>
       </ModalContent>

@@ -95,12 +95,12 @@ const columns = [
   },
   {
     name: 'message',
-    label: 'Message',
+    label: translate('Message'),
     isVisible: true
   },
   {
     name: 'actions',
-    label: 'Actions',
+    label: translate('Actions'),
     isVisible: true
   }
 ];

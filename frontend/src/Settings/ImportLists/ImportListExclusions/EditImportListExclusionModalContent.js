@@ -39,7 +39,7 @@ function EditImportListExclusionModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        {id ? 'Edit Import List Exclusion' : 'Add Import List Exclusion'}
+        {id ? translate('EditImportListExclusion') : translate('AddImportListExclusion')}
       </ModalHeader>
 
       <ModalBody className={styles.body}>
@@ -99,14 +99,14 @@ function EditImportListExclusionModalContent(props) {
               kind={kinds.DANGER}
               onPress={onDeleteImportListExclusionPress}
             >
-              Delete
+              {translate('Delete')}
             </Button>
         }
 
         <Button
           onPress={onModalClose}
         >
-          Cancel
+          {translate('Cancel')}
         </Button>
 
         <SpinnerErrorButton
@@ -114,7 +114,7 @@ function EditImportListExclusionModalContent(props) {
           error={saveError}
           onPress={onSavePress}
         >
-          Save
+          {translate('Save')}
         </SpinnerErrorButton>
       </ModalFooter>
     </ModalContent>

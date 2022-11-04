@@ -12,6 +12,7 @@ import TableBody from 'Components/Table/TableBody';
 import { kinds } from 'Helpers/Props';
 import ExpandingFileDetails from 'TrackFile/ExpandingFileDetails';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
+import translate from 'Utilities/String/translate';
 import getSelectedIds from 'Utilities/Table/getSelectedIds';
 import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
@@ -20,7 +21,7 @@ import SelectTrackRow from './SelectTrackRow';
 const columns = [
   {
     name: 'mediumNumber',
-    label: 'Medium',
+    label: translate('Medium'),
     isSortable: true,
     isVisible: true
   },
@@ -32,12 +33,12 @@ const columns = [
   },
   {
     name: 'title',
-    label: 'Title',
+    label: translate('Title'),
     isVisible: true
   },
   {
     name: 'trackStatus',
-    label: 'Status',
+    label: translate('Status'),
     isVisible: true
   }
 ];
@@ -137,7 +138,7 @@ class SelectTrackModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Manual Import - Select Track(s):
+          {translate('ManualImport')} - {translate('SelectTracks')}
         </ModalHeader>
 
         <ModalBody>
@@ -201,14 +202,14 @@ class SelectTrackModalContent extends Component {
 
         <ModalFooter>
           <Button onPress={onModalClose}>
-            Cancel
+            {translate('Cancel')}
           </Button>
 
           <Button
             kind={kinds.SUCCESS}
             onPress={this.onTracksSelect}
           >
-            Select Tracks
+            {translate('SelectTracks')}
           </Button>
         </ModalFooter>
       </ModalContent>

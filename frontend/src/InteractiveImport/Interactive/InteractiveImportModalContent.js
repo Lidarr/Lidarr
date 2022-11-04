@@ -22,6 +22,7 @@ import SelectArtistModal from 'InteractiveImport/Artist/SelectArtistModal';
 import ConfirmImportModal from 'InteractiveImport/Confirmation/ConfirmImportModal';
 import SelectQualityModal from 'InteractiveImport/Quality/SelectQualityModal';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
+import translate from 'Utilities/String/translate';
 import getSelectedIds from 'Utilities/Table/getSelectedIds';
 import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
@@ -31,35 +32,35 @@ import styles from './InteractiveImportModalContent.css';
 const columns = [
   {
     name: 'path',
-    label: 'Path',
+    label: translate('Path'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'artist',
-    label: 'Artist',
+    label: translate('Artist'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'album',
-    label: 'Album',
+    label: translate('Album'),
     isVisible: true
   },
   {
     name: 'tracks',
-    label: 'Track(s)',
+    label: translate('Tracks'),
     isVisible: true
   },
   {
     name: 'quality',
-    label: 'Quality',
+    label: translate('Quality'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'size',
-    label: 'Size',
+    label: translate('Size'),
     isSortable: true,
     isVisible: true
   },
@@ -80,8 +81,8 @@ const filterExistingFilesOptions = {
 };
 
 const importModeOptions = [
-  { key: 'move', value: 'Move Files' },
-  { key: 'copy', value: 'Hardlink/Copy Files' }
+  { key: 'move', value: translate('MoveFiles') },
+  { key: 'copy', value: translate('HardlinkCopyFiles') }
 ];
 
 const SELECT = 'select';
@@ -288,23 +289,23 @@ class InteractiveImportModalContent extends Component {
     const errorMessage = getErrorMessage(error, 'Unable to load manual import items');
 
     const bulkSelectOptions = [
-      { key: SELECT, value: 'Select...', disabled: true },
-      { key: ALBUM, value: 'Select Album' },
-      { key: ALBUM_RELEASE, value: 'Select Album Release' },
-      { key: QUALITY, value: 'Select Quality' }
+      { key: SELECT, value: translate('Select...'), disabled: true },
+      { key: ALBUM, value: translate('SelectAlbum') },
+      { key: ALBUM_RELEASE, value: translate('SelectAlbumRelease') },
+      { key: QUALITY, value: translate('SelectQuality') }
     ];
 
     if (allowArtistChange) {
       bulkSelectOptions.splice(1, 0, {
         key: ARTIST,
-        value: 'Select Artist'
+        value: translate('SelectArtist')
       });
     }
 
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Manual Import - {title || folder}
+          {translate('ManualImport')} - {title || folder}
         </ModalHeader>
 
         <ModalBody scrollDirection={scrollDirections.BOTH}>
@@ -320,7 +321,7 @@ class InteractiveImportModalContent extends Component {
 
                     <div className={styles.filterText}>
                       {
-                        filterExistingFiles ? 'Unmapped Files Only' : 'All Files'
+                        filterExistingFiles ? translate('UnmappedFilesOnly') : translate('AllFiles')
                       }
                     </div>
                   </MenuButton>
@@ -331,7 +332,7 @@ class InteractiveImportModalContent extends Component {
                       isSelected={!filterExistingFiles}
                       onPress={this.onFilterExistingFilesChange}
                     >
-                      All Files
+                      {translate('AllFiles')}
                     </SelectedMenuItem>
 
                     <SelectedMenuItem
@@ -339,7 +340,7 @@ class InteractiveImportModalContent extends Component {
                       isSelected={filterExistingFiles}
                       onPress={this.onFilterExistingFilesChange}
                     >
-                      Unmapped Files Only
+                      {translate('UnmappedFilesOnly')}
                     </SelectedMenuItem>
                   </MenuContent>
                 </Menu>
@@ -366,7 +367,7 @@ class InteractiveImportModalContent extends Component {
                       isSelected={!replaceExistingFiles}
                       onPress={this.onReplaceExistingFilesChange}
                     >
-                      Combine With Existing Files
+                      {translate('CombineWithExistingFiles')}
                     </SelectedMenuItem>
 
                     <SelectedMenuItem
@@ -374,7 +375,7 @@ class InteractiveImportModalContent extends Component {
                       isSelected={replaceExistingFiles}
                       onPress={this.onReplaceExistingFilesChange}
                     >
-                      Replace Existing Files
+                      {translate('ReplaceExistingFiles')}
                     </SelectedMenuItem>
                   </MenuContent>
                 </Menu>
@@ -474,7 +475,7 @@ class InteractiveImportModalContent extends Component {
 
           <div className={styles.rightButtons}>
             <Button onPress={onModalClose}>
-              Cancel
+              {translate('Cancel')}
             </Button>
 
             {
@@ -487,7 +488,7 @@ class InteractiveImportModalContent extends Component {
               isDisabled={!selectedIds.length || !!invalidRowsSelected.length || inconsistentAlbumReleases}
               onPress={this.onImportSelectedPress}
             >
-              Import
+              {translate('Import')}
             </Button>
           </div>
         </ModalFooter>

@@ -1,6 +1,7 @@
 import { createAction } from 'redux-actions';
 import { sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
+import translate from 'Utilities/String/translate';
 import createFetchHandler from './Creators/createFetchHandler';
 import createHandleActions from './Creators/createHandleActions';
 import createSetClientSideCollectionSortReducer from './Creators/Reducers/createSetClientSideCollectionSortReducer';
@@ -27,42 +28,42 @@ export const defaultState = {
   columns: [
     {
       name: 'medium',
-      label: 'Medium',
+      label: translate('Medium'),
       isVisible: false
     },
     {
       name: 'absoluteTrackNumber',
-      label: 'Track',
+      label: translate('Track'),
       isVisible: true
     },
     {
       name: 'title',
-      label: 'Title',
+      label: translate('Title'),
       isVisible: true
     },
     {
       name: 'path',
-      label: 'Path',
+      label: translate('Path'),
       isVisible: false
     },
     {
       name: 'duration',
-      label: 'Duration',
+      label: translate('Duration'),
       isVisible: true
     },
     {
       name: 'audioInfo',
-      label: 'Audio Info',
+      label: translate('AudioInfo'),
       isVisible: true
     },
     {
       name: 'status',
-      label: 'Status',
+      label: translate('Status'),
       isVisible: true
     },
     {
       name: 'actions',
-      columnLabel: 'Actions',
+      columnLabel: translate('Actions'),
       isVisible: true,
       isModifiable: false
     }

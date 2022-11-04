@@ -119,7 +119,7 @@ class EditQualityProfileModalContent extends Component {
           onMeasure={this.onHeaderMeasure}
         >
           <ModalHeader>
-            {id ? 'Edit Quality Profile' : 'Add Quality Profile'}
+            {id ? translate('EditQualityProfile') : translate('AddQualityProfile')}
           </ModalHeader>
         </Measure>
 
@@ -161,7 +161,7 @@ class EditQualityProfileModalContent extends Component {
 
                         <FormGroup size={sizes.EXTRA_SMALL}>
                           <FormLabel size={sizes.SMALL}>
-                            Upgrades Allowed
+                            {translate('UpgradesAllowed')}
                           </FormLabel>
 
                           <FormInputGroup
@@ -226,7 +226,7 @@ class EditQualityProfileModalContent extends Component {
                     isDisabled={isInUse}
                     onPress={onDeleteQualityProfilePress}
                   >
-                    Delete
+                    {translate('Delete')}
                   </Button>
                 </div>
             }
@@ -234,7 +234,7 @@ class EditQualityProfileModalContent extends Component {
             <Button
               onPress={onModalClose}
             >
-              Cancel
+              {translate('Cancel')}
             </Button>
 
             <SpinnerErrorButton
@@ -242,7 +242,7 @@ class EditQualityProfileModalContent extends Component {
               error={saveError}
               onPress={onSavePress}
             >
-              Save
+              {translate('Save')}
             </SpinnerErrorButton>
           </ModalFooter>
         </Measure>

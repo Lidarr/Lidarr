@@ -10,18 +10,19 @@ import Scroller from 'Components/Scroller/Scroller';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import { scrollDirections } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import SelectAlbumReleaseRow from './SelectAlbumReleaseRow';
 import styles from './SelectAlbumReleaseModalContent.css';
 
 const columns = [
   {
     name: 'album',
-    label: 'Album',
+    label: translate('Album'),
     isVisible: true
   },
   {
     name: 'release',
-    label: 'Album Release',
+    label: translate('AlbumRelease'),
     isVisible: true
   }
 ];
@@ -42,7 +43,7 @@ class SelectAlbumReleaseModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Manual Import - Select Album Release
+          {translate('ManualImport')} - {translate('SelectAlbumRelease')}
         </ModalHeader>
 
         <ModalBody
@@ -81,7 +82,7 @@ class SelectAlbumReleaseModalContent extends Component {
 
         <ModalFooter>
           <Button onPress={onModalClose}>
-            Cancel
+            {translate('Cancel')}
           </Button>
         </ModalFooter>
       </ModalContent>

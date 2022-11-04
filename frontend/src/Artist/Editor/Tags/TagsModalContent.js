@@ -61,9 +61,9 @@ class TagsModalContent extends Component {
     } = this.state;
 
     const applyTagsOptions = [
-      { key: 'add', value: 'Add' },
-      { key: 'remove', value: 'Remove' },
-      { key: 'replace', value: 'Replace' }
+      { key: 'add', value: translate('Add') },
+      { key: 'remove', value: translate('Remove') },
+      { key: 'replace', value: translate('Replace') }
     ];
 
     return (
@@ -169,14 +169,14 @@ class TagsModalContent extends Component {
 
         <ModalFooter>
           <Button onPress={onModalClose}>
-            Cancel
+            {translate('Cancel')}
           </Button>
 
           <Button
             kind={kinds.PRIMARY}
             onPress={this.onApplyTagsPress}
           >
-            Apply
+            {translate('Apply')}
           </Button>
         </ModalFooter>
       </ModalContent>

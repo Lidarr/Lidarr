@@ -47,7 +47,7 @@ class SelectArtistModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Manual Import - Select Artist
+          {translate('ManualImport')} - {translate('SelectArtist')}
         </ModalHeader>
 
         <ModalBody
@@ -83,7 +83,7 @@ class SelectArtistModalContent extends Component {
 
         <ModalFooter>
           <Button onPress={onModalClose}>
-            Cancel
+            {translate('Cancel')}
           </Button>
         </ModalFooter>
       </ModalContent>

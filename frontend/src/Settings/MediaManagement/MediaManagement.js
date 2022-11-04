@@ -15,26 +15,26 @@ import NamingConnector from './Naming/NamingConnector';
 import RootFoldersConnector from './RootFolder/RootFoldersConnector';
 
 const rescanAfterRefreshOptions = [
-  { key: 'always', value: 'Always' },
-  { key: 'afterManual', value: 'After Manual Refresh' },
-  { key: 'never', value: 'Never' }
+  { key: 'always', value: translate('Always') },
+  { key: 'afterManual', value: translate('AfterManualRefresh') },
+  { key: 'never', value: translate('Never') }
 ];
 
 const allowFingerprintingOptions = [
-  { key: 'allFiles', value: 'Always' },
-  { key: 'newFiles', value: 'For new imports only' },
-  { key: 'never', value: 'Never' }
+  { key: 'allFiles', value: translate('Always') },
+  { key: 'newFiles', value: translate('ForNewImportsOnly') },
+  { key: 'never', value: translate('Never') }
 ];
 
 const downloadPropersAndRepacksOptions = [
-  { key: 'preferAndUpgrade', value: 'Prefer and Upgrade' },
-  { key: 'doNotUpgrade', value: 'Do not Upgrade Automatically' },
-  { key: 'doNotPrefer', value: 'Do not Prefer' }
+  { key: 'preferAndUpgrade', value: translate('PreferAndUpgrade') },
+  { key: 'doNotUpgrade', value: translate('DoNotUpgradeAutomatically') },
+  { key: 'doNotPrefer', value: translate('DoNotPrefer') }
 ];
 
 const fileDateOptions = [
-  { key: 'none', value: 'None' },
-  { key: 'albumReleaseDate', value: 'Album Release Date' }
+  { key: 'none', value: translate('None') },
+  { key: 'albumReleaseDate', value: translate('AlbumReleaseDate') }
 ];
 
 class MediaManagement extends Component {

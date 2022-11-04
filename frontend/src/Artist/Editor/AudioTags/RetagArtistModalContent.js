@@ -8,6 +8,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { icons, kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './RetagArtistModalContent.css';
 
 function RetagArtistModalContent(props) {
@@ -50,14 +51,14 @@ function RetagArtistModalContent(props) {
 
       <ModalFooter>
         <Button onPress={onModalClose}>
-          Cancel
+          {translate('Cancel')}
         </Button>
 
         <Button
           kind={kinds.DANGER}
           onPress={onRetagArtistPress}
         >
-          Retag
+          {translate('Retag')}
         </Button>
       </ModalFooter>
     </ModalContent>

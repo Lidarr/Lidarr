@@ -5,6 +5,7 @@ import albumEntities from 'Album/albumEntities';
 import { sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
+import translate from 'Utilities/String/translate';
 import { updateItem } from './baseActions';
 import createFetchHandler from './Creators/createFetchHandler';
 import createHandleActions from './Creators/createHandleActions';
@@ -41,58 +42,58 @@ export const defaultState = {
   columns: [
     {
       name: 'monitored',
-      columnLabel: 'Monitored',
+      columnLabel: translate('Monitored'),
       isVisible: true,
       isModifiable: false
     },
     {
       name: 'title',
-      label: 'Title',
+      label: translate('Title'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'releaseDate',
-      label: 'Release Date',
+      label: translate('ReleaseDate'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'secondaryTypes',
-      label: 'Secondary Types',
+      label: translate('SecondaryTypes'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'mediumCount',
-      label: 'Media Count',
+      label: translate('MediaCount'),
       isVisible: false
     },
     {
       name: 'trackCount',
-      label: 'Track Count',
+      label: translate('TrackCount'),
       isVisible: false
     },
     {
       name: 'duration',
-      label: 'Duration',
+      label: translate('Duration'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'rating',
-      label: 'Rating',
+      label: translate('Rating'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'status',
-      label: 'Status',
+      label: translate('Status'),
       isVisible: true
     },
     {
       name: 'actions',
-      columnLabel: 'Actions',
+      columnLabel: translate('Actions'),
       isVisible: true,
       isModifiable: false
     }

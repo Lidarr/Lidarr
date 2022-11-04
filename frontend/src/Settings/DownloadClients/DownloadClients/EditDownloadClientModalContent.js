@@ -189,7 +189,7 @@ class EditDownloadClientModalContent extends Component {
                 kind={kinds.DANGER}
                 onPress={onDeleteDownloadClientPress}
               >
-                Delete
+                {translate('Delete')}
               </Button>
           }
 
@@ -198,13 +198,13 @@ class EditDownloadClientModalContent extends Component {
             error={saveError}
             onPress={onTestPress}
           >
-            Test
+            {translate('Test')}
           </SpinnerErrorButton>
 
           <Button
             onPress={onModalClose}
           >
-            Cancel
+            {translate('Cancel')}
           </Button>
 
           <SpinnerErrorButton
@@ -212,7 +212,7 @@ class EditDownloadClientModalContent extends Component {
             error={saveError}
             onPress={onSavePress}
           >
-            Save
+            {translate('Save')}
           </SpinnerErrorButton>
         </ModalFooter>
       </ModalContent>
