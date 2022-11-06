@@ -8,6 +8,7 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Processes;
 using NzbDrone.Common.Serializer;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.HealthCheck;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
@@ -18,12 +19,20 @@ namespace NzbDrone.Core.Notifications.CustomScript
 {
     public class CustomScript : NotificationBase<CustomScriptSettings>
     {
+        private readonly IConfigFileProvider _configFileProvider;
+        private readonly IConfigService _configService;
         private readonly IDiskProvider _diskProvider;
         private readonly IProcessProvider _processProvider;
         private readonly Logger _logger;
 
-        public CustomScript(IDiskProvider diskProvider, IProcessProvider processProvider, Logger logger)
+        public CustomScript(IConfigFileProvider configFileProvider,
+            IConfigService configService,
+            IDiskProvider diskProvider,
+            IProcessProvider processProvider,
+            Logger logger)
         {
+            _configFileProvider = configFileProvider;
+            _configService = configService;
             _diskProvider = diskProvider;
             _processProvider = processProvider;
             _logger = logger;
@@ -43,6 +52,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             var environmentVariables = new StringDictionary();
 
             environmentVariables.Add("Lidarr_EventType", "Grab");
+            environmentVariables.Add("Lidarr_InstanceName", _configFileProvider.InstanceName);
+            environmentVariables.Add("Lidarr_ApplicationUrl", _configService.ApplicationUrl);
             environmentVariables.Add("Lidarr_Artist_Id", artist.Id.ToString());
             environmentVariables.Add("Lidarr_Artist_Name", artist.Metadata.Value.Name);
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId);
@@ -50,6 +61,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Release_AlbumCount", remoteAlbum.Albums.Count.ToString());
             environmentVariables.Add("Lidarr_Release_AlbumReleaseDates", string.Join(",", remoteAlbum.Albums.Select(e => e.ReleaseDate)));
             environmentVariables.Add("Lidarr_Release_AlbumTitles", string.Join("|", remoteAlbum.Albums.Select(e => e.Title)));
+            environmentVariables.Add("Lidarr_Release_AlbumOverviews", string.Join("|", remoteAlbum.Albums.Select(e => e.Overview)));
             environmentVariables.Add("Lidarr_Release_AlbumMBIds", string.Join("|", remoteAlbum.Albums.Select(e => e.ForeignAlbumId)));
             environmentVariables.Add("Lidarr_Release_Title", remoteAlbum.Release.Title);
             environmentVariables.Add("Lidarr_Release_Indexer", remoteAlbum.Release.Indexer ?? string.Empty);
@@ -72,6 +84,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             var environmentVariables = new StringDictionary();
 
             environmentVariables.Add("Lidarr_EventType", "AlbumDownload");
+            environmentVariables.Add("Lidarr_InstanceName", _configFileProvider.InstanceName);
+            environmentVariables.Add("Lidarr_ApplicationUrl", _configService.ApplicationUrl);
             environmentVariables.Add("Lidarr_Artist_Id", artist.Id.ToString());
             environmentVariables.Add("Lidarr_Artist_Name", artist.Metadata.Value.Name);
             environmentVariables.Add("Lidarr_Artist_Path", artist.Path);
@@ -79,6 +93,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
             environmentVariables.Add("Lidarr_Album_Id", album.Id.ToString());
             environmentVariables.Add("Lidarr_Album_Title", album.Title);
+            environmentVariables.Add("Lidarr_Album_Overview", album.Overview);
             environmentVariables.Add("Lidarr_Album_MBId", album.ForeignAlbumId);
             environmentVariables.Add("Lidarr_AlbumRelease_MBId", release.ForeignReleaseId);
             environmentVariables.Add("Lidarr_Album_ReleaseDate", album.ReleaseDate.ToString());
@@ -105,6 +120,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             var environmentVariables = new StringDictionary();
 
             environmentVariables.Add("Lidarr_EventType", "Rename");
+            environmentVariables.Add("Lidarr_InstanceName", _configFileProvider.InstanceName);
+            environmentVariables.Add("Lidarr_ApplicationUrl", _configService.ApplicationUrl);
             environmentVariables.Add("Lidarr_Artist_Id", artist.Id.ToString());
             environmentVariables.Add("Lidarr_Artist_Name", artist.Metadata.Value.Name);
             environmentVariables.Add("Lidarr_Artist_Path", artist.Path);
@@ -126,6 +143,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             var environmentVariables = new StringDictionary();
 
             environmentVariables.Add("Lidarr_EventType", "TrackRetag");
+            environmentVariables.Add("Lidarr_InstanceName", _configFileProvider.InstanceName);
+            environmentVariables.Add("Lidarr_ApplicationUrl", _configService.ApplicationUrl);
             environmentVariables.Add("Lidarr_Artist_Id", artist.Id.ToString());
             environmentVariables.Add("Lidarr_Artist_Name", artist.Metadata.Value.Name);
             environmentVariables.Add("Lidarr_Artist_Path", artist.Path);
@@ -133,6 +152,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
             environmentVariables.Add("Lidarr_Album_Id", album.Id.ToString());
             environmentVariables.Add("Lidarr_Album_Title", album.Title);
+            environmentVariables.Add("Lidarr_Album_Overview", album.Overview);
             environmentVariables.Add("Lidarr_Album_MBId", album.ForeignAlbumId);
             environmentVariables.Add("Lidarr_AlbumRelease_MBId", release.ForeignReleaseId);
             environmentVariables.Add("Lidarr_Album_ReleaseDate", album.ReleaseDate.ToString());
@@ -159,6 +179,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             var environmentVariables = new StringDictionary();
 
             environmentVariables.Add("Lidarr_EventType", "AlbumDeleted");
+            environmentVariables.Add("Lidarr_InstanceName", _configFileProvider.InstanceName);
+            environmentVariables.Add("Lidarr_ApplicationUrl", _configService.ApplicationUrl);
             environmentVariables.Add("Lidarr_Artist_Id", artist.Id.ToString());
             environmentVariables.Add("Lidarr_Artist_Name", artist.Metadata.Value.Name);
             environmentVariables.Add("Lidarr_Artist_Path", artist.Path);
@@ -166,6 +188,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
             environmentVariables.Add("Lidarr_Album_Id", album.Id.ToString());
             environmentVariables.Add("Lidarr_Album_Title", album.Title);
+            environmentVariables.Add("Lidarr_Album_Overview", album.Overview);
             environmentVariables.Add("Lidarr_Album_MBId", album.ForeignAlbumId);
             environmentVariables.Add("Lidarr_Album_ReleaseDate", album.ReleaseDate.ToString());
             environmentVariables.Add("Lidarr_Artist_DeletedFiles", deleteMessage.DeletedFiles.ToString());
@@ -179,6 +202,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             var environmentVariables = new StringDictionary();
 
             environmentVariables.Add("Lidarr_EventType", "ArtistDeleted");
+            environmentVariables.Add("Lidarr_InstanceName", _configFileProvider.InstanceName);
+            environmentVariables.Add("Lidarr_ApplicationUrl", _configService.ApplicationUrl);
             environmentVariables.Add("Lidarr_Artist_Id", artist.Id.ToString());
             environmentVariables.Add("Lidarr_Artist_Title", artist.Metadata.Value.Name);
             environmentVariables.Add("Lidarr_Artist_Path", artist.Path);
@@ -194,6 +219,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             var environmentVariables = new StringDictionary();
 
             environmentVariables.Add("Lidarr_EventType", "HealthIssue");
+            environmentVariables.Add("Lidarr_InstanceName", _configFileProvider.InstanceName);
+            environmentVariables.Add("Lidarr_ApplicationUrl", _configService.ApplicationUrl);
             environmentVariables.Add("Lidarr_Health_Issue_Level", Enum.GetName(typeof(HealthCheckResult), healthCheck.Type));
             environmentVariables.Add("Lidarr_Health_Issue_Message", healthCheck.Message);
             environmentVariables.Add("Lidarr_Health_Issue_Type", healthCheck.Source.Name);
@@ -207,6 +234,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             var environmentVariables = new StringDictionary();
 
             environmentVariables.Add("Lidarr_EventType", "ApplicationUpdate");
+            environmentVariables.Add("Lidarr_InstanceName", _configFileProvider.InstanceName);
+            environmentVariables.Add("Lidarr_ApplicationUrl", _configService.ApplicationUrl);
             environmentVariables.Add("Lidarr_Update_Message", updateMessage.Message);
             environmentVariables.Add("Lidarr_Update_NewVersion", updateMessage.NewVersion.ToString());
             environmentVariables.Add("Lidarr_Update_PreviousVersion", updateMessage.PreviousVersion.ToString());
@@ -237,6 +266,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
                 {
                     var environmentVariables = new StringDictionary();
                     environmentVariables.Add("Lidarr_EventType", "Test");
+                    environmentVariables.Add("Lidarr_InstanceName", _configFileProvider.InstanceName);
+                    environmentVariables.Add("Lidarr_ApplicationUrl", _configService.ApplicationUrl);
 
                     var processOutput = ExecuteScript(environmentVariables);
 

@@ -3,7 +3,6 @@ using System.Linq;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
-using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Notifications.Webhook
@@ -12,11 +11,12 @@ namespace NzbDrone.Core.Notifications.Webhook
         where TSettings : IProviderConfig, new()
     {
         private readonly IConfigFileProvider _configFileProvider;
+        private readonly IConfigService _configService;
 
-        protected WebhookBase(IConfigFileProvider configFileProvider)
-            : base()
+        protected WebhookBase(IConfigFileProvider configFileProvider, IConfigService configService)
         {
             _configFileProvider = configFileProvider;
+            _configService = configService;
         }
 
         public WebhookGrabPayload BuildOnGrabPayload(GrabMessage message)
@@ -28,6 +28,7 @@ namespace NzbDrone.Core.Notifications.Webhook
             {
                 EventType = WebhookEventType.Grab,
                 InstanceName = _configFileProvider.InstanceName,
+                ApplicationUrl = _configService.ApplicationUrl,
                 Artist = new WebhookArtist(message.Artist),
                 Albums = remoteAlbum.Albums.Select(x => new WebhookAlbum(x)).ToList(),
                 Release = new WebhookRelease(quality, remoteAlbum),
@@ -45,6 +46,7 @@ namespace NzbDrone.Core.Notifications.Webhook
             {
                 EventType = WebhookEventType.Download,
                 InstanceName = _configFileProvider.InstanceName,
+                ApplicationUrl = _configService.ApplicationUrl,
                 Artist = new WebhookArtist(message.Artist),
                 Album = new WebhookAlbum(message.Album),
                 Tracks = trackFiles.SelectMany(x => x.Tracks.Value.Select(y => new WebhookTrack(y))).ToList(),
@@ -69,6 +71,7 @@ namespace NzbDrone.Core.Notifications.Webhook
             {
                 EventType = WebhookEventType.DownloadFailure,
                 InstanceName = _configFileProvider.InstanceName,
+                ApplicationUrl = _configService.ApplicationUrl,
                 DownloadClient = message.DownloadClient,
                 DownloadId = message.DownloadId,
                 Quality = message.Quality.Quality.Name,
@@ -85,6 +88,7 @@ namespace NzbDrone.Core.Notifications.Webhook
             {
                 EventType = WebhookEventType.ImportFailure,
                 InstanceName = _configFileProvider.InstanceName,
+                ApplicationUrl = _configService.ApplicationUrl,
                 Artist = new WebhookArtist(message.Artist),
                 Tracks = trackFiles.SelectMany(x => x.Tracks.Value.Select(y => new WebhookTrack(y))).ToList(),
                 TrackFiles = trackFiles.ConvertAll(x => new WebhookTrackFile(x)),
@@ -108,6 +112,7 @@ namespace NzbDrone.Core.Notifications.Webhook
             {
                 EventType = WebhookEventType.Rename,
                 InstanceName = _configFileProvider.InstanceName,
+                ApplicationUrl = _configService.ApplicationUrl,
                 Artist = new WebhookArtist(artist),
                 RenamedTrackFiles = renamedFiles.ConvertAll(x => new WebhookRenamedTrackFile(x))
             };
@@ -119,6 +124,7 @@ namespace NzbDrone.Core.Notifications.Webhook
             {
                 EventType = WebhookEventType.Retag,
                 InstanceName = _configFileProvider.InstanceName,
+                ApplicationUrl = _configService.ApplicationUrl,
                 Artist = new WebhookArtist(message.Artist),
                 TrackFile = new WebhookTrackFile(message.TrackFile)
             };
@@ -130,6 +136,7 @@ namespace NzbDrone.Core.Notifications.Webhook
             {
                 EventType = WebhookEventType.AlbumDelete,
                 InstanceName = _configFileProvider.InstanceName,
+                ApplicationUrl = _configService.ApplicationUrl,
                 Album = new WebhookAlbum(deleteMessage.Album),
                 DeletedFiles = deleteMessage.DeletedFiles
             };
@@ -141,6 +148,7 @@ namespace NzbDrone.Core.Notifications.Webhook
             {
                 EventType = WebhookEventType.ArtistDelete,
                 InstanceName = _configFileProvider.InstanceName,
+                ApplicationUrl = _configService.ApplicationUrl,
                 Artist = new WebhookArtist(deleteMessage.Artist),
                 DeletedFiles = deleteMessage.DeletedFiles
             };
@@ -152,6 +160,7 @@ namespace NzbDrone.Core.Notifications.Webhook
             {
                 EventType = WebhookEventType.Health,
                 InstanceName = _configFileProvider.InstanceName,
+                ApplicationUrl = _configService.ApplicationUrl,
                 Level = healthCheck.Type,
                 Message = healthCheck.Message,
                 Type = healthCheck.Source.Name,
@@ -165,6 +174,7 @@ namespace NzbDrone.Core.Notifications.Webhook
             {
                 EventType = WebhookEventType.ApplicationUpdate,
                 InstanceName = _configFileProvider.InstanceName,
+                ApplicationUrl = _configService.ApplicationUrl,
                 Message = updateMessage.Message,
                 PreviousVersion = updateMessage.PreviousVersion.ToString(),
                 NewVersion = updateMessage.NewVersion.ToString()
@@ -177,21 +187,22 @@ namespace NzbDrone.Core.Notifications.Webhook
             {
                 EventType = WebhookEventType.Test,
                 InstanceName = _configFileProvider.InstanceName,
-                Artist = new WebhookArtist()
+                ApplicationUrl = _configService.ApplicationUrl,
+                Artist = new WebhookArtist
                 {
                     Id = 1,
                     Name = "Test Name",
                     Path = "C:\\testpath",
                     MBId = "aaaaa-aaa-aaaa-aaaaaa"
                 },
-                Albums = new List<WebhookAlbum>()
+                Albums = new List<WebhookAlbum>
+                {
+                    new ()
                     {
-                            new WebhookAlbum()
-                            {
-                                Id = 123,
-                                Title = "Test title"
-                            }
+                        Id = 123,
+                        Title = "Test title"
                     }
+                }
             };
         }
     }

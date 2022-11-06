@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
@@ -13,8 +12,8 @@ namespace NzbDrone.Core.Notifications.Webhook
     {
         private readonly IWebhookProxy _proxy;
 
-        public Webhook(IWebhookProxy proxy, IConfigFileProvider configFileProvider)
-            : base(configFileProvider)
+        public Webhook(IWebhookProxy proxy, IConfigFileProvider configFileProvider, IConfigService configService)
+            : base(configFileProvider, configService)
         {
             _proxy = proxy;
         }
