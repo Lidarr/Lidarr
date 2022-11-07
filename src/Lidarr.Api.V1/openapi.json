@@ -347,6 +347,18 @@
         }
       }
     },
+    "/api": {
+      "get": {
+        "tags": [
+          "ApiInfo"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/v1/artist/{id}": {
       "get": {
         "tags": [
