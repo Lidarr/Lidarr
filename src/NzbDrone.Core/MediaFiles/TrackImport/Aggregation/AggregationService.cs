@@ -58,7 +58,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation
                 {
                     var message = $"Unable to augment information for file: '{localTrack.Path}'. Artist: {localTrack.Artist} Error: {ex.Message}";
 
-                    _logger.Warn(ex, ex.Message);
+                    _logger.Warn(ex, message);
                 }
             }
 
