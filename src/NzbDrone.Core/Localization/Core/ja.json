@@ -581,5 +581,6 @@
     "Ok": "OK",
     "System": "システム",
     "Info": "情報",
-    "AddImportListExclusion": "インポートリストの除外を削除する"
+    "AddImportListExclusion": "インポートリストの除外を削除する",
+    "ImportListExclusions": "インポートリストの除外を削除する"
 }

@@ -583,5 +583,6 @@
     "AddImportListExclusion": "Ștergeți excluderea listei de import",
     "NoResults": "Nici un rezultat gasit",
     "NoTagsHaveBeenAddedYet": "Nu s-au adăugat încă etichete",
-    "OnlyTorrent": "Numai Torrent"
+    "OnlyTorrent": "Numai Torrent",
+    "ImportListExclusions": "Ștergeți excluderea listei de import"
 }

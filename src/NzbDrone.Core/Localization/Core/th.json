@@ -581,5 +581,6 @@
     "NoTagsHaveBeenAddedYet": "ยังไม่มีการเพิ่มแท็ก",
     "Organize": "จัดระเบียบ",
     "Close": "ปิด",
-    "Manual": "คู่มือ"
+    "Manual": "คู่มือ",
+    "ImportListExclusions": "ลบการยกเว้นรายการนำเข้า"
 }

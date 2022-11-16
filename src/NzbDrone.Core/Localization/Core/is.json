@@ -581,5 +581,6 @@
     "QualityLimitsHelpText": "Takmörkun er sjálfkrafa leiðrétt fyrir keyrslutíma kvikmyndarinnar.",
     "Queued": "Í biðröð",
     "TimeLeft": "Tími eftir",
-    "AddImportListExclusion": "Eyða útilokun innflutningslista"
+    "AddImportListExclusion": "Eyða útilokun innflutningslista",
+    "ImportListExclusions": "Eyða útilokun innflutningslista"
 }

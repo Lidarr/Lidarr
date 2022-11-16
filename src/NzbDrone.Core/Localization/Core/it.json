@@ -635,5 +635,6 @@
     "InteractiveImport": "Importazione interattiva",
     "Presets": "Preset",
     "AddImportListExclusion": "Cancellare la lista delle esclusioni",
-    "EditMetadataProfile": "profilo metadati"
+    "EditMetadataProfile": "profilo metadati",
+    "ImportListExclusions": "Cancellare la lista delle esclusioni"
 }

@@ -606,5 +606,6 @@
     "AddConnection": "Редактировать коллекцию",
     "AddImportListExclusion": "Удалить лист исключения для импорта",
     "Date": "Дата",
-    "Manual": "Ручной"
+    "Manual": "Ручной",
+    "ImportListExclusions": "Удалить лист исключения для импорта"
 }
