@@ -581,5 +581,6 @@
     "NoResults": "không tìm thấy kết quả nào",
     "NoTagsHaveBeenAddedYet": "Chưa có thẻ nào được thêm vào",
     "Ok": "Đồng ý",
-    "System": "Hệ thống"
+    "System": "Hệ thống",
+    "ImportListExclusions": "Xóa loại trừ danh sách nhập"
 }

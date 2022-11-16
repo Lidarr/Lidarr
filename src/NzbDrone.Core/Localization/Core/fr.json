@@ -666,5 +666,7 @@
     "AddDelayProfile": "Ajouter un profil différé",
     "AddImportListExclusion": "Supprimer les exclusions de liste d'imports",
     "EditMetadataProfile": "profil de métadonnées",
-    "AddConnection": "Modifier la collection"
+    "AddConnection": "Modifier la collection",
+    "ImportListExclusions": "Supprimer les exclusions de liste d'imports",
+    "LastDuration": "Dernière durée"
 }

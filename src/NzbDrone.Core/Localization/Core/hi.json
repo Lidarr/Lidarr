@@ -581,5 +581,6 @@
     "Peers": "साथियों",
     "PreferAndUpgrade": "प्राथमिकता और उन्नयन",
     "System": "प्रणाली",
-    "AddImportListExclusion": "आयात सूची बहिष्करण हटाएं"
+    "AddImportListExclusion": "आयात सूची बहिष्करण हटाएं",
+    "ImportListExclusions": "आयात सूची बहिष्करण हटाएं"
 }

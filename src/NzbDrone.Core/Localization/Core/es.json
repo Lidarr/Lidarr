@@ -615,5 +615,6 @@
     "Started": "Iniciado",
     "AddConnection": "Editar Colección",
     "AddImportListExclusion": "Borrar exclusión de lista de importación",
-    "EditMetadataProfile": "perfil de metadatos"
+    "EditMetadataProfile": "perfil de metadatos",
+    "ImportListExclusions": "Borrar exclusión de lista de importación"
 }
