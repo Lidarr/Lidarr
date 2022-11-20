@@ -10,7 +10,7 @@ namespace NzbDrone.Core.Datastore.Migration
     {
         protected override void MainDbUpgrade()
         {
-            Alter.Table("AlbumReleases").AlterColumn("ReleaseDate").AsDateTimeOffset().NotNullable();
+            Alter.Table("AlbumReleases").AlterColumn("ReleaseDate").AsDateTimeOffset().Nullable();
             Alter.Table("Albums").AlterColumn("LastInfoSync").AsDateTimeOffset().Nullable();
             Alter.Table("Albums").AlterColumn("ReleaseDate").AsDateTimeOffset().Nullable();
             Alter.Table("Albums").AlterColumn("Added").AsDateTimeOffset().Nullable();
