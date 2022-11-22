@@ -1,22 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import OverlayScroller from 'Components/Scroller/OverlayScroller';
 import Scroller from 'Components/Scroller/Scroller';
 import { scrollDirections } from 'Helpers/Props';
-import { isMobile as isMobileUtil } from 'Utilities/mobile';
 import { isLocked } from 'Utilities/scrollLock';
 import styles from './PageContentBody.css';
 
 class PageContentBody extends Component {
-
-  //
-  // Lifecycle
-
-  constructor(props, context) {
-    super(props, context);
-
-    this._isMobile = isMobileUtil();
-  }
 
   //
   // Listeners
@@ -41,10 +30,8 @@ class PageContentBody extends Component {
       ...otherProps
     } = this.props;
 
-    const ScrollerComponent = this._isMobile ? Scroller : OverlayScroller;
-
     return (
-      <ScrollerComponent
+      <Scroller
         className={className}
         scrollDirection={scrollDirections.VERTICAL}
         {...otherProps}
@@ -53,7 +40,7 @@ class PageContentBody extends Component {
         <div className={innerClassName}>
           {children}
         </div>
-      </ScrollerComponent>
+      </Scroller>
     );
   }
 }
