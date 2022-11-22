@@ -42,7 +42,7 @@ namespace NzbDrone.Core.Music
         [MemberwiseEqualityIgnore]
         public LazyLoaded<List<Album>> Albums { get; set; }
 
-        //compatibility properties
+        // compatibility properties
         [MemberwiseEqualityIgnore]
         public string Name
         {

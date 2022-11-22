@@ -47,7 +47,7 @@ namespace Lidarr.Api.V1.Albums
         public AddAlbumOptions AddOptions { get; set; }
         public string RemoteCover { get; set; }
 
-        //Hiding this so people don't think its usable (only used to set the initial state)
+        // Hiding this so people don't think its usable (only used to set the initial state)
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool Grabbed { get; set; }
     }

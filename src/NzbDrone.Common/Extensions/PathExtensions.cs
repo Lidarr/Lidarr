@@ -38,7 +38,7 @@ namespace NzbDrone.Common.Extensions
 
         public static string CleanFilePathBasic(this string path)
         {
-            //UNC
+            // UNC
             if (OsInfo.IsWindows && path.StartsWith(@"\\"))
             {
                 return path.TrimEnd('/', '\\', ' ');
@@ -167,7 +167,7 @@ namespace NzbDrone.Common.Extensions
             var parentDirInfo = dirInfo.Parent;
             if (parentDirInfo == null)
             {
-                //Drive letter
+                // Drive letter
                 return dirInfo.Name.ToUpper();
             }
 

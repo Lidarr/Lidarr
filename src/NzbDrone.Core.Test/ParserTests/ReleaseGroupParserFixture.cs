@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Test.ParserTests
         [TestCase("Olafur.Arnalds-Remember-WEB-2018-ENTiTLED-postbot", "ENTiTLED")]
         [TestCase("Olafur.Arnalds-Remember-WEB-2018-ENTiTLED-xpost", "ENTiTLED")]
 
-        //[TestCase("", "")]
+        // [TestCase("", "")]
         public void should_parse_release_group(string title, string expected)
         {
             Parser.Parser.ParseReleaseGroup(title).Should().Be(expected);
@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Test.ParserTests
         [TestCase("Olafur.Arnalds-Remember-WEB-2018-SKGTV_English", "SKGTV")]
         [TestCase("Olafur.Arnalds-Remember-WEB-2018-SKGTV.English", "SKGTV")]
 
-        //[TestCase("", "")]
+        // [TestCase("", "")]
         public void should_not_include_language_in_release_group(string title, string expected)
         {
             Parser.Parser.ParseReleaseGroup(title).Should().Be(expected);
@@ -60,8 +60,8 @@ namespace NzbDrone.Core.Test.ParserTests
         [TestCase("[Anime-Koi] Barakamon - S01E07 - A High-Grade Fish", "Anime-Koi")]
         [TestCase("[Anime-Koi] Kami-sama Hajimemashita 2 - 01 [h264-720p][28D54E2C]", "Anime-Koi")]
 
-        //[TestCase("Tokyo.Ghoul.02x01.013.HDTV-720p-Anime-Koi", "Anime-Koi")]
-        //[TestCase("", "")]
+        // [TestCase("Tokyo.Ghoul.02x01.013.HDTV-720p-Anime-Koi", "Anime-Koi")]
+        // [TestCase("", "")]
         public void should_parse_anime_release_groups(string title, string expected)
         {
             Parser.Parser.ParseReleaseGroup(title).Should().Be(expected);

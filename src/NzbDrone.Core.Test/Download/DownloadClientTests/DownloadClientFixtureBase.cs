@@ -72,8 +72,8 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests
             VerifyIdentifiable(downloadClientItem);
             downloadClientItem.RemainingSize.Should().NotBe(0);
 
-            //downloadClientItem.RemainingTime.Should().NotBe(TimeSpan.Zero);
-            //downloadClientItem.OutputPath.Should().NotBeNullOrEmpty();
+            // downloadClientItem.RemainingTime.Should().NotBe(TimeSpan.Zero);
+            // downloadClientItem.OutputPath.Should().NotBeNullOrEmpty();
             downloadClientItem.Status.Should().Be(DownloadItemStatus.Queued);
         }
 
@@ -83,8 +83,8 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests
 
             downloadClientItem.RemainingSize.Should().NotBe(0);
 
-            //downloadClientItem.RemainingTime.Should().NotBe(TimeSpan.Zero);
-            //downloadClientItem.OutputPath.Should().NotBeNullOrEmpty();
+            // downloadClientItem.RemainingTime.Should().NotBe(TimeSpan.Zero);
+            // downloadClientItem.OutputPath.Should().NotBeNullOrEmpty();
             downloadClientItem.Status.Should().Be(DownloadItemStatus.Paused);
         }
 
@@ -94,8 +94,8 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests
 
             downloadClientItem.RemainingSize.Should().NotBe(0);
 
-            //downloadClientItem.RemainingTime.Should().NotBe(TimeSpan.Zero);
-            //downloadClientItem.OutputPath.Should().NotBeNullOrEmpty();
+            // downloadClientItem.RemainingTime.Should().NotBe(TimeSpan.Zero);
+            // downloadClientItem.OutputPath.Should().NotBeNullOrEmpty();
             downloadClientItem.Status.Should().Be(DownloadItemStatus.Downloading);
         }
 
@@ -103,8 +103,8 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests
         {
             VerifyIdentifiable(downloadClientItem);
 
-            //downloadClientItem.RemainingTime.Should().NotBe(TimeSpan.Zero);
-            //downloadClientItem.OutputPath.Should().NotBeNullOrEmpty();
+            // downloadClientItem.RemainingTime.Should().NotBe(TimeSpan.Zero);
+            // downloadClientItem.OutputPath.Should().NotBeNullOrEmpty();
             downloadClientItem.Status.Should().Be(DownloadItemStatus.Downloading);
         }
 
@@ -116,7 +116,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests
             downloadClientItem.RemainingSize.Should().Be(0);
             downloadClientItem.RemainingTime.Should().Be(TimeSpan.Zero);
 
-            //downloadClientItem.OutputPath.Should().NotBeNullOrEmpty();
+            // downloadClientItem.OutputPath.Should().NotBeNullOrEmpty();
             downloadClientItem.Status.Should().Be(DownloadItemStatus.Completed);
         }
 

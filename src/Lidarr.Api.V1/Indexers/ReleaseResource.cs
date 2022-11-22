@@ -51,12 +51,12 @@ namespace Lidarr.Api.V1.Indexers
         // Sent when queuing an unknown release
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
 
-        //        [JsonIgnore]
+        // [JsonIgnore]
         public int? ArtistId { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
 
-        //        [JsonIgnore]
+        // [JsonIgnore]
         public int? AlbumId { get; set; }
     }
 
@@ -75,7 +75,7 @@ namespace Lidarr.Api.V1.Indexers
                 Guid = releaseInfo.Guid,
                 Quality = parsedAlbumInfo.Quality,
 
-                //QualityWeight
+                // QualityWeight
                 Age = releaseInfo.Age,
                 AgeHours = releaseInfo.AgeHours,
                 AgeMinutes = releaseInfo.AgeMinutes,
@@ -98,7 +98,7 @@ namespace Lidarr.Api.V1.Indexers
                 InfoUrl = releaseInfo.InfoUrl,
                 DownloadAllowed = remoteAlbum.DownloadAllowed,
 
-                //ReleaseWeight
+                // ReleaseWeight
                 PreferredWordScore = remoteAlbum.PreferredWordScore,
 
                 MagnetUrl = torrentInfo.MagnetUrl,

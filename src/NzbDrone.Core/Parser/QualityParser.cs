@@ -238,7 +238,7 @@ namespace NzbDrone.Core.Parser
                     break;
             }
 
-            //Based on extension
+            // Based on extension
             if (result.Quality == Quality.Unknown && !name.ContainsInvalidPathChars())
             {
                 try
@@ -248,8 +248,8 @@ namespace NzbDrone.Core.Parser
                 }
                 catch (ArgumentException)
                 {
-                    //Swallow exception for cases where string contains illegal
-                    //path characters.
+                    // Swallow exception for cases where string contains illegal
+                    // path characters.
                 }
             }
 
@@ -340,7 +340,7 @@ namespace NzbDrone.Core.Parser
 
         private static BitRate ParseBitRate(string name)
         {
-            //var nameWithNoSpaces = Regex.Replace(name, @"\s+", "");
+            // var nameWithNoSpaces = Regex.Replace(name, @"\s+", "");
             var match = BitRateRegex.Match(name);
 
             if (!match.Success)
@@ -644,7 +644,7 @@ namespace NzbDrone.Core.Parser
                 result.Revision.Version = Convert.ToInt32(versionRegexResult.Groups["version"].Value);
             }
 
-            //TODO: re-enable this when we have a reliable way to determine real
+            // TODO: re-enable this when we have a reliable way to determine real
             MatchCollection realRegexResult = RealRegex.Matches(name);
 
             if (realRegexResult.Count > 0)

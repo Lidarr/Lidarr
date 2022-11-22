@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Download.Pending
         public ReleaseInfo Release { get; set; }
         public PendingReleaseReason Reason { get; set; }
 
-        //Not persisted
+        // Not persisted
         public RemoteAlbum RemoteAlbum { get; set; }
     }
 }

@@ -66,7 +66,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
                 RelativePath = artist.Path.GetRelativePath(path)
             };
 
-            //Series and season images are both named folder.jpg, only season ones sit in season folders
+            // Series and season images are both named folder.jpg, only season ones sit in season folders
             if (Path.GetFileNameWithoutExtension(filename).Equals(parentdir.Name, StringComparison.InvariantCultureIgnoreCase))
             {
                 var seasonMatch = SeasonImagesRegex.Match(parentdir.Name);
@@ -109,7 +109,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
 
         public override MetadataFileResult ArtistMetadata(Artist artist)
         {
-            //Artist metadata is not supported
+            // Artist metadata is not supported
             return null;
         }
 

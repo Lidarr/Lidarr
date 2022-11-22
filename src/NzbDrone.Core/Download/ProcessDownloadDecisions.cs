@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Download
             var grabbed = new List<DownloadDecision>();
             var pending = new List<DownloadDecision>();
 
-            //var failed = new List<DownloadDecision>();
+            // var failed = new List<DownloadDecision>();
             var rejected = decisions.Where(d => d.Rejected).ToList();
 
             var pendingAddQueue = new List<Tuple<DownloadDecision, PendingReleaseReason>>();
@@ -53,7 +53,7 @@ namespace NzbDrone.Core.Download
                 var remoteAlbum = report.RemoteAlbum;
                 var downloadProtocol = report.RemoteAlbum.Release.DownloadProtocol;
 
-                //Skip if already grabbed
+                // Skip if already grabbed
                 if (IsAlbumProcessed(grabbed, report))
                 {
                     continue;
@@ -116,7 +116,7 @@ namespace NzbDrone.Core.Download
 
         internal List<DownloadDecision> GetQualifiedReports(IEnumerable<DownloadDecision> decisions)
         {
-            //Process both approved and temporarily rejected
+            // Process both approved and temporarily rejected
             return decisions.Where(c => (c.Approved || c.TemporarilyRejected) && c.RemoteAlbum.Albums.Any()).ToList();
         }
 

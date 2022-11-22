@@ -22,11 +22,11 @@ namespace NzbDrone.Core.Test.AlbumTests
                 .With(e => e.Monitored = true)
                 .With(e => e.ReleaseDate = DateTime.UtcNow.AddDays(-7))
 
-                //Future
+                // Future
                 .TheFirst(1)
                 .With(e => e.ReleaseDate = DateTime.UtcNow.AddDays(7))
 
-                //Future/TBA
+                // Future/TBA
                 .TheNext(1)
                 .With(e => e.ReleaseDate = null)
                 .Build()

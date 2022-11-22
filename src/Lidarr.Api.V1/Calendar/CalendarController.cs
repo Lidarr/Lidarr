@@ -28,7 +28,7 @@ namespace Lidarr.Api.V1.Calendar
         [HttpGet]
         public List<AlbumResource> GetCalendar(DateTime? start, DateTime? end, bool unmonitored = false, bool includeArtist = false)
         {
-            //TODO: Add Album Image support to AlbumControllerWithSignalR
+            // TODO: Add Album Image support to AlbumControllerWithSignalR
             var includeAlbumImages = Request.GetBooleanQueryParameter("includeAlbumImages");
 
             var startUse = start ?? DateTime.Today;

@@ -210,7 +210,7 @@ namespace NzbDrone.Core.Download.Pending
                 }
             }
 
-            //Return best quality release for each album
+            // Return best quality release for each album
             var deduped = queued.GroupBy(q => q.Album.Id).Select(g =>
             {
                 var artist = g.First().Artist;
@@ -376,8 +376,8 @@ namespace NzbDrone.Core.Download.Pending
                 var compare = new QualityModelComparer(profile).Compare(remoteAlbum.ParsedAlbumInfo.Quality,
                                                                         existingReport.RemoteAlbum.ParsedAlbumInfo.Quality);
 
-                //Only remove lower/equal quality pending releases
-                //It is safer to retry these releases on the next round than remove it and try to re-add it (if its still in the feed)
+                // Only remove lower/equal quality pending releases
+                // It is safer to retry these releases on the next round than remove it and try to re-add it (if its still in the feed)
                 if (compare >= 0)
                 {
                     _logger.Debug("Removing previously pending release, as it was grabbed.");

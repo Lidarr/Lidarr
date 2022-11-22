@@ -57,7 +57,7 @@ namespace NzbDrone.Core.Music
         [MemberwiseEqualityIgnore]
         public LazyLoaded<Artist> Artist { get; set; }
 
-        //compatibility properties with old version of Album
+        // compatibility properties with old version of Album
         [MemberwiseEqualityIgnore]
         [JsonIgnore]
         public int ArtistId

@@ -79,7 +79,7 @@ namespace NzbDrone.Core.MediaFiles
             {
                 // Atm we don't report it as a command failure, coz that would cause the download to be failed.
                 // Changing the message won't do a thing either, coz it will get set to 'Completed' a msec later.
-                //message.SetMessage("Failed to import");
+                // message.SetMessage("Failed to import");
             }
         }
     }

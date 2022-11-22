@@ -61,7 +61,7 @@ namespace Lidarr.Api.V1.Calendar
                 var occurrence = calendar.Create<CalendarEvent>();
                 occurrence.Uid = "Lidarr_album_" + album.Id;
 
-                //occurrence.Status = album.HasFile ? EventStatus.Confirmed : EventStatus.Tentative;
+                // occurrence.Status = album.HasFile ? EventStatus.Confirmed : EventStatus.Tentative;
                 occurrence.Description = album.Overview;
                 occurrence.Categories = album.Genres;
 

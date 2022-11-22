@@ -80,19 +80,19 @@ namespace NzbDrone.Core.DecisionEngine
                     if (parsedAlbumInfo != null)
                     {
                         // TODO: Artist Data Augment without calling to parse title again
-                        //if (!report.Artist.IsNullOrWhiteSpace())
-                        //{
+                        // if (!report.Artist.IsNullOrWhiteSpace())
+                        // {
                         //    if (parsedAlbumInfo.ArtistName.IsNullOrWhiteSpace() || _parsingService.GetArtist(parsedAlbumInfo.ArtistName) == null)
                         //    {
                         //        parsedAlbumInfo.ArtistName = report.Artist;
                         //    }
-                        //}
+                        // }
 
                         // TODO: Replace Parsed AlbumTitle with metadata Title if Parsed AlbumTitle not a valid match
-                        //if (!report.Album.IsNullOrWhiteSpace())
-                        //{
+                        // if (!report.Album.IsNullOrWhiteSpace())
+                        // {
                         //    parsedAlbumInfo.AlbumTitle = report.Album;
-                        //}
+                        // }
                         if (!parsedAlbumInfo.ArtistName.IsNullOrWhiteSpace())
                         {
                             var remoteAlbum = _parsingService.Map(parsedAlbumInfo, searchCriteria);

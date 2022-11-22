@@ -92,7 +92,7 @@ namespace NzbDrone.Core.Music
 
         public List<Track> TracksWithoutFiles(int albumId)
         {
-            //x.Id == null is converted to SQL, so warning incorrect
+            // x.Id == null is converted to SQL, so warning incorrect
 #pragma warning disable CS0472
             return Query(Builder()
                          .Join<Track, AlbumRelease>((t, r) => t.AlbumReleaseId == r.Id)

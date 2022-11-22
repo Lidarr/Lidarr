@@ -90,7 +90,7 @@ namespace NzbDrone.Core.Test.ParserTests
         {
             var result = Parser.Parser.ParseMusicPath(path);
 
-            //result.SeriesTitle.Should().Be(title);
+            // result.SeriesTitle.Should().Be(title);
             result.Quality.Quality.Should().Be(quality);
         }
     }

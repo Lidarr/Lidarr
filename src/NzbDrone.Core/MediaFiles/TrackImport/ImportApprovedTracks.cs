@@ -149,7 +149,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
                 try
                 {
-                    //check if already imported
+                    // check if already imported
                     if (importResults.SelectMany(r => r.ImportDecision.Item.Tracks)
                                          .Select(e => e.Id)
                                          .Intersect(localTrack.Tracks.Select(e => e.Id))
@@ -307,7 +307,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 }
             }
 
-            //Adding all the rejected decisions
+            // Adding all the rejected decisions
             importResults.AddRange(decisions.Where(c => !c.Approved)
                                             .Select(d => new ImportResult(d, d.Rejections.Select(r => r.Reason).ToArray())));
 

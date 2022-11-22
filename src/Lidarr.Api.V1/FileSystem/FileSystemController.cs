@@ -36,7 +36,7 @@ namespace Lidarr.Api.V1.FileSystem
                 return new { type = "file" };
             }
 
-            //Return folder even if it doesn't exist on disk to avoid leaking anything from the UI about the underlying system
+            // Return folder even if it doesn't exist on disk to avoid leaking anything from the UI about the underlying system
             return new { type = "folder" };
         }
 

@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Music
             var qualitiesBelowCutoff = new List<QualitiesBelowCutoff>();
             var profiles = _profileService.All();
 
-            //Get all items less than the cutoff
+            // Get all items less than the cutoff
             foreach (var profile in profiles)
             {
                 var cutoffIndex = profile.GetIndex(profile.Cutoff);

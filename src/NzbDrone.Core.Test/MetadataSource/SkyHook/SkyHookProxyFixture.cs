@@ -224,7 +224,7 @@ namespace NzbDrone.Core.Test.MetadataSource.SkyHook
                 }
             }
 
-            //if atleast one album has title it means parse it working.
+            // if atleast one album has title it means parse it working.
             if (!idOnly)
             {
                 albums.Should().Contain(c => !string.IsNullOrWhiteSpace(c.Title));

@@ -48,7 +48,7 @@ namespace Lidarr.Api.V1.History
                 SourceTitle = model.SourceTitle,
                 Quality = model.Quality,
 
-                //QualityCutoffNotMet
+                // QualityCutoffNotMet
                 Date = model.Date,
                 DownloadId = model.DownloadId,
 
@@ -56,8 +56,8 @@ namespace Lidarr.Api.V1.History
 
                 Data = model.Data
 
-                //Episode
-                //Series
+                // Episode
+                // Series
             };
         }
     }

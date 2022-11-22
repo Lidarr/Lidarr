@@ -88,7 +88,7 @@ namespace NzbDrone.Core.MediaFiles
 
         public List<TrackFile> GetUnmappedFiles()
         {
-            //x.Id == null is converted to SQL, so warning incorrect
+            // x.Id == null is converted to SQL, so warning incorrect
 #pragma warning disable CS0472
             return _database.Query<TrackFile>(new SqlBuilder(_database.DatabaseType).Select(typeof(TrackFile))
                                               .LeftJoin<TrackFile, Track>((f, t) => f.Id == t.TrackFileId)

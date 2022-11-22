@@ -117,7 +117,7 @@ namespace Lidarr.Api.V1.Artist
             FetchAndLinkArtistStatistics(resource);
             LinkNextPreviousAlbums(resource);
 
-            //PopulateAlternateTitles(resource);
+            // PopulateAlternateTitles(resource);
             LinkRootFolderPath(resource);
 
             return resource;
@@ -143,7 +143,7 @@ namespace Lidarr.Api.V1.Artist
             LinkArtistStatistics(artistsResources, artistStats);
             artistsResources.ForEach(LinkRootFolderPath);
 
-            //PopulateAlternateTitles(seriesResources);
+            // PopulateAlternateTitles(seriesResources);
             return artistsResources;
         }
 
@@ -235,22 +235,22 @@ namespace Lidarr.Api.V1.Artist
             resource.Statistics = artistStatistics.ToResource();
         }
 
-        //private void PopulateAlternateTitles(List<ArtistResource> resources)
-        //{
+        // private void PopulateAlternateTitles(List<ArtistResource> resources)
+        // {
         //    foreach (var resource in resources)
         //    {
         //        PopulateAlternateTitles(resource);
         //    }
-        //}
+        // }
 
-        //private void PopulateAlternateTitles(ArtistResource resource)
-        //{
+        // private void PopulateAlternateTitles(ArtistResource resource)
+        // {
         //    var mappings = _sceneMappingService.FindByTvdbId(resource.TvdbId);
 
-        //    if (mappings == null) return;
+        // if (mappings == null) return;
 
-        //    resource.AlternateTitles = mappings.Select(v => new AlternateTitleResource { Title = v.Title, SeasonNumber = v.SeasonNumber, SceneSeasonNumber = v.SceneSeasonNumber }).ToList();
-        //}
+        // resource.AlternateTitles = mappings.Select(v => new AlternateTitleResource { Title = v.Title, SeasonNumber = v.SeasonNumber, SceneSeasonNumber = v.SceneSeasonNumber }).ToList();
+        // }
         private void LinkRootFolderPath(ArtistResource resource)
         {
             resource.RootFolderPath = _rootFolderService.GetBestRootFolderPath(resource.Path);

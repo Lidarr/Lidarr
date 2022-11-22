@@ -12,16 +12,16 @@ namespace NzbDrone.Core.Configuration
 
         bool IsDefined(string key);
 
-        //Download Client
+        // Download Client
         string DownloadClientWorkingFolders { get; set; }
         int DownloadClientHistoryLimit { get; set; }
 
-        //Completed/Failed Download Handling (Download client)
+        // Completed/Failed Download Handling (Download client)
         bool EnableCompletedDownloadHandling { get; set; }
 
         bool AutoRedownloadFailed { get; set; }
 
-        //Media Management
+        // Media Management
         bool AutoUnmonitorPreviouslyDownloadedTracks { get; set; }
         string RecycleBin { get; set; }
         int RecycleBinCleanupDays { get; set; }
@@ -38,18 +38,18 @@ namespace NzbDrone.Core.Configuration
         RescanAfterRefreshType RescanAfterRefresh { get; set; }
         AllowFingerprinting AllowFingerprinting { get; set; }
 
-        //Permissions (Media Management)
+        // Permissions (Media Management)
         bool SetPermissionsLinux { get; set; }
         string ChmodFolder { get; set; }
         string ChownGroup { get; set; }
 
-        //Indexers
+        // Indexers
         int Retention { get; set; }
         int RssSyncInterval { get; set; }
         int MaximumSize { get; set; }
         int MinimumAge { get; set; }
 
-        //UI
+        // UI
         int FirstDayOfWeek { get; set; }
         string CalendarWeekColumnHeader { get; set; }
 
@@ -66,23 +66,23 @@ namespace NzbDrone.Core.Configuration
         bool ExpandBroadcastByDefault { get; set; }
         bool ExpandOtherByDefault { get; set; }
 
-        //Internal
+        // Internal
         bool CleanupMetadataImages { get; set; }
 
         string PlexClientIdentifier { get; }
 
-        //Metadata
+        // Metadata
         string MetadataSource { get; set; }
         WriteAudioTagsType WriteAudioTags { get; set; }
         bool ScrubAudioTags { get; set; }
 
-        //Forms Auth
+        // Forms Auth
         string RijndaelPassphrase { get; }
         string HmacPassphrase { get; }
         string RijndaelSalt { get; }
         string HmacSalt { get; }
 
-        //Proxy
+        // Proxy
         bool ProxyEnabled { get; }
         ProxyType ProxyType { get; }
         string ProxyHostname { get; }

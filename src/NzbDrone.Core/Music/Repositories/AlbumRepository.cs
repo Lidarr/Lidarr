@@ -90,7 +90,7 @@ namespace NzbDrone.Core.Music
             return Query(s => s.ForeignAlbumId == foreignAlbumId).SingleOrDefault();
         }
 
-        //x.Id == null is converted to SQL, so warning incorrect
+        // x.Id == null is converted to SQL, so warning incorrect
 #pragma warning disable CS0472
         private SqlBuilder AlbumsWithoutFilesBuilder(DateTime currentTime)
         {

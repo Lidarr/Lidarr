@@ -94,7 +94,7 @@ namespace NzbDrone.Core.Notifications
                 return true;
             }
 
-            //TODO: this message could be more clear
+            // TODO: this message could be more clear
             _logger.Debug("{0} does not have any intersecting tags with {1}. Notification will not be sent.", definition.Name, artist.Name);
             return false;
         }

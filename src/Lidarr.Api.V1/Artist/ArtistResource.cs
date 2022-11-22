@@ -11,9 +11,9 @@ namespace Lidarr.Api.V1.Artist
 {
     public class ArtistResource : RestResource
     {
-        //Todo: Sorters should be done completely on the client
-        //Todo: Is there an easy way to keep IgnoreArticlesWhenSorting in sync between, Series, History, Missing?
-        //Todo: We should get the entire Profile instead of ID and Name separately
+        // Todo: Sorters should be done completely on the client
+        // Todo: Is there an easy way to keep IgnoreArticlesWhenSorting in sync between, Series, History, Missing?
+        // Todo: We should get the entire Profile instead of ID and Name separately
         [JsonIgnore]
         public int ArtistMetadataId { get; set; }
         public ArtistStatusType Status { get; set; }
@@ -39,12 +39,12 @@ namespace Lidarr.Api.V1.Artist
 
         public string RemotePoster { get; set; }
 
-        //View & Edit
+        // View & Edit
         public string Path { get; set; }
         public int QualityProfileId { get; set; }
         public int MetadataProfileId { get; set; }
 
-        //Editing Only
+        // Editing Only
         public bool Monitored { get; set; }
         public NewItemMonitorTypes MonitorNewItems { get; set; }
 
@@ -76,7 +76,7 @@ namespace Lidarr.Api.V1.Artist
 
                 ArtistName = model.Name,
 
-                //AlternateTitles
+                // AlternateTitles
                 SortName = model.SortName,
 
                 Status = model.Metadata.Value.Status,
@@ -133,7 +133,7 @@ namespace Lidarr.Api.V1.Artist
                     Type = resource.ArtistType
                 },
 
-                //AlternateTitles
+                // AlternateTitles
                 SortName = resource.SortName,
                 Path = resource.Path,
                 QualityProfileId = resource.QualityProfileId,

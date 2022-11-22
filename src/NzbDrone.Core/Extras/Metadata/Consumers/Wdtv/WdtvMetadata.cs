@@ -77,7 +77,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
 
         public override MetadataFileResult ArtistMetadata(Artist artist)
         {
-            //Artist metadata is not supported
+            // Artist metadata is not supported
             return null;
         }
 

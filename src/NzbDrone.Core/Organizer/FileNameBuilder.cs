@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Organizer
         private static readonly Regex ScenifyRemoveChars = new Regex(@"(?<=\s)(,|<|>|\/|\\|;|:|'|""|\||`|~|!|\?|@|$|%|^|\*|-|_|=){1}(?=\s)|('|:|\?|,)(?=(?:(?:s|m)\s)|\s|$)|(\(|\)|\[|\]|\{|\})", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex ScenifyReplaceChars = new Regex(@"[\/]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        //TODO: Support Written numbers (One, Two, etc) and Roman Numerals (I, II, III etc)
+        // TODO: Support Written numbers (One, Two, etc) and Roman Numerals (I, II, III etc)
         private static readonly Regex MultiPartCleanupRegex = new Regex(@"(?:\(\d+\)|(Part|Pt\.?)\s?\d+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private static readonly char[] TrackTitleTrimCharacters = new[] { ' ', '.', '?' };
@@ -330,12 +330,12 @@ namespace NzbDrone.Core.Organizer
             var qualityTitle = _qualityDefinitionService.Get(trackFile.Quality.Quality).Title;
             var qualityProper = GetQualityProper(trackFile.Quality);
 
-            //var qualityReal = GetQualityReal(artist, trackFile.Quality);
+            // var qualityReal = GetQualityReal(artist, trackFile.Quality);
             tokenHandlers["{Quality Full}"] = m => string.Format("{0}", qualityTitle);
             tokenHandlers["{Quality Title}"] = m => qualityTitle;
             tokenHandlers["{Quality Proper}"] = m => qualityProper;
 
-            //tokenHandlers["{Quality Real}"] = m => qualityReal;
+            // tokenHandlers["{Quality Real}"] = m => qualityReal;
         }
 
         private void AddMediaInfoTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, TrackFile trackFile)
@@ -496,7 +496,7 @@ namespace NzbDrone.Core.Organizer
 
         private string CleanupTrackTitle(string title)
         {
-            //this will remove (1),(2) from the end of multi part episodes.
+            // this will remove (1),(2) from the end of multi part episodes.
             return MultiPartCleanupRegex.Replace(title, string.Empty).Trim();
         }
 
@@ -515,15 +515,15 @@ namespace NzbDrone.Core.Organizer
             return string.Empty;
         }
 
-        //private string GetQualityReal(Series series, QualityModel quality)
-        //{
+        // private string GetQualityReal(Series series, QualityModel quality)
+        // {
         //    if (quality.Revision.Real > 0)
         //    {
         //        return "REAL";
         //    }
 
-        //    return string.Empty;
-        //}
+        // return string.Empty;
+        // }
         private string GetOriginalTitle(TrackFile trackFile)
         {
             if (trackFile.SceneName.IsNullOrWhiteSpace())

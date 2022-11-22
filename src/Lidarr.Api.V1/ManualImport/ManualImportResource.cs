@@ -51,7 +51,7 @@ namespace Lidarr.Api.V1.ManualImport
                 Tracks = model.Tracks.ToResource(),
                 Quality = model.Quality,
 
-                //QualityWeight
+                // QualityWeight
                 DownloadId = model.DownloadId,
                 Rejections = model.Rejections,
                 AudioTags = model.Tags,

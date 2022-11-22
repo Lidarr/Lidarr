@@ -142,7 +142,7 @@ namespace NzbDrone.Core.Download
 
             if (importResults.Any(c => c.Result != ImportResultType.Imported))
             {
-                //Mark as failed to prevent further attempts at processing
+                // Mark as failed to prevent further attempts at processing
                 trackedDownload.State = TrackedDownloadState.ImportFailed;
 
                 statusMessages.AddRange(
@@ -158,7 +158,7 @@ namespace NzbDrone.Core.Download
                     trackedDownload.Warn(statusMessages.ToArray());
                 }
 
-                //Publish event to notify Album was imported incompelte
+                // Publish event to notify Album was imported incompelte
                 _eventAggregator.PublishEvent(new AlbumImportIncompleteEvent(trackedDownload));
                 return;
             }

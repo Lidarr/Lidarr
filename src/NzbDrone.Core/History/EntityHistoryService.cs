@@ -100,7 +100,7 @@ namespace NzbDrone.Core.History
 
             var allHistory = _historyRepository.FindDownloadHistory(trackedDownload.TrackInfo.Artist.Id, trackedDownload.ImportedTrack.Quality);
 
-            //Find download related items for these episodes
+            // Find download related items for these episodes
             var albumsHistory = allHistory.Where(h => albumIds.Contains(h.AlbumId)).ToList();
 
             var processedDownloadId = albumsHistory
@@ -230,8 +230,8 @@ namespace NzbDrone.Core.History
                     DownloadId = downloadId
                 };
 
-                //Won't have a value since we publish this event before saving to DB.
-                //history.Data.Add("FileId", message.ImportedEpisode.Id.ToString());
+                // Won't have a value since we publish this event before saving to DB.
+                // history.Data.Add("FileId", message.ImportedEpisode.Id.ToString());
                 history.Data.Add("DroppedPath", message.TrackInfo.Path);
                 history.Data.Add("ImportedPath", message.ImportedTrack.Path);
                 history.Data.Add("DownloadClient", message.DownloadClientInfo.Name);

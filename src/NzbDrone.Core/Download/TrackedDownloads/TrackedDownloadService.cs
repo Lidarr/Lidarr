@@ -124,7 +124,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                     .OrderByDescending(h => h.Date)
                     .ToList();
 
-                //TODO: Create release info from history and use that here, so we don't loose indexer flags!
+                // TODO: Create release info from history and use that here, so we don't loose indexer flags!
                 var parsedAlbumInfo = Parser.Parser.ParseAlbumTitle(trackedDownload.DownloadItem.Title);
 
                 if (parsedAlbumInfo != null)

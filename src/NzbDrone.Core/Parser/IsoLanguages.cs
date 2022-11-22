@@ -48,7 +48,7 @@ namespace NzbDrone.Core.Parser
 
             if (langCode.Length == 2)
             {
-                //Lookup ISO639-1 code
+                // Lookup ISO639-1 code
                 var isoLanguages = All.Where(l => l.TwoLetterCode == langCode).ToList();
 
                 if (isoArray.Length > 1)
@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Parser
             }
             else if (langCode.Length == 3)
             {
-                //Lookup ISO639-2T code
+                // Lookup ISO639-2T code
                 return All.FirstOrDefault(l => l.ThreeLetterCode == langCode);
             }
 

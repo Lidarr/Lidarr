@@ -207,7 +207,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                             return new List<Artist> { existingArtist };
                         }
 
-                        var metadataProfile = _metadataProfileService.All().First().Id; //Change this to Use last Used profile?
+                        var metadataProfile = _metadataProfileService.All().First().Id; // Change this to Use last Used profile?
 
                         return new List<Artist> { GetArtistInfo(searchGuid.ToString(), metadataProfile) };
                     }

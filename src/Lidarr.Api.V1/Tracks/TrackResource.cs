@@ -27,7 +27,7 @@ namespace Lidarr.Api.V1.Tracks
         public ArtistResource Artist { get; set; }
         public Ratings Ratings { get; set; }
 
-        //Hiding this so people don't think its usable (only used to set the initial state)
+        // Hiding this so people don't think its usable (only used to set the initial state)
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool Grabbed { get; set; }
     }

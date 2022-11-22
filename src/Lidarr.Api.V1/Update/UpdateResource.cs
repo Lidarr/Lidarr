@@ -40,9 +40,9 @@ namespace Lidarr.Api.V1.Update
                 FileName = model.FileName,
                 Url = model.Url,
 
-                //Installed
-                //Installable
-                //Latest
+                // Installed
+                // Installable
+                // Latest
                 Changes = model.Changes,
                 Hash = model.Hash,
             };
