@@ -22,7 +22,7 @@
     "Cancel": "zrušení",
     "CancelMessageText": "Opravdu chcete zrušit tento nevyřízený úkol?",
     "CertificateValidation": "Ověření certifikátu",
-    "CertificateValidationHelpText": "Změňte, jak přísné je ověření certifikace HTTPS",
+    "CertificateValidationHelpText": "Změňte přísnost ověřování certifikátů HTTPS. Neměňte, pokud nerozumíte rizikům.",
     "ChangeFileDate": "Změnit datum souboru",
     "ChangeHasNotBeenSavedYet": "Změna ještě nebyla uložena",
     "20MinutesTwenty": "120 minut: {0}",
