@@ -401,7 +401,7 @@
     "PreferredHelpTexts3": "Uma pontuação negativa será preterida",
     "PreviewRename": "Visualizar renomeação",
     "PreviewRetag": "Visualizar adição de nova tag",
-    "PriorityHelpText": "Prioridade do indexador de 1 (mais alta) a 50 (mais baixa). Padrão: 25.",
+    "PriorityHelpText": "Prioridade do indexador de 1 (mais alta) a 50 (mais baixa). Padrão: 25. Usado ao obter lançamentos como um desempate para lançamentos iguais, o Lidarr ainda usará todos os indexadores habilitados para sincronização e pesquisa de RSS.",
     "NETCore": ".NET",
     "PropersAndRepacks": "Propers e repacks",
     "Protocol": "Protocolo",
@@ -612,7 +612,7 @@
     "TrackTitle": "Título da faixa",
     "Type": "Tipo",
     "Ungroup": "Desagrupar",
-    "DefaultMonitorOptionHelpText": "Opções de Monitoramento Padrão para álbuns de artistas detectados nesta pasta",
+    "DefaultMonitorOptionHelpText": "Quais álbuns devem ser monitorados na adição inicial para artistas detectados nesta pasta",
     "CollapseMultipleAlbums": "Agrupar Múltiplos Álbuns",
     "ContinuingMoreAlbumsAreExpected": "Mais álbuns são esperados",
     "RemoveCompleted": "Remover Completos",
@@ -636,7 +636,7 @@
     "HasMonitoredAlbumsNoMonitoredAlbumsForThisArtist": "Não monitorar álbuns para este artista",
     "HideAlbums": "Ocultar álbuns",
     "HideTracks": "Ocultar faixas",
-    "ImportListSettings": "Configurações da Lista de Importação",
+    "ImportListSettings": "Configurações Gerais da Lista de Importação",
     "IsExpandedHideAlbums": "Ocultar álbuns",
     "IsExpandedHideTracks": "Ocultar faixas",
     "IsExpandedShowAlbums": "Mostrar álbuns",
@@ -875,5 +875,6 @@
     "TrackImported": "Faixa Importada",
     "TrackProgress": "Progresso da Faixa",
     "EndedOnly": "Concluídos Somente",
-    "MediaCount": "Número de Mídias"
+    "MediaCount": "Número de Mídias",
+    "Database": "Banco de dados"
 }
