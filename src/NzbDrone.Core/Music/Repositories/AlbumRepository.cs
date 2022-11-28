@@ -101,7 +101,8 @@ namespace NzbDrone.Core.Music
                     .LeftJoin<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
                     .Where<TrackFile>(f => f.Id == null)
                     .Where<AlbumRelease>(r => r.Monitored == true)
-                    .Where<Album>(a => a.ReleaseDate <= currentTime);
+                    .Where<Album>(a => a.ReleaseDate <= currentTime)
+                    .GroupBy<Album>(x => x.Id);
         }
 #pragma warning restore CS0472
 
@@ -123,7 +124,8 @@ namespace NzbDrone.Core.Music
                     .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
                     .LeftJoin<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
                     .Where<AlbumRelease>(r => r.Monitored == true)
-                    .Where(BuildQualityCutoffWhereClause(qualitiesBelowCutoff));
+                    .Where(BuildQualityCutoffWhereClause(qualitiesBelowCutoff))
+                    .GroupBy<Album>(x => x.Id);
         }
 
         private string BuildQualityCutoffWhereClause(List<QualitiesBelowCutoff> qualitiesBelowCutoff)
