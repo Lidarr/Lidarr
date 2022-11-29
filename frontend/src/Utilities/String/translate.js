@@ -26,5 +26,5 @@ export default function translate(key, args = '') {
     });
   }
 
-  return translations[key] || key;
+  return (translations && translations[key]) || key;
 }
