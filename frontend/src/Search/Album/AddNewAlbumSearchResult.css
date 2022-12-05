@@ -9,7 +9,7 @@
 .underlay {
   @add-mixin cover;
 
-  background-color: var(--addSeriesBackgroundColor);
+  background-color: var(--addArtistBackgroundColor);
   transition: background 500ms;
 
   &:hover {

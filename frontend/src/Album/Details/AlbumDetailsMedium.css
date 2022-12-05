@@ -2,7 +2,7 @@
   margin-bottom: 20px;
   border: 1px solid var(--borderColor);
   border-radius: 4px;
-  background-color: var(--white);
+  background-color: var(--modalBackgroundColor);
 
   &:last-of-type {
     margin-bottom: 0;
@@ -81,7 +81,7 @@
   border-top: 1px solid var(--borderColor);
   border-bottom-right-radius: 4px;
   border-bottom-left-radius: 4px;
-  background-color: #fafafa;
+  background-color: var(--cardBackgroundColor);
   text-align: center;
 }
 

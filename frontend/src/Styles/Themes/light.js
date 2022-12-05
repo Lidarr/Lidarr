@@ -212,18 +212,18 @@ module.exports = {
   tableRowHoverBackgroundColor: '#fafbfc',
 
   //
-  // Series
+  // Atist
 
-  addSeriesBackgroundColor: '#ededed',
-  seriesBackgroundColor: '#ededed',
+  addArtistBackgroundColor: '#ededed',
+  artistBackgroundColor: '#ededed',
   searchIconContainerBackgroundColor: offWhite,
   collapseButtonBackgroundColor: offWhite,
 
   //
-  // Season
+  // Album
 
-  seasonBackgroundColor: white,
-  episodesBackgroundColor: offWhite,
+  albumBackgroundColor: white,
+  trackBackgroundColor: offWhite,
 
   //
   // misc
