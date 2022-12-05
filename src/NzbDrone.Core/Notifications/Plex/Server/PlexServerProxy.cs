@@ -151,14 +151,15 @@ namespace NzbDrone.Core.Notifications.Plex.Server
         private HttpRequestBuilder BuildRequest(string resource, HttpMethod method, PlexServerSettings settings)
         {
             var scheme = settings.UseSsl ? "https" : "http";
-            var requestBuilder = new HttpRequestBuilder($"{scheme}://{settings.Host}:{settings.Port}")
-                                .Accept(HttpAccept.Json)
-                                .AddQueryParam("X-Plex-Client-Identifier", _configService.PlexClientIdentifier)
-                                .AddQueryParam("X-Plex-Product", BuildInfo.AppName)
-                                .AddQueryParam("X-Plex-Platform", "Windows")
-                                .AddQueryParam("X-Plex-Platform-Version", "7")
-                                .AddQueryParam("X-Plex-Device-Name", BuildInfo.AppName)
-                                .AddQueryParam("X-Plex-Version", BuildInfo.Version.ToString());
+
+            var requestBuilder = new HttpRequestBuilder($"{scheme}://{settings.Host.ToUrlHost()}:{settings.Port}")
+                                 .Accept(HttpAccept.Json)
+                                 .AddQueryParam("X-Plex-Client-Identifier", _configService.PlexClientIdentifier)
+                                 .AddQueryParam("X-Plex-Product", BuildInfo.AppName)
+                                 .AddQueryParam("X-Plex-Platform", "Windows")
+                                 .AddQueryParam("X-Plex-Platform-Version", "7")
+                                 .AddQueryParam("X-Plex-Device-Name", BuildInfo.AppName)
+                                 .AddQueryParam("X-Plex-Version", BuildInfo.Version.ToString());
 
             if (settings.AuthToken.IsNotNullOrWhiteSpace())
             {
