@@ -9,13 +9,15 @@
 .underlay {
   @add-mixin cover;
 
-  background-color: var(--white);
+  background-color: var(--addArtistBackgroundColor);
   transition: background 500ms;
 
   &:hover {
-    background-color: #eaf2ff;
+    background-color: var(--pageBackground);
+    box-shadow: 0 0 12px var(--black);
     color: inherit;
     text-decoration: none;
+    transition: all 200ms ease-in;
   }
 }
 

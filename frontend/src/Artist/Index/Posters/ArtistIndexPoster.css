@@ -44,7 +44,7 @@ $hoverScale: 1.05;
 }
 
 .nextAiring {
-  background-color: var(--seriesBackgroundColor);
+  background-color: var(--artistBackgroundColor);
   text-align: center;
   font-size: $smallFontSize;
 }
@@ -52,7 +52,7 @@ $hoverScale: 1.05;
 .title {
   @add-mixin truncate;
 
-  background-color: var(--seriesBackgroundColor);
+  background-color: var(--artistBackgroundColor);
   text-align: center;
   font-size: $smallFontSize;
 }
