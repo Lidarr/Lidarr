@@ -66,7 +66,8 @@ namespace NzbDrone.Core.Annotations
         OAuth,
         Device,
         Playlist,
-        TagSelect
+        TagSelect,
+        RootFolder
     }
 
     public enum HiddenType

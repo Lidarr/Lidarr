@@ -4,6 +4,7 @@ using System.Linq;
 using Dapper;
 using NzbDrone.Common.Reflection;
 using NzbDrone.Core.Authentication;
+using NzbDrone.Core.AutoTagging.Specifications;
 using NzbDrone.Core.Blocklisting;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.CustomFilters;
@@ -199,10 +200,13 @@ namespace NzbDrone.Core.Datastore
             Mapper.Entity<NotificationStatus>("NotificationStatus").RegisterModel();
 
             Mapper.Entity<CustomFilter>("CustomFilters").RegisterModel();
-            Mapper.Entity<ImportListExclusion>("ImportListExclusions").RegisterModel();
+
             Mapper.Entity<DownloadHistory>("DownloadHistory").RegisterModel();
 
             Mapper.Entity<UpdateHistory>("UpdateHistory").RegisterModel();
+            Mapper.Entity<ImportListExclusion>("ImportListExclusions").RegisterModel();
+
+            Mapper.Entity<AutoTagging.AutoTag>("AutoTagging").RegisterModel();
         }
 
         private static void RegisterMappers()
@@ -217,6 +221,7 @@ namespace NzbDrone.Core.Datastore
             SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<List<QualityProfileQualityItem>>(new QualityIntConverter()));
             SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<List<ProfileFormatItem>>(new CustomFormatIntConverter()));
             SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<List<ICustomFormatSpecification>>(new CustomFormatSpecificationListConverter()));
+            SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<List<IAutoTaggingSpecification>>(new AutoTaggingSpecificationConverter()));
             SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<QualityModel>(new QualityIntConverter()));
             SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<Dictionary<string, string>>());
             SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<IDictionary<string, string>>());

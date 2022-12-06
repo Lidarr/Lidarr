@@ -5,6 +5,7 @@ import ConfirmModal from 'Components/Modal/ConfirmModal';
 import { kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import TagDetailsModal from './Details/TagDetailsModal';
+import TagInUse from './TagInUse';
 import styles from './Tag.css';
 
 class Tag extends Component {
@@ -57,9 +58,10 @@ class Tag extends Component {
       importListIds,
       notificationIds,
       restrictionIds,
-      artistIds,
       indexerIds,
-      downloadClientIds
+      downloadClientIds,
+      autoTagIds,
+      artistIds
     } = this.props;
 
     const {
@@ -72,9 +74,10 @@ class Tag extends Component {
       importListIds.length ||
       notificationIds.length ||
       restrictionIds.length ||
-      artistIds.length ||
       indexerIds.length ||
-      downloadClientIds.length
+      downloadClientIds.length ||
+      autoTagIds.length ||
+      artistIds.length
     );
 
     return (
@@ -88,63 +91,56 @@ class Tag extends Component {
         </div>
 
         {
-          isTagUsed &&
+          isTagUsed ?
             <div>
-              {
-                artistIds.length ?
-                  <div>
-                    {artistIds.length} artists
-                  </div> :
-                  null
-              }
+              <TagInUse
+                label={translate('Artist')}
+                labelPlural={translate('Artists')}
+                count={artistIds.length}
+              />
 
-              {
-                delayProfileIds.length ?
-                  <div>
-                    {delayProfileIds.length} delay profile{delayProfileIds.length > 1 && 's'}
-                  </div> :
-                  null
-              }
+              <TagInUse
+                label={translate('DelayProfile')}
+                labelPlural={translate('DelayProfiles')}
+                count={delayProfileIds.length}
+              />
 
-              {
-                importListIds.length ?
-                  <div>
-                    {importListIds.length} import list{importListIds.length > 1 && 's'}
-                  </div> :
-                  null
-              }
+              <TagInUse
+                label={translate('ImportList')}
+                labelPlural={translate('ImportLists')}
+                count={importListIds.length}
+              />
 
-              {
-                notificationIds.length ?
-                  <div>
-                    {notificationIds.length} connection{notificationIds.length > 1 && 's'}
-                  </div> :
-                  null
-              }
+              <TagInUse
+                label={translate('Connection')}
+                labelPlural={translate('Connections')}
+                count={notificationIds.length}
+              />
 
-              {
-                restrictionIds.length ?
-                  <div>
-                    {restrictionIds.length} restriction{restrictionIds.length > 1 && 's'}
-                  </div> :
-                  null
-              }
-              {
-                indexerIds.length ?
-                  <div>
-                    {indexerIds.length} indexer{indexerIds.length > 1 && 's'}
-                  </div> :
-                  null
-              }
+              <TagInUse
+                label={translate('ReleaseProfile')}
+                labelPlural={translate('ReleaseProfiles')}
+                count={restrictionIds.length}
+              />
 
-              {
-                downloadClientIds.length ?
-                  <div>
-                    {downloadClientIds.length} download client{indexerIds.length > 1 && 's'}
-                  </div> :
-                  null
-              }
-            </div>
+              <TagInUse
+                label={translate('Indexer')}
+                labelPlural={translate('Indexers')}
+                count={indexerIds.length}
+              />
+
+              <TagInUse
+                label={translate('DownloadClient')}
+                labelPlural={translate('DownloadClients')}
+                count={downloadClientIds.length}
+              />
+
+              <TagInUse
+                label={translate('AutoTagging')}
+                count={autoTagIds.length}
+              />
+            </div> :
+            null
         }
 
         {
@@ -164,6 +160,7 @@ class Tag extends Component {
           restrictionIds={restrictionIds}
           indexerIds={indexerIds}
           downloadClientIds={downloadClientIds}
+          autoTagIds={autoTagIds}
           isOpen={isDetailsModalOpen}
           onModalClose={this.onDetailsModalClose}
           onDeleteTagPress={this.onDeleteTagPress}
@@ -173,7 +170,7 @@ class Tag extends Component {
           isOpen={isDeleteTagModalOpen}
           kind={kinds.DANGER}
           title={translate('DeleteTag')}
-          message={translate('DeleteTagMessageText', [label])}
+          message={translate('DeleteTagMessageText', { label })}
           confirmLabel={translate('Delete')}
           onConfirm={this.onConfirmDeleteTag}
           onCancel={this.onDeleteTagModalClose}
@@ -190,9 +187,10 @@ Tag.propTypes = {
   importListIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   notificationIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   restrictionIds: PropTypes.arrayOf(PropTypes.number).isRequired,
-  artistIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   indexerIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   downloadClientIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+  autoTagIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+  artistIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   onConfirmDeleteTag: PropTypes.func.isRequired
 };
 
@@ -201,9 +199,10 @@ Tag.defaultProps = {
   importListIds: [],
   notificationIds: [],
   restrictionIds: [],
-  artistIds: [],
   indexerIds: [],
-  downloadClientIds: []
+  downloadClientIds: [],
+  autoTagIds: [],
+  artistIds: []
 };
 
 export default Tag;
