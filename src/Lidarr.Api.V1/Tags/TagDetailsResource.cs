@@ -12,9 +12,10 @@ namespace Lidarr.Api.V1.Tags
         public List<int> ImportListIds { get; set; }
         public List<int> NotificationIds { get; set; }
         public List<int> RestrictionIds { get; set; }
-        public List<int> ArtistIds { get; set; }
         public List<int> IndexerIds { get; set; }
         public List<int> DownloadClientIds { get; set; }
+        public List<int> AutoTagIds { get; set; }
+        public List<int> ArtistIds { get; set; }
     }
 
     public static class TagDetailsResourceMapper
@@ -34,9 +35,10 @@ namespace Lidarr.Api.V1.Tags
                 ImportListIds = model.ImportListIds,
                 NotificationIds = model.NotificationIds,
                 RestrictionIds = model.RestrictionIds,
-                ArtistIds = model.ArtistIds,
                 IndexerIds = model.IndexerIds,
                 DownloadClientIds = model.DownloadClientIds,
+                AutoTagIds = model.AutoTagIds,
+                ArtistIds = model.ArtistIds
             };
         }
 

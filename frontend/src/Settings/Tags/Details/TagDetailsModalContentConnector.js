@@ -85,6 +85,14 @@ function createMatchingDownloadClientsSelector() {
   );
 }
 
+function createMatchingAutoTagsSelector() {
+  return createSelector(
+    (state, { autoTagIds }) => autoTagIds,
+    (state) => state.settings.autoTaggings.items,
+    findMatchingItems
+  );
+}
+
 function createMapStateToProps() {
   return createSelector(
     createMatchingArtistSelector(),
@@ -94,7 +102,8 @@ function createMapStateToProps() {
     createMatchingReleaseProfilesSelector(),
     createMatchingIndexersSelector(),
     createMatchingDownloadClientsSelector(),
-    (artist, delayProfiles, importLists, notifications, releaseProfiles, indexers, downloadClients) => {
+    createMatchingAutoTagsSelector(),
+    (artist, delayProfiles, importLists, notifications, releaseProfiles, indexers, downloadClients, autoTags) => {
       return {
         artist,
         delayProfiles,
@@ -102,7 +111,8 @@ function createMapStateToProps() {
         notifications,
         releaseProfiles,
         indexers,
-        downloadClients
+        downloadClients,
+        autoTags
       };
     }
   );

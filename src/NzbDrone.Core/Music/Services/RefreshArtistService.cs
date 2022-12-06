@@ -6,6 +6,7 @@ using NLog;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
+using NzbDrone.Core.AutoTagging;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.History;
@@ -37,6 +38,7 @@ namespace NzbDrone.Core.Music
         private readonly ICheckIfArtistShouldBeRefreshed _checkIfArtistShouldBeRefreshed;
         private readonly IMonitorNewAlbumService _monitorNewAlbumService;
         private readonly IConfigService _configService;
+        private readonly IAutoTaggingService _autoTaggingService;
         private readonly IImportListExclusionService _importListExclusionService;
         private readonly Logger _logger;
 
@@ -53,6 +55,7 @@ namespace NzbDrone.Core.Music
                                     ICheckIfArtistShouldBeRefreshed checkIfArtistShouldBeRefreshed,
                                     IMonitorNewAlbumService monitorNewAlbumService,
                                     IConfigService configService,
+                                    IAutoTaggingService autoTaggingService,
                                     IImportListExclusionService importListExclusionService,
                                     Logger logger)
         : base(logger, artistMetadataService)
@@ -69,6 +72,7 @@ namespace NzbDrone.Core.Music
             _checkIfArtistShouldBeRefreshed = checkIfArtistShouldBeRefreshed;
             _monitorNewAlbumService = monitorNewAlbumService;
             _configService = configService;
+            _autoTaggingService = autoTaggingService;
             _importListExclusionService = importListExclusionService;
             _logger = logger;
         }
@@ -277,7 +281,7 @@ namespace NzbDrone.Core.Music
             _eventAggregator.PublishEvent(new AlbumInfoRefreshedEvent(entity, newChildren, updateChildren, removedChildren));
         }
 
-        private void Rescan(List<Artist> artists, bool isNew, CommandTrigger trigger, bool infoUpdated)
+        private void RescanArtists(List<Artist> artists, bool isNew, CommandTrigger trigger, bool infoUpdated)
         {
             var rescanAfterRefresh = _configService.RescanAfterRefresh;
             var shouldRescan = true;
@@ -332,14 +336,49 @@ namespace NzbDrone.Core.Music
                 try
                 {
                     updated |= RefreshEntityInfo(artist, null, true, false, null);
+                    UpdateTags(artist);
                 }
                 catch (Exception e)
                 {
                     _logger.Error(e, "Couldn't refresh info for {0}", artist);
+                    UpdateTags(artist);
                 }
             }
 
-            Rescan(artists, isNew, trigger, updated);
+            RescanArtists(artists, isNew, trigger, updated);
+        }
+
+        private void UpdateTags(Artist artist)
+        {
+            _logger.Trace("Updating tags for {0}", artist);
+
+            var tagsAdded = new HashSet<int>();
+            var tagsRemoved = new HashSet<int>();
+            var changes = _autoTaggingService.GetTagChanges(artist);
+
+            foreach (var tag in changes.TagsToRemove)
+            {
+                if (artist.Tags.Contains(tag))
+                {
+                    artist.Tags.Remove(tag);
+                    tagsRemoved.Add(tag);
+                }
+            }
+
+            foreach (var tag in changes.TagsToAdd)
+            {
+                if (!artist.Tags.Contains(tag))
+                {
+                    artist.Tags.Add(tag);
+                    tagsAdded.Add(tag);
+                }
+            }
+
+            if (tagsAdded.Any() || tagsRemoved.Any())
+            {
+                _artistService.UpdateArtist(artist);
+                _logger.Debug("Updated tags for '{0}'. Added: {1}, Removed: {2}", artist.Name, tagsAdded.Count, tagsRemoved.Count);
+            }
         }
 
         public void Execute(BulkRefreshArtistCommand message)
@@ -385,14 +424,17 @@ namespace NzbDrone.Core.Music
                         {
                             _logger.Error(e, "Couldn't refresh info for {0}", artist);
                         }
+
+                        UpdateTags(artist);
                     }
                     else
                     {
                         _logger.Info("Skipping refresh of artist: {0}", artist.Name);
+                        UpdateTags(artist);
                     }
                 }
 
-                Rescan(artists, isNew, trigger, updated);
+                RescanArtists(artists, isNew, trigger, updated);
             }
         }
     }

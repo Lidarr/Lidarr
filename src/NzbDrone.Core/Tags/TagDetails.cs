@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Tags
         public List<int> ImportListIds { get; set; }
         public List<int> RootFolderIds { get; set; }
         public List<int> IndexerIds { get; set; }
+        public List<int> AutoTagIds { get; set; }
         public List<int> DownloadClientIds { get; set; }
 
         public bool InUse => ArtistIds.Any() ||
@@ -23,6 +24,7 @@ namespace NzbDrone.Core.Tags
                              ImportListIds.Any() ||
                              RootFolderIds.Any() ||
                              IndexerIds.Any() ||
+                             AutoTagIds.Any() ||
                              DownloadClientIds.Any();
     }
 }

@@ -3,6 +3,7 @@ using FizzWare.NBuilder;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.AutoTagging;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.History;
 using NzbDrone.Core.ImportLists.Exclusions;
@@ -78,6 +79,10 @@ namespace NzbDrone.Core.Test.MusicTests
             Mocker.GetMock<IMonitorNewAlbumService>()
                 .Setup(x => x.ShouldMonitorNewAlbum(It.IsAny<Album>(), It.IsAny<List<Album>>(), It.IsAny<NewItemMonitorTypes>()))
                 .Returns(true);
+
+            Mocker.GetMock<IAutoTaggingService>()
+                .Setup(s => s.GetTagChanges(_artist))
+                .Returns(new AutoTaggingChanges());
         }
 
         private void GivenNewArtistInfo(Artist artist)
