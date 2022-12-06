@@ -54,9 +54,9 @@ namespace Lidarr.Api.V1.System
         }
 
         [HttpGet("status")]
-        public object GetStatus()
+        public SystemResource GetStatus()
         {
-            return new
+            return new SystemResource
             {
                 AppName = BuildInfo.AppName,
                 InstanceName = _configFileProvider.InstanceName,
