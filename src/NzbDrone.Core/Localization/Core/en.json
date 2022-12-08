@@ -453,6 +453,8 @@
   "LidarrSupportsAnyIndexerThatUsesTheNewznabStandardAsWellAsOtherIndexersListedBelow": "Lidarr supports any indexer that uses the Newznab standard, as well as other indexers listed below.",
   "LidarrSupportsMultipleListsForImportingAlbumsAndArtistsIntoTheDatabase": "Lidarr supports multiple lists for importing Albums and Artists into the database.",
   "LidarrTags": "Lidarr Tags",
+  "ListRefreshInterval": "List Refresh Interval",
+  "ListWillRefreshEveryInterp": "List will refresh every {0}",
   "Loading": "loading",
   "LoadingAlbumsFailed": "Loading albums failed",
   "LoadingTrackFilesFailed": "Loading track files failed",

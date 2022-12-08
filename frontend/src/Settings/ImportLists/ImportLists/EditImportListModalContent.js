@@ -20,6 +20,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import Popover from 'Components/Tooltip/Popover';
 import { icons, inputTypes, kinds, tooltipPositions } from 'Helpers/Props';
+import formatShortTimeSpan from 'Utilities/Date/formatShortTimeSpan';
 import translate from 'Utilities/String/translate';
 import styles from './EditImportListModalContent.css';
 
@@ -74,6 +75,7 @@ function EditImportListModalContent(props) {
     id,
     name,
     enableAutomaticAdd,
+    minRefreshInterval,
     shouldMonitor,
     shouldMonitorExisting,
     shouldSearch,
@@ -117,6 +119,13 @@ function EditImportListModalContent(props) {
                     {message.value.message}
                   </Alert>
               }
+
+              <Alert
+                kind={kinds.INFO}
+                className={styles.message}
+              >
+                {translate('ListWillRefreshEveryInterp', [formatShortTimeSpan(minRefreshInterval.value)])}
+              </Alert>
 
               <FieldSet legend={translate('ImportListSettings')} >
                 <FormGroup>

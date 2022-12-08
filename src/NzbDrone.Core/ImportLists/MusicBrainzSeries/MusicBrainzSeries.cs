@@ -1,3 +1,4 @@
+using System;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
@@ -14,6 +15,7 @@ namespace NzbDrone.Core.ImportLists.MusicBrainzSeries
         public override ProviderMessage Message => new ProviderMessage("MusicBrainz Series only supports release groups within series, other types of member will not be picked up by Lidarr", ProviderMessageType.Warning);
 
         public override ImportListType ListType => ImportListType.Other;
+        public override TimeSpan MinRefreshInterval => TimeSpan.FromHours(12);
 
         private readonly IMetadataRequestBuilder _requestBuilder;
 

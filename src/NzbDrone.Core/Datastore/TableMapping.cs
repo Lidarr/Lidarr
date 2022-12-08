@@ -75,8 +75,9 @@ namespace NzbDrone.Core.Datastore
 
             Mapper.Entity<ImportListDefinition>("ImportLists").RegisterModel()
                   .Ignore(x => x.ImplementationName)
-                  .Ignore(i => i.Enable)
-                  .Ignore(i => i.ListType);
+                  .Ignore(i => i.ListType)
+                  .Ignore(i => i.MinRefreshInterval)
+                  .Ignore(i => i.Enable);
 
             Mapper.Entity<NotificationDefinition>("Notifications").RegisterModel()
                   .Ignore(x => x.ImplementationName)

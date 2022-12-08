@@ -1,3 +1,4 @@
+using System;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
@@ -10,6 +11,7 @@ namespace NzbDrone.Core.ImportLists.LastFm
         public override string Name => "Last.fm User";
 
         public override ImportListType ListType => ImportListType.LastFm;
+        public override TimeSpan MinRefreshInterval => TimeSpan.FromHours(12);
 
         public override int PageSize => 1000;
 

@@ -22,6 +22,8 @@ namespace NzbDrone.Core.ImportLists
 
         public abstract ImportListType ListType { get; }
 
+        public abstract TimeSpan MinRefreshInterval { get; }
+
         public ImportListBase(IImportListStatusService importListStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
         {
             _importListStatusService = importListStatusService;

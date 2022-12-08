@@ -17,6 +17,7 @@ namespace NzbDrone.Core.ImportLists.Lidarr
         public override string Name => "Lidarr";
 
         public override ImportListType ListType => ImportListType.Program;
+        public override TimeSpan MinRefreshInterval => TimeSpan.FromMinutes(15);
 
         public LidarrImport(ILidarrV1Proxy lidarrV1Proxy,
                             IImportListStatusService importListStatusService,
