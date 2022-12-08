@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NLog;
 using NzbDrone.Common.Http;
@@ -13,6 +14,7 @@ namespace NzbDrone.Core.ImportLists.LidarrLists
         public override string Name => "Lidarr Lists";
 
         public override ImportListType ListType => ImportListType.Other;
+        public override TimeSpan MinRefreshInterval => TimeSpan.FromMinutes(15);
 
         public override int PageSize => 10;
 

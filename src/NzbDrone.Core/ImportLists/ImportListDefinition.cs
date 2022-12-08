@@ -1,3 +1,4 @@
+using System;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.ThingiProvider;
 
@@ -18,6 +19,7 @@ namespace NzbDrone.Core.ImportLists
 
         public ImportListStatus Status { get; set; }
         public ImportListType ListType { get; set; }
+        public TimeSpan MinRefreshInterval { get; set; }
     }
 
     public enum ImportListMonitorType

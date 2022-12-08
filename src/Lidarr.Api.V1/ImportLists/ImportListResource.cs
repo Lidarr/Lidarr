@@ -1,3 +1,4 @@
+using System;
 using NzbDrone.Core.ImportLists;
 using NzbDrone.Core.Music;
 
@@ -15,6 +16,7 @@ namespace Lidarr.Api.V1.ImportLists
         public int MetadataProfileId { get; set; }
         public ImportListType ListType { get; set; }
         public int ListOrder { get; set; }
+        public TimeSpan MinRefreshInterval { get; set; }
     }
 
     public class ImportListResourceMapper : ProviderResourceMapper<ImportListResource, ImportListDefinition>
@@ -38,6 +40,7 @@ namespace Lidarr.Api.V1.ImportLists
             resource.MetadataProfileId = definition.MetadataProfileId;
             resource.ListType = definition.ListType;
             resource.ListOrder = (int)definition.ListType;
+            resource.MinRefreshInterval = definition.MinRefreshInterval;
 
             return resource;
         }
@@ -60,6 +63,7 @@ namespace Lidarr.Api.V1.ImportLists
             definition.ProfileId = resource.QualityProfileId;
             definition.MetadataProfileId = resource.MetadataProfileId;
             definition.ListType = resource.ListType;
+            definition.MinRefreshInterval = resource.MinRefreshInterval;
 
             return definition;
         }

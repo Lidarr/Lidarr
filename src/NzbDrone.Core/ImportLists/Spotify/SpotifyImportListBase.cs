@@ -45,6 +45,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
         }
 
         public override ImportListType ListType => ImportListType.Spotify;
+        public override TimeSpan MinRefreshInterval => TimeSpan.FromHours(12);
 
         public string AccessToken => Settings.AccessToken;
 
