@@ -58,6 +58,14 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         }
 
         [Test]
+        public void should_return_true_if_all_albums_will_have_released_in_the_next_24_hours()
+        {
+            _remoteAlbum.Albums.Last().ReleaseDate = DateTime.UtcNow.AddHours(23);
+
+            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
+        }
+
+        [Test]
         public void should_return_false_if_one_album_has_not_released()
         {
             _remoteAlbum.Albums.Last().ReleaseDate = DateTime.UtcNow.AddDays(+2);
