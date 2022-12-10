@@ -49,7 +49,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                 var minSize = qualityDefinition.MinSize.Value.Kilobits();
 
                 // Multiply minSize by smallest release duration
-                minSize = minSize * minReleaseDuration;
+                minSize *= minReleaseDuration;
 
                 // If the parsed size is smaller than minSize we don't want it
                 if (subject.Release.Size < minSize)
@@ -75,7 +75,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                 var maxSize = qualityDefinition.MaxSize.Value.Kilobits();
 
                 // Multiply maxSize by Album.Duration
-                maxSize = maxSize * maxReleaseDuration;
+                maxSize *= maxReleaseDuration;
 
                 // If the parsed size is greater than maxSize we don't want it
                 if (subject.Release.Size > maxSize)

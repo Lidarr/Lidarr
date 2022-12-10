@@ -25,12 +25,30 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         public void Setup()
         {
             GivenPreferredDownloadProtocol(DownloadProtocol.Usenet);
+
+            Mocker.GetMock<IQualityDefinitionService>()
+                .Setup(s => s.Get(It.IsAny<Quality>()))
+                .Returns(new QualityDefinition { PreferredSize = null });
+        }
+
+        private void GivenPreferredSize(double? size)
+        {
+            Mocker.GetMock<IQualityDefinitionService>()
+                .Setup(s => s.Get(It.IsAny<Quality>()))
+                .Returns(new QualityDefinition { PreferredSize = size });
         }
 
         private Album GivenAlbum(int id)
         {
+            var release = Builder<AlbumRelease>.CreateNew()
+                .With(e => e.AlbumId = id)
+                .With(e => e.Monitored = true)
+                .With(e => e.Duration = 3600000)
+                .Build();
+
             return Builder<Album>.CreateNew()
                             .With(e => e.Id = id)
+                            .With(e => e.AlbumReleases = new List<AlbumRelease> { release })
                             .Build();
         }
 
@@ -128,6 +146,44 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
 
             var qualifiedReports = Subject.PrioritizeDecisions(decisions);
             qualifiedReports.First().RemoteAlbum.Should().Be(remoteAlbumHdLargeYoung);
+        }
+
+        [Test]
+        public void should_order_by_closest_to_preferred_size_if_both_under()
+        {
+            // 1000 Kibit/Sec * 60 Min Duration = 439.5 MiB
+            GivenPreferredSize(1000);
+
+            var remoteAlbumSmall = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_256), size: 120.Megabytes(), age: 1);
+            var remoteAlbumLarge = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_256), size: 400.Megabytes(), age: 1);
+
+            var decisions = new List<DownloadDecision>();
+            decisions.Add(new DownloadDecision(remoteAlbumSmall));
+            decisions.Add(new DownloadDecision(remoteAlbumLarge));
+
+            var qualifiedReports = Subject.PrioritizeDecisions(decisions);
+            qualifiedReports.First().RemoteAlbum.Should().Be(remoteAlbumLarge);
+        }
+
+        [Test]
+        public void should_order_by_closest_to_preferred_size_if_preferred_is_in_between()
+        {
+            // 700 Kibit/Sec * 60 Min Duration = 307.6 MiB
+            GivenPreferredSize(700);
+
+            var remoteAlbum1 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_256), size: 100.Megabytes(), age: 1);
+            var remoteAlbum2 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_256), size: 200.Megabytes(), age: 1);
+            var remoteAlbum3 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_256), size: 300.Megabytes(), age: 1);
+            var remoteAlbum4 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_256), size: 500.Megabytes(), age: 1);
+
+            var decisions = new List<DownloadDecision>();
+            decisions.Add(new DownloadDecision(remoteAlbum1));
+            decisions.Add(new DownloadDecision(remoteAlbum2));
+            decisions.Add(new DownloadDecision(remoteAlbum3));
+            decisions.Add(new DownloadDecision(remoteAlbum4));
+
+            var qualifiedReports = Subject.PrioritizeDecisions(decisions);
+            qualifiedReports.First().RemoteAlbum.Should().Be(remoteAlbum3);
         }
 
         [Test]
