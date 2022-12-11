@@ -719,7 +719,7 @@
     "AllMonitoringOptionHelpText": "Az importálási listán lévő szerzők összes könyvének monitorozása",
     "AllResultsFiltered": "Az alkalmazott szűrők miatt, az összes keresési eredmény rejtve marad",
     "ApplicationURL": "Alkalmazás URL-je",
-    "ApplicationUrlHelpText": "Az alkalmazás külső URL-címe, beleértve a \"http(s)://\"-t, a \"Portot\" és az \"URL-alapot\" is",
+    "ApplicationUrlHelpText": "Az alkalmazás külső URL-címe, beleértve a http(s)://-t, a portot és az URL-alapot",
     "Apply": "Alkalmazás",
     "AudioInfo": "Hang Infó",
     "BeforeUpdate": "Alkalmazásfrissítés előtt",

@@ -597,7 +597,7 @@
     "IfYouDontAddAnImportListExclusionAndTheArtistHasAMetadataProfileOtherThanNoneThenThisAlbumMayBeReaddedDuringTheNextArtistRefresh": "Wenn kein Ausschluss der Import Liste hinzugefügt wird und der Künstler ein anderes Metadaten Profil als 'Keine' hat, kann es passieren, dass dieses Album bei der nächsten Aktualisierung des Künstlers erneut hinzugefügt wird.",
     "ImportFailures": "Importfehler",
     "ImportLists": "Importlisten",
-    "ImportListSettings": "Importliste Einstellungen",
+    "ImportListSettings": "Allgemeine Importlisten-Einstellungen",
     "IncludePreferredWhenRenaming": "Bevorzugungen bei Umbennenung beachten",
     "IndexerIdHelpText": "Angabe, welcher Indexer für das Profil gilt",
     "IndexerIdHelpTextWarning": "Die Verwendung eines bestimmten Indexers mit bevorzugten Wörtern kann dazu führen, dass Veröffentlichungen mehrfach erfasst werden",
@@ -841,5 +841,7 @@
     "DeleteArtist": "Lösche ausgewählten Künstler",
     "Discography": "Diskographie",
     "DownloadImported": "Importiere herunterladen",
-    "EditMetadata": "Metadaten bearbeiten"
+    "EditMetadata": "Metadaten bearbeiten",
+    "ForNewImportsOnly": "Nur für neue Imports",
+    "ImportFailed": "Import fehlgeschlagen"
 }
