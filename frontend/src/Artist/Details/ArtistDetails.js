@@ -36,6 +36,7 @@ import InteractiveImportModal from '../../InteractiveImport/InteractiveImportMod
 import ArtistAlternateTitles from './ArtistAlternateTitles';
 import ArtistDetailsLinks from './ArtistDetailsLinks';
 import ArtistDetailsSeasonConnector from './ArtistDetailsSeasonConnector';
+import ArtistGenres from './ArtistGenres';
 import ArtistTagsConnector from './ArtistTagsConnector';
 import styles from './ArtistDetails.css';
 
@@ -187,6 +188,7 @@ class ArtistDetails extends Component {
       statistics,
       qualityProfileId,
       monitored,
+      genres,
       albumTypes,
       status,
       overview,
@@ -431,6 +433,8 @@ class ArtistDetails extends Component {
                       rating={ratings.value}
                       iconSize={20}
                     />
+
+                    <ArtistGenres genres={genres} />
                   </div>
                 </div>
 
@@ -695,6 +699,7 @@ ArtistDetails.propTypes = {
   monitored: PropTypes.bool.isRequired,
   artistType: PropTypes.string,
   albumTypes: PropTypes.arrayOf(PropTypes.string),
+  genres: PropTypes.arrayOf(PropTypes.string),
   status: PropTypes.string.isRequired,
   overview: PropTypes.string.isRequired,
   links: PropTypes.arrayOf(PropTypes.object).isRequired,
