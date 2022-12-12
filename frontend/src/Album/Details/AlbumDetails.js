@@ -7,6 +7,7 @@ import AlbumCover from 'Album/AlbumCover';
 import DeleteAlbumModal from 'Album/Delete/DeleteAlbumModal';
 import EditAlbumModalConnector from 'Album/Edit/EditAlbumModalConnector';
 import AlbumInteractiveSearchModalConnector from 'Album/Search/AlbumInteractiveSearchModalConnector';
+import ArtistGenres from 'Artist/Details/ArtistGenres';
 import ArtistHistoryModal from 'Artist/History/ArtistHistoryModal';
 import HeartRating from 'Components/HeartRating';
 import Icon from 'Components/Icon';
@@ -199,6 +200,7 @@ class AlbumDetails extends Component {
       releaseDate,
       ratings,
       images,
+      genres,
       links,
       media,
       isSaving,
@@ -385,6 +387,8 @@ class AlbumDetails extends Component {
                       rating={ratings.value}
                       iconSize={20}
                     />
+
+                    <ArtistGenres genres={genres} />
                   </div>
                 </div>
 
@@ -602,6 +606,7 @@ AlbumDetails.propTypes = {
   releaseDate: PropTypes.string.isRequired,
   ratings: PropTypes.object.isRequired,
   images: PropTypes.arrayOf(PropTypes.object).isRequired,
+  genres: PropTypes.arrayOf(PropTypes.string).isRequired,
   links: PropTypes.arrayOf(PropTypes.object).isRequired,
   media: PropTypes.arrayOf(PropTypes.object).isRequired,
   monitored: PropTypes.bool.isRequired,
