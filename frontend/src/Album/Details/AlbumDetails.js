@@ -219,6 +219,11 @@ class AlbumDetails extends Component {
     } = this.props;
 
     const {
+      trackFileCount,
+      sizeOnDisk
+    } = statistics;
+
+    const {
       isOrganizeModalOpen,
       isRetagModalOpen,
       isArtistHistoryModalOpen,
@@ -232,6 +237,14 @@ class AlbumDetails extends Component {
     } = this.state;
 
     let expandIcon = icons.EXPAND_INDETERMINATE;
+
+    let trackFilesCountMessage = translate('TrackFilesCountMessage');
+
+    if (trackFileCount === 1) {
+      trackFilesCountMessage = '1 track file';
+    } else if (trackFileCount > 1) {
+      trackFilesCountMessage = `${trackFileCount} track files`;
+    }
 
     if (allExpanded) {
       expandIcon = icons.COLLAPSE;
@@ -410,21 +423,32 @@ class AlbumDetails extends Component {
                     </span>
                   </Label>
 
-                  <Label
-                    className={styles.detailsLabel}
-                    size={sizes.LARGE}
-                  >
-                    <Icon
-                      name={icons.DRIVE}
-                      size={17}
-                    />
+                  <Tooltip
+                    anchor={
+                      <Label
+                        className={styles.detailsLabel}
+                        size={sizes.LARGE}
+                      >
+                        <Icon
+                          name={icons.DRIVE}
+                          size={17}
+                        />
 
-                    <span className={styles.sizeOnDisk}>
-                      {
-                        formatBytes(statistics.sizeOnDisk || 0)
-                      }
-                    </span>
-                  </Label>
+                        <span className={styles.sizeOnDisk}>
+                          {
+                            formatBytes(sizeOnDisk || 0)
+                          }
+                        </span>
+                      </Label>
+                    }
+                    tooltip={
+                      <span>
+                        {trackFilesCountMessage}
+                      </span>
+                    }
+                    kind={kinds.INVERSE}
+                    position={tooltipPositions.BOTTOM}
+                  />
 
                   <Label
                     className={styles.detailsLabel}
