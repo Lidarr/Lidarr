@@ -36,9 +36,9 @@ function createMapStateToProps() {
       return {
         items: sortedAlbums,
         columns: albums.columns,
+        artistMonitored: artist.monitored,
         sortKey: albums.sortKey,
         sortDirection: albums.sortDirection,
-        artistMonitored: artist.monitored,
         isSmallScreen: dimensions.isSmallScreen,
         uiSettings
       };
@@ -66,7 +66,7 @@ class ArtistDetailsSeasonConnector extends Component {
     this.props.dispatchSetAlbumSort({ sortKey });
   };
 
-  onMonitorAlbumPress = (albumIds, monitored) => {
+  onMonitorAlbumsPress = (albumIds, monitored) => {
     this.props.toggleAlbumsMonitored({
       albumIds,
       monitored
@@ -82,7 +82,7 @@ class ArtistDetailsSeasonConnector extends Component {
         {...this.props}
         onSortPress={this.onSortPress}
         onTableOptionChange={this.onTableOptionChange}
-        onMonitorAlbumPress={this.onMonitorAlbumPress}
+        onMonitorAlbumsPress={this.onMonitorAlbumsPress}
       />
     );
   }

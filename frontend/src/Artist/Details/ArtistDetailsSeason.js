@@ -2,17 +2,69 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Icon from 'Components/Icon';
+import Label from 'Components/Label';
 import IconButton from 'Components/Link/IconButton';
 import Link from 'Components/Link/Link';
+import MonitorToggleButton from 'Components/MonitorToggleButton';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
-import { icons, sortDirections } from 'Helpers/Props';
+import Popover from 'Components/Tooltip/Popover';
+import { icons, kinds, sizes, sortDirections, tooltipPositions } from 'Helpers/Props';
 import OrganizePreviewModalConnector from 'Organize/OrganizePreviewModalConnector';
 import TrackFileEditorModal from 'TrackFile/Editor/TrackFileEditorModal';
+import isBefore from 'Utilities/Date/isBefore';
+import formatBytes from 'Utilities/Number/formatBytes';
 import translate from 'Utilities/String/translate';
 import getToggledRange from 'Utilities/Table/getToggledRange';
+import AlbumGroupInfo from './AlbumGroupInfo';
 import AlbumRowConnector from './AlbumRowConnector';
 import styles from './ArtistDetailsSeason.css';
+
+function getAlbumTypeStatistics(albums) {
+  let albumCount = 0;
+  let trackFileCount = 0;
+  let totalAlbumCount = 0;
+  let monitoredAlbumCount = 0;
+  let hasMonitoredAlbums = false;
+  let sizeOnDisk = 0;
+
+  albums.forEach((album) => {
+    sizeOnDisk = sizeOnDisk + album.statistics.sizeOnDisk;
+    trackFileCount = trackFileCount + album.statistics.trackFileCount;
+
+    if (album.statistics.trackFileCount === album.statistics.totalTrackCount || (album.monitored && isBefore(album.airDateUtc))) {
+      albumCount++;
+    }
+
+    if (album.monitored) {
+      monitoredAlbumCount++;
+      hasMonitoredAlbums = true;
+    }
+
+    totalAlbumCount++;
+  });
+
+  return {
+    albumCount,
+    totalAlbumCount,
+    trackFileCount,
+    monitoredAlbumCount,
+    sizeOnDisk,
+    hasMonitoredAlbums
+  };
+}
+
+function getAlbumCountKind(monitored, albumCount, monitoredAlbumCount) {
+  if (albumCount === monitoredAlbumCount && monitoredAlbumCount > 0) {
+    return kinds.SUCCESS;
+  }
+
+  if (!monitored) {
+    return kinds.WARNING;
+  }
+
+  return kinds.DANGER;
+}
 
 class ArtistDetailsSeason extends Component {
 
@@ -108,7 +160,13 @@ class ArtistDetailsSeason extends Component {
 
     this.setState({ lastToggledAlbum: albumId });
 
-    this.props.onMonitorAlbumPress(_.uniq(albumIds), monitored);
+    this.props.onMonitorAlbumsPress(_.uniq(albumIds), monitored);
+  };
+
+  onMonitorAlbumsPress = (monitored, { shiftKey }) => {
+    const albumIds = this.props.items.map((a) => a.id);
+
+    this.props.onMonitorAlbumsPress(_.uniq(albumIds), monitored);
   };
 
   //
@@ -120,13 +178,24 @@ class ArtistDetailsSeason extends Component {
       label,
       items,
       columns,
+      isSaving,
       isExpanded,
+      artistMonitored,
       sortKey,
       sortDirection,
       onSortPress,
       isSmallScreen,
       onTableOptionChange
     } = this.props;
+
+    const {
+      albumCount,
+      totalAlbumCount,
+      trackFileCount,
+      monitoredAlbumCount,
+      sizeOnDisk,
+      hasMonitoredAlbums
+    } = getAlbumTypeStatistics(items);
 
     const {
       isOrganizeModalOpen,
@@ -137,25 +206,55 @@ class ArtistDetailsSeason extends Component {
       <div
         className={styles.albumType}
       >
-        <Link
-          className={styles.expandButton}
-          onPress={this.onExpandPress}
-        >
-          <div className={styles.header}>
-            <div className={styles.left}>
-              {
+        <div className={styles.header}>
+          <div className={styles.left}>
+            <MonitorToggleButton
+              monitored={hasMonitoredAlbums}
+              isDisabled={!artistMonitored}
+              isSaving={isSaving}
+              size={24}
+              onPress={this.onMonitorAlbumsPress}
+            />
+            <span className={styles.albumTypeLabel}>
+              {label}
+            </span>
+            <Popover
+              className={styles.albumCountTooltip}
+              anchor={
+                <Label
+                  size={sizes.LARGE}
+                  kind={getAlbumCountKind(hasMonitoredAlbums, albumCount, monitoredAlbumCount)}
+                >
+                  <span>{albumCount} / {monitoredAlbumCount}</span>
+                </Label>
+              }
+              title="Group Information"
+              body={
                 <div>
-                  <span className={styles.albumTypeLabel}>
-                    {label}
-                  </span>
-
-                  <span className={styles.albumCount}>
-                    ({items.length} Releases)
-                  </span>
+                  <AlbumGroupInfo
+                    totalAlbumCount={totalAlbumCount}
+                    monitoredAlbumCount={monitoredAlbumCount}
+                    trackFileCount={trackFileCount}
+                    sizeOnDisk={sizeOnDisk}
+                  />
                 </div>
               }
+              position={tooltipPositions.BOTTOM}
+            />
 
-            </div>
+            {
+              sizeOnDisk ?
+                <div className={styles.sizeOnDisk}>
+                  {formatBytes(sizeOnDisk)}
+                </div> :
+                null
+            }
+          </div>
+
+          <Link
+            className={styles.expandButton}
+            onPress={this.onExpandPress}
+          >
 
             <Icon
               className={styles.expandButtonIcon}
@@ -168,9 +267,9 @@ class ArtistDetailsSeason extends Component {
               !isSmallScreen &&
                 <span>&nbsp;</span>
             }
+          </Link>
 
-          </div>
-        </Link>
+        </div>
 
         <div>
           {
@@ -238,16 +337,18 @@ ArtistDetailsSeason.propTypes = {
   artistId: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
+  artistMonitored: PropTypes.bool.isRequired,
   sortKey: PropTypes.string,
   sortDirection: PropTypes.oneOf(sortDirections.all),
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  isSaving: PropTypes.bool,
   isExpanded: PropTypes.bool,
   isSmallScreen: PropTypes.bool.isRequired,
   onTableOptionChange: PropTypes.func.isRequired,
   onExpandPress: PropTypes.func.isRequired,
   onSortPress: PropTypes.func.isRequired,
-  onMonitorAlbumPress: PropTypes.func.isRequired,
+  onMonitorAlbumsPress: PropTypes.func.isRequired,
   uiSettings: PropTypes.object.isRequired
 };
 
