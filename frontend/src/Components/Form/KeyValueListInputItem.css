@@ -20,4 +20,6 @@
 .valueInput {
   width: 100%;
   border: none;
+  background-color: var(--inputBackgroundColor);
+  color: var(--textColor);
 }

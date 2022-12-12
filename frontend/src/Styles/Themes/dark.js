@@ -52,8 +52,8 @@ module.exports = {
 
   // Links
   defaultLinkHoverColor: '#fff',
-  linkColor: '#0b8750',
-  linkHoverColor: '#1b72e2',
+  linkColor: '#fff',
+  linkHoverColor: '#0b8750',
 
   // Header
   pageHeaderBackgroundColor: '#2a2a2a',
