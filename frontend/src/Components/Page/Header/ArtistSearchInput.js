@@ -10,9 +10,7 @@ import ArtistSearchResult from './ArtistSearchResult';
 import FuseWorker from './fuse.worker';
 import styles from './ArtistSearchInput.css';
 
-const LOADING_TYPE = 'suggestionsLoading';
 const ADD_NEW_TYPE = 'addNew';
-const workerInstance = new FuseWorker();
 
 class ArtistSearchInput extends Component {
 
@@ -23,6 +21,7 @@ class ArtistSearchInput extends Component {
     super(props, context);
 
     this._autosuggest = null;
+    this._worker = null;
 
     this.state = {
       value: '',
@@ -32,7 +31,23 @@ class ArtistSearchInput extends Component {
 
   componentDidMount() {
     this.props.bindShortcut(shortcuts.ARTIST_SEARCH_INPUT.key, this.focusInput);
-    workerInstance.addEventListener('message', this.onSuggestionsReceived, false);
+  }
+
+  componentWillUnmount() {
+    if (this._worker) {
+      this._worker.removeEventListener('message', this.onSuggestionsReceived, false);
+      this._worker.terminate();
+      this._worker = null;
+    }
+  }
+
+  getWorker() {
+    if (!this._worker) {
+      this._worker = new FuseWorker();
+      this._worker.addEventListener('message', this.onSuggestionsReceived, false);
+    }
+
+    return this._worker;
   }
 
   //
@@ -55,6 +70,15 @@ class ArtistSearchInput extends Component {
     return (
       <div className={styles.sectionTitle}>
         {section.title}
+
+        {
+          section.loading &&
+            <LoadingIndicator
+              className={styles.loading}
+              rippleClassName={styles.ripple}
+              size={20}
+            />
+        }
       </div>
     );
   }
@@ -69,16 +93,6 @@ class ArtistSearchInput extends Component {
         <div className={styles.addNewArtistSuggestion}>
           Search for {query}
         </div>
-      );
-    }
-
-    if (item.type === LOADING_TYPE) {
-      return (
-        <LoadingIndicator
-          className={styles.loading}
-          rippleClassName={styles.ripple}
-          size={30}
-        />
       );
     }
 
@@ -98,7 +112,8 @@ class ArtistSearchInput extends Component {
   reset() {
     this.setState({
       value: '',
-      suggestions: []
+      suggestions: [],
+      loading: false
     });
   }
 
@@ -114,6 +129,15 @@ class ArtistSearchInput extends Component {
   };
 
   onKeyDown = (event) => {
+    if (event.shiftKey || event.altKey || event.ctrlKey) {
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      this.reset();
+      return;
+    }
+
     if (event.key !== 'Tab' && event.key !== 'Enter') {
       return;
     }
@@ -154,35 +178,74 @@ class ArtistSearchInput extends Component {
   };
 
   onSuggestionsFetchRequested = ({ value }) => {
-    this.setState({
-      suggestions: [
-        {
-          type: LOADING_TYPE,
-          title: value
-        }
-      ]
-    });
+    if (!this.state.loading) {
+      this.setState({
+        loading: true
+      });
+    }
+
     this.requestSuggestions(value);
   };
 
   requestSuggestions = _.debounce((value) => {
-    const payload = {
-      value,
-      artists: this.props.artists
-    };
+    if (!this.state.loading) {
+      return;
+    }
 
-    workerInstance.postMessage(payload);
+    const requestLoading = this.state.requestLoading;
+
+    this.setState({
+      requestValue: value,
+      requestLoading: true
+    });
+
+    if (!requestLoading) {
+      const payload = {
+        value,
+        artists: this.props.artists
+      };
+
+      this.getWorker().postMessage(payload);
+    }
   }, 250);
 
   onSuggestionsReceived = (message) => {
-    this.setState({
-      suggestions: message.data
-    });
+    const {
+      value,
+      suggestions
+    } = message.data;
+
+    if (!this.state.loading) {
+      this.setState({
+        requestValue: null,
+        requestLoading: false
+      });
+    } else if (value === this.state.requestValue) {
+      this.setState({
+        suggestions,
+        requestValue: null,
+        requestLoading: false,
+        loading: false
+      });
+    } else {
+      this.setState({
+        suggestions,
+        requestLoading: true
+      });
+
+      const payload = {
+        value: this.state.requestValue,
+        artists: this.props.artists
+      };
+
+      this.getWorker().postMessage(payload);
+    }
   };
 
   onSuggestionsClearRequested = () => {
     this.setState({
-      suggestions: []
+      suggestions: [],
+      loading: false
     });
   };
 
@@ -200,14 +263,16 @@ class ArtistSearchInput extends Component {
   render() {
     const {
       value,
+      loading,
       suggestions
     } = this.state;
 
     const suggestionGroups = [];
 
-    if (suggestions.length) {
+    if (suggestions.length || loading) {
       suggestionGroups.push({
         title: 'Existing Artist',
+        loading,
         suggestions
       });
     }
