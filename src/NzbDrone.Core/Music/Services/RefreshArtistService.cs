@@ -272,9 +272,9 @@ namespace NzbDrone.Core.Music
             _eventAggregator.PublishEvent(new ArtistRefreshCompleteEvent(entity));
         }
 
-        protected override void PublishChildrenUpdatedEvent(Artist entity, List<Album> newChildren, List<Album> updateChildren)
+        protected override void PublishChildrenUpdatedEvent(Artist entity, List<Album> newChildren, List<Album> updateChildren, List<Album> removedChildren)
         {
-            _eventAggregator.PublishEvent(new AlbumInfoRefreshedEvent(entity, newChildren, updateChildren));
+            _eventAggregator.PublishEvent(new AlbumInfoRefreshedEvent(entity, newChildren, updateChildren, removedChildren));
         }
 
         private void Rescan(List<Artist> artists, bool isNew, CommandTrigger trigger, bool infoUpdated)

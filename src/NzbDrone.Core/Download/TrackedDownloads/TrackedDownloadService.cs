@@ -56,22 +56,11 @@ namespace NzbDrone.Core.Download.TrackedDownloads
             return _cache.Find(downloadId);
         }
 
-        public void UpdateAlbumCache(int albumId)
+        private void UpdateCachedItem(TrackedDownload trackedDownload)
         {
-            var updateCacheItems = _cache.Values.Where(x => x.RemoteAlbum != null && x.RemoteAlbum.Albums.Any(a => a.Id == albumId)).ToList();
+            var parsedAlbumInfo = Parser.Parser.ParseAlbumTitle(trackedDownload.DownloadItem.Title);
 
-            foreach (var item in updateCacheItems)
-            {
-                var parsedAlbumInfo = Parser.Parser.ParseAlbumTitle(item.DownloadItem.Title);
-                item.RemoteAlbum = null;
-
-                if (parsedAlbumInfo != null)
-                {
-                    item.RemoteAlbum = _parsingService.Map(parsedAlbumInfo);
-                }
-            }
-
-            _eventAggregator.PublishEvent(new TrackedDownloadRefreshedEvent(GetTrackedDownloads()));
+            trackedDownload.RemoteAlbum = parsedAlbumInfo == null ? null : _parsingService.Map(parsedAlbumInfo, 0, new List<int> { });
         }
 
         public void StopTracking(string downloadId)
@@ -259,7 +248,54 @@ namespace NzbDrone.Core.Download.TrackedDownloads
 
         public void Handle(AlbumDeletedEvent message)
         {
-            UpdateAlbumCache(message.Album.Id);
+            var cachedItems = _cache.Values.Where(x => x.RemoteAlbum != null && x.RemoteAlbum.Albums.Any(a => a.Id == message.Album.Id)).ToList();
+
+            if (cachedItems.Any())
+            {
+                cachedItems.ForEach(UpdateCachedItem);
+
+                _eventAggregator.PublishEvent(new TrackedDownloadRefreshedEvent(GetTrackedDownloads()));
+            }
+        }
+
+        public void Handle(AlbumInfoRefreshedEvent message)
+        {
+            var needsToUpdate = false;
+
+            foreach (var album in message.Removed)
+            {
+                var cachedItems = _cache.Values.Where(t =>
+                                            t.RemoteAlbum?.Albums != null &&
+                                            t.RemoteAlbum.Albums.Any(e => e.Id == album.Id))
+                                        .ToList();
+
+                if (cachedItems.Any())
+                {
+                    needsToUpdate = true;
+                }
+
+                cachedItems.ForEach(UpdateCachedItem);
+            }
+
+            if (needsToUpdate)
+            {
+                _eventAggregator.PublishEvent(new TrackedDownloadRefreshedEvent(GetTrackedDownloads()));
+            }
+        }
+
+        public void Handle(ArtistsDeletedEvent message)
+        {
+            var cachedItems = _cache.Values.Where(t =>
+                                        t.RemoteAlbum?.Artist != null &&
+                                        message.Artists.Select(a => a.Id).Contains(t.RemoteAlbum.Artist.Id))
+                                    .ToList();
+
+            if (cachedItems.Any())
+            {
+                cachedItems.ForEach(UpdateCachedItem);
+
+                _eventAggregator.PublishEvent(new TrackedDownloadRefreshedEvent(GetTrackedDownloads()));
+            }
         }
     }
 }

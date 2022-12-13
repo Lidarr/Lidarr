@@ -109,7 +109,7 @@ namespace NzbDrone.Core.Music
         {
         }
 
-        protected virtual void PublishChildrenUpdatedEvent(TEntity entity, List<TChild> newChildren, List<TChild> updateChildren)
+        protected virtual void PublishChildrenUpdatedEvent(TEntity entity, List<TChild> newChildren, List<TChild> updateChildren, List<TChild> removedChildren)
         {
         }
 
@@ -287,7 +287,7 @@ namespace NzbDrone.Core.Music
             // now trigger updates
             var updated = RefreshChildren(sortedChildren, remoteChildren, forceChildRefresh, forceUpdateFileTags, lastUpdate);
 
-            PublishChildrenUpdatedEvent(entity, sortedChildren.Added, sortedChildren.Updated);
+            PublishChildrenUpdatedEvent(entity, sortedChildren.Added, sortedChildren.Updated, sortedChildren.Deleted);
             return updated;
         }
     }
