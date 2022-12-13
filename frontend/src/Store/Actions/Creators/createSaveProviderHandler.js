@@ -54,7 +54,7 @@ function createSaveProviderHandler(section, url, options = {}, removeStale = fal
 
     request.done((data) => {
       lastSaveData = null;
-      
+
       if (!Array.isArray(data)) {
         data = [data];
       }
