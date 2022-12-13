@@ -106,7 +106,7 @@ namespace NzbDrone.Core.Music
                 return artists[0];
             }
 
-            throw new MultipleArtistsFoundException("Expected one artist, but found {0}. Matching artists: {1}", artists.Count, string.Join(",", artists.Select(s => s.Name)));
+            throw new MultipleArtistsFoundException(artists, "Expected one artist, but found {0}. Matching artists: {1}", artists.Count, string.Join(", ", artists));
         }
     }
 }

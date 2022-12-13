@@ -169,8 +169,8 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                         {
                             trackedDownload.RemoteAlbum = _parsingService.Map(parsedAlbumInfo,
                                 firstHistoryItem.ArtistId,
-                                historyItems.Where(v => v.EventType == EntityHistoryEventType.Grabbed).Select(h => h.AlbumId)
-                                    .Distinct());
+                                historyItems.Where(v => v.EventType == EntityHistoryEventType.Grabbed)
+                                    .Select(h => h.AlbumId).Distinct());
                         }
                         else
                         {
@@ -183,8 +183,8 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                             {
                                 trackedDownload.RemoteAlbum = _parsingService.Map(parsedAlbumInfo,
                                     firstHistoryItem.ArtistId,
-                                    historyItems.Where(v => v.EventType == EntityHistoryEventType.Grabbed).Select(h => h.AlbumId)
-                                        .Distinct());
+                                    historyItems.Where(v => v.EventType == EntityHistoryEventType.Grabbed)
+                                        .Select(h => h.AlbumId).Distinct());
                             }
                         }
                     }
@@ -211,10 +211,17 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                     _logger.Trace("No Album found for download '{0}'", trackedDownload.DownloadItem.Title);
                 }
             }
+            catch (MultipleArtistsFoundException e)
+            {
+                _logger.Debug(e, "Found multiple artists for " + downloadItem.Title);
+
+                trackedDownload.Warn("Unable to import automatically, found multiple artists: {0}", string.Join(", ", e.Artists));
+            }
             catch (Exception e)
             {
                 _logger.Debug(e, "Failed to find album for " + downloadItem.Title);
-                return null;
+
+                trackedDownload.Warn("Unable to parse albums from title");
             }
 
             LogItemChange(trackedDownload, existingItem?.DownloadItem, trackedDownload.DownloadItem);
