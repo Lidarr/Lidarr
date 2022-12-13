@@ -18,7 +18,7 @@
   border-width: 0 1px;
   border-style: solid;
   border-color: var(--borderColor);
-  background-color: var(--white);
+  background-color: var(--albumBackgroundColor);
   color: var(--defaultColor);
 }
 
@@ -29,9 +29,11 @@
 }
 
 .allTracks {
-  background-color: #e0ffe0;
+  background-color: color(#27c24c saturation(-25%));
+  color: var(--white);
 }
 
 .missingWanted {
-  background-color: #ffe0e0;
+  background-color: color(#f05050 saturation(-20%));
+  color: var(--white);
 }
