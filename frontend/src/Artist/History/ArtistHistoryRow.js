@@ -11,6 +11,7 @@ import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import Popover from 'Components/Tooltip/Popover';
 import { icons, kinds, tooltipPositions } from 'Helpers/Props';
+import formatPreferredWordScore from 'Utilities/Number/formatPreferredWordScore';
 import translate from 'Utilities/String/translate';
 import styles from './ArtistHistoryRow.css';
 
@@ -75,6 +76,7 @@ class ArtistHistoryRow extends Component {
       sourceTitle,
       quality,
       qualityCutoffNotMet,
+      customFormatScore,
       date,
       data,
       album
@@ -129,6 +131,10 @@ class ArtistHistoryRow extends Component {
           />
         </TableRowCell>
 
+        <TableRowCell className={styles.customFormatScore}>
+          {formatPreferredWordScore(customFormatScore)}
+        </TableRowCell>
+
         <TableRowCell className={styles.actions}>
           {
             eventType === 'grabbed' &&
@@ -160,6 +166,7 @@ ArtistHistoryRow.propTypes = {
   sourceTitle: PropTypes.string.isRequired,
   quality: PropTypes.object.isRequired,
   qualityCutoffNotMet: PropTypes.bool.isRequired,
+  customFormatScore: PropTypes.number.isRequired,
   date: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
   fullArtist: PropTypes.bool.isRequired,
