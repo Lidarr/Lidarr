@@ -66,6 +66,8 @@ namespace Lidarr.Api.V1.Calendar
                 occurrence.Categories = album.Genres;
 
                 occurrence.Start = new CalDateTime(album.ReleaseDate.Value.ToLocalTime()) { HasTime = false };
+                occurrence.End = occurrence.Start;
+                occurrence.IsAllDay = true;
 
                 occurrence.Summary = $"{artist.Name} - {album.Title}";
             }
