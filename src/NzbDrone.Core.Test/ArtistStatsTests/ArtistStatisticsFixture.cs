@@ -3,6 +3,7 @@ using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.ArtistStats;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
@@ -118,6 +119,27 @@ namespace NzbDrone.Core.Test.ArtistStatsTests
             GivenTrackWithFile();
             GivenTrack();
             GivenTrackFile();
+
+            var stats = Subject.ArtistStatistics();
+
+            stats.Should().HaveCount(1);
+            stats.First().SizeOnDisk.Should().Be(_trackFile.Size);
+        }
+
+        [Test]
+        public void should_not_duplicate_size_for_multi_track_files()
+        {
+            GivenTrackWithFile();
+            GivenTrack();
+            GivenTrackFile();
+
+            var track2 = _track.JsonClone();
+
+            track2.Id = 0;
+            track2.TrackNumber += 1;
+            track2.ForeignTrackId = "2";
+
+            Db.Insert(track2);
 
             var stats = Subject.ArtistStatistics();
 
