@@ -74,7 +74,7 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
 
         protected override string AddFromMagnetLink(RemoteAlbum remoteAlbum, string hash, string magnetLink)
         {
-            var priority = (RTorrentPriority)(remoteAlbum.IsRecentAlbum() ? Settings.RecentTvPriority : Settings.OlderTvPriority);
+            var priority = (RTorrentPriority)(remoteAlbum.IsRecentAlbum() ? Settings.RecentMusicPriority : Settings.OlderMusicPriority);
 
             _proxy.AddTorrentFromUrl(magnetLink, Settings.MusicCategory, priority, Settings.MusicDirectory, Settings);
 
@@ -94,7 +94,7 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
 
         protected override string AddFromTorrentFile(RemoteAlbum remoteAlbum, string hash, string filename, byte[] fileContent)
         {
-            var priority = (RTorrentPriority)(remoteAlbum.IsRecentAlbum() ? Settings.RecentTvPriority : Settings.OlderTvPriority);
+            var priority = (RTorrentPriority)(remoteAlbum.IsRecentAlbum() ? Settings.RecentMusicPriority : Settings.OlderMusicPriority);
 
             _proxy.AddTorrentFromFile(filename, fileContent, Settings.MusicCategory, priority, Settings.MusicDirectory, Settings);
 

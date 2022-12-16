@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Download.Clients.Transmission
             RuleFor(c => c.MusicCategory).Matches(@"^\.?[-a-z]*$", RegexOptions.IgnoreCase).WithMessage("Allowed characters a-z and -");
 
             RuleFor(c => c.MusicCategory).Empty()
-                .When(c => c.TvDirectory.IsNotNullOrWhiteSpace())
+                .When(c => c.MusicDirectory.IsNotNullOrWhiteSpace())
                 .WithMessage("Cannot use Category and Directory");
         }
     }
@@ -57,13 +57,13 @@ namespace NzbDrone.Core.Download.Clients.Transmission
         public string MusicCategory { get; set; }
 
         [FieldDefinition(7, Label = "Directory", Type = FieldType.Textbox, Advanced = true, HelpText = "Optional location to put downloads in, leave blank to use the default Transmission location")]
-        public string TvDirectory { get; set; }
+        public string MusicDirectory { get; set; }
 
         [FieldDefinition(8, Label = "Recent Priority", Type = FieldType.Select, SelectOptions = typeof(TransmissionPriority), HelpText = "Priority to use when grabbing albums released within the last 14 days")]
-        public int RecentTvPriority { get; set; }
+        public int RecentMusicPriority { get; set; }
 
         [FieldDefinition(9, Label = "Older Priority", Type = FieldType.Select, SelectOptions = typeof(TransmissionPriority), HelpText = "Priority to use when grabbing albums released over 14 days ago")]
-        public int OlderTvPriority { get; set; }
+        public int OlderMusicPriority { get; set; }
 
         [FieldDefinition(10, Label = "Add Paused", Type = FieldType.Checkbox)]
         public bool AddPaused { get; set; }

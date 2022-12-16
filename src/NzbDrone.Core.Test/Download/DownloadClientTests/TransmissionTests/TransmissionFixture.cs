@@ -66,9 +66,9 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.TransmissionTests
         }
 
         [Test]
-        public void Download_with_TvDirectory_should_force_directory()
+        public void Download_with_MusicDirectory_should_force_directory()
         {
-            GivenTvDirectory();
+            GivenMusicDirectory();
             GivenSuccessfulDownload();
 
             var remoteAlbum = CreateRemoteAlbum();
@@ -116,7 +116,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.TransmissionTests
         }
 
         [Test]
-        public void Download_without_TvDirectory_and_Category_should_use_default()
+        public void Download_without_MusicDirectory_and_Category_should_use_default()
         {
             GivenSuccessfulDownload();
 
@@ -224,9 +224,9 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.TransmissionTests
         }
 
         [Test]
-        public void should_exclude_items_not_in_TvDirectory()
+        public void should_exclude_items_not_in_MusicDirectory()
         {
-            GivenTvDirectory();
+            GivenMusicDirectory();
 
             _downloading.DownloadDir = @"C:/Downloads/Finished/Lidarr/subdir";
 

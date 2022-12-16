@@ -47,9 +47,9 @@ namespace NzbDrone.Core.Download.Clients.Transmission
 
                 var outputPath = new OsPath(torrent.DownloadDir);
 
-                if (Settings.TvDirectory.IsNotNullOrWhiteSpace())
+                if (Settings.MusicDirectory.IsNotNullOrWhiteSpace())
                 {
-                    if (!new OsPath(Settings.TvDirectory).Contains(outputPath))
+                    if (!new OsPath(Settings.MusicDirectory).Contains(outputPath))
                     {
                         continue;
                     }
@@ -165,9 +165,9 @@ namespace NzbDrone.Core.Download.Clients.Transmission
         public override DownloadClientInfo GetStatus()
         {
             string destDir;
-            if (Settings.TvDirectory.IsNotNullOrWhiteSpace())
+            if (Settings.MusicDirectory.IsNotNullOrWhiteSpace())
             {
-                destDir = Settings.TvDirectory;
+                destDir = Settings.MusicDirectory;
             }
             else
             {
@@ -194,8 +194,8 @@ namespace NzbDrone.Core.Download.Clients.Transmission
 
             var isRecentAlbum = remoteAlbum.IsRecentAlbum();
 
-            if ((isRecentAlbum && Settings.RecentTvPriority == (int)TransmissionPriority.First) ||
-                (!isRecentAlbum && Settings.OlderTvPriority == (int)TransmissionPriority.First))
+            if ((isRecentAlbum && Settings.RecentMusicPriority == (int)TransmissionPriority.First) ||
+                (!isRecentAlbum && Settings.OlderMusicPriority == (int)TransmissionPriority.First))
             {
                 _proxy.MoveTorrentToTopInQueue(hash, Settings);
             }
@@ -210,8 +210,8 @@ namespace NzbDrone.Core.Download.Clients.Transmission
 
             var isRecentAlbum = remoteAlbum.IsRecentAlbum();
 
-            if ((isRecentAlbum && Settings.RecentTvPriority == (int)TransmissionPriority.First) ||
-                (!isRecentAlbum && Settings.OlderTvPriority == (int)TransmissionPriority.First))
+            if ((isRecentAlbum && Settings.RecentMusicPriority == (int)TransmissionPriority.First) ||
+                (!isRecentAlbum && Settings.OlderMusicPriority == (int)TransmissionPriority.First))
             {
                 _proxy.MoveTorrentToTopInQueue(hash, Settings);
             }
@@ -237,9 +237,9 @@ namespace NzbDrone.Core.Download.Clients.Transmission
 
         protected string GetDownloadDirectory()
         {
-            if (Settings.TvDirectory.IsNotNullOrWhiteSpace())
+            if (Settings.MusicDirectory.IsNotNullOrWhiteSpace())
             {
-                return Settings.TvDirectory;
+                return Settings.MusicDirectory;
             }
 
             if (!Settings.MusicCategory.IsNotNullOrWhiteSpace())

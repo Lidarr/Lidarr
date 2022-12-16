@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.SabnzbdTests
                 Username = "admin",
                 Password = "pass",
                 MusicCategory = "tv",
-                RecentTvPriority = (int)SabnzbdPriority.High
+                RecentMusicPriority = (int)SabnzbdPriority.High
             };
             _queued = new SabnzbdQueue
             {
@@ -353,7 +353,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.SabnzbdTests
         }
 
         [Test]
-        public void Download_should_use_sabRecentTvPriority_when_recentEpisode_is_true()
+        public void Download_should_use_sabRecentMusicPriority_when_recentAlbum_is_true()
         {
             Mocker.GetMock<ISabnzbdProxy>()
                     .Setup(s => s.DownloadNzb(It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<string>(), (int)SabnzbdPriority.High, It.IsAny<SabnzbdSettings>()))

@@ -158,8 +158,8 @@ namespace NzbDrone.Core.Test.Datastore.Migration
         public string UrlBase { get; set; }
         public string Password { get; set; }
         public string MusicCategory { get; set; }
-        public int RecentTvPriority { get; set; }
-        public int OlderTvPriority { get; set; }
+        public int RecentMusicPriority { get; set; }
+        public int OlderMusicPriority { get; set; }
         public bool UseSsl { get; set; }
     }
 
@@ -171,8 +171,8 @@ namespace NzbDrone.Core.Test.Datastore.Migration
         public string Username { get; set; }
         public string Password { get; set; }
         public string MusicCategory { get; set; }
-        public int RecentTvPriority { get; set; }
-        public int OlderTvPriority { get; set; }
+        public int RecentMusicPriority { get; set; }
+        public int OlderMusicPriority { get; set; }
         public bool UseSsl { get; set; }
     }
 }

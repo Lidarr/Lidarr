@@ -216,9 +216,9 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
             _settings.MusicCategory = _category;
         }
 
-        protected void GivenTvDirectory()
+        protected void GivenMusicDirectory()
         {
-            _settings.TvDirectory = _musicDirectory;
+            _settings.MusicDirectory = _musicDirectory;
         }
 
         protected virtual void GivenTasks(List<DownloadStationTask> nzbs)
@@ -267,10 +267,10 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
         }
 
         [Test]
-        public void Download_with_TvDirectory_should_force_directory()
+        public void Download_with_MusicDirectory_should_force_directory()
         {
             GivenSerialNumber();
-            GivenTvDirectory();
+            GivenMusicDirectory();
             GivenSuccessfulDownload();
 
             var remoteAlbum = CreateRemoteAlbum();
@@ -301,7 +301,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
         }
 
         [Test]
-        public void Download_without_TvDirectory_and_Category_should_use_default()
+        public void Download_without_MusicDirectory_and_Category_should_use_default()
         {
             GivenSerialNumber();
             GivenSuccessfulDownload();
@@ -341,7 +341,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
         [Test]
         public void GetItems_should_ignore_downloads_in_wrong_folder()
         {
-            _settings.TvDirectory = @"/shared/folder/sub";
+            _settings.MusicDirectory = @"/shared/folder/sub";
 
             GivenSerialNumber();
             GivenSharedFolder();
@@ -408,7 +408,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
         public void GetStatus_should_map_outputpath_when_using_destination()
         {
             GivenSerialNumber();
-            GivenTvDirectory();
+            GivenMusicDirectory();
             GivenSharedFolder($"/{_musicDirectory}");
 
             var status = Subject.GetStatus();

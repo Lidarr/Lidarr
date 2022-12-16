@@ -27,8 +27,8 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
             Port = 8080;
             UrlBase = "RPC2";
             MusicCategory = "lidarr";
-            OlderTvPriority = (int)RTorrentPriority.Normal;
-            RecentTvPriority = (int)RTorrentPriority.Normal;
+            OlderMusicPriority = (int)RTorrentPriority.Normal;
+            RecentMusicPriority = (int)RTorrentPriority.Normal;
         }
 
         [FieldDefinition(0, Label = "Host", Type = FieldType.Textbox)]
@@ -59,10 +59,10 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
         public string MusicDirectory { get; set; }
 
         [FieldDefinition(9, Label = "Recent Priority", Type = FieldType.Select, SelectOptions = typeof(RTorrentPriority), HelpText = "Priority to use when grabbing albums released within the last 14 days")]
-        public int RecentTvPriority { get; set; }
+        public int RecentMusicPriority { get; set; }
 
         [FieldDefinition(10, Label = "Older Priority", Type = FieldType.Select, SelectOptions = typeof(RTorrentPriority), HelpText = "Priority to use when grabbing albums released over 14 days ago")]
-        public int OlderTvPriority { get; set; }
+        public int OlderMusicPriority { get; set; }
 
         [FieldDefinition(11, Label = "Add Stopped", Type = FieldType.Checkbox, HelpText = "Enabling will add torrents and magnets to rTorrent in a stopped state. This may break magnet files.")]
         public bool AddStopped { get; set; }

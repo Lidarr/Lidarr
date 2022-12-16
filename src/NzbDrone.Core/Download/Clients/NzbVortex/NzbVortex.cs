@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Download.Clients.NzbVortex
 
         protected override string AddFromNzbFile(RemoteAlbum remoteAlbum, string filename, byte[] fileContent)
         {
-            var priority = remoteAlbum.IsRecentAlbum() ? Settings.RecentTvPriority : Settings.OlderTvPriority;
+            var priority = remoteAlbum.IsRecentAlbum() ? Settings.RecentMusicPriority : Settings.OlderMusicPriority;
 
             var response = _proxy.DownloadNzb(fileContent, filename, priority, Settings);
 
