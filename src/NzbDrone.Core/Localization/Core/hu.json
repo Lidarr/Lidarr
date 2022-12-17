@@ -18,7 +18,7 @@
     "BackupRetentionHelpText": "A megőrzési időnél régebbi automatikus biztonsági másolatok automatikusan törlésre kerülnek",
     "Backups": "Biztonsági Mentés",
     "BindAddress": "Kapcsolási Cím",
-    "BindAddressHelpText": "Érvényes IPv4-cím, vagy „*” minden interfészhez",
+    "BindAddressHelpText": "Érvényes IP-cím, localhost vagy '*' minden interfészhez",
     "Cancel": "Vissza",
     "CertificateValidation": "Tanúsítvány érvényesítése",
     "ChangeHasNotBeenSavedYet": "A változások még nem lettek elmentve",
@@ -872,10 +872,13 @@
     "SelectTracks": "Szám kiválasztása",
     "ShouldMonitorExisting": "Meglévő albumok figyelése",
     "Theme": "Téma",
-    "ThemeHelpText": "Alkamazás kinézetének változtatása",
+    "ThemeHelpText": "Változtasd meg az alkalmazás felhasználói felület témáját, az „Auto” téma az operációs rendszer témáját használja a Világos vagy Sötét mód beállításához. A Theme.Park ihlette",
     "TrackCount": "Darabszám",
     "TrackImported": "Szám importálva",
     "TrackProgress": "Szám folyamata",
     "SelectAlbumRelease": "Album kiadásának kiválasztása",
-    "Database": "Adatbázis"
+    "Database": "Adatbázis",
+    "EditGroups": "Csoportok szerkesztése",
+    "QualitiesHelpText": "A listán magasabb minőségek előnyösebbek, még akkor is, ha nincs bejelölve. Ugyanazon csoporton belül a tulajdonságok egyenlőek. Csak ellenőrzött minőségek szükségesek",
+    "DoneEditingGroups": "A csoportok szerkesztése kész"
 }
