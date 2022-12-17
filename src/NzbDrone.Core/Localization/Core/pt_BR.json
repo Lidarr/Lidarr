@@ -73,7 +73,7 @@
     "BackupRetentionHelpText": "Backups automáticos anteriores ao período de retenção serão limpos automaticamente",
     "Backups": "Backups",
     "BindAddress": "Fixar Endereço",
-    "BindAddressHelpText": "Endereço IPv4 Válido ou '*' para todas as interfaces",
+    "BindAddressHelpText": "Endereço IP válido, localhost ou '*' para todas as interfaces",
     "BindAddressHelpTextWarning": "Requer reiniciar para ter efeito",
     "BlocklistHelpText": "Previne Lidarr de baixar automaticamente esses arquivos novamente",
     "BlocklistRelease": "Lista de Bloqueio de Lançamentos",
@@ -876,5 +876,8 @@
     "TrackProgress": "Progresso da Faixa",
     "EndedOnly": "Concluídos Somente",
     "MediaCount": "Número de Mídias",
-    "Database": "Banco de dados"
+    "Database": "Banco de dados",
+    "DoneEditingGroups": "Concluído a Edição de Grupos",
+    "QualitiesHelpText": "As qualidades mais altas na lista são mais preferidas, mesmo que não sejam verificadas. As qualidades dentro do mesmo grupo são iguais. Somente qualidades verificadas são desejadas",
+    "EditGroups": "Editar Grupos"
 }
