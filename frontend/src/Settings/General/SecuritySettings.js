@@ -11,15 +11,20 @@ import ConfirmModal from 'Components/Modal/ConfirmModal';
 import { icons, inputTypes, kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 
-export const authenticationRequiredWarning = 'To prevent remote access without authentication, Radarr now requires authentication to be enabled. You can optionally disable authentication from local addresses.';
-
-const authenticationMethodOptions = [
+export const authenticationMethodOptions = [
   {
     key: 'none',
     get value() {
       return translate('None');
     },
     isDisabled: true
+  },
+  {
+    key: 'external',
+    get value() {
+      return translate('External');
+    },
+    isHidden: true
   },
   {
     key: 'basic',
@@ -36,14 +41,39 @@ const authenticationMethodOptions = [
 ];
 
 export const authenticationRequiredOptions = [
-  { key: 'enabled', value: 'Enabled' },
-  { key: 'disabledForLocalAddresses', value: 'Disabled for Local Addresses' }
+  {
+    key: 'enabled',
+    get value() {
+      return translate('Enabled');
+    }
+  },
+  {
+    key: 'disabledForLocalAddresses',
+    get value() {
+      return translate('DisabledForLocalAddresses');
+    }
+  }
 ];
 
 const certificateValidationOptions = [
-  { key: 'enabled', value: 'Enabled' },
-  { key: 'disabledForLocalAddresses', value: 'Disabled for Local Addresses' },
-  { key: 'disabled', value: 'Disabled' }
+  {
+    key: 'enabled',
+    get value() {
+      return translate('Enabled');
+    }
+  },
+  {
+    key: 'disabledForLocalAddresses',
+    get value() {
+      return translate('DisabledForLocalAddresses');
+    }
+  },
+  {
+    key: 'disabled',
+    get value() {
+      return translate('Disabled');
+    }
+  }
 ];
 
 class SecuritySettings extends Component {
@@ -112,7 +142,7 @@ class SecuritySettings extends Component {
             name="authenticationMethod"
             values={authenticationMethodOptions}
             helpText={translate('AuthenticationMethodHelpText')}
-            helpTextWarning={authenticationRequiredWarning}
+            helpTextWarning={translate('AuthenticationRequiredWarning')}
             onChange={onInputChange}
             {...authenticationMethod}
           />
@@ -121,13 +151,13 @@ class SecuritySettings extends Component {
         {
           authenticationEnabled ?
             <FormGroup>
-              <FormLabel>Authentication Required</FormLabel>
+              <FormLabel>{translate('AuthenticationRequired')}</FormLabel>
 
               <FormInputGroup
                 type={inputTypes.SELECT}
                 name="authenticationRequired"
                 values={authenticationRequiredOptions}
-                helpText="Change which requests authentication is required for. Do not change unless you understand the risks."
+                helpText={translate('AuthenticationRequiredHelpText')}
                 onChange={onInputChange}
                 {...authenticationRequired}
               />
