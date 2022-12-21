@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Parser.Model
         public TorrentSeedConfiguration SeedConfiguration { get; set; }
         public List<CustomFormat> CustomFormats { get; set; }
         public int CustomFormatScore { get; set; }
+        public ReleaseSourceType ReleaseSource { get; set; }
 
         public RemoteAlbum()
         {
@@ -33,5 +34,15 @@ namespace NzbDrone.Core.Parser.Model
         {
             return Release.Title;
         }
+    }
+
+    public enum ReleaseSourceType
+    {
+        Unknown = 0,
+        Rss = 1,
+        Search = 2,
+        UserInvokedSearch = 3,
+        InteractiveSearch = 4,
+        ReleasePush = 5
     }
 }

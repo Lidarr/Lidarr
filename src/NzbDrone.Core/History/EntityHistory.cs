@@ -9,6 +9,7 @@ namespace NzbDrone.Core.History
     public class EntityHistory : ModelBase
     {
         public const string DOWNLOAD_CLIENT = "downloadClient";
+        public const string RELEASE_SOURCE = "releaseSource";
 
         public EntityHistory()
         {
