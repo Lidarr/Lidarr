@@ -32,6 +32,9 @@ namespace NzbDrone.Core.Notifications.Gotify
         [FieldDefinition(2, Label = "Priority", Type = FieldType.Select, SelectOptions = typeof(GotifyPriority), HelpText = "Priority of the notification")]
         public int Priority { get; set; }
 
+        [FieldDefinition(3, Label = "Include Artist Poster", Type = FieldType.Checkbox, HelpText = "Include artist poster in message")]
+        public bool IncludeArtistPoster { get; set; }
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
