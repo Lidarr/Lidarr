@@ -220,6 +220,7 @@ class ArtistDetailsSeason extends Component {
             </span>
             <Popover
               className={styles.albumCountTooltip}
+              canFlip={true}
               anchor={
                 <Label
                   size={sizes.LARGE}
