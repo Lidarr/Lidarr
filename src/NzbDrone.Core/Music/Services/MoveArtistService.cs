@@ -66,7 +66,7 @@ namespace NzbDrone.Core.Music
                     _diskProvider.CreateFolder(new DirectoryInfo(destinationPath).Parent.FullName);
                     _diskTransferService.TransferFolder(sourcePath, destinationPath, TransferMode.Move);
 
-                    _logger.ProgressInfo("{0} moved successfully to {1}", artist.Name, artist.Path);
+                    _logger.ProgressInfo("{0} moved successfully to {1}", artist.Name, destinationPath);
                 }
 
                 _eventAggregator.PublishEvent(new ArtistMovedEvent(artist, sourcePath, destinationPath));
