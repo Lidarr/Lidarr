@@ -45,10 +45,7 @@ namespace NzbDrone.Common.Instrumentation.Sentry
             "OutOfMemoryException",
 
             // Filter out people stuck in boot loops
-            "CorruptDatabaseException",
-
-            // This also filters some people in boot loops
-            "TinyIoCResolutionException"
+            "CorruptDatabaseException"
         };
 
         public static readonly List<string> FilteredExceptionMessages = new List<string>
@@ -105,9 +102,6 @@ namespace NzbDrone.Common.Instrumentation.Sentry
                                       o.Dsn = dsn;
                                       o.AttachStacktrace = true;
                                       o.MaxBreadcrumbs = 200;
-                                      o.SendDefaultPii = false;
-                                      o.Debug = false;
-                                      o.DiagnosticLevel = SentryLevel.Debug;
                                       o.Release = BuildInfo.Release;
                                       o.BeforeSend = x => SentryCleanser.CleanseEvent(x);
                                       o.BeforeBreadcrumb = x => SentryCleanser.CleanseBreadcrumb(x);
