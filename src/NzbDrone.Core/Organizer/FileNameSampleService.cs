@@ -32,7 +32,8 @@ namespace NzbDrone.Core.Organizer
             var artistMetadata = new ArtistMetadata
             {
                 Name = "The Artist Name",
-                Disambiguation = "US Rock Band"
+                Disambiguation = "US Rock Band",
+                Genres = new List<string> { "Pop" }
             };
 
             _standardArtist = new Artist
@@ -46,6 +47,7 @@ namespace NzbDrone.Core.Organizer
                 ReleaseDate = System.DateTime.Today,
                 AlbumType = "Album",
                 Disambiguation = "The Best Album",
+                Genres = new List<string> { "Rock" }
             };
 
             _singleRelease = new AlbumRelease

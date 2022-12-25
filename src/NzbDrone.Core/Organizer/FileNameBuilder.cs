@@ -267,6 +267,7 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{Artist Name}"] = m => artist.Name;
             tokenHandlers["{Artist CleanName}"] = m => CleanTitle(artist.Name);
             tokenHandlers["{Artist NameThe}"] = m => TitleThe(artist.Name);
+            tokenHandlers["{Artist Genre}"] = m => artist.Metadata.Value.Genres?.FirstOrDefault() ?? string.Empty;
             tokenHandlers["{Artist NameFirstCharacter}"] = m => TitleThe(artist.Name).Substring(0, 1).FirstCharToUpper();
 
             if (artist.Metadata.Value.Disambiguation != null)
@@ -281,6 +282,7 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{Album CleanTitle}"] = m => CleanTitle(album.Title);
             tokenHandlers["{Album TitleThe}"] = m => TitleThe(album.Title);
             tokenHandlers["{Album Type}"] = m => album.AlbumType;
+            tokenHandlers["{Album Genre}"] = m => album.Genres.FirstOrDefault() ?? string.Empty;
 
             if (album.Disambiguation != null)
             {

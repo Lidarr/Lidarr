@@ -10,6 +10,7 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Organizer;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
+using TagLib;
 
 namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
 {
@@ -37,7 +38,8 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
                     .With(s => s.Metadata = new ArtistMetadata
                     {
                         Disambiguation = "US Rock Band",
-                        Name = "Linkin Park"
+                        Name = "Linkin Park",
+                        Genres = new List<string> { "Rock" }
                     })
                     .Build();
 
@@ -66,6 +68,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
                 .With(s => s.Title = "Hybrid Theory")
                 .With(s => s.AlbumType = "Album")
                 .With(s => s.Disambiguation = "The Best Album")
+                .With(s => s.Genres = new List<string> { "Rock" })
                 .Build();
 
             _mixAlbum = Builder<Album>
@@ -206,6 +209,15 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
         }
 
         [Test]
+        public void should_replace_artist_genre()
+        {
+            _namingConfig.StandardTrackFormat = "{Artist Genre}";
+
+            Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
+                   .Should().Be("Rock");
+        }
+
+        [Test]
         public void should_replace_Album_space_Title()
         {
             _namingConfig.StandardTrackFormat = "{Album Title}";
@@ -230,6 +242,15 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
 
             Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
                 .Should().Be("The Best Album");
+        }
+
+        [Test]
+        public void should_replace_album_genre()
+        {
+            _namingConfig.StandardTrackFormat = "{Album Genre}";
+
+            Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
+                   .Should().Be("Rock");
         }
 
         [Test]
