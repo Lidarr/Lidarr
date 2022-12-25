@@ -40,6 +40,16 @@ namespace NzbDrone.Core.Notifications.Subsonic
             Update();
         }
 
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            Notify(Settings, ALBUM_DELETED_TITLE_BRANDED, deleteMessage.Message);
+        }
+
+        public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
+        {
+            Notify(Settings, ARTIST_DELETED_TITLE_BRANDED, deleteMessage.Message);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             Notify(Settings, HEALTH_ISSUE_TITLE_BRANDED, healthCheck.Message);

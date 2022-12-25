@@ -54,6 +54,28 @@ namespace NzbDrone.Core.Notifications.Synology
             }
         }
 
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            if (deleteMessage.DeletedFiles)
+            {
+                if (Settings.UpdateLibrary)
+                {
+                    _indexerProxy.DeleteFolder(deleteMessage.Album.Artist.Value.Path);
+                }
+            }
+        }
+
+        public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
+        {
+            if (deleteMessage.DeletedFiles)
+            {
+                if (Settings.UpdateLibrary)
+                {
+                    _indexerProxy.DeleteFolder(deleteMessage.Artist.Path);
+                }
+            }
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();

@@ -53,6 +53,22 @@ namespace NzbDrone.Core.Notifications.Plex.Server
             UpdateIfEnabled(message.Artist);
         }
 
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            if (deleteMessage.DeletedFiles)
+            {
+                UpdateIfEnabled(deleteMessage.Album.Artist);
+            }
+        }
+
+        public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
+        {
+            if (deleteMessage.DeletedFiles)
+            {
+                UpdateIfEnabled(deleteMessage.Artist);
+            }
+        }
+
         private void UpdateIfEnabled(Artist artist)
         {
             _plexTvService.Ping(Settings.AuthToken);

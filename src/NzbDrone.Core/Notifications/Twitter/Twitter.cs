@@ -28,6 +28,16 @@ namespace NzbDrone.Core.Notifications.Twitter
             _twitterService.SendNotification($"Imported: {message.Message}", Settings);
         }
 
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            _twitterService.SendNotification($"Album Deleted: {deleteMessage.Message}", Settings);
+        }
+
+        public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
+        {
+            _twitterService.SendNotification($"Artist Deleted: {deleteMessage.Message}", Settings);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             _twitterService.SendNotification($"Health Issue: {healthCheck.Message}", Settings);

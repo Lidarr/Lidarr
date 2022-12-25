@@ -69,6 +69,38 @@ namespace NzbDrone.Core.Notifications.Slack
             _proxy.SendPayload(payload, Settings);
         }
 
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            var attachments = new List<Attachment>
+                              {
+                                  new Attachment
+                                  {
+                                      Title = deleteMessage.Album.Title,
+                                      Text = deleteMessage.DeletedFilesMessage
+                                  }
+                              };
+
+            var payload = CreatePayload("Album Deleted", attachments);
+
+            _proxy.SendPayload(payload, Settings);
+        }
+
+        public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
+        {
+            var attachments = new List<Attachment>
+                              {
+                                  new Attachment
+                                  {
+                                      Title = deleteMessage.Artist.Metadata.Value.Name,
+                                      Text = deleteMessage.DeletedFilesMessage
+                                  }
+                              };
+
+            var payload = CreatePayload("Artist Deleted", attachments);
+
+            _proxy.SendPayload(payload, Settings);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             var attachments = new List<Attachment>

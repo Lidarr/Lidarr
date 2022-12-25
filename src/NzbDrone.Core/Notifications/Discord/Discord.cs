@@ -221,6 +221,42 @@ namespace NzbDrone.Core.Notifications.Discord
             _proxy.SendPayload(payload, Settings);
         }
 
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            var album = deleteMessage.Album;
+
+            var attachments = new List<Embed>
+                              {
+                                  new Embed
+                                  {
+                                      Title = album.Title,
+                                      Description = deleteMessage.DeletedFilesMessage
+                                  }
+                              };
+
+            var payload = CreatePayload("Album Deleted", attachments);
+
+            _proxy.SendPayload(payload, Settings);
+        }
+
+        public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
+        {
+            var artist = deleteMessage.Artist;
+
+            var attachments = new List<Embed>
+                              {
+                                  new Embed
+                                  {
+                                      Title = artist.Metadata.Value.Name,
+                                      Description = deleteMessage.DeletedFilesMessage
+                                  }
+                              };
+
+            var payload = CreatePayload("Artist Deleted", attachments);
+
+            _proxy.SendPayload(payload, Settings);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             var attachments = new List<Embed>

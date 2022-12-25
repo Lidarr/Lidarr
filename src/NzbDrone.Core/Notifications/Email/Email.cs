@@ -41,6 +41,20 @@ namespace NzbDrone.Core.Notifications.Email
             SendEmail(Settings, ALBUM_DOWNLOADED_TITLE_BRANDED, body);
         }
 
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            var body = $"{deleteMessage.Message}";
+
+            SendEmail(Settings, ALBUM_DELETED_TITLE_BRANDED, body);
+        }
+
+        public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
+        {
+            var body = $"{deleteMessage.Message}";
+
+            SendEmail(Settings, ARTIST_DELETED_TITLE_BRANDED, body);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck message)
         {
             SendEmail(Settings, HEALTH_ISSUE_TITLE_BRANDED, message.Message);
@@ -155,7 +169,7 @@ namespace NzbDrone.Core.Notifications.Email
 
             try
             {
-                SendEmail(settings, "Sonarr - Test Notification", body);
+                SendEmail(settings, "Lidarr - Test Notification", body);
             }
             catch (Exception ex)
             {

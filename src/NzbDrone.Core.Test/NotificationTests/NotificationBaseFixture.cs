@@ -62,6 +62,16 @@ namespace NzbDrone.Core.Test.NotificationTests
                 TestLogger.Info("OnRename was called");
             }
 
+            public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+            {
+                TestLogger.Info("Album OnDelete was called");
+            }
+
+            public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
+            {
+                TestLogger.Info("Artist OnDelete was called");
+            }
+
             public override void OnHealthIssue(NzbDrone.Core.HealthCheck.HealthCheck artist)
             {
                 TestLogger.Info("OnHealthIssue was called");
@@ -125,6 +135,8 @@ namespace NzbDrone.Core.Test.NotificationTests
             notification.SupportsOnImportFailure.Should().BeTrue();
             notification.SupportsOnTrackRetag.Should().BeTrue();
             notification.SupportsOnApplicationUpdate.Should().BeTrue();
+            notification.SupportsOnAlbumDelete.Should().BeTrue();
+            notification.SupportsOnArtistDelete.Should().BeTrue();
         }
 
         [Test]
@@ -141,6 +153,8 @@ namespace NzbDrone.Core.Test.NotificationTests
             notification.SupportsOnImportFailure.Should().BeFalse();
             notification.SupportsOnTrackRetag.Should().BeFalse();
             notification.SupportsOnApplicationUpdate.Should().BeFalse();
+            notification.SupportsOnAlbumDelete.Should().BeFalse();
+            notification.SupportsOnArtistDelete.Should().BeFalse();
         }
     }
 }

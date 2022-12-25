@@ -19,6 +19,8 @@ function NotificationEventItems(props) {
     onReleaseImport,
     onUpgrade,
     onRename,
+    onAlbumDelete,
+    onArtistDelete,
     onHealthIssue,
     onDownloadFailure,
     onImportFailure,
@@ -28,6 +30,8 @@ function NotificationEventItems(props) {
     supportsOnReleaseImport,
     supportsOnUpgrade,
     supportsOnRename,
+    supportsOnAlbumDelete,
+    supportsOnArtistDelete,
     supportsOnHealthIssue,
     includeHealthWarnings,
     supportsOnDownloadFailure,
@@ -130,6 +134,28 @@ function NotificationEventItems(props) {
           <div>
             <FormInputGroup
               type={inputTypes.CHECK}
+              name="onAlbumDelete"
+              helpText={translate('OnAlbumDeleteHelpText')}
+              isDisabled={!supportsOnAlbumDelete.value}
+              {...onAlbumDelete}
+              onChange={onInputChange}
+            />
+          </div>
+
+          <div>
+            <FormInputGroup
+              type={inputTypes.CHECK}
+              name="onArtistDelete"
+              helpText={translate('OnArtistDeleteHelpText')}
+              isDisabled={!supportsOnArtistDelete.value}
+              {...onArtistDelete}
+              onChange={onInputChange}
+            />
+          </div>
+
+          <div>
+            <FormInputGroup
+              type={inputTypes.CHECK}
               name="onApplicationUpdate"
               helpText={translate('OnApplicationUpdateHelpText')}
               isDisabled={!supportsOnApplicationUpdate.value}
@@ -162,7 +188,6 @@ function NotificationEventItems(props) {
                 />
               </div>
           }
-
         </div>
       </div>
     </FormGroup>

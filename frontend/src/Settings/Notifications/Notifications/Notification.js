@@ -59,6 +59,8 @@ class Notification extends Component {
       onReleaseImport,
       onUpgrade,
       onRename,
+      onAlbumDelete,
+      onArtistDelete,
       onHealthIssue,
       onDownloadFailure,
       onImportFailure,
@@ -68,6 +70,8 @@ class Notification extends Component {
       supportsOnReleaseImport,
       supportsOnUpgrade,
       supportsOnRename,
+      supportsOnAlbumDelete,
+      supportsOnArtistDelete,
       supportsOnHealthIssue,
       supportsOnDownloadFailure,
       supportsOnImportFailure,
@@ -121,6 +125,20 @@ class Notification extends Component {
         }
 
         {
+          supportsOnAlbumDelete && onAlbumDelete &&
+            <Label kind={kinds.SUCCESS}>
+              {translate('OnAlbumDelete')}
+            </Label>
+        }
+
+        {
+          supportsOnArtistDelete && onArtistDelete &&
+            <Label kind={kinds.SUCCESS}>
+              {translate('OnArtistDelete')}
+            </Label>
+        }
+
+        {
           supportsOnHealthIssue && onHealthIssue &&
             <Label kind={kinds.SUCCESS}>
               {translate('OnHealthIssue')}
@@ -149,7 +167,7 @@ class Notification extends Component {
         }
 
         {
-          !onGrab && !onReleaseImport && !onRename && !onTrackRetag &&
+          !onGrab && !onReleaseImport && !onRename && !onTrackRetag && !onAlbumDelete && !onArtistDelete &&
             !onHealthIssue && !onDownloadFailure && !onImportFailure && !onApplicationUpdate &&
               <Label
                 kind={kinds.DISABLED}
@@ -187,6 +205,8 @@ Notification.propTypes = {
   onReleaseImport: PropTypes.bool.isRequired,
   onUpgrade: PropTypes.bool.isRequired,
   onRename: PropTypes.bool.isRequired,
+  onAlbumDelete: PropTypes.bool.isRequired,
+  onArtistDelete: PropTypes.bool.isRequired,
   onHealthIssue: PropTypes.bool.isRequired,
   onDownloadFailure: PropTypes.bool.isRequired,
   onImportFailure: PropTypes.bool.isRequired,
@@ -196,6 +216,8 @@ Notification.propTypes = {
   supportsOnReleaseImport: PropTypes.bool.isRequired,
   supportsOnUpgrade: PropTypes.bool.isRequired,
   supportsOnRename: PropTypes.bool.isRequired,
+  supportsOnAlbumDelete: PropTypes.bool.isRequired,
+  supportsOnArtistDelete: PropTypes.bool.isRequired,
   supportsOnHealthIssue: PropTypes.bool.isRequired,
   supportsOnDownloadFailure: PropTypes.bool.isRequired,
   supportsOnImportFailure: PropTypes.bool.isRequired,

@@ -12,8 +12,10 @@ namespace NzbDrone.Core.Notifications.Webhook
         Grab,
         Download,
         Rename,
+        AlbumDelete,
+        ArtistDelete,
         Health,
         Retag,
-        ApplicationUpdate
+        ApplicationUpdate,
     }
 }

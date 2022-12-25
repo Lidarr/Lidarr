@@ -30,6 +30,7 @@ namespace NzbDrone.Core.MediaFiles
         private readonly IMediaFileService _mediaFileService;
         private readonly IArtistService _artistService;
         private readonly IConfigService _configService;
+        private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
         public MediaFileDeletionService(IDiskProvider diskProvider,
@@ -37,6 +38,7 @@ namespace NzbDrone.Core.MediaFiles
                                         IMediaFileService mediaFileService,
                                         IArtistService artistService,
                                         IConfigService configService,
+                                        IEventAggregator eventAggregator,
                                         Logger logger)
         {
             _diskProvider = diskProvider;
@@ -44,6 +46,7 @@ namespace NzbDrone.Core.MediaFiles
             _mediaFileService = mediaFileService;
             _artistService = artistService;
             _configService = configService;
+            _eventAggregator = eventAggregator;
             _logger = logger;
         }
 
@@ -97,6 +100,8 @@ namespace NzbDrone.Core.MediaFiles
 
             // Delete the track file from the database to clean it up even if the file was already deleted
             _mediaFileService.Delete(trackFile, DeleteMediaFileReason.Manual);
+
+            _eventAggregator.PublishEvent(new DeleteCompletedEvent());
         }
 
         public void HandleAsync(ArtistsDeletedEvent message)
@@ -133,6 +138,8 @@ namespace NzbDrone.Core.MediaFiles
                         _recycleBinProvider.DeleteFolder(artist.Path);
                     }
                 }
+
+                _eventAggregator.PublishEvent(new DeleteCompletedEvent());
             }
         }
 
@@ -141,10 +148,13 @@ namespace NzbDrone.Core.MediaFiles
             if (message.DeleteFiles)
             {
                 var files = _mediaFileService.GetFilesByAlbum(message.Album.Id);
+
                 foreach (var file in files)
                 {
                     _recycleBinProvider.DeleteFile(file.Path);
                 }
+
+                _eventAggregator.PublishEvent(new DeleteCompletedEvent());
             }
         }
 

@@ -145,6 +145,43 @@ namespace NzbDrone.Core.Notifications.CustomScript
             ExecuteScript(environmentVariables);
         }
 
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            var artist = deleteMessage.Album.Artist.Value;
+            var album = deleteMessage.Album;
+            var environmentVariables = new StringDictionary();
+
+            environmentVariables.Add("Lidarr_EventType", "AlbumDeleted");
+            environmentVariables.Add("Lidarr_Artist_Id", artist.Id.ToString());
+            environmentVariables.Add("Lidarr_Artist_Name", artist.Metadata.Value.Name);
+            environmentVariables.Add("Lidarr_Artist_Path", artist.Path);
+            environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId);
+            environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
+            environmentVariables.Add("Lidarr_Album_Id", album.Id.ToString());
+            environmentVariables.Add("Lidarr_Album_Title", album.Title);
+            environmentVariables.Add("Lidarr_Album_MBId", album.ForeignAlbumId);
+            environmentVariables.Add("Lidarr_Album_ReleaseDate", album.ReleaseDate.ToString());
+            environmentVariables.Add("Lidarr_Artist_DeletedFiles", deleteMessage.DeletedFiles.ToString());
+
+            ExecuteScript(environmentVariables);
+        }
+
+        public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
+        {
+            var artist = deleteMessage.Artist;
+            var environmentVariables = new StringDictionary();
+
+            environmentVariables.Add("Lidarr_EventType", "ArtistDeleted");
+            environmentVariables.Add("Lidarr_Artist_Id", artist.Id.ToString());
+            environmentVariables.Add("Lidarr_Artist_Title", artist.Metadata.Value.Name);
+            environmentVariables.Add("Lidarr_Artist_Path", artist.Path);
+            environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId.ToString());
+            environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
+            environmentVariables.Add("Lidarr_Artist_DeletedFiles", deleteMessage.DeletedFiles.ToString());
+
+            ExecuteScript(environmentVariables);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             var environmentVariables = new StringDictionary();

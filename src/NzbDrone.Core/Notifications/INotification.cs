@@ -10,6 +10,8 @@ namespace NzbDrone.Core.Notifications
         void OnGrab(GrabMessage grabMessage);
         void OnReleaseImport(AlbumDownloadMessage message);
         void OnRename(Artist artist);
+        void OnAlbumDelete(AlbumDeleteMessage deleteMessage);
+        void OnArtistDelete(ArtistDeleteMessage deleteMessage);
         void OnHealthIssue(HealthCheck.HealthCheck healthCheck);
         void OnApplicationUpdate(ApplicationUpdateMessage updateMessage);
         void OnDownloadFailure(DownloadFailedMessage message);
@@ -20,6 +22,8 @@ namespace NzbDrone.Core.Notifications
         bool SupportsOnReleaseImport { get; }
         bool SupportsOnUpgrade { get; }
         bool SupportsOnRename { get; }
+        bool SupportsOnAlbumDelete { get; }
+        bool SupportsOnArtistDelete { get; }
         bool SupportsOnHealthIssue { get; }
         bool SupportsOnApplicationUpdate { get; }
         bool SupportsOnDownloadFailure { get; }

@@ -26,6 +26,16 @@ namespace NzbDrone.Core.Notifications.Prowl
             _prowlProxy.SendNotification(ALBUM_DOWNLOADED_TITLE, message.Message, Settings);
         }
 
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            _prowlProxy.SendNotification(ALBUM_DELETED_TITLE, deleteMessage.Message, Settings);
+        }
+
+        public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
+        {
+            _prowlProxy.SendNotification(ARTIST_DELETED_TITLE, deleteMessage.Message, Settings);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             _prowlProxy.SendNotification(HEALTH_ISSUE_TITLE, healthCheck.Message, Settings);

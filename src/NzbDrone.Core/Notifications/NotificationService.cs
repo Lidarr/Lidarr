@@ -9,6 +9,7 @@ using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.Music.Events;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Update.History.Events;
@@ -19,13 +20,16 @@ namespace NzbDrone.Core.Notifications
         : IHandle<AlbumGrabbedEvent>,
           IHandle<AlbumImportedEvent>,
           IHandle<ArtistRenamedEvent>,
+          IHandle<AlbumDeletedEvent>,
+          IHandle<ArtistsDeletedEvent>,
           IHandle<HealthCheckFailedEvent>,
           IHandle<DownloadFailedEvent>,
           IHandle<AlbumImportIncompleteEvent>,
           IHandle<TrackFileRetaggedEvent>,
+          IHandle<UpdateInstalledEvent>,
           IHandleAsync<RenameCompletedEvent>,
-          IHandleAsync<HealthCheckCompleteEvent>,
-          IHandle<UpdateInstalledEvent>
+          IHandleAsync<DeleteCompletedEvent>,
+          IHandleAsync<HealthCheckCompleteEvent>
     {
         private readonly INotificationFactory _notificationFactory;
         private readonly Logger _logger;
@@ -200,6 +204,49 @@ namespace NzbDrone.Core.Notifications
             }
         }
 
+        public void Handle(AlbumDeletedEvent message)
+        {
+            var deleteMessage = new AlbumDeleteMessage(message.Album, message.DeleteFiles);
+
+            foreach (var notification in _notificationFactory.OnAlbumDeleteEnabled())
+            {
+                try
+                {
+                    if (ShouldHandleArtist(notification.Definition, deleteMessage.Album.Artist))
+                    {
+                        notification.OnAlbumDelete(deleteMessage);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "Unable to send OnDelete notification to: " + notification.Definition.Name);
+                }
+            }
+        }
+
+        public void Handle(ArtistsDeletedEvent message)
+        {
+            foreach (var artist in message.Artists)
+            {
+                var deleteMessage = new ArtistDeleteMessage(artist, message.DeleteFiles);
+
+                foreach (var notification in _notificationFactory.OnArtistDeleteEnabled())
+                {
+                    try
+                    {
+                        if (ShouldHandleArtist(notification.Definition, deleteMessage.Artist))
+                        {
+                            notification.OnArtistDelete(deleteMessage);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn(ex, "Unable to send OnDelete notification to: " + notification.Definition.Name);
+                    }
+                }
+            }
+        }
+
         public void Handle(HealthCheckFailedEvent message)
         {
             // Don't send health check notifications during the start up grace period,
@@ -310,6 +357,11 @@ namespace NzbDrone.Core.Notifications
         }
 
         public void HandleAsync(HealthCheckCompleteEvent message)
+        {
+            ProcessQueue();
+        }
+
+        public void HandleAsync(DeleteCompletedEvent message)
         {
             ProcessQueue();
         }

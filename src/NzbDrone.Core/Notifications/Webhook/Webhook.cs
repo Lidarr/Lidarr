@@ -94,6 +94,30 @@ namespace NzbDrone.Core.Notifications.Webhook
             _proxy.SendWebhook(payload, Settings);
         }
 
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            var payload = new WebhookAlbumDeletePayload
+            {
+                EventType = WebhookEventType.AlbumDelete,
+                Album = new WebhookAlbum(deleteMessage.Album),
+                DeletedFiles = deleteMessage.DeletedFiles
+            };
+
+            _proxy.SendWebhook(payload, Settings);
+        }
+
+        public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
+        {
+            var payload = new WebhookArtistDeletePayload
+            {
+                EventType = WebhookEventType.ArtistDelete,
+                Artist = new WebhookArtist(deleteMessage.Artist),
+                DeletedFiles = deleteMessage.DeletedFiles
+            };
+
+            _proxy.SendWebhook(payload, Settings);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             var payload = new WebhookHealthPayload

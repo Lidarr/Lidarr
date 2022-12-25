@@ -46,6 +46,32 @@ namespace NzbDrone.Core.Notifications.Emby
             }
         }
 
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            if (Settings.Notify)
+            {
+                _mediaBrowserService.Notify(Settings, ALBUM_DELETED_TITLE_BRANDED, deleteMessage.Message);
+            }
+
+            if (Settings.UpdateLibrary)
+            {
+                _mediaBrowserService.Update(Settings, deleteMessage.Album.Artist);
+            }
+        }
+
+        public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
+        {
+            if (Settings.Notify)
+            {
+                _mediaBrowserService.Notify(Settings, ARTIST_DELETED_TITLE_BRANDED, deleteMessage.Message);
+            }
+
+            if (Settings.UpdateLibrary)
+            {
+                _mediaBrowserService.Update(Settings, deleteMessage.Artist);
+            }
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck message)
         {
             if (Settings.Notify)
