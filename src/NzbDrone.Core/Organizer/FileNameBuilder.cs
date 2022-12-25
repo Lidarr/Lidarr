@@ -267,6 +267,7 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{Artist Name}"] = m => artist.Name;
             tokenHandlers["{Artist CleanName}"] = m => CleanTitle(artist.Name);
             tokenHandlers["{Artist NameThe}"] = m => TitleThe(artist.Name);
+            tokenHandlers["{Artist NameFirstCharacter}"] = m => TitleThe(artist.Name).Substring(0, 1).FirstCharToUpper();
 
             if (artist.Metadata.Value.Disambiguation != null)
             {
