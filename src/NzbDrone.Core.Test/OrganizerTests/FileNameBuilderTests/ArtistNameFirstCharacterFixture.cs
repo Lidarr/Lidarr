@@ -1,3 +1,4 @@
+using System.IO;
 using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
@@ -33,15 +34,15 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
                 .Returns<Quality>(v => Quality.DefaultQualityDefinitions.First(c => c.Quality == v));
         }
 
-        [TestCase("The Mist", "M\\The Mist")]
-        [TestCase("A", "A\\A")]
-        [TestCase("30 Rock", "3\\30 Rock")]
-        public void should_get_expected_folder_name_back(string title, string expected)
+        [TestCase("The Mist", "M", "The Mist")]
+        [TestCase("A", "A", "A")]
+        [TestCase("30 Rock", "3", "30 Rock")]
+        public void should_get_expected_folder_name_back(string title, string parent, string child)
         {
             _artist.Name = title;
             _namingConfig.ArtistFolderFormat = "{Artist NameFirstCharacter}\\{Artist Name}";
 
-            Subject.GetArtistFolder(_artist).Should().Be(expected);
+            Subject.GetArtistFolder(_artist).Should().Be(Path.Combine(parent, child));
         }
 
         [Test]
@@ -50,7 +51,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
             _artist.Name = "Westworld";
             _namingConfig.ArtistFolderFormat = "{artist namefirstcharacter}\\{artist name}";
 
-            Subject.GetArtistFolder(_artist).Should().Be("w\\westworld");
+            Subject.GetArtistFolder(_artist).Should().Be(Path.Combine("w", "westworld"));
         }
     }
 }
