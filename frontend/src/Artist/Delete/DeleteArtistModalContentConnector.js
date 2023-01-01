@@ -1,56 +1,44 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { deleteArtist } from 'Store/Actions/artistActions';
+import { deleteArtist, setDeleteOption } from 'Store/Actions/artistActions';
 import createArtistSelector from 'Store/Selectors/createArtistSelector';
 import DeleteArtistModalContent from './DeleteArtistModalContent';
 
 function createMapStateToProps() {
   return createSelector(
+    (state) => state.artist.deleteOptions,
     createArtistSelector(),
-    (artist) => {
-      return artist;
+    (deleteOptions, artist) => {
+      return {
+        ...artist,
+        deleteOptions
+      };
     }
   );
 }
 
-const mapDispatchToProps = {
-  deleteArtist
-};
+function createMapDispatchToProps(dispatch, props) {
+  return {
+    onDeleteOptionChange(option) {
+      dispatch(
+        setDeleteOption({
+          [option.name]: option.value
+        })
+      );
+    },
 
-class DeleteArtistModalContentConnector extends Component {
+    onDeletePress(deleteFiles, addImportListExclusion) {
+      dispatch(
+        deleteArtist({
+          id: props.artistId,
+          deleteFiles,
+          addImportListExclusion
+        })
+      );
 
-  //
-  // Listeners
-
-  onDeletePress = (deleteFiles, addImportListExclusion) => {
-    this.props.deleteArtist({
-      id: this.props.artistId,
-      deleteFiles,
-      addImportListExclusion
-    });
-
-    this.props.onModalClose(true);
+      props.onModalClose(true);
+    }
   };
-
-  //
-  // Render
-
-  render() {
-    return (
-      <DeleteArtistModalContent
-        {...this.props}
-        onDeletePress={this.onDeletePress}
-      />
-    );
-  }
 }
 
-DeleteArtistModalContentConnector.propTypes = {
-  artistId: PropTypes.number.isRequired,
-  onModalClose: PropTypes.func.isRequired,
-  deleteArtist: PropTypes.func.isRequired
-};
-
-export default connect(createMapStateToProps, mapDispatchToProps)(DeleteArtistModalContentConnector);
+export default connect(createMapStateToProps, createMapDispatchToProps)(DeleteArtistModalContent);

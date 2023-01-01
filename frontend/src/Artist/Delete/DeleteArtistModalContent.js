@@ -23,8 +23,7 @@ class DeleteArtistModalContent extends Component {
     super(props, context);
 
     this.state = {
-      deleteFiles: false,
-      addImportListExclusion: false
+      deleteFiles: false
     };
   }
 
@@ -35,16 +34,11 @@ class DeleteArtistModalContent extends Component {
     this.setState({ deleteFiles: value });
   };
 
-  onAddImportListExclusionChange = ({ value }) => {
-    this.setState({ addImportListExclusion: value });
-  };
-
   onDeleteArtistConfirmed = () => {
     const deleteFiles = this.state.deleteFiles;
-    const addImportListExclusion = this.state.addImportListExclusion;
+    const addImportListExclusion = this.props.deleteOptions.addImportListExclusion;
 
     this.setState({ deleteFiles: false });
-    this.setState({ addImportListExclusion: false });
     this.props.onDeletePress(deleteFiles, addImportListExclusion);
   };
 
@@ -56,7 +50,9 @@ class DeleteArtistModalContent extends Component {
       artistName,
       path,
       statistics,
-      onModalClose
+      deleteOptions,
+      onModalClose,
+      onDeleteOptionChange
     } = this.props;
 
     const {
@@ -65,7 +61,7 @@ class DeleteArtistModalContent extends Component {
     } = statistics;
 
     const deleteFiles = this.state.deleteFiles;
-    const addImportListExclusion = this.state.addImportListExclusion;
+    const addImportListExclusion = deleteOptions.addImportListExclusion;
 
     let deleteFilesLabel = `Delete ${trackFileCount} Track Files`;
     let deleteFilesHelpText = translate('DeleteFilesHelpText');
@@ -117,7 +113,7 @@ class DeleteArtistModalContent extends Component {
               value={addImportListExclusion}
               helpText={translate('AddImportListExclusionArtistHelpText')}
               kind={kinds.DANGER}
-              onChange={this.onAddImportListExclusionChange}
+              onChange={onDeleteOptionChange}
             />
           </FormGroup>
 
@@ -158,6 +154,8 @@ DeleteArtistModalContent.propTypes = {
   artistName: PropTypes.string.isRequired,
   path: PropTypes.string.isRequired,
   statistics: PropTypes.object.isRequired,
+  deleteOptions: PropTypes.object.isRequired,
+  onDeleteOptionChange: PropTypes.func.isRequired,
   onDeletePress: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired
 };

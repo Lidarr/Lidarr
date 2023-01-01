@@ -157,8 +157,15 @@ export const defaultState = {
   items: [],
   sortKey: 'sortName',
   sortDirection: sortDirections.ASCENDING,
-  pendingChanges: {}
+  pendingChanges: {},
+  deleteOptions: {
+    addImportListExclusion: false
+  }
 };
+
+export const persistState = [
+  'artist.deleteOptions'
+];
 
 //
 // Actions Types
@@ -170,6 +177,8 @@ export const DELETE_ARTIST = 'artist/deleteArtist';
 
 export const TOGGLE_ARTIST_MONITORED = 'artist/toggleArtistMonitored';
 export const TOGGLE_ALBUM_MONITORED = 'artist/toggleAlbumMonitored';
+
+export const SET_DELETE_OPTION = 'artist/setDeleteOption';
 
 //
 // Action Creators
@@ -210,6 +219,8 @@ export const setArtistValue = createAction(SET_ARTIST_VALUE, (payload) => {
     ...payload
   };
 });
+
+export const setDeleteOption = createAction(SET_DELETE_OPTION);
 
 //
 // Helpers
@@ -340,6 +351,15 @@ export const actionHandlers = handleThunks({
 
 export const reducers = createHandleActions({
 
-  [SET_ARTIST_VALUE]: createSetSettingValueReducer(section)
+  [SET_ARTIST_VALUE]: createSetSettingValueReducer(section),
+
+  [SET_DELETE_OPTION]: (state, { payload }) => {
+    return {
+      ...state,
+      deleteOptions: {
+        ...payload
+      }
+    };
+  }
 
 }, defaultState, section);
