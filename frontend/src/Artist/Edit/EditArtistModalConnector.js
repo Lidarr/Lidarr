@@ -32,6 +32,7 @@ class EditArtistModalConnector extends Component {
 }
 
 EditArtistModalConnector.propTypes = {
+  ...EditArtistModal.propTypes,
   onModalClose: PropTypes.func.isRequired,
   clearPendingChanges: PropTypes.func.isRequired
 };

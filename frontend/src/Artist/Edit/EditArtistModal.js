@@ -18,6 +18,7 @@ function EditArtistModal({ isOpen, onModalClose, ...otherProps }) {
 }
 
 EditArtistModal.propTypes = {
+  ...EditArtistModalContentConnector.propTypes,
   isOpen: PropTypes.bool.isRequired,
   onModalClose: PropTypes.func.isRequired
 };

@@ -8,7 +8,7 @@ import AlbumDetailsPageConnector from 'Album/Details/AlbumDetailsPageConnector';
 import AlbumStudioConnector from 'AlbumStudio/AlbumStudioConnector';
 import ArtistDetailsPageConnector from 'Artist/Details/ArtistDetailsPageConnector';
 import ArtistEditorConnector from 'Artist/Editor/ArtistEditorConnector';
-import ArtistIndexConnector from 'Artist/Index/ArtistIndexConnector';
+import ArtistIndex from 'Artist/Index/ArtistIndex';
 import CalendarPageConnector from 'Calendar/CalendarPageConnector';
 import NotFound from 'Components/NotFound';
 import Switch from 'Components/Router/Switch';
@@ -51,7 +51,7 @@ function AppRoutes(props) {
       <Route
         exact={true}
         path="/"
-        component={ArtistIndexConnector}
+        component={ArtistIndex}
       />
 
       {

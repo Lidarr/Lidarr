@@ -15,6 +15,10 @@ function ArtistPoster(props) {
 }
 
 ArtistPoster.propTypes = {
+  ...ArtistImage.propTypes,
+  coverType: PropTypes.string,
+  placeholder: PropTypes.string,
+  overflow: PropTypes.bool,
   size: PropTypes.number.isRequired
 };
 

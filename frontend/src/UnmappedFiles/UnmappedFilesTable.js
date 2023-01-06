@@ -27,6 +27,8 @@ class UnmappedFilesTable extends Component {
   constructor(props, context) {
     super(props, context);
 
+    this.scrollerRef = React.createRef();
+
     this.state = {
       scroller: null,
       allSelected: false,
@@ -64,13 +66,6 @@ class UnmappedFilesTable extends Component {
       this.onSelectAllChange({ value: false });
     }
   }
-
-  //
-  // Control
-
-  setScrollerRef = (ref) => {
-    this.setState({ scroller: ref });
-  };
 
   getSelectedIds = () => {
     if (this.state.allUnselected) {
@@ -184,7 +179,6 @@ class UnmappedFilesTable extends Component {
     } = this.props;
 
     const {
-      scroller,
       allSelected,
       allUnselected,
       selectedState
@@ -227,9 +221,7 @@ class UnmappedFilesTable extends Component {
           </PageToolbarSection>
         </PageToolbar>
 
-        <PageContentBody
-          registerScroller={this.setScrollerRef}
-        >
+        <PageContentBody ref={this.scrollerRef} >
           {
             isFetching && !isPopulated &&
               <LoadingIndicator />
@@ -243,11 +235,14 @@ class UnmappedFilesTable extends Component {
           }
 
           {
-            isPopulated && !error && !!items.length && scroller &&
+            isPopulated &&
+            !error &&
+            !!items.length &&
+            this.scrollerRef.current ?
               <VirtualTable
                 items={items}
                 columns={columns}
-                scroller={scroller}
+                scroller={this.scrollerRef.current}
                 isSmallScreen={false}
                 overscanRowCount={10}
                 rowRenderer={this.rowRenderer}
@@ -266,7 +261,8 @@ class UnmappedFilesTable extends Component {
                 selectedState={selectedState}
                 sortKey={sortKey}
                 sortDirection={sortDirection}
-              />
+              /> :
+              null
           }
         </PageContentBody>
       </PageContent>

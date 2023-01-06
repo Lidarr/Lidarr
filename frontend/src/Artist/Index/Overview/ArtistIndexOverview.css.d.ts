@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'actions': string;
-  'container': string;
   'content': string;
   'details': string;
   'ended': string;
