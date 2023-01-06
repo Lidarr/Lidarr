@@ -26,6 +26,7 @@ function DeleteArtistModal(props) {
 }
 
 DeleteArtistModal.propTypes = {
+  ...DeleteArtistModalContentConnector.propTypes,
   isOpen: PropTypes.bool.isRequired,
   onModalClose: PropTypes.func.isRequired
 };

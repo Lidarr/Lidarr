@@ -39,6 +39,7 @@ export const defaultState = {
     showTitle: false,
     showMonitored: true,
     showQualityProfile: true,
+    showNextAlbum: true,
     showSearchAction: false
   },
 

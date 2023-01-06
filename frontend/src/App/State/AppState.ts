@@ -1,3 +1,4 @@
+import ArtistAppState, { ArtistIndexAppState } from './ArtistAppState';
 import SettingsAppState from './SettingsAppState';
 import TagsAppState from './TagsAppState';
 
@@ -34,6 +35,8 @@ export interface CustomFilter {
 }
 
 interface AppState {
+  artist: ArtistAppState;
+  artistIndex: ArtistIndexAppState;
   settings: SettingsAppState;
   tags: TagsAppState;
 }
