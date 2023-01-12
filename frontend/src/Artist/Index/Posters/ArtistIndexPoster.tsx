@@ -7,6 +7,7 @@ import EditArtistModalConnector from 'Artist/Edit/EditArtistModalConnector';
 import createArtistIndexItemSelector from 'Artist/Index/createArtistIndexItemSelector';
 import ArtistIndexPosterInfo from 'Artist/Index/Posters/ArtistIndexPosterInfo';
 import ArtistIndexProgressBar from 'Artist/Index/ProgressBar/ArtistIndexProgressBar';
+import ArtistIndexPosterSelect from 'Artist/Index/Select/ArtistIndexPosterSelect';
 import { ARTIST_SEARCH, REFRESH_ARTIST } from 'Commands/commandNames';
 import Label from 'Components/Label';
 import IconButton from 'Components/Link/IconButton';
@@ -23,12 +24,13 @@ import styles from './ArtistIndexPoster.css';
 interface ArtistIndexPosterProps {
   artistId: number;
   sortKey: string;
+  isSelectMode: boolean;
   posterWidth: number;
   posterHeight: number;
 }
 
 function ArtistIndexPoster(props: ArtistIndexPosterProps) {
-  const { artistId, sortKey, posterWidth, posterHeight } = props;
+  const { artistId, sortKey, isSelectMode, posterWidth, posterHeight } = props;
 
   const {
     artist,
@@ -130,6 +132,8 @@ function ArtistIndexPoster(props: ArtistIndexPosterProps) {
   return (
     <div className={styles.content}>
       <div className={styles.posterContainer}>
+        {isSelectMode ? <ArtistIndexPosterSelect artistId={artistId} /> : null}
+
         <Label className={styles.controls}>
           <SpinnerIconButton
             className={styles.action}

@@ -6,6 +6,7 @@ import ArtistPoster from 'Artist/ArtistPoster';
 import DeleteArtistModal from 'Artist/Delete/DeleteArtistModal';
 import EditArtistModalConnector from 'Artist/Edit/EditArtistModalConnector';
 import ArtistIndexProgressBar from 'Artist/Index/ProgressBar/ArtistIndexProgressBar';
+import ArtistIndexPosterSelect from 'Artist/Index/Select/ArtistIndexPosterSelect';
 import { ARTIST_SEARCH, REFRESH_ARTIST } from 'Commands/commandNames';
 import IconButton from 'Components/Link/IconButton';
 import Link from 'Components/Link/Link';
@@ -37,6 +38,7 @@ interface ArtistIndexOverviewProps {
   posterWidth: number;
   posterHeight: number;
   rowHeight: number;
+  isSelectMode: boolean;
   isSmallScreen: boolean;
 }
 
@@ -47,6 +49,7 @@ function ArtistIndexOverview(props: ArtistIndexOverviewProps) {
     posterWidth,
     posterHeight,
     rowHeight,
+    isSelectMode,
     isSmallScreen,
   } = props;
 
@@ -136,6 +139,10 @@ function ArtistIndexOverview(props: ArtistIndexOverviewProps) {
       <div className={styles.content}>
         <div className={styles.poster}>
           <div className={styles.posterContainer}>
+            {isSelectMode ? (
+              <ArtistIndexPosterSelect artistId={artistId} />
+            ) : null}
+
             {status === 'ended' && (
               <div className={styles.ended} title={translate('Inactive')} />
             )}

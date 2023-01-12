@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { SelectProvider } from 'App/SelectContext';
 import NoArtist from 'Artist/NoArtist';
 import { REFRESH_ARTIST, RSS_SYNC } from 'Commands/commandNames';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
@@ -37,6 +38,7 @@ import ArtistIndexOverviews from './Overview/ArtistIndexOverviews';
 import ArtistIndexOverviewOptionsModal from './Overview/Options/ArtistIndexOverviewOptionsModal';
 import ArtistIndexPosters from './Posters/ArtistIndexPosters';
 import ArtistIndexPosterOptionsModal from './Posters/Options/ArtistIndexPosterOptionsModal';
+import ArtistIndexSelectAllButton from './Select/ArtistIndexSelectAllButton';
 import ArtistIndexTable from './Table/ArtistIndexTable';
 import ArtistIndexTableOptions from './Table/ArtistIndexTableOptions';
 import styles from './ArtistIndex.css';
@@ -88,6 +90,7 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
   const scrollerRef = useRef<HTMLDivElement>();
   const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
   const [jumpToCharacter, setJumpToCharacter] = useState<string | null>(null);
+  const [isSelectMode, setIsSelectMode] = useState(false);
 
   const onRefreshArtistPress = useCallback(() => {
     dispatch(
@@ -104,6 +107,10 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
       })
     );
   }, [dispatch]);
+
+  const onSelectModePress = useCallback(() => {
+    setIsSelectMode(!isSelectMode);
+  }, [isSelectMode, setIsSelectMode]);
 
   const onTableOptionChange = useCallback(
     (payload) => {
@@ -202,131 +209,150 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
   const hasNoArtist = !totalItems;
 
   return (
-    <PageContent>
-      <PageToolbar>
-        <PageToolbarSection>
-          <PageToolbarButton
-            label={translate('UpdateAll')}
-            iconName={icons.REFRESH}
-            spinningName={icons.REFRESH}
-            isSpinning={isRefreshingArtist}
-            isDisabled={hasNoArtist}
-            onPress={onRefreshArtistPress}
-          />
+    <SelectProvider isSelectMode={isSelectMode} items={items}>
+      <PageContent>
+        <PageToolbar>
+          <PageToolbarSection>
+            <PageToolbarButton
+              label={translate('UpdateAll')}
+              iconName={icons.REFRESH}
+              spinningName={icons.REFRESH}
+              isSpinning={isRefreshingArtist}
+              isDisabled={hasNoArtist}
+              onPress={onRefreshArtistPress}
+            />
 
-          <PageToolbarButton
-            label={translate('RSSSync')}
-            iconName={icons.RSS}
-            isSpinning={isRssSyncExecuting}
-            isDisabled={hasNoArtist}
-            onPress={onRssSyncPress}
-          />
-        </PageToolbarSection>
+            <PageToolbarButton
+              label={translate('RSSSync')}
+              iconName={icons.RSS}
+              isSpinning={isRssSyncExecuting}
+              isDisabled={hasNoArtist}
+              onPress={onRssSyncPress}
+            />
 
-        <PageToolbarSection alignContent={align.RIGHT} collapseButtons={false}>
-          {view === 'table' ? (
-            <TableOptionsModalWrapper
-              columns={columns}
-              optionsComponent={ArtistIndexTableOptions}
-              onTableOptionChange={onTableOptionChange}
-            >
+            <PageToolbarSeparator />
+
+            <PageToolbarButton
+              label={isSelectMode ? 'Stop Selecting' : 'Select Artists'}
+              iconName={isSelectMode ? icons.ARTIST_ENDED : icons.CHECK}
+              onPress={onSelectModePress}
+            />
+
+            {isSelectMode ? <ArtistIndexSelectAllButton /> : null}
+          </PageToolbarSection>
+
+          <PageToolbarSection
+            alignContent={align.RIGHT}
+            collapseButtons={false}
+          >
+            {view === 'table' ? (
+              <TableOptionsModalWrapper
+                columns={columns}
+                optionsComponent={ArtistIndexTableOptions}
+                onTableOptionChange={onTableOptionChange}
+              >
+                <PageToolbarButton
+                  label={translate('Options')}
+                  iconName={icons.TABLE}
+                />
+              </TableOptionsModalWrapper>
+            ) : (
               <PageToolbarButton
                 label={translate('Options')}
-                iconName={icons.TABLE}
+                iconName={view === 'posters' ? icons.POSTER : icons.OVERVIEW}
+                isDisabled={hasNoArtist}
+                onPress={onOptionsPress}
               />
-            </TableOptionsModalWrapper>
-          ) : (
-            <PageToolbarButton
-              label={translate('Options')}
-              iconName={view === 'posters' ? icons.POSTER : icons.OVERVIEW}
+            )}
+
+            <PageToolbarSeparator />
+
+            <ArtistIndexViewMenu
+              view={view}
               isDisabled={hasNoArtist}
-              onPress={onOptionsPress}
+              onViewSelect={onViewSelect}
             />
-          )}
 
-          <PageToolbarSeparator />
+            <ArtistIndexSortMenu
+              sortKey={sortKey}
+              sortDirection={sortDirection}
+              isDisabled={hasNoArtist}
+              onSortSelect={onSortSelect}
+            />
 
-          <ArtistIndexViewMenu
-            view={view}
-            isDisabled={hasNoArtist}
-            onViewSelect={onViewSelect}
-          />
+            <ArtistIndexFilterMenu
+              selectedFilterKey={selectedFilterKey}
+              filters={filters}
+              customFilters={customFilters}
+              isDisabled={hasNoArtist}
+              onFilterSelect={onFilterSelect}
+            />
+          </PageToolbarSection>
+        </PageToolbar>
+        <div className={styles.pageContentBodyWrapper}>
+          <PageContentBody
+            ref={scrollerRef}
+            className={styles.contentBody}
+            innerClassName={styles[`${view}InnerContentBody`]}
+            initialScrollTop={props.initialScrollTop}
+            onScroll={onScroll}
+          >
+            {isFetching && !isPopulated ? <LoadingIndicator /> : null}
 
-          <ArtistIndexSortMenu
-            sortKey={sortKey}
-            sortDirection={sortDirection}
-            isDisabled={hasNoArtist}
-            onSortSelect={onSortSelect}
-          />
+            {!isFetching && !!error ? (
+              <div className={styles.errorMessage}>
+                {getErrorMessage(error, 'Failed to load artist from API')}
+              </div>
+            ) : null}
 
-          <ArtistIndexFilterMenu
-            selectedFilterKey={selectedFilterKey}
-            filters={filters}
-            customFilters={customFilters}
-            isDisabled={hasNoArtist}
-            onFilterSelect={onFilterSelect}
-          />
-        </PageToolbarSection>
-      </PageToolbar>
-      <div className={styles.pageContentBodyWrapper}>
-        <PageContentBody
-          ref={scrollerRef}
-          className={styles.contentBody}
-          innerClassName={styles[`${view}InnerContentBody`]}
-          initialScrollTop={props.initialScrollTop}
-          onScroll={onScroll}
-        >
-          {isFetching && !isPopulated ? <LoadingIndicator /> : null}
+            {isLoaded ? (
+              <div className={styles.contentBodyContainer}>
+                <ViewComponent
+                  scrollerRef={scrollerRef}
+                  items={items}
+                  sortKey={sortKey}
+                  sortDirection={sortDirection}
+                  jumpToCharacter={jumpToCharacter}
+                  isSelectMode={isSelectMode}
+                  isSmallScreen={isSmallScreen}
+                />
 
-          {!isFetching && !!error ? (
-            <div className={styles.errorMessage}>
-              {getErrorMessage(error, 'Failed to load artist from API')}
-            </div>
+                <ArtistIndexFooter />
+              </div>
+            ) : null}
+
+            {!error && isPopulated && !items.length ? (
+              <NoArtist totalItems={totalItems} />
+            ) : null}
+          </PageContentBody>
+
+          {isLoaded && !!jumpBarItems.order.length ? (
+            <PageJumpBar
+              items={jumpBarItems}
+              onItemPress={onJumpBarItemPress}
+            />
           ) : null}
-
-          {isLoaded ? (
-            <div className={styles.contentBodyContainer}>
-              <ViewComponent
-                scrollerRef={scrollerRef}
-                items={items}
-                sortKey={sortKey}
-                sortDirection={sortDirection}
-                jumpToCharacter={jumpToCharacter}
-                isSmallScreen={isSmallScreen}
-              />
-
-              <ArtistIndexFooter />
-            </div>
-          ) : null}
-
-          {!error && isPopulated && !items.length ? (
-            <NoArtist totalItems={totalItems} />
-          ) : null}
-        </PageContentBody>
-
-        {isLoaded && !!jumpBarItems.order.length ? (
-          <PageJumpBar items={jumpBarItems} onItemPress={onJumpBarItemPress} />
+        </div>
+        {view === 'posters' ? (
+          <ArtistIndexPosterOptionsModal
+            isOpen={isOptionsModalOpen}
+            onModalClose={onOptionsModalClose}
+          />
         ) : null}
-      </div>
-      {view === 'posters' ? (
-        <ArtistIndexPosterOptionsModal
-          isOpen={isOptionsModalOpen}
-          onModalClose={onOptionsModalClose}
-        />
-      ) : null}
-      {view === 'banners' ? (
-        <ArtistIndexBannerOptionsModal
-          isOpen={isOptionsModalOpen}
-          onModalClose={onOptionsModalClose}
-        />
-      ) : null}
-      {view === 'overview' ? (
-        <ArtistIndexOverviewOptionsModal
-          isOpen={isOptionsModalOpen}
-          onModalClose={onOptionsModalClose}
-        />
-      ) : null}
-    </PageContent>
+        {view === 'banners' ? (
+          <ArtistIndexBannerOptionsModal
+            isOpen={isOptionsModalOpen}
+            onModalClose={onOptionsModalClose}
+          />
+        ) : null}
+        {view === 'overview' ? (
+          <ArtistIndexOverviewOptionsModal
+            isOpen={isOptionsModalOpen}
+            onModalClose={onOptionsModalClose}
+          />
+        ) : null}
+      </PageContent>
+    </SelectProvider>
   );
 }, 'artistIndex');
 
