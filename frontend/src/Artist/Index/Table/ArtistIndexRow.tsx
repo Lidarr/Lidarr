@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AlbumTitleLink from 'Album/AlbumTitleLink';
+import { SelectActionType, useSelect } from 'App/SelectContext';
 import { Statistics } from 'Artist/Artist';
 import ArtistBanner from 'Artist/ArtistBanner';
 import ArtistNameLink from 'Artist/ArtistNameLink';
@@ -17,6 +18,7 @@ import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
 import ProgressBar from 'Components/ProgressBar';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
+import VirtualTableSelectCell from 'Components/Table/Cells/VirtualTableSelectCell';
 import Column from 'Components/Table/Column';
 import TagListConnector from 'Components/TagListConnector';
 import { icons } from 'Helpers/Props';
@@ -32,10 +34,11 @@ interface ArtistIndexRowProps {
   artistId: number;
   sortKey: string;
   columns: Column[];
+  isSelectMode: boolean;
 }
 
 function ArtistIndexRow(props: ArtistIndexRowProps) {
-  const { artistId, columns } = props;
+  const { artistId, columns, isSelectMode } = props;
 
   const {
     artist,
@@ -77,6 +80,7 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
   const [hasBannerError, setHasBannerError] = useState(false);
   const [isEditArtistModalOpen, setIsEditArtistModalOpen] = useState(false);
   const [isDeleteArtistModalOpen, setIsDeleteArtistModalOpen] = useState(false);
+  const [selectState, selectDispatch] = useSelect();
 
   const onRefreshPress = useCallback(() => {
     dispatch(
@@ -121,8 +125,29 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
     setIsDeleteArtistModalOpen(false);
   }, [setIsDeleteArtistModalOpen]);
 
+  const onSelectedChange = useCallback(
+    ({ id, value, shiftKey }) => {
+      selectDispatch({
+        type: SelectActionType.ToggleSelected,
+        id,
+        isSelected: value,
+        shiftKey,
+      });
+    },
+    [selectDispatch]
+  );
+
   return (
     <>
+      {isSelectMode ? (
+        <VirtualTableSelectCell
+          id={artistId}
+          isSelected={selectState.selectedState[artistId]}
+          isDisabled={false}
+          onSelectedChange={onSelectedChange}
+        />
+      ) : null}
+
       {columns.map((column) => {
         const { name, isVisible } = column;
 

@@ -36,6 +36,7 @@ interface CellItemData {
   };
   items: Artist[];
   sortKey: string;
+  isSelectMode: boolean;
 }
 
 interface ArtistIndexBannersProps {
@@ -45,6 +46,7 @@ interface ArtistIndexBannersProps {
   jumpToCharacter?: string;
   scrollTop?: number;
   scrollerRef: React.MutableRefObject<HTMLElement>;
+  isSelectMode: boolean;
   isSmallScreen: boolean;
 }
 
@@ -63,10 +65,8 @@ const Cell: React.FC<GridChildComponentProps<CellItemData>> = ({
   style,
   data,
 }) => {
-  const { layout, items, sortKey } = data;
-
+  const { layout, items, sortKey, isSelectMode } = data;
   const { columnCount, padding, bannerWidth, bannerHeight } = layout;
-
   const index = rowIndex * columnCount + columnIndex;
 
   if (index >= items.length) {
@@ -85,6 +85,7 @@ const Cell: React.FC<GridChildComponentProps<CellItemData>> = ({
       <ArtistIndexBanner
         artistId={artist.id}
         sortKey={sortKey}
+        isSelectMode={isSelectMode}
         bannerWidth={bannerWidth}
         bannerHeight={bannerHeight}
       />
@@ -97,7 +98,14 @@ function getWindowScrollTopPosition() {
 }
 
 export default function ArtistIndexBanners(props: ArtistIndexBannersProps) {
-  const { scrollerRef, items, sortKey, jumpToCharacter, isSmallScreen } = props;
+  const {
+    scrollerRef,
+    items,
+    sortKey,
+    jumpToCharacter,
+    isSelectMode,
+    isSmallScreen,
+  } = props;
 
   const { bannerOptions } = useSelector(artistIndexSelector);
   const ref: React.MutableRefObject<Grid> = useRef();
@@ -285,6 +293,7 @@ export default function ArtistIndexBanners(props: ArtistIndexBannersProps) {
           },
           items,
           sortKey,
+          isSelectMode,
         }}
       >
         {Cell}
