@@ -13,6 +13,7 @@ import { icons, kinds, sortDirections, tooltipPositions } from 'Helpers/Props';
 import SelectAlbumModal from 'InteractiveImport/Album/SelectAlbumModal';
 import SelectArtistModal from 'InteractiveImport/Artist/SelectArtistModal';
 import SelectQualityModal from 'InteractiveImport/Quality/SelectQualityModal';
+import SelectReleaseGroupModal from 'InteractiveImport/ReleaseGroup/SelectReleaseGroupModal';
 import SelectTrackModal from 'InteractiveImport/Track/SelectTrackModal';
 import formatBytes from 'Utilities/Number/formatBytes';
 import hasDifferentItems from 'Utilities/Object/hasDifferentItems';
@@ -32,6 +33,7 @@ class InteractiveImportRow extends Component {
       isSelectArtistModalOpen: false,
       isSelectAlbumModalOpen: false,
       isSelectTrackModalOpen: false,
+      isSelectReleaseGroupModalOpen: false,
       isSelectQualityModalOpen: false
     };
   }
@@ -119,6 +121,10 @@ class InteractiveImportRow extends Component {
     this.setState({ isSelectTrackModalOpen: true });
   };
 
+  onSelectReleaseGroupPress = () => {
+    this.setState({ isSelectReleaseGroupModalOpen: true });
+  };
+
   onSelectQualityPress = () => {
     this.setState({ isSelectQualityModalOpen: true });
   };
@@ -135,6 +141,11 @@ class InteractiveImportRow extends Component {
 
   onSelectTrackModalClose = (changed) => {
     this.setState({ isSelectTrackModalOpen: false });
+    this.selectRowAfterChange(changed);
+  };
+
+  onSelectReleaseGroupModalClose = (changed) => {
+    this.setState({ isSelectReleaseGroupModalOpen: false });
     this.selectRowAfterChange(changed);
   };
 
@@ -156,12 +167,13 @@ class InteractiveImportRow extends Component {
       albumReleaseId,
       tracks,
       quality,
+      releaseGroup,
       size,
       rejections,
+      isReprocessing,
       audioTags,
       additionalFile,
       isSelected,
-      isSaving,
       onSelectedChange
     } = this.props;
 
@@ -169,6 +181,7 @@ class InteractiveImportRow extends Component {
       isSelectArtistModalOpen,
       isSelectAlbumModalOpen,
       isSelectTrackModalOpen,
+      isSelectReleaseGroupModalOpen,
       isSelectQualityModalOpen
     } = this.state;
 
@@ -185,8 +198,9 @@ class InteractiveImportRow extends Component {
 
     const showArtistPlaceholder = isSelected && !artist;
     const showAlbumNumberPlaceholder = isSelected && !!artist && !album;
-    const showTrackNumbersPlaceholder = !isSaving && isSelected && !!album && !tracks.length;
-    const showTrackNumbersLoading = isSaving && !tracks.length;
+    const showTrackNumbersPlaceholder = !isReprocessing && isSelected && !!album && !tracks.length;
+    const showTrackNumbersLoading = isReprocessing && !tracks.length;
+    const showReleaseGroupPlaceholder = isSelected && !releaseGroup;
     const showQualityPlaceholder = isSelected && !quality;
 
     const pathCellContents = (
@@ -254,6 +268,17 @@ class InteractiveImportRow extends Component {
         </TableRowCellButton>
 
         <TableRowCellButton
+          title={translate('ClickToChangeReleaseGroup')}
+          onPress={this.onSelectReleaseGroupPress}
+        >
+          {
+            showReleaseGroupPlaceholder ?
+              <InteractiveImportRowCellPlaceholder /> :
+              releaseGroup
+          }
+        </TableRowCellButton>
+
+        <TableRowCellButton
           className={styles.quality}
           title={translate('ClickToChangeQuality')}
           onPress={this.onSelectQualityPress}
@@ -301,6 +326,7 @@ class InteractiveImportRow extends Component {
                   </ul>
                 }
                 position={tooltipPositions.LEFT}
+                canFlip={false}
               /> :
               null
           }
@@ -333,6 +359,13 @@ class InteractiveImportRow extends Component {
           onModalClose={this.onSelectTrackModalClose}
         />
 
+        <SelectReleaseGroupModal
+          isOpen={isSelectReleaseGroupModalOpen}
+          ids={[id]}
+          releaseGroup={releaseGroup ?? ''}
+          onModalClose={this.onSelectReleaseGroupModalClose}
+        />
+
         <SelectQualityModal
           isOpen={isSelectQualityModalOpen}
           ids={[id]}
@@ -355,13 +388,14 @@ InteractiveImportRow.propTypes = {
   album: PropTypes.object,
   albumReleaseId: PropTypes.number,
   tracks: PropTypes.arrayOf(PropTypes.object).isRequired,
+  releaseGroup: PropTypes.string,
   quality: PropTypes.object,
   size: PropTypes.number.isRequired,
   rejections: PropTypes.arrayOf(PropTypes.object).isRequired,
   audioTags: PropTypes.object.isRequired,
   additionalFile: PropTypes.bool.isRequired,
+  isReprocessing: PropTypes.bool,
   isSelected: PropTypes.bool,
-  isSaving: PropTypes.bool.isRequired,
   onSelectedChange: PropTypes.func.isRequired,
   onValidRowChange: PropTypes.func.isRequired
 };

@@ -22,6 +22,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
         public AlbumRelease Release { get; set; }
         public List<Track> Tracks { get; set; }
         public QualityModel Quality { get; set; }
+        public string ReleaseGroup { get; set; }
         public string DownloadId { get; set; }
         public IEnumerable<Rejection> Rejections { get; set; }
         public ParsedTrackInfo Tags { get; set; }

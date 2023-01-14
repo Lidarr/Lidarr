@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Modal from 'Components/Modal/Modal';
+import { sizes } from 'Helpers/Props';
 import InteractiveImportSelectFolderModalContentConnector from './Folder/InteractiveImportSelectFolderModalContentConnector';
 import InteractiveImportModalContentConnector from './Interactive/InteractiveImportModalContentConnector';
 
@@ -47,6 +48,7 @@ class InteractiveImportModal extends Component {
     return (
       <Modal
         isOpen={isOpen}
+        size={sizes.EXTRA_LARGE}
         closeOnBackgroundClick={false}
         onModalClose={onModalClose}
       >
@@ -73,7 +75,12 @@ InteractiveImportModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   folder: PropTypes.string,
   downloadId: PropTypes.string,
+  modalTitle: PropTypes.string.isRequired,
   onModalClose: PropTypes.func.isRequired
+};
+
+InteractiveImportModal.defaultProps = {
+  modalTitle: 'Manual Import'
 };
 
 export default InteractiveImportModal;

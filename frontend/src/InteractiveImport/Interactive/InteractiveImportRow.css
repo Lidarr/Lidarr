@@ -16,10 +16,11 @@
   cursor: pointer;
 }
 
-.loading {
+.reprocessing {
   composes: loading from '~Components/Loading/LoadingIndicator.css';
 
   margin-top: 0;
+  text-align: start;
 }
 
 .additionalFile {

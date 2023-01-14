@@ -32,8 +32,8 @@ namespace Lidarr.Api.V1.ManualImport
             _logger = logger;
         }
 
-        [HttpPut]
-        public IActionResult UpdateItems(List<ManualImportResource> resource)
+        [HttpPost]
+        public IActionResult UpdateItems(List<ManualImportUpdateResource> resource)
         {
             return Accepted(UpdateImportItems(resource));
         }
@@ -65,7 +65,7 @@ namespace Lidarr.Api.V1.ManualImport
             return item;
         }
 
-        private List<ManualImportResource> UpdateImportItems(List<ManualImportResource> resources)
+        private List<ManualImportResource> UpdateImportItems(List<ManualImportUpdateResource> resources)
         {
             var items = new List<ManualImportItem>();
             foreach (var resource in resources)
@@ -75,11 +75,11 @@ namespace Lidarr.Api.V1.ManualImport
                     Id = resource.Id,
                     Path = resource.Path,
                     Name = resource.Name,
-                    Size = resource.Size,
-                    Artist = resource.Artist == null ? null : _artistService.GetArtist(resource.Artist.Id),
-                    Album = resource.Album == null ? null : _albumService.GetAlbum(resource.Album.Id),
-                    Release = resource.AlbumReleaseId == 0 ? null : _releaseService.GetRelease(resource.AlbumReleaseId),
+                    Artist = resource.ArtistId.HasValue ? _artistService.GetArtist(resource.ArtistId.Value) : null,
+                    Album = resource.AlbumId.HasValue ? _albumService.GetAlbum(resource.AlbumId.Value) : null,
+                    Release = resource.AlbumReleaseId.HasValue ? _releaseService.GetRelease(resource.AlbumReleaseId.Value) : null,
                     Quality = resource.Quality,
+                    ReleaseGroup = resource.ReleaseGroup,
                     DownloadId = resource.DownloadId,
                     AdditionalFile = resource.AdditionalFile,
                     ReplaceExistingFiles = resource.ReplaceExistingFiles,

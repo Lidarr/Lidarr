@@ -5,10 +5,9 @@ import { sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import updateSectionState from 'Utilities/State/updateSectionState';
-import { set, update } from './baseActions';
+import { set, update, updateItem } from './baseActions';
 import createFetchHandler from './Creators/createFetchHandler';
 import createHandleActions from './Creators/createHandleActions';
-import createSaveProviderHandler from './Creators/createSaveProviderHandler';
 import createSetClientSideCollectionSortReducer from './Creators/Reducers/createSetClientSideCollectionSortReducer';
 
 //
@@ -18,6 +17,8 @@ export const section = 'interactiveImport';
 
 const albumsSection = `${section}.albums`;
 const trackFilesSection = `${section}.trackFiles`;
+let abortCurrentRequest = null;
+let currentIds = [];
 
 const MAXIMUM_RECENT_FOLDERS = 10;
 
@@ -34,7 +35,7 @@ export const defaultState = {
   sortKey: 'path',
   sortDirection: sortDirections.ASCENDING,
   recentFolders: [],
-  importMode: 'move',
+  importMode: 'chooseImportMode',
   sortPredicates: {
     path: function(item, direction) {
       const path = item.path;
@@ -156,7 +157,83 @@ export const actionHandlers = handleThunks({
     });
   },
 
-  [SAVE_INTERACTIVE_IMPORT_ITEM]: createSaveProviderHandler(section, '/manualimport', {}, true),
+  [SAVE_INTERACTIVE_IMPORT_ITEM]: function(getState, payload, dispatch) {
+    if (abortCurrentRequest) {
+      abortCurrentRequest();
+    }
+
+    dispatch(batchActions([
+      ...currentIds.map((id) => updateItem({
+        section,
+        id,
+        isReprocessing: false,
+        updateOnly: true
+      })),
+      ...payload.ids.map((id) => updateItem({
+        section,
+        id,
+        isReprocessing: true,
+        updateOnly: true
+      }))
+    ]));
+
+    const items = getState()[section].items;
+
+    const requestPayload = payload.ids.map((id) => {
+      const item = items.find((i) => i.id === id);
+
+      return {
+        id,
+        path: item.path,
+        artistId: item.artist ? item.artist.id : undefined,
+        albumId: item.album ? item.album.id : undefined,
+        albumReleaseId: item.albumReleaseId ? item.albumReleaseId : undefined,
+        trackIds: (item.tracks || []).map((e) => e.id),
+        quality: item.quality,
+        releaseGroup: item.releaseGroup,
+        downloadId: item.downloadId,
+        additionalFile: item.additionalFile,
+        replaceExistingFiles: item.replaceExistingFiles,
+        disableReleaseSwitching: item.disableReleaseSwitching
+      };
+    });
+
+    const { request, abortRequest } = createAjaxRequest({
+      method: 'POST',
+      url: '/manualimport',
+      contentType: 'application/json',
+      data: JSON.stringify(requestPayload)
+    });
+
+    abortCurrentRequest = abortRequest;
+    currentIds = payload.ids;
+
+    request.done((data) => {
+      dispatch(batchActions(
+        data.map((item) => updateItem({
+          section,
+          ...item,
+          isReprocessing: false,
+          updateOnly: true
+        }))
+      ));
+    });
+
+    request.fail((xhr) => {
+      if (xhr.aborted) {
+        return;
+      }
+
+      dispatch(batchActions(
+        payload.ids.map((id) => updateItem({
+          section,
+          id,
+          isReprocessing: false,
+          updateOnly: true
+        }))
+      ));
+    });
+  },
 
   [FETCH_INTERACTIVE_IMPORT_ALBUMS]: createFetchHandler(albumsSection, '/album'),
 
