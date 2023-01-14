@@ -584,5 +584,8 @@
     "NoResults": "Nici un rezultat gasit",
     "NoTagsHaveBeenAddedYet": "Nu s-au adăugat încă etichete",
     "OnlyTorrent": "Numai Torrent",
-    "ImportListExclusions": "Ștergeți excluderea listei de import"
+    "ImportListExclusions": "Ștergeți excluderea listei de import",
+    "EditGroups": "Editați grupurile",
+    "QualitiesHelpText": "Calitățile mai mari din listă sunt mai preferate. Calitățile din același grup sunt egale. Se doresc doar calități verificate",
+    "DoneEditingGroups": "Efectuat editarea grupurilor"
 }

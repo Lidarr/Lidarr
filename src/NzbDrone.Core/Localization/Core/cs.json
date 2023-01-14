@@ -582,5 +582,8 @@
     "Peers": "Vrstevníci",
     "PreferAndUpgrade": "Preferovat a upgradovat",
     "AddImportListExclusion": "Odstranit vyloučení seznamu importů",
-    "ImportListExclusions": "Odstranit vyloučení seznamu importů"
+    "ImportListExclusions": "Odstranit vyloučení seznamu importů",
+    "QualitiesHelpText": "Kvality vyšší v seznamu jsou upřednostňovány. Vlastnosti ve stejné skupině jsou stejné. Chtějí se pouze ověřené kvality",
+    "DoneEditingGroups": "Úpravy skupin dokončeny",
+    "EditGroups": "Upravit skupiny"
 }

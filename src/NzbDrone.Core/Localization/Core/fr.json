@@ -668,5 +668,9 @@
     "EditMetadataProfile": "profil de métadonnées",
     "AddConnection": "Modifier la collection",
     "ImportListExclusions": "Supprimer les exclusions de liste d'imports",
-    "LastDuration": "Dernière durée"
+    "LastDuration": "Dernière durée",
+    "QualitiesHelpText": "Les qualités plus élevées dans la liste sont plus préférées. Les qualités au sein d'un même groupe sont égales. Seules les qualités vérifiées sont recherchées",
+    "Database": "Base de données",
+    "DoneEditingGroups": "Finir de modifier les groupes",
+    "EditGroups": "Modifier les groupes"
 }

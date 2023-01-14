@@ -860,5 +860,12 @@
     "NoneMonitoringOptionHelpText": "Künstler oder Album nicht beobachten",
     "NotDiscography": "Keine Diskographie",
     "OrganizeArtist": "Ausgewählte Künstler organisieren",
-    "Playlist": "Playlist"
+    "Playlist": "Playlist",
+    "QualitiesHelpText": "Qualitätsprofile oben sind mehr bevorzugt, auch wenn diese nicht angehakt sind. Profile in einer Gruppe sind gleichgestellt. Nur ausgewählte werden gesucht",
+    "SearchForAllCutoffUnmetAlbums": "Suche nach allen abgeschnittenen unerfüllten Büchern",
+    "ShouldMonitorExistingHelpText": "Bücher in dieser Liste welche bereits in Readarr sind überwachen",
+    "ShouldSearch": "Suche nach neuen Einträgen",
+    "Theme": "Design",
+    "ThemeHelpText": "Anwendungsdesign ändern, das 'Auto' Design passt sich an den Light/Dark-Mode deines Systems an. Inspiriert von Theme.Park",
+    "MonitorAlbumExistingOnlyWarning": "Dies ist eine einmalige Anpassung der Überwachungseinstellung für jedes Buch.  Verwenden Sie die Option unter Autor/Bearbeiten, um festzulegen, was bei neu hinzugefügten Büchern geschieht"
 }

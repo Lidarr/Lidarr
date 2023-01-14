@@ -582,5 +582,8 @@
     "System": "システム",
     "Info": "情報",
     "AddImportListExclusion": "インポートリストの除外を削除する",
-    "ImportListExclusions": "インポートリストの除外を削除する"
+    "ImportListExclusions": "インポートリストの除外を削除する",
+    "QualitiesHelpText": "リストの上位の品質がより優先されます。同じグループ内の品質は同じです。チェックされた品質のみが必要です",
+    "DoneEditingGroups": "グループの編集を完了",
+    "EditGroups": "グループの編集"
 }

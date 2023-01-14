@@ -607,5 +607,8 @@
     "EditMetadataProfile": "perfil de metadades",
     "AddConnection": "Edita la col·lecció",
     "AddImportListExclusion": "Suprimeix l'exclusió de la llista d'importació",
-    "ImportListExclusions": "Suprimeix l'exclusió de la llista d'importació"
+    "ImportListExclusions": "Suprimeix l'exclusió de la llista d'importació",
+    "Database": "Base de dades",
+    "DoneEditingGroups": "Acabada l'edició de grups",
+    "EditGroups": "Edita grups"
 }

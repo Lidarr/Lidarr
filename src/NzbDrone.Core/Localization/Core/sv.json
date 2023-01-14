@@ -762,5 +762,10 @@
     "Renamed": "Omdöpt",
     "Add": "Lägg till",
     "EditMetadataProfile": "Metadata Profil",
-    "Info": "Info"
+    "Info": "Info",
+    "ApplicationURL": "Applikations-URL",
+    "ApplicationUrlHelpText": "Denna applikations externa URL inklusive http(s)://, port och URL-bas",
+    "QualitiesHelpText": "Kvaliteter högre i listan är mer föredragna. Kvaliteter inom samma grupp är lika. Endast kontrollerade egenskaper önskas",
+    "DoneEditingGroups": "Redigering av grupper klar",
+    "EditGroups": "Redigera grupper"
 }
