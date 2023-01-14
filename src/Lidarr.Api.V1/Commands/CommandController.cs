@@ -27,6 +27,8 @@ namespace Lidarr.Api.V1.Commands
         private readonly Debouncer _debouncer;
         private readonly Dictionary<int, CommandResource> _pendingUpdates;
 
+        private readonly CommandPriorityComparer _commandPriorityComparer = new CommandPriorityComparer();
+
         public CommandController(IManageCommandQueue commandQueueManager,
                              IBroadcastSignalRMessage signalRBroadcaster,
                              KnownTypes knownTypes)
@@ -35,10 +37,10 @@ namespace Lidarr.Api.V1.Commands
             _commandQueueManager = commandQueueManager;
             _knownTypes = knownTypes;
 
-            PostValidator.RuleFor(c => c.Name).NotBlank();
-
             _debouncer = new Debouncer(SendUpdates, TimeSpan.FromSeconds(0.1));
             _pendingUpdates = new Dictionary<int, CommandResource>();
+
+            PostValidator.RuleFor(c => c.Name).NotBlank();
         }
 
         public override CommandResource GetResourceById(int id)
@@ -74,7 +76,10 @@ namespace Lidarr.Api.V1.Commands
         [HttpGet]
         public List<CommandResource> GetStartedCommands()
         {
-            return _commandQueueManager.All().ToResource();
+            return _commandQueueManager.All()
+                .OrderBy(c => c.Status, _commandPriorityComparer)
+                .ThenByDescending(c => c.Priority)
+                .ToResource();
         }
 
         [RestDeleteById]
