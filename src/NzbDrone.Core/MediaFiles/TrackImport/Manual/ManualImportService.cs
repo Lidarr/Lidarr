@@ -17,6 +17,7 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.Qualities;
 using NzbDrone.Core.RootFolders;
 
 namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
@@ -237,7 +238,18 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                         item.Tracks = decision.Item.Tracks;
                     }
 
+                    if (item.Quality?.Quality == Quality.Unknown)
+                    {
+                        item.Quality = decision.Item.Quality;
+                    }
+
+                    if (item.ReleaseGroup.IsNullOrWhiteSpace())
+                    {
+                        item.ReleaseGroup = decision.Item.ReleaseGroup;
+                    }
+
                     item.Rejections = decision.Rejections;
+                    item.Size = decision.Item.Size;
 
                     result.Add(item);
                 }

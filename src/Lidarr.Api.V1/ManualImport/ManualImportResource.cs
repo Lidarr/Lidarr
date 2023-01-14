@@ -21,6 +21,7 @@ namespace Lidarr.Api.V1.ManualImport
         public int AlbumReleaseId { get; set; }
         public List<TrackResource> Tracks { get; set; }
         public QualityModel Quality { get; set; }
+        public string ReleaseGroup { get; set; }
         public int QualityWeight { get; set; }
         public string DownloadId { get; set; }
         public IEnumerable<Rejection> Rejections { get; set; }
@@ -50,6 +51,7 @@ namespace Lidarr.Api.V1.ManualImport
                 AlbumReleaseId = model.Release?.Id ?? 0,
                 Tracks = model.Tracks.ToResource(),
                 Quality = model.Quality,
+                ReleaseGroup = model.ReleaseGroup,
 
                 // QualityWeight
                 DownloadId = model.DownloadId,

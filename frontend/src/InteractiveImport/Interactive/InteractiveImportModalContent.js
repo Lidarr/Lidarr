@@ -21,6 +21,7 @@ import SelectAlbumReleaseModal from 'InteractiveImport/AlbumRelease/SelectAlbumR
 import SelectArtistModal from 'InteractiveImport/Artist/SelectArtistModal';
 import ConfirmImportModal from 'InteractiveImport/Confirmation/ConfirmImportModal';
 import SelectQualityModal from 'InteractiveImport/Quality/SelectQualityModal';
+import SelectReleaseGroupModal from 'InteractiveImport/ReleaseGroup/SelectReleaseGroupModal';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import translate from 'Utilities/String/translate';
 import getSelectedIds from 'Utilities/Table/getSelectedIds';
@@ -53,6 +54,11 @@ const columns = [
     isVisible: true
   },
   {
+    name: 'releaseGroup',
+    label: translate('ReleaseGroup'),
+    isVisible: true
+  },
+  {
     name: 'quality',
     label: translate('Quality'),
     isSortable: true,
@@ -81,6 +87,7 @@ const filterExistingFilesOptions = {
 };
 
 const importModeOptions = [
+  { key: 'chooseImportMode', value: translate('ChooseImportMethod'), disabled: true },
   { key: 'move', value: translate('MoveFiles') },
   { key: 'copy', value: translate('HardlinkCopyFiles') }
 ];
@@ -89,6 +96,7 @@ const SELECT = 'select';
 const ARTIST = 'artist';
 const ALBUM = 'album';
 const ALBUM_RELEASE = 'albumRelease';
+const RELEASE_GROUP = 'releaseGroup';
 const QUALITY = 'quality';
 
 const replaceExistingFilesOptions = {
@@ -292,7 +300,8 @@ class InteractiveImportModalContent extends Component {
       { key: SELECT, value: translate('Select...'), disabled: true },
       { key: ALBUM, value: translate('SelectAlbum') },
       { key: ALBUM_RELEASE, value: translate('SelectAlbumRelease') },
-      { key: QUALITY, value: translate('SelectQuality') }
+      { key: QUALITY, value: translate('SelectQuality') },
+      { key: RELEASE_GROUP, value: translate('SelectReleaseGroup') }
     ];
 
     if (allowArtistChange) {
@@ -510,6 +519,13 @@ class InteractiveImportModalContent extends Component {
           isOpen={selectModalOpen === ALBUM_RELEASE}
           importIdsByAlbum={_.chain(items).filter((x) => x.album).groupBy((x) => x.album.id).mapValues((x) => x.map((y) => y.id)).value()}
           albums={_.chain(items).filter((x) => x.album).keyBy((x) => x.album.id).mapValues((x) => ({ matchedReleaseId: x.albumReleaseId, album: x.album })).values().value()}
+          onModalClose={this.onSelectModalClose}
+        />
+
+        <SelectReleaseGroupModal
+          isOpen={selectModalOpen === RELEASE_GROUP}
+          ids={selectedIds}
+          releaseGroup=""
           onModalClose={this.onSelectModalClose}
         />
 
