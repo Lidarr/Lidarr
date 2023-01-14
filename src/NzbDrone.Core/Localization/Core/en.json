@@ -254,6 +254,7 @@
   "EnableInteractiveSearch": "Enable Interactive Search",
   "EnableProfile": "Enable Profile",
   "EnableRSS": "Enable RSS",
+  "EnableRssHelpText": "Will be used when Lidarr periodically looks for releases via RSS Sync",
   "EnableSSL": "Enable SSL",
   "EnableSslHelpText": " Requires restart running as administrator to take effect",
   "Ended": "Ended",
