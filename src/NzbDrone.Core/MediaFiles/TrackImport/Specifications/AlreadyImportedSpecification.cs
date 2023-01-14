@@ -58,7 +58,7 @@ namespace NzbDrone.Core.MediaFiles.EpisodeImport.Specifications
             if (lastImported.DownloadId == downloadClientItem.DownloadId)
             {
                 _logger.Debug("Album previously imported at {0}", lastImported.Date);
-                return Decision.Reject("Album already imported at {0}", lastImported.Date);
+                return Decision.Reject("Album already imported at {0}", lastImported.Date.ToLocalTime());
             }
 
             return Decision.Accept();
