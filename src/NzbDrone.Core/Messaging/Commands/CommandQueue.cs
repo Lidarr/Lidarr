@@ -98,7 +98,7 @@ namespace NzbDrone.Core.Messaging.Commands
         public List<CommandModel> QueuedOrStarted()
         {
             return All().Where(q => q.Status == CommandStatus.Queued || q.Status == CommandStatus.Started)
-                .ToList();
+                        .ToList();
         }
 
         public IEnumerable<CommandModel> GetConsumingEnumerable()
@@ -158,7 +158,7 @@ namespace NzbDrone.Core.Messaging.Commands
                 else
                 {
                     var startedCommands = _items.Where(c => c.Status == CommandStatus.Started)
-                        .ToList();
+                                                .ToList();
 
                     var exclusiveTypes = startedCommands.Where(x => x.Body.IsTypeExclusive)
                         .Select(x => x.Body.Name)
@@ -176,9 +176,14 @@ namespace NzbDrone.Core.Messaging.Commands
                         queuedCommands = queuedCommands.Where(c => !exclusiveTypes.Any(x => x == c.Body.Name));
                     }
 
+                    if (startedCommands.Any(x => x.Body.IsLongRunning))
+                    {
+                        queuedCommands = queuedCommands.Where(c => c.Status == CommandStatus.Queued && !c.Body.IsExclusive);
+                    }
+
                     var localItem = queuedCommands.OrderByDescending(c => c.Priority)
-                        .ThenBy(c => c.QueuedAt)
-                        .FirstOrDefault();
+                                                  .ThenBy(c => c.QueuedAt)
+                                                  .FirstOrDefault();
 
                     // Nothing queued that meets the requirements
                     if (localItem == null)

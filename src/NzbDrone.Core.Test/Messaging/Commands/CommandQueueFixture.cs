@@ -3,6 +3,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.ImportLists;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Music.Commands;
 using NzbDrone.Core.Test.Framework;
@@ -19,6 +20,18 @@ namespace NzbDrone.Core.Test.Messaging.Commands
                 .CreateNew()
                 .With(c => c.Name = "ProcessMonitoredDownloads")
                 .With(c => c.Body = new ProcessMonitoredDownloadsCommand())
+                .With(c => c.Status = CommandStatus.Started)
+                .Build();
+
+            Subject.Add(commandModel);
+        }
+
+        private void GivenLongRunningCommand()
+        {
+            var commandModel = Builder<CommandModel>
+                .CreateNew()
+                .With(c => c.Name = "RssSync")
+                .With(c => c.Body = new RssSyncCommand())
                 .With(c => c.Status = CommandStatus.Started)
                 .Build();
 
@@ -76,6 +89,24 @@ namespace NzbDrone.Core.Test.Messaging.Commands
                 .CreateNew()
                 .With(c => c.Name = "ImportListSync")
                 .With(c => c.Body = new ImportListSyncCommand())
+                .Build();
+
+            Subject.Add(newCommandModel);
+
+            Subject.TryGet(out var command);
+
+            command.Should().BeNull();
+        }
+
+        [Test]
+        public void should_not_return_exclusive_command_if_long_running_command_running()
+        {
+            GivenLongRunningCommand();
+
+            var newCommandModel = Builder<CommandModel>
+                .CreateNew()
+                .With(c => c.Name = "ApplicationUpdate")
+                .With(c => c.Body = new ApplicationUpdateCommand())
                 .Build();
 
             Subject.Add(newCommandModel);
