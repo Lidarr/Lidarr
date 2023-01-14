@@ -616,5 +616,9 @@
     "AddConnection": "Editar Colección",
     "AddImportListExclusion": "Borrar exclusión de lista de importación",
     "EditMetadataProfile": "perfil de metadatos",
-    "ImportListExclusions": "Borrar exclusión de lista de importación"
+    "ImportListExclusions": "Borrar exclusión de lista de importación",
+    "EditGroups": "Editar grupos",
+    "Database": "Base de Datos",
+    "QualitiesHelpText": "Se prefieren las calidades más altas en la lista. Las cualidades dentro del mismo grupo son iguales. Solo se buscan cualidades comprobadas",
+    "DoneEditingGroups": "Terminado de editar grupos"
 }

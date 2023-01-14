@@ -880,5 +880,9 @@
     "Database": "Adatbázis",
     "EditGroups": "Csoportok szerkesztése",
     "QualitiesHelpText": "A listán magasabb minőségek előnyösebbek, még akkor is, ha nincs bejelölve. Ugyanazon csoporton belül a tulajdonságok egyenlőek. Csak ellenőrzött minőségek szükségesek",
-    "DoneEditingGroups": "A csoportok szerkesztése kész"
+    "DoneEditingGroups": "A csoportok szerkesztése kész",
+    "OnAlbumDeleteHelpText": "Album törlésekor",
+    "OnAlbumDelete": "Album törlésekor",
+    "OnArtistDelete": "Előadó törlésekor",
+    "OnArtistDeleteHelpText": "Előadó törlésekor"
 }

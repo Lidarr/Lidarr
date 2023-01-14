@@ -601,5 +601,9 @@
     "AddImportListExclusion": "Usuń wykluczenie listy importu",
     "General": "Generał",
     "Started": "Rozpoczęto",
-    "TimeLeft": "Pozostały czas"
+    "TimeLeft": "Pozostały czas",
+    "Database": "Baza danych",
+    "QualitiesHelpText": "Cechy wyższe na liście są bardziej preferowane. Cechy w tej samej grupie są równe. Potrzebne są tylko sprawdzone cechy",
+    "DoneEditingGroups": "Zakończono edycję grup",
+    "EditGroups": "Edytuj grupy"
 }

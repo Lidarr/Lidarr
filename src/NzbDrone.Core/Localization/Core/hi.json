@@ -582,5 +582,8 @@
     "PreferAndUpgrade": "प्राथमिकता और उन्नयन",
     "System": "प्रणाली",
     "AddImportListExclusion": "आयात सूची बहिष्करण हटाएं",
-    "ImportListExclusions": "आयात सूची बहिष्करण हटाएं"
+    "ImportListExclusions": "आयात सूची बहिष्करण हटाएं",
+    "EditGroups": "समूह संपादित करें",
+    "QualitiesHelpText": "सूची में उच्चतर योग्यताएं अधिक पसंद की जाती हैं। समान समूह के भीतर योग्यताएं समान हैं। केवल जाँच किए गए गुण चाहते हैं",
+    "DoneEditingGroups": "सम्पादन समूह"
 }

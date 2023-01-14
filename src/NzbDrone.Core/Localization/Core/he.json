@@ -591,5 +591,9 @@
     "OnlyUsenet": "רק Usenet",
     "Organize": "לְאַרגֵן",
     "AddImportListExclusion": "מחק אי הכללת רשימות ייבוא",
-    "ImportListExclusions": "מחק אי הכללת רשימות ייבוא"
+    "ImportListExclusions": "מחק אי הכללת רשימות ייבוא",
+    "EditGroups": "ערוך קבוצות",
+    "Database": "מסד נתונים",
+    "QualitiesHelpText": "תכונות גבוהות יותר ברשימה עדיפות יותר. איכויות באותה קבוצה שוות. רק איכויות בדוקות רצויות",
+    "DoneEditingGroups": "עריכת קבוצות הסתיימה"
 }

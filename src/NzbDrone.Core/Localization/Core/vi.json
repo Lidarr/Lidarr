@@ -582,5 +582,8 @@
     "NoTagsHaveBeenAddedYet": "Chưa có thẻ nào được thêm vào",
     "Ok": "Đồng ý",
     "System": "Hệ thống",
-    "ImportListExclusions": "Xóa loại trừ danh sách nhập"
+    "ImportListExclusions": "Xóa loại trừ danh sách nhập",
+    "DoneEditingGroups": "Chỉnh sửa xong nhóm",
+    "EditGroups": "Chỉnh sửa nhóm",
+    "QualitiesHelpText": "Các phẩm chất cao hơn trong danh sách được ưu tiên hơn. Các phẩm chất trong cùng một nhóm là ngang nhau. Chỉ những phẩm chất đã được kiểm tra mới được mong muốn"
 }
