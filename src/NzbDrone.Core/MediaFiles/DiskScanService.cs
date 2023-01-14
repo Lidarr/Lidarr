@@ -105,7 +105,7 @@ namespace NzbDrone.Core.MediaFiles
                 {
                     if (!_diskProvider.FolderExists(rootFolder.Path))
                     {
-                        _logger.Warn("Artists' root folder ({0}) doesn't exist.", rootFolder);
+                        _logger.Warn("Artists' root folder ({0}) doesn't exist.", rootFolder.Path);
                         var skippedArtists = _artistService.GetArtists(artistIds);
                         skippedArtists.ForEach(x => _eventAggregator.PublishEvent(new ArtistScanSkippedEvent(x, ArtistScanSkippedReason.RootFolderDoesNotExist)));
                         return;
@@ -113,7 +113,7 @@ namespace NzbDrone.Core.MediaFiles
 
                     if (_diskProvider.FolderEmpty(rootFolder.Path))
                     {
-                        _logger.Warn("Artists' root folder ({0}) is empty.", rootFolder);
+                        _logger.Warn("Artists' root folder ({0}) is empty.", rootFolder.Path);
                         var skippedArtists = _artistService.GetArtists(artistIds);
                         skippedArtists.ForEach(x => _eventAggregator.PublishEvent(new ArtistScanSkippedEvent(x, ArtistScanSkippedReason.RootFolderIsEmpty)));
                         return;
