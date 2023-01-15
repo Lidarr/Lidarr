@@ -20,3 +20,9 @@
 
   flex: 0 0 95px;
 }
+
+.checkInput {
+  composes: input from '~Components/Form/CheckInput.css';
+
+  margin-top: 0;
+}

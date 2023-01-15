@@ -196,6 +196,7 @@
   "DeleteReleaseProfileMessageText": "Are you sure you want to delete this releaseProfile?",
   "DeleteRootFolder": "Delete Root Folder",
   "DeleteRootFolderMessageText": "Are you sure you want to delete the root folder '{0}'?",
+  "DeleteSelected": "Delete Selected",
   "DeleteSelectedTrackFiles": "Delete Selected Track Files",
   "DeleteSelectedTrackFilesMessageText": "Are you sure you want to delete the selected track files?",
   "DeleteTag": "Delete Tag",

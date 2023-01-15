@@ -154,17 +154,23 @@ namespace Lidarr.Api.V1.TrackFiles
         }
 
         [HttpDelete("bulk")]
-        public IActionResult DeleteTrackFiles([FromBody] TrackFileListResource resource)
+        public object DeleteTrackFiles([FromBody] TrackFileListResource resource)
         {
             var trackFiles = _mediaFileService.Get(resource.TrackFileIds);
-            var artist = trackFiles.First().Artist.Value;
 
             foreach (var trackFile in trackFiles)
             {
-                _mediaFileDeletionService.DeleteTrackFile(artist, trackFile);
+                if (trackFile.AlbumId > 0 && trackFile.Artist != null && trackFile.Artist.Value != null)
+                {
+                    _mediaFileDeletionService.DeleteTrackFile(trackFile.Artist.Value, trackFile);
+                }
+                else
+                {
+                    _mediaFileDeletionService.DeleteTrackFile(trackFile, "Unmapped_Files");
+                }
             }
 
-            return Ok();
+            return new { };
         }
 
         [NonAction]

@@ -6,7 +6,7 @@ import { createSelector } from 'reselect';
 import * as commandNames from 'Commands/commandNames';
 import withCurrentPage from 'Components/withCurrentPage';
 import { executeCommand } from 'Store/Actions/commandActions';
-import { deleteTrackFile, fetchTrackFiles, setTrackFilesSort, setTrackFilesTableOption } from 'Store/Actions/trackFileActions';
+import { deleteTrackFile, deleteTrackFiles, fetchTrackFiles, setTrackFilesSort, setTrackFilesTableOption } from 'Store/Actions/trackFileActions';
 import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
 import createCommandExecutingSelector from 'Store/Selectors/createCommandExecutingSelector';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
@@ -28,7 +28,9 @@ function createMapStateToProps() {
         items,
         ...otherProps
       } = trackFiles;
+
       const unmappedFiles = _.filter(items, { albumId: 0 });
+
       return {
         items: unmappedFiles,
         ...otherProps,
@@ -55,6 +57,10 @@ function createMapDispatchToProps(dispatch, props) {
 
     deleteUnmappedFile(id) {
       dispatch(deleteTrackFile({ id }));
+    },
+
+    deleteUnmappedFiles(trackFileIds) {
+      dispatch(deleteTrackFiles({ trackFileIds }));
     },
 
     onAddMissingArtistsPress() {
@@ -105,7 +111,8 @@ UnmappedFilesTableConnector.propTypes = {
   onSortPress: PropTypes.func.isRequired,
   onTableOptionChange: PropTypes.func.isRequired,
   fetchUnmappedFiles: PropTypes.func.isRequired,
-  deleteUnmappedFile: PropTypes.func.isRequired
+  deleteUnmappedFile: PropTypes.func.isRequired,
+  deleteUnmappedFiles: PropTypes.func.isRequired
 };
 
 export default withCurrentPage(

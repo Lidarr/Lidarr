@@ -4,6 +4,7 @@ import IconButton from 'Components/Link/IconButton';
 import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
 import VirtualTableHeader from 'Components/Table/VirtualTableHeader';
 import VirtualTableHeaderCell from 'Components/Table/VirtualTableHeaderCell';
+import VirtualTableSelectAllHeaderCell from 'Components/Table/VirtualTableSelectAllHeaderCell';
 import { icons } from 'Helpers/Props';
 // import hasGrowableColumns from './hasGrowableColumns';
 import styles from './UnmappedFilesTableHeader.css';
@@ -12,6 +13,9 @@ function UnmappedFilesTableHeader(props) {
   const {
     columns,
     onTableOptionChange,
+    allSelected,
+    allUnselected,
+    onSelectAllChange,
     ...otherProps
   } = props;
 
@@ -28,6 +32,17 @@ function UnmappedFilesTableHeader(props) {
 
           if (!isVisible) {
             return null;
+          }
+
+          if (name === 'select') {
+            return (
+              <VirtualTableSelectAllHeaderCell
+                key={name}
+                allSelected={allSelected}
+                allUnselected={allUnselected}
+                onSelectAllChange={onSelectAllChange}
+              />
+            );
           }
 
           if (name === 'actions') {
@@ -71,6 +86,9 @@ function UnmappedFilesTableHeader(props) {
 
 UnmappedFilesTableHeader.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  allSelected: PropTypes.bool.isRequired,
+  allUnselected: PropTypes.bool.isRequired,
+  onSelectAllChange: PropTypes.func.isRequired,
   onTableOptionChange: PropTypes.func.isRequired
 };
 

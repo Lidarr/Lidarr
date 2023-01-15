@@ -5,6 +5,7 @@ import IconButton from 'Components/Link/IconButton';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
+import VirtualTableSelectCell from 'Components/Table/Cells/VirtualTableSelectCell';
 import { icons, kinds } from 'Helpers/Props';
 import InteractiveImportModal from 'InteractiveImport/InteractiveImportModal';
 import FileDetailsModal from 'TrackFile/FileDetailsModal';
@@ -69,7 +70,9 @@ class UnmappedFilesTableRow extends Component {
       size,
       dateAdded,
       quality,
-      columns
+      columns,
+      isSelected,
+      onSelectedChange
     } = this.props;
 
     const folder = path.substring(0, Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\')));
@@ -91,6 +94,19 @@ class UnmappedFilesTableRow extends Component {
 
             if (!isVisible) {
               return null;
+            }
+
+            if (name === 'select') {
+              return (
+                <VirtualTableSelectCell
+                  inputClassName={styles.checkInput}
+                  id={id}
+                  key={name}
+                  isSelected={isSelected}
+                  isDisabled={false}
+                  onSelectedChange={onSelectedChange}
+                />
+              );
             }
 
             if (name === 'path') {
@@ -208,6 +224,8 @@ UnmappedFilesTableRow.propTypes = {
   quality: PropTypes.object.isRequired,
   dateAdded: PropTypes.string.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  isSelected: PropTypes.bool,
+  onSelectedChange: PropTypes.func.isRequired,
   deleteUnmappedFile: PropTypes.func.isRequired
 };
 
