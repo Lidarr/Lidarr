@@ -63,13 +63,15 @@ namespace NzbDrone.Core.ArtistStats
 
         private SqlBuilder Builder()
         {
+            var trueIndicator = _database.DatabaseType == DatabaseType.PostgreSQL ? "true" : "1";
+
             return new SqlBuilder(_database.DatabaseType)
-                .Select(@"""Artists"".""Id"" AS ""ArtistId"",
+                .Select($@"""Artists"".""Id"" AS ""ArtistId"",
                         ""Albums"".""Id"" AS ""AlbumId"",
                         SUM(COALESCE(""TrackFiles"".""Size"", 0)) AS ""SizeOnDisk"",
                         COUNT(""Tracks"".""Id"") AS ""TotalTrackCount"",
                         SUM(CASE WHEN ""Tracks"".""TrackFileId"" > 0 THEN 1 ELSE 0 END) AS ""AvailableTrackCount"",
-                        SUM(CASE WHEN ""Albums"".""Monitored"" = true OR ""Tracks"".""TrackFileId"" > 0 THEN 1 ELSE 0 END) AS ""TrackCount"",
+                        SUM(CASE WHEN ""Albums"".""Monitored"" = {trueIndicator} OR ""Tracks"".""TrackFileId"" > 0 THEN 1 ELSE 0 END) AS ""TrackCount"",
                         SUM(CASE WHEN ""TrackFiles"".""Id"" IS NULL THEN 0 ELSE 1 END) AS ""TrackFileCount""")
                 .Join<Track, AlbumRelease>((t, r) => t.AlbumReleaseId == r.Id)
                 .Join<AlbumRelease, Album>((r, a) => r.AlbumId == a.Id)
