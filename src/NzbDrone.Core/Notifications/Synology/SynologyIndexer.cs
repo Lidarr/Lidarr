@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using FluentValidation.Results;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.Notifications.Synology
@@ -38,7 +39,7 @@ namespace NzbDrone.Core.Notifications.Synology
             }
         }
 
-        public override void OnRename(Artist artist)
+        public override void OnRename(Artist artist, List<RenamedTrackFile> renamedFiles)
         {
             if (Settings.UpdateLibrary)
             {

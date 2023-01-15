@@ -11,6 +11,8 @@ namespace NzbDrone.Core.Notifications.Webhook
         Test,
         Grab,
         Download,
+        DownloadFailure,
+        ImportFailure,
         Rename,
         AlbumDelete,
         ArtistDelete,

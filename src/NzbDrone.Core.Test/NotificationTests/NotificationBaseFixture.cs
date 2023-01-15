@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using FluentValidation.Results;
 using NUnit.Framework;
+using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Notifications;
 using NzbDrone.Core.ThingiProvider;
@@ -57,7 +59,7 @@ namespace NzbDrone.Core.Test.NotificationTests
                 TestLogger.Info("OnAlbumDownload was called");
             }
 
-            public override void OnRename(Artist artist)
+            public override void OnRename(Artist artist, List<RenamedTrackFile> renamedFiles)
             {
                 TestLogger.Info("OnRename was called");
             }

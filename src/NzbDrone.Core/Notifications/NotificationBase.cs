@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
+using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.ThingiProvider;
 
@@ -50,7 +51,7 @@ namespace NzbDrone.Core.Notifications
         {
         }
 
-        public virtual void OnRename(Artist artist)
+        public virtual void OnRename(Artist artist, List<RenamedTrackFile> renamedFiles)
         {
         }
 

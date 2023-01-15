@@ -8,6 +8,7 @@ namespace NzbDrone.Core.Notifications.Webhook
         public string Name { get; set; }
         public string Path { get; set; }
         public string MBId { get; set; }
+        public string Type { get; set; }
 
         public WebhookArtist()
         {
@@ -18,6 +19,7 @@ namespace NzbDrone.Core.Notifications.Webhook
             Id = artist.Id;
             Name = artist.Name;
             Path = artist.Path;
+            Type = artist.Metadata.Value.Type;
             MBId = artist.Metadata.Value.ForeignArtistId;
         }
     }

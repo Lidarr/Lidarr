@@ -9,6 +9,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Processes;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.HealthCheck;
+using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
@@ -56,7 +57,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Release_Quality", remoteAlbum.ParsedAlbumInfo.Quality.Quality.Name);
             environmentVariables.Add("Lidarr_Release_QualityVersion", remoteAlbum.ParsedAlbumInfo.Quality.Revision.Version.ToString());
             environmentVariables.Add("Lidarr_Release_ReleaseGroup", releaseGroup ?? string.Empty);
-            environmentVariables.Add("Lidarr_Download_Client", message.DownloadClient ?? string.Empty);
+            environmentVariables.Add("Lidarr_Download_Client", message.DownloadClientName ?? string.Empty);
+            environmentVariables.Add("Lidarr_Download_Client_Type", message.DownloadClientType ?? string.Empty);
             environmentVariables.Add("Lidarr_Download_Id", message.DownloadId ?? string.Empty);
 
             ExecuteScript(environmentVariables);
@@ -80,7 +82,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Album_MBId", album.ForeignAlbumId);
             environmentVariables.Add("Lidarr_AlbumRelease_MBId", release.ForeignReleaseId);
             environmentVariables.Add("Lidarr_Album_ReleaseDate", album.ReleaseDate.ToString());
-            environmentVariables.Add("Lidarr_Download_Client", message.DownloadClient ?? string.Empty);
+            environmentVariables.Add("Lidarr_Download_Client", message.DownloadClientInfo?.Name ?? string.Empty);
+            environmentVariables.Add("Lidarr_Download_Client_Type", message.DownloadClientInfo?.Type ?? string.Empty);
             environmentVariables.Add("Lidarr_Download_Id", message.DownloadId ?? string.Empty);
 
             if (message.TrackFiles.Any())
@@ -96,7 +99,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
             ExecuteScript(environmentVariables);
         }
 
-        public override void OnRename(Artist artist)
+        public override void OnRename(Artist artist, List<RenamedTrackFile> renamedFiles)
         {
             var environmentVariables = new StringDictionary();
 
@@ -106,6 +109,9 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_Path", artist.Path);
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId);
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
+            environmentVariables.Add("Lidarr_TrackFile_Ids", string.Join(",", renamedFiles.Select(e => e.TrackFile.Id)));
+            environmentVariables.Add("Lidarr_TrackFile_Paths", string.Join("|", renamedFiles.Select(e => e.TrackFile.Path)));
+            environmentVariables.Add("Lidarr_TrackFile_PreviousPaths", string.Join("|", renamedFiles.Select(e => e.PreviousPath)));
 
             ExecuteScript(environmentVariables);
         }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.ThingiProvider;
 
@@ -9,7 +11,7 @@ namespace NzbDrone.Core.Notifications
 
         void OnGrab(GrabMessage grabMessage);
         void OnReleaseImport(AlbumDownloadMessage message);
-        void OnRename(Artist artist);
+        void OnRename(Artist artist, List<RenamedTrackFile> renamedFiles);
         void OnAlbumDelete(AlbumDeleteMessage deleteMessage);
         void OnArtistDelete(ArtistDeleteMessage deleteMessage);
         void OnHealthIssue(HealthCheck.HealthCheck healthCheck);

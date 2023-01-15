@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.Notifications.Subsonic
@@ -35,7 +36,7 @@ namespace NzbDrone.Core.Notifications.Subsonic
             Update();
         }
 
-        public override void OnRename(Artist artist)
+        public override void OnRename(Artist artist, List<RenamedTrackFile> renamedFiles)
         {
             Update();
         }

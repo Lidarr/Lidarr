@@ -10,7 +10,8 @@ namespace NzbDrone.Core.Notifications
         public Artist Artist { get; set; }
         public RemoteAlbum Album { get; set; }
         public QualityModel Quality { get; set; }
-        public string DownloadClient { get; set; }
+        public string DownloadClientType { get; set; }
+        public string DownloadClientName { get; set; }
         public string DownloadId { get; set; }
 
         public override string ToString()

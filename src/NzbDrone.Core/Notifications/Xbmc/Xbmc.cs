@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.Notifications.Xbmc
@@ -36,7 +37,7 @@ namespace NzbDrone.Core.Notifications.Xbmc
             UpdateAndClean(message.Artist, message.OldFiles.Any());
         }
 
-        public override void OnRename(Artist artist)
+        public override void OnRename(Artist artist, List<RenamedTrackFile> renamedFiles)
         {
             UpdateAndClean(artist);
         }

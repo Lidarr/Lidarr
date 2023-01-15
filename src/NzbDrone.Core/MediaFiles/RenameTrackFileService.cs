@@ -112,11 +112,11 @@ namespace NzbDrone.Core.MediaFiles
 
         private void RenameFiles(List<TrackFile> trackFiles, Artist artist)
         {
-            var renamed = new List<TrackFile>();
+            var renamed = new List<RenamedTrackFile>();
 
             foreach (var trackFile in trackFiles)
             {
-                var trackFilePath = trackFile.Path;
+                var previousPath = trackFile.Path;
 
                 try
                 {
@@ -124,11 +124,16 @@ namespace NzbDrone.Core.MediaFiles
                     _trackFileMover.MoveTrackFile(trackFile, artist);
 
                     _mediaFileService.Update(trackFile);
-                    renamed.Add(trackFile);
+
+                    renamed.Add(new RenamedTrackFile
+                    {
+                        TrackFile = trackFile,
+                        PreviousPath = previousPath
+                    });
 
                     _logger.Debug("Renamed track file: {0}", trackFile);
 
-                    _eventAggregator.PublishEvent(new TrackFileRenamedEvent(artist, trackFile, trackFilePath));
+                    _eventAggregator.PublishEvent(new TrackFileRenamedEvent(artist, trackFile, previousPath));
                 }
                 catch (SameFilenameException ex)
                 {
@@ -136,13 +141,13 @@ namespace NzbDrone.Core.MediaFiles
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex, "Failed to rename file {0}", trackFilePath);
+                    _logger.Error(ex, "Failed to rename file {0}", previousPath);
                 }
             }
 
             if (renamed.Any())
             {
-                _eventAggregator.PublishEvent(new ArtistRenamedEvent(artist));
+                _eventAggregator.PublishEvent(new ArtistRenamedEvent(artist, renamed));
 
                 _logger.Debug("Removing Empty Subfolders from: {0}", artist.Path);
                 _diskProvider.RemoveEmptySubfolders(artist.Path);

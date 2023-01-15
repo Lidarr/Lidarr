@@ -126,7 +126,8 @@ namespace NzbDrone.Core.Notifications
                 Artist = message.Album.Artist,
                 Quality = message.Album.ParsedAlbumInfo.Quality,
                 Album = message.Album,
-                DownloadClient = message.DownloadClient,
+                DownloadClientName = message.DownloadClientName,
+                DownloadClientType = message.DownloadClient,
                 DownloadId = message.DownloadId
             };
 
@@ -161,7 +162,7 @@ namespace NzbDrone.Core.Notifications
                 Artist = message.Artist,
                 Album = message.Album,
                 Release = message.AlbumRelease,
-                DownloadClient = message.DownloadClientInfo?.Name,
+                DownloadClientInfo = message.DownloadClientInfo,
                 DownloadId = message.DownloadId,
                 TrackFiles = message.ImportedTracks,
                 OldFiles = message.OldFiles,
@@ -194,7 +195,7 @@ namespace NzbDrone.Core.Notifications
                 {
                     if (ShouldHandleArtist(notification.Definition, message.Artist))
                     {
-                        notification.OnRename(message.Artist);
+                        notification.OnRename(message.Artist, message.RenamedFiles);
                     }
                 }
                 catch (Exception ex)

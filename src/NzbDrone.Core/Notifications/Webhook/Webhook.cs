@@ -2,16 +2,19 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Configuration;
+using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Notifications.Webhook
 {
-    public class Webhook : NotificationBase<WebhookSettings>
+    public class Webhook : WebhookBase<WebhookSettings>
     {
         private readonly IWebhookProxy _proxy;
 
-        public Webhook(IWebhookProxy proxy)
+        public Webhook(IWebhookProxy proxy, IConfigFileProvider configFileProvider)
+            : base(configFileProvider)
         {
             _proxy = proxy;
         }
@@ -20,129 +23,52 @@ namespace NzbDrone.Core.Notifications.Webhook
 
         public override void OnGrab(GrabMessage message)
         {
-            var remoteAlbum = message.Album;
-            var quality = message.Quality;
-
-            var payload = new WebhookGrabPayload
-            {
-                EventType = WebhookEventType.Grab,
-                Artist = new WebhookArtist(message.Artist),
-                Albums = remoteAlbum.Albums.ConvertAll(x => new WebhookAlbum(x)
-                {
-                    // TODO: Stop passing these parameters inside an album v3
-                    Quality = quality.Quality.Name,
-                    QualityVersion = quality.Revision.Version,
-                    ReleaseGroup = remoteAlbum.ParsedAlbumInfo.ReleaseGroup
-                }),
-                Release = new WebhookRelease(quality, remoteAlbum),
-                DownloadClient = message.DownloadClient,
-                DownloadId = message.DownloadId
-            };
-
-            _proxy.SendWebhook(payload, Settings);
+            _proxy.SendWebhook(BuildOnGrabPayload(message), Settings);
         }
 
         public override void OnReleaseImport(AlbumDownloadMessage message)
         {
-            var trackFiles = message.TrackFiles;
-
-            var payload = new WebhookImportPayload
-            {
-                EventType = WebhookEventType.Download,
-                Artist = new WebhookArtist(message.Artist),
-                Tracks = trackFiles.SelectMany(x => x.Tracks.Value.Select(y => new WebhookTrack(y)
-                {
-                    // TODO: Stop passing these parameters inside an episode v3
-                    Quality = x.Quality.Quality.Name,
-                    QualityVersion = x.Quality.Revision.Version,
-                    ReleaseGroup = x.ReleaseGroup
-                })).ToList(),
-                TrackFiles = trackFiles.ConvertAll(x => new WebhookTrackFile(x)),
-                IsUpgrade = message.OldFiles.Any(),
-                DownloadClient = message.DownloadClient,
-                DownloadId = message.DownloadId
-            };
-
-            if (message.OldFiles.Any())
-            {
-                payload.DeletedFiles = message.OldFiles.ConvertAll(x => new WebhookTrackFile(x));
-            }
-
-            _proxy.SendWebhook(payload, Settings);
+            _proxy.SendWebhook(BuildOnReleaseImportPayload(message), Settings);
         }
 
-        public override void OnRename(Artist artist)
+        public override void OnDownloadFailure(DownloadFailedMessage message)
         {
-            var payload = new WebhookRenamePayload
-            {
-                EventType = WebhookEventType.Rename,
-                Artist = new WebhookArtist(artist)
-            };
+            _proxy.SendWebhook(BuildOnDownloadFailurePayload(message), Settings);
+        }
 
-            _proxy.SendWebhook(payload, Settings);
+        public override void OnImportFailure(AlbumDownloadMessage message)
+        {
+            _proxy.SendWebhook(BuildOnImportFailurePayload(message), Settings);
+        }
+
+        public override void OnRename(Artist artist, List<RenamedTrackFile> renamedFiles)
+        {
+            _proxy.SendWebhook(BuildOnRenamePayload(artist, renamedFiles), Settings);
         }
 
         public override void OnTrackRetag(TrackRetagMessage message)
         {
-            var payload = new WebhookRetagPayload
-            {
-                EventType = WebhookEventType.Retag,
-                Artist = new WebhookArtist(message.Artist),
-                TrackFile = new WebhookTrackFile(message.TrackFile)
-            };
-
-            _proxy.SendWebhook(payload, Settings);
+            _proxy.SendWebhook(BuildOnTrackRetagPayload(message), Settings);
         }
 
         public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
         {
-            var payload = new WebhookAlbumDeletePayload
-            {
-                EventType = WebhookEventType.AlbumDelete,
-                Album = new WebhookAlbum(deleteMessage.Album),
-                DeletedFiles = deleteMessage.DeletedFiles
-            };
-
-            _proxy.SendWebhook(payload, Settings);
+            _proxy.SendWebhook(BuildOnAlbumDelete(deleteMessage), Settings);
         }
 
         public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
         {
-            var payload = new WebhookArtistDeletePayload
-            {
-                EventType = WebhookEventType.ArtistDelete,
-                Artist = new WebhookArtist(deleteMessage.Artist),
-                DeletedFiles = deleteMessage.DeletedFiles
-            };
-
-            _proxy.SendWebhook(payload, Settings);
+            _proxy.SendWebhook(BuildOnArtistDelete(deleteMessage), Settings);
         }
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
-            var payload = new WebhookHealthPayload
-                          {
-                              EventType = WebhookEventType.Health,
-                              Level = healthCheck.Type,
-                              Message = healthCheck.Message,
-                              Type = healthCheck.Source.Name,
-                              WikiUrl = healthCheck.WikiUrl?.ToString()
-                          };
-
-            _proxy.SendWebhook(payload, Settings);
+            _proxy.SendWebhook(BuildHealthPayload(healthCheck), Settings);
         }
 
         public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
         {
-            var payload = new WebhookApplicationUpdatePayload
-            {
-                EventType = WebhookEventType.ApplicationUpdate,
-                Message = updateMessage.Message,
-                PreviousVersion = updateMessage.PreviousVersion.ToString(),
-                NewVersion = updateMessage.NewVersion.ToString()
-            };
-
-            _proxy.SendWebhook(payload, Settings);
+            _proxy.SendWebhook(BuildApplicationUpdatePayload(updateMessage), Settings);
         }
 
         public override string Name => "Webhook";
@@ -160,27 +86,7 @@ namespace NzbDrone.Core.Notifications.Webhook
         {
             try
             {
-                var payload = new WebhookGrabPayload
-                {
-                    EventType = WebhookEventType.Test,
-                    Artist = new WebhookArtist()
-                    {
-                        Id = 1,
-                        Name = "Test Name",
-                        Path = "C:\\testpath",
-                        MBId = "aaaaa-aaa-aaaa-aaaaaa"
-                    },
-                    Albums = new List<WebhookAlbum>()
-                    {
-                            new WebhookAlbum()
-                            {
-                                Id = 123,
-                                Title = "Test title"
-                            }
-                    }
-                };
-
-                _proxy.SendWebhook(payload, Settings);
+                _proxy.SendWebhook(BuildTestPayload(), Settings);
             }
             catch (WebhookException ex)
             {

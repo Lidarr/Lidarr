@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Notifications.Slack.Payloads;
 using NzbDrone.Core.Validation;
@@ -54,7 +55,7 @@ namespace NzbDrone.Core.Notifications.Slack
             _proxy.SendPayload(payload, Settings);
         }
 
-        public override void OnRename(Artist artist)
+        public override void OnRename(Artist artist, List<RenamedTrackFile> renamedFiles)
         {
             var attachments = new List<Attachment>
                               {

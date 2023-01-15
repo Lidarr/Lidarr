@@ -6,6 +6,7 @@ using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Exceptions;
+using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Notifications.Plex.PlexTv;
 using NzbDrone.Core.Validation;
@@ -43,7 +44,7 @@ namespace NzbDrone.Core.Notifications.Plex.Server
             UpdateIfEnabled(message.Artist);
         }
 
-        public override void OnRename(Artist artist)
+        public override void OnRename(Artist artist, List<RenamedTrackFile> renamedFiles)
         {
             UpdateIfEnabled(artist);
         }
