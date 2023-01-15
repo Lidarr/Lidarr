@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using NLog;
 using NzbDrone.Common.Disk;
@@ -147,11 +148,26 @@ namespace NzbDrone.Core.MediaFiles
         {
             if (message.DeleteFiles)
             {
-                var files = _mediaFileService.GetFilesByAlbum(message.Album.Id);
+                var files = message.TrackFilesToDelete;
 
                 foreach (var file in files)
                 {
                     _recycleBinProvider.DeleteFile(file.Path);
+                }
+
+                if (_configService.DeleteEmptyFolders)
+                {
+                    var artist = message.Album.Artist.Value;
+                    var albumFolder = message.TrackFilesToDelete.FirstOrDefault()?.Path.GetParentPath();
+
+                    if (_diskProvider.GetFiles(artist.Path, SearchOption.AllDirectories).Empty())
+                    {
+                        _diskProvider.DeleteFolder(artist.Path, true);
+                    }
+                    else if (_diskProvider.GetFiles(albumFolder, SearchOption.AllDirectories).Empty())
+                    {
+                        _diskProvider.RemoveEmptySubfolders(albumFolder);
+                    }
                 }
 
                 _eventAggregator.PublishEvent(new DeleteCompletedEvent());

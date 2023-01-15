@@ -4,6 +4,7 @@ using System.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Datastore;
+using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music.Events;
 using NzbDrone.Core.Parser;
@@ -46,14 +47,17 @@ namespace NzbDrone.Core.Music
     {
         private readonly IAlbumRepository _albumRepository;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IMediaFileService _mediaFileService;
         private readonly Logger _logger;
 
         public AlbumService(IAlbumRepository albumRepository,
                             IEventAggregator eventAggregator,
+                            IMediaFileService mediaFileService,
                             Logger logger)
         {
             _albumRepository = albumRepository;
             _eventAggregator = eventAggregator;
+            _mediaFileService = mediaFileService;
             _logger = logger;
         }
 
@@ -71,7 +75,15 @@ namespace NzbDrone.Core.Music
             var album = _albumRepository.Get(albumId);
             album.Artist.LazyLoad();
             _albumRepository.Delete(albumId);
-            _eventAggregator.PublishEvent(new AlbumDeletedEvent(album, deleteFiles, addImportListExclusion));
+
+            var deleteEvent = new AlbumDeletedEvent(album, deleteFiles, addImportListExclusion);
+
+            if (deleteFiles)
+            {
+                deleteEvent.TrackFilesToDelete = _mediaFileService.GetFilesByAlbum(albumId);
+            }
+
+            _eventAggregator.PublishEvent(deleteEvent);
         }
 
         public Album FindById(string foreignId)
