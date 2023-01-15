@@ -14,6 +14,12 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
 
         public void Clean()
         {
+            CleanupOrphanedByAlbum();
+            CleanupOrphanedByTracks();
+        }
+
+        private void CleanupOrphanedByAlbum()
+        {
             using (var mapper = _database.OpenConnection())
             {
                 // Unlink where track no longer exists
@@ -24,7 +30,13 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
                                      LEFT OUTER JOIN ""Tracks""
                                      ON ""TrackFiles"".""Id"" = ""Tracks"".""TrackFileId""
                                      WHERE ""Tracks"".""Id"" IS NULL)");
+            }
+        }
 
+        private void CleanupOrphanedByTracks()
+        {
+            using (var mapper = _database.OpenConnection())
+            {
                 // Unlink Tracks where the Trackfiles entry no longer exists
                 mapper.Execute(@"UPDATE ""Tracks""
                                      SET ""TrackFileId"" = 0
