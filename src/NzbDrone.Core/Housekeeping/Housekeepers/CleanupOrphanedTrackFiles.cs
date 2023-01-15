@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
                 // Unlink where track no longer exists
                 mapper.Execute(@"UPDATE ""TrackFiles""
                                      SET ""AlbumId"" = 0
-                                     WHERE ""Id"" IN (
+                                     WHERE ""AlbumId"" <> 0 AND  ""Id"" IN (
                                      SELECT ""TrackFiles"".""Id"" FROM ""TrackFiles""
                                      LEFT OUTER JOIN ""Tracks""
                                      ON ""TrackFiles"".""Id"" = ""Tracks"".""TrackFileId""
@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
                 // Unlink Tracks where the Trackfiles entry no longer exists
                 mapper.Execute(@"UPDATE ""Tracks""
                                      SET ""TrackFileId"" = 0
-                                     WHERE ""Id"" IN (
+                                     WHERE ""TrackFileId"" <> 0 AND ""Id"" IN (
                                      SELECT ""Tracks"".""Id"" FROM ""Tracks""
                                      LEFT OUTER JOIN ""TrackFiles""
                                      ON ""Tracks"".""TrackFileId"" = ""TrackFiles"".""Id""
