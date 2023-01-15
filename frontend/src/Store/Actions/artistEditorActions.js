@@ -56,7 +56,7 @@ export const defaultState = {
       name: 'metadataProfileId',
       label: translate('MetadataProfile'),
       isSortable: true,
-      isVisible: false
+      isVisible: true
     },
     {
       name: 'path',
