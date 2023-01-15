@@ -155,6 +155,8 @@ export const defaultState = {
   error: null,
   isSaving: false,
   saveError: null,
+  isDeleting: false,
+  deleteError: null,
   items: [],
   sortKey: 'sortName',
   sortDirection: sortDirections.ASCENDING,
@@ -179,6 +181,8 @@ export const DELETE_ARTIST = 'artist/deleteArtist';
 export const TOGGLE_ARTIST_MONITORED = 'artist/toggleArtistMonitored';
 export const TOGGLE_ALBUM_MONITORED = 'artist/toggleAlbumMonitored';
 export const UPDATE_ARTISTS_MONITOR = 'artist/updateArtistsMonitor';
+export const SAVE_ARTIST_EDITOR = 'artist/saveArtistEditor';
+export const BULK_DELETE_ARTIST = 'artist/bulkDeleteArtist';
 
 export const SET_DELETE_OPTION = 'artist/setDeleteOption';
 
@@ -215,6 +219,8 @@ export const deleteArtist = createThunk(DELETE_ARTIST, (payload) => {
 export const toggleArtistMonitored = createThunk(TOGGLE_ARTIST_MONITORED);
 export const toggleAlbumMonitored = createThunk(TOGGLE_ALBUM_MONITORED);
 export const updateArtistsMonitor = createThunk(UPDATE_ARTISTS_MONITOR);
+export const saveArtistEditor = createThunk(SAVE_ARTIST_EDITOR);
+export const bulkDeleteArtist = createThunk(BULK_DELETE_ARTIST);
 
 export const setArtistValue = createAction(SET_ARTIST_VALUE, (payload) => {
   return {
@@ -400,8 +406,87 @@ export const actionHandlers = handleThunks({
         saveError: xhr
       }));
     });
-  }
+  },
 
+  [SAVE_ARTIST_EDITOR]: function(getState, payload, dispatch) {
+    dispatch(set({
+      section,
+      isSaving: true
+    }));
+
+    const promise = createAjaxRequest({
+      url: '/artist/editor',
+      method: 'PUT',
+      data: JSON.stringify(payload),
+      dataType: 'json'
+    }).request;
+
+    promise.done((data) => {
+      dispatch(batchActions([
+        ...data.map((artist) => {
+
+          const {
+            images,
+            rootFolderPath,
+            statistics,
+            ...propsToUpdate
+          } = artist;
+
+          return updateItem({
+            id: artist.id,
+            section: 'artist',
+            ...propsToUpdate
+          });
+        }),
+
+        set({
+          section,
+          isSaving: false,
+          saveError: null
+        })
+      ]));
+    });
+
+    promise.fail((xhr) => {
+      dispatch(set({
+        section,
+        isSaving: false,
+        saveError: xhr
+      }));
+    });
+  },
+
+  [BULK_DELETE_ARTIST]: function(getState, payload, dispatch) {
+    dispatch(set({
+      section,
+      isDeleting: true
+    }));
+
+    const promise = createAjaxRequest({
+      url: '/artist/editor',
+      method: 'DELETE',
+      data: JSON.stringify(payload),
+      dataType: 'json'
+    }).request;
+
+    promise.done(() => {
+      // SignaR will take care of removing the artist from the collection
+
+      dispatch(set({
+        section,
+        isDeleting: false,
+        deleteError: null
+      }));
+    });
+
+    promise.fail((xhr) => {
+      dispatch(set({
+        section,
+        isDeleting: false,
+        deleteError: xhr
+      }));
+    });
+  }
 });
 
 //

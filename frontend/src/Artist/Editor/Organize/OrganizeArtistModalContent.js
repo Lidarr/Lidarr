@@ -21,7 +21,7 @@ function OrganizeArtistModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        {translate('OrganizeArtist')}
+        {translate('OrganizeSelectedArtists')}
       </ModalHeader>
 
       <ModalBody>

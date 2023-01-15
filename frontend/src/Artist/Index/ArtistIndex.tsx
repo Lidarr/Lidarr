@@ -39,6 +39,10 @@ import ArtistIndexOverviewOptionsModal from './Overview/Options/ArtistIndexOverv
 import ArtistIndexPosters from './Posters/ArtistIndexPosters';
 import ArtistIndexPosterOptionsModal from './Posters/Options/ArtistIndexPosterOptionsModal';
 import ArtistIndexSelectAllButton from './Select/ArtistIndexSelectAllButton';
+import ArtistIndexSelectAllMenuItem from './Select/ArtistIndexSelectAllMenuItem';
+import ArtistIndexSelectFooter from './Select/ArtistIndexSelectFooter';
+import ArtistIndexSelectModeButton from './Select/ArtistIndexSelectModeButton';
+import ArtistIndexSelectModeMenuItem from './Select/ArtistIndexSelectModeMenuItem';
 import ArtistIndexTable from './Table/ArtistIndexTable';
 import ArtistIndexTableOptions from './Table/ArtistIndexTableOptions';
 import styles from './ArtistIndex.css';
@@ -209,7 +213,7 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
   const hasNoArtist = !totalItems;
 
   return (
-    <SelectProvider isSelectMode={isSelectMode} items={items}>
+    <SelectProvider items={items}>
       <PageContent>
         <PageToolbar>
           <PageToolbarSection>
@@ -232,13 +236,19 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
 
             <PageToolbarSeparator />
 
-            <PageToolbarButton
+            <ArtistIndexSelectModeButton
               label={isSelectMode ? 'Stop Selecting' : 'Select Artists'}
               iconName={isSelectMode ? icons.ARTIST_ENDED : icons.CHECK}
+              isSelectMode={isSelectMode}
+              overflowComponent={ArtistIndexSelectModeMenuItem}
               onPress={onSelectModePress}
             />
 
-            {isSelectMode ? <ArtistIndexSelectAllButton /> : null}
+            <ArtistIndexSelectAllButton
+              label="SelectAll"
+              isSelectMode={isSelectMode}
+              overflowComponent={ArtistIndexSelectAllMenuItem}
+            />
           </PageToolbarSection>
 
           <PageToolbarSection
@@ -325,7 +335,6 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
               <NoArtist totalItems={totalItems} />
             ) : null}
           </PageContentBody>
-
           {isLoaded && !!jumpBarItems.order.length ? (
             <PageJumpBar
               items={jumpBarItems}
@@ -333,6 +342,9 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
             />
           ) : null}
         </div>
+
+        {isSelectMode ? <ArtistIndexSelectFooter /> : null}
+
         {view === 'posters' ? (
           <ArtistIndexPosterOptionsModal
             isOpen={isOptionsModalOpen}

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import translate from 'Utilities/String/translate';
-import SelectInput from './SelectInput';
+import EnhancedSelectInput from './EnhancedSelectInput';
 
 const artistTypeOptions = [
   { key: 'standard', value: 'Standard' },
@@ -14,6 +14,7 @@ function SeriesTypeSelectInput(props) {
 
   const {
     includeNoChange,
+    includeNoChangeDisabled = true,
     includeMixed
   } = props;
 
@@ -21,7 +22,7 @@ function SeriesTypeSelectInput(props) {
     values.unshift({
       key: 'noChange',
       value: translate('NoChange'),
-      disabled: true
+      disabled: includeNoChangeDisabled
     });
   }
 
@@ -34,7 +35,7 @@ function SeriesTypeSelectInput(props) {
   }
 
   return (
-    <SelectInput
+    <EnhancedSelectInput
       {...props}
       values={values}
     />
@@ -43,6 +44,7 @@ function SeriesTypeSelectInput(props) {
 
 SeriesTypeSelectInput.propTypes = {
   includeNoChange: PropTypes.bool.isRequired,
+  includeNoChangeDisabled: PropTypes.bool,
   includeMixed: PropTypes.bool.isRequired
 };
 
