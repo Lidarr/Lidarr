@@ -234,7 +234,7 @@ class ArtistDetails extends Component {
     } = this.state;
 
     const continuing = status === 'continuing';
-    const endedString = artistType === 'Person' ? 'Deceased' : 'Ended';
+    const endedString = artistType === 'Person' ? 'Deceased' : 'Inactive';
 
     let trackFilesCountMessage = translate('TrackFilesCountMessage');
 

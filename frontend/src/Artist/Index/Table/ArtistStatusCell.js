@@ -19,7 +19,7 @@ function ArtistStatusCell(props) {
     ...otherProps
   } = props;
 
-  const endedString = artistType === 'Person' ? 'Deceased' : 'Ended';
+  const endedString = artistType === 'Person' ? 'Deceased' : 'Inactive';
 
   return (
     <Component

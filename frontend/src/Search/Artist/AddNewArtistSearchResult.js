@@ -88,7 +88,7 @@ class AddNewArtistSearchResult extends Component {
 
     const linkProps = isExistingArtist ? { to: `/artist/${foreignArtistId}` } : { onPress: this.onPress };
 
-    const endedString = artistType === 'Person' ? 'Deceased' : 'Ended';
+    const endedString = artistType === 'Person' ? 'Deceased' : 'Inactive';
 
     const height = calculateHeight(230, isSmallScreen);
 

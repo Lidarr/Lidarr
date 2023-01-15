@@ -3,7 +3,7 @@ import FilterBuilderRowValue from './FilterBuilderRowValue';
 
 const protocols = [
   { id: 'continuing', name: 'Continuing' },
-  { id: 'ended', name: 'Ended' }
+  { id: 'ended', name: 'Inactive' }
 ];
 
 function ArtistStatusFilterBuilderRowValue(props) {

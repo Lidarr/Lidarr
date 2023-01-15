@@ -130,7 +130,7 @@ class ArtistIndexOverview extends Component {
                 status === 'ended' &&
                   <div
                     className={styles.ended}
-                    title={translate('Ended')}
+                    title={translate('Inactive')}
                   />
               }
 

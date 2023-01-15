@@ -111,7 +111,7 @@ class ArtistIndexFooter extends PureComponent {
                   />
 
                   <DescriptionListItem
-                    title={translate('Ended')}
+                    title={translate('Inactive')}
                     data={ended}
                   />
 

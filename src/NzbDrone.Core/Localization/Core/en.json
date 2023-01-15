@@ -352,6 +352,7 @@
   "ImportLists": "Import Lists",
   "ImportListSettings": "General Import List Settings",
   "ImportListSpecificSettings": "Import List Specific Settings",
+  "Inactive": "Inactive",
   "IncludeHealthWarningsHelpText": "Include Health Warnings",
   "IncludePreferredWhenRenaming": "Include Preferred when Renaming",
   "IncludeUnknownArtistItemsHelpText": "Show items without a artist in the queue, this could include removed artists, movies or anything else in Lidarr's category",
