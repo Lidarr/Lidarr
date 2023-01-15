@@ -3915,7 +3915,7 @@
       }
     },
     "/api/v1/manualimport": {
-      "put": {
+      "post": {
         "tags": [
           "ManualImport"
         ],
@@ -3925,7 +3925,7 @@
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/ManualImportResource"
+                  "$ref": "#/components/schemas/ManualImportUpdateResource"
                 }
               }
             },
@@ -3933,7 +3933,7 @@
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/ManualImportResource"
+                  "$ref": "#/components/schemas/ManualImportUpdateResource"
                 }
               }
             },
@@ -3941,7 +3941,7 @@
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/ManualImportResource"
+                  "$ref": "#/components/schemas/ManualImportUpdateResource"
                 }
               }
             }
@@ -5561,6 +5561,25 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ParseResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ping": {
+      "get": {
+        "tags": [
+          "Ping"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PingResource"
                 }
               }
             }
@@ -7448,7 +7467,24 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemResource"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemResource"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemResource"
+                }
+              }
+            }
           }
         }
       }
@@ -9704,6 +9740,10 @@
             "type": "boolean",
             "readOnly": true
           },
+          "isLongRunning": {
+            "type": "boolean",
+            "readOnly": true
+          },
           "name": {
             "type": "string",
             "nullable": true,
@@ -9860,6 +9900,13 @@
           }
         },
         "additionalProperties": false
+      },
+      "DatabaseType": {
+        "enum": [
+          "sqLite",
+          "postgreSQL"
+        ],
+        "type": "string"
       },
       "DelayProfileResource": {
         "type": "object",
@@ -10837,6 +10884,10 @@
           "quality": {
             "$ref": "#/components/schemas/QualityModel"
           },
+          "releaseGroup": {
+            "type": "string",
+            "nullable": true
+          },
           "qualityWeight": {
             "type": "integer",
             "format": "int32"
@@ -10863,6 +10914,81 @@
           },
           "disableReleaseSwitching": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ManualImportUpdateResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "path": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "artistId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "albumId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "albumReleaseId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "tracks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrackResource"
+            },
+            "nullable": true
+          },
+          "trackIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "quality": {
+            "$ref": "#/components/schemas/QualityModel"
+          },
+          "releaseGroup": {
+            "type": "string",
+            "nullable": true
+          },
+          "downloadId": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalFile": {
+            "type": "boolean"
+          },
+          "replaceExistingFiles": {
+            "type": "boolean"
+          },
+          "disableReleaseSwitching": {
+            "type": "boolean"
+          },
+          "rejections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Rejection"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -11405,6 +11531,12 @@
           "onRename": {
             "type": "boolean"
           },
+          "onAlbumDelete": {
+            "type": "boolean"
+          },
+          "onArtistDelete": {
+            "type": "boolean"
+          },
           "onHealthIssue": {
             "type": "boolean"
           },
@@ -11430,6 +11562,12 @@
             "type": "boolean"
           },
           "supportsOnRename": {
+            "type": "boolean"
+          },
+          "supportsOnAlbumDelete": {
+            "type": "boolean"
+          },
+          "supportsOnArtistDelete": {
             "type": "boolean"
           },
           "supportsOnHealthIssue": {
@@ -11636,6 +11774,16 @@
             "nullable": true
           },
           "releaseHash": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PingResource": {
+        "type": "object",
+        "properties": {
+          "status": {
             "type": "string",
             "nullable": true
           }
@@ -12561,6 +12709,14 @@
         },
         "additionalProperties": false
       },
+      "RuntimeMode": {
+        "enum": [
+          "console",
+          "service",
+          "tray"
+        ],
+        "type": "string"
+      },
       "SecondaryAlbumType": {
         "type": "object",
         "properties": {
@@ -12615,6 +12771,121 @@
           "value": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SystemResource": {
+        "type": "object",
+        "properties": {
+          "appName": {
+            "type": "string",
+            "nullable": true
+          },
+          "instanceName": {
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "type": "string",
+            "nullable": true
+          },
+          "buildTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isDebug": {
+            "type": "boolean"
+          },
+          "isProduction": {
+            "type": "boolean"
+          },
+          "isAdmin": {
+            "type": "boolean"
+          },
+          "isUserInteractive": {
+            "type": "boolean"
+          },
+          "startupPath": {
+            "type": "string",
+            "nullable": true
+          },
+          "appData": {
+            "type": "string",
+            "nullable": true
+          },
+          "osName": {
+            "type": "string",
+            "nullable": true
+          },
+          "osVersion": {
+            "type": "string",
+            "nullable": true
+          },
+          "isNetCore": {
+            "type": "boolean"
+          },
+          "isLinux": {
+            "type": "boolean"
+          },
+          "isOsx": {
+            "type": "boolean"
+          },
+          "isWindows": {
+            "type": "boolean"
+          },
+          "isDocker": {
+            "type": "boolean"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/RuntimeMode"
+          },
+          "branch": {
+            "type": "string",
+            "nullable": true
+          },
+          "databaseType": {
+            "$ref": "#/components/schemas/DatabaseType"
+          },
+          "databaseVersion": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "authentication": {
+            "$ref": "#/components/schemas/AuthenticationType"
+          },
+          "migrationVersion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "urlBase": {
+            "type": "string",
+            "nullable": true
+          },
+          "runtimeVersion": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "runtimeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "packageVersion": {
+            "type": "string",
+            "nullable": true
+          },
+          "packageAuthor": {
+            "type": "string",
+            "nullable": true
+          },
+          "packageUpdateMechanism": {
+            "$ref": "#/components/schemas/UpdateMechanism"
+          },
+          "packageUpdateMechanismMessage": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
