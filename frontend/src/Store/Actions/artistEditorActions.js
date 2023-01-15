@@ -182,10 +182,18 @@ export const actionHandlers = handleThunks({
     promise.done((data) => {
       dispatch(batchActions([
         ...data.map((artist) => {
+
+          const {
+            images,
+            rootFolderPath,
+            statistics,
+            ...propsToUpdate
+          } = artist;
+
           return updateItem({
             id: artist.id,
             section: 'artist',
-            ...artist
+            ...propsToUpdate
           });
         }),
 
