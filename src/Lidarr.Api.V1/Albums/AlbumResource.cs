@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using Lidarr.Api.V1.Artist;
 using Lidarr.Http.REST;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.Music;
 using Swashbuckle.AspNetCore.Annotations;
@@ -79,7 +80,7 @@ namespace Lidarr.Api.V1.Albums
                 Title = model.Title,
                 Disambiguation = model.Disambiguation,
                 Overview = model.Overview,
-                Images = model.Images,
+                Images = model.Images.JsonClone(),
                 Links = model.Links,
                 Ratings = model.Ratings,
                 Duration = selectedRelease?.Duration ?? 0,

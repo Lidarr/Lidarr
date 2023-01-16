@@ -121,7 +121,7 @@ namespace NzbDrone.Core.Notifications.Gotify
 
             if (Settings.IncludeArtistPoster && artist != null)
             {
-                var poster = artist.Metadata.Value.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Poster)?.Url;
+                var poster = artist.Metadata.Value.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Poster)?.RemoteUrl;
 
                 if (poster != null)
                 {

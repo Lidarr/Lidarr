@@ -244,7 +244,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
 
                 var destination = Path.Combine(albumPath, filename + image.Extension);
 
-                yield return new ImageFileResult(destination, image.Url);
+                yield return new ImageFileResult(destination, image.RemoteUrl);
             }
         }
 

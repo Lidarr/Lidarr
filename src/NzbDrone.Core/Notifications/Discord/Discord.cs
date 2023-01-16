@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Notifications.Discord
             {
                 embed.Thumbnail = new DiscordImage
                 {
-                    Url = albums.First().Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Cover)?.Url
+                    Url = albums.First().Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Cover)?.RemoteUrl
                 };
             }
 
@@ -59,7 +59,7 @@ namespace NzbDrone.Core.Notifications.Discord
             {
                 embed.Image = new DiscordImage
                 {
-                    Url = artistMetadata.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Fanart)?.Url
+                    Url = artistMetadata.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Fanart)?.RemoteUrl
                 };
             }
 
@@ -156,7 +156,7 @@ namespace NzbDrone.Core.Notifications.Discord
             {
                 embed.Thumbnail = new DiscordImage
                 {
-                    Url = album.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Cover)?.Url
+                    Url = album.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Cover)?.RemoteUrl
                 };
             }
 
@@ -164,7 +164,7 @@ namespace NzbDrone.Core.Notifications.Discord
             {
                 embed.Image = new DiscordImage
                 {
-                    Url = artistMetadata.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Fanart)?.Url
+                    Url = artistMetadata.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Fanart)?.RemoteUrl
                 };
             }
 

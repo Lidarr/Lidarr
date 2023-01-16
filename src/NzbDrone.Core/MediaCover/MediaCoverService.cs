@@ -89,7 +89,6 @@ namespace NzbDrone.Core.MediaCover
                 // Artist isn't in Lidarr yet, map via a proxy to circument referrer issues
                 foreach (var mediaCover in covers)
                 {
-                    mediaCover.RemoteUrl = mediaCover.Url;
                     mediaCover.Url = _mediaCoverProxy.RegisterUrl(mediaCover.RemoteUrl);
                 }
 
@@ -109,8 +108,6 @@ namespace NzbDrone.Core.MediaCover
                 }
 
                 var filePath = GetCoverPath(entityId, coverEntity, mediaCover.CoverType, mediaCover.Extension, null);
-
-                mediaCover.RemoteUrl = mediaCover.Url;
 
                 if (coverEntity == MediaCoverEntity.Album)
                 {
@@ -156,7 +153,7 @@ namespace NzbDrone.Core.MediaCover
 
                 try
                 {
-                    var serverFileHeaders = _httpClient.Head(new HttpRequest(cover.Url) { AllowAutoRedirect = true }).Headers;
+                    var serverFileHeaders = _httpClient.Head(new HttpRequest(cover.RemoteUrl) { AllowAutoRedirect = true }).Headers;
 
                     alreadyExists = _coverExistsSpecification.AlreadyExists(serverFileHeaders.LastModified, serverFileHeaders.ContentLength, fileName);
 
@@ -244,7 +241,7 @@ namespace NzbDrone.Core.MediaCover
 
                 try
                 {
-                    var serverFileHeaders = _httpClient.Head(new HttpRequest(cover.Url) { AllowAutoRedirect = true }).Headers;
+                    var serverFileHeaders = _httpClient.Head(new HttpRequest(cover.RemoteUrl) { AllowAutoRedirect = true }).Headers;
 
                     alreadyExists = _coverExistsSpecification.AlreadyExists(serverFileHeaders.LastModified, serverFileHeaders.ContentLength, fileName);
 
@@ -275,8 +272,8 @@ namespace NzbDrone.Core.MediaCover
         {
             var fileName = GetCoverPath(artist.Id, MediaCoverEntity.Artist, cover.CoverType, cover.Extension);
 
-            _logger.Info("Downloading {0} for {1} {2}", cover.CoverType, artist, cover.Url);
-            _httpClient.DownloadFile(cover.Url, fileName);
+            _logger.Info("Downloading {0} for {1} {2}", cover.CoverType, artist, cover.RemoteUrl);
+            _httpClient.DownloadFile(cover.RemoteUrl, fileName);
 
             try
             {
@@ -292,8 +289,8 @@ namespace NzbDrone.Core.MediaCover
         {
             var fileName = GetCoverPath(album.Id, MediaCoverEntity.Album, cover.CoverType, cover.Extension, null);
 
-            _logger.Info("Downloading {0} for {1} {2}", cover.CoverType, album, cover.Url);
-            _httpClient.DownloadFile(cover.Url, fileName);
+            _logger.Info("Downloading {0} for {1} {2}", cover.CoverType, album, cover.RemoteUrl);
+            _httpClient.DownloadFile(cover.RemoteUrl, fileName);
 
             try
             {
