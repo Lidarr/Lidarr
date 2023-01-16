@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Test.MediaCoverTests
                 {
                     new MediaCover.MediaCover
                     {
-                        Url = "http://dummy.com/test" + extension,
+                        RemoteUrl = "http://dummy.com/test" + extension,
                         CoverType = MediaCoverTypes.Banner
                     }
                 };
@@ -75,7 +75,7 @@ namespace NzbDrone.Core.Test.MediaCoverTests
                 {
                     new MediaCover.MediaCover
                     {
-                        Url = "http://dummy.com/test" + extension,
+                        RemoteUrl = "http://dummy.com/test" + extension,
                         CoverType = MediaCoverTypes.Banner
                     }
                 };
@@ -99,7 +99,7 @@ namespace NzbDrone.Core.Test.MediaCoverTests
                 {
                     new MediaCover.MediaCover
                     {
-                        Url = "http://dummy.com/test" + extension,
+                        RemoteUrl = "http://dummy.com/test" + extension,
                         CoverType = MediaCoverTypes.Disc
                     }
                 };
@@ -123,7 +123,7 @@ namespace NzbDrone.Core.Test.MediaCoverTests
                 {
                     new MediaCover.MediaCover
                     {
-                        Url = "http://dummy.com/test" + extension,
+                        RemoteUrl = "http://dummy.com/test" + extension,
                         CoverType = MediaCoverTypes.Banner
                     }
                 };

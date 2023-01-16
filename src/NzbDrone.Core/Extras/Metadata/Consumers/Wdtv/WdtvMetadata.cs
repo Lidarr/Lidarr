@@ -5,10 +5,8 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using NLog;
-using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Extras.Metadata.Files;
-using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 
@@ -16,16 +14,10 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
 {
     public class WdtvMetadata : MetadataBase<WdtvMetadataSettings>
     {
-        private readonly IMapCoversToLocal _mediaCoverService;
-        private readonly IDiskProvider _diskProvider;
         private readonly Logger _logger;
 
-        public WdtvMetadata(IMapCoversToLocal mediaCoverService,
-                            IDiskProvider diskProvider,
-                            Logger logger)
+        public WdtvMetadata(Logger logger)
         {
-            _mediaCoverService = mediaCoverService;
-            _diskProvider = diskProvider;
             _logger = logger;
         }
 
