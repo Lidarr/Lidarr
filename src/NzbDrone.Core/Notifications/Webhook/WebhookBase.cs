@@ -3,6 +3,7 @@ using System.Linq;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Notifications.Webhook
@@ -20,7 +21,7 @@ namespace NzbDrone.Core.Notifications.Webhook
 
         public WebhookGrabPayload BuildOnGrabPayload(GrabMessage message)
         {
-            var remoteAlbum = message.Album;
+            var remoteAlbum = message.RemoteAlbum;
             var quality = message.Quality;
 
             return new WebhookGrabPayload
@@ -28,6 +29,7 @@ namespace NzbDrone.Core.Notifications.Webhook
                 EventType = WebhookEventType.Grab,
                 InstanceName = _configFileProvider.InstanceName,
                 Artist = new WebhookArtist(message.Artist),
+                Albums = remoteAlbum.Albums.Select(x => new WebhookAlbum(x)).ToList(),
                 Release = new WebhookRelease(quality, remoteAlbum),
                 DownloadClient = message.DownloadClientName,
                 DownloadClientType = message.DownloadClientType,
@@ -44,6 +46,7 @@ namespace NzbDrone.Core.Notifications.Webhook
                 EventType = WebhookEventType.Download,
                 InstanceName = _configFileProvider.InstanceName,
                 Artist = new WebhookArtist(message.Artist),
+                Album = new WebhookAlbum(message.Album),
                 Tracks = trackFiles.SelectMany(x => x.Tracks.Value.Select(y => new WebhookTrack(y))).ToList(),
                 TrackFiles = trackFiles.ConvertAll(x => new WebhookTrackFile(x)),
                 IsUpgrade = message.OldFiles.Any(),

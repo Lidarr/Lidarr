@@ -125,7 +125,7 @@ namespace NzbDrone.Core.Notifications
                 Message = GetMessage(message.Album.Artist, message.Album.Albums, message.Album.ParsedAlbumInfo.Quality),
                 Artist = message.Album.Artist,
                 Quality = message.Album.ParsedAlbumInfo.Quality,
-                Album = message.Album,
+                RemoteAlbum = message.Album,
                 DownloadClientName = message.DownloadClientName,
                 DownloadClientType = message.DownloadClient,
                 DownloadId = message.DownloadId

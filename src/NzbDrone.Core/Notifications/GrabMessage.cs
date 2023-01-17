@@ -8,7 +8,7 @@ namespace NzbDrone.Core.Notifications
     {
         public string Message { get; set; }
         public Artist Artist { get; set; }
-        public RemoteAlbum Album { get; set; }
+        public RemoteAlbum RemoteAlbum { get; set; }
         public QualityModel Quality { get; set; }
         public string DownloadClientType { get; set; }
         public string DownloadClientName { get; set; }

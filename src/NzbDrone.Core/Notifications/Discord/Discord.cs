@@ -26,7 +26,7 @@ namespace NzbDrone.Core.Notifications.Discord
         public override void OnGrab(GrabMessage message)
         {
             var artist = message.Artist;
-            var albums = message.Album.Albums;
+            var albums = message.RemoteAlbum.Albums;
             var artistMetadata = message.Artist.Metadata.Value;
 
             var embed = new Embed
@@ -86,16 +86,16 @@ namespace NzbDrone.Core.Notifications.Discord
                         break;
                     case DiscordGrabFieldType.Group:
                         discordField.Name = "Group";
-                        discordField.Value = message.Album.ParsedAlbumInfo.ReleaseGroup;
+                        discordField.Value = message.RemoteAlbum.ParsedAlbumInfo.ReleaseGroup;
                         break;
                     case DiscordGrabFieldType.Size:
                         discordField.Name = "Size";
-                        discordField.Value = BytesToString(message.Album.Release.Size);
+                        discordField.Value = BytesToString(message.RemoteAlbum.Release.Size);
                         discordField.Inline = true;
                         break;
                     case DiscordGrabFieldType.Release:
                         discordField.Name = "Release";
-                        discordField.Value = string.Format("```{0}```", message.Album.Release.Title);
+                        discordField.Value = string.Format("```{0}```", message.RemoteAlbum.Release.Title);
                         break;
                     case DiscordGrabFieldType.Links:
                         discordField.Name = "Links";

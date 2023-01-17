@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
         public override void OnGrab(GrabMessage message)
         {
             var artist = message.Artist;
-            var remoteAlbum = message.Album;
+            var remoteAlbum = message.RemoteAlbum;
             var releaseGroup = remoteAlbum.ParsedAlbumInfo.ReleaseGroup;
             var environmentVariables = new StringDictionary();
 
