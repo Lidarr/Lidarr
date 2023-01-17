@@ -855,5 +855,18 @@
     "AddImportListExclusionHelpText": "Estä tuontilistoja lisäämästä esittäjiä automaattisesti.",
     "FutureAlbumsData": "Seuraa albumeita, joita ei ole vielä julkaistu.",
     "MassAlbumsSearchWarning": "Haluatko varmasti etsiä '{0}' puuttuvaa albumia?",
-    "EditArtist": "Muokkaa esittäjää"
+    "EditArtist": "Muokkaa esittäjää",
+    "DeleteSelected": "Poista valitut",
+    "ClickToChangeReleaseGroup": "Paina vaihtaaksesi julkaisuryhmää",
+    "EnableAutomaticAddHelpText": "Lisää esittäjät/albumit, kun synkronoinnit suoritetaan käyttöliittymästä tai sovelluksen toimesta.",
+    "IndexerIdHelpText": "Määritä mitä tietolähteitä proofiili koskee",
+    "Inactive": "Ei aktiivinen",
+    "EnableRssHelpText": "Käytetään, kun sovellus etsii julkaisuja ajoitetusti RSS-synkronoinnilla.",
+    "AllMonitoringOptionHelpText": "Valvo esittäjiä ja jokaisen esittäjän kaikkia tuontilistan sisältämiä albumeita",
+    "ContinuingOnly": "Vain jatkuvat",
+    "EntityName": "Entiteetin nimi",
+    "EpisodeDoesNotHaveAnAbsoluteEpisodeNumber": "Jaksolla ei ole tarkkaa jaksonumeroa",
+    "IncludePreferredWhenRenaming": "Huomioi painotukset uudelleennimettäessä",
+    "IndexerIdHelpTextWarning": "Tietyn tietolähteen käyttö painotetuilla sanoilla saattaa aiheuttaa julkaisujen kaksoiskappaleiden sieppauksia.",
+    "AllowFingerprintingHelpText": "Tarkenna kappaleiden täsmäystarkkuutta piiloleimauksen avulla."
 }
