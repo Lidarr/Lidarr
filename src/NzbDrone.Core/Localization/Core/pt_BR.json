@@ -884,5 +884,11 @@
     "OnArtistDelete": "Ao Excluir Artista",
     "OnArtistDeleteHelpText": "Ao Excluir Artista",
     "OnAlbumDeleteHelpText": "Ao Excluir Álbum",
-    "ContinuingOnly": "Apenas continuar"
+    "ContinuingOnly": "Apenas continuar",
+    "DeleteSelected": "Excluir Selecionado",
+    "SelectReleaseGroup": "Selecionar Grupo do Lançamento",
+    "Inactive": "Inativo",
+    "ChooseImportMethod": "Escolher o Método de Importação",
+    "ClickToChangeReleaseGroup": "Clique para alterar o grupo do lançamento",
+    "EnableRssHelpText": "Será usado quando o Lidarr procurar periodicamente lançamentos via RSS Sync"
 }
