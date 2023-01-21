@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Core.Datastore
 {
@@ -100,7 +101,7 @@ namespace NzbDrone.Core.Datastore
                 var split = sortKey.Split('.');
                 if (split.Length != 2)
                 {
-                    return sortKey;
+                    return sortKey.FirstCharToUpper();
                 }
 
                 table = split[0];
@@ -109,12 +110,12 @@ namespace NzbDrone.Core.Datastore
 
             if (table != null && !TableMap.Values.Contains(table, StringComparer.OrdinalIgnoreCase))
             {
-                return sortKey;
+                return sortKey.FirstCharToUpper();
             }
 
             if (!_allowedOrderBy.Contains(sortKey))
             {
-                return sortKey;
+                return sortKey.FirstCharToUpper();
             }
 
             return _allowedOrderBy.First(x => x.Equals(sortKey, StringComparison.OrdinalIgnoreCase));
