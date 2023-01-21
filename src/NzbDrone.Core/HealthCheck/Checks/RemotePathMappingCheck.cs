@@ -50,7 +50,8 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 return new HealthCheck(GetType());
             }
 
-            var clients = _downloadClientProvider.GetDownloadClients();
+            // Only check clients not in failure status, those get another message
+            var clients = _downloadClientProvider.GetDownloadClients(true);
 
             foreach (var client in clients)
             {
