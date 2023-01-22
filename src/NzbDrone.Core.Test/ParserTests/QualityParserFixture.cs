@@ -120,6 +120,10 @@ namespace NzbDrone.Core.Test.ParserTests
         [TestCase("Beck.-.Guero.2005.[2016.Remastered].24bit.96kHz.LOSSLESS.FLAC", null, 0, 0)]
         [TestCase("[R.E.M - Lifes Rich Pageant(1986) [24bit192kHz 2016 Remaster]LOSSLESS FLAC]", null, 0, 0)]
         [TestCase("Kid_Cudi-Entergalactic-24BIT-WEBFLAC-2022-NACHOS", null, 0, 0)]
+        [TestCase("Foghat-Foghat_Live-24-192-WEB-FLAC-REMASTERED-2016-OBZEN", null, 0, 0)]
+        [TestCase("John Mellencamp-Plain Spoken From The Chicago Theatre-24-48-WEB-FLAC-2018-OBZEN", null, 0, 0)]
+        [TestCase("Nazareth-Close Enough For Rock N Roll-24-96-WEB-FLAC-REMASTERED-2021-OBZEN", null, 0, 0)]
+        [TestCase("Green_Day-Father_Of_All-24-44-WEB-FLAC-2020-OBZEN", null, 0, 0)]
         [TestCase("", "Flac Audio", 5057, 24)]
         public void should_parse_flac_24bit_quality(string title, string desc, int bitrate, int sampleSize)
         {
