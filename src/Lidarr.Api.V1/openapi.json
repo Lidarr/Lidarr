@@ -1410,6 +1410,183 @@
         }
       }
     },
+    "/api/v1/customformat/{id}": {
+      "get": {
+        "tags": [
+          "CustomFormat"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomFormatResource"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomFormatResource"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomFormatResource"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "CustomFormat"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomFormatResource"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomFormatResource"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomFormatResource"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomFormatResource"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "CustomFormat"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/customformat": {
+      "post": {
+        "tags": [
+          "CustomFormat"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomFormatResource"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomFormatResource"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomFormatResource"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomFormatResource"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "CustomFormat"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomFormatResource"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/customformat/schema": {
+      "get": {
+        "tags": [
+          "CustomFormat"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/v1/wanted/cutoff": {
       "get": {
         "tags": [
@@ -9645,6 +9822,13 @@
           "quality": {
             "$ref": "#/components/schemas/QualityModel"
           },
+          "customFormats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomFormatResource"
+            },
+            "nullable": true
+          },
           "date": {
             "type": "string",
             "format": "date-time"
@@ -9901,6 +10085,101 @@
         },
         "additionalProperties": false
       },
+      "CustomFormat": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "includeCustomFormatWhenRenaming": {
+            "type": "boolean"
+          },
+          "specifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ICustomFormatSpecification"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomFormatResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "includeCustomFormatWhenRenaming": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "specifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomFormatSpecificationSchema"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomFormatSpecificationSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "implementation": {
+            "type": "string",
+            "nullable": true
+          },
+          "implementationName": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoLink": {
+            "type": "string",
+            "nullable": true
+          },
+          "negate": {
+            "type": "boolean"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Field"
+            },
+            "nullable": true
+          },
+          "presets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomFormatSpecificationSchema"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "DatabaseType": {
         "enum": [
           "sqLite",
@@ -9929,6 +10208,16 @@
             "format": "int32"
           },
           "torrentDelay": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bypassIfHighestQuality": {
+            "type": "boolean"
+          },
+          "bypassIfAboveCustomFormatScore": {
+            "type": "boolean"
+          },
+          "minimumCustomFormatScore": {
             "type": "integer",
             "format": "int32"
           },
@@ -10215,6 +10504,13 @@
           "quality": {
             "$ref": "#/components/schemas/QualityModel"
           },
+          "customFormats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomFormatResource"
+            },
+            "nullable": true
+          },
           "qualityCutoffNotMet": {
             "type": "boolean"
           },
@@ -10458,6 +10754,37 @@
             "type": "string",
             "nullable": true,
             "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ICustomFormatSpecification": {
+        "type": "object",
+        "properties": {
+          "order": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "infoLink": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "implementationName": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "negate": {
+            "type": "boolean"
+          },
+          "required": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -11679,6 +12006,10 @@
           "releaseVersion": {
             "type": "string",
             "nullable": true
+          },
+          "releaseTitle": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -11800,6 +12131,41 @@
           "name": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProfileFormatItem": {
+        "type": "object",
+        "properties": {
+          "format": {
+            "$ref": "#/components/schemas/CustomFormat"
+          },
+          "score": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProfileFormatItemResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "format": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "score": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -12000,6 +12366,21 @@
             "type": "integer",
             "format": "int32"
           },
+          "minFormatScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cutoffFormatScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "formatItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfileFormatItem"
+            },
+            "nullable": true
+          },
           "items": {
             "type": "array",
             "items": {
@@ -12101,6 +12482,21 @@
               "$ref": "#/components/schemas/QualityProfileQualityItemResource"
             },
             "nullable": true
+          },
+          "minFormatScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cutoffFormatScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "formatItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfileFormatItemResource"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -12144,6 +12540,13 @@
           },
           "quality": {
             "$ref": "#/components/schemas/QualityModel"
+          },
+          "customFormats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomFormatResource"
+            },
+            "nullable": true
           },
           "size": {
             "type": "number",
@@ -12329,22 +12732,18 @@
             "type": "boolean"
           },
           "required": {
-            "type": "string",
-            "nullable": true
-          },
-          "ignored": {
-            "type": "string",
-            "nullable": true
-          },
-          "preferred": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/StringInt32KeyValuePair"
+              "type": "string"
             },
             "nullable": true
           },
-          "includePreferredWhenRenaming": {
-            "type": "boolean"
+          "ignored": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
           },
           "indexerId": {
             "type": "integer",
@@ -12477,7 +12876,14 @@
             "type": "integer",
             "format": "int32"
           },
-          "preferredWordScore": {
+          "customFormats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomFormatResource"
+            },
+            "nullable": true
+          },
+          "customFormatScore": {
             "type": "integer",
             "format": "int32"
           },
@@ -12760,20 +13166,6 @@
           "descending"
         ],
         "type": "string"
-      },
-      "StringInt32KeyValuePair": {
-        "type": "object",
-        "properties": {
-          "key": {
-            "type": "string",
-            "nullable": true
-          },
-          "value": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
       },
       "SystemResource": {
         "type": "object",
@@ -13196,6 +13588,10 @@
           "dateAdded": {
             "type": "string",
             "format": "date-time"
+          },
+          "originalFilePath": {
+            "type": "string",
+            "nullable": true
           },
           "sceneName": {
             "type": "string",
