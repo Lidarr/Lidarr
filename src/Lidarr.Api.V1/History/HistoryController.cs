@@ -12,6 +12,7 @@ using NzbDrone.Core.Datastore;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.History;
+using NzbDrone.Core.Music;
 
 namespace Lidarr.Api.V1.History
 {
@@ -22,16 +23,19 @@ namespace Lidarr.Api.V1.History
         private readonly ICustomFormatCalculationService _formatCalculator;
         private readonly IUpgradableSpecification _upgradableSpecification;
         private readonly IFailedDownloadService _failedDownloadService;
+        private readonly IArtistService _artistService;
 
         public HistoryController(IHistoryService historyService,
                              ICustomFormatCalculationService formatCalculator,
                              IUpgradableSpecification upgradableSpecification,
-                             IFailedDownloadService failedDownloadService)
+                             IFailedDownloadService failedDownloadService,
+                             IArtistService artistService)
         {
             _historyService = historyService;
             _formatCalculator = formatCalculator;
             _upgradableSpecification = upgradableSpecification;
             _failedDownloadService = failedDownloadService;
+            _artistService = artistService;
         }
 
         protected HistoryResource MapToResource(EntityHistory model, bool includeArtist, bool includeAlbum, bool includeTrack)
@@ -101,12 +105,24 @@ namespace Lidarr.Api.V1.History
         [HttpGet("artist")]
         public List<HistoryResource> GetArtistHistory(int artistId, int? albumId = null, EntityHistoryEventType? eventType = null, bool includeArtist = false, bool includeAlbum = false, bool includeTrack = false)
         {
+            var artist = _artistService.GetArtist(artistId);
+
             if (albumId.HasValue)
             {
-                return _historyService.GetByAlbum(albumId.Value, eventType).Select(h => MapToResource(h, includeArtist, includeAlbum, includeTrack)).ToList();
+                return _historyService.GetByAlbum(albumId.Value, eventType).Select(h =>
+                {
+                    h.Artist = artist;
+
+                    return MapToResource(h, includeArtist, includeAlbum, includeTrack);
+                }).ToList();
             }
 
-            return _historyService.GetByArtist(artistId, eventType).Select(h => MapToResource(h, includeArtist, includeAlbum, includeTrack)).ToList();
+            return _historyService.GetByArtist(artistId, eventType).Select(h =>
+            {
+                h.Artist = artist;
+
+                return MapToResource(h, includeArtist, includeAlbum, includeTrack);
+            }).ToList();
         }
 
         [HttpPost("failed/{id}")]
