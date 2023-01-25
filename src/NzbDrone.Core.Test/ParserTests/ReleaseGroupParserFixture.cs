@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Test.ParserTests
         [TestCase("Olafur.Arnalds-Remember-WEB-2018-ENTiTLED-Pre", "ENTiTLED")]
         [TestCase("Olafur.Arnalds-Remember-WEB-2018-ENTiTLED-postbot", "ENTiTLED")]
         [TestCase("Olafur.Arnalds-Remember-WEB-2018-ENTiTLED-xpost", "ENTiTLED")]
+        [TestCase("[TR24][OF] Good Charlotte - Generation Rx - 2018", null)]
 
         // [TestCase("", "")]
         public void should_parse_release_group(string title, string expected)
