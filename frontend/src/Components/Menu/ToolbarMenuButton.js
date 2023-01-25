@@ -9,7 +9,7 @@ import styles from './ToolbarMenuButton.css';
 function ToolbarMenuButton(props) {
   const {
     iconName,
-    indicator,
+    showIndicator,
     text,
     ...otherProps
   } = props;
@@ -26,7 +26,7 @@ function ToolbarMenuButton(props) {
         />
 
         {
-          indicator &&
+          showIndicator ?
             <span
               className={classNames(
                 styles.indicatorContainer,
@@ -37,7 +37,8 @@ function ToolbarMenuButton(props) {
                 name={icons.CIRCLE}
                 size={9}
               />
-            </span>
+            </span> :
+            null
         }
 
         <div className={styles.labelContainer}>
@@ -52,12 +53,12 @@ function ToolbarMenuButton(props) {
 
 ToolbarMenuButton.propTypes = {
   iconName: PropTypes.object.isRequired,
-  text: PropTypes.string,
-  indicator: PropTypes.bool.isRequired
+  showIndicator: PropTypes.bool.isRequired,
+  text: PropTypes.string
 };
 
 ToolbarMenuButton.defaultProps = {
-  indicator: false
+  showIndicator: false
 };
 
 export default ToolbarMenuButton;
