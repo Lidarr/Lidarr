@@ -94,6 +94,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
             if (message.OldFiles.Any())
             {
                 environmentVariables.Add("Lidarr_DeletedPaths", string.Join("|", message.OldFiles.Select(e => e.Path)));
+                environmentVariables.Add("Lidarr_DeletedDateAdded", string.Join("|", message.OldFiles.Select(e => e.DateAdded)));
             }
 
             ExecuteScript(environmentVariables);
