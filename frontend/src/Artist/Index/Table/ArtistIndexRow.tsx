@@ -26,6 +26,7 @@ import { executeCommand } from 'Store/Actions/commandActions';
 import getProgressBarKind from 'Utilities/Artist/getProgressBarKind';
 import formatBytes from 'Utilities/Number/formatBytes';
 import translate from 'Utilities/String/translate';
+import AlbumsCell from './AlbumsCell';
 import hasGrowableColumns from './hasGrowableColumns';
 import selectTableOptions from './selectTableOptions';
 import styles from './ArtistIndexRow.css';
@@ -164,6 +165,7 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
               artistType={artistType}
               monitored={monitored}
               status={status}
+              isSelectMode={isSelectMode}
               isSaving={isSaving}
               component={VirtualTableRowCell}
             />
@@ -288,9 +290,13 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
 
         if (name === 'albumCount') {
           return (
-            <VirtualTableRowCell key={name} className={styles[name]}>
-              {albumCount}
-            </VirtualTableRowCell>
+            <AlbumsCell
+              key={name}
+              className={styles[name]}
+              artistId={artistId}
+              albumCount={albumCount}
+              isSelectMode={isSelectMode}
+            />
           );
         }
 

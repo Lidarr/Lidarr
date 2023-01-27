@@ -2,15 +2,20 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { SelectActionType, useSelect } from 'App/SelectContext';
+import AppState from 'App/State/AppState';
 import { RENAME_ARTIST, RETAG_ARTIST } from 'Commands/commandNames';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
 import { kinds } from 'Helpers/Props';
-import { saveArtistEditor } from 'Store/Actions/artistActions';
+import {
+  saveArtistEditor,
+  updateArtistsMonitor,
+} from 'Store/Actions/artistActions';
 import { fetchRootFolders } from 'Store/Actions/settingsActions';
 import createCommandExecutingSelector from 'Store/Selectors/createCommandExecutingSelector';
 import translate from 'Utilities/String/translate';
 import getSelectedIds from 'Utilities/Table/getSelectedIds';
+import ChangeMonitoringModal from './AlbumStudio/ChangeMonitoringModal';
 import RetagArtistModal from './AudioTags/RetagArtistModal';
 import DeleteArtistModal from './Delete/DeleteArtistModal';
 import EditArtistModal from './Edit/EditArtistModal';
@@ -19,7 +24,7 @@ import TagsModal from './Tags/TagsModal';
 import styles from './ArtistIndexSelectFooter.css';
 
 const artistEditorSelector = createSelector(
-  (state) => state.artist,
+  (state: AppState) => state.artist,
   (artist) => {
     const { isSaving, isDeleting, deleteError } = artist;
 
@@ -48,9 +53,11 @@ function ArtistIndexSelectFooter() {
   const [isOrganizeModalOpen, setIsOrganizeModalOpen] = useState(false);
   const [isRetaggingModalOpen, setIsRetaggingModalOpen] = useState(false);
   const [isTagsModalOpen, setIsTagsModalOpen] = useState(false);
+  const [isMonitoringModalOpen, setIsMonitoringModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isSavingArtist, setIsSavingArtist] = useState(false);
   const [isSavingTags, setIsSavingTags] = useState(false);
+  const [isSavingMonitoring, setIsSavingMonitoring] = useState(false);
 
   const [selectState, selectDispatch] = useSelect();
   const { selectedState } = selectState;
@@ -124,6 +131,29 @@ function ArtistIndexSelectFooter() {
     [artistIds, dispatch]
   );
 
+  const onMonitoringPress = useCallback(() => {
+    setIsMonitoringModalOpen(true);
+  }, [setIsMonitoringModalOpen]);
+
+  const onMonitoringClose = useCallback(() => {
+    setIsMonitoringModalOpen(false);
+  }, [setIsMonitoringModalOpen]);
+
+  const onMonitoringSavePress = useCallback(
+    (monitor: string) => {
+      setIsSavingMonitoring(true);
+      setIsMonitoringModalOpen(false);
+
+      dispatch(
+        updateArtistsMonitor({
+          artistIds,
+          monitor,
+        })
+      );
+    },
+    [artistIds, dispatch]
+  );
+
   const onDeletePress = useCallback(() => {
     setIsDeleteModalOpen(true);
   }, [setIsDeleteModalOpen]);
@@ -136,6 +166,7 @@ function ArtistIndexSelectFooter() {
     if (!isSaving) {
       setIsSavingArtist(false);
       setIsSavingTags(false);
+      setIsSavingMonitoring(false);
     }
   }, [isSaving]);
 
@@ -188,6 +219,14 @@ function ArtistIndexSelectFooter() {
           >
             {translate('SetAppTags')}
           </SpinnerButton>
+
+          <SpinnerButton
+            isSpinning={isSaving && isSavingMonitoring}
+            isDisabled={!anySelected || isOrganizingArtist || isRetaggingArtist}
+            onPress={onMonitoringPress}
+          >
+            {translate('UpdateMonitoring')}
+          </SpinnerButton>
         </div>
 
         <div className={styles.deleteButtons}>
@@ -218,6 +257,13 @@ function ArtistIndexSelectFooter() {
         artistIds={artistIds}
         onApplyTagsPress={onApplyTagsPress}
         onModalClose={onTagsModalClose}
+      />
+
+      <ChangeMonitoringModal
+        isOpen={isMonitoringModalOpen}
+        artistIds={artistIds}
+        onSavePress={onMonitoringSavePress}
+        onModalClose={onMonitoringClose}
       />
 
       <OrganizeArtistModal

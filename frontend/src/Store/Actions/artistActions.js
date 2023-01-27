@@ -358,7 +358,8 @@ export const actionHandlers = handleThunks({
       artistIds,
       monitor,
       monitored,
-      monitorNewItems
+      monitorNewItems,
+      shouldFetchAlbumsAfterUpdate = false
     } = payload;
 
     const artists = [];
@@ -390,7 +391,9 @@ export const actionHandlers = handleThunks({
     }).request;
 
     promise.done((data) => {
-      dispatch(fetchAlbums({ artistId: artistIds[0] }));
+      if (shouldFetchAlbumsAfterUpdate) {
+        dispatch(fetchAlbums({ artistId: artistIds[0] }));
+      }
 
       dispatch(set({
         section,

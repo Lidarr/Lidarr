@@ -47,7 +47,8 @@ class MonitoringOptionsModalContentConnector extends Component {
   onSavePress = ({ monitor }) => {
     this.props.dispatchUpdateMonitoringOptions({
       artistIds: [this.props.artistId],
-      monitor
+      monitor,
+      shouldFetchAlbumsAfterUpdate: true
     });
   };
 
