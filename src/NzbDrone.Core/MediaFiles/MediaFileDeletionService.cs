@@ -164,7 +164,7 @@ namespace NzbDrone.Core.MediaFiles
                     {
                         _diskProvider.DeleteFolder(artist.Path, true);
                     }
-                    else if (_diskProvider.GetFiles(albumFolder, SearchOption.AllDirectories).Empty())
+                    else if (albumFolder.IsNotNullOrWhiteSpace() && _diskProvider.GetFiles(albumFolder, SearchOption.AllDirectories).Empty())
                     {
                         _diskProvider.RemoveEmptySubfolders(albumFolder);
                     }
