@@ -7,5 +7,7 @@ namespace Lidarr.Api.V1.TrackFiles
     {
         public List<int> TrackFileIds { get; set; }
         public QualityModel Quality { get; set; }
+        public string SceneName { get; set; }
+        public string ReleaseGroup { get; set; }
     }
 }

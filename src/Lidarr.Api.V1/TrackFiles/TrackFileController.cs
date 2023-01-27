@@ -11,6 +11,7 @@ using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.Parser;
 using NzbDrone.SignalR;
 using BadRequestException = Lidarr.Http.REST.BadRequestException;
 using HttpStatusCode = System.Net.HttpStatusCode;
@@ -111,6 +112,17 @@ namespace Lidarr.Api.V1.TrackFiles
         {
             var trackFile = _mediaFileService.Get(trackFileResource.Id);
             trackFile.Quality = trackFileResource.Quality;
+
+            if (trackFileResource.SceneName != null && SceneChecker.IsSceneTitle(trackFileResource.SceneName))
+            {
+                trackFile.SceneName = trackFileResource.SceneName;
+            }
+
+            if (trackFileResource.ReleaseGroup != null)
+            {
+                trackFile.ReleaseGroup = trackFileResource.ReleaseGroup;
+            }
+
             _mediaFileService.Update(trackFile);
             return Accepted(trackFile.Id);
         }
@@ -125,6 +137,16 @@ namespace Lidarr.Api.V1.TrackFiles
                 if (resource.Quality != null)
                 {
                     trackFile.Quality = resource.Quality;
+                }
+
+                if (resource.SceneName != null && SceneChecker.IsSceneTitle(resource.SceneName))
+                {
+                    trackFile.SceneName = resource.SceneName;
+                }
+
+                if (resource.ReleaseGroup != null)
+                {
+                    trackFile.ReleaseGroup = resource.ReleaseGroup;
                 }
             }
 
