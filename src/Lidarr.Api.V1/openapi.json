@@ -10910,7 +10910,8 @@
           "program",
           "spotify",
           "lastFm",
-          "other"
+          "other",
+          "advanced"
         ],
         "type": "string"
       },
