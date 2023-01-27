@@ -8,7 +8,6 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
-import split from 'Utilities/String/split';
 import translate from 'Utilities/String/translate';
 import TagDetailsDelayProfile from './TagDetailsDelayProfile';
 import styles from './TagDetailsModalContent.css';
@@ -131,7 +130,7 @@ function TagDetailsModalContent(props) {
                     >
                       <div>
                         {
-                          split(item.required).map((r) => {
+                          item.required.map((r) => {
                             return (
                               <Label
                                 key={r}
@@ -146,7 +145,7 @@ function TagDetailsModalContent(props) {
 
                       <div>
                         {
-                          split(item.ignored).map((i) => {
+                          item.ignored.map((i) => {
                             return (
                               <Label
                                 key={i}
