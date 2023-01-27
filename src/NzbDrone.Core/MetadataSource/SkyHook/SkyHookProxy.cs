@@ -227,14 +227,20 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
                 return httpResponse.Resource.SelectList(MapSearchResult);
             }
-            catch (HttpException)
+            catch (HttpException ex)
             {
-                throw new SkyHookException("Search for '{0}' failed. Unable to communicate with LidarrAPI.", title);
+                _logger.Warn(ex);
+                throw new SkyHookException("Search for '{0}' failed. Unable to communicate with LidarrAPI.", ex, title);
+            }
+            catch (WebException ex)
+            {
+                _logger.Warn(ex);
+                throw new SkyHookException("Search for '{0}' failed. Unable to communicate with SkyHook.", ex, title, ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Warn(ex, ex.Message);
-                throw new SkyHookException("Search for '{0}' failed. Invalid response received from LidarrAPI.", title);
+                throw new SkyHookException("Search for '{0}' failed. Invalid response received from LidarrAPI.", ex, title);
             }
         }
 
