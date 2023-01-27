@@ -79,6 +79,5 @@ namespace NzbDrone.Integration.Test.ApiTests.WantedTests
 
             result.Records.Should().NotBeEmpty();
         }
-
     }
 }
