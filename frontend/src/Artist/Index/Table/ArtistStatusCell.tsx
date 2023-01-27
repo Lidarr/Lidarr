@@ -14,6 +14,7 @@ interface ArtistStatusCellProps {
   artistType?: string;
   monitored: boolean;
   status: string;
+  isSelectMode: boolean;
   isSaving: boolean;
   component?: React.ElementType;
 }
@@ -25,12 +26,14 @@ function ArtistStatusCell(props: ArtistStatusCellProps) {
     artistType,
     monitored,
     status,
+    isSelectMode,
     isSaving,
     component: Component = VirtualTableRowCell,
     ...otherProps
   } = props;
 
-  const endedString = artistType === 'Person' ? 'Deceased' : 'Inactive';
+  const endedString =
+    artistType === 'Person' ? translate('Deceased') : translate('Inactive');
   const dispatch = useDispatch();
 
   const onMonitoredPress = useCallback(() => {
@@ -39,13 +42,24 @@ function ArtistStatusCell(props: ArtistStatusCellProps) {
 
   return (
     <Component className={className} {...otherProps}>
-      <MonitorToggleButton
-        className={styles.monitorToggle}
-        monitored={monitored}
-        size={14}
-        isSaving={isSaving}
-        onPress={onMonitoredPress}
-      />
+      {isSelectMode ? (
+        <MonitorToggleButton
+          className={styles.statusIcon}
+          monitored={monitored}
+          isSaving={isSaving}
+          onPress={onMonitoredPress}
+        />
+      ) : (
+        <Icon
+          className={styles.statusIcon}
+          name={monitored ? icons.MONITORED : icons.UNMONITORED}
+          title={
+            monitored
+              ? translate('ArtistIsMonitored')
+              : translate('ArtistIsUnmonitored')
+          }
+        />
+      )}
 
       <Icon
         className={styles.statusIcon}

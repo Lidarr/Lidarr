@@ -23,6 +23,7 @@ export interface Ratings {
 
 interface Artist extends ModelBase {
   added: string;
+  artistMetadataId: string;
   foreignArtistId: string;
   cleanName: string;
   ended: boolean;
@@ -37,7 +38,6 @@ interface Artist extends ModelBase {
   metadataProfileId: number;
   ratings: Ratings;
   rootFolderPath: string;
-  albums: Album[];
   sortName: string;
   statistics: Statistics;
   status: string;
