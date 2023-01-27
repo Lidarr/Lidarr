@@ -249,6 +249,12 @@ namespace NzbDrone.Core.Organizer
             string[] badCharacters = { "\\", "/", "<", ">", "?", "*", ":", "|", "\"" };
             string[] goodCharacters = { "+", "+", "", "", "!", "-", "-", "", "" };
 
+            // Replace a colon followed by a space with space dash space for a better appearance
+            if (replace)
+            {
+                result = result.Replace(": ", " - ");
+            }
+
             for (int i = 0; i < badCharacters.Length; i++)
             {
                 result = result.Replace(badCharacters[i], replace ? goodCharacters[i] : string.Empty);
