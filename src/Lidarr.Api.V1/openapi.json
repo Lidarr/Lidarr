@@ -13650,6 +13650,14 @@
           },
           "quality": {
             "$ref": "#/components/schemas/QualityModel"
+          },
+          "sceneName": {
+            "type": "string",
+            "nullable": true
+          },
+          "releaseGroup": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -13680,6 +13688,14 @@
           "dateAdded": {
             "type": "string",
             "format": "date-time"
+          },
+          "sceneName": {
+            "type": "string",
+            "nullable": true
+          },
+          "releaseGroup": {
+            "type": "string",
+            "nullable": true
           },
           "quality": {
             "$ref": "#/components/schemas/QualityModel"
