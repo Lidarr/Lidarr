@@ -88,9 +88,6 @@ namespace NzbDrone.Core.DecisionEngine
 
                         _aggregationService.Augment(remoteAlbum);
 
-                        remoteAlbum.CustomFormats = _formatCalculator.ParseCustomFormat(remoteAlbum, remoteAlbum.Release.Size);
-                        remoteAlbum.CustomFormatScore = remoteAlbum?.Artist?.QualityProfile?.Value.CalculateCustomFormatScore(remoteAlbum.CustomFormats) ?? 0;
-
                         // try parsing again using the search criteria, in case it parsed but parsed incorrectly
                         if ((remoteAlbum.Artist == null || remoteAlbum.Albums.Empty()) && searchCriteria != null)
                         {
@@ -129,6 +126,10 @@ namespace NzbDrone.Core.DecisionEngine
                         else
                         {
                             _aggregationService.Augment(remoteAlbum);
+
+                            remoteAlbum.CustomFormats = _formatCalculator.ParseCustomFormat(remoteAlbum, remoteAlbum.Release.Size);
+                            remoteAlbum.CustomFormatScore = remoteAlbum?.Artist?.QualityProfile?.Value.CalculateCustomFormatScore(remoteAlbum.CustomFormats) ?? 0;
+
                             remoteAlbum.DownloadAllowed = remoteAlbum.Albums.Any();
                             decision = GetDecisionForReport(remoteAlbum, searchCriteria);
                         }
