@@ -364,7 +364,7 @@ namespace NzbDrone.Core.Parser
                 {
                     try
                     {
-                        var result = ParseAlbumMatchCollection(match);
+                        var result = ParseAlbumMatchCollection(match, releaseTitle);
 
                         if (result != null)
                         {
@@ -459,7 +459,7 @@ namespace NzbDrone.Core.Parser
                         Logger.Trace(regex);
                         try
                         {
-                            var result = ParseAlbumMatchCollection(match);
+                            var result = ParseAlbumMatchCollection(match, releaseTitle);
 
                             if (result != null)
                             {
@@ -695,7 +695,7 @@ namespace NzbDrone.Core.Parser
             return parseResult.ArtistName;
         }
 
-        private static ParsedAlbumInfo ParseAlbumMatchCollection(MatchCollection matchCollection)
+        private static ParsedAlbumInfo ParseAlbumMatchCollection(MatchCollection matchCollection, string releaseTitle)
         {
             var artistName = matchCollection[0].Groups["artist"].Value.Replace('.', ' ').Replace('_', ' ');
             var albumTitle = matchCollection[0].Groups["album"].Value.Replace('.', ' ').Replace('_', ' ');
@@ -709,7 +709,10 @@ namespace NzbDrone.Core.Parser
 
             ParsedAlbumInfo result;
 
-            result = new ParsedAlbumInfo();
+            result = new ParsedAlbumInfo
+            {
+                ReleaseTitle = releaseTitle
+            };
 
             result.ArtistName = artistName;
             result.AlbumTitle = albumTitle;
