@@ -5,7 +5,6 @@ import BlocklistConnector from 'Activity/Blocklist/BlocklistConnector';
 import HistoryConnector from 'Activity/History/HistoryConnector';
 import QueueConnector from 'Activity/Queue/QueueConnector';
 import AlbumDetailsPageConnector from 'Album/Details/AlbumDetailsPageConnector';
-import AlbumStudioConnector from 'AlbumStudio/AlbumStudioConnector';
 import ArtistDetailsPageConnector from 'Artist/Details/ArtistDetailsPageConnector';
 import ArtistIndex from 'Artist/Index/ArtistIndex';
 import CalendarPageConnector from 'Calendar/CalendarPageConnector';
@@ -90,7 +89,15 @@ function AppRoutes(props) {
 
       <Route
         path="/albumstudio"
-        component={AlbumStudioConnector}
+        exact={true}
+        render={() => {
+          return (
+            <Redirect
+              to={getPathWithUrlBase('/')}
+              component={app}
+            />
+          );
+        }}
       />
 
       <Route
