@@ -575,7 +575,6 @@
   "MarkAsFailedMessageText": "Are you sure you want to mark '{0}' as failed?",
   "MassAlbumsCutoffUnmetWarning": "Are you sure you want to search for all '{0}' Cutoff Unmet albums?",
   "MassAlbumsSearchWarning": "Are you sure you want to search for all '{0}' missing albums?",
-  "MassEditor": "Mass Editor",
   "MaximumLimits": "Maximum Limits",
   "MaximumSize": "Maximum Size",
   "MaximumSizeHelpText": "Maximum size for a release to be grabbed in MB. Set to zero to set to unlimited.",

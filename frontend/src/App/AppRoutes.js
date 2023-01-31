@@ -7,7 +7,6 @@ import QueueConnector from 'Activity/Queue/QueueConnector';
 import AlbumDetailsPageConnector from 'Album/Details/AlbumDetailsPageConnector';
 import AlbumStudioConnector from 'AlbumStudio/AlbumStudioConnector';
 import ArtistDetailsPageConnector from 'Artist/Details/ArtistDetailsPageConnector';
-import ArtistEditorConnector from 'Artist/Editor/ArtistEditorConnector';
 import ArtistIndex from 'Artist/Index/ArtistIndex';
 import CalendarPageConnector from 'Calendar/CalendarPageConnector';
 import NotFound from 'Components/NotFound';
@@ -78,7 +77,15 @@ function AppRoutes(props) {
 
       <Route
         path="/artisteditor"
-        component={ArtistEditorConnector}
+        exact={true}
+        render={() => {
+          return (
+            <Redirect
+              to={getPathWithUrlBase('/')}
+              component={app}
+            />
+          );
+        }}
       />
 
       <Route
