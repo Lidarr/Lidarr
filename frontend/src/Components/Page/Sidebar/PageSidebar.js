@@ -30,10 +30,6 @@ const links = [
         to: '/add/search'
       },
       {
-        title: () => translate('MassEditor'),
-        to: '/artisteditor'
-      },
-      {
         title: () => translate('AlbumStudio'),
         to: '/albumstudio'
       },
