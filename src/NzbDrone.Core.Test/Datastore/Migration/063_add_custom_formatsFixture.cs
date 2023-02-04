@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 });
             });
 
-            var customFormats = db.Query<CustomFormat171>("SELECT \"Id\", \"Name\", \"IncludeCustomFormatWhenRenaming\", \"Specifications\" FROM \"CustomFormats\"");
+            var customFormats = db.Query<CustomFormat063>("SELECT \"Id\", \"Name\", \"IncludeCustomFormatWhenRenaming\", \"Specifications\" FROM \"CustomFormats\"");
 
             customFormats.Should().HaveCount(1);
             customFormats.First().Name.Should().Be("Unnamed_1");
@@ -68,7 +68,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 });
             });
 
-            var customFormats = db.Query<CustomFormat171>("SELECT \"Id\", \"Name\", \"IncludeCustomFormatWhenRenaming\", \"Specifications\" FROM \"CustomFormats\"");
+            var customFormats = db.Query<CustomFormat063>("SELECT \"Id\", \"Name\", \"IncludeCustomFormatWhenRenaming\", \"Specifications\" FROM \"CustomFormats\"");
 
             customFormats.Should().HaveCount(0);
         }
@@ -97,7 +97,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 });
             });
 
-            var customFormats = db.Query<CustomFormat171>("SELECT \"Id\", \"Name\", \"IncludeCustomFormatWhenRenaming\", \"Specifications\" FROM \"CustomFormats\"");
+            var customFormats = db.Query<CustomFormat063>("SELECT \"Id\", \"Name\", \"IncludeCustomFormatWhenRenaming\", \"Specifications\" FROM \"CustomFormats\"");
 
             customFormats.Should().HaveCount(1);
             customFormats.First().Name.Should().Be("Unnamed_1");
@@ -129,7 +129,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 });
             });
 
-            var releaseProfiles = db.Query<ReleaseProfile171>("SELECT \"Id\" FROM \"ReleaseProfiles\"");
+            var releaseProfiles = db.Query<ReleaseProfile063>("SELECT \"Id\" FROM \"ReleaseProfiles\"");
 
             releaseProfiles.Should().HaveCount(1);
         }
@@ -158,7 +158,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 });
             });
 
-            var releaseProfiles = db.Query<ReleaseProfile171>("SELECT \"Id\" FROM \"ReleaseProfiles\"");
+            var releaseProfiles = db.Query<ReleaseProfile063>("SELECT \"Id\" FROM \"ReleaseProfiles\"");
 
             releaseProfiles.Should().HaveCount(0);
         }
@@ -187,7 +187,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 });
             });
 
-            var customFormats = db.Query<CustomFormat171>("SELECT \"Id\", \"Name\", \"IncludeCustomFormatWhenRenaming\", \"Specifications\" FROM \"CustomFormats\"");
+            var customFormats = db.Query<CustomFormat063>("SELECT \"Id\", \"Name\", \"IncludeCustomFormatWhenRenaming\", \"Specifications\" FROM \"CustomFormats\"");
 
             customFormats.Should().HaveCount(1);
             customFormats.First().Name.Should().Be("Unnamed_1");
@@ -237,7 +237,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 });
             });
 
-            var customFormats = db.Query<CustomFormat171>("SELECT \"Id\", \"Name\", \"IncludeCustomFormatWhenRenaming\", \"Specifications\" FROM \"CustomFormats\"");
+            var customFormats = db.Query<CustomFormat063>("SELECT \"Id\", \"Name\", \"IncludeCustomFormatWhenRenaming\", \"Specifications\" FROM \"CustomFormats\"");
 
             customFormats.Should().HaveCount(2);
             customFormats.First().Name.Should().Be("Unnamed_1");
@@ -275,7 +275,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 });
             });
 
-            var customFormats = db.Query<CustomFormat171>("SELECT \"Id\", \"Name\", \"IncludeCustomFormatWhenRenaming\", \"Specifications\" FROM \"CustomFormats\"");
+            var customFormats = db.Query<CustomFormat063>("SELECT \"Id\", \"Name\", \"IncludeCustomFormatWhenRenaming\", \"Specifications\" FROM \"CustomFormats\"");
 
             customFormats.Should().HaveCount(2);
             customFormats.First().Name.Should().Be("Unnamed_1_0");
@@ -315,7 +315,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 });
             });
 
-            var customFormats = db.Query<QualityProfile171>("SELECT \"Id\", \"Name\", \"FormatItems\" FROM \"QualityProfiles\"");
+            var customFormats = db.Query<QualityProfile063>("SELECT \"Id\", \"Name\", \"FormatItems\" FROM \"QualityProfiles\"");
 
             customFormats.Should().HaveCount(1);
             customFormats.First().FormatItems.Should().HaveCount(1);
@@ -353,11 +353,73 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 });
             });
 
-            var customFormats = db.Query<QualityProfile171>("SELECT \"Id\", \"Name\", \"FormatItems\" FROM \"QualityProfiles\"");
+            var customFormats = db.Query<QualityProfile063>("SELECT \"Id\", \"Name\", \"FormatItems\" FROM \"QualityProfiles\"");
 
             customFormats.Should().HaveCount(1);
             customFormats.First().FormatItems.Should().HaveCount(1);
             customFormats.First().FormatItems.First().Score.Should().Be(0);
+        }
+
+        [Test]
+        public void should_migrate_case_sensitive_regex()
+        {
+            var db = WithMigrationTestDb(c =>
+            {
+                c.Insert.IntoTable("ReleaseProfiles").Row(new
+                {
+                    Preferred = new[]
+                    {
+                        new
+                        {
+                            Key = "/somestring/",
+                            Value = 2
+                        }
+                    }.ToJson(),
+                    Required = "[]",
+                    Ignored = "[]",
+                    Tags = "[]",
+                    IncludePreferredWhenRenaming = true,
+                    Enabled = true,
+                    IndexerId = 0
+                });
+            });
+
+            var customFormats = db.Query<CustomFormat063>("SELECT \"Id\", \"Name\", \"IncludeCustomFormatWhenRenaming\", \"Specifications\" FROM \"CustomFormats\"");
+
+            customFormats.Should().HaveCount(1);
+            customFormats.First().Specifications.Should().HaveCount(1);
+            customFormats.First().Specifications.First().Body.Value.Should().Be("somestring");
+        }
+
+        [Test]
+        public void should_migrate_case_insensitive_regex()
+        {
+            var db = WithMigrationTestDb(c =>
+            {
+                c.Insert.IntoTable("ReleaseProfiles").Row(new
+                {
+                    Preferred = new[]
+                    {
+                        new
+                        {
+                            Key = "/somestring/i",
+                            Value = 2
+                        }
+                    }.ToJson(),
+                    Required = "[]",
+                    Ignored = "[]",
+                    Tags = "[]",
+                    IncludePreferredWhenRenaming = true,
+                    Enabled = true,
+                    IndexerId = 0
+                });
+            });
+
+            var customFormats = db.Query<CustomFormat063>("SELECT \"Id\", \"Name\", \"IncludeCustomFormatWhenRenaming\", \"Specifications\" FROM \"CustomFormats\"");
+
+            customFormats.Should().HaveCount(1);
+            customFormats.First().Specifications.Should().HaveCount(1);
+            customFormats.First().Specifications.First().Body.Value.Should().Be("somestring");
         }
 
         [Test]
@@ -373,52 +435,52 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 });
             });
 
-            var customFormats = db.Query<NamingConfig171>("SELECT \"StandardTrackFormat\", \"MultiDiscTrackFormat\" FROM \"NamingConfig\"");
+            var customFormats = db.Query<NamingConfig063>("SELECT \"StandardTrackFormat\", \"MultiDiscTrackFormat\" FROM \"NamingConfig\"");
 
             customFormats.Should().HaveCount(1);
             customFormats.First().StandardTrackFormat.Should().Be("{Series Title} - S{season:00}E{episode:00} - {Episode Title} {Custom Formats } {Quality Full}");
             customFormats.First().MultiDiscTrackFormat.Should().Be("{Series Title} - {Air-Date} - {Episode Title} {Custom.Formats } {Quality Full}");
         }
 
-        private class NamingConfig171
+        private class NamingConfig063
         {
             public string StandardTrackFormat { get; set; }
             public string MultiDiscTrackFormat { get; set; }
         }
 
-        private class ReleaseProfile171
+        private class ReleaseProfile063
         {
             public int Id { get; set; }
         }
 
-        private class QualityProfile171
+        private class QualityProfile063
         {
             public int Id { get; set; }
             public string Name { get; set; }
-            public List<FormatItem171> FormatItems { get; set; }
+            public List<FormatItem063> FormatItems { get; set; }
         }
 
-        private class FormatItem171
+        private class FormatItem063
         {
             public int Format { get; set; }
             public int Score { get; set; }
         }
 
-        private class CustomFormat171
+        private class CustomFormat063
         {
             public int Id { get; set; }
             public string Name { get; set; }
             public bool IncludeCustomFormatWhenRenaming { get; set; }
-            public List<CustomFormatSpec171> Specifications { get; set; }
+            public List<CustomFormatSpec063> Specifications { get; set; }
         }
 
-        private class CustomFormatSpec171
+        private class CustomFormatSpec063
         {
             public string Type { get; set; }
-            public CustomFormatReleaseTitleSpec171 Body { get; set; }
+            public CustomFormatReleaseTitleSpec063 Body { get; set; }
         }
 
-        private class CustomFormatReleaseTitleSpec171
+        private class CustomFormatReleaseTitleSpec063
         {
             public int Order { get; set; }
             public string ImplementationName { get; set; }
