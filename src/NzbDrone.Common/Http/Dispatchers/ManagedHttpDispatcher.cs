@@ -206,6 +206,9 @@ namespace NzbDrone.Common.Http.Dispatchers
                     case "Content-Type":
                         AddContentHeader(webRequest, "Content-Type", header.Value);
                         break;
+                    case "Content-Encoding":
+                        AddContentHeader(webRequest, "Content-Encoding", header.Value);
+                        break;
                     case "Date":
                         webRequest.Headers.Remove("Date");
                         webRequest.Headers.Date = HttpHeader.ParseDateTime(header.Value);
