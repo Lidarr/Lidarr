@@ -170,6 +170,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
 
             if (artist == null && artistFiles.Count > 100)
             {
+                _logger.Warn("Unable to determine artist from folder name and found more than 100 files. Skipping parsing");
                 return ProcessDownloadDirectory(folder, artistFiles);
             }
 
