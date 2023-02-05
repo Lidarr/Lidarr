@@ -12,7 +12,7 @@
     "BackupNow": "Sauvegarder maintenant",
     "Backups": "Sauvegardes",
     "BindAddress": "Adresse d'attache",
-    "BindAddressHelpText": "Adresse IP4 valide ou '*' pour toutes les interfaces",
+    "BindAddressHelpText": "Adresse IPv4 valide ou '*' pour toutes les interfaces",
     "Branch": "Branche",
     "BypassProxyForLocalAddresses": "Contourner le proxy pour les adresses locales",
     "Cancel": "Annuler",
