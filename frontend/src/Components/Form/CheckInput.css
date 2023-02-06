@@ -54,8 +54,8 @@
 }
 
 .primaryIsChecked {
-  border-color: var(--primaryColor);
-  background-color: var(--primaryColor);
+  border-color: var(--lidarrGreen);
+  background-color: var(--lidarrGreen);
 
   &.isDisabled {
     opacity: 0.7;
