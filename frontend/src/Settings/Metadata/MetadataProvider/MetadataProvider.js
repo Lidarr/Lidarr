@@ -18,7 +18,6 @@ const writeAudioTagOptions = [
 
 function MetadataProvider(props) {
   const {
-    advancedSettings,
     isFetching,
     error,
     settings,
@@ -44,29 +43,6 @@ function MetadataProvider(props) {
       {
         hasSettings && !isFetching && !error &&
           <Form>
-            {
-              advancedSettings &&
-                <FieldSet legend={translate('MetadataProviderSource')}>
-                  <FormGroup
-                    advancedSettings={advancedSettings}
-                    isAdvanced={true}
-                  >
-                    <FormLabel>
-                      {translate('MetadataSource')}
-                    </FormLabel>
-
-                    <FormInputGroup
-                      type={inputTypes.TEXT}
-                      name="metadataSource"
-                      helpText={translate('MetadataSourceHelpText')}
-                      helpLink="https://wiki.servarr.com/lidarr/settings#metadata"
-                      onChange={onInputChange}
-                      {...settings.metadataSource}
-                    />
-                  </FormGroup>
-                </FieldSet>
-            }
-
             <FieldSet legend={translate('WriteMetadataToAudioFiles')}>
               <FormGroup>
                 <FormLabel>
