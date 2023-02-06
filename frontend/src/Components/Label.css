@@ -61,21 +61,21 @@
 }
 
 .primary {
-  border-color: var(--primaryColor);
-  background-color: var(--primaryColor);
+  border-color: var(--lidarrGreen);
+  background-color: var(--lidarrGreen);
 
   &.outline {
-    color: var(--primaryColor);
+    color: var(--lidarrGreen);
   }
 }
 
 .success {
-  border-color: var(--successColor);
-  background-color: var(--successColor);
+  border-color: var(--lidarrGreen);
+  background-color: var(--lidarrGreen);
   color: #eee;
 
   &.outline {
-    color: var(--successColor);
+    color: var(--lidarrGreen);
   }
 }
 
