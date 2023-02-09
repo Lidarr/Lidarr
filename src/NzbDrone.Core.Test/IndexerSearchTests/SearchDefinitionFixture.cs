@@ -20,8 +20,11 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
         [TestCase("American III: Solitary Man", "American+III+Solitary+Man")]
         [TestCase("Sad Clowns & Hillbillies", "Sad+Clowns+Hillbillies")]
         [TestCase("¿Quién sabe?", "Quien+sabe")]
-        [TestCase("Seal the Deal & Let’s Boogie", "Seal+the+Deal+Lets+Boogie")]
-        [TestCase("Section.80", "Section80")]
+        [TestCase("Seal the Deal & Let’s Boogie", "Seal+the+Deal+Let's+Boogie")]
+        [TestCase("Section.80", "Section+80")]
+        [TestCase("Anthology: Hey Ho, Let’s Go!", "Anthology+Hey+Ho+Let's+Go")]
+        [TestCase("Vankelsteg - Mot Okända Hembygder", "Vankelsteg+Mot+Okanda+Hembygder")]
+        [TestCase("The Beach Boys - The Beach Boys' Christmas Album", "Beach+Boys+The+Beach+Boys'+Christmas+Album")]
         public void should_replace_some_special_characters(string album, string expected)
         {
             Subject.AlbumTitle = album;
