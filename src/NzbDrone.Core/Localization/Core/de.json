@@ -140,7 +140,7 @@
     "ForMoreInformationOnTheIndividualDownloadClientsClickOnTheInfoButtons": "Für mehr Infomationen der individuellen Clients zum herunterladen, klicken Sie auf die Info-Knöpfe.",
     "ForMoreInformationOnTheIndividualIndexersClickOnTheInfoButtons": "Für mehr Infomationen klicke auf die Info-Knöpfe.",
     "ForMoreInformationOnTheIndividualListsClickOnTheInfoButtons": "Für mehr Infomationen klicke auf die Info-Knöpfe.",
-    "IncludeUnknownArtistItemsHelpText": "Einträge ohne eine Zuordnung in der Warteschlange anzeigen. Dies könnten gelöschte Filme oder alles andere mit Radarrs Downloadkategorie sein",
+    "IncludeUnknownArtistItemsHelpText": "Einträge ohne eine Zuordnung in der Warteschlange anzeigen. Dies könnten gelöschte Filme oder alles andere mit Lidarrs Downloadkategorie sein",
     "InteractiveSearch": "Interaktive Suche",
     "Interval": "Intervall",
     "IsCutoffCutoff": "Schwelle",
@@ -817,7 +817,7 @@
     "MediaManagement": "Medien",
     "NoResults": "Keine Ergebnisse gefunden",
     "Ok": "OK",
-    "RestoreBackupAdditionalInfo": "Hinweis: Während der wiederherstellung wird Radarr automatisch neugestartet und die Oberfläche neugelade.",
+    "RestoreBackupAdditionalInfo": "Hinweis: Während der wiederherstellung wird Lidarr automatisch neugestartet und die Oberfläche neugelade.",
     "SelectFolder": "Ordner auswählen",
     "AddConnection": "Sammlung bearbeiten",
     "EditMetadataProfile": "Metadaten Profil",
@@ -867,5 +867,12 @@
     "ShouldSearch": "Suche nach neuen Einträgen",
     "Theme": "Design",
     "ThemeHelpText": "Anwendungsdesign ändern, das 'Auto' Design passt sich an den Light/Dark-Mode deines Systems an. Inspiriert von Theme.Park",
-    "MonitorAlbumExistingOnlyWarning": "Dies ist eine einmalige Anpassung der Überwachungseinstellung für jedes Buch.  Verwenden Sie die Option unter Autor/Bearbeiten, um festzulegen, was bei neu hinzugefügten Büchern geschieht"
+    "MonitorAlbumExistingOnlyWarning": "Dies ist eine einmalige Anpassung der Überwachungseinstellung für jedes Buch.  Verwenden Sie die Option unter Autor/Bearbeiten, um festzulegen, was bei neu hinzugefügten Büchern geschieht",
+    "SelectReleaseGroup": "Releasgruppe auswählen",
+    "ChooseImportMethod": "Wähle eine Importmethode",
+    "ClickToChangeReleaseGroup": "Releasegruppe ändern",
+    "BypassIfHighestQuality": "Ignoriere wenn höchste Qualität",
+    "CustomFormatScore": "Eigenes Format Bewertungspunkte",
+    "EnableRssHelpText": "Wird benutzt, wenn Lidarr mittels RSS-Sync regelmäßig nach Releases schaut",
+    "MinimumCustomFormatScore": "Minimum der eigenen Formate Bewertungspunkte"
 }

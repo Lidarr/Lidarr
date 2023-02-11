@@ -586,5 +586,7 @@
     "AddImportListExclusion": "حذف استبعاد قائمة الاستيراد",
     "EditGroups": "تحرير المجموعات",
     "QualitiesHelpText": "الصفات الأعلى في القائمة هي الأفضل. الصفات داخل نفس المجموعة متساوية. فقط الصفات المحددة مطلوبة",
-    "DoneEditingGroups": "تم تحرير المجموعات"
+    "DoneEditingGroups": "تم تحرير المجموعات",
+    "CustomFormatScore": "درجة التنسيق المخصص",
+    "MinimumCustomFormatScore": "الحد الأدنى من نقاط التنسيق المخصص"
 }
