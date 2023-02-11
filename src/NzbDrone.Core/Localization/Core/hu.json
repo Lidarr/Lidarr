@@ -884,5 +884,12 @@
     "OnAlbumDeleteHelpText": "Album törlésekor",
     "OnAlbumDelete": "Album törlésekor",
     "OnArtistDelete": "Előadó törlésekor",
-    "OnArtistDeleteHelpText": "Előadó törlésekor"
+    "OnArtistDeleteHelpText": "Előadó törlésekor",
+    "ChooseImportMethod": "Importálási mód kiválasztása",
+    "ClickToChangeReleaseGroup": "Kiadási csoport módosítása",
+    "SelectReleaseGroup": "Kiadási csoport kiválasztása",
+    "BypassIfHighestQuality": "Kihagyás ha a legjobb minőség elérhető",
+    "EnableRssHelpText": "Akkor használatos, amikor a Radarr rendszeresen keres kiadásokat az RSS Sync segítségével",
+    "CustomFormatScore": "Egyéni formátum pontszám",
+    "MinimumCustomFormatScore": "Minimum Egyéni Formátum száma"
 }

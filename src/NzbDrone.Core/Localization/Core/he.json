@@ -595,5 +595,10 @@
     "EditGroups": "ערוך קבוצות",
     "Database": "מסד נתונים",
     "QualitiesHelpText": "תכונות גבוהות יותר ברשימה עדיפות יותר. איכויות באותה קבוצה שוות. רק איכויות בדוקות רצויות",
-    "DoneEditingGroups": "עריכת קבוצות הסתיימה"
+    "DoneEditingGroups": "עריכת קבוצות הסתיימה",
+    "DeleteTrackFileMessageText": "האם למחוק את {0}?",
+    "ClickToChangeReleaseGroup": "לחץ כדי לשנות קבוצת שחרור",
+    "BypassIfHighestQuality": "עקוף במידה והאיכות גבוהה יותר",
+    "CustomFormatScore": "ציון פורמט מותאם אישית",
+    "MinimumCustomFormatScore": "ציון פורמט מותאם אישית מינימלי"
 }

@@ -620,5 +620,11 @@
     "EditGroups": "Editar grupos",
     "Database": "Base de Datos",
     "QualitiesHelpText": "Se prefieren las calidades más altas en la lista. Las cualidades dentro del mismo grupo son iguales. Solo se buscan cualidades comprobadas",
-    "DoneEditingGroups": "Terminado de editar grupos"
+    "DoneEditingGroups": "Terminado de editar grupos",
+    "ChooseImportMethod": "Elegir Modo de Importación",
+    "ClickToChangeReleaseGroup": "Clic para cambiar el grupo de lanzamiento",
+    "SelectReleaseGroup": "Seleccionar Grupo De Lanzamiento",
+    "BypassIfHighestQuality": "Pasar sí es la calidad más alta",
+    "CustomFormatScore": "Puntuación de Formato personalizado",
+    "MinimumCustomFormatScore": "Puntuación mínima de formato personalizado"
 }

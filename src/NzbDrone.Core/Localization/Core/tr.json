@@ -586,5 +586,7 @@
     "ImportListExclusions": "İçe Aktarma Listesi Hariç Tutmasını Sil",
     "DoneEditingGroups": "Grupları Düzenleme Bitti",
     "QualitiesHelpText": "Listede daha yüksek nitelikler daha çok tercih edilir. Aynı grup içindeki nitelikler eşittir. Sadece kontrol edilen nitelikler istenir",
-    "EditGroups": "Grupları Düzenle"
+    "EditGroups": "Grupları Düzenle",
+    "CustomFormatScore": "Özel Biçim Puanı",
+    "MinimumCustomFormatScore": "Minimum Özel Biçim Puanı"
 }

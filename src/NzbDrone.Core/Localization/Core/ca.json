@@ -610,5 +610,13 @@
     "ImportListExclusions": "Suprimeix l'exclusió de la llista d'importació",
     "Database": "Base de dades",
     "DoneEditingGroups": "Acabada l'edició de grups",
-    "EditGroups": "Edita grups"
+    "EditGroups": "Edita grups",
+    "ChooseImportMethod": "Trieu el mode d'importació",
+    "StandardTrackFormat": "Format de pel·lícula estàndard",
+    "BypassIfHighestQuality": "Bypass si és de màxima qualitat",
+    "CustomFormatScore": "Puntuació de format personalitzat",
+    "MinimumCustomFormatScore": "Puntuació mínima de format personalitzat",
+    "ClickToChangeReleaseGroup": "Feu clic per canviar el grup de llançaments",
+    "SelectReleaseGroup": "Seleccioneu grup de llançament",
+    "ArtistAlbumClickToChangeTrack": "Feu clic per canviar la pel·lícula"
 }
