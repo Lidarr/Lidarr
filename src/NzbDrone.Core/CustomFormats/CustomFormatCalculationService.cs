@@ -58,7 +58,7 @@ namespace NzbDrone.Core.CustomFormats
         {
             var parsed = Parser.Parser.ParseAlbumTitle(blocklist.SourceTitle);
 
-            var episodeInfo = new ParsedAlbumInfo
+            var albumInfo = new ParsedAlbumInfo
             {
                 ArtistName = artist.Name,
                 ReleaseTitle = parsed?.ReleaseTitle ?? blocklist.SourceTitle,
@@ -68,7 +68,7 @@ namespace NzbDrone.Core.CustomFormats
 
             var input = new CustomFormatInput
             {
-                AlbumInfo = episodeInfo,
+                AlbumInfo = albumInfo,
                 Artist = artist,
                 Size = blocklist.Size ?? 0
             };
@@ -160,7 +160,7 @@ namespace NzbDrone.Core.CustomFormats
             else if (trackFile.OriginalFilePath.IsNotNullOrWhiteSpace())
             {
                 _logger.Trace("Using original file path for release title: {0}", Path.GetFileName(trackFile.OriginalFilePath));
-                releaseTitle = trackFile.OriginalFilePath;
+                releaseTitle = Path.GetFileName(trackFile.OriginalFilePath);
             }
             else if (trackFile.Path.IsNotNullOrWhiteSpace())
             {
@@ -168,7 +168,7 @@ namespace NzbDrone.Core.CustomFormats
                 releaseTitle = Path.GetFileName(trackFile.Path);
             }
 
-            var episodeInfo = new ParsedAlbumInfo
+            var albumInfo = new ParsedAlbumInfo
             {
                 ArtistName = artist.Name,
                 ReleaseTitle = releaseTitle,
@@ -178,7 +178,7 @@ namespace NzbDrone.Core.CustomFormats
 
             var input = new CustomFormatInput
             {
-                AlbumInfo = episodeInfo,
+                AlbumInfo = albumInfo,
                 Artist = artist,
                 Size = trackFile.Size,
                 Filename = Path.GetFileName(trackFile.Path)
