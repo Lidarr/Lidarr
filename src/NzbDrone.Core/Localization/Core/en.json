@@ -341,6 +341,7 @@
   "Episode": "Episode",
   "EpisodeDoesNotHaveAnAbsoluteEpisodeNumber": "Episode does not have an absolute episode number",
   "Error": "Error",
+  "ErrorLoadingContent": "There was an error loading this content",
   "ErrorLoadingContents": "Error loading contents",
   "ErrorLoadingPreviews": "Error loading previews",
   "ErrorRestoringBackup": "Error restoring backup",
