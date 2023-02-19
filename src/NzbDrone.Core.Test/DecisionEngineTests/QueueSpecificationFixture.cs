@@ -4,6 +4,7 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.Download.TrackedDownloads;
@@ -368,6 +369,32 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             GivenQueue(new List<RemoteAlbum> { remoteAlbum }, TrackedDownloadState.DownloadFailedPending);
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
+        }
+
+        [Test]
+        public void should_return_false_if_same_quality_non_proper_in_queue_and_download_propers_is_do_not_upgrade()
+        {
+            _remoteAlbum.ParsedAlbumInfo.Quality = new QualityModel(Quality.MP3_008, new Revision(2));
+            _artist.QualityProfile.Value.Cutoff = _remoteAlbum.ParsedAlbumInfo.Quality.Quality.Id;
+
+            Mocker.GetMock<IConfigService>()
+                .Setup(s => s.DownloadPropersAndRepacks)
+                .Returns(ProperDownloadTypes.DoNotUpgrade);
+
+            var remoteAlbum = Builder<RemoteAlbum>.CreateNew()
+                .With(r => r.Artist = _artist)
+                .With(r => r.Albums = new List<Album> { _album })
+                .With(r => r.ParsedAlbumInfo = new ParsedAlbumInfo
+                {
+                    Quality = new QualityModel(Quality.MP3_008)
+                })
+                .With(r => r.Release = _releaseInfo)
+                .With(r => r.CustomFormats = new List<CustomFormat>())
+                .Build();
+
+            GivenQueue(new List<RemoteAlbum> { remoteAlbum });
+
+            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
         }
     }
 }

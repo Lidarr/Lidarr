@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.Download.TrackedDownloads;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -15,16 +16,19 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
         private readonly IQueueService _queueService;
         private readonly UpgradableSpecification _upgradableSpecification;
         private readonly ICustomFormatCalculationService _formatService;
+        private readonly IConfigService _configService;
         private readonly Logger _logger;
 
         public QueueSpecification(IQueueService queueService,
                                   UpgradableSpecification upgradableSpecification,
                                   ICustomFormatCalculationService formatService,
+                                  IConfigService configService,
                                   Logger logger)
         {
             _queueService = queueService;
             _upgradableSpecification = upgradableSpecification;
             _formatService = formatService;
+            _configService = configService;
             _logger = logger;
         }
 
@@ -84,6 +88,15 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
                                                                subject.CustomFormats))
                 {
                     return Decision.Reject("Another release is queued and the Quality profile does not allow upgrades");
+                }
+
+                if (_upgradableSpecification.IsRevisionUpgrade(remoteAlbum.ParsedAlbumInfo.Quality, subject.ParsedAlbumInfo.Quality))
+                {
+                    if (_configService.DownloadPropersAndRepacks == ProperDownloadTypes.DoNotUpgrade)
+                    {
+                        _logger.Debug("Auto downloading of propers is disabled");
+                        return Decision.Reject("Proper downloading is disabled");
+                    }
                 }
             }
 
