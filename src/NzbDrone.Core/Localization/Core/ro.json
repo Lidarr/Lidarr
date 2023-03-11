@@ -587,5 +587,8 @@
     "ImportListExclusions": "Ștergeți excluderea listei de import",
     "EditGroups": "Editați grupurile",
     "QualitiesHelpText": "Calitățile mai mari din listă sunt mai preferate. Calitățile din același grup sunt egale. Se doresc doar calități verificate",
-    "DoneEditingGroups": "Efectuat editarea grupurilor"
+    "DoneEditingGroups": "Efectuat editarea grupurilor",
+    "CustomFormatScore": "Scorul formatului personalizat",
+    "MinimumCustomFormatScore": "Scor minim format personalizat",
+    "Absolute": "Absolut"
 }

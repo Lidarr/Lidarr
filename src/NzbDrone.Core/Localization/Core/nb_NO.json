@@ -14,7 +14,7 @@
     "BackupRetentionHelpText": "Automatiske sikkerhetskopier som er eldre enn oppbevaringsperioden, blir ryddet opp automatisk",
     "Backups": "Sikkerhetskopier",
     "BindAddress": "Bind adresse",
-    "BindAddressHelpText": "Gyldig IP4 -adresse eller \"*\" for alle grensesnitt",
+    "BindAddressHelpText": "Gyldig IPv4 -adresse, localhost eller \"*\" for alle grensesnitt",
     "Blocklist": "Svarteliste",
     "BlocklistHelpText": "Hindrer Lidarr i å automatisk gripe denne utgivelsen igjen",
     "BlocklistRelease": "Blacklist -utgivelse",
@@ -164,5 +164,10 @@
     "Peers": "Likemenn",
     "EditMetadataProfile": "metadataprofil",
     "Queued": "Kø",
-    "Replace": "Erstatt"
+    "Replace": "Erstatt",
+    "ChooseImportMethod": "Velg importeringsmodus",
+    "ClickToChangeReleaseGroup": "Klikk for å endre utgivelsegruppe",
+    "BypassIfHighestQuality": "Omgå hvis høyeste kvalitet",
+    "ApplicationURL": "Applikasjon URL",
+    "ApplicationUrlHelpText": "Denne applikasjonens eksterne URL inkludert http(s)://, port og URL base"
 }

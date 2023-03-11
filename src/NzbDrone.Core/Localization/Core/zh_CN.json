@@ -44,7 +44,7 @@
     "ApplyTagsHelpTexts4": "替换：用输入的标签替换标签（不输入标签将清除所有标签）",
     "Backups": "备份",
     "BindAddress": "绑定地址",
-    "BindAddressHelpText": "有效的 IP 地址，localhost，或以'*'代表所有地址",
+    "BindAddressHelpText": "有效的 IPv4 地址、localhost、或以'*'代表所有接口",
     "Branch": "分支",
     "BypassProxyForLocalAddresses": "对局域网地址不使用代理",
     "Cancel": "取消",
@@ -881,5 +881,13 @@
     "TheArtistFolderStrongpathstrongAndAllOfItsContentWillBeDeleted": "歌手目录 <strong>{path}</strong> 及目录下所有内容都将被删除。",
     "Theme": "主题",
     "ThemeHelpText": "改变应用界面主题，选择“自动”主题会通过操作系统主题来自适应白天黑夜模式。（受Theme.Park启发）",
-    "MassAlbumsCutoffUnmetWarning": "你确定要搜索所有 '{0}' 个缺失专辑么？"
+    "MassAlbumsCutoffUnmetWarning": "你确定要搜索所有 '{0}' 个缺失专辑么？",
+    "ChooseImportMethod": "选择导入模式",
+    "ClickToChangeReleaseGroup": "点击修改发布组",
+    "BypassIfHighestQuality": "如果质量最高，则绕过",
+    "CustomFormatScore": "自定义格式分数",
+    "MinimumCustomFormatScore": "最小自定义格式分数",
+    "EnableRssHelpText": "当Radarr定期通过RSS同步查找发布时使用",
+    "SelectReleaseGroup": "选择发布组",
+    "BypassIfAboveCustomFormatScore": "若高于自定义格式分数则绕过"
 }

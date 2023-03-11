@@ -53,7 +53,7 @@
     "BackupRetentionHelpText": "I backup automatici più vecchi del periodo di conservazione verranno eliminati automaticamente",
     "Backups": "I Backup",
     "BindAddress": "Indirizzo per il collegamento",
-    "BindAddressHelpText": "Indirizzo IPV4 valido o '*' per tutte le interfacce di rete",
+    "BindAddressHelpText": "Indirizzo IP valido, localhost o '*' per tutte le interfacce di rete",
     "BindAddressHelpTextWarning": "Richiede il riavvio per avere effetti",
     "Blocklist": "Lista Nera",
     "BlocklistHelpText": "Impedisci a Lidarr di acquisire automaticamente questo versione",
@@ -689,5 +689,10 @@
     "QualitiesHelpText": "Le qualità più in alto nell'elenco sono più preferite. Le qualità all'interno dello stesso gruppo sono uguali. Sono richieste solo qualità controllate",
     "StatusEndedContinuing": "Continuando",
     "DoneEditingGroups": "Finito di modificare i gruppi",
-    "EditGroups": "Modifica Gruppi"
+    "EditGroups": "Modifica Gruppi",
+    "ChooseImportMethod": "Selezionare Metodo di Importazione",
+    "BypassIfHighestQuality": "Aggira se è di Qualità Massima",
+    "CustomFormatScore": "Punteggio del Formato Personalizzato",
+    "MinimumCustomFormatScore": "Punteggio formato personalizzato minimo",
+    "ClickToChangeReleaseGroup": "Clicca per cambiare gruppo di rilascio"
 }

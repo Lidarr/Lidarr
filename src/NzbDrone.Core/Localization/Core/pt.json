@@ -358,7 +358,7 @@
     "UnableToLoadGeneralSettings": "Não foi possível carregar as definições gerais",
     "60MinutesSixty": "60 minutos: {0}",
     "APIKey": "Chave da API",
-    "About": "Informações",
+    "About": "Sobre",
     "AddListExclusion": "Adicionar exclusão de lista",
     "AddingTag": "A adicionar etiqueta",
     "AdvancedSettingsHiddenClickToShow": "Oculto, clique para mostrar",
@@ -679,5 +679,11 @@
     "QualitiesHelpText": "Qualidades mais acima na lista têm maior prioridade, as que estão no mesmo grupo têm prioridade igual. Apenas qualidades verificadas são desejadas",
     "Database": "Base de dados",
     "DoneEditingGroups": "Edição de grupos terminada",
-    "EditGroups": "Editar grupos"
+    "EditGroups": "Editar grupos",
+    "ChooseImportMethod": "Selecionar Modo de Importação",
+    "ClickToChangeReleaseGroup": "Clique para mudar o grupo de lançamento",
+    "BypassIfHighestQuality": "Ignorar se a qualidade for mais alta",
+    "CustomFormatScore": "Pontuação do formato personalizados",
+    "MinimumCustomFormatScore": "Pontuação mínima de formato personalizado",
+    "SelectReleaseGroup": "Selecionar Grupo de Lançamento"
 }

@@ -585,5 +585,7 @@
     "ImportListExclusions": "Xóa loại trừ danh sách nhập",
     "DoneEditingGroups": "Chỉnh sửa xong nhóm",
     "EditGroups": "Chỉnh sửa nhóm",
-    "QualitiesHelpText": "Các phẩm chất cao hơn trong danh sách được ưu tiên hơn. Các phẩm chất trong cùng một nhóm là ngang nhau. Chỉ những phẩm chất đã được kiểm tra mới được mong muốn"
+    "QualitiesHelpText": "Các phẩm chất cao hơn trong danh sách được ưu tiên hơn. Các phẩm chất trong cùng một nhóm là ngang nhau. Chỉ những phẩm chất đã được kiểm tra mới được mong muốn",
+    "CustomFormatScore": "Điểm định dạng tùy chỉnh",
+    "MinimumCustomFormatScore": "Điểm định dạng tùy chỉnh tối thiểu"
 }

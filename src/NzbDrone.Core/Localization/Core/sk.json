@@ -162,5 +162,8 @@
     "AddMetadataProfile": "profil metadát",
     "Events": "Udalosť",
     "Info": "Info",
-    "EditMetadataProfile": "profil metadát"
+    "EditMetadataProfile": "profil metadát",
+    "BypassIfHighestQuality": "Obísť pri najvyššej kvalite",
+    "ChooseImportMethod": "Zvoliť Import mód",
+    "ClickToChangeReleaseGroup": "Kliknutím zmeníte skupinu vydania"
 }

@@ -585,5 +585,7 @@
     "ImportListExclusions": "Eyða útilokun innflutningslista",
     "QualitiesHelpText": "Eiginleikar ofar á listanum eru ákjósanlegri. Gæði innan sama hóps eru jöfn. Aðeins hakaðir eiginleikar óskast",
     "DoneEditingGroups": "Búið að klippa hópa",
-    "EditGroups": "Breyta hópum"
+    "EditGroups": "Breyta hópum",
+    "MinimumCustomFormatScore": "Lágmarkseinkunn fyrir sérsniðið snið",
+    "CustomFormatScore": "Sérsniðið snið"
 }
