@@ -613,5 +613,13 @@
     "DoneEditingGroups": "Groepen Bewerken Voltooien",
     "EditGroups": "Bewerk Groepen",
     "EditConnection": "Bewerk collectie",
-    "EditMetadataProfile": "Metadata profiel toevoegen"
+    "EditMetadataProfile": "Metadata profiel toevoegen",
+    "SelectReleaseGroup": "Selecteer Release Groep",
+    "ChooseImportMethod": "Kies Importmodus",
+    "BypassIfHighestQuality": "Omzeilen indien de hoogste kwaliteit",
+    "CustomFormatScore": "Eigen Formaat Score",
+    "MetadataProfiles": "Metadata profiel toevoegen",
+    "MinimumCustomFormatScore": "Minimum Eigen Formaat Score",
+    "AddConnection": "Bewerk collectie",
+    "ClickToChangeReleaseGroup": "Klik om de releasegroep te wijzigen"
 }

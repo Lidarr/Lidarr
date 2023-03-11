@@ -605,5 +605,11 @@
     "Database": "Baza danych",
     "QualitiesHelpText": "Cechy wyższe na liście są bardziej preferowane. Cechy w tej samej grupie są równe. Potrzebne są tylko sprawdzone cechy",
     "DoneEditingGroups": "Zakończono edycję grup",
-    "EditGroups": "Edytuj grupy"
+    "EditGroups": "Edytuj grupy",
+    "SelectReleaseGroup": "Wybierz grupę wydającą",
+    "ChooseImportMethod": "Wybierz tryb importu",
+    "ClickToChangeReleaseGroup": "Kliknij, by zmienić grupę wydającą",
+    "CustomFormatScore": "Wynik w formacie niestandardowym",
+    "MinimumCustomFormatScore": "Minimalny wynik w formacie niestandardowym",
+    "BypassIfHighestQuality": "Pomiń, jeśli najwyższa jakość"
 }

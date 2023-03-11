@@ -481,7 +481,7 @@
     "UpgradeAllowedHelpText": "Si les qualitats estan desactivades no s'actualitzaran",
     "Year": "Any",
     "YesCancel": "Si, cancel·la",
-    "BindAddressHelpText": "Adreça IPv4 vàlida o '*' per a totes les interfícies",
+    "BindAddressHelpText": "Adreça IP vàlida, localhost o '*' per a totes les interfícies",
     "Activity": "Activitat",
     "AddDelayProfile": "Afegeix un perfil de retard",
     "Added": "Afegit",
@@ -618,5 +618,9 @@
     "MinimumCustomFormatScore": "Puntuació mínima de format personalitzat",
     "ClickToChangeReleaseGroup": "Feu clic per canviar el grup de llançaments",
     "SelectReleaseGroup": "Seleccioneu grup de llançament",
-    "ArtistAlbumClickToChangeTrack": "Feu clic per canviar la pel·lícula"
+    "ArtistAlbumClickToChangeTrack": "Feu clic per canviar la pel·lícula",
+    "QualitiesHelpText": "Les qualitats més altes a la llista són més preferides encara que no es comproven. Les qualitats dins d'un mateix grup són iguals. Només es volen qualitats verificades",
+    "Theme": "Tema",
+    "ThemeHelpText": "Canvieu el tema de la interfície d'usuari de l'aplicació, el tema \"Automàtic\" utilitzarà el tema del vostre sistema operatiu per configurar el mode clar o fosc. Inspirat en Theme.Park",
+    "EnableRssHelpText": "S'utilitzarà quan Radarr cerqui publicacions periòdicament mitjançant RSS Sync"
 }
