@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Modal from 'Components/Modal/Modal';
+import { sizes } from 'Helpers/Props';
 import ArtistInteractiveSearchModalContent from './ArtistInteractiveSearchModalContent';
 
 function ArtistInteractiveSearchModal(props) {
@@ -13,6 +14,7 @@ function ArtistInteractiveSearchModal(props) {
   return (
     <Modal
       isOpen={isOpen}
+      size={sizes.EXTRA_LARGE}
       closeOnBackgroundClick={false}
       onModalClose={onModalClose}
     >
