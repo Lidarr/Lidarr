@@ -25,6 +25,8 @@ interface Queue extends ModelBase {
   protocol: string;
   downloadClient: string;
   outputPath: string;
+  trackFileCount: number;
+  trackHasFileCount: number;
   artistId?: number;
   albumId?: number;
 }

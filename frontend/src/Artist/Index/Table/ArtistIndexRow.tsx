@@ -9,13 +9,13 @@ import ArtistNameLink from 'Artist/ArtistNameLink';
 import DeleteArtistModal from 'Artist/Delete/DeleteArtistModal';
 import EditArtistModalConnector from 'Artist/Edit/EditArtistModalConnector';
 import createArtistIndexItemSelector from 'Artist/Index/createArtistIndexItemSelector';
+import ArtistIndexProgressBar from 'Artist/Index/ProgressBar/ArtistIndexProgressBar';
 import ArtistStatusCell from 'Artist/Index/Table/ArtistStatusCell';
 import { ARTIST_SEARCH, REFRESH_ARTIST } from 'Commands/commandNames';
 import HeartRating from 'Components/HeartRating';
 import IconButton from 'Components/Link/IconButton';
 import Link from 'Components/Link/Link';
 import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
-import ProgressBar from 'Components/ProgressBar';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
 import VirtualTableSelectCell from 'Components/Table/Cells/VirtualTableSelectCell';
@@ -23,7 +23,6 @@ import Column from 'Components/Table/Column';
 import TagListConnector from 'Components/TagListConnector';
 import { icons } from 'Helpers/Props';
 import { executeCommand } from 'Store/Actions/commandActions';
-import getProgressBarKind from 'Utilities/Artist/getProgressBarKind';
 import formatBytes from 'Utilities/Number/formatBytes';
 import translate from 'Utilities/String/translate';
 import AlbumsCell from './AlbumsCell';
@@ -301,23 +300,18 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
         }
 
         if (name === 'trackProgress') {
-          const progress = trackCount
-            ? (trackFileCount / trackCount) * 100
-            : 100;
-
           return (
             <VirtualTableRowCell key={name} className={styles[name]}>
-              <ProgressBar
-                progress={progress}
-                kind={getProgressBarKind(status, monitored, progress)}
-                showText={true}
-                text={`${trackFileCount} / ${trackCount}`}
-                title={translate('ArtistProgressBarText', {
-                  trackFileCount,
-                  trackCount,
-                  totalTrackCount,
-                })}
+              <ArtistIndexProgressBar
+                artistId={artistId}
+                monitored={monitored}
+                status={status}
+                trackCount={trackCount}
+                trackFileCount={trackFileCount}
+                totalTrackCount={totalTrackCount}
                 width={125}
+                detailedProgressBar={true}
+                isStandalone={true}
               />
             </VirtualTableRowCell>
           );

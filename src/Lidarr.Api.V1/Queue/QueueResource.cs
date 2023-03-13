@@ -38,6 +38,8 @@ namespace Lidarr.Api.V1.Queue
         public bool DownloadClientHasPostImportCategory { get; set; }
         public string Indexer { get; set; }
         public string OutputPath { get; set; }
+        public int TrackFileCount { get; set; }
+        public int TrackHasFileCount { get; set; }
         public bool DownloadForced { get; set; }
     }
 
@@ -52,6 +54,8 @@ namespace Lidarr.Api.V1.Queue
 
             var customFormats = model.RemoteAlbum?.CustomFormats;
             var customFormatScore = model.Artist?.QualityProfile?.Value?.CalculateCustomFormatScore(customFormats) ?? 0;
+
+            var albumRelease = model.Album?.AlbumReleases?.Value?.SingleOrDefault(x => x.Monitored);
 
             return new QueueResource
             {
@@ -80,6 +84,8 @@ namespace Lidarr.Api.V1.Queue
                 DownloadClientHasPostImportCategory = model.DownloadClientHasPostImportCategory,
                 Indexer = model.Indexer,
                 OutputPath = model.OutputPath,
+                TrackFileCount = albumRelease?.Tracks?.Value?.Count ?? 0,
+                TrackHasFileCount = albumRelease?.Tracks?.Value?.Count(x => x.HasFile) ?? 0,
                 DownloadForced = model.DownloadForced
             };
         }

@@ -183,13 +183,15 @@ function ArtistIndexBanner(props: ArtistIndexBannerProps) {
       </div>
 
       <ArtistIndexProgressBar
+        artistId={artistId}
         monitored={monitored}
         status={status}
         trackCount={trackCount}
         trackFileCount={trackFileCount}
         totalTrackCount={totalTrackCount}
-        posterWidth={bannerWidth}
+        width={bannerWidth}
         detailedProgressBar={detailedProgressBar}
+        isStandalone={false}
       />
 
       {showTitle ? (
