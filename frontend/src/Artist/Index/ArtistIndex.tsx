@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SelectProvider } from 'App/SelectContext';
 import NoArtist from 'Artist/NoArtist';
@@ -22,6 +28,7 @@ import {
   setArtistView,
 } from 'Store/Actions/artistIndexActions';
 import { executeCommand } from 'Store/Actions/commandActions';
+import { fetchQueueDetails } from 'Store/Actions/queueActions';
 import scrollPositions from 'Store/scrollPositions';
 import createArtistClientSideCollectionItemsSelector from 'Store/Selectors/createArtistClientSideCollectionItemsSelector';
 import createCommandExecutingSelector from 'Store/Selectors/createCommandExecutingSelector';
@@ -48,7 +55,7 @@ import ArtistIndexTable from './Table/ArtistIndexTable';
 import ArtistIndexTableOptions from './Table/ArtistIndexTableOptions';
 import styles from './ArtistIndex.css';
 
-function getViewComponent(view) {
+function getViewComponent(view: string) {
   if (view === 'posters') {
     return ArtistIndexPosters;
   }
@@ -93,6 +100,10 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
   const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
   const [jumpToCharacter, setJumpToCharacter] = useState<string | null>(null);
   const [isSelectMode, setIsSelectMode] = useState(false);
+
+  useEffect(() => {
+    dispatch(fetchQueueDetails({ all: true }));
+  }, [dispatch]);
 
   const onRssSyncPress = useCallback(() => {
     dispatch(

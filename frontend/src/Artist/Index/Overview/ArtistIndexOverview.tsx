@@ -160,13 +160,15 @@ function ArtistIndexOverview(props: ArtistIndexOverviewProps) {
           </div>
 
           <ArtistIndexProgressBar
+            artistId={artistId}
             monitored={monitored}
             status={status}
             trackCount={trackCount}
             trackFileCount={trackFileCount}
             totalTrackCount={totalTrackCount}
-            posterWidth={posterWidth}
+            width={posterWidth}
             detailedProgressBar={overviewOptions.detailedProgressBar}
+            isStandalone={false}
           />
         </div>
 

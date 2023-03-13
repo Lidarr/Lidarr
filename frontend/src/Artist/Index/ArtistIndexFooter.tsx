@@ -113,6 +113,16 @@ export default function ArtistIndexFooter() {
                 />
                 <div>{translate('MissingTracksArtistNotMonitored')}</div>
               </div>
+
+              <div className={styles.legendItem}>
+                <div
+                  className={classNames(
+                    styles.downloading,
+                    enableColorImpairedMode && 'colorImpaired'
+                  )}
+                />
+                <div>{translate('ArtistIndexFooterDownloading')}</div>
+              </div>
             </div>
 
             <div className={styles.statistics}>
