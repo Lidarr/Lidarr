@@ -35,6 +35,10 @@ class EditArtistModalContent extends Component {
   //
   // Listeners
 
+  onCancelPress = () => {
+    this.setState({ isConfirmMoveModalOpen: false });
+  };
+
   onSavePress = () => {
     const {
       isPathChanging,
@@ -226,6 +230,7 @@ class EditArtistModalContent extends Component {
           originalPath={originalPath}
           destinationPath={path.value}
           isOpen={this.state.isConfirmMoveModalOpen}
+          onModalClose={this.onCancelPress}
           onSavePress={this.onSavePress}
           onMoveArtistPress={this.onMoveArtistPress}
         />

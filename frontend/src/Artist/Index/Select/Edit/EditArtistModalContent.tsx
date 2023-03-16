@@ -135,6 +135,10 @@ function EditArtistModalContent(props: EditArtistModalContentProps) {
     }
   }, [rootFolderPath, save]);
 
+  const onCancelPress = useCallback(() => {
+    setIsConfirmMoveModalOpen(false);
+  }, [setIsConfirmMoveModalOpen]);
+
   const onDoNotMoveArtistPress = useCallback(() => {
     setIsConfirmMoveModalOpen(false);
     save(false);
@@ -223,6 +227,7 @@ function EditArtistModalContent(props: EditArtistModalContentProps) {
       <MoveArtistModal
         isOpen={isConfirmMoveModalOpen}
         destinationRootFolder={rootFolderPath}
+        onModalClose={onCancelPress}
         onSavePress={onDoNotMoveArtistPress}
         onMoveArtistPress={onMoveArtistPress}
       />
