@@ -101,6 +101,10 @@ namespace NzbDrone.Core.Notifications.Discord
                         discordField.Name = "Links";
                         discordField.Value = GetLinksString(artist);
                         break;
+                    case DiscordGrabFieldType.Indexer:
+                        discordField.Name = "Indexer";
+                        discordField.Value = message.RemoteAlbum.Release.Indexer;
+                        break;
                 }
 
                 if (discordField.Name.IsNotNullOrWhiteSpace() && discordField.Value.IsNotNullOrWhiteSpace())
