@@ -54,7 +54,7 @@ namespace NzbDrone.Mono.Disk
 
         public override long? GetAvailableSpace(string path)
         {
-            Ensure.That(path, () => path).IsValidPath();
+            Ensure.That(path, () => path).IsValidPath(PathValidationType.CurrentOs);
 
             _logger.Debug($"path: {path}");
 
@@ -233,7 +233,7 @@ namespace NzbDrone.Mono.Disk
 
         public override long? GetTotalSize(string path)
         {
-            Ensure.That(path, () => path).IsValidPath();
+            Ensure.That(path, () => path).IsValidPath(PathValidationType.CurrentOs);
 
             var mount = GetMount(path);
 

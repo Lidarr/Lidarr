@@ -108,7 +108,7 @@ namespace NzbDrone.Core.MediaFiles
         {
             Ensure.That(trackFile, () => trackFile).IsNotNull();
             Ensure.That(artist, () => artist).IsNotNull();
-            Ensure.That(destinationFilePath, () => destinationFilePath).IsValidPath();
+            Ensure.That(destinationFilePath, () => destinationFilePath).IsValidPath(PathValidationType.CurrentOs);
 
             var trackFilePath = trackFile.Path;
 
