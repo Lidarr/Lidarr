@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { SelectActionType, useSelect } from 'App/SelectContext';
+import { useSelect } from 'App/SelectContext';
 import IconButton from 'Components/Link/IconButton';
 import { icons } from 'Helpers/Props';
 import styles from './ArtistIndexPosterSelect.css';
@@ -18,7 +18,7 @@ function ArtistIndexPosterSelect(props: ArtistIndexPosterSelectProps) {
       const shiftKey = event.nativeEvent.shiftKey;
 
       selectDispatch({
-        type: SelectActionType.ToggleSelected,
+        type: 'toggleSelected',
         id: artistId,
         isSelected: !isSelected,
         shiftKey,
