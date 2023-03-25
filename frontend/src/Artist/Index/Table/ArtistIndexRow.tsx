@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AlbumTitleLink from 'Album/AlbumTitleLink';
-import { SelectActionType, useSelect } from 'App/SelectContext';
+import { useSelect } from 'App/SelectContext';
 import { Statistics } from 'Artist/Artist';
 import ArtistBanner from 'Artist/ArtistBanner';
 import ArtistNameLink from 'Artist/ArtistNameLink';
@@ -129,7 +129,7 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
   const onSelectedChange = useCallback(
     ({ id, value, shiftKey }) => {
       selectDispatch({
-        type: SelectActionType.ToggleSelected,
+        type: 'toggleSelected',
         id,
         isSelected: value,
         shiftKey,

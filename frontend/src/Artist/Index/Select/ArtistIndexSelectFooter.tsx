@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { SelectActionType, useSelect } from 'App/SelectContext';
+import { useSelect } from 'App/SelectContext';
 import AppState from 'App/State/AppState';
 import { RENAME_ARTIST, RETAG_ARTIST } from 'Commands/commandNames';
 import SpinnerButton from 'Components/Link/SpinnerButton';
@@ -172,7 +172,7 @@ function ArtistIndexSelectFooter() {
 
   useEffect(() => {
     if (!isDeleting && !deleteError) {
-      selectDispatch({ type: SelectActionType.UnselectAll });
+      selectDispatch({ type: 'unselectAll' });
     }
   }, [isDeleting, deleteError, selectDispatch]);
 
