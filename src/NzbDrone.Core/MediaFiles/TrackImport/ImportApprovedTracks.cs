@@ -128,11 +128,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 _eventAggregator.PublishEvent(new AlbumEditedEvent(album, album));
             }
 
-            var qualifiedImports = decisions.Where(c => c.Approved)
-                .GroupBy(c => c.Item.Artist.Id, (i, s) => s
-                         .OrderByDescending(c => c.Item.Quality, new QualityModelComparer(s.First().Item.Artist.QualityProfile))
-                         .ThenByDescending(c => c.Item.Size))
-                .SelectMany(c => c)
+            var qualifiedImports = decisions
+                .Where(decision => decision.Approved)
+                .GroupBy(decision => decision.Item.Artist.Id)
+                .SelectMany(group => group
+                    .OrderByDescending(decision => decision.Item.Quality, new QualityModelComparer(group.First().Item.Artist.QualityProfile))
+                    .ThenByDescending(decision => decision.Item.Size))
                 .ToList();
 
             _logger.ProgressInfo($"Importing {qualifiedImports.Count} tracks");

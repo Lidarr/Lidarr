@@ -42,7 +42,7 @@ namespace NzbDrone.Core.Indexers
         {
             if (!SupportsRss)
             {
-                return new List<ReleaseInfo>();
+                return Array.Empty<ReleaseInfo>();
             }
 
             return FetchReleases(g => g.GetRecentRequests(), true);
@@ -52,7 +52,7 @@ namespace NzbDrone.Core.Indexers
         {
             if (!SupportsSearch)
             {
-                return new List<ReleaseInfo>();
+                return Array.Empty<ReleaseInfo>();
             }
 
             return FetchReleases(g => g.GetSearchRequests(searchCriteria));
@@ -62,7 +62,7 @@ namespace NzbDrone.Core.Indexers
         {
             if (!SupportsSearch)
             {
-                return new List<ReleaseInfo>();
+                return Array.Empty<ReleaseInfo>();
             }
 
             return FetchReleases(g => g.GetSearchRequests(searchCriteria));

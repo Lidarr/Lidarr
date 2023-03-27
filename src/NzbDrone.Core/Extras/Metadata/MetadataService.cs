@@ -145,7 +145,7 @@ namespace NzbDrone.Core.Extras.Metadata
 
             if (artistFolder.IsNullOrWhiteSpace() && albumFolder.IsNullOrWhiteSpace())
             {
-                return new List<MetadataFile>();
+                return Array.Empty<MetadataFile>();
             }
 
             var files = new List<MetadataFile>();

@@ -17,16 +17,17 @@ namespace NzbDrone.Common.Composition
             RegisterSQLiteResolver();
         }
 
-        public static IEnumerable<Assembly> Load(IEnumerable<string> assemblies)
+        public static IList<Assembly> Load(IList<string> assemblyNames)
         {
-            var toLoad = assemblies.ToList();
+            var toLoad = assemblyNames.ToList();
             toLoad.Add("Lidarr.Common");
             toLoad.Add(OsInfo.IsWindows ? "Lidarr.Windows" : "Lidarr.Mono");
 
             var startupPath = AppDomain.CurrentDomain.BaseDirectory;
 
-            return toLoad.Select(x =>
-                AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.Combine(startupPath, $"{x}.dll")));
+            return toLoad
+                .Select(x => AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.Combine(startupPath, $"{x}.dll")))
+                .ToList();
         }
 
         private static Assembly ContainerResolveEventHandler(object sender, ResolveEventArgs args)
