@@ -1,5 +1,6 @@
 import * as albums from './albumActions';
 import * as albumHistory from './albumHistoryActions';
+import * as albumSelection from './albumSelectionActions';
 import * as app from './appActions';
 import * as artist from './artistActions';
 import * as artistHistory from './artistHistoryActions';
@@ -36,6 +37,7 @@ export default [
   albums,
   trackFiles,
   albumHistory,
+  albumSelection,
   history,
   interactiveImportActions,
   oAuth,

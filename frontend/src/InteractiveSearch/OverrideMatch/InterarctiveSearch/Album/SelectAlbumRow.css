@@ -1,0 +1,5 @@
+.foreignAlbumId {
+  composes: cell from '~Components/Table/Cells/VirtualTableRowCell.css';
+
+  font-family: $monoSpaceFontFamily;
+}

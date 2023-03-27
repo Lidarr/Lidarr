@@ -6,6 +6,7 @@ using Lidarr.Http;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 using NzbDrone.Common.Cache;
+using NzbDrone.Common.EnsureThat;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Download;
@@ -81,6 +82,30 @@ namespace Lidarr.Api.V1.Indexers
 
             try
             {
+                if (release.ShouldOverride == true)
+                {
+                    Ensure.That(release.ArtistId, () => release.ArtistId).IsNotNull();
+                    Ensure.That(release.AlbumIds, () => release.AlbumIds).IsNotNull();
+                    Ensure.That(release.AlbumIds, () => release.AlbumIds).HasItems();
+                    Ensure.That(release.Quality, () => release.Quality).IsNotNull();
+
+                    // Clone the remote episode so we don't overwrite anything on the original
+                    remoteAlbum = new RemoteAlbum
+                    {
+                        Release = remoteAlbum.Release,
+                        ParsedAlbumInfo = remoteAlbum.ParsedAlbumInfo.JsonClone(),
+                        DownloadAllowed = remoteAlbum.DownloadAllowed,
+                        SeedConfiguration = remoteAlbum.SeedConfiguration,
+                        CustomFormats = remoteAlbum.CustomFormats,
+                        CustomFormatScore = remoteAlbum.CustomFormatScore,
+                        ReleaseSource = remoteAlbum.ReleaseSource
+                    };
+
+                    remoteAlbum.Artist = _artistService.GetArtist(release.ArtistId!.Value);
+                    remoteAlbum.Albums = _albumService.GetAlbums(release.AlbumIds);
+                    remoteAlbum.ParsedAlbumInfo.Quality = release.Quality;
+                }
+
                 if (remoteAlbum.Artist == null)
                 {
                     if (release.AlbumId.HasValue)

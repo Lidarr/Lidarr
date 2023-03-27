@@ -1,0 +1,11 @@
+.artistName {
+  composes: headerCell from '~Components/Table/VirtualTableHeaderCell.css';
+
+  flex: 4 0 200px;
+}
+
+.foreignArtistId {
+  composes: headerCell  from '~Components/Table/VirtualTableHeaderCell.css';
+
+  flex: 0 0 250px;
+}

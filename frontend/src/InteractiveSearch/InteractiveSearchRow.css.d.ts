@@ -4,13 +4,16 @@ interface CssExports {
   'age': string;
   'customFormatScore': string;
   'download': string;
+  'downloadIcon': string;
   'indexer': string;
+  'interactiveIcon': string;
+  'manualDownloadContent': string;
   'peers': string;
   'protocol': string;
   'quality': string;
   'rejected': string;
   'size': string;
-  'title': string;
+  'titleContent': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

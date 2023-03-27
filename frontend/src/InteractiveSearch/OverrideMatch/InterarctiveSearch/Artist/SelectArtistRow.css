@@ -1,0 +1,19 @@
+.cell {
+  composes: cell from '~Components/Table/Cells/VirtualTableRowCell.css';
+
+  display: flex;
+  align-items: center;
+}
+
+.artistName {
+  composes: cell;
+
+  flex: 4 0 200px;
+}
+
+.foreignArtistId {
+  composes: cell;
+
+  flex: 0 0 250px;
+  font-family: $monoSpaceFontFamily;
+}

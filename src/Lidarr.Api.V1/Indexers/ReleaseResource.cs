@@ -6,6 +6,7 @@ using Lidarr.Api.V1.CustomFormats;
 using Lidarr.Http.REST;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Qualities;
 
@@ -31,6 +32,8 @@ namespace Lidarr.Api.V1.Indexers
         public string AirDate { get; set; }
         public string ArtistName { get; set; }
         public string AlbumTitle { get; set; }
+        public int? MappedArtistId { get; set; }
+        public IEnumerable<ReleaseAlbumResource> MappedAlbumInfo { get; set; }
         public bool Approved { get; set; }
         public bool TemporarilyRejected { get; set; }
         public bool Rejected { get; set; }
@@ -52,20 +55,22 @@ namespace Lidarr.Api.V1.Indexers
 
         // Sent when queuing an unknown release
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-
-        // [JsonIgnore]
         public int? ArtistId { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-
-        // [JsonIgnore]
         public int? AlbumId { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public List<int> AlbumIds { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int? DownloadClientId { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string DownloadClient { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public bool? ShouldOverride { get; set; }
     }
 
     public static class ReleaseResourceMapper
@@ -96,6 +101,8 @@ namespace Lidarr.Api.V1.Indexers
                 ArtistName = parsedAlbumInfo.ArtistName,
                 AlbumTitle = parsedAlbumInfo.AlbumTitle,
                 Discography = parsedAlbumInfo.Discography,
+                MappedArtistId = remoteAlbum.Artist?.Id,
+                MappedAlbumInfo = remoteAlbum.Albums.Select(v => new ReleaseAlbumResource(v)),
                 Approved = model.Approved,
                 TemporarilyRejected = model.TemporarilyRejected,
                 Rejected = model.Rejected,
@@ -149,6 +156,22 @@ namespace Lidarr.Api.V1.Indexers
             model.PublishDate = resource.PublishDate.ToUniversalTime();
 
             return model;
+        }
+    }
+
+    public class ReleaseAlbumResource
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+
+        public ReleaseAlbumResource()
+        {
+        }
+
+        public ReleaseAlbumResource(Album album)
+        {
+            Id = album.Id;
+            Title = album.Title;
         }
     }
 }
