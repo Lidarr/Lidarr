@@ -13,6 +13,7 @@ namespace NzbDrone.Common.EnvironmentInfo
     public interface IAppFolderFactory
     {
         void Register();
+        void SetPermissions();
     }
 
     public class AppFolderFactory : IAppFolderFactory
@@ -55,7 +56,7 @@ namespace NzbDrone.Common.EnvironmentInfo
             InitializeMonoApplicationData();
         }
 
-        private void SetPermissions()
+        public void SetPermissions()
         {
             try
             {
