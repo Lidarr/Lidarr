@@ -150,7 +150,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
                         return new HealthCheck(GetType(), HealthCheckResult.Error, $"Lidarr failed to import a track.  Check your logs for details.");
                     }
 
-                    if (!dlpath.IsPathValid())
+                    if (!dlpath.IsPathValid(PathValidationType.CurrentOs))
                     {
                         if (!status.IsLocalhost)
                         {
