@@ -12,19 +12,19 @@ namespace NzbDrone.Core.Parser
     {
         private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(QualityParser));
 
-        private static readonly Regex ProperRegex = new Regex(@"\b(?<proper>proper)\b",
+        private static readonly Regex ProperRegex = new (@"\b(?<proper>proper)\b",
                                                                 RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static readonly Regex RepackRegex = new Regex(@"\b(?<repack>repack\d?|rerip\d?)\b",
+        private static readonly Regex RepackRegex = new (@"\b(?<repack>repack\d?|rerip\d?)\b",
                                                                 RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static readonly Regex VersionRegex = new Regex(@"\d[-._ ]?v(?<version>\d)[-._ ]|\[v(?<version>\d)\]|repack(?<version>\d)|rerip(?<version>\d)",
+        private static readonly Regex VersionRegex = new (@"\d[-._ ]?v(?<version>\d)[-._ ]|\[v(?<version>\d)\]|repack(?<version>\d)|rerip(?<version>\d)",
                                                                 RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static readonly Regex RealRegex = new Regex(@"\b(?<real>REAL)\b",
+        private static readonly Regex RealRegex = new (@"\b(?<real>REAL)\b",
                                                                 RegexOptions.Compiled);
 
-        private static readonly Regex BitRateRegex = new Regex(@"\b(?:(?<B096>96[ ]?kbps|96|[\[\(].*96.*[\]\)])|
+        private static readonly Regex BitRateRegex = new (@"\b(?:(?<B096>96[ ]?kbps|96|[\[\(].*96.*[\]\)])|
                                                                 (?<B128>128[ ]?kbps|128|[\[\(].*128.*[\]\)])|
                                                                 (?<B160>160[ ]?kbps|160|[\[\(].*160.*[\]\)]|q5)|
                                                                 (?<B192>192[ ]?kbps|192|[\[\(].*192.*[\]\)]|q6)|
@@ -36,12 +36,12 @@ namespace NzbDrone.Core.Parser
                                                                 (?<VBRV2>V2[ ]?kbps|V2|[\[\(].*V2.*[\]\)]))\b",
                                                                 RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
 
-        private static readonly Regex SampleSizeRegex = new Regex(@"\b(?:(?<S24>24[ ]?bit|tr24|24-(?:44|48|96|192)|[\[\(].*24bit.*[\]\)]))\b", RegexOptions.Compiled);
+        private static readonly Regex SampleSizeRegex = new (@"\b(?:(?<S24>24[ ]?bit|tr24|24-(?:44|48|96|192)|[\[\(].*24bit.*[\]\)]))\b", RegexOptions.Compiled);
 
-        private static readonly Regex CodecRegex = new Regex(@"\b(?:(?<MP1>MPEG Version \d(.5)? Audio, Layer 1|MP1)|(?<MP2>MPEG Version \d(.5)? Audio, Layer 2|MP2)|(?<MP3VBR>MP3.*VBR|MPEG Version \d(.5)? Audio, Layer 3 vbr)|(?<MP3CBR>MP3|MPEG Version \d(.5)? Audio, Layer 3)|(?<FLAC>(web)?flac|TR24)|(?<WAVPACK>wavpack|wv)|(?<ALAC>alac)|(?<WMA>WMA\d?)|(?<WAV>WAV|PCM)|(?<AAC>M4A|M4P|M4B|AAC|mp4a|MPEG-4 Audio(?!.*alac))|(?<OGG>OGG|OGA|Vorbis))\b|(?<APE>monkey's audio|[\[|\(].*\bape\b.*[\]|\)])|(?<OPUS>Opus Version \d(.5)? Audio|[\[|\(].*\bopus\b.*[\]|\)])",
+        private static readonly Regex CodecRegex = new (@"\b(?:(?<MP1>MPEG Version \d(.5)? Audio, Layer 1|MP1)|(?<MP2>MPEG Version \d(.5)? Audio, Layer 2|MP2)|(?<MP3VBR>MP3.*VBR|MPEG Version \d(.5)? Audio, Layer 3 vbr)|(?<MP3CBR>MP3|MPEG Version \d(.5)? Audio, Layer 3)|(?<FLAC>(web)?flac|TR24)|(?<WAVPACK>wavpack|wv)|(?<ALAC>alac)|(?<WMA>WMA\d?)|(?<WAV>WAV|PCM)|(?<AAC>M4A|M4P|M4B|AAC|mp4a|MPEG-4 Audio(?!.*alac))|(?<OGG>OGG|OGA|Vorbis))\b|(?<APE>monkey's audio|[\[|\(].*\bape\b.*[\]|\)])|(?<OPUS>Opus Version \d(.5)? Audio|[\[|\(].*\bopus\b.*[\]|\)])",
                                                                   RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static readonly Regex WebRegex = new Regex(@"\b(?<web>WEB)(?:\b|$|[ .])",
+        private static readonly Regex WebRegex = new (@"\b(?<web>WEB)(?:\b|$|[ .])",
                                                         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public static QualityModel ParseQuality(string name, string desc, int fileBitrate, int fileSampleSize = 0)
