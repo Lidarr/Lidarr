@@ -34,7 +34,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
                     return Decision.Reject($"Album match is not close enough: {1 - dist:P1} vs {1 - _albumThreshold:P0} {reasons}");
                 }
 
-                var worstTrackMatch = item.LocalTracks.Where(x => x.Distance != null).OrderByDescending(x => x.Distance.NormalizedDistance()).FirstOrDefault();
+                var worstTrackMatch = item.LocalTracks.Where(x => x.Distance != null).MaxBy(x => x.Distance.NormalizedDistance());
                 if (worstTrackMatch == null)
                 {
                     _logger.Debug($"No tracks matched");

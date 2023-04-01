@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Music
                 return true;
             }
 
-            var lastAlbum = _albumService.GetAlbumsByArtist(artist.Id).OrderByDescending(e => e.ReleaseDate).FirstOrDefault();
+            var lastAlbum = _albumService.GetAlbumsByArtist(artist.Id).MaxBy(e => e.ReleaseDate);
 
             if (lastAlbum != null && lastAlbum.ReleaseDate > DateTime.UtcNow.AddDays(-30))
             {

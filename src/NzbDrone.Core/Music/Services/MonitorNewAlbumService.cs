@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Music
 
             if (monitorNewItems == NewItemMonitorTypes.New)
             {
-                var newest = existingAlbums.OrderByDescending(x => x.ReleaseDate ?? DateTime.MinValue).FirstOrDefault()?.ReleaseDate ?? DateTime.MinValue;
+                var newest = existingAlbums.MaxBy(x => x.ReleaseDate ?? DateTime.MinValue)?.ReleaseDate ?? DateTime.MinValue;
 
                 return (addedAlbum.ReleaseDate ?? DateTime.MinValue) >= newest;
             }

@@ -155,8 +155,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private bool ShouldFingerprint(LocalAlbumRelease localAlbumRelease)
         {
             var worstTrackMatchDist = localAlbumRelease.TrackMapping?.Mapping
-                .OrderByDescending(x => x.Value.Item2.NormalizedDistance())
-                .First()
+                .MaxBy(x => x.Value.Item2.NormalizedDistance())
                 .Value.Item2.NormalizedDistance() ?? 1.0;
 
             if (localAlbumRelease.Distance.NormalizedDistance() > 0.15 ||

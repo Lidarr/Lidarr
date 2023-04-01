@@ -29,16 +29,12 @@ namespace NzbDrone.Core.History
 
         public EntityHistory MostRecentForAlbum(int albumId)
         {
-            return Query(h => h.AlbumId == albumId)
-                .OrderByDescending(h => h.Date)
-                .FirstOrDefault();
+            return Query(h => h.AlbumId == albumId).MaxBy(h => h.Date);
         }
 
         public EntityHistory MostRecentForDownloadId(string downloadId)
         {
-            return Query(h => h.DownloadId == downloadId)
-                .OrderByDescending(h => h.Date)
-                .FirstOrDefault();
+            return Query(h => h.DownloadId == downloadId).MaxBy(h => h.Date);
         }
 
         public List<EntityHistory> FindByDownloadId(string downloadId)

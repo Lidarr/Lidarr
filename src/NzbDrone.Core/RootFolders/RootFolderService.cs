@@ -143,8 +143,7 @@ namespace NzbDrone.Core.RootFolders
         public RootFolder GetBestRootFolder(string path)
         {
             return All().Where(r => PathEqualityComparer.Instance.Equals(r.Path, path) || r.Path.IsParentPath(path))
-                .OrderByDescending(r => r.Path.Length)
-                .FirstOrDefault();
+                .MaxBy(r => r.Path.Length);
         }
 
         public string GetBestRootFolderPath(string path)

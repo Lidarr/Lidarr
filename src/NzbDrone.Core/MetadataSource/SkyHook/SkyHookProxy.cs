@@ -461,7 +461,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 album.AlbumReleases = resource.Releases.Select(x => MapRelease(x, artistDict)).Where(x => x.TrackCount > 0).ToList();
 
                 // Monitor the release with most tracks
-                var mostTracks = album.AlbumReleases.Value.OrderByDescending(x => x.TrackCount).FirstOrDefault();
+                var mostTracks = album.AlbumReleases.Value.MaxBy(x => x.TrackCount);
                 if (mostTracks != null)
                 {
                     mostTracks.Monitored = true;

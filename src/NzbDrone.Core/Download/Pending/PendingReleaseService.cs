@@ -96,7 +96,7 @@ namespace NzbDrone.Core.Download.Pending
 
                     var albumIds = decision.RemoteAlbum.Albums.Select(e => e.Id);
 
-                    var existingReports = albumIds.SelectMany(v => alreadyPendingByAlbum[v] ?? Enumerable.Empty<PendingRelease>())
+                    var existingReports = albumIds.SelectMany(v => alreadyPendingByAlbum[v])
                                                     .Distinct().ToList();
 
                     var matchingReports = existingReports.Where(MatchingReleasePredicate(decision.RemoteAlbum.Release)).ToList();
@@ -253,8 +253,7 @@ namespace NzbDrone.Core.Download.Pending
 
             return artistReleases.Select(r => r.RemoteAlbum)
                                  .Where(r => r.Albums.Select(e => e.Id).Intersect(albumIds).Any())
-                                 .OrderByDescending(p => p.Release.AgeHours)
-                                 .FirstOrDefault();
+                                 .MaxBy(p => p.Release.AgeHours);
         }
 
         private List<PendingRelease> GetPendingReleases()
