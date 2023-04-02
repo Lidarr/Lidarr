@@ -105,7 +105,7 @@ namespace NzbDrone.Core.CustomFormats
             var albumInfo = new ParsedAlbumInfo
             {
                 ArtistName = localTrack.Artist.Name,
-                ReleaseTitle = localTrack.SceneName,
+                ReleaseTitle = localTrack.SceneName.IsNotNullOrWhiteSpace() ? localTrack.SceneName : Path.GetFileName(localTrack.Path),
                 Quality = localTrack.Quality,
                 ReleaseGroup = localTrack.ReleaseGroup
             };
@@ -114,7 +114,8 @@ namespace NzbDrone.Core.CustomFormats
             {
                 AlbumInfo = albumInfo,
                 Artist = localTrack.Artist,
-                Size = localTrack.Size
+                Size = localTrack.Size,
+                Filename = Path.GetFileName(localTrack.Path)
             };
 
             return ParseCustomFormat(input);
