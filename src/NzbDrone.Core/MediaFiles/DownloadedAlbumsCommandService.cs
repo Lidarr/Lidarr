@@ -4,6 +4,7 @@ using System.Linq;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Download.TrackedDownloads;
 using NzbDrone.Core.MediaFiles.Commands;
@@ -18,18 +19,21 @@ namespace NzbDrone.Core.MediaFiles
         private readonly ITrackedDownloadService _trackedDownloadService;
         private readonly IDiskProvider _diskProvider;
         private readonly ICompletedDownloadService _completedDownloadService;
+        private readonly ICommandResultReporter _commandResultReporter;
         private readonly Logger _logger;
 
         public DownloadedAlbumsCommandService(IDownloadedTracksImportService downloadedTracksImportService,
                                                 ITrackedDownloadService trackedDownloadService,
                                                 IDiskProvider diskProvider,
                                                 ICompletedDownloadService completedDownloadService,
+                                                ICommandResultReporter commandResultReporter,
                                                 Logger logger)
         {
             _downloadedTracksImportService = downloadedTracksImportService;
             _trackedDownloadService = trackedDownloadService;
             _diskProvider = diskProvider;
             _completedDownloadService = completedDownloadService;
+            _commandResultReporter = commandResultReporter;
             _logger = logger;
         }
 
@@ -77,9 +81,10 @@ namespace NzbDrone.Core.MediaFiles
 
             if (importResults == null || importResults.All(v => v.Result != ImportResultType.Imported))
             {
-                // Atm we don't report it as a command failure, coz that would cause the download to be failed.
-                // Changing the message won't do a thing either, coz it will get set to 'Completed' a msec later.
-                // message.SetMessage("Failed to import");
+                // Allow the command to complete successfully, but report as unsuccessful
+
+                _logger.ProgressDebug("Failed to import");
+                _commandResultReporter.Report(CommandResult.Unsuccessful);
             }
         }
     }
