@@ -11,7 +11,7 @@ interface AlbumStudioAlbumProps {
   artistId: number;
   albumId: number;
   title: string;
-  disambiguation: string;
+  disambiguation?: string;
   albumType: string;
   monitored: boolean;
   statistics: Statistics;

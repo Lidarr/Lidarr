@@ -28,9 +28,15 @@ function RetagArtistModalContent(props: RetagArtistModalContentProps) {
   const dispatch = useDispatch();
 
   const artistNames = useMemo(() => {
-    const artists = artistIds.map((id) => {
-      return allArtists.find((a) => a.id === id);
-    });
+    const artists = artistIds.reduce((acc: Artist[], id) => {
+      const a = allArtists.find((a) => a.id === id);
+
+      if (a) {
+        acc.push(a);
+      }
+
+      return acc;
+    }, []);
 
     const sorted = orderBy(artists, ['sortName']);
 

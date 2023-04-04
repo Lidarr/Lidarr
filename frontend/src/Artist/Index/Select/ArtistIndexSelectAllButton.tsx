@@ -6,7 +6,7 @@ import { icons } from 'Helpers/Props';
 interface ArtistIndexSelectAllButtonProps {
   label: string;
   isSelectMode: boolean;
-  overflowComponent: React.FunctionComponent;
+  overflowComponent: React.FunctionComponent<never>;
 }
 
 function ArtistIndexSelectAllButton(props: ArtistIndexSelectAllButtonProps) {

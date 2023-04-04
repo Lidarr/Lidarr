@@ -1,8 +1,9 @@
 import { throttle } from 'lodash';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import { createSelector } from 'reselect';
+import AppState from 'App/State/AppState';
 import Artist from 'Artist/Artist';
 import ArtistIndexRow from 'Artist/Index/Table/ArtistIndexRow';
 import ArtistIndexTableHeader from 'Artist/Index/Table/ArtistIndexTableHeader';
@@ -30,17 +31,17 @@ interface RowItemData {
 
 interface ArtistIndexTableProps {
   items: Artist[];
-  sortKey?: string;
+  sortKey: string;
   sortDirection?: SortDirection;
   jumpToCharacter?: string;
   scrollTop?: number;
-  scrollerRef: React.MutableRefObject<HTMLElement>;
+  scrollerRef: RefObject<HTMLElement>;
   isSelectMode: boolean;
   isSmallScreen: boolean;
 }
 
 const columnsSelector = createSelector(
-  (state) => state.artistIndex.columns,
+  (state: AppState) => state.artistIndex.columns,
   (columns) => columns
 );
 
@@ -93,7 +94,7 @@ function ArtistIndexTable(props: ArtistIndexTableProps) {
 
   const columns = useSelector(columnsSelector);
   const { showBanners } = useSelector(selectTableOptions);
-  const listRef: React.MutableRefObject<List> = useRef();
+  const listRef = useRef<List<RowItemData>>(null);
   const [measureRef, bounds] = useMeasure();
   const [size, setSize] = useState({ width: 0, height: 0 });
   const windowWidth = window.innerWidth;
@@ -104,7 +105,7 @@ function ArtistIndexTable(props: ArtistIndexTableProps) {
   }, [showBanners]);
 
   useEffect(() => {
-    const current = scrollerRef.current as HTMLElement;
+    const current = scrollerRef?.current as HTMLElement;
 
     if (isSmallScreen) {
       setSize({
@@ -128,8 +129,8 @@ function ArtistIndexTable(props: ArtistIndexTableProps) {
   }, [isSmallScreen, windowWidth, windowHeight, scrollerRef, bounds]);
 
   useEffect(() => {
-    const currentScrollListener = isSmallScreen ? window : scrollerRef.current;
-    const currentScrollerRef = scrollerRef.current;
+    const currentScrollerRef = scrollerRef.current as HTMLElement;
+    const currentScrollListener = isSmallScreen ? window : currentScrollerRef;
 
     const handleScroll = throttle(() => {
       const { offsetTop = 0 } = currentScrollerRef;
@@ -138,7 +139,7 @@ function ArtistIndexTable(props: ArtistIndexTableProps) {
           ? getWindowScrollTopPosition()
           : currentScrollerRef.scrollTop) - offsetTop;
 
-      listRef.current.scrollTo(scrollTop);
+      listRef.current?.scrollTo(scrollTop);
     }, 10);
 
     currentScrollListener.addEventListener('scroll', handleScroll);
@@ -167,8 +168,8 @@ function ArtistIndexTable(props: ArtistIndexTableProps) {
           scrollTop += offset;
         }
 
-        listRef.current.scrollTo(scrollTop);
-        scrollerRef.current.scrollTo(0, scrollTop);
+        listRef.current?.scrollTo(scrollTop);
+        scrollerRef?.current?.scrollTo(0, scrollTop);
       }
     }
   }, [jumpToCharacter, rowHeight, items, scrollerRef, listRef]);

@@ -1,11 +1,19 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import MenuContent from 'Components/Menu/MenuContent';
 import SortMenu from 'Components/Menu/SortMenu';
 import SortMenuItem from 'Components/Menu/SortMenuItem';
-import { align, sortDirections } from 'Helpers/Props';
+import { align } from 'Helpers/Props';
+import SortDirection from 'Helpers/Props/SortDirection';
+import translate from 'Utilities/String/translate';
 
-function ArtistIndexSortMenu(props) {
+interface SeriesIndexSortMenuProps {
+  sortKey?: string;
+  sortDirection?: SortDirection;
+  isDisabled: boolean;
+  onSortSelect(sortKey: string): unknown;
+}
+
+function ArtistIndexSortMenu(props: SeriesIndexSortMenuProps) {
   const { sortKey, sortDirection, isDisabled, onSortSelect } = props;
 
   return (
@@ -17,7 +25,7 @@ function ArtistIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Monitored/Status
+          {translate('MonitoredStatus')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -26,7 +34,7 @@ function ArtistIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Name
+          {translate('Name')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -35,7 +43,7 @@ function ArtistIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Type
+          {translate('Type')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -44,7 +52,7 @@ function ArtistIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Quality Profile
+          {translate('QualityProfile')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -53,7 +61,7 @@ function ArtistIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Metadata Profile
+          {translate('MetadataProfile')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -62,7 +70,7 @@ function ArtistIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Next Album
+          {translate('NextAlbum')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -71,7 +79,7 @@ function ArtistIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Last Album
+          {translate('Last Album')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -80,7 +88,7 @@ function ArtistIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Added
+          {translate('Added')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -89,7 +97,7 @@ function ArtistIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Albums
+          {translate('Albums')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -98,7 +106,7 @@ function ArtistIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Tracks
+          {translate('Tracks')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -107,7 +115,7 @@ function ArtistIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Track Count
+          {translate('TrackCount')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -116,7 +124,7 @@ function ArtistIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Path
+          {translate('Path')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -125,7 +133,7 @@ function ArtistIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Size on Disk
+          {translate('SizeOnDisk')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -134,18 +142,11 @@ function ArtistIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Tags
+          {translate('Tags')}
         </SortMenuItem>
       </MenuContent>
     </SortMenu>
   );
 }
-
-ArtistIndexSortMenu.propTypes = {
-  sortKey: PropTypes.string,
-  sortDirection: PropTypes.oneOf(sortDirections.all),
-  isDisabled: PropTypes.bool.isRequired,
-  onSortSelect: PropTypes.func.isRequired,
-};
 
 export default ArtistIndexSortMenu;

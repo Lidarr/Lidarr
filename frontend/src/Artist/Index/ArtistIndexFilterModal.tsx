@@ -23,7 +23,13 @@ function createFilterBuilderPropsSelector() {
   );
 }
 
-export default function ArtistIndexFilterModal(props) {
+interface ArtistIndexFilterModalProps {
+  isOpen: boolean;
+}
+
+export default function ArtistIndexFilterModal(
+  props: ArtistIndexFilterModalProps
+) {
   const sectionItems = useSelector(createArtistSelector());
   const filterBuilderProps = useSelector(createFilterBuilderPropsSelector());
   const customFilterType = 'artist';
@@ -31,7 +37,7 @@ export default function ArtistIndexFilterModal(props) {
   const dispatch = useDispatch();
 
   const dispatchSetFilter = useCallback(
-    (payload) => {
+    (payload: unknown) => {
       dispatch(setArtistFilter(payload));
     },
     [dispatch]
@@ -39,6 +45,7 @@ export default function ArtistIndexFilterModal(props) {
 
   return (
     <FilterModal
+      // TODO: Don't spread all the props
       {...props}
       sectionItems={sectionItems}
       filterBuilderProps={filterBuilderProps}

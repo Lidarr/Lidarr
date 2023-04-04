@@ -23,6 +23,7 @@ import Column from 'Components/Table/Column';
 import TagListConnector from 'Components/TagListConnector';
 import { icons } from 'Helpers/Props';
 import { executeCommand } from 'Store/Actions/commandActions';
+import { SelectStateInputProps } from 'typings/props';
 import formatBytes from 'Utilities/Number/formatBytes';
 import firstCharToUpper from 'Utilities/String/firstCharToUpper';
 import translate from 'Utilities/String/translate';
@@ -128,7 +129,7 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
   }, [setIsDeleteArtistModalOpen]);
 
   const onSelectedChange = useCallback(
-    ({ id, value, shiftKey }) => {
+    ({ id, value, shiftKey }: SelectStateInputProps) => {
       selectDispatch({
         type: 'toggleSelected',
         id,
@@ -219,7 +220,7 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
         if (name === 'qualityProfileId') {
           return (
             <VirtualTableRowCell key={name} className={styles[name]}>
-              {qualityProfile.name}
+              {qualityProfile?.name ?? ''}
             </VirtualTableRowCell>
           );
         }
@@ -227,7 +228,7 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
         if (name === 'metadataProfileId') {
           return (
             <VirtualTableRowCell key={name} className={styles[name]}>
-              {metadataProfile.name}
+              {metadataProfile?.name ?? ''}
             </VirtualTableRowCell>
           );
         }
@@ -280,6 +281,8 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
 
         if (name === 'added') {
           return (
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore ts(2739)
             <RelativeDateCellConnector
               key={name}
               className={styles[name]}

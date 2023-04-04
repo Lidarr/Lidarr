@@ -59,7 +59,7 @@ function ArtistIndexBannerOptionsModalContent(
   const dispatch = useDispatch();
 
   const onBannerOptionChange = useCallback(
-    ({ name, value }) => {
+    ({ name, value }: { name: string; value: unknown }) => {
       dispatch(setArtistBannerOption({ [name]: value }));
     },
     [dispatch]

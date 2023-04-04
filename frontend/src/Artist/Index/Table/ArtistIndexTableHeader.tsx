@@ -15,6 +15,7 @@ import {
   setArtistSort,
   setArtistTableOption,
 } from 'Store/Actions/artistIndexActions';
+import { CheckInputChanged } from 'typings/inputs';
 import hasGrowableColumns from './hasGrowableColumns';
 import styles from './ArtistIndexTableHeader.css';
 
@@ -32,21 +33,21 @@ function ArtistIndexTableHeader(props: ArtistIndexTableHeaderProps) {
   const [selectState, selectDispatch] = useSelect();
 
   const onSortPress = useCallback(
-    (value) => {
+    (value: string) => {
       dispatch(setArtistSort({ sortKey: value }));
     },
     [dispatch]
   );
 
   const onTableOptionChange = useCallback(
-    (payload) => {
+    (payload: unknown) => {
       dispatch(setArtistTableOption(payload));
     },
     [dispatch]
   );
 
   const onSelectAllChange = useCallback(
-    ({ value }) => {
+    ({ value }: CheckInputChanged) => {
       selectDispatch({
         type: value ? 'selectAll' : 'unselectAll',
       });
@@ -94,6 +95,8 @@ function ArtistIndexTableHeader(props: ArtistIndexTableHeaderProps) {
           <VirtualTableHeaderCell
             key={name}
             className={classNames(
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
               styles[name],
               name === 'sortName' && showBanners && styles.banner,
               name === 'sortName' &&

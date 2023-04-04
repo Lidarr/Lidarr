@@ -1,14 +1,50 @@
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import Album from 'Album/Album';
 import { icons } from 'Helpers/Props';
 import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
 import dimensions from 'Styles/Variables/dimensions';
+import QualityProfile from 'typings/QualityProfile';
+import { UiSettings } from 'typings/UiSettings';
 import formatDateTime from 'Utilities/Date/formatDateTime';
 import getRelativeDate from 'Utilities/Date/getRelativeDate';
 import formatBytes from 'Utilities/Number/formatBytes';
+import translate from 'Utilities/String/translate';
 import ArtistIndexOverviewInfoRow from './ArtistIndexOverviewInfoRow';
 import styles from './ArtistIndexOverviewInfo.css';
+
+interface RowProps {
+  name: string;
+  showProp: string;
+  valueProp: string;
+}
+
+interface RowInfoProps {
+  title: string;
+  iconName: IconDefinition;
+  label: string;
+}
+
+interface ArtistIndexOverviewInfoProps {
+  height: number;
+  showMonitored: boolean;
+  showQualityProfile: boolean;
+  showLastAlbum: boolean;
+  showAdded: boolean;
+  showAlbumCount: boolean;
+  showPath: boolean;
+  showSizeOnDisk: boolean;
+  monitored: boolean;
+  nextAlbum?: Album;
+  qualityProfile?: QualityProfile;
+  lastAlbum?: Album;
+  added?: string;
+  albumCount: number;
+  path: string;
+  sizeOnDisk?: number;
+  sortKey: string;
+}
 
 const infoRowHeight = parseInt(dimensions.artistIndexOverviewInfoRowHeight);
 
@@ -50,11 +86,17 @@ const rows = [
   },
 ];
 
-function getInfoRowProps(row, props, uiSettings) {
+function getInfoRowProps(
+  row: RowProps,
+  props: ArtistIndexOverviewInfoProps,
+  uiSettings: UiSettings
+): RowInfoProps | null {
   const { name } = row;
 
   if (name === 'monitored') {
-    const monitoredText = props.monitored ? 'Monitored' : 'Unmonitored';
+    const monitoredText = props.monitored
+      ? translate('Monitored')
+      : translate('Unmonitored');
 
     return {
       title: monitoredText,
@@ -63,9 +105,9 @@ function getInfoRowProps(row, props, uiSettings) {
     };
   }
 
-  if (name === 'qualityProfileId') {
+  if (name === 'qualityProfileId' && !!props.qualityProfile?.name) {
     return {
-      title: 'Quality Profile',
+      title: translate('QualityProfile'),
       iconName: icons.PROFILE,
       label: props.qualityProfile.name,
     };
@@ -78,15 +120,16 @@ function getInfoRowProps(row, props, uiSettings) {
     return {
       title: `Last Album: ${lastAlbum.title}`,
       iconName: icons.CALENDAR,
-      label: getRelativeDate(
-        lastAlbum.releaseDate,
-        shortDateFormat,
-        showRelativeDates,
-        {
-          timeFormat,
-          timeForToday: true,
-        }
-      ),
+      label:
+        getRelativeDate(
+          lastAlbum.releaseDate,
+          shortDateFormat,
+          showRelativeDates,
+          {
+            timeFormat,
+            timeForToday: true,
+          }
+        ) ?? '',
     };
   }
 
@@ -98,10 +141,11 @@ function getInfoRowProps(row, props, uiSettings) {
     return {
       title: `Added: ${formatDateTime(added, longDateFormat, timeFormat)}`,
       iconName: icons.ADD,
-      label: getRelativeDate(added, shortDateFormat, showRelativeDates, {
-        timeFormat,
-        timeForToday: true,
-      }),
+      label:
+        getRelativeDate(added, shortDateFormat, showRelativeDates, {
+          timeFormat,
+          timeForToday: true,
+        }) ?? '',
     };
   }
 
@@ -116,7 +160,7 @@ function getInfoRowProps(row, props, uiSettings) {
     }
 
     return {
-      title: 'Album Count',
+      title: translate('AlbumCount'),
       iconName: icons.CIRCLE,
       label: albums,
     };
@@ -124,7 +168,7 @@ function getInfoRowProps(row, props, uiSettings) {
 
   if (name === 'path') {
     return {
-      title: 'Path',
+      title: translate('Path'),
       iconName: icons.FOLDER,
       label: props.path,
     };
@@ -132,31 +176,13 @@ function getInfoRowProps(row, props, uiSettings) {
 
   if (name === 'sizeOnDisk') {
     return {
-      title: 'Size on Disk',
+      title: translate('SizeOnDisk'),
       iconName: icons.DRIVE,
       label: formatBytes(props.sizeOnDisk),
     };
   }
-}
 
-interface ArtistIndexOverviewInfoProps {
-  height: number;
-  showMonitored: boolean;
-  showQualityProfile: boolean;
-  showLastAlbum: boolean;
-  showAdded: boolean;
-  showAlbumCount: boolean;
-  showPath: boolean;
-  showSizeOnDisk: boolean;
-  monitored: boolean;
-  nextAlbum?: Album;
-  qualityProfile: object;
-  lastAlbum?: Album;
-  added?: string;
-  albumCount: number;
-  path: string;
-  sizeOnDisk?: number;
-  sortKey: string;
+  return null;
 }
 
 function ArtistIndexOverviewInfo(props: ArtistIndexOverviewInfoProps) {
@@ -175,6 +201,8 @@ function ArtistIndexOverviewInfo(props: ArtistIndexOverviewInfoProps) {
       const { name, showProp, valueProp } = row;
 
       const isVisible =
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore ts(7053)
         props[valueProp] != null && (props[showProp] || props.sortKey === name);
 
       return {
@@ -218,6 +246,10 @@ function ArtistIndexOverviewInfo(props: ArtistIndexOverviewInfoProps) {
         shownRows++;
 
         const infoRowProps = getInfoRowProps(row, props, uiSettings);
+
+        if (infoRowProps == null) {
+          return null;
+        }
 
         return <ArtistIndexOverviewInfoRow key={row.name} {...infoRowProps} />;
       })}

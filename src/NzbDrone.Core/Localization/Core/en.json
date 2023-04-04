@@ -680,6 +680,7 @@
   "Monitored": "Monitored",
   "MonitoredHelpText": "Download monitored albums from this artist",
   "MonitoredOnly": "Monitored Only",
+  "MonitoredStatus": "Monitored/Status",
   "Monitoring": "Monitoring",
   "MonitoringOptions": "Monitoring Options",
   "MonitoringOptionsHelpText": "Which albums should be monitored after the artist is added (one-time adjustment)",

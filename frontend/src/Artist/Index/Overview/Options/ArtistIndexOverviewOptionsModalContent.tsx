@@ -60,7 +60,7 @@ function ArtistIndexOverviewOptionsModalContent(
   const dispatch = useDispatch();
 
   const onOverviewOptionChange = useCallback(
-    ({ name, value }) => {
+    ({ name, value }: { name: string; value: unknown }) => {
       dispatch(setArtistOverviewOption({ [name]: value }));
     },
     [dispatch]

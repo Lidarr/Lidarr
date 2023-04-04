@@ -57,7 +57,7 @@ function AlbumDetails(props: AlbumDetailsProps) {
               albumType,
               monitored,
               statistics,
-              isSaving,
+              isSaving = false,
             } = album;
 
             return (

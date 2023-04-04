@@ -1,11 +1,12 @@
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import React from 'react';
 import Icon from 'Components/Icon';
 import styles from './ArtistIndexOverviewInfoRow.css';
 
 interface ArtistIndexOverviewInfoRowProps {
   title?: string;
-  iconName: object;
-  label: string;
+  iconName?: IconDefinition;
+  label: string | null;
 }
 
 function ArtistIndexOverviewInfoRow(props: ArtistIndexOverviewInfoRowProps) {

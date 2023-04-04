@@ -7,6 +7,8 @@ import React, {
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SelectProvider } from 'App/SelectContext';
+import ArtistAppState, { ArtistIndexAppState } from 'App/State/ArtistAppState';
+import ClientSideCollectionAppState from 'App/State/ClientSideCollectionAppState';
 import NoArtist from 'Artist/NoArtist';
 import { RSS_SYNC } from 'Commands/commandNames';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
@@ -89,16 +91,19 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
     sortKey,
     sortDirection,
     view,
-  } = useSelector(createArtistClientSideCollectionItemsSelector('artistIndex'));
+  }: ArtistAppState & ArtistIndexAppState & ClientSideCollectionAppState =
+    useSelector(createArtistClientSideCollectionItemsSelector('artistIndex'));
 
   const isRssSyncExecuting = useSelector(
     createCommandExecutingSelector(RSS_SYNC)
   );
   const { isSmallScreen } = useSelector(createDimensionsSelector());
   const dispatch = useDispatch();
-  const scrollerRef = useRef<HTMLDivElement>();
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
-  const [jumpToCharacter, setJumpToCharacter] = useState<string | null>(null);
+  const [jumpToCharacter, setJumpToCharacter] = useState<string | undefined>(
+    undefined
+  );
   const [isSelectMode, setIsSelectMode] = useState(false);
 
   useEffect(() => {
@@ -118,14 +123,14 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
   }, [isSelectMode, setIsSelectMode]);
 
   const onTableOptionChange = useCallback(
-    (payload) => {
+    (payload: unknown) => {
       dispatch(setArtistTableOption(payload));
     },
     [dispatch]
   );
 
   const onViewSelect = useCallback(
-    (value) => {
+    (value: string) => {
       dispatch(setArtistView({ view: value }));
 
       if (scrollerRef.current) {
@@ -136,14 +141,14 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
   );
 
   const onSortSelect = useCallback(
-    (value) => {
+    (value: string) => {
       dispatch(setArtistSort({ sortKey: value }));
     },
     [dispatch]
   );
 
   const onFilterSelect = useCallback(
-    (value) => {
+    (value: string) => {
       dispatch(setArtistFilter({ selectedFilterKey: value }));
     },
     [dispatch]
@@ -158,15 +163,15 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
   }, [setIsOptionsModalOpen]);
 
   const onJumpBarItemPress = useCallback(
-    (character) => {
+    (character: string) => {
       setJumpToCharacter(character);
     },
     [setJumpToCharacter]
   );
 
   const onScroll = useCallback(
-    ({ scrollTop }) => {
-      setJumpToCharacter(null);
+    ({ scrollTop }: { scrollTop: number }) => {
+      setJumpToCharacter(undefined);
       scrollPositions.artistIndex = scrollTop;
     },
     [setJumpToCharacter]
@@ -180,10 +185,10 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
       };
     }
 
-    const characters = items.reduce((acc, item) => {
+    const characters = items.reduce((acc: Record<string, number>, item) => {
       let char = item.sortName.charAt(0);
 
-      if (!isNaN(char)) {
+      if (!isNaN(Number(char))) {
         char = '#';
       }
 
@@ -300,6 +305,8 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
           <PageContentBody
             ref={scrollerRef}
             className={styles.contentBody}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             innerClassName={styles[`${view}InnerContentBody`]}
             initialScrollTop={props.initialScrollTop}
             onScroll={onScroll}

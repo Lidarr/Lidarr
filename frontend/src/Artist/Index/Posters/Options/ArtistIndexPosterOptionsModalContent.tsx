@@ -59,7 +59,7 @@ function ArtistIndexPosterOptionsModalContent(
   const dispatch = useDispatch();
 
   const onPosterOptionChange = useCallback(
-    ({ name, value }) => {
+    ({ name, value }: { name: string; value: unknown }) => {
       dispatch(setArtistPosterOption({ [name]: value }));
     },
     [dispatch]

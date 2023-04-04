@@ -24,6 +24,14 @@ import OrganizeArtistModal from './Organize/OrganizeArtistModal';
 import TagsModal from './Tags/TagsModal';
 import styles from './ArtistIndexSelectFooter.css';
 
+interface SavePayload {
+  monitored?: boolean;
+  qualityProfileId?: number;
+  metadataProfileId?: number;
+  rootFolderPath?: string;
+  moveFiles?: boolean;
+}
+
 const artistEditorSelector = createSelector(
   (state: AppState) => state.artist,
   (artist) => {
@@ -79,7 +87,7 @@ function ArtistIndexSelectFooter() {
   }, [setIsEditModalOpen]);
 
   const onSavePress = useCallback(
-    (payload) => {
+    (payload: SavePayload) => {
       setIsSavingArtist(true);
       setIsEditModalOpen(false);
 
@@ -118,7 +126,7 @@ function ArtistIndexSelectFooter() {
   }, [setIsTagsModalOpen]);
 
   const onApplyTagsPress = useCallback(
-    (tags, applyTags) => {
+    (tags: number[], applyTags: string) => {
       setIsSavingTags(true);
       setIsTagsModalOpen(false);
 

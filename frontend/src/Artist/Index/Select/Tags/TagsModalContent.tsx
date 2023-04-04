@@ -1,6 +1,7 @@
 import { uniq } from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Tag } from 'App/State/TagsAppState';
 import Artist from 'Artist/Artist';
 import Form from 'Components/Form/Form';
 import FormGroup from 'Components/Form/FormGroup';
@@ -28,7 +29,7 @@ function TagsModalContent(props: TagsModalContentProps) {
   const { artistIds, onModalClose, onApplyTagsPress } = props;
 
   const allArtists: Artist[] = useSelector(createAllArtistSelector());
-  const tagList = useSelector(createTagsSelector());
+  const tagList: Tag[] = useSelector(createTagsSelector());
 
   const [tags, setTags] = useState<number[]>([]);
   const [applyTags, setApplyTags] = useState('add');
@@ -48,14 +49,14 @@ function TagsModalContent(props: TagsModalContentProps) {
   }, [artistIds, allArtists]);
 
   const onTagsChange = useCallback(
-    ({ value }) => {
+    ({ value }: { value: number[] }) => {
       setTags(value);
     },
     [setTags]
   );
 
   const onApplyTagsChange = useCallback(
-    ({ value }) => {
+    ({ value }: { value: string }) => {
       setApplyTags(value);
     },
     [setApplyTags]

@@ -206,7 +206,7 @@ function ArtistIndexBanner(props: ArtistIndexBannerProps) {
         </div>
       ) : null}
 
-      {showQualityProfile ? (
+      {showQualityProfile && !!qualityProfile?.name ? (
         <div className={styles.title} title={translate('QualityProfile')}>
           {qualityProfile.name}
         </div>

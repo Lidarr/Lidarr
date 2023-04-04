@@ -15,6 +15,7 @@ import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds } from 'Helpers/Props';
 import { bulkDeleteArtist, setDeleteOption } from 'Store/Actions/artistActions';
 import createAllArtistSelector from 'Store/Selectors/createAllArtistSelector';
+import { CheckInputChanged } from 'typings/inputs';
 import translate from 'Utilities/String/translate';
 import styles from './DeleteArtistModalContent.css';
 
@@ -37,16 +38,16 @@ function DeleteArtistModalContent(props: DeleteArtistModalContentProps) {
 
   const [deleteFiles, setDeleteFiles] = useState(false);
 
-  const artists = useMemo(() => {
-    const artists = artistIds.map((id) => {
+  const artists = useMemo((): Artist[] => {
+    const artistList = artistIds.map((id) => {
       return allArtists.find((a) => a.id === id);
-    });
+    }) as Artist[];
 
-    return orderBy(artists, ['sortName']);
+    return orderBy(artistList, ['sortName']);
   }, [artistIds, allArtists]);
 
   const onDeleteFilesChange = useCallback(
-    ({ value }) => {
+    ({ value }: CheckInputChanged) => {
       setDeleteFiles(value);
     },
     [setDeleteFiles]

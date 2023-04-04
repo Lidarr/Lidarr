@@ -7,6 +7,8 @@ import { scrollDirections } from 'Helpers/Props';
 import hasDifferentItemsOrOrder from 'Utilities/Object/hasDifferentItemsOrOrder';
 import styles from './VirtualTable.css';
 
+const ROW_HEIGHT = 38;
+
 function overscanIndicesGetter(options) {
   const {
     cellCount,
@@ -48,8 +50,7 @@ class VirtualTable extends Component {
     const {
       items,
       scrollIndex,
-      scrollTop,
-      onRecompute
+      scrollTop
     } = this.props;
 
     const {
@@ -57,10 +58,7 @@ class VirtualTable extends Component {
       scrollRestored
     } = this.state;
 
-    if (this._grid &&
-        (prevState.width !== width ||
-            hasDifferentItemsOrOrder(prevProps.items, items))) {
-      onRecompute(width);
+    if (this._grid && (prevState.width !== width || hasDifferentItemsOrOrder(prevProps.items, items))) {
       // recomputeGridSize also forces Grid to discard its cache of rendered cells
       this._grid.recomputeGridSize();
     }
@@ -103,7 +101,6 @@ class VirtualTable extends Component {
       className,
       items,
       scroller,
-      scrollTop: ignored,
       header,
       headerHeight,
       rowHeight,
@@ -149,6 +146,7 @@ class VirtualTable extends Component {
                 {header}
                 <div ref={registerChild}>
                   <Grid
+                    {...otherProps}
                     ref={this.setGridRef}
                     autoContainerWidth={true}
                     autoHeight={true}
@@ -170,7 +168,6 @@ class VirtualTable extends Component {
                     className={styles.tableBodyContainer}
                     style={gridStyle}
                     containerStyle={containerStyle}
-                    {...otherProps}
                   />
                 </div>
               </Scroller>
@@ -192,16 +189,14 @@ VirtualTable.propTypes = {
   scroller: PropTypes.instanceOf(Element).isRequired,
   header: PropTypes.node.isRequired,
   headerHeight: PropTypes.number.isRequired,
-  rowHeight: PropTypes.oneOfType([PropTypes.func, PropTypes.number]).isRequired,
   rowRenderer: PropTypes.func.isRequired,
-  onRecompute: PropTypes.func.isRequired
+  rowHeight: PropTypes.number.isRequired
 };
 
 VirtualTable.defaultProps = {
   className: styles.tableContainer,
   headerHeight: 38,
-  rowHeight: 38,
-  onRecompute: () => {}
+  rowHeight: ROW_HEIGHT
 };
 
 export default VirtualTable;
