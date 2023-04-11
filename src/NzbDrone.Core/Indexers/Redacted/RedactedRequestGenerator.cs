@@ -28,14 +28,14 @@ namespace NzbDrone.Core.Indexers.Redacted
         public IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(string.Format("&artistname={0}&groupname={1}", searchCriteria.CleanArtistQuery, searchCriteria.CleanAlbumQuery)));
+            pageableRequests.Add(GetRequest(string.Format("&artistname={0}&groupname={1}", searchCriteria.ArtistQuery, searchCriteria.AlbumQuery)));
             return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(string.Format("&artistname={0}", searchCriteria.CleanArtistQuery)));
+            pageableRequests.Add(GetRequest(string.Format("&artistname={0}", searchCriteria.ArtistQuery)));
             return pageableRequests;
         }
 
