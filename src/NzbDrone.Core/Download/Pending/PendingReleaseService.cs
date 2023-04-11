@@ -181,63 +181,28 @@ namespace NzbDrone.Core.Download.Pending
             var nextRssSync = new Lazy<DateTime>(() => _taskManager.GetNextExecution(typeof(RssSyncCommand)));
 
             var pendingReleases = IncludeRemoteAlbums(_repository.WithoutFallback());
+
             foreach (var pendingRelease in pendingReleases)
             {
+                if (pendingRelease.RemoteAlbum.Albums.Empty())
+                {
+                    var noAlbumItem = GetQueueItem(pendingRelease, nextRssSync, null);
+
+                    noAlbumItem.ErrorMessage = "Unable to find matching album(s)";
+
+                    queued.Add(noAlbumItem);
+
+                    continue;
+                }
+
                 foreach (var album in pendingRelease.RemoteAlbum.Albums)
                 {
-                    var ect = pendingRelease.Release.PublishDate.AddMinutes(GetDelay(pendingRelease.RemoteAlbum));
-
-                    if (ect < nextRssSync.Value)
-                    {
-                        ect = nextRssSync.Value;
-                    }
-                    else
-                    {
-                        ect = ect.AddMinutes(_configService.RssSyncInterval);
-                    }
-
-                    var timeleft = ect.Subtract(DateTime.UtcNow);
-
-                    if (timeleft.TotalSeconds < 0)
-                    {
-                        timeleft = TimeSpan.Zero;
-                    }
-
-                    string downloadClientName = null;
-                    var indexer = _indexerFactory.Find(pendingRelease.Release.IndexerId);
-
-                    if (indexer is { DownloadClientId: > 0 })
-                    {
-                        var downloadClient = _downloadClientFactory.Find(indexer.DownloadClientId);
-
-                        downloadClientName = downloadClient?.Name;
-                    }
-
-                    var queue = new Queue.Queue
-                    {
-                        Id = GetQueueId(pendingRelease, album),
-                        Artist = pendingRelease.RemoteAlbum.Artist,
-                        Album = album,
-                        Quality = pendingRelease.RemoteAlbum.ParsedAlbumInfo.Quality,
-                        Title = pendingRelease.Title,
-                        Size = pendingRelease.RemoteAlbum.Release.Size,
-                        Sizeleft = pendingRelease.RemoteAlbum.Release.Size,
-                        RemoteAlbum = pendingRelease.RemoteAlbum,
-                        Timeleft = timeleft,
-                        EstimatedCompletionTime = ect,
-                        Added = pendingRelease.Added,
-                        Status = pendingRelease.Reason.ToString(),
-                        Protocol = pendingRelease.RemoteAlbum.Release.DownloadProtocol,
-                        Indexer = pendingRelease.RemoteAlbum.Release.Indexer,
-                        DownloadClient = downloadClientName
-                    };
-
-                    queued.Add(queue);
+                    queued.Add(GetQueueItem(pendingRelease, nextRssSync, album));
                 }
             }
 
             // Return best quality release for each album
-            var deduped = queued.GroupBy(q => q.Album.Id).Select(g =>
+            var deduped = queued.Where(q => q.Album != null).GroupBy(q => q.Album.Id).Select(g =>
             {
                 var artist = g.First().Artist;
 
@@ -330,25 +295,33 @@ namespace NzbDrone.Core.Download.Pending
                     return null;
                 }
 
-                List<Album> albums;
-
-                if (knownRemoteAlbums != null && knownRemoteAlbums.TryGetValue(release.Release.Title, out var knownRemoteAlbum))
-                {
-                    albums = knownRemoteAlbum.Albums;
-                }
-                else
-                {
-                    albums = _parsingService.GetAlbums(release.ParsedAlbumInfo, artist);
-                }
-
                 release.RemoteAlbum = new RemoteAlbum
                 {
                     Artist = artist,
-                    Albums = albums,
                     ReleaseSource = release.AdditionalInfo?.ReleaseSource ?? ReleaseSourceType.Unknown,
                     ParsedAlbumInfo = release.ParsedAlbumInfo,
                     Release = release.Release
                 };
+
+                if (knownRemoteAlbums != null && knownRemoteAlbums.TryGetValue(release.Release.Title, out var knownRemoteAlbum))
+                {
+                    release.RemoteAlbum.Albums = knownRemoteAlbum.Albums;
+                }
+                else
+                {
+                    try
+                    {
+                        var remoteAlbums = _parsingService.GetAlbums(release.ParsedAlbumInfo, artist);
+
+                        release.RemoteAlbum.Albums = remoteAlbums;
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        _logger.Debug(ex, ex.Message);
+
+                        release.RemoteAlbum.Albums = new List<Album>();
+                    }
+                }
 
                 _aggregationService.Augment(release.RemoteAlbum);
                 release.RemoteAlbum.CustomFormats = _formatCalculator.ParseCustomFormat(release.RemoteAlbum, release.Release.Size);
@@ -357,6 +330,58 @@ namespace NzbDrone.Core.Download.Pending
             }
 
             return result;
+        }
+
+        private Queue.Queue GetQueueItem(PendingRelease pendingRelease, Lazy<DateTime> nextRssSync, Album album)
+        {
+            var ect = pendingRelease.Release.PublishDate.AddMinutes(GetDelay(pendingRelease.RemoteAlbum));
+
+            if (ect < nextRssSync.Value)
+            {
+                ect = nextRssSync.Value;
+            }
+            else
+            {
+                ect = ect.AddMinutes(_configService.RssSyncInterval);
+            }
+
+            var timeleft = ect.Subtract(DateTime.UtcNow);
+
+            if (timeleft.TotalSeconds < 0)
+            {
+                timeleft = TimeSpan.Zero;
+            }
+
+            string downloadClientName = null;
+            var indexer = _indexerFactory.Find(pendingRelease.Release.IndexerId);
+
+            if (indexer is { DownloadClientId: > 0 })
+            {
+                var downloadClient = _downloadClientFactory.Find(indexer.DownloadClientId);
+
+                downloadClientName = downloadClient?.Name;
+            }
+
+            var queue = new Queue.Queue
+            {
+                Id = GetQueueId(pendingRelease, album),
+                Artist = pendingRelease.RemoteAlbum.Artist,
+                Album = album,
+                Quality = pendingRelease.RemoteAlbum.ParsedAlbumInfo.Quality,
+                Title = pendingRelease.Title,
+                Size = pendingRelease.RemoteAlbum.Release.Size,
+                Sizeleft = pendingRelease.RemoteAlbum.Release.Size,
+                RemoteAlbum = pendingRelease.RemoteAlbum,
+                Timeleft = timeleft,
+                EstimatedCompletionTime = ect,
+                Added = pendingRelease.Added,
+                Status = pendingRelease.Reason.ToString(),
+                Protocol = pendingRelease.RemoteAlbum.Release.DownloadProtocol,
+                Indexer = pendingRelease.RemoteAlbum.Release.Indexer,
+                DownloadClient = downloadClientName
+            };
+
+            return queue;
         }
 
         private void Insert(DownloadDecision decision, PendingReleaseReason reason)
@@ -449,7 +474,7 @@ namespace NzbDrone.Core.Download.Pending
 
         private int GetQueueId(PendingRelease pendingRelease, Album album)
         {
-            return HashConverter.GetHashInt31(string.Format("pending-{0}-album{1}", pendingRelease.Id, album.Id));
+            return HashConverter.GetHashInt31(string.Format("pending-{0}-album{1}", pendingRelease.Id, album?.Id ?? 0));
         }
 
         private int PrioritizeDownloadProtocol(Artist artist, DownloadProtocol downloadProtocol)
