@@ -6,6 +6,7 @@ import AppState from 'App/State/AppState';
 import { RENAME_ARTIST, RETAG_ARTIST } from 'Commands/commandNames';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
+import usePrevious from 'Helpers/Hooks/usePrevious';
 import { kinds } from 'Helpers/Props';
 import {
   saveArtistEditor,
@@ -58,6 +59,7 @@ function ArtistIndexSelectFooter() {
   const [isSavingArtist, setIsSavingArtist] = useState(false);
   const [isSavingTags, setIsSavingTags] = useState(false);
   const [isSavingMonitoring, setIsSavingMonitoring] = useState(false);
+  const previousIsDeleting = usePrevious(isDeleting);
 
   const [selectState, selectDispatch] = useSelect();
   const { selectedState } = selectState;
@@ -171,10 +173,10 @@ function ArtistIndexSelectFooter() {
   }, [isSaving]);
 
   useEffect(() => {
-    if (!isDeleting && !deleteError) {
+    if (previousIsDeleting && !isDeleting && !deleteError) {
       selectDispatch({ type: 'unselectAll' });
     }
-  }, [isDeleting, deleteError, selectDispatch]);
+  }, [previousIsDeleting, isDeleting, deleteError, selectDispatch]);
 
   useEffect(() => {
     dispatch(fetchRootFolders());
