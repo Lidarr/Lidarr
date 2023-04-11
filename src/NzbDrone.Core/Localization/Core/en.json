@@ -153,7 +153,7 @@
   "ContinuingNoAdditionalAlbumsAreExpected": "No additional albums are expected",
   "ContinuingOnly": "ContinuingOnly",
   "CopyToClipboard": "Copy to clipboard",
-  "CopyUsingHardlinksHelpText": "Use Hardlinks when trying to copy files from torrents that are still being seeded",
+  "CopyUsingHardlinksHelpText": "Hardlinks allow Lidarr to import seeding torrents to the the series folder without taking extra disk space or copying the entire contents of the file. Hardlinks will only work if the source and destination are on the same volume",
   "CopyUsingHardlinksHelpTextWarning": "Occasionally, file locks may prevent renaming files that are being seeded. You may temporarily disable seeding and use Lidarr's rename function as a work around.",
   "CouldntFindAnyResultsForTerm": "Couldn't find any results for '{0}'",
   "Country": "Country",
