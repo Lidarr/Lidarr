@@ -15,9 +15,9 @@ namespace NzbDrone.Core.Datastore
 
         private const DbType EnumerableMultiParameter = (DbType)(-1);
         private readonly string _paramNamePrefix;
-        private readonly bool _requireConcreteValue = false;
-        private int _paramCount = 0;
-        private bool _gotConcreteValue = false;
+        private readonly bool _requireConcreteValue;
+        private int _paramCount;
+        private bool _gotConcreteValue;
 
         public WhereBuilderSqlite(Expression filter, bool requireConcreteValue, int seq)
         {
@@ -44,7 +44,7 @@ namespace NzbDrone.Core.Datastore
 
         protected override Expression VisitBinary(BinaryExpression expression)
         {
-            _sb.Append("(");
+            _sb.Append('(');
 
             Visit(expression.Left);
 
@@ -52,7 +52,7 @@ namespace NzbDrone.Core.Datastore
 
             Visit(expression.Right);
 
-            _sb.Append(")");
+            _sb.Append(')');
 
             return expression;
         }
@@ -309,7 +309,7 @@ namespace NzbDrone.Core.Datastore
                 item = body.Arguments[1];
             }
 
-            _sb.Append("(");
+            _sb.Append('(');
 
             Visit(item);
 
@@ -319,9 +319,9 @@ namespace NzbDrone.Core.Datastore
             if (item.Type == typeof(int) && TryGetRightValue(list, out var value))
             {
                 var items = (IEnumerable<int>)value;
-                _sb.Append("(");
+                _sb.Append('(');
                 _sb.Append(string.Join(", ", items));
-                _sb.Append(")");
+                _sb.Append(')');
 
                 _gotConcreteValue = true;
             }
@@ -330,12 +330,12 @@ namespace NzbDrone.Core.Datastore
                 Visit(list);
             }
 
-            _sb.Append(")");
+            _sb.Append(')');
         }
 
         private void ParseStringContains(MethodCallExpression body)
         {
-            _sb.Append("(");
+            _sb.Append('(');
 
             Visit(body.Object);
 
@@ -348,7 +348,7 @@ namespace NzbDrone.Core.Datastore
 
         private void ParseStartsWith(MethodCallExpression body)
         {
-            _sb.Append("(");
+            _sb.Append('(');
 
             Visit(body.Object);
 
@@ -361,7 +361,7 @@ namespace NzbDrone.Core.Datastore
 
         private void ParseEndsWith(MethodCallExpression body)
         {
-            _sb.Append("(");
+            _sb.Append('(');
 
             Visit(body.Object);
 
@@ -369,7 +369,7 @@ namespace NzbDrone.Core.Datastore
 
             Visit(body.Arguments[0]);
 
-            _sb.Append(")");
+            _sb.Append(')');
         }
 
         public override string ToString()

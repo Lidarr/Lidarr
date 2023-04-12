@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Notifications.SendGrid
         public SendGridSettings()
         {
             BaseUrl = "https://api.sendgrid.com/v3/";
-            Recipients = new string[] { };
+            Recipients = System.Array.Empty<string>();
         }
 
         public string BaseUrl { get; set; }

@@ -41,7 +41,7 @@ namespace NzbDrone.Common.Http.Proxy
                     return hostlist;
                 }
 
-                return new string[] { };
+                return System.Array.Empty<string>();
             }
         }
 

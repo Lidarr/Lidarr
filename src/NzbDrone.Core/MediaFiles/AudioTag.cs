@@ -324,9 +324,9 @@ namespace NzbDrone.Core.MediaFiles
 
             // patch up any null fields to work around TagLib exception for
             // WMA with null performers/albumartists
-            Performers = Performers ?? new string[0];
-            AlbumArtists = AlbumArtists ?? new string[0];
-            Genres = Genres ?? new string[0];
+            Performers = Performers ?? Array.Empty<string>();
+            AlbumArtists = AlbumArtists ?? Array.Empty<string>();
+            Genres = Genres ?? Array.Empty<string>();
 
             TagLib.File file = null;
             try

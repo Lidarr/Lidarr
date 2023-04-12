@@ -91,7 +91,7 @@ namespace NzbDrone.Common.Extensions
             int best_loc = -1;
 
             // Empty initialization added to appease C# compiler.
-            var last_rd = new BigInteger[0];
+            var last_rd = Array.Empty<BigInteger>();
             for (int d = 0; d < pattern.Length; d++)
             {
                 // Scan for the best match; each iteration allows for one more error.

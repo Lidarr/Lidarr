@@ -12,9 +12,6 @@ namespace NzbDrone.Core.Test.ImportListTests
     [TestFixture]
     public class SpotifyFollowedArtistsFixture : CoreTest<SpotifyFollowedArtists>
     {
-        // placeholder, we don't use real API
-        private readonly SpotifyWebAPI _api = null;
-
         [Test]
         public void should_not_throw_if_followed_is_null()
         {
@@ -23,7 +20,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                 It.IsAny<SpotifyWebAPI>()))
                 .Returns(default(FollowedArtists));
 
-            var result = Subject.Fetch(_api);
+            var result = Subject.Fetch(null);
 
             result.Should().BeEmpty();
         }
@@ -41,7 +38,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                 It.IsAny<SpotifyWebAPI>()))
                 .Returns(followed);
 
-            var result = Subject.Fetch(_api);
+            var result = Subject.Fetch(null);
 
             result.Should().BeEmpty();
         }
@@ -62,10 +59,10 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                 It.IsAny<SpotifyWebAPI>()))
                 .Returns(followed);
 
-            var result = Subject.Fetch(_api);
+            var result = Subject.Fetch(null);
 
             result.Should().BeEmpty();
-            Subject.Fetch(_api);
+            Subject.Fetch(null);
         }
 
         [Test]
@@ -87,10 +84,10 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                 It.IsAny<SpotifyWebAPI>()))
                 .Returns(followed);
 
-            var result = Subject.Fetch(_api);
+            var result = Subject.Fetch(null);
 
             result.Should().BeEmpty();
-            Subject.Fetch(_api);
+            Subject.Fetch(null);
         }
 
         [Test]
@@ -115,7 +112,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                 It.IsAny<SpotifyWebAPI>()))
                 .Returns(followed);
 
-            var result = Subject.Fetch(_api);
+            var result = Subject.Fetch(null);
 
             result.Should().HaveCount(1);
         }
@@ -149,7 +146,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                           It.IsAny<FollowedArtists>()))
                 .Returns(default(FollowedArtists));
 
-            var result = Subject.Fetch(_api);
+            var result = Subject.Fetch(null);
 
             result.Should().HaveCount(1);
 
@@ -183,7 +180,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                 It.IsAny<SpotifyWebAPI>()))
                 .Returns(followed);
 
-            var result = Subject.Fetch(_api);
+            var result = Subject.Fetch(null);
 
             result.Should().BeEmpty();
         }

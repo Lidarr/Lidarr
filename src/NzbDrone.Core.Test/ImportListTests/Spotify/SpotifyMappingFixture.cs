@@ -48,7 +48,7 @@ namespace NzbDrone.Core.Test.ImportListTests
         {
             Mocker.GetMock<IHttpClient>()
                 .Setup(x => x.Get<ArtistResource>(It.IsAny<HttpRequest>()))
-                .Returns<HttpRequest>((x) => new HttpResponse<ArtistResource>(new HttpResponse(x, new HttpHeader(), new byte[0], HttpStatusCode.NotFound)));
+                .Returns<HttpRequest>((x) => new HttpResponse<ArtistResource>(new HttpResponse(x, new HttpHeader(), Array.Empty<byte>(), HttpStatusCode.NotFound)));
 
             var data = new SpotifyImportListItemInfo
             {
@@ -120,7 +120,7 @@ namespace NzbDrone.Core.Test.ImportListTests
         {
             Mocker.GetMock<IHttpClient>()
                 .Setup(x => x.Get<AlbumResource>(It.IsAny<HttpRequest>()))
-                .Returns<HttpRequest>((x) => new HttpResponse<AlbumResource>(new HttpResponse(x, new HttpHeader(), new byte[0], HttpStatusCode.NotFound)));
+                .Returns<HttpRequest>((x) => new HttpResponse<AlbumResource>(new HttpResponse(x, new HttpHeader(), Array.Empty<byte>(), HttpStatusCode.NotFound)));
 
             var data = new SpotifyImportListItemInfo
             {

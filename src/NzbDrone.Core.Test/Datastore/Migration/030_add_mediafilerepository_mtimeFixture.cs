@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
     [TestFixture]
     public class add_mediafilerepository_mtimeFixture : MigrationTest<add_mediafilerepository_mtime>
     {
-        private string _artistPath = null;
+        private string _artistPath;
 
         private void GivenArtist(add_mediafilerepository_mtime c, int id, string name)
         {

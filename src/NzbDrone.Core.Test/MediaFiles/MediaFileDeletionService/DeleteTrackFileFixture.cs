@@ -14,7 +14,7 @@ namespace NzbDrone.Core.Test.MediaFiles.MediaFileDeletionService
     [TestFixture]
     public class DeleteTrackFileFixture : CoreTest<Core.MediaFiles.MediaFileDeletionService>
     {
-        private static readonly string RootFolder = @"C:\Test\Music";
+        private const string RootFolder = @"C:\Test\Music";
         private Artist _artist;
         private TrackFile _trackFile;
 

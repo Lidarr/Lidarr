@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Notifications.Mailgun
 
       public MailgunSettings()
       {
-          Recipients = new string[] { };
+          Recipients = System.Array.Empty<string>();
       }
 
       [FieldDefinition(0, Label = "API Key", HelpText = "The API key generated from MailGun")]

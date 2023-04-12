@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Parser.Model
 
         public ParsedTrackInfo()
         {
-            TrackNumbers = new int[0];
+            TrackNumbers = Array.Empty<int>();
         }
 
         public override string ToString()

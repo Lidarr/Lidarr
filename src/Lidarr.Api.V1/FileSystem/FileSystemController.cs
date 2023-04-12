@@ -45,7 +45,7 @@ namespace Lidarr.Api.V1.FileSystem
         {
             if (!_diskProvider.FolderExists(path))
             {
-                return new string[0];
+                return global::System.Array.Empty<string>();
             }
 
             return _diskScanService.GetAudioFiles(path).Select(f => new

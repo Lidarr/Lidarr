@@ -209,7 +209,7 @@ namespace NzbDrone.Core.MediaFiles
 
             foreach (var file in files)
             {
-                var newPath = message.DestinationPath + file.Path.Substring(message.SourcePath.Length);
+                var newPath = $"{message.DestinationPath}{file.Path.AsSpan(message.SourcePath.Length)}";
                 file.Path = newPath;
             }
 

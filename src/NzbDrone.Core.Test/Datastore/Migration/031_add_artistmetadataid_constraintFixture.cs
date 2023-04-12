@@ -11,7 +11,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
     [TestFixture]
     public class add_artistmetadataid_constraintFixture : MigrationTest<add_artistmetadataid_constraint>
     {
-        private string _artistPath = null;
+        private string _artistPath;
 
         private void GivenArtistMetadata(add_artistmetadataid_constraint c, int id, string name)
         {

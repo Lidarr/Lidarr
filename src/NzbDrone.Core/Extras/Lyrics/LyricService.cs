@@ -111,7 +111,7 @@ namespace NzbDrone.Core.Extras.Lyrics
 
             if (multipleCopies)
             {
-                suffixBuilder.Append(".");
+                suffixBuilder.Append('.');
                 suffixBuilder.Append(copy);
             }
 

@@ -27,7 +27,7 @@ namespace NzbDrone.Common.Http
             if (scheme.IsNotNullOrWhiteSpace())
             {
                 builder.Append(scheme);
-                builder.Append(":");
+                builder.Append(':');
             }
 
             if (host.IsNotNullOrWhiteSpace())
@@ -36,7 +36,7 @@ namespace NzbDrone.Common.Http
                 builder.Append(host);
                 if (port.HasValue)
                 {
-                    builder.Append(":");
+                    builder.Append(':');
                     builder.Append(port);
                 }
             }
@@ -170,7 +170,7 @@ namespace NzbDrone.Common.Http
 
             if (baseSlashIndex >= 0)
             {
-                return basePath.Substring(0, baseSlashIndex) + "/" + relativePath;
+                return $"{basePath.AsSpan(0, baseSlashIndex)}/{relativePath}";
             }
 
             return relativePath;
@@ -202,11 +202,11 @@ namespace NzbDrone.Common.Http
             {
                 if (builder.Length != 0)
                 {
-                    builder.Append("&");
+                    builder.Append('&');
                 }
 
                 builder.Append(Uri.EscapeDataString(pair.Key));
-                builder.Append("=");
+                builder.Append('=');
                 builder.Append(Uri.EscapeDataString(pair.Value));
             }
 

@@ -19,7 +19,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
         public SpotifyPlaylistSettings()
         {
-            PlaylistIds = new string[] { };
+            PlaylistIds = System.Array.Empty<string>();
         }
 
         public override string Scope => "playlist-read-private";

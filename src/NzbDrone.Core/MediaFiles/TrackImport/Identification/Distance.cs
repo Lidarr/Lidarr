@@ -39,7 +39,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         }
 
         public Dictionary<string, List<double>> Penalties => _penalties;
-        public string Reasons => _penalties.Count(x => x.Value.Max() > 0.0) > 0 ? "[" + string.Join(", ", Penalties.Where(x => x.Value.Max() > 0.0).Select(x => x.Key.Replace('_', ' '))) + "]" : string.Empty;
+        public string Reasons => _penalties.Any(x => x.Value.Max() > 0.0) ? "[" + string.Join(", ", Penalties.Where(x => x.Value.Max() > 0.0).Select(x => x.Key.Replace('_', ' '))) + "]" : string.Empty;
 
         private double MaxDistance(Dictionary<string, List<double>> penalties)
         {

@@ -102,7 +102,7 @@ namespace NzbDrone.Core.Organizer
 
             var pattern = namingConfig.StandardTrackFormat;
 
-            if (tracks.First().AlbumRelease.Value.Media.Count() > 1)
+            if (tracks.First().AlbumRelease.Value.Media.Count > 1)
             {
                 pattern = namingConfig.MultiDiscTrackFormat;
             }

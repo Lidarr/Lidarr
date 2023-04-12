@@ -283,7 +283,7 @@ namespace NzbDrone.Core.MediaCover
             switch (coverType)
             {
                 default:
-                    return new int[] { };
+                    return Array.Empty<int>();
 
                 case MediaCoverTypes.Poster:
                 case MediaCoverTypes.Disc:

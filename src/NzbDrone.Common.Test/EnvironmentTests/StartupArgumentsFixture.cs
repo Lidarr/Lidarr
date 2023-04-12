@@ -11,7 +11,7 @@ namespace NzbDrone.Common.Test.EnvironmentTests
         [Test]
         public void empty_array_should_return_empty_flags()
         {
-            var args = new StartupContext(new string[0]);
+            var args = new StartupContext(System.Array.Empty<string>());
             args.Flags.Should().BeEmpty();
         }
 

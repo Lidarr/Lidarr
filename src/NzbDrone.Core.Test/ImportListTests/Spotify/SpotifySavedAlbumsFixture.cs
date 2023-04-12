@@ -12,9 +12,6 @@ namespace NzbDrone.Core.Test.ImportListTests
     [TestFixture]
     public class SpotifySavedAlbumsFixture : CoreTest<SpotifySavedAlbums>
     {
-        // placeholder, we don't use real API
-        private readonly SpotifyWebAPI _api = null;
-
         [Test]
         public void should_not_throw_if_saved_albums_is_null()
         {
@@ -23,7 +20,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                 It.IsAny<SpotifyWebAPI>()))
                 .Returns(default(Paging<SavedAlbum>));
 
-            var result = Subject.Fetch(_api);
+            var result = Subject.Fetch(null);
 
             result.Should().BeEmpty();
         }
@@ -41,7 +38,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                 It.IsAny<SpotifyWebAPI>()))
                 .Returns(savedAlbums);
 
-            var result = Subject.Fetch(_api);
+            var result = Subject.Fetch(null);
 
             result.Should().BeEmpty();
         }
@@ -62,7 +59,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                 It.IsAny<SpotifyWebAPI>()))
                 .Returns(savedAlbums);
 
-            var result = Subject.Fetch(_api);
+            var result = Subject.Fetch(null);
 
             result.Should().BeEmpty();
         }
@@ -96,7 +93,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                 It.IsAny<SpotifyWebAPI>()))
                 .Returns(savedAlbums);
 
-            var result = Subject.Fetch(_api);
+            var result = Subject.Fetch(null);
 
             result.Should().HaveCount(1);
         }
@@ -137,7 +134,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                           It.IsAny<Paging<SavedAlbum>>()))
                 .Returns(default(Paging<SavedAlbum>));
 
-            var result = Subject.Fetch(_api);
+            var result = Subject.Fetch(null);
 
             result.Should().HaveCount(1);
 
@@ -179,7 +176,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                 It.IsAny<SpotifyWebAPI>()))
                 .Returns(savedAlbums);
 
-            var result = Subject.Fetch(_api);
+            var result = Subject.Fetch(null);
 
             result.Should().BeEmpty();
         }

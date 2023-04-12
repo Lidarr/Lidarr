@@ -65,7 +65,7 @@ namespace NzbDrone.Common
 
             var args = $"create {serviceName} " +
                 $"DisplayName= \"{serviceName}\" " +
-                $"binpath= \"{Process.GetCurrentProcess().MainModule.FileName}\" " +
+                $"binpath= \"{Environment.ProcessPath}\" " +
                 "start= auto " +
                 "depend= EventLog/Tcpip/http " +
                 "obj= \"NT AUTHORITY\\LocalService\"";

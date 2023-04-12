@@ -266,7 +266,7 @@ namespace NzbDrone.Core.Configuration
 
                     var valueHolder = parentContainer.Descendants(key).ToList();
 
-                    if (valueHolder.Count() == 1)
+                    if (valueHolder.Count == 1)
                     {
                         return valueHolder.First().Value.Trim();
                     }

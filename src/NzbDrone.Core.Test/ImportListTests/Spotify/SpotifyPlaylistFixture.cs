@@ -12,9 +12,6 @@ namespace NzbDrone.Core.Test.ImportListTests
     [TestFixture]
     public class SpotifyPlaylistFixture : CoreTest<SpotifyPlaylist>
     {
-        // placeholder, we don't use real API
-        private readonly SpotifyWebAPI _api = null;
-
         [Test]
         public void should_not_throw_if_playlist_tracks_is_null()
         {
@@ -25,7 +22,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                It.IsAny<string>()))
                 .Returns(default(Paging<PlaylistTrack>));
 
-            var result = Subject.Fetch(_api, "playlistid");
+            var result = Subject.Fetch(null, "playlistid");
 
             result.Should().BeEmpty();
         }
@@ -45,7 +42,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                It.IsAny<string>()))
                 .Returns(playlistTracks);
 
-            var result = Subject.Fetch(_api, "playlistid");
+            var result = Subject.Fetch(null, "playlistid");
 
             result.Should().BeEmpty();
         }
@@ -68,7 +65,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                It.IsAny<string>()))
                 .Returns(playlistTracks);
 
-            var result = Subject.Fetch(_api, "playlistid");
+            var result = Subject.Fetch(null, "playlistid");
 
             result.Should().BeEmpty();
         }
@@ -114,7 +111,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                It.IsAny<string>()))
                 .Returns(playlistTracks);
 
-            var result = Subject.Fetch(_api, "playlistid");
+            var result = Subject.Fetch(null, "playlistid");
 
             result.Should().HaveCount(1);
             result[0].Artist.Should().Be("AlbumArtist");
@@ -161,7 +158,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                It.IsAny<string>()))
                 .Returns(playlistTracks);
 
-            var result = Subject.Fetch(_api, "playlistid");
+            var result = Subject.Fetch(null, "playlistid");
 
             result.Should().HaveCount(1);
             result[0].Artist.Should().Be("TrackArtist");
@@ -210,7 +207,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                                It.IsAny<string>()))
                 .Returns(playlistTracks);
 
-            var result = Subject.Fetch(_api, "playlistid");
+            var result = Subject.Fetch(null, "playlistid");
 
             result.Should().BeEmpty();
         }
@@ -263,7 +260,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                                           It.IsAny<Paging<PlaylistTrack>>()))
                 .Returns(default(Paging<PlaylistTrack>));
 
-            var result = Subject.Fetch(_api, "playlistid");
+            var result = Subject.Fetch(null, "playlistid");
 
             result.Should().HaveCount(1);
 

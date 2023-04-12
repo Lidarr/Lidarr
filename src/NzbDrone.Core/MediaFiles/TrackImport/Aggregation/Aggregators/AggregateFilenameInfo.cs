@@ -58,9 +58,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators
         public LocalAlbumRelease Aggregate(LocalAlbumRelease release, bool others)
         {
             var tracks = release.LocalTracks;
-            if (tracks.Count(x => x.FileTrackInfo.Title.IsNullOrWhiteSpace()) > 0
-                || tracks.Count(x => x.FileTrackInfo.TrackNumbers.First() == 0) > 0
-                || tracks.Count(x => x.FileTrackInfo.DiscNumber == 0) > 0)
+            if (tracks.Any(x => x.FileTrackInfo.Title.IsNullOrWhiteSpace())
+                || tracks.Any(x => x.FileTrackInfo.TrackNumbers.First() == 0)
+                || tracks.Any(x => x.FileTrackInfo.DiscNumber == 0))
             {
                 _logger.Debug("Missing data in tags, trying filename augmentation");
                 foreach (var charSep in CharsAndSeps)
@@ -171,7 +171,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators
                 }
 
                 var trackNums = track.FileTrackInfo.TrackNumbers;
-                if (keys.Contains("track") && (trackNums.Count() == 0 || trackNums.First() == 0))
+                if (keys.Contains("track") && (trackNums.Length == 0 || trackNums.First() == 0))
                 {
                     var tracknum = Convert.ToInt32(matches[track].Groups["track"].Value);
                     if (tracknum > 100)

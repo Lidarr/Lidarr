@@ -46,7 +46,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             {
                 var trackFiles = _mediaFileService.GetFilesByAlbum(album.Id);
 
-                if (trackFiles.Count() == 0)
+                if (trackFiles.Count == 0)
                 {
                     _logger.Debug("Skipping already imported check for album without files");
                     continue;

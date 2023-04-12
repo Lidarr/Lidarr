@@ -2,6 +2,7 @@ using System;
 using Mono.Unix;
 using Mono.Unix.Native;
 using NLog;
+using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Mono.Disk
 {
@@ -55,7 +56,7 @@ namespace NzbDrone.Mono.Disk
             var target = 0;
             for (var i = 0; i < dirs.Length; ++i)
             {
-                if (dirs[i] == "." || dirs[i] == string.Empty)
+                if (dirs[i] == "." || dirs[i].IsNullOrWhiteSpace())
                 {
                     continue;
                 }

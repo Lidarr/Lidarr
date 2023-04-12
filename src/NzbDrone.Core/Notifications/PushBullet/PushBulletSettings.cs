@@ -20,8 +20,8 @@ namespace NzbDrone.Core.Notifications.PushBullet
 
         public PushBulletSettings()
         {
-            DeviceIds = new string[] { };
-            ChannelTags = new string[] { };
+            DeviceIds = System.Array.Empty<string>();
+            ChannelTags = System.Array.Empty<string>();
         }
 
         [FieldDefinition(0, Label = "Access Token", Privacy = PrivacyLevel.ApiKey, HelpLink = "https://www.pushbullet.com/#settings/account")]

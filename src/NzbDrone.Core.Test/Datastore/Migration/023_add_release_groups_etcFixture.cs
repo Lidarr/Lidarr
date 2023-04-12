@@ -78,7 +78,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             var albums = db.Query<Album>("SELECT * FROM \"Albums\"");
 
             // we only put in one release per album
-            releases.Count().Should().Be(albums.Count());
+            releases.Count.Should().Be(albums.Count);
 
             // each album should be linked to exactly one release
             releases.Select(x => x.AlbumId).SequenceEqual(albums.Select(x => x.Id)).Should().Be(true);

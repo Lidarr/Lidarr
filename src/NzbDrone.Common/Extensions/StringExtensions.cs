@@ -126,7 +126,7 @@ namespace NzbDrone.Common.Extensions
 
         public static string WrapInQuotes(this string text)
         {
-            if (!text.Contains(" "))
+            if (!text.Contains(' '))
             {
                 return text;
             }
@@ -170,7 +170,7 @@ namespace NzbDrone.Common.Extensions
             {
                 return 0;
             }
-            else if (a.Contains(" ") && b.Contains(" "))
+            else if (a.Contains(' ') && b.Contains(' '))
             {
                 var partsA = a.Split(' ');
                 var partsB = b.Split(' ');
@@ -256,7 +256,7 @@ namespace NzbDrone.Common.Extensions
 
         public static string ToUrlHost(this string input)
         {
-            return input.Contains(":") ? $"[{input}]" : input;
+            return input.Contains(':') ? $"[{input}]" : input;
         }
     }
 }

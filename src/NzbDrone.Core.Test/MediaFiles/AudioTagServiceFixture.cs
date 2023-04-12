@@ -240,9 +240,9 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
             var tag = Subject.ReadAudioTag(path);
             var expected = new AudioTag()
             {
-                Performers = new string[0],
-                AlbumArtists = new string[0],
-                Genres = new string[0]
+                Performers = Array.Empty<string>(),
+                AlbumArtists = Array.Empty<string>(),
+                Genres = Array.Empty<string>()
             };
 
             VerifySame(tag, expected, skipProperties);
