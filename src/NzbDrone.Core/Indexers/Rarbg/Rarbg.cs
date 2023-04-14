@@ -18,8 +18,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
         public override string Name => "Rarbg";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-
-        public override TimeSpan RateLimit => TimeSpan.FromSeconds(2);
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(4);
 
         public Rarbg(IRarbgTokenProvider tokenProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
             : base(httpClient, indexerStatusService, configService, parsingService, logger)
