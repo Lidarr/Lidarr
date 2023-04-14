@@ -26,12 +26,7 @@ namespace NzbDrone.Core.Indexers.Redacted
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new RedactedRequestGenerator()
-            {
-                Settings = Settings,
-                HttpClient = _httpClient,
-                Logger = _logger,
-            };
+            return new RedactedRequestGenerator(Settings, _httpClient, _logger);
         }
 
         public override IParseIndexerResponse GetParser()

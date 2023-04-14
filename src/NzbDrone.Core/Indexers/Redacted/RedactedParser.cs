@@ -56,9 +56,9 @@ namespace NzbDrone.Core.Indexers.Redacted
                             title += " [Cue]";
                         }
 
-                        torrentInfos.Add(new GazelleInfo()
+                        torrentInfos.Add(new GazelleInfo
                         {
-                            Guid = string.Format("Redacted-{0}", id),
+                            Guid = $"Redacted-{id}",
                             Artist = artist,
 
                             // Splice Title from info to avoid calling API again for every torrent.
@@ -72,7 +72,7 @@ namespace NzbDrone.Core.Indexers.Redacted
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                             PublishDate = torrent.Time.ToUniversalTime(),
-                            Scene = torrent.Scene,
+                            Scene = torrent.Scene
                         });
                     }
                 }

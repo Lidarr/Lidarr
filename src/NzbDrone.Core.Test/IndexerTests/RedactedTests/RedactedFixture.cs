@@ -9,7 +9,7 @@ using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Redacted;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.IndexerTests.GazelleTests
+namespace NzbDrone.Core.Test.IndexerTests.RedactedTests
 {
     [TestFixture]
     public class RedactedFixture : CoreTest<Redacted>
@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Test.IndexerTests.GazelleTests
         [SetUp]
         public void Setup()
         {
-            Subject.Definition = new IndexerDefinition()
+            Subject.Definition = new IndexerDefinition
             {
                 Name = "Redacted",
                 Settings = new RedactedSettings
