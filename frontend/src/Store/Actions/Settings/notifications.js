@@ -107,6 +107,8 @@ export default {
         selectedSchema.onReleaseImport = selectedSchema.supportsOnReleaseImport;
         selectedSchema.onUpgrade = selectedSchema.supportsOnUpgrade;
         selectedSchema.onRename = selectedSchema.supportsOnRename;
+        selectedSchema.onArtistAdd = selectedSchema.supportsOnArtistAdd;
+        selectedSchema.onArtistDelete = selectedSchema.supportsOnArtistDelete;
         selectedSchema.onHealthIssue = selectedSchema.supportsOnHealthIssue;
         selectedSchema.onDownloadFailure = selectedSchema.supportsOnDownloadFailure;
         selectedSchema.onImportFailure = selectedSchema.supportsOnImportFailure;

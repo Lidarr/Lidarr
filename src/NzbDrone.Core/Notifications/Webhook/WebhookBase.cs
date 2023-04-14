@@ -130,15 +130,14 @@ namespace NzbDrone.Core.Notifications.Webhook
             };
         }
 
-        public WebhookAlbumDeletePayload BuildOnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        protected WebhookArtistAddPayload BuildOnArtistAdd(ArtistAddMessage addMessage)
         {
-            return new WebhookAlbumDeletePayload
+            return new WebhookArtistAddPayload
             {
-                EventType = WebhookEventType.AlbumDelete,
+                EventType = WebhookEventType.ArtistAdd,
                 InstanceName = _configFileProvider.InstanceName,
                 ApplicationUrl = _configService.ApplicationUrl,
-                Album = new WebhookAlbum(deleteMessage.Album),
-                DeletedFiles = deleteMessage.DeletedFiles
+                Artist = new WebhookArtist(addMessage.Artist),
             };
         }
 
@@ -150,6 +149,18 @@ namespace NzbDrone.Core.Notifications.Webhook
                 InstanceName = _configFileProvider.InstanceName,
                 ApplicationUrl = _configService.ApplicationUrl,
                 Artist = new WebhookArtist(deleteMessage.Artist),
+                DeletedFiles = deleteMessage.DeletedFiles
+            };
+        }
+
+        public WebhookAlbumDeletePayload BuildOnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            return new WebhookAlbumDeletePayload
+            {
+                EventType = WebhookEventType.AlbumDelete,
+                InstanceName = _configFileProvider.InstanceName,
+                ApplicationUrl = _configService.ApplicationUrl,
+                Album = new WebhookAlbum(deleteMessage.Album),
                 DeletedFiles = deleteMessage.DeletedFiles
             };
         }

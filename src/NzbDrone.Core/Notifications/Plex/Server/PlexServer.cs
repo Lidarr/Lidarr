@@ -54,12 +54,9 @@ namespace NzbDrone.Core.Notifications.Plex.Server
             UpdateIfEnabled(message.Artist);
         }
 
-        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        public override void OnArtistAdd(ArtistAddMessage message)
         {
-            if (deleteMessage.DeletedFiles)
-            {
-                UpdateIfEnabled(deleteMessage.Album.Artist);
-            }
+            UpdateIfEnabled(message.Artist);
         }
 
         public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
@@ -67,6 +64,14 @@ namespace NzbDrone.Core.Notifications.Plex.Server
             if (deleteMessage.DeletedFiles)
             {
                 UpdateIfEnabled(deleteMessage.Artist);
+            }
+        }
+
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            if (deleteMessage.DeletedFiles)
+            {
+                UpdateIfEnabled(deleteMessage.Album.Artist);
             }
         }
 

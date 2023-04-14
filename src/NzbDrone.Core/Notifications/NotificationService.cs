@@ -20,8 +20,9 @@ namespace NzbDrone.Core.Notifications
         : IHandle<AlbumGrabbedEvent>,
           IHandle<AlbumImportedEvent>,
           IHandle<ArtistRenamedEvent>,
-          IHandle<AlbumDeletedEvent>,
+          IHandle<ArtistAddCompletedEvent>,
           IHandle<ArtistsDeletedEvent>,
+          IHandle<AlbumDeletedEvent>,
           IHandle<HealthCheckFailedEvent>,
           IHandle<HealthCheckRestoredEvent>,
           IHandle<DownloadFailedEvent>,
@@ -214,24 +215,29 @@ namespace NzbDrone.Core.Notifications
             }
         }
 
-        public void Handle(AlbumDeletedEvent message)
+        public void Handle(ArtistAddCompletedEvent message)
         {
-            var deleteMessage = new AlbumDeleteMessage(message.Album, message.DeleteFiles);
+            var artist = message.Artist;
+            var addMessage = new ArtistAddMessage
+            {
+                Artist = artist,
+                Message = artist.Name
+            };
 
-            foreach (var notification in _notificationFactory.OnAlbumDeleteEnabled())
+            foreach (var notification in _notificationFactory.OnArtistAddEnabled())
             {
                 try
                 {
-                    if (ShouldHandleArtist(notification.Definition, deleteMessage.Album.Artist))
+                    if (ShouldHandleArtist(notification.Definition, artist))
                     {
-                        notification.OnAlbumDelete(deleteMessage);
+                        notification.OnArtistAdd(addMessage);
                         _notificationStatusService.RecordSuccess(notification.Definition.Id);
                     }
                 }
                 catch (Exception ex)
                 {
                     _notificationStatusService.RecordFailure(notification.Definition.Id);
-                    _logger.Warn(ex, "Unable to send OnAlbumDelete notification to: " + notification.Definition.Name);
+                    _logger.Warn(ex, "Unable to send OnArtistAdd notification to: " + notification.Definition.Name);
                 }
             }
         }
@@ -257,6 +263,28 @@ namespace NzbDrone.Core.Notifications
                         _notificationStatusService.RecordFailure(notification.Definition.Id);
                         _logger.Warn(ex, "Unable to send OnArtistDelete notification to: " + notification.Definition.Name);
                     }
+                }
+            }
+        }
+
+        public void Handle(AlbumDeletedEvent message)
+        {
+            var deleteMessage = new AlbumDeleteMessage(message.Album, message.DeleteFiles);
+
+            foreach (var notification in _notificationFactory.OnAlbumDeleteEnabled())
+            {
+                try
+                {
+                    if (ShouldHandleArtist(notification.Definition, deleteMessage.Album.Artist))
+                    {
+                        notification.OnAlbumDelete(deleteMessage);
+                        _notificationStatusService.RecordSuccess(notification.Definition.Id);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
+                    _logger.Warn(ex, "Unable to send OnAlbumDelete notification to: " + notification.Definition.Name);
                 }
             }
         }

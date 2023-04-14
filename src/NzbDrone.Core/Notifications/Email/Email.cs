@@ -40,11 +40,11 @@ namespace NzbDrone.Core.Notifications.Email
             SendEmail(Settings, ALBUM_DOWNLOADED_TITLE_BRANDED, body);
         }
 
-        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        public override void OnArtistAdd(ArtistAddMessage message)
         {
-            var body = $"{deleteMessage.Message}";
+            var body = $"{message.Message}";
 
-            SendEmail(Settings, ALBUM_DELETED_TITLE_BRANDED, body);
+            SendEmail(Settings, ARTIST_ADDED_TITLE_BRANDED, body);
         }
 
         public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
@@ -52,6 +52,13 @@ namespace NzbDrone.Core.Notifications.Email
             var body = $"{deleteMessage.Message}";
 
             SendEmail(Settings, ARTIST_DELETED_TITLE_BRANDED, body);
+        }
+
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            var body = $"{deleteMessage.Message}";
+
+            SendEmail(Settings, ALBUM_DELETED_TITLE_BRANDED, body);
         }
 
         public override void OnHealthIssue(HealthCheck.HealthCheck message)

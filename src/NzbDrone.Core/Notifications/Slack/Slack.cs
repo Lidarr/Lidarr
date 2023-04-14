@@ -70,18 +70,17 @@ namespace NzbDrone.Core.Notifications.Slack
             _proxy.SendPayload(payload, Settings);
         }
 
-        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        public override void OnArtistAdd(ArtistAddMessage message)
         {
             var attachments = new List<Attachment>
-                              {
-                                  new Attachment
-                                  {
-                                      Title = deleteMessage.Album.Title,
-                                      Text = deleteMessage.DeletedFilesMessage
-                                  }
-                              };
+            {
+                new Attachment
+                {
+                    Title = message.Artist.Metadata.Value.Name,
+                }
+            };
 
-            var payload = CreatePayload("Album Deleted", attachments);
+            var payload = CreatePayload("Artist Added", attachments);
 
             _proxy.SendPayload(payload, Settings);
         }
@@ -89,15 +88,31 @@ namespace NzbDrone.Core.Notifications.Slack
         public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
         {
             var attachments = new List<Attachment>
-                              {
-                                  new Attachment
-                                  {
-                                      Title = deleteMessage.Artist.Metadata.Value.Name,
-                                      Text = deleteMessage.DeletedFilesMessage
-                                  }
-                              };
+            {
+                new Attachment
+                {
+                    Title = deleteMessage.Artist.Metadata.Value.Name,
+                    Text = deleteMessage.DeletedFilesMessage
+                }
+            };
 
             var payload = CreatePayload("Artist Deleted", attachments);
+
+            _proxy.SendPayload(payload, Settings);
+        }
+
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            var attachments = new List<Attachment>
+            {
+                new Attachment
+                {
+                    Title = deleteMessage.Album.Title,
+                    Text = deleteMessage.DeletedFilesMessage
+                }
+            };
+
+            var payload = CreatePayload("Album Deleted", attachments);
 
             _proxy.SendPayload(payload, Settings);
         }

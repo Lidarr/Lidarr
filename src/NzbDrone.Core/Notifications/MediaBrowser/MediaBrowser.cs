@@ -47,16 +47,16 @@ namespace NzbDrone.Core.Notifications.Emby
             }
         }
 
-        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        public override void OnArtistAdd(ArtistAddMessage message)
         {
             if (Settings.Notify)
             {
-                _mediaBrowserService.Notify(Settings, ALBUM_DELETED_TITLE_BRANDED, deleteMessage.Message);
+                _mediaBrowserService.Notify(Settings, ARTIST_ADDED_TITLE_BRANDED, message.Message);
             }
 
             if (Settings.UpdateLibrary)
             {
-                _mediaBrowserService.Update(Settings, deleteMessage.Album.Artist);
+                _mediaBrowserService.Update(Settings, message.Artist);
             }
         }
 
@@ -70,6 +70,19 @@ namespace NzbDrone.Core.Notifications.Emby
             if (Settings.UpdateLibrary)
             {
                 _mediaBrowserService.Update(Settings, deleteMessage.Artist);
+            }
+        }
+
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            if (Settings.Notify)
+            {
+                _mediaBrowserService.Notify(Settings, ALBUM_DELETED_TITLE_BRANDED, deleteMessage.Message);
+            }
+
+            if (Settings.UpdateLibrary)
+            {
+                _mediaBrowserService.Update(Settings, deleteMessage.Album.Artist);
             }
         }
 

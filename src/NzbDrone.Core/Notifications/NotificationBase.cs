@@ -12,8 +12,9 @@ namespace NzbDrone.Core.Notifications
     {
         protected const string ALBUM_GRABBED_TITLE = "Album Grabbed";
         protected const string ALBUM_DOWNLOADED_TITLE = "Album Downloaded";
-        protected const string ALBUM_DELETED_TITLE = "Album Deleted";
+        protected const string ARTIST_ADDED_TITLE = "Artist Added";
         protected const string ARTIST_DELETED_TITLE = "Artist Deleted";
+        protected const string ALBUM_DELETED_TITLE = "Album Deleted";
         protected const string HEALTH_ISSUE_TITLE = "Health Check Failure";
         protected const string HEALTH_RESTORED_TITLE = "Health Check Restored";
         protected const string DOWNLOAD_FAILURE_TITLE = "Download Failed";
@@ -23,8 +24,9 @@ namespace NzbDrone.Core.Notifications
 
         protected const string ALBUM_GRABBED_TITLE_BRANDED = "Lidarr - " + ALBUM_GRABBED_TITLE;
         protected const string ALBUM_DOWNLOADED_TITLE_BRANDED = "Lidarr - " + ALBUM_DOWNLOADED_TITLE;
-        protected const string ALBUM_DELETED_TITLE_BRANDED = "Lidarr - " + ALBUM_DELETED_TITLE;
+        protected const string ARTIST_ADDED_TITLE_BRANDED = "Lidarr - " + ARTIST_ADDED_TITLE;
         protected const string ARTIST_DELETED_TITLE_BRANDED = "Lidarr - " + ARTIST_DELETED_TITLE;
+        protected const string ALBUM_DELETED_TITLE_BRANDED = "Lidarr - " + ALBUM_DELETED_TITLE;
         protected const string HEALTH_ISSUE_TITLE_BRANDED = "Lidarr - " + HEALTH_ISSUE_TITLE;
         protected const string HEALTH_RESTORED_TITLE_BRANDED = "Lidarr - " + HEALTH_RESTORED_TITLE;
         protected const string DOWNLOAD_FAILURE_TITLE_BRANDED = "Lidarr - " + DOWNLOAD_FAILURE_TITLE;
@@ -57,11 +59,15 @@ namespace NzbDrone.Core.Notifications
         {
         }
 
-        public virtual void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        public virtual void OnArtistAdd(ArtistAddMessage message)
         {
         }
 
         public virtual void OnArtistDelete(ArtistDeleteMessage deleteMessage)
+        {
+        }
+
+        public virtual void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
         {
         }
 
@@ -97,8 +103,9 @@ namespace NzbDrone.Core.Notifications
         public bool SupportsOnRename => HasConcreteImplementation("OnRename");
         public bool SupportsOnReleaseImport => HasConcreteImplementation("OnReleaseImport");
         public bool SupportsOnUpgrade => SupportsOnReleaseImport;
-        public bool SupportsOnAlbumDelete => HasConcreteImplementation("OnAlbumDelete");
+        public bool SupportsOnArtistAdd => HasConcreteImplementation("OnArtistAdd");
         public bool SupportsOnArtistDelete => HasConcreteImplementation("OnArtistDelete");
+        public bool SupportsOnAlbumDelete => HasConcreteImplementation("OnAlbumDelete");
         public bool SupportsOnHealthIssue => HasConcreteImplementation("OnHealthIssue");
         public bool SupportsOnHealthRestored => HasConcreteImplementation("OnHealthRestored");
         public bool SupportsOnDownloadFailure => HasConcreteImplementation("OnDownloadFailure");
