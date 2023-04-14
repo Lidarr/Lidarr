@@ -14,7 +14,7 @@ namespace NzbDrone.Core.Indexers.Redacted
 
     public class RedactedSettings : ITorrentIndexerSettings
     {
-        private static readonly RedactedSettingsValidator Validator = new RedactedSettingsValidator();
+        private static readonly RedactedSettingsValidator Validator = new ();
 
         public RedactedSettings()
         {
@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Indexers.Redacted
         public int MinimumSeeders { get; set; }
 
         [FieldDefinition(4)]
-        public SeedCriteriaSettings SeedCriteria { get; set; } = new SeedCriteriaSettings();
+        public SeedCriteriaSettings SeedCriteria { get; set; } = new ();
 
         [FieldDefinition(5, Type = FieldType.Number, Label = "Early Download Limit", Unit = "days", HelpText = "Time before release date Lidarr will download from this indexer, empty is no limit", Advanced = true)]
         public int? EarlyReleaseLimit { get; set; }

@@ -11,10 +11,16 @@ namespace NzbDrone.Core.Indexers.Redacted
 {
     public class RedactedRequestGenerator : IIndexerRequestGenerator
     {
-        public RedactedSettings Settings { get; set; }
+        private readonly RedactedSettings _settings;
+        private readonly IHttpClient _httpClient;
+        private readonly Logger _logger;
 
-        public IHttpClient HttpClient { get; set; }
-        public Logger Logger { get; set; }
+        public RedactedRequestGenerator(RedactedSettings settings, IHttpClient httpClient, Logger logger)
+        {
+            _settings = settings;
+            _httpClient = httpClient;
+            _logger = logger;
+        }
 
         public virtual IndexerPageableRequestChain GetRecentRequests()
         {
@@ -28,14 +34,23 @@ namespace NzbDrone.Core.Indexers.Redacted
         public IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(string.Format("&artistname={0}&groupname={1}", searchCriteria.CleanArtistQuery, searchCriteria.CleanAlbumQuery)));
+
+            if (searchCriteria.CleanArtistQuery == "VA")
+            {
+                pageableRequests.Add(GetRequest($"&groupname={searchCriteria.CleanAlbumQuery}"));
+            }
+            else
+            {
+                pageableRequests.Add(GetRequest($"&artistname={searchCriteria.CleanArtistQuery}&groupname={searchCriteria.CleanAlbumQuery}"));
+            }
+
             return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(string.Format("&artistname={0}", searchCriteria.CleanArtistQuery)));
+            pageableRequests.Add(GetRequest($"&artistname={searchCriteria.CleanArtistQuery}"));
             return pageableRequests;
         }
 
@@ -48,13 +63,13 @@ namespace NzbDrone.Core.Indexers.Redacted
                 index.Status != "success" ||
                 index.Response.Passkey.IsNullOrWhiteSpace())
             {
-                Logger.Debug("Redacted authentication failed.");
+                _logger.Debug("Redacted authentication failed.");
                 throw new Exception("Failed to authenticate with Redacted.");
             }
 
-            Logger.Debug("Redacted authentication succeeded.");
+            _logger.Debug("Redacted authentication succeeded.");
 
-            Settings.PassKey = index.Response.Passkey;
+            _settings.PassKey = index.Response.Passkey;
         }
 
         private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
@@ -70,7 +85,7 @@ namespace NzbDrone.Core.Indexers.Redacted
         {
             var request = RequestBuilder().Resource("ajax.php?action=index").Build();
 
-            var indexResponse = HttpClient.Execute(request);
+            var indexResponse = _httpClient.Execute(request);
 
             var result = Json.Deserialize<GazelleAuthResponse>(indexResponse.Content);
 
@@ -79,9 +94,9 @@ namespace NzbDrone.Core.Indexers.Redacted
 
         private HttpRequestBuilder RequestBuilder()
         {
-            return new HttpRequestBuilder($"{Settings.BaseUrl.Trim().TrimEnd('/')}")
+            return new HttpRequestBuilder($"{_settings.BaseUrl.Trim().TrimEnd('/')}")
                 .Accept(HttpAccept.Json)
-                .SetHeader("Authorization", Settings.ApiKey);
+                .SetHeader("Authorization", _settings.ApiKey);
         }
     }
 }
