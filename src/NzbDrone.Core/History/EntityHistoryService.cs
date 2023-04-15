@@ -184,6 +184,11 @@ namespace NzbDrone.Core.History
 
         public void Handle(AlbumImportIncompleteEvent message)
         {
+            if (message.TrackedDownload.RemoteAlbum == null)
+            {
+                return;
+            }
+
             foreach (var album in message.TrackedDownload.RemoteAlbum.Albums)
             {
                 var history = new EntityHistory
@@ -266,6 +271,11 @@ namespace NzbDrone.Core.History
 
         public void Handle(DownloadCompletedEvent message)
         {
+            if (message.TrackedDownload.RemoteAlbum == null)
+            {
+                return;
+            }
+
             foreach (var album in message.TrackedDownload.RemoteAlbum.Albums)
             {
                 var history = new EntityHistory
