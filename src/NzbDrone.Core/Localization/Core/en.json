@@ -787,7 +787,7 @@
   "TestAllIndexers": "Test All Indexers",
   "TestAllLists": "Test All Lists",
   "TheAlbumsFilesWillBeDeleted": "The album's files will be deleted.",
-  "TheArtistFolderStrongpathstrongAndAllOfItsContentWillBeDeleted": "The artist folder <strong>{path}</strong> and all of its content will be deleted.",
+  "TheArtistFolderStrongpathstrongAndAllOfItsContentWillBeDeleted": "The artist folder '{0}' and all of its content will be deleted.",
   "Theme": "Theme",
   "ThemeHelpText": "Change Application UI Theme, 'Auto' Theme will use your OS Theme to set Light or Dark mode. Inspired by Theme.Park",
   "ThisCannotBeCancelled": "This cannot be cancelled once started without disabling all of your indexers.",
