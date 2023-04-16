@@ -8,10 +8,11 @@ namespace NzbDrone.Core.Validation
         private readonly IMetadataProfileService _profileService;
 
         public MetadataProfileExistsValidator(IMetadataProfileService profileService)
-            : base("Metadata profile does not exist")
         {
             _profileService = profileService;
         }
+
+        protected override string GetDefaultMessageTemplate() => "Metadata profile does not exist";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {

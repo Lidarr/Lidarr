@@ -10,10 +10,11 @@ namespace NzbDrone.Core.Validation.Paths
         private readonly IArtistService _artistService;
 
         public ArtistPathValidator(IArtistService artistService)
-            : base("Path is already configured for an existing artist")
         {
             _artistService = artistService;
         }
+
+        protected override string GetDefaultMessageTemplate() => "Path is already configured for an existing artist";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {

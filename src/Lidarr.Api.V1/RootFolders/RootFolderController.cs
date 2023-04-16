@@ -32,7 +32,7 @@ namespace Lidarr.Api.V1.RootFolders
             _rootFolderService = rootFolderService;
 
             SharedValidator.RuleFor(c => c.Path)
-                .Cascade(CascadeMode.StopOnFirstFailure)
+                .Cascade(CascadeMode.Stop)
                 .IsValidPath()
                 .SetValidator(mappedNetworkDriveValidator)
                 .SetValidator(startupFolderValidator)

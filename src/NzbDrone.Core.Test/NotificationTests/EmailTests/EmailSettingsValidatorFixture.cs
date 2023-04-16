@@ -40,7 +40,6 @@ namespace NzbDrone.Core.Test.NotificationTests.EmailTests
         public void should_not_be_valid_if_port_is_out_of_range()
         {
             _emailSettings.Port = 900000;
-
             _validator.Validate(_emailSettings).IsValid.Should().BeFalse();
         }
 
@@ -48,7 +47,6 @@ namespace NzbDrone.Core.Test.NotificationTests.EmailTests
         public void should_not_be_valid_if_server_is_empty()
         {
             _emailSettings.Server = "";
-
             _validator.Validate(_emailSettings).IsValid.Should().BeFalse();
         }
 
@@ -61,7 +59,6 @@ namespace NzbDrone.Core.Test.NotificationTests.EmailTests
         }
 
         [TestCase("lidarr")]
-        [TestCase("lidarr@lidarr")]
         [TestCase("lidarr.audio")]
         public void should_not_be_valid_if_to_is_invalid(string email)
         {
@@ -71,7 +68,6 @@ namespace NzbDrone.Core.Test.NotificationTests.EmailTests
         }
 
         [TestCase("lidarr")]
-        [TestCase("lidarr@lidarr")]
         [TestCase("lidarr.audio")]
         public void should_not_be_valid_if_cc_is_invalid(string email)
         {
@@ -81,7 +77,6 @@ namespace NzbDrone.Core.Test.NotificationTests.EmailTests
         }
 
         [TestCase("lidarr")]
-        [TestCase("lidarr@lidarr")]
         [TestCase("lidarr.audio")]
         public void should_not_be_valid_if_bcc_is_invalid(string email)
         {

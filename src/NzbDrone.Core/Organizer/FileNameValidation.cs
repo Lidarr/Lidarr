@@ -41,53 +41,36 @@ namespace NzbDrone.Core.Organizer
 
     public class ValidStandardTrackFormatValidator : PropertyValidator
     {
-        public ValidStandardTrackFormatValidator()
-            : base("Must contain Track Title and Track numbers OR Original Title")
-        {
-        }
+        protected override string GetDefaultMessageTemplate() => "Must contain Track Title and Track numbers OR Original Title";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            var value = context.PropertyValue as string;
-
-            if (!(FileNameBuilder.TrackTitleRegex.IsMatch(value) &&
-                FileNameBuilder.TrackRegex.IsMatch(value)) &&
-                !FileNameValidation.OriginalTokenRegex.IsMatch(value))
+            if (context.PropertyValue is not string value)
             {
                 return false;
             }
 
-            return true;
+            return (FileNameBuilder.TrackTitleRegex.IsMatch(value) && FileNameBuilder.TrackRegex.IsMatch(value)) ||
+                   FileNameValidation.OriginalTokenRegex.IsMatch(value);
         }
     }
 
     public class IllegalCharactersValidator : PropertyValidator
     {
-        private readonly char[] _invalidPathChars = Path.GetInvalidPathChars();
+        private static readonly char[] InvalidPathChars = Path.GetInvalidPathChars();
 
-        public IllegalCharactersValidator()
-            : base("Contains illegal characters: {InvalidCharacters}")
-        {
-        }
+        protected override string GetDefaultMessageTemplate() => "Contains illegal characters: {InvalidCharacters}";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
             var value = context.PropertyValue as string;
-            var invalidCharacters = new List<char>();
 
             if (value.IsNullOrWhiteSpace())
             {
                 return true;
             }
 
-            foreach (var i in _invalidPathChars)
-            {
-                if (value.IndexOf(i) >= 0)
-                {
-                    invalidCharacters.Add(i);
-                }
-            }
-
+            var invalidCharacters = InvalidPathChars.Where(i => value!.IndexOf(i) >= 0).ToList();
             if (invalidCharacters.Any())
             {
                 context.MessageFormatter.AppendArgument("InvalidCharacters", string.Join("", invalidCharacters));

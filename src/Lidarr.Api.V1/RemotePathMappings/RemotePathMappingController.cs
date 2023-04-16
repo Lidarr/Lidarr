@@ -28,7 +28,7 @@ namespace Lidarr.Api.V1.RemotePathMappings
                            .NotEmpty();
 
             SharedValidator.RuleFor(c => c.LocalPath)
-                           .Cascade(CascadeMode.StopOnFirstFailure)
+                           .Cascade(CascadeMode.Stop)
                            .IsValidPath()
                            .SetValidator(mappedNetworkDriveValidator)
                            .SetValidator(pathExistsValidator);

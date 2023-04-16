@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Music
                                   QualityProfileExistsValidator qualityProfileExistsValidator,
                                   MetadataProfileExistsValidator metadataProfileExistsValidator)
         {
-            RuleFor(c => c.Path).Cascade(CascadeMode.StopOnFirstFailure)
+            RuleFor(c => c.Path).Cascade(CascadeMode.Stop)
                                 .IsValidPath()
                                 .SetValidator(rootFolderValidator)
                                 .SetValidator(recycleBinValidator)
