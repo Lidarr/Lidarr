@@ -16,13 +16,13 @@ namespace NzbDrone.Core.Notifications.Email
             RuleFor(c => c.Port).InclusiveBetween(1, 65535);
             RuleFor(c => c.From).NotEmpty();
             RuleForEach(c => c.To).EmailAddress();
-            RuleForEach(c => c.CC).EmailAddress();
+            RuleForEach(c => c.Cc).EmailAddress();
             RuleForEach(c => c.Bcc).EmailAddress();
 
             // Only require one of three send fields to be set
-            RuleFor(c => c.To).NotEmpty().Unless(c => c.Bcc.Any() || c.CC.Any());
-            RuleFor(c => c.CC).NotEmpty().Unless(c => c.To.Any() || c.Bcc.Any());
-            RuleFor(c => c.Bcc).NotEmpty().Unless(c => c.To.Any() || c.CC.Any());
+            RuleFor(c => c.To).NotEmpty().Unless(c => c.Bcc.Any() || c.Cc.Any());
+            RuleFor(c => c.Cc).NotEmpty().Unless(c => c.To.Any() || c.Bcc.Any());
+            RuleFor(c => c.Bcc).NotEmpty().Unless(c => c.To.Any() || c.Cc.Any());
         }
     }
 
@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Notifications.Email
             Port = 587;
 
             To = Array.Empty<string>();
-            CC = Array.Empty<string>();
+            Cc = Array.Empty<string>();
             Bcc = Array.Empty<string>();
         }
 
@@ -62,7 +62,7 @@ namespace NzbDrone.Core.Notifications.Email
         public IEnumerable<string> To { get; set; }
 
         [FieldDefinition(7, Label = "CC Address(es)", HelpText = "Comma separated list of email cc recipients", Advanced = true)]
-        public IEnumerable<string> CC { get; set; }
+        public IEnumerable<string> Cc { get; set; }
 
         [FieldDefinition(8, Label = "BCC Address(es)", HelpText = "Comma separated list of email bcc recipients", Advanced = true)]
         public IEnumerable<string> Bcc { get; set; }
