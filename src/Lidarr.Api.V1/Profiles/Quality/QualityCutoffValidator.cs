@@ -15,30 +15,17 @@ namespace Lidarr.Api.V1.Profiles.Quality
 
     public class ValidCutoffValidator<T> : PropertyValidator
     {
-        public ValidCutoffValidator()
-            : base("Cutoff must be an allowed quality or group")
-        {
-        }
+        protected override string GetDefaultMessageTemplate() => "Cutoff must be an allowed quality or group";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            int cutoff = (int)context.PropertyValue;
+            var cutoff = (int)context.PropertyValue;
             dynamic instance = context.ParentContext.InstanceToValidate;
             var items = instance.Items as IList<QualityProfileQualityItemResource>;
 
-            QualityProfileQualityItemResource cutoffItem = items.SingleOrDefault(i => (i.Quality == null && i.Id == cutoff) || i.Quality?.Id == cutoff);
+            var cutoffItem = items?.SingleOrDefault(i => (i.Quality == null && i.Id == cutoff) || i.Quality?.Id == cutoff);
 
-            if (cutoffItem == null)
-            {
-                return false;
-            }
-
-            if (!cutoffItem.Allowed)
-            {
-                return false;
-            }
-
-            return true;
+            return cutoffItem is { Allowed: true };
         }
     }
 }

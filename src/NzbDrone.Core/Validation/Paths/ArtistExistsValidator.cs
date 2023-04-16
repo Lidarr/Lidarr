@@ -8,10 +8,11 @@ namespace NzbDrone.Core.Validation.Paths
         private readonly IArtistService _artistService;
 
         public ArtistExistsValidator(IArtistService artistService)
-            : base("This artist has already been added.")
         {
             _artistService = artistService;
         }
+
+        protected override string GetDefaultMessageTemplate() => "This artist has already been added.";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {

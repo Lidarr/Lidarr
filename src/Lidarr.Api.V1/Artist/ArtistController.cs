@@ -78,7 +78,7 @@ namespace Lidarr.Api.V1.Artist
             Http.Validation.RuleBuilderExtensions.ValidId(SharedValidator.RuleFor(s => s.MetadataProfileId));
 
             SharedValidator.RuleFor(s => s.Path)
-                           .Cascade(CascadeMode.StopOnFirstFailure)
+                           .Cascade(CascadeMode.Stop)
                            .IsValidPath()
                            .SetValidator(rootFolderValidator)
                            .SetValidator(mappedNetworkDriveValidator)

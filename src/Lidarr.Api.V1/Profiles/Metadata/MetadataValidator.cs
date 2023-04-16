@@ -31,76 +31,34 @@ namespace Lidarr.Api.V1.Profiles.Metadata
 
     public class PrimaryTypeValidator<T> : PropertyValidator
     {
-        public PrimaryTypeValidator()
-            : base("Must have at least one allowed primary type")
-        {
-        }
+        protected override string GetDefaultMessageTemplate() => "Must have at least one allowed primary type";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            var list = context.PropertyValue as IList<ProfilePrimaryAlbumTypeItemResource>;
-
-            if (list == null)
-            {
-                return false;
-            }
-
-            if (!list.Any(c => c.Allowed))
-            {
-                return false;
-            }
-
-            return true;
+            return context.PropertyValue is IList<ProfilePrimaryAlbumTypeItemResource> list &&
+                   list.Any(c => c.Allowed);
         }
     }
 
     public class SecondaryTypeValidator<T> : PropertyValidator
     {
-        public SecondaryTypeValidator()
-            : base("Must have at least one allowed secondary type")
-        {
-        }
+        protected override string GetDefaultMessageTemplate() => "Must have at least one allowed secondary type";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            var list = context.PropertyValue as IList<ProfileSecondaryAlbumTypeItemResource>;
-
-            if (list == null)
-            {
-                return false;
-            }
-
-            if (!list.Any(c => c.Allowed))
-            {
-                return false;
-            }
-
-            return true;
+            return context.PropertyValue is IList<ProfileSecondaryAlbumTypeItemResource> list &&
+                   list.Any(c => c.Allowed);
         }
     }
 
     public class ReleaseStatusValidator<T> : PropertyValidator
     {
-        public ReleaseStatusValidator()
-            : base("Must have at least one allowed release status")
-        {
-        }
+        protected override string GetDefaultMessageTemplate() => "Must have at least one allowed release status";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            var list = context.PropertyValue as IList<ProfileReleaseStatusItemResource>;
-
-            if (list == null)
-            {
-                return false;
-            }
-
-            if (!list.Any(c => c.Allowed))
-            {
-                return false;
-            }
-
-            return true;
+            return context.PropertyValue is IList<ProfileReleaseStatusItemResource> list &&
+                   list.Any(c => c.Allowed);
         }
     }
 }
