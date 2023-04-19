@@ -28,15 +28,15 @@ namespace Lidarr.Api.V1.Calendar
         }
 
         [HttpGet("Lidarr.ics")]
-        public IActionResult GetCalendarFeed(int pastDays = 7, int futureDays = 28, string tagList = "", bool unmonitored = false)
+        public IActionResult GetCalendarFeed(int pastDays = 7, int futureDays = 28, string tags = "", bool unmonitored = false)
         {
             var start = DateTime.Today.AddDays(-pastDays);
             var end = DateTime.Today.AddDays(futureDays);
-            var tags = new List<int>();
+            var parsedTags = new List<int>();
 
-            if (tagList.IsNotNullOrWhiteSpace())
+            if (tags.IsNotNullOrWhiteSpace())
             {
-                tags.AddRange(tagList.Split(',').Select(_tagService.GetTag).Select(t => t.Id));
+                parsedTags.AddRange(tags.Split(',').Select(_tagService.GetTag).Select(t => t.Id));
             }
 
             var albums = _albumService.AlbumsBetweenDates(start, end, unmonitored);
@@ -53,7 +53,7 @@ namespace Lidarr.Api.V1.Calendar
             {
                 var artist = _artistService.GetArtist(album.ArtistId); // Temp fix TODO: Figure out why Album.Artist is not populated during AlbumsBetweenDates Query
 
-                if (tags.Any() && tags.None(artist.Tags.Contains))
+                if (parsedTags.Any() && parsedTags.None(artist.Tags.Contains))
                 {
                     continue;
                 }
