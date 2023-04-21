@@ -240,7 +240,7 @@ namespace NzbDrone.Core.History
                 // history.Data.Add("FileId", message.ImportedEpisode.Id.ToString());
                 history.Data.Add("DroppedPath", message.TrackInfo.Path);
                 history.Data.Add("ImportedPath", message.ImportedTrack.Path);
-                history.Data.Add("DownloadClient", message.DownloadClientInfo.Name);
+                history.Data.Add("DownloadClient", message.DownloadClientInfo?.Name);
                 history.Data.Add("ReleaseGroup", message.TrackInfo.ReleaseGroup);
 
                 _historyRepository.Insert(history);
@@ -405,7 +405,7 @@ namespace NzbDrone.Core.History
                     DownloadId = message.DownloadId
                 };
 
-                history.Data.Add("DownloadClient", message.DownloadClientInfo.Name);
+                history.Data.Add("DownloadClient", message.DownloadClientInfo?.Name);
                 history.Data.Add("ReleaseGroup", message.TrackedDownload?.RemoteAlbum?.ParsedAlbumInfo?.ReleaseGroup);
                 history.Data.Add("Message", message.Message);
 
