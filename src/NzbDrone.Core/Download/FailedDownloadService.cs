@@ -40,12 +40,23 @@ namespace NzbDrone.Core.Download
             if (downloadId.IsNullOrWhiteSpace())
             {
                 PublishDownloadFailedEvent(new List<EntityHistory> { history }, "Manually marked as failed", skipRedownload: skipRedownload);
+
+                return;
             }
-            else
+
+            var grabbedHistory = new List<EntityHistory>();
+
+            // If the history item is a grabbed item (it should be, at least from the UI) add it as the first history item
+            if (history.EventType == EntityHistoryEventType.Grabbed)
             {
-                var grabbedHistory = _historyService.Find(downloadId, EntityHistoryEventType.Grabbed).ToList();
-                PublishDownloadFailedEvent(grabbedHistory, "Manually marked as failed");
+                grabbedHistory.Add(history);
             }
+
+            // Add any other history items for the download ID then filter out any duplicate history items.
+            grabbedHistory.AddRange(_historyService.Find(downloadId, EntityHistoryEventType.Grabbed));
+            grabbedHistory = grabbedHistory.DistinctBy(h => h.Id).ToList();
+
+            PublishDownloadFailedEvent(grabbedHistory, "Manually marked as failed");
         }
 
         public void MarkAsFailed(string downloadId, bool skipRedownload = false)
@@ -56,7 +67,7 @@ namespace NzbDrone.Core.Download
             {
                 var trackedDownload = _trackedDownloadService.Find(downloadId);
 
-                PublishDownloadFailedEvent(history, "Manually marked as failed", trackedDownload, skipRedownload);
+                PublishDownloadFailedEvent(history, "Manually marked as failed", trackedDownload, skipRedownload: skipRedownload);
             }
         }
 
@@ -124,7 +135,7 @@ namespace NzbDrone.Core.Download
             var downloadFailedEvent = new DownloadFailedEvent
             {
                 ArtistId = historyItem.ArtistId,
-                AlbumIds = historyItems.Select(h => h.AlbumId).ToList(),
+                AlbumIds = historyItems.Select(h => h.AlbumId).Distinct().ToList(),
                 Quality = historyItem.Quality,
                 SourceTitle = historyItem.SourceTitle,
                 DownloadClient = historyItem.Data.GetValueOrDefault(EntityHistory.DOWNLOAD_CLIENT),
