@@ -99,8 +99,13 @@ namespace NzbDrone.Core.Indexers.Gazelle
                 .AddQueryParam("action", "download")
                 .AddQueryParam("id", torrentId)
                 .AddQueryParam("authkey", _settings.AuthKey)
-                .AddQueryParam("torrent_pass", _settings.PassKey)
-                .AddQueryParam("usetoken", _settings.UseFreeleechToken ? 1 : 0);
+                .AddQueryParam("torrent_pass", _settings.PassKey);
+
+            // Orpheus fails to download if usetoken=0 so we need to only add if we will use one
+            if (_settings.UseFreeleechToken)
+            {
+                url = url.AddQueryParam("usetoken", "1");
+            }
 
             return url.FullUri;
         }
