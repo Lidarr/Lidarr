@@ -87,6 +87,15 @@ class Naming extends Component {
     } = this.state;
 
     const renameTracks = hasSettings && settings.renameTracks.value;
+    const replaceIllegalCharacters = hasSettings && settings.replaceIllegalCharacters.value;
+
+    const colonReplacementOptions = [
+      { key: 0, value: translate('Delete') },
+      { key: 1, value: translate('ReplaceWithDash') },
+      { key: 2, value: translate('ReplaceWithSpaceDash') },
+      { key: 3, value: translate('ReplaceWithSpaceDashSpace') },
+      { key: 4, value: translate('SmartReplace'), hint: translate('DashOrSpaceDashDependingOnName') }
+    ];
 
     const standardTrackFormatHelpTexts = [];
     const standardTrackFormatErrors = [];
@@ -159,6 +168,24 @@ class Naming extends Component {
                   {...settings.replaceIllegalCharacters}
                 />
               </FormGroup>
+
+              {
+                replaceIllegalCharacters ?
+                  <FormGroup>
+                    <FormLabel>
+                      {translate('ColonReplacement')}
+                    </FormLabel>
+
+                    <FormInputGroup
+                      type={inputTypes.SELECT}
+                      name="colonReplacementFormat"
+                      values={colonReplacementOptions}
+                      onChange={onInputChange}
+                      {...settings.colonReplacementFormat}
+                    />
+                  </FormGroup> :
+                  null
+              }
 
               {
                 renameTracks &&

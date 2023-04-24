@@ -6,6 +6,7 @@ namespace Lidarr.Api.V1.Config
     {
         public bool RenameTracks { get; set; }
         public bool ReplaceIllegalCharacters { get; set; }
+        public int ColonReplacementFormat { get; set; }
         public string StandardTrackFormat { get; set; }
         public string MultiDiscTrackFormat { get; set; }
         public string ArtistFolderFormat { get; set; }
