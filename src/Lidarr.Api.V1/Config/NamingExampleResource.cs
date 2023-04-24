@@ -20,6 +20,7 @@ namespace Lidarr.Api.V1.Config
 
                 RenameTracks = model.RenameTracks,
                 ReplaceIllegalCharacters = model.ReplaceIllegalCharacters,
+                ColonReplacementFormat = (int)model.ColonReplacementFormat,
                 StandardTrackFormat = model.StandardTrackFormat,
                 MultiDiscTrackFormat = model.MultiDiscTrackFormat,
                 ArtistFolderFormat = model.ArtistFolderFormat
@@ -44,6 +45,7 @@ namespace Lidarr.Api.V1.Config
 
                 RenameTracks = resource.RenameTracks,
                 ReplaceIllegalCharacters = resource.ReplaceIllegalCharacters,
+                ColonReplacementFormat = (ColonReplacementFormat)resource.ColonReplacementFormat,
                 StandardTrackFormat = resource.StandardTrackFormat,
                 MultiDiscTrackFormat = resource.MultiDiscTrackFormat,
 
