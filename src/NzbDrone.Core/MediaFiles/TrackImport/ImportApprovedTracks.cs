@@ -266,6 +266,13 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
                     importResults.Add(new ImportResult(importDecision, "Failed to import track, Permissions error"));
                 }
+                catch (RecycleBinException e)
+                {
+                    _logger.Warn(e, "Couldn't import track " + localTrack);
+                    _eventAggregator.PublishEvent(new TrackImportFailedEvent(e, localTrack, !localTrack.ExistingFile, downloadClientItem));
+
+                    importResults.Add(new ImportResult(importDecision, "Failed to import track, unable to move existing file to the Recycle Bin."));
+                }
                 catch (Exception e)
                 {
                     _logger.Warn(e, "Couldn't import track " + localTrack);
