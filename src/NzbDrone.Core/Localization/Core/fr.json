@@ -414,7 +414,7 @@
     "UpdateAutomaticallyHelpText": "Télécharger et installer automatiquement les mises à jour. Vous pourrez toujours installer à partir de System : Updates",
     "UpdateMechanismHelpText": "Utiliser le programme de mise à jour intégré de Lidarr ou un script",
     "UpdateScriptPathHelpText": "Chemin vers un script personnalisé qui prend un package de mise à jour extraite et gère le reste du processus de mise à jour",
-    "UpgradeAllowedHelpText": "Ne sera pas mis à jour si la qualité est désactivée",
+    "UpgradeAllowedHelpText": "Si désactivé, la qualité ne sera pas améliorée",
     "Uptime": "Durée de fonctionnent",
     "URLBase": "Base URL",
     "UrlBaseHelpText": "Pour la prise en charge du proxy inverse, la valeur par défaut est vide",
