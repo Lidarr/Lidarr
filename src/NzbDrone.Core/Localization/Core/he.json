@@ -390,7 +390,7 @@
     "BackupRetentionHelpText": "גיבויים אוטומטיים ישנים יותר מתקופת השמירה ינוקו אוטומטית",
     "Backups": "גיבויים",
     "BindAddress": "כתובת איגוד",
-    "BindAddressHelpText": "כתובת IP4 תקפה או '*' לכל הממשקים",
+    "BindAddressHelpText": "יש להזין localhost, כתובת IP או '*' כדי לאפשר הכל",
     "BindAddressHelpTextWarning": "נדרש הפעלה מחדש כדי להיכנס לתוקף",
     "Blocklist": "רשימה שחורה",
     "BlocklistRelease": "שחרור הרשימה השחורה",

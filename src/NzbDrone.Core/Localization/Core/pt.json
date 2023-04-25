@@ -543,7 +543,7 @@
     "Queue": "Fila",
     "WriteMetadataToAudioFiles": "Escrever metadados em ficheiros de áudio",
     "Year": "Ano",
-    "BindAddressHelpText": "Endereço IPv4 válido ou \"*\" para todas as interfaces",
+    "BindAddressHelpText": "Endereço de IP válido, localhost ou \"*\" para todas as interfaces",
     "MonoVersion": "Versão do Mono",
     "OutputPath": "Caminho de saída",
     "MetadataProfiles": "perfil de metadados",
@@ -676,7 +676,7 @@
     "ImportListExclusions": "Eliminar exclusão da lista de importação",
     "EditMetadataProfile": "perfil de metadados",
     "Seeders": "Semeadores",
-    "QualitiesHelpText": "Qualidades mais acima na lista têm maior prioridade, as que estão no mesmo grupo têm prioridade igual. Apenas qualidades verificadas são desejadas",
+    "QualitiesHelpText": "Qualidades mais acima na lista têm maior prioridade, mesmo que não sejam verificadas. As que estão no mesmo grupo têm prioridade igual. Apenas qualidades verificadas são desejadas",
     "Database": "Base de dados",
     "DoneEditingGroups": "Edição de grupos terminada",
     "EditGroups": "Editar grupos",
@@ -685,5 +685,6 @@
     "BypassIfHighestQuality": "Ignorar se a qualidade for mais alta",
     "CustomFormatScore": "Pontuação do formato personalizados",
     "MinimumCustomFormatScore": "Pontuação mínima de formato personalizado",
-    "SelectReleaseGroup": "Selecionar Grupo de Lançamento"
+    "SelectReleaseGroup": "Selecionar Grupo de Lançamento",
+    "PreferredProtocol": "Protocolo Preferido"
 }
