@@ -11,6 +11,7 @@ namespace NzbDrone.Core.ImportLists.Lidarr
         public List<MediaCover.MediaCover> Images { get; set; }
         public bool Monitored { get; set; }
         public int QualityProfileId { get; set; }
+        public string RootFolderPath { get; set; }
         public HashSet<int> Tags { get; set; }
     }
 
@@ -34,6 +35,12 @@ namespace NzbDrone.Core.ImportLists.Lidarr
     public class LidarrTag
     {
         public string Label { get; set; }
+        public int Id { get; set; }
+    }
+
+    public class LidarrRootFolder
+    {
+        public string Path { get; set; }
         public int Id { get; set; }
     }
 }

@@ -42,18 +42,34 @@ namespace NzbDrone.Core.ImportLists.Lidarr
                 foreach (var remoteAlbum in remoteAlbums)
                 {
                     var remoteArtist = artistDict[remoteAlbum.ArtistId];
-                    if ((!Settings.ProfileIds.Any() || Settings.ProfileIds.Contains(remoteArtist.QualityProfileId)) &&
-                        (!Settings.TagIds.Any() || Settings.TagIds.Any(x => remoteArtist.Tags.Any(y => y == x))) &&
-                         remoteAlbum.Monitored && remoteArtist.Monitored)
+
+                    if (Settings.ProfileIds.Any() && !Settings.ProfileIds.Contains(remoteArtist.QualityProfileId))
                     {
-                        artistsAndAlbums.Add(new ImportListItemInfo
-                        {
-                            ArtistMusicBrainzId = remoteArtist.ForeignArtistId,
-                            Artist = remoteArtist.ArtistName,
-                            AlbumMusicBrainzId = remoteAlbum.ForeignAlbumId,
-                            Album = remoteAlbum.Title
-                        });
+                        continue;
                     }
+
+                    if (Settings.TagIds.Any() && !Settings.TagIds.Any(x => remoteArtist.Tags.Any(y => y == x)))
+                    {
+                        continue;
+                    }
+
+                    if (Settings.RootFolderPaths.Any() && !Settings.RootFolderPaths.Any(rootFolderPath => remoteArtist.RootFolderPath.ContainsIgnoreCase(rootFolderPath)))
+                    {
+                        continue;
+                    }
+
+                    if (!remoteAlbum.Monitored || !remoteArtist.Monitored)
+                    {
+                        continue;
+                    }
+
+                    artistsAndAlbums.Add(new ImportListItemInfo
+                    {
+                        ArtistMusicBrainzId = remoteArtist.ForeignArtistId,
+                        Artist = remoteArtist.ArtistName,
+                        AlbumMusicBrainzId = remoteAlbum.ForeignAlbumId,
+                        Album = remoteAlbum.Title
+                    });
                 }
 
                 _importListStatusService.RecordSuccess(Definition.Id);
@@ -106,6 +122,23 @@ namespace NzbDrone.Core.ImportLists.Lidarr
                                                 Value = d.Id,
                                                 Name = d.Label
                                             })
+                };
+            }
+
+            if (action == "getRootFolders")
+            {
+                Settings.Validate().Filter("ApiKey").ThrowOnError();
+
+                var remoteRootfolders = _lidarrV1Proxy.GetRootFolders(Settings);
+
+                return new
+                {
+                    options = remoteRootfolders.OrderBy(d => d.Path, StringComparer.InvariantCultureIgnoreCase)
+                                               .Select(d => new
+                                               {
+                                                   value = d.Path,
+                                                   name = d.Path
+                                               })
                 };
             }
 

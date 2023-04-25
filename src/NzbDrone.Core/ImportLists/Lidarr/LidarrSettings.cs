@@ -25,6 +25,7 @@ namespace NzbDrone.Core.ImportLists.Lidarr
             ApiKey = "";
             ProfileIds = Array.Empty<int>();
             TagIds = Array.Empty<int>();
+            RootFolderPaths = Array.Empty<string>();
         }
 
         [FieldDefinition(0, Label = "Full URL", HelpText = "URL, including port, of the Lidarr instance to import from")]
@@ -38,6 +39,9 @@ namespace NzbDrone.Core.ImportLists.Lidarr
 
         [FieldDefinition(3, Type = FieldType.Select, SelectOptionsProviderAction = "getTags", Label = "Tags", HelpText = "Tags from the source instance to import from")]
         public IEnumerable<int> TagIds { get; set; }
+
+        [FieldDefinition(4, Type = FieldType.Select, SelectOptionsProviderAction = "getRootFolders", Label = "Root Folders", HelpText = "Root Folders from the source instance to import from")]
+        public IEnumerable<string> RootFolderPaths { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

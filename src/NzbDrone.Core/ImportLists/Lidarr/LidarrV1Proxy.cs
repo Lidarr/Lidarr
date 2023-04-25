@@ -14,6 +14,7 @@ namespace NzbDrone.Core.ImportLists.Lidarr
         List<LidarrArtist> GetArtists(LidarrSettings settings);
         List<LidarrAlbum> GetAlbums(LidarrSettings settings);
         List<LidarrProfile> GetProfiles(LidarrSettings settings);
+        List<LidarrRootFolder> GetRootFolders(LidarrSettings settings);
         List<LidarrTag> GetTags(LidarrSettings settings);
         ValidationFailure Test(LidarrSettings settings);
     }
@@ -42,6 +43,11 @@ namespace NzbDrone.Core.ImportLists.Lidarr
         public List<LidarrProfile> GetProfiles(LidarrSettings settings)
         {
             return Execute<LidarrProfile>("/api/v1/qualityprofile", settings);
+        }
+
+        public List<LidarrRootFolder> GetRootFolders(LidarrSettings settings)
+        {
+            return Execute<LidarrRootFolder>("api/v1/rootfolder", settings);
         }
 
         public List<LidarrTag> GetTags(LidarrSettings settings)
