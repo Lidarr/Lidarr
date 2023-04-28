@@ -242,7 +242,7 @@ class EditQualityProfileModalContent extends Component {
                         }
 
                         <div className={styles.formatItemLarge}>
-                          {getCustomFormatRender(formatItems, ...otherProps)}
+                          {getCustomFormatRender(formatItems, otherProps)}
                         </div>
                       </div>
 
