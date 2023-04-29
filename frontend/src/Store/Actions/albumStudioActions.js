@@ -61,7 +61,7 @@ export const defaultState = {
     },
     {
       name: 'rootFolderPath',
-      label: translate('Root Folder Path'),
+      label: translate('RootFolderPath'),
       type: filterBuilderTypes.EXACT
     },
     {

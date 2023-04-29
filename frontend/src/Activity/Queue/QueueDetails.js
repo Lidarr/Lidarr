@@ -45,7 +45,7 @@ function QueueDetails(props) {
         <Icon
           name={icons.DOWNLOAD}
           kind={kinds.WARNING}
-          title={'Downloaded - Unable to Import: check logs for details'}
+          title={translate('DownloadedUnableToImportCheckLogsForDetails')}
         />
       );
     }
@@ -55,7 +55,7 @@ function QueueDetails(props) {
         <Icon
           name={icons.DOWNLOAD}
           kind={kinds.PURPLE}
-          title={'Downloaded - Waiting to Import'}
+          title={translate('DownloadedWaitingToImport')}
         />
       );
     }
@@ -65,7 +65,7 @@ function QueueDetails(props) {
         <Icon
           name={icons.DOWNLOAD}
           kind={kinds.PURPLE}
-          title={'Downloaded - Importing'}
+          title={translate('DownloadedImporting')}
         />
       );
     }

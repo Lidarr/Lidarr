@@ -67,8 +67,7 @@ const columns = [
   {
     name: 'rejections',
     label: React.createElement(Icon, {
-      name: icons.DANGER,
-      title: translate('rejections')
+      name: icons.DANGER
     }),
     isSortable: true,
     fixedSortDirection: sortDirections.ASCENDING,

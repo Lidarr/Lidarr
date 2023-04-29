@@ -3,6 +3,7 @@ import React from 'react';
 import DescriptionList from 'Components/DescriptionList/DescriptionList';
 import DescriptionListItem from 'Components/DescriptionList/DescriptionListItem';
 import formatBytes from 'Utilities/Number/formatBytes';
+import translate from 'Utilities/String/translate';
 import styles from './AlbumGroupInfo.css';
 
 function AlbumGroupInfo(props) {
@@ -18,28 +19,28 @@ function AlbumGroupInfo(props) {
       <DescriptionListItem
         titleClassName={styles.title}
         descriptionClassName={styles.description}
-        title="Total"
+        title={translate('Total')}
         data={totalAlbumCount}
       />
 
       <DescriptionListItem
         titleClassName={styles.title}
         descriptionClassName={styles.description}
-        title="Monitored"
+        title={translate('Monitored')}
         data={monitoredAlbumCount}
       />
 
       <DescriptionListItem
         titleClassName={styles.title}
         descriptionClassName={styles.description}
-        title="Track Files"
+        title={translate('TrackFiles')}
         data={trackFileCount}
       />
 
       <DescriptionListItem
         titleClassName={styles.title}
         descriptionClassName={styles.description}
-        title="Size on Disk"
+        title={translate('SizeOnDisk')}
         data={formatBytes(sizeOnDisk)}
       />
     </DescriptionList>
