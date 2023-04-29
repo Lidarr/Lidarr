@@ -231,7 +231,7 @@ class ArtistDetailsSeason extends Component {
                   <span>{albumCount} / {monitoredAlbumCount}</span>
                 </Label>
               }
-              title="Group Information"
+              title={translate('GroupInformation')}
               body={
                 <div>
                   <AlbumGroupInfo

@@ -15,6 +15,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { icons, inputTypes, kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import ImportCustomFormatModal from './ImportCustomFormatModal';
 import AddSpecificationModal from './Specifications/AddSpecificationModal';
 import EditSpecificationModalConnector from './Specifications/EditSpecificationModalConnector';
@@ -141,14 +142,14 @@ class EditCustomFormatModalContent extends Component {
                       <FormInputGroup
                         type={inputTypes.CHECK}
                         name="includeCustomFormatWhenRenaming"
-                        helpText={'Include in {Custom Formats} renaming format'}
+                        helpText={translate('IncludeCustomFormatWhenRenamingHelpText')}
                         {...includeCustomFormatWhenRenaming}
                         onChange={onInputChange}
                       />
                     </FormGroup>
                   </Form>
 
-                  <FieldSet legend={'Conditions'}>
+                  <FieldSet legend={translate('Conditions')}>
                     <div className={styles.customFormats}>
                       {
                         specifications.map((tag) => {

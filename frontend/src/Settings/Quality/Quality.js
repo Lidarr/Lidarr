@@ -72,7 +72,7 @@ class Quality extends Component {
               <PageToolbarSeparator />
 
               <PageToolbarButton
-                label="Reset Definitions"
+                label={translate('ResetDefinitions')}
                 iconName={icons.REFRESH}
                 isSpinning={isResettingQualityDefinitions}
                 onPress={this.onResetQualityDefinitionsPress}

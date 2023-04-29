@@ -127,7 +127,7 @@ class AddNewItem extends Component {
             !isFetching && !!error ?
               <div className={styles.message}>
                 <div className={styles.helpText}>
-                  Failed to load search results, please try again.
+                  {translate('FailedLoadingSearchResults')}
                 </div>
                 <div>{getErrorMessage(error)}</div>
               </div> : null
@@ -166,7 +166,9 @@ class AddNewItem extends Component {
           {
             !isFetching && !error && !items.length && !!term &&
               <div className={styles.message}>
-                <div className={styles.noResults}>Couldn't find any results for '{term}'</div>
+                <div className={styles.noResults}>
+                  {translate('CouldntFindAnyResultsForTerm'[term])}
+                </div>
                 <div>
                   You can also search using the
                   <Link to="https://musicbrainz.org/search"> MusicBrainz ID </Link>
@@ -178,7 +180,9 @@ class AddNewItem extends Component {
           {
             !term &&
               <div className={styles.message}>
-                <div className={styles.helpText}>It's easy to add a new artist, just start typing the name of the artist you want to add.</div>
+                <div className={styles.helpText}>
+                  {translate('ItsEasyToAddANewArtistJustStartTypingTheNameOfTheArtistYouWantToAdd')}
+                </div>
                 <div>
                   You can also search using the
                   <Link to="https://musicbrainz.org/search"> MusicBrainz ID </Link>

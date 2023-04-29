@@ -33,7 +33,7 @@ function ImportListMonitoringOptionsPopoverContent() {
 
       <DescriptionListItem
         title={translate('SpecificAlbum')}
-        data={translate('SecificMonitoringOptionHelpText')}
+        data={translate('SpecificMonitoringOptionHelpText')}
       />
 
       <DescriptionListItem
@@ -49,7 +49,7 @@ function EditImportListModalContent(props) {
   const monitorOptions = [
     { key: 'none', value: translate('None') },
     { key: 'specificAlbum', value: translate('SpecificAlbum') },
-    { key: 'entireArtist', value: translate('All Artist Albums') }
+    { key: 'entireArtist', value: translate('AllArtistAlbums') }
   ];
 
   const {

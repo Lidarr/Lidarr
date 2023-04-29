@@ -20,17 +20,17 @@ const columns = [
   },
   {
     name: 'lastExecution',
-    label: translate('Last Execution'),
+    label: translate('LastExecution'),
     isVisible: true
   },
   {
     name: 'lastDuration',
-    label: translate('Last Duration'),
+    label: translate('LastDuration'),
     isVisible: true
   },
   {
     name: 'nextExecution',
-    label: translate('Next Execution'),
+    label: translate('NextExecution'),
     isVisible: true
   },
   {
