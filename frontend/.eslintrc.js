@@ -1,14 +1,17 @@
 const fs = require('fs');
+const path = require('path');
+
+const frontendFolder = __dirname;
 
 const dirs = fs
-  .readdirSync('frontend/src', { withFileTypes: true })
+  .readdirSync(path.join(frontendFolder, 'src'), { withFileTypes: true })
   .filter((dirent) => dirent.isDirectory())
   .map((dirent) => dirent.name)
   .join('|');
 
-const frontendFolder = __dirname;
-
 module.exports = {
+  root: true,
+
   parser: '@babel/eslint-parser',
 
   env: {
