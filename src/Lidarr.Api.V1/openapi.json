@@ -10434,6 +10434,10 @@
           "hidden": {
             "type": "string",
             "nullable": true
+          },
+          "placeholder": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
