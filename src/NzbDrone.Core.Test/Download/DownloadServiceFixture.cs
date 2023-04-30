@@ -102,7 +102,8 @@ namespace NzbDrone.Core.Test.Download
         public void Download_report_should_not_publish_on_failed_grab_event()
         {
             var mock = WithUsenetClient();
-            mock.Setup(s => s.Download(It.IsAny<RemoteAlbum>(), It.IsAny<IIndexer>()));
+            mock.Setup(s => s.Download(It.IsAny<RemoteAlbum>(), It.IsAny<IIndexer>()))
+                .Throws(new WebException());
 
             Assert.Throws<WebException>(() => Subject.DownloadReport(_parseResult));
 
