@@ -167,5 +167,17 @@
     "ClickToChangeReleaseGroup": "Klikk for å endre utgivelsegruppe",
     "BypassIfHighestQuality": "Omgå hvis høyeste kvalitet",
     "ApplicationURL": "Applikasjon URL",
-    "ApplicationUrlHelpText": "Denne applikasjonens eksterne URL inkludert http(s)://, port og URL base"
+    "ApplicationUrlHelpText": "Denne applikasjonens eksterne URL inkludert http(s)://, port og URL base",
+    "DeleteCustomFormat": "Klon egendefinert format",
+    "DeleteCustomFormatMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
+    "DeleteFormatMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
+    "CloneCustomFormat": "Klon egendefinert format",
+    "Conditions": "Tilstander",
+    "CopyToClipboard": "Kopier til utklippstavle",
+    "CustomFormat": "Egendefinert format",
+    "CustomFormats": "Egendefinert format",
+    "Customformat": "Egendefinert format",
+    "ExportCustomFormat": "Legg til egendefinert format",
+    "Formats": "Format",
+    "ItsEasyToAddANewArtistJustStartTypingTheNameOfTheArtistYouWantToAdd": "Det er enkelt å legge til en ny film, bare begynn å skrive navnet på filmen du vil legge til"
 }
