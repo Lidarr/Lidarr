@@ -6,6 +6,7 @@ using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Indexers.Headphones
@@ -20,6 +21,12 @@ namespace NzbDrone.Core.Indexers.Headphones
 
         public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings).DefaultPageSize;
 
+        public Headphones(IHeadphonesCapabilitiesProvider capabilitiesProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
+            : base(httpClient, indexerStatusService, configService, parsingService, logger)
+        {
+            _capabilitiesProvider = capabilitiesProvider;
+        }
+
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
             return new HeadphonesRequestGenerator(_capabilitiesProvider)
@@ -31,16 +38,17 @@ namespace NzbDrone.Core.Indexers.Headphones
 
         public override IParseIndexerResponse GetParser()
         {
-            return new HeadphonesRssParser
-            {
-                Settings = Settings
-            };
+            return new NewznabRssParser();
         }
 
-        public Headphones(IHeadphonesCapabilitiesProvider capabilitiesProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
-            : base(httpClient, indexerStatusService, configService, parsingService, logger)
+        public override HttpRequest GetDownloadRequest(string link)
         {
-            _capabilitiesProvider = capabilitiesProvider;
+            var request = new HttpRequest(link)
+            {
+                Credentials = new BasicNetworkCredential(Settings.Username, Settings.Password)
+            };
+
+            return request;
         }
 
         protected override void Test(List<ValidationFailure> failures)
