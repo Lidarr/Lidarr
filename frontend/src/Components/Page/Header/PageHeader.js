@@ -61,6 +61,7 @@ class PageHeader extends Component {
             <img
               className={styles.logo}
               src={`${window.Lidarr.urlBase}/Content/Images/logo.svg`}
+              alt="Lidarr Logo"
             />
           </Link>
         </div>
@@ -79,6 +80,7 @@ class PageHeader extends Component {
           <IconButton
             className={styles.donate}
             name={icons.HEART}
+            aria-label="Donate"
             to="https://lidarr.audio/donate"
             size={14}
           />
