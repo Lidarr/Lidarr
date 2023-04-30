@@ -307,7 +307,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.SabnzbdTests
             var remoteAlbum = CreateRemoteAlbum();
             remoteAlbum.Release.Title = title;
 
-            var id = Subject.Download(remoteAlbum);
+            var id = Subject.Download(remoteAlbum, CreateIndexer());
 
             Mocker.GetMock<ISabnzbdProxy>()
                 .Verify(v => v.DownloadNzb(It.IsAny<byte[]>(), filename, It.IsAny<string>(), It.IsAny<int>(), It.IsAny<SabnzbdSettings>()), Times.Once());
@@ -320,7 +320,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.SabnzbdTests
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum);
+            var id = Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
         }
@@ -366,7 +366,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.SabnzbdTests
                                                       .Build()
                                                       .ToList();
 
-            Subject.Download(remoteAlbum);
+            Subject.Download(remoteAlbum, CreateIndexer());
 
             Mocker.GetMock<ISabnzbdProxy>()
                   .Verify(v => v.DownloadNzb(It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<string>(), (int)SabnzbdPriority.High, It.IsAny<SabnzbdSettings>()), Times.Once());

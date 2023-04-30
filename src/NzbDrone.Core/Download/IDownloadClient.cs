@@ -9,7 +9,7 @@ namespace NzbDrone.Core.Download
     {
         DownloadProtocol Protocol { get; }
 
-        string Download(RemoteAlbum remoteAlbum);
+        string Download(RemoteAlbum remoteAlbum, IIndexer indexer);
         IEnumerable<DownloadClientItem> GetItems();
         DownloadClientItem GetImportItem(DownloadClientItem item, DownloadClientItem previousImportAttempt);
         void RemoveItem(DownloadClientItem item, bool deleteData);

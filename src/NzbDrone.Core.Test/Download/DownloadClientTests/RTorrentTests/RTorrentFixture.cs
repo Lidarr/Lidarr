@@ -117,7 +117,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.RTorrentTests
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum);
+            var id = Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
         }

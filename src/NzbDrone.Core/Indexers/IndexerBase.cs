@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser;
@@ -70,6 +70,7 @@ namespace NzbDrone.Core.Indexers
 
         public abstract IList<ReleaseInfo> Fetch(AlbumSearchCriteria searchCriteria);
         public abstract IList<ReleaseInfo> Fetch(ArtistSearchCriteria searchCriteria);
+        public abstract HttpRequest GetDownloadRequest(string link);
 
         protected virtual IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases)
         {

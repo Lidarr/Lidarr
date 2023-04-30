@@ -123,7 +123,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
         {
             var remoteAlbum = CreateRemoteAlbum();
 
-            Subject.Download(remoteAlbum);
+            Subject.Download(remoteAlbum, CreateIndexer());
 
             Mocker.GetMock<IHttpClient>().Verify(c => c.Get(It.Is<HttpRequest>(v => v.Url.FullUri == _downloadUrl)), Times.Once());
             Mocker.GetMock<IDiskProvider>().Verify(c => c.OpenWriteStream(_filePath), Times.Once());
@@ -139,7 +139,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
             var remoteAlbum = CreateRemoteAlbum();
             remoteAlbum.Release.Title = illegalTitle;
 
-            Subject.Download(remoteAlbum);
+            Subject.Download(remoteAlbum, CreateIndexer());
 
             Mocker.GetMock<IHttpClient>().Verify(c => c.Get(It.Is<HttpRequest>(v => v.Url.FullUri == _downloadUrl)), Times.Once());
             Mocker.GetMock<IDiskProvider>().Verify(c => c.OpenWriteStream(expectedFilename), Times.Once());
