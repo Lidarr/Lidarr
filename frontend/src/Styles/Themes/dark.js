@@ -93,9 +93,9 @@ module.exports = {
 
   defaultButtonTextColor: '#eee',
   defaultBackgroundColor: '#333',
-  defaultBorderColor: '#eaeaea',
+  defaultBorderColor: '#393f45',
   defaultHoverBackgroundColor: '#444',
-  defaultHoverBorderColor: '#d6d6d6',
+  defaultHoverBorderColor: '#5a6265',
 
   primaryBackgroundColor: '#0b8750',
   primaryBorderColor: '#1d563d',
@@ -208,7 +208,7 @@ module.exports = {
 
   calendarTodayBackgroundColor: '#3e3e3e',
   calendarBackgroundColor: '#2a2a2a',
-  calendarBorderColor: '#cecece',
+  calendarBorderColor: '#393f45',
   calendarTextDim: '#eee',
   calendarTextDimAlternate: '#fff',
 
