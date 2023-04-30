@@ -67,7 +67,7 @@ namespace NzbDrone.Core.Indexers.Redacted
                             Container = torrent.Encoding,
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),
-                            DownloadUrl = GetDownloadUrl(id),
+                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken),
                             InfoUrl = GetInfoUrl(result.GroupId, id),
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
@@ -85,17 +85,13 @@ namespace NzbDrone.Core.Indexers.Redacted
                     .ToArray();
         }
 
-        private string GetDownloadUrl(int torrentId)
+        private string GetDownloadUrl(int torrentId, bool canUseToken)
         {
-            // AuthKey is required but not checked, just pass in a dummy variable
-            // to avoid having to track authkey, which is randomly cycled
             var url = new HttpUri(_settings.BaseUrl)
-                .CombinePath("/torrents.php")
+                .CombinePath("/ajax.php")
                 .AddQueryParam("action", "download")
                 .AddQueryParam("id", torrentId)
-                .AddQueryParam("authkey", "lidarr")
-                .AddQueryParam("torrent_pass", _settings.PassKey)
-                .AddQueryParam("usetoken", _settings.UseFreeleechToken ? 1 : 0);
+                .AddQueryParam("usetoken", _settings.UseFreeleechToken && canUseToken ? 1 : 0);
 
             return url.FullUri;
         }
