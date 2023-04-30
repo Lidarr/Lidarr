@@ -152,7 +152,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
         {
             var remoteAlbum = CreateRemoteAlbum();
 
-            Subject.Download(remoteAlbum);
+            Subject.Download(remoteAlbum, CreateIndexer());
 
             Mocker.GetMock<IHttpClient>().Verify(c => c.Get(It.Is<HttpRequest>(v => v.Url.FullUri == _downloadUrl)), Times.Once());
             Mocker.GetMock<IDiskProvider>().Verify(c => c.OpenWriteStream(_filePath), Times.Once());
@@ -164,9 +164,12 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
         {
             GivenMagnetFilePath();
             Subject.Definition.Settings.As<TorrentBlackholeSettings>().SaveMagnetFiles = true;
+
             var remoteAlbum = CreateRemoteAlbum();
             remoteAlbum.Release.DownloadUrl = null;
-            Subject.Download(remoteAlbum);
+
+            Subject.Download(remoteAlbum, CreateIndexer());
+
             Mocker.GetMock<IHttpClient>().Verify(c => c.Get(It.Is<HttpRequest>(v => v.Url.FullUri == _downloadUrl)), Times.Never());
             Mocker.GetMock<IDiskProvider>().Verify(c => c.OpenWriteStream(_filePath), Times.Never());
             Mocker.GetMock<IDiskProvider>().Verify(c => c.OpenWriteStream(_magnetFilePath), Times.Once());
@@ -185,7 +188,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
             var remoteAlbum = CreateRemoteAlbum();
             remoteAlbum.Release.DownloadUrl = null;
 
-            Subject.Download(remoteAlbum);
+            Subject.Download(remoteAlbum, CreateIndexer());
 
             Mocker.GetMock<IHttpClient>().Verify(c => c.Get(It.Is<HttpRequest>(v => v.Url.FullUri == _downloadUrl)), Times.Never());
             Mocker.GetMock<IDiskProvider>().Verify(c => c.OpenWriteStream(_filePath), Times.Never());
@@ -200,7 +203,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
             var remoteAlbum = CreateRemoteAlbum();
             remoteAlbum.Release.DownloadUrl = null;
 
-            Assert.Throws<ReleaseDownloadException>(() => Subject.Download(remoteAlbum));
+            Assert.Throws<ReleaseDownloadException>(() => Subject.Download(remoteAlbum, CreateIndexer()));
 
             Mocker.GetMock<IHttpClient>().Verify(c => c.Get(It.Is<HttpRequest>(v => v.Url.FullUri == _downloadUrl)), Times.Never());
             Mocker.GetMock<IDiskProvider>().Verify(c => c.OpenWriteStream(_filePath), Times.Never());
@@ -215,7 +218,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            Subject.Download(remoteAlbum);
+            Subject.Download(remoteAlbum, CreateIndexer());
 
             Mocker.GetMock<IHttpClient>().Verify(c => c.Get(It.Is<HttpRequest>(v => v.Url.FullUri == _downloadUrl)), Times.Once());
             Mocker.GetMock<IDiskProvider>().Verify(c => c.OpenWriteStream(_filePath), Times.Once());
@@ -232,7 +235,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
             var remoteAlbum = CreateRemoteAlbum();
             remoteAlbum.Release.Title = illegalTitle;
 
-            Subject.Download(remoteAlbum);
+            Subject.Download(remoteAlbum, CreateIndexer());
 
             Mocker.GetMock<IHttpClient>().Verify(c => c.Get(It.Is<HttpRequest>(v => v.Url.FullUri == _downloadUrl)), Times.Once());
             Mocker.GetMock<IDiskProvider>().Verify(c => c.OpenWriteStream(expectedFilename), Times.Once());
@@ -245,7 +248,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
             var remoteAlbum = CreateRemoteAlbum();
             remoteAlbum.Release.DownloadUrl = null;
 
-            Assert.Throws<ReleaseDownloadException>(() => Subject.Download(remoteAlbum));
+            Assert.Throws<ReleaseDownloadException>(() => Subject.Download(remoteAlbum, CreateIndexer()));
         }
 
         [Test]
@@ -319,7 +322,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
         {
             var remoteAlbum = CreateRemoteAlbum();
 
-            Subject.Download(remoteAlbum).Should().BeNull();
+            Subject.Download(remoteAlbum, CreateIndexer()).Should().BeNull();
         }
     }
 }

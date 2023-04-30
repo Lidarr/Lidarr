@@ -393,7 +393,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum);
+            var id = Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
 
@@ -410,7 +410,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum);
+            var id = Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
 
@@ -426,7 +426,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum);
+            var id = Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
 
@@ -505,7 +505,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
                   .Setup(s => s.GetSerialNumber(_settings))
                   .Throws(new ApplicationException("Some unknown exception, HttpException or DownloadClientException"));
 
-            Assert.Throws(Is.InstanceOf<Exception>(), () => Subject.Download(remoteAlbum));
+            Assert.Throws(Is.InstanceOf<Exception>(), () => Subject.Download(remoteAlbum, CreateIndexer()));
 
             Mocker.GetMock<IDownloadStationTaskProxy>()
                   .Verify(v => v.AddTaskFromUrl(It.IsAny<string>(), null, _settings), Times.Never());

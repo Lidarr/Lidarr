@@ -35,7 +35,7 @@ namespace NzbDrone.Core.Download
 
         protected abstract string AddFromNzbFile(RemoteAlbum remoteAlbum, string filename, byte[] fileContent);
 
-        public override string Download(RemoteAlbum remoteAlbum)
+        public override string Download(RemoteAlbum remoteAlbum, IIndexer indexer)
         {
             var url = remoteAlbum.Release.DownloadUrl;
             var filename = FileNameBuilder.CleanFileName(remoteAlbum.Release.Title) + ".nzb";
@@ -44,16 +44,16 @@ namespace NzbDrone.Core.Download
 
             try
             {
-                var nzbDataRequest = new HttpRequest(url);
-                nzbDataRequest.RateLimitKey = remoteAlbum?.Release?.IndexerId.ToString();
+                var request = indexer.GetDownloadRequest(url);
+                request.RateLimitKey = remoteAlbum?.Release?.IndexerId.ToString();
 
                 // TODO: Look into moving download request handling to indexer
                 if (remoteAlbum.Release.BasicAuthString.IsNotNullOrWhiteSpace())
                 {
-                    nzbDataRequest.Headers.Set("Authorization", "Basic " + remoteAlbum.Release.BasicAuthString);
+                    request.Headers.Set("Authorization", "Basic " + remoteAlbum.Release.BasicAuthString);
                 }
 
-                nzbData = _httpClient.Get(nzbDataRequest).ResponseData;
+                nzbData = _httpClient.Get(request).ResponseData;
 
                 _logger.Debug("Downloaded nzb for release '{0}' finished ({1} bytes from {2})", remoteAlbum.Release.Title, nzbData.Length, url);
             }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
@@ -59,7 +58,7 @@ namespace NzbDrone.Core.Download
             get;
         }
 
-        public abstract string Download(RemoteAlbum remoteAlbum);
+        public abstract string Download(RemoteAlbum remoteAlbum, IIndexer indexer);
         public abstract IEnumerable<DownloadClientItem> GetItems();
 
         public virtual DownloadClientItem GetImportItem(DownloadClientItem item, DownloadClientItem previousImportAttempt)

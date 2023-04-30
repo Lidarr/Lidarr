@@ -69,7 +69,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.VuzeTests
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum);
+            var id = Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
         }
@@ -82,7 +82,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.VuzeTests
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum);
+            var id = Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
 
@@ -98,7 +98,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.VuzeTests
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum);
+            var id = Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
 
@@ -116,7 +116,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.VuzeTests
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum);
+            var id = Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
 
@@ -131,7 +131,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.VuzeTests
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum);
+            var id = Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
 
@@ -147,7 +147,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.VuzeTests
             var remoteAlbum = CreateRemoteAlbum();
             remoteAlbum.Release.DownloadUrl = magnetUrl;
 
-            var id = Subject.Download(remoteAlbum);
+            var id = Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().Be(expectedHash);
         }

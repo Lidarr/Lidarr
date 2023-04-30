@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Download
         protected abstract string AddFromMagnetLink(RemoteAlbum remoteAlbum, string hash, string magnetLink);
         protected abstract string AddFromTorrentFile(RemoteAlbum remoteAlbum, string hash, string filename, byte[] fileContent);
 
-        public override string Download(RemoteAlbum remoteAlbum)
+        public override string Download(RemoteAlbum remoteAlbum, IIndexer indexer)
         {
             var torrentInfo = remoteAlbum.Release as TorrentInfo;
 
@@ -68,7 +68,7 @@ namespace NzbDrone.Core.Download
                 {
                     try
                     {
-                        return DownloadFromWebUrl(remoteAlbum, torrentUrl);
+                        return DownloadFromWebUrl(remoteAlbum, indexer, torrentUrl);
                     }
                     catch (Exception ex)
                     {
@@ -114,20 +114,20 @@ namespace NzbDrone.Core.Download
 
                 if (torrentUrl.IsNotNullOrWhiteSpace())
                 {
-                    return DownloadFromWebUrl(remoteAlbum, torrentUrl);
+                    return DownloadFromWebUrl(remoteAlbum, indexer, torrentUrl);
                 }
             }
 
             return null;
         }
 
-        private string DownloadFromWebUrl(RemoteAlbum remoteAlbum, string torrentUrl)
+        private string DownloadFromWebUrl(RemoteAlbum remoteAlbum, IIndexer indexer, string torrentUrl)
         {
             byte[] torrentFile = null;
 
             try
             {
-                var request = new HttpRequest(torrentUrl);
+                var request = indexer.GetDownloadRequest(torrentUrl);
                 request.RateLimitKey = remoteAlbum?.Release?.IndexerId.ToString();
                 request.Headers.Accept = "application/x-bittorrent";
                 request.AllowAutoRedirect = false;
@@ -149,7 +149,9 @@ namespace NzbDrone.Core.Download
                             return DownloadFromMagnetUrl(remoteAlbum, locationHeader);
                         }
 
-                        return DownloadFromWebUrl(remoteAlbum, locationHeader);
+                        request.Url += new HttpUri(locationHeader);
+
+                        return DownloadFromWebUrl(remoteAlbum, indexer, request.Url.ToString());
                     }
 
                     throw new WebException("Remote website tried to redirect without providing a location.");

@@ -345,7 +345,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.NzbgetTests
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum);
+            var id = Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
         }
@@ -357,7 +357,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.NzbgetTests
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            Assert.Throws<DownloadClientRejectedReleaseException>(() => Subject.Download(remoteAlbum));
+            Assert.Throws<DownloadClientRejectedReleaseException>(() => Subject.Download(remoteAlbum, CreateIndexer()));
         }
 
         [Test]
