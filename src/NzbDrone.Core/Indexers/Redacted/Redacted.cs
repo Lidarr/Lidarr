@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
@@ -26,7 +24,7 @@ namespace NzbDrone.Core.Indexers.Redacted
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new RedactedRequestGenerator(Settings, _httpClient, _logger);
+            return new RedactedRequestGenerator(Settings);
         }
 
         public override IParseIndexerResponse GetParser()
@@ -34,11 +32,12 @@ namespace NzbDrone.Core.Indexers.Redacted
             return new RedactedParser(Settings);
         }
 
-        protected override void Test(List<ValidationFailure> failures)
+        public override HttpRequest GetDownloadRequest(string link)
         {
-            ((RedactedRequestGenerator)GetRequestGenerator()).Authenticate();
+            var request = new HttpRequest(link);
+            request.Headers.Set("Authorization", Settings.ApiKey);
 
-            base.Test(failures);
+            return request;
         }
     }
 }
