@@ -63,13 +63,19 @@ namespace NzbDrone.Core.Download
 
             // Get the seed configuration for this release.
             remoteAlbum.SeedConfiguration = _seedConfigProvider.GetSeedConfiguration(remoteAlbum);
-            var indexer = _indexerFactory.GetInstance(_indexerFactory.Get(remoteAlbum.Release.IndexerId));
 
             // Limit grabs to 2 per second.
             if (remoteAlbum.Release.DownloadUrl.IsNotNullOrWhiteSpace() && !remoteAlbum.Release.DownloadUrl.StartsWith("magnet:"))
             {
                 var url = new HttpUri(remoteAlbum.Release.DownloadUrl);
                 _rateLimitService.WaitAndPulse(url.Host, TimeSpan.FromSeconds(2));
+            }
+
+            IIndexer indexer = null;
+
+            if (remoteAlbum.Release.IndexerId > 0)
+            {
+                indexer = _indexerFactory.GetInstance(_indexerFactory.Get(remoteAlbum.Release.IndexerId));
             }
 
             string downloadClientId;
