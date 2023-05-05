@@ -52,7 +52,7 @@
 
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-  
+
   <!-- Test projects need bindingRedirects -->
   <PropertyGroup Condition="'$(LidarrOutputType)'=='Test'">
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -65,7 +65,7 @@
     <Product>Lidarr</Product>
     <Company>lidarr.audio</Company>
     <Copyright>Copyright 2017-$([System.DateTime]::Now.ToString('yyyy')) lidarr.audio (GNU General Public v3)</Copyright>
-    
+
     <!-- Should be replaced by CI -->
     <AssemblyVersion>10.0.0.*</AssemblyVersion>
     <AssemblyConfiguration>$(Configuration)-dev</AssemblyConfiguration>
@@ -74,7 +74,7 @@
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    
+
     <Deterministic Condition="$(AssemblyVersion.EndsWith('*'))">False</Deterministic>
   </PropertyGroup>
 
@@ -156,4 +156,7 @@
     <RuntimeIdentifier>osx-x64</RuntimeIdentifier>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
 </Project>

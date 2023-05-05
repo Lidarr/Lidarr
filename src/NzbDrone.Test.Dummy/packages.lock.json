@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net6.0": {
+      "StyleCop.Analyzers": {
+        "type": "Direct",
+        "requested": "[1.1.118, )",
+        "resolved": "1.1.118",
+        "contentHash": "Onx6ovGSqXSK07n/0eM3ZusiNdB6cIlJdabQhWGgJp3Vooy9AaLS/tigeybOJAobqbtggTamoWndz72JscZBvw=="
+      }
+    },
+    "net6.0/linux-arm": {},
+    "net6.0/linux-arm64": {},
+    "net6.0/linux-musl-arm": {},
+    "net6.0/linux-musl-arm64": {},
+    "net6.0/linux-musl-x64": {},
+    "net6.0/linux-x64": {},
+    "net6.0/osx-arm64": {},
+    "net6.0/osx-x64": {},
+    "net6.0/win-x64": {},
+    "net6.0/win-x86": {}
+  }
+}
