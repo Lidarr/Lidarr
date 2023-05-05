@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
                             .With(e => e.AlbumRelease = _release)
                             .Build();
 
-            _trackFiles = new TrackFile { Quality = new QualityModel(Quality.FLAC), ReleaseGroup = "SonarrTest" };
+            _trackFiles = new TrackFile { Quality = new QualityModel(Quality.FLAC), ReleaseGroup = "LidarrTest" };
 
             _namingConfig = NamingConfig.Default;
             _namingConfig.RenameTracks = true;
