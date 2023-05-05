@@ -297,9 +297,9 @@ namespace NzbDrone.Integration.Test
             }
         }
 
-        public void EnsureTrackFile(ArtistResource artist, int albumId, int albumReleaseId, int trackId, Quality quality)
+        public void EnsureTrackFile(ArtistResource artist, int albumId, int albumReleaseId, int trackNumber, Quality quality)
         {
-            var result = Tracks.GetTracksInArtist(artist.Id).Single(v => v.Id == trackId);
+            var result = Tracks.GetTracksInArtist(artist.Id).Single(v => v.AlbumId == albumId && v.AbsoluteTrackNumber == trackNumber);
 
             if (result.TrackFile == null)
             {
@@ -318,14 +318,14 @@ namespace NzbDrone.Integration.Test
                                 ArtistId = artist.Id,
                                 AlbumId = albumId,
                                 AlbumReleaseId = albumReleaseId,
-                                TrackIds = new List<int> { trackId },
+                                TrackIds = new List<int> { trackNumber },
                                 Quality = new QualityModel(quality)
                             }
                     }
                 });
                 Commands.WaitAll();
 
-                var track = Tracks.GetTracksInArtist(artist.Id).Single(x => x.Id == trackId);
+                var track = Tracks.GetTracksInArtist(artist.Id).Single(x => x.AlbumId == albumId && x.AbsoluteTrackNumber == trackNumber);
 
                 track.TrackFileId.Should().NotBe(0);
             }
