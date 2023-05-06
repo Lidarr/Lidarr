@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Common.Extensions;
@@ -39,7 +40,7 @@ namespace NzbDrone.Core.Indexers.Headphones
             pageableRequests.Add(GetPagedRequests(MaxPages,
                 Settings.Categories,
                 "search",
-                NewsnabifyTitle($"&q={searchCriteria.CleanArtistQuery}+{searchCriteria.CleanAlbumQuery}")));
+                $"&q={NewsnabifyTitle(searchCriteria.CleanArtistQuery)}+{NewsnabifyTitle(searchCriteria.CleanAlbumQuery)}"));
 
             return pageableRequests;
         }
@@ -53,7 +54,7 @@ namespace NzbDrone.Core.Indexers.Headphones
             pageableRequests.Add(GetPagedRequests(MaxPages,
                 Settings.Categories,
                 "search",
-                NewsnabifyTitle($"&q={searchCriteria.CleanArtistQuery}")));
+                $"&q={NewsnabifyTitle(searchCriteria.CleanArtistQuery)}"));
 
             return pageableRequests;
         }
@@ -96,7 +97,8 @@ namespace NzbDrone.Core.Indexers.Headphones
 
         private static string NewsnabifyTitle(string title)
         {
-            return title.Replace("+", "%20");
+            title = title.Replace("+", " ");
+            return Uri.EscapeDataString(title);
         }
     }
 }
