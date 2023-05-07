@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Lidarr.Http.Extensions;
 using Microsoft.AspNetCore.Http;
 using NzbDrone.Common.EnvironmentInfo;
 
@@ -19,7 +20,7 @@ namespace Lidarr.Http.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (!context.Response.Headers.ContainsKey(VERSIONHEADER))
+            if (context.Request.IsApiRequest() && !context.Response.Headers.ContainsKey(VERSIONHEADER))
             {
                 context.Response.Headers.Add(VERSIONHEADER, _version);
             }
