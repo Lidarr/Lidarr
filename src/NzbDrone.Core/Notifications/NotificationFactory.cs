@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Notifications
         List<INotification> OnAlbumDeleteEnabled();
         List<INotification> OnArtistDeleteEnabled();
         List<INotification> OnHealthIssueEnabled();
+        List<INotification> OnHealthRestoredEnabled();
         List<INotification> OnDownloadFailureEnabled();
         List<INotification> OnImportFailureEnabled();
         List<INotification> OnTrackRetagEnabled();
@@ -65,6 +66,11 @@ namespace NzbDrone.Core.Notifications
             return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnHealthIssue).ToList();
         }
 
+        public List<INotification> OnHealthRestoredEnabled()
+        {
+            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnHealthRestored).ToList();
+        }
+
         public List<INotification> OnDownloadFailureEnabled()
         {
             return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnDownloadFailure).ToList();
@@ -96,6 +102,7 @@ namespace NzbDrone.Core.Notifications
             definition.SupportsOnAlbumDelete = provider.SupportsOnAlbumDelete;
             definition.SupportsOnArtistDelete = provider.SupportsOnArtistDelete;
             definition.SupportsOnHealthIssue = provider.SupportsOnHealthIssue;
+            definition.SupportsOnHealthRestored = provider.SupportsOnHealthRestored;
             definition.SupportsOnDownloadFailure = provider.SupportsOnDownloadFailure;
             definition.SupportsOnImportFailure = provider.SupportsOnImportFailure;
             definition.SupportsOnTrackRetag = provider.SupportsOnTrackRetag;

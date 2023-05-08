@@ -229,6 +229,21 @@ namespace NzbDrone.Core.Notifications.CustomScript
             ExecuteScript(environmentVariables);
         }
 
+        public override void OnHealthRestored(HealthCheck.HealthCheck previousCheck)
+        {
+            var environmentVariables = new StringDictionary();
+
+            environmentVariables.Add("Lidarr_EventType", "HealthRestored");
+            environmentVariables.Add("Lidarr_InstanceName", _configFileProvider.InstanceName);
+            environmentVariables.Add("Lidarr_ApplicationUrl", _configService.ApplicationUrl);
+            environmentVariables.Add("Lidarr_Health_Restored_Level", Enum.GetName(typeof(HealthCheckResult), previousCheck.Type));
+            environmentVariables.Add("Lidarr_Health_Restored_Message", previousCheck.Message);
+            environmentVariables.Add("Lidarr_Health_Restored_Type", previousCheck.Source.Name);
+            environmentVariables.Add("Lidarr_Health_Restored_Wiki", previousCheck.WikiUrl.ToString() ?? string.Empty);
+
+            ExecuteScript(environmentVariables);
+        }
+
         public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
         {
             var environmentVariables = new StringDictionary();

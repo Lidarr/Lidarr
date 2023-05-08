@@ -43,6 +43,11 @@ namespace NzbDrone.Core.Notifications.Twitter
             _twitterService.SendNotification($"Health Issue: {healthCheck.Message}", Settings);
         }
 
+        public override void OnHealthRestored(HealthCheck.HealthCheck previousCheck)
+        {
+            _twitterService.SendNotification($"Health Issue Resolved: {previousCheck.Message}", Settings);
+        }
+
         public override void OnDownloadFailure(DownloadFailedMessage message)
         {
             _twitterService.SendNotification($"Download Failed: {message.Message}", Settings);

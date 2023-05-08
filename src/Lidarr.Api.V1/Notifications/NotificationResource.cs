@@ -12,6 +12,7 @@ namespace Lidarr.Api.V1.Notifications
         public bool OnAlbumDelete { get; set; }
         public bool OnArtistDelete { get; set; }
         public bool OnHealthIssue { get; set; }
+        public bool OnHealthRestored { get; set; }
         public bool OnDownloadFailure { get; set; }
         public bool OnImportFailure { get; set; }
         public bool OnTrackRetag { get; set; }
@@ -23,6 +24,7 @@ namespace Lidarr.Api.V1.Notifications
         public bool SupportsOnAlbumDelete { get; set; }
         public bool SupportsOnArtistDelete { get; set; }
         public bool SupportsOnHealthIssue { get; set; }
+        public bool SupportsOnHealthRestored { get; set; }
         public bool IncludeHealthWarnings { get; set; }
         public bool SupportsOnDownloadFailure { get; set; }
         public bool SupportsOnImportFailure { get; set; }
@@ -49,6 +51,7 @@ namespace Lidarr.Api.V1.Notifications
             resource.OnAlbumDelete = definition.OnAlbumDelete;
             resource.OnArtistDelete = definition.OnArtistDelete;
             resource.OnHealthIssue = definition.OnHealthIssue;
+            resource.OnHealthRestored = definition.OnHealthRestored;
             resource.OnDownloadFailure = definition.OnDownloadFailure;
             resource.OnImportFailure = definition.OnImportFailure;
             resource.OnTrackRetag = definition.OnTrackRetag;
@@ -60,6 +63,7 @@ namespace Lidarr.Api.V1.Notifications
             resource.SupportsOnAlbumDelete = definition.SupportsOnAlbumDelete;
             resource.SupportsOnArtistDelete = definition.SupportsOnArtistDelete;
             resource.SupportsOnHealthIssue = definition.SupportsOnHealthIssue;
+            resource.SupportsOnHealthRestored = definition.SupportsOnHealthRestored;
             resource.IncludeHealthWarnings = definition.IncludeHealthWarnings;
             resource.SupportsOnDownloadFailure = definition.SupportsOnDownloadFailure;
             resource.SupportsOnImportFailure = definition.SupportsOnImportFailure;
@@ -85,6 +89,7 @@ namespace Lidarr.Api.V1.Notifications
             definition.OnAlbumDelete = resource.OnAlbumDelete;
             definition.OnArtistDelete = resource.OnArtistDelete;
             definition.OnHealthIssue = resource.OnHealthIssue;
+            definition.OnHealthRestored = resource.OnHealthRestored;
             definition.OnDownloadFailure = resource.OnDownloadFailure;
             definition.OnImportFailure = resource.OnImportFailure;
             definition.OnTrackRetag = resource.OnTrackRetag;
@@ -96,6 +101,7 @@ namespace Lidarr.Api.V1.Notifications
             definition.SupportsOnAlbumDelete = resource.SupportsOnAlbumDelete;
             definition.SupportsOnArtistDelete = resource.SupportsOnArtistDelete;
             definition.SupportsOnHealthIssue = resource.SupportsOnHealthIssue;
+            definition.SupportsOnHealthRestored = resource.SupportsOnHealthRestored;
             definition.IncludeHealthWarnings = resource.IncludeHealthWarnings;
             definition.SupportsOnDownloadFailure = resource.SupportsOnDownloadFailure;
             definition.SupportsOnImportFailure = resource.SupportsOnImportFailure;

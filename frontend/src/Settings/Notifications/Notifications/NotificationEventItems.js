@@ -22,6 +22,7 @@ function NotificationEventItems(props) {
     onAlbumDelete,
     onArtistDelete,
     onHealthIssue,
+    onHealthRestored,
     onDownloadFailure,
     onImportFailure,
     onTrackRetag,
@@ -33,6 +34,7 @@ function NotificationEventItems(props) {
     supportsOnAlbumDelete,
     supportsOnArtistDelete,
     supportsOnHealthIssue,
+    supportsOnHealthRestored,
     includeHealthWarnings,
     supportsOnDownloadFailure,
     supportsOnImportFailure,
@@ -175,8 +177,19 @@ function NotificationEventItems(props) {
             />
           </div>
 
+          <div>
+            <FormInputGroup
+              type={inputTypes.CHECK}
+              name="onHealthRestored"
+              helpText={translate('OnHealthRestoredHelpText')}
+              isDisabled={!supportsOnHealthRestored.value}
+              {...onHealthRestored}
+              onChange={onInputChange}
+            />
+          </div>
+
           {
-            onHealthIssue.value &&
+            (onHealthIssue.value || onHealthRestored.value) &&
               <div>
                 <FormInputGroup
                   type={inputTypes.CHECK}
