@@ -11263,6 +11263,10 @@
       "ParsedAlbumInfo": {
         "type": "object",
         "properties": {
+          "releaseTitle": {
+            "type": "string",
+            "nullable": true
+          },
           "albumTitle": {
             "type": "string",
             "nullable": true
@@ -11305,10 +11309,6 @@
             "nullable": true
           },
           "releaseVersion": {
-            "type": "string",
-            "nullable": true
-          },
-          "releaseTitle": {
             "type": "string",
             "nullable": true
           }
