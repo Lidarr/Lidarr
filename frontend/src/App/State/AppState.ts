@@ -1,3 +1,4 @@
+import ParseAppState from 'App/State/ParseAppState';
 import AlbumAppState from './AlbumAppState';
 import ArtistAppState, { ArtistIndexAppState } from './ArtistAppState';
 import CalendarAppState from './CalendarAppState';
@@ -58,6 +59,7 @@ interface AppState {
   calendar: CalendarAppState;
   commands: CommandAppState;
   history: HistoryAppState;
+  parse: ParseAppState;
   queue: QueueAppState;
   settings: SettingsAppState;
   tags: TagsAppState;

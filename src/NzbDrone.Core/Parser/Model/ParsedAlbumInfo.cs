@@ -6,6 +6,7 @@ namespace NzbDrone.Core.Parser.Model
 {
     public class ParsedAlbumInfo
     {
+        public string ReleaseTitle { get; set; }
         public string AlbumTitle { get; set; }
         public string ArtistName { get; set; }
         public string AlbumType { get; set; }
@@ -18,7 +19,6 @@ namespace NzbDrone.Core.Parser.Model
         public string ReleaseGroup { get; set; }
         public string ReleaseHash { get; set; }
         public string ReleaseVersion { get; set; }
-        public string ReleaseTitle { get; set; }
 
         [JsonIgnore]
         public Dictionary<string, object> ExtraInfo { get; set; } = new Dictionary<string, object>();
