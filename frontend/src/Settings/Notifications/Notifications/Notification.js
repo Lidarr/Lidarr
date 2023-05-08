@@ -62,6 +62,7 @@ class Notification extends Component {
       onAlbumDelete,
       onArtistDelete,
       onHealthIssue,
+      onHealthRestored,
       onDownloadFailure,
       onImportFailure,
       onTrackRetag,
@@ -73,6 +74,7 @@ class Notification extends Component {
       supportsOnAlbumDelete,
       supportsOnArtistDelete,
       supportsOnHealthIssue,
+      supportsOnHealthRestored,
       supportsOnDownloadFailure,
       supportsOnImportFailure,
       supportsOnTrackRetag,
@@ -146,6 +148,14 @@ class Notification extends Component {
         }
 
         {
+          supportsOnHealthRestored && onHealthRestored ?
+            <Label kind={kinds.SUCCESS}>
+              {translate('OnHealthRestored')}
+            </Label> :
+            null
+        }
+
+        {
           supportsOnDownloadFailure && onDownloadFailure &&
             <Label kind={kinds.SUCCESS} >
               {translate('OnDownloadFailure')}
@@ -168,12 +178,12 @@ class Notification extends Component {
 
         {
           !onGrab && !onReleaseImport && !onRename && !onTrackRetag && !onAlbumDelete && !onArtistDelete &&
-            !onHealthIssue && !onDownloadFailure && !onImportFailure && !onApplicationUpdate &&
+            !onHealthIssue && !onHealthRestored && !onDownloadFailure && !onImportFailure && !onApplicationUpdate &&
               <Label
                 kind={kinds.DISABLED}
                 outline={true}
               >
-                Disabled
+                {translate('Disabled')}
               </Label>
         }
 
@@ -208,6 +218,7 @@ Notification.propTypes = {
   onAlbumDelete: PropTypes.bool.isRequired,
   onArtistDelete: PropTypes.bool.isRequired,
   onHealthIssue: PropTypes.bool.isRequired,
+  onHealthRestored: PropTypes.bool.isRequired,
   onDownloadFailure: PropTypes.bool.isRequired,
   onImportFailure: PropTypes.bool.isRequired,
   onTrackRetag: PropTypes.bool.isRequired,
@@ -219,6 +230,7 @@ Notification.propTypes = {
   supportsOnAlbumDelete: PropTypes.bool.isRequired,
   supportsOnArtistDelete: PropTypes.bool.isRequired,
   supportsOnHealthIssue: PropTypes.bool.isRequired,
+  supportsOnHealthRestored: PropTypes.bool.isRequired,
   supportsOnDownloadFailure: PropTypes.bool.isRequired,
   supportsOnImportFailure: PropTypes.bool.isRequired,
   supportsOnTrackRetag: PropTypes.bool.isRequired,

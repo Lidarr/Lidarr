@@ -15,6 +15,7 @@ namespace NzbDrone.Core.Notifications
         protected const string ALBUM_DELETED_TITLE = "Album Deleted";
         protected const string ARTIST_DELETED_TITLE = "Artist Deleted";
         protected const string HEALTH_ISSUE_TITLE = "Health Check Failure";
+        protected const string HEALTH_RESTORED_TITLE = "Health Check Restored";
         protected const string DOWNLOAD_FAILURE_TITLE = "Download Failed";
         protected const string IMPORT_FAILURE_TITLE = "Import Failed";
         protected const string TRACK_RETAGGED_TITLE = "Track File Tags Updated";
@@ -25,6 +26,7 @@ namespace NzbDrone.Core.Notifications
         protected const string ALBUM_DELETED_TITLE_BRANDED = "Lidarr - " + ALBUM_DELETED_TITLE;
         protected const string ARTIST_DELETED_TITLE_BRANDED = "Lidarr - " + ARTIST_DELETED_TITLE;
         protected const string HEALTH_ISSUE_TITLE_BRANDED = "Lidarr - " + HEALTH_ISSUE_TITLE;
+        protected const string HEALTH_RESTORED_TITLE_BRANDED = "Lidarr - " + HEALTH_RESTORED_TITLE;
         protected const string DOWNLOAD_FAILURE_TITLE_BRANDED = "Lidarr - " + DOWNLOAD_FAILURE_TITLE;
         protected const string IMPORT_FAILURE_TITLE_BRANDED = "Lidarr - " + IMPORT_FAILURE_TITLE;
         protected const string TRACK_RETAGGED_TITLE_BRANDED = "Lidarr - " + TRACK_RETAGGED_TITLE;
@@ -67,6 +69,10 @@ namespace NzbDrone.Core.Notifications
         {
         }
 
+        public virtual void OnHealthRestored(HealthCheck.HealthCheck previousCheck)
+        {
+        }
+
         public virtual void OnDownloadFailure(DownloadFailedMessage message)
         {
         }
@@ -94,6 +100,7 @@ namespace NzbDrone.Core.Notifications
         public bool SupportsOnAlbumDelete => HasConcreteImplementation("OnAlbumDelete");
         public bool SupportsOnArtistDelete => HasConcreteImplementation("OnArtistDelete");
         public bool SupportsOnHealthIssue => HasConcreteImplementation("OnHealthIssue");
+        public bool SupportsOnHealthRestored => HasConcreteImplementation("OnHealthRestored");
         public bool SupportsOnDownloadFailure => HasConcreteImplementation("OnDownloadFailure");
         public bool SupportsOnImportFailure => HasConcreteImplementation("OnImportFailure");
         public bool SupportsOnTrackRetag => HasConcreteImplementation("OnTrackRetag");

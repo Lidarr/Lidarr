@@ -87,6 +87,7 @@ namespace NzbDrone.Core.Datastore
                   .Ignore(i => i.SupportsOnAlbumDelete)
                   .Ignore(i => i.SupportsOnArtistDelete)
                   .Ignore(i => i.SupportsOnHealthIssue)
+                  .Ignore(i => i.SupportsOnHealthRestored)
                   .Ignore(i => i.SupportsOnDownloadFailure)
                   .Ignore(i => i.SupportsOnImportFailure)
                   .Ignore(i => i.SupportsOnTrackRetag)

@@ -15,6 +15,7 @@ namespace NzbDrone.Core.Notifications
         void OnAlbumDelete(AlbumDeleteMessage deleteMessage);
         void OnArtistDelete(ArtistDeleteMessage deleteMessage);
         void OnHealthIssue(HealthCheck.HealthCheck healthCheck);
+        void OnHealthRestored(HealthCheck.HealthCheck previousCheck);
         void OnApplicationUpdate(ApplicationUpdateMessage updateMessage);
         void OnDownloadFailure(DownloadFailedMessage message);
         void OnImportFailure(AlbumDownloadMessage message);
@@ -27,6 +28,7 @@ namespace NzbDrone.Core.Notifications
         bool SupportsOnAlbumDelete { get; }
         bool SupportsOnArtistDelete { get; }
         bool SupportsOnHealthIssue { get; }
+        bool SupportsOnHealthRestored { get; }
         bool SupportsOnApplicationUpdate { get; }
         bool SupportsOnDownloadFailure { get; }
         bool SupportsOnImportFailure { get; }

@@ -44,6 +44,11 @@ namespace NzbDrone.Core.Notifications.PushBullet
             _proxy.SendNotification(HEALTH_ISSUE_TITLE_BRANDED, healthCheck.Message, Settings);
         }
 
+        public override void OnHealthRestored(HealthCheck.HealthCheck previousCheck)
+        {
+            _proxy.SendNotification(HEALTH_RESTORED_TITLE_BRANDED, $"The following issue is now resolved: {previousCheck.Message}", Settings);
+        }
+
         public override void OnDownloadFailure(DownloadFailedMessage message)
         {
             _proxy.SendNotification(DOWNLOAD_FAILURE_TITLE_BRANDED, message.Message, Settings);
