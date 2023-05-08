@@ -68,6 +68,7 @@
   "AnchorTooltip": "This file is already in your library for a release you are currently importing",
   "AnyReleaseOkHelpText": "Lidarr will automatically switch to the release best matching downloaded tracks",
   "ApiKeyHelpTextWarning": "Requires restart to take effect",
+  "ApiKeyValidationHealthCheckMessage": "Please update your API key to be at least 20 characters long. You can do this via settings or the config file",
   "AppDataDirectory": "AppData directory",
   "AppDataLocationHealthCheckMessage": "Updating will not be possible to prevent deleting AppData on Update",
   "ApplicationURL": "Application URL",
