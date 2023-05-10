@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
-using Lidarr.Api.V1.CustomFormats;
 using Lidarr.Http;
 using Lidarr.Http.REST;
 using Lidarr.Http.REST.Attributes;
@@ -9,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.CustomFormats;
 
-namespace Sonarr.Api.V3.CustomFormats
+namespace Lidarr.Api.V1.CustomFormats
 {
     [V1ApiController]
     public class CustomFormatController : RestController<CustomFormatResource>
