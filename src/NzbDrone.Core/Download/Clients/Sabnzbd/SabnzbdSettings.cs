@@ -41,8 +41,8 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
             Host = "localhost";
             Port = 8080;
             MusicCategory = "music";
-            RecentTvPriority = (int)SabnzbdPriority.Default;
-            OlderTvPriority = (int)SabnzbdPriority.Default;
+            RecentMusicPriority = (int)SabnzbdPriority.Default;
+            OlderMusicPriority = (int)SabnzbdPriority.Default;
         }
 
         [FieldDefinition(0, Label = "Host", Type = FieldType.Textbox)]
@@ -70,10 +70,10 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
         public string MusicCategory { get; set; }
 
         [FieldDefinition(8, Label = "Recent Priority", Type = FieldType.Select, SelectOptions = typeof(SabnzbdPriority), HelpText = "Priority to use when grabbing albums released within the last 14 days")]
-        public int RecentTvPriority { get; set; }
+        public int RecentMusicPriority { get; set; }
 
         [FieldDefinition(9, Label = "Older Priority", Type = FieldType.Select, SelectOptions = typeof(SabnzbdPriority), HelpText = "Priority to use when grabbing albums released over 14 days ago")]
-        public int OlderTvPriority { get; set; }
+        public int OlderMusicPriority { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

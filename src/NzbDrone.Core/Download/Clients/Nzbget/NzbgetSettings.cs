@@ -32,8 +32,8 @@ namespace NzbDrone.Core.Download.Clients.Nzbget
             MusicCategory = "Music";
             Username = "nzbget";
             Password = "tegbzn6789";
-            RecentTvPriority = (int)NzbgetPriority.Normal;
-            OlderTvPriority = (int)NzbgetPriority.Normal;
+            RecentMusicPriority = (int)NzbgetPriority.Normal;
+            OlderMusicPriority = (int)NzbgetPriority.Normal;
         }
 
         [FieldDefinition(0, Label = "Host", Type = FieldType.Textbox)]
@@ -58,10 +58,10 @@ namespace NzbDrone.Core.Download.Clients.Nzbget
         public string MusicCategory { get; set; }
 
         [FieldDefinition(7, Label = "Recent Priority", Type = FieldType.Select, SelectOptions = typeof(NzbgetPriority), HelpText = "Priority to use when grabbing albums released within the last 14 days")]
-        public int RecentTvPriority { get; set; }
+        public int RecentMusicPriority { get; set; }
 
         [FieldDefinition(8, Label = "Older Priority", Type = FieldType.Select, SelectOptions = typeof(NzbgetPriority), HelpText = "Priority to use when grabbing albums released over 14 days ago")]
-        public int OlderTvPriority { get; set; }
+        public int OlderMusicPriority { get; set; }
 
         [FieldDefinition(9, Label = "Add Paused", Type = FieldType.Checkbox, HelpText = "This option requires at least NzbGet version 16.0")]
         public bool AddPaused { get; set; }

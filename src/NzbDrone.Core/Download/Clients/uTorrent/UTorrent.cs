@@ -64,8 +64,8 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
 
             var isRecentAlbum = remoteAlbum.IsRecentAlbum();
 
-            if ((isRecentAlbum && Settings.RecentTvPriority == (int)UTorrentPriority.First) ||
-                (!isRecentAlbum && Settings.OlderTvPriority == (int)UTorrentPriority.First))
+            if ((isRecentAlbum && Settings.RecentMusicPriority == (int)UTorrentPriority.First) ||
+                (!isRecentAlbum && Settings.OlderMusicPriority == (int)UTorrentPriority.First))
             {
                 _proxy.MoveTorrentToTopInQueue(hash, Settings);
             }
@@ -87,8 +87,8 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
 
             var isRecentAlbum = remoteAlbum.IsRecentAlbum();
 
-            if ((isRecentAlbum && Settings.RecentTvPriority == (int)UTorrentPriority.First) ||
-                (!isRecentAlbum && Settings.OlderTvPriority == (int)UTorrentPriority.First))
+            if ((isRecentAlbum && Settings.RecentMusicPriority == (int)UTorrentPriority.First) ||
+                (!isRecentAlbum && Settings.OlderMusicPriority == (int)UTorrentPriority.First))
             {
                 _proxy.MoveTorrentToTopInQueue(hash, Settings);
             }

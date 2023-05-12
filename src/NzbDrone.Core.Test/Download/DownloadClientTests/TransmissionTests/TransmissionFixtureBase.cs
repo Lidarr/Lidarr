@@ -117,9 +117,9 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.TransmissionTests
             _settings.MusicCategory = "Lidarr";
         }
 
-        protected void GivenTvDirectory()
+        protected void GivenMusicDirectory()
         {
-            _settings.TvDirectory = @"C:/Downloads/Finished/Lidarr";
+            _settings.MusicDirectory = @"C:/Downloads/Finished/Lidarr";
         }
 
         protected void GivenFailedDownload()

@@ -32,8 +32,8 @@ namespace NzbDrone.Core.Download.Clients.NzbVortex
             Host = "localhost";
             Port = 4321;
             MusicCategory = "Music";
-            RecentTvPriority = (int)NzbVortexPriority.Normal;
-            OlderTvPriority = (int)NzbVortexPriority.Normal;
+            RecentMusicPriority = (int)NzbVortexPriority.Normal;
+            OlderMusicPriority = (int)NzbVortexPriority.Normal;
         }
 
         [FieldDefinition(0, Label = "Host", Type = FieldType.Textbox)]
@@ -52,10 +52,10 @@ namespace NzbDrone.Core.Download.Clients.NzbVortex
         public string MusicCategory { get; set; }
 
         [FieldDefinition(5, Label = "Recent Priority", Type = FieldType.Select, SelectOptions = typeof(NzbVortexPriority), HelpText = "Priority to use when grabbing albums released within the last 14 days")]
-        public int RecentTvPriority { get; set; }
+        public int RecentMusicPriority { get; set; }
 
         [FieldDefinition(6, Label = "Older Priority", Type = FieldType.Select, SelectOptions = typeof(NzbVortexPriority), HelpText = "Priority to use when grabbing albums released over 14 days ago")]
-        public int OlderTvPriority { get; set; }
+        public int OlderMusicPriority { get; set; }
 
         public NzbDroneValidationResult Validate()
         {
