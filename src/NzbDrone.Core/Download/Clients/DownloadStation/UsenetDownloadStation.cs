@@ -78,9 +78,9 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
                     totalRemainingSize += taskRemainingSize;
                 }
 
-                if (Settings.TvDirectory.IsNotNullOrWhiteSpace())
+                if (Settings.MusicDirectory.IsNotNullOrWhiteSpace())
                 {
-                    if (!new OsPath($"/{Settings.TvDirectory}").Contains(outputPath))
+                    if (!new OsPath($"/{Settings.MusicDirectory}").Contains(outputPath))
                     {
                         continue;
                     }
@@ -213,7 +213,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
 
                 if (downloadDir == null)
                 {
-                    return new NzbDroneValidationFailure(nameof(Settings.TvDirectory), "No default destination")
+                    return new NzbDroneValidationFailure(nameof(Settings.MusicDirectory), "No default destination")
                     {
                         DetailedDescription = $"You must login into your Diskstation as {Settings.Username} and manually set it up into DownloadStation settings under BT/HTTP/FTP/NZB -> Location."
                     };
@@ -224,7 +224,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
                 if (downloadDir != null)
                 {
                     var sharedFolder = downloadDir.Split('\\', '/')[0];
-                    var fieldName = Settings.TvDirectory.IsNotNullOrWhiteSpace() ? nameof(Settings.TvDirectory) : nameof(Settings.MusicCategory);
+                    var fieldName = Settings.MusicDirectory.IsNotNullOrWhiteSpace() ? nameof(Settings.MusicDirectory) : nameof(Settings.MusicCategory);
 
                     var folderInfo = _fileStationProxy.GetInfoFileOrDirectory($"/{downloadDir}", Settings);
 
@@ -425,9 +425,9 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
 
         protected string GetDownloadDirectory()
         {
-            if (Settings.TvDirectory.IsNotNullOrWhiteSpace())
+            if (Settings.MusicDirectory.IsNotNullOrWhiteSpace())
             {
-                return Settings.TvDirectory.TrimStart('/');
+                return Settings.MusicDirectory.TrimStart('/');
             }
 
             var destDir = GetDefaultDir();

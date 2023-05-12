@@ -14,14 +14,14 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
             RuleFor(c => c.Host).ValidHost();
             RuleFor(c => c.Port).InclusiveBetween(1, 65535);
 
-            RuleFor(c => c.TvDirectory).Matches(@"^(?!/).+")
-                                       .When(c => c.TvDirectory.IsNotNullOrWhiteSpace())
+            RuleFor(c => c.MusicDirectory).Matches(@"^(?!/).+")
+                                       .When(c => c.MusicDirectory.IsNotNullOrWhiteSpace())
                                        .WithMessage("Cannot start with /");
 
             RuleFor(c => c.MusicCategory).Matches(@"^\.?[-a-z]*$", RegexOptions.IgnoreCase).WithMessage("Allowed characters a-z and -");
 
             RuleFor(c => c.MusicCategory).Empty()
-                                      .When(c => c.TvDirectory.IsNotNullOrWhiteSpace())
+                                      .When(c => c.MusicDirectory.IsNotNullOrWhiteSpace())
                                       .WithMessage("Cannot use Category and Directory");
         }
     }
@@ -49,7 +49,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
         public string MusicCategory { get; set; }
 
         [FieldDefinition(6, Label = "Directory", Type = FieldType.Textbox, HelpText = "Optional shared folder to put downloads into, leave blank to use the default Download Station location")]
-        public string TvDirectory { get; set; }
+        public string MusicDirectory { get; set; }
 
         public DownloadStationSettings()
         {

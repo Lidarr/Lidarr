@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.NzbgetTests
                 Username = "admin",
                 Password = "pass",
                 MusicCategory = "music",
-                RecentTvPriority = (int)NzbgetPriority.High
+                RecentMusicPriority = (int)NzbgetPriority.High
             };
 
             _queued = new NzbgetQueueItem

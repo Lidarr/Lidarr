@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.SabnzbdTests
                 Username = "admin",
                 Password = "pass",
                 MusicCategory = "tv",
-                RecentTvPriority = (int)SabnzbdPriority.High
+                RecentMusicPriority = (int)SabnzbdPriority.High
             };
             _queued = new SabnzbdQueue
             {

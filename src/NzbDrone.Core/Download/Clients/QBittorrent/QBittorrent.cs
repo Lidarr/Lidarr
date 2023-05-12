@@ -74,7 +74,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             var setShareLimits = remoteAlbum.SeedConfiguration != null && (remoteAlbum.SeedConfiguration.Ratio.HasValue || remoteAlbum.SeedConfiguration.SeedTime.HasValue);
             var addHasSetShareLimits = setShareLimits && ProxyApiVersion >= new Version(2, 8, 1);
             var isRecentAlbum = remoteAlbum.IsRecentAlbum();
-            var moveToTop = (isRecentAlbum && Settings.RecentTvPriority == (int)QBittorrentPriority.First) || (!isRecentAlbum && Settings.OlderTvPriority == (int)QBittorrentPriority.First);
+            var moveToTop = (isRecentAlbum && Settings.RecentMusicPriority == (int)QBittorrentPriority.First) || (!isRecentAlbum && Settings.OlderMusicPriority == (int)QBittorrentPriority.First);
             var forceStart = (QBittorrentState)Settings.InitialState == QBittorrentState.ForceStart;
 
             Proxy.AddTorrentFromUrl(magnetLink, addHasSetShareLimits && setShareLimits ? remoteAlbum.SeedConfiguration : null, Settings);
@@ -131,7 +131,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             var setShareLimits = remoteAlbum.SeedConfiguration != null && (remoteAlbum.SeedConfiguration.Ratio.HasValue || remoteAlbum.SeedConfiguration.SeedTime.HasValue);
             var addHasSetShareLimits = setShareLimits && ProxyApiVersion >= new Version(2, 8, 1);
             var isRecentAlbum = remoteAlbum.IsRecentAlbum();
-            var moveToTop = (isRecentAlbum && Settings.RecentTvPriority == (int)QBittorrentPriority.First) || (!isRecentAlbum && Settings.OlderTvPriority == (int)QBittorrentPriority.First);
+            var moveToTop = (isRecentAlbum && Settings.RecentMusicPriority == (int)QBittorrentPriority.First) || (!isRecentAlbum && Settings.OlderMusicPriority == (int)QBittorrentPriority.First);
             var forceStart = (QBittorrentState)Settings.InitialState == QBittorrentState.ForceStart;
 
             Proxy.AddTorrentFromFile(filename, fileContent, addHasSetShareLimits ? remoteAlbum.SeedConfiguration : null, Settings);
@@ -529,8 +529,8 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
 
         private ValidationFailure TestPrioritySupport()
         {
-            var recentPriorityDefault = Settings.RecentTvPriority == (int)QBittorrentPriority.Last;
-            var olderPriorityDefault = Settings.OlderTvPriority == (int)QBittorrentPriority.Last;
+            var recentPriorityDefault = Settings.RecentMusicPriority == (int)QBittorrentPriority.Last;
+            var olderPriorityDefault = Settings.OlderMusicPriority == (int)QBittorrentPriority.Last;
 
             if (olderPriorityDefault && recentPriorityDefault)
             {
@@ -545,11 +545,11 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                 {
                     if (!recentPriorityDefault)
                     {
-                        return new NzbDroneValidationFailure(nameof(Settings.RecentTvPriority), "Queueing not enabled") { DetailedDescription = "Torrent Queueing is not enabled in your qBittorrent settings. Enable it in qBittorrent or select 'Last' as priority." };
+                        return new NzbDroneValidationFailure(nameof(Settings.RecentMusicPriority), "Queueing not enabled") { DetailedDescription = "Torrent Queueing is not enabled in your qBittorrent settings. Enable it in qBittorrent or select 'Last' as priority." };
                     }
                     else if (!olderPriorityDefault)
                     {
-                        return new NzbDroneValidationFailure(nameof(Settings.OlderTvPriority), "Queueing not enabled") { DetailedDescription = "Torrent Queueing is not enabled in your qBittorrent settings. Enable it in qBittorrent or select 'Last' as priority." };
+                        return new NzbDroneValidationFailure(nameof(Settings.OlderMusicPriority), "Queueing not enabled") { DetailedDescription = "Torrent Queueing is not enabled in your qBittorrent settings. Enable it in qBittorrent or select 'Last' as priority." };
                     }
                 }
             }
