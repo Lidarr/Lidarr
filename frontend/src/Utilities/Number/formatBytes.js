@@ -1,4 +1,4 @@
-import filesize from 'filesize';
+import { filesize } from 'filesize';
 
 function formatBytes(input, showBits = false) {
   const size = Number(input);
