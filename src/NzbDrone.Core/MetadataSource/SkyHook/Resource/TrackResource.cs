@@ -4,10 +4,6 @@ namespace NzbDrone.Core.MetadataSource.SkyHook.Resource
 {
     public class TrackResource
     {
-        public TrackResource()
-        {
-        }
-
         public string ArtistId { get; set; }
         public int DurationMs { get; set; }
         public string Id { get; set; }

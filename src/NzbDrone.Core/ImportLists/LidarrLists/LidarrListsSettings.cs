@@ -6,9 +6,6 @@ namespace NzbDrone.Core.ImportLists.LidarrLists
 {
     public class LidarrListsSettingsValidator : AbstractValidator<LidarrListsSettings>
     {
-        public LidarrListsSettingsValidator()
-        {
-        }
     }
 
     public class LidarrListsSettings : IImportListSettings

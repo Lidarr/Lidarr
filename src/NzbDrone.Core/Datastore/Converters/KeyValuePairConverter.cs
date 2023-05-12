@@ -50,10 +50,6 @@ namespace NzbDrone.Core.Datastore.Converters
         private class KeyValuePairConverterInner<TKey, TValue> :
             JsonConverter<KeyValuePair<TKey, TValue>>
         {
-            public KeyValuePairConverterInner()
-            {
-            }
-
             public override KeyValuePair<TKey, TValue> Read(
                 ref Utf8JsonReader reader,
                 Type typeToConvert,

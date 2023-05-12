@@ -6,9 +6,6 @@ namespace NzbDrone.Core.ImportLists.MusicBrainzSeries
 {
     public class MusicBrainzSeriesSettingsValidator : AbstractValidator<MusicBrainzSeriesSettings>
     {
-        public MusicBrainzSeriesSettingsValidator()
-        {
-        }
     }
 
     public class MusicBrainzSeriesSettings : IImportListSettings

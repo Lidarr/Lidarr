@@ -5,10 +5,6 @@ namespace Lidarr.Http
 {
     public class ApiInfoController : Controller
     {
-        public ApiInfoController()
-        {
-        }
-
         [HttpGet("/api")]
         [Produces("application/json")]
         public object GetApiInfo()
