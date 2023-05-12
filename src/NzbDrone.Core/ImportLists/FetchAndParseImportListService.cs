@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Common.TPL;
 using NzbDrone.Core.Parser.Model;
 

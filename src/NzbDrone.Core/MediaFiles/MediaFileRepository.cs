@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Dapper;
 using NzbDrone.Common;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Messaging.Events;

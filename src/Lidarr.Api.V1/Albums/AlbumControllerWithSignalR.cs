@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Lidarr.Api.V1.Artist;
 using Lidarr.Http.REST;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Core.ArtistStats;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.MediaCover;

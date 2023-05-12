@@ -11,7 +11,6 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Organizer;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
-using TagLib;
 
 namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
 {

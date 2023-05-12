@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Dapper;
 using FizzWare.NBuilder;
 using NUnit.Framework;
 using NzbDrone.Core.Datastore;

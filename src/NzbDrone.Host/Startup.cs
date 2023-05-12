@@ -27,7 +27,6 @@ using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Instrumentation;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Host;
 using NzbDrone.Host.AccessControl;
 using NzbDrone.Http.Authentication;
 using NzbDrone.SignalR;

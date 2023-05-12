@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Serializer;

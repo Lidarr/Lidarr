@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;

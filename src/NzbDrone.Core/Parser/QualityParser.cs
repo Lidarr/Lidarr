@@ -1,8 +1,6 @@
 using System;
-using System.IO;
 using System.Text.RegularExpressions;
 using NLog;
-using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation;
 using NzbDrone.Core.MediaFiles;

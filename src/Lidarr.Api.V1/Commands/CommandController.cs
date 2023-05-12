@@ -7,7 +7,6 @@ using Lidarr.Http.REST;
 using Lidarr.Http.REST.Attributes;
 using Lidarr.Http.Validation;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common;
 using NzbDrone.Common.Composition;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Common.TPL;

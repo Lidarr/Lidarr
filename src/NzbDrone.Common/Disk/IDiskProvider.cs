@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
-using System.Security.AccessControl;
-using System.Security.Principal;
 
 namespace NzbDrone.Common.Disk
 {

@@ -1,4 +1,3 @@
-using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.Notifications

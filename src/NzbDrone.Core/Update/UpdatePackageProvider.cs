@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using FluentValidation.Validators;
 using NzbDrone.Common.Cloud;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Http;

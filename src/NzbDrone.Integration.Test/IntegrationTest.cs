@@ -1,9 +1,6 @@
-using System.Collections.Generic;
 using System.Threading;
 using Lidarr.Http.ClientSchema;
-using Microsoft.Extensions.Configuration;
 using NLog;
-using Npgsql;
 using NUnit.Framework;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Datastore;

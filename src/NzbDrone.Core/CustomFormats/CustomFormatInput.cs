@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using NzbDrone.Core.Languages;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
 

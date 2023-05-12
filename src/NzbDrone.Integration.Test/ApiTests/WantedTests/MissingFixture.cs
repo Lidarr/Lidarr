@@ -3,7 +3,6 @@ using FluentAssertions;
 using Lidarr.Api.V1.RootFolders;
 using NUnit.Framework;
 using NzbDrone.Core.Music;
-using NzbDrone.Core.Qualities;
 
 namespace NzbDrone.Integration.Test.ApiTests.WantedTests
 {

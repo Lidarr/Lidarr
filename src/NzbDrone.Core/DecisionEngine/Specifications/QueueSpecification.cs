@@ -5,7 +5,6 @@ using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.Download.TrackedDownloads;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Profiles.Releases;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Queue;
 

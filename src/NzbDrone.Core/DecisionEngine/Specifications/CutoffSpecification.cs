@@ -8,7 +8,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Profiles.Releases;
 
 namespace NzbDrone.Core.DecisionEngine.Specifications
 {

@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
-using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Core.Configuration;
 
 namespace Lidarr.Http.Frontend
 {

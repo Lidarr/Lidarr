@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace NzbDrone.Core.Notifications.Xbmc.Model
 {
     public class KodiSource

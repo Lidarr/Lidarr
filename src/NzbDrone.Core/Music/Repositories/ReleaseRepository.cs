@@ -3,7 +3,6 @@ using System.Linq;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Messaging.Events;
-using TagLib.Riff;
 
 namespace NzbDrone.Core.Music
 {

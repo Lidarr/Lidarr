@@ -5,7 +5,6 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;

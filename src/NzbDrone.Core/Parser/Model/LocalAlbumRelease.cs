@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Core.MediaFiles.TrackImport.Identification;
 using NzbDrone.Core.Music;
 

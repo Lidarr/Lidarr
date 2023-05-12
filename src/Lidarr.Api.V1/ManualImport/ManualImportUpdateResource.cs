@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using Lidarr.Api.V1.Albums;
 using Lidarr.Api.V1.Tracks;
 using Lidarr.Http.REST;
 using NzbDrone.Core.DecisionEngine;
-using NzbDrone.Core.Languages;
 using NzbDrone.Core.Qualities;
 
 namespace Lidarr.Api.V1.ManualImport
