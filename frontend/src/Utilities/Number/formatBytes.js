@@ -7,11 +7,11 @@ function formatBytes(input, showBits = false) {
     return '';
   }
 
-  return filesize(size, {
+  return `${filesize(size, {
     base: 2,
     round: 1,
     bits: showBits
-  });
+  })}`;
 }
 
 export default formatBytes;
