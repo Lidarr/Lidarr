@@ -32,11 +32,11 @@ namespace NzbDrone.Core.HealthCheck.Checks
         public override HealthCheck Check()
         {
             var rootFolders = _artistService.AllArtistPaths()
-                                                           .Select(s => _rootFolderService.GetBestRootFolderPath(s.Value))
-                                                           .Distinct();
+                .Select(s => _rootFolderService.GetBestRootFolderPath(s.Value))
+                .Distinct();
 
             var missingRootFolders = rootFolders.Where(s => !_diskProvider.FolderExists(s))
-                                                          .ToList();
+                .ToList();
 
             missingRootFolders.AddRange(_importListFactory.All()
                 .Select(s => s.RootFolderPath)
