@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using Lidarr.Http;
-using Lidarr.Http.Extensions;
 using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
@@ -139,11 +138,8 @@ namespace Lidarr.Api.V1.Albums
         }
 
         [RestDeleteById]
-        public void DeleteAlbum(int id)
+        public void DeleteAlbum(int id, bool deleteFiles = false, bool addImportListExclusion = false)
         {
-            var deleteFiles = Request.GetBooleanQueryParameter("deleteFiles");
-            var addImportListExclusion = Request.GetBooleanQueryParameter("addImportListExclusion");
-
             _albumService.DeleteAlbum(id, deleteFiles, addImportListExclusion);
         }
 

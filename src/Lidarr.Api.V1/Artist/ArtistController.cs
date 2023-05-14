@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using Lidarr.Http;
-using Lidarr.Http.Extensions;
 using Lidarr.Http.REST;
 using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
@@ -156,9 +155,8 @@ namespace Lidarr.Api.V1.Artist
         }
 
         [RestPutById]
-        public ActionResult<ArtistResource> UpdateArtist(ArtistResource artistResource)
+        public ActionResult<ArtistResource> UpdateArtist(ArtistResource artistResource, bool moveFiles = false)
         {
-            var moveFiles = Request.GetBooleanQueryParameter("moveFiles");
             var artist = _artistService.GetArtist(artistResource.Id);
 
             var sourcePath = artist.Path;
@@ -183,11 +181,8 @@ namespace Lidarr.Api.V1.Artist
         }
 
         [RestDeleteById]
-        public void DeleteArtist(int id)
+        public void DeleteArtist(int id, bool deleteFiles = false, bool addImportListExclusion = false)
         {
-            var deleteFiles = Request.GetBooleanQueryParameter("deleteFiles");
-            var addImportListExclusion = Request.GetBooleanQueryParameter("addImportListExclusion");
-
             _artistService.DeleteArtist(id, deleteFiles, addImportListExclusion);
         }
 
