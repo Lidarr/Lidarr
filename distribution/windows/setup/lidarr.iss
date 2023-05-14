@@ -52,8 +52,8 @@ Name: "none"; Description: "Do not start automatically"; GroupDescription: "Star
 Name: "{app}"; Permissions: users-modify
 
 [Files]
-Source: "..\_artifacts\{#Runtime}\{#Framework}\Lidarr\Lidarr.exe"; DestDir: "{app}\bin"; Flags: ignoreversion
-Source: "..\_artifacts\{#Runtime}\{#Framework}\Lidarr\*"; Excludes: "Lidarr.Update"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\..\_artifacts\{#Runtime}\{#Framework}\Lidarr\Lidarr.exe"; DestDir: "{app}\bin"; Flags: ignoreversion
+Source: "..\..\..\_artifacts\{#Runtime}\{#Framework}\Lidarr\*"; Excludes: "Lidarr.Update"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
