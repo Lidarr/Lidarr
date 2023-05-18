@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
-using Lidarr.Http.Extensions;
 using Lidarr.Http.REST;
 using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
@@ -74,10 +73,9 @@ namespace Lidarr.Api.V1
         }
 
         [RestPutById]
-        public ActionResult<TProviderResource> UpdateProvider(TProviderResource providerResource)
+        public ActionResult<TProviderResource> UpdateProvider([FromBody] TProviderResource providerResource, [FromQuery] bool forceSave = false)
         {
             var providerDefinition = GetDefinition(providerResource, true, false, false);
-            var forceSave = Request.GetBooleanQueryParameter("forceSave");
 
             // Only test existing definitions if it is enabled and forceSave isn't set.
             if (providerDefinition.Enable && !forceSave)
