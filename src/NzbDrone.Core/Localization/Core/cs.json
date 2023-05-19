@@ -35,7 +35,6 @@
     "ChmodFolderHelpTextWarning": "Funguje to pouze v případě, že je uživatel souboru Lidarr vlastníkem souboru. Je lepší zajistit, aby stahovací klient správně nastavil oprávnění.",
     "ChownGroupHelpTextWarning": "Funguje to pouze v případě, že je uživatel souboru Lidarr vlastníkem souboru. Je lepší zajistit, aby stahovací klient používal stejnou skupinu jako Lidarr.",
     "AddingTag": "Přidávání značky",
-    "AdvancedSettingsHiddenClickToShow": "Skryté, kliknutím zobrazíte",
     "AdvancedSettingsShownClickToHide": "Zobrazeno, kliknutím se skryjete",
     "AgeWhenGrabbed": "Stáří (při zachycení)",
     "AlbumIsDownloadingInterp": "Film se stahuje - {0}% {1}",
