@@ -184,7 +184,6 @@
     "AddImportListExclusionHelpText": "防止列表中的电影被添加到 Lidarr 中",
     "AddMissing": "添加丢失项",
     "AlbumIsDownloadingInterp": "正在下载专辑 - {0}% {1}",
-    "AdvancedSettingsShownClickToHide": "已显示，点击隐藏",
     "Album": "专辑",
     "AlbumHasNotAired": "专辑尚未发布",
     "AlbumIsDownloading": "正在下载专辑",
