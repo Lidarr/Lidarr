@@ -979,5 +979,7 @@
     "AlbumCount": "Número de Álbuns",
     "CutoffFormatScoreHelpText": "Assim que essa pontuação de formato personalizado for alcançada, Lidarr não obterá mais lançamentos de álbuns",
     "DownloadedImporting": "'Baixado - Importando'",
-    "DownloadedWaitingToImport": "'Baixado - Aguardando para Importar'"
+    "DownloadedWaitingToImport": "'Baixado - Aguardando para Importar'",
+    "HiddenClickToShow": "Oculto, clique para mostrar",
+    "ShownClickToHide": "Exibido, clique para ocultar"
 }
