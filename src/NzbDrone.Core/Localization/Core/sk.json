@@ -163,5 +163,19 @@
     "EditMetadataProfile": "profil metadát",
     "BypassIfHighestQuality": "Obísť pri najvyššej kvalite",
     "ChooseImportMethod": "Zvoliť Import mód",
-    "ClickToChangeReleaseGroup": "Kliknutím zmeníte skupinu vydania"
+    "ClickToChangeReleaseGroup": "Kliknutím zmeníte skupinu vydania",
+    "CloneCustomFormat": "Klonovať vlastný formát",
+    "ColonReplacement": "Nahrádzanie bodkočiarky",
+    "Conditions": "Podmienky",
+    "Customformat": "Vlastný formát",
+    "Disabled": "zakázané",
+    "Formats": "Formát",
+    "ItsEasyToAddANewArtistJustStartTypingTheNameOfTheArtistYouWantToAdd": "Pridanie nového filmu je jednoduché, stačí začať písať názov filmu, ktorý chcete pridať",
+    "AppDataLocationHealthCheckMessage": "Aktualizácia nebude možná, aby sa predišlo zmazaniu AppData v priebehu aktualizácie",
+    "CustomFormat": "Vlastný formát",
+    "CustomFormats": "Vlastný formát",
+    "DeleteCustomFormat": "Klonovať vlastný formát",
+    "DeleteCustomFormatMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
+    "DeleteFormatMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
+    "ExportCustomFormat": "Pridať vlastný formát"
 }

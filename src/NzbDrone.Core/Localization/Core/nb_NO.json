@@ -179,5 +179,8 @@
     "Customformat": "Egendefinert format",
     "ExportCustomFormat": "Legg til egendefinert format",
     "Formats": "Format",
-    "ItsEasyToAddANewArtistJustStartTypingTheNameOfTheArtistYouWantToAdd": "Det er enkelt å legge til en ny film, bare begynn å skrive navnet på filmen du vil legge til"
+    "ItsEasyToAddANewArtistJustStartTypingTheNameOfTheArtistYouWantToAdd": "Det er enkelt å legge til en ny film, bare begynn å skrive navnet på filmen du vil legge til",
+    "AppDataLocationHealthCheckMessage": "Oppdatering vil ikke være mulig for å forhindre sletting av AppData på oppdateringen",
+    "ColonReplacement": "Kolon erstatntning",
+    "Disabled": "deaktivert"
 }
