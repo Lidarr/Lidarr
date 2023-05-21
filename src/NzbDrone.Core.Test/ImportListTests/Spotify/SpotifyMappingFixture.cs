@@ -103,7 +103,7 @@ namespace NzbDrone.Core.Test.ImportListTests
         {
             var data = new SpotifyImportListItemInfo
             {
-                Album = "25",
+                Album = "30",
                 Artist = "Adele"
             };
 
@@ -111,7 +111,7 @@ namespace NzbDrone.Core.Test.ImportListTests
             data.Should().NotBeNull();
             data.Artist.Should().Be("Adele");
             data.ArtistMusicBrainzId.Should().BeNull();
-            data.Album.Should().Be("25");
+            data.Album.Should().Be("30");
             data.AlbumMusicBrainzId.Should().BeNull();
         }
 
@@ -124,7 +124,7 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             var data = new SpotifyImportListItemInfo
             {
-                Album = "25",
+                Album = "30",
                 AlbumSpotifyId = "id",
                 Artist = "Adele"
             };
@@ -142,7 +142,7 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             var data = new SpotifyImportListItemInfo
             {
-                Album = "25",
+                Album = "30",
                 AlbumSpotifyId = "id",
                 Artist = "Adele"
             };
@@ -151,7 +151,7 @@ namespace NzbDrone.Core.Test.ImportListTests
             data.Should().NotBeNull();
             data.Artist.Should().Be("Adele");
             data.ArtistMusicBrainzId.Should().BeNull();
-            data.Album.Should().Be("25");
+            data.Album.Should().Be("30");
             data.AlbumMusicBrainzId.Should().BeNull();
 
             ExceptionVerification.ExpectedErrors(1);
@@ -164,8 +164,8 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             var data = new SpotifyImportListItemInfo
             {
-                Album = "25",
-                AlbumSpotifyId = "7uwTHXmFa1Ebi5flqBosig",
+                Album = "30",
+                AlbumSpotifyId = "21jF5jlMtzo94wbxmJ18aa",
                 Artist = "Adele"
             };
 
@@ -173,8 +173,8 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             data.Should().NotBeNull();
             data.Artist.Should().Be("Adele");
-            data.Album.Should().Be("25");
-            data.AlbumMusicBrainzId.Should().Be("5537624c-3d2f-4f5c-8099-df916082c85c");
+            data.Album.Should().Be("30");
+            data.AlbumMusicBrainzId.Should().Be("d8a99910-33c2-481d-9b96-085ece5545f6");
         }
 
         [Test]
@@ -184,8 +184,8 @@ namespace NzbDrone.Core.Test.ImportListTests
             {
                 new SpotifyImportListItemInfo
                 {
-                    Album = "25",
-                    AlbumSpotifyId = "7uwTHXmFa1Ebi5flqBosig",
+                    Album = "30",
+                    AlbumSpotifyId = "21jF5jlMtzo94wbxmJ18aa",
                     Artist = "Adele",
                     ArtistSpotifyId = "4dpARuHxo51G3z768sgnrY"
                 }
@@ -195,8 +195,8 @@ namespace NzbDrone.Core.Test.ImportListTests
             {
                 new SpotifyMap
                 {
-                    SpotifyId = "7uwTHXmFa1Ebi5flqBosig",
-                    MusicbrainzId = "5537624c-3d2f-4f5c-8099-df916082c85c"
+                    SpotifyId = "21jF5jlMtzo94wbxmJ18aa",
+                    MusicbrainzId = "d8a99910-33c2-481d-9b96-085ece5545f6"
                 },
                 new SpotifyMap
                 {
@@ -210,7 +210,7 @@ namespace NzbDrone.Core.Test.ImportListTests
                 .Returns<HttpRequest>(r => new HttpResponse<List<SpotifyMap>>(new HttpResponse(r, new HttpHeader(), map.ToJson())));
 
             var result = Subject.MapSpotifyReleases(data);
-            result[0].AlbumMusicBrainzId.Should().Be("5537624c-3d2f-4f5c-8099-df916082c85c");
+            result[0].AlbumMusicBrainzId.Should().Be("d8a99910-33c2-481d-9b96-085ece5545f6");
             result[0].ArtistMusicBrainzId.Should().BeNull();
         }
 
@@ -230,8 +230,8 @@ namespace NzbDrone.Core.Test.ImportListTests
             {
                 new SpotifyMap
                 {
-                    SpotifyId = "7uwTHXmFa1Ebi5flqBosig",
-                    MusicbrainzId = "5537624c-3d2f-4f5c-8099-df916082c85c"
+                    SpotifyId = "21jF5jlMtzo94wbxmJ18aa",
+                    MusicbrainzId = "d8a99910-33c2-481d-9b96-085ece5545f6"
                 },
                 new SpotifyMap
                 {
@@ -255,8 +255,8 @@ namespace NzbDrone.Core.Test.ImportListTests
             {
                 new SpotifyImportListItemInfo
                 {
-                    Album = "25",
-                    AlbumSpotifyId = "7uwTHXmFa1Ebi5flqBosig",
+                    Album = "30",
+                    AlbumSpotifyId = "21jF5jlMtzo94wbxmJ18aa",
                     Artist = "Adele"
                 }
             };
@@ -265,7 +265,7 @@ namespace NzbDrone.Core.Test.ImportListTests
             {
                 new SpotifyMap
                 {
-                    SpotifyId = "7uwTHXmFa1Ebi5flqBosig",
+                    SpotifyId = "21jF5jlMtzo94wbxmJ18aa",
                     MusicbrainzId = "0"
                 }
             };
@@ -285,8 +285,8 @@ namespace NzbDrone.Core.Test.ImportListTests
             {
                 new SpotifyImportListItemInfo
                 {
-                    Album = "25",
-                    AlbumSpotifyId = "7uwTHXmFa1Ebi5flqBosig",
+                    Album = "30",
+                    AlbumSpotifyId = "21jF5jlMtzo94wbxmJ18aa",
                     Artist = "Adele"
                 }
             };
@@ -311,14 +311,14 @@ namespace NzbDrone.Core.Test.ImportListTests
             {
                 new SpotifyImportListItemInfo
                 {
-                    Album = "25",
-                    AlbumSpotifyId = "7uwTHXmFa1Ebi5flqBosig",
+                    Album = "30",
+                    AlbumSpotifyId = "21jF5jlMtzo94wbxmJ18aa",
                     Artist = "Adele"
                 },
                 new SpotifyImportListItemInfo
                 {
-                    Album = "25",
-                    AlbumSpotifyId = "7uwTHXmFa1Ebi5flqBosig",
+                    Album = "30",
+                    AlbumSpotifyId = "21jF5jlMtzo94wbxmJ18aa",
                     Artist = "Adele"
                 }
             };
@@ -327,8 +327,8 @@ namespace NzbDrone.Core.Test.ImportListTests
             {
                 new SpotifyMap
                 {
-                    SpotifyId = "7uwTHXmFa1Ebi5flqBosig",
-                    MusicbrainzId = "5537624c-3d2f-4f5c-8099-df916082c85c"
+                    SpotifyId = "21jF5jlMtzo94wbxmJ18aa",
+                    MusicbrainzId = "d8a99910-33c2-481d-9b96-085ece5545f6"
                 }
             };
 
@@ -338,8 +338,8 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             var result = Subject.MapSpotifyReleases(data);
             result.Should().HaveCount(2);
-            result[0].AlbumMusicBrainzId.Should().Be("5537624c-3d2f-4f5c-8099-df916082c85c");
-            result[1].AlbumMusicBrainzId.Should().Be("5537624c-3d2f-4f5c-8099-df916082c85c");
+            result[0].AlbumMusicBrainzId.Should().Be("d8a99910-33c2-481d-9b96-085ece5545f6");
+            result[1].AlbumMusicBrainzId.Should().Be("d8a99910-33c2-481d-9b96-085ece5545f6");
         }
     }
 }
