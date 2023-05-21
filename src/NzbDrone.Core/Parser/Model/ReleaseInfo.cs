@@ -1,5 +1,7 @@
 using System;
 using System.Text;
+using Newtonsoft.Json;
+using NzbDrone.Core.Download.Pending;
 using NzbDrone.Core.Indexers;
 
 namespace NzbDrone.Core.Parser.Model
@@ -25,6 +27,10 @@ namespace NzbDrone.Core.Parser.Model
         public string Container { get; set; }
         public string Codec { get; set; }
         public string Resolution { get; set; }
+
+        // Used to track pending releases that are being reprocessed
+        [JsonIgnore]
+        public PendingReleaseReason? PendingReleaseReason { get; set; }
 
         public int Age
         {
