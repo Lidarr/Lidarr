@@ -352,9 +352,9 @@ namespace NzbDrone.Core.Music
             var trigger = message.Trigger;
             var isNew = message.IsNewArtist;
 
-            if (message.ArtistId.HasValue)
+            if (message.ArtistIds.Any())
             {
-                RefreshSelectedArtists(new List<int> { message.ArtistId.Value }, isNew, trigger);
+                RefreshSelectedArtists(message.ArtistIds, isNew, trigger);
             }
             else
             {

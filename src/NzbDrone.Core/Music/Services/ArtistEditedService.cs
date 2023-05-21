@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music.Commands;
@@ -19,7 +20,7 @@ namespace NzbDrone.Core.Music
             // Refresh Artist is we change AlbumType Preferences
             if (message.Artist.MetadataProfileId != message.OldArtist.MetadataProfileId)
             {
-                _commandQueueManager.Push(new RefreshArtistCommand(message.Artist.Id, false));
+                _commandQueueManager.Push(new RefreshArtistCommand(new List<int> { message.Artist.Id }, false));
             }
         }
     }

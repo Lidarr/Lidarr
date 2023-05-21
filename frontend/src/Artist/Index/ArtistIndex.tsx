@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SelectProvider } from 'App/SelectContext';
 import NoArtist from 'Artist/NoArtist';
-import { REFRESH_ARTIST, RSS_SYNC } from 'Commands/commandNames';
+import { RSS_SYNC } from 'Commands/commandNames';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
@@ -29,6 +29,7 @@ import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import translate from 'Utilities/String/translate';
 import ArtistIndexFooter from './ArtistIndexFooter';
+import ArtistIndexRefreshArtistsButton from './ArtistIndexRefreshArtistsButton';
 import ArtistIndexBanners from './Banners/ArtistIndexBanners';
 import ArtistIndexBannerOptionsModal from './Banners/Options/ArtistIndexBannerOptionsModal';
 import ArtistIndexFilterMenu from './Menus/ArtistIndexFilterMenu';
@@ -83,9 +84,6 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
     view,
   } = useSelector(createArtistClientSideCollectionItemsSelector('artistIndex'));
 
-  const isRefreshingArtist = useSelector(
-    createCommandExecutingSelector(REFRESH_ARTIST)
-  );
   const isRssSyncExecuting = useSelector(
     createCommandExecutingSelector(RSS_SYNC)
   );
@@ -95,14 +93,6 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
   const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
   const [jumpToCharacter, setJumpToCharacter] = useState<string | null>(null);
   const [isSelectMode, setIsSelectMode] = useState(false);
-
-  const onRefreshArtistPress = useCallback(() => {
-    dispatch(
-      executeCommand({
-        name: REFRESH_ARTIST,
-      })
-    );
-  }, [dispatch]);
 
   const onRssSyncPress = useCallback(() => {
     dispatch(
@@ -217,13 +207,9 @@ const ArtistIndex = withScrollPosition((props: ArtistIndexProps) => {
       <PageContent>
         <PageToolbar>
           <PageToolbarSection>
-            <PageToolbarButton
-              label={translate('UpdateAll')}
-              iconName={icons.REFRESH}
-              spinningName={icons.REFRESH}
-              isSpinning={isRefreshingArtist}
-              isDisabled={hasNoArtist}
-              onPress={onRefreshArtistPress}
+            <ArtistIndexRefreshArtistsButton
+              isSelectMode={isSelectMode}
+              selectedFilterKey={selectedFilterKey}
             />
 
             <PageToolbarButton

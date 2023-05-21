@@ -119,7 +119,7 @@ namespace NzbDrone.Core.Test.MusicTests
             GivenAlbumsForRefresh(_albums);
             AllowArtistUpdate();
 
-            Subject.Execute(new RefreshArtistCommand(_artist.Id));
+            Subject.Execute(new RefreshArtistCommand(new List<int> { _artist.Id }));
 
             VerifyEventNotPublished<ArtistUpdatedEvent>();
             VerifyEventPublished<ArtistRefreshCompleteEvent>();
@@ -140,7 +140,7 @@ namespace NzbDrone.Core.Test.MusicTests
             GivenAlbumsForRefresh(new List<Album>());
             AllowArtistUpdate();
 
-            Subject.Execute(new RefreshArtistCommand(_artist.Id));
+            Subject.Execute(new RefreshArtistCommand(new List<int> { _artist.Id }));
 
             VerifyEventPublished<ArtistUpdatedEvent>();
             VerifyEventPublished<ArtistRefreshCompleteEvent>();
@@ -163,7 +163,7 @@ namespace NzbDrone.Core.Test.MusicTests
             GivenAlbumsForRefresh(_albums);
             AllowArtistUpdate();
 
-            Subject.Execute(new RefreshArtistCommand(_artist.Id));
+            Subject.Execute(new RefreshArtistCommand(new List<int> { _artist.Id }));
 
             Mocker.GetMock<IMonitorNewAlbumService>()
                 .Verify(x => x.ShouldMonitorNewAlbum(newAlbum, _albums, _artist.MonitorNewItems), Times.Once());
@@ -175,7 +175,7 @@ namespace NzbDrone.Core.Test.MusicTests
             Mocker.GetMock<IArtistService>()
                 .Setup(x => x.DeleteArtist(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()));
 
-            Subject.Execute(new RefreshArtistCommand(_artist.Id));
+            Subject.Execute(new RefreshArtistCommand(new List<int> { _artist.Id }));
 
             Mocker.GetMock<IArtistService>()
                 .Verify(v => v.UpdateArtist(It.IsAny<Artist>(), It.IsAny<bool>()), Times.Never());
@@ -193,7 +193,7 @@ namespace NzbDrone.Core.Test.MusicTests
             GivenArtistFiles();
             GivenAlbumsForRefresh(new List<Album>());
 
-            Subject.Execute(new RefreshArtistCommand(_artist.Id));
+            Subject.Execute(new RefreshArtistCommand(new List<int> { _artist.Id }));
 
             Mocker.GetMock<IArtistService>()
                 .Verify(v => v.UpdateArtist(It.IsAny<Artist>(), It.IsAny<bool>()), Times.Never());
@@ -238,7 +238,7 @@ namespace NzbDrone.Core.Test.MusicTests
                 .Setup(x => x.UpdateArtist(It.IsAny<Artist>(), It.IsAny<bool>()))
                 .Returns((Artist a, bool updated) => a);
 
-            Subject.Execute(new RefreshArtistCommand(_artist.Id));
+            Subject.Execute(new RefreshArtistCommand(new List<int> { _artist.Id }));
 
             Mocker.GetMock<IArtistService>()
                 .Verify(v => v.UpdateArtist(It.Is<Artist>(s => s.ArtistMetadataId == 100 && s.ForeignArtistId == newArtistInfo.ForeignArtistId), It.IsAny<bool>()),
@@ -298,7 +298,7 @@ namespace NzbDrone.Core.Test.MusicTests
                 .Setup(x => x.UpdateArtist(It.IsAny<Artist>(), It.IsAny<bool>()))
                 .Returns((Artist a, bool updated) => a);
 
-            Subject.Execute(new RefreshArtistCommand(_artist.Id));
+            Subject.Execute(new RefreshArtistCommand(new List<int> { _artist.Id }));
 
             // the retained artist gets updated
             Mocker.GetMock<IArtistService>()

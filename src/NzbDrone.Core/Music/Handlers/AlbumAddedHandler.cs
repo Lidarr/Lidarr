@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music.Commands;
@@ -25,7 +26,7 @@ namespace NzbDrone.Core.Music
 
                 if (_checkIfArtistShouldBeRefreshed.ShouldRefresh(artist))
                 {
-                    _commandQueueManager.Push(new RefreshArtistCommand(artist.Id));
+                    _commandQueueManager.Push(new RefreshArtistCommand(new List<int> { artist.Id }));
                 }
                 else
                 {
