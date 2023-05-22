@@ -138,6 +138,11 @@ namespace NzbDrone.Core.MediaCover
 
             foreach (var cover in artist.Metadata.Value.Images)
             {
+                if (cover.CoverType == MediaCoverTypes.Unknown)
+                {
+                    continue;
+                }
+
                 var fileName = GetCoverPath(artist.Id, MediaCoverEntity.Artist, cover.CoverType, cover.Extension);
                 var alreadyExists = false;
 
@@ -192,8 +197,14 @@ namespace NzbDrone.Core.MediaCover
 
             foreach (var cover in album.Images.Where(e => e.CoverType == MediaCoverTypes.Cover))
             {
+                if (cover.CoverType == MediaCoverTypes.Unknown)
+                {
+                    continue;
+                }
+
                 var fileName = GetCoverPath(album.Id, MediaCoverEntity.Album, cover.CoverType, cover.Extension, null);
                 var alreadyExists = false;
+
                 try
                 {
                     var serverFileHeaders = _httpClient.Head(new HttpRequest(cover.Url) { AllowAutoRedirect = true }).Headers;

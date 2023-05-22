@@ -15,7 +15,8 @@ namespace NzbDrone.Core.MediaCover
         Headshot = 5,
         Cover = 6,
         Disc = 7,
-        Logo = 8
+        Logo = 8,
+        Clearart = 9
     }
 
     public enum MediaCoverEntity
