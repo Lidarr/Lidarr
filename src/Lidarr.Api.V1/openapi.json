@@ -11456,7 +11456,8 @@
           "headshot",
           "cover",
           "disc",
-          "logo"
+          "logo",
+          "clearlogo"
         ],
         "type": "string"
       },
