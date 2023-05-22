@@ -13,6 +13,7 @@ using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Download.Pending;
 using NzbDrone.Core.Download.TrackedDownloads;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Profiles.Qualities;
 using NzbDrone.Core.Qualities;
@@ -129,15 +130,15 @@ namespace Lidarr.Api.V1.Queue
 
         [HttpGet]
         [Produces("application/json")]
-        public PagingResource<QueueResource> GetQueue([FromQuery] PagingRequestResource paging, bool includeUnknownArtistItems = false, bool includeArtist = false, bool includeAlbum = false)
+        public PagingResource<QueueResource> GetQueue([FromQuery] PagingRequestResource paging, bool includeUnknownArtistItems = false, bool includeArtist = false, bool includeAlbum = false, [FromQuery] int[] artistIds = null, DownloadProtocol? protocol = null, int? quality = null)
         {
             var pagingResource = new PagingResource<QueueResource>(paging);
             var pagingSpec = pagingResource.MapToPagingSpec<QueueResource, NzbDrone.Core.Queue.Queue>("timeleft", SortDirection.Ascending);
 
-            return pagingSpec.ApplyToPage((spec) => GetQueue(spec, includeUnknownArtistItems), (q) => MapToResource(q, includeArtist, includeAlbum));
+            return pagingSpec.ApplyToPage((spec) => GetQueue(spec, artistIds?.ToHashSet(), protocol, quality, includeUnknownArtistItems), (q) => MapToResource(q, includeArtist, includeAlbum));
         }
 
-        private PagingSpec<NzbDrone.Core.Queue.Queue> GetQueue(PagingSpec<NzbDrone.Core.Queue.Queue> pagingSpec, bool includeUnknownArtistItems)
+        private PagingSpec<NzbDrone.Core.Queue.Queue> GetQueue(PagingSpec<NzbDrone.Core.Queue.Queue> pagingSpec, HashSet<int> artistIds, DownloadProtocol? protocol, int? quality, bool includeUnknownArtistItems)
         {
             var ascending = pagingSpec.SortDirection == SortDirection.Ascending;
             var orderByFunc = GetOrderByFunc(pagingSpec);
@@ -145,7 +146,30 @@ namespace Lidarr.Api.V1.Queue
             var queue = _queueService.GetQueue();
             var filteredQueue = includeUnknownArtistItems ? queue : queue.Where(q => q.Artist != null);
             var pending = _pendingReleaseService.GetPendingQueue();
-            var fullQueue = filteredQueue.Concat(pending).ToList();
+
+            var hasArtistIdFilter = artistIds.Any();
+            var fullQueue = filteredQueue.Concat(pending).Where(q =>
+            {
+                var include = true;
+
+                if (hasArtistIdFilter)
+                {
+                    include &= q.Artist != null && artistIds.Contains(q.Artist.Id);
+                }
+
+                if (include && protocol.HasValue)
+                {
+                    include &= q.Protocol == protocol.Value;
+                }
+
+                if (include && quality.HasValue)
+                {
+                    include &= q.Quality.Quality.Id == quality.Value;
+                }
+
+                return include;
+            }).ToList();
+
             IOrderedEnumerable<NzbDrone.Core.Queue.Queue> ordered;
 
             if (pagingSpec.SortKey == "timeleft")

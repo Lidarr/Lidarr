@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import SelectInput from 'Components/Form/SelectInput';
 import IconButton from 'Components/Link/IconButton';
 import { filterBuilderTypes, filterBuilderValueTypes, icons } from 'Helpers/Props';
+import ArtistFilterBuilderRowValue from './ArtistFilterBuilderRowValue';
 import ArtistStatusFilterBuilderRowValue from './ArtistStatusFilterBuilderRowValue';
 import BoolFilterBuilderRowValue from './BoolFilterBuilderRowValue';
 import DateFilterBuilderRowValue from './DateFilterBuilderRowValue';
@@ -71,6 +72,9 @@ function getRowValueConnector(selectedFilterBuilderProp) {
 
     case filterBuilderValueTypes.QUALITY_PROFILE:
       return QualityProfileFilterBuilderRowValueConnector;
+
+    case filterBuilderValueTypes.ARTIST:
+      return ArtistFilterBuilderRowValue;
 
     case filterBuilderValueTypes.ARTIST_STATUS:
       return ArtistStatusFilterBuilderRowValue;

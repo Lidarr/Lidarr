@@ -7,6 +7,7 @@ import withCurrentPage from 'Components/withCurrentPage';
 import { clearAlbums, fetchAlbums } from 'Store/Actions/albumActions';
 import { executeCommand } from 'Store/Actions/commandActions';
 import * as queueActions from 'Store/Actions/queueActions';
+import { createCustomFiltersSelector } from 'Store/Selectors/createClientSideCollectionSelector';
 import createCommandExecutingSelector from 'Store/Selectors/createCommandExecutingSelector';
 import hasDifferentItems from 'Utilities/Object/hasDifferentItems';
 import selectUniqueIds from 'Utilities/Object/selectUniqueIds';
@@ -19,14 +20,18 @@ function createMapStateToProps() {
     (state) => state.albums,
     (state) => state.queue.options,
     (state) => state.queue.paged,
+    (state) => state.queue.status.item,
+    createCustomFiltersSelector('queue'),
     createCommandExecutingSelector(commandNames.REFRESH_MONITORED_DOWNLOADS),
-    (artist, albums, options, queue, isRefreshMonitoredDownloadsExecuting) => {
+    (artist, albums, options, queue, status, customFilters, isRefreshMonitoredDownloadsExecuting) => {
       return {
+        count: options.includeUnknownArtistItems ? status.totalCount : status.count,
         isArtistFetching: artist.isFetching,
         isArtistPopulated: artist.isPopulated,
         isAlbumsFetching: albums.isFetching,
         isAlbumsPopulated: albums.isPopulated,
         albumsError: albums.error,
+        customFilters,
         isRefreshMonitoredDownloadsExecuting,
         ...options,
         ...queue
@@ -125,6 +130,10 @@ class QueueConnector extends Component {
     this.props.setQueueSort({ sortKey });
   };
 
+  onFilterSelect = (selectedFilterKey) => {
+    this.props.setQueueFilter({ selectedFilterKey });
+  };
+
   onTableOptionChange = (payload) => {
     this.props.setQueueTableOption(payload);
 
@@ -159,6 +168,7 @@ class QueueConnector extends Component {
         onLastPagePress={this.onLastPagePress}
         onPageSelect={this.onPageSelect}
         onSortPress={this.onSortPress}
+        onFilterSelect={this.onFilterSelect}
         onTableOptionChange={this.onTableOptionChange}
         onRefreshPress={this.onRefreshPress}
         onGrabSelectedPress={this.onGrabSelectedPress}
@@ -181,6 +191,7 @@ QueueConnector.propTypes = {
   gotoQueueLastPage: PropTypes.func.isRequired,
   gotoQueuePage: PropTypes.func.isRequired,
   setQueueSort: PropTypes.func.isRequired,
+  setQueueFilter: PropTypes.func.isRequired,
   setQueueTableOption: PropTypes.func.isRequired,
   clearQueue: PropTypes.func.isRequired,
   grabQueueItems: PropTypes.func.isRequired,

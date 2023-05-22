@@ -7,5 +7,6 @@ export const METADATA_PROFILE = 'metadataProfile';
 export const PROTOCOL = 'protocol';
 export const QUALITY = 'quality';
 export const QUALITY_PROFILE = 'qualityProfile';
+export const ARTIST = 'artist';
 export const ARTIST_STATUS = 'artistStatus';
 export const TAG = 'tag';

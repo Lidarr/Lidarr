@@ -780,6 +780,7 @@
   "QualityProfiles": "Quality Profiles",
   "QualitySettings": "Quality Settings",
   "Queue": "Queue",
+  "QueueFilterHasNoItems": "Selected queue filter has no items",
   "QueueIsEmpty": "Queue is empty",
   "Queued": "Queued",
   "RSSSync": "RSS Sync",
