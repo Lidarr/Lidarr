@@ -19,7 +19,7 @@ namespace NzbDrone.Core.MediaCover
     public interface IMapCoversToLocal
     {
         void ConvertToLocalUrls(int entityId, MediaCoverEntity coverEntity, IEnumerable<MediaCover> covers);
-        string GetCoverPath(int entityId, MediaCoverEntity coverEntity, MediaCoverTypes mediaCoverTypes, string extension, int? height = null);
+        string GetCoverPath(int entityId, MediaCoverEntity coverEntity, MediaCoverTypes coverType, string extension, int? height = null);
         bool EnsureAlbumCovers(Album album);
     }
 
@@ -70,18 +70,16 @@ namespace NzbDrone.Core.MediaCover
             _coverRootFolder = appFolderInfo.GetMediaCoverPath();
         }
 
-        public string GetCoverPath(int entityId, MediaCoverEntity coverEntity, MediaCoverTypes coverTypes, string extension, int? height = null)
+        public string GetCoverPath(int entityId, MediaCoverEntity coverEntity, MediaCoverTypes coverType, string extension, int? height = null)
         {
             var heightSuffix = height.HasValue ? "-" + height.ToString() : "";
 
             if (coverEntity == MediaCoverEntity.Album)
             {
-                return Path.Combine(GetAlbumCoverPath(entityId), coverTypes.ToString().ToLower() + heightSuffix + extension);
+                return Path.Combine(GetAlbumCoverPath(entityId), coverType.ToString().ToLower() + heightSuffix + GetExtension(coverType, extension));
             }
-            else
-            {
-                return Path.Combine(GetArtistCoverPath(entityId), coverTypes.ToString().ToLower() + heightSuffix + extension);
-            }
+
+            return Path.Combine(GetArtistCoverPath(entityId), coverType.ToString().ToLower() + heightSuffix + GetExtension(coverType, extension));
         }
 
         public void ConvertToLocalUrls(int entityId, MediaCoverEntity coverEntity, IEnumerable<MediaCover> covers)
@@ -99,17 +97,22 @@ namespace NzbDrone.Core.MediaCover
             {
                 foreach (var mediaCover in covers)
                 {
+                    if (mediaCover.CoverType == MediaCoverTypes.Unknown)
+                    {
+                        continue;
+                    }
+
                     var filePath = GetCoverPath(entityId, coverEntity, mediaCover.CoverType, mediaCover.Extension, null);
 
                     mediaCover.RemoteUrl = mediaCover.Url;
 
                     if (coverEntity == MediaCoverEntity.Album)
                     {
-                        mediaCover.Url = _configFileProvider.UrlBase + @"/MediaCover/Albums/" + entityId + "/" + mediaCover.CoverType.ToString().ToLower() + mediaCover.Extension;
+                        mediaCover.Url = _configFileProvider.UrlBase + @"/MediaCover/Albums/" + entityId + "/" + mediaCover.CoverType.ToString().ToLower() + GetExtension(mediaCover.CoverType, mediaCover.Extension);
                     }
                     else
                     {
-                        mediaCover.Url = _configFileProvider.UrlBase + @"/MediaCover/" + entityId + "/" + mediaCover.CoverType.ToString().ToLower() + mediaCover.Extension;
+                        mediaCover.Url = _configFileProvider.UrlBase + @"/MediaCover/" + entityId + "/" + mediaCover.CoverType.ToString().ToLower() + GetExtension(mediaCover.CoverType, mediaCover.Extension);
                     }
 
                     if (_diskProvider.FileExists(filePath))
@@ -310,6 +313,15 @@ namespace NzbDrone.Core.MediaCover
                 case MediaCoverTypes.Screenshot:
                     return new[] { 360, 180 };
             }
+        }
+
+        private string GetExtension(MediaCoverTypes coverType, string defaultExtension)
+        {
+            return coverType switch
+            {
+                MediaCoverTypes.Clearlogo => ".png",
+                _ => defaultExtension
+            };
         }
 
         public void HandleAsync(ArtistRefreshCompleteEvent message)
