@@ -70,6 +70,8 @@ namespace NzbDrone.Core.MediaFiles
                 _mediaFileService.Delete(file, DeleteMediaFileReason.Upgrade);
             }
 
+            localTrack.OldFiles = moveFileResult.OldFiles;
+
             if (copyOnly)
             {
                 moveFileResult.TrackFile = _trackFileMover.CopyTrackFile(trackFile, localTrack);

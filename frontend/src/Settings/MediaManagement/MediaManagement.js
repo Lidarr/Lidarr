@@ -68,29 +68,29 @@ class MediaManagement extends Component {
           <NamingConnector />
 
           {
-            isFetching &&
+            isFetching ?
               <FieldSet legend={translate('NamingSettings')}>
                 <LoadingIndicator />
-              </FieldSet>
+              </FieldSet> : null
           }
 
           {
-            !isFetching && error &&
+            !isFetching && error ?
               <FieldSet legend={translate('NamingSettings')}>
                 <div>
                   {translate('UnableToLoadMediaManagementSettings')}
                 </div>
-              </FieldSet>
+              </FieldSet> : null
           }
 
           {
-            hasSettings && !isFetching && !error &&
+            hasSettings && !isFetching && !error ?
               <Form
                 id="mediaManagementSettings"
                 {...otherProps}
               >
                 {
-                  advancedSettings &&
+                  advancedSettings ?
                     <FieldSet legend={translate('Folders')}>
                       <FormGroup
                         advancedSettings={advancedSettings}
@@ -127,11 +127,11 @@ class MediaManagement extends Component {
                           {...settings.deleteEmptyFolders}
                         />
                       </FormGroup>
-                    </FieldSet>
+                    </FieldSet> : null
                 }
 
                 {
-                  advancedSettings &&
+                  advancedSettings ?
                     <FieldSet
                       legend={translate('Importing')}
                     >
@@ -194,6 +194,41 @@ class MediaManagement extends Component {
                         />
                       </FormGroup>
 
+                      <FormGroup
+                        advancedSettings={advancedSettings}
+                        isAdvanced={true}
+                        size={sizes.MEDIUM}
+                      >
+                        <FormLabel>{translate('ImportUsingScript')}</FormLabel>
+
+                        <FormInputGroup
+                          type={inputTypes.CHECK}
+                          name="useScriptImport"
+                          helpText={translate('UseScriptImportHelpText')}
+                          onChange={onInputChange}
+                          {...settings.useScriptImport}
+                        />
+                      </FormGroup>
+
+                      {
+                        settings.useScriptImport.value ?
+                          <FormGroup
+                            advancedSettings={advancedSettings}
+                            isAdvanced={true}
+                          >
+                            <FormLabel>{translate('ImportScriptPath')}</FormLabel>
+
+                            <FormInputGroup
+                              type={inputTypes.PATH}
+                              includeFiles={true}
+                              name="scriptImportPath"
+                              helpText={translate('ScriptImportPathHelpText')}
+                              onChange={onInputChange}
+                              {...settings.scriptImportPath}
+                            />
+                          </FormGroup> : null
+                      }
+
                       <FormGroup size={sizes.MEDIUM}>
                         <FormLabel>
                           {translate('ImportExtraFiles')}
@@ -209,7 +244,7 @@ class MediaManagement extends Component {
                       </FormGroup>
 
                       {
-                        settings.importExtraFiles.value &&
+                        settings.importExtraFiles.value ?
                           <FormGroup
                             advancedSettings={advancedSettings}
                             isAdvanced={true}
@@ -228,9 +263,9 @@ class MediaManagement extends Component {
                               onChange={onInputChange}
                               {...settings.extraFileExtensions}
                             />
-                          </FormGroup>
+                          </FormGroup> : null
                       }
-                    </FieldSet>
+                    </FieldSet> : null
                 }
 
                 <FieldSet
@@ -375,7 +410,7 @@ class MediaManagement extends Component {
                 </FieldSet>
 
                 {
-                  advancedSettings && !isWindows &&
+                  advancedSettings && !isWindows ?
                     <FieldSet
                       legend={translate('Permissions')}
                     >
@@ -434,9 +469,9 @@ class MediaManagement extends Component {
                           {...settings.chownGroup}
                         />
                       </FormGroup>
-                    </FieldSet>
+                    </FieldSet> : null
                 }
-              </Form>
+              </Form> : null
           }
         </PageContentBody>
       </PageContent>

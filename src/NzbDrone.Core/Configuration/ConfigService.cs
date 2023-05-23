@@ -200,6 +200,20 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("CopyUsingHardlinks", value); }
         }
 
+        public bool UseScriptImport
+        {
+            get { return GetValueBoolean("UseScriptImport", false); }
+
+            set { SetValue("UseScriptImport", value); }
+        }
+
+        public string ScriptImportPath
+        {
+            get { return GetValue("ScriptImportPath"); }
+
+            set { SetValue("ScriptImportPath", value); }
+        }
+
         public bool ImportExtraFiles
         {
             get { return GetValueBoolean("ImportExtraFiles", false); }

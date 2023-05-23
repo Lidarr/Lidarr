@@ -216,8 +216,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                         trackFile.SceneName = localTrack.SceneName;
                         trackFile.OriginalFilePath = GetOriginalFilePath(downloadClientItem, localTrack);
 
-                        var moveResult = _trackFileUpgrader.UpgradeTrackFile(trackFile, localTrack, copyOnly);
-                        oldFiles = moveResult.OldFiles;
+                        oldFiles = _trackFileUpgrader.UpgradeTrackFile(trackFile, localTrack, copyOnly).OldFiles;
                     }
                     else
                     {

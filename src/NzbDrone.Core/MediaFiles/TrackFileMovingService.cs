@@ -31,6 +31,7 @@ namespace NzbDrone.Core.MediaFiles
         private readonly IDiskProvider _diskProvider;
         private readonly IRootFolderWatchingService _rootFolderWatchingService;
         private readonly IMediaFileAttributeService _mediaFileAttributeService;
+        private readonly IImportScript _scriptImportDecider;
         private readonly IEventAggregator _eventAggregator;
         private readonly IConfigService _configService;
         private readonly Logger _logger;
@@ -43,6 +44,7 @@ namespace NzbDrone.Core.MediaFiles
                                       IDiskProvider diskProvider,
                                       IRootFolderWatchingService rootFolderWatchingService,
                                       IMediaFileAttributeService mediaFileAttributeService,
+                                      IImportScript scriptImportDecider,
                                       IEventAggregator eventAggregator,
                                       IConfigService configService,
                                       Logger logger)
@@ -55,6 +57,7 @@ namespace NzbDrone.Core.MediaFiles
             _diskProvider = diskProvider;
             _rootFolderWatchingService = rootFolderWatchingService;
             _mediaFileAttributeService = mediaFileAttributeService;
+            _scriptImportDecider = scriptImportDecider;
             _eventAggregator = eventAggregator;
             _configService = configService;
             _logger = logger;
@@ -63,6 +66,11 @@ namespace NzbDrone.Core.MediaFiles
         public TrackFile MoveTrackFile(TrackFile trackFile, Artist artist)
         {
             var tracks = _trackService.GetTracksByFileId(trackFile.Id);
+            return MoveTrackFile(trackFile, artist, tracks);
+        }
+
+        private TrackFile MoveTrackFile(TrackFile trackFile, Artist artist, List<Track> tracks)
+        {
             var album = _albumService.GetAlbum(trackFile.AlbumId);
             var newFileName = _buildFileNames.BuildTrackFileName(tracks, artist, album, trackFile);
             var filePath = _buildFileNames.BuildTrackFilePath(artist, newFileName, Path.GetExtension(trackFile.Path));
@@ -83,7 +91,7 @@ namespace NzbDrone.Core.MediaFiles
 
             _logger.Debug("Moving track file: {0} to {1}", trackFile.Path, filePath);
 
-            return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.Move);
+            return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.Move, localTrack);
         }
 
         public TrackFile CopyTrackFile(TrackFile trackFile, LocalTrack localTrack)
@@ -96,14 +104,14 @@ namespace NzbDrone.Core.MediaFiles
             if (_configService.CopyUsingHardlinks)
             {
                 _logger.Debug("Hardlinking track file: {0} to {1}", trackFile.Path, filePath);
-                return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.HardLinkOrCopy);
+                return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.HardLinkOrCopy, localTrack);
             }
 
             _logger.Debug("Copying track file: {0} to {1}", trackFile.Path, filePath);
-            return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.Copy);
+            return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.Copy, localTrack);
         }
 
-        private TrackFile TransferFile(TrackFile trackFile, Artist artist, List<Track> tracks, string destinationFilePath, TransferMode mode)
+        private TrackFile TransferFile(TrackFile trackFile, Artist artist, List<Track> tracks, string destinationFilePath, TransferMode mode, LocalTrack localTrack = null)
         {
             Ensure.That(trackFile, () => trackFile).IsNotNull();
             Ensure.That(artist, () => artist).IsNotNull();
@@ -122,9 +130,33 @@ namespace NzbDrone.Core.MediaFiles
             }
 
             _rootFolderWatchingService.ReportFileSystemChangeBeginning(trackFilePath, destinationFilePath);
-            _diskTransferService.TransferFile(trackFilePath, destinationFilePath, mode);
+
+            var transfer = true;
 
             trackFile.Path = destinationFilePath;
+
+            if (localTrack is not null)
+            {
+                var scriptImportDecision = _scriptImportDecider.TryImport(trackFilePath, destinationFilePath, localTrack, trackFile, mode);
+
+                switch (scriptImportDecision)
+                {
+                    case ScriptImportDecision.DeferMove:
+                        break;
+                    case ScriptImportDecision.RenameRequested:
+                        MoveTrackFile(trackFile, artist, trackFile.Tracks);
+                        transfer = false;
+                        break;
+                    case ScriptImportDecision.MoveComplete:
+                        transfer = false;
+                        break;
+                }
+            }
+
+            if (transfer)
+            {
+                _diskTransferService.TransferFile(trackFilePath, destinationFilePath, mode);
+            }
 
             _updateTrackFileService.ChangeFileDateForFile(trackFile, artist, tracks);
 
