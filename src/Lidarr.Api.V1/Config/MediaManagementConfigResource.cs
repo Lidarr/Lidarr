@@ -25,6 +25,9 @@ namespace Lidarr.Api.V1.Config
         public bool SkipFreeSpaceCheckWhenImporting { get; set; }
         public int MinimumFreeSpaceWhenImporting { get; set; }
         public bool CopyUsingHardlinks { get; set; }
+        public bool EnableMediaInfo { get; set; }
+        public bool UseScriptImport { get; set; }
+        public string ScriptImportPath { get; set; }
         public bool ImportExtraFiles { get; set; }
         public string ExtraFileExtensions { get; set; }
     }
@@ -53,6 +56,9 @@ namespace Lidarr.Api.V1.Config
                 SkipFreeSpaceCheckWhenImporting = model.SkipFreeSpaceCheckWhenImporting,
                 MinimumFreeSpaceWhenImporting = model.MinimumFreeSpaceWhenImporting,
                 CopyUsingHardlinks = model.CopyUsingHardlinks,
+                EnableMediaInfo = model.EnableMediaInfo,
+                UseScriptImport = model.UseScriptImport,
+                ScriptImportPath = model.ScriptImportPath,
                 ImportExtraFiles = model.ImportExtraFiles,
                 ExtraFileExtensions = model.ExtraFileExtensions,
             };
