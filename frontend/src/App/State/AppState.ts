@@ -1,5 +1,6 @@
 import AlbumAppState from './AlbumAppState';
 import ArtistAppState, { ArtistIndexAppState } from './ArtistAppState';
+import HistoryAppState from './HistoryAppState';
 import QueueAppState from './QueueAppState';
 import SettingsAppState from './SettingsAppState';
 import TagsAppState from './TagsAppState';
@@ -42,6 +43,7 @@ interface AppState {
   albums: AlbumAppState;
   artist: ArtistAppState;
   artistIndex: ArtistIndexAppState;
+  history: HistoryAppState;
   queue: QueueAppState;
   settings: SettingsAppState;
   tags: TagsAppState;

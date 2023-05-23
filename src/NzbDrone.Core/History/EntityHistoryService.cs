@@ -18,7 +18,7 @@ namespace NzbDrone.Core.History
 {
     public interface IHistoryService
     {
-        PagingSpec<EntityHistory> Paged(PagingSpec<EntityHistory> pagingSpec);
+        PagingSpec<EntityHistory> Paged(PagingSpec<EntityHistory> pagingSpec, int[] qualities);
         EntityHistory MostRecentForAlbum(int albumId);
         EntityHistory MostRecentForDownloadId(string downloadId);
         EntityHistory Get(int historyId);
@@ -52,9 +52,9 @@ namespace NzbDrone.Core.History
             _logger = logger;
         }
 
-        public PagingSpec<EntityHistory> Paged(PagingSpec<EntityHistory> pagingSpec)
+        public PagingSpec<EntityHistory> Paged(PagingSpec<EntityHistory> pagingSpec, int[] qualities)
         {
-            return _historyRepository.GetPaged(pagingSpec);
+            return _historyRepository.GetPaged(pagingSpec, qualities);
         }
 
         public EntityHistory MostRecentForAlbum(int albumId)

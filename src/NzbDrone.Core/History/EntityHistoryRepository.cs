@@ -18,6 +18,7 @@ namespace NzbDrone.Core.History
         List<EntityHistory> FindDownloadHistory(int idArtistId, QualityModel quality);
         void DeleteForArtists(List<int> artistIds);
         List<EntityHistory> Since(DateTime date, EntityHistoryEventType? eventType);
+        PagingSpec<EntityHistory> GetPaged(PagingSpec<EntityHistory> pagingSpec, int[] qualities);
     }
 
     public class EntityHistoryRepository : BasicRepository<EntityHistory>, IHistoryRepository
@@ -98,19 +99,6 @@ namespace NzbDrone.Core.History
             Delete(c => artistIds.Contains(c.ArtistId));
         }
 
-        protected override SqlBuilder PagedBuilder() => new SqlBuilder(_database.DatabaseType)
-            .Join<EntityHistory, Artist>((h, a) => h.ArtistId == a.Id)
-            .Join<EntityHistory, Album>((h, a) => h.AlbumId == a.Id)
-            .LeftJoin<EntityHistory, Track>((h, t) => h.TrackId == t.Id);
-        protected override IEnumerable<EntityHistory> PagedQuery(SqlBuilder builder) =>
-            _database.QueryJoined<EntityHistory, Artist, Album, Track>(builder, (history, artist, album, track) =>
-                    {
-                        history.Artist = artist;
-                        history.Album = album;
-                        history.Track = track;
-                        return history;
-                    });
-
         public List<EntityHistory> Since(DateTime date, EntityHistoryEventType? eventType)
         {
             var builder = Builder()
@@ -129,6 +117,54 @@ namespace NzbDrone.Core.History
                 history.Album = album;
                 return history;
             }).OrderBy(h => h.Date).ToList();
+        }
+
+        public PagingSpec<EntityHistory> GetPaged(PagingSpec<EntityHistory> pagingSpec, int[] qualities)
+        {
+            pagingSpec.Records = GetPagedRecords(PagedBuilder(pagingSpec, qualities), pagingSpec, PagedQuery);
+
+            var countTemplate = $"SELECT COUNT(*) FROM (SELECT /**select**/ FROM \"{TableMapping.Mapper.TableNameMapping(typeof(EntityHistory))}\" /**join**/ /**innerjoin**/ /**leftjoin**/ /**where**/ /**groupby**/ /**having**/) AS \"Inner\"";
+            pagingSpec.TotalRecords = GetPagedRecordCount(PagedBuilder(pagingSpec, qualities).Select(typeof(EntityHistory)), pagingSpec, countTemplate);
+
+            return pagingSpec;
+        }
+
+        private SqlBuilder PagedBuilder(PagingSpec<EntityHistory> pagingSpec, int[] qualities)
+        {
+            var builder = Builder()
+                .Join<EntityHistory, Artist>((h, a) => h.ArtistId == a.Id)
+                .Join<EntityHistory, Album>((h, a) => h.AlbumId == a.Id)
+                .LeftJoin<EntityHistory, Track>((h, t) => h.TrackId == t.Id);
+
+            AddFilters(builder, pagingSpec);
+
+            if (qualities is { Length: > 0 })
+            {
+                builder.Where($"({BuildQualityWhereClause(qualities)})");
+            }
+
+            return builder;
+        }
+
+        protected override IEnumerable<EntityHistory> PagedQuery(SqlBuilder builder) =>
+            _database.QueryJoined<EntityHistory, Artist, Album, Track>(builder, (history, artist, album, track) =>
+            {
+                history.Artist = artist;
+                history.Album = album;
+                history.Track = track;
+                return history;
+            });
+
+        private string BuildQualityWhereClause(int[] qualities)
+        {
+            var clauses = new List<string>();
+
+            foreach (var quality in qualities)
+            {
+                clauses.Add($"\"{TableMapping.Mapper.TableNameMapping(typeof(EntityHistory))}\".\"Quality\" LIKE '%_quality_: {quality},%'");
+            }
+
+            return $"({string.Join(" OR ", clauses)})";
         }
     }
 }

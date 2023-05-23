@@ -6,6 +6,7 @@ import withCurrentPage from 'Components/withCurrentPage';
 import { clearAlbums, fetchAlbums } from 'Store/Actions/albumActions';
 import * as historyActions from 'Store/Actions/historyActions';
 import { clearTracks, fetchTracks } from 'Store/Actions/trackActions';
+import { createCustomFiltersSelector } from 'Store/Selectors/createClientSideCollectionSelector';
 import hasDifferentItems from 'Utilities/Object/hasDifferentItems';
 import selectUniqueIds from 'Utilities/Object/selectUniqueIds';
 import { registerPagePopulator, unregisterPagePopulator } from 'Utilities/pagePopulator';
@@ -17,7 +18,8 @@ function createMapStateToProps() {
     (state) => state.artist,
     (state) => state.albums,
     (state) => state.tracks,
-    (history, artist, albums, tracks) => {
+    createCustomFiltersSelector('history'),
+    (history, artist, albums, tracks, customFilters) => {
       return {
         isArtistFetching: artist.isFetching,
         isArtistPopulated: artist.isPopulated,
@@ -27,6 +29,7 @@ function createMapStateToProps() {
         isTracksFetching: tracks.isFetching,
         isTracksPopulated: tracks.isPopulated,
         tracksError: tracks.error,
+        customFilters,
         ...history
       };
     }
