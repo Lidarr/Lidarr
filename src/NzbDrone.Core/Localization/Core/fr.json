@@ -110,7 +110,7 @@
     "DetailedProgressBarHelpText": "Afficher le texte sur la barre de progression",
     "DiskSpace": "Espace disque",
     "DownloadClient": "Client de téléchargement",
-    "DownloadClients": "Clients téléchargement",
+    "DownloadClients": "Clients télécharg.",
     "DownloadClientSettings": "Réglages Clients de téléchargement",
     "DownloadFailedCheckDownloadClientForMoreDetails": "Téléchargement échoué : voir le client de téléchargement pour plus de détails",
     "DownloadFailedInterp": "Échec du téléchargement : {0}",
