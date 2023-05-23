@@ -79,9 +79,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             get
             {
                 var value = new List<Tuple<int, int>>();
-                for (int row = 0; row < nrow_orig; row++)
+                for (var row = 0; row < nrow_orig; row++)
                 {
-                    for (int col = 0; col < ncol_orig; col++)
+                    for (var col = 0; col < ncol_orig; col++)
                     {
                         if (M[row, col] == 1)
                         {
@@ -107,9 +107,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         {
             var newdim = Math.Max(matrix.GetLength(0), matrix.GetLength(1));
             var outp = new double[newdim, newdim];
-            for (int row = 0; row < matrix.GetLength(0); row++)
+            for (var row = 0; row < matrix.GetLength(0); row++)
             {
-                for (int col = 0; col < matrix.GetLength(1); col++)
+                for (var col = 0; col < matrix.GetLength(1); col++)
                 {
                     outp[row, col] = matrix[row, col];
                 }
@@ -124,10 +124,10 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         {
             double min_in_row;
 
-            for (int r = 0; r < n; r++)
+            for (var r = 0; r < n; r++)
             {
                 min_in_row = C[r, 0];
-                for (int c = 0; c < n; c++)
+                for (var c = 0; c < n; c++)
                 {
                     if (C[r, c] < min_in_row)
                     {
@@ -135,7 +135,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                     }
                 }
 
-                for (int c = 0; c < n; c++)
+                for (var c = 0; c < n; c++)
                 {
                     C[r, c] -= min_in_row;
                 }
@@ -149,9 +149,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         // matrix. Go to Step 3.
         private void step_two(ref int step)
         {
-            for (int r = 0; r < n; r++)
+            for (var r = 0; r < n; r++)
             {
-                for (int c = 0; c < n; c++)
+                for (var c = 0; c < n; c++)
                 {
                     if (C[r, c] == 0 && RowCover[r] == 0 && ColCover[c] == 0)
                     {
@@ -162,12 +162,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 }
             }
 
-            for (int r = 0; r < n; r++)
+            for (var r = 0; r < n; r++)
             {
                 RowCover[r] = 0;
             }
 
-            for (int c = 0; c < n; c++)
+            for (var c = 0; c < n; c++)
             {
                 ColCover[c] = 0;
             }
@@ -181,9 +181,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private void step_three(ref int step)
         {
             int colcount;
-            for (int r = 0; r < n; r++)
+            for (var r = 0; r < n; r++)
             {
-                for (int c = 0; c < n; c++)
+                for (var c = 0; c < n; c++)
                 {
                     if (M[r, c] == 1)
                     {
@@ -193,7 +193,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             }
 
             colcount = 0;
-            for (int c = 0; c < n; c++)
+            for (var c = 0; c < n; c++)
             {
                 if (ColCover[c] == 1)
                 {
@@ -214,7 +214,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         // methods to support step 4
         private void find_a_zero(ref int row, ref int col)
         {
-            int r = 0;
+            var r = 0;
             int c;
             bool done;
             row = -1;
@@ -249,8 +249,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         private bool star_in_row(int row)
         {
-            bool tmp = false;
-            for (int c = 0; c < n; c++)
+            var tmp = false;
+            for (var c = 0; c < n; c++)
             {
                 if (M[row, c] == 1)
                 {
@@ -264,7 +264,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private void find_star_in_row(int row, ref int col)
         {
             col = -1;
-            for (int c = 0; c < n; c++)
+            for (var c = 0; c < n; c++)
             {
                 if (M[row, c] == 1)
                 {
@@ -280,8 +280,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         // Save the smallest uncovered value and Go to Step 6.
         private void step_four(ref int step)
         {
-            int row = -1;
-            int col = -1;
+            var row = -1;
+            var col = -1;
             bool done;
 
             done = false;
@@ -317,7 +317,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private void find_star_in_col(int c, ref int r)
         {
             r = -1;
-            for (int i = 0; i < n; i++)
+            for (var i = 0; i < n; i++)
             {
                 if (M[i, c] == 1)
                 {
@@ -328,7 +328,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         private void find_prime_in_row(int r, ref int c)
         {
-            for (int j = 0; j < n; j++)
+            for (var j = 0; j < n; j++)
             {
                 if (M[r, j] == 2)
                 {
@@ -339,7 +339,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         private void augment_path()
         {
-            for (int p = 0; p < path_count; p++)
+            for (var p = 0; p < path_count; p++)
             {
                 if (M[path[p, 0], path[p, 1]] == 1)
                 {
@@ -354,12 +354,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         private void clear_covers()
         {
-            for (int r = 0; r < n; r++)
+            for (var r = 0; r < n; r++)
             {
                 RowCover[r] = 0;
             }
 
-            for (int c = 0; c < n; c++)
+            for (var c = 0; c < n; c++)
             {
                 ColCover[c] = 0;
             }
@@ -367,9 +367,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         private void erase_primes()
         {
-            for (int r = 0; r < n; r++)
+            for (var r = 0; r < n; r++)
             {
-                for (int c = 0; c < n; c++)
+                for (var c = 0; c < n; c++)
                 {
                     if (M[r, c] == 2)
                     {
@@ -389,8 +389,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private void step_five(ref int step)
         {
             bool done;
-            int r = -1;
-            int c = -1;
+            var r = -1;
+            var c = -1;
 
             path_count = 1;
             path[path_count - 1, 0] = path_row_0;
@@ -428,9 +428,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         // methods to support step 6
         private void find_smallest(ref double minval)
         {
-            for (int r = 0; r < n; r++)
+            for (var r = 0; r < n; r++)
             {
-                for (int c = 0; c < n; c++)
+                for (var c = 0; c < n; c++)
                 {
                     if (RowCover[r] == 0 && ColCover[c] == 0)
                     {
@@ -448,11 +448,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         // altering any stars, primes, or covered lines.
         private void step_six(ref int step)
         {
-            double minval = double.MaxValue;
+            var minval = double.MaxValue;
             find_smallest(ref minval);
-            for (int r = 0; r < n; r++)
+            for (var r = 0; r < n; r++)
             {
-                for (int c = 0; c < n; c++)
+                for (var c = 0; c < n; c++)
                 {
                     if (RowCover[r] == 1)
                     {
@@ -471,7 +471,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         public void Run()
         {
-            bool done = false;
+            var done = false;
             while (!done)
             {
                 switch (step)

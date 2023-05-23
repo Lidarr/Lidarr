@@ -136,7 +136,7 @@ namespace NzbDrone.Core.MediaCover
 
         private bool EnsureArtistCovers(Artist artist)
         {
-            bool updated = false;
+            var updated = false;
             var toResize = new List<Tuple<MediaCover, bool>>();
 
             foreach (var cover in artist.Metadata.Value.Images)
@@ -196,7 +196,7 @@ namespace NzbDrone.Core.MediaCover
 
         public bool EnsureAlbumCovers(Album album)
         {
-            bool updated = false;
+            var updated = false;
 
             foreach (var cover in album.Images.Where(e => e.CoverType == MediaCoverTypes.Cover))
             {
@@ -269,7 +269,7 @@ namespace NzbDrone.Core.MediaCover
 
         private void EnsureResizedCovers(Artist artist, MediaCover cover, bool forceResize, Album album = null)
         {
-            int[] heights = GetDefaultHeights(cover.CoverType);
+            var heights = GetDefaultHeights(cover.CoverType);
 
             foreach (var height in heights)
             {

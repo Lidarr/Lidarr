@@ -188,11 +188,11 @@ namespace NzbDrone.Common.Extensions
         {
             double weightDenom = Math.Max(a.Length, b.Length);
             double sum = 0;
-            for (int i = 0; i < a.Length; i++)
+            for (var i = 0; i < a.Length; i++)
             {
-                double high = 0.0;
-                int indexDistance = 0;
-                for (int x = 0; x < b.Length; x++)
+                var high = 0.0;
+                var indexDistance = 0;
+                for (var x = 0; x < b.Length; x++)
                 {
                     var coef = LevenshteinCoefficient(a[i], b[x]);
                     if (coef > high)

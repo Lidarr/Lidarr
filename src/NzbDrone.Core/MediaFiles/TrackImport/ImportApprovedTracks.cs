@@ -90,7 +90,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             var albumDecisions = decisions.Where(e => e.Item.Album != null && e.Approved)
                 .GroupBy(e => e.Item.Album.ForeignAlbumId).ToList();
 
-            int iDecision = 1;
+            var iDecision = 1;
             foreach (var albumDecision in albumDecisions)
             {
                 _logger.ProgressInfo($"Importing album {iDecision++}/{albumDecisions.Count}");

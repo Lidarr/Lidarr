@@ -29,7 +29,7 @@ namespace Lidarr.Api.V1.Search
 
         private static IEnumerable<SearchResource> MapToResource(IEnumerable<object> results)
         {
-            int id = 1;
+            var id = 1;
             foreach (var result in results)
             {
                 var resource = new SearchResource();

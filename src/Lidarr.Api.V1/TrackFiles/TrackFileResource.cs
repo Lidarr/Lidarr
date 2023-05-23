@@ -34,7 +34,7 @@ namespace Lidarr.Api.V1.TrackFiles
                 return 0;
             }
 
-            int qualityWeight = Quality.DefaultQualityDefinitions.Single(q => q.Quality == quality.Quality).Weight;
+            var qualityWeight = Quality.DefaultQualityDefinitions.Single(q => q.Quality == quality.Quality).Weight;
             qualityWeight += quality.Revision.Real * 10;
             qualityWeight += quality.Revision.Version;
             return qualityWeight;

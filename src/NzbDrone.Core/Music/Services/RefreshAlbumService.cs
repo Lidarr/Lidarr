@@ -324,7 +324,7 @@ namespace NzbDrone.Core.Music
 
         public bool RefreshAlbumInfo(List<Album> albums, List<Album> remoteAlbums, bool forceAlbumRefresh, bool forceUpdateFileTags, DateTime? lastUpdate)
         {
-            bool updated = false;
+            var updated = false;
 
             HashSet<string> updatedMusicbrainzAlbums = null;
 

@@ -145,7 +145,7 @@ namespace NzbDrone.Core.Profiles.Metadata
 
                 var names = profiles.Select(x => x.Name).ToList();
 
-                int i = 1;
+                var i = 1;
                 emptyProfile.Name = $"{NONE_PROFILE_NAME}.{i}";
 
                 while (names.Contains(emptyProfile.Name))

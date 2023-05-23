@@ -79,7 +79,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
             where T : BasicModel
             where TSettings : SpotifySettingsBase<TSettings>, new()
         {
-            T result = method(api);
+            var result = method(api);
             if (result.HasError())
             {
                 // If unauthorized, refresh token and try again

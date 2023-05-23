@@ -161,13 +161,13 @@ namespace NzbDrone.Core.MediaFiles
 
                 OriginalYear = OriginalReleaseDate.HasValue ? (uint)OriginalReleaseDate?.Year : 0;
 
-                foreach (ICodec codec in file.Properties.Codecs)
+                foreach (var codec in file.Properties.Codecs)
                 {
-                    IAudioCodec acodec = codec as IAudioCodec;
+                    var acodec = codec as IAudioCodec;
 
                     if (acodec != null && (acodec.MediaTypes & MediaTypes.Audio) != MediaTypes.None)
                     {
-                        int bitrate = acodec.AudioBitrate;
+                        var bitrate = acodec.AudioBitrate;
                         if (bitrate == 0)
                         {
                             // Taglib can't read bitrate for Opus.
@@ -222,7 +222,7 @@ namespace NzbDrone.Core.MediaFiles
 
         private int EstimateBitrate(TagLib.File file, string path)
         {
-            int bitrate = 0;
+            var bitrate = 0;
             try
             {
                 // Taglib File.Length is unreliable so use System.IO
@@ -241,22 +241,22 @@ namespace NzbDrone.Core.MediaFiles
 
         private DateTime? ReadId3Date(TagLib.Id3v2.Tag tag, string dateTag)
         {
-            string date = tag.GetTextAsString(dateTag);
+            var date = tag.GetTextAsString(dateTag);
 
             if (tag.Version == 4)
             {
                 // the unabused TDRC/TDOR tags
-                return DateTime.TryParse(date, out DateTime result) ? result : default(DateTime?);
+                return DateTime.TryParse(date, out var result) ? result : default(DateTime?);
             }
             else if (dateTag == "TDRC")
             {
                 // taglib maps the v3 TYER and TDAT to TDRC but does it incorrectly
-                return DateTime.TryParseExact(date, "yyyy-dd-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result) ? result : default(DateTime?);
+                return DateTime.TryParseExact(date, "yyyy-dd-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result) ? result : default(DateTime?);
             }
             else
             {
                 // taglib maps the v3 TORY to TDRC so we just get a year
-                return int.TryParse(date, out int year) && year >= 1860 && year <= DateTime.UtcNow.Year + 1 ? new DateTime(year, 1, 1) : default(DateTime?);
+                return int.TryParse(date, out var year) && year >= 1860 && year <= DateTime.UtcNow.Year + 1 ? new DateTime(year, 1, 1) : default(DateTime?);
             }
         }
 

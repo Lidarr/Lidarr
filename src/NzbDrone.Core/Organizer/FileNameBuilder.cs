@@ -423,7 +423,7 @@ namespace NzbDrone.Core.Organizer
         {
             var pattern = string.Empty;
 
-            for (int i = 0; i < tracks.Count; i++)
+            for (var i = 0; i < tracks.Count; i++)
             {
                 var patternToReplace = i == 0 ? basePattern : formatPattern;
 
@@ -437,7 +437,7 @@ namespace NzbDrone.Core.Organizer
         {
             var pattern = string.Empty;
 
-            for (int i = 0; i < tracks.Count; i++)
+            for (var i = 0; i < tracks.Count; i++)
             {
                 var patternToReplace = i == 0 ? basePattern : formatPattern;
 

@@ -100,7 +100,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Aggregation.Aggregators
             {
                 get
                 {
-                    int i = 0;
+                    var i = 0;
 
                     foreach (var tokens in tokenList)
                     {
@@ -128,7 +128,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Aggregation.Aggregators
         private List<string> GivenFilenames(string[] fields, string fieldSeparator, string whitespace)
         {
             var outp = new List<string>();
-            for (int i = 1; i <= 3; i++)
+            for (var i = 1; i <= 3; i++)
             {
                 var components = new List<string>();
                 foreach (var field in fields)
@@ -161,7 +161,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Aggregation.Aggregators
 
         private void VerifyDataAuto(List<LocalTrack> tracks, string[] tokens, string whitespace)
         {
-            for (int i = 1; i <= tracks.Count; i++)
+            for (var i = 1; i <= tracks.Count; i++)
             {
                 var info = tracks[i - 1].FileTrackInfo;
 

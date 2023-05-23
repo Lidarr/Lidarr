@@ -43,7 +43,7 @@ namespace NzbDrone.Common.Test.DiskTests
         [Test]
         public void should_not_contain_recycling_bin_for_root_of_drive()
         {
-            string root = @"C:\".AsOsAgnostic();
+            var root = @"C:\".AsOsAgnostic();
             SetupFolders(root);
 
             Mocker.GetMock<IDiskProvider>()
@@ -56,7 +56,7 @@ namespace NzbDrone.Common.Test.DiskTests
         [Test]
         public void should_not_contain_system_volume_information()
         {
-            string root = @"C:\".AsOsAgnostic();
+            var root = @"C:\".AsOsAgnostic();
             SetupFolders(root);
 
             Mocker.GetMock<IDiskProvider>()
@@ -69,7 +69,7 @@ namespace NzbDrone.Common.Test.DiskTests
         [Test]
         public void should_not_contain_recycling_bin_or_system_volume_information_for_root_of_drive()
         {
-            string root = @"C:\".AsOsAgnostic();
+            var root = @"C:\".AsOsAgnostic();
             SetupFolders(root);
 
             Mocker.GetMock<IDiskProvider>()

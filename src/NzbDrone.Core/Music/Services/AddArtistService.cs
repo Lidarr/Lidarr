@@ -154,7 +154,7 @@ namespace NzbDrone.Core.Music
                 if (_artistService.ArtistPathExists(path))
                 {
                     var basepath = path;
-                    int i = 0;
+                    var i = 0;
                     do
                     {
                         i++;

@@ -100,7 +100,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 downloadClientItemInfo = Parser.Parser.ParseAlbumTitle(downloadClientItem.Title);
             }
 
-            int i = 1;
+            var i = 1;
             foreach (var file in files)
             {
                 _logger.ProgressInfo($"Reading file {i++}/{files.Count}");

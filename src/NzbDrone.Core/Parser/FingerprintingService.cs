@@ -98,7 +98,7 @@ namespace NzbDrone.Core.Parser
                 path = "fpcalc";
 
                 // check that the command exists
-                Process p = new Process();
+                var p = new Process();
                 p.StartInfo.FileName = path;
                 p.StartInfo.Arguments = "-version";
                 p.StartInfo.UseShellExecute = false;
@@ -110,7 +110,7 @@ namespace NzbDrone.Core.Parser
                     p.Start();
 
                     // To avoid deadlocks, always read the output stream first and then wait.
-                    string output = p.StandardOutput.ReadToEnd();
+                    var output = p.StandardOutput.ReadToEnd();
                     p.WaitForExit(1000);
                 }
                 catch
@@ -136,7 +136,7 @@ namespace NzbDrone.Core.Parser
                 return null;
             }
 
-            Process p = new Process();
+            var p = new Process();
             p.StartInfo.FileName = _fpcalcPath;
             p.StartInfo.Arguments = $"-version";
             p.StartInfo.UseShellExecute = false;
@@ -146,7 +146,7 @@ namespace NzbDrone.Core.Parser
             p.Start();
 
             // To avoid deadlocks, always read the output stream first and then wait.
-            string output = p.StandardOutput.ReadToEnd();
+            var output = p.StandardOutput.ReadToEnd();
             p.WaitForExit(1000);
 
             if (p.ExitCode != 0)
@@ -241,7 +241,7 @@ namespace NzbDrone.Core.Parser
         {
             if (IsSetup() && File.Exists(file))
             {
-                Process p = new Process();
+                var p = new Process();
                 p.StartInfo.FileName = _fpcalcPath;
                 p.StartInfo.Arguments = $"{_fpcalcArgs} \"{file}\"";
                 p.StartInfo.UseShellExecute = false;
@@ -251,14 +251,14 @@ namespace NzbDrone.Core.Parser
 
                 _logger.Trace("Executing {0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
 
-                StringBuilder output = new StringBuilder();
-                StringBuilder error = new StringBuilder();
+                var output = new StringBuilder();
+                var error = new StringBuilder();
 
                 // see https://stackoverflow.com/questions/139593/processstartinfo-hanging-on-waitforexit-why?lq=1
                 // this is most likely overkill...
-                using (AutoResetEvent outputWaitHandle = new AutoResetEvent(false))
+                using (var outputWaitHandle = new AutoResetEvent(false))
                 {
-                    using (AutoResetEvent errorWaitHandle = new AutoResetEvent(false))
+                    using (var errorWaitHandle = new AutoResetEvent(false))
                     {
                         DataReceivedEventHandler outputHandler = (sender, e) =>
                         {
@@ -353,7 +353,7 @@ namespace NzbDrone.Core.Parser
                 .Build();
 
             var sb = new StringBuilder($"client={_acoustIdApiKey}&format=json&meta=recordingids&batch=1", 2000);
-            for (int i = 0; i < toLookup.Count; i++)
+            for (var i = 0; i < toLookup.Count; i++)
             {
                 sb.Append($"&duration.{i}={toLookup[i].Item2.Duration:F0}&fingerprint.{i}={toLookup[i].Item2.Fingerprint}");
             }

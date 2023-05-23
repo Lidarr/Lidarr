@@ -67,7 +67,7 @@ namespace NzbDrone.Core.Test.Profiles.Delay
             var moving = _last;
             var result = Subject.Reorder(moving.Id, null).OrderBy(d => d.Order).ToList();
 
-            for (int i = 1; i < result.Count; i++)
+            for (var i = 1; i < result.Count; i++)
             {
                 var delayProfile = result[i];
 

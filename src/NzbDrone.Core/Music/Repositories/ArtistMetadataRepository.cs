@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using NzbDrone.Core.Datastore;
@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Music
             var existingMetadata = FindById(data.Select(x => x.ForeignArtistId).ToList());
             var updateMetadataList = new List<ArtistMetadata>();
             var addMetadataList = new List<ArtistMetadata>();
-            int upToDateMetadataCount = 0;
+            var upToDateMetadataCount = 0;
 
             foreach (var meta in data)
             {

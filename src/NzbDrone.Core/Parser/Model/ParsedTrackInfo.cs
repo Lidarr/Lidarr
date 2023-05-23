@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Parser.Model
 
         public override string ToString()
         {
-            string trackString = "[Unknown Track]";
+            var trackString = "[Unknown Track]";
 
             if (TrackNumbers != null && TrackNumbers.Any())
             {

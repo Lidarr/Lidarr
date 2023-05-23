@@ -33,7 +33,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
 
             foreach (var workingFolder in _configService.DownloadClientWorkingFolders.Split('|'))
             {
-                DirectoryInfo parent = Directory.GetParent(item.Path);
+                var parent = Directory.GetParent(item.Path);
                 while (parent != null)
                 {
                     if (parent.Name.StartsWith(workingFolder))

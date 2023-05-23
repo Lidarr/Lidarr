@@ -20,8 +20,8 @@ namespace NzbDrone.Core.Datastore.Migration
 
         private void SetDefaultOptions(IDbConnection conn, IDbTransaction tran)
         {
-            int metadataId = GetMinProfileId(conn, tran, "MetadataProfiles");
-            int qualityId = GetMinProfileId(conn, tran, "QualityProfiles");
+            var metadataId = GetMinProfileId(conn, tran, "MetadataProfiles");
+            var qualityId = GetMinProfileId(conn, tran, "QualityProfiles");
 
             if (metadataId == 0 || qualityId == 0)
             {

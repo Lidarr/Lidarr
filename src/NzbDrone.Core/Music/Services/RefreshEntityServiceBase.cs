@@ -114,7 +114,7 @@ namespace NzbDrone.Core.Music
 
         public bool RefreshEntityInfo(TEntity local, List<TEntity> remoteList, bool forceChildRefresh, bool forceUpdateFileTags, DateTime? lastUpdate)
         {
-            bool updated = false;
+            var updated = false;
 
             LogProgress(local);
 
@@ -201,7 +201,7 @@ namespace NzbDrone.Core.Music
 
         public bool RefreshEntityInfo(List<TEntity> localList, List<TEntity> remoteList, bool forceChildRefresh, bool forceUpdateFileTags)
         {
-            bool updated = false;
+            var updated = false;
             foreach (var entity in localList)
             {
                 updated |= RefreshEntityInfo(entity, remoteList, forceChildRefresh, forceUpdateFileTags, null);

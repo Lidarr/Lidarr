@@ -126,7 +126,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
             var releases = GetLocalAlbumReleases(localTracks, config.SingleRelease);
 
-            int i = 0;
+            var i = 0;
             foreach (var localRelease in releases)
             {
                 i++;
@@ -193,7 +193,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private void IdentifyRelease(LocalAlbumRelease localAlbumRelease, IdentificationOverrides idOverrides, ImportDecisionMakerConfig config)
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
-            bool fingerprinted = false;
+            var fingerprinted = false;
 
             var candidateReleases = _candidateService.GetDbCandidatesFromTags(localAlbumRelease, idOverrides, config.IncludeExisting);
 
@@ -304,7 +304,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             _logger.Debug("Matching {0} track files against {1} candidates", localAlbumRelease.TrackCount, candidateReleases.Count);
             _logger.Trace("Processing files:\n{0}", string.Join("\n", localAlbumRelease.LocalTracks.Select(x => x.Path)));
 
-            double bestDistance = 1.0;
+            var bestDistance = 1.0;
 
             foreach (var candidateRelease in candidateReleases)
             {
@@ -350,10 +350,10 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             var distances = new Distance[localTracks.Count, mbTracks.Count];
             var costs = new double[localTracks.Count, mbTracks.Count];
 
-            for (int col = 0; col < mbTracks.Count; col++)
+            for (var col = 0; col < mbTracks.Count; col++)
             {
                 var totalTrackNumber = DistanceCalculator.GetTotalTrackNumber(mbTracks[col], mbTracks);
-                for (int row = 0; row < localTracks.Count; row++)
+                for (var row = 0; row < localTracks.Count; row++)
                 {
                     distances[row, col] = DistanceCalculator.TrackDistance(localTracks[row], mbTracks[col], totalTrackNumber, false);
                     costs[row, col] = distances[row, col].NormalizedDistance();

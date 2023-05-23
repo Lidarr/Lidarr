@@ -35,7 +35,7 @@ namespace NzbDrone.Core.MetadataSource
 
         public int Compare(Artist x, Artist y)
         {
-            int result = 0;
+            var result = 0;
 
             // Prefer exact matches
             result = Compare(x, y, s => CleanPunctuation(s.Name).Equals(CleanPunctuation(SearchQuery)));

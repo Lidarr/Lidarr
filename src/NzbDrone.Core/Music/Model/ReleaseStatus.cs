@@ -85,7 +85,7 @@ namespace NzbDrone.Core.Music
                 return Official;
             }
 
-            ReleaseStatus albumType = All.FirstOrDefault(v => v.Id == id);
+            var albumType = All.FirstOrDefault(v => v.Id == id);
 
             if (albumType == null)
             {

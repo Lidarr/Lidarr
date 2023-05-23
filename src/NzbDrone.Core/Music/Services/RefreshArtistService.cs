@@ -106,7 +106,7 @@ namespace NzbDrone.Core.Music
 
         protected override UpdateResult UpdateEntity(Artist local, Artist remote)
         {
-            UpdateResult result = UpdateResult.None;
+            var result = UpdateResult.None;
 
             if (!local.Metadata.Value.Equals(remote.Metadata.Value))
             {
@@ -324,7 +324,7 @@ namespace NzbDrone.Core.Music
 
         private void RefreshSelectedArtists(List<int> artistIds, bool isNew, CommandTrigger trigger)
         {
-            bool updated = false;
+            var updated = false;
             var artists = _artistService.GetArtists(artistIds);
 
             foreach (var artist in artists)

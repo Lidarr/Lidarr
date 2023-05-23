@@ -121,7 +121,7 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
             _logger.Debug("Retrieved metadata of {0} torrents in client", torrents.Count);
 
             var items = new List<DownloadClientItem>();
-            foreach (RTorrentTorrent torrent in torrents)
+            foreach (var torrent in torrents)
             {
                 // Don't concern ourselves with categories other than specified
                 if (Settings.MusicCategory.IsNotNullOrWhiteSpace() && torrent.Category != Settings.MusicCategory)

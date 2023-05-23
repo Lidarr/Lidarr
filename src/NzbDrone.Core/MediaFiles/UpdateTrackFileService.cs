@@ -64,7 +64,7 @@ namespace NzbDrone.Core.MediaFiles
                         var relDate = album.ReleaseDate.Value;
 
                         // avoiding false +ve checks and set date skewing by not using UTC (Windows)
-                        DateTime oldDateTime = _diskProvider.FileGetLastWrite(trackFilePath);
+                        var oldDateTime = _diskProvider.FileGetLastWrite(trackFilePath);
 
                         if (OsInfo.IsNotWindows && relDate < EpochTime)
                         {

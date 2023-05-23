@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -107,7 +107,7 @@ namespace NzbDrone.Common.EnvironmentInfo
 
         private static string RunAndCapture(string filename, string args)
         {
-            Process p = new Process();
+            var p = new Process();
             p.StartInfo.FileName = filename;
             p.StartInfo.Arguments = args;
             p.StartInfo.UseShellExecute = false;
@@ -117,7 +117,7 @@ namespace NzbDrone.Common.EnvironmentInfo
             p.Start();
 
             // To avoid deadlocks, always read the output stream first and then wait.
-            string output = p.StandardOutput.ReadToEnd();
+            var output = p.StandardOutput.ReadToEnd();
             p.WaitForExit(1000);
 
             return output;

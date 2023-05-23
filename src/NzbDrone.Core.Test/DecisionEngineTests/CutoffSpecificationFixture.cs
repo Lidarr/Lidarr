@@ -87,7 +87,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [Test]
         public void should_return_true_if_cutoffs_are_met_but_is_a_revision_upgrade()
         {
-            QualityProfile profile = new QualityProfile
+            var profile = new QualityProfile
             {
                 Cutoff = Quality.MP3_320.Id,
                 Items = Qualities.QualityFixture.GetDefaultQualities(),
@@ -104,7 +104,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [Test]
         public void should_return_false_if_quality_profile_does_not_allow_upgrades_but_cutoff_is_set_to_highest_quality()
         {
-            QualityProfile profile = new QualityProfile
+            var profile = new QualityProfile
             {
                 Cutoff = Quality.FLAC_24.Id,
                 Items = Qualities.QualityFixture.GetDefaultQualities(),

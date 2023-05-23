@@ -62,7 +62,7 @@ namespace NzbDrone.Core.Queue
 
         private Queue MapQueueItem(TrackedDownload trackedDownload, Album album)
         {
-            bool downloadForced = false;
+            var downloadForced = false;
             var history = _historyService.Find(trackedDownload.DownloadItem.DownloadId, EntityHistoryEventType.Grabbed).FirstOrDefault();
             if (history != null && history.Data.ContainsKey("downloadForced"))
             {

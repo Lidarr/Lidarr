@@ -65,7 +65,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
 
         private void GivenTrackFiles(add_mediafilerepository_mtime c, List<string> tracks, int albumReleaseId, int albumId, int firstId = 1, bool addTracks = true)
         {
-            int id = firstId;
+            var id = firstId;
             foreach (var track in tracks)
             {
                 c.Insert.IntoTable("TrackFiles").Row(new

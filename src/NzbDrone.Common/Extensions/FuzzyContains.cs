@@ -1,4 +1,4 @@
-﻿/*
+/*
  * This file incorporates work covered by the following copyright and
  * permission notice:
  *
@@ -78,7 +78,7 @@ namespace NzbDrone.Common.Extensions
         private static Tuple<int, double> match_bitap(string text, string pattern, double matchThreshold)
         {
             // Initialise the alphabet.
-            Dictionary<char, BigInteger> s = alphabet(pattern);
+            var s = alphabet(pattern);
 
             // don't keep creating new BigInteger(1)
             var big1 = new BigInteger(1);
@@ -88,19 +88,19 @@ namespace NzbDrone.Common.Extensions
 
             // Initialise the bit arrays.
             var matchmask = big1 << (pattern.Length - 1);
-            int best_loc = -1;
+            var best_loc = -1;
 
             // Empty initialization added to appease C# compiler.
             var last_rd = Array.Empty<BigInteger>();
-            for (int d = 0; d < pattern.Length; d++)
+            for (var d = 0; d < pattern.Length; d++)
             {
                 // Scan for the best match; each iteration allows for one more error.
-                int start = 1;
-                int finish = text.Length + pattern.Length;
+                var start = 1;
+                var finish = text.Length + pattern.Length;
 
                 var rd = new BigInteger[finish + 2];
                 rd[finish + 1] = (big1 << d) - big1;
-                for (int j = finish; j >= start; j--)
+                for (var j = finish; j >= start; j--)
                 {
                     BigInteger charMatch;
                     if (text.Length <= j - 1 || !s.ContainsKey(text[j - 1]))
@@ -171,8 +171,8 @@ namespace NzbDrone.Common.Extensions
         private static Dictionary<char, BigInteger> alphabet(string pattern)
         {
             var s = new Dictionary<char, BigInteger>();
-            char[] char_pattern = pattern.ToCharArray();
-            foreach (char c in char_pattern)
+            var char_pattern = pattern.ToCharArray();
+            foreach (var c in char_pattern)
             {
                 if (!s.ContainsKey(c))
                 {
@@ -180,8 +180,8 @@ namespace NzbDrone.Common.Extensions
                 }
             }
 
-            int i = 0;
-            foreach (char c in char_pattern)
+            var i = 0;
+            foreach (var c in char_pattern)
             {
                 s[c] = s[c] | (new BigInteger(1) << (pattern.Length - i - 1));
                 i++;

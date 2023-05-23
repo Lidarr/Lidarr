@@ -129,7 +129,7 @@ namespace NzbDrone.Core.Test.MusicTests.ArtistRepositoryTests
         {
             GivenArtists();
 
-            string name = "Alice Cooper";
+            var name = "Alice Cooper";
             AddArtist(name, "ee58c59f-8e7f-4430-b8ca-236c4d3745ae");
             AddArtist(name, "4d7928cd-7ed2-4282-8c29-c0c9f966f1bd");
 

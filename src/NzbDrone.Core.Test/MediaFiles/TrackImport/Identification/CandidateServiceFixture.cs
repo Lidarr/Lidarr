@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
                 .Build()
                 .ToList();
 
-            for (int i = 0; i < tracks.Count; i++)
+            for (var i = 0; i < tracks.Count; i++)
             {
                 output[i].FileTrackInfo = GivenParsedTrackInfo(tracks[i], release);
             }

@@ -52,7 +52,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
 
         private void GivenTracks(add_release_groups_etc c, int artistid, int albumid, int firstId, int count)
         {
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 var id = firstId + i;
                 c.Insert.IntoTable("Tracks").Row(new

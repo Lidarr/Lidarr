@@ -74,7 +74,7 @@ namespace NzbDrone.Core.IndexerSearch
 
             if (message.ArtistId.HasValue)
             {
-                int artistId = message.ArtistId.Value;
+                var artistId = message.ArtistId.Value;
 
                 var pagingSpec = new PagingSpec<Album>
                 {

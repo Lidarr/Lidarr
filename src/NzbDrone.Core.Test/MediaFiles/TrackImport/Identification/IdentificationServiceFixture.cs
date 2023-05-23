@@ -79,7 +79,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
             Mocker.SetConstant<ICandidateService>(Mocker.Resolve<CandidateService>());
 
             // set up the augmenters
-            List<IAggregate<LocalAlbumRelease>> aggregators = new List<IAggregate<LocalAlbumRelease>>
+            var aggregators = new List<IAggregate<LocalAlbumRelease>>
             {
                 Mocker.Resolve<AggregateFilenameInfo>()
             };
@@ -97,7 +97,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
         private List<Artist> GivenArtists(List<ArtistTestCase> artists)
         {
             var outp = new List<Artist>();
-            for (int i = 0; i < artists.Count; i++)
+            for (var i = 0; i < artists.Count; i++)
             {
                 var meta = artists[i].MetadataProfile;
                 meta.Id = i + 1;

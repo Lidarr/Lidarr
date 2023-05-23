@@ -635,7 +635,7 @@ namespace NzbDrone.Core.Parser
                 result.Revision.IsRepack = true;
             }
 
-            Match versionRegexResult = VersionRegex.Match(normalizedName);
+            var versionRegexResult = VersionRegex.Match(normalizedName);
 
             if (versionRegexResult.Success)
             {
@@ -643,7 +643,7 @@ namespace NzbDrone.Core.Parser
             }
 
             // TODO: re-enable this when we have a reliable way to determine real
-            MatchCollection realRegexResult = RealRegex.Matches(name);
+            var realRegexResult = RealRegex.Matches(name);
 
             if (realRegexResult.Count > 0)
             {

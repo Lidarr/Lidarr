@@ -190,7 +190,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 {
                     var slug = lowerTitle.Split(':')[1].Trim();
 
-                    bool isValid = Guid.TryParse(slug, out var searchGuid);
+                    var isValid = Guid.TryParse(slug, out var searchGuid);
 
                     if (slug.IsNullOrWhiteSpace() || slug.Any(char.IsWhiteSpace) || isValid == false)
                     {
@@ -252,7 +252,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 {
                     var slug = lowerTitle.Split(':')[1].Trim();
 
-                    bool isValid = Guid.TryParse(slug, out var searchGuid);
+                    var isValid = Guid.TryParse(slug, out var searchGuid);
 
                     if (slug.IsNullOrWhiteSpace() || slug.Any(char.IsWhiteSpace) || isValid == false)
                     {
@@ -432,7 +432,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
         private static Album MapAlbum(AlbumResource resource, Dictionary<string, ArtistMetadata> artistDict)
         {
-            Album album = new Album();
+            var album = new Album();
             album.ForeignAlbumId = resource.Id;
             album.OldForeignAlbumIds = resource.OldIds;
             album.Title = resource.Title;
@@ -475,7 +475,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
         private static AlbumRelease MapRelease(ReleaseResource resource, Dictionary<string, ArtistMetadata> artistDict)
         {
-            AlbumRelease release = new AlbumRelease();
+            var release = new AlbumRelease();
             release.ForeignReleaseId = resource.Id;
             release.OldForeignReleaseIds = resource.OldIds;
             release.Title = resource.Title;
@@ -490,7 +490,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             var allTracks = resource.Tracks.Select(x => MapTrack(x, artistDict));
             if (!allMedia.Any())
             {
-                foreach (int n in allTracks.Select(x => x.MediumNumber).Distinct())
+                foreach (var n in allTracks.Select(x => x.MediumNumber).Distinct())
                 {
                     allMedia.Add(new Medium { Name = "Unknown", Number = n, Format = "Unknown" });
                 }
@@ -514,7 +514,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
         private static Medium MapMedium(MediumResource resource)
         {
-            Medium medium = new Medium
+            var medium = new Medium
             {
                 Name = resource.Name,
                 Number = resource.Position,
@@ -526,7 +526,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
         private static Track MapTrack(TrackResource resource, Dictionary<string, ArtistMetadata> artistDict)
         {
-            Track track = new Track
+            var track = new Track
             {
                 ArtistMetadata = artistDict[resource.ArtistId],
                 Title = resource.TrackName,
@@ -545,7 +545,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
         private static ArtistMetadata MapArtistMetadata(ArtistResource resource)
         {
-            ArtistMetadata artist = new ArtistMetadata();
+            var artist = new ArtistMetadata();
 
             artist.Name = resource.ArtistName;
             artist.Aliases = resource.ArtistAliases;

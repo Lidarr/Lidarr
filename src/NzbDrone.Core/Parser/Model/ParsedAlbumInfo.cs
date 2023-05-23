@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Parser.Model
 
         public override string ToString()
         {
-            string albumString = "[Unknown Album]";
+            var albumString = "[Unknown Album]";
 
             if (AlbumTitle != null)
             {

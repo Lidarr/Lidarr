@@ -202,7 +202,7 @@ namespace NzbDrone.Core.Datastore.Migration
                 {
                     while (releaseReader.Read())
                     {
-                        int albumId = releaseReader.GetInt32(0);
+                        var albumId = releaseReader.GetInt32(0);
                         var albumRelease = Json.Deserialize<LegacyAlbumRelease>(releaseReader.GetString(1));
 
                         AlbumRelease023 toInsert = null;

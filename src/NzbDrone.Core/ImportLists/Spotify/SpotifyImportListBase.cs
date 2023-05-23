@@ -138,7 +138,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
                     break;
             }
 
-            return DateTime.TryParseExact(date, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result) ? result : default(DateTime);
+            return DateTime.TryParseExact(date, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result) ? result : default(DateTime);
         }
 
         public IList<SpotifyImportListItemInfo> MapSpotifyReleases(IList<SpotifyImportListItemInfo> items)
