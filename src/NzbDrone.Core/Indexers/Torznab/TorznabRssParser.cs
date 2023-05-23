@@ -110,10 +110,8 @@ namespace NzbDrone.Core.Indexers.Torznab
 
         protected override long GetSize(XElement item)
         {
-            long size;
-
             var sizeString = TryGetTorznabAttribute(item, "size");
-            if (!sizeString.IsNullOrWhiteSpace() && long.TryParse(sizeString, out size))
+            if (!sizeString.IsNullOrWhiteSpace() && long.TryParse(sizeString, out var size))
             {
                 return size;
             }

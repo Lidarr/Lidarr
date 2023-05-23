@@ -307,8 +307,7 @@ namespace NzbDrone.Core.Download.Pending
 
                 List<Album> albums;
 
-                RemoteAlbum knownRemoteAlbum;
-                if (knownRemoteAlbums != null && knownRemoteAlbums.TryGetValue(release.Release.Title, out knownRemoteAlbum))
+                if (knownRemoteAlbums != null && knownRemoteAlbums.TryGetValue(release.Release.Title, out var knownRemoteAlbum))
                 {
                     albums = knownRemoteAlbum.Albums;
                 }

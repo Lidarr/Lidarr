@@ -129,10 +129,8 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         protected override long GetSize(XElement item)
         {
-            long size;
-
             var sizeString = TryGetNewznabAttribute(item, "size");
-            if (!sizeString.IsNullOrWhiteSpace() && long.TryParse(sizeString, out size))
+            if (!sizeString.IsNullOrWhiteSpace() && long.TryParse(sizeString, out var size))
             {
                 return size;
             }

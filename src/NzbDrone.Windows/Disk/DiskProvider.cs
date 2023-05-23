@@ -103,8 +103,7 @@ namespace NzbDrone.Windows.Disk
                                                           PropagationFlags.InheritOnly,
                                                           controlType);
 
-                bool modified;
-                directorySecurity.ModifyAccessRule(AccessControlModification.Add, accessRule, out modified);
+                directorySecurity.ModifyAccessRule(AccessControlModification.Add, accessRule, out var modified);
 
                 if (modified)
                 {
@@ -153,11 +152,7 @@ namespace NzbDrone.Windows.Disk
                 folderName += '\\';
             }
 
-            ulong free = 0;
-            ulong dummy1 = 0;
-            ulong dummy2 = 0;
-
-            if (GetDiskFreeSpaceEx(folderName, out free, out dummy1, out dummy2))
+            if (GetDiskFreeSpaceEx(folderName, out var free, out var dummy1, out var dummy2))
             {
                 return (long)free;
             }
@@ -174,11 +169,7 @@ namespace NzbDrone.Windows.Disk
                 folderName += '\\';
             }
 
-            ulong total = 0;
-            ulong dummy1 = 0;
-            ulong dummy2 = 0;
-
-            if (GetDiskFreeSpaceEx(folderName, out dummy1, out total, out dummy2))
+            if (GetDiskFreeSpaceEx(folderName, out var dummy1, out var total, out var dummy2))
             {
                 return (long)total;
             }

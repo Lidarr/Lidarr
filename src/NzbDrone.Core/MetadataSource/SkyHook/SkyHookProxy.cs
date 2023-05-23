@@ -190,9 +190,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 {
                     var slug = lowerTitle.Split(':')[1].Trim();
 
-                    Guid searchGuid;
-
-                    bool isValid = Guid.TryParse(slug, out searchGuid);
+                    bool isValid = Guid.TryParse(slug, out var searchGuid);
 
                     if (slug.IsNullOrWhiteSpace() || slug.Any(char.IsWhiteSpace) || isValid == false)
                     {
@@ -254,9 +252,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 {
                     var slug = lowerTitle.Split(':')[1].Trim();
 
-                    Guid searchGuid;
-
-                    bool isValid = Guid.TryParse(slug, out searchGuid);
+                    bool isValid = Guid.TryParse(slug, out var searchGuid);
 
                     if (slug.IsNullOrWhiteSpace() || slug.Any(char.IsWhiteSpace) || isValid == false)
                     {

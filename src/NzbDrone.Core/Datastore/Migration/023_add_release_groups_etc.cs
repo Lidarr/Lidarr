@@ -39,8 +39,8 @@ namespace NzbDrone.Core.Datastore.Migration
 
             // Update artistmetadataId
             Execute.Sql(@"UPDATE ""Artists""
-                          SET ""ArtistMetadataId"" = (SELECT ""ArtistMetadata"".""Id"" 
-                                                  FROM ""ArtistMetadata"" 
+                          SET ""ArtistMetadataId"" = (SELECT ""ArtistMetadata"".""Id""
+                                                  FROM ""ArtistMetadata""
                                                   WHERE ""ArtistMetadata"".""ForeignArtistId"" = ""Artists"".""ForeignArtistId"")");
 
             // ALBUM RELEASES TABLE - Do this before we mess with the Albums table
@@ -69,8 +69,8 @@ namespace NzbDrone.Core.Datastore.Migration
 
             // Set metadata ID
             Execute.Sql(@"UPDATE ""Albums""
-                          SET ""ArtistMetadataId"" = (SELECT ""ArtistMetadata"".""Id"" 
-                                                  FROM ""ArtistMetadata"" 
+                          SET ""ArtistMetadataId"" = (SELECT ""ArtistMetadata"".""Id""
+                                                  FROM ""ArtistMetadata""
                                                   JOIN ""Artists"" ON ""ArtistMetadata"".""Id"" = ""Artists"".""ArtistMetadataId""
                                                   WHERE ""Albums"".""ArtistId"" = ""Artists"".""Id"")");
 
@@ -81,15 +81,15 @@ namespace NzbDrone.Core.Datastore.Migration
 
             // Set track release to the only release we've bothered populating
             Execute.Sql(@"UPDATE ""Tracks""
-                          SET ""AlbumReleaseId"" = (SELECT ""AlbumReleases"".""Id"" 
+                          SET ""AlbumReleaseId"" = (SELECT ""AlbumReleases"".""Id""
                                                 FROM ""AlbumReleases""
                                                 JOIN ""Albums"" ON ""AlbumReleases"".""AlbumId"" = ""Albums"".""Id""
                                                 WHERE ""Albums"".""Id"" = ""Tracks"".""AlbumId"")");
 
             // Set metadata ID
             Execute.Sql(@"UPDATE ""Tracks""
-                          SET ""ArtistMetadataId"" = (SELECT ""ArtistMetadata"".""Id"" 
-                                                  FROM ""ArtistMetadata"" 
+                          SET ""ArtistMetadataId"" = (SELECT ""ArtistMetadata"".""Id""
+                                                  FROM ""ArtistMetadata""
                                                   JOIN ""Albums"" ON ""ArtistMetadata"".""Id"" = ""Albums"".""ArtistMetadataId""
                                                   WHERE ""Tracks"".""AlbumId"" = ""Albums"".""Id"")");
 

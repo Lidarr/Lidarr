@@ -1,4 +1,4 @@
-﻿using FluentValidation.Results;
+using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Http;
@@ -54,8 +54,7 @@ namespace NzbDrone.Core.Download.Clients.Vuze
 
             _logger.Debug("Vuze protocol version information: {0}", versionString);
 
-            int version;
-            if (!int.TryParse(versionString, out version) || version < MINIMUM_SUPPORTED_PROTOCOL_VERSION)
+            if (!int.TryParse(versionString, out var version) || version < MINIMUM_SUPPORTED_PROTOCOL_VERSION)
             {
                 {
                     return new ValidationFailure(string.Empty, "Protocol version not supported, use Vuze 5.0.0.0 or higher with Vuze Web Remote plugin.");

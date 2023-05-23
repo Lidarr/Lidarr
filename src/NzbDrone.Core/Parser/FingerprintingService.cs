@@ -197,8 +197,7 @@ namespace NzbDrone.Core.Parser
         public AcoustId ParseFpcalcTextOutput(string output)
         {
             var durationstring = Regex.Match(output, @"(?<=DURATION=)[\d\.]+(?=\s)").Value;
-            double duration;
-            if (durationstring.IsNullOrWhiteSpace() || !double.TryParse(durationstring, out duration))
+            if (durationstring.IsNullOrWhiteSpace() || !double.TryParse(durationstring, out var duration))
             {
                 return null;
             }

@@ -490,9 +490,7 @@ namespace NzbDrone.Mono.Disk
                 return UNCHANGED_ID;
             }
 
-            uint userId;
-
-            if (uint.TryParse(user, out userId))
+            if (uint.TryParse(user, out var userId))
             {
                 return userId;
             }
@@ -514,9 +512,7 @@ namespace NzbDrone.Mono.Disk
                 return UNCHANGED_ID;
             }
 
-            uint groupId;
-
-            if (uint.TryParse(group, out groupId))
+            if (uint.TryParse(group, out var groupId))
             {
                 return groupId;
             }

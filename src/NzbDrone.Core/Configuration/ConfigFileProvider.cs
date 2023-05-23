@@ -116,8 +116,7 @@ namespace NzbDrone.Core.Configuration
                     continue;
                 }
 
-                object currentValue;
-                allWithDefaults.TryGetValue(configValue.Key, out currentValue);
+                allWithDefaults.TryGetValue(configValue.Key, out var currentValue);
                 if (currentValue == null)
                 {
                     continue;
