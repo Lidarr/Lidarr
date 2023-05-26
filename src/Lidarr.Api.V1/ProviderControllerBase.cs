@@ -58,9 +58,9 @@ namespace Lidarr.Api.V1
         }
 
         [RestPostById]
-        public ActionResult<TProviderResource> CreateProvider(TProviderResource providerResource)
+        public ActionResult<TProviderResource> CreateProvider([FromBody] TProviderResource providerResource, [FromQuery] bool forceSave = false)
         {
-            var providerDefinition = GetDefinition(providerResource, true, false, false);
+            var providerDefinition = GetDefinition(providerResource, true, !forceSave, false);
 
             if (providerDefinition.Enable)
             {
@@ -75,7 +75,7 @@ namespace Lidarr.Api.V1
         [RestPutById]
         public ActionResult<TProviderResource> UpdateProvider([FromBody] TProviderResource providerResource, [FromQuery] bool forceSave = false)
         {
-            var providerDefinition = GetDefinition(providerResource, true, false, false);
+            var providerDefinition = GetDefinition(providerResource, true, !forceSave, false);
 
             // Only test existing definitions if it is enabled and forceSave isn't set.
             if (providerDefinition.Enable && !forceSave)
@@ -191,7 +191,7 @@ namespace Lidarr.Api.V1
 
         protected void VerifyValidationResult(ValidationResult validationResult, bool includeWarnings)
         {
-            var result = new NzbDroneValidationResult(validationResult.Errors);
+            var result = validationResult as NzbDroneValidationResult ?? new NzbDroneValidationResult(validationResult.Errors);
 
             if (includeWarnings && (!result.IsValid || result.HasWarnings))
             {
