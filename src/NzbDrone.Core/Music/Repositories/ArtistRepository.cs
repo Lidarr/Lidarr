@@ -13,6 +13,7 @@ namespace NzbDrone.Core.Music
         Artist FindByName(string cleanName);
         Artist FindById(string foreignArtistId);
         Dictionary<int, string> AllArtistPaths();
+        Dictionary<int, List<int>> AllArtistsTags();
         Artist GetArtistByMetadataId(int artistMetadataId);
         List<Artist> GetArtistByMetadataId(IEnumerable<int> artistMetadataId);
     }
@@ -76,6 +77,15 @@ namespace NzbDrone.Core.Music
             {
                 var strSql = "SELECT \"Id\" AS \"Key\", \"Path\" AS \"Value\" FROM \"Artists\"";
                 return conn.Query<KeyValuePair<int, string>>(strSql).ToDictionary(x => x.Key, x => x.Value);
+            }
+        }
+
+        public Dictionary<int, List<int>> AllArtistsTags()
+        {
+            using (var conn = _database.OpenConnection())
+            {
+                var strSql = "SELECT \"Id\" AS \"Key\", \"Tags\" AS \"Value\" FROM \"Artists\" WHERE \"Tags\" IS NOT NULL";
+                return conn.Query<KeyValuePair<int, List<int>>>(strSql).ToDictionary(x => x.Key, x => x.Value);
             }
         }
 

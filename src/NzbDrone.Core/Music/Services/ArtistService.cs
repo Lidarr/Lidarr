@@ -24,6 +24,7 @@ namespace NzbDrone.Core.Music
         void DeleteArtist(int artistId, bool deleteFiles, bool addImportListExclusion = false);
         void DeleteArtists(List<int> artistIds, bool deleteFiles, bool addImportListExclusion = false);
         List<Artist> GetAllArtists();
+        Dictionary<int, List<int>> GetAllArtistsTags();
         List<Artist> AllForTag(int tagId);
         Artist UpdateArtist(Artist artist, bool publishUpdatedEvent = true);
         List<Artist> UpdateArtists(List<Artist> artist, bool useExistingRelativeFolder);
@@ -187,6 +188,11 @@ namespace NzbDrone.Core.Music
         public Dictionary<int, string> AllArtistPaths()
         {
             return _artistRepository.AllArtistPaths();
+        }
+
+        public Dictionary<int, List<int>> GetAllArtistsTags()
+        {
+            return _artistRepository.AllArtistsTags();
         }
 
         public List<Artist> AllForTag(int tagId)
