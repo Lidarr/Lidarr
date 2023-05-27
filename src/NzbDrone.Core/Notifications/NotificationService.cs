@@ -221,7 +221,7 @@ namespace NzbDrone.Core.Notifications
                 }
                 catch (Exception ex)
                 {
-                    _logger.Warn(ex, "Unable to send OnDelete notification to: " + notification.Definition.Name);
+                    _logger.Warn(ex, "Unable to send OnAlbumDelete notification to: " + notification.Definition.Name);
                 }
             }
         }
@@ -243,7 +243,7 @@ namespace NzbDrone.Core.Notifications
                     }
                     catch (Exception ex)
                     {
-                        _logger.Warn(ex, "Unable to send OnDelete notification to: " + notification.Definition.Name);
+                        _logger.Warn(ex, "Unable to send OnArtistDelete notification to: " + notification.Definition.Name);
                     }
                 }
             }
