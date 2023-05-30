@@ -7,7 +7,7 @@ function getTranslations() {
     dataType: 'json',
     url: '/localization',
     success: function(data) {
-      localization = data.Strings;
+      localization = data.strings;
     }
   };
 
@@ -19,12 +19,13 @@ function getTranslations() {
 const translations = getTranslations();
 
 export default function translate(key, args = '') {
+  const translation = translations[key] || key;
+
   if (args) {
-    const translatedKey = translate(key);
-    return translatedKey.replace(/\{(\d+)\}/g, (match, index) => {
+    return translation.replace(/\{(\d+)\}/g, (match, index) => {
       return args[index];
     });
   }
 
-  return translations[key] || key;
+  return translation;
 }

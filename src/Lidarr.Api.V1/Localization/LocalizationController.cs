@@ -1,7 +1,5 @@
-using System.Text.Json;
 using Lidarr.Http;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Localization;
 
 namespace Lidarr.Api.V1.Localization
@@ -10,21 +8,17 @@ namespace Lidarr.Api.V1.Localization
     public class LocalizationController : Controller
     {
         private readonly ILocalizationService _localizationService;
-        private readonly JsonSerializerOptions _serializerSettings;
 
         public LocalizationController(ILocalizationService localizationService)
         {
             _localizationService = localizationService;
-            _serializerSettings = STJson.GetSerializerSettings();
-            _serializerSettings.DictionaryKeyPolicy = null;
-            _serializerSettings.PropertyNamingPolicy = null;
         }
 
         [HttpGet]
         [Produces("application/json")]
-        public string GetLocalizationDictionary()
+        public LocalizationResource GetLocalizationDictionary()
         {
-            return JsonSerializer.Serialize(_localizationService.GetLocalizationDictionary().ToResource(), _serializerSettings);
+            return _localizationService.GetLocalizationDictionary().ToResource();
         }
     }
 }
