@@ -22,6 +22,7 @@ namespace Lidarr.Api.V1.Tags
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<TagDetailsResource> GetAll()
         {
             var tags = _tagService.Details().ToResource();

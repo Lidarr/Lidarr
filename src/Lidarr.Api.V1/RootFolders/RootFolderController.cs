@@ -60,6 +60,7 @@ namespace Lidarr.Api.V1.RootFolders
         }
 
         [RestPostById]
+        [Consumes("application/json")]
         public ActionResult<RootFolderResource> CreateRootFolder(RootFolderResource rootFolderResource)
         {
             var model = rootFolderResource.ToModel();
@@ -83,6 +84,7 @@ namespace Lidarr.Api.V1.RootFolders
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<RootFolderResource> GetRootFolders()
         {
             return _rootFolderService.AllWithSpaceStats().ToResource();

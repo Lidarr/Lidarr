@@ -29,6 +29,7 @@ namespace Lidarr.Api.V1.Wanted
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public PagingResource<AlbumResource> GetCutoffUnmetAlbums(bool includeArtist = false)
         {
             var pagingResource = Request.ReadPagingResourceFromRequest<AlbumResource>();

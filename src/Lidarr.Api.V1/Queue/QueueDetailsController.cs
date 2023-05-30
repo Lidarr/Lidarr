@@ -32,6 +32,7 @@ namespace Lidarr.Api.V1.Queue
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<QueueResource> GetQueue(int? artistId, [FromQuery]List<int> albumIds, bool includeArtist = false, bool includeAlbum = true)
         {
             var queue = _queueService.GetQueue();

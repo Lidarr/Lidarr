@@ -40,6 +40,7 @@ namespace Lidarr.Api.V1.RemotePathMappings
         }
 
         [RestPostById]
+        [Consumes("application/json")]
         public ActionResult<RemotePathMappingResource> CreateMapping(RemotePathMappingResource resource)
         {
             var model = resource.ToModel();
@@ -48,6 +49,7 @@ namespace Lidarr.Api.V1.RemotePathMappings
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<RemotePathMappingResource> GetMappings()
         {
             return _remotePathMappingService.All().ToResource();

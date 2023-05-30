@@ -90,6 +90,7 @@ namespace Lidarr.Api.V1.Queue
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public PagingResource<QueueResource> GetQueue(bool includeUnknownArtistItems = false, bool includeArtist = false, bool includeAlbum = false)
         {
             var pagingResource = Request.ReadPagingResourceFromRequest<QueueResource>();

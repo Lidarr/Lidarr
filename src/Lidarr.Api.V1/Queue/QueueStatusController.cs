@@ -36,6 +36,7 @@ namespace Lidarr.Api.V1.Queue
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public QueueStatusResource GetQueueStatus()
         {
             _broadcastDebounce.Pause();

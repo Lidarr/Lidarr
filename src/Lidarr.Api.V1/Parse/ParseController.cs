@@ -17,6 +17,7 @@ namespace Lidarr.Api.V1.Parse
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public ParseResource Parse(string title)
         {
             var parsedAlbumInfo = Parser.ParseAlbumTitle(title);

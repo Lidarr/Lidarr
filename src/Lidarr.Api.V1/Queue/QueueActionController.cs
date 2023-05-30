@@ -35,6 +35,7 @@ namespace Lidarr.Api.V1.Queue
         }
 
         [HttpPost("grab/bulk")]
+        [Consumes("application/json")]
         public object Grab([FromBody] QueueBulkResource resource)
         {
             foreach (var id in resource.Ids)

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Lidarr.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,12 +24,14 @@ namespace Lidarr.Api.V1.FileSystem
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public IActionResult GetContents(string path, bool includeFiles = false, bool allowFoldersWithoutTrailingSlashes = false)
         {
             return Ok(_fileSystemLookupService.LookupContents(path, includeFiles, allowFoldersWithoutTrailingSlashes));
         }
 
         [HttpGet("type")]
+        [Produces("application/json")]
         public object GetEntityType(string path)
         {
             if (_diskProvider.FileExists(path))
@@ -41,11 +44,12 @@ namespace Lidarr.Api.V1.FileSystem
         }
 
         [HttpGet("mediafiles")]
+        [Produces("application/json")]
         public object GetMediaFiles(string path)
         {
             if (!_diskProvider.FolderExists(path))
             {
-                return global::System.Array.Empty<string>();
+                return Array.Empty<string>();
             }
 
             return _diskScanService.GetAudioFiles(path).Select(f => new

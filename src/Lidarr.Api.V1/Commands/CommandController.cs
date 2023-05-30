@@ -48,6 +48,8 @@ namespace Lidarr.Api.V1.Commands
         }
 
         [RestPostById]
+        [Consumes("application/json")]
+        [Produces("application/json")]
         public ActionResult<CommandResource> StartCommand(CommandResource commandResource)
         {
             var commandType =
@@ -73,6 +75,7 @@ namespace Lidarr.Api.V1.Commands
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<CommandResource> GetStartedCommands()
         {
             return _commandQueueManager.All()

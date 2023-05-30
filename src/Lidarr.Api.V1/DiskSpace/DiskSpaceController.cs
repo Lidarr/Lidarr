@@ -16,6 +16,7 @@ namespace Lidarr.Api.V1.DiskSpace
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<DiskSpaceResource> GetFreeSpace()
         {
             return _diskSpaceService.GetFreeSpace().ConvertAll(DiskSpaceResourceMapper.MapToResource);
