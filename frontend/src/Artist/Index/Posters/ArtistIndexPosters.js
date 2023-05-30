@@ -38,7 +38,8 @@ function calculateRowHeight(posterHeight, sortKey, isSmallScreen, posterOptions)
     detailedProgressBar,
     showTitle,
     showMonitored,
-    showQualityProfile
+    showQualityProfile,
+    showNextAlbum
   } = posterOptions;
 
   const nextAiringHeight = 19;
@@ -62,16 +63,28 @@ function calculateRowHeight(posterHeight, sortKey, isSmallScreen, posterOptions)
     heights.push(19);
   }
 
+  if (showNextAlbum) {
+    heights.push(19);
+  }
+
   switch (sortKey) {
+    case 'artistType':
+    case 'lastAlbum':
     case 'seasons':
-    case 'previousAiring':
     case 'added':
+    case 'albumCount':
     case 'path':
     case 'sizeOnDisk':
+    case 'tags':
       heights.push(19);
       break;
     case 'qualityProfileId':
       if (!showQualityProfile) {
+        heights.push(19);
+      }
+      break;
+    case 'nextAlbum':
+      if (!showNextAlbum) {
         heights.push(19);
       }
       break;
@@ -197,6 +210,7 @@ class ArtistIndexPosters extends Component {
       posterOptions,
       showRelativeDates,
       shortDateFormat,
+      longDateFormat,
       timeFormat
     } = this.props;
 
@@ -210,7 +224,8 @@ class ArtistIndexPosters extends Component {
       detailedProgressBar,
       showTitle,
       showMonitored,
-      showQualityProfile
+      showQualityProfile,
+      showNextAlbum
     } = posterOptions;
 
     const artist = items[rowIndex * columnCount + columnIndex];
@@ -237,8 +252,10 @@ class ArtistIndexPosters extends Component {
           showTitle={showTitle}
           showMonitored={showMonitored}
           showQualityProfile={showQualityProfile}
+          showNextAlbum={showNextAlbum}
           showRelativeDates={showRelativeDates}
           shortDateFormat={shortDateFormat}
+          longDateFormat={longDateFormat}
           timeFormat={timeFormat}
           style={style}
           artistId={artist.id}
@@ -326,8 +343,9 @@ ArtistIndexPosters.propTypes = {
   scroller: PropTypes.instanceOf(Element).isRequired,
   showRelativeDates: PropTypes.bool.isRequired,
   shortDateFormat: PropTypes.string.isRequired,
-  isSmallScreen: PropTypes.bool.isRequired,
-  timeFormat: PropTypes.string.isRequired
+  longDateFormat: PropTypes.string.isRequired,
+  timeFormat: PropTypes.string.isRequired,
+  isSmallScreen: PropTypes.bool.isRequired
 };
 
 export default ArtistIndexPosters;

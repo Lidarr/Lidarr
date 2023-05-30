@@ -33,6 +33,7 @@ class ArtistIndexPosterOptionsModalContent extends Component {
       showTitle: props.showTitle,
       showMonitored: props.showMonitored,
       showQualityProfile: props.showQualityProfile,
+      showNextAlbum: props.showNextAlbum,
       showSearchAction: props.showSearchAction
     };
   }
@@ -44,6 +45,7 @@ class ArtistIndexPosterOptionsModalContent extends Component {
       showTitle,
       showMonitored,
       showQualityProfile,
+      showNextAlbum,
       showSearchAction
     } = this.props;
 
@@ -67,6 +69,10 @@ class ArtistIndexPosterOptionsModalContent extends Component {
 
     if (showQualityProfile !== prevProps.showQualityProfile) {
       state.showQualityProfile = showQualityProfile;
+    }
+
+    if (showNextAlbum !== prevProps.showNextAlbum) {
+      state.showNextAlbum = showNextAlbum;
     }
 
     if (showSearchAction !== prevProps.showSearchAction) {
@@ -103,6 +109,7 @@ class ArtistIndexPosterOptionsModalContent extends Component {
       showTitle,
       showMonitored,
       showQualityProfile,
+      showNextAlbum,
       showSearchAction
     } = this.state;
 
@@ -186,6 +193,20 @@ class ArtistIndexPosterOptionsModalContent extends Component {
 
             <FormGroup>
               <FormLabel>
+                {translate('ShowNextAlbum')}
+              </FormLabel>
+
+              <FormInputGroup
+                type={inputTypes.CHECK}
+                name="showNextAlbum"
+                value={showNextAlbum}
+                helpText={translate('ShowNextAlbumHelpText')}
+                onChange={this.onChangePosterOption}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <FormLabel>
                 {translate('ShowSearch')}
               </FormLabel>
 
@@ -217,6 +238,7 @@ ArtistIndexPosterOptionsModalContent.propTypes = {
   showTitle: PropTypes.bool.isRequired,
   showMonitored: PropTypes.bool.isRequired,
   showQualityProfile: PropTypes.bool.isRequired,
+  showNextAlbum: PropTypes.bool.isRequired,
   detailedProgressBar: PropTypes.bool.isRequired,
   showSearchAction: PropTypes.bool.isRequired,
   onChangePosterOption: PropTypes.func.isRequired,
