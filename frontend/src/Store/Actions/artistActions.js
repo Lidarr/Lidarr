@@ -89,11 +89,11 @@ export const filterPredicates = {
   },
 
   nextAlbum: function(item, filterValue, type) {
-    return dateFilterPredicate(item.nextAlbum, filterValue, type);
+    return dateFilterPredicate(item.nextAlbum?.releaseDate, filterValue, type);
   },
 
   lastAlbum: function(item, filterValue, type) {
-    return dateFilterPredicate(item.lastAlbum, filterValue, type);
+    return dateFilterPredicate(item.lastAlbum?.releaseDate, filterValue, type);
   },
 
   added: function(item, filterValue, type) {

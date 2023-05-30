@@ -14,6 +14,7 @@ function createMapStateToProps() {
         posterOptions,
         showRelativeDates: uiSettings.showRelativeDates,
         shortDateFormat: uiSettings.shortDateFormat,
+        longDateFormat: uiSettings.longDateFormat,
         timeFormat: uiSettings.timeFormat,
         isSmallScreen: dimensions.isSmallScreen
       };

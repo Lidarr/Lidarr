@@ -43,7 +43,7 @@ $hoverScale: 1.05;
   font-size: 20px;
 }
 
-.nextAiring {
+.nextAlbum {
   background-color: var(--artistBackgroundColor);
   text-align: center;
   font-size: $smallFontSize;

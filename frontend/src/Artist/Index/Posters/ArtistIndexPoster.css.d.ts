@@ -7,7 +7,7 @@ interface CssExports {
   'controls': string;
   'ended': string;
   'link': string;
-  'nextAiring': string;
+  'nextAlbum': string;
   'overlayTitle': string;
   'posterContainer': string;
   'title': string;

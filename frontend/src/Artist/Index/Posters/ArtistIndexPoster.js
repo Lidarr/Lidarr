@@ -73,7 +73,8 @@ class ArtistIndexPoster extends Component {
       monitored,
       foreignArtistId,
       status,
-      nextAiring,
+      nextAlbum,
+      lastAlbum,
       statistics,
       images,
       posterWidth,
@@ -83,9 +84,11 @@ class ArtistIndexPoster extends Component {
       showMonitored,
       showQualityProfile,
       qualityProfile,
+      showNextAlbum,
       showSearchAction,
       showRelativeDates,
       shortDateFormat,
+      longDateFormat,
       timeFormat,
       isRefreshingArtist,
       isSearchingArtist,
@@ -118,7 +121,7 @@ class ArtistIndexPoster extends Component {
     return (
       <div>
         <div className={styles.content}>
-          <div className={styles.posterContainer}>
+          <div className={styles.posterContainer} title={artistName}>
             <Label className={styles.controls}>
               <SpinnerIconButton
                 className={styles.action}
@@ -193,7 +196,7 @@ class ArtistIndexPoster extends Component {
 
           {
             showTitle &&
-              <div className={styles.title}>
+              <div className={styles.title} title={artistName}>
                 {artistName}
               </div>
           }
@@ -207,16 +210,17 @@ class ArtistIndexPoster extends Component {
 
           {
             showQualityProfile &&
-              <div className={styles.title}>
+              <div className={styles.title} title={translate('QualityProfile')}>
                 {qualityProfile.name}
               </div>
           }
+
           {
-            nextAiring &&
-              <div className={styles.nextAiring}>
+            showNextAlbum && !!nextAlbum?.releaseDate &&
+              <div className={styles.nextAlbum} title={translate('NextAlbum')}>
                 {
                   getRelativeDate(
-                    nextAiring,
+                    nextAlbum.releaseDate,
                     shortDateFormat,
                     showRelativeDates,
                     {
@@ -228,12 +232,16 @@ class ArtistIndexPoster extends Component {
               </div>
           }
           <ArtistIndexPosterInfo
+            nextAlbum={nextAlbum}
+            lastAlbum={lastAlbum}
             albumCount={albumCount}
             sizeOnDisk={sizeOnDisk}
             qualityProfile={qualityProfile}
             showQualityProfile={showQualityProfile}
+            showNextAlbum={showNextAlbum}
             showRelativeDates={showRelativeDates}
             shortDateFormat={shortDateFormat}
+            longDateFormat={longDateFormat}
             timeFormat={timeFormat}
             {...otherProps}
           />
@@ -262,7 +270,8 @@ ArtistIndexPoster.propTypes = {
   monitored: PropTypes.bool.isRequired,
   status: PropTypes.string.isRequired,
   foreignArtistId: PropTypes.string.isRequired,
-  nextAiring: PropTypes.string,
+  nextAlbum: PropTypes.object,
+  lastAlbum: PropTypes.object,
   statistics: PropTypes.object.isRequired,
   images: PropTypes.arrayOf(PropTypes.object).isRequired,
   posterWidth: PropTypes.number.isRequired,
@@ -272,9 +281,11 @@ ArtistIndexPoster.propTypes = {
   showMonitored: PropTypes.bool.isRequired,
   showQualityProfile: PropTypes.bool.isRequired,
   qualityProfile: PropTypes.object.isRequired,
+  showNextAlbum: PropTypes.bool.isRequired,
   showSearchAction: PropTypes.bool.isRequired,
   showRelativeDates: PropTypes.bool.isRequired,
   shortDateFormat: PropTypes.string.isRequired,
+  longDateFormat: PropTypes.string.isRequired,
   timeFormat: PropTypes.string.isRequired,
   isRefreshingArtist: PropTypes.bool.isRequired,
   isSearchingArtist: PropTypes.bool.isRequired,
