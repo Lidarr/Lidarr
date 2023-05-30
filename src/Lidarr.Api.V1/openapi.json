@@ -11054,6 +11054,9 @@
           "listOrder": {
             "type": "integer",
             "format": "int32"
+          },
+          "minRefreshInterval": {
+            "$ref": "#/components/schemas/TimeSpan"
           }
         },
         "additionalProperties": false
