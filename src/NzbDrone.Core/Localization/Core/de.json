@@ -941,5 +941,6 @@
     "RemotePathMappingCheckLocalFolderMissing": "Downloader {0} speichert Downloads in {1}, aber dieses Verzeichnis scheint nicht zu existieren. Möglicherweise eine fehlende oder falsche Remote-Pfadzuordnung.",
     "RemotePathMappingCheckRemoteDownloadClient": "Downloader {0} meldet Dateien in {1}, aber dieses Verzeichnis scheint nicht zu existieren. Möglicherweise fehle die Remote-Pfadzuordnung.",
     "ReplaceWithSpaceDashSpace": "Mit Leerzeichen Bindestrich Leerzeichen ersetzen",
-    "SystemTimeCheckMessage": "Die Systemzeit ist um einen Tag versetzt. Bis die Zeit korrigiert wurde, könnten die geplanten Aufgaben nicht korrekt ausgeführt werden"
+    "SystemTimeCheckMessage": "Die Systemzeit ist um einen Tag versetzt. Bis die Zeit korrigiert wurde, könnten die geplanten Aufgaben nicht korrekt ausgeführt werden",
+    "ApiKeyValidationHealthCheckMessage": "Bitte den API Schlüssel korrigieren, dieser muss mindestens {0} Zeichen lang sein. Die Änderung kann über die Einstellungen oder die Konfigurationsdatei erfolgen"
 }

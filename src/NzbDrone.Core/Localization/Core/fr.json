@@ -695,7 +695,7 @@
     "CustomFormat": "Format Personnalisé",
     "CustomFormatRequiredHelpText": "Cette {0} condition doit correspondre pour que le format personnalisé s'applique. Sinon, une seule correspondance {1} est suffisante.",
     "CustomFormatSettings": "Réglages Formats Personnalisés",
-    "CustomFormats": "Formats personnalisés",
+    "CustomFormats": "Formats perso.",
     "Customformat": "Format Personnalisé",
     "CutoffFormatScoreHelpText": "Quand ce score de format personnalisé est atteint, Radarr ne téléchargera plus de films",
     "DeleteCustomFormat": "Supprimer le format personnalisé",
