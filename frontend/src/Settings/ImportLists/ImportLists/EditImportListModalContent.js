@@ -222,6 +222,7 @@ function EditImportListModalContent(props) {
                     name="rootFolderPath"
                     helpText={translate('RootFolderPathHelpText')}
                     {...rootFolderPath}
+                    includeMissingValue={true}
                     onChange={onInputChange}
                   />
                 </FormGroup>

@@ -9,8 +9,10 @@ const ADD_NEW_KEY = 'addNew';
 function createMapStateToProps() {
   return createSelector(
     (state) => state.settings.rootFolders,
+    (state, { value }) => value,
+    (state, { includeMissingValue }) => includeMissingValue,
     (state, { includeNoChange }) => includeNoChange,
-    (rootFolders, includeNoChange) => {
+    (rootFolders, value, includeMissingValue, includeNoChange) => {
       const values = rootFolders.items.map((rootFolder) => {
         return {
           key: rootFolder.path,
@@ -25,7 +27,8 @@ function createMapStateToProps() {
           key: 'noChange',
           value: '',
           name: 'No Change',
-          isDisabled: true
+          isDisabled: true,
+          isMissing: false
         });
       }
 
@@ -36,6 +39,15 @@ function createMapStateToProps() {
           name: '',
           isDisabled: true,
           isHidden: true
+        });
+      }
+
+      if (includeMissingValue && !values.find((v) => v.key === value)) {
+        values.push({
+          key: value,
+          value,
+          isMissing: true,
+          isDisabled: true
         });
       }
 

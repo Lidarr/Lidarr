@@ -4,6 +4,7 @@ interface CssExports {
   'deleteButton': string;
   'hideMetadataProfile': string;
   'labelIcon': string;
+  'message': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

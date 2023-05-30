@@ -18,3 +18,9 @@
   color: var(--darkGray);
   font-size: $smallFontSize;
 }
+
+.isMissing {
+  margin-left: 15px;
+  color: var(--dangerColor);
+  font-size: $smallFontSize;
+}
