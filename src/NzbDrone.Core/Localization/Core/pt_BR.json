@@ -981,5 +981,7 @@
     "DownloadedImporting": "'Baixado - Importando'",
     "DownloadedWaitingToImport": "'Baixado - Aguardando para Importar'",
     "HiddenClickToShow": "Oculto, clique para mostrar",
-    "ShownClickToHide": "Mostrado, clique para ocultar"
+    "ShownClickToHide": "Mostrado, clique para ocultar",
+    "ListWillRefreshEveryInterp": "A lista será atualizada a cada {0}",
+    "ListRefreshInterval": "Intervalo de atualização da lista"
 }
