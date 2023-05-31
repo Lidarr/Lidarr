@@ -33,22 +33,25 @@ namespace NzbDrone.Core.Instrumentation
 
             LogManager.Configuration.AddTarget("DbLogger", target);
             LogManager.Configuration.LoggingRules.Add(Rule);
-            LogManager.ConfigurationReloaded += OnLogManagerOnConfigurationReloaded;
+            LogManager.ConfigurationChanged += OnLogManagerOnConfigurationChanged;
             LogManager.ReconfigExistingLoggers();
         }
 
         public void UnRegister()
         {
-            LogManager.ConfigurationReloaded -= OnLogManagerOnConfigurationReloaded;
+            LogManager.ConfigurationChanged -= OnLogManagerOnConfigurationChanged;
             LogManager.Configuration.RemoveTarget("DbLogger");
             LogManager.Configuration.LoggingRules.Remove(Rule);
             LogManager.ReconfigExistingLoggers();
             Dispose();
         }
 
-        private void OnLogManagerOnConfigurationReloaded(object sender, LoggingConfigurationReloadedEventArgs args)
+        private void OnLogManagerOnConfigurationChanged(object sender, LoggingConfigurationChangedEventArgs args)
         {
-            Register();
+            if (args.ActivatedConfiguration != null)
+            {
+                Register();
+            }
         }
 
         public LoggingRule Rule { get; set; }
@@ -97,9 +100,14 @@ namespace NzbDrone.Core.Instrumentation
                     WritePostgresLog(log, connectionString);
                 }
             }
+            catch (NpgsqlException ex)
+            {
+                InternalLogger.Error("Unable to save log event to database: {0}", ex);
+                throw;
+            }
             catch (SQLiteException ex)
             {
-                InternalLogger.Error(ex, "Unable to save log event to database");
+                InternalLogger.Error("Unable to save log event to database: {0}", ex);
                 throw;
             }
         }
@@ -128,10 +136,8 @@ namespace NzbDrone.Core.Instrumentation
         private void WriteSqliteLog(Log log, string connectionString)
         {
             using (var connection =
-                SQLiteFactory.Instance.CreateConnection())
+                new SQLiteConnection(connectionString).OpenAndReturn())
             {
-                connection.ConnectionString = connectionString;
-                connection.Open();
                 using (var sqlCommand = connection.CreateCommand())
                 {
                     sqlCommand.CommandText = INSERT_COMMAND;
