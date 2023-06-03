@@ -983,5 +983,10 @@
     "HiddenClickToShow": "Oculto, clique para mostrar",
     "ShownClickToHide": "Mostrado, clique para ocultar",
     "ListWillRefreshEveryInterp": "A lista será atualizada a cada {0}",
-    "ListRefreshInterval": "Intervalo de atualização da lista"
+    "ListRefreshInterval": "Intervalo de atualização da lista",
+    "ShowNextAlbumHelpText": "Mostrar próximo álbum sob pôster",
+    "CountAlbums": "{0} álbuns",
+    "NoAlbums": "Sem álbuns",
+    "OneAlbum": "1 álbum",
+    "ShowNextAlbum": "Mostrar Próximo Álbum"
 }
