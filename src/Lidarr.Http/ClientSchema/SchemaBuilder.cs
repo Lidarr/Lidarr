@@ -98,6 +98,7 @@ namespace Lidarr.Http.ClientSchema
                         Label = fieldAttribute.Label,
                         Unit = fieldAttribute.Unit,
                         HelpText = fieldAttribute.HelpText,
+                        HelpTextWarning = fieldAttribute.HelpTextWarning,
                         HelpLink = fieldAttribute.HelpLink,
                         Order = fieldAttribute.Order,
                         Advanced = fieldAttribute.Advanced,
