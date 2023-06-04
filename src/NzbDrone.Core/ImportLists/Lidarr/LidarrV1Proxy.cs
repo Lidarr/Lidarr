@@ -69,13 +69,19 @@ namespace NzbDrone.Core.ImportLists.Lidarr
                     return new ValidationFailure("ApiKey", "API Key is invalid");
                 }
 
-                _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("ApiKey", "Unable to send test message");
+                if (ex.Response.HasHttpRedirect)
+                {
+                    _logger.Error(ex, "Lidarr returned redirect and is invalid");
+                    return new ValidationFailure("BaseUrl", "Lidarr URL is invalid, are you missing a URL base?");
+                }
+
+                _logger.Error(ex, "Unable to connect to import list.");
+                return new ValidationFailure(string.Empty, $"Unable to connect to import list: {ex.Message}. Check the log surrounding this error for details.");
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("", "Unable to send test message");
+                _logger.Error(ex, "Unable to connect to import list.");
+                return new ValidationFailure(string.Empty, $"Unable to connect to import list: {ex.Message}. Check the log surrounding this error for details.");
             }
 
             return null;
@@ -90,10 +96,17 @@ namespace NzbDrone.Core.ImportLists.Lidarr
 
             var baseUrl = settings.BaseUrl.TrimEnd('/');
 
-            var request = new HttpRequestBuilder(baseUrl).Resource(resource).Accept(HttpAccept.Json)
-                .SetHeader("X-Api-Key", settings.ApiKey).Build();
+            var request = new HttpRequestBuilder(baseUrl).Resource(resource)
+                .Accept(HttpAccept.Json)
+                .SetHeader("X-Api-Key", settings.ApiKey)
+                .Build();
 
             var response = _httpClient.Get(request);
+
+            if ((int)response.StatusCode >= 300)
+            {
+                throw new HttpException(response);
+            }
 
             var results = JsonConvert.DeserializeObject<List<TResource>>(response.Content);
 
