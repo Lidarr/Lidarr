@@ -72,6 +72,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Download_Client", message.DownloadClientName ?? string.Empty);
             environmentVariables.Add("Lidarr_Download_Client_Type", message.DownloadClientType ?? string.Empty);
             environmentVariables.Add("Lidarr_Download_Id", message.DownloadId ?? string.Empty);
+            environmentVariables.Add("Lidarr_Release_CustomFormat", string.Join("|", remoteAlbum.CustomFormats));
+            environmentVariables.Add("Lidarr_Release_CustomFormatScore", remoteAlbum.CustomFormatScore.ToString());
 
             ExecuteScript(environmentVariables);
         }
