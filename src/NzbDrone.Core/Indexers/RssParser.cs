@@ -121,7 +121,8 @@ namespace NzbDrone.Core.Indexers
 
         protected virtual bool PreProcess(IndexerResponse indexerResponse)
         {
-            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            // Server Down HTTP Errors are handled in HTTPIndexerBase so ignore them here
+            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK && !indexerResponse.HttpResponse.HasHttpServerError)
             {
                 throw new IndexerException(indexerResponse, "Indexer API call resulted in an unexpected StatusCode [{0}]", indexerResponse.HttpResponse.StatusCode);
             }
