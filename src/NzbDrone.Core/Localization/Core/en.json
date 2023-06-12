@@ -217,6 +217,8 @@
   "DeleteQualityProfileMessageText": "Are you sure you want to delete the quality profile '{0}'?",
   "DeleteReleaseProfile": "Delete ReleaseProfile",
   "DeleteReleaseProfileMessageText": "Are you sure you want to delete this releaseProfile?",
+  "DeleteRemotePathMapping": "Delete Remote Path Mapping",
+  "DeleteRemotePathMappingMessageText": "Are you sure you want to delete this remote path mapping?",
   "DeleteRootFolder": "Delete Root Folder",
   "DeleteRootFolderMessageText": "Are you sure you want to delete the root folder '{0}'?",
   "DeleteSelected": "Delete Selected",
