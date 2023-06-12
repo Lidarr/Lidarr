@@ -169,7 +169,7 @@ class Blocklist extends Component {
           {
             isAllPopulated && !error && !items.length &&
               <div>
-                No history blocklist
+                {translate('NoHistoryBlocklist')}
               </div>
           }
 
@@ -214,7 +214,7 @@ class Blocklist extends Component {
           isOpen={isConfirmRemoveModalOpen}
           kind={kinds.DANGER}
           title={translate('RemoveSelected')}
-          message={translate('RemoveSelectedMessageText')}
+          message={translate('RemoveSelectedItemBlocklistMessageText')}
           confirmLabel={translate('RemoveSelected')}
           onConfirm={this.onRemoveSelectedConfirmed}
           onCancel={this.onConfirmRemoveModalClose}

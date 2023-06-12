@@ -78,7 +78,7 @@ class Specification extends Component {
 
           <IconButton
             className={styles.cloneButton}
-            title={translate('Clone')}
+            title={translate('CloneCondition')}
             name={icons.CLONE}
             onPress={this.onCloneSpecificationPress}
           />
@@ -92,14 +92,14 @@ class Specification extends Component {
           {
             negate &&
               <Label kind={kinds.DANGER}>
-                Negated
+                {translate('Negated')}
               </Label>
           }
 
           {
             required &&
               <Label kind={kinds.SUCCESS}>
-                Required
+                {translate('Required')}
               </Label>
           }
         </div>
@@ -114,8 +114,8 @@ class Specification extends Component {
         <ConfirmModal
           isOpen={this.state.isDeleteSpecificationModalOpen}
           kind={kinds.DANGER}
-          title={translate('DeleteFormat')}
-          message={translate('DeleteFormatMessageText', [name])}
+          title={translate('DeleteCondition')}
+          message={translate('DeleteConditionMessageText', [name])}
           confirmLabel={translate('Delete')}
           onConfirm={this.onConfirmDeleteSpecification}
           onCancel={this.onDeleteSpecificationModalClose}

@@ -88,12 +88,12 @@ class RemoveQueueItemsModal extends Component {
           onModalClose={this.onModalClose}
         >
           <ModalHeader>
-            Remove Selected Item{selectedCount > 1 ? 's' : ''}
+            {selectedCount > 1 ? translate('RemoveSelectedItems') : translate('RemoveSelectedItem')}
           </ModalHeader>
 
           <ModalBody>
             <div className={styles.message}>
-              Are you sure you want to remove {selectedCount} item{selectedCount > 1 ? 's' : ''} from the queue?
+              {selectedCount > 1 ? translate('RemoveSelectedItemsQueueMessageText', selectedCount) : translate('RemoveSelectedItemQueueMessageText')}
             </div>
 
             <FormGroup>
@@ -113,7 +113,7 @@ class RemoveQueueItemsModal extends Component {
 
             <FormGroup>
               <FormLabel>
-                Blocklist Release{selectedCount > 1 ? 's' : ''}
+                {selectedCount > 1 ? translate('BlocklistReleases') : translate('BlocklistRelease')}
               </FormLabel>
 
               <FormInputGroup
@@ -145,14 +145,14 @@ class RemoveQueueItemsModal extends Component {
 
           <ModalFooter>
             <Button onPress={this.onModalClose}>
-              Close
+              {translate('Close')}
             </Button>
 
             <Button
               kind={kinds.DANGER}
               onPress={this.onRemoveConfirmed}
             >
-              Remove
+              {translate('Remove')}
             </Button>
           </ModalFooter>
         </ModalContent>

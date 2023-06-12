@@ -55,12 +55,12 @@ class ResetQualityDefinitionsModalContent extends Component {
         onModalClose={onModalClose}
       >
         <ModalHeader>
-          Reset Quality Definitions
+          {translate('ResetQualityDefinitions')}
         </ModalHeader>
 
         <ModalBody>
           <div className={styles.messageContainer}>
-            Are you sure you want to reset quality definitions?
+            {translate('ResetQualityDefinitionsMessageText')}
           </div>
 
           <FormGroup>
@@ -81,7 +81,7 @@ class ResetQualityDefinitionsModalContent extends Component {
 
         <ModalFooter>
           <Button onPress={onModalClose}>
-            Cancel
+            {translate('Cancel')}
           </Button>
 
           <Button
@@ -89,7 +89,7 @@ class ResetQualityDefinitionsModalContent extends Component {
             onPress={this.onResetQualityDefinitionsConfirmed}
             isDisabled={isResettingQualityDefinitions}
           >
-            Reset
+            {translate('Reset')}
           </Button>
         </ModalFooter>
       </ModalContent>
