@@ -144,7 +144,6 @@
     "RemoveFromQueue": "Eliminar de la cola",
     "RemoveHelpTextWarning": "Eliminar borrará la descarga y el/los fichero(s) del gestor de descargas.",
     "RemoveSelected": "Borrar Seleccionados",
-    "RemoveSelectedMessageText": "¿Está seguro de que desea eliminar los elementos seleccionados de la lista negra?",
     "RemoveTagExistingTag": "Etiqueta existente",
     "RemoveTagRemovingTag": "Eliminando etiqueta",
     "RenameTracksHelpText": "Lidarr usará el nombre del archivo si el renombrado está deshabilitado",
@@ -708,5 +707,6 @@
     "RemotePathMappingCheckLocalFolderMissing": "El cliente de descarga remota {0} coloca las descargas en {1} pero este directorio no parece existir. Probablemente falta o el mapeo de la ruta remota es incorrecto.",
     "RemotePathMappingCheckLocalWrongOSPath": "El cliente de descarga local {0} coloca las descargas en {1} pero ésta no es una ruta válida {2}.  Revise la configuración de su cliente de descarga.",
     "RemotePathMappingCheckWrongOSPath": "El cliente de descarga remota {0} coloca las descargas en {1} pero esta no es una ruta válida {2}.  Revise los mapeos de las rutas remotas y la configuración del cliente de descarga.",
-    "UpdateCheckUINotWritableMessage": "No se puede instalar la actualización porque la carpeta UI '{0}' no tiene permisos de escritura para el usuario '{1}'."
+    "UpdateCheckUINotWritableMessage": "No se puede instalar la actualización porque la carpeta UI '{0}' no tiene permisos de escritura para el usuario '{1}'.",
+    "DeleteRemotePathMapping": "Editar Mapeo de Ruta Remota"
 }

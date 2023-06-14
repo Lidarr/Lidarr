@@ -173,7 +173,6 @@
     "RemoveFromDownloadClient": "Elimina del client de baixada",
     "RemoveFromQueue": "Elimina de la cua",
     "RemoveSelected": "Elimina els seleccionats",
-    "RemoveSelectedMessageText": "Esteu segur que voleu suprimir els elements seleccionats de la llista de blocs?",
     "RemoveTagExistingTag": "Etiqueta existent",
     "RemoveTagRemovingTag": "S'està eliminant l'etiqueta",
     "RenameTracksHelpText": "Lidarr utilitzarà el nom del fitxer existent si el reanomenat està desactivat",
@@ -700,5 +699,7 @@
     "RemotePathMappingCheckWrongOSPath": "El client de descàrrega remota {0} col·loca les baixades a {1}, però el camí {2} no és vàlid. Reviseu els mapes de camins remots i la configuració del client de baixada.",
     "UpdateCheckStartupNotWritableMessage": "No es pot instal·lar l'actualització perquè l'usuari \"{1}\" no pot escriure la carpeta d'inici \"{0}\".",
     "UpdateCheckStartupTranslocationMessage": "No es pot instal·lar l'actualització perquè la carpeta d'inici \"{0}\" es troba en una carpeta de translocació d'aplicacions.",
-    "UpdateCheckUINotWritableMessage": "No es pot instal·lar l'actualització perquè l'usuari '{1}' no pot escriure la carpeta de la IU '{0}'."
+    "UpdateCheckUINotWritableMessage": "No es pot instal·lar l'actualització perquè l'usuari '{1}' no pot escriure la carpeta de la IU '{0}'.",
+    "DeleteRemotePathMapping": "Editeu el mapa de camins remots",
+    "DeleteRemotePathMappingMessageText": "Esteu segur que voleu suprimir aquesta assignació remota de camins?"
 }

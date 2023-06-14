@@ -48,7 +48,6 @@
     "RefreshScan": "Reîmprospătează și scanează",
     "RemoveFailedDownloadsHelpText": "Eliminați descărcările nereușite din istoricul clientului de descărcare",
     "RemoveFilter": "Scoateți filtrul",
-    "RemoveSelectedMessageText": "Sigur doriți să eliminați elementele selectate din lista neagră?",
     "RemoveTagExistingTag": "Etichetă existentă",
     "RemoveTagRemovingTag": "Se elimină eticheta",
     "RenameTracksHelpText": "Lidarr va folosi numele fișierului existent dacă redenumirea este dezactivată",
@@ -647,5 +646,6 @@
     "UnableToLoadInteractiveSearch": "Nu se pot încărca rezultatele pentru această căutare de filme. Încercați mai târziu",
     "UpdateCheckStartupNotWritableMessage": "Nu pot instala actualizarea pentru că dosarul '{0}' nu poate fi scris de către utilizatorul '{1}'.",
     "UpdateCheckStartupTranslocationMessage": "Nu pot instala actualizarea pentru că folderul de pornire '{0}' este într-un folder de App Translocation.",
-    "UpdateCheckUINotWritableMessage": "Nu pot instala actualizarea pentru că dosarul UI '{0}' nu poate fi scris de către utilizatorul '{1}'."
+    "UpdateCheckUINotWritableMessage": "Nu pot instala actualizarea pentru că dosarul UI '{0}' nu poate fi scris de către utilizatorul '{1}'.",
+    "DeleteRemotePathMapping": "Editați maparea căilor la distanță"
 }

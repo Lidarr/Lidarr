@@ -114,7 +114,6 @@
     "RemoveFromQueue": "Xóa khỏi hàng đợi",
     "RemoveHelpTextWarning": "Việc xóa sẽ xóa phần tải xuống và (các) tệp khỏi ứng dụng khách tải xuống.",
     "RemoveSelected": "Bỏ đã chọn",
-    "RemoveSelectedMessageText": "Bạn có chắc chắn muốn xóa các mục đã chọn khỏi danh sách đen không?",
     "RemoveTagExistingTag": "Thẻ hiện có",
     "RemoveTagRemovingTag": "Xóa thẻ",
     "RenameTracksHelpText": "Lidarr sẽ sử dụng tên tệp hiện có nếu việc đổi tên bị tắt",

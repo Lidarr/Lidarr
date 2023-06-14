@@ -302,7 +302,6 @@
     "RemoveFromQueue": "Rimuovi dalla coda",
     "RemoveHelpTextWarning": "La rimozione eliminerà il download e i file dal client di download.",
     "RemoveSelected": "Rimuovi Selezionato",
-    "RemoveSelectedMessageText": "Sei sicuro di voler rimuovere gli elementi selezionati della blacklist?",
     "RemoveTagExistingTag": "Tag esistente",
     "RemoveTagRemovingTag": "Sto eliminando il tag",
     "RenameTracksHelpText": "Lidarr userà i nomi dei file se rinomina è disabilitato",
@@ -762,5 +761,6 @@
     "RootFolderCheckMultipleMessage": "Ci sono più cartelle radice mancanti: {0}",
     "RootFolderCheckSingleMessage": "Cartella radice mancante: {0}",
     "SystemTimeCheckMessage": "L'orario di sistema è sbagliato di più di un giorno. Le attività pianificate potrebbero non essere eseguite correttamente fino alla correzione",
-    "UpdateAvailable": "É disponibile un nuovo aggiornamento"
+    "UpdateAvailable": "É disponibile un nuovo aggiornamento",
+    "DeleteRemotePathMapping": "Modifica la Mappatura dei Percorsi Remoti"
 }

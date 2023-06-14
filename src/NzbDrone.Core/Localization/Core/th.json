@@ -76,7 +76,6 @@
     "RemoveFromBlocklist": "ลบออกจากบัญชีดำ",
     "RemoveFromQueue": "ลบออกจากคิว",
     "RemoveHelpTextWarning": "การลบจะลบการดาวน์โหลดและไฟล์ออกจากไคลเอนต์ดาวน์โหลด",
-    "RemoveSelectedMessageText": "แน่ใจหรือไม่ว่าต้องการลบรายการที่เลือกออกจากบัญชีดำ?",
     "RemoveTagExistingTag": "แท็กที่มีอยู่",
     "ReplaceIllegalCharacters": "แทนที่อักขระที่ผิดกฎหมาย",
     "ReplaceIllegalCharactersHelpText": "แทนที่อักขระที่ผิดกฎหมาย หากไม่เลือก Lidarr จะลบออกแทน",

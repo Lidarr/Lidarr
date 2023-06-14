@@ -211,7 +211,6 @@
     "RemoveCompletedDownloadsHelpText": "Odeberte importované soubory ke stažení z historie klienta stahování",
     "RemoveFailedDownloadsHelpText": "Odebrat neúspěšná stahování z historie stahování klienta",
     "RemoveFilter": "Vyjměte filtr",
-    "RemoveSelectedMessageText": "Opravdu chcete odebrat vybrané položky z černé listiny?",
     "RequiredHelpText": "Vydání musí obsahovat alespoň jeden z těchto výrazů (nerozlišují se malá a velká písmena)",
     "RequiredPlaceHolder": "Přidat nové omezení",
     "RequiresRestartToTakeEffect": "Vyžaduje restart, aby se projevilo",
@@ -645,5 +644,7 @@
     "IndexerRssHealthCheckNoIndexers": "Nejsou k dispozici žádné indexery se zapnutou synchronizací RSS, Radarr nové verze automaticky nezachytí",
     "IndexerSearchCheckNoInteractiveMessage": "Při povoleném interaktivním vyhledávání, nejsou dostupné žádné indexovací moduly, Radarr neposkytne žádné interaktivní výsledky hledání",
     "IndexerStatusCheckAllClientMessage": "Všechny indexery nejsou k dispozici z důvodu selhání",
-    "UpdateCheckUINotWritableMessage": "Aktualizaci nelze nainstalovat, protože uživatelská složka „{0}“ není zapisovatelná uživatelem „{1}“."
+    "UpdateCheckUINotWritableMessage": "Aktualizaci nelze nainstalovat, protože uživatelská složka „{0}“ není zapisovatelná uživatelem „{1}“.",
+    "DeleteRemotePathMapping": "Upravit vzdálené mapování cesty",
+    "DeleteRemotePathMappingMessageText": "Opravdu chcete toto vzdálené mapování cesty odstranit?"
 }

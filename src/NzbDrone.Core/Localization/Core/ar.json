@@ -147,7 +147,6 @@
     "UnableToAddANewNotificationPleaseTryAgain": "تعذر إضافة إشعار جديد ، يرجى المحاولة مرة أخرى.",
     "UnableToAddANewQualityProfilePleaseTryAgain": "غير قادر على إضافة ملف تعريف جودة جديد ، يرجى المحاولة مرة أخرى.",
     "ReleaseDate": "يوم الاصدار",
-    "RemoveSelectedMessageText": "هل أنت متأكد أنك تريد إزالة العناصر المحددة من القائمة السوداء؟",
     "SupportsRssvalueRSSIsNotSupportedWithThisIndexer": "لا يتم دعم RSS مع هذا المفهرس",
     "TagIsNotUsedAndCanBeDeleted": "العلامة غير مستخدمة ويمكن حذفها",
     "TestAllClients": "اختبر كل العملاء",
@@ -646,5 +645,7 @@
     "ProxyCheckBadRequestMessage": "فشل اختبار الوكيل. رمز الحالة: {0}",
     "ProxyCheckFailedToTestMessage": "فشل اختبار الوكيل: {0}",
     "SystemTimeCheckMessage": "توقف وقت النظام بأكثر من يوم واحد. قد لا تعمل المهام المجدولة بشكل صحيح حتى يتم تصحيح الوقت",
-    "ShownClickToHide": "يظهر ، انقر للإخفاء"
+    "ShownClickToHide": "يظهر ، انقر للإخفاء",
+    "DeleteRemotePathMapping": "تحرير تعيين المسار البعيد",
+    "DeleteRemotePathMappingMessageText": "هل أنت متأكد أنك تريد حذف تعيين المسار البعيد هذا؟"
 }

@@ -419,7 +419,6 @@
     "QualitySettings": "품질 설정",
     "Queue": "열",
     "ReadTheWikiForMoreInformation": "자세한 내용은 Wiki를 참조하십시오.",
-    "RemoveSelectedMessageText": "블랙리스트에서 선택한 항목을 제거 하시겠습니까?",
     "RemoveTagExistingTag": "기존 태그",
     "RemoveTagRemovingTag": "태그 제거",
     "RenameTracksHelpText": "Radarr는 이름 변경이 비활성화 된 경우 기존 파일 이름을 사용합니다.",
@@ -639,5 +638,6 @@
     "ProxyCheckResolveIpMessage": "구성된 프록시 호스트 {0}의 IP 주소를 확인하지 못했습니다.",
     "UpdateCheckStartupNotWritableMessage": "'{1}'사용자가 '{0}'시작 폴더에 쓸 수 없기 때문에 업데이트를 설치할 수 없습니다.",
     "UpdateCheckStartupTranslocationMessage": "시작 폴더 '{0}'이 (가) App Translocation 폴더에 있으므로 업데이트를 설치할 수 없습니다.",
-    "UpdateCheckUINotWritableMessage": "사용자 '{1}'이 (가) UI 폴더 '{0}'에 쓸 수 없기 때문에 업데이트를 설치할 수 없습니다."
+    "UpdateCheckUINotWritableMessage": "사용자 '{1}'이 (가) UI 폴더 '{0}'에 쓸 수 없기 때문에 업데이트를 설치할 수 없습니다.",
+    "DeleteRemotePathMapping": "원격 경로 매핑 편집"
 }

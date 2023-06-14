@@ -42,5 +42,15 @@
     "AppDataDirectory": "Direktori AppData",
     "ChangeHasNotBeenSavedYet": "Perubahan belum disimpan",
     "Automatic": "Otomatis",
-    "ClickToChangeQuality": "Klik untuk mengubah kualitas"
+    "ClickToChangeQuality": "Klik untuk mengubah kualitas",
+    "Close": "Tutup",
+    "Date": "Tanggal",
+    "Delete": "Hapus",
+    "AlternateTitles": "Judul Lain",
+    "Connections": "Koleksi",
+    "CopyToClipboard": "Salin ke Papan Klip",
+    "Deleted": "Hapus",
+    "ExportCustomFormat": "Tambahkan Format Khusus",
+    "ArtistAlbumClickToChangeTrack": "Klik untuk mengubah film",
+    "Dates": "Tanggal"
 }

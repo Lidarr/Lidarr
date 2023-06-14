@@ -189,7 +189,6 @@
     "RemoveFromDownloadClient": "Aus dem Downloader entfernen",
     "RemoveFromQueue": "Aus der Warteschlage entfernen",
     "RemoveHelpTextWarning": "Dies wird den Download und alle bereits heruntergeladenen Dateien aus dem Downloader entfernen.",
-    "RemoveSelectedMessageText": "Sind sie sicher, dass die ausgewählten Einträge aus der Sperrliste entfernt werden sollen?",
     "RemoveTagRemovingTag": "Tag entfernen",
     "RenameTracksHelpText": "Wenn das umbennen deaktiviert ist, wird der vorhandene Dateiname benutzt",
     "Reorder": "Neu sortieren",
