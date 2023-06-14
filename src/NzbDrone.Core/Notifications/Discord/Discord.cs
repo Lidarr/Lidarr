@@ -485,7 +485,9 @@ namespace NzbDrone.Core.Notifications.Discord
         {
             var albumTitles = string.Join(" + ", albums.Select(e => e.Title));
 
-            return $"{artist.Name} - {albumTitles}";
+            var title = $"{artist.Name} - {albumTitles}";
+
+            return title.Length > 256 ? $"{title.AsSpan(0, 253)}..." : title;
         }
     }
 }
