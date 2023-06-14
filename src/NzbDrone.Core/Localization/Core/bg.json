@@ -345,7 +345,6 @@
     "RemoveFromQueue": "Премахване от опашката",
     "RemoveHelpTextWarning": "Премахването ще премахне изтеглянето и файловете от клиента за изтегляне.",
     "RemoveSelected": "Премахнете избраното",
-    "RemoveSelectedMessageText": "Наистина ли искате да премахнете избраните елементи от черния списък?",
     "RequiresRestartToTakeEffect": "Изисква рестартиране, за да влезе в сила",
     "RescanAfterRefreshHelpTextWarning": "Lidarr няма автоматично да открива промени във файлове, когато не е зададено на „Винаги“",
     "RescanArtistFolderAfterRefresh": "Повторно сканиране на папка за филм след опресняване",
@@ -645,5 +644,7 @@
     "IndexerStatusCheckSingleClientMessage": "Индексатори не са налични поради грешки: {0}",
     "ReplaceWithSpaceDashSpace": "Заменете с Space Dash Space",
     "UpdateCheckStartupTranslocationMessage": "Не може да се инсталира актуализация, защото стартовата папка „{0}“ е в папка за преместване на приложения.",
-    "UpdateCheckUINotWritableMessage": "Не може да се инсталира актуализация, защото папката „{0}“ на потребителския интерфейс не може да се записва от потребителя „{1}“."
+    "UpdateCheckUINotWritableMessage": "Не може да се инсталира актуализация, защото папката „{0}“ на потребителския интерфейс не може да се записва от потребителя „{1}“.",
+    "DeleteRemotePathMapping": "Редактиране на отдалечено картографиране на пътя",
+    "DeleteRemotePathMappingMessageText": "Наистина ли искате да изтриете това отдалечено картографиране на пътя?"
 }

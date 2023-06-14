@@ -92,7 +92,6 @@
     "RemoveFromDownloadClient": "Fjern fra downloadklient",
     "RemoveHelpTextWarning": "Fjernelse fjerner download og fil (er) fra download-klienten.",
     "RemoveSelected": "Fjern valgte",
-    "RemoveSelectedMessageText": "Er du sikker på, at du vil fjerne de valgte emner fra sortlisten?",
     "RemoveTagExistingTag": "Eksisterende mærke",
     "RenameTracksHelpText": "Lidarr bruger det eksisterende filnavn, hvis omdøbning er deaktiveret",
     "Reorder": "Omarranger",
@@ -650,5 +649,7 @@
     "ShownClickToHide": "Vist, klik for at skjule",
     "SystemTimeCheckMessage": "Systemtiden er slukket mere end 1 dag. Planlagte opgaver kører muligvis ikke korrekt, før tiden er rettet",
     "UpdateCheckStartupTranslocationMessage": "Kan ikke installere opdatering, fordi startmappen '{0}' er i en App Translocation-mappe.",
-    "UpdateCheckUINotWritableMessage": "Kan ikke installere opdatering, fordi brugergrænsefladen \"{0}\" ikke kan skrives af brugeren \"{1}\"."
+    "UpdateCheckUINotWritableMessage": "Kan ikke installere opdatering, fordi brugergrænsefladen \"{0}\" ikke kan skrives af brugeren \"{1}\".",
+    "DeleteRemotePathMapping": "Rediger kortlægning af fjernsti",
+    "DeleteRemotePathMappingMessageText": "Er du sikker på, at du vil slette denne kortlægning af fjernstien?"
 }

@@ -294,7 +294,6 @@
     "RemoveFromQueue": "从队列中移除",
     "RemoveHelpTextWarning": "移除操作会从下载客户端中删除任务和已下载文件。",
     "RemoveSelected": "移除已选",
-    "RemoveSelectedMessageText": "您确定要从黑名单中删除选择项吗？",
     "RemoveTagExistingTag": "已有标签",
     "RemoveTagRemovingTag": "移除标签",
     "RenameTracksHelpText": "如果重命名未启用，Radarr会使用现有文件名",

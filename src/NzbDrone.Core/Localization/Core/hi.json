@@ -387,7 +387,6 @@
     "RemoveFromQueue": "कतार से निकालें",
     "RemoveHelpTextWarning": "हटाने से डाउनलोड और फ़ाइल को डाउनलोड क्लाइंट से निकाल दिया जाएगा।",
     "RemoveSelected": "चुना हुआ हटाओ",
-    "RemoveSelectedMessageText": "क्या आप वाकई चयनित आइटम को ब्लैकलिस्ट से हटाना चाहते हैं?",
     "RemoveTagExistingTag": "मौजूदा टैग",
     "RemoveTagRemovingTag": "टैग हटाना",
     "RenameTracksHelpText": "यदि नामकरण अक्षम किया गया है तो रैडर मौजूदा फ़ाइल नाम का उपयोग करेगा",
@@ -645,5 +644,6 @@
     "ReplaceWithSpaceDash": "स्पेस डैश के साथ बदलें",
     "ReplaceWithSpaceDashSpace": "स्पेस डैश स्पेस के साथ बदलें",
     "SystemTimeCheckMessage": "सिस्टम का समय 1 दिन से अधिक बंद है। जब तक समय सही नहीं होगा तब तक शेड्यूल किए गए कार्य सही तरीके से नहीं चल सकते हैं",
-    "UpdateCheckStartupNotWritableMessage": "अपडेट स्थापित नहीं किया जा सकता क्योंकि स्टार्टअप फ़ोल्डर '{0}' उपयोगकर्ता '{1}' द्वारा लिखने योग्य नहीं है।"
+    "UpdateCheckStartupNotWritableMessage": "अपडेट स्थापित नहीं किया जा सकता क्योंकि स्टार्टअप फ़ोल्डर '{0}' उपयोगकर्ता '{1}' द्वारा लिखने योग्य नहीं है।",
+    "DeleteRemotePathMapping": "दूरस्थ पथ मानचित्रण संपादित करें"
 }

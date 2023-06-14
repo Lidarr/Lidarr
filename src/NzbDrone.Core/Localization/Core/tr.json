@@ -340,7 +340,6 @@
     "RemoveFromQueue": "Sıradan kaldır",
     "RemoveHelpTextWarning": "Kaldırma, indirmeyi ve dosyaları indirme istemcisinden kaldırır.",
     "RemoveSelected": "Seçilenleri Kaldır",
-    "RemoveSelectedMessageText": "Kara listeden seçili öğeleri kaldırmak istediğinizden emin misiniz?",
     "RemoveTagExistingTag": "Mevcut etiket",
     "RemoveTagRemovingTag": "Etiket kaldırılıyor",
     "RenameTracksHelpText": "Yeniden adlandırma devre dışı bırakılırsa, Lidarr mevcut dosya adını kullanacaktır",
@@ -646,5 +645,7 @@
     "SystemTimeCheckMessage": "Sistem saati 1 günden fazla kapalı. Zamanlanan görevler, saat düzeltilene kadar doğru çalışmayabilir",
     "UpdateCheckStartupNotWritableMessage": "'{0}' başlangıç klasörü '{1}' kullanıcısı tarafından yazılamadığından güncelleme yüklenemiyor.",
     "UpdateCheckStartupTranslocationMessage": "Başlangıç klasörü '{0}' bir Uygulama Yer Değiştirme klasöründe olduğu için güncelleme yüklenemiyor.",
-    "UpdateCheckUINotWritableMessage": "'{0}' UI klasörü '{1}' kullanıcısı tarafından yazılamadığından güncelleme yüklenemiyor."
+    "UpdateCheckUINotWritableMessage": "'{0}' UI klasörü '{1}' kullanıcısı tarafından yazılamadığından güncelleme yüklenemiyor.",
+    "DeleteRemotePathMapping": "Uzak Yol Eşlemeyi Düzenle",
+    "DeleteRemotePathMappingMessageText": "Bu uzak yol eşlemesini silmek istediğinizden emin misiniz?"
 }

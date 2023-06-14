@@ -203,7 +203,6 @@
     "RemoveFromQueue": "Verwijder uit wachtrij",
     "RemoveHelpTextWarning": "Het verwijderen zal zowel de download als de bestanden verwijderen bij de downloader.",
     "RemoveSelected": "Selectie Verwijderen",
-    "RemoveSelectedMessageText": "Ben je zeker dat je de geselecteerde items wil verwijderen van de uitzonderingslijst?",
     "RemoveTagExistingTag": "Bestaande tag",
     "RemoveTagRemovingTag": "Tag verwijderen",
     "RenameTracksHelpText": "Lidarr zal de bestaande bestandsnaam gebruiken als hernoemen uitgeschakeld is",
@@ -707,5 +706,12 @@
     "ThereWasAnErrorLoadingThisItem": "Er ging iets fout bij het laden van dit item",
     "ThereWasAnErrorLoadingThisPage": "Er ging iets fout bij het laden van deze pagina",
     "InstanceName": "Naam van de instantie",
-    "PreferredProtocol": "Voorkeursprotocol"
+    "PreferredProtocol": "Voorkeursprotocol",
+    "Albums": "album",
+    "ExpandAlbumByDefaultHelpText": "album",
+    "RecycleBinUnableToWriteHealthCheck": "Kan niet schrijven naar prullenbak: {0}. Zorg dat dit pad bestaat en schrijfbaar is voor de gebruiker waaronder Radarr draait",
+    "DeleteRemotePathMapping": "Bewerk Externe Pad Verwijzing",
+    "EnableRssHelpText": "Wordt gebruikt wanneer Radarr periodiek zoekt naar uitgaven via RSS synchronisatie",
+    "Theme": "Thema",
+    "Loading": "Laden"
 }

@@ -76,7 +76,6 @@
     "RemoveFilter": "Αφαιρέστε το φίλτρο",
     "RemoveFromQueue": "Κατάργηση από την ουρά",
     "RemoveHelpTextWarning": "Η κατάργηση θα καταργήσει τη λήψη και τα αρχεία από τον πελάτη λήψης.",
-    "RemoveSelectedMessageText": "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε τα επιλεγμένα στοιχεία από τη λίστα αποκλεισμού;",
     "RemoveTagExistingTag": "Υφιστάμενη ετικέτα",
     "Reorder": "Παραγγέλλω πάλι",
     "ReplaceIllegalCharacters": "Αντικαταστήστε τους παράνομους χαρακτήρες",
@@ -973,5 +972,10 @@
     "ListRefreshInterval": "Διάστημα Ανανέωσης Λίστας",
     "ListWillRefreshEveryInterp": "Η λίστα θα ανανεώνεται κάθε {0}",
     "ThereWasAnErrorLoadingThisItem": "Υπήρξε ένα σφάλμα κατά τη φόρτωση του αρχείου",
-    "ThereWasAnErrorLoadingThisPage": "Υπήρξε ένα σφάλμα κατά τη φόρτωση της σελίδας"
+    "ThereWasAnErrorLoadingThisPage": "Υπήρξε ένα σφάλμα κατά τη φόρτωση της σελίδας",
+    "DeleteRemotePathMapping": "Επεξεργασία αντιστοίχισης απομακρυσμένης διαδρομής",
+    "DeleteRemotePathMappingMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτήν την αντιστοίχιση απομακρυσμένης διαδρομής;",
+    "OnHealthRestoredHelpText": "Στην Αποκατάσταση Υγείας",
+    "RecycleBinUnableToWriteHealthCheck": "Δεν είναι δυνατή η εγγραφή στον επιλεγμένο φάκελο ανακύκλωσης: {0}. Ελέγξτε ότι ο φάκελος υπάρχει και είναι εγγράψιμος από τον χρήστη που τρέχει το Radarr",
+    "ShowNextAlbum": "Εμφάνιση τελευταίου άλμπουμ"
 }

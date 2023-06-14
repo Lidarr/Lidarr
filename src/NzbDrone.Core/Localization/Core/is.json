@@ -185,7 +185,6 @@
     "RemoveFromQueue": "Fjarlægðu úr biðröð",
     "RemoveHelpTextWarning": "Fjarlæging fjarlægir niðurhalið og skrána / skrána úr niðurhalsviðskiptavininum.",
     "RemoveSelected": "Fjarlægja valið",
-    "RemoveSelectedMessageText": "Ertu viss um að þú viljir fjarlægja valda hluti af svörtum lista?",
     "RemoveTagExistingTag": "Núverandi merki",
     "RenameTracksHelpText": "Lidarr mun nota núverandi skráarheiti ef ekki er gert endurnafn á nafni",
     "ReplaceIllegalCharactersHelpText": "Skiptu um ólöglega stafi. Ef ekki er hakað við mun Lidarr fjarlægja þá í staðinn",
@@ -645,5 +644,7 @@
     "RootFolderCheckSingleMessage": "Rótarmöppu vantar: {0}",
     "SystemTimeCheckMessage": "Slökkt er á tíma kerfisins meira en 1 dag. Skipulögð verkefni ganga kannski ekki rétt fyrr en tíminn er leiðréttur",
     "UpdateCheckStartupNotWritableMessage": "Ekki er hægt að setja uppfærslu þar sem ræsimappan '{0}' er ekki skrifanleg af notandanum '{1}'.",
-    "UpdateCheckStartupTranslocationMessage": "Ekki er hægt að setja uppfærslu vegna þess að ræsimappan '{0}' er í forritunarmöppu forrits."
+    "UpdateCheckStartupTranslocationMessage": "Ekki er hægt að setja uppfærslu vegna þess að ræsimappan '{0}' er í forritunarmöppu forrits.",
+    "DeleteRemotePathMapping": "Breyta kortlagningu fjarstígs",
+    "DeleteRemotePathMappingMessageText": "Ertu viss um að þú viljir eyða þessari ytri slóðakortun?"
 }

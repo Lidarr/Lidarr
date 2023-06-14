@@ -490,7 +490,6 @@
     "RemoveFromQueue": "Eltávolítás a sorból",
     "RemoveHelpTextWarning": "Az eltávolítás eltávolítja a letöltést és a fájl(oka)t a letöltési kliensből.",
     "RemoveSelected": "Kiválaszottak törlése",
-    "RemoveSelectedMessageText": "Biztosan eltávolítja a kijelölt elemeket a feketelistáról?",
     "RemoveTagExistingTag": "Meglévő Címke",
     "RemoveTagRemovingTag": "Címke eltávolítása",
     "RestartLidarr": "Lidarr újraindítása",
@@ -957,5 +956,7 @@
     "UpdateAvailable": "Új frissítés elérhető",
     "UpdateCheckStartupNotWritableMessage": "A frissítés nem telepíthető, mert a (z) „{0}” indítási mappát a „{1}” felhasználó nem írhatja.",
     "UpdateCheckStartupTranslocationMessage": "Nem lehet telepíteni a frissítést, mert a (z) „{0}” indítási mappa az Alkalmazások Transzlokációs mappájában található.",
-    "UpdateCheckUINotWritableMessage": "Nem lehet telepíteni a frissítést, mert a(z) „{0}” felhasználói felület mappát nem írhatja a „{1}” felhasználó."
+    "UpdateCheckUINotWritableMessage": "Nem lehet telepíteni a frissítést, mert a(z) „{0}” felhasználói felület mappát nem írhatja a „{1}” felhasználó.",
+    "DeleteRemotePathMapping": "Távoli Elérési Útvonal Módosítása",
+    "ShowNextAlbum": "Az utolsó album mutatása"
 }

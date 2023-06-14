@@ -31,7 +31,6 @@
     "LaunchBrowserHelpText": " Avaa Lidarrin verkkokäyttöliittymä verkkoselaimeen sovelluksen käynnistyksen yhteydessä.",
     "TagsHelpText": "Käytetään vähintään yhdellä täsmäävällä tunnisteella merkityille esittäjille. Käytä kaikille jättämällä tyhjäksi.",
     "WriteAudioTagsHelpTextWarning": "'Kaikki tiedostot' -valinnat käsittelevät myös olemassa olevien tiedostojen tagit tuonnin yhteydessä.",
-    "RemoveSelectedMessageText": "Haluatko varmasti poistaa valitut kohteet estolistalta?",
     "Refresh": "Päivitä",
     "ResetAPIKey": "Uudista API-avain",
     "Restart": "Käynnistä uudelleen",

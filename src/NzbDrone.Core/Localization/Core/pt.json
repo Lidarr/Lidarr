@@ -84,7 +84,6 @@
     "RemoveFromQueue": "Remover da fila",
     "RemoveHelpTextWarning": "Remover eliminará a transferência e o(s) ficheiro(s) do cliente de transferências.",
     "RemoveSelected": "Remover selecionado(s)",
-    "RemoveSelectedMessageText": "Tem a certeza que quer remover os itens selecionados da lista de bloqueio?",
     "RemoveTagExistingTag": "Etiqueta existente",
     "RemoveTagRemovingTag": "Eliminando etiqueta",
     "RequiredHelpText": "A versão deve conter pelo menos um desses termos (não diferencia maiúsculas de minúsculas)",
@@ -765,5 +764,7 @@
     "SystemTimeCheckMessage": "A hora do sistema está atrasada em mais de 1 dia. As tarefas agendadas podem não ocorrer corretamente até a hora ser corrigida",
     "UpdateAvailable": "Nova atualização disponível",
     "UpdateCheckStartupNotWritableMessage": "Não é possível instalar a atualização porque a pasta de arranque \"{0}\" não tem permissões de escrita para o utilizador \"{1}\".",
-    "ApiKeyValidationHealthCheckMessage": "Por favor, actualize a sua API Key para ter no minimo {0} caracteres. Pode fazer através das definições ou do ficheiro de configuração"
+    "ApiKeyValidationHealthCheckMessage": "Por favor, actualize a sua API Key para ter no minimo {0} caracteres. Pode fazer através das definições ou do ficheiro de configuração",
+    "DeleteRemotePathMapping": "Editar mapeamento de caminho remoto",
+    "DeleteRemotePathMappingMessageText": "Tem a certeza que quer eliminar este mapeamento de caminho remoto?"
 }

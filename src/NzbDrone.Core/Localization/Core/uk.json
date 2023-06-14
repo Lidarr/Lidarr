@@ -54,7 +54,6 @@
     "DeleteEmptyFolders": "Видалити порожні папки",
     "UsingExternalUpdateMechanismBranchToUseToUpdateLidarr": "Гілка для оновлення Lidarr",
     "UsingExternalUpdateMechanismBranchUsedByExternalUpdateMechanism": "Гілка, що використовується зовнішнім механізмом оновлення",
-    "RemoveSelectedMessageText": "Ви впевнені, що хочете видалити вибрані елементи зі списку блокування?",
     "ResetAPIKeyMessageText": "Ви впевнені, що хочете скинути свій ключ API?",
     "ShowQualityProfile": "Додати профіль якості",
     "AnalyticsEnabledHelpText": "Надсилайте анонімну інформацію про використання та помилки на сервери Lidarr. Це включає інформацію про ваш веб-переглядач, які сторінки Lidarr WebUI ви використовуєте, звіти про помилки, а також версію ОС і часу виконання. Ми будемо використовувати цю інформацію, щоб визначити пріоритети функцій і виправлення помилок.",

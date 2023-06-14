@@ -171,7 +171,6 @@
     "RemoveFromQueue": "Usuń z kolejki",
     "RemoveHelpTextWarning": "Usunięcie spowoduje usunięcie pobierania i plików z klienta pobierania.",
     "RemoveSelected": "Usuń zaznaczone",
-    "RemoveSelectedMessageText": "Czy na pewno chcesz usunąć wybrane elementy z czarnej listy?",
     "RemoveTagExistingTag": "Istniejący tag",
     "RemoveTagRemovingTag": "Usuwanie tagu",
     "RetentionHelpText": "Tylko Usenet: Ustaw na zero, aby ustawić nieograniczone przechowywanie",
@@ -686,5 +685,7 @@
     "SystemTimeCheckMessage": "Czas systemowy jest wyłączony o więcej niż 1 dzień. Zaplanowane zadania mogą nie działać poprawnie, dopóki czas nie zostanie skorygowany",
     "UpdateAvailable": "Dostępna jest aktualizacja",
     "UpdateCheckStartupNotWritableMessage": "Nie można zainstalować aktualizacji, ponieważ użytkownik „{1}” nie ma prawa zapisu do folderu startowego „{0}”.",
-    "Language": "Język"
+    "Language": "Język",
+    "DeleteRemotePathMapping": "Edytuj zdalne mapowanie ścieżki",
+    "DeleteRemotePathMappingMessageText": "Czy na pewno chcesz usunąć to mapowanie zdalnej ścieżki?"
 }

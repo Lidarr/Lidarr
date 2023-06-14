@@ -293,7 +293,6 @@
     "RemoveFromQueue": "Supprimer de la file d'attente",
     "RemoveHelpTextWarning": "La suppression supprimera le téléchargement et le(s) fichier(s) du client de téléchargement.",
     "RemoveSelected": "Supprimer la sélection",
-    "RemoveSelectedMessageText": "Êtes-vous sûr de vouloir supprimer les éléments sélectionnés de la liste noire ?",
     "RemoveTagExistingTag": "Tag existant",
     "RemoveTagRemovingTag": "Suppression du tag",
     "RenameTracksHelpText": "Lidarr utilisera le nom de fichier existant si le changement de nom est désactivé",
@@ -777,5 +776,7 @@
     "UpdateCheckUINotWritableMessage": "Impossible d'installer la mise à jour car le dossier d'interface utilisateur '{0}' n'est pas accessible en écriture par l'utilisateur '{1}'.",
     "UpdateAvailable": "Une nouvelle mise à jour est disponible",
     "UpdateCheckStartupNotWritableMessage": "Impossible d'installer la mise à jour car le dossier de démarrage '{0}' n'est pas accessible en écriture par l'utilisateur '{1}'.",
-    "UpdateCheckStartupTranslocationMessage": "Impossible d'installer la mise à jour car le dossier de démarrage '{0}' se trouve dans un dossier App Translocation."
+    "UpdateCheckStartupTranslocationMessage": "Impossible d'installer la mise à jour car le dossier de démarrage '{0}' se trouve dans un dossier App Translocation.",
+    "DeleteRemotePathMapping": "Éditer le chemin distant",
+    "DeleteRemotePathMappingMessageText": "Êtes-vous sûr de vouloir effacer ce chemin ?"
 }

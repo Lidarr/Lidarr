@@ -302,7 +302,6 @@
     "TrackFileCountTrackCountTotalTotalTrackCountInterp": "{0} / {1} (Totalt: {2})",
     "MaintenanceRelease": "Underhållsutgåva",
     "Usenet": "Usenet",
-    "RemoveSelectedMessageText": "Är du säker på att du vill ta bort de markerade objekten från blockeringslistan?",
     "MaximumSizeHelpText": "Maximal storlek för att en utgåva ska fångas i MB. Ställ in på noll för att ställa in på obegränsad.",
     "NoHistory": "Ingen historik.",
     "DownloadPropersAndRepacksHelpTexts2": "Använd 'Föredra inte' för att sortera efter önskade ordpoäng över propers/repacks",
