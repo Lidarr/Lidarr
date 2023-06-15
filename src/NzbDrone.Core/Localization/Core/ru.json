@@ -240,7 +240,6 @@
     "BindAddress": "Привязать адрес",
     "BindAddressHelpTextWarning": "Для вступления в силу требуется перезапуск",
     "Blocklist": "Черный список",
-    "BlocklistHelpText": "Запрещает Lidarr автоматически получать этот релиз повторно",
     "BlocklistRelease": "Релиз из черного списка",
     "Branch": "Ветка",
     "BypassProxyForLocalAddresses": "Обход прокси для локальных адресов",

@@ -196,7 +196,6 @@
     "BindAddress": "عنوان ملزم",
     "BindAddressHelpTextWarning": "يتطلب إعادة التشغيل ليصبح ساري المفعول",
     "Blocklist": "القائمة السوداء",
-    "BlocklistHelpText": "يمنع Lidarr من الاستيلاء على هذا الإصدار تلقائيًا مرة أخرى",
     "BlocklistRelease": "إصدار القائمة السوداء",
     "Branch": "فرع شجرة",
     "BypassProxyForLocalAddresses": "تجاوز الوكيل للعناوين المحلية",

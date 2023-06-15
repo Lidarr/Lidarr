@@ -83,7 +83,6 @@
     "BindAddressHelpText": "Tüm arayüzler için geçerli IP4 adresi veya '*'",
     "BindAddressHelpTextWarning": "Etkili olması için yeniden başlatma gerektirir",
     "Blocklist": "Kara liste",
-    "BlocklistHelpText": "Lidarr'ın bu sürümü otomatik olarak tekrar yakalamasını engeller",
     "BlocklistRelease": "Kara Liste Yayını",
     "Branch": "Şube",
     "BypassProxyForLocalAddresses": "Yerel Adresler için Proxy'yi Atla",

@@ -16,7 +16,6 @@
     "BindAddress": "Bind adresse",
     "BindAddressHelpText": "Gyldig IPv4 -adresse, localhost eller \"*\" for alle grensesnitt",
     "Blocklist": "Svarteliste",
-    "BlocklistHelpText": "Hindrer Lidarr i å automatisk gripe denne utgivelsen igjen",
     "BlocklistRelease": "Blacklist -utgivelse",
     "Branch": "Gren",
     "BypassProxyForLocalAddresses": "Omgå proxy for lokale adresser",

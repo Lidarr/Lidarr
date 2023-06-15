@@ -46,7 +46,6 @@
     "ApiKeyHelpTextWarning": "Nécessite un redémarrage pour prendre effet",
     "ApplyTagsHelpTexts1": "Comment appliquer des tags à l'auteur sélectionné",
     "Blocklist": "Liste noire",
-    "BlocklistHelpText": "Empêche Lidarr de récupérer automatiquement cette version",
     "BlocklistRelease": "Mettre cette release sur la liste noire",
     "Calendar": "Calendrier",
     "CalendarWeekColumnHeaderHelpText": "Affiché au dessus de chaque colonne quand \"Semaine\" est l'affichage actif",

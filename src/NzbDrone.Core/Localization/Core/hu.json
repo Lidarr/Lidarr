@@ -257,7 +257,6 @@
     "DelayProfiles": "Késleltetési Profilok",
     "DelayingDownloadUntilInterp": "Késleltetni a letöltést {0} -tól {1} -ig",
     "DeleteDelayProfile": "Késleltetési Profil Törlése",
-    "BlocklistHelpText": "Megakadályozza, hogy a Lidarr automatikusan letöltse újra",
     "DefaultTagsHelpText": "Az ebben a mappában észlelt előadók alapértelmezett Lidarr címkéi",
     "DeleteReleaseProfile": "Késleltetési Profil Törlése",
     "DeleteReleaseProfileMessageText": "Biztos hogy törölni szeretnéd ezt a késleltetési profilt?",

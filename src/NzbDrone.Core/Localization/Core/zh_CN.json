@@ -233,7 +233,6 @@
     "BackupFolderHelpText": "Lidarr 的 AppData 目录下的相对路径",
     "BindAddressHelpTextWarning": "需重启以生效",
     "Blocklist": "阻止列表",
-    "BlocklistHelpText": "防止 Lidarr 再次自动抓取这些文件",
     "BlocklistRelease": "黑名单版本",
     "Calendar": "日历",
     "ClickToChangeQuality": "点击修改质量",

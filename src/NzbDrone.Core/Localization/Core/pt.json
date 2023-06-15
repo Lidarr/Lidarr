@@ -237,7 +237,6 @@
     "BackupRetentionHelpText": "Cópias de segurança automáticas anteriores ao período de retenção serão eliminadas automaticamente",
     "Backups": "Cópias de segurança",
     "BindAddress": "Endereço de vínculo",
-    "BlocklistHelpText": "Impede o Lidarr de capturar automaticamente estes ficheiros novamente",
     "BlocklistRelease": "Bloquear versão",
     "Branch": "Ramificação",
     "BypassProxyForLocalAddresses": "Ignorar proxy para endereços locais",

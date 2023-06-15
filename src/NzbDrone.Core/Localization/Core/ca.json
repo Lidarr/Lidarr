@@ -100,7 +100,6 @@
     "Backups": "Còpies de seguretat",
     "BindAddressHelpTextWarning": "Cal reiniciar perquè tingui efecte",
     "Blocklist": "Llista de bloquejats",
-    "BlocklistHelpText": "Impedeix que Lidarr torni a capturar aquesta versió automàticament",
     "ChangeFileDate": "Canvia la data del fitxer",
     "ChangeHasNotBeenSavedYet": "El canvi encara no s'ha desat",
     "ChmodFolder": "Carpeta chmod",
