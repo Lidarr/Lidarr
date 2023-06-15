@@ -16,7 +16,6 @@
     "Backups": "Veiligheidskopieën",
     "BindAddressHelpText": "Geldig IP-adres, localhost of '*' voor alle interfaces",
     "BindAddressHelpTextWarning": "Herstarten vereist om in werking te treden",
-    "BlocklistHelpText": "Voorkom dat Lidarr deze release nogmaals automatisch ophaalt",
     "Branch": "Branch",
     "BypassProxyForLocalAddresses": "Omzeil Proxy voor Lokale Adressen",
     "Calendar": "Kalender",

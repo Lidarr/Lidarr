@@ -50,7 +50,6 @@
     "Indexer": "Tietolähde",
     "UnableToAddANewDownloadClientPleaseTryAgain": "Uuden lataustyökalun lisäys epäonnistui. Yitä uudelleen.",
     "GrabReleaseMessageText": "Lidarr ei tunnistanut, mille esittäjälle ja albumille tämä julkaisu kuuluu, eikä julkaisun automaattinen tuonti onnistu. Haluatko siepata julkaisun '{0}'?",
-    "BlocklistHelpText": "Estää julkaisun automaattisen uudelleensieppauksen.",
     "CalendarWeekColumnHeaderHelpText": "Näkyy jokaisen sarakkeen yläpuolella käytettäessä viikkonäkymää.",
     "ShownAboveEachColumnWhenWeekIsTheActiveView": "Näkyy jokaisen sarakkeen yläpuolella käytettäessä viikkonäkymää.",
     "NotificationTriggers": "Laukaisijat",

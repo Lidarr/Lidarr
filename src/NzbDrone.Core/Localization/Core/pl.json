@@ -472,7 +472,6 @@
     "OnApplicationUpdate": "Przy aktualizacji aplikacji",
     "OnApplicationUpdateHelpText": "Przy aktualizacji aplikacji",
     "Duration": "Czas trwania",
-    "BlocklistHelpText": "Zapobiega ponownemu pobraniu tej wersji przez Lidarr",
     "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent podawany przez aplikację wywołującą API",
     "Add": "Dodaj",
     "AddDelayProfile": "Dodaj profil opóźnienia",

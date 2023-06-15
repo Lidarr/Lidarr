@@ -39,7 +39,6 @@
     "EnableSslHelpText": " Erfordert einen Neustart als Administrator",
     "ErrorLoadingContents": "Fehler beim laden der Inhalte",
     "CutoffUnmet": "› Schwelle nicht erreicht",
-    "BlocklistHelpText": "Dieses Release nicht automatisch erneut erfassen",
     "Actions": "Aktionen",
     "Authentication": "Authentifizierung",
     "BlocklistRelease": "Release sperren",

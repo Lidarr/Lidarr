@@ -73,7 +73,6 @@
     "ArtistAlbumClickToChangeTrack": "Натисніть, щоб змінити фільм",
     "AuthenticationMethodHelpText": "Для доступу до Lidarr потрібні ім’я користувача та пароль",
     "BackupFolderHelpText": "Відносні шляхи будуть у каталозі AppData Lidarr",
-    "BlocklistHelpText": "Забороняє Lidarr знову автоматично захопити цей випуск",
     "CancelMessageText": "Ви впевнені, що хочете скасувати це незавершене завдання?",
     "ChmodFolderHelpTextWarning": "Це працює лише в тому випадку, якщо власником файлу є користувач, на якому працює Lidarr. Краще переконатися, що клієнт завантаження правильно встановлює дозволи.",
     "ChownGroupHelpText": "Назва групи або gid. Використовуйте gid для віддалених файлових систем.",

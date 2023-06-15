@@ -54,7 +54,6 @@
     "BindAddressHelpText": "Indirizzo IP valido, localhost o '*' per tutte le interfacce di rete",
     "BindAddressHelpTextWarning": "Richiede il riavvio per avere effetti",
     "Blocklist": "Lista Nera",
-    "BlocklistHelpText": "Impedisci a Lidarr di acquisire automaticamente questo versione",
     "BlocklistRelease": "Release in blacklist",
     "Branch": "Ramo",
     "BypassProxyForLocalAddresses": "Evita il Proxy per gli indirizzi locali",

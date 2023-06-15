@@ -79,7 +79,6 @@
     "BindAddressHelpText": "Giltig IP4-adress eller '*' för alla gränssnitt",
     "BindAddressHelpTextWarning": "Kräver omstart för att träda i kraft",
     "Blocklist": "Svartlista",
-    "BlocklistHelpText": "Förhindra Lidarr att automatiskt hämta denna utgåva igen",
     "Branch": "Gren",
     "BypassProxyForLocalAddresses": "Bypass Proxy för lokala adresser",
     "Calendar": "Kalender",
