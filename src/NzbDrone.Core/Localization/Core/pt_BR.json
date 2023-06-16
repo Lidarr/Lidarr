@@ -1000,5 +1000,6 @@
     "Required": "Requerido",
     "ResetQualityDefinitions": "Redefinir Configurações de Qualidade",
     "ResetQualityDefinitionsMessageText": "Tem certeza de que deseja redefinir as configurações de qualidade?",
-    "ResetTitlesHelpText": "Redefinir títulos de configuração, bem como valores"
+    "ResetTitlesHelpText": "Redefinir títulos de configuração, bem como valores",
+    "BlocklistReleaseHelpText": "Impede que o Lidarr pegue automaticamente esses arquivos novamente"
 }
