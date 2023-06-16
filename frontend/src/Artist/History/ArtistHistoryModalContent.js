@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Alert from 'Components/Alert';
 import Button from 'Components/Link/Button';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import ModalBody from 'Components/Modal/ModalBody';
@@ -8,6 +9,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
+import { kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import ArtistHistoryRowConnector from './ArtistHistoryRowConnector';
 
@@ -81,16 +83,16 @@ class ArtistHistoryModalContent extends Component {
 
           {
             !isFetching && !!error &&
-              <div>
+              <Alert kind={kinds.DANGER}>
                 {translate('UnableToLoadHistory')}
-              </div>
+              </Alert>
           }
 
           {
             isPopulated && !hasItems && !error &&
-              <div>
+              <Alert kind={kinds.INFO}>
                 {translate('NoHistory')}
-              </div>
+              </Alert>
           }
 
           {
