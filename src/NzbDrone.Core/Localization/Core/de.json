@@ -106,7 +106,7 @@
     "Folders": "Ordner",
     "ApplyTagsHelpTexts2": "Hinzufügen: Füge neu Tags zu den existierenden Tags hinzu",
     "CreateEmptyArtistFolders": "Leeren Künstlerordner erstellen",
-    "DeleteDelayProfileMessageText": "Bist du sicher, dass du dieses Verzögerungs-Profil löschen willst?",
+    "DeleteDelayProfileMessageText": "Bist du sicher, dass du dieses Verzögerung-Profil löschen willst?",
     "DeleteImportListExclusionMessageText": "Bist du sicher, dass du diesen Importlisten Ausschluss löschen willst?",
     "DeleteImportListMessageText": "Liste '{0}' wirklich löschen?",
     "ExtraFileExtensionsHelpTexts1": "Kommaseparierte Liste von Dateiendungen die als Extra Dateien importiert werden sollen ( .nfo wird in .nfo-orig umbenannt )",
@@ -861,8 +861,8 @@
     "CustomFormatRequiredHelpText": "Diese {0} Bedingungen müsen zutreffen damit das eigene Format zutrifft. Ansonsten reicht ein einzelner {1} Treffer.",
     "CustomFormatSettings": "Einstellungen für eigene Formate",
     "DeleteCustomFormat": "Eigenes Format löschen",
-    "DeleteCustomFormatMessageText": "Indexer '{0}' wirklich löschen?",
-    "DeleteFormatMessageText": "Bist du sicher, dass du das Formatierungstag {0} löschen willst ?",
+    "DeleteCustomFormatMessageText": "Bist du sicher, dass du das eigene Format '{0}' löschen willst?",
+    "DeleteFormatMessageText": "Bist du sicher, dass du das Formatierungstag {0} löschen willst?",
     "DownloadPropersAndRepacksHelpTextWarning": "Benutze eigene Formate um automatisch auf Proper oder Repack releases zu upgraden",
     "DownloadedUnableToImportCheckLogsForDetails": "Heruntergeladen - Aber Import nicht möglich: Schaue in die Logs für mehr Details",
     "ExportCustomFormat": "Eigenes Format exportieren",
@@ -944,5 +944,11 @@
     "OnHealthRestoredHelpText": "Bei Wiederherstellung des Zustands",
     "OnHealthRestored": "Bei Wiederherstellung des Zustands",
     "ThereWasAnErrorLoadingThisItem": "Beim Laden des Eintrags ist ein Fehler aufgetreten",
-    "ThereWasAnErrorLoadingThisPage": "Beim Laden der Seite ist ein Fehler aufgetreten"
+    "ThereWasAnErrorLoadingThisPage": "Beim Laden der Seite ist ein Fehler aufgetreten",
+    "DeleteCondition": "Bedingung löschen",
+    "NoHistoryBlocklist": "Keine Verlauf-Sperrliste",
+    "RemoveSelectedItemBlocklistMessageText": "Bist du sicher, dass du die ausgewählten Einträge aus der Sperrliste entfernen willst?",
+    "ResetQualityDefinitionsMessageText": "Bist du sicher, dass du die Qualitätsdefinitionen zurücksetzen willst?",
+    "DeleteRemotePathMapping": "Entfernte Pfadzuordnung löschen",
+    "DeleteRemotePathMappingMessageText": "Bist du sicher, dass du das diese entfernte Pfadzuordnung löschen willst?"
 }
