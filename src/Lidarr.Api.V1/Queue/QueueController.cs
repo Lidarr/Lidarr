@@ -184,6 +184,8 @@ namespace Lidarr.Api.V1.Queue
                     return q => q.Album?.ReleaseDate ?? DateTime.MinValue;
                 case "quality":
                     return q => q.Quality;
+                case "size":
+                    return q => q.Size;
                 case "progress":
                     // Avoid exploding if a download's size is 0
                     return q => 100 - (q.Sizeleft / Math.Max(q.Size * 100, 1));
