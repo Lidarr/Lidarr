@@ -1001,5 +1001,7 @@
     "ResetQualityDefinitions": "Redefinir Configurações de Qualidade",
     "ResetQualityDefinitionsMessageText": "Tem certeza de que deseja redefinir as configurações de qualidade?",
     "ResetTitlesHelpText": "Redefinir títulos de configuração, bem como valores",
-    "BlocklistReleaseHelpText": "Impede que o Lidarr pegue automaticamente esses arquivos novamente"
+    "BlocklistReleaseHelpText": "Impede que o Lidarr pegue automaticamente esses arquivos novamente",
+    "FailedToLoadQueue": "Falha ao carregar a fila",
+    "QueueIsEmpty": "Fila está vazia"
 }
