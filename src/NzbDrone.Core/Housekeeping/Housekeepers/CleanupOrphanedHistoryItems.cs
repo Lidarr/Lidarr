@@ -20,28 +20,24 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
 
         private void CleanupOrphanedByArtist()
         {
-            using (var mapper = _database.OpenConnection())
-            {
-                mapper.Execute(@"DELETE FROM ""History""
-                                     WHERE ""Id"" IN (
-                                     SELECT ""History"".""Id"" FROM ""History""
-                                     LEFT OUTER JOIN ""Artists""
-                                     ON ""History"".""ArtistId"" = ""Artists"".""Id""
-                                     WHERE ""Artists"".""Id"" IS NULL)");
-            }
+            using var mapper = _database.OpenConnection();
+            mapper.Execute(@"DELETE FROM ""History""
+                             WHERE ""Id"" IN (
+                             SELECT ""History"".""Id"" FROM ""History""
+                             LEFT OUTER JOIN ""Artists""
+                             ON ""History"".""ArtistId"" = ""Artists"".""Id""
+                             WHERE ""Artists"".""Id"" IS NULL)");
         }
 
         private void CleanupOrphanedByAlbum()
         {
-            using (var mapper = _database.OpenConnection())
-            {
-                mapper.Execute(@"DELETE FROM ""History""
-                                     WHERE ""Id"" IN (
-                                     SELECT ""History"".""Id"" FROM ""History""
-                                     LEFT OUTER JOIN ""Albums""
-                                     ON ""History"".""AlbumId"" = ""Albums"".""Id""
-                                     WHERE ""Albums"".""Id"" IS NULL)");
-            }
+            using var mapper = _database.OpenConnection();
+            mapper.Execute(@"DELETE FROM ""History""
+                             WHERE ""Id"" IN (
+                             SELECT ""History"".""Id"" FROM ""History""
+                             LEFT OUTER JOIN ""Albums""
+                             ON ""History"".""AlbumId"" = ""Albums"".""Id""
+                             WHERE ""Albums"".""Id"" IS NULL)");
         }
     }
 }
