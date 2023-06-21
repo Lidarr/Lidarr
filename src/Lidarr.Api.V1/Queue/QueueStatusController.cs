@@ -30,6 +30,7 @@ namespace Lidarr.Api.V1.Queue
             _broadcastDebounce = new Debouncer(BroadcastChange, TimeSpan.FromSeconds(5));
         }
 
+        [NonAction]
         public override QueueStatusResource GetResourceById(int id)
         {
             throw new NotImplementedException();

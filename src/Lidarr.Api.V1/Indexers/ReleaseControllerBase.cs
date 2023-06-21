@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Lidarr.Http.REST;
+using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Profiles.Qualities;
 
@@ -15,6 +16,7 @@ namespace Lidarr.Api.V1.Indexers
             _qualityProfile = qualityProfileService.GetDefaultProfile(string.Empty);
         }
 
+        [NonAction]
         public override ReleaseResource GetResourceById(int id)
         {
             throw new NotImplementedException();

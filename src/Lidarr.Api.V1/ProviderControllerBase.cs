@@ -60,6 +60,7 @@ namespace Lidarr.Api.V1
 
         [RestPostById]
         [Consumes("application/json")]
+        [Produces("application/json")]
         public ActionResult<TProviderResource> CreateProvider([FromBody] TProviderResource providerResource, [FromQuery] bool forceSave = false)
         {
             var providerDefinition = GetDefinition(providerResource, true, !forceSave, false);
@@ -76,6 +77,7 @@ namespace Lidarr.Api.V1
 
         [RestPutById]
         [Consumes("application/json")]
+        [Produces("application/json")]
         public ActionResult<TProviderResource> UpdateProvider([FromBody] TProviderResource providerResource, [FromQuery] bool forceSave = false)
         {
             var providerDefinition = GetDefinition(providerResource, true, !forceSave, false);
@@ -146,6 +148,7 @@ namespace Lidarr.Api.V1
         }
 
         [HttpPost("testall")]
+        [Produces("application/json")]
         public IActionResult TestAll()
         {
             var providerDefinitions = _providerFactory.All()
@@ -170,6 +173,7 @@ namespace Lidarr.Api.V1
         [SkipValidation]
         [HttpPost("action/{name}")]
         [Consumes("application/json")]
+        [Produces("application/json")]
         public IActionResult RequestAction(string name, [FromBody] TProviderResource resource)
         {
             var providerDefinition = GetDefinition(resource, false, false, false);

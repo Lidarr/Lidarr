@@ -22,6 +22,7 @@ namespace Lidarr.Api.V1.Health
             _healthCheckService = healthCheckService;
         }
 
+        [NonAction]
         public override HealthResource GetResourceById(int id)
         {
             throw new NotImplementedException();

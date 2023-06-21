@@ -26,6 +26,7 @@ namespace Lidarr.Api.V1.Queue
             _pendingReleaseService = pendingReleaseService;
         }
 
+        [NonAction]
         public override QueueResource GetResourceById(int id)
         {
             throw new NotImplementedException();

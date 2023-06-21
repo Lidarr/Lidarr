@@ -53,6 +53,7 @@ namespace Lidarr.Api.V1.Queue
             _qualityComparer = new QualityModelComparer(qualityProfileService.GetDefaultProfile(string.Empty));
         }
 
+        [NonAction]
         public override QueueResource GetResourceById(int id)
         {
             throw new NotImplementedException();
