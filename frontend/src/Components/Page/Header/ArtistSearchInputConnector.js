@@ -25,6 +25,7 @@ function createCleanArtistSelector() {
           sortName,
           foreignArtistId,
           images,
+          firstCharacter: artistName.charAt(0).toLowerCase(),
           tags: tags.reduce((acc, id) => {
             const matchingTag = allTags.find((tag) => tag.id === id);
 

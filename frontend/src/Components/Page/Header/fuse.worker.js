@@ -9,6 +9,7 @@ const fuseOptions = {
   minMatchCharLength: 1,
   keys: [
     'artistName',
+    'foreignArtistId',
     'tags.label'
   ]
 };

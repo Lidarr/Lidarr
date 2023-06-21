@@ -10,6 +10,7 @@ function ArtistSearchResult(props) {
     match,
     artistName,
     images,
+    foreignArtistId,
     tags
   } = props;
 
@@ -35,6 +36,14 @@ function ArtistSearchResult(props) {
         </div>
 
         {
+          match.key === 'foreignArtistId' && foreignArtistId ?
+            <div className={styles.alternateTitle}>
+              MbId: {foreignArtistId}
+            </div> :
+            null
+        }
+
+        {
           tag ?
             <div className={styles.tagContainer}>
               <Label
@@ -54,6 +63,7 @@ function ArtistSearchResult(props) {
 ArtistSearchResult.propTypes = {
   artistName: PropTypes.string.isRequired,
   images: PropTypes.arrayOf(PropTypes.object).isRequired,
+  foreignArtistId: PropTypes.string.isRequired,
   tags: PropTypes.arrayOf(PropTypes.object).isRequired,
   match: PropTypes.object.isRequired
 };
