@@ -10,7 +10,7 @@ import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
-import { inputTypes } from 'Helpers/Props';
+import { inputTypes, sizes } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 
 class EditAlbumModalContent extends Component {
@@ -59,7 +59,7 @@ class EditAlbumModalContent extends Component {
           <Form
             {...otherProps}
           >
-            <FormGroup>
+            <FormGroup size={sizes.MEDIUM}>
               <FormLabel>
                 {translate('Monitored')}
               </FormLabel>
@@ -73,7 +73,7 @@ class EditAlbumModalContent extends Component {
               />
             </FormGroup>
 
-            <FormGroup>
+            <FormGroup size={sizes.MEDIUM}>
               <FormLabel>
                 {translate('AutomaticallySwitchRelease')}
               </FormLabel>
@@ -87,7 +87,7 @@ class EditAlbumModalContent extends Component {
               />
             </FormGroup>
 
-            <FormGroup>
+            <FormGroup size={sizes.MEDIUM}>
               <FormLabel>
                 {translate('Release')}
               </FormLabel>

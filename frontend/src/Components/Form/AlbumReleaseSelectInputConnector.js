@@ -13,13 +13,23 @@ function createMapStateToProps() {
     (albumReleases) => {
       const values = _.map(albumReleases.value, (albumRelease) => {
 
+        const {
+          foreignReleaseId,
+          title,
+          disambiguation,
+          mediumCount,
+          trackCount,
+          country,
+          format
+        } = albumRelease;
+
         return {
-          key: albumRelease.foreignReleaseId,
-          value: `${albumRelease.title}` +
-            `${albumRelease.disambiguation ? ' (' : ''}${titleCase(albumRelease.disambiguation)}${albumRelease.disambiguation ? ')' : ''}` +
-            `, ${albumRelease.mediumCount} med, ${albumRelease.trackCount} tracks` +
-            `${albumRelease.country.length > 0 ? ', ' : ''}${shortenList(albumRelease.country)}` +
-            `${albumRelease.format ? ', [' : ''}${albumRelease.format}${albumRelease.format ? ']' : ''}`
+          key: foreignReleaseId,
+          value: `${title}` +
+            `${disambiguation ? ' (' : ''}${titleCase(disambiguation)}${disambiguation ? ')' : ''}` +
+            `, ${mediumCount} med, ${trackCount} tracks` +
+            `${country && country.length > 0 ? `, ${shortenList(country)}` : ''}` +
+            `${format ? `, [${format}]` : ''}`
         };
       });
 
