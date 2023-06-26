@@ -236,8 +236,9 @@ class AlbumDetails extends Component {
       expandedState
     } = this.state;
 
-    let expandIcon = icons.EXPAND_INDETERMINATE;
+    const fanartUrl = getFanartUrl(artist.images);
 
+    let expandIcon = icons.EXPAND_INDETERMINATE;
     let trackFilesCountMessage = translate('TrackFilesCountMessage');
 
     if (trackFileCount === 1) {
@@ -326,9 +327,11 @@ class AlbumDetails extends Component {
           <div className={styles.header}>
             <div
               className={styles.backdrop}
-              style={{
-                backgroundImage: `url(${getFanartUrl(artist.images)})`
-              }}
+              style={
+                fanartUrl ?
+                  { backgroundImage: `url(${fanartUrl})` } :
+                  null
+              }
             >
               <div className={styles.backdropOverlay} />
             </div>
