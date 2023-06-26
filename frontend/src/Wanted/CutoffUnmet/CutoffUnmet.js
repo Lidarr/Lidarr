@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Alert from 'Components/Alert';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import FilterMenu from 'Components/Menu/FilterMenu';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
@@ -190,16 +191,16 @@ class CutoffUnmet extends Component {
 
           {
             !isAnyFetching && error &&
-              <div>
+              <Alert kind={kinds.DANGER}>
                 Error fetching cutoff unmet
-              </div>
+              </Alert>
           }
 
           {
             isAllPopulated && !error && !items.length &&
-              <div>
-                No cutoff unmet items
-              </div>
+              <Alert kind={kinds.INFO}>
+                {translate('NoCutoffUnmetItems')}
+              </Alert>
           }
 
           {
