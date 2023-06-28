@@ -1003,5 +1003,8 @@
     "ResetTitlesHelpText": "Redefinir títulos de configuração, bem como valores",
     "BlocklistReleaseHelpText": "Impede que o Lidarr pegue automaticamente esses arquivos novamente",
     "FailedToLoadQueue": "Falha ao carregar a fila",
-    "QueueIsEmpty": "Fila está vazia"
+    "QueueIsEmpty": "Fila está vazia",
+    "NoCutoffUnmetItems": "Nenhum item de corte não atendido",
+    "NoEventsFound": "Nenhum evento encontrado",
+    "NoMissingItems": "Nenhum item faltando"
 }
