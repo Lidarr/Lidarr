@@ -227,7 +227,7 @@
     "DeleteBackup": "Διαγραφή αντιγράφων ασφαλείας",
     "DeleteBackupMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε το αντίγραφο ασφαλείας \"{0}\";",
     "DeleteDelayProfile": "Διαγραφή προφίλ καθυστέρησης",
-    "DeleteDelayProfileMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτό το προφίλ καθυστέρησης;",
+    "DeleteDelayProfileMessageText": "Είστε σίγουροι πως θέλετε να διαγράψετε αυτό το Προφίλ χρονοκαθυστέρησης;",
     "DeleteDownloadClient": "Διαγραφή προγράμματος-πελάτη λήψης",
     "DeleteDownloadClientMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε τον πελάτη λήψης \"{0}\";",
     "DeleteEmptyFolders": "Διαγραφή κενών φακέλων",
@@ -887,7 +887,7 @@
     "Customformat": "Προσαρμοσμένη μορφή",
     "CutoffFormatScoreHelpText": "Μόλις επιτευχθεί αυτό το σκορ προσαρμοσμένης μορφής, το Radarr δεν θα κατεβάζει πλέον ταινίες",
     "DeleteCustomFormat": "Διαγραφή προσαρμοσμένης μορφής",
-    "DeleteCustomFormatMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε το ευρετήριο \"{0}\";",
+    "DeleteCustomFormatMessageText": "Είστε σίγουροι πως θέλετε να διαγράψετε τη προσαρμοσμένη μορφή '{0}';",
     "DeleteFormatMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε την ετικέτα μορφής {0};",
     "DownloadPropersAndRepacksHelpTextWarning": "Χρησιμοποιήστε προσαρμοσμένες μορφές για αυτόματες αναβαθμίσεις σε Propers / Repacks",
     "DownloadedUnableToImportCheckLogsForDetails": "Λήψη - Δεν είναι δυνατή η εισαγωγή: ελέγξτε τα αρχεία καταγραφής για λεπτομέρειες",
@@ -904,7 +904,7 @@
     "NegateHelpText": "Εάν επιλεγεί, η προσαρμοσμένη μορφή δεν θα εφαρμοστεί εάν αντιστοιχεί σε αυτήν την {0} συνθήκη.",
     "PreferTorrent": "Προτιμήστε το Torrent",
     "PreferUsenet": "Προτιμήστε το Usenet",
-    "ResetDefinitionTitlesHelpText": "Επαναφέρετε τίτλους ορισμού καθώς και τιμές",
+    "ResetDefinitionTitlesHelpText": "Επαναφορά τίτλων ορισμού και των τιμών τους",
     "ResetDefinitions": "Επαναφορά ορισμών",
     "ResetTitles": "Επαναφορά τίτλων",
     "SpecificMonitoringOptionHelpText": "Παρακολουθήστε τους συγγραφείς, αλλά παρακολουθήστε μόνο βιβλία που περιλαμβάνονται ρητά στη λίστα",
@@ -976,5 +976,9 @@
     "DeleteRemotePathMappingMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτήν την αντιστοίχιση απομακρυσμένης διαδρομής;",
     "OnHealthRestoredHelpText": "Στην Αποκατάσταση Υγείας",
     "RecycleBinUnableToWriteHealthCheck": "Δεν είναι δυνατή η εγγραφή στον επιλεγμένο φάκελο ανακύκλωσης: {0}. Ελέγξτε ότι ο φάκελος υπάρχει και είναι εγγράψιμος από τον χρήστη που τρέχει το Radarr",
-    "ShowNextAlbum": "Εμφάνιση τελευταίου άλμπουμ"
+    "ShowNextAlbum": "Εμφάνιση τελευταίου άλμπουμ",
+    "DeleteCondition": "Διαγραφή συνθήκης",
+    "NoHistoryBlocklist": "Δεν υπάρχει λίστα αποκλεισμού ιστορικού",
+    "RemoveSelectedItemBlocklistMessageText": "Είστε σίγουροι πως θέλετε να διαγράψετε τα επιλεγμένα αντικείμενα από τη λίστα αποκλεισμού;",
+    "ResetQualityDefinitionsMessageText": "Είστε σίγουροι πως θέλετε να επαναφέρετε τους ορισμούς ποιότητας;"
 }
