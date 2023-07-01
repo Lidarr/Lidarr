@@ -11,6 +11,7 @@ namespace NzbDrone.Core.Download
         }
 
         public bool IsLocalhost { get; set; }
+        public string SortingMode { get; set; }
         public List<OsPath> OutputRootFolders { get; set; }
     }
 }
