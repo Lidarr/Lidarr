@@ -1006,5 +1006,6 @@
     "QueueIsEmpty": "Fila está vazia",
     "NoCutoffUnmetItems": "Nenhum item de corte não atendido",
     "NoEventsFound": "Nenhum evento encontrado",
-    "NoMissingItems": "Nenhum item faltando"
+    "NoMissingItems": "Nenhum item faltando",
+    "DownloadClientSortingCheckMessage": "O cliente de download {0} tem classificação {1} habilitada para a categoria de Lidarr. Você deve desativar a classificação em seu cliente de download para evitar problemas de importação."
 }
