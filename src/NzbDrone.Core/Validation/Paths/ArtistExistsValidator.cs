@@ -21,7 +21,9 @@ namespace NzbDrone.Core.Validation.Paths
                 return true;
             }
 
-            return !_artistService.GetAllArtists().Exists(s => s.Metadata.Value.ForeignArtistId == context.PropertyValue.ToString());
+            var foreignArtistId = context.PropertyValue.ToString();
+
+            return _artistService.FindById(foreignArtistId) == null;
         }
     }
 }
