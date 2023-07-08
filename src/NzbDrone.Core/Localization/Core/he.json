@@ -665,5 +665,6 @@
     "UpdateCheckStartupTranslocationMessage": "לא ניתן להתקין את העדכון מכיוון שתיקיית ההפעלה '{0}' נמצאת בתיקיית טרנסלוקציה של אפליקציות.",
     "UpdateCheckUINotWritableMessage": "לא ניתן להתקין את העדכון מכיוון שתיקיית ממשק המשתמש '{0}' אינה ניתנת לכתיבה על ידי המשתמש '{1}'.",
     "DeleteRemotePathMapping": "ערוך מיפוי נתיבים מרחוק",
-    "DeleteRemotePathMappingMessageText": "האם אתה בטוח שברצונך למחוק את מיפוי הנתיבים המרוחק הזה?"
+    "DeleteRemotePathMappingMessageText": "האם אתה בטוח שברצונך למחוק את מיפוי הנתיבים המרוחק הזה?",
+    "ApiKeyValidationHealthCheckMessage": "עדכן בבקשה את מפתח ה API שלך שיהיה עם לפחות {0} תווים. ניתן לעשות זאת דרך ההגדות או קובץ הקונפיגורציה"
 }

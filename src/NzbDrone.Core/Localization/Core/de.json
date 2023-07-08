@@ -950,5 +950,7 @@
     "RemoveSelectedItemBlocklistMessageText": "Bist du sicher, dass du die ausgewählten Einträge aus der Sperrliste entfernen willst?",
     "ResetQualityDefinitionsMessageText": "Bist du sicher, dass du die Qualitätsdefinitionen zurücksetzen willst?",
     "DeleteRemotePathMapping": "Entfernte Pfadzuordnung löschen",
-    "DeleteRemotePathMappingMessageText": "Bist du sicher, dass du das diese entfernte Pfadzuordnung löschen willst?"
+    "DeleteRemotePathMappingMessageText": "Bist du sicher, dass du das diese entfernte Pfadzuordnung löschen willst?",
+    "ListRefreshInterval": "Listen Aktualisierungsintervall",
+    "ListWillRefreshEveryInterp": "Liste wird alle [0] aktualisiert"
 }
