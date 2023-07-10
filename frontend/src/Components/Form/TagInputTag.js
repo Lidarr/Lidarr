@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import MiddleTruncate from 'react-middle-truncate';
 import Label from 'Components/Label';
 import IconButton from 'Components/Link/IconButton';
 import Link from 'Components/Link/Link';
@@ -49,6 +48,7 @@ class TagInputTag extends Component {
       kind,
       canEdit
     } = this.props;
+
     return (
       <div
         className={styles.tag}
@@ -63,11 +63,7 @@ class TagInputTag extends Component {
             tabIndex={-1}
             onPress={this.onDelete}
           >
-            <MiddleTruncate
-              text={tag.name}
-              start={10}
-              end={10}
-            />
+            {tag.name}
           </Link>
 
           {

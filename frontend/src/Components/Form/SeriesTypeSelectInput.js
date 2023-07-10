@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import translate from 'Utilities/String/translate';
 import SelectInput from './SelectInput';
 
 const artistTypeOptions = [
@@ -19,7 +20,7 @@ function SeriesTypeSelectInput(props) {
   if (includeNoChange) {
     values.unshift({
       key: 'noChange',
-      value: 'No Change',
+      value: translate('NoChange'),
       disabled: true
     });
   }

@@ -161,7 +161,7 @@ class ArtistEditorFooter extends Component {
     } = this.state;
 
     const monitoredOptions = [
-      { key: NO_CHANGE, value: 'No Change', disabled: true },
+      { key: NO_CHANGE, value: translate('NoChange'), disabled: true },
       { key: 'monitored', value: 'Monitored' },
       { key: 'unmonitored', value: 'Unmonitored' }
     ];
