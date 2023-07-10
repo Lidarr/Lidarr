@@ -75,6 +75,18 @@ class TagInput extends Component {
   //
   // Listeners
 
+  onTagEdit = ({ value, ...otherProps }) => {
+    const currentValue = this.state.value;
+
+    if (currentValue && this.props.onTagReplace) {
+      this.props.onTagReplace(otherProps, { name: currentValue });
+    } else {
+      this.props.onTagDelete(otherProps);
+    }
+
+    this.setState({ value });
+  };
+
   onInputContainerPress = () => {
     this._autosuggestRef.input.focus();
   };
@@ -188,6 +200,7 @@ class TagInput extends Component {
     const {
       tags,
       kind,
+      canEdit,
       tagComponent,
       onTagDelete
     } = this.props;
@@ -199,8 +212,10 @@ class TagInput extends Component {
         kind={kind}
         inputProps={inputProps}
         isFocused={this.state.isFocused}
+        canEdit={canEdit}
         tagComponent={tagComponent}
         onTagDelete={onTagDelete}
+        onTagEdit={this.onTagEdit}
         onInputContainerPress={this.onInputContainerPress}
       />
     );
@@ -225,7 +240,7 @@ class TagInput extends Component {
       <AutoSuggestInput
         {...otherProps}
         forwardedRef={this._setAutosuggestRef}
-        className={styles.internalInput}
+        className={className}
         inputContainerClassName={classNames(
           inputContainerClassName,
           isFocused && styles.isFocused,
@@ -262,11 +277,13 @@ TagInput.propTypes = {
   placeholder: PropTypes.string.isRequired,
   delimiters: PropTypes.arrayOf(PropTypes.string).isRequired,
   minQueryLength: PropTypes.number.isRequired,
+  canEdit: PropTypes.bool,
   hasError: PropTypes.bool,
   hasWarning: PropTypes.bool,
   tagComponent: PropTypes.elementType.isRequired,
   onTagAdd: PropTypes.func.isRequired,
-  onTagDelete: PropTypes.func.isRequired
+  onTagDelete: PropTypes.func.isRequired,
+  onTagReplace: PropTypes.func
 };
 
 TagInput.defaultProps = {
@@ -277,6 +294,7 @@ TagInput.defaultProps = {
   placeholder: '',
   delimiters: ['Tab', 'Enter', ' ', ','],
   minQueryLength: 1,
+  canEdit: false,
   tagComponent: TagInputTag
 };
 

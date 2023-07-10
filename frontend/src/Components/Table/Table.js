@@ -52,6 +52,7 @@ function Table(props) {
           scrollDirections.HORIZONTAL :
           scrollDirections.NONE
       }
+      autoFocus={false}
     >
       <table className={className}>
         <TableHeader>
@@ -120,6 +121,7 @@ function Table(props) {
 }
 
 Table.propTypes = {
+  ...TableHeaderCell.props,
   className: PropTypes.string,
   horizontalScroll: PropTypes.bool.isRequired,
   selectAll: PropTypes.bool.isRequired,

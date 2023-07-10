@@ -9,6 +9,7 @@ import SettingsToolbarConnector from 'Settings/SettingsToolbarConnector';
 import translate from 'Utilities/String/translate';
 import ImportListsExclusionsConnector from './ImportListExclusions/ImportListExclusionsConnector';
 import ImportListsConnector from './ImportLists/ImportListsConnector';
+import ManageImportListsModal from './ImportLists/Manage/ManageImportListsModal';
 
 class ImportListSettings extends Component {
 
@@ -19,7 +20,8 @@ class ImportListSettings extends Component {
     super(props, context);
 
     this.state = {
-      hasPendingChanges: false
+      hasPendingChanges: false,
+      isManageImportListsOpen: false
     };
   }
 
@@ -28,6 +30,14 @@ class ImportListSettings extends Component {
 
   setListOptionsRef = (ref) => {
     this._listOptions = ref;
+  };
+
+  onManageImportListsPress = () => {
+    this.setState({ isManageImportListsOpen: true });
+  };
+
+  onManageImportListsModalClose = () => {
+    this.setState({ isManageImportListsOpen: false });
   };
 
   onHasPendingChange = (hasPendingChanges) => {
@@ -51,7 +61,8 @@ class ImportListSettings extends Component {
 
     const {
       isSaving,
-      hasPendingChanges
+      hasPendingChanges,
+      isManageImportListsOpen
     } = this.state;
 
     return (
@@ -69,6 +80,12 @@ class ImportListSettings extends Component {
                 isSpinning={isTestingAll}
                 onPress={dispatchTestAllImportLists}
               />
+
+              <PageToolbarButton
+                label={translate('ManageLists')}
+                iconName={icons.MANAGE}
+                onPress={this.onManageImportListsPress}
+              />
             </Fragment>
           }
           onSavePress={this.onSavePress}
@@ -77,6 +94,10 @@ class ImportListSettings extends Component {
         <PageContentBody>
           <ImportListsConnector />
           <ImportListsExclusionsConnector />
+          <ManageImportListsModal
+            isOpen={isManageImportListsOpen}
+            onModalClose={this.onManageImportListsModalClose}
+          />
         </PageContentBody>
       </PageContent>
     );

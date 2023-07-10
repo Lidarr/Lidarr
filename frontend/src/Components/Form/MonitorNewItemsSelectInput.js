@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import monitorNewItemsOptions from 'Utilities/Artist/monitorNewItemsOptions';
+import translate from 'Utilities/String/translate';
 import SelectInput from './SelectInput';
 
 function MonitorNewItemsSelectInput(props) {
@@ -15,7 +16,7 @@ function MonitorNewItemsSelectInput(props) {
   if (includeNoChange) {
     values.unshift({
       key: 'noChange',
-      value: 'No Change',
+      value: translate('NoChange'),
       disabled: true
     });
   }

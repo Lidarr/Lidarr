@@ -1,4 +1,6 @@
 .tag {
+  display: flex;
+
   &.isLastTag {
     .or {
       display: none;

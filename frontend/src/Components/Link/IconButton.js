@@ -39,11 +39,13 @@ function IconButton(props) {
 }
 
 IconButton.propTypes = {
+  ...Link.propTypes,
   className: PropTypes.string.isRequired,
   iconClassName: PropTypes.string,
   kind: PropTypes.string,
   name: PropTypes.object.isRequired,
   size: PropTypes.number,
+  title: PropTypes.string,
   isSpinning: PropTypes.bool,
   isDisabled: PropTypes.bool
 };

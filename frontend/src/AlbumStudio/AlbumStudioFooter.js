@@ -6,6 +6,7 @@ import SelectInput from 'Components/Form/SelectInput';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
 import { kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './AlbumStudioFooter.css';
 
 const NO_CHANGE = 'noChange';
@@ -87,7 +88,7 @@ class AlbumStudioFooter extends Component {
     } = this.state;
 
     const monitoredOptions = [
-      { key: NO_CHANGE, value: 'No Change', disabled: true },
+      { key: NO_CHANGE, value: translate('NoChange'), disabled: true },
       { key: 'monitored', value: 'Monitored' },
       { key: 'unmonitored', value: 'Unmonitored' }
     ];

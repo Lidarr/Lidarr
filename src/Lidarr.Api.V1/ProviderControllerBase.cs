@@ -11,18 +11,25 @@ using NzbDrone.Core.Validation;
 
 namespace Lidarr.Api.V1
 {
-    public abstract class ProviderControllerBase<TProviderResource, TProvider, TProviderDefinition> : RestController<TProviderResource>
+    public abstract class ProviderControllerBase<TProviderResource, TBulkProviderResource, TProvider, TProviderDefinition> : RestController<TProviderResource>
         where TProviderDefinition : ProviderDefinition, new()
         where TProvider : IProvider
         where TProviderResource : ProviderResource<TProviderResource>, new()
+        where TBulkProviderResource : ProviderBulkResource<TBulkProviderResource>, new()
     {
         private readonly IProviderFactory<TProvider, TProviderDefinition> _providerFactory;
         private readonly ProviderResourceMapper<TProviderResource, TProviderDefinition> _resourceMapper;
+        private readonly ProviderBulkResourceMapper<TBulkProviderResource, TProviderDefinition> _bulkResourceMapper;
 
-        protected ProviderControllerBase(IProviderFactory<TProvider, TProviderDefinition> providerFactory, string resource, ProviderResourceMapper<TProviderResource, TProviderDefinition> resourceMapper)
+        protected ProviderControllerBase(IProviderFactory<TProvider,
+            TProviderDefinition> providerFactory,
+            string resource,
+            ProviderResourceMapper<TProviderResource, TProviderDefinition> resourceMapper,
+            ProviderBulkResourceMapper<TBulkProviderResource, TProviderDefinition> bulkResourceMapper)
         {
             _providerFactory = providerFactory;
             _resourceMapper = resourceMapper;
+            _bulkResourceMapper = bulkResourceMapper;
 
             SharedValidator.RuleFor(c => c.Name).NotEmpty();
             SharedValidator.RuleFor(c => c.Name).Must((v, c) => !_providerFactory.All().Any(p => p.Name == c && p.Id != v.Id)).WithMessage("Should be unique");
@@ -93,6 +100,47 @@ namespace Lidarr.Api.V1
             return Accepted(providerResource.Id);
         }
 
+        [HttpPut("bulk")]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public virtual ActionResult<TProviderResource> UpdateProvider([FromBody] TBulkProviderResource providerResource)
+        {
+            if (!providerResource.Ids.Any())
+            {
+                throw new BadRequestException("ids must be provided");
+            }
+
+            var definitionsToUpdate = _providerFactory.Get(providerResource.Ids).ToList();
+
+            foreach (var definition in definitionsToUpdate)
+            {
+                _providerFactory.SetProviderCharacteristics(definition);
+
+                if (providerResource.Tags != null)
+                {
+                    var newTags = providerResource.Tags;
+                    var applyTags = providerResource.ApplyTags;
+
+                    switch (applyTags)
+                    {
+                        case ApplyTags.Add:
+                            newTags.ForEach(t => definition.Tags.Add(t));
+                            break;
+                        case ApplyTags.Remove:
+                            newTags.ForEach(t => definition.Tags.Remove(t));
+                            break;
+                        case ApplyTags.Replace:
+                            definition.Tags = new HashSet<int>(newTags);
+                            break;
+                    }
+                }
+            }
+
+            _bulkResourceMapper.UpdateModel(providerResource, definitionsToUpdate);
+
+            return Accepted(_providerFactory.Update(definitionsToUpdate).Select(x => _resourceMapper.ToResource(x)));
+        }
+
         private TProviderDefinition GetDefinition(TProviderResource providerResource, bool validate, bool includeWarnings, bool forceValidate)
         {
             var definition = _resourceMapper.ToModel(providerResource);
@@ -109,6 +157,15 @@ namespace Lidarr.Api.V1
         public object DeleteProvider(int id)
         {
             _providerFactory.Delete(id);
+            return new { };
+        }
+
+        [HttpDelete("bulk")]
+        [Consumes("application/json")]
+        public virtual object DeleteProviders([FromBody] TBulkProviderResource resource)
+        {
+            _providerFactory.Delete(resource.Ids);
+
             return new { };
         }
 
