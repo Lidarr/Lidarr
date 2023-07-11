@@ -91,7 +91,7 @@ namespace NzbDrone.Core.Notifications.Xbmc
 
                 if (artistPath != null)
                 {
-                    _logger.Debug("Updating artist {0} (Path: {1}) on XBMC host: {2}", artist, artistPath, settings.Address);
+                    _logger.Debug("Updating artist {0} (Kodi Path: {1}) on XBMC host: {2}", artist, artistPath, settings.Address);
                 }
                 else
                 {
