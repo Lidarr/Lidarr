@@ -15,13 +15,6 @@ namespace Lidarr.Api.V1
         }
     }
 
-    public enum ApplyTags
-    {
-        Add,
-        Remove,
-        Replace
-    }
-
     public class ProviderBulkResourceMapper<TProviderBulkResource, TProviderDefinition>
         where TProviderBulkResource : ProviderBulkResource<TProviderBulkResource>, new()
         where TProviderDefinition : ProviderDefinition, new()
