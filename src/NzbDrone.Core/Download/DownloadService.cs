@@ -56,7 +56,8 @@ namespace NzbDrone.Core.Download
 
             var downloadTitle = remoteAlbum.Release.Title;
             var filterBlockedClients = remoteAlbum.Release.PendingReleaseReason == PendingReleaseReason.DownloadClientUnavailable;
-            var downloadClient = _downloadClientProvider.GetDownloadClient(remoteAlbum.Release.DownloadProtocol, remoteAlbum.Release.IndexerId, filterBlockedClients);
+            var tags = remoteAlbum.Artist?.Tags;
+            var downloadClient = _downloadClientProvider.GetDownloadClient(remoteAlbum.Release.DownloadProtocol, remoteAlbum.Release.IndexerId, filterBlockedClients, tags);
 
             if (downloadClient == null)
             {

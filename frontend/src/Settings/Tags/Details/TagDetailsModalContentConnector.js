@@ -77,6 +77,14 @@ function createMatchingIndexersSelector() {
   );
 }
 
+function createMatchingDownloadClientsSelector() {
+  return createSelector(
+    (state, { downloadClientIds }) => downloadClientIds,
+    (state) => state.settings.downloadClients.items,
+    findMatchingItems
+  );
+}
+
 function createMapStateToProps() {
   return createSelector(
     createMatchingArtistSelector(),
@@ -85,14 +93,16 @@ function createMapStateToProps() {
     createMatchingNotificationsSelector(),
     createMatchingReleaseProfilesSelector(),
     createMatchingIndexersSelector(),
-    (artist, delayProfiles, importLists, notifications, releaseProfiles, indexers) => {
+    createMatchingDownloadClientsSelector(),
+    (artist, delayProfiles, importLists, notifications, releaseProfiles, indexers, downloadClients) => {
       return {
         artist,
         delayProfiles,
         importLists,
         notifications,
         releaseProfiles,
-        indexers
+        indexers,
+        downloadClients
       };
     }
   );
