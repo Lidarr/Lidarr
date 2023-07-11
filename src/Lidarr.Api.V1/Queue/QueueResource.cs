@@ -20,6 +20,7 @@ namespace Lidarr.Api.V1.Queue
         public AlbumResource Album { get; set; }
         public QualityModel Quality { get; set; }
         public List<CustomFormatResource> CustomFormats { get; set; }
+        public int CustomFormatScore { get; set; }
         public decimal Size { get; set; }
         public string Title { get; set; }
         public decimal Sizeleft { get; set; }
@@ -47,6 +48,9 @@ namespace Lidarr.Api.V1.Queue
                 return null;
             }
 
+            var customFormats = model.RemoteAlbum?.CustomFormats;
+            var customFormatScore = model.Artist?.QualityProfile?.Value?.CalculateCustomFormatScore(customFormats) ?? 0;
+
             return new QueueResource
             {
                 Id = model.Id,
@@ -55,7 +59,8 @@ namespace Lidarr.Api.V1.Queue
                 Artist = includeArtist && model.Artist != null ? model.Artist.ToResource() : null,
                 Album = includeAlbum && model.Album != null ? model.Album.ToResource() : null,
                 Quality = model.Quality,
-                CustomFormats = model.RemoteAlbum?.CustomFormats?.ToResource(false),
+                CustomFormats = customFormats?.ToResource(false),
+                CustomFormatScore = customFormatScore,
                 Size = model.Size,
                 Title = model.Title,
                 Sizeleft = model.Sizeleft,

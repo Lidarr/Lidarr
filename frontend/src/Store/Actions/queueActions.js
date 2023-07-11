@@ -1,7 +1,9 @@
 import _ from 'lodash';
+import React from 'react';
 import { createAction } from 'redux-actions';
 import { batchActions } from 'redux-batched-actions';
-import { sortDirections } from 'Helpers/Props';
+import Icon from 'Components/Icon';
+import { icons, sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import serverSideCollectionHandlers from 'Utilities/serverSideCollectionHandlers';
@@ -92,6 +94,15 @@ export const defaultState = {
         label: 'Formats',
         isSortable: false,
         isVisible: true
+      },
+      {
+        name: 'customFormatScore',
+        columnLabel: translate('CustomFormatScore'),
+        label: React.createElement(Icon, {
+          name: icons.SCORE,
+          title: translate('CustomFormatScore')
+        }),
+        isVisible: false
       },
       {
         name: 'protocol',
