@@ -7,7 +7,7 @@ namespace NzbDrone.Core.CustomFormats
         public abstract int Order { get; }
         public abstract string ImplementationName { get; }
 
-        public virtual string InfoLink => "https://wiki.servarr.com/sonarr/settings#custom-formats-2";
+        public virtual string InfoLink => "https://wiki.servarr.com/lidarr/settings#custom-formats-2";
 
         public string Name { get; set; }
         public bool Negate { get; set; }
