@@ -12,6 +12,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.HealthCheck;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.Tags;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
@@ -23,18 +24,21 @@ namespace NzbDrone.Core.Notifications.CustomScript
         private readonly IConfigService _configService;
         private readonly IDiskProvider _diskProvider;
         private readonly IProcessProvider _processProvider;
+        private readonly ITagRepository _tagRepository;
         private readonly Logger _logger;
 
         public CustomScript(IConfigFileProvider configFileProvider,
             IConfigService configService,
             IDiskProvider diskProvider,
             IProcessProvider processProvider,
+            ITagRepository tagRepository,
             Logger logger)
         {
             _configFileProvider = configFileProvider;
             _configService = configService;
             _diskProvider = diskProvider;
             _processProvider = processProvider;
+            _tagRepository = tagRepository;
             _logger = logger;
         }
 
@@ -58,6 +62,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_Name", artist.Metadata.Value.Name);
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId);
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
+            environmentVariables.Add("Lidarr_Artist_Genres", string.Join("|", artist.Metadata.Value.Genres));
+            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", artist.Tags.Select(t => _tagRepository.Get(t).Label)));
             environmentVariables.Add("Lidarr_Release_AlbumCount", remoteAlbum.Albums.Count.ToString());
             environmentVariables.Add("Lidarr_Release_AlbumReleaseDates", string.Join(",", remoteAlbum.Albums.Select(e => e.ReleaseDate)));
             environmentVariables.Add("Lidarr_Release_AlbumTitles", string.Join("|", remoteAlbum.Albums.Select(e => e.Title)));
@@ -93,6 +99,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_Path", artist.Path);
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId);
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
+            environmentVariables.Add("Lidarr_Artist_Genres", string.Join("|", artist.Metadata.Value.Genres));
+            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", artist.Tags.Select(t => _tagRepository.Get(t).Label)));
             environmentVariables.Add("Lidarr_Album_Id", album.Id.ToString());
             environmentVariables.Add("Lidarr_Album_Title", album.Title);
             environmentVariables.Add("Lidarr_Album_Overview", album.Overview);
@@ -129,6 +137,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_Path", artist.Path);
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId);
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
+            environmentVariables.Add("Lidarr_Artist_Genres", string.Join("|", artist.Metadata.Value.Genres));
+            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", artist.Tags.Select(t => _tagRepository.Get(t).Label)));
             environmentVariables.Add("Lidarr_TrackFile_Ids", string.Join(",", renamedFiles.Select(e => e.TrackFile.Id)));
             environmentVariables.Add("Lidarr_TrackFile_Paths", string.Join("|", renamedFiles.Select(e => e.TrackFile.Path)));
             environmentVariables.Add("Lidarr_TrackFile_PreviousPaths", string.Join("|", renamedFiles.Select(e => e.PreviousPath)));
@@ -152,6 +162,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_Path", artist.Path);
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId);
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
+            environmentVariables.Add("Lidarr_Artist_Genres", string.Join("|", artist.Metadata.Value.Genres));
+            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", artist.Tags.Select(t => _tagRepository.Get(t).Label)));
             environmentVariables.Add("Lidarr_Album_Id", album.Id.ToString());
             environmentVariables.Add("Lidarr_Album_Title", album.Title);
             environmentVariables.Add("Lidarr_Album_Overview", album.Overview);
@@ -188,6 +200,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_Path", artist.Path);
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId);
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
+            environmentVariables.Add("Lidarr_Artist_Genres", string.Join("|", artist.Metadata.Value.Genres));
+            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", artist.Tags.Select(t => _tagRepository.Get(t).Label)));
             environmentVariables.Add("Lidarr_Album_Id", album.Id.ToString());
             environmentVariables.Add("Lidarr_Album_Title", album.Title);
             environmentVariables.Add("Lidarr_Album_Overview", album.Overview);
@@ -211,6 +225,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_Path", artist.Path);
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId.ToString());
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
+            environmentVariables.Add("Lidarr_Artist_Genres", string.Join("|", artist.Metadata.Value.Genres));
+            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", artist.Tags.Select(t => _tagRepository.Get(t).Label)));
             environmentVariables.Add("Lidarr_Artist_DeletedFiles", deleteMessage.DeletedFiles.ToString());
 
             ExecuteScript(environmentVariables);
