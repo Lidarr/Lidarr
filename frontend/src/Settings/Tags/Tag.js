@@ -57,8 +57,9 @@ class Tag extends Component {
       importListIds,
       notificationIds,
       restrictionIds,
+      artistIds,
       indexerIds,
-      artistIds
+      downloadClientIds
     } = this.props;
 
     const {
@@ -71,8 +72,9 @@ class Tag extends Component {
       importListIds.length ||
       notificationIds.length ||
       restrictionIds.length ||
+      artistIds.length ||
       indexerIds.length ||
-      artistIds.length
+      downloadClientIds.length
     );
 
     return (
@@ -134,6 +136,14 @@ class Tag extends Component {
                   </div> :
                   null
               }
+
+              {
+                downloadClientIds.length ?
+                  <div>
+                    {downloadClientIds.length} download client{indexerIds.length > 1 && 's'}
+                  </div> :
+                  null
+              }
             </div>
         }
 
@@ -153,6 +163,7 @@ class Tag extends Component {
           notificationIds={notificationIds}
           restrictionIds={restrictionIds}
           indexerIds={indexerIds}
+          downloadClientIds={downloadClientIds}
           isOpen={isDetailsModalOpen}
           onModalClose={this.onDetailsModalClose}
           onDeleteTagPress={this.onDeleteTagPress}
@@ -179,8 +190,9 @@ Tag.propTypes = {
   importListIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   notificationIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   restrictionIds: PropTypes.arrayOf(PropTypes.number).isRequired,
-  indexerIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   artistIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+  indexerIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+  downloadClientIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   onConfirmDeleteTag: PropTypes.func.isRequired
 };
 
@@ -189,8 +201,9 @@ Tag.defaultProps = {
   importListIds: [],
   notificationIds: [],
   restrictionIds: [],
+  artistIds: [],
   indexerIds: [],
-  artistIds: []
+  downloadClientIds: []
 };
 
 export default Tag;

@@ -22,6 +22,7 @@ function TagDetailsModalContent(props) {
     notifications,
     releaseProfiles,
     indexers,
+    downloadClients,
     onModalClose,
     onDeleteTagPress
   } = props;
@@ -180,6 +181,22 @@ function TagDetailsModalContent(props) {
             </FieldSet> :
             null
         }
+
+        {
+          downloadClients.length ?
+            <FieldSet legend={translate('DownloadClients')}>
+              {
+                downloadClients.map((item) => {
+                  return (
+                    <div key={item.id}>
+                      {item.name}
+                    </div>
+                  );
+                })
+              }
+            </FieldSet> :
+            null
+        }
       </ModalBody>
 
       <ModalFooter>
@@ -214,6 +231,7 @@ TagDetailsModalContent.propTypes = {
   notifications: PropTypes.arrayOf(PropTypes.object).isRequired,
   releaseProfiles: PropTypes.arrayOf(PropTypes.object).isRequired,
   indexers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  downloadClients: PropTypes.arrayOf(PropTypes.object).isRequired,
   onModalClose: PropTypes.func.isRequired,
   onDeleteTagPress: PropTypes.func.isRequired
 };
