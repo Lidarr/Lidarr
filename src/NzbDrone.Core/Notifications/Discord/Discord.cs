@@ -101,6 +101,14 @@ namespace NzbDrone.Core.Notifications.Discord
                         discordField.Name = "Links";
                         discordField.Value = GetLinksString(artist);
                         break;
+                    case DiscordGrabFieldType.CustomFormats:
+                        discordField.Name = "Custom Formats";
+                        discordField.Value = string.Join("|", message.RemoteAlbum.CustomFormats);
+                        break;
+                    case DiscordGrabFieldType.CustomFormatScore:
+                        discordField.Name = "Custom Format Score";
+                        discordField.Value = message.RemoteAlbum.CustomFormatScore.ToString();
+                        break;
                     case DiscordGrabFieldType.Indexer:
                         discordField.Name = "Indexer";
                         discordField.Value = message.RemoteAlbum.Release.Indexer;
