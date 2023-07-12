@@ -251,7 +251,7 @@ class InteractiveImportModalContent extends Component {
   };
 
   onGetTrackMappingPress = () => {
-    this.props.saveInteractiveImportItem({ id: this.getSelectedIds() });
+    this.props.saveInteractiveImportItem({ ids: this.getSelectedIds() });
   };
 
   onSelectModalClose = () => {
