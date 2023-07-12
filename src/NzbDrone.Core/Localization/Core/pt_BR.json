@@ -1007,5 +1007,12 @@
     "NoCutoffUnmetItems": "Nenhum item de corte não atendido",
     "NoEventsFound": "Nenhum evento encontrado",
     "NoMissingItems": "Nenhum item faltando",
-    "DownloadClientSortingCheckMessage": "O cliente de download {0} tem classificação {1} habilitada para a categoria de Lidarr. Você deve desativar a classificação em seu cliente de download para evitar problemas de importação."
+    "DownloadClientSortingCheckMessage": "O cliente de download {0} tem classificação {1} habilitada para a categoria de Lidarr. Você deve desativar a classificação em seu cliente de download para evitar problemas de importação.",
+    "CountIndexersSelected": "{0} indexador(es) selecionado(s)",
+    "ManageImportLists": "Gerenciar listas de importação",
+    "ManageLists": "Gerenciar listas",
+    "NoDownloadClientsFound": "Nenhum cliente de download encontrado",
+    "NoImportListsFound": "Nenhuma lista de importação encontrada",
+    "NoIndexersFound": "Nenhum indexador encontrado",
+    "ManageDownloadClients": "Gerenciar clientes de download"
 }
