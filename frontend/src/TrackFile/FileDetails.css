@@ -1,6 +1,7 @@
 .audioTags {
   padding-top: 15px;
   padding-bottom: 15px;
+  word-break: break-word;
   /* border-top: 1px solid $borderColor; */
 }
 
