@@ -167,7 +167,7 @@ class AddNewItem extends Component {
             !isFetching && !error && !items.length && !!term &&
               <div className={styles.message}>
                 <div className={styles.noResults}>
-                  {translate('CouldntFindAnyResultsForTerm'[term])}
+                  {translate('CouldntFindAnyResultsForTerm', [term])}
                 </div>
                 <div>
                   You can also search using the
