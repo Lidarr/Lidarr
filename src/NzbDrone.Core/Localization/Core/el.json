@@ -980,5 +980,10 @@
     "DeleteCondition": "Διαγραφή συνθήκης",
     "NoHistoryBlocklist": "Δεν υπάρχει λίστα αποκλεισμού ιστορικού",
     "RemoveSelectedItemBlocklistMessageText": "Είστε σίγουροι πως θέλετε να διαγράψετε τα επιλεγμένα αντικείμενα από τη λίστα αποκλεισμού;",
-    "ResetQualityDefinitionsMessageText": "Είστε σίγουροι πως θέλετε να επαναφέρετε τους ορισμούς ποιότητας;"
+    "ResetQualityDefinitionsMessageText": "Είστε σίγουροι πως θέλετε να επαναφέρετε τους ορισμούς ποιότητας;",
+    "ApplyChanges": "Εφαρμογή Αλλαγών",
+    "AutomaticAdd": "Αυτόματη Προσθήκη",
+    "CountDownloadClientsSelected": "{0} εφαρμογή(ες) λήψης επιλέχθηκαν",
+    "CountImportListsSelected": "{0} λίστα(ες) εισαγωγής επιλέχθηκαν",
+    "CountIndexersSelected": "{0} ευρετηριαστής(ες) επιλέχθηκαν"
 }
