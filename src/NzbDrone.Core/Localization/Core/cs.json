@@ -118,7 +118,6 @@
     "RemoveFromBlocklist": "Odebrat z černé listiny",
     "RemoveFromDownloadClient": "Odebrat ze staženého klienta",
     "RemoveFromQueue": "Odebrat z fronty",
-    "RemoveHelpTextWarning": "Odebráním odstraníte stažené soubory a soubory z klienta pro stahování.",
     "RemoveTagExistingTag": "Stávající značka",
     "RemoveTagRemovingTag": "Odebírání značky",
     "RenameTracksHelpText": "Pokud je přejmenování zakázáno, použije Lidarr stávající název souboru",

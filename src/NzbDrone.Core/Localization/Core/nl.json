@@ -200,7 +200,6 @@
     "RemoveFromBlocklist": "Verwijder van zwarte lijst",
     "RemoveFromDownloadClient": "Verwijder uit downloader",
     "RemoveFromQueue": "Verwijder uit wachtrij",
-    "RemoveHelpTextWarning": "Het verwijderen zal zowel de download als de bestanden verwijderen bij de downloader.",
     "RemoveSelected": "Selectie Verwijderen",
     "RemoveTagExistingTag": "Bestaande tag",
     "RemoveTagRemovingTag": "Tag verwijderen",

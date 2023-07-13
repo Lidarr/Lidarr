@@ -75,7 +75,6 @@
     "RemoveFailedDownloadsHelpText": "ลบการดาวน์โหลดที่ล้มเหลวออกจากประวัติไคลเอนต์ดาวน์โหลด",
     "RemoveFromBlocklist": "ลบออกจากบัญชีดำ",
     "RemoveFromQueue": "ลบออกจากคิว",
-    "RemoveHelpTextWarning": "การลบจะลบการดาวน์โหลดและไฟล์ออกจากไคลเอนต์ดาวน์โหลด",
     "RemoveTagExistingTag": "แท็กที่มีอยู่",
     "ReplaceIllegalCharacters": "แทนที่อักขระที่ผิดกฎหมาย",
     "ReplaceIllegalCharactersHelpText": "แทนที่อักขระที่ผิดกฎหมาย หากไม่เลือก Lidarr จะลบออกแทน",

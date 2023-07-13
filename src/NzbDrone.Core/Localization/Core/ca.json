@@ -374,7 +374,6 @@
     "Reason": "Raó",
     "RemoveFailed": "Ha fallat l'eliminació",
     "RemoveFailedDownloadsHelpText": "Elimineu les baixades fallides de l'historial del client de baixada",
-    "RemoveHelpTextWarning": "L'eliminació esborrarà la baixada i els fitxers del client de baixada.",
     "RescanAfterRefreshHelpTextWarning": "Lidarr no detectarà automàticament els canvis als fitxers quan no estigui configurat com a \"Sempre\"",
     "RescanArtistFolderAfterRefresh": "Torna a escanejar la carpeta de pel·lícules després de l'actualització",
     "Restore": "Restaura",

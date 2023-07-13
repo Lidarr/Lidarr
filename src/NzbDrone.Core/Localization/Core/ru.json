@@ -397,7 +397,6 @@
     "OnApplicationUpdate": "О обновлении приложения",
     "Proxy": "Прокси",
     "RemoveFromBlocklist": "Удалить из черного списка",
-    "RemoveHelpTextWarning": "Удаление приведет к удалению загрузки и файла(ов) из клиента загрузки.",
     "RemoveSelected": "Удалить выбранное",
     "SslCertPathHelpTextWarning": "Для вступления в силу требуется перезапуск",
     "SSLPort": "SSL порт",

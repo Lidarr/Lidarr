@@ -373,7 +373,6 @@
     "RemoveFromBlocklist": "ブラックリストから削除する",
     "RemoveFromDownloadClient": "ダウンロードクライアントから削除",
     "RemoveFromQueue": "キューから削除",
-    "RemoveHelpTextWarning": "削除すると、ダウンロードとファイルがダウンロードクライアントから削除されます。",
     "RemoveSelected": "削除選択",
     "RemoveTagExistingTag": "既存のタグ",
     "RemoveTagRemovingTag": "タグの削除",
