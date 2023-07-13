@@ -385,7 +385,6 @@
     "RemoveFromBlocklist": "ब्लैकलिस्ट से निकालें",
     "RemoveFromDownloadClient": "डाउनलोड क्लाइंट से निकालें",
     "RemoveFromQueue": "कतार से निकालें",
-    "RemoveHelpTextWarning": "हटाने से डाउनलोड और फ़ाइल को डाउनलोड क्लाइंट से निकाल दिया जाएगा।",
     "RemoveSelected": "चुना हुआ हटाओ",
     "RemoveTagExistingTag": "मौजूदा टैग",
     "RemoveTagRemovingTag": "टैग हटाना",

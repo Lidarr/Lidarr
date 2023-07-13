@@ -56,7 +56,6 @@
     "RemoveFromBlocklist": "إزالة من القائمة السوداء",
     "RemoveFromDownloadClient": "إزالة من Download Client",
     "RemoveFromQueue": "إزالة من قائمة الانتظار",
-    "RemoveHelpTextWarning": "ستؤدي الإزالة إلى إزالة التنزيل والملف (الملفات) من عميل التنزيل.",
     "RemoveSelected": "ازل المحدد",
     "RemoveTagExistingTag": "علامة موجودة",
     "ReplaceIllegalCharactersHelpText": "استبدل الأحرف غير القانونية. إذا لم يتم تحديده ، فسوف يقوم Lidarr بإزالتها بدلاً من ذلك",

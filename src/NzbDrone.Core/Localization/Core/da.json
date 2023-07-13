@@ -90,7 +90,6 @@
     "RemoveFailedDownloadsHelpText": "Fjern mislykkede downloads fra downloadklienthistorik",
     "RemoveFromBlocklist": "Fjern fra sortlisten",
     "RemoveFromDownloadClient": "Fjern fra downloadklient",
-    "RemoveHelpTextWarning": "Fjernelse fjerner download og fil (er) fra download-klienten.",
     "RemoveSelected": "Fjern valgte",
     "RemoveTagExistingTag": "Eksisterende mærke",
     "RenameTracksHelpText": "Lidarr bruger det eksisterende filnavn, hvis omdøbning er deaktiveret",

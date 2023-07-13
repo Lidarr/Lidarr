@@ -141,7 +141,6 @@
     "RemoveFromBlocklist": "Eliminar de lista de bloqueados",
     "RemoveFromDownloadClient": "Eliminar del Gestor de Descargas",
     "RemoveFromQueue": "Eliminar de la cola",
-    "RemoveHelpTextWarning": "Eliminar borrará la descarga y el/los fichero(s) del gestor de descargas.",
     "RemoveSelected": "Borrar Seleccionados",
     "RemoveTagExistingTag": "Etiqueta existente",
     "RemoveTagRemovingTag": "Eliminando etiqueta",

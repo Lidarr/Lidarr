@@ -249,7 +249,6 @@
     "RemoveFromBlocklist": "블랙리스트에서 제거",
     "RemoveFromDownloadClient": "다운로드 클라이언트에서 제거",
     "RemoveFromQueue": "대기열에서 제거",
-    "RemoveHelpTextWarning": "제거하면 다운로드 클라이언트에서 다운로드 및 파일이 제거됩니다.",
     "RemoveSelected": "선택된 것을 지워 라",
     "ReplaceIllegalCharactersHelpText": "잘못된 문자를 바꿉니다. 선택하지 않으면 Radarr가 대신 제거합니다.",
     "RequiredHelpText": "릴리스에는 다음 용어 중 하나 이상이 포함되어야합니다 (대소 문자 구분 안 함).",

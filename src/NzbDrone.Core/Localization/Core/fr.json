@@ -290,7 +290,6 @@
     "RemoveFromBlocklist": "Supprimer de la liste noire",
     "RemoveFromDownloadClient": "Supprimer du client de téléchargement",
     "RemoveFromQueue": "Supprimer de la file d'attente",
-    "RemoveHelpTextWarning": "La suppression supprimera le téléchargement et le(s) fichier(s) du client de téléchargement.",
     "RemoveSelected": "Supprimer la sélection",
     "RemoveTagExistingTag": "Tag existant",
     "RemoveTagRemovingTag": "Suppression du tag",

@@ -343,7 +343,6 @@
     "RemoveFromBlocklist": "Премахване от черния списък",
     "RemoveFromDownloadClient": "Премахване от клиент за изтегляне",
     "RemoveFromQueue": "Премахване от опашката",
-    "RemoveHelpTextWarning": "Премахването ще премахне изтеглянето и файловете от клиента за изтегляне.",
     "RemoveSelected": "Премахнете избраното",
     "RequiresRestartToTakeEffect": "Изисква рестартиране, за да влезе в сила",
     "RescanAfterRefreshHelpTextWarning": "Lidarr няма автоматично да открива промени във файлове, когато не е зададено на „Винаги“",

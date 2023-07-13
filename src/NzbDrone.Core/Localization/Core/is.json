@@ -183,7 +183,6 @@
     "RemoveFromBlocklist": "Fjarlægja af svörtum lista",
     "RemoveFromDownloadClient": "Fjarlægja úr niðurhalsviðskiptavininum",
     "RemoveFromQueue": "Fjarlægðu úr biðröð",
-    "RemoveHelpTextWarning": "Fjarlæging fjarlægir niðurhalið og skrána / skrána úr niðurhalsviðskiptavininum.",
     "RemoveSelected": "Fjarlægja valið",
     "RemoveTagExistingTag": "Núverandi merki",
     "RenameTracksHelpText": "Lidarr mun nota núverandi skráarheiti ef ekki er gert endurnafn á nafni",
