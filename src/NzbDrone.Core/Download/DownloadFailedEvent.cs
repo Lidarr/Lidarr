@@ -21,6 +21,6 @@ namespace NzbDrone.Core.Download
         public string Message { get; set; }
         public Dictionary<string, string> Data { get; set; }
         public TrackedDownload TrackedDownload { get; set; }
-        public bool SkipReDownload { get; set; }
+        public bool SkipRedownload { get; set; }
     }
 }

@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Test.Download
             {
                 ArtistId = 1,
                 AlbumIds = new List<int> { 1 },
-                SkipReDownload = true
+                SkipRedownload = true
             };
 
             Subject.Handle(failedEvent);

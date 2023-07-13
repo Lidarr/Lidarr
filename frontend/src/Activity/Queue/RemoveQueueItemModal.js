@@ -21,9 +21,9 @@ class RemoveQueueItemModal extends Component {
     super(props, context);
 
     this.state = {
-      remove: true,
+      removeFromClient: true,
       blocklist: false,
-      skipredownload: false
+      skipRedownload: false
     };
   }
 
@@ -32,25 +32,25 @@ class RemoveQueueItemModal extends Component {
 
   resetState = function() {
     this.setState({
-      remove: true,
+      removeFromClient: true,
       blocklist: false,
-      skipredownload: false
+      skipRedownload: false
     });
   };
 
   //
   // Listeners
 
-  onRemoveChange = ({ value }) => {
-    this.setState({ remove: value });
+  onRemoveFromClientChange = ({ value }) => {
+    this.setState({ removeFromClient: value });
   };
 
   onBlocklistChange = ({ value }) => {
     this.setState({ blocklist: value });
   };
 
-  onSkipReDownloadChange = ({ value }) => {
-    this.setState({ skipredownload: value });
+  onSkipRedownloadChange = ({ value }) => {
+    this.setState({ skipRedownload: value });
   };
 
   onRemoveConfirmed = () => {
@@ -75,7 +75,7 @@ class RemoveQueueItemModal extends Component {
       canIgnore
     } = this.props;
 
-    const { remove, blocklist, skipredownload } = this.state;
+    const { removeFromClient, blocklist, skipRedownload } = this.state;
 
     return (
       <Modal
@@ -102,11 +102,11 @@ class RemoveQueueItemModal extends Component {
 
               <FormInputGroup
                 type={inputTypes.CHECK}
-                name="remove"
-                value={remove}
-                helpTextWarning={translate('RemoveHelpTextWarning')}
+                name="removeFromClient"
+                value={removeFromClient}
+                helpTextWarning={translate('RemoveFromDownloadClientHelpTextWarning')}
                 isDisabled={!canIgnore}
-                onChange={this.onRemoveChange}
+                onChange={this.onRemoveFromClientChange}
               />
             </FormGroup>
 
@@ -132,10 +132,10 @@ class RemoveQueueItemModal extends Component {
                   </FormLabel>
                   <FormInputGroup
                     type={inputTypes.CHECK}
-                    name="skipredownload"
-                    value={skipredownload}
-                    helpText={translate('SkipredownloadHelpText')}
-                    onChange={this.onSkipReDownloadChange}
+                    name="skipRedownload"
+                    value={skipRedownload}
+                    helpText={translate('SkipRedownloadHelpText')}
+                    onChange={this.onSkipRedownloadChange}
                   />
                 </FormGroup>
             }
