@@ -82,6 +82,7 @@ class RetagPreviewRow extends Component {
                   <DescriptionListItem
                     key={field}
                     title={field}
+                    descriptionClassName={styles.description}
                     data={formatChange(field, oldValue, newValue)}
                   />
                 );

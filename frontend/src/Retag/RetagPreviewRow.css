@@ -22,5 +22,12 @@
 
 .path {
   margin-left: 10px;
+  word-break: break-word;
   font-weight: bold;
+}
+
+.description {
+  composes: description from '~Components/DescriptionList/DescriptionListItemDescription.css';
+
+  word-break: break-word;
 }

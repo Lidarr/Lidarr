@@ -17,4 +17,5 @@
 
 .path {
   margin-left: 10px;
+  word-break: break-word;
 }

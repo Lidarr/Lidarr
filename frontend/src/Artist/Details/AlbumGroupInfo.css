@@ -5,7 +5,7 @@
 }
 
 .description {
-  composes: title from '~Components/DescriptionList/DescriptionListItemDescription.css';
+  composes: description from '~Components/DescriptionList/DescriptionListItemDescription.css';
 
   margin-left: 110px;
 }
