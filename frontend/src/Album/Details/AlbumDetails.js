@@ -35,7 +35,7 @@ import AlbumDetailsLinks from './AlbumDetailsLinks';
 import AlbumDetailsMediumConnector from './AlbumDetailsMediumConnector';
 import styles from './AlbumDetails.css';
 
-const defaultFontSize = parseInt(fonts.defaultFontSize);
+const intermediateFontSize = parseInt(fonts.intermediateFontSize);
 const lineHeight = parseFloat(fonts.lineHeight);
 
 function getFanartUrl(images) {
@@ -358,8 +358,14 @@ class AlbumDetails extends Component {
                       />
                     </div>
 
-                    <div className={styles.title}>
-                      {title}{disambiguation ? ` (${disambiguation})` : ''}
+                    <div
+                      className={styles.title}
+                      title={disambiguation ? `${title} (${disambiguation})` : title}
+                    >
+                      <TextTruncate
+                        line={2}
+                        text={disambiguation ? `${title} (${disambiguation})` : title}
+                      />
                     </div>
                   </div>
 
@@ -512,9 +518,9 @@ class AlbumDetails extends Component {
                   />
 
                 </div>
-                <div className={styles.overview}>
+                <div className={styles.overview} title={overview}>
                   <TextTruncate
-                    line={Math.floor(125 / (defaultFontSize * lineHeight))}
+                    line={Math.floor(125 / (intermediateFontSize * lineHeight))}
                     text={overview}
                   />
                 </div>
