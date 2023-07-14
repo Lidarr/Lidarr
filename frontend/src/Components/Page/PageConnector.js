@@ -220,6 +220,7 @@ class PageConnector extends Component {
 
   render() {
     const {
+      hasTranslationsError,
       isPopulated,
       hasError,
       dispatchFetchArtist,
@@ -233,11 +234,12 @@ class PageConnector extends Component {
       ...otherProps
     } = this.props;
 
-    if (hasError || !this.state.isLocalStorageSupported) {
+    if (hasTranslationsError || hasError || !this.state.isLocalStorageSupported) {
       return (
         <ErrorPage
           {...this.state}
           {...otherProps}
+          hasTranslationsError={hasTranslationsError}
         />
       );
     }
@@ -258,6 +260,7 @@ class PageConnector extends Component {
 }
 
 PageConnector.propTypes = {
+  hasTranslationsError: PropTypes.bool.isRequired,
   isPopulated: PropTypes.bool.isRequired,
   hasError: PropTypes.bool.isRequired,
   isSidebarVisible: PropTypes.bool.isRequired,
