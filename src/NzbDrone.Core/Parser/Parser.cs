@@ -217,7 +217,7 @@ namespace NzbDrone.Core.Parser
 
         private static readonly Regex[] CommonTagRegex = new Regex[]
         {
-            new Regex(@"(\[|\()*\b((featuring|feat.|feat|ft|ft.)\s{1}){1}\s*.*(\]|\))*", RegexOptions.IgnoreCase | RegexOptions.Compiled),
+            new Regex(@"(\[|\()*\b((featuring|feat.|feat|ft|ft.|produced by)\s{1}){1}\s*.*(\]|\))*", RegexOptions.IgnoreCase | RegexOptions.Compiled),
             new Regex(@"(?:\(|\[)(?:[^\(\[]*)(?:version|limited|deluxe|single|clean|album|special|bonus|promo|remaster(ed)?)(?:[^\)\]]*)(?:\)|\])", RegexOptions.IgnoreCase | RegexOptions.Compiled)
         };
 

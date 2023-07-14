@@ -72,6 +72,8 @@ namespace NzbDrone.Core.Test.ParserTests
         [TestCase("Science Fiction/Double Feature", "Science Fiction/Double Feature")]
         [TestCase("Dancing Feathers", "Dancing Feathers")]
         [TestCase("D.J. (2017 Remaster)", "D.J.")]
+        [TestCase("The Kiss (Skit) (Produced By Eminem)", "The Kiss (Skit)")]
+        [TestCase("Without Me (Produced By Eminem & Jeff Bass)", "Without Me")]
         public void should_remove_common_tags_from_track_title(string title, string correct)
         {
             var result = Parser.Parser.CleanTrackTitle(title);
