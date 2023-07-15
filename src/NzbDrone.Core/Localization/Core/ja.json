@@ -1,9 +1,6 @@
 {
     "Language": "言語",
     "UILanguage": "UI言語",
-    "ApplyTagsHelpTexts2": "追加：既存のタグリストにタグを追加します",
-    "ApplyTagsHelpTexts3": "削除：入力したタグを削除します",
-    "ApplyTagsHelpTexts4": "置換：タグを入力したタグに置き換えます（すべてのタグをクリアするには、タグを入力しないでください）",
     "ArtistAlbumClickToChangeTrack": "クリックしてムービーを変更",
     "Authentication": "認証",
     "AuthenticationMethodHelpText": "Radarrにアクセスするにはユーザー名とパスワードが必要です",
@@ -252,7 +249,6 @@
     "ApiKeyHelpTextWarning": "有効にするには再起動が必要です",
     "AppDataDirectory": "AppDataディレクトリ",
     "ApplyTags": "タグを適用する",
-    "ApplyTagsHelpTexts1": "選択した映画にタグを適用する方法",
     "BindAddressHelpText": "すべてのインターフェースに有効なIP4アドレスまたは「*」",
     "BindAddressHelpTextWarning": "有効にするには再起動が必要です",
     "Blocklist": "ブラックリスト",

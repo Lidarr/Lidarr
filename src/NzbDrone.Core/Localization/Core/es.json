@@ -1,7 +1,6 @@
 {
     "Language": "Idioma",
     "UILanguage": "Lenguaje de UI",
-    "ApplyTagsHelpTexts3": "Eliminar: Eliminar las etiquetas introducidas",
     "Connections": "Conexiones",
     "NoMinimumForAnyRuntime": "Sin mínimo para el tiempo de ejecución",
     "Quality": "Calidad",
@@ -308,9 +307,6 @@
     "ApiKeyHelpTextWarning": "Requiere reiniciar para que surta efecto",
     "AppDataDirectory": "Directorio de AppData",
     "ApplyTags": "Aplicar Etiquetas",
-    "ApplyTagsHelpTexts1": "Cómo añadir etiquetas a las películas seleccionadas",
-    "ApplyTagsHelpTexts2": "Añadir: Añadir las etiquetas a la lista de etiquetas existente",
-    "ApplyTagsHelpTexts4": "Reemplazar: Reemplazar las etiquetas con las etiquetas introducidas (no introducir etiquetas para eliminar todas las etiquetas)",
     "ArtistAlbumClickToChangeTrack": "Clic para cambiar la película",
     "Authentication": "Autenticación",
     "BindAddressHelpTextWarning": "Requiere reiniciar para que surta efecto",
