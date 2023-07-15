@@ -13002,6 +13002,17 @@
             "type": "integer",
             "format": "int32"
           },
+          "customFormats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomFormatResource"
+            },
+            "nullable": true
+          },
+          "customFormatScore": {
+            "type": "integer",
+            "format": "int32"
+          },
           "mediaInfo": {
             "$ref": "#/components/schemas/MediaInfoResource"
           },
