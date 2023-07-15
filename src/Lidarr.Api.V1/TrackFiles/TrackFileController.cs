@@ -4,6 +4,7 @@ using Lidarr.Http;
 using Lidarr.Http.REST;
 using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.Exceptions;
@@ -28,6 +29,7 @@ namespace Lidarr.Api.V1.TrackFiles
         private readonly IAudioTagService _audioTagService;
         private readonly IArtistService _artistService;
         private readonly IAlbumService _albumService;
+        private readonly ICustomFormatCalculationService _formatCalculator;
         private readonly IUpgradableSpecification _upgradableSpecification;
 
         public TrackFileController(IBroadcastSignalRMessage signalRBroadcaster,
@@ -36,6 +38,7 @@ namespace Lidarr.Api.V1.TrackFiles
                                IAudioTagService audioTagService,
                                IArtistService artistService,
                                IAlbumService albumService,
+                               ICustomFormatCalculationService formatCalculator,
                                IUpgradableSpecification upgradableSpecification)
             : base(signalRBroadcaster)
         {
@@ -44,6 +47,7 @@ namespace Lidarr.Api.V1.TrackFiles
             _audioTagService = audioTagService;
             _artistService = artistService;
             _albumService = albumService;
+            _formatCalculator = formatCalculator;
             _upgradableSpecification = upgradableSpecification;
         }
 
@@ -51,7 +55,7 @@ namespace Lidarr.Api.V1.TrackFiles
         {
             if (trackFile.AlbumId > 0 && trackFile.Artist != null && trackFile.Artist.Value != null)
             {
-                return trackFile.ToResource(trackFile.Artist.Value, _upgradableSpecification);
+                return trackFile.ToResource(trackFile.Artist.Value, _upgradableSpecification, _formatCalculator);
             }
             else
             {
@@ -84,7 +88,7 @@ namespace Lidarr.Api.V1.TrackFiles
             {
                 var artist = _artistService.GetArtist(artistId.Value);
 
-                return _mediaFileService.GetFilesByArtist(artistId.Value).ConvertAll(f => f.ToResource(artist, _upgradableSpecification));
+                return _mediaFileService.GetFilesByArtist(artistId.Value).ConvertAll(f => f.ToResource(artist, _upgradableSpecification, _formatCalculator));
             }
 
             if (albumIds.Any())
@@ -94,7 +98,7 @@ namespace Lidarr.Api.V1.TrackFiles
                 {
                     var album = _albumService.GetAlbum(albumId);
                     var albumArtist = _artistService.GetArtist(album.ArtistId);
-                    result.AddRange(_mediaFileService.GetFilesByAlbum(album.Id).ConvertAll(f => f.ToResource(albumArtist, _upgradableSpecification)));
+                    result.AddRange(_mediaFileService.GetFilesByAlbum(album.Id).ConvertAll(f => f.ToResource(albumArtist, _upgradableSpecification, _formatCalculator)));
                 }
 
                 return result;
@@ -152,7 +156,7 @@ namespace Lidarr.Api.V1.TrackFiles
 
             _mediaFileService.Update(trackFiles);
 
-            return Accepted(trackFiles.ConvertAll(f => f.ToResource(trackFiles.First().Artist.Value, _upgradableSpecification)));
+            return Accepted(trackFiles.ConvertAll(f => f.ToResource(trackFiles.First().Artist.Value, _upgradableSpecification, _formatCalculator)));
         }
 
         [RestDeleteById]

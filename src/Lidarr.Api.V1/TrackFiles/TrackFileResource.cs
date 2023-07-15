@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Lidarr.Api.V1.CustomFormats;
 using Lidarr.Http.REST;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Parser.Model;
@@ -19,6 +22,8 @@ namespace Lidarr.Api.V1.TrackFiles
         public string ReleaseGroup { get; set; }
         public QualityModel Quality { get; set; }
         public int QualityWeight { get; set; }
+        public List<CustomFormatResource> CustomFormats { get; set; }
+        public int CustomFormatScore { get; set; }
         public MediaInfoResource MediaInfo { get; set; }
 
         public bool QualityCutoffNotMet { get; set; }
@@ -62,12 +67,16 @@ namespace Lidarr.Api.V1.TrackFiles
             };
         }
 
-        public static TrackFileResource ToResource(this TrackFile model, NzbDrone.Core.Music.Artist artist, IUpgradableSpecification upgradableSpecification)
+        public static TrackFileResource ToResource(this TrackFile model, NzbDrone.Core.Music.Artist artist, IUpgradableSpecification upgradableSpecification, ICustomFormatCalculationService formatCalculationService)
         {
             if (model == null)
             {
                 return null;
             }
+
+            model.Artist = artist;
+            var customFormats = formatCalculationService?.ParseCustomFormat(model, model.Artist);
+            var customFormatScore = artist?.QualityProfile?.Value?.CalculateCustomFormatScore(customFormats) ?? 0;
 
             return new TrackFileResource
             {
@@ -83,7 +92,9 @@ namespace Lidarr.Api.V1.TrackFiles
                 Quality = model.Quality,
                 QualityWeight = QualityWeight(model.Quality),
                 MediaInfo = model.MediaInfo.ToResource(),
-                QualityCutoffNotMet = upgradableSpecification.QualityCutoffNotMet(artist.QualityProfile.Value, model.Quality)
+                QualityCutoffNotMet = upgradableSpecification.QualityCutoffNotMet(artist.QualityProfile.Value, model.Quality),
+                CustomFormats = customFormats.ToResource(false),
+                CustomFormatScore = customFormatScore
             };
         }
     }

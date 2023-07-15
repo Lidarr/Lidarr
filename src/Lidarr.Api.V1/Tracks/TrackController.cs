@@ -3,6 +3,7 @@ using System.Linq;
 using Lidarr.Http;
 using Lidarr.Http.REST;
 using Microsoft.AspNetCore.Mvc;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.Music;
 using NzbDrone.SignalR;
@@ -15,8 +16,9 @@ namespace Lidarr.Api.V1.Tracks
         public TrackController(IArtistService artistService,
                              ITrackService trackService,
                              IUpgradableSpecification upgradableSpecification,
+                             ICustomFormatCalculationService formatCalculator,
                              IBroadcastSignalRMessage signalRBroadcaster)
-            : base(trackService, artistService, upgradableSpecification, signalRBroadcaster)
+            : base(trackService, artistService, upgradableSpecification, formatCalculator, signalRBroadcaster)
         {
         }
 

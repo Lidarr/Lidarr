@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'audio': string;
+  'customFormatScore': string;
   'duration': string;
   'monitored': string;
   'status': string;

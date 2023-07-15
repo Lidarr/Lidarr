@@ -1,11 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import AlbumFormats from 'Album/AlbumFormats';
 import EpisodeStatusConnector from 'Album/EpisodeStatusConnector';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
+import Tooltip from 'Components/Tooltip/Tooltip';
+import { tooltipPositions } from 'Helpers/Props';
 import MediaInfoConnector from 'TrackFile/MediaInfoConnector';
 import * as mediaInfoTypes from 'TrackFile/mediaInfoTypes';
 import formatTimeSpan from 'Utilities/Date/formatTimeSpan';
+import formatPreferredWordScore from 'Utilities/Number/formatPreferredWordScore';
 import TrackActionsCell from './TrackActionsCell';
 import styles from './TrackRow.css';
 
@@ -24,6 +28,8 @@ class TrackRow extends Component {
       title,
       duration,
       trackFilePath,
+      customFormats,
+      customFormatScore,
       columns,
       deleteTrackFile
     } = this.props;
@@ -111,6 +117,34 @@ class TrackRow extends Component {
               );
             }
 
+            if (name === 'customFormats') {
+              return (
+                <TableRowCell key={name}>
+                  <AlbumFormats
+                    formats={customFormats}
+                  />
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'customFormatScore') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.customFormatScore}
+                >
+                  <Tooltip
+                    anchor={formatPreferredWordScore(
+                      customFormatScore,
+                      customFormats.length
+                    )}
+                    tooltip={<AlbumFormats formats={customFormats} />}
+                    position={tooltipPositions.BOTTOM}
+                  />
+                </TableRowCell>
+              );
+            }
+
             if (name === 'status') {
               return (
                 <TableRowCell
@@ -158,8 +192,14 @@ TrackRow.propTypes = {
   duration: PropTypes.number.isRequired,
   isSaving: PropTypes.bool,
   trackFilePath: PropTypes.string,
+  customFormats: PropTypes.arrayOf(PropTypes.object),
+  customFormatScore: PropTypes.number.isRequired,
   mediaInfo: PropTypes.object,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired
+};
+
+TrackRow.defaultProps = {
+  customFormats: []
 };
 
 export default TrackRow;

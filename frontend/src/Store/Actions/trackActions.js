@@ -1,5 +1,7 @@
+import React from 'react';
 import { createAction } from 'redux-actions';
-import { sortDirections } from 'Helpers/Props';
+import Icon from 'Components/Icon';
+import { icons, sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import translate from 'Utilities/String/translate';
 import createFetchHandler from './Creators/createFetchHandler';
@@ -55,6 +57,20 @@ export const defaultState = {
       name: 'audioInfo',
       label: translate('AudioInfo'),
       isVisible: true
+    },
+    {
+      name: 'customFormats',
+      label: 'Formats',
+      isVisible: false
+    },
+    {
+      name: 'customFormatScore',
+      columnLabel: translate('CustomFormatScore'),
+      label: React.createElement(Icon, {
+        name: icons.SCORE,
+        title: translate('CustomFormatScore')
+      }),
+      isVisible: false
     },
     {
       name: 'status',

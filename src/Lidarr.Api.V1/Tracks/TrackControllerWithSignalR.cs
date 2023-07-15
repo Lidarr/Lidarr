@@ -3,6 +3,7 @@ using Lidarr.Api.V1.Artist;
 using Lidarr.Api.V1.TrackFiles;
 using Lidarr.Http.REST;
 using Microsoft.AspNetCore.Mvc;
+using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.MediaFiles.Events;
@@ -19,16 +20,19 @@ namespace Lidarr.Api.V1.Tracks
         protected readonly ITrackService _trackService;
         protected readonly IArtistService _artistService;
         protected readonly IUpgradableSpecification _upgradableSpecification;
+        private readonly ICustomFormatCalculationService _formatCalculator;
 
         protected TrackControllerWithSignalR(ITrackService trackService,
                                            IArtistService artistService,
                                            IUpgradableSpecification upgradableSpecification,
+                                           ICustomFormatCalculationService formatCalculator,
                                            IBroadcastSignalRMessage signalRBroadcaster)
             : base(signalRBroadcaster)
         {
             _trackService = trackService;
             _artistService = artistService;
             _upgradableSpecification = upgradableSpecification;
+            _formatCalculator = formatCalculator;
         }
 
         public override TrackResource GetResourceById(int id)
@@ -53,7 +57,7 @@ namespace Lidarr.Api.V1.Tracks
 
                 if (includeTrackFile && track.TrackFileId != 0)
                 {
-                    resource.TrackFile = track.TrackFile.Value.ToResource(artist, _upgradableSpecification);
+                    resource.TrackFile = track.TrackFile.Value.ToResource(artist, _upgradableSpecification, _formatCalculator);
                 }
             }
 
@@ -80,7 +84,7 @@ namespace Lidarr.Api.V1.Tracks
 
                     if (includeTrackFile && tracks[i].TrackFileId != 0)
                     {
-                        resource.TrackFile = tracks[i].TrackFile.Value.ToResource(artist, _upgradableSpecification);
+                        resource.TrackFile = tracks[i].TrackFile.Value.ToResource(artist, _upgradableSpecification, _formatCalculator);
                     }
                 }
             }
