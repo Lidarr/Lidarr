@@ -16,11 +16,4 @@ namespace Lidarr.Api.V1.Artist
         public bool MoveFiles { get; set; }
         public bool DeleteFiles { get; set; }
     }
-
-    public enum ApplyTags
-    {
-        Add,
-        Remove,
-        Replace
-    }
 }
