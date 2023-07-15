@@ -225,7 +225,7 @@
     "AddingTag": "Добавить ярлык",
     "AddListExclusion": "Добавить исключения списка",
     "ApplyTags": "Применить тэги",
-    "ApplyTagsHelpTexts4": "Заменить: Изменить существующие тэги на введенные тэги (оставьте пустым чтобы очистить все тэги)",
+    "ApplyTagsHelpTextReplace": "Заменить: Изменить существующие тэги на введенные тэги (оставьте пустым чтобы очистить все тэги)",
     "ArtistAlbumClickToChangeTrack": "Нажать для смены фильма",
     "Authentication": "Аутентификация",
     "AuthenticationMethodHelpText": "Необходим логин и пароль для доступа в Lidarr",

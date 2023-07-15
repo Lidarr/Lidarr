@@ -38,7 +38,7 @@
     "ApiKeyHelpTextWarning": "Richiede il riavvio per avere effetti",
     "AppDataDirectory": "Cartella AppData",
     "ApplyTags": "Applica Etichette",
-    "ApplyTagsHelpTexts4": "Sostituire: sostituisci le tag con le tag inserite (non inserire nessuna tag per pulirle tutte)",
+    "ApplyTagsHelpTextReplace": "Sostituire: sostituisci le tag con le tag inserite (non inserire nessuna tag per pulirle tutte)",
     "ArtistAlbumClickToChangeTrack": "Clicca per cambiare film",
     "Authentication": "Autenticazione",
     "AuthenticationMethodHelpText": "Utilizza nome utente e password per accedere a Lidarr",

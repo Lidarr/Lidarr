@@ -58,7 +58,7 @@
     "AnalyticsEnabledHelpTextWarning": "Kräver omstart för att träda i kraft",
     "AppDataDirectory": "AppData-katalog",
     "ApplyTags": "Tillämpa taggar",
-    "ApplyTagsHelpTexts4": "Ersätt: Ersätt taggarna med de angivna taggarna (ange inga taggar för att rensa alla taggar)",
+    "ApplyTagsHelpTextReplace": "Ersätt: Ersätt taggarna med de angivna taggarna (ange inga taggar för att rensa alla taggar)",
     "Artist": "Artist",
     "ArtistAlbumClickToChangeTrack": "Klicka för att ändra spår",
     "ArtistClickToChangeAlbum": "Klicka för att ändra album",

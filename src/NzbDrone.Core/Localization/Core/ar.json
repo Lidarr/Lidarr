@@ -181,7 +181,7 @@
     "ApiKeyHelpTextWarning": "يتطلب إعادة التشغيل ليصبح ساري المفعول",
     "AppDataDirectory": "دليل AppData",
     "ApplyTags": "تطبيق العلامات",
-    "ApplyTagsHelpTexts4": "استبدال: استبدل العلامات بالعلامات التي تم إدخالها (لا تدخل أي علامات لمسح جميع العلامات)",
+    "ApplyTagsHelpTextReplace": "استبدال: استبدل العلامات بالعلامات التي تم إدخالها (لا تدخل أي علامات لمسح جميع العلامات)",
     "ArtistAlbumClickToChangeTrack": "انقر لتغيير الفيلم",
     "AuthenticationMethodHelpText": "طلب اسم المستخدم وكلمة المرور للوصول إلى Lidarr",
     "AutoRedownloadFailedHelpText": "ابحث تلقائيًا عن إصدار مختلف وحاول تنزيله",

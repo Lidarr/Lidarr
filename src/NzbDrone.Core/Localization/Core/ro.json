@@ -177,7 +177,7 @@
     "UnableToLoadRemotePathMappings": "Imposibil de încărcat mapări de cale la distanță",
     "UnableToLoadTags": "Nu se pot încărca etichete",
     "UseHardlinksInsteadOfCopy": "Folosiți Hardlink-uri în loc de Copy",
-    "ApplyTagsHelpTexts4": "Înlocuire: înlocuiți etichetele cu etichetele introduse (nu introduceți etichete pentru a șterge toate etichetele)",
+    "ApplyTagsHelpTextReplace": "Înlocuire: înlocuiți etichetele cu etichetele introduse (nu introduceți etichete pentru a șterge toate etichetele)",
     "ArtistAlbumClickToChangeTrack": "Faceți clic pentru a schimba filmul",
     "Authentication": "Autentificare",
     "AuthenticationMethodHelpText": "Solicitați numele de utilizator și parola pentru a accesa Lidarr",

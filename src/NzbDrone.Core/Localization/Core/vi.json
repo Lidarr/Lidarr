@@ -254,7 +254,7 @@
     "AlternateTitleslength1Title": "Tiêu đề",
     "AlternateTitleslength1Titles": "Tiêu đề",
     "ApplyTags": "Áp dụng thẻ",
-    "ApplyTagsHelpTexts4": "Thay thế: Thay thế các thẻ bằng các thẻ đã nhập (không nhập thẻ nào để xóa tất cả các thẻ)",
+    "ApplyTagsHelpTextReplace": "Thay thế: Thay thế các thẻ bằng các thẻ đã nhập (không nhập thẻ nào để xóa tất cả các thẻ)",
     "ArtistAlbumClickToChangeTrack": "Bấm để thay đổi phim",
     "AutoRedownloadFailedHelpText": "Tự động tìm kiếm và cố gắng tải xuống một bản phát hành khác",
     "BackupFolderHelpText": "Các đường dẫn tương đối sẽ nằm trong thư mục AppData của Lidarr",

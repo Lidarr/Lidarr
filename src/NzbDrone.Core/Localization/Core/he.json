@@ -371,7 +371,7 @@
     "ApiKeyHelpTextWarning": "נדרש הפעלה מחדש כדי להיכנס לתוקף",
     "AppDataDirectory": "ספריית AppData",
     "ApplyTags": "החל תגים",
-    "ApplyTagsHelpTexts4": "החלף: החלף את התגים בתגיות שהוזנו (אין להזין תגים כדי למחוק את כל התגים)",
+    "ApplyTagsHelpTextReplace": "החלף: החלף את התגים בתגיות שהוזנו (אין להזין תגים כדי למחוק את כל התגים)",
     "ArtistAlbumClickToChangeTrack": "לחץ כדי לשנות סרט",
     "Authentication": "אימות",
     "AuthenticationMethodHelpText": "דרוש שם משתמש וסיסמה כדי לגשת ל Lidarr",

@@ -6,7 +6,7 @@
     "ICalFeed": "iCal straumur",
     "Port": "Höfn",
     "PortNumber": "Portnúmer",
-    "ApplyTagsHelpTexts4": "Skipta um: Skiptu um merkin með innsláttu merkjunum (sláðu inn engin merki til að hreinsa öll merki)",
+    "ApplyTagsHelpTextReplace": "Skipta um: Skiptu um merkin með innsláttu merkjunum (sláðu inn engin merki til að hreinsa öll merki)",
     "ArtistAlbumClickToChangeTrack": "Smelltu til að breyta kvikmynd",
     "AuthenticationMethodHelpText": "Krefjast notandanafns og lykilorðs til að fá aðgang að Lidarr",
     "AutoRedownloadFailedHelpText": "Leitaðu sjálfkrafa að og reyndu að hlaða niður annarri útgáfu",

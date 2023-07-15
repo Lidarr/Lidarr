@@ -1,7 +1,7 @@
 {
     "AppDataDirectory": "AppData -katalog",
     "ApplyTags": "Bruk Tags",
-    "ApplyTagsHelpTexts4": "Erstatt: Erstatt taggene med de angitte kodene (skriv inn ingen tagger for å slette alle taggene)",
+    "ApplyTagsHelpTextReplace": "Erstatt: Erstatt taggene med de angitte kodene (skriv inn ingen tagger for å slette alle taggene)",
     "ArtistAlbumClickToChangeTrack": "Klikk for å endre film",
     "Authentication": "Godkjenning",
     "AuthenticationMethodHelpText": "Krev brukernavn og passord for å få tilgang til Lidarr",

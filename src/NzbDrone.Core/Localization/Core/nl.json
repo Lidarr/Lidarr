@@ -6,7 +6,7 @@
     "BlocklistRelease": "Uitgave op blokkeerlijst zetten",
     "AppDataDirectory": "AppData map",
     "ApplyTags": "Tags Toepassen",
-    "ApplyTagsHelpTexts4": "Vervangen: Vervang de tags met de ingevoerde tags (voer geen tags in om alle tags te wissen)",
+    "ApplyTagsHelpTextReplace": "Vervangen: Vervang de tags met de ingevoerde tags (voer geen tags in om alle tags te wissen)",
     "ArtistAlbumClickToChangeTrack": "Klik om film te wijzigen",
     "BackupNow": "Veiligheidskopie Maken",
     "BackupRetentionHelpText": "Automatische veiligheidskopieën ouder dan de retentie periode zullen worden opgeruimd",

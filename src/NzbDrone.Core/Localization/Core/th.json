@@ -229,7 +229,7 @@
     "UnableToLoadQualities": "ไม่สามารถโหลดคุณภาพได้",
     "UnableToAddANewMetadataProfilePleaseTryAgain": "ไม่สามารถเพิ่มโปรไฟล์คุณภาพใหม่ได้โปรดลองอีกครั้ง",
     "AppDataDirectory": "ไดเรกทอรี AppData",
-    "ApplyTagsHelpTexts4": "แทนที่: แทนที่แท็กด้วยแท็กที่ป้อน (ป้อนไม่มีแท็กเพื่อล้างแท็กทั้งหมด)",
+    "ApplyTagsHelpTextReplace": "แทนที่: แทนที่แท็กด้วยแท็กที่ป้อน (ป้อนไม่มีแท็กเพื่อล้างแท็กทั้งหมด)",
     "ArtistAlbumClickToChangeTrack": "คลิกเพื่อเปลี่ยนภาพยนตร์",
     "Authentication": "การรับรองความถูกต้อง",
     "AuthenticationMethodHelpText": "ต้องการชื่อผู้ใช้และรหัสผ่านเพื่อเข้าถึงเรดาร์",

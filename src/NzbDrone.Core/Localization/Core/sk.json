@@ -20,7 +20,7 @@
     "UsingExternalUpdateMechanismBranchUsedByExternalUpdateMechanism": "Vetva používaná externým mechanizmom aktualizácie",
     "Actions": "Akcie",
     "ApplyTags": "Použiť značky",
-    "ApplyTagsHelpTexts4": "Nahradiť: Nahradí značky zadanými značkami (pre vymazanie všetkých značiek, nezadávajte žiadne)",
+    "ApplyTagsHelpTextReplace": "Nahradiť: Nahradí značky zadanými značkami (pre vymazanie všetkých značiek, nezadávajte žiadne)",
     "DeleteImportListExclusionMessageText": "Naozaj chcete toto vylúčenie importného zoznamu zmazať?",
     "DeleteImportListMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
     "DeleteIndexerMessageText": "Naozaj chcete zmazať značku formátu {0} ?",

@@ -276,7 +276,7 @@
     "Actions": "Aktywności",
     "ApiKeyHelpTextWarning": "Wymaga ponownego uruchomienia, aby odniosło skutek",
     "ApplyTags": "Zastosuj tagi",
-    "ApplyTagsHelpTexts4": "Zastąp: Zastąp tagi wprowadzonymi tagami (nie wprowadzaj tagów, aby usunąć wszystkie tagi)",
+    "ApplyTagsHelpTextReplace": "Zastąp: Zastąp tagi wprowadzonymi tagami (nie wprowadzaj tagów, aby usunąć wszystkie tagi)",
     "ArtistAlbumClickToChangeTrack": "Kliknij, aby zmienić film",
     "CalendarWeekColumnHeaderHelpText": "Wyświetlany nad każdą kolumną, gdy tydzień jest aktywnym widokiem",
     "Cancel": "Anuluj",

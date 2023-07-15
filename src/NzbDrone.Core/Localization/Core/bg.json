@@ -147,7 +147,7 @@
     "ApiKeyHelpTextWarning": "Изисква рестартиране, за да влезе в сила",
     "AppDataDirectory": "Директория на AppData",
     "ApplyTags": "Прилагане на тагове",
-    "ApplyTagsHelpTexts4": "Замяна: Заменете маркерите с въведените маркери (не въвеждайте маркери, за да изчистите всички маркери)",
+    "ApplyTagsHelpTextReplace": "Замяна: Заменете маркерите с въведените маркери (не въвеждайте маркери, за да изчистите всички маркери)",
     "ArtistAlbumClickToChangeTrack": "Щракнете, за да промените филма",
     "Authentication": "Удостоверяване",
     "AuthenticationMethodHelpText": "Изисквайте потребителско име и парола за достъп до Lidarr",

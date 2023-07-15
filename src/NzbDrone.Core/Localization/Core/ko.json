@@ -10,7 +10,7 @@
     "ApiKeyHelpTextWarning": "적용하려면 다시 시작해야합니다.",
     "AppDataDirectory": "AppData 디렉토리",
     "ApplyTags": "태그 적용",
-    "ApplyTagsHelpTexts4": "바꾸기 : 태그를 입력 한 태그로 바꿉니다 (모든 태그를 지우려면 태그를 입력하지 않음)",
+    "ApplyTagsHelpTextReplace": "바꾸기 : 태그를 입력 한 태그로 바꿉니다 (모든 태그를 지우려면 태그를 입력하지 않음)",
     "ArtistAlbumClickToChangeTrack": "영화를 변경하려면 클릭",
     "Authentication": "입증",
     "AuthenticationMethodHelpText": "Radarr에 액세스하려면 사용자 이름 및 암호 필요",

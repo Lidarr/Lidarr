@@ -248,7 +248,7 @@
     "AddListExclusion": "Tilføj ekskludering af liste",
     "AppDataDirectory": "AppData-bibliotek",
     "ApplyTags": "Anvend tags",
-    "ApplyTagsHelpTexts4": "Erstat: Udskift tags med de indtastede tags (indtast ingen tags for at rydde alle tags)",
+    "ApplyTagsHelpTextReplace": "Erstat: Udskift tags med de indtastede tags (indtast ingen tags for at rydde alle tags)",
     "ArtistAlbumClickToChangeTrack": "Klik for at skifte film",
     "Authentication": "Godkendelse",
     "AuthenticationMethodHelpText": "Kræv brugernavn og adgangskode for at få adgang til Lidarr",
