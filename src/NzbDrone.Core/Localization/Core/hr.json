@@ -13,8 +13,6 @@
     "AddRootFolder": "asdf",
     "ApplicationUrlHelpText": "Vanjski URL ove aplikacije uključuje http(s)://, port i URL base",
     "ApplyTags": "Primjeni Oznake",
-    "ApplyTagsHelpTexts3": "Ukloni: Ukloni unešene oznake",
-    "ApplyTagsHelpTexts4": "Zamijeni: Zamijeni oznake sa unešenim oznakama (ostavi prazno kako bi poništio oznake)",
     "AudioInfo": "Informacije o Zvuku",
     "Automatic": "Automatski",
     "AutoRedownloadFailedHelpText": "Automatski pretraži i pokušaj preuzeti drukčiju verziju",
