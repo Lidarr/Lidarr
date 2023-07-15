@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import HistoryDetailsConnector from 'Activity/History/Details/HistoryDetailsConnector';
 import HistoryEventTypeCell from 'Activity/History/HistoryEventTypeCell';
+import AlbumFormats from 'Album/AlbumFormats';
 import TrackQuality from 'Album/TrackQuality';
 import Icon from 'Components/Icon';
 import IconButton from 'Components/Link/IconButton';
@@ -10,6 +11,7 @@ import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellCo
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import Popover from 'Components/Tooltip/Popover';
+import Tooltip from 'Components/Tooltip/Tooltip';
 import { icons, kinds, tooltipPositions } from 'Helpers/Props';
 import formatPreferredWordScore from 'Utilities/Number/formatPreferredWordScore';
 import translate from 'Utilities/String/translate';
@@ -76,6 +78,7 @@ class ArtistHistoryRow extends Component {
       sourceTitle,
       quality,
       qualityCutoffNotMet,
+      customFormats,
       customFormatScore,
       date,
       data,
@@ -132,7 +135,14 @@ class ArtistHistoryRow extends Component {
         </TableRowCell>
 
         <TableRowCell className={styles.customFormatScore}>
-          {formatPreferredWordScore(customFormatScore)}
+          <Tooltip
+            anchor={formatPreferredWordScore(
+              customFormatScore,
+              customFormats.length
+            )}
+            tooltip={<AlbumFormats formats={customFormats} />}
+            position={tooltipPositions.BOTTOM}
+          />
         </TableRowCell>
 
         <TableRowCell className={styles.actions}>
@@ -166,6 +176,7 @@ ArtistHistoryRow.propTypes = {
   sourceTitle: PropTypes.string.isRequired,
   quality: PropTypes.object.isRequired,
   qualityCutoffNotMet: PropTypes.bool.isRequired,
+  customFormats: PropTypes.arrayOf(PropTypes.object),
   customFormatScore: PropTypes.number.isRequired,
   date: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
@@ -173,6 +184,10 @@ ArtistHistoryRow.propTypes = {
   artist: PropTypes.object.isRequired,
   album: PropTypes.object.isRequired,
   onMarkAsFailedPress: PropTypes.func.isRequired
+};
+
+ArtistHistoryRow.defaultProps = {
+  customFormats: []
 };
 
 export default ArtistHistoryRow;

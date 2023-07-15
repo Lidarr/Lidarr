@@ -8,7 +8,8 @@ import IconButton from 'Components/Link/IconButton';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
-import { icons } from 'Helpers/Props';
+import Tooltip from 'Components/Tooltip/Tooltip';
+import { icons, tooltipPositions } from 'Helpers/Props';
 import formatPreferredWordScore from 'Utilities/Number/formatPreferredWordScore';
 import HistoryDetailsModal from './Details/HistoryDetailsModal';
 import HistoryEventTypeCell from './HistoryEventTypeCell';
@@ -187,7 +188,14 @@ class HistoryRow extends Component {
                   key={name}
                   className={styles.customFormatScore}
                 >
-                  {formatPreferredWordScore(customFormatScore)}
+                  <Tooltip
+                    anchor={formatPreferredWordScore(
+                      customFormatScore,
+                      customFormats.length
+                    )}
+                    tooltip={<AlbumFormats formats={customFormats} />}
+                    position={tooltipPositions.BOTTOM}
+                  />
                 </TableRowCell>
               );
             }
@@ -272,7 +280,8 @@ HistoryRow.propTypes = {
 HistoryRow.defaultProps = {
   track: {
     title: ''
-  }
+  },
+  customFormats: []
 };
 
 export default HistoryRow;
