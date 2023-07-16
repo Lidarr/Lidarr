@@ -98,10 +98,10 @@ class TagsModalContent extends Component {
                 value={applyTags}
                 values={applyTagsOptions}
                 helpTexts={[
-                  translate('ApplyTagsHelpTexts1'),
-                  translate('ApplyTagsHelpTexts2'),
-                  translate('ApplyTagsHelpTexts3'),
-                  translate('ApplyTagsHelpTexts4')
+                  translate('ApplyTagsHelpTextHowToApplyArtists'),
+                  translate('ApplyTagsHelpTextAdd'),
+                  translate('ApplyTagsHelpTextRemove'),
+                  translate('ApplyTagsHelpTextReplace')
                 ]}
                 onChange={this.onInputChange}
               />
