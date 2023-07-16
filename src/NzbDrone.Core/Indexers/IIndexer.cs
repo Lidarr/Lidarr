@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
@@ -12,9 +13,9 @@ namespace NzbDrone.Core.Indexers
         bool SupportsSearch { get; }
         DownloadProtocol Protocol { get; }
 
-        IList<ReleaseInfo> FetchRecent();
-        IList<ReleaseInfo> Fetch(AlbumSearchCriteria searchCriteria);
-        IList<ReleaseInfo> Fetch(ArtistSearchCriteria searchCriteria);
+        Task<IList<ReleaseInfo>> FetchRecent();
+        Task<IList<ReleaseInfo>> Fetch(AlbumSearchCriteria searchCriteria);
+        Task<IList<ReleaseInfo>> Fetch(ArtistSearchCriteria searchCriteria);
         HttpRequest GetDownloadRequest(string link);
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Download.Clients;
@@ -12,7 +13,7 @@ namespace NzbDrone.Core.Download
 {
     public interface IProcessDownloadDecisions
     {
-        ProcessedDecisions ProcessDecisions(List<DownloadDecision> decisions);
+        Task<ProcessedDecisions> ProcessDecisions(List<DownloadDecision> decisions);
     }
 
     public class ProcessDownloadDecisions : IProcessDownloadDecisions
@@ -33,7 +34,7 @@ namespace NzbDrone.Core.Download
             _logger = logger;
         }
 
-        public ProcessedDecisions ProcessDecisions(List<DownloadDecision> decisions)
+        public async Task<ProcessedDecisions> ProcessDecisions(List<DownloadDecision> decisions)
         {
             var qualifiedReports = GetQualifiedReports(decisions);
             var prioritizedDecisions = _prioritizeDownloadDecision.PrioritizeDecisions(qualifiedReports);
@@ -75,7 +76,7 @@ namespace NzbDrone.Core.Download
                 try
                 {
                     _logger.Trace("Grabbing from Indexer {0} at priority {1}.", remoteAlbum.Release.Indexer, remoteAlbum.Release.IndexerPriority);
-                    _downloadService.DownloadReport(remoteAlbum);
+                    await _downloadService.DownloadReport(remoteAlbum);
                     grabbed.Add(report);
                 }
                 catch (ReleaseUnavailableException)

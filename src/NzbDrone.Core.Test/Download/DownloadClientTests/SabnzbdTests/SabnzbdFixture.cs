@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
@@ -300,27 +301,27 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.SabnzbdTests
         }
 
         [TestCase("[ TOWN ]-[ http://www.town.ag ]-[ ANIME ]-[Usenet Provider >> http://www.ssl- <<] - [Commie] Aldnoah Zero 18 [234C8FC7]", "[ TOWN ]-[ http-++www.town.ag ]-[ ANIME ]-[Usenet Provider  http-++www.ssl- ] - [Commie] Aldnoah Zero 18 [234C8FC7].nzb")]
-        public void Download_should_use_clean_title(string title, string filename)
+        public async Task Download_should_use_clean_title(string title, string filename)
         {
             GivenSuccessfulDownload();
 
             var remoteAlbum = CreateRemoteAlbum();
             remoteAlbum.Release.Title = title;
 
-            var id = Subject.Download(remoteAlbum, CreateIndexer());
+            var id = await Subject.Download(remoteAlbum, CreateIndexer());
 
             Mocker.GetMock<ISabnzbdProxy>()
                 .Verify(v => v.DownloadNzb(It.IsAny<byte[]>(), filename, It.IsAny<string>(), It.IsAny<int>(), It.IsAny<SabnzbdSettings>()), Times.Once());
         }
 
         [Test]
-        public void Download_should_return_unique_id()
+        public async Task Download_should_return_unique_id()
         {
             GivenSuccessfulDownload();
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum, CreateIndexer());
+            var id = await Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
         }
@@ -353,7 +354,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.SabnzbdTests
         }
 
         [Test]
-        public void Download_should_use_sabRecentTvPriority_when_recentEpisode_is_true()
+        public async Task Download_should_use_sabRecentTvPriority_when_recentEpisode_is_true()
         {
             Mocker.GetMock<ISabnzbdProxy>()
                     .Setup(s => s.DownloadNzb(It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<string>(), (int)SabnzbdPriority.High, It.IsAny<SabnzbdSettings>()))
@@ -366,7 +367,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.SabnzbdTests
                                                       .Build()
                                                       .ToList();
 
-            Subject.Download(remoteAlbum, CreateIndexer());
+            await Subject.Download(remoteAlbum, CreateIndexer());
 
             Mocker.GetMock<ISabnzbdProxy>()
                   .Verify(v => v.DownloadNzb(It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<string>(), (int)SabnzbdPriority.High, It.IsAny<SabnzbdSettings>()), Times.Once());

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -28,17 +29,17 @@ namespace NzbDrone.Core.Test.IndexerTests.RedactedTests
         }
 
         [Test]
-        public void should_parse_recent_feed_from_redacted()
+        public async Task should_parse_recent_feed_from_redacted()
         {
             var recentFeed = ReadAllText(@"Files/Indexers/Gazelle/Gazelle.json");
 
             Mocker.GetMock<IHttpClient>()
-                .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get &&
+                .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get &&
                                                          v.Url.FullUri.Contains("ajax.php?action=browse") &&
                                                          v.Headers.Get("Authorization") == ((RedactedSettings)Subject.Definition.Settings).ApiKey)))
-                                                         .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader { ContentType = "application/json" }, recentFeed));
+                                                         .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader { ContentType = "application/json" }, recentFeed)));
 
-            var releases = Subject.FetchRecent();
+            var releases = await Subject.FetchRecent();
 
             releases.Should().HaveCount(4);
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Core.DecisionEngine;
@@ -27,11 +28,11 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
 
             Mocker.GetMock<ISearchForReleases>()
                 .Setup(s => s.ArtistSearch(_artist.Id, false, true, false))
-                .Returns(new List<DownloadDecision>());
+                .Returns(Task.FromResult(new List<DownloadDecision>()));
 
             Mocker.GetMock<IProcessDownloadDecisions>()
                 .Setup(s => s.ProcessDecisions(It.IsAny<List<DownloadDecision>>()))
-                .Returns(new ProcessedDecisions(new List<DownloadDecision>(), new List<DownloadDecision>(), new List<DownloadDecision>()));
+                .Returns(Task.FromResult(new ProcessedDecisions(new List<DownloadDecision>(), new List<DownloadDecision>(), new List<DownloadDecision>())));
         }
 
         [Test]

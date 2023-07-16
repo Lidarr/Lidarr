@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
@@ -52,17 +53,14 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
         private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
         {
-            Authenticate();
+            Authenticate().GetAwaiter().GetResult();
 
             var filter = "";
             if (searchParameters == null)
             {
             }
 
-            var request =
-                new IndexerRequest(
-                    $"{Settings.BaseUrl.Trim().TrimEnd('/')}/ajax.php?action=browse&searchstr={searchParameters}{filter}",
-                    HttpAccept.Json);
+            var request = new IndexerRequest($"{Settings.BaseUrl.Trim().TrimEnd('/')}/ajax.php?action=browse&searchstr={searchParameters}{filter}", HttpAccept.Json);
 
             var cookies = AuthCookieCache.Find(Settings.BaseUrl.Trim().TrimEnd('/'));
             foreach (var cookie in cookies)
@@ -73,36 +71,36 @@ namespace NzbDrone.Core.Indexers.Gazelle
             yield return request;
         }
 
-        private GazelleAuthResponse GetIndex(Dictionary<string, string> cookies)
+        private async Task<GazelleAuthResponse> GetIndex(Dictionary<string, string> cookies)
         {
             var indexRequestBuilder = new HttpRequestBuilder($"{Settings.BaseUrl.Trim().TrimEnd('/')}")
             {
-                LogResponseContent = true
+                LogResponseContent = true,
+                Method = HttpMethod.Post
             };
 
             indexRequestBuilder.SetCookies(cookies);
-            indexRequestBuilder.Method = HttpMethod.Post;
             indexRequestBuilder.Resource("ajax.php?action=index");
 
             var authIndexRequest = indexRequestBuilder
                 .Accept(HttpAccept.Json)
                 .Build();
 
-            var indexResponse = HttpClient.Execute(authIndexRequest);
+            var indexResponse = await HttpClient.ExecuteAsync(authIndexRequest);
 
             var result = Json.Deserialize<GazelleAuthResponse>(indexResponse.Content);
 
             return result;
         }
 
-        private void Authenticate()
+        private async Task Authenticate()
         {
             var requestBuilder = new HttpRequestBuilder($"{Settings.BaseUrl.Trim().TrimEnd('/')}")
             {
-                LogResponseContent = true
+                LogResponseContent = true,
+                Method = HttpMethod.Post
             };
 
-            requestBuilder.Method = HttpMethod.Post;
             requestBuilder.Resource("login.php");
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
@@ -120,19 +118,20 @@ namespace NzbDrone.Core.Indexers.Gazelle
                     .Accept(HttpAccept.Json)
                     .Build();
 
-                var response = HttpClient.Execute(authLoginRequest);
+                var response = await HttpClient.ExecuteAsync(authLoginRequest);
 
                 cookies = response.GetCookies();
 
                 AuthCookieCache.Set(authKey, cookies);
             }
 
-            var index = GetIndex(cookies);
+            var index = await GetIndex(cookies);
 
             if (index == null || index.Status.IsNullOrWhiteSpace() || index.Status != "success")
             {
                 Logger.Debug("Gazelle authentication failed.");
                 AuthCookieCache.Remove(authKey);
+
                 throw new Exception("Failed to authenticate with Gazelle.");
             }
 

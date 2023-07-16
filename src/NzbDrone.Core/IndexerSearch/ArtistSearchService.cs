@@ -22,8 +22,8 @@ namespace NzbDrone.Core.IndexerSearch
 
         public void Execute(ArtistSearchCommand message)
         {
-            var decisions = _releaseSearchService.ArtistSearch(message.ArtistId, false, message.Trigger == CommandTrigger.Manual, false);
-            var processed = _processDownloadDecisions.ProcessDecisions(decisions);
+            var decisions = _releaseSearchService.ArtistSearch(message.ArtistId, false, message.Trigger == CommandTrigger.Manual, false).GetAwaiter().GetResult();
+            var processed = _processDownloadDecisions.ProcessDecisions(decisions).GetAwaiter().GetResult();
 
             _logger.ProgressInfo("Artist search completed. {0} reports downloaded.", processed.Grabbed.Count);
         }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Cache;
@@ -78,11 +79,12 @@ namespace NzbDrone.Core.Indexers.Gazelle
             return settings;
         }
 
-        protected override void Test(List<ValidationFailure> failures)
+        protected override async Task Test(List<ValidationFailure> failures)
         {
             // Remove previous cookies when testing incase user or pwd change
             _authCookieCache.Remove(Settings.BaseUrl.Trim().TrimEnd('/'));
-            base.Test(failures);
+
+            await base.Test(failures);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Lidarr.Http;
 using Lidarr.Http.REST;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace Lidarr.Api.V1.Queue
         }
 
         [HttpPost("grab/{id:int}")]
-        public object Grab(int id)
+        public async Task<object> Grab(int id)
         {
             var pendingRelease = _pendingReleaseService.FindPendingQueueItem(id);
 
@@ -29,14 +30,14 @@ namespace Lidarr.Api.V1.Queue
                 throw new NotFoundException();
             }
 
-            _downloadService.DownloadReport(pendingRelease.RemoteAlbum);
+            await _downloadService.DownloadReport(pendingRelease.RemoteAlbum);
 
             return new { };
         }
 
         [HttpPost("grab/bulk")]
         [Consumes("application/json")]
-        public object Grab([FromBody] QueueBulkResource resource)
+        public async Task<object> Grab([FromBody] QueueBulkResource resource)
         {
             foreach (var id in resource.Ids)
             {
@@ -47,7 +48,7 @@ namespace Lidarr.Api.V1.Queue
                     throw new NotFoundException();
                 }
 
-                _downloadService.DownloadReport(pendingRelease.RemoteAlbum);
+                await _downloadService.DownloadReport(pendingRelease.RemoteAlbum);
             }
 
             return new { };

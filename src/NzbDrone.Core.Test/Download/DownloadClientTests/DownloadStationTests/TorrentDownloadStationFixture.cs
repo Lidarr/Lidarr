@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -385,7 +386,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
         }
 
         [Test]
-        public void Download_with_MusicDirectory_should_force_directory()
+        public async Task Download_with_MusicDirectory_should_force_directory()
         {
             GivenSerialNumber();
             GivenMusicDirectory();
@@ -393,7 +394,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum, CreateIndexer());
+            var id = await Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
 
@@ -402,7 +403,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
         }
 
         [Test]
-        public void Download_with_category_should_force_directory()
+        public async Task Download_with_category_should_force_directory()
         {
             GivenSerialNumber();
             GivenMusicCategory();
@@ -410,7 +411,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum, CreateIndexer());
+            var id = await Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
 
@@ -419,14 +420,14 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
         }
 
         [Test]
-        public void Download_without_MusicDirectory_and_Category_should_use_default()
+        public async Task Download_without_MusicDirectory_and_Category_should_use_default()
         {
             GivenSerialNumber();
             GivenSuccessfulDownload();
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum, CreateIndexer());
+            var id = await Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
 
@@ -505,7 +506,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.DownloadStationTests
                   .Setup(s => s.GetSerialNumber(_settings))
                   .Throws(new ApplicationException("Some unknown exception, HttpException or DownloadClientException"));
 
-            Assert.Throws(Is.InstanceOf<Exception>(), () => Subject.Download(remoteAlbum, CreateIndexer()));
+            Assert.ThrowsAsync(Is.InstanceOf<Exception>(), async () => await Subject.Download(remoteAlbum, CreateIndexer()));
 
             Mocker.GetMock<IDownloadStationTaskProxy>()
                   .Verify(v => v.AddTaskFromUrl(It.IsAny<string>(), null, _settings), Times.Never());
