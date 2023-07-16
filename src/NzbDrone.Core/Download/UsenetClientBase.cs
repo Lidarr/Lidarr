@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Http;
@@ -34,7 +35,7 @@ namespace NzbDrone.Core.Download
 
         protected abstract string AddFromNzbFile(RemoteAlbum remoteAlbum, string filename, byte[] fileContent);
 
-        public override string Download(RemoteAlbum remoteAlbum, IIndexer indexer)
+        public override async Task<string> Download(RemoteAlbum remoteAlbum, IIndexer indexer)
         {
             var url = remoteAlbum.Release.DownloadUrl;
             var filename = FileNameBuilder.CleanFileName(remoteAlbum.Release.Title) + ".nzb";
@@ -46,7 +47,9 @@ namespace NzbDrone.Core.Download
                 var request = indexer?.GetDownloadRequest(url) ?? new HttpRequest(url);
                 request.RateLimitKey = remoteAlbum?.Release?.IndexerId.ToString();
 
-                nzbData = _httpClient.Get(request).ResponseData;
+                var response = await _httpClient.GetAsync(request);
+
+                nzbData = response.ResponseData;
 
                 _logger.Debug("Downloaded nzb for release '{0}' finished ({1} bytes from {2})", remoteAlbum.Release.Title, nzbData.Length, url);
             }

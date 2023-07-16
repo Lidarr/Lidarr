@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Datastore;
@@ -39,7 +40,7 @@ namespace NzbDrone.Core.IndexerSearch
             _logger = logger;
         }
 
-        private void SearchForMissingAlbums(List<Album> albums, bool userInvokedSearch)
+        private async Task SearchForMissingAlbums(List<Album> albums, bool userInvokedSearch)
         {
             _logger.ProgressInfo("Performing missing search for {0} albums", albums.Count);
             var downloadedCount = 0;
@@ -47,8 +48,8 @@ namespace NzbDrone.Core.IndexerSearch
             foreach (var album in albums)
             {
                 List<DownloadDecision> decisions;
-                decisions = _releaseSearchService.AlbumSearch(album.Id, false, userInvokedSearch, false);
-                var processed = _processDownloadDecisions.ProcessDecisions(decisions);
+                decisions = await _releaseSearchService.AlbumSearch(album.Id, false, userInvokedSearch, false);
+                var processed = await _processDownloadDecisions.ProcessDecisions(decisions);
 
                 downloadedCount += processed.Grabbed.Count;
             }
@@ -60,9 +61,8 @@ namespace NzbDrone.Core.IndexerSearch
         {
             foreach (var albumId in message.AlbumIds)
             {
-                var decisions =
-                    _releaseSearchService.AlbumSearch(albumId, false, message.Trigger == CommandTrigger.Manual, false);
-                var processed = _processDownloadDecisions.ProcessDecisions(decisions);
+                var decisions = _releaseSearchService.AlbumSearch(albumId, false, message.Trigger == CommandTrigger.Manual, false).GetAwaiter().GetResult();
+                var processed = _processDownloadDecisions.ProcessDecisions(decisions).GetAwaiter().GetResult();
 
                 _logger.ProgressInfo("Album search completed. {0} reports downloaded.", processed.Grabbed.Count);
             }
@@ -106,7 +106,7 @@ namespace NzbDrone.Core.IndexerSearch
             var queue = _queueService.GetQueue().Where(q => q.Album != null).Select(q => q.Album.Id);
             var missing = albums.Where(e => !queue.Contains(e.Id)).ToList();
 
-            SearchForMissingAlbums(missing, message.Trigger == CommandTrigger.Manual);
+            SearchForMissingAlbums(missing, message.Trigger == CommandTrigger.Manual).GetAwaiter().GetResult();
         }
 
         public void Execute(CutoffUnmetAlbumSearchCommand message)
@@ -132,7 +132,7 @@ namespace NzbDrone.Core.IndexerSearch
             var queue = _queueService.GetQueue().Where(q => q.Album != null).Select(q => q.Album.Id);
             var missing = albums.Where(e => !queue.Contains(e.Id)).ToList();
 
-            SearchForMissingAlbums(missing, message.Trigger == CommandTrigger.Manual);
+            SearchForMissingAlbums(missing, message.Trigger == CommandTrigger.Manual).GetAwaiter().GetResult();
         }
     }
 }

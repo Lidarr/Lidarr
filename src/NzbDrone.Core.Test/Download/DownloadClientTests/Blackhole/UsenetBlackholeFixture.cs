@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
@@ -119,19 +120,19 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
         }
 
         [Test]
-        public void Download_should_download_file_if_it_doesnt_exist()
+        public async Task Download_should_download_file_if_it_doesnt_exist()
         {
             var remoteAlbum = CreateRemoteAlbum();
 
-            Subject.Download(remoteAlbum, CreateIndexer());
+            await Subject.Download(remoteAlbum, CreateIndexer());
 
-            Mocker.GetMock<IHttpClient>().Verify(c => c.Get(It.Is<HttpRequest>(v => v.Url.FullUri == _downloadUrl)), Times.Once());
+            Mocker.GetMock<IHttpClient>().Verify(c => c.GetAsync(It.Is<HttpRequest>(v => v.Url.FullUri == _downloadUrl)), Times.Once());
             Mocker.GetMock<IDiskProvider>().Verify(c => c.OpenWriteStream(_filePath), Times.Once());
-            Mocker.GetMock<IHttpClient>().Verify(c => c.DownloadFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+            Mocker.GetMock<IHttpClient>().Verify(c => c.DownloadFileAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
         }
 
         [Test]
-        public void Download_should_replace_illegal_characters_in_title()
+        public async Task Download_should_replace_illegal_characters_in_title()
         {
             var illegalTitle = "Radiohead - Scotch Mist [2008/FLAC/Lossless]";
             var expectedFilename = Path.Combine(_blackholeFolder, "Radiohead - Scotch Mist [2008+FLAC+Lossless]" + Path.GetExtension(_filePath));
@@ -139,11 +140,11 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.Blackhole
             var remoteAlbum = CreateRemoteAlbum();
             remoteAlbum.Release.Title = illegalTitle;
 
-            Subject.Download(remoteAlbum, CreateIndexer());
+            await Subject.Download(remoteAlbum, CreateIndexer());
 
-            Mocker.GetMock<IHttpClient>().Verify(c => c.Get(It.Is<HttpRequest>(v => v.Url.FullUri == _downloadUrl)), Times.Once());
+            Mocker.GetMock<IHttpClient>().Verify(c => c.GetAsync(It.Is<HttpRequest>(v => v.Url.FullUri == _downloadUrl)), Times.Once());
             Mocker.GetMock<IDiskProvider>().Verify(c => c.OpenWriteStream(expectedFilename), Times.Once());
-            Mocker.GetMock<IHttpClient>().Verify(c => c.DownloadFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+            Mocker.GetMock<IHttpClient>().Verify(c => c.DownloadFileAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
         }
 
         [Test]

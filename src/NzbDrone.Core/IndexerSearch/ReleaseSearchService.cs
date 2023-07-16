@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Common.TPL;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -16,8 +15,8 @@ namespace NzbDrone.Core.IndexerSearch
 {
     public interface ISearchForReleases
     {
-        List<DownloadDecision> AlbumSearch(int albumId, bool missingOnly, bool userInvokedSearch, bool interactiveSearch);
-        List<DownloadDecision> ArtistSearch(int artistId, bool missingOnly, bool userInvokedSearch, bool interactiveSearch);
+        Task<List<DownloadDecision>> AlbumSearch(int albumId, bool missingOnly, bool userInvokedSearch, bool interactiveSearch);
+        Task<List<DownloadDecision>> ArtistSearch(int artistId, bool missingOnly, bool userInvokedSearch, bool interactiveSearch);
     }
 
     public class ReleaseSearchService : ISearchForReleases
@@ -41,19 +40,21 @@ namespace NzbDrone.Core.IndexerSearch
             _logger = logger;
         }
 
-        public List<DownloadDecision> AlbumSearch(int albumId, bool missingOnly, bool userInvokedSearch, bool interactiveSearch)
+        public async Task<List<DownloadDecision>> AlbumSearch(int albumId, bool missingOnly, bool userInvokedSearch, bool interactiveSearch)
         {
             var album = _albumService.GetAlbum(albumId);
-            return AlbumSearch(album, missingOnly, userInvokedSearch, interactiveSearch);
+
+            return await AlbumSearch(album, missingOnly, userInvokedSearch, interactiveSearch);
         }
 
-        public List<DownloadDecision> ArtistSearch(int artistId, bool missingOnly, bool userInvokedSearch, bool interactiveSearch)
+        public async Task<List<DownloadDecision>> ArtistSearch(int artistId, bool missingOnly, bool userInvokedSearch, bool interactiveSearch)
         {
             var artist = _artistService.GetArtist(artistId);
-            return ArtistSearch(artist, missingOnly, userInvokedSearch, interactiveSearch);
+
+            return await ArtistSearch(artist, missingOnly, userInvokedSearch, interactiveSearch);
         }
 
-        public List<DownloadDecision> ArtistSearch(Artist artist, bool missingOnly, bool userInvokedSearch, bool interactiveSearch)
+        public async Task<List<DownloadDecision>> ArtistSearch(Artist artist, bool missingOnly, bool userInvokedSearch, bool interactiveSearch)
         {
             var downloadDecisions = new List<DownloadDecision>();
 
@@ -64,13 +65,13 @@ namespace NzbDrone.Core.IndexerSearch
 
             searchSpec.Albums = albums;
 
-            var decisions = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
+            var decisions = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
             downloadDecisions.AddRange(decisions);
 
             return DeDupeDecisions(downloadDecisions);
         }
 
-        public List<DownloadDecision> AlbumSearch(Album album, bool missingOnly, bool userInvokedSearch, bool interactiveSearch)
+        public async Task<List<DownloadDecision>> AlbumSearch(Album album, bool missingOnly, bool userInvokedSearch, bool interactiveSearch)
         {
             var downloadDecisions = new List<DownloadDecision>();
 
@@ -89,7 +90,7 @@ namespace NzbDrone.Core.IndexerSearch
                 searchSpec.Disambiguation = album.Disambiguation;
             }
 
-            var decisions = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
+            var decisions = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
             downloadDecisions.AddRange(decisions);
 
             return DeDupeDecisions(downloadDecisions);
@@ -119,7 +120,7 @@ namespace NzbDrone.Core.IndexerSearch
             return spec;
         }
 
-        private List<DownloadDecision> Dispatch(Func<IIndexer, IEnumerable<ReleaseInfo>> searchAction, SearchCriteriaBase criteriaBase)
+        private async Task<List<DownloadDecision>> Dispatch(Func<IIndexer, Task<IList<ReleaseInfo>>> searchAction, SearchCriteriaBase criteriaBase)
         {
             var indexers = criteriaBase.InteractiveSearch ?
                 _indexerFactory.InteractiveSearchEnabled() :
@@ -128,40 +129,31 @@ namespace NzbDrone.Core.IndexerSearch
             // Filter indexers to untagged indexers and indexers with intersecting tags
             indexers = indexers.Where(i => i.Definition.Tags.Empty() || i.Definition.Tags.Intersect(criteriaBase.Artist.Tags).Any()).ToList();
 
-            var reports = new List<ReleaseInfo>();
-
             _logger.ProgressInfo("Searching indexers for {0}. {1} active indexers", criteriaBase, indexers.Count);
 
-            var taskList = new List<Task>();
-            var taskFactory = new TaskFactory(TaskCreationOptions.LongRunning, TaskContinuationOptions.None);
+            var tasks = indexers.Select(indexer => DispatchIndexer(searchAction, indexer, criteriaBase));
 
-            foreach (var indexer in indexers)
-            {
-                var indexerLocal = indexer;
+            var batch = await Task.WhenAll(tasks);
 
-                taskList.Add(taskFactory.StartNew(() =>
-                {
-                    try
-                    {
-                        var indexerReports = searchAction(indexerLocal);
-
-                        lock (reports)
-                        {
-                            reports.AddRange(indexerReports);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.Error(e, "Error while searching for {0}", criteriaBase);
-                    }
-                }).LogExceptions());
-            }
-
-            Task.WaitAll(taskList.ToArray());
+            var reports = batch.SelectMany(x => x).ToList();
 
             _logger.Debug("Total of {0} reports were found for {1} from {2} indexers", reports.Count, criteriaBase, indexers.Count);
 
             return _makeDownloadDecision.GetSearchDecision(reports, criteriaBase).ToList();
+        }
+
+        private async Task<IList<ReleaseInfo>> DispatchIndexer(Func<IIndexer, Task<IList<ReleaseInfo>>> searchAction, IIndexer indexer, SearchCriteriaBase criteriaBase)
+        {
+            try
+            {
+                return await searchAction(indexer);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Error while searching for {0}", criteriaBase);
+            }
+
+            return Array.Empty<ReleaseInfo>();
         }
 
         private List<DownloadDecision> DeDupeDecisions(List<DownloadDecision> decisions)

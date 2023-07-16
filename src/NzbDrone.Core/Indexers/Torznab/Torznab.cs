@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -69,9 +70,10 @@ namespace NzbDrone.Core.Indexers.Torznab
             return settings;
         }
 
-        protected override void Test(List<ValidationFailure> failures)
+        protected override async Task Test(List<ValidationFailure> failures)
         {
-            base.Test(failures);
+            await base.Test(failures);
+
             if (failures.HasErrors())
             {
                 return;

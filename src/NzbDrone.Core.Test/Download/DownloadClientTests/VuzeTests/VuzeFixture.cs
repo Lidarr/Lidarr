@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -63,26 +64,26 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.VuzeTests
         }
 
         [Test]
-        public void Download_should_return_unique_id()
+        public async Task Download_should_return_unique_id()
         {
             GivenSuccessfulDownload();
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum, CreateIndexer());
+            var id = await Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
         }
 
         [Test]
-        public void Download_with_MusicDirectory_should_force_directory()
+        public async Task Download_with_MusicDirectory_should_force_directory()
         {
             GivenMusicDirectory();
             GivenSuccessfulDownload();
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum, CreateIndexer());
+            var id = await Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
 
@@ -91,14 +92,14 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.VuzeTests
         }
 
         [Test]
-        public void Download_with_category_should_force_directory()
+        public async Task Download_with_category_should_force_directory()
         {
             GivenMusicCategory();
             GivenSuccessfulDownload();
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum, CreateIndexer());
+            var id = await Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
 
@@ -107,7 +108,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.VuzeTests
         }
 
         [Test]
-        public void Download_with_category_should_not_have_double_slashes()
+        public async Task Download_with_category_should_not_have_double_slashes()
         {
             GivenMusicCategory();
             GivenSuccessfulDownload();
@@ -116,7 +117,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.VuzeTests
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum, CreateIndexer());
+            var id = await Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
 
@@ -125,13 +126,13 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.VuzeTests
         }
 
         [Test]
-        public void Download_without_MusicDirectory_and_Category_should_use_default()
+        public async Task Download_without_MusicDirectory_and_Category_should_use_default()
         {
             GivenSuccessfulDownload();
 
             var remoteAlbum = CreateRemoteAlbum();
 
-            var id = Subject.Download(remoteAlbum, CreateIndexer());
+            var id = await Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().NotBeNullOrEmpty();
 
@@ -140,14 +141,14 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.VuzeTests
         }
 
         [TestCase("magnet:?xt=urn:btih:ZPBPA2P6ROZPKRHK44D5OW6NHXU5Z6KR&tr=udp", "CBC2F069FE8BB2F544EAE707D75BCD3DE9DCF951")]
-        public void Download_should_get_hash_from_magnet_url(string magnetUrl, string expectedHash)
+        public async Task Download_should_get_hash_from_magnet_url(string magnetUrl, string expectedHash)
         {
             GivenSuccessfulDownload();
 
             var remoteAlbum = CreateRemoteAlbum();
             remoteAlbum.Release.DownloadUrl = magnetUrl;
 
-            var id = Subject.Download(remoteAlbum, CreateIndexer());
+            var id = await Subject.Download(remoteAlbum, CreateIndexer());
 
             id.Should().Be(expectedHash);
         }

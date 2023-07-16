@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentValidation;
 using Lidarr.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -65,7 +66,7 @@ namespace Lidarr.Api.V1.Indexers
         }
 
         [HttpPost]
-        public ActionResult<ReleaseResource> Create(ReleaseResource release)
+        public async Task<ActionResult<ReleaseResource>> DownloadRelease(ReleaseResource release)
         {
             ValidateResource(release);
 
@@ -126,7 +127,7 @@ namespace Lidarr.Api.V1.Indexers
                     throw new NzbDroneClientException(HttpStatusCode.NotFound, "Unable to parse albums in the release");
                 }
 
-                _downloadService.DownloadReport(remoteAlbum);
+                await _downloadService.DownloadReport(remoteAlbum);
             }
             catch (ReleaseDownloadException ex)
             {
@@ -138,26 +139,26 @@ namespace Lidarr.Api.V1.Indexers
         }
 
         [HttpGet]
-        public List<ReleaseResource> GetReleases(int? albumId, int? artistId)
+        public async Task<List<ReleaseResource>> GetReleases(int? albumId, int? artistId)
         {
             if (albumId.HasValue)
             {
-                return GetAlbumReleases(int.Parse(Request.Query["albumId"]));
+                return await GetAlbumReleases(int.Parse(Request.Query["albumId"]));
             }
 
             if (artistId.HasValue)
             {
-                return GetArtistReleases(int.Parse(Request.Query["artistId"]));
+                return await GetArtistReleases(int.Parse(Request.Query["artistId"]));
             }
 
-            return GetRss();
+            return await GetRss();
         }
 
-        private List<ReleaseResource> GetAlbumReleases(int albumId)
+        private async Task<List<ReleaseResource>> GetAlbumReleases(int albumId)
         {
             try
             {
-                var decisions = _releaseSearchService.AlbumSearch(albumId, true, true, true);
+                var decisions = await _releaseSearchService.AlbumSearch(albumId, true, true, true);
                 var prioritizedDecisions = _prioritizeDownloadDecision.PrioritizeDecisions(decisions);
 
                 return MapDecisions(prioritizedDecisions);
@@ -169,11 +170,11 @@ namespace Lidarr.Api.V1.Indexers
             }
         }
 
-        private List<ReleaseResource> GetArtistReleases(int artistId)
+        private async Task<List<ReleaseResource>> GetArtistReleases(int artistId)
         {
             try
             {
-                var decisions = _releaseSearchService.ArtistSearch(artistId, false, true, true);
+                var decisions = await _releaseSearchService.ArtistSearch(artistId, false, true, true);
                 var prioritizedDecisions = _prioritizeDownloadDecision.PrioritizeDecisions(decisions);
 
                 return MapDecisions(prioritizedDecisions);
@@ -185,9 +186,9 @@ namespace Lidarr.Api.V1.Indexers
             }
         }
 
-        private List<ReleaseResource> GetRss()
+        private async Task<List<ReleaseResource>> GetRss()
         {
-            var reports = _rssFetcherAndParser.Fetch();
+            var reports = await _rssFetcherAndParser.Fetch();
             var decisions = _downloadDecisionMaker.GetRssDecision(reports);
             var prioritizedDecisions = _prioritizeDownloadDecision.PrioritizeDecisions(decisions);
 
@@ -198,6 +199,7 @@ namespace Lidarr.Api.V1.Indexers
         {
             var resource = base.MapDecision(decision, initialWeight);
             _remoteAlbumCache.Set(GetCacheKey(resource), decision.RemoteAlbum, TimeSpan.FromMinutes(30));
+
             return resource;
         }
 
