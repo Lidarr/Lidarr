@@ -122,18 +122,10 @@ namespace NzbDrone.Core.Parser
 
                     break;
                 case Codec.FLAC:
-                    if (sampleSize == SampleSize.S24)
-                    {
-                        result.Quality = Quality.FLAC_24;
-                    }
-                    else
-                    {
-                        result.Quality = Quality.FLAC;
-                    }
-
+                    result.Quality = sampleSize == SampleSize.S24 ? Quality.FLAC_24 : Quality.FLAC;
                     break;
                 case Codec.ALAC:
-                    result.Quality = Quality.ALAC;
+                    result.Quality = sampleSize == SampleSize.S24 ? Quality.ALAC_24 : Quality.ALAC;
                     break;
                 case Codec.WAVPACK:
                     result.Quality = Quality.WAVPACK;
@@ -518,14 +510,9 @@ namespace NzbDrone.Core.Parser
 
                     return Quality.Unknown;
                 case Codec.FLAC:
-                    if (sampleSize == 24)
-                    {
-                        return Quality.FLAC_24;
-                    }
-
-                    return Quality.FLAC;
+                    return sampleSize == 24 ? Quality.FLAC_24 : Quality.FLAC;
                 case Codec.ALAC:
-                    return Quality.ALAC;
+                    return sampleSize == 24 ? Quality.ALAC_24 : Quality.ALAC;
                 case Codec.WAVPACK:
                     return Quality.WAVPACK;
                 case Codec.APE:
