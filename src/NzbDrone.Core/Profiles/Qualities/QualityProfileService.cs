@@ -131,15 +131,17 @@ namespace NzbDrone.Core.Profiles.Qualities
                 Quality.VORBIS_Q9,
                 Quality.VORBIS_Q10,
                 Quality.WMA,
-                Quality.ALAC,
                 Quality.FLAC,
-                Quality.FLAC_24);
+                Quality.ALAC,
+                Quality.FLAC_24,
+                Quality.ALAC_24);
 
             AddDefaultProfile("Lossless",
                 Quality.FLAC,
                 Quality.FLAC,
                 Quality.ALAC,
-                Quality.FLAC_24);
+                Quality.FLAC_24,
+                Quality.ALAC_24);
 
             AddDefaultProfile("Standard",
                 Quality.MP3_192,

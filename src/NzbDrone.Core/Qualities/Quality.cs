@@ -107,6 +107,7 @@ namespace NzbDrone.Core.Qualities
         public static Quality MP3_224 => new Quality(34, "MP3-224"); // For Current Files Only
         public static Quality APE => new Quality(35, "APE");
         public static Quality WAVPACK => new Quality(36, "WavPack");
+        public static Quality ALAC_24 => new Quality(37, "ALAC 24bit");
 
         static Quality()
         {
@@ -143,11 +144,12 @@ namespace NzbDrone.Core.Qualities
                 VORBIS_Q7,
                 VORBIS_Q6,
                 VORBIS_Q5,
-                ALAC,
                 FLAC,
+                ALAC,
                 APE,
                 WAVPACK,
                 FLAC_24,
+                ALAC_24,
                 WAV
             };
 
@@ -190,11 +192,12 @@ namespace NzbDrone.Core.Qualities
                 new QualityDefinition(Quality.VORBIS_Q9)   { Weight = 20, MinSize = 0, MaxSize = 350, GroupName = "High Quality Lossy", GroupWeight = 6 },
                 new QualityDefinition(Quality.AAC_320)     { Weight = 20, MinSize = 0, MaxSize = 350, GroupName = "High Quality Lossy", GroupWeight = 6 },
                 new QualityDefinition(Quality.VORBIS_Q10)  { Weight = 21, MinSize = 0, MaxSize = 550, GroupName = "High Quality Lossy", GroupWeight = 6 },
-                new QualityDefinition(Quality.ALAC)        { Weight = 22, MinSize = 0, MaxSize = null, GroupName = "Lossless", GroupWeight = 7 },
                 new QualityDefinition(Quality.FLAC)        { Weight = 22, MinSize = 0, MaxSize = null, GroupName = "Lossless", GroupWeight = 7 },
+                new QualityDefinition(Quality.ALAC)        { Weight = 22, MinSize = 0, MaxSize = null, GroupName = "Lossless", GroupWeight = 7 },
                 new QualityDefinition(Quality.APE)         { Weight = 22, MinSize = 0, MaxSize = null, GroupName = "Lossless", GroupWeight = 7 },
                 new QualityDefinition(Quality.WAVPACK)     { Weight = 22, MinSize = 0, MaxSize = null, GroupName = "Lossless", GroupWeight = 7 },
                 new QualityDefinition(Quality.FLAC_24)     { Weight = 23, MinSize = 0, MaxSize = null, GroupName = "Lossless", GroupWeight = 7 },
+                new QualityDefinition(Quality.ALAC_24)     { Weight = 23, MinSize = 0, MaxSize = null, GroupName = "Lossless", GroupWeight = 7 },
                 new QualityDefinition(Quality.WAV)         { Weight = 24, MinSize = 0, MaxSize = null, GroupWeight = 8 }
             };
         }
