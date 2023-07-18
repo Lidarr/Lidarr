@@ -36,7 +36,7 @@ module.exports = (env) => {
     },
 
     entry: {
-      index: 'index.js'
+      index: 'index.ts'
     },
 
     resolve: {
@@ -98,7 +98,8 @@ module.exports = (env) => {
       new HtmlWebpackPlugin({
         template: 'frontend/src/index.ejs',
         filename: 'index.html',
-        publicPath: '/'
+        publicPath: '/',
+        inject: false
       }),
 
       new FileManagerPlugin({

@@ -20,7 +20,7 @@
   "author": "Team Lidarr",
   "license": "GPL-3.0",
   "readmeFilename": "readme.md",
-  "main": "index.js",
+  "main": "index.ts",
   "browserslist": [
     "defaults"
   ],
