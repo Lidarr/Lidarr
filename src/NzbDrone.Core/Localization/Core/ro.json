@@ -662,10 +662,15 @@
     "NoEventsFound": "Nu s-au găsit evenimente",
     "QueueIsEmpty": "Coada este goală",
     "ApplyTagsHelpTextAdd": "Adăugare: adăugați etichetele la lista de etichete existentă",
-    "ApplyTagsHelpTextHowToApply": "Cum se aplică etichete indexatoarelor selectate",
     "ApplyTagsHelpTextRemove": "Eliminați: eliminați etichetele introduse",
-    "ApplyTagsHelpTextReplace": "Înlocuire: înlocuiți etichetele cu etichetele introduse (nu introduceți etichete pentru a șterge toate etichetele)",
     "RemoveSelectedItemQueueMessageText": "Sigur doriți să eliminați {0} elementul {1} din coadă?",
     "RemoveSelectedItemsQueueMessageText": "Sigur doriți să eliminați {0} elementul {1} din coadă?",
-    "RemoveFromDownloadClientHelpTextWarning": "Eliminarea va elimina descărcarea și fișierele din clientul de descărcare."
+    "RemoveFromDownloadClientHelpTextWarning": "Eliminarea va elimina descărcarea și fișierele din clientul de descărcare.",
+    "DeleteSelectedDownloadClientsMessageText": "Sigur doriți să ștergeți indexatorul „{0}”?",
+    "ApplyTagsHelpTextHowToApplyArtists": "Cum se aplică etichete indexatoarelor selectate",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Cum se aplică etichete filmelor selectate",
+    "DeleteSelectedImportListsMessageText": "Sigur doriți să ștergeți indexatorul „{0}”?",
+    "DeleteSelectedIndexersMessageText": "Sigur doriți să ștergeți indexatorul „{0}”?",
+    "ApplyTagsHelpTextHowToApplyImportLists": "Cum se aplică etichete filmelor selectate",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Cum se aplică etichete indexatoarelor selectate"
 }

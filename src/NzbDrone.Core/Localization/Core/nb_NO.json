@@ -210,10 +210,16 @@
     "ExpandAlbumByDefaultHelpText": "album",
     "ReleaseProfiles": "utgivelseprofil",
     "ApplyTagsHelpTextAdd": "Legg til: Legg til taggene i den eksisterende listen med tagger",
-    "ApplyTagsHelpTextHowToApply": "Slik bruker du tagger på de valgte filmene",
     "ApplyTagsHelpTextRemove": "Fjern: Fjern de angitte kodene",
-    "ApplyTagsHelpTextReplace": "Erstatt: Erstatt taggene med de angitte kodene (skriv inn ingen tagger for å slette alle taggene)",
     "RemoveSelectedItemQueueMessageText": "Er du sikker på at du vil fjerne {0} elementet {1} fra køen?",
     "RemoveSelectedItemsQueueMessageText": "Er du sikker på at du vil fjerne {0} elementet {1} fra køen?",
-    "Required": "Kreve"
+    "Required": "Kreve",
+    "Tracks": "spor",
+    "ApplyTagsHelpTextHowToApplyArtists": "Slik bruker du tagger på de valgte filmene",
+    "ApplyTagsHelpTextHowToApplyImportLists": "Slik bruker du tagger på de valgte filmene",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Slik bruker du tagger på de valgte filmene",
+    "DeleteSelectedDownloadClientsMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
+    "DeleteSelectedImportListsMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
+    "DeleteSelectedIndexersMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
+    "DeleteImportListExclusion": "Legg til importeringsliste unntak"
 }

@@ -656,7 +656,6 @@
     "Required": "Požadované",
     "SetTags": "Nastavit značky",
     "ApplyTagsHelpTextAdd": "Přidat: Přidejte značky do existujícího seznamu značek",
-    "ApplyTagsHelpTextHowToApply": "Jak použít značky na vybrané filmy",
     "ApplyTagsHelpTextRemove": "Odebrat: Odebere zadané značky",
     "ApplyTagsHelpTextReplace": "Nahradit: Nahradit tagy zadanými tagy (pro vymazání všech tagů zadejte žádné tagy)",
     "DeleteSelectedIndexers": "Odstranit indexer",
@@ -664,5 +663,12 @@
     "Yes": "Ano",
     "RemoveFromDownloadClientHelpTextWarning": "Odebráním odstraníte stažené soubory a soubory z klienta pro stahování.",
     "RemoveSelectedItemQueueMessageText": "Opravdu chcete odebrat {0} položku {1} z fronty?",
-    "RemoveSelectedItemsQueueMessageText": "Opravdu chcete odebrat {0} položku {1} z fronty?"
+    "RemoveSelectedItemsQueueMessageText": "Opravdu chcete odebrat {0} položku {1} z fronty?",
+    "DeleteSelectedDownloadClientsMessageText": "Opravdu chcete odstranit indexer „{0}“?",
+    "DeleteSelectedIndexersMessageText": "Opravdu chcete odstranit indexer „{0}“?",
+    "ApplyTagsHelpTextHowToApplyArtists": "Jak použít značky na vybrané filmy",
+    "ApplyTagsHelpTextHowToApplyImportLists": "Jak použít značky na vybrané filmy",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Jak použít značky na vybrané filmy",
+    "DeleteSelectedImportListsMessageText": "Opravdu chcete odstranit indexer „{0}“?",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Jak použít značky na vybrané filmy"
 }

@@ -711,7 +711,6 @@
     "ResetTitlesHelpText": "Restableix els títols de definició i els valors",
     "SetTags": "Estableix etiquetes",
     "ApplyTagsHelpTextAdd": "Afegeix: afegeix les etiquetes a la llista d'etiquetes existent",
-    "ApplyTagsHelpTextHowToApply": "Com aplicar etiquetes a les pel·lícules seleccionades",
     "ApplyTagsHelpTextReplace": "Substituïu: substituïu les etiquetes per les etiquetes introduïdes (no introduïu cap etiqueta per esborrar totes les etiquetes)",
     "NoEventsFound": "No s'han trobat esdeveniments",
     "Required": "Obligatori",
@@ -725,5 +724,8 @@
     "RemoveSelectedItemQueueMessageText": "Esteu segur que voleu eliminar {0} de la cua?",
     "RemoveSelectedItemsQueueMessageText": "Esteu segur que voleu eliminar {0} de la cua?",
     "DeleteSelectedDownloadClientsMessageText": "Esteu segur que voleu suprimir l'indexador '{0}'?",
-    "DeleteSelectedImportListsMessageText": "Esteu segur que voleu suprimir l'indexador '{0}'?"
+    "DeleteSelectedImportListsMessageText": "Esteu segur que voleu suprimir l'indexador '{0}'?",
+    "ApplyTagsHelpTextHowToApplyArtists": "Com aplicar etiquetes a les pel·lícules seleccionades",
+    "ApplyTagsHelpTextHowToApplyImportLists": "Com aplicar etiquetes a les pel·lícules seleccionades",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Com aplicar etiquetes a les pel·lícules seleccionades"
 }

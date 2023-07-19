@@ -664,11 +664,16 @@
     "RemovingTag": "Fjerner tag",
     "SetTags": "Indstil tags",
     "NoEventsFound": "Ingen begivenheder fundet",
-    "ApplyTagsHelpTextHowToApply": "Sådan anvendes tags på de valgte film",
     "ApplyTagsHelpTextRemove": "Fjern: Fjern de indtastede tags",
-    "ApplyTagsHelpTextReplace": "Erstat: Udskift tags med de indtastede tags (indtast ingen tags for at rydde alle tags)",
     "RemoveFromDownloadClientHelpTextWarning": "Fjernelse fjerner download og fil (er) fra download-klienten.",
     "RemoveSelectedItemQueueMessageText": "Er du sikker på, at du vil fjerne {0} element {1} fra køen?",
     "RemoveSelectedItemsQueueMessageText": "Er du sikker på, at du vil fjerne {0} element {1} fra køen?",
-    "Yes": "Ja"
+    "Yes": "Ja",
+    "DeleteSelectedDownloadClientsMessageText": "Er du sikker på, at du vil slette indeksøren '{0}'?",
+    "DeleteSelectedImportListsMessageText": "Er du sikker på, at du vil slette indeksøren '{0}'?",
+    "ApplyTagsHelpTextHowToApplyArtists": "Sådan anvendes tags på de valgte film",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Sådan anvendes tags på de valgte film",
+    "DeleteSelectedIndexersMessageText": "Er du sikker på, at du vil slette indeksøren '{0}'?",
+    "ApplyTagsHelpTextHowToApplyImportLists": "Sådan anvendes tags på de valgte film",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Sådan anvendes tags på de valgte film"
 }

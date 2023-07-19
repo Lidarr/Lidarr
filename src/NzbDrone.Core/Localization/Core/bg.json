@@ -659,11 +659,13 @@
     "SetTags": "Задаване на маркери",
     "Yes": "Да",
     "ApplyTagsHelpTextAdd": "Добавяне: Добавете маркерите към съществуващия списък с маркери",
-    "ApplyTagsHelpTextHowToApply": "Как да приложите тагове към избраните филми",
     "ApplyTagsHelpTextRemove": "Премахване: Премахнете въведените тагове",
-    "ApplyTagsHelpTextReplace": "Замяна: Заменете маркерите с въведените маркери (не въвеждайте маркери, за да изчистите всички маркери)",
     "NoEventsFound": "Няма намерени събития",
     "RemoveSelectedItemQueueMessageText": "Наистина ли искате да премахнете {0} елемент {1} от опашката?",
     "RemoveFromDownloadClientHelpTextWarning": "Премахването ще премахне изтеглянето и файловете от клиента за изтегляне.",
-    "RemoveSelectedItemsQueueMessageText": "Наистина ли искате да премахнете {0} елемент {1} от опашката?"
+    "RemoveSelectedItemsQueueMessageText": "Наистина ли искате да премахнете {0} елемент {1} от опашката?",
+    "ApplyTagsHelpTextHowToApplyArtists": "Как да приложите тагове към избраните филми",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Как да приложите тагове към избраните филми",
+    "ApplyTagsHelpTextHowToApplyImportLists": "Как да приложите тагове към избраните филми",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Как да приложите тагове към избраните филми"
 }

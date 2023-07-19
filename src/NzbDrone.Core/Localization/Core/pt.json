@@ -767,7 +767,6 @@
     "ResetQualityDefinitions": "Redefinir Qualidade de Definições",
     "ApplyTagsHelpTextRemove": "Remover: eliminar as etiquetas adicionadas",
     "ApplyTagsHelpTextAdd": "Adicionar: agregar as etiquetas à lista existente de etiquetas",
-    "ApplyTagsHelpTextHowToApply": "Como aplicar etiquetas aos indexadores selecionados",
     "ApplyTagsHelpTextReplace": "Substituir: mudar as etiquetas pelas adicionadas (deixe em branco para limpar todas as etiquetas)",
     "RemoveFromDownloadClientHelpTextWarning": "Remover eliminará a transferência e o(s) ficheiro(s) do cliente de transferências.",
     "RemoveSelectedItemQueueMessageText": "Tem a certeza que deseja remover {0} da fila?",
@@ -792,5 +791,11 @@
     "ResetTitlesHelpText": "Redefinir títulos de definição, bem como valores",
     "NoEventsFound": "Nenhum evento encontrado",
     "DownloadClientTagHelpText": "Só use este indexador para filmes com pelo menos uma etiqueta correspondente. Deixe em branco para usar com todos os filmes.",
-    "SkipRedownloadHelpText": "Impede que o Lidarr tente transferir versões alternativas para itens removidos"
+    "SkipRedownloadHelpText": "Impede que o Lidarr tente transferir versões alternativas para itens removidos",
+    "ApplyTagsHelpTextHowToApplyArtists": "Como aplicar etiquetas aos filmes selecionados",
+    "ApplyTagsHelpTextHowToApplyImportLists": "Como aplicar etiquetas aos filmes selecionados",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Como aplicar etiquetas aos indexadores selecionados",
+    "DeleteSelectedDownloadClientsMessageText": "Tem a certeza que quer eliminar o indexador \"{0}\"?",
+    "DeleteSelectedImportListsMessageText": "Tem a certeza que quer eliminar o indexador \"{0}\"?",
+    "DeleteSelectedIndexersMessageText": "Tem a certeza que quer eliminar o indexador \"{0}\"?"
 }

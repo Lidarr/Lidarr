@@ -645,7 +645,6 @@
     "BlocklistReleaseHelpText": "Lidarr'ın bu sürümü otomatik olarak tekrar yakalamasını engeller",
     "FailedToLoadQueue": "Sıra yüklenemedi",
     "ApplyTagsHelpTextAdd": "Ekle: Etiketleri mevcut etiket listesine ekleyin",
-    "ApplyTagsHelpTextHowToApply": "Seçilen filmlere etiketler nasıl uygulanır",
     "ApplyTagsHelpTextRemove": "Kaldır: Girilen etiketleri kaldırın",
     "ApplyTagsHelpTextReplace": "Değiştir: Etiketleri girilen etiketlerle değiştirin (tüm etiketleri temizlemek için hiçbir etiket girmeyin)",
     "RemoveFromDownloadClientHelpTextWarning": "Kaldırma, indirmeyi ve dosyaları indirme istemcisinden kaldırır.",
@@ -665,5 +664,9 @@
     "No": "Hayır",
     "NoChange": "Değişiklik yok",
     "RemoveSelectedItemBlocklistMessageText": "Kara listeden seçili öğeleri kaldırmak istediğinizden emin misiniz?",
-    "RemovingTag": "Etiket kaldırılıyor"
+    "RemovingTag": "Etiket kaldırılıyor",
+    "ApplyTagsHelpTextHowToApplyArtists": "Seçilen filmlere etiketler nasıl uygulanır",
+    "ApplyTagsHelpTextHowToApplyImportLists": "Seçilen filmlere etiketler nasıl uygulanır",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Seçilen filmlere etiketler nasıl uygulanır",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Seçilen filmlere etiketler nasıl uygulanır"
 }
