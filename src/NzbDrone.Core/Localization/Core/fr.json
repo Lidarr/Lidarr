@@ -796,7 +796,6 @@
     "NoEventsFound": "Aucun événement trouvé",
     "QueueIsEmpty": "La file d'attente est vide",
     "ResetQualityDefinitionsMessageText": "Êtes-vous sûr de vouloir réinitialiser les définitions de qualité ?",
-    "ApplyTagsHelpTextHowToApply": "Comment appliquer des étiquettes aux indexeurs sélectionnés",
     "ApplyTagsHelpTextRemove": "Retirer : Retire les étiquettes renseignées",
     "ApplyTagsHelpTextReplace": "Remplacer : Remplace les tags par les tags renseignés (ne pas renseigner de tags pour effacer tous les tags)",
     "DownloadClientTagHelpText": "Utiliser seulement cet indexeur pour les films avec au moins un tag correspondant. Laissez vide pour l'utiliser avec tous les films.",
@@ -806,5 +805,12 @@
     "RemoveFromDownloadClientHelpTextWarning": "La suppression supprimera le téléchargement et le(s) fichier(s) du client de téléchargement.",
     "RemoveSelectedItemQueueMessageText": "Êtes-vous sûr de vouloir désinstaller {0} objet{1} de la file d'attente ?",
     "RemoveSelectedItemsQueueMessageText": "Êtes-vous sûr de vouloir supprimer {0} objet(s) de la file d'attente ?",
-    "Yes": "Oui"
+    "Yes": "Oui",
+    "ApplyTagsHelpTextHowToApplyArtists": "Comment appliquer des étiquettes aux indexeurs sélectionnés",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Comment appliquer des tags au film sélectionné",
+    "DeleteSelectedDownloadClientsMessageText": "Voulez-vous vraiment supprimer l'indexeur '{0}' ?",
+    "DeleteSelectedImportListsMessageText": "Voulez-vous vraiment supprimer l'indexeur '{0}' ?",
+    "DeleteSelectedIndexersMessageText": "Voulez-vous vraiment supprimer l'indexeur '{0}' ?",
+    "ApplyTagsHelpTextHowToApplyImportLists": "Comment appliquer des tags au film sélectionné",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Comment appliquer des étiquettes aux indexeurs sélectionnés"
 }

@@ -658,12 +658,13 @@
     "QueueIsEmpty": "Biðröðin er tóm",
     "RemoveSelectedItemBlocklistMessageText": "Ertu viss um að þú viljir fjarlægja valda hluti af svörtum lista?",
     "ApplyTagsHelpTextAdd": "Bæta við: Bættu merkjum við núverandi lista yfir merki",
-    "ApplyTagsHelpTextHowToApply": "Hvernig á að setja merki á völdu kvikmyndirnar",
     "ApplyTagsHelpTextRemove": "Fjarlægja: Fjarlægðu innsláttarmerkin",
-    "ApplyTagsHelpTextReplace": "Skipta um: Skiptu um merkin með innsláttu merkjunum (sláðu inn engin merki til að hreinsa öll merki)",
     "RemoveSelectedItemQueueMessageText": "Ertu viss um að þú viljir fjarlægja {0} hlut {1} úr biðröðinni?",
     "RemoveSelectedItemsQueueMessageText": "Ertu viss um að þú viljir fjarlægja {0} hlut {1} úr biðröðinni?",
     "RemovingTag": "Fjarlægir merkið",
     "SetTags": "Settu merki",
-    "RemoveFromDownloadClientHelpTextWarning": "Fjarlæging fjarlægir niðurhalið og skrána / skrána úr niðurhalsviðskiptavininum."
+    "RemoveFromDownloadClientHelpTextWarning": "Fjarlæging fjarlægir niðurhalið og skrána / skrána úr niðurhalsviðskiptavininum.",
+    "ApplyTagsHelpTextHowToApplyArtists": "Hvernig á að setja merki á völdu kvikmyndirnar",
+    "ApplyTagsHelpTextHowToApplyImportLists": "Hvernig á að setja merki á völdu kvikmyndirnar",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Hvernig á að setja merki á völdu kvikmyndirnar"
 }

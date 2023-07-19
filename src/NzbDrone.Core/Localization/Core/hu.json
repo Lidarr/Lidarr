@@ -984,7 +984,6 @@
     "ResetQualityDefinitions": "Állítsd vissza a minőségi meghatározásokat",
     "ResetTitlesHelpText": "A definíciócímek és értékek visszaállítása",
     "ApplyTagsHelpTextAdd": "Hozzáadás: Új címkék hozzáadása a meglévő címkékhez",
-    "ApplyTagsHelpTextHowToApply": "Hogyan adjunk hozzá címkéket a kiválasztott filmhez",
     "ApplyTagsHelpTextRemove": "Eltávolítás: Távolítsa el a beírt címkéket",
     "ApplyTagsHelpTextReplace": "Csere: Cserélje ki a címkéket a beírt címkékre (az összes címke törléséhez ne adjon meg címkéket)",
     "RemoveFromDownloadClientHelpTextWarning": "Az eltávolítás eltávolítja a letöltést és a fájl(oka)t a letöltési kliensből.",
@@ -992,5 +991,11 @@
     "RemoveSelectedItemsQueueMessageText": "Biztosan el akar távolítani {0} elemet a várólistáról?",
     "DownloadClientTagHelpText": "Csak olyan filmekhez használja ezt az indexelőt, amelyek legalább egy megfelelő címkével rendelkeznek. Hagyja üresen az összes filmhez való használathoz.",
     "SetTags": "Címkék beállítása",
-    "SkipRedownloadHelpText": "Megakadályozza, hogy a Lidarr megpróbálja letölteni az eltávolított elemek alternatív kiadásait"
+    "SkipRedownloadHelpText": "Megakadályozza, hogy a Lidarr megpróbálja letölteni az eltávolított elemek alternatív kiadásait",
+    "ApplyTagsHelpTextHowToApplyArtists": "Hogyan adjunk hozzá címkéket a kiválasztott filmhez",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Hogyan adjunk hozzá címkéket a kiválasztott filmhez",
+    "RemoveCompletedDownloads": "Befejezett letöltések eltávolítása",
+    "RemoveFailedDownloads": "Sikertelen letöltések eltávolítása",
+    "ApplyTagsHelpTextHowToApplyImportLists": "Hogyan adjunk hozzá címkéket a kiválasztott filmhez",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Hogyan adjunk hozzá címkéket a kiválasztott filmhez"
 }

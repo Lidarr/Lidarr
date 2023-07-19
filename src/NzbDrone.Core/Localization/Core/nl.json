@@ -714,9 +714,7 @@
     "Required": "Benodigd",
     "ResetQualityDefinitions": "Reset kwaliteitsdefinities",
     "ApplyTagsHelpTextAdd": "Toevoegen: Voeg de tags toe aan de lijst met bestaande tags",
-    "ApplyTagsHelpTextHowToApply": "Hoe tags toe te passen op de geselecteerd films",
     "ApplyTagsHelpTextRemove": "Verwijderen: Verwijder de ingevoerde tags",
-    "ApplyTagsHelpTextReplace": "Vervangen: Vervang de tags met de ingevoerde tags (voer geen tags in om alle tags te wissen)",
     "BlocklistReleases": "Uitgave op blokkeerlijst zetten",
     "CountIndexersSelected": "{0} Indexer(s) Geselecteerd",
     "DeleteConditionMessageText": "Bent u zeker dat u de lijst '{0}' wilt verwijderen?",
@@ -737,5 +735,13 @@
     "QueueIsEmpty": "Wachtrij is leeg",
     "RemoveFromDownloadClientHelpTextWarning": "Het verwijderen zal zowel de download als de bestanden verwijderen bij de downloader.",
     "RemoveSelectedItemQueueMessageText": "Weet je zeker dat je {0} van de wachtrij wilt verwijderen?",
-    "RemoveSelectedItemsQueueMessageText": "Weet je zeker dat je {0} van de wachtrij wilt verwijderen?"
+    "RemoveSelectedItemsQueueMessageText": "Weet je zeker dat je {0} van de wachtrij wilt verwijderen?",
+    "DeleteSelectedDownloadClientsMessageText": "Bent u zeker dat u de indexeerder '{0}' wilt verwijderen?",
+    "DeleteSelectedImportListsMessageText": "Bent u zeker dat u de indexeerder '{0}' wilt verwijderen?",
+    "ApplyTagsHelpTextHowToApplyArtists": "Hoe tags toe te passen op de geselecteerd films",
+    "ApplyTagsHelpTextHowToApplyImportLists": "Hoe tags toe te passen op de geselecteerd films",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Hoe tags toe te passen op de geselecteerd films",
+    "DeleteSelectedIndexersMessageText": "Bent u zeker dat u de indexeerder '{0}' wilt verwijderen?",
+    "RemoveCompletedDownloads": "Verwijder voltooide downloads",
+    "RemoveFailedDownloads": "Verwijder mislukte downloads"
 }

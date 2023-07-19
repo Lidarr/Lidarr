@@ -685,9 +685,7 @@
     "DeleteRemotePathMappingMessageText": "Czy na pewno chcesz usunąć to mapowanie zdalnej ścieżki?",
     "BlocklistReleaseHelpText": "Zapobiega ponownemu pobraniu tej wersji przez Lidarr",
     "FailedToLoadQueue": "Nie udało się załadować kolejki",
-    "ApplyTagsHelpTextReplace": "Zastąp: Zastąp tagi wprowadzonymi tagami (nie wprowadzaj tagów, aby usunąć wszystkie tagi)",
     "ApplyTagsHelpTextAdd": "Dodaj: dodaj tagi do istniejącej listy tagów",
-    "ApplyTagsHelpTextHowToApply": "Jak zastosować tagi do wybranych filmów",
     "ApplyTagsHelpTextRemove": "Usuń: usuń wprowadzone tagi",
     "RemoveSelectedItemsQueueMessageText": "Czy na pewno chcesz usunąć elementy ({0}) z kolejki?",
     "BlocklistReleases": "Wydanie czarnej listy",
@@ -709,5 +707,12 @@
     "QueueIsEmpty": "Kolejka jest pusta",
     "RemoveSelectedItems": "Usuń wybrane",
     "RemoveFromDownloadClientHelpTextWarning": "Usunięcie spowoduje usunięcie pobierania i plików z klienta pobierania.",
-    "RemoveSelectedItemQueueMessageText": "Czy na pewno chcesz usunąć {0} element {1} z kolejki?"
+    "RemoveSelectedItemQueueMessageText": "Czy na pewno chcesz usunąć {0} element {1} z kolejki?",
+    "DeleteSelectedDownloadClientsMessageText": "Czy na pewno chcesz usunąć indeksator „{0}”?",
+    "DeleteSelectedImportListsMessageText": "Czy na pewno chcesz usunąć indeksator „{0}”?",
+    "ApplyTagsHelpTextHowToApplyArtists": "Jak zastosować tagi do wybranych filmów",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Jak zastosować tagi do wybranych filmów",
+    "ApplyTagsHelpTextHowToApplyImportLists": "Jak zastosować tagi do wybranych filmów",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Jak zastosować tagi do wybranych filmów",
+    "DeleteSelectedIndexersMessageText": "Czy na pewno chcesz usunąć indeksator „{0}”?"
 }

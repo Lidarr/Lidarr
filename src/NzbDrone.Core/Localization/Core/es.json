@@ -612,8 +612,6 @@
     "BypassIfHighestQuality": "Pasar sí es la calidad más alta",
     "CustomFormatScore": "Puntuación de Formato personalizado",
     "MinimumCustomFormatScore": "Puntuación mínima de formato personalizado",
-    "ApplicationURL": "78.30.42.111:7878",
-    "ApplicationUrlHelpText": "78.30.42.111:7878",
     "PreferredProtocol": "Protocolo preferido",
     "CloneCustomFormat": "Clonar Formato Personalizado",
     "Conditions": "Condiciones",
@@ -723,7 +721,6 @@
     "NoEventsFound": "No se encontraron eventos",
     "ResetTitlesHelpText": "Restablecer los títulos y valores de las definiciones",
     "ApplyTagsHelpTextAdd": "Añadir: Añadir a las etiquetas la lista existente de etiquetas",
-    "ApplyTagsHelpTextHowToApply": "Cómo añadir etiquetas a las películas seleccionadas",
     "ApplyTagsHelpTextRemove": "Eliminar: Eliminar las etiquetas introducidas",
     "ApplyTagsHelpTextReplace": "Reemplazar: Reemplazar las etiquetas con las etiquetas introducidas (no introducir etiquetas para eliminar todas las etiquetas)",
     "RemoveSelectedItemQueueMessageText": "¿Está seguro de que desea eliminar el {0} elemento {1} de la cola?",
@@ -733,5 +730,12 @@
     "RemoveSelectedItem": "Eliminar el elemento seleccionado",
     "RemovingTag": "Eliminando etiqueta",
     "ResetQualityDefinitionsMessageText": "¿Está seguro de que desea restablecer las definiciones de calidad?",
-    "RemoveFromDownloadClientHelpTextWarning": "Eliminar borrará la descarga y el/los fichero(s) del gestor de descargas."
+    "RemoveFromDownloadClientHelpTextWarning": "Eliminar borrará la descarga y el/los fichero(s) del gestor de descargas.",
+    "ApplyTagsHelpTextHowToApplyArtists": "Cómo añadir etiquetas a las películas seleccionadas",
+    "ApplyTagsHelpTextHowToApplyImportLists": "Cómo añadir etiquetas a las películas seleccionadas",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Cómo añadir etiquetas a las películas seleccionadas",
+    "DeleteSelectedDownloadClientsMessageText": "Seguro que quieres eliminar el indexer '{0}'?",
+    "DeleteSelectedImportListsMessageText": "Seguro que quieres eliminar el indexer '{0}'?",
+    "DeleteSelectedIndexersMessageText": "Seguro que quieres eliminar el indexer '{0}'?",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Cómo añadir etiquetas a las películas seleccionadas"
 }

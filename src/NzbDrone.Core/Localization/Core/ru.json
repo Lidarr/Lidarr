@@ -717,9 +717,7 @@
     "RemoveSelectedItems": "Удалить выбранные элементы",
     "Required": "Необходимо",
     "ResetTitlesHelpText": "Сбросить заголовки определений, а также значения",
-    "ApplyTagsHelpTextHowToApply": "Как добавить ярлыки к выбранным фильмам",
     "ApplyTagsHelpTextRemove": "Убрать: Убрать введенные тэги",
-    "ApplyTagsHelpTextReplace": "Заменить: Изменить существующие тэги на введенные тэги (оставьте пустым чтобы очистить все тэги)",
     "RemoveFromDownloadClientHelpTextWarning": "Удаление приведет к удалению загрузки и файла(ов) из клиента загрузки.",
     "RemoveSelectedItemQueueMessageText": "Вы действительно хотите удалить {0} из очереди?",
     "RemoveSelectedItemsQueueMessageText": "Вы действительно хотите удалить {0} из очереди?",
@@ -729,5 +727,12 @@
     "QueueIsEmpty": "Очередь пуста",
     "ResetQualityDefinitions": "Сбросить определения качества",
     "RemovingTag": "Удаление тега",
-    "Yes": "Да"
+    "Yes": "Да",
+    "DeleteSelectedImportListsMessageText": "Вы уверены что хотите удалить индексер '{0}'?",
+    "ApplyTagsHelpTextHowToApplyArtists": "Как добавить ярлыки к выбранным фильмам",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Как добавить ярлыки к выбранным фильмам",
+    "ApplyTagsHelpTextHowToApplyImportLists": "Как добавить ярлыки к выбранным фильмам",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Как добавить ярлыки к выбранным фильмам",
+    "DeleteSelectedIndexersMessageText": "Вы уверены что хотите удалить индексер '{0}'?",
+    "DeleteSelectedDownloadClientsMessageText": "Вы уверены что хотите удалить индексер '{0}'?"
 }

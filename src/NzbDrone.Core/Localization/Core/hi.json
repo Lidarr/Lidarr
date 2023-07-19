@@ -658,11 +658,12 @@
     "SetTags": "टैग सेट करें",
     "Yes": "हाँ",
     "NoEventsFound": "कोई घटना नहीं मिली",
-    "ApplyTagsHelpTextHowToApply": "चयनित फिल्मों के लिए टैग कैसे लागू करें",
     "ApplyTagsHelpTextRemove": "निकालें: दर्ज किए गए टैग निकालें",
-    "ApplyTagsHelpTextReplace": "प्रतिस्थापित करें: दर्ज किए गए टैगों के साथ टैग बदलें (सभी टैग्स को खाली करने के लिए कोई टैग दर्ज न करें)",
     "RemoveFromDownloadClientHelpTextWarning": "हटाने से डाउनलोड और फ़ाइल को डाउनलोड क्लाइंट से निकाल दिया जाएगा।",
     "RemoveSelectedItemQueueMessageText": "क्या आप वाकई {0} आइटम {1} को कतार से हटाना चाहते हैं?",
     "RemoveSelectedItemsQueueMessageText": "क्या आप वाकई {0} आइटम {1} को कतार से हटाना चाहते हैं?",
-    "Negated": "नकार दिया गया"
+    "Negated": "नकार दिया गया",
+    "ApplyTagsHelpTextHowToApplyArtists": "चयनित फिल्मों के लिए टैग कैसे लागू करें",
+    "ApplyTagsHelpTextHowToApplyImportLists": "चयनित फिल्मों के लिए टैग कैसे लागू करें",
+    "ApplyTagsHelpTextHowToApplyIndexers": "चयनित फिल्मों के लिए टैग कैसे लागू करें"
 }
