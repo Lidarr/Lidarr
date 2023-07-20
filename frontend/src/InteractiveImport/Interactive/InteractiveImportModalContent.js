@@ -74,7 +74,7 @@ const columns = [
     name: 'customFormats',
     label: React.createElement(Icon, {
       name: icons.INTERACTIVE,
-      title: translate('CustomFormat')
+      title: () => translate('CustomFormat')
     }),
     isSortable: true,
     isVisible: true
