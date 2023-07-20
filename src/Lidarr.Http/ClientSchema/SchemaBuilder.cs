@@ -107,7 +107,7 @@ namespace Lidarr.Http.ClientSchema
                         Placeholder = fieldAttribute.Placeholder
                     };
 
-                    if (fieldAttribute.Type == FieldType.Select || fieldAttribute.Type == FieldType.TagSelect)
+                    if (fieldAttribute.Type is FieldType.Select or FieldType.TagSelect)
                     {
                         if (fieldAttribute.SelectOptionsProviderAction.IsNotNullOrWhiteSpace())
                         {
@@ -154,33 +154,40 @@ namespace Lidarr.Http.ClientSchema
 
         private static List<SelectOption> GetSelectOptions(Type selectOptions)
         {
-            var options = selectOptions.GetFields().Where(v => v.IsStatic).Select(v =>
+            if (selectOptions.IsEnum)
             {
-                var name = v.Name.Replace('_', ' ');
-                var value = Convert.ToInt32(v.GetRawConstantValue());
-                var attrib = v.GetCustomAttribute<FieldOptionAttribute>();
-                if (attrib != null)
-                {
-                    return new SelectOption
+                var options = selectOptions
+                    .GetFields()
+                    .Where(v => v.IsStatic && !v.GetCustomAttributes(false).OfType<ObsoleteAttribute>().Any())
+                    .Select(v =>
                     {
-                        Value = value,
-                        Name = attrib.Label ?? name,
-                        Order = attrib.Order,
-                        Hint = attrib.Hint ?? $"({value})"
-                    };
-                }
-                else
-                {
-                    return new SelectOption
-                    {
-                        Value = value,
-                        Name = name,
-                        Order = value
-                    };
-                }
-            });
+                        var name = v.Name.Replace('_', ' ');
+                        var value = Convert.ToInt32(v.GetRawConstantValue());
+                        var attrib = v.GetCustomAttribute<FieldOptionAttribute>();
 
-            return options.OrderBy(o => o.Order).ToList();
+                        if (attrib != null)
+                        {
+                            return new SelectOption
+                            {
+                                Value = value,
+                                Name = attrib.Label ?? name,
+                                Order = attrib.Order,
+                                Hint = attrib.Hint ?? $"({value})"
+                            };
+                        }
+
+                        return new SelectOption
+                        {
+                            Value = value,
+                            Name = name,
+                            Order = value
+                        };
+                    });
+
+                return options.OrderBy(o => o.Order).ToList();
+            }
+
+            throw new NotSupportedException();
         }
 
         private static Func<object, object> GetValueConverter(Type propertyType)
