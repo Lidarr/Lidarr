@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import FormInputGroup from 'Components/Form/FormInputGroup';
 import MonitorAlbumsSelectInput from 'Components/Form/MonitorAlbumsSelectInput';
 import MonitorNewItemsSelectInput from 'Components/Form/MonitorNewItemsSelectInput';
-import SelectInput from 'Components/Form/SelectInput';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
-import { kinds } from 'Helpers/Props';
+import { inputTypes, kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import styles from './AlbumStudioFooter.css';
 
@@ -30,7 +30,7 @@ class AlbumStudioFooter extends Component {
     const {
       isSaving,
       saveError
-    } = prevProps;
+    } = this.props;
 
     if (prevProps.isSaving && !isSaving && !saveError) {
       this.setState({
@@ -89,8 +89,8 @@ class AlbumStudioFooter extends Component {
 
     const monitoredOptions = [
       { key: NO_CHANGE, value: translate('NoChange'), disabled: true },
-      { key: 'monitored', value: 'Monitored' },
-      { key: 'unmonitored', value: 'Unmonitored' }
+      { key: 'monitored', value: translate('Monitored') },
+      { key: 'unmonitored', value: translate('Unmonitored') }
     ];
 
     const noChanges = monitored === NO_CHANGE &&
@@ -101,10 +101,11 @@ class AlbumStudioFooter extends Component {
       <PageContentFooter>
         <div className={styles.inputContainer}>
           <div className={styles.label}>
-            Monitor Artist
+            {translate('MonitorArtist')}
           </div>
 
-          <SelectInput
+          <FormInputGroup
+            type={inputTypes.SELECT}
             name="monitored"
             value={monitored}
             values={monitoredOptions}
@@ -115,13 +116,14 @@ class AlbumStudioFooter extends Component {
 
         <div className={styles.inputContainer}>
           <div className={styles.label}>
-            Monitor Existing Albums
+            {translate('MonitorExistingAlbums')}
           </div>
 
           <MonitorAlbumsSelectInput
             name="monitor"
             value={monitor}
             includeNoChange={true}
+            includeNoChangeDisabled={false}
             isDisabled={!selectedCount}
             onChange={this.onInputChange}
           />
@@ -129,13 +131,14 @@ class AlbumStudioFooter extends Component {
 
         <div className={styles.inputContainer}>
           <div className={styles.label}>
-            Monitor New Albums
+            {translate('MonitorNewAlbums')}
           </div>
 
           <MonitorNewItemsSelectInput
             name="monitorNewItems"
             value={monitorNewItems}
             includeNoChange={true}
+            includeNoChangeDisabled={false}
             isDisabled={!selectedCount}
             onChange={this.onInputChange}
           />
@@ -143,7 +146,7 @@ class AlbumStudioFooter extends Component {
 
         <div>
           <div className={styles.label}>
-            {selectedCount} Artist(s) Selected
+            {translate('CountArtistsSelected', [selectedCount])}
           </div>
 
           <SpinnerButton
@@ -153,7 +156,7 @@ class AlbumStudioFooter extends Component {
             isDisabled={!selectedCount || noChanges}
             onPress={this.onUpdateSelectedPress}
           >
-            Update Selected
+            {translate('UpdateSelected')}
           </SpinnerButton>
         </div>
       </PageContentFooter>

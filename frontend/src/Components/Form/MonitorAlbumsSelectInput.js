@@ -7,6 +7,7 @@ import SelectInput from './SelectInput';
 function MonitorAlbumsSelectInput(props) {
   const {
     includeNoChange,
+    includeNoChangeDisabled = true,
     includeMixed,
     ...otherProps
   } = props;
@@ -17,7 +18,7 @@ function MonitorAlbumsSelectInput(props) {
     values.unshift({
       key: 'noChange',
       value: translate('NoChange'),
-      disabled: true
+      disabled: includeNoChangeDisabled
     });
   }
 
@@ -39,6 +40,7 @@ function MonitorAlbumsSelectInput(props) {
 
 MonitorAlbumsSelectInput.propTypes = {
   includeNoChange: PropTypes.bool.isRequired,
+  includeNoChangeDisabled: PropTypes.bool,
   includeMixed: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired
 };

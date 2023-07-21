@@ -40,10 +40,8 @@ namespace NzbDrone.Core.Music
                 // If specific albums are passed use those instead of the monitoring options.
                 if (monitoredAlbums.Any())
                 {
-                    ToggleAlbumsMonitoredState(
-                        albums.Where(s => monitoredAlbums.Contains(s.ForeignAlbumId)), true);
-                    ToggleAlbumsMonitoredState(
-                        albums.Where(s => !monitoredAlbums.Contains(s.ForeignAlbumId)), false);
+                    ToggleAlbumsMonitoredState(albums.Where(s => monitoredAlbums.Contains(s.ForeignAlbumId)), true);
+                    ToggleAlbumsMonitoredState(albums.Where(s => !monitoredAlbums.Contains(s.ForeignAlbumId)), false);
                 }
                 else
                 {
@@ -80,6 +78,9 @@ namespace NzbDrone.Core.Music
                         case MonitorTypes.First:
                             ToggleAlbumsMonitoredState(albums, false);
                             ToggleAlbumsMonitoredState(albums.OrderBy(e => e.ReleaseDate).Take(1), true);
+                            break;
+                        case MonitorTypes.Unknown:
+                            // Ignoring, it's the default value
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();

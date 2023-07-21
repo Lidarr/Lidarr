@@ -18,11 +18,13 @@ namespace Lidarr.Api.V1.AlbumStudio
         }
 
         [HttpPost]
-        public IActionResult UpdateAll([FromBody] AlbumStudioResource request)
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public IActionResult UpdateAll([FromBody] AlbumStudioResource resource)
         {
-            var artistToUpdate = _artistService.GetArtists(request.Artist.Select(s => s.Id));
+            var artistToUpdate = _artistService.GetArtists(resource.Artist.Select(s => s.Id));
 
-            foreach (var s in request.Artist)
+            foreach (var s in resource.Artist)
             {
                 var artist = artistToUpdate.Single(c => c.Id == s.Id);
 
@@ -31,20 +33,20 @@ namespace Lidarr.Api.V1.AlbumStudio
                     artist.Monitored = s.Monitored.Value;
                 }
 
-                if (request.MonitoringOptions != null && request.MonitoringOptions.Monitor == MonitorTypes.None)
+                if (resource.MonitoringOptions is { Monitor: MonitorTypes.None })
                 {
                     artist.Monitored = false;
                 }
 
-                if (request.MonitorNewItems.HasValue)
+                if (resource.MonitorNewItems.HasValue)
                 {
-                    artist.MonitorNewItems = request.MonitorNewItems.Value;
+                    artist.MonitorNewItems = resource.MonitorNewItems.Value;
                 }
 
-                _albumMonitoredService.SetAlbumMonitoredStatus(artist, request.MonitoringOptions);
+                _albumMonitoredService.SetAlbumMonitoredStatus(artist, resource.MonitoringOptions);
             }
 
-            return Accepted(request);
+            return Accepted(resource);
         }
     }
 }

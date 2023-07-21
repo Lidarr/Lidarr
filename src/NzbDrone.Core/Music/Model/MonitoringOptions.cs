@@ -7,6 +7,7 @@ namespace NzbDrone.Core.Music
     {
         public MonitoringOptions()
         {
+            Monitor = MonitorTypes.Unknown;
             AlbumsToMonitor = new List<string>();
         }
 
