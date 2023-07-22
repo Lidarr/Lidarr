@@ -43,6 +43,7 @@ export const defaultState = {
     {
       name: 'monitored',
       columnLabel: translate('Monitored'),
+      isSortable: true,
       isVisible: true,
       isModifiable: false
     },
