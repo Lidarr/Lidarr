@@ -1,7 +1,9 @@
+import translate from 'Utilities/String/translate';
+
 const monitorNewItemsOptions = [
-  { key: 'all', value: 'All Albums' },
-  { key: 'none', value: 'None' },
-  { key: 'new', value: 'New' }
+  { key: 'all', value: translate('AllAlbums') },
+  { key: 'none', value: translate('None') },
+  { key: 'new', value: translate('New') }
 ];
 
 export default monitorNewItemsOptions;

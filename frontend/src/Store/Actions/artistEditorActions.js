@@ -47,6 +47,12 @@ export const defaultState = {
       isVisible: true
     },
     {
+      name: 'monitorNewItems',
+      label: translate('MonitorNewItems'),
+      isSortable: true,
+      isVisible: true
+    },
+    {
       name: 'qualityProfileId',
       label: translate('QualityProfile'),
       isSortable: true,

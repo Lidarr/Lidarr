@@ -6,6 +6,7 @@ import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
 import TableRow from 'Components/Table/TableRow';
 import TagListConnector from 'Components/TagListConnector';
+import monitorNewItemsOptions from 'Utilities/Artist/monitorNewItemsOptions';
 import formatBytes from 'Utilities/Number/formatBytes';
 
 class ArtistEditorRow extends Component {
@@ -21,6 +22,7 @@ class ArtistEditorRow extends Component {
       artistName,
       artistType,
       monitored,
+      monitorNewItems,
       metadataProfile,
       qualityProfile,
       path,
@@ -32,6 +34,8 @@ class ArtistEditorRow extends Component {
       onArtistMonitoredPress,
       onSelectedChange
     } = this.props;
+
+    const monitorNewItemsName = monitorNewItemsOptions.find((o) => o.key === monitorNewItems)?.value;
 
     return (
       <TableRow>
@@ -74,6 +78,14 @@ class ArtistEditorRow extends Component {
                     foreignArtistId={foreignArtistId}
                     artistName={artistName}
                   />
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'monitorNewItems') {
+              return (
+                <TableRowCell key={name}>
+                  {monitorNewItemsName ?? 'Unknown'}
                 </TableRowCell>
               );
             }
@@ -135,6 +147,7 @@ ArtistEditorRow.propTypes = {
   artistName: PropTypes.string.isRequired,
   artistType: PropTypes.string,
   monitored: PropTypes.bool.isRequired,
+  monitorNewItems: PropTypes.string.isRequired,
   metadataProfile: PropTypes.object.isRequired,
   qualityProfile: PropTypes.object.isRequired,
   path: PropTypes.string.isRequired,
