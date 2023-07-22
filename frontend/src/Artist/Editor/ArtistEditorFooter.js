@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import MoveArtistModal from 'Artist/MoveArtist/MoveArtistModal';
+import FormInputGroup from 'Components/Form/FormInputGroup';
 import MetadataProfileSelectInputConnector from 'Components/Form/MetadataProfileSelectInputConnector';
 import MonitorNewItemsSelectInput from 'Components/Form/MonitorNewItemsSelectInput';
 import QualityProfileSelectInputConnector from 'Components/Form/QualityProfileSelectInputConnector';
 import RootFolderSelectInputConnector from 'Components/Form/RootFolderSelectInputConnector';
-import SelectInput from 'Components/Form/SelectInput';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
-import { kinds } from 'Helpers/Props';
+import { inputTypes, kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import ArtistEditorFooterLabel from './ArtistEditorFooterLabel';
 import DeleteArtistModal from './Delete/DeleteArtistModal';
@@ -174,10 +174,12 @@ class ArtistEditorFooter extends Component {
             isSaving={isSaving && monitored !== NO_CHANGE}
           />
 
-          <SelectInput
+          <FormInputGroup
+            type={inputTypes.SELECT}
             name="monitored"
             value={monitored}
             values={monitoredOptions}
+            includeNoChangeDisabled={false}
             isDisabled={!selectedCount}
             onChange={this.onInputChange}
           />
@@ -193,6 +195,7 @@ class ArtistEditorFooter extends Component {
             name="monitorNewItems"
             value={monitorNewItems}
             includeNoChange={true}
+            includeNoChangeDisabled={false}
             isDisabled={!selectedCount}
             onChange={this.onInputChange}
           />
@@ -224,6 +227,7 @@ class ArtistEditorFooter extends Component {
                     name="qualityProfileId"
                     value={qualityProfileId}
                     includeNoChange={true}
+                    includeNoChangeDisabled={false}
                     isDisabled={!selectedCount}
                     onChange={this.onInputChange}
                   />
@@ -246,6 +250,7 @@ class ArtistEditorFooter extends Component {
                     name="metadataProfileId"
                     value={metadataProfileId}
                     includeNoChange={true}
+                    includeNoChangeDisabled={false}
                     includeNone={true}
                     isDisabled={!selectedCount}
                     onChange={this.onInputChange}

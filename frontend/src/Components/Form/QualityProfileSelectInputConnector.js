@@ -6,14 +6,15 @@ import { createSelector } from 'reselect';
 import createSortedSectionSelector from 'Store/Selectors/createSortedSectionSelector';
 import sortByName from 'Utilities/Array/sortByName';
 import translate from 'Utilities/String/translate';
-import SelectInput from './SelectInput';
+import EnhancedSelectInput from './EnhancedSelectInput';
 
 function createMapStateToProps() {
   return createSelector(
     createSortedSectionSelector('settings.qualityProfiles', sortByName),
     (state, { includeNoChange }) => includeNoChange,
+    (state, { includeNoChangeDisabled }) => includeNoChangeDisabled,
     (state, { includeMixed }) => includeMixed,
-    (qualityProfiles, includeNoChange, includeMixed) => {
+    (qualityProfiles, includeNoChange, includeNoChangeDisabled = true, includeMixed) => {
       const values = _.map(qualityProfiles.items, (qualityProfile) => {
         return {
           key: qualityProfile.id,
@@ -25,7 +26,7 @@ function createMapStateToProps() {
         values.unshift({
           key: 'noChange',
           value: translate('NoChange'),
-          disabled: true
+          disabled: includeNoChangeDisabled
         });
       }
 
@@ -56,8 +57,8 @@ class QualityProfileSelectInputConnector extends Component {
       values
     } = this.props;
 
-    if (!value || !_.some(values, (option) => parseInt(option.key) === value)) {
-      const firstValue = _.find(values, (option) => !isNaN(parseInt(option.key)));
+    if (!value || !values.some((option) => option.key === value || parseInt(option.key) === value)) {
+      const firstValue = values.find((option) => !isNaN(parseInt(option.key)));
 
       if (firstValue) {
         this.onChange({ name, value: firstValue.key });
@@ -77,7 +78,7 @@ class QualityProfileSelectInputConnector extends Component {
 
   render() {
     return (
-      <SelectInput
+      <EnhancedSelectInput
         {...this.props}
         onChange={this.onChange}
       />

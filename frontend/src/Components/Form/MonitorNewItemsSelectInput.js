@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import monitorNewItemsOptions from 'Utilities/Artist/monitorNewItemsOptions';
 import translate from 'Utilities/String/translate';
-import SelectInput from './SelectInput';
+import EnhancedSelectInput from './EnhancedSelectInput';
 
 function MonitorNewItemsSelectInput(props) {
   const {
@@ -31,7 +31,7 @@ function MonitorNewItemsSelectInput(props) {
   }
 
   return (
-    <SelectInput
+    <EnhancedSelectInput
       values={values}
       {...otherProps}
     />
