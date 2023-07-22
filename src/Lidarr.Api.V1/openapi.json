@@ -343,16 +343,6 @@
               "schema": {
                 "$ref": "#/components/schemas/AlbumStudioResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AlbumStudioResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AlbumStudioResource"
-              }
             }
           }
         },
