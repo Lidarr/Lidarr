@@ -88,14 +88,17 @@ class SelectAlbumModalContent extends Component {
           }
           <TextInput
             className={styles.filterInput}
-            placeholder={translate('FilterPlaceHolder')}
+            placeholder={translate('FilterAlbumPlaceholder')}
             name="filter"
             value={filter}
             autoFocus={true}
             onChange={this.onFilterChange}
           />
 
-          <Scroller className={styles.scroller}>
+          <Scroller
+            className={styles.scroller}
+            autoFocus={false}
+          >
             {
               <Table
                 columns={columns}

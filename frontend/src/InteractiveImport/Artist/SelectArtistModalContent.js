@@ -56,14 +56,17 @@ class SelectArtistModalContent extends Component {
         >
           <TextInput
             className={styles.filterInput}
-            placeholder={translate('FilterPlaceHolder')}
+            placeholder={translate('FilterArtistPlaceholder')}
             name="filter"
             value={filter}
             autoFocus={true}
             onChange={this.onFilterChange}
           />
 
-          <Scroller className={styles.scroller}>
+          <Scroller
+            className={styles.scroller}
+            autoFocus={false}
+          >
             {
               items.map((item) => {
                 return item.artistName.toLowerCase().includes(filter) ?
