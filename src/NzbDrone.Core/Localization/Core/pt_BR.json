@@ -533,7 +533,7 @@
     "Size": " Tamanho",
     "SkipFreeSpaceCheck": "Ignorar verificação de espaço livre",
     "SkipFreeSpaceCheckWhenImportingHelpText": "Usar quando o Lidarr não conseguir detectar espaço livre na pasta raiz do filme",
-    "SkipRedownload": "Ignorar novo download",
+    "SkipRedownload": "Ignorar o Redownload",
     "SorryThatAlbumCannotBeFound": "Desculpe, esse filme não pode ser encontrado.",
     "SorryThatArtistCannotBeFound": "Desculpe, esse autor não pode ser encontrado.",
     "Source": "Fonte",
@@ -730,7 +730,7 @@
     "HideAdvanced": "Ocultar Avançado",
     "Ignored": "Ignorado",
     "IndexerDownloadClientHelpText": "Especifique qual cliente de download é usado para capturas deste indexador",
-    "IndexerTagHelpText": "Use este indexador apenas para artistas com pelo menos uma etiqueta correspondente. Deixe em branco para usar com todos os artistas.",
+    "IndexerTagHelpText": "Use este indexador apenas para artistas com pelo menos uma tag correspondente. Deixe em branco para usar com todos os artistas.",
     "InstanceName": "Nome da instância",
     "InstanceNameHelpText": "Nome da instância na guia e para o nome do aplicativo do Syslog",
     "InteractiveImport": "Importação interativa",
@@ -1044,5 +1044,11 @@
     "ApplyTagsHelpTextHowToApplyImportLists": "Como aplicar tags às listas de importação selecionadas",
     "ApplyTagsHelpTextHowToApplyIndexers": "Como aplicar tags aos indexadores selecionados",
     "RemoveCompletedDownloads": "Remover downloads concluídos",
-    "RemoveFailedDownloads": "Remover downloads com falha"
+    "RemoveFailedDownloads": "Remover downloads com falha",
+    "FilterAlbumPlaceholder": "Filtrar álbum",
+    "FilterArtistPlaceholder": "Filtrar artista",
+    "MonitorExistingAlbums": "Monitorar Álbuns Existentes",
+    "MonitorNewAlbums": "Monitorar Novos Álbuns",
+    "UpdateSelected": "Atualizar Selecionada",
+    "CountArtistsSelected": "{0} artista(s) selecionado(s)"
 }
