@@ -920,7 +920,7 @@
     "RemotePathMappingCheckLocalFolderMissing": "远程客户端 {0} 将下载文件放置在 {1} 中，但该目录似乎不存在，可能目录确实或远程地址映射错误。",
     "RemotePathMappingCheckRemoteDownloadClient": "远程客户端 {0} 将下载文件放置在 {1} 中，但该目录似乎不存在，可能目录确实或远程地址映射错误。",
     "RemotePathMappingCheckWrongOSPath": "远程下载客户端 {0} 报告文件在 {1} 中，但是该地址 {2} 非法。请检查您的远程地址映射和下载客户端设置。",
-    "AppDataLocationHealthCheckMessage": "更新将无法阻止在更新时删除 AppData",
+    "AppDataLocationHealthCheckMessage": "正在更新期间的 AppData 不会被更新删除",
     "ColonReplacement": "替换冒号",
     "CopyToClipboard": "复制到剪贴板",
     "DeleteCustomFormat": "删除自定义命名格式",
@@ -983,5 +983,11 @@
     "OnHealthRestoredHelpText": "健康度恢复",
     "OnHealthRestored": "健康度恢复",
     "RemoveSelectedItemBlocklistMessageText": "您确定要从阻止列表中删除所选项目吗？",
-    "ResetQualityDefinitionsMessageText": "您确定要重置质量定义吗？"
+    "ResetQualityDefinitionsMessageText": "您确定要重置质量定义吗？",
+    "ApplyTagsHelpTextRemove": "移除: 移除已输入的标签",
+    "ApplyTagsHelpTextAdd": "添加: 添加标签至已有的标签列表中",
+    "ApplyTagsHelpTextReplace": "替换: 用输入的标签替换当前标签 (不输入将会清除所有标签)",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "如何将标签应用到已选择的下载客户端",
+    "ApplyTagsHelpTextHowToApplyImportLists": "如何将标签应用到已选择的导入列表",
+    "ApplyTagsHelpTextHowToApplyIndexers": "如何将标签应用到已选择的索引器"
 }
