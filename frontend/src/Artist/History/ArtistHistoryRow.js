@@ -13,7 +13,7 @@ import TableRow from 'Components/Table/TableRow';
 import Popover from 'Components/Tooltip/Popover';
 import Tooltip from 'Components/Tooltip/Tooltip';
 import { icons, kinds, tooltipPositions } from 'Helpers/Props';
-import formatPreferredWordScore from 'Utilities/Number/formatPreferredWordScore';
+import formatCustomFormatScore from 'Utilities/Number/formatCustomFormatScore';
 import translate from 'Utilities/String/translate';
 import styles from './ArtistHistoryRow.css';
 
@@ -136,7 +136,7 @@ class ArtistHistoryRow extends Component {
 
         <TableRowCell className={styles.customFormatScore}>
           <Tooltip
-            anchor={formatPreferredWordScore(
+            anchor={formatCustomFormatScore(
               customFormatScore,
               customFormats.length
             )}

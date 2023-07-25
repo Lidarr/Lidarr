@@ -9,7 +9,7 @@ import { tooltipPositions } from 'Helpers/Props';
 import MediaInfoConnector from 'TrackFile/MediaInfoConnector';
 import * as mediaInfoTypes from 'TrackFile/mediaInfoTypes';
 import formatTimeSpan from 'Utilities/Date/formatTimeSpan';
-import formatPreferredWordScore from 'Utilities/Number/formatPreferredWordScore';
+import formatCustomFormatScore from 'Utilities/Number/formatCustomFormatScore';
 import TrackActionsCell from './TrackActionsCell';
 import styles from './TrackRow.css';
 
@@ -134,7 +134,7 @@ class TrackRow extends Component {
                   className={styles.customFormatScore}
                 >
                   <Tooltip
-                    anchor={formatPreferredWordScore(
+                    anchor={formatCustomFormatScore(
                       customFormatScore,
                       customFormats.length
                     )}

@@ -15,7 +15,7 @@ import { icons, kinds, tooltipPositions } from 'Helpers/Props';
 import formatDateTime from 'Utilities/Date/formatDateTime';
 import formatAge from 'Utilities/Number/formatAge';
 import formatBytes from 'Utilities/Number/formatBytes';
-import formatPreferredWordScore from 'Utilities/Number/formatPreferredWordScore';
+import formatCustomFormatScore from 'Utilities/Number/formatCustomFormatScore';
 import translate from 'Utilities/String/translate';
 import Peers from './Peers';
 import styles from './InteractiveSearchRow.css';
@@ -172,7 +172,7 @@ class InteractiveSearchRow extends Component {
         <TableRowCell className={styles.customFormatScore}>
           <Tooltip
             anchor={
-              formatPreferredWordScore(customFormatScore, customFormats.length)
+              formatCustomFormatScore(customFormatScore, customFormats.length)
             }
             tooltip={<AlbumFormats formats={customFormats} />}
             position={tooltipPositions.BOTTOM}

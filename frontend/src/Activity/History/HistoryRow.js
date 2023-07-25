@@ -10,7 +10,7 @@ import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import Tooltip from 'Components/Tooltip/Tooltip';
 import { icons, tooltipPositions } from 'Helpers/Props';
-import formatPreferredWordScore from 'Utilities/Number/formatPreferredWordScore';
+import formatCustomFormatScore from 'Utilities/Number/formatCustomFormatScore';
 import HistoryDetailsModal from './Details/HistoryDetailsModal';
 import HistoryEventTypeCell from './HistoryEventTypeCell';
 import styles from './HistoryRow.css';
@@ -189,7 +189,7 @@ class HistoryRow extends Component {
                   className={styles.customFormatScore}
                 >
                   <Tooltip
-                    anchor={formatPreferredWordScore(
+                    anchor={formatCustomFormatScore(
                       customFormatScore,
                       customFormats.length
                     )}
