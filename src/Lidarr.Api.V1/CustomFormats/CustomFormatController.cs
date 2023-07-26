@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
+using FluentValidation.Results;
 using Lidarr.Http;
 using Lidarr.Http.REST;
 using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.CustomFormats;
+using NzbDrone.Core.Validation;
 
 namespace Lidarr.Api.V1.CustomFormats
 {
@@ -50,6 +52,9 @@ namespace Lidarr.Api.V1.CustomFormats
         public ActionResult<CustomFormatResource> Create(CustomFormatResource customFormatResource)
         {
             var model = customFormatResource.ToModel(_specifications);
+
+            Validate(model);
+
             return Created(_formatService.Insert(model).Id);
         }
 
@@ -58,6 +63,9 @@ namespace Lidarr.Api.V1.CustomFormats
         public ActionResult<CustomFormatResource> Update(CustomFormatResource resource)
         {
             var model = resource.ToModel(_specifications);
+
+            Validate(model);
+
             _formatService.Update(model);
 
             return Accepted(model.Id);
@@ -89,6 +97,24 @@ namespace Lidarr.Api.V1.CustomFormats
             }
 
             return schema;
+        }
+
+        private void Validate(CustomFormat definition)
+        {
+            foreach (var validationResult in definition.Specifications.Select(spec => spec.Validate()))
+            {
+                VerifyValidationResult(validationResult);
+            }
+        }
+
+        private void VerifyValidationResult(ValidationResult validationResult)
+        {
+            var result = new NzbDroneValidationResult(validationResult.Errors);
+
+            if (!result.IsValid)
+            {
+                throw new ValidationException(result.Errors);
+            }
         }
 
         private IEnumerable<ICustomFormatSpecification> GetPresets()
