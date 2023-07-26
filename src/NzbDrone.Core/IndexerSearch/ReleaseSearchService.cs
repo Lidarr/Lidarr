@@ -166,8 +166,10 @@ namespace NzbDrone.Core.IndexerSearch
 
         private List<DownloadDecision> DeDupeDecisions(List<DownloadDecision> decisions)
         {
-            // De-dupe reports by guid so duplicate results aren't returned.
-            return decisions.DistinctBy(d => d.RemoteAlbum.Release.Guid).ToList();
+            // De-dupe reports by guid so duplicate results aren't returned. Pick the one with the least rejections and higher indexer priority.
+            return decisions.GroupBy(d => d.RemoteAlbum.Release.Guid)
+                .Select(d => d.OrderBy(v => v.Rejections.Count()).ThenBy(v => v.RemoteAlbum?.Release?.IndexerPriority ?? IndexerDefinition.DefaultPriority).First())
+                .ToList();
         }
     }
 }
