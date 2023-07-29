@@ -52,32 +52,32 @@ export const defaultState = {
     },
     {
       name: 'path',
-      label: translate('Path'),
+      label: () => translate('Path'),
       isSortable: true,
       isVisible: true,
       isModifiable: false
     },
     {
       name: 'size',
-      label: translate('Size'),
+      label: () => translate('Size'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'dateAdded',
-      label: translate('DateAdded'),
+      label: () => translate('DateAdded'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'quality',
-      label: translate('Quality'),
+      label: () => translate('Quality'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'actions',
-      columnLabel: translate('Actions'),
+      columnLabel: () => translate('Actions'),
       isVisible: true,
       isModifiable: false
     }

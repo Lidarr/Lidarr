@@ -63,105 +63,105 @@ export const defaultState = {
   columns: [
     {
       name: 'status',
-      columnLabel: translate('Status'),
+      columnLabel: () => translate('Status'),
       isSortable: true,
       isVisible: true,
       isModifiable: false
     },
     {
       name: 'sortName',
-      label: translate('ArtistName'),
+      label: () => translate('ArtistName'),
       isSortable: true,
       isVisible: true,
       isModifiable: false
     },
     {
       name: 'artistType',
-      label: translate('Type'),
+      label: () => translate('Type'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'qualityProfileId',
-      label: translate('QualityProfile'),
+      label: () => translate('QualityProfile'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'metadataProfileId',
-      label: translate('MetadataProfile'),
+      label: () => translate('MetadataProfile'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'nextAlbum',
-      label: translate('NextAlbum'),
+      label: () => translate('NextAlbum'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'lastAlbum',
-      label: translate('LastAlbum'),
+      label: () => translate('LastAlbum'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'added',
-      label: translate('Added'),
+      label: () => translate('Added'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'albumCount',
-      label: translate('Albums'),
+      label: () => translate('Albums'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'trackProgress',
-      label: translate('Tracks'),
+      label: () => translate('Tracks'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'trackCount',
-      label: translate('TrackCount'),
+      label: () => translate('TrackCount'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'path',
-      label: translate('Path'),
+      label: () => translate('Path'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'sizeOnDisk',
-      label: translate('SizeOnDisk'),
+      label: () => translate('SizeOnDisk'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'genres',
-      label: translate('Genres'),
+      label: () => translate('Genres'),
       isSortable: false,
       isVisible: false
     },
     {
       name: 'ratings',
-      label: translate('Rating'),
+      label: () => translate('Rating'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'tags',
-      label: translate('Tags'),
+      label: () => translate('Tags'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'actions',
-      columnLabel: translate('Actions'),
+      columnLabel: () => translate('Actions'),
       isVisible: true,
       isModifiable: false
     }
@@ -244,70 +244,70 @@ export const defaultState = {
   filterBuilderProps: [
     {
       name: 'monitored',
-      label: translate('Monitored'),
+      label: () => translate('Monitored'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.BOOL
     },
     {
       name: 'status',
-      label: translate('Status'),
+      label: () => translate('Status'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.ARTIST_STATUS
     },
     {
       name: 'qualityProfileId',
-      label: translate('QualityProfile'),
+      label: () => translate('QualityProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.QUALITY_PROFILE
     },
     {
       name: 'metadataProfileId',
-      label: translate('MetadataProfile'),
+      label: () => translate('MetadataProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.METADATA_PROFILE
     },
     {
       name: 'nextAlbum',
-      label: translate('NextAlbum'),
+      label: () => translate('NextAlbum'),
       type: filterBuilderTypes.DATE,
       valueType: filterBuilderValueTypes.DATE
     },
     {
       name: 'lastAlbum',
-      label: translate('LastAlbum'),
+      label: () => translate('LastAlbum'),
       type: filterBuilderTypes.DATE,
       valueType: filterBuilderValueTypes.DATE
     },
     {
       name: 'added',
-      label: translate('Added'),
+      label: () => translate('Added'),
       type: filterBuilderTypes.DATE,
       valueType: filterBuilderValueTypes.DATE
     },
     {
       name: 'albumCount',
-      label: translate('AlbumCount'),
+      label: () => translate('AlbumCount'),
       type: filterBuilderTypes.NUMBER
     },
     {
       name: 'trackProgress',
-      label: translate('TrackProgress'),
+      label: () => translate('TrackProgress'),
       type: filterBuilderTypes.NUMBER
     },
     {
       name: 'path',
-      label: translate('Path'),
+      label: () => translate('Path'),
       type: filterBuilderTypes.STRING
     },
     {
       name: 'sizeOnDisk',
-      label: translate('SizeOnDisk'),
+      label: () => translate('SizeOnDisk'),
       type: filterBuilderTypes.NUMBER,
       valueType: filterBuilderValueTypes.BYTES
     },
     {
       name: 'genres',
-      label: translate('Genres'),
+      label: () => translate('Genres'),
       type: filterBuilderTypes.ARRAY,
       optionsSelector: function(items) {
         const tagList = items.reduce((acc, artist) => {
@@ -326,12 +326,12 @@ export const defaultState = {
     },
     {
       name: 'ratings',
-      label: translate('Rating'),
+      label: () => translate('Rating'),
       type: filterBuilderTypes.NUMBER
     },
     {
       name: 'tags',
-      label: translate('Tags'),
+      label: () => translate('Tags'),
       type: filterBuilderTypes.ARRAY,
       valueType: filterBuilderValueTypes.TAG
     }

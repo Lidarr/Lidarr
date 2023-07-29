@@ -32,30 +32,30 @@ export const defaultState = {
   columns: [
     {
       name: 'eventType',
-      columnLabel: translate('EventType'),
+      columnLabel: () => translate('EventType'),
       isVisible: true,
       isModifiable: false
     },
     {
       name: 'artists.sortName',
-      label: translate('Artist'),
+      label: () => translate('Artist'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'albums.title',
-      label: translate('AlbumTitle'),
+      label: () => translate('AlbumTitle'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'trackTitle',
-      label: translate('TrackTitle'),
+      label: () => translate('TrackTitle'),
       isVisible: true
     },
     {
       name: 'quality',
-      label: translate('Quality'),
+      label: () => translate('Quality'),
       isVisible: true
     },
     {
@@ -66,28 +66,28 @@ export const defaultState = {
     },
     {
       name: 'date',
-      label: translate('Date'),
+      label: () => translate('Date'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'downloadClient',
-      label: translate('DownloadClient'),
+      label: () => translate('DownloadClient'),
       isVisible: false
     },
     {
       name: 'indexer',
-      label: translate('Indexer'),
+      label: () => translate('Indexer'),
       isVisible: false
     },
     {
       name: 'releaseGroup',
-      label: translate('ReleaseGroup'),
+      label: () => translate('ReleaseGroup'),
       isVisible: false
     },
     {
       name: 'sourceTitle',
-      label: translate('SourceTitle'),
+      label: () => translate('SourceTitle'),
       isVisible: false
     },
     {
@@ -106,7 +106,7 @@ export const defaultState = {
     },
     {
       name: 'details',
-      columnLabel: translate('Details'),
+      columnLabel: () => translate('Details'),
       isVisible: true,
       isModifiable: false
     }
@@ -117,12 +117,12 @@ export const defaultState = {
   filters: [
     {
       key: 'all',
-      label: translate('All'),
+      label: () => translate('All'),
       filters: []
     },
     {
       key: 'grabbed',
-      label: translate('Grabbed'),
+      label: () => translate('Grabbed'),
       filters: [
         {
           key: 'eventType',
@@ -133,7 +133,7 @@ export const defaultState = {
     },
     {
       key: 'trackFileImported',
-      label: translate('TrackImported'),
+      label: () => translate('TrackImported'),
       filters: [
         {
           key: 'eventType',
@@ -144,7 +144,7 @@ export const defaultState = {
     },
     {
       key: 'failed',
-      label: translate('DownloadFailed'),
+      label: () => translate('DownloadFailed'),
       filters: [
         {
           key: 'eventType',
@@ -155,7 +155,7 @@ export const defaultState = {
     },
     {
       key: 'importFailed',
-      label: translate('ImportFailed'),
+      label: () => translate('ImportFailed'),
       filters: [
         {
           key: 'eventType',
@@ -166,7 +166,7 @@ export const defaultState = {
     },
     {
       key: 'downloadImported',
-      label: translate('DownloadImported'),
+      label: () => translate('DownloadImported'),
       filters: [
         {
           key: 'eventType',
@@ -177,7 +177,7 @@ export const defaultState = {
     },
     {
       key: 'deleted',
-      label: translate('Deleted'),
+      label: () => translate('Deleted'),
       filters: [
         {
           key: 'eventType',
@@ -188,7 +188,7 @@ export const defaultState = {
     },
     {
       key: 'renamed',
-      label: translate('Renamed'),
+      label: () => translate('Renamed'),
       filters: [
         {
           key: 'eventType',
@@ -199,7 +199,7 @@ export const defaultState = {
     },
     {
       key: 'retagged',
-      label: translate('Retagged'),
+      label: () => translate('Retagged'),
       filters: [
         {
           key: 'eventType',
@@ -210,7 +210,7 @@ export const defaultState = {
     },
     {
       key: 'ignored',
-      label: translate('Ignored'),
+      label: () => translate('Ignored'),
       filters: [
         {
           key: 'eventType',

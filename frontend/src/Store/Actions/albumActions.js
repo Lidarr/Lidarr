@@ -42,59 +42,59 @@ export const defaultState = {
   columns: [
     {
       name: 'monitored',
-      columnLabel: translate('Monitored'),
+      columnLabel: () => translate('Monitored'),
       isSortable: true,
       isVisible: true,
       isModifiable: false
     },
     {
       name: 'title',
-      label: translate('Title'),
+      label: () => translate('Title'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'releaseDate',
-      label: translate('ReleaseDate'),
+      label: () => translate('ReleaseDate'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'secondaryTypes',
-      label: translate('SecondaryTypes'),
+      label: () => translate('SecondaryTypes'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'mediumCount',
-      label: translate('MediaCount'),
+      label: () => translate('MediaCount'),
       isVisible: false
     },
     {
       name: 'trackCount',
-      label: translate('TrackCount'),
+      label: () => translate('TrackCount'),
       isVisible: false
     },
     {
       name: 'duration',
-      label: translate('Duration'),
+      label: () => translate('Duration'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'rating',
-      label: translate('Rating'),
+      label: () => translate('Rating'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'status',
-      label: translate('Status'),
+      label: () => translate('Status'),
       isVisible: true
     },
     {
       name: 'actions',
-      columnLabel: translate('Actions'),
+      columnLabel: () => translate('Actions'),
       isVisible: true,
       isModifiable: false
     }

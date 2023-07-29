@@ -32,41 +32,41 @@ export const defaultState = {
   filterBuilderProps: [
     {
       name: 'monitored',
-      label: translate('Monitored'),
+      label: () => translate('Monitored'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.BOOL
     },
     {
       name: 'status',
-      label: translate('Status'),
+      label: () => translate('Status'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.ARTIST_STATUS
     },
     {
       name: 'artistType',
-      label: translate('ArtistType'),
+      label: () => translate('ArtistType'),
       type: filterBuilderTypes.EXACT
     },
     {
       name: 'qualityProfileId',
-      label: translate('QualityProfile'),
+      label: () => translate('QualityProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.QUALITY_PROFILE
     },
     {
       name: 'metadataProfileId',
-      label: translate('MetadataProfile'),
+      label: () => translate('MetadataProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.METADATA_PROFILE
     },
     {
       name: 'rootFolderPath',
-      label: translate('RootFolderPath'),
+      label: () => translate('RootFolderPath'),
       type: filterBuilderTypes.EXACT
     },
     {
       name: 'tags',
-      label: translate('Tags'),
+      label: () => translate('Tags'),
       type: filterBuilderTypes.ARRAY,
       valueType: filterBuilderValueTypes.TAG
     }

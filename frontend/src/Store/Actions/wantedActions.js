@@ -30,25 +30,25 @@ export const defaultState = {
     columns: [
       {
         name: 'artists.sortName',
-        label: translate('ArtistName'),
+        label: () => translate('ArtistName'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'albums.title',
-        label: translate('AlbumTitle'),
+        label: () => translate('AlbumTitle'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'albumType',
-        label: translate('AlbumType'),
+        label: () => translate('AlbumType'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'releaseDate',
-        label: translate('ReleaseDate'),
+        label: () => translate('ReleaseDate'),
         isSortable: true,
         isVisible: true
       },
@@ -59,7 +59,7 @@ export const defaultState = {
       // },
       {
         name: 'actions',
-        columnLabel: translate('Actions'),
+        columnLabel: () => translate('Actions'),
         isVisible: true,
         isModifiable: false
       }
@@ -70,7 +70,7 @@ export const defaultState = {
     filters: [
       {
         key: 'monitored',
-        label: translate('Monitored'),
+        label: () => translate('Monitored'),
         filters: [
           {
             key: 'monitored',
@@ -81,7 +81,7 @@ export const defaultState = {
       },
       {
         key: 'unmonitored',
-        label: translate('Unmonitored'),
+        label: () => translate('Unmonitored'),
         filters: [
           {
             key: 'monitored',
@@ -104,25 +104,25 @@ export const defaultState = {
     columns: [
       {
         name: 'artists.sortName',
-        label: translate('ArtistName'),
+        label: () => translate('ArtistName'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'albums.title',
-        label: translate('AlbumTitle'),
+        label: () => translate('AlbumTitle'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'albumType',
-        label: translate('AlbumType'),
+        label: () => translate('AlbumType'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'releaseDate',
-        label: translate('ReleaseDate'),
+        label: () => translate('ReleaseDate'),
         isSortable: true,
         isVisible: true
       },
@@ -133,7 +133,7 @@ export const defaultState = {
       // },
       {
         name: 'actions',
-        columnLabel: translate('Actions'),
+        columnLabel: () => translate('Actions'),
         isVisible: true,
         isModifiable: false
       }
@@ -144,7 +144,7 @@ export const defaultState = {
     filters: [
       {
         key: 'monitored',
-        label: translate('Monitored'),
+        label: () => translate('Monitored'),
         filters: [
           {
             key: 'monitored',
@@ -155,7 +155,7 @@ export const defaultState = {
       },
       {
         key: 'unmonitored',
-        label: translate('Unmonitored'),
+        label: () => translate('Unmonitored'),
         filters: [
           {
             key: 'monitored',

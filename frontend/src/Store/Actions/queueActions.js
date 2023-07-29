@@ -60,32 +60,32 @@ export const defaultState = {
     columns: [
       {
         name: 'status',
-        columnLabel: translate('Status'),
+        columnLabel: () => translate('Status'),
         isSortable: true,
         isVisible: true,
         isModifiable: false
       },
       {
         name: 'artists.sortName',
-        label: translate('Artist'),
+        label: () => translate('Artist'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'albums.title',
-        label: translate('AlbumTitle'),
+        label: () => translate('AlbumTitle'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'albums.releaseDate',
-        label: translate('AlbumReleaseDate'),
+        label: () => translate('AlbumReleaseDate'),
         isSortable: true,
         isVisible: false
       },
       {
         name: 'quality',
-        label: translate('Quality'),
+        label: () => translate('Quality'),
         isSortable: true,
         isVisible: true
       },
@@ -97,7 +97,7 @@ export const defaultState = {
       },
       {
         name: 'customFormatScore',
-        columnLabel: translate('CustomFormatScore'),
+        columnLabel: () => translate('CustomFormatScore'),
         label: React.createElement(Icon, {
           name: icons.SCORE,
           title: () => translate('CustomFormatScore')
@@ -106,55 +106,55 @@ export const defaultState = {
       },
       {
         name: 'protocol',
-        label: translate('Protocol'),
+        label: () => translate('Protocol'),
         isSortable: true,
         isVisible: false
       },
       {
         name: 'indexer',
-        label: translate('Indexer'),
+        label: () => translate('Indexer'),
         isSortable: true,
         isVisible: false
       },
       {
         name: 'downloadClient',
-        label: translate('DownloadClient'),
+        label: () => translate('DownloadClient'),
         isSortable: true,
         isVisible: false
       },
       {
         name: 'title',
-        label: translate('ReleaseTitle'),
+        label: () => translate('ReleaseTitle'),
         isSortable: true,
         isVisible: false
       },
       {
         name: 'size',
-        label: translate('Size'),
+        label: () => translate('Size'),
         isSortable: true,
         isVisibile: false
       },
       {
         name: 'outputPath',
-        label: translate('OutputPath'),
+        label: () => translate('OutputPath'),
         isSortable: false,
         isVisible: false
       },
       {
         name: 'estimatedCompletionTime',
-        label: translate('TimeLeft'),
+        label: () => translate('TimeLeft'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'progress',
-        label: translate('Progress'),
+        label: () => translate('Progress'),
         isSortable: true,
         isVisible: true
       },
       {
         name: 'actions',
-        columnLabel: translate('Actions'),
+        columnLabel: () => translate('Actions'),
         isVisible: true,
         isModifiable: false
       }

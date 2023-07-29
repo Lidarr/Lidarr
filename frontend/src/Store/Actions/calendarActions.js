@@ -51,7 +51,7 @@ export const defaultState = {
   filters: [
     {
       key: 'all',
-      label: translate('All'),
+      label: () => translate('All'),
       filters: [
         {
           key: 'monitored',
@@ -62,7 +62,7 @@ export const defaultState = {
     },
     {
       key: 'monitored',
-      label: translate('MonitoredOnly'),
+      label: () => translate('MonitoredOnly'),
       filters: [
         {
           key: 'monitored',

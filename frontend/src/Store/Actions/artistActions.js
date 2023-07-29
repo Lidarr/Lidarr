@@ -21,12 +21,12 @@ export const section = 'artist';
 export const filters = [
   {
     key: 'all',
-    label: translate('All'),
+    label: () => translate('All'),
     filters: []
   },
   {
     key: 'monitored',
-    label: translate('MonitoredOnly'),
+    label: () => translate('MonitoredOnly'),
     filters: [
       {
         key: 'monitored',
@@ -37,7 +37,7 @@ export const filters = [
   },
   {
     key: 'unmonitored',
-    label: translate('UnmonitoredOnly'),
+    label: () => translate('UnmonitoredOnly'),
     filters: [
       {
         key: 'monitored',
@@ -48,7 +48,7 @@ export const filters = [
   },
   {
     key: 'continuing',
-    label: translate('ContinuingOnly'),
+    label: () => translate('ContinuingOnly'),
     filters: [
       {
         key: 'status',
@@ -59,7 +59,7 @@ export const filters = [
   },
   {
     key: 'ended',
-    label: translate('EndedOnly'),
+    label: () => translate('EndedOnly'),
     filters: [
       {
         key: 'status',
@@ -70,7 +70,7 @@ export const filters = [
   },
   {
     key: 'missing',
-    label: translate('MissingTracks'),
+    label: () => translate('MissingTracks'),
     filters: [
       {
         key: 'missing',

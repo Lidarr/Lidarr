@@ -33,19 +33,19 @@ export const defaultState = {
   columns: [
     {
       name: 'artists.sortName',
-      label: translate('ArtistName'),
+      label: () => translate('ArtistName'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'sourceTitle',
-      label: translate('SourceTitle'),
+      label: () => translate('SourceTitle'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'quality',
-      label: translate('Quality'),
+      label: () => translate('Quality'),
       isVisible: true
     },
     {
@@ -56,19 +56,19 @@ export const defaultState = {
     },
     {
       name: 'date',
-      label: translate('Date'),
+      label: () => translate('Date'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'indexer',
-      label: translate('Indexer'),
+      label: () => translate('Indexer'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'actions',
-      columnLabel: translate('Actions'),
+      columnLabel: () => translate('Actions'),
       isVisible: true,
       isModifiable: false
     }

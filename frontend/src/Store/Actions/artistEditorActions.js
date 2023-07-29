@@ -35,50 +35,50 @@ export const defaultState = {
   columns: [
     {
       name: 'status',
-      columnLabel: translate('Status'),
+      columnLabel: () => translate('Status'),
       isSortable: true,
       isVisible: true,
       isModifiable: false
     },
     {
       name: 'sortName',
-      label: translate('Name'),
+      label: () => translate('Name'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'monitorNewItems',
-      label: translate('MonitorNewItems'),
+      label: () => translate('MonitorNewItems'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'qualityProfileId',
-      label: translate('QualityProfile'),
+      label: () => translate('QualityProfile'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'metadataProfileId',
-      label: translate('MetadataProfile'),
+      label: () => translate('MetadataProfile'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'path',
-      label: translate('Path'),
+      label: () => translate('Path'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'sizeOnDisk',
-      label: translate('SizeOnDisk'),
+      label: () => translate('SizeOnDisk'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'tags',
-      label: translate('Tags'),
+      label: () => translate('Tags'),
       isSortable: true,
       isVisible: true
     }
@@ -87,47 +87,47 @@ export const defaultState = {
   filterBuilderProps: [
     {
       name: 'monitored',
-      label: translate('Monitored'),
+      label: () => translate('Monitored'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.BOOL
     },
     {
       name: 'status',
-      label: translate('Status'),
+      label: () => translate('Status'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.ARTIST_STATUS
     },
     {
       name: 'qualityProfileId',
-      label: translate('QualityProfile'),
+      label: () => translate('QualityProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.QUALITY_PROFILE
     },
     {
       name: 'metadataProfileId',
-      label: translate('MetadataProfile'),
+      label: () => translate('MetadataProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.METADATA_PROFILE
     },
     {
       name: 'path',
-      label: translate('Path'),
+      label: () => translate('Path'),
       type: filterBuilderTypes.STRING
     },
     {
       name: 'rootFolderPath',
-      label: translate('RootFolderPath'),
+      label: () => translate('RootFolderPath'),
       type: filterBuilderTypes.EXACT
     },
     {
       name: 'sizeOnDisk',
-      label: translate('SizeOnDisk'),
+      label: () => translate('SizeOnDisk'),
       type: filterBuilderTypes.NUMBER,
       valueType: filterBuilderValueTypes.BYTES
     },
     {
       name: 'tags',
-      label: translate('Tags'),
+      label: () => translate('Tags'),
       type: filterBuilderTypes.ARRAY,
       valueType: filterBuilderValueTypes.TAG
     }
