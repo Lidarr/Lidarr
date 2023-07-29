@@ -5,7 +5,6 @@ import FieldSet from 'Components/FieldSet';
 import Icon from 'Components/Icon';
 import PageSectionContent from 'Components/Page/PageSectionContent';
 import { icons } from 'Helpers/Props';
-import sortByName from 'Utilities/Array/sortByName';
 import translate from 'Utilities/String/translate';
 import EditRootFolderModalConnector from './EditRootFolderModalConnector';
 import RootFolder from './RootFolder';
