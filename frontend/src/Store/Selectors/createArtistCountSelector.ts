@@ -1,18 +1,19 @@
 import { createSelector } from 'reselect';
+import AppState from 'App/State/AppState';
 import createAllArtistSelector from './createAllArtistSelector';
 
 function createArtistCountSelector() {
   return createSelector(
     createAllArtistSelector(),
-    (state) => state.artist.error,
-    (state) => state.artist.isFetching,
-    (state) => state.artist.isPopulated,
+    (state: AppState) => state.artist.error,
+    (state: AppState) => state.artist.isFetching,
+    (state: AppState) => state.artist.isPopulated,
     (artists, error, isFetching, isPopulated) => {
       return {
         count: artists.length,
         error,
         isFetching,
-        isPopulated
+        isPopulated,
       };
     }
   );

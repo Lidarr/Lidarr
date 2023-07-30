@@ -1,5 +1,6 @@
 import AppSectionState, {
   AppSectionDeleteState,
+  AppSectionItemState,
   AppSectionSaveState,
   AppSectionSchemaState,
 } from 'App/State/AppSectionState';
@@ -46,7 +47,7 @@ export interface RootFolderAppState
     AppSectionSaveState {}
 
 export type IndexerFlagSettingsAppState = AppSectionState<IndexerFlag>;
-export type UiSettingsAppState = AppSectionState<UiSettings>;
+export type UiSettingsAppState = AppSectionItemState<UiSettings>;
 
 interface SettingsAppState {
   downloadClients: DownloadClientAppState;
@@ -57,7 +58,7 @@ interface SettingsAppState {
   notifications: NotificationAppState;
   qualityProfiles: QualityProfilesAppState;
   rootFolders: RootFolderAppState;
-  uiSettings: UiSettingsAppState;
+  ui: UiSettingsAppState;
 }
 
 export default SettingsAppState;

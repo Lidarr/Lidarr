@@ -5,6 +5,7 @@ import CommandAppState from './CommandAppState';
 import HistoryAppState from './HistoryAppState';
 import QueueAppState from './QueueAppState';
 import SettingsAppState from './SettingsAppState';
+import SystemAppState from './SystemAppState';
 import TagsAppState from './TagsAppState';
 import TrackFilesAppState from './TrackFilesAppState';
 import TracksAppState from './TracksAppState';
@@ -62,6 +63,7 @@ interface AppState {
   tags: TagsAppState;
   trackFiles: TrackFilesAppState;
   tracksSelection: TracksAppState;
+  system: SystemAppState;
 }
 
 export default AppState;

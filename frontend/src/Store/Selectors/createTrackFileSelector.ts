@@ -1,9 +1,10 @@
 import { createSelector } from 'reselect';
+import AppState from 'App/State/AppState';
 
 function createTrackFileSelector() {
   return createSelector(
-    (state, { trackFileId }) => trackFileId,
-    (state) => state.trackFiles,
+    (_: AppState, { trackFileId }: { trackFileId: number }) => trackFileId,
+    (state: AppState) => state.trackFiles,
     (trackFileId, trackFiles) => {
       if (!trackFileId) {
         return;
