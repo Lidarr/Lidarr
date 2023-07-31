@@ -221,5 +221,7 @@
     "DeleteSelectedDownloadClientsMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
     "DeleteSelectedImportListsMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
     "DeleteSelectedIndexersMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
-    "DeleteImportListExclusion": "Legg til importeringsliste unntak"
+    "DeleteImportListExclusion": "Legg til importeringsliste unntak",
+    "ApplyChanges": "Bekreft endringer",
+    "ApiKeyValidationHealthCheckMessage": "Vennligst oppdater din API-nøkkel til å være minst {0} tegn lang. Du kan gjøre dette via innstillinger eller konfigurasjonsfilen"
 }
