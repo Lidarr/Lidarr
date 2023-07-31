@@ -26,10 +26,10 @@ namespace NzbDrone.Core.Indexers.FileList
             BaseUrl = "https://filelist.io";
             MinimumSeeders = IndexerDefaults.MINIMUM_SEEDERS;
 
-            Categories = new int[]
+            Categories = new[]
             {
-                (int)FileListCategories.AUDIO,
-                (int)FileListCategories.FLAC
+                (int)FileListCategories.Audio,
+                (int)FileListCategories.Flac
             };
         }
 
@@ -62,9 +62,9 @@ namespace NzbDrone.Core.Indexers.FileList
 
     public enum FileListCategories
     {
-        [FieldOption]
-        AUDIO = 5,
-        [FieldOption]
-        FLAC = 11
+        [FieldOption(Label = "FLAC")]
+        Flac = 5,
+        [FieldOption(Label = "Audio")]
+        Audio = 11
     }
 }
