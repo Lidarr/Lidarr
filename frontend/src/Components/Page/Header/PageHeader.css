@@ -37,6 +37,22 @@
   flex-grow: 1;
 }
 
+.translation {
+  composes: link from '~Components/Link/Link.css';
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  color: #fff;
+  text-align: center;
+  line-height: 60px;
+
+&:hover {
+   color: #1d563d;
+ }
+}
+
 .donate {
   composes: link from '~Components/Link/Link.css';
 
@@ -59,7 +75,8 @@
     display: flex;
   }
 
-  .donate {
+  .donate,
+  .translation {
     display: none;
   }
 }

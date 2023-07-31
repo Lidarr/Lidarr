@@ -64,6 +64,7 @@ import {
   faHistory as fasHistory,
   faHome as fasHome,
   faInfoCircle as fasInfoCircle,
+  faLanguage as fasLanguage,
   faLaptop as fasLaptop,
   faLevelUpAlt as fasLevelUpAlt,
   faListCheck as fasListCheck,
@@ -211,6 +212,7 @@ export const TABLE = fasTable;
 export const TAGS = fasTags;
 export const TBA = fasQuestionCircle;
 export const TEST = fasVial;
+export const TRANSLATE = fasLanguage;
 export const UNGROUP = farObjectUngroup;
 export const UNKNOWN = fasQuestion;
 export const UNMONITORED = farBookmark;

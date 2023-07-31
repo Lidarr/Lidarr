@@ -4,6 +4,7 @@ import keyboardShortcuts, { shortcuts } from 'Components/keyboardShortcuts';
 import IconButton from 'Components/Link/IconButton';
 import Link from 'Components/Link/Link';
 import { icons } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import ArtistSearchInputConnector from './ArtistSearchInputConnector';
 import KeyboardShortcutsModal from './KeyboardShortcutsModal';
 import PageHeaderActionsMenuConnector from './PageHeaderActionsMenuConnector';
@@ -80,6 +81,13 @@ class PageHeader extends Component {
             aria-label="Donate"
             to="https://lidarr.audio/donate"
             size={14}
+          />
+          <IconButton
+            className={styles.translation}
+            title={translate('SuggestTranslationChange')}
+            name={icons.TRANSLATE}
+            to="https://translate.servarr.com/projects/servarr/lidarr/"
+            size={24}
           />
           <PageHeaderActionsMenuConnector
             onKeyboardShortcutsPress={this.onOpenKeyboardShortcutsModal}

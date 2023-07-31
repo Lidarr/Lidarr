@@ -911,6 +911,7 @@
   "Style": "Style",
   "SuccessMyWorkIsDoneNoFilesToRename": "Success! My work is done, no files to rename.",
   "SuccessMyWorkIsDoneNoFilesToRetag": "Success! My work is done, no files to retag.",
+  "SuggestTranslationChange": "Suggest translation change",
   "SupportsRssvalueRSSIsNotSupportedWithThisIndexer": "RSS is not supported with this indexer",
   "SupportsSearchvalueSearchIsNotSupportedWithThisIndexer": "Search is not supported with this indexer",
   "SupportsSearchvalueWillBeUsedWhenAutomaticSearchesArePerformedViaTheUIOrByLidarr": "Will be used when automatic searches are performed via the UI or by Lidarr",
