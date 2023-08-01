@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import Alert from 'Components/Alert';
 import Icon from 'Components/Icon';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import FilterMenu from 'Components/Menu/FilterMenu';
 import PageMenuButton from 'Components/Menu/PageMenuButton';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
-import { align, icons, sortDirections } from 'Helpers/Props';
+import { align, icons, kinds, sortDirections } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import InteractiveSearchFilterModalConnector from './InteractiveSearchFilterModalConnector';
 import InteractiveSearchRow from './InteractiveSearchRow';
@@ -132,17 +133,17 @@ function InteractiveSearch(props) {
 
       {
         !isFetching && isPopulated && !totalReleasesCount ?
-          <div className={styles.blankpad}>
-            {translate('NoResults')}
-          </div> :
+          <Alert kind={kinds.INFO}>
+            {translate('NoResultsFound')}
+          </Alert> :
           null
       }
 
       {
         !!totalReleasesCount && isPopulated && !items.length ?
-          <div className={styles.blankpad}>
-            {translate('AllResultsFiltered')}
-          </div> :
+          <Alert kind={kinds.WARNING}>
+            {translate('AllResultsAreHiddenByTheAppliedFilter')}
+          </Alert> :
           null
       }
 
@@ -177,7 +178,7 @@ function InteractiveSearch(props) {
       {
         totalReleasesCount !== items.length && !!items.length ?
           <div className={styles.filteredMessage}>
-            {translate('SomeResultsFiltered')}
+            {translate('SomeResultsAreHiddenByTheAppliedFilter')}
           </div> :
           null
       }
