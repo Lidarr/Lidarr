@@ -115,7 +115,7 @@ class DeleteArtistModalContent extends Component {
               type={inputTypes.CHECK}
               name="addImportListExclusion"
               value={addImportListExclusion}
-              helpText={translate('AddImportListExclusionHelpText')}
+              helpText={translate('AddImportListExclusionArtistHelpText')}
               kind={kinds.DANGER}
               onChange={this.onAddImportListExclusionChange}
             />
