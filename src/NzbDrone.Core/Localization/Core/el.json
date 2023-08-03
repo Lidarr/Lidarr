@@ -571,7 +571,6 @@
     "ImportListExclusions": "Διαγραφή εξαίρεσης λίστας εισαγωγής",
     "AddImportListExclusion": "Διαγραφή εξαίρεσης λίστας εισαγωγής",
     "AddedArtistSettings": "Προστέθηκαν Ρυθμίσεις Καλλιτέχνη",
-    "AddImportListExclusionHelpText": "Αποτροπή προσθήκης καλλιτέχνη στο Lidarr μέσω λίστας εισαγωγής",
     "AddConnection": "Προσθήκη Σύνδεσης",
     "AddMetadataProfile": "Προσθήκη Προφίλ Μεταδεδομένων",
     "AddNewItem": "Προσθήκη Νέου",

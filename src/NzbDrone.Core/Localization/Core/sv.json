@@ -268,7 +268,6 @@
     "WatchRootFoldersForFileChanges": "Bevaka Rotmapparna efter filförändringar",
     "UrlBaseHelpTextWarning": "Kräver omstart för att träda i kraft",
     "20MinutesTwenty": "20 Minuter: {0}",
-    "AddImportListExclusionHelpText": "Hindra artist från att läggas till i Lidarr av Importlista",
     "AllowFingerprinting": "Tillåt Fingeravtryckning",
     "AlternateTitles": "Alternativ Titel",
     "AlbumIsDownloadingInterp": "Album är nedladdat - {0}% {1}",

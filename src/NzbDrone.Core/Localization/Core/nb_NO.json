@@ -189,7 +189,6 @@
     "CatalogNumber": "katalognummer",
     "AddConnection": "Legg til kobling",
     "AddImportListExclusion": "Legg til importeringsliste unntak",
-    "AddImportListExclusionHelpText": "Forhindre artisten fra å legges til Lidarr med importeringsliste",
     "AddMissing": "Legg til manglende",
     "AddNewItem": "Legg til nytt item",
     "AddReleaseProfile": "Legg til utgivelseprofil",

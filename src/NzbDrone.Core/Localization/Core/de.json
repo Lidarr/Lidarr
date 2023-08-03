@@ -660,7 +660,6 @@
     "WatchRootFoldersForFileChanges": "Beobachte Stammverzeichnis auf Dateiänderungen",
     "WriteAudioTagsHelpTextWarning": "Wenn Sie \"Alle Dateien\" auswählen, werden vorhandene Dateien beim Import geändert.",
     "MusicbrainzId": "MusicBrainz Id",
-    "AddImportListExclusionHelpText": "Verhindern, dass der Künstler durch Importlisten zu Lidarr hinzugefügt wird",
     "AlbumStudio": "Albumstudio",
     "OnHealthIssue": "Bei Zustandsproblem",
     "ThisCannotBeCancelled": "Nach dem Start kann dies nicht mehr abgebrochen werden ohne alle Indexer zu deaktivieren.",

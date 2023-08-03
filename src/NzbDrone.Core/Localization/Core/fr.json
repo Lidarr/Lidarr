@@ -2,7 +2,7 @@
     "Language": "Langue",
     "UILanguage": "UI Langue",
     "AppDataDirectory": "Dossier AppData",
-    "AddingTag": "Ajout d'un tag",
+    "AddingTag": "Ajouter un tag",
     "Analytics": "Analytique",
     "About": "À propos",
     "ApplyTags": "Appliquer les tags",
@@ -488,7 +488,6 @@
     "ChownGroup": "groupe chown",
     "CollapseMultipleAlbums": "Réduire plusieurs albums",
     "CollapseMultipleAlbumsHelpText": "Réduire plusieurs albums publiés le même jour",
-    "AddImportListExclusionHelpText": "Éviter d'ajouter l'artiste à Lidarr par les listes d'importation",
     "Album": "Album",
     "AlbumHasNotAired": "Album non diffusé",
     "AlbumIsDownloading": "Album en cours de téléchargement",
@@ -812,5 +811,8 @@
     "DeleteSelectedImportListsMessageText": "Voulez-vous vraiment supprimer l'indexeur '{0}' ?",
     "DeleteSelectedIndexersMessageText": "Voulez-vous vraiment supprimer l'indexeur '{0}' ?",
     "ApplyTagsHelpTextHowToApplyImportLists": "Comment appliquer des tags au film sélectionné",
-    "ApplyTagsHelpTextHowToApplyIndexers": "Comment appliquer des étiquettes aux indexeurs sélectionnés"
+    "ApplyTagsHelpTextHowToApplyIndexers": "Comment appliquer des étiquettes aux indexeurs sélectionnés",
+    "CountDownloadClientsSelected": "{0} client(s) de téléchargement sélectionné(s)",
+    "EditSelectedDownloadClients": "Modifier les clients de téléchargement sélectionnés",
+    "EditSelectedIndexers": "Modifier les indexeurs sélectionnés"
 }
