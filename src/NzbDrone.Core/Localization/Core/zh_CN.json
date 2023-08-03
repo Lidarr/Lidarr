@@ -178,7 +178,6 @@
     "MinimumAge": "最低间隔",
     "MinimumFreeSpaceWhenImportingHelpText": "如果导入的磁盘空间不足，则禁止导入",
     "Absolute": "绝对",
-    "AddImportListExclusionHelpText": "防止列表中的电影被添加到 Lidarr 中",
     "AddMissing": "添加丢失项",
     "AlbumIsDownloadingInterp": "正在下载专辑 - {0}% {1}",
     "AlbumHasNotAired": "专辑尚未发布",
@@ -1004,5 +1003,6 @@
     "RemoveFromDownloadClientHelpTextWarning": "移除操作会从下载客户端中删除任务和已下载文件。",
     "RemovingTag": "移除标签",
     "Yes": "确定",
-    "ResetQualityDefinitions": "重置质量定义"
+    "ResetQualityDefinitions": "重置质量定义",
+    "Album": "专辑"
 }

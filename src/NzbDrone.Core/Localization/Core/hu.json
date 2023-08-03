@@ -203,7 +203,6 @@
     "ApiKeyHelpTextWarning": "Újraindítás szükséges a hatálybalépéshez",
     "Artist": "Előadó",
     "AlbumIsDownloading": "Album letöltés alatt",
-    "AddImportListExclusionHelpText": "Megakadályozza, hogy az előadót az importálási listák hozzáadják a Lidarrhoz",
     "AlbumIsNotMonitored": "Album nincs monitorozva",
     "ArtistAlbumClickToChangeTrack": "Kattints a következő számért",
     "ArtistClickToChangeAlbum": "Kattints az album módosításához",

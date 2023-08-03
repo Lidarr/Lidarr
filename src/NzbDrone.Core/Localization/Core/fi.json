@@ -828,7 +828,6 @@
     "SearchAlbum": "Etsi albumia",
     "SelectAlbum": "Valitse albumi",
     "SelectAlbumRelease": "Valitse albumin julkaisu",
-    "AddImportListExclusionHelpText": "Estä tuontilistoja lisäämästä esittäjiä automaattisesti.",
     "FutureAlbumsData": "Seuraa albumeita, joita ei ole vielä julkaistu.",
     "MassAlbumsSearchWarning": "Haluatko varmasti etsiä '{0}' puuttuvaa albumia?",
     "EditArtist": "Muokkaa esittäjää",
