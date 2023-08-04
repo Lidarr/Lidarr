@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Net;
 using NLog;
@@ -160,11 +159,11 @@ namespace NzbDrone.Core.MediaFiles
                     var artist = message.Album.Artist.Value;
                     var albumFolder = message.TrackFilesToDelete.FirstOrDefault()?.Path.GetParentPath();
 
-                    if (_diskProvider.GetFiles(artist.Path, SearchOption.AllDirectories).Empty())
+                    if (_diskProvider.GetFiles(artist.Path, true).Empty())
                     {
                         _diskProvider.DeleteFolder(artist.Path, true);
                     }
-                    else if (albumFolder.IsNotNullOrWhiteSpace() && _diskProvider.GetFiles(albumFolder, SearchOption.AllDirectories).Empty())
+                    else if (albumFolder.IsNotNullOrWhiteSpace() && _diskProvider.GetFiles(albumFolder, true).Empty())
                     {
                         _diskProvider.RemoveEmptySubfolders(albumFolder);
                     }
@@ -187,11 +186,11 @@ namespace NzbDrone.Core.MediaFiles
                 var artist = message.TrackFile.Artist.Value;
                 var albumFolder = message.TrackFile.Path.GetParentPath();
 
-                if (_diskProvider.GetFiles(artist.Path, SearchOption.AllDirectories).Empty())
+                if (_diskProvider.GetFiles(artist.Path, true).Empty())
                 {
                     _diskProvider.DeleteFolder(artist.Path, true);
                 }
-                else if (_diskProvider.GetFiles(albumFolder, SearchOption.AllDirectories).Empty())
+                else if (_diskProvider.GetFiles(albumFolder, true).Empty())
                 {
                     _diskProvider.RemoveEmptySubfolders(albumFolder);
                 }
