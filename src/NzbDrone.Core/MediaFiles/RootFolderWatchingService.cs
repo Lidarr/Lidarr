@@ -116,6 +116,9 @@ namespace NzbDrone.Core.MediaFiles
 
         private void StartWatchingPath(string path)
         {
+            Ensure.That(path, () => path).IsNotNullOrWhiteSpace();
+            Ensure.That(path, () => path).IsValidPath(PathValidationType.CurrentOs);
+
             // Already being watched
             if (_fileSystemWatchers.ContainsKey(path))
             {
