@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using NLog;
 using NzbDrone.Common.Disk;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.RootFolders;
 
 namespace NzbDrone.Core.DiskSpace
@@ -33,13 +34,21 @@ namespace NzbDrone.Core.DiskSpace
 
         public List<DiskSpace> GetFreeSpace()
         {
-            var importantRootFolders = _rootFolderService.All().Select(x => x.Path).ToList();
+            var importantRootFolders = GetRootPaths().Distinct().ToList();
 
             var optionalRootFolders = GetFixedDisksRootPaths().Except(importantRootFolders).Distinct().ToList();
 
             var diskSpace = GetDiskSpace(importantRootFolders).Concat(GetDiskSpace(optionalRootFolders, true)).ToList();
 
             return diskSpace;
+        }
+
+        private IEnumerable<string> GetRootPaths()
+        {
+            return _rootFolderService.All()
+                .Select(x => x.Path)
+                .Where(path => path.IsPathValid(PathValidationType.CurrentOs) && _diskProvider.FolderExists(path))
+                .Distinct();
         }
 
         private IEnumerable<string> GetFixedDisksRootPaths()

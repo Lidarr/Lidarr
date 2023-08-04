@@ -1,5 +1,6 @@
 using System.Linq;
 using NzbDrone.Common.Disk;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.ImportLists;
 using NzbDrone.Core.Localization;
 using NzbDrone.Core.MediaFiles.Events;
@@ -35,7 +36,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 .Select(s => _rootFolderService.GetBestRootFolderPath(s.Value))
                 .Distinct();
 
-            var missingRootFolders = rootFolders.Where(s => !_diskProvider.FolderExists(s))
+            var missingRootFolders = rootFolders.Where(s => !s.IsPathValid(PathValidationType.CurrentOs) || !_diskProvider.FolderExists(s))
                 .ToList();
 
             missingRootFolders.AddRange(_importListFactory.All()

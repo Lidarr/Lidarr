@@ -8,7 +8,9 @@ using NzbDrone.Core.HealthCheck.Checks;
 using NzbDrone.Core.ImportLists;
 using NzbDrone.Core.Localization;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.RootFolders;
 using NzbDrone.Core.Test.Framework;
+using NzbDrone.Test.Common;
 
 namespace NzbDrone.Core.Test.HealthCheck.Checks
 {
@@ -23,7 +25,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
                   .Returns("Some Warning Message");
         }
 
-        private void GivenMissingRootFolder()
+        private void GivenMissingRootFolder(string rootFolderPath)
         {
             var artist = Builder<Artist>.CreateListOfSize(1)
                                         .Build()
@@ -41,9 +43,9 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
                 .Setup(s => s.All())
                 .Returns(importList);
 
-            Mocker.GetMock<IDiskProvider>()
-                  .Setup(s => s.GetParentFolder(artist.First().Path))
-                  .Returns(@"C:\Music");
+            Mocker.GetMock<IRootFolderService>()
+                  .Setup(s => s.GetBestRootFolderPath(It.IsAny<string>()))
+                  .Returns(rootFolderPath);
 
             Mocker.GetMock<IDiskProvider>()
                   .Setup(s => s.FolderExists(It.IsAny<string>()))
@@ -67,7 +69,25 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         [Test]
         public void should_return_error_if_artist_parent_is_missing()
         {
-            GivenMissingRootFolder();
+            GivenMissingRootFolder(@"C:\Music".AsOsAgnostic());
+
+            Subject.Check().ShouldBeError();
+        }
+
+        [Test]
+        public void should_return_error_if_series_path_is_for_posix_os()
+        {
+            WindowsOnly();
+            GivenMissingRootFolder("/mnt/music");
+
+            Subject.Check().ShouldBeError();
+        }
+
+        [Test]
+        public void should_return_error_if_series_path_is_for_windows()
+        {
+            PosixOnly();
+            GivenMissingRootFolder(@"C:\Music");
 
             Subject.Check().ShouldBeError();
         }

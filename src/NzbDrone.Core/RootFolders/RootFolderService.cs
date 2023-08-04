@@ -152,10 +152,12 @@ namespace NzbDrone.Core.RootFolders
 
             if (possibleRootFolder == null)
             {
-                return _diskProvider.GetParentFolder(path);
+                var osPath = new OsPath(path);
+
+                return osPath.Directory.ToString();
             }
 
-            return possibleRootFolder.Path;
+            return possibleRootFolder?.Path;
         }
 
         private void GetDetails(RootFolder rootFolder)
