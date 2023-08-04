@@ -32,6 +32,10 @@ namespace NzbDrone.Core.Test.DiskSpace
                   .Returns(new List<RootFolder>() { _rootDir });
 
             Mocker.GetMock<IDiskProvider>()
+                .Setup(v => v.FolderExists(_rootDir.Path))
+                .Returns(true);
+
+            Mocker.GetMock<IDiskProvider>()
                   .Setup(v => v.GetMounts())
                   .Returns(new List<IMount>());
 
