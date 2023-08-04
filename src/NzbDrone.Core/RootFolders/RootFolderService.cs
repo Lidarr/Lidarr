@@ -154,7 +154,7 @@ namespace NzbDrone.Core.RootFolders
             {
                 var osPath = new OsPath(path);
 
-                return osPath.Directory.ToString();
+                return osPath.Directory.ToString().TrimEnd(osPath.IsUnixPath ? '/' : '\\');
             }
 
             return possibleRootFolder?.Path;
