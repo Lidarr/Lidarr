@@ -838,7 +838,7 @@ namespace NzbDrone.Common.Test.DiskTests
 
             // Note: never returns anything.
             Mocker.GetMock<IDiskProvider>()
-                .Setup(v => v.GetFileInfos(It.IsAny<string>(), It.IsAny<SearchOption>()))
+                .Setup(v => v.GetFileInfos(It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(new List<IFileInfo>());
 
             Mocker.GetMock<IDiskProvider>()
@@ -878,8 +878,8 @@ namespace NzbDrone.Common.Test.DiskTests
                 .Returns<string>(v => fileSystem.DirectoryInfo.FromDirectoryName(v).GetDirectories().ToList());
 
             Mocker.GetMock<IDiskProvider>()
-                .Setup(v => v.GetFileInfos(It.IsAny<string>(), It.IsAny<SearchOption>()))
-                .Returns((string v, SearchOption option) => fileSystem.DirectoryInfo.FromDirectoryName(v).GetFiles("*", option).ToList());
+                .Setup(v => v.GetFileInfos(It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns((string v, bool recursive) => fileSystem.DirectoryInfo.FromDirectoryName(v).GetFiles("*", new EnumerationOptions { RecurseSubdirectories = recursive }).ToList());
 
             Mocker.GetMock<IDiskProvider>()
                 .Setup(v => v.GetFileSize(It.IsAny<string>()))

@@ -9,6 +9,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Disk;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.TrackImport;
@@ -66,10 +67,26 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
 
         private void GivenRootFolder(params string[] subfolders)
         {
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(s => s.FolderExists(_rootFolder))
+                .Returns(true);
+
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(s => s.GetDirectories(_rootFolder))
+                .Returns(subfolders);
+
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(s => s.FolderEmpty(_rootFolder))
+                .Returns(subfolders.Empty());
+
             FileSystem.AddDirectory(_rootFolder);
 
             foreach (var folder in subfolders)
             {
+                Mocker.GetMock<IDiskProvider>()
+                    .Setup(s => s.FolderExists(folder))
+                    .Returns(true);
+
                 FileSystem.AddDirectory(folder);
             }
         }
@@ -79,7 +96,7 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
             GivenRootFolder(_artist.Path);
         }
 
-        private List<IFileInfo> GivenFiles(IEnumerable<string> files, DateTimeOffset? lastWrite = null)
+        private void GivenFiles(IEnumerable<string> files, DateTimeOffset? lastWrite = null)
         {
             if (lastWrite == null)
             {
@@ -92,7 +109,9 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
                 FileSystem.AddFile(file, new MockFileData(string.Empty) { LastWriteTime = lastWrite.Value });
             }
 
-            return files.Select(x => DiskProvider.GetFileInfo(x)).ToList();
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(s => s.GetFileInfos(It.IsAny<string>(), true))
+                .Returns(files.Select(x => DiskProvider.GetFileInfo(x)).ToList());
         }
 
         private void GivenKnownFiles(IEnumerable<string> files, DateTimeOffset? lastWrite = null)
@@ -139,7 +158,7 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
             ExceptionVerification.ExpectedWarns(1);
 
             Mocker.GetMock<IDiskProvider>()
-                  .Verify(v => v.GetFiles(_artist.Path, SearchOption.AllDirectories), Times.Never());
+                  .Verify(v => v.GetFiles(_artist.Path, true), Times.Never());
 
             Mocker.GetMock<IMediaFileTableCleanupService>()
                   .Verify(v => v.Clean(It.IsAny<string>(), It.IsAny<List<string>>()), Times.Never());
@@ -193,6 +212,9 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
                        });
 
             Subject.Scan(new List<string> { _artist.Path });
+
+            Mocker.GetMock<IDiskProvider>()
+                .Verify(v => v.GetFileInfos(It.IsAny<string>(), It.IsAny<bool>()), Times.Once());
 
             Mocker.GetMock<IMakeImportDecision>()
                 .Verify(v => v.GetImportDecisions(It.Is<List<IFileInfo>>(l => l.Count == 1), It.IsAny<IdentificationOverrides>(), It.IsAny<ImportDecisionMakerInfo>(), It.IsAny<ImportDecisionMakerConfig>()), Times.Once());
@@ -384,6 +406,8 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
         [Test]
         public void should_insert_new_unmatched_files_when_all_new()
         {
+            GivenArtistFolder();
+
             var files = new List<string>
             {
                 Path.Combine(_artist.Path, "Season 1", "file1.flac"),
@@ -404,6 +428,8 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
         [Test]
         public void should_insert_new_unmatched_files_when_some_known()
         {
+            GivenArtistFolder();
+
             var files = new List<string>
             {
                 Path.Combine(_artist.Path, "Season 1", "file1.flac"),
@@ -424,6 +450,8 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
         [Test]
         public void should_not_insert_files_when_all_known()
         {
+            GivenArtistFolder();
+
             var files = new List<string>
             {
                 Path.Combine(_artist.Path, "Season 1", "file1.flac"),
@@ -448,6 +476,8 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
         [Test]
         public void should_not_update_info_for_unchanged_known_files()
         {
+            GivenArtistFolder();
+
             var files = new List<string>
             {
                 Path.Combine(_artist.Path, "Season 1", "file1.flac"),
@@ -472,6 +502,8 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
         [Test]
         public void should_update_info_for_changed_known_files()
         {
+            GivenArtistFolder();
+
             var files = new List<string>
             {
                 Path.Combine(_artist.Path, "Season 1", "file1.flac"),

@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Test.ProviderTests.DiskScanProviderTests
                         };
 
             Mocker.GetMock<IDiskProvider>()
-                .Setup(s => s.GetFileInfos(It.IsAny<string>(), It.IsAny<SearchOption>()))
+                .Setup(s => s.GetFileInfos(It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(new List<IFileInfo>());
         }
 
@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Test.ProviderTests.DiskScanProviderTests
             }
 
             Mocker.GetMock<IDiskProvider>()
-                  .Setup(s => s.GetFileInfos(It.IsAny<string>(), SearchOption.AllDirectories))
+                  .Setup(s => s.GetFileInfos(It.IsAny<string>(), true))
                   .Returns(filesToReturn);
         }
 
@@ -60,8 +60,8 @@ namespace NzbDrone.Core.Test.ProviderTests.DiskScanProviderTests
         {
             Subject.GetAudioFiles(_path);
 
-            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.AllDirectories), Times.Once());
-            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.TopDirectoryOnly), Times.Never());
+            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, true), Times.Once());
+            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, false), Times.Never());
         }
 
         [Test]
@@ -69,8 +69,8 @@ namespace NzbDrone.Core.Test.ProviderTests.DiskScanProviderTests
         {
             Subject.GetAudioFiles(_path, true);
 
-            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.AllDirectories), Times.Once());
-            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.TopDirectoryOnly), Times.Never());
+            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, true), Times.Once());
+            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, false), Times.Never());
         }
 
         [Test]
@@ -78,8 +78,8 @@ namespace NzbDrone.Core.Test.ProviderTests.DiskScanProviderTests
         {
             Subject.GetAudioFiles(_path, false);
 
-            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.AllDirectories), Times.Never());
-            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, SearchOption.TopDirectoryOnly), Times.Once());
+            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, true), Times.Never());
+            Mocker.GetMock<IDiskProvider>().Verify(s => s.GetFileInfos(_path, false), Times.Once());
         }
 
         [Test]
