@@ -4,6 +4,8 @@ import createRemoveItemHandler from 'Store/Actions/Creators/createRemoveItemHand
 import createSaveProviderHandler, { createCancelSaveProviderHandler } from 'Store/Actions/Creators/createSaveProviderHandler';
 import createSetSettingValueReducer from 'Store/Actions/Creators/Reducers/createSetSettingValueReducer';
 import { createThunk } from 'Store/thunks';
+import monitorNewItemsOptions from 'Utilities/Artist/monitorNewItemsOptions';
+import monitorOptions from 'Utilities/Artist/monitorOptions';
 
 //
 // Variables
@@ -46,6 +48,10 @@ export default {
     isPopulated: false,
     error: null,
     schema: {
+      defaultQualityProfileId: 0,
+      defaultMetadataProfileId: 0,
+      defaultMonitorOption: monitorOptions[0].key,
+      defaultNewItemMonitorOption: monitorNewItemsOptions[0].key,
       defaultTags: []
     },
     isSaving: false,
