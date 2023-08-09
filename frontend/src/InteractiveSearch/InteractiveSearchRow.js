@@ -32,6 +32,18 @@ function getDownloadIcon(isGrabbing, isGrabbed, grabError) {
   return icons.DOWNLOAD;
 }
 
+function getDownloadKind(isGrabbed, grabError, downloadAllowed) {
+  if (isGrabbed) {
+    return kinds.SUCCESS;
+  }
+
+  if (grabError || !downloadAllowed) {
+    return kinds.DANGER;
+  }
+
+  return kinds.DEFAULT;
+}
+
 function getDownloadTooltip(isGrabbing, isGrabbed, grabError) {
   if (isGrabbing) {
     return '';
@@ -212,7 +224,7 @@ class InteractiveSearchRow extends Component {
           {
             <SpinnerIconButton
               name={getDownloadIcon(isGrabbing, isGrabbed, grabError)}
-              kind={grabError || !downloadAllowed ? kinds.DANGER : kinds.DEFAULT}
+              kind={getDownloadKind(isGrabbed, grabError, downloadAllowed)}
               title={getDownloadTooltip(isGrabbing, isGrabbed, grabError)}
               isSpinning={isGrabbing}
               onPress={downloadAllowed ? this.onGrabPress : this.onConfirmGrabPress}
