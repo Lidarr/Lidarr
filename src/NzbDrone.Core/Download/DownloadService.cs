@@ -51,13 +51,21 @@ namespace NzbDrone.Core.Download
 
         public void DownloadReport(RemoteAlbum remoteAlbum)
         {
+            var filterBlockedClients = remoteAlbum.Release.PendingReleaseReason == PendingReleaseReason.DownloadClientUnavailable;
+
+            var tags = remoteAlbum.Artist?.Tags;
+
+            var downloadClient = _downloadClientProvider.GetDownloadClient(remoteAlbum.Release.DownloadProtocol, remoteAlbum.Release.IndexerId, filterBlockedClients, tags);
+
+            DownloadReport(remoteAlbum, downloadClient);
+        }
+
+        private void DownloadReport(RemoteAlbum remoteAlbum, IDownloadClient downloadClient)
+        {
             Ensure.That(remoteAlbum.Artist, () => remoteAlbum.Artist).IsNotNull();
             Ensure.That(remoteAlbum.Albums, () => remoteAlbum.Albums).HasItems();
 
             var downloadTitle = remoteAlbum.Release.Title;
-            var filterBlockedClients = remoteAlbum.Release.PendingReleaseReason == PendingReleaseReason.DownloadClientUnavailable;
-            var tags = remoteAlbum.Artist?.Tags;
-            var downloadClient = _downloadClientProvider.GetDownloadClient(remoteAlbum.Release.DownloadProtocol, remoteAlbum.Release.IndexerId, filterBlockedClients, tags);
 
             if (downloadClient == null)
             {
@@ -100,8 +108,7 @@ namespace NzbDrone.Core.Download
             }
             catch (ReleaseDownloadException ex)
             {
-                var http429 = ex.InnerException as TooManyRequestsException;
-                if (http429 != null)
+                if (ex.InnerException is TooManyRequestsException http429)
                 {
                     _indexerStatusService.RecordFailure(remoteAlbum.Release.IndexerId, http429.RetryAfter);
                 }
