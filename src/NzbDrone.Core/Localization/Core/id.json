@@ -1,6 +1,5 @@
 {
     "All": "Semua",
-    "AllResultsFiltered": "Seluruh hasil disembunyikan karena penyaringan yang diterapkan",
     "AlreadyInYourLibrary": "Sudah ada di pustaka kamu",
     "ApplicationURL": "URL Aplikasi",
     "Custom": "Khusus",
@@ -36,7 +35,6 @@
     "Age": "Usia",
     "AgeWhenGrabbed": "Usia (saat diperoleh)",
     "About": "Tentang",
-    "SomeResultsFiltered": "Seluruh hasil disembunyikan karena penyaringan yang diterapkan",
     "Added": "Ditambahkan",
     "AnalyticsEnabledHelpText": "Kirimkan informasi penggunaan secara anonim ke server Lidarr. Informasi tersebut mengandung browser kamu, halaman WebUI Lidarr yang kamu gunakan, pelaporan masalah serta OS dan versi runtime. Kami akan memanfaatkan informasi ini untuk memprioritaskan fitur dan perbaikan bug.",
     "AppDataDirectory": "Direktori AppData",
