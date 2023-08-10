@@ -21,7 +21,7 @@
     <PackageReference Include="System.IO.Abstractions" Version="17.0.24" />
     <PackageReference Include="TagLibSharp-Lidarr" Version="2.2.0.27" />
     <PackageReference Include="Kveer.XmlRPC" Version="1.2.0" />
-    <PackageReference Include="Npgsql" Version="6.0.8" />
+    <PackageReference Include="Npgsql" Version="7.0.4" />
     <PackageReference Include="SpotifyAPI.Web" Version="4.2.2" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
     <PackageReference Include="Equ" Version="2.3.0" />
