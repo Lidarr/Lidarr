@@ -14,31 +14,31 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Core.Test.HealthCheck.Checks
+namespace NzbDrone.Core.Test.Housekeeping.Housekeepers
 {
     [TestFixture]
     public class DeleteBadMediaCoversFixture : CoreTest<DeleteBadMediaCovers>
     {
         private List<MetadataFile> _metadata;
-        private List<Artist> _artist;
+        private Dictionary<int, string> _artist;
 
         [SetUp]
         public void Setup()
         {
-            _artist = Builder<Artist>.CreateListOfSize(1)
-                .All()
-                .With(c => c.Path = "C:\\Music\\".AsOsAgnostic())
-                .Build().ToList();
+            _artist = new Dictionary<int, string>
+            {
+                { 1, "C:\\Music\\".AsOsAgnostic() }
+            };
 
             _metadata = Builder<MetadataFile>.CreateListOfSize(1)
                .Build().ToList();
 
             Mocker.GetMock<IArtistService>()
                 .Setup(c => c.AllArtistPaths())
-                .Returns(_artist.ToDictionary(x => x.Id, x => x.Path));
+                .Returns(_artist);
 
             Mocker.GetMock<IMetadataFileService>()
-                .Setup(c => c.GetFilesByArtist(_artist.First().Id))
+                .Setup(c => c.GetFilesByArtist(_artist.First().Key))
                 .Returns(_metadata);
 
             Mocker.GetMock<IConfigService>().SetupGet(c => c.CleanupMetadataImages).Returns(true);
