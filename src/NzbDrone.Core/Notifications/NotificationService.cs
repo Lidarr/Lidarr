@@ -33,11 +33,13 @@ namespace NzbDrone.Core.Notifications
           IHandleAsync<HealthCheckCompleteEvent>
     {
         private readonly INotificationFactory _notificationFactory;
+        private readonly INotificationStatusService _notificationStatusService;
         private readonly Logger _logger;
 
-        public NotificationService(INotificationFactory notificationFactory, Logger logger)
+        public NotificationService(INotificationFactory notificationFactory, INotificationStatusService notificationStatusService, Logger logger)
         {
             _notificationFactory = notificationFactory;
+            _notificationStatusService = notificationStatusService;
             _logger = logger;
         }
 
@@ -142,9 +144,11 @@ namespace NzbDrone.Core.Notifications
                     }
 
                     notification.OnGrab(grabMessage);
+                    _notificationStatusService.RecordSuccess(notification.Definition.Id);
                 }
                 catch (Exception ex)
                 {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
                     _logger.Error(ex, "Unable to send OnGrab notification to {0}", notification.Definition.Name);
                 }
             }
@@ -178,11 +182,13 @@ namespace NzbDrone.Core.Notifications
                         if (downloadMessage.OldFiles.Empty() || ((NotificationDefinition)notification.Definition).OnUpgrade)
                         {
                             notification.OnReleaseImport(downloadMessage);
+                            _notificationStatusService.RecordSuccess(notification.Definition.Id);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
                     _logger.Warn(ex, "Unable to send OnReleaseImport notification to: " + notification.Definition.Name);
                 }
             }
@@ -197,10 +203,12 @@ namespace NzbDrone.Core.Notifications
                     if (ShouldHandleArtist(notification.Definition, message.Artist))
                     {
                         notification.OnRename(message.Artist, message.RenamedFiles);
+                        _notificationStatusService.RecordSuccess(notification.Definition.Id);
                     }
                 }
                 catch (Exception ex)
                 {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
                     _logger.Warn(ex, "Unable to send OnRename notification to: " + notification.Definition.Name);
                 }
             }
@@ -217,10 +225,12 @@ namespace NzbDrone.Core.Notifications
                     if (ShouldHandleArtist(notification.Definition, deleteMessage.Album.Artist))
                     {
                         notification.OnAlbumDelete(deleteMessage);
+                        _notificationStatusService.RecordSuccess(notification.Definition.Id);
                     }
                 }
                 catch (Exception ex)
                 {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
                     _logger.Warn(ex, "Unable to send OnAlbumDelete notification to: " + notification.Definition.Name);
                 }
             }
@@ -239,10 +249,12 @@ namespace NzbDrone.Core.Notifications
                         if (ShouldHandleArtist(notification.Definition, deleteMessage.Artist))
                         {
                             notification.OnArtistDelete(deleteMessage);
+                            _notificationStatusService.RecordSuccess(notification.Definition.Id);
                         }
                     }
                     catch (Exception ex)
                     {
+                        _notificationStatusService.RecordFailure(notification.Definition.Id);
                         _logger.Warn(ex, "Unable to send OnArtistDelete notification to: " + notification.Definition.Name);
                     }
                 }
@@ -265,10 +277,12 @@ namespace NzbDrone.Core.Notifications
                     if (ShouldHandleHealthFailure(message.HealthCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
                     {
                         notification.OnHealthIssue(message.HealthCheck);
+                        _notificationStatusService.RecordSuccess(notification.Definition.Id);
                     }
                 }
                 catch (Exception ex)
                 {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
                     _logger.Warn(ex, "Unable to send OnHealthIssue notification to: " + notification.Definition.Name);
                 }
             }
@@ -288,10 +302,12 @@ namespace NzbDrone.Core.Notifications
                     if (ShouldHandleHealthFailure(message.PreviousCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
                     {
                         notification.OnHealthRestored(message.PreviousCheck);
+                        _notificationStatusService.RecordSuccess(notification.Definition.Id);
                     }
                 }
                 catch (Exception ex)
                 {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
                     _logger.Warn(ex, "Unable to send OnHealthRestored notification to: " + notification.Definition.Name);
                 }
             }
@@ -310,9 +326,18 @@ namespace NzbDrone.Core.Notifications
 
             foreach (var notification in _notificationFactory.OnDownloadFailureEnabled())
             {
-                if (ShouldHandleArtist(notification.Definition, message.TrackedDownload.RemoteAlbum.Artist))
+                try
                 {
-                    notification.OnDownloadFailure(downloadFailedMessage);
+                    if (ShouldHandleArtist(notification.Definition, message.TrackedDownload.RemoteAlbum.Artist))
+                    {
+                        notification.OnDownloadFailure(downloadFailedMessage);
+                        _notificationStatusService.RecordSuccess(notification.Definition.Id);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
+                    _logger.Warn(ex, "Unable to send OnDownloadFailure notification to: " + notification.Definition.Name);
                 }
             }
         }
@@ -327,9 +352,18 @@ namespace NzbDrone.Core.Notifications
 
             foreach (var notification in _notificationFactory.OnImportFailureEnabled())
             {
-                if (ShouldHandleArtist(notification.Definition, message.TrackedDownload.RemoteAlbum.Artist))
+                try
                 {
-                    notification.OnImportFailure(downloadMessage);
+                    if (ShouldHandleArtist(notification.Definition, message.TrackedDownload.RemoteAlbum.Artist))
+                    {
+                        notification.OnImportFailure(downloadMessage);
+                        _notificationStatusService.RecordSuccess(notification.Definition.Id);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
+                    _logger.Warn(ex, "Unable to send OnImportFailure notification to: " + notification.Definition.Name);
                 }
             }
         }
@@ -349,9 +383,18 @@ namespace NzbDrone.Core.Notifications
 
             foreach (var notification in _notificationFactory.OnTrackRetagEnabled())
             {
-                if (ShouldHandleArtist(notification.Definition, message.Artist))
+                try
                 {
-                    notification.OnTrackRetag(retagMessage);
+                    if (ShouldHandleArtist(notification.Definition, message.Artist))
+                    {
+                        notification.OnTrackRetag(retagMessage);
+                        _notificationStatusService.RecordSuccess(notification.Definition.Id);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
+                    _logger.Warn(ex, "Unable to send OnTrackRetag notification to: " + notification.Definition.Name);
                 }
             }
         }
@@ -368,9 +411,11 @@ namespace NzbDrone.Core.Notifications
                 try
                 {
                     notification.OnApplicationUpdate(updateMessage);
+                    _notificationStatusService.RecordSuccess(notification.Definition.Id);
                 }
                 catch (Exception ex)
                 {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
                     _logger.Warn(ex, "Unable to send OnApplicationUpdate notification to: " + notification.Definition.Name);
                 }
             }
