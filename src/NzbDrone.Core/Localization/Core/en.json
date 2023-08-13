@@ -101,6 +101,7 @@
   "AutoRedownloadFailedHelpText": "Automatically search for and attempt to download a different release",
   "Automatic": "Automatic",
   "AutomaticAdd": "Automatic Add",
+  "AutomaticUpdatesDisabledDocker": "Automatic updates are not directly supported when using the Docker update mechanism. You will need to update the container image outside of {appName} or use a script",
   "AutomaticallySwitchRelease": "Automatically Switch Release",
   "Backup": "Backup",
   "BackupFolderHelpText": "Relative paths will be under Lidarr's AppData directory",
