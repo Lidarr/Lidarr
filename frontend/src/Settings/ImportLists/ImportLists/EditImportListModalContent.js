@@ -73,6 +73,7 @@ function EditImportListModalContent(props) {
 
   const {
     id,
+    implementationName,
     name,
     enableAutomaticAdd,
     minRefreshInterval,
@@ -91,7 +92,7 @@ function EditImportListModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        {id ? translate('EditList') : translate('AddList')}
+        {id ? translate('EditImportListImplementation', { implementationName }) : translate('AddImportListImplementation', { implementationName })}
       </ModalHeader>
 
       <ModalBody>

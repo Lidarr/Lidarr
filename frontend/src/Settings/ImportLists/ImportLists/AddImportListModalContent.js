@@ -32,7 +32,7 @@ class AddImportListModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Add List
+          {translate('AddImportList')}
         </ModalHeader>
 
         <ModalBody>
