@@ -289,7 +289,7 @@ class ArtistEditorFooter extends Component {
         <div className={styles.buttonContainer}>
           <div className={styles.buttonContainerContent}>
             <ArtistEditorFooterLabel
-              label={translate('SelectedCountArtistsSelectedInterp', [selectedCount])}
+              label={translate('SelectedCountArtistsSelectedInterp', { selectedCount })}
               isSaving={false}
             />
 

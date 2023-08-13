@@ -107,7 +107,7 @@ class ImportList extends Component {
           isOpen={this.state.isDeleteImportListModalOpen}
           kind={kinds.DANGER}
           title={translate('DeleteImportList')}
-          message={translate('DeleteImportListMessageText', [name])}
+          message={translate('DeleteImportListMessageText', { name })}
           confirmLabel={translate('Delete')}
           onConfirm={this.onConfirmDeleteImportList}
           onCancel={this.onDeleteImportListModalClose}

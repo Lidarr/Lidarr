@@ -95,7 +95,7 @@ class RootFolder extends Component {
           isOpen={this.state.isDeleteRootFolderModalOpen}
           kind={kinds.DANGER}
           title={translate('DeleteRootFolder')}
-          message={translate('DeleteRootFolderMessageText', [name])}
+          message={translate('DeleteRootFolderMessageText', { name })}
           confirmLabel={translate('Delete')}
           onConfirm={this.onConfirmDeleteRootFolder}
           onCancel={this.onDeleteRootFolderModalClose}

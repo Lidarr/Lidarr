@@ -142,7 +142,7 @@ function ManageImportListsEditModalContent(
 
       <ModalFooter className={styles.modalFooter}>
         <div className={styles.selected}>
-          {translate('CountImportListsSelected', [selectedCount])}
+          {translate('CountImportListsSelected', { selectedCount })}
         </div>
 
         <div>

@@ -120,7 +120,7 @@ function ArtistIndexPosterInfo(props) {
     if (albumCount === 0) {
       albums = translate('NoAlbums');
     } else if (albumCount > 1) {
-      albums = translate('CountAlbums', [albumCount]);
+      albums = translate('CountAlbums', { albumCount });
     }
 
     return (

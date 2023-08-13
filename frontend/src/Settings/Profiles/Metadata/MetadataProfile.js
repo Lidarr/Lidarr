@@ -140,7 +140,7 @@ class MetadataProfile extends Component {
           isOpen={this.state.isDeleteMetadataProfileModalOpen}
           kind={kinds.DANGER}
           title={translate('DeleteMetadataProfile')}
-          message={translate('DeleteMetadataProfileMessageText', [name])}
+          message={translate('DeleteMetadataProfileMessageText', { name })}
           confirmLabel={translate('Delete')}
           isSpinning={isDeleting}
           onConfirm={this.onConfirmDeleteMetadataProfile}

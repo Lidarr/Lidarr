@@ -146,7 +146,7 @@ class AlbumStudioFooter extends Component {
 
         <div>
           <div className={styles.label}>
-            {translate('CountArtistsSelected', [selectedCount])}
+            {translate('CountArtistsSelected', { selectedCount })}
           </div>
 
           <SpinnerButton
