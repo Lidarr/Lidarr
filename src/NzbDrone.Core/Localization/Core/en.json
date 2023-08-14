@@ -614,6 +614,8 @@
   "NoneData": "No albums will be monitored",
   "NoneMonitoringOptionHelpText": "Do not monitor artists or albums",
   "NotDiscography": "Not Discography",
+  "NotificationStatusAllClientHealthCheckMessage": "All notifications are unavailable due to failures",
+  "NotificationStatusSingleClientHealthCheckMessage": "Notifications unavailable due to failures: {0}",
   "NotificationTriggers": "Notification Triggers",
   "Ok": "Ok",
   "OnAlbumDelete": "On Album Delete",
