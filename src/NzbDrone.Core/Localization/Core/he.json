@@ -689,5 +689,14 @@
     "ApplyTagsHelpTextHowToApplyDownloadClients": "כיצד להחיל תגים על הסרטים שנבחרו",
     "ApplyTagsHelpTextHowToApplyImportLists": "כיצד להחיל תגים על הסרטים שנבחרו",
     "ApplyTagsHelpTextHowToApplyIndexers": "כיצד להחיל תגים על הסרטים שנבחרו",
-    "DeleteSelectedImportListsMessageText": "האם אתה בטוח שברצונך למחוק את האינדקס '{0}'?"
+    "DeleteSelectedImportListsMessageText": "האם אתה בטוח שברצונך למחוק את האינדקס '{0}'?",
+    "SomeResultsAreHiddenByTheAppliedFilter": "חלק מהתוצאות מוסתרות על ידי המסנן שהוחל",
+    "SuggestTranslationChange": "הצע שינוי בתרגום",
+    "Artist": "אמן",
+    "CatalogNumber": "מספר קטלוג",
+    "Theme": "ערכת נושא",
+    "Album": "אלבום",
+    "UpdateSelected": "עדכון נבחר",
+    "AllResultsAreHiddenByTheAppliedFilter": "כל התוצאות מוסתרות על ידי המסנן שהוחל",
+    "NoResultsFound": "לא נמצאו תוצאות"
 }

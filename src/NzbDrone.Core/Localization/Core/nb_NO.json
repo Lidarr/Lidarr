@@ -220,5 +220,8 @@
     "DeleteSelectedIndexersMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
     "DeleteImportListExclusion": "Legg til importeringsliste unntak",
     "ApplyChanges": "Bekreft endringer",
-    "ApiKeyValidationHealthCheckMessage": "Vennligst oppdater din API-nøkkel til å være minst {0} tegn lang. Du kan gjøre dette via innstillinger eller konfigurasjonsfilen"
+    "ApiKeyValidationHealthCheckMessage": "Vennligst oppdater din API-nøkkel til å være minst {0} tegn lang. Du kan gjøre dette via innstillinger eller konfigurasjonsfilen",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Slik bruker du tagger på de valgte filmene",
+    "AllResultsAreHiddenByTheAppliedFilter": "Alle resultatene er skjult av det anvendte filteret",
+    "SomeResultsAreHiddenByTheAppliedFilter": "Alle resultatene er skjult av det anvendte filteret"
 }

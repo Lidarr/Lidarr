@@ -657,5 +657,9 @@
     "ApplyTagsHelpTextHowToApplyImportLists": "선택한 동영상에 태그를 적용하는 방법",
     "DeleteSelectedDownloadClientsMessageText": "인덱서 '{0}'을 (를) 삭제 하시겠습니까?",
     "DeleteSelectedImportListsMessageText": "인덱서 '{0}'을 (를) 삭제 하시겠습니까?",
-    "ApplyTagsHelpTextHowToApplyIndexers": "선택한 동영상에 태그를 적용하는 방법"
+    "ApplyTagsHelpTextHowToApplyIndexers": "선택한 동영상에 태그를 적용하는 방법",
+    "SomeResultsAreHiddenByTheAppliedFilter": "적용된 필터에 의해 모든 결과가 숨겨집니다.",
+    "SuggestTranslationChange": "번역 변경 제안",
+    "UpdateSelected": "선택한 항목 업데이트",
+    "AllResultsAreHiddenByTheAppliedFilter": "적용된 필터에 의해 모든 결과가 숨겨집니다."
 }

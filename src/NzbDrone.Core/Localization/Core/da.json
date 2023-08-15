@@ -672,5 +672,10 @@
     "ApplyTagsHelpTextHowToApplyDownloadClients": "Sådan anvendes tags på de valgte film",
     "DeleteSelectedIndexersMessageText": "Er du sikker på, at du vil slette indeksøren '{0}'?",
     "ApplyTagsHelpTextHowToApplyImportLists": "Sådan anvendes tags på de valgte film",
-    "ApplyTagsHelpTextHowToApplyIndexers": "Sådan anvendes tags på de valgte film"
+    "ApplyTagsHelpTextHowToApplyIndexers": "Sådan anvendes tags på de valgte film",
+    "SuggestTranslationChange": "Foreslå ændring af oversættelsen",
+    "UpdateSelected": "Opdatering valgt",
+    "AllResultsAreHiddenByTheAppliedFilter": "Alle resultater skjules af det anvendte filter",
+    "NoResultsFound": "Ingen resultater fundet",
+    "SomeResultsAreHiddenByTheAppliedFilter": "Nogle resultater skjules af det anvendte filter"
 }

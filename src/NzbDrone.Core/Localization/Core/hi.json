@@ -662,5 +662,11 @@
     "Negated": "नकार दिया गया",
     "ApplyTagsHelpTextHowToApplyArtists": "चयनित फिल्मों के लिए टैग कैसे लागू करें",
     "ApplyTagsHelpTextHowToApplyImportLists": "चयनित फिल्मों के लिए टैग कैसे लागू करें",
-    "ApplyTagsHelpTextHowToApplyIndexers": "चयनित फिल्मों के लिए टैग कैसे लागू करें"
+    "ApplyTagsHelpTextHowToApplyIndexers": "चयनित फिल्मों के लिए टैग कैसे लागू करें",
+    "AllResultsAreHiddenByTheAppliedFilter": "सभी परिणाम लागू फ़िल्टर द्वारा छिपे हुए हैं",
+    "NoResultsFound": "कोई परिणाम नहीं मिला",
+    "SomeResultsAreHiddenByTheAppliedFilter": "कुछ परिणाम लागू फ़िल्टर द्वारा छिपे हुए हैं",
+    "SuggestTranslationChange": "अनुवाद परिवर्तन का सुझाव दें",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "चयनित फिल्मों के लिए टैग कैसे लागू करें",
+    "UpdateSelected": "चयनित अपडेट करें"
 }

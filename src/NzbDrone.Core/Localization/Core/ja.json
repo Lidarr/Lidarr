@@ -663,5 +663,10 @@
     "ApplyTagsHelpTextHowToApplyArtists": "選択した映画にタグを適用する方法",
     "ApplyTagsHelpTextHowToApplyDownloadClients": "選択した映画にタグを適用する方法",
     "ApplyTagsHelpTextHowToApplyImportLists": "選択した映画にタグを適用する方法",
-    "ApplyTagsHelpTextHowToApplyIndexers": "選択した映画にタグを適用する方法"
+    "ApplyTagsHelpTextHowToApplyIndexers": "選択した映画にタグを適用する方法",
+    "SomeResultsAreHiddenByTheAppliedFilter": "一部の結果は、適用されたフィルターによって非表示になります",
+    "SuggestTranslationChange": "翻訳の変更を提案する",
+    "UpdateSelected": "選択した更新",
+    "AllResultsAreHiddenByTheAppliedFilter": "すべての結果は、適用されたフィルターによって非表示になります",
+    "NoResultsFound": "結果が見つかりません"
 }

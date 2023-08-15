@@ -724,5 +724,11 @@
     "DeleteSelectedImportListsMessageText": "Esteu segur que voleu suprimir l'indexador '{0}'?",
     "ApplyTagsHelpTextHowToApplyArtists": "Com aplicar etiquetes a les pel·lícules seleccionades",
     "ApplyTagsHelpTextHowToApplyImportLists": "Com aplicar etiquetes a les pel·lícules seleccionades",
-    "ApplyTagsHelpTextHowToApplyIndexers": "Com aplicar etiquetes a les pel·lícules seleccionades"
+    "ApplyTagsHelpTextHowToApplyIndexers": "Com aplicar etiquetes a les pel·lícules seleccionades",
+    "SomeResultsAreHiddenByTheAppliedFilter": "Alguns resultats estan ocults pel filtre aplicat",
+    "SuggestTranslationChange": "Suggereix un canvi de traducció",
+    "UpdateSelected": "Actualització seleccionada",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Com aplicar etiquetes a les pel·lícules seleccionades",
+    "AllResultsAreHiddenByTheAppliedFilter": "Tots els resultats estan ocults pel filtre aplicat",
+    "NoResultsFound": "Sense resultats"
 }

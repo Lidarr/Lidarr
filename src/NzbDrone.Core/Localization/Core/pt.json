@@ -794,5 +794,12 @@
     "ApplyTagsHelpTextHowToApplyIndexers": "Como aplicar etiquetas aos indexadores selecionados",
     "DeleteSelectedDownloadClientsMessageText": "Tem a certeza que quer eliminar o indexador \"{0}\"?",
     "DeleteSelectedImportListsMessageText": "Tem a certeza que quer eliminar o indexador \"{0}\"?",
-    "DeleteSelectedIndexersMessageText": "Tem a certeza que quer eliminar o indexador \"{0}\"?"
+    "DeleteSelectedIndexersMessageText": "Tem a certeza que quer eliminar o indexador \"{0}\"?",
+    "SomeResultsAreHiddenByTheAppliedFilter": "Alguns resultados estão ocultos pelo filtro aplicado",
+    "SuggestTranslationChange": "Sugerir mudança na tradução",
+    "UpdateSelected": "Atualizar selecionado(s)",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Como aplicar etiquetas aos filmes selecionados",
+    "CountArtistsSelected": "{0} autor(es) selecionado(s)",
+    "AllResultsAreHiddenByTheAppliedFilter": "Todos os resultados estão ocultos pelo filtro aplicado",
+    "NoResultsFound": "Nenhum resultado encontrado"
 }
