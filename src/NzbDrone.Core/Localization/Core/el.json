@@ -1013,5 +1013,13 @@
     "ApplyTagsHelpTextHowToApplyDownloadClients": "Πώς να εφαρμόσετε ετικέτες στις επιλεγμένες ταινίες",
     "ApplyTagsHelpTextHowToApplyImportLists": "Πώς να εφαρμόσετε ετικέτες στις επιλεγμένες ταινίες",
     "ApplyTagsHelpTextHowToApplyIndexers": "Πώς να εφαρμόσετε ετικέτες στις επιλεγμένες ταινίες",
-    "DeleteSelectedIndexersMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε το ευρετήριο \"{0}\";"
+    "DeleteSelectedIndexersMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε το ευρετήριο \"{0}\";",
+    "SomeResultsAreHiddenByTheAppliedFilter": "Ορισμένα αποτελέσματα αποκρύπτονται από το εφαρμοσμένο φίλτρο",
+    "SuggestTranslationChange": "Προτείνετε αλλαγή μετάφρασης",
+    "MonitorExistingAlbums": "Παρακολούθηση υπαρχόντων άλμπουμ",
+    "MonitorNewAlbums": "Παρακολούθηση νέων άλμπουμ",
+    "CountArtistsSelected": "Επιλέχθηκαν {0} καλλιτέχνες",
+    "UpdateSelected": "Επιλεγμένη ενημέρωση",
+    "AllResultsAreHiddenByTheAppliedFilter": "Όλα τα αποτελέσματα αποκρύπτονται από το εφαρμοσμένο φίλτρο",
+    "NoResultsFound": "Δεν βρέθηκαν αποτελέσματα"
 }

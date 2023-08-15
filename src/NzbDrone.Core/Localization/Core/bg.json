@@ -664,5 +664,10 @@
     "ApplyTagsHelpTextHowToApplyArtists": "Как да приложите тагове към избраните филми",
     "ApplyTagsHelpTextHowToApplyDownloadClients": "Как да приложите тагове към избраните филми",
     "ApplyTagsHelpTextHowToApplyImportLists": "Как да приложите тагове към избраните филми",
-    "ApplyTagsHelpTextHowToApplyIndexers": "Как да приложите тагове към избраните филми"
+    "ApplyTagsHelpTextHowToApplyIndexers": "Как да приложите тагове към избраните филми",
+    "SomeResultsAreHiddenByTheAppliedFilter": "Някои резултати са скрити от прилагания филтър",
+    "SuggestTranslationChange": "Предложете промяна на превода",
+    "UpdateSelected": "Избрана актуализация",
+    "AllResultsAreHiddenByTheAppliedFilter": "Всички резултати са скрити от приложения филтър",
+    "NoResultsFound": "Няма намерени резултати"
 }

@@ -533,7 +533,7 @@
     "AddMetadataProfile": "profil de métadonnées",
     "AddNew": "Ajouter un nouveau",
     "AddQualityProfile": "Ajouter un profil de qualité",
-    "AddRemotePathMapping": "Ajouter un chemin distant",
+    "AddRemotePathMapping": "Ajouter un mappage des chemins d'accès",
     "AddRootFolder": "Ajouter un dossier racine",
     "AfterManualRefresh": "Après un rafraichissement manuel",
     "Age": "Âge",
@@ -811,5 +811,10 @@
     "ApplyTagsHelpTextHowToApplyIndexers": "Comment appliquer des tags aux indexeurs sélectionnés",
     "CountDownloadClientsSelected": "{0} client(s) de téléchargement sélectionné(s)",
     "EditSelectedDownloadClients": "Modifier les clients de téléchargement sélectionnés",
-    "EditSelectedIndexers": "Modifier les indexeurs sélectionnés"
+    "EditSelectedIndexers": "Modifier les indexeurs sélectionnés",
+    "SomeResultsAreHiddenByTheAppliedFilter": "Tous les résultats ont été dissimulés par le filtre actuellement appliqué",
+    "SuggestTranslationChange": "Suggérer un changement de traduction",
+    "UpdateSelected": "Mettre à jour la sélection",
+    "AllResultsAreHiddenByTheAppliedFilter": "Tous les résultats ont été dissimulés par le filtre actuellement appliqué",
+    "NoResultsFound": "Aucun résultat trouvé"
 }

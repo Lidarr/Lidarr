@@ -645,7 +645,7 @@
     "BlocklistReleases": "Lansare pe lista neagră",
     "CountIndexersSelected": "{0} Indexatoare selectate",
     "DeleteConditionMessageText": "Sigur doriți să ștergeți eticheta „{0}”?",
-    "DeleteSelectedDownloadClients": "Ștergeți clientul de descărcare",
+    "DeleteSelectedDownloadClients": "Ștergere clienți de descărcare",
     "DeleteSelectedIndexers": "Ștergeți Indexer",
     "ExistingTag": "Etichetă existentă",
     "No": "Nu",
@@ -676,5 +676,10 @@
     "Database": "Bază de date",
     "Implementation": "Implementarea",
     "Episode": "Episod",
-    "AllResultsAreHiddenByTheAppliedFilter": "Toate rezultatele sunt ascunse de filtrul aplicat"
+    "AllResultsAreHiddenByTheAppliedFilter": "Toate rezultatele sunt ascunse de filtrul aplicat",
+    "ConnectionLostReconnect": "{appName} va încerca să se conecteze automat, sau poți apăsa reîncarcă mai jos.",
+    "ConnectionLostToBackend": "{appName} a pierdut conexiunea cu backend-ul și trebuie reîncărcat pentru a restabili funcționalitatea.",
+    "RecentChanges": "Schimbări recente",
+    "WhatsNew": "Ce mai e nou?",
+    "Authentication": "Autentificare"
 }

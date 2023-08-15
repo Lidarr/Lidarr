@@ -665,5 +665,10 @@
     "ApplyTagsHelpTextHowToApplyArtists": "Seçilen filmlere etiketler nasıl uygulanır",
     "ApplyTagsHelpTextHowToApplyImportLists": "Seçilen filmlere etiketler nasıl uygulanır",
     "ApplyTagsHelpTextHowToApplyIndexers": "Seçilen filmlere etiketler nasıl uygulanır",
-    "ApplyTagsHelpTextHowToApplyDownloadClients": "Seçilen filmlere etiketler nasıl uygulanır"
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Seçilen filmlere etiketler nasıl uygulanır",
+    "NoResultsFound": "Sonuç bulunamadı",
+    "SuggestTranslationChange": "Çeviri değişikliği önerin",
+    "UpdateSelected": "Seçilmişleri güncelle",
+    "AllResultsAreHiddenByTheAppliedFilter": "Tüm sonuçlar, uygulanan filtre tarafından gizlenir",
+    "SomeResultsAreHiddenByTheAppliedFilter": "Bazı sonuçlar, uygulanan filtre tarafından gizlendi"
 }

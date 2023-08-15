@@ -743,5 +743,11 @@
     "ApplyChanges": "Pas Wijzigingen Toe",
     "AutoAdd": "Automatisch Toevoegen",
     "AutomaticAdd": "Automatisch Toevoegen",
-    "ApplyTagsHelpTextHowToApplyDownloadClients": "Hoe tags toepassen op de geselecteerde download clients"
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Hoe tags toepassen op de geselecteerde download clients",
+    "SomeResultsAreHiddenByTheAppliedFilter": "Sommige resultaten zijn verborgen door de aangebrachte filter",
+    "SuggestTranslationChange": "Stel vertaling voor",
+    "CountDownloadClientsSelected": "{count} download client(s) geselecteerd",
+    "UpdateSelected": "Selectie Bijwerken",
+    "AllResultsAreHiddenByTheAppliedFilter": "Alle resultaten zijn verborgen door de toegepaste filter",
+    "NoResultsFound": "Geen resultaten gevonden"
 }

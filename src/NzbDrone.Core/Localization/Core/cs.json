@@ -667,5 +667,10 @@
     "ApplyTagsHelpTextHowToApplyImportLists": "Jak použít značky na vybrané filmy",
     "ApplyTagsHelpTextHowToApplyIndexers": "Jak použít značky na vybrané filmy",
     "DeleteSelectedImportListsMessageText": "Opravdu chcete odstranit indexer „{0}“?",
-    "ApplyTagsHelpTextHowToApplyDownloadClients": "Jak použít značky na vybrané filmy"
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "Jak použít značky na vybrané filmy",
+    "SuggestTranslationChange": "Navrhnout změnu překladu",
+    "UpdateSelected": "Aktualizace vybrána",
+    "AllResultsAreHiddenByTheAppliedFilter": "Všechny výsledky jsou skryty použitým filtrem",
+    "NoResultsFound": "Nebyly nalezeny žádné výsledky",
+    "SomeResultsAreHiddenByTheAppliedFilter": "Některé výsledky jsou použitým filtrem skryty"
 }

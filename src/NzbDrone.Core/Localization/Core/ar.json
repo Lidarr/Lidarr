@@ -665,5 +665,10 @@
     "ApplyTagsHelpTextHowToApplyArtists": "كيفية تطبيق العلامات على الأفلام المختارة",
     "ApplyTagsHelpTextHowToApplyDownloadClients": "كيفية تطبيق العلامات على الأفلام المختارة",
     "ApplyTagsHelpTextHowToApplyImportLists": "كيفية تطبيق العلامات على الأفلام المختارة",
-    "ApplyTagsHelpTextHowToApplyIndexers": "كيفية تطبيق العلامات على الأفلام المختارة"
+    "ApplyTagsHelpTextHowToApplyIndexers": "كيفية تطبيق العلامات على الأفلام المختارة",
+    "SuggestTranslationChange": "اقترح تغيير الترجمة",
+    "UpdateSelected": "تم تحديد التحديث",
+    "AllResultsAreHiddenByTheAppliedFilter": "يتم إخفاء جميع النتائج بواسطة عامل التصفية المطبق",
+    "NoResultsFound": "لم يتم العثور على نتائج",
+    "SomeResultsAreHiddenByTheAppliedFilter": "بعض النتائج مخفية بواسطة عامل التصفية المطبق"
 }
