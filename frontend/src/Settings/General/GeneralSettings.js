@@ -103,7 +103,6 @@ class GeneralSettings extends Component {
       isResettingApiKey,
       isWindows,
       isWindowsService,
-      isDocker,
       mode,
       packageUpdateMechanism,
       onInputChange,
@@ -171,7 +170,6 @@ class GeneralSettings extends Component {
                   settings={settings}
                   isWindows={isWindows}
                   packageUpdateMechanism={packageUpdateMechanism}
-                  isDocker={isDocker}
                   onInputChange={onInputChange}
                 />
 
@@ -214,7 +212,6 @@ GeneralSettings.propTypes = {
   hasSettings: PropTypes.bool.isRequired,
   isWindows: PropTypes.bool.isRequired,
   isWindowsService: PropTypes.bool.isRequired,
-  isDocker: PropTypes.bool.isRequired,
   mode: PropTypes.string.isRequired,
   packageUpdateMechanism: PropTypes.string.isRequired,
   onInputChange: PropTypes.func.isRequired,
