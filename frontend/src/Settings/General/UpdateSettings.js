@@ -44,16 +44,6 @@ function UpdateSettings(props) {
 
   updateOptions.push({ key: 'script', value: 'Script' });
 
-  if (isDocker) {
-    return (
-      <FieldSet legend={translate('Updates')}>
-        <div>
-          {translate('UpdatingIsDisabledInsideADockerContainerUpdateTheContainerImageInstead')}
-        </div>
-      </FieldSet>
-    );
-  }
-
   return (
     <FieldSet legend={translate('Updates')}>
       <FormGroup
@@ -145,7 +135,6 @@ UpdateSettings.propTypes = {
   advancedSettings: PropTypes.bool.isRequired,
   settings: PropTypes.object.isRequired,
   isWindows: PropTypes.bool.isRequired,
-  isDocker: PropTypes.bool.isRequired,
   packageUpdateMechanism: PropTypes.string.isRequired,
   onInputChange: PropTypes.func.isRequired
 };
