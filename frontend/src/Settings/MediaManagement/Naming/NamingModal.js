@@ -76,6 +76,7 @@ const mediumTokens = [
 ];
 
 const mediumFormatTokens = [
+  { token: '{Medium Name}', example: 'First Medium' },
   { token: '{Medium Format}', example: 'CD' }
 ];
 
