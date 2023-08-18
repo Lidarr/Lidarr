@@ -727,5 +727,12 @@
     "UpdateSelected": "Actualització seleccionada",
     "ApplyTagsHelpTextHowToApplyDownloadClients": "Com aplicar etiquetes a les pel·lícules seleccionades",
     "AllResultsAreHiddenByTheAppliedFilter": "Tots els resultats estan ocults pel filtre aplicat",
-    "NoResultsFound": "Sense resultats"
+    "NoResultsFound": "Sense resultats",
+    "ConnectionLost": "Connexió perduda",
+    "ConnectionLostReconnect": "Radarr intentarà connectar-se automàticament, o podeu fer clic a recarregar.",
+    "RecentChanges": "Canvis recents",
+    "WhatsNew": "Que hi ha de nou?",
+    "NotificationStatusAllClientHealthCheckMessage": "Totes les llistes no estan disponibles a causa d'errors",
+    "ConnectionLostToBackend": "Radarr ha perdut la connexió amb el backend i s'haurà de tornar a carregar per restaurar la funcionalitat.",
+    "NotificationStatusSingleClientHealthCheckMessage": "Llistes no disponibles a causa d'errors: {0}"
 }

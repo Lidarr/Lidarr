@@ -670,5 +670,12 @@
     "UpdateSelected": "Aktualizace vybrána",
     "AllResultsAreHiddenByTheAppliedFilter": "Všechny výsledky jsou skryty použitým filtrem",
     "NoResultsFound": "Nebyly nalezeny žádné výsledky",
-    "SomeResultsAreHiddenByTheAppliedFilter": "Některé výsledky jsou použitým filtrem skryty"
+    "SomeResultsAreHiddenByTheAppliedFilter": "Některé výsledky jsou použitým filtrem skryty",
+    "ConnectionLost": "Spojení ztraceno",
+    "ConnectionLostReconnect": "Radarr se pokusí připojit automaticky, nebo můžete kliknout na znovu načíst níže.",
+    "ConnectionLostToBackend": "Radarr ztratil spojení s back-endem a pro obnovení funkčnosti bude nutné jej znovu načíst.",
+    "RecentChanges": "Nedávné změny",
+    "WhatsNew": "Co je nového?",
+    "NotificationStatusSingleClientHealthCheckMessage": "Seznamy nejsou k dispozici z důvodu selhání: {0}",
+    "NotificationStatusAllClientHealthCheckMessage": "Všechny seznamy nejsou k dispozici z důvodu selhání"
 }

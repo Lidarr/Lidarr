@@ -600,7 +600,6 @@
     "DownloadPropersAndRepacksHelpTexts2": "使用“不要偏好”按首字母而不是专有/重新打包进行排序",
     "EditDelayProfile": "编辑延时配置",
     "EditImportListExclusion": "删除导入排除列表",
-    "EditList": "编辑列表",
     "EditQualityProfile": "编辑质量档案",
     "EditRemotePathMapping": "编辑远程映射路径",
     "EditRootFolder": "添加根目录",
@@ -724,7 +723,7 @@
     "IsInUseCantDeleteAQualityProfileThatIsAttachedToAnArtistOrImportList": "无法删除质量配置文件，其已附加到作者或为导入列表",
     "MoveAutomatically": "自动移动",
     "StatusEndedContinuing": "仍在继续",
-    "AddConnection": "编辑集合",
+    "AddConnection": "添加连接",
     "Custom": "自定义",
     "EditMetadataProfile": "元数据配置",
     "Organize": "整理",
@@ -1020,5 +1019,15 @@
     "ShowNextAlbum": "显示最后专辑",
     "CountArtistsSelected": "{0} 作者选中",
     "AllResultsAreHiddenByTheAppliedFilter": "根据过滤条件所有结果已隐藏",
-    "NoResultsFound": "无结果"
+    "NoResultsFound": "无结果",
+    "ConnectionLost": "连接丢失",
+    "ConnectionLostReconnect": "Radarr将会尝试自动连接，您也可以点击下方的重新加载。",
+    "ConnectionLostToBackend": "Radarr与后端的链接已断开，需要重新加载恢复功能。",
+    "WhatsNew": "什么是新的？",
+    "NotificationStatusAllClientHealthCheckMessage": "由于故障所用应用程序都不可用",
+    "NotificationStatusSingleClientHealthCheckMessage": "由于故障应用程序不可用",
+    "RecentChanges": "最近修改",
+    "AddConnectionImplementation": "添加连接-{实体名称}",
+    "AddDownloadClientImplementation": "添加下载客户端-{实体名称}",
+    "AddIndexerImplementation": "添加索引器-{实体名称}"
 }

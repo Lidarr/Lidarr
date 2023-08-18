@@ -675,5 +675,11 @@
     "UpdateSelected": "Opdatering valgt",
     "AllResultsAreHiddenByTheAppliedFilter": "Alle resultater skjules af det anvendte filter",
     "NoResultsFound": "Ingen resultater fundet",
-    "SomeResultsAreHiddenByTheAppliedFilter": "Nogle resultater skjules af det anvendte filter"
+    "SomeResultsAreHiddenByTheAppliedFilter": "Nogle resultater skjules af det anvendte filter",
+    "ConnectionLost": "Forbindelse Mistet",
+    "RecentChanges": "Seneste ændringer",
+    "WhatsNew": "Hvad er nyt?",
+    "ConnectionLostReconnect": "Radarr vil prøve at tilslutte automatisk, eller du kan klikke genindlæs forneden.",
+    "NotificationStatusAllClientHealthCheckMessage": "Alle lister er utilgængelige på grund af fejl",
+    "NotificationStatusSingleClientHealthCheckMessage": "Lister utilgængelige på grund af fejl: {0}"
 }
