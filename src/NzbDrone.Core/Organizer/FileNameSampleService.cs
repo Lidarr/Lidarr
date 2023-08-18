@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Organizer
                 {
                     new Medium
                     {
-                        Name = "CD 1: First Years",
+                        Name = "First Years",
                         Format = "CD",
                         Number = 1
                     }
@@ -76,13 +76,13 @@ namespace NzbDrone.Core.Organizer
                 {
                     new Medium
                     {
-                        Name = "CD 1: First Years",
+                        Name = "First Years",
                         Format = "CD",
                         Number = 1
                     },
                     new Medium
                     {
-                        Name = "CD 2: Second Best",
+                        Name = "Second Best",
                         Format = "CD",
                         Number = 2
                     }

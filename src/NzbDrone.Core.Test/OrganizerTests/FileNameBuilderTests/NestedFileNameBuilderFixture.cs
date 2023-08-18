@@ -40,11 +40,13 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
             _medium = Builder<Medium>
                 .CreateNew()
                 .With(m => m.Number = 3)
+                .With(m => m.Name = "Hybrid Theory")
                 .Build();
 
             _medium2 = Builder<Medium>
                 .CreateNew()
                 .With(m => m.Number = 4)
+                .With(m => m.Name = "Reanimation")
                 .Build();
 
             _release = Builder<AlbumRelease>
@@ -129,6 +131,17 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
 
             Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
                    .Should().Be("Hybrid Theory (2020)\\CD 03\\Linkin Park - 06 [MP3-256]".AsOsAgnostic());
+        }
+
+        [Test]
+        public void should_build_nested_multi_track_filename_with_medium_name()
+        {
+            _namingConfig.MultiDiscTrackFormat = "{Album Title} {(Release Year)}/CD {medium:00} - {Medium Name}/{Artist Name} - {track:00} [{Quality Title}] {[Quality Proper]}";
+
+            _release.Media.Add(_medium2);
+
+            Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
+                .Should().Be("Hybrid Theory (2020)\\CD 03 - Hybrid Theory\\Linkin Park - 06 [MP3-256]".AsOsAgnostic());
         }
     }
 }
