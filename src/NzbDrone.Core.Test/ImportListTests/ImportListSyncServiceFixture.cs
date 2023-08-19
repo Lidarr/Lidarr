@@ -28,6 +28,8 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             _importListReports = new List<ImportListItemInfo> { importListItem1 };
 
+            var mockImportList = new Mock<IImportList>();
+
             Mocker.GetMock<ISearchForNewArtist>()
                 .Setup(v => v.SearchForNewArtist(It.IsAny<string>()))
                 .Returns(new List<Artist>());
@@ -39,6 +41,10 @@ namespace NzbDrone.Core.Test.ImportListTests
             Mocker.GetMock<IImportListFactory>()
                 .Setup(v => v.All())
                 .Returns(new List<ImportListDefinition> { new () { ShouldMonitor = ImportListMonitorType.SpecificAlbum } });
+
+            Mocker.GetMock<IImportListFactory>()
+                .Setup(v => v.AutomaticAddEnabled(It.IsAny<bool>()))
+                .Returns(new List<IImportList> { mockImportList.Object });
 
             Mocker.GetMock<IFetchAndParseImportList>()
                 .Setup(v => v.Fetch())
@@ -515,6 +521,32 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<IManageCommandQueue>()
                 .Verify(v => v.Push<Command>(It.IsAny<MissingAlbumSearchCommand>(), CommandPriority.Normal, CommandTrigger.Unspecified), Times.Never);
+        }
+
+        [Test]
+        public void should_not_fetch_if_no_lists_are_enabled()
+        {
+            Mocker.GetMock<IImportListFactory>()
+                .Setup(v => v.AutomaticAddEnabled(It.IsAny<bool>()))
+                .Returns(new List<IImportList>());
+
+            Subject.Execute(new ImportListSyncCommand());
+
+            Mocker.GetMock<IFetchAndParseImportList>()
+                .Verify(v => v.Fetch(), Times.Never);
+        }
+
+        [Test]
+        public void should_not_process_if_no_items_are_returned()
+        {
+            Mocker.GetMock<IFetchAndParseImportList>()
+                .Setup(v => v.Fetch())
+                .Returns(new List<ImportListItemInfo>());
+
+            Subject.Execute(new ImportListSyncCommand());
+
+            Mocker.GetMock<IImportListExclusionService>()
+                .Verify(v => v.All(), Times.Never);
         }
     }
 }
