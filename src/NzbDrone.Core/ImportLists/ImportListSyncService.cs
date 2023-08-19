@@ -100,12 +100,13 @@ namespace NzbDrone.Core.ImportLists
             var reportNumber = 1;
 
             var listExclusions = _importListExclusionService.All().ToDictionary(x => x.ForeignId);
+            var importLists = _importListFactory.All();
 
             foreach (var item in items)
             {
                 _logger.ProgressTrace("Processing list item {0}/{1}", reportNumber++, items.Count);
 
-                var importList = _importListFactory.Get(item.ImportListId);
+                var importList = importLists.Single(x => x.Id == item.ImportListId);
 
                 if (item.Album.IsNotNullOrWhiteSpace() || item.AlbumMusicBrainzId.IsNotNullOrWhiteSpace())
                 {
