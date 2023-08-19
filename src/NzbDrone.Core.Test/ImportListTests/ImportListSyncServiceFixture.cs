@@ -28,10 +28,6 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             _importListReports = new List<ImportListItemInfo> { importListItem1 };
 
-            Mocker.GetMock<IFetchAndParseImportList>()
-                .Setup(v => v.Fetch())
-                .Returns(_importListReports);
-
             Mocker.GetMock<ISearchForNewArtist>()
                 .Setup(v => v.SearchForNewArtist(It.IsAny<string>()))
                 .Returns(new List<Artist>());
@@ -41,8 +37,8 @@ namespace NzbDrone.Core.Test.ImportListTests
                 .Returns(new List<Album>());
 
             Mocker.GetMock<IImportListFactory>()
-                .Setup(v => v.Get(It.IsAny<int>()))
-                .Returns(new ImportListDefinition { ShouldMonitor = ImportListMonitorType.SpecificAlbum });
+                .Setup(v => v.All())
+                .Returns(new List<ImportListDefinition> { new () { ShouldMonitor = ImportListMonitorType.SpecificAlbum } });
 
             Mocker.GetMock<IFetchAndParseImportList>()
                 .Setup(v => v.Fetch())
@@ -145,8 +141,8 @@ namespace NzbDrone.Core.Test.ImportListTests
         private void WithListSettings(ImportListMonitorType monitor = ImportListMonitorType.EntireArtist, bool shouldMonitorExisting = false, bool shouldSearch = true)
         {
             Mocker.GetMock<IImportListFactory>()
-                .Setup(v => v.Get(It.IsAny<int>()))
-                .Returns(new ImportListDefinition { ShouldMonitor = monitor, ShouldMonitorExisting = shouldMonitorExisting, ShouldSearch = shouldSearch });
+                .Setup(v => v.All())
+                .Returns(new List<ImportListDefinition> { new () { ShouldMonitor = monitor, ShouldMonitorExisting = shouldMonitorExisting, ShouldSearch = shouldSearch } });
         }
 
         [Test]
