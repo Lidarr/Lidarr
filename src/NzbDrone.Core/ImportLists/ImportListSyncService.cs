@@ -59,68 +59,78 @@ namespace NzbDrone.Core.ImportLists
 
         private List<Album> SyncAll()
         {
+            if (_importListFactory.AutomaticAddEnabled().Empty())
+            {
+                _logger.Debug("No import lists with automatic add enabled");
+
+                return new List<Album>();
+            }
+
             _logger.ProgressInfo("Starting Import List Sync");
 
-            var rssReleases = _listFetcherAndParser.Fetch();
+            var listItems = _listFetcherAndParser.Fetch().ToList();
 
-            var reports = rssReleases.ToList();
-
-            return ProcessReports(reports);
+            return ProcessListItems(listItems);
         }
 
         private List<Album> SyncList(ImportListDefinition definition)
         {
-            _logger.ProgressInfo("Starting Import List Refresh for List {0}", definition.Name);
+            _logger.ProgressInfo($"Starting Import List Refresh for List {definition.Name}");
 
-            var rssReleases = _listFetcherAndParser.FetchSingleList(definition);
+            var listItems = _listFetcherAndParser.FetchSingleList(definition).ToList();
 
-            var reports = rssReleases.ToList();
-
-            return ProcessReports(reports);
+            return ProcessListItems(listItems);
         }
 
-        private List<Album> ProcessReports(List<ImportListItemInfo> reports)
+        private List<Album> ProcessListItems(List<ImportListItemInfo> items)
         {
             var processed = new List<Album>();
             var artistsToAdd = new List<Artist>();
             var albumsToAdd = new List<Album>();
 
-            _logger.ProgressInfo("Processing {0} list items", reports.Count);
+            if (items.Count == 0)
+            {
+                _logger.ProgressInfo("No list items to process");
+
+                return new List<Album>();
+            }
+
+            _logger.ProgressInfo("Processing {0} list items", items.Count);
 
             var reportNumber = 1;
 
             var listExclusions = _importListExclusionService.All().ToDictionary(x => x.ForeignId);
 
-            foreach (var report in reports)
+            foreach (var item in items)
             {
-                _logger.ProgressTrace("Processing list item {0}/{1}", reportNumber++, reports.Count);
+                _logger.ProgressTrace("Processing list item {0}/{1}", reportNumber++, items.Count);
 
-                var importList = _importListFactory.Get(report.ImportListId);
+                var importList = _importListFactory.Get(item.ImportListId);
 
-                if (report.Album.IsNotNullOrWhiteSpace() || report.AlbumMusicBrainzId.IsNotNullOrWhiteSpace())
+                if (item.Album.IsNotNullOrWhiteSpace() || item.AlbumMusicBrainzId.IsNotNullOrWhiteSpace())
                 {
-                    if (report.AlbumMusicBrainzId.IsNullOrWhiteSpace() || report.ArtistMusicBrainzId.IsNullOrWhiteSpace())
+                    if (item.AlbumMusicBrainzId.IsNullOrWhiteSpace() || item.ArtistMusicBrainzId.IsNullOrWhiteSpace())
                     {
-                        MapAlbumReport(report);
+                        MapAlbumReport(item);
                     }
 
-                    ProcessAlbumReport(importList, report, listExclusions, albumsToAdd, artistsToAdd);
+                    ProcessAlbumReport(importList, item, listExclusions, albumsToAdd, artistsToAdd);
                 }
-                else if (report.Artist.IsNotNullOrWhiteSpace() || report.ArtistMusicBrainzId.IsNotNullOrWhiteSpace())
+                else if (item.Artist.IsNotNullOrWhiteSpace() || item.ArtistMusicBrainzId.IsNotNullOrWhiteSpace())
                 {
-                    if (report.ArtistMusicBrainzId.IsNullOrWhiteSpace())
+                    if (item.ArtistMusicBrainzId.IsNullOrWhiteSpace())
                     {
-                        MapArtistReport(report);
+                        MapArtistReport(item);
                     }
 
-                    ProcessArtistReport(importList, report, listExclusions, artistsToAdd);
+                    ProcessArtistReport(importList, item, listExclusions, artistsToAdd);
                 }
             }
 
             var addedArtists = _addArtistService.AddArtists(artistsToAdd, false, true);
             var addedAlbums = _addAlbumService.AddAlbums(albumsToAdd, false, true);
 
-            var message = string.Format($"Import List Sync Completed. Items found: {reports.Count}, Artists added: {addedArtists.Count}, Albums added: {addedAlbums.Count}");
+            var message = string.Format($"Import List Sync Completed. Items found: {items.Count}, Artists added: {addedArtists.Count}, Albums added: {addedAlbums.Count}");
 
             _logger.ProgressInfo(message);
 
@@ -136,8 +146,7 @@ namespace NzbDrone.Core.ImportLists
         private void MapAlbumReport(ImportListItemInfo report)
         {
             var albumQuery = report.AlbumMusicBrainzId.IsNotNullOrWhiteSpace() ? $"lidarr:{report.AlbumMusicBrainzId}" : report.Album;
-            var mappedAlbum = _albumSearchService.SearchForNewAlbum(albumQuery, report.Artist)
-                .FirstOrDefault();
+            var mappedAlbum = _albumSearchService.SearchForNewAlbum(albumQuery, report.Artist).FirstOrDefault();
 
             // Break if we are looking for an album and cant find it. This will avoid us from adding the artist and possibly getting it wrong.
             if (mappedAlbum == null)
@@ -250,8 +259,7 @@ namespace NzbDrone.Core.ImportLists
 
         private void MapArtistReport(ImportListItemInfo report)
         {
-            var mappedArtist = _artistSearchService.SearchForNewArtist(report.Artist)
-                .FirstOrDefault();
+            var mappedArtist = _artistSearchService.SearchForNewArtist(report.Artist).FirstOrDefault();
             report.ArtistMusicBrainzId = mappedArtist?.Metadata.Value?.ForeignArtistId;
             report.Artist = mappedArtist?.Metadata.Value?.Name;
         }
