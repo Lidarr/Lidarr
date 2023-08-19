@@ -27,6 +27,10 @@ trigger:
     include:
     - develop
     - master
+  paths:
+    exclude:
+      - .github
+      - src/Lidarr.Api.*/openapi.json
 
 pr:
   branches:
@@ -34,6 +38,7 @@ pr:
     - develop
   paths:
     exclude:
+    - .github
     - src/NzbDrone.Core/Localization/Core
     - src/Lidarr.Api.*/openapi.json
 
@@ -184,7 +189,7 @@ stages:
         artifact: '$(osName)Frontend'
         displayName: Publish Frontend
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
-        
+
   - stage: Installer
     dependsOn:
     - Build_Backend
@@ -392,6 +397,7 @@ stages:
     displayName: Unit Tests
     dependsOn: Build_Backend
     condition: succeeded()
+
     jobs:
     - job: Prepare
       pool:
@@ -459,7 +465,7 @@ stages:
       - bash: |
           chmod a+x _tests/fpcalc
         displayName: Make fpcalc Executable
-        condition: and(succeeded(), or(eq(variables['osName'], 'Mac'), eq(variables['testName'], 'linux-x64')))
+        condition: and(succeeded(), and(ne(variables['osName'], 'Windows'), ne(variables['poolName'], 'FreeBSD')))
       - bash: find ${TESTSFOLDER} -name "Lidarr.Test.Dummy" -exec chmod a+x {} \;
         displayName: Make Test Dummy Executable
         condition: and(succeeded(), ne(variables['osName'], 'Windows'))
@@ -494,11 +500,11 @@ stages:
 
       pool:
         vmImage: ${{ variables.linuxImage }}
-      
+
       container: $[ variables['containerImage'] ]
 
       timeoutInMinutes: 10
-        
+
       steps:
       - task: UseDotNet@2
         displayName: 'Install .NET'
@@ -518,9 +524,11 @@ stages:
           artifactName: $(artifactName)
           targetPath: $(testsFolder)
       - bash: |
-          find ${TESTSFOLDER} -name "Lidarr.Test.Dummy" -exec chmod a+x {} \;
           chmod a+x _tests/fpcalc
-        displayName: Make fpcalc and Test Dummy Executable
+        displayName: Make fpcalc Executable
+        condition: and(succeeded(), ne(variables['osName'], 'Windows'))
+      - bash: find ${TESTSFOLDER} -name "Lidarr.Test.Dummy" -exec chmod a+x {} \;
+        displayName: Make Test Dummy Executable
         condition: and(succeeded(), ne(variables['osName'], 'Windows'))
       - bash: |
           chmod a+x ${TESTSFOLDER}/test.sh
@@ -534,7 +542,7 @@ stages:
           testResultsFiles: '**/TestResult.xml'
           testRunTitle: '$(testName) Unit Tests'
           failTaskOnFailedTests: true
-          
+
     - job: Unit_LinuxCore_Postgres14
       displayName: Unit Native LinuxCore with Postgres14 Database
       dependsOn: Prepare
@@ -551,7 +559,7 @@ stages:
         vmImage: ${{ variables.linuxImage }}
 
       timeoutInMinutes: 10
-        
+
       steps:
       - task: UseDotNet@2
         displayName: 'Install .net core'
@@ -576,6 +584,7 @@ stages:
           -e POSTGRES_PASSWORD=lidarr \
           -e POSTGRES_USER=lidarr \
           -p 5432:5432/tcp \
+          -v /usr/share/zoneinfo/America/Chicago:/etc/localtime:ro \
           postgres:14
         displayName: Start postgres
       - bash: |
@@ -602,12 +611,12 @@ stages:
         Lidarr__Postgres__Port: '5432'
         Lidarr__Postgres__User: 'lidarr'
         Lidarr__Postgres__Password: 'lidarr'
-  
+
       pool:
         vmImage: ${{ variables.linuxImage }}
 
       timeoutInMinutes: 10
-        
+
       steps:
       - task: UseDotNet@2
         displayName: 'Install .net core'
@@ -651,6 +660,7 @@ stages:
   - stage: Integration
     displayName: Integration
     dependsOn: Packages
+
     jobs:
     - job: Prepare
       pool:
@@ -689,7 +699,7 @@ stages:
 
       pool:
         vmImage: $(imageName)
-        
+
       steps:
       - task: UseDotNet@2
         displayName: 'Install .net core'
@@ -711,7 +721,7 @@ stages:
           targetPath: $(Build.ArtifactStagingDirectory)
       - task: ExtractFiles@1
         inputs:
-          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)' 
+          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)'
           destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
         displayName: Extract Package
       - bash: |
@@ -765,7 +775,7 @@ stages:
             targetPath: $(Build.ArtifactStagingDirectory)
         - task: ExtractFiles@1
           inputs:
-            archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)' 
+            archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)'
             destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
           displayName: Extract Package
         - bash: |
@@ -828,7 +838,7 @@ stages:
             targetPath: $(Build.ArtifactStagingDirectory)
         - task: ExtractFiles@1
           inputs:
-            archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)' 
+            archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)'
             destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
           displayName: Extract Package
         - bash: |
@@ -923,7 +933,7 @@ stages:
       container: $[ variables['containerImage'] ]
 
       timeoutInMinutes: 15
-        
+
       steps:
       - task: UseDotNet@2
         displayName: 'Install .NET'
@@ -951,7 +961,7 @@ stages:
           targetPath: $(Build.ArtifactStagingDirectory)
       - task: ExtractFiles@1
         inputs:
-          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)' 
+          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)'
           destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
         displayName: Extract Package
       - bash: |
@@ -973,7 +983,7 @@ stages:
   - stage: Automation
     displayName: Automation
     dependsOn: Packages
-    
+
     jobs:
     - job: Automation
       strategy:
@@ -999,7 +1009,7 @@ stages:
 
       pool:
         vmImage: $(imageName)
-        
+
       steps:
       - task: UseDotNet@2
         displayName: 'Install .net core'
@@ -1021,7 +1031,7 @@ stages:
           targetPath: $(Build.ArtifactStagingDirectory)
       - task: ExtractFiles@1
         inputs:
-          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)' 
+          archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)'
           destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
         displayName: Extract Package
       - bash: |
@@ -1055,6 +1065,7 @@ stages:
     dependsOn:
     - Setup
     displayName: Analyze
+
     jobs:
     - job: Prepare
       pool:
@@ -1122,7 +1133,7 @@ stages:
           cliProjectVersion: '$(lidarrVersion)'
           cliSources: './frontend'
       - task: SonarCloudAnalyze@1
-      
+
     - job: Api_Docs
       displayName: API Docs
       dependsOn: Prepare
@@ -1144,7 +1155,7 @@ stages:
       - checkout: self
         submodules: true
         persistCredentials: true
-        fetchDepth: 1    
+        fetchDepth: 1
       - bash: ./docs.sh Windows
         displayName: Create openapi.json
       - bash: |
@@ -1152,10 +1163,9 @@ stages:
           git config --global user.name "Servarr"
           git checkout -b api-docs
           git add .
-          git status
-          if git status | grep modified
+          if git status | grep -q modified
           then
-            git commit -am 'Automated API Docs update [skip ci]'
+            git commit -am 'Automated API Docs update'
             git push -f --set-upstream origin api-docs
             curl -X POST -H "Authorization: token ${GITHUBTOKEN}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/lidarr/lidarr/pulls -d '{"head":"api-docs","base":"develop","title":"Update API docs"}'
           else
@@ -1261,3 +1271,4 @@ stages:
             DISCORDCHANNELID: $(discordChannelId)
             DISCORDWEBHOOKKEY: $(discordWebhookKey)
             DISCORDTHREADID: $(discordThreadId)
+
