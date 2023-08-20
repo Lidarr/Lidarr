@@ -39,25 +39,33 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
             }
 
             var albumHistory = _historyService.GetByAlbum(albumRelease.AlbumId, null);
-            var lastImported = albumHistory.FirstOrDefault(h => h.EventType == EntityHistoryEventType.DownloadImported);
-            var lastGrabbed = albumHistory.FirstOrDefault(h => h.EventType == EntityHistoryEventType.Grabbed);
+            var lastImported = albumHistory.FirstOrDefault(h =>
+                h.DownloadId == downloadClientItem.DownloadId &&
+                h.EventType == EntityHistoryEventType.DownloadImported);
+            var lastGrabbed = albumHistory.FirstOrDefault(h =>
+                h.DownloadId == downloadClientItem.DownloadId && h.EventType == EntityHistoryEventType.Grabbed);
 
             if (lastImported == null)
             {
-                _logger.Trace("Track file has not been imported");
+                _logger.Trace("Album has not been imported");
                 return Decision.Accept();
             }
 
-            if (lastGrabbed != null && lastGrabbed.Date.After(lastImported.Date))
+            if (lastGrabbed != null)
             {
-                _logger.Trace("Track file was grabbed again after importing");
-                return Decision.Accept();
-            }
+                // If the release was grabbed again after importing don't reject it
+                if (lastGrabbed.Date.After(lastImported.Date))
+                {
+                    _logger.Trace("Album was grabbed again after importing");
+                    return Decision.Accept();
+                }
 
-            if (lastImported.DownloadId == downloadClientItem.DownloadId)
-            {
-                _logger.Debug("Album previously imported at {0}", lastImported.Date);
-                return Decision.Reject("Album already imported at {0}", lastImported.Date.ToLocalTime());
+                // If the release was imported after the last grab reject it
+                if (lastImported.Date.After(lastGrabbed.Date))
+                {
+                    _logger.Debug("Album previously imported at {0}", lastImported.Date);
+                    return Decision.Reject("Album already imported at {0}", lastImported.Date.ToLocalTime());
+                }
             }
 
             return Decision.Accept();
