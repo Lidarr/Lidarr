@@ -21,27 +21,27 @@ const columns = [
   },
   {
     name: 'album',
-    label: translate('Album'),
+    label: () => translate('Album'),
     isVisible: true
   },
   {
     name: 'sourceTitle',
-    label: translate('SourceTitle'),
+    label: () => translate('SourceTitle'),
     isVisible: true
   },
   {
     name: 'quality',
-    label: translate('Quality'),
+    label: () => translate('Quality'),
     isVisible: true
   },
   {
     name: 'date',
-    label: translate('Date'),
+    label: () => translate('Date'),
     isVisible: true
   },
   {
     name: 'details',
-    label: translate('Details'),
+    label: () => translate('Details'),
     isVisible: true
   },
   {
@@ -55,7 +55,7 @@ const columns = [
   },
   {
     name: 'actions',
-    label: translate('Actions'),
+    label: () => translate('Actions'),
     isVisible: true
   }
 ];

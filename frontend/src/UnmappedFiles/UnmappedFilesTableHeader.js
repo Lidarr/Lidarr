@@ -75,7 +75,7 @@ function UnmappedFilesTableHeader(props) {
               isSortable={isSortable}
               {...otherProps}
             >
-              {label}
+              {typeof label === 'function' ? label() : label}
             </VirtualTableHeaderCell>
           );
         })

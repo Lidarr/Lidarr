@@ -16,43 +16,43 @@ import styles from './InteractiveSearch.css';
 const columns = [
   {
     name: 'protocol',
-    label: translate('Source'),
+    label: () => translate('Source'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'age',
-    label: translate('Age'),
+    label: () => translate('Age'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'title',
-    label: translate('Title'),
+    label: () => translate('Title'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'indexer',
-    label: translate('Indexer'),
+    label: () => translate('Indexer'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'size',
-    label: translate('Size'),
+    label: () => translate('Size'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'peers',
-    label: translate('Peers'),
+    label: () => translate('Peers'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'qualityWeight',
-    label: translate('Quality'),
+    label: () => translate('Quality'),
     isSortable: true,
     isVisible: true
   },

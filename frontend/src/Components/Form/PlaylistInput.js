@@ -17,7 +17,7 @@ import styles from './PlaylistInput.css';
 const columns = [
   {
     name: 'name',
-    label: translate('Playlist'),
+    label: () => translate('Playlist'),
     isSortable: false,
     isVisible: true
   }

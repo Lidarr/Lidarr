@@ -18,22 +18,22 @@ import styles from './SelectAlbumModalContent.css';
 const columns = [
   {
     name: 'title',
-    label: translate('AlbumTitle'),
+    label: () => translate('AlbumTitle'),
     isVisible: true
   },
   {
     name: 'albumType',
-    label: translate('AlbumType'),
+    label: () => translate('AlbumType'),
     isVisible: true
   },
   {
     name: 'releaseDate',
-    label: translate('ReleaseDate'),
+    label: () => translate('ReleaseDate'),
     isVisible: true
   },
   {
     name: 'status',
-    label: translate('AlbumStatus'),
+    label: () => translate('AlbumStatus'),
     isVisible: true
   }
 ];

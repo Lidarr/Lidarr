@@ -21,7 +21,7 @@ import SelectTrackRow from './SelectTrackRow';
 const columns = [
   {
     name: 'mediumNumber',
-    label: translate('Medium'),
+    label: () => translate('Medium'),
     isSortable: true,
     isVisible: true
   },
@@ -33,12 +33,12 @@ const columns = [
   },
   {
     name: 'title',
-    label: translate('Title'),
+    label: () => translate('Title'),
     isVisible: true
   },
   {
     name: 'trackStatus',
-    label: translate('Status'),
+    label: () => translate('Status'),
     isVisible: true
   }
 ];

@@ -16,26 +16,81 @@ import NamingConnector from './Naming/NamingConnector';
 import RootFoldersConnector from './RootFolder/RootFoldersConnector';
 
 const rescanAfterRefreshOptions = [
-  { key: 'always', value: translate('Always') },
-  { key: 'afterManual', value: translate('AfterManualRefresh') },
-  { key: 'never', value: translate('Never') }
+  {
+    key: 'always',
+    get value() {
+      return translate('Always');
+    }
+  },
+  {
+    key: 'afterManual',
+    get value() {
+      return translate('AfterManualRefresh');
+    }
+  },
+  {
+    key: 'never',
+    get value() {
+      return translate('Never');
+    }
+  }
 ];
 
 const allowFingerprintingOptions = [
-  { key: 'allFiles', value: translate('Always') },
-  { key: 'newFiles', value: translate('ForNewImportsOnly') },
-  { key: 'never', value: translate('Never') }
+  {
+    key: 'allFiles',
+    get value() {
+      return translate('Always');
+    }
+  },
+  {
+    key: 'newFiles',
+    get value() {
+      return translate('ForNewImportsOnly');
+    }
+  },
+  {
+    key: 'never',
+    get value() {
+      return translate('Never');
+    }
+  }
 ];
 
 const downloadPropersAndRepacksOptions = [
-  { key: 'preferAndUpgrade', value: translate('PreferAndUpgrade') },
-  { key: 'doNotUpgrade', value: translate('DoNotUpgradeAutomatically') },
-  { key: 'doNotPrefer', value: translate('DoNotPrefer') }
+  {
+    key: 'preferAndUpgrade',
+    get value() {
+      return translate('PreferAndUpgrade');
+    }
+  },
+  {
+    key: 'doNotUpgrade',
+    get value() {
+      return translate('DoNotUpgradeAutomatically');
+    }
+  },
+  {
+    key: 'doNotPrefer',
+    get value() {
+      return translate('DoNotPrefer');
+    }
+  }
 ];
 
 const fileDateOptions = [
-  { key: 'none', value: translate('None') },
-  { key: 'albumReleaseDate', value: translate('AlbumReleaseDate') }
+  {
+    key: 'none',
+    get value() {
+      return translate('None');
+    }
+  },
+  {
+    key: 'albumReleaseDate',
+    get value() {
+      return translate('AlbumReleaseDate');
+    }
+  }
 ];
 
 class MediaManagement extends Component {

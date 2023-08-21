@@ -25,17 +25,17 @@ import styles from './TrackFileEditorModalContent.css';
 const columns = [
   {
     name: 'trackNumber',
-    label: translate('Track'),
+    label: () => translate('Track'),
     isVisible: true
   },
   {
     name: 'path',
-    label: translate('Path'),
+    label: () => translate('Path'),
     isVisible: true
   },
   {
     name: 'quality',
-    label: translate('Quality'),
+    label: () => translate('Quality'),
     isVisible: true
   }
 ];

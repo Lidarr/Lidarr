@@ -17,11 +17,11 @@ import styles from './InteractiveImportSelectFolderModalContent.css';
 const recentFoldersColumns = [
   {
     name: 'folder',
-    label: translate('Folder')
+    label: () => translate('Folder')
   },
   {
     name: 'lastUsed',
-    label: translate('LastUsed')
+    label: () => translate('LastUsed')
   },
   {
     name: 'actions',

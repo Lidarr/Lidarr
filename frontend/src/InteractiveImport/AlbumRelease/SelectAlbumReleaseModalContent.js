@@ -17,12 +17,12 @@ import styles from './SelectAlbumReleaseModalContent.css';
 const columns = [
   {
     name: 'album',
-    label: translate('Album'),
+    label: () => translate('Album'),
     isVisible: true
   },
   {
     name: 'release',
-    label: translate('AlbumRelease'),
+    label: () => translate('AlbumRelease'),
     isVisible: true
   }
 ];

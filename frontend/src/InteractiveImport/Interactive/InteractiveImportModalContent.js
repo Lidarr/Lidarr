@@ -33,40 +33,40 @@ import styles from './InteractiveImportModalContent.css';
 const columns = [
   {
     name: 'path',
-    label: translate('Path'),
+    label: () => translate('Path'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'artist',
-    label: translate('Artist'),
+    label: () => translate('Artist'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'album',
-    label: translate('Album'),
+    label: () => translate('Album'),
     isVisible: true
   },
   {
     name: 'tracks',
-    label: translate('Tracks'),
+    label: () => translate('Tracks'),
     isVisible: true
   },
   {
     name: 'releaseGroup',
-    label: translate('ReleaseGroup'),
+    label: () => translate('ReleaseGroup'),
     isVisible: true
   },
   {
     name: 'quality',
-    label: translate('Quality'),
+    label: () => translate('Quality'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'size',
-    label: translate('Size'),
+    label: () => translate('Size'),
     isSortable: true,
     isVisible: true
   },
@@ -96,9 +96,9 @@ const filterExistingFilesOptions = {
 };
 
 const importModeOptions = [
-  { key: 'chooseImportMode', value: translate('ChooseImportMethod'), disabled: true },
-  { key: 'move', value: translate('MoveFiles') },
-  { key: 'copy', value: translate('HardlinkCopyFiles') }
+  { key: 'chooseImportMode', value: () => translate('ChooseImportMethod'), disabled: true },
+  { key: 'move', value: () => translate('MoveFiles') },
+  { key: 'copy', value: () => translate('HardlinkCopyFiles') }
 ];
 
 const SELECT = 'select';
