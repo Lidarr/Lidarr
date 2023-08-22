@@ -15,8 +15,9 @@ jobs:
           issue-comment: >
             :wave: @{issue-author}, we use the issue tracker exclusively
             for bug reports and feature requests. However, this issue appears
-            to be a support request. Please hop over onto our [Discord](https://lidarr.audio/discord)
+            to be a support request. Please hop over onto our [Discord](https://lidarr.audio/discord).
           close-issue: true
+          close-reason: 'not planned'
           lock-issue: false
       - uses: dessant/support-requests@v3
         with:
