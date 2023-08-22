@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
+using NzbDrone.Common.TPL;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.ImportLists
@@ -40,7 +41,10 @@ namespace NzbDrone.Core.ImportLists
 
             _logger.Debug("Available import lists {0}", importLists.Count);
 
-            Parallel.ForEach(importLists, new ParallelOptions { MaxDegreeOfParallelism = 5 }, importList =>
+            var taskList = new List<Task>();
+            var taskFactory = new TaskFactory(TaskCreationOptions.LongRunning, TaskContinuationOptions.None);
+
+            foreach (var importList in importLists)
             {
                 var importListLocal = importList;
                 var importListStatus = _importListStatusService.GetLastSyncListInfo(importListLocal.Definition.Id);
@@ -52,28 +56,35 @@ namespace NzbDrone.Core.ImportLists
                     if (DateTime.UtcNow < importListNextSync)
                     {
                         _logger.Trace("Skipping refresh of Import List {0} ({1}) due to minimum refresh interval. Next sync after {2}", importList.Name, importListLocal.Definition.Name, importListNextSync);
-                        return;
+                        continue;
                     }
                 }
 
-                try
-                {
-                    var importListReports = importListLocal.Fetch();
+                var task = taskFactory.StartNew(() =>
+                     {
+                         try
+                         {
+                             var importListReports = importListLocal.Fetch();
 
-                    lock (result)
-                    {
-                        _logger.Debug("Found {0} reports from {1} ({2})", importListReports.Count, importList.Name, importListLocal.Definition.Name);
+                             lock (result)
+                             {
+                                 _logger.Debug("Found {0} reports from {1} ({2})", importListReports.Count, importList.Name, importListLocal.Definition.Name);
 
-                        result.AddRange(importListReports);
-                    }
+                                 result.AddRange(importListReports);
+                             }
 
-                    _importListStatusService.UpdateListSyncStatus(importList.Definition.Id);
-                }
-                catch (Exception e)
-                {
-                    _logger.Error(e, "Error during Import List Sync of {0} ({1})", importList.Name, importListLocal.Definition.Name);
-                }
-            });
+                             _importListStatusService.UpdateListSyncStatus(importList.Definition.Id);
+                         }
+                         catch (Exception e)
+                         {
+                             _logger.Error(e, "Error during Import List Sync of {0} ({1})", importList.Name, importListLocal.Definition.Name);
+                         }
+                     }).LogExceptions();
+
+                taskList.Add(task);
+            }
+
+            Task.WaitAll(taskList.ToArray());
 
             result = result.DistinctBy(r => new { r.Artist, r.Album }).ToList();
 
@@ -94,25 +105,35 @@ namespace NzbDrone.Core.ImportLists
                 return result;
             }
 
+            var taskList = new List<Task>();
+            var taskFactory = new TaskFactory(TaskCreationOptions.LongRunning, TaskContinuationOptions.None);
+
             var importListLocal = importList;
 
-            try
+            var task = taskFactory.StartNew(() =>
             {
-                var importListReports = importListLocal.Fetch();
-
-                lock (result)
+                try
                 {
-                    _logger.Debug("Found {0} reports from {1} ({2})", importListReports.Count, importList.Name, importListLocal.Definition.Name);
+                    var importListReports = importListLocal.Fetch();
 
-                    result.AddRange(importListReports);
+                    lock (result)
+                    {
+                        _logger.Debug("Found {0} reports from {1} ({2})", importListReports.Count, importList.Name, importListLocal.Definition.Name);
+
+                        result.AddRange(importListReports);
+                    }
+
+                    _importListStatusService.UpdateListSyncStatus(importList.Definition.Id);
                 }
+                catch (Exception e)
+                {
+                    _logger.Error(e, "Error during Import List Sync of {0} ({1})", importList.Name, importListLocal.Definition.Name);
+                }
+            }).LogExceptions();
 
-                _importListStatusService.UpdateListSyncStatus(importList.Definition.Id);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e, "Error during Import List Sync of {0} ({1})", importList.Name, importListLocal.Definition.Name);
-            }
+            taskList.Add(task);
+
+            Task.WaitAll(taskList.ToArray());
 
             result = result.DistinctBy(r => new { r.Artist, r.Album }).ToList();
 
