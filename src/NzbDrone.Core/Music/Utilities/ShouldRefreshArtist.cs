@@ -22,6 +22,12 @@ namespace NzbDrone.Core.Music
 
         public bool ShouldRefresh(Artist artist)
         {
+            if (artist.LastInfoSync == null)
+            {
+                _logger.Trace("Artist {0} was just added, should refresh.", artist.Name);
+                return true;
+            }
+
             if (artist.LastInfoSync < DateTime.UtcNow.AddDays(-30))
             {
                 _logger.Trace("Artist {0} last updated more than 30 days ago, should refresh.", artist.Name);
