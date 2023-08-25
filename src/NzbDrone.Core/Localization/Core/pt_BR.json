@@ -277,9 +277,9 @@
     "Host": "Host",
     "HostHelpText": "O mesmo host que você especificou para o Cliente de download remoto",
     "Hostname": "Hostname",
-    "ICalFeed": "iCal Feed",
+    "ICalFeed": "Feed do iCal",
     "ICalHttpUrlHelpText": "Copie este URL em seu(s) cliente(s) ou clique para se inscrever se o seu navegador é compatível com webcal",
-    "ICalLink": "iCal Link",
+    "ICalLink": "Link do iCal",
     "IconForCutoffUnmet": "Ícone para Corte Não Atendido",
     "IfYouDontAddAnImportListExclusionAndTheArtistHasAMetadataProfileOtherThanNoneThenThisAlbumMayBeReaddedDuringTheNextArtistRefresh": "Se você não adicionar uma exclusão à lista de importação e o autor tiver um perfil de metadados diferente de \"Nenhum\", este livro poderá ser adicionado novamente durante a próxima atualização do autor.",
     "IgnoredAddresses": "Endereços Ignorados",
@@ -1074,5 +1074,6 @@
     "RemotePathMappingsInfo": "Raramente são necessários mapeamentos de caminho remoto, se {app} e seu cliente de download estiverem no mesmo sistema, é melhor combinar seus caminhos. Para mais informações, consulte o [wiki]({wikiLink})",
     "CloneCondition": "Clonar Condição",
     "Enabled": "Habilitado",
-    "Priority": "Prioridade"
+    "Priority": "Prioridade",
+    "ErrorLoadingContent": "Ocorreu um erro ao carregar este conteúdo"
 }
