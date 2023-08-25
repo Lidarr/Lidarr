@@ -8728,6 +8728,10 @@
             "type": "string",
             "nullable": true
           },
+          "folder": {
+            "type": "string",
+            "nullable": true
+          },
           "genres": {
             "type": "array",
             "items": {
