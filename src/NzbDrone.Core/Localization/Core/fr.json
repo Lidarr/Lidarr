@@ -643,7 +643,7 @@
     "AddDelayProfile": "Ajouter un profil différé",
     "AddImportListExclusion": "Supprimer les exclusions de liste d'imports",
     "EditMetadataProfile": "profil de métadonnées",
-    "AddConnection": "Modifier la collection",
+    "AddConnection": "Ajouter une connexion",
     "ImportListExclusions": "Supprimer les exclusions de liste d'imports",
     "LastDuration": "Dernière durée",
     "QualitiesHelpText": "Les qualités placées en haut de la liste sont privilégiées même si elles ne sont pas cochées. Les qualités d'un même groupe sont égales. Seules les qualités cochées sont recherchées",
@@ -813,5 +813,7 @@
     "SuggestTranslationChange": "Suggérer un changement de traduction",
     "UpdateSelected": "Mettre à jour la sélection",
     "AllResultsAreHiddenByTheAppliedFilter": "Tous les résultats ont été dissimulés par le filtre actuellement appliqué",
-    "NoResultsFound": "Aucun résultat trouvé"
+    "NoResultsFound": "Aucun résultat trouvé",
+    "AddConditionImplementation": "Ajouter une condition - {NomDeL'implémentation}",
+    "AddConnectionImplementation": "Ajouter une connexion - {NomDeL'implémentation}"
 }
