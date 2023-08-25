@@ -9,9 +9,9 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import AddArtistOptionsForm from '../Common/AddArtistOptionsForm.js';
 import styles from './AddNewAlbumModalContent.css';
-import translate from 'Utilities/String/translate';
 
 class AddNewAlbumModalContent extends Component {
 
