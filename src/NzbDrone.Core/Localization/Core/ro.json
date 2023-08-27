@@ -679,5 +679,6 @@
     "ConnectionLostToBackend": "{appName} a pierdut conexiunea cu backend-ul și trebuie reîncărcat pentru a restabili funcționalitatea.",
     "RecentChanges": "Schimbări recente",
     "WhatsNew": "Ce mai e nou?",
-    "Authentication": "Autentificare"
+    "Authentication": "Autentificare",
+    "NotificationStatusSingleClientHealthCheckMessage": "Notificări indisponibile datorită erorilor: {0}"
 }

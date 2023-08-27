@@ -814,6 +814,6 @@
     "UpdateSelected": "Mettre à jour la sélection",
     "AllResultsAreHiddenByTheAppliedFilter": "Tous les résultats ont été dissimulés par le filtre actuellement appliqué",
     "NoResultsFound": "Aucun résultat trouvé",
-    "AddConditionImplementation": "Ajouter une condition - {NomDeL'implémentation}",
-    "AddConnectionImplementation": "Ajouter une connexion - {NomDeL'implémentation}"
+    "AddConditionImplementation": "Ajouter une condition - {implementationName}",
+    "AddConnectionImplementation": "Ajouter une connexion - {implementationName}"
 }

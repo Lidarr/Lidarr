@@ -1080,5 +1080,6 @@
     "AddNewAlbum": "Adicionar Novo Álbum",
     "AddNewArtistRootFolderHelpText": "A subpasta '{folder}' será criada automaticamente",
     "ImportListRootFolderMissingRootHealthCheckMessage": "Pasta raiz ausente para lista(s) de importação: {0}",
-    "ImportListRootFolderMultipleMissingRootsHealthCheckMessage": "Múltiplas pastas raiz estão faltando nas listas de importação: {0}"
+    "ImportListRootFolderMultipleMissingRootsHealthCheckMessage": "Múltiplas pastas raiz estão faltando nas listas de importação: {0}",
+    "PreferProtocol": "Preferir {preferredProtocol}"
 }
