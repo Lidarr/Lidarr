@@ -1249,10 +1249,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@microsoft/signalr@6.0.16":
-  version "6.0.16"
-  resolved "https://registry.yarnpkg.com/@microsoft/signalr/-/signalr-6.0.16.tgz#d36498a9b16bf11c0e9213d77d24c0ad8ebffa47"
-  integrity sha512-wekzRtt2Ti38Ja0OQwLE0EKN0Zm7RI9VilrungwHe5Eej1IwnRYuhpauAqNtwwP3CY2j7uFT4XUk74E2vythTQ==
+"@microsoft/signalr@6.0.21":
+  version "6.0.21"
+  resolved "https://registry.yarnpkg.com/@microsoft/signalr/-/signalr-6.0.21.tgz#b45f335df7011abba831cb3d7974b58da7e725c7"
+  integrity sha512-3MWhSUE7AxkQs3QBuJ/spJJpg1mAHo0/6yRGhs5+Hew3Z+iqYrHVfo0yTElC7W2bVA9t3fW3jliQ9rBN0OvJLA==
   dependencies:
     abort-controller "^3.0.0"
     eventsource "^1.0.7"
