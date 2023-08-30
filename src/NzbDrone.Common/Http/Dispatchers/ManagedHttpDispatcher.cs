@@ -116,7 +116,7 @@ namespace NzbDrone.Common.Http.Dispatchers
                         }
                         else
                         {
-                            data = responseMessage.Content.ReadAsByteArrayAsync(cts.Token).GetAwaiter().GetResult();
+                            data = await responseMessage.Content.ReadAsByteArrayAsync(cts.Token);
                         }
                     }
                     catch (Exception ex)
