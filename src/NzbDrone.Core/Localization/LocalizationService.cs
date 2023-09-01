@@ -86,7 +86,7 @@ namespace NzbDrone.Core.Localization
 
         private string GetSetLanguageFileName()
         {
-            var isoLanguage = IsoLanguages.Get((Language)_configService.UILanguage);
+            var isoLanguage = IsoLanguages.Get((Language)_configService.UILanguage) ?? IsoLanguages.Get(Language.English);
             var language = isoLanguage.TwoLetterCode;
 
             if (isoLanguage.CountryCode.IsNotNullOrWhiteSpace())

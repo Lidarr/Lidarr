@@ -1,9 +1,11 @@
 using System.Linq;
 using System.Reflection;
+using FluentValidation;
 using Lidarr.Http;
 using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Languages;
 
 namespace Lidarr.Api.V1.Config
 {
@@ -16,6 +18,17 @@ namespace Lidarr.Api.V1.Config
             : base(configService)
         {
             _configFileProvider = configFileProvider;
+            SharedValidator.RuleFor(c => c.UILanguage).Custom((value, context) =>
+            {
+                if (!Language.All.Any(o => o.Id == value))
+                {
+                    context.AddFailure("Invalid UI Language value");
+                }
+            });
+
+            SharedValidator.RuleFor(c => c.UILanguage)
+                           .GreaterThanOrEqualTo(1)
+                           .WithMessage("The UI Language value cannot be less than 1");
         }
 
         [RestPutById]

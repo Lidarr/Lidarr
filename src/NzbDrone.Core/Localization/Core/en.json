@@ -480,6 +480,7 @@
   "InteractiveImport": "Interactive Import",
   "InteractiveSearch": "Interactive Search",
   "Interval": "Interval",
+  "InvalidUILanguage": "Your UI is set to an invalid language, correct it and save your settings",
   "IsCutoffCutoff": "Cutoff",
   "IsCutoffUpgradeUntilThisQualityIsMetOrExceeded": "Upgrade until this quality is met or exceeded",
   "IsExpandedHideAlbums": "Hide albums",
