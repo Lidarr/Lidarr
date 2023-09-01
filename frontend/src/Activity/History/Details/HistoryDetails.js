@@ -60,6 +60,7 @@ function HistoryDetails(props) {
     eventType,
     sourceTitle,
     data,
+    downloadId,
     shortDateFormat,
     timeFormat
   } = props;
@@ -72,7 +73,6 @@ function HistoryDetails(props) {
       nzbInfoUrl,
       downloadClient,
       downloadClientName,
-      downloadId,
       age,
       ageHours,
       ageMinutes,
@@ -90,20 +90,22 @@ function HistoryDetails(props) {
         />
 
         {
-          !!indexer &&
+          indexer ?
             <DescriptionListItem
               title={translate('Indexer')}
               data={indexer}
-            />
+            /> :
+            null
         }
 
         {
-          !!releaseGroup &&
+          releaseGroup ?
             <DescriptionListItem
               descriptionClassName={styles.description}
               title={translate('ReleaseGroup')}
               data={releaseGroup}
-            />
+            /> :
+            null
         }
 
         {
@@ -119,7 +121,7 @@ function HistoryDetails(props) {
           nzbInfoUrl ?
             <span>
               <DescriptionListItemTitle>
-                Info URL
+                {translate('InfoUrl')}
               </DescriptionListItemTitle>
 
               <DescriptionListItemDescription>
@@ -139,27 +141,30 @@ function HistoryDetails(props) {
         }
 
         {
-          !!downloadId &&
+          downloadId ?
             <DescriptionListItem
-              title={translate('GrabID')}
+              title={translate('GrabId')}
               data={downloadId}
-            />
+            /> :
+            null
         }
 
         {
-          !!indexer &&
+          age || ageHours || ageMinutes ?
             <DescriptionListItem
               title={translate('AgeWhenGrabbed')}
               data={formatAge(age, ageHours, ageMinutes)}
-            />
+            /> :
+            null
         }
 
         {
-          !!publishedDate &&
+          publishedDate ?
             <DescriptionListItem
               title={translate('PublishedDate')}
               data={formatDateTime(publishedDate, shortDateFormat, timeFormat, { includeSeconds: true })}
-            />
+            /> :
+            null
         }
       </DescriptionList>
     );
@@ -179,11 +184,21 @@ function HistoryDetails(props) {
         />
 
         {
-          !!message &&
+          downloadId ?
+            <DescriptionListItem
+              title={translate('GrabId')}
+              data={downloadId}
+            /> :
+            null
+        }
+
+        {
+          message ?
             <DescriptionListItem
               title={translate('Message')}
               data={message}
-            />
+            /> :
+            null
         }
       </DescriptionList>
     );
@@ -205,12 +220,13 @@ function HistoryDetails(props) {
         />
 
         {
-          !!droppedPath &&
+          droppedPath ?
             <DescriptionListItem
               descriptionClassName={styles.description}
               title={translate('Source')}
               data={droppedPath}
-            />
+            /> :
+            null
         }
 
         {
@@ -360,9 +376,9 @@ function HistoryDetails(props) {
     const {
       indexer,
       releaseGroup,
+      customFormatScore,
       nzbInfoUrl,
       downloadClient,
-      downloadId,
       age,
       ageHours,
       ageMinutes,
@@ -377,64 +393,80 @@ function HistoryDetails(props) {
         />
 
         {
-          !!indexer &&
+          indexer ?
             <DescriptionListItem
               title={translate('Indexer')}
               data={indexer}
-            />
+            /> :
+            null
         }
 
         {
-          !!releaseGroup &&
+          releaseGroup ?
             <DescriptionListItem
               title={translate('ReleaseGroup')}
               data={releaseGroup}
-            />
+            /> :
+            null
         }
 
         {
-          !!nzbInfoUrl &&
+          customFormatScore && customFormatScore !== '0' ?
+            <DescriptionListItem
+              title={translate('CustomFormatScore')}
+              data={formatCustomFormatScore(customFormatScore)}
+            /> :
+            null
+        }
+
+        {
+          nzbInfoUrl ?
             <span>
               <DescriptionListItemTitle>
-                Info URL
+                {translate('InfoUrl')}
               </DescriptionListItemTitle>
 
               <DescriptionListItemDescription>
                 <Link to={nzbInfoUrl}>{nzbInfoUrl}</Link>
               </DescriptionListItemDescription>
-            </span>
+            </span> :
+            null
         }
 
         {
-          !!downloadClient &&
+          downloadClient ?
             <DescriptionListItem
               title={translate('DownloadClient')}
               data={downloadClient}
-            />
+            /> :
+            null
         }
 
         {
-          !!downloadId &&
+          downloadId ?
             <DescriptionListItem
-              title={translate('GrabID')}
+              title={translate('GrabId')}
               data={downloadId}
-            />
+            /> :
+            null
         }
 
         {
-          !!indexer &&
+          age || ageHours || ageMinutes ?
             <DescriptionListItem
               title={translate('AgeWhenGrabbed')}
               data={formatAge(age, ageHours, ageMinutes)}
-            />
+            /> :
+            null
         }
 
         {
-          !!publishedDate &&
+          publishedDate ?
             <DescriptionListItem
               title={translate('PublishedDate')}
               data={formatDateTime(publishedDate, shortDateFormat, timeFormat, { includeSeconds: true })}
-            />
+            /> :
+            null
         }
       </DescriptionList>
     );
@@ -454,11 +486,21 @@ function HistoryDetails(props) {
         />
 
         {
-          !!message &&
+          downloadId ?
+            <DescriptionListItem
+              title={translate('GrabId')}
+              data={downloadId}
+            /> :
+            null
+        }
+
+        {
+          message ?
             <DescriptionListItem
               title={translate('Message')}
               data={message}
-            />
+            /> :
+            null
         }
       </DescriptionList>
     );
@@ -479,6 +521,7 @@ HistoryDetails.propTypes = {
   eventType: PropTypes.string.isRequired,
   sourceTitle: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
+  downloadId: PropTypes.string,
   shortDateFormat: PropTypes.string.isRequired,
   timeFormat: PropTypes.string.isRequired
 };

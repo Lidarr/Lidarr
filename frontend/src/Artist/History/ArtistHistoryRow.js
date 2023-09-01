@@ -82,6 +82,7 @@ class ArtistHistoryRow extends Component {
       customFormatScore,
       date,
       data,
+      downloadId,
       album
     } = this.props;
 
@@ -128,6 +129,7 @@ class ArtistHistoryRow extends Component {
                 eventType={eventType}
                 sourceTitle={sourceTitle}
                 data={data}
+                downloadId={downloadId}
               />
             }
             position={tooltipPositions.LEFT}
@@ -180,6 +182,7 @@ ArtistHistoryRow.propTypes = {
   customFormatScore: PropTypes.number.isRequired,
   date: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
+  downloadId: PropTypes.string,
   fullArtist: PropTypes.bool.isRequired,
   artist: PropTypes.object.isRequired,
   album: PropTypes.object.isRequired,

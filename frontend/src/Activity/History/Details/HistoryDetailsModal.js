@@ -42,6 +42,7 @@ function HistoryDetailsModal(props) {
     eventType,
     sourceTitle,
     data,
+    downloadId,
     isMarkingAsFailed,
     shortDateFormat,
     timeFormat,
@@ -64,6 +65,7 @@ function HistoryDetailsModal(props) {
             eventType={eventType}
             sourceTitle={sourceTitle}
             data={data}
+            downloadId={downloadId}
             shortDateFormat={shortDateFormat}
             timeFormat={timeFormat}
           />
@@ -98,6 +100,7 @@ HistoryDetailsModal.propTypes = {
   eventType: PropTypes.string.isRequired,
   sourceTitle: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
+  downloadId: PropTypes.string,
   isMarkingAsFailed: PropTypes.bool.isRequired,
   shortDateFormat: PropTypes.string.isRequired,
   timeFormat: PropTypes.string.isRequired,
