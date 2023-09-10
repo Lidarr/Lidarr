@@ -696,5 +696,20 @@
     "Album": "אלבום",
     "UpdateSelected": "עדכון נבחר",
     "AllResultsAreHiddenByTheAppliedFilter": "כל התוצאות מוסתרות על ידי המסנן שהוחל",
-    "NoResultsFound": "לא נמצאו תוצאות"
+    "NoResultsFound": "לא נמצאו תוצאות",
+    "ImportListRootFolderMissingRootHealthCheckMessage": "תיקיית אב חסרה, לא ניתן לעשות ייבוא מרשימה(ות): {0}",
+    "ImportListRootFolderMultipleMissingRootsHealthCheckMessage": "מספר תיקיות אב חסרות לייבוא רשימות: {0}",
+    "Artists": "אמן",
+    "ConnectionLost": "החיבור אבד",
+    "ConnectionLostReconnect": "Radarr ינסה להתחבר אוטומטית, או שתלחץ על טען מחדש למטה.",
+    "RecentChanges": "שינויים אחרונים",
+    "PreferredProtocol": "פרוטוקול מועדף",
+    "Enabled": "מופעל",
+    "ExpandAlbumByDefaultHelpText": "אלבום",
+    "Priority": "עדיפות",
+    "AddNewArtistRootFolderHelpText": "תיקיית המשנה '{0}' תיווצר באופן אוטומטי",
+    "WhatsNew": "מה חדש?",
+    "Albums": "אלבום",
+    "NotificationStatusAllClientHealthCheckMessage": "כל הרשימות אינן זמינות בגלל כשלים",
+    "NotificationStatusSingleClientHealthCheckMessage": "רשימות לא זמינות בגלל כשלים: {0}"
 }

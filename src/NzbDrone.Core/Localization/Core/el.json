@@ -1017,5 +1017,19 @@
     "CountArtistsSelected": "Επιλέχθηκαν {0} καλλιτέχνες",
     "UpdateSelected": "Επιλεγμένη ενημέρωση",
     "AllResultsAreHiddenByTheAppliedFilter": "Όλα τα αποτελέσματα αποκρύπτονται από το εφαρμοσμένο φίλτρο",
-    "NoResultsFound": "Δεν βρέθηκαν αποτελέσματα"
+    "NoResultsFound": "Δεν βρέθηκαν αποτελέσματα",
+    "RecentChanges": "Πρόσφατες αλλαγές",
+    "ImportListRootFolderMissingRootHealthCheckMessage": "Λείπει ο ριζικός φάκελος για λίστες εισαγωγής: {0}",
+    "ConnectionLostToBackend": "Το Radarr έχασε τη σύνδεσή του με το backend και θα χρειαστεί να επαναφορτωθεί για να αποκαταστήσει τη λειτουργικότητά του.",
+    "ImportListRootFolderMultipleMissingRootsHealthCheckMessage": "Λείπουν πολλοί ριζικοί φάκελοι για λίστες εισαγωγής: {0}",
+    "CloneCondition": "Κλωνοποίηση συνθήκης",
+    "ConnectionLost": "Η σύνδεση χάθηκε",
+    "ConnectionLostReconnect": "Το Radarr θα προσπαθήσει να συνδεθεί αυτόματα, αλλιώς μπορείτε να κάνετε reload απο κάτω.",
+    "Enabled": "Ενεργοποιήθηκε",
+    "Priority": "Προτεραιότητα",
+    "NotificationStatusAllClientHealthCheckMessage": "Όλες οι λίστες δεν είναι διαθέσιμες λόγω αστοχιών",
+    "NotificationStatusSingleClientHealthCheckMessage": "Μη διαθέσιμες λίστες λόγω αποτυχιών: {0}",
+    "WhatsNew": "Τι νέα?",
+    "AddNewArtistRootFolderHelpText": "Ο υποφάκελος \"{0}\" θα δημιουργηθεί αυτόματα",
+    "ErrorLoadingContent": "Υπήρξε ένα σφάλμα κατά τη φόρτωση του αρχείου"
 }

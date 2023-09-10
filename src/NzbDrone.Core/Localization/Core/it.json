@@ -792,5 +792,17 @@
     "AutoAdd": "Aggiungi Automaticamente",
     "AutomaticAdd": "Aggiungi Automaticamente",
     "ApplyChanges": "Applica Cambiamenti",
-    "ApiKeyValidationHealthCheckMessage": "Aggiorna la tua chiave API in modo che abbia una lunghezza di almeno {0} caratteri. Puoi farlo dalle impostazioni o dal file di configurazione"
+    "ApiKeyValidationHealthCheckMessage": "Aggiorna la tua chiave API in modo che abbia una lunghezza di almeno {0} caratteri. Puoi farlo dalle impostazioni o dal file di configurazione",
+    "NotificationStatusAllClientHealthCheckMessage": "Tutte le applicazioni non sono disponibili a causa di errori",
+    "ImportListRootFolderMissingRootHealthCheckMessage": "Persa la cartella principale per l’importazione delle liste : {0}",
+    "ImportListRootFolderMultipleMissingRootsHealthCheckMessage": "Diverse cartelle principale sono perse per l’importazione: {0}",
+    "ConnectionLost": "Connessione Persa",
+    "ConnectionLostReconnect": "Radarr cercherà di connettersi automaticamente, oppure clicca su ricarica qui sotto.",
+    "RecentChanges": "Cambiamenti recenti",
+    "WhatsNew": "Cosa c'è di nuovo?",
+    "ConnectionLostToBackend": "Radarr ha perso la connessione al backend e dovrà essere ricaricato per ripristinare la funzionalità.",
+    "Priority": "Priorità",
+    "AddNewArtistRootFolderHelpText": "La sottocartella '{0}' verrà creata automaticamente",
+    "Enabled": "Abilitato",
+    "NotificationStatusSingleClientHealthCheckMessage": "Applicazioni non disponibili a causa di errori: {0}"
 }

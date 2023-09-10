@@ -666,5 +666,14 @@
     "SomeResultsAreHiddenByTheAppliedFilter": "कुछ परिणाम लागू फ़िल्टर द्वारा छिपे हुए हैं",
     "SuggestTranslationChange": "अनुवाद परिवर्तन का सुझाव दें",
     "ApplyTagsHelpTextHowToApplyDownloadClients": "चयनित फिल्मों के लिए टैग कैसे लागू करें",
-    "UpdateSelected": "चयनित अपडेट करें"
+    "UpdateSelected": "चयनित अपडेट करें",
+    "Priority": "वरीयता",
+    "ConnectionLost": "संपर्क टूट गया",
+    "ConnectionLostReconnect": "Radarr अपने आप कनेक्ट होने का प्रयास करेगा, या आप नीचे पुनः लोड कर सकते हैं।",
+    "RecentChanges": "हाल में हुए बदलाव",
+    "WhatsNew": "नया क्या है?",
+    "Enabled": "सक्रिय",
+    "NotificationStatusAllClientHealthCheckMessage": "सभी सूचियाँ विफल होने के कारण अनुपलब्ध हैं",
+    "NotificationStatusSingleClientHealthCheckMessage": "विफलताओं के कारण अनुपलब्ध सूची: {0}",
+    "AddNewArtistRootFolderHelpText": "'{0}' सबफ़ोल्डर स्वचालित रूप से बनाया जाएगा"
 }

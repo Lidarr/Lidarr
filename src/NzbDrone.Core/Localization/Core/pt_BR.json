@@ -1081,5 +1081,6 @@
     "AddNewArtistRootFolderHelpText": "A subpasta '{folder}' será criada automaticamente",
     "ImportListRootFolderMissingRootHealthCheckMessage": "Pasta raiz ausente para lista(s) de importação: {0}",
     "ImportListRootFolderMultipleMissingRootsHealthCheckMessage": "Múltiplas pastas raiz estão faltando nas listas de importação: {0}",
-    "PreferProtocol": "Preferir {preferredProtocol}"
+    "PreferProtocol": "Preferir {preferredProtocol}",
+    "HealthMessagesInfoBox": "Você pode encontrar mais informações sobre a causa dessas mensagens de verificação de integridade clicando no link da wiki (ícone do livro) no final da linha ou verificando seus [logs]({link}). Se tiver dificuldade em interpretar essas mensagens, você pode entrar em contato com nosso suporte, nos links abaixo."
 }

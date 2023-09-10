@@ -734,5 +734,10 @@
     "WhatsNew": "Que hi ha de nou?",
     "NotificationStatusAllClientHealthCheckMessage": "Totes les llistes no estan disponibles a causa d'errors",
     "ConnectionLostToBackend": "Radarr ha perdut la connexió amb el backend i s'haurà de tornar a carregar per restaurar la funcionalitat.",
-    "NotificationStatusSingleClientHealthCheckMessage": "Llistes no disponibles a causa d'errors: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Llistes no disponibles a causa d'errors: {0}",
+    "ImportListRootFolderMissingRootHealthCheckMessage": "Falta la carpeta arrel per a les llistes d'importació: {0}",
+    "ImportListRootFolderMultipleMissingRootsHealthCheckMessage": "Falten diverses carpetes arrel per a les llistes d'importació: {0}",
+    "Enabled": "Habilitat",
+    "AddNewArtistRootFolderHelpText": "La subcarpeta '{0}' es crearà automàticament",
+    "Priority": "Prioritat"
 }
