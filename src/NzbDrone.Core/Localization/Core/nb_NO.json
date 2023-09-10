@@ -221,5 +221,11 @@
     "ApiKeyValidationHealthCheckMessage": "Vennligst oppdater din API-nøkkel til å være minst {0} tegn lang. Du kan gjøre dette via innstillinger eller konfigurasjonsfilen",
     "ApplyTagsHelpTextHowToApplyDownloadClients": "Slik bruker du tagger på de valgte filmene",
     "AllResultsAreHiddenByTheAppliedFilter": "Alle resultatene er skjult av det anvendte filteret",
-    "SomeResultsAreHiddenByTheAppliedFilter": "Alle resultatene er skjult av det anvendte filteret"
+    "SomeResultsAreHiddenByTheAppliedFilter": "Alle resultatene er skjult av det anvendte filteret",
+    "ConnectionLost": "Tilkobling mistet",
+    "ConnectionLostReconnect": "Radarr vil forsøke å koble til automatisk, eller du kan klikke oppdater nedenfor.",
+    "ConnectionLostToBackend": "Radarr har mistet tilkoblingen til baksystemet og må lastes inn på nytt for å gjenopprette funksjonalitet.",
+    "ImportLists": "importeringsliste",
+    "Enabled": "Aktiver",
+    "Release": " utgivelse"
 }

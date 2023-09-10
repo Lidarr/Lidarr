@@ -659,5 +659,12 @@
     "SomeResultsAreHiddenByTheAppliedFilter": "적용된 필터에 의해 모든 결과가 숨겨집니다.",
     "SuggestTranslationChange": "번역 변경 제안",
     "UpdateSelected": "선택한 항목 업데이트",
-    "AllResultsAreHiddenByTheAppliedFilter": "적용된 필터에 의해 모든 결과가 숨겨집니다."
+    "AllResultsAreHiddenByTheAppliedFilter": "적용된 필터에 의해 모든 결과가 숨겨집니다.",
+    "ConnectionLost": "연결이 끊어졌습니다.",
+    "ConnectionLostReconnect": "Radarr가 자동으로 연결을 시도하거나 아래에서 새로고침을 클릭할 수 있습니다.",
+    "ConnectionLostToBackend": "Radarr는 백엔드와의 연결이 끊어졌으며 기능을 복원하려면 다시 로딩해야 합니다.",
+    "Priority": "우선 순위",
+    "NotificationStatusSingleClientHealthCheckMessage": "실패로 인해 사용할 수없는 목록 : {0}",
+    "Enabled": "활성화",
+    "NotificationStatusAllClientHealthCheckMessage": "실패로 인해 모든 목록을 사용할 수 없습니다."
 }

@@ -668,5 +668,15 @@
     "UpdateSelected": "تم تحديد التحديث",
     "AllResultsAreHiddenByTheAppliedFilter": "يتم إخفاء جميع النتائج بواسطة عامل التصفية المطبق",
     "NoResultsFound": "لم يتم العثور على نتائج",
-    "SomeResultsAreHiddenByTheAppliedFilter": "بعض النتائج مخفية بواسطة عامل التصفية المطبق"
+    "SomeResultsAreHiddenByTheAppliedFilter": "بعض النتائج مخفية بواسطة عامل التصفية المطبق",
+    "Release": " صدر",
+    "NotificationStatusSingleClientHealthCheckMessage": "القوائم غير متاحة بسبب الإخفاقات: {0}",
+    "Priority": "أفضلية",
+    "ConnectionLostReconnect": "سيحاول Radarr الاتصال تلقائيًا ، أو يمكنك النقر فوق إعادة التحميل أدناه.",
+    "Enabled": "ممكن",
+    "RecentChanges": "التغييرات الأخيرة",
+    "ConnectionLost": "انقطع الاتصال",
+    "NotificationStatusAllClientHealthCheckMessage": "جميع القوائم غير متاحة بسبب الإخفاقات",
+    "WhatsNew": "ما هو الجديد؟",
+    "AddNewArtistRootFolderHelpText": "سيتم إنشاء المجلد الفرعي \"{0}\" تلقائيًا"
 }

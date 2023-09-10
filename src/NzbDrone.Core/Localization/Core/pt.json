@@ -798,5 +798,15 @@
     "ApplyTagsHelpTextHowToApplyDownloadClients": "Como aplicar etiquetas aos filmes selecionados",
     "CountArtistsSelected": "{0} autor(es) selecionado(s)",
     "AllResultsAreHiddenByTheAppliedFilter": "Todos os resultados estão ocultos pelo filtro aplicado",
-    "NoResultsFound": "Nenhum resultado encontrado"
+    "NoResultsFound": "Nenhum resultado encontrado",
+    "Priority": "Prioridade",
+    "ImportListRootFolderMissingRootHealthCheckMessage": "Pasta de raiz ausente para a(s) lista(s) de importação: {0}",
+    "ImportListRootFolderMultipleMissingRootsHealthCheckMessage": "Faltam várias pastas de raiz para a(s) lista(s) de importação: {0}",
+    "ConnectionLost": "Ligação perdida",
+    "ConnectionLostReconnect": "O Radarr tentará ligar-se automaticamente, ou você pode clicar em Recarregar abaixo.",
+    "RecentChanges": "Mudanças recentes",
+    "WhatsNew": "O que há de novo?",
+    "AddNewArtistRootFolderHelpText": "A subpasta \"{0}\" será criada automaticamente",
+    "ConnectionLostToBackend": "O Radarr perdeu a ligação com o back-end e precisará ser recarregado para restaurar a funcionalidade.",
+    "Enabled": "Ativado"
 }

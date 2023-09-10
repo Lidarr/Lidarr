@@ -677,5 +677,8 @@
     "ConnectionLost": "Kết nối bị mất",
     "NotificationStatusAllClientHealthCheckMessage": "Tất cả danh sách không có sẵn do lỗi",
     "RecentChanges": "Những thay đổi gần đây",
-    "NotificationStatusSingleClientHealthCheckMessage": "Danh sách không có sẵn do lỗi: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Danh sách không có sẵn do lỗi: {0}",
+    "Enabled": "Đã bật",
+    "Priority": "Sự ưu tiên",
+    "AddNewArtistRootFolderHelpText": "Thư mục con '{0}' sẽ được tạo tự động"
 }

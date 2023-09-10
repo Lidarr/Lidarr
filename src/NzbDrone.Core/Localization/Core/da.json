@@ -412,8 +412,8 @@
     "MaximumSize": "Maksimal størrelse",
     "Mechanism": "Mekanisme",
     "Message": "Besked",
-    "20MinutesTwenty": "60 minutter: {0}",
-    "45MinutesFourtyFive": "60 minutter: {0}",
+    "20MinutesTwenty": "20 minutter: {0}",
+    "45MinutesFourtyFive": "45 minutter: {0}",
     "60MinutesSixty": "60 minutter: {0}",
     "APIKey": "API-nøgle",
     "About": "Om",
@@ -681,5 +681,10 @@
     "WhatsNew": "Hvad er nyt?",
     "ConnectionLostReconnect": "Radarr vil prøve at tilslutte automatisk, eller du kan klikke genindlæs forneden.",
     "NotificationStatusAllClientHealthCheckMessage": "Alle lister er utilgængelige på grund af fejl",
-    "NotificationStatusSingleClientHealthCheckMessage": "Lister utilgængelige på grund af fejl: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Lister utilgængelige på grund af fejl: {0}",
+    "Enabled": "Aktiveret",
+    "Priority": "Prioritet",
+    "AddNewArtistRootFolderHelpText": "Undermappen '{0}' oprettes automatisk",
+    "AddNewItem": "Tilføj Ny Genstand",
+    "Absolute": "Absolut"
 }

@@ -666,5 +666,15 @@
     "SuggestTranslationChange": "翻訳の変更を提案する",
     "UpdateSelected": "選択した更新",
     "AllResultsAreHiddenByTheAppliedFilter": "すべての結果は、適用されたフィルターによって非表示になります",
-    "NoResultsFound": "結果が見つかりません"
+    "NoResultsFound": "結果が見つかりません",
+    "ConnectionLost": "接続切断",
+    "ConnectionLostReconnect": "Radarrは自動的に接続を試みます。または、下の[再読み込み]をクリックしてください。",
+    "WhatsNew": "新着情報？",
+    "Enabled": "有効",
+    "Priority": "優先",
+    "AddNewArtistRootFolderHelpText": "'{0}'サブフォルダは自動的に作成されます",
+    "Release": " リリース済み",
+    "RecentChanges": "最近の変化",
+    "NotificationStatusAllClientHealthCheckMessage": "障害のため、すべてのリストを利用できません",
+    "NotificationStatusSingleClientHealthCheckMessage": "失敗のため利用できないリスト：{0}"
 }

@@ -715,5 +715,18 @@
     "UpdateSelected": "Aktualizuj wybrane",
     "AllResultsAreHiddenByTheAppliedFilter": "Wszystkie wyniki są ukrywane przez zastosowany filtr",
     "NoResultsFound": "Nie znaleziono wyników",
-    "SomeResultsAreHiddenByTheAppliedFilter": "Niektóre wyniki są ukrywane przez zastosowany filtr"
+    "SomeResultsAreHiddenByTheAppliedFilter": "Niektóre wyniki są ukrywane przez zastosowany filtr",
+    "ImportListRootFolderMissingRootHealthCheckMessage": "Brak katalogu głównego dla list importu: {0}",
+    "ImportListRootFolderMultipleMissingRootsHealthCheckMessage": "Brak wielu katalogów głównych dla list importu: {0}",
+    "Priority": "Priorytet",
+    "ConnectionLost": "Utracono połączenie",
+    "ConnectionLostReconnect": "Radarr spróbuje połączyć się automatycznie lub możesz kliknąć przycisk przeładuj poniżej.",
+    "RecentChanges": "Ostatnie zmiany",
+    "WhatsNew": "Co nowego?",
+    "AddNewArtistRootFolderHelpText": "Podfolder „{0}” zostanie utworzony automatycznie",
+    "ConnectionLostToBackend": "Radarr utracił połączenie z silnikiem programu, aby przywrócić funkcjonalność musi zostać zrestartowany.",
+    "Enabled": "Włączone",
+    "Release": " Wydany",
+    "NotificationStatusAllClientHealthCheckMessage": "Wszystkie listy są niedostępne z powodu błędów",
+    "NotificationStatusSingleClientHealthCheckMessage": "Listy niedostępne z powodu błędów: {0}"
 }

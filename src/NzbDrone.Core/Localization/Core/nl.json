@@ -746,5 +746,19 @@
     "CountDownloadClientsSelected": "{count} download client(s) geselecteerd",
     "UpdateSelected": "Selectie Bijwerken",
     "AllResultsAreHiddenByTheAppliedFilter": "Alle resultaten zijn verborgen door de toegepaste filter",
-    "NoResultsFound": "Geen resultaten gevonden"
+    "NoResultsFound": "Geen resultaten gevonden",
+    "ImportListRootFolderMissingRootHealthCheckMessage": "Ontbrekende hoofdmap voor importlijst(en): {0}",
+    "ImportListRootFolderMultipleMissingRootsHealthCheckMessage": "Er ontbreken meerdere hoofdmappen voor importlijsten: {0}",
+    "ConnectionLost": "Verbinding Onderbroken",
+    "ConnectionLostReconnect": "Radarr zal automatisch proberen te verbinden, of u kunt hieronder op herladen klikken.",
+    "ConnectionLostToBackend": "Radarr heeft zijn verbinding met de backend verloren en zal moeten worden herladen om de functionaliteit te kunnen herstellen.",
+    "RecentChanges": "Recente wijzigingen",
+    "CloneCondition": "Kloon Conditie",
+    "Enabled": "Ingeschakeld",
+    "Priority": "Prioriteit",
+    "WhatsNew": "Wat is er nieuw?",
+    "AddNewArtistRootFolderHelpText": "'{0}' submap zal automatisch worden aangemaakt",
+    "NotificationStatusSingleClientHealthCheckMessage": "Applicaties onbeschikbaar door fouten",
+    "NotificationStatusAllClientHealthCheckMessage": "Alle applicaties onbeschikbaar door fouten",
+    "ErrorLoadingContent": "Er ging iets fout bij het laden van dit item"
 }

@@ -667,5 +667,14 @@
     "SuggestTranslationChange": "Предложете промяна на превода",
     "UpdateSelected": "Избрана актуализация",
     "AllResultsAreHiddenByTheAppliedFilter": "Всички резултати са скрити от приложения филтър",
-    "NoResultsFound": "Няма намерени резултати"
+    "NoResultsFound": "Няма намерени резултати",
+    "NotificationStatusAllClientHealthCheckMessage": "Всички списъци са недостъпни поради неуспехи",
+    "Enabled": "Активирано",
+    "NotificationStatusSingleClientHealthCheckMessage": "Списъци, недостъпни поради неуспехи: {0}",
+    "Priority": "Приоритет",
+    "Release": " Освободен",
+    "RecentChanges": "Последни промени",
+    "WhatsNew": "Какво ново?",
+    "ConnectionLostReconnect": "Radarr ще се опита да се свърже автоматично или можете да щракнете върху презареждане по-долу.",
+    "AddNewArtistRootFolderHelpText": "Подпапката „{0}“ ще бъде създадена автоматично"
 }
