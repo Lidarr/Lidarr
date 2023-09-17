@@ -1031,5 +1031,10 @@
     "NotificationStatusSingleClientHealthCheckMessage": "Μη διαθέσιμες λίστες λόγω αποτυχιών: {0}",
     "WhatsNew": "Τι νέα?",
     "AddNewArtistRootFolderHelpText": "Ο υποφάκελος \"{0}\" θα δημιουργηθεί αυτόματα",
-    "ErrorLoadingContent": "Υπήρξε ένα σφάλμα κατά τη φόρτωση του αρχείου"
+    "ErrorLoadingContent": "Υπήρξε ένα σφάλμα κατά τη φόρτωση του αρχείου",
+    "AppUpdated": "{appName} Ενημερώθηκε",
+    "AppUpdatedVersion": "ξαναφορτωθεί",
+    "AutoAdd": "Προσθήκη",
+    "AddConditionImplementation": "Προσθήκη",
+    "AddConnectionImplementation": "Προσθήκη"
 }

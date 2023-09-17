@@ -683,5 +683,6 @@
     "Absolute": "Mutlak",
     "AddNewArtistRootFolderHelpText": "'{0}' alt klasörü otomatik olarak oluşturulacak",
     "Priority": "Öncelik",
-    "AddMetadataProfile": "üstveri profili"
+    "AddMetadataProfile": "üstveri profili",
+    "EditMetadataProfile": "üstveri profili"
 }

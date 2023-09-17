@@ -680,5 +680,10 @@
     "RecentChanges": "Schimbări recente",
     "WhatsNew": "Ce mai e nou?",
     "Authentication": "Autentificare",
-    "NotificationStatusSingleClientHealthCheckMessage": "Notificări indisponibile datorită erorilor: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Notificări indisponibile datorită erorilor: {0}",
+    "AddDownloadClientImplementation": "Adăugați client de descărcare - {implementationName}",
+    "AddIndexerImplementation": "Adăugați Indexator - {implementationName}",
+    "AddConnectionImplementation": "Adăugați conexiune - {implementationName}",
+    "Album": "Album",
+    "AddConnection": "Adăugați conexiune"
 }
