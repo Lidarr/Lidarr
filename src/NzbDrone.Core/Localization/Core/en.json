@@ -915,7 +915,7 @@
   "SizeLimit": "Size Limit",
   "SizeOnDisk": "Size on Disk",
   "SkipFreeSpaceCheck": "Skip Free Space Check",
-  "SkipFreeSpaceCheckWhenImportingHelpText": "Use when Lidarr is unable to detect free space from your artist root folder",
+  "SkipFreeSpaceCheckWhenImportingHelpText": "Use when Lidarr is unable to detect free space of your root folder during file import",
   "SkipRedownload": "Skip Redownload",
   "SkipRedownloadHelpText": "Prevents Lidarr from trying download alternative releases for the removed items",
   "SmartReplace": "Smart Replace",
