@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Download
     public interface IProcessDownloadDecisions
     {
         Task<ProcessedDecisions> ProcessDecisions(List<DownloadDecision> decisions);
+        Task<ProcessedDecisionResult> ProcessDecision(DownloadDecision decision, int? downloadClientId);
     }
 
     public class ProcessDownloadDecisions : IProcessDownloadDecisions
@@ -40,8 +41,6 @@ namespace NzbDrone.Core.Download
             var prioritizedDecisions = _prioritizeDownloadDecision.PrioritizeDecisions(qualifiedReports);
             var grabbed = new List<DownloadDecision>();
             var pending = new List<DownloadDecision>();
-
-            // var failed = new List<DownloadDecision>();
             var rejected = decisions.Where(d => d.Rejected).ToList();
 
             var pendingAddQueue = new List<Tuple<DownloadDecision, PendingReleaseReason>>();
@@ -51,7 +50,6 @@ namespace NzbDrone.Core.Download
 
             foreach (var report in prioritizedDecisions)
             {
-                var remoteAlbum = report.RemoteAlbum;
                 var downloadProtocol = report.RemoteAlbum.Release.DownloadProtocol;
 
                 // Skip if already grabbed
@@ -73,37 +71,48 @@ namespace NzbDrone.Core.Download
                     continue;
                 }
 
-                try
-                {
-                    _logger.Trace("Grabbing from Indexer {0} at priority {1}.", remoteAlbum.Release.Indexer, remoteAlbum.Release.IndexerPriority);
-                    await _downloadService.DownloadReport(remoteAlbum, null);
-                    grabbed.Add(report);
-                }
-                catch (ReleaseUnavailableException)
-                {
-                    _logger.Warn("Failed to download release from indexer, no longer available. " + remoteAlbum);
-                    rejected.Add(report);
-                }
-                catch (Exception ex)
-                {
-                    if (ex is DownloadClientUnavailableException || ex is DownloadClientAuthenticationException)
-                    {
-                        _logger.Debug(ex, "Failed to send release to download client, storing until later. " + remoteAlbum);
-                        PreparePending(pendingAddQueue, grabbed, pending, report, PendingReleaseReason.DownloadClientUnavailable);
+                var result = await ProcessDecisionInternal(report);
 
-                        if (downloadProtocol == DownloadProtocol.Usenet)
+                switch (result)
+                {
+                    case ProcessedDecisionResult.Grabbed:
                         {
-                            usenetFailed = true;
+                            grabbed.Add(report);
+                            break;
                         }
-                        else if (downloadProtocol == DownloadProtocol.Torrent)
+
+                    case ProcessedDecisionResult.Pending:
                         {
-                            torrentFailed = true;
+                            PreparePending(pendingAddQueue, grabbed, pending, report, PendingReleaseReason.Delay);
+                            break;
                         }
-                    }
-                    else
-                    {
-                        _logger.Warn(ex, "Couldn't add report to download queue. " + remoteAlbum);
-                    }
+
+                    case ProcessedDecisionResult.Rejected:
+                        {
+                            rejected.Add(report);
+                            break;
+                        }
+
+                    case ProcessedDecisionResult.Failed:
+                        {
+                            PreparePending(pendingAddQueue, grabbed, pending, report, PendingReleaseReason.DownloadClientUnavailable);
+
+                            if (downloadProtocol == DownloadProtocol.Usenet)
+                            {
+                                usenetFailed = true;
+                            }
+                            else if (downloadProtocol == DownloadProtocol.Torrent)
+                            {
+                                torrentFailed = true;
+                            }
+
+                            break;
+                        }
+
+                    case ProcessedDecisionResult.Skipped:
+                        {
+                            break;
+                        }
                 }
             }
 
@@ -113,6 +122,30 @@ namespace NzbDrone.Core.Download
             }
 
             return new ProcessedDecisions(grabbed, pending, rejected);
+        }
+
+        public async Task<ProcessedDecisionResult> ProcessDecision(DownloadDecision decision, int? downloadClientId)
+        {
+            if (decision == null)
+            {
+                return ProcessedDecisionResult.Skipped;
+            }
+
+            if (decision.TemporarilyRejected)
+            {
+                _pendingReleaseService.Add(decision, PendingReleaseReason.Delay);
+
+                return ProcessedDecisionResult.Pending;
+            }
+
+            var result = await ProcessDecisionInternal(decision, downloadClientId);
+
+            if (result == ProcessedDecisionResult.Failed)
+            {
+                _pendingReleaseService.Add(decision, PendingReleaseReason.DownloadClientUnavailable);
+            }
+
+            return result;
         }
 
         internal List<DownloadDecision> GetQualifiedReports(IEnumerable<DownloadDecision> decisions)
@@ -147,6 +180,39 @@ namespace NzbDrone.Core.Download
 
             queue.Add(Tuple.Create(report, reason));
             pending.Add(report);
+        }
+
+        private async Task<ProcessedDecisionResult> ProcessDecisionInternal(DownloadDecision decision, int? downloadClientId = null)
+        {
+            var remoteAlbum = decision.RemoteAlbum;
+
+            try
+            {
+                _logger.Trace("Grabbing from Indexer {0} at priority {1}.", remoteAlbum.Release.Indexer, remoteAlbum.Release.IndexerPriority);
+                await _downloadService.DownloadReport(remoteAlbum, downloadClientId);
+
+                return ProcessedDecisionResult.Grabbed;
+            }
+            catch (ReleaseUnavailableException)
+            {
+                _logger.Warn("Failed to download release from indexer, no longer available. " + remoteAlbum);
+                return ProcessedDecisionResult.Rejected;
+            }
+            catch (Exception ex)
+            {
+                if (ex is DownloadClientUnavailableException || ex is DownloadClientAuthenticationException)
+                {
+                    _logger.Debug(ex,
+                        "Failed to send release to download client, storing until later. " + remoteAlbum);
+
+                    return ProcessedDecisionResult.Failed;
+                }
+                else
+                {
+                    _logger.Warn(ex, "Couldn't add report to download queue. " + remoteAlbum);
+                    return ProcessedDecisionResult.Skipped;
+                }
+            }
         }
     }
 }

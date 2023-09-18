@@ -56,22 +56,23 @@ namespace Lidarr.Api.V1.Indexers
 
             ResolveIndexer(info);
 
-            List<DownloadDecision> decisions;
+            DownloadDecision decision;
 
             lock (PushLock)
             {
-                decisions = _downloadDecisionMaker.GetRssDecision(new List<ReleaseInfo> { info }, true);
-                _downloadDecisionProcessor.ProcessDecisions(decisions).GetAwaiter().GetResult();
+                var decisions = _downloadDecisionMaker.GetRssDecision(new List<ReleaseInfo> { info }, true);
+
+                decision = decisions.FirstOrDefault();
+
+                _downloadDecisionProcessor.ProcessDecision(decision, release.DownloadClientId).GetAwaiter().GetResult();
             }
 
-            var firstDecision = decisions.FirstOrDefault();
-
-            if (firstDecision?.RemoteAlbum.ParsedAlbumInfo == null)
+            if (decision?.RemoteAlbum.ParsedAlbumInfo == null)
             {
-                throw new ValidationException(new List<ValidationFailure> { new ValidationFailure("Title", "Unable to parse", release.Title) });
+                throw new ValidationException(new List<ValidationFailure> { new ("Title", "Unable to parse", release.Title) });
             }
 
-            return MapDecisions(new[] { firstDecision }).First();
+            return MapDecisions(new[] { decision }).First();
         }
 
         private void ResolveIndexer(ReleaseInfo release)
