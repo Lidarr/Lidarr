@@ -10,12 +10,10 @@ function findLogo(images) {
 }
 
 function getLogoUrl(logo, size) {
-  if (logo) {
-    // Remove protocol
-    let url = logo.url.replace(/^https?:/, '');
-    url = url.replace('logo.jpg', `logo-${size}.jpg`);
+  const logoUrl = logo?.url;
 
-    return url;
+  if (logoUrl) {
+    return logoUrl.replace('logo.jpg', `logo-${size}.jpg`);
   }
 }
 
