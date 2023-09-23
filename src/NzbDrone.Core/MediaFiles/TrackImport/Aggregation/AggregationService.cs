@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using NLog;
 using NzbDrone.Common.Disk;
-using NzbDrone.Core.MediaFiles.EpisodeImport;
 using NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators;
 using NzbDrone.Core.Parser.Model;
 

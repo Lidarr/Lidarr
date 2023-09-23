@@ -3,7 +3,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport
+namespace NzbDrone.Core.MediaFiles.TrackImport
 {
     public static class SceneNameCalculator
     {

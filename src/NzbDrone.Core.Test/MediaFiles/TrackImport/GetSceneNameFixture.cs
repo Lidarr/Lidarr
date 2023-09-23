@@ -3,7 +3,7 @@ using System.IO;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.MediaFiles.EpisodeImport;
+using NzbDrone.Core.MediaFiles.TrackImport;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Profiles.Qualities;
@@ -11,7 +11,7 @@ using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Core.Test.MediaFiles.EpisodeImport
+namespace NzbDrone.Core.Test.MediaFiles.TrackImport
 {
     [TestFixture]
     public class GetSceneNameFixture : CoreTest

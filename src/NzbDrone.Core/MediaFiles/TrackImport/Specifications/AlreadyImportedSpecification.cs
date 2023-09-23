@@ -4,10 +4,9 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.History;
-using NzbDrone.Core.MediaFiles.TrackImport;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.MediaFiles.EpisodeImport.Specifications
+namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
 {
     public class AlreadyImportedSpecification : IImportDecisionEngineSpecification<LocalAlbumRelease>
     {
