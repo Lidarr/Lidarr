@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using NLog;
 using NzbDrone.Common;
 using NzbDrone.Common.Crypto;
@@ -132,6 +134,33 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             return ProcessFolder(path, downloadId, artist, filter, replaceExistingFiles);
         }
 
+        private static List<string> ReadFieldFromCuesheet(string[] lines, string fieldName)
+        {
+            var results = new List<string>();
+            var candidates = lines.Where(l => l.StartsWith(fieldName)).ToList();
+            foreach (var candidate in candidates)
+            {
+                var matches = Regex.Matches(candidate, "\"(.*?)\"");
+                var result = matches.ToList()[0].Groups[1].Value;
+                results.Add(result);
+            }
+
+            return results;
+        }
+
+        private static string ReadOptionalFieldFromCuesheet(string[] lines, string fieldName)
+        {
+            var results = lines.Where(l => l.StartsWith(fieldName));
+            if (results.Any())
+            {
+                var matches = Regex.Matches(results.ToList()[0], fieldName + " (.+)");
+                var result = matches.ToList()[0].Groups[1].Value;
+                return result;
+            }
+
+            return "";
+        }
+
         private List<ManualImportItem> ProcessFolder(string folder, string downloadId, Artist artist, FilterFilesType filter, bool replaceExistingFiles)
         {
             DownloadClientItem downloadClientItem = null;
@@ -149,15 +178,91 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                 }
             }
 
-            var artistFiles = _diskScanService.GetAudioFiles(folder).ToList();
+            var audioFiles = _diskScanService.GetAudioFiles(folder).ToList();
+            var results = new List<ManualImportItem>();
+
+            // Split cue and non-cue files
+            var cueFiles = audioFiles.Where(x => x.Extension.Equals(".cue")).ToList();
+            audioFiles.RemoveAll(l => cueFiles.Contains(l));
+            foreach (var cueFile in cueFiles)
+            {
+                using (var fs = cueFile.OpenRead())
+                {
+                    var bytes = new byte[cueFile.Length];
+                    var encoding = new UTF8Encoding(true);
+                    string content;
+                    while (fs.Read(bytes, 0, bytes.Length) > 0)
+                    {
+                        content = encoding.GetString(bytes);
+                        var lines = content.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+
+                        // Single-file cue means it's an unsplit image
+                        var fileNames = ReadFieldFromCuesheet(lines, "FILE");
+                        if (fileNames.Empty() || fileNames.Count > 1)
+                        {
+                            continue;
+                        }
+
+                        var fileName = fileNames[0];
+                        if (!fileName.Empty())
+                        {
+                            Artist artistFromCue = null;
+                            var artistNames = ReadFieldFromCuesheet(lines, "PERFORMER");
+                            if (artistNames.Count > 0)
+                            {
+                                artistFromCue = _parsingService.GetArtist(artistNames[0]);
+                            }
+
+                            string albumTitle = null;
+                            var albumTitles = ReadFieldFromCuesheet(lines, "TITLE");
+                            if (artistNames.Count > 0)
+                            {
+                                albumTitle = albumTitles[0];
+                            }
+
+                            var date = ReadOptionalFieldFromCuesheet(lines, "REM DATE");
+                            var audioFile = audioFiles.Find(x => x.Name == fileName && x.DirectoryName == cueFile.DirectoryName);
+                            var parsedAlbumInfo = new ParsedAlbumInfo
+                            {
+                                AlbumTitle = albumTitle,
+                                ArtistName = artistFromCue.Name,
+                                ReleaseDate = date,
+                            };
+                            var albumsFromCue = _parsingService.GetAlbums(parsedAlbumInfo, artistFromCue);
+                            if (albumsFromCue == null || albumsFromCue.Count == 0)
+                            {
+                                continue;
+                            }
+
+                            var tempAudioFiles = new List<IFileInfo>
+                            {
+                                audioFile
+                            };
+
+                            results.AddRange(ProcessFolder(downloadId, artistFromCue, albumsFromCue[0], filter, replaceExistingFiles, downloadClientItem, albumTitle, tempAudioFiles, true));
+                            audioFiles.Remove(audioFile);
+                        }
+                    }
+                }
+            }
+
+            results.AddRange(ProcessFolder(downloadId, artist, null, filter, replaceExistingFiles, downloadClientItem, directoryInfo.Name, audioFiles, false));
+
+            return results;
+        }
+
+        private List<ManualImportItem> ProcessFolder(string downloadId, Artist overrideArtist, Album overrideAlbum, FilterFilesType filter, bool replaceExistingFiles, DownloadClientItem downloadClientItem, string albumTitle, List<IFileInfo> audioFiles, bool isSingleFileRelease)
+        {
             var idOverrides = new IdentificationOverrides
             {
-                Artist = artist
+                Artist = overrideArtist,
+                Album = overrideAlbum
             };
             var itemInfo = new ImportDecisionMakerInfo
             {
                 DownloadClientItem = downloadClientItem,
-                ParsedAlbumInfo = Parser.Parser.ParseAlbumTitle(directoryInfo.Name)
+                ParsedAlbumInfo = Parser.Parser.ParseAlbumTitle(albumTitle),
+                IsSingleFileRelease = isSingleFileRelease
             };
             var config = new ImportDecisionMakerConfig
             {
@@ -168,10 +273,10 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                 AddNewArtists = false
             };
 
-            var decisions = _importDecisionMaker.GetImportDecisions(artistFiles, idOverrides, itemInfo, config);
+            var decisions = _importDecisionMaker.GetImportDecisions(audioFiles, idOverrides, itemInfo, config);
 
             // paths will be different for new and old files which is why we need to map separately
-            var newFiles = artistFiles.Join(decisions,
+            var newFiles = audioFiles.Join(decisions,
                                             f => f.FullName,
                                             d => d.Item.Path,
                                             (f, d) => new { File = f, Decision = d },
@@ -299,6 +404,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             item.AdditionalFile = decision.Item.AdditionalFile;
             item.ReplaceExistingFiles = replaceExistingFiles;
             item.DisableReleaseSwitching = disableReleaseSwitching;
+            item.IsSingleFileRelease = decision.Item.IsSingleFileRelease;
 
             return item;
         }
@@ -346,8 +452,14 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                         Quality = file.Quality,
                         Artist = artist,
                         Album = album,
-                        Release = release
+                        Release = release,
+                        IsSingleFileRelease = file.IsSingleFileRelease,
                     };
+
+                    if (file.IsSingleFileRelease)
+                    {
+                        localTrack.Tracks.ForEach(x => x.IsSingleFileRelease = true);
+                    }
 
                     var importDecision = new ImportDecision<LocalTrack>(localTrack);
                     if (_rootFolderService.GetBestRootFolder(artist.Path) == null)

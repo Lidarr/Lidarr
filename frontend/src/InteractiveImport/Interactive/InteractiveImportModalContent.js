@@ -54,6 +54,11 @@ const columns = [
     isVisible: true
   },
   {
+    name: 'isSingleFileRelease',
+    label: () => 'Is Single File Release',
+    isVisible: true
+  },
+  {
     name: 'releaseGroup',
     label: () => translate('ReleaseGroup'),
     isVisible: true
@@ -435,6 +440,7 @@ class InteractiveImportModalContent extends Component {
                           allowArtistChange={allowArtistChange}
                           onSelectedChange={this.onSelectedChange}
                           onValidRowChange={this.onValidRowChange}
+                          isSingleFileRelease={item.isSingleFileRelease}
                         />
                       );
                     })

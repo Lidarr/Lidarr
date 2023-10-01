@@ -154,6 +154,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         private bool ShouldFingerprint(LocalAlbumRelease localAlbumRelease)
         {
+            if (localAlbumRelease.LocalTracks.Count == 1 && localAlbumRelease.LocalTracks[0].IsSingleFileRelease)
+            {
+                return false;
+            }
+
             var worstTrackMatchDist = localAlbumRelease.TrackMapping?.Mapping
                 .DefaultIfEmpty()
                 .MaxBy(x => x.Value.Item2.NormalizedDistance())
@@ -335,6 +340,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                     localAlbumRelease.AlbumRelease = release;
                     localAlbumRelease.ExistingTracks = extraTracks;
                     localAlbumRelease.TrackMapping = mapping;
+                    if (localAlbumRelease.LocalTracks.Count == 1 && localAlbumRelease.LocalTracks[0].IsSingleFileRelease)
+                    {
+                        localAlbumRelease.LocalTracks[0].Tracks = release.Tracks;
+                        localAlbumRelease.LocalTracks[0].Tracks.ForEach(x => x.IsSingleFileRelease = true);
+                    }
+
                     if (currDistance == 0.0)
                     {
                         break;
@@ -348,6 +359,14 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         public TrackMapping MapReleaseTracks(List<LocalTrack> localTracks, List<Track> mbTracks)
         {
+            var result = new TrackMapping();
+            if (localTracks.Count == 1 && localTracks[0].IsSingleFileRelease)
+            {
+                result.IsSingleFileRelease = true;
+
+                return result;
+            }
+
             var distances = new Distance[localTracks.Count, mbTracks.Count];
             var costs = new double[localTracks.Count, mbTracks.Count];
 
@@ -364,7 +383,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             var m = new Munkres(costs);
             m.Run();
 
-            var result = new TrackMapping();
             foreach (var pair in m.Solution)
             {
                 result.Mapping.Add(localTracks[pair.Item1], Tuple.Create(mbTracks[pair.Item2], distances[pair.Item1, pair.Item2]));

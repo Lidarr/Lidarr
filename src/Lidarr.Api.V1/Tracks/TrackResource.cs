@@ -26,6 +26,7 @@ namespace Lidarr.Api.V1.Tracks
 
         public ArtistResource Artist { get; set; }
         public Ratings Ratings { get; set; }
+        public bool IsSingleFileRelease { get; set; }
 
         // Hiding this so people don't think its usable (only used to set the initial state)
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -58,6 +59,7 @@ namespace Lidarr.Api.V1.Tracks
                 MediumNumber = model.MediumNumber,
                 HasFile = model.HasFile,
                 Ratings = model.Ratings,
+                IsSingleFileRelease = model.IsSingleFileRelease
             };
         }
 

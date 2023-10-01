@@ -17,6 +17,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
 
         public Decision IsSatisfiedBy(LocalTrack item, DownloadClientItem downloadClientItem)
         {
+            if (item.IsSingleFileRelease)
+            {
+                return Decision.Accept();
+            }
+
             var dist = item.Distance.NormalizedDistance();
             var reasons = item.Distance.Reasons;
 

@@ -73,5 +73,6 @@ namespace NzbDrone.Core.Parser.Model
         public Dictionary<LocalTrack, Tuple<Track, Distance>> Mapping { get; set; }
         public List<LocalTrack> LocalExtra { get; set; }
         public List<Track> MBExtra { get; set; }
+        public bool IsSingleFileRelease { get; set; }
     }
 }

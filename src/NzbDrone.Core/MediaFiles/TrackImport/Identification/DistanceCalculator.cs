@@ -118,13 +118,16 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             {
                 var albumYear = release.Album.Value.ReleaseDate?.Year ?? 0;
                 var releaseYear = release.ReleaseDate?.Year ?? 0;
-                if (localYear == albumYear || localYear == releaseYear)
+
+                // The single file version's year is from the album year already, to avoid false positives here we consider it's always different
+                var isSameWithAlbumYear = (localTracks.Count == 1 && localTracks[0].IsSingleFileRelease) ? false : localYear == albumYear;
+                if (isSameWithAlbumYear || localYear == releaseYear)
                 {
                     dist.Add("year", 0.0);
                 }
                 else
                 {
-                    var remoteYear = albumYear > 0 ? albumYear : releaseYear;
+                    var remoteYear = (albumYear > 0 && isSameWithAlbumYear) ? albumYear : releaseYear;
                     var diff = Math.Abs(localYear - remoteYear);
                     var diff_max = Math.Abs(DateTime.Now.Year - remoteYear);
                     dist.AddRatio("year", diff, diff_max);
@@ -176,28 +179,35 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             }
 
             // tracks
-            foreach (var pair in mapping.Mapping)
+            if (localTracks.Count == 1 && localTracks[0].IsSingleFileRelease)
             {
-                dist.Add("tracks", pair.Value.Item2.NormalizedDistance());
+                dist.Add("tracks", 0);
             }
-
-            Logger.Trace("after trackMapping: {0}", dist.NormalizedDistance());
-
-            // missing tracks
-            foreach (var track in mapping.MBExtra.Take(localTracks.Count))
+            else
             {
-                dist.Add("missing_tracks", 1.0);
+                foreach (var pair in mapping.Mapping)
+                {
+                    dist.Add("tracks", pair.Value.Item2.NormalizedDistance());
+                }
+
+                Logger.Trace("after trackMapping: {0}", dist.NormalizedDistance());
+
+                // missing tracks
+                foreach (var track in mapping.MBExtra.Take(localTracks.Count))
+                {
+                    dist.Add("missing_tracks", 1.0);
+                }
+
+                Logger.Trace("after missing tracks: {0}", dist.NormalizedDistance());
+
+                // unmatched tracks
+                foreach (var track in mapping.LocalExtra.Take(localTracks.Count))
+                {
+                    dist.Add("unmatched_tracks", 1.0);
+                }
+
+                Logger.Trace("after unmatched tracks: {0}", dist.NormalizedDistance());
             }
-
-            Logger.Trace("after missing tracks: {0}", dist.NormalizedDistance());
-
-            // unmatched tracks
-            foreach (var track in mapping.LocalExtra.Take(localTracks.Count))
-            {
-                dist.Add("unmatched_tracks", 1.0);
-            }
-
-            Logger.Trace("after unmatched tracks: {0}", dist.NormalizedDistance());
 
             return dist;
         }

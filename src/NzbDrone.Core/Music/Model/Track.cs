@@ -30,6 +30,7 @@ namespace NzbDrone.Core.Music
         public Ratings Ratings { get; set; }
         public int MediumNumber { get; set; }
         public int TrackFileId { get; set; }
+        public bool IsSingleFileRelease { get; set; }
 
         [MemberwiseEqualityIgnore]
         public bool HasFile => TrackFileId > 0;
@@ -73,6 +74,7 @@ namespace NzbDrone.Core.Music
             Explicit = other.Explicit;
             Ratings = other.Ratings;
             MediumNumber = other.MediumNumber;
+            IsSingleFileRelease = other.IsSingleFileRelease;
         }
 
         public override void UseDbFieldsFrom(Track other)
@@ -81,6 +83,7 @@ namespace NzbDrone.Core.Music
             AlbumReleaseId = other.AlbumReleaseId;
             ArtistMetadataId = other.ArtistMetadataId;
             TrackFileId = other.TrackFileId;
+            IsSingleFileRelease = other.IsSingleFileRelease;
         }
     }
 }

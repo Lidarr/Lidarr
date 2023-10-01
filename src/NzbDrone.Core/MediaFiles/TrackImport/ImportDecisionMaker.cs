@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
+using DryIoc.ImTools;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
@@ -32,6 +33,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
     {
         public DownloadClientItem DownloadClientItem { get; set; }
         public ParsedAlbumInfo ParsedAlbumInfo { get; set; }
+        public bool IsSingleFileRelease { get; set; }
     }
 
     public class ImportDecisionMakerConfig
@@ -149,6 +151,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             var decisions = trackData.Item2;
 
             localTracks.ForEach(x => x.ExistingFile = !config.NewDownload);
+            localTracks.ForEach(x => x.IsSingleFileRelease = itemInfo.IsSingleFileRelease);
+            if (itemInfo.IsSingleFileRelease)
+            {
+                localTracks.ForEach(x => x.Artist = idOverrides.Artist);
+                localTracks.ForEach(x => x.Album = idOverrides.Album);
+            }
 
             var releases = _identificationService.Identify(localTracks, idOverrides, config);
 
@@ -246,7 +254,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         {
             ImportDecision<LocalTrack> decision = null;
 
-            if (localTrack.Tracks.Empty())
+            if (!localTrack.IsSingleFileRelease && localTrack.Tracks.Empty())
             {
                 decision = localTrack.Album != null ? new ImportDecision<LocalTrack>(localTrack, new Rejection($"Couldn't parse track from: {localTrack.FileTrackInfo}")) :
                     new ImportDecision<LocalTrack>(localTrack, new Rejection($"Couldn't parse album from: {localTrack.FileTrackInfo}"));

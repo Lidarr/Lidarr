@@ -29,6 +29,7 @@ namespace Lidarr.Api.V1.ManualImport
         public bool AdditionalFile { get; set; }
         public bool ReplaceExistingFiles { get; set; }
         public bool DisableReleaseSwitching { get; set; }
+        public bool IsSingleFileRelease { get; set; }
     }
 
     public static class ManualImportResourceMapper
@@ -52,6 +53,7 @@ namespace Lidarr.Api.V1.ManualImport
                 Tracks = model.Tracks.ToResource(),
                 Quality = model.Quality,
                 ReleaseGroup = model.ReleaseGroup,
+                IsSingleFileRelease = model.IsSingleFileRelease,
 
                 // QualityWeight
                 DownloadId = model.DownloadId,

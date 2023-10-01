@@ -64,6 +64,7 @@ class InteractiveImportRow extends Component {
       artist,
       album,
       tracks,
+      isSingleFileRelease,
       quality,
       isSelected,
       onValidRowChange
@@ -82,7 +83,7 @@ class InteractiveImportRow extends Component {
     const isValid = !!(
       artist &&
       album &&
-      tracks.length &&
+      (isSingleFileRelease || tracks.length) &&
       quality
     );
 
@@ -167,6 +168,7 @@ class InteractiveImportRow extends Component {
       album,
       albumReleaseId,
       tracks,
+      isSingleFileRelease,
       quality,
       releaseGroup,
       size,
@@ -257,7 +259,7 @@ class InteractiveImportRow extends Component {
         </TableRowCellButton>
 
         <TableRowCellButton
-          isDisabled={!artist || !album}
+          isDisabled={!artist || !album || isSingleFileRelease}
           title={artist && album ? translate('ArtistAlbumClickToChangeTrack') : undefined}
           onPress={this.onSelectTrackPress}
         >
@@ -265,9 +267,19 @@ class InteractiveImportRow extends Component {
             showTrackNumbersLoading && <LoadingIndicator size={20} className={styles.loading} />
           }
           {
-            showTrackNumbersPlaceholder ? <InteractiveImportRowCellPlaceholder /> : trackNumbers
+            !isSingleFileRelease && showTrackNumbersPlaceholder ? <InteractiveImportRowCellPlaceholder /> : trackNumbers
           }
+
         </TableRowCellButton>
+
+        <TableRowCell
+          id={id}
+          title={'Is Single File Release'}
+        >
+          {
+            isSingleFileRelease ? 'Yes' : 'No'
+          }
+        </TableRowCell>
 
         <TableRowCellButton
           title={translate('ClickToChangeReleaseGroup')}
@@ -408,7 +420,8 @@ InteractiveImportRow.propTypes = {
   artist: PropTypes.object,
   album: PropTypes.object,
   albumReleaseId: PropTypes.number,
-  tracks: PropTypes.arrayOf(PropTypes.object).isRequired,
+  tracks: PropTypes.arrayOf(PropTypes.object),
+  isSingleFileRelease: PropTypes.bool.isRequired,
   releaseGroup: PropTypes.string,
   quality: PropTypes.object,
   size: PropTypes.number.isRequired,
