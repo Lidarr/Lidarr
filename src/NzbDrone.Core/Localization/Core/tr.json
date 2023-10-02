@@ -185,7 +185,6 @@
     "Global": "Küresel",
     "GoToInterp": "{0} adresine gidin",
     "Grab": "Kapmak",
-    "GrabID": "Grab ID",
     "GrabRelease": "Bırakma",
     "GrabReleaseMessageText": "Lidarr, bu sürümün hangi film için olduğunu belirleyemedi. Lidarr bu sürümü otomatik olarak içe aktaramayabilir. '{0}' almak istiyor musunuz?",
     "GrabSelected": "Seçilenleri Kap",

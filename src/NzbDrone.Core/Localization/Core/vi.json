@@ -369,7 +369,6 @@
     "Global": "Toàn cầu",
     "GoToInterp": "Đi tới {0}",
     "Grab": "Vồ lấy",
-    "GrabID": "Lấy ID",
     "GrabRelease": "Lấy bản phát hành",
     "GrabReleaseMessageText": "Lidarr không thể xác định bộ phim này được phát hành. Lidarr có thể không tự động nhập bản phát hành này. Bạn có muốn lấy '{0}' không?",
     "GrabSelected": "Lấy đã chọn",

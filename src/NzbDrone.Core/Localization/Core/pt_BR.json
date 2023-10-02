@@ -266,7 +266,6 @@
     "GoToArtistListing": "Ir para listagem do autor",
     "GoToInterp": "Ir para {0}",
     "Grab": "Obter",
-    "GrabID": "Obter ID",
     "GrabRelease": "Capturar Versão",
     "GrabReleaseMessageText": "O Lidarr não conseguiu determinar a qual autor e livro esse lançamento está relacionado. O Lidarr pode não conseguir importar automaticamente este lançamento. Quer obter \"{0}\"?",
     "GrabSelected": "Obter Selecionado",
@@ -531,7 +530,7 @@
     "ShowMonitoredHelpText": "Mostrar status de monitoramento sob o pôster",
     "Size": " Tamanho",
     "SkipFreeSpaceCheck": "Ignorar verificação de espaço livre",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Usar quando o Lidarr não conseguir detectar espaço livre na pasta raiz do filme",
+    "SkipFreeSpaceCheckWhenImportingHelpText": "Use quando o Lidarr não consegue detectar espaço livre em sua pasta raiz durante a importação do arquivo",
     "SkipRedownload": "Ignorar o Redownload",
     "SorryThatAlbumCannotBeFound": "Desculpe, esse filme não pode ser encontrado.",
     "SorryThatArtistCannotBeFound": "Desculpe, esse autor não pode ser encontrado.",
@@ -1082,5 +1081,8 @@
     "ImportListRootFolderMissingRootHealthCheckMessage": "Pasta raiz ausente para lista(s) de importação: {0}",
     "ImportListRootFolderMultipleMissingRootsHealthCheckMessage": "Múltiplas pastas raiz estão faltando nas listas de importação: {0}",
     "PreferProtocol": "Preferir {preferredProtocol}",
-    "HealthMessagesInfoBox": "Você pode encontrar mais informações sobre a causa dessas mensagens de verificação de integridade clicando no link da wiki (ícone do livro) no final da linha ou verificando seus [logs]({link}). Se tiver dificuldade em interpretar essas mensagens, você pode entrar em contato com nosso suporte, nos links abaixo."
+    "HealthMessagesInfoBox": "Você pode encontrar mais informações sobre a causa dessas mensagens de verificação de integridade clicando no link da wiki (ícone do livro) no final da linha ou verificando seus [logs]({link}). Se tiver dificuldade em interpretar essas mensagens, você pode entrar em contato com nosso suporte, nos links abaixo.",
+    "DownloadClientRemovesCompletedDownloadsHealthCheckMessage": "O cliente de download {0} está configurado para remover downloads concluídos. Isso pode resultar na remoção dos downloads do seu cliente antes que {1} possa importá-los.",
+    "InfoUrl": "URL da info",
+    "GrabId": "Obter ID"
 }

@@ -154,7 +154,6 @@
     "Global": "Globale",
     "GoToInterp": "Vai a {0}",
     "Grab": "Preleva",
-    "GrabID": "ID di Prelievo",
     "GrabRelease": "Preleva Release",
     "GrabReleaseMessageText": "Lidarr non è stato in grado di determinare a quale film si riferisce questa release. Lidarr potrebbe non essere in grado di importarla automaticamente. Vuoi catturare '{0}'?",
     "GrabSelected": "Recupera selezione",
@@ -804,5 +803,6 @@
     "Priority": "Priorità",
     "AddNewArtistRootFolderHelpText": "La sottocartella '{0}' verrà creata automaticamente",
     "Enabled": "Abilitato",
-    "NotificationStatusSingleClientHealthCheckMessage": "Applicazioni non disponibili a causa di errori: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Applicazioni non disponibili a causa di errori: {0}",
+    "AddImportList": "Aggiungi lista da importare"
 }

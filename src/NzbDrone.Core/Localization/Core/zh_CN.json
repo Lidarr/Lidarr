@@ -314,7 +314,7 @@
     "ShowUnknownArtistItems": "显示未知歌手条目",
     "Size": " 文件大小",
     "SkipFreeSpaceCheck": "跳过剩余空间检查",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "当 Lidarr 无法从您的艺术家根文件夹中检测到空闲空间时使用",
+    "SkipFreeSpaceCheckWhenImportingHelpText": "当Lidarr在文件导入过程中无法检测到根文件夹的可用空间时使用",
     "SorryThatAlbumCannotBeFound": "对不起，未找到专辑。",
     "SorryThatArtistCannotBeFound": "对不起，未找到歌手。",
     "SourcePath": "来源路径",
@@ -420,7 +420,6 @@
     "Global": "全局",
     "GoToInterp": "跳转到 {0}",
     "Grab": "抓取",
-    "GrabID": "抓取ID",
     "GrabRelease": "抓取版本",
     "GrabReleaseMessageText": "Radarr无法确定这个发布版本是哪部电影，Radarr可能无法自动导入此版本，你想要获取“{0}”吗？",
     "Group": "组",
@@ -1082,5 +1081,8 @@
     "AddNewAlbum": "添加新专辑",
     "AddNewArtist": "添加新艺术家",
     "DeleteSelected": "删除所选",
-    "FilterArtistPlaceholder": "过滤艺术家"
+    "FilterArtistPlaceholder": "过滤艺术家",
+    "DownloadClientRemovesCompletedDownloadsHealthCheckMessage": "下载客户端{0}设置为删除已完成的下载。这可能导致在{1}可以导入下载之前从您的客户端删除下载。",
+    "InfoUrl": "信息 URL",
+    "GrabId": "抓取ID"
 }

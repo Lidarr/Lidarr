@@ -359,7 +359,6 @@
     "Global": "ทั่วโลก",
     "GoToInterp": "ไปที่ {0}",
     "Grab": "คว้า",
-    "GrabID": "Grab ID",
     "GrabRelease": "คว้ารีลีส",
     "GrabReleaseMessageText": "Lidarr ไม่สามารถระบุได้ว่าภาพยนตร์เรื่องนี้เป็นภาพยนตร์เรื่องใด Lidarr อาจไม่สามารถนำเข้ารุ่นนี้โดยอัตโนมัติได้ คุณต้องการคว้า \"{0}\" ไหม",
     "GrabSelected": "Grab Selected",
