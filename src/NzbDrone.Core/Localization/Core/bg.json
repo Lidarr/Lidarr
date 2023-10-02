@@ -211,7 +211,6 @@
     "Global": "Глобален",
     "GoToInterp": "Отидете на {0}",
     "Grab": "Грабнете",
-    "GrabID": "Идентификатор на грабване",
     "GrabRelease": "Grab Release",
     "GrabReleaseMessageText": "Lidarr не успя да определи за кой филм е предназначено това издание. Lidarr може да не може автоматично да импортира тази версия. Искате ли да вземете „{0}“?",
     "GrabSelected": "Grab Selected",
@@ -676,5 +675,8 @@
     "RecentChanges": "Последни промени",
     "WhatsNew": "Какво ново?",
     "ConnectionLostReconnect": "Radarr ще се опита да се свърже автоматично или можете да щракнете върху презареждане по-долу.",
-    "AddNewArtistRootFolderHelpText": "Подпапката „{0}“ ще бъде създадена автоматично"
+    "AddNewArtistRootFolderHelpText": "Подпапката „{0}“ ще бъде създадена автоматично",
+    "AddMetadataProfile": "Добави профил на метадата",
+    "AddNewArtist": "Добави нов изпълнител",
+    "AddNewAlbum": "Добави нов албум"
 }

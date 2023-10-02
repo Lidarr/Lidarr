@@ -273,7 +273,6 @@
     "Fixed": "Korjattu",
     "GoToInterp": "Siirry kohteeseen '{0}'",
     "Grab": "Sieppaa",
-    "GrabID": "Sieppauksen ID",
     "GrabRelease": "Sieppaa julkaisu",
     "ICalHttpUrlHelpText": "Kopioi URL-osoite kalenteripalveluusi/-sovellukseesi tai tilaa painamalla, jos selaimesi tukee Webcal-osoitteita.",
     "IgnoredAddresses": "Ohitetut osoitteet",

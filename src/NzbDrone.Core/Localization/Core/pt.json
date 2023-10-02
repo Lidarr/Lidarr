@@ -464,7 +464,6 @@
     "Global": "Global",
     "GoToInterp": "Ir para {0}",
     "Grab": "Capturar",
-    "GrabID": "Capturar ID",
     "GrabRelease": "Capturar versão",
     "GrabReleaseMessageText": "O Lidarr não pode determinar a que autor e livro pertence esta versão. O Lidarr pode ser incapaz de importar automaticamente esta versão. Deseja capturar \"{0}\"?",
     "GrabSelected": "Capturar seleção",

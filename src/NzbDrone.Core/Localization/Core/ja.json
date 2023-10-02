@@ -315,7 +315,6 @@
     "Global": "グローバル",
     "GoToInterp": "{0}に移動",
     "Grab": "つかむ",
-    "GrabID": "IDを取得",
     "GrabRelease": "グラブリリース",
     "GrabReleaseMessageText": "Radarrは、このリリースの対象となる映画を特定できませんでした。 Radarrは、このリリースを自動的にインポートできない場合があります。 '{0}'を取得しますか？",
     "GrabSelected": "選択したグラブ",

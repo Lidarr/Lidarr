@@ -283,7 +283,6 @@
     "Global": "Global",
     "GoToInterp": "Accesați {0}",
     "Grab": "Apuca",
-    "GrabID": "Grab ID",
     "GrabRelease": "Grab Release",
     "GrabReleaseMessageText": "Lidarr nu a putut stabili pentru ce film a fost lansată această lansare. Este posibil ca Lidarr să nu poată importa automat această versiune. Doriți să luați „{0}”?",
     "GrabSelected": "Prinderea selectată",

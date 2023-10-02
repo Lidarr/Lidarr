@@ -119,7 +119,6 @@
     "Global": "Alheimslegt",
     "GoToInterp": "Farðu í {0}",
     "Grab": "Grípa",
-    "GrabID": "Grípa skilríki",
     "GrabReleaseMessageText": "Lidarr gat ekki ákvarðað fyrir hvaða kvikmynd þessi útgáfa var gerð. Lidarr gæti hugsanlega ekki flutt þessa útgáfu sjálfkrafa inn. Viltu grípa '{0}'?",
     "GrabSelected": "Grípa valið",
     "Group": "Hópur",

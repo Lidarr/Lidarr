@@ -317,7 +317,6 @@
     "Global": "Światowy",
     "GoToInterp": "Idź do {0}",
     "Grab": "Chwycić",
-    "GrabID": "Grab ID",
     "GrabRelease": "Grab Release",
     "GrabReleaseMessageText": "Lidarr nie był w stanie określić, dla którego filmu jest to wydanie. Lidarr może nie być w stanie automatycznie zaimportować tej wersji. Czy chcesz złapać „{0}”?",
     "GrabSelected": "Wybierz wybrane",
