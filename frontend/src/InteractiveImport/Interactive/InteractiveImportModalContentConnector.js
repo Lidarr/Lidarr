@@ -135,6 +135,7 @@ class InteractiveImportModalContentConnector extends Component {
           albumReleaseId,
           tracks,
           isSingleFileRelease,
+          cuesheetPath,
           quality,
           disableReleaseSwitching
         } = item;
@@ -149,7 +150,7 @@ class InteractiveImportModalContentConnector extends Component {
           return false;
         }
 
-        if (!isSingleFileRelease && (!tracks || !tracks.length)) {
+        if (!(isSingleFileRelease && cuesheetPath) && (!tracks || !tracks.length)) {
           this.setState({ interactiveImportErrorMessage: 'One or more tracks must be chosen for each selected file' });
           return false;
         }
@@ -166,6 +167,7 @@ class InteractiveImportModalContentConnector extends Component {
           albumReleaseId,
           trackIds: _.map(tracks, 'id'),
           isSingleFileRelease: item.isSingleFileRelease,
+          cuesheetPath: item.cuesheetPath,
           quality,
           downloadId: this.props.downloadId,
           disableReleaseSwitching

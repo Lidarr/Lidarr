@@ -22,7 +22,7 @@ namespace Lidarr.Api.V1.ManualImport
         public bool ReplaceExistingFiles { get; set; }
         public bool DisableReleaseSwitching { get; set; }
         public bool IsSingleFileRelease { get; set; }
-
+        public string CuesheetPath { get; set; }
         public IEnumerable<Rejection> Rejections { get; set; }
     }
 }

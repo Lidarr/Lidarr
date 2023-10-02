@@ -4,6 +4,7 @@ using System.IO;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnsureThat;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.MediaFiles.TrackImport;
@@ -89,6 +90,21 @@ namespace NzbDrone.Core.MediaFiles
             var filePath = _buildFileNames.BuildTrackFilePath(localTrack.Tracks, localTrack.Artist, localTrack.Album, trackFile, Path.GetExtension(trackFile.Path));
 
             EnsureTrackFolder(trackFile, localTrack, filePath);
+
+            if (!localTrack.CuesheetPath.Empty())
+            {
+                var directory = Path.GetDirectoryName(filePath);
+                var fileName = Path.GetFileNameWithoutExtension(filePath);
+                var cuesheetPath = Path.Combine(directory, fileName + ".cue");
+                _diskTransferService.TransferFile(localTrack.CuesheetPath, cuesheetPath, TransferMode.Copy);
+                var lines = new List<string>(File.ReadAllLines(cuesheetPath));
+                var fileLineIndex = lines.FindIndex(line => line.Contains("FILE"));
+                if (fileLineIndex != -1)
+                {
+                    lines[fileLineIndex] = "FILE \"" + Path.GetFileName(filePath) + "\" WAVE";
+                    File.WriteAllLines(cuesheetPath, lines);
+                }
+            }
 
             if (_configService.CopyUsingHardlinks)
             {

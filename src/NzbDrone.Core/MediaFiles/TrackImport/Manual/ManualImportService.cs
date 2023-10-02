@@ -186,6 +186,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             audioFiles.RemoveAll(l => cueFiles.Contains(l));
             foreach (var cueFile in cueFiles)
             {
+                // TODO move this to the disk service
                 using (var fs = cueFile.OpenRead())
                 {
                     var bytes = new byte[cueFile.Length];
@@ -239,19 +240,19 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                                 audioFile
                             };
 
-                            results.AddRange(ProcessFolder(downloadId, artistFromCue, albumsFromCue[0], filter, replaceExistingFiles, downloadClientItem, albumTitle, tempAudioFiles, true));
+                            results.AddRange(ProcessFolder(downloadId, artistFromCue, albumsFromCue[0], filter, replaceExistingFiles, downloadClientItem, albumTitle, tempAudioFiles, cueFile.FullName));
                             audioFiles.Remove(audioFile);
                         }
                     }
                 }
             }
 
-            results.AddRange(ProcessFolder(downloadId, artist, null, filter, replaceExistingFiles, downloadClientItem, directoryInfo.Name, audioFiles, false));
+            results.AddRange(ProcessFolder(downloadId, artist, null, filter, replaceExistingFiles, downloadClientItem, directoryInfo.Name, audioFiles, string.Empty));
 
             return results;
         }
 
-        private List<ManualImportItem> ProcessFolder(string downloadId, Artist overrideArtist, Album overrideAlbum, FilterFilesType filter, bool replaceExistingFiles, DownloadClientItem downloadClientItem, string albumTitle, List<IFileInfo> audioFiles, bool isSingleFileRelease)
+        private List<ManualImportItem> ProcessFolder(string downloadId, Artist overrideArtist, Album overrideAlbum, FilterFilesType filter, bool replaceExistingFiles, DownloadClientItem downloadClientItem, string albumTitle, List<IFileInfo> audioFiles, string cuesheetPath)
         {
             var idOverrides = new IdentificationOverrides
             {
@@ -262,7 +263,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             {
                 DownloadClientItem = downloadClientItem,
                 ParsedAlbumInfo = Parser.Parser.ParseAlbumTitle(albumTitle),
-                IsSingleFileRelease = isSingleFileRelease
+                IsSingleFileRelease = !cuesheetPath.Empty()
             };
             var config = new ImportDecisionMakerConfig
             {
@@ -286,7 +287,10 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             var existingDecisions = decisions.Except(newFiles.Select(x => x.Decision));
             var existingItems = existingDecisions.Select(x => MapItem(x, null, replaceExistingFiles, false));
 
-            return newItems.Concat(existingItems).ToList();
+            var itemsList = newItems.Concat(existingItems).ToList();
+            itemsList.ForEach(item => { item.CuesheetPath = cuesheetPath; });
+
+            return itemsList;
         }
 
         public List<ManualImportItem> UpdateItems(List<ManualImportItem> items)
@@ -405,6 +409,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             item.ReplaceExistingFiles = replaceExistingFiles;
             item.DisableReleaseSwitching = disableReleaseSwitching;
             item.IsSingleFileRelease = decision.Item.IsSingleFileRelease;
+            item.CuesheetPath = decision.Item.CuesheetPath;
 
             return item;
         }
@@ -454,6 +459,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                         Album = album,
                         Release = release,
                         IsSingleFileRelease = file.IsSingleFileRelease,
+                        CuesheetPath = file.CuesheetPath,
                     };
 
                     if (file.IsSingleFileRelease)

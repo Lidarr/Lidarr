@@ -32,6 +32,7 @@ namespace NzbDrone.Core.Parser.Model
         public string ReleaseGroup { get; set; }
         public string SceneName { get; set; }
         public bool IsSingleFileRelease { get; set; }
+        public string CuesheetPath { get; set; }
         public override string ToString()
         {
             return Path;

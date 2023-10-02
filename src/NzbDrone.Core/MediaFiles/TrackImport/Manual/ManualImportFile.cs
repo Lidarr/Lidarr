@@ -16,6 +16,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
         public string DownloadId { get; set; }
         public bool DisableReleaseSwitching { get; set; }
         public bool IsSingleFileRelease { get; set; }
+        public string CuesheetPath { get; set; }
 
         public bool Equals(ManualImportFile other)
         {

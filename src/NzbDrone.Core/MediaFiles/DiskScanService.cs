@@ -140,6 +140,7 @@ namespace NzbDrone.Core.MediaFiles
 
                 CleanMediaFiles(folder, files.Select(x => x.FullName).ToList());
                 mediaFileList.AddRange(files);
+                mediaFileList.RemoveAll(x => x.Extension == ".cue");
             }
 
             musicFilesStopwatch.Stop();

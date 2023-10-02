@@ -65,6 +65,7 @@ class InteractiveImportRow extends Component {
       album,
       tracks,
       isSingleFileRelease,
+      cuesheetPath,
       quality,
       isSelected,
       onValidRowChange
@@ -83,7 +84,7 @@ class InteractiveImportRow extends Component {
     const isValid = !!(
       artist &&
       album &&
-      (isSingleFileRelease || tracks.length) &&
+      ((isSingleFileRelease && cuesheetPath) || tracks.length) &&
       quality
     );
 
@@ -169,6 +170,7 @@ class InteractiveImportRow extends Component {
       albumReleaseId,
       tracks,
       isSingleFileRelease,
+      cuesheetPath,
       quality,
       releaseGroup,
       size,
@@ -278,6 +280,15 @@ class InteractiveImportRow extends Component {
         >
           {
             isSingleFileRelease ? 'Yes' : 'No'
+          }
+        </TableRowCell>
+
+        <TableRowCell
+          id={id}
+          title={'Cuesheet Path'}
+        >
+          {
+            cuesheetPath
           }
         </TableRowCell>
 
@@ -422,6 +433,7 @@ InteractiveImportRow.propTypes = {
   albumReleaseId: PropTypes.number,
   tracks: PropTypes.arrayOf(PropTypes.object),
   isSingleFileRelease: PropTypes.bool.isRequired,
+  cuesheetPath: PropTypes.string.isRequired,
   releaseGroup: PropTypes.string,
   quality: PropTypes.object,
   size: PropTypes.number.isRequired,
