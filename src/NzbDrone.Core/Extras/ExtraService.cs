@@ -60,14 +60,11 @@ namespace NzbDrone.Core.Extras
             var sourceFileName = Path.GetFileNameWithoutExtension(trackFile.Path);
             var files = _diskProvider.GetFiles(sourceFolder, false);
 
-            var wantedExtensions = _configService.ExtraFileExtensions
-                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(e => e.Trim(' ', '.'))
-                .ToList();
+            var wantedExtensions = _configService.ExtraFileExtensions.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                                                              .Select(e => e.Trim(' ', '.'))
+                                                                              .ToList();
 
-            var matchingFilenames = files.Where(f =>
-                Path.GetFileNameWithoutExtension(f)
-                    .StartsWith(sourceFileName, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            var matchingFilenames = files.Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(sourceFileName, StringComparison.InvariantCultureIgnoreCase)).ToList();
             var filteredFilenames = new List<string>();
             var hasNfo = false;
 
