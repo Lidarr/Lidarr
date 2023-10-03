@@ -11,13 +11,12 @@ using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
-using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Extras
 {
     public interface IExtraService
     {
-        void ImportTrack(LocalTrack localTrack, TrackFile trackFile, bool isReadOnly);
+        void ImportExtraFiles(string sourceFolder, TrackFile trackFile, bool isReadOnly);
     }
 
     public class ExtraService : IExtraService,
@@ -51,30 +50,24 @@ namespace NzbDrone.Core.Extras
             _logger = logger;
         }
 
-        public void ImportTrack(LocalTrack localTrack, TrackFile trackFile, bool isReadOnly)
-        {
-            ImportExtraFiles(localTrack, trackFile, isReadOnly);
-
-            CreateAfterTrackImport(localTrack.Artist, trackFile);
-        }
-
-        public void ImportExtraFiles(LocalTrack localTrack, TrackFile trackFile, bool isReadOnly)
+        public void ImportExtraFiles(string sourceFolder, TrackFile trackFile, bool isReadOnly)
         {
             if (!_configService.ImportExtraFiles)
             {
                 return;
             }
 
-            var sourcePath = localTrack.Path;
-            var sourceFolder = _diskProvider.GetParentFolder(sourcePath);
-            var sourceFileName = Path.GetFileNameWithoutExtension(sourcePath);
+            var sourceFileName = Path.GetFileNameWithoutExtension(trackFile.Path);
             var files = _diskProvider.GetFiles(sourceFolder, false);
 
-            var wantedExtensions = _configService.ExtraFileExtensions.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                                                     .Select(e => e.Trim(' ', '.'))
-                                                                     .ToList();
+            var wantedExtensions = _configService.ExtraFileExtensions
+                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(e => e.Trim(' ', '.'))
+                .ToList();
 
-            var matchingFilenames = files.Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(sourceFileName, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            var matchingFilenames = files.Where(f =>
+                Path.GetFileNameWithoutExtension(f)
+                    .StartsWith(sourceFileName, StringComparison.InvariantCultureIgnoreCase)).ToList();
             var filteredFilenames = new List<string>();
             var hasNfo = false;
 
@@ -105,10 +98,10 @@ namespace NzbDrone.Core.Extras
 
                 try
                 {
-                    foreach (var extraFileManager in _extraFileManagers)
+                    foreach (var extraFileManager1 in _extraFileManagers)
                     {
                         var extension = Path.GetExtension(matchingFilename);
-                        var extraFile = extraFileManager.Import(localTrack.Artist, trackFile, matchingFilename, extension, isReadOnly);
+                        var extraFile = extraFileManager1.Import(trackFile.Artist, trackFile, matchingFilename, extension, isReadOnly);
 
                         if (extraFile != null)
                         {
@@ -120,14 +113,6 @@ namespace NzbDrone.Core.Extras
                 {
                     _logger.Warn(ex, "Failed to import extra file: {0}", matchingFilename);
                 }
-            }
-        }
-
-        private void CreateAfterTrackImport(Artist artist, TrackFile trackFile)
-        {
-            foreach (var extraFileManager in _extraFileManagers)
-            {
-                extraFileManager.CreateAfterTrackImport(artist, trackFile);
             }
         }
 

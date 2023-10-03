@@ -9,6 +9,7 @@ using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Extras;
+using NzbDrone.Core.Extras.Files;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
@@ -43,6 +44,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         private readonly IReleaseService _releaseService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IManageCommandQueue _commandQueueManager;
+        private readonly List<IManageExtraFiles> _extraFileManagers;
         private readonly Logger _logger;
 
         public ImportApprovedTracks(IUpgradeMediaFiles trackFileUpgrader,
@@ -60,6 +62,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                                     IReleaseService releaseService,
                                     IEventAggregator eventAggregator,
                                     IManageCommandQueue commandQueueManager,
+                                    IEnumerable<IManageExtraFiles> extraFileManagers,
                                     Logger logger)
         {
             _trackFileUpgrader = trackFileUpgrader;
@@ -77,6 +80,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             _releaseService = releaseService;
             _eventAggregator = eventAggregator;
             _commandQueueManager = commandQueueManager;
+            _extraFileManagers = extraFileManagers.OrderBy(e => e.Order).ToList();
             _logger = logger;
         }
 
@@ -143,6 +147,13 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             var albumReleasesDict = new Dictionary<int, List<AlbumRelease>>(albumDecisions.Count);
             var trackImportedEvents = new List<TrackImportedEvent>(qualifiedImports.Count);
 
+            var copyOnly = importMode switch
+            {
+                ImportMode.Move => false,
+                ImportMode.Copy => true,
+                _ => downloadClientItem is { CanMoveFiles: false },
+            };
+
             foreach (var importDecision in qualifiedImports.OrderBy(e => e.Item.Tracks.Select(track => track.AbsoluteTrackNumber).MinOrDefault())
                                                            .ThenByDescending(e => e.Item.Size))
             {
@@ -197,21 +208,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                         Tracks = localTrack.Tracks
                     };
 
-                    bool copyOnly;
-                    switch (importMode)
-                    {
-                        default:
-                        case ImportMode.Auto:
-                            copyOnly = downloadClientItem != null && !downloadClientItem.CanMoveFiles;
-                            break;
-                        case ImportMode.Move:
-                            copyOnly = false;
-                            break;
-                        case ImportMode.Copy:
-                            copyOnly = true;
-                            break;
-                    }
-
                     if (!localTrack.ExistingFile)
                     {
                         trackFile.SceneName = localTrack.SceneName;
@@ -235,12 +231,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
                     filesToAdd.Add(trackFile);
                     importResults.Add(new ImportResult(importDecision));
-
-                    if (!localTrack.ExistingFile)
-                    {
-                        _extraService.ImportTrack(localTrack, trackFile, copyOnly);
-                    }
-
                     allImportedTrackFiles.Add(trackFile);
                     allOldTrackFiles.AddRange(oldFiles);
 
@@ -278,6 +268,16 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 {
                     _logger.Warn(e, "Couldn't import track " + localTrack);
                     importResults.Add(new ImportResult(importDecision, "Failed to import track"));
+                }
+            }
+
+            // _extraService.ImportExtraFiles(sourceFolder, track, copyOnly);
+
+            foreach (var track in allImportedTrackFiles)
+            {
+                foreach (var extraFileManager in _extraFileManagers)
+                {
+                    extraFileManager.CreateAfterTrackImport(track.Artist, track);
                 }
             }
 
