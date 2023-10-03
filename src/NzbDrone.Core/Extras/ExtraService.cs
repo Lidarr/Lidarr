@@ -98,10 +98,10 @@ namespace NzbDrone.Core.Extras
 
                 try
                 {
-                    foreach (var extraFileManager1 in _extraFileManagers)
+                    foreach (var extraFileManager in _extraFileManagers)
                     {
                         var extension = Path.GetExtension(matchingFilename);
-                        var extraFile = extraFileManager1.Import(trackFile.Artist, trackFile, matchingFilename, extension, isReadOnly);
+                        var extraFile = extraFileManager.Import(trackFile.Artist, trackFile, matchingFilename, extension, isReadOnly);
 
                         if (extraFile != null)
                         {
