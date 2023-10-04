@@ -154,7 +154,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         private bool ShouldFingerprint(LocalAlbumRelease localAlbumRelease)
         {
-            if (localAlbumRelease.LocalTracks.Count == 1 && localAlbumRelease.LocalTracks[0].IsSingleFileRelease)
+            if (localAlbumRelease.IsSingleFileRelease)
             {
                 return false;
             }
@@ -340,10 +340,18 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                     localAlbumRelease.AlbumRelease = release;
                     localAlbumRelease.ExistingTracks = extraTracks;
                     localAlbumRelease.TrackMapping = mapping;
-                    if (localAlbumRelease.LocalTracks.Count == 1 && localAlbumRelease.LocalTracks[0].IsSingleFileRelease)
+                    if (localAlbumRelease.IsSingleFileRelease)
                     {
-                        localAlbumRelease.LocalTracks[0].Tracks = release.Tracks;
-                        localAlbumRelease.LocalTracks[0].Tracks.ForEach(x => x.IsSingleFileRelease = true);
+                        localAlbumRelease.LocalTracks.ForEach(x => x.Tracks.Clear());
+                        for (var i = 0; i < release.Tracks.Value.Count; i++)
+                        {
+                            var track = release.Tracks.Value[i];
+                            var localTrackIndex = localAlbumRelease.LocalTracks.FindIndex(x => x.FileTrackInfo.DiscNumber == track.MediumNumber);
+                            if (localTrackIndex != -1)
+                            {
+                                localAlbumRelease.LocalTracks[localTrackIndex].Tracks.Add(track);
+                            }
+                        }
                     }
 
                     if (currDistance == 0.0)
@@ -360,10 +368,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         public TrackMapping MapReleaseTracks(List<LocalTrack> localTracks, List<Track> mbTracks)
         {
             var result = new TrackMapping();
-            if (localTracks.Count == 1 && localTracks[0].IsSingleFileRelease)
+            result.IsSingleFileRelease = localTracks.All(x => x.IsSingleFileRelease == true);
+            if (result.IsSingleFileRelease)
             {
-                result.IsSingleFileRelease = true;
-
                 return result;
             }
 

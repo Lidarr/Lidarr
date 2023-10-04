@@ -61,6 +61,8 @@ namespace NzbDrone.Core.Parser.Model
         {
             return "[" + string.Join(", ", LocalTracks.Select(x => Path.GetDirectoryName(x.Path)).Distinct()) + "]";
         }
+
+        public bool IsSingleFileRelease => LocalTracks.All(x => x.IsSingleFileRelease == true);
     }
 
     public class TrackMapping

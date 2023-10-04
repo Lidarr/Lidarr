@@ -22,7 +22,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
         {
             double dist;
             string reasons;
-            if (item.LocalTracks.Count == 1 && item.LocalTracks[0].IsSingleFileRelease)
+            if (item.IsSingleFileRelease)
             {
                 _logger.Debug($"Accepting single file release {item}: {item.Distance.Reasons}");
                 return Decision.Accept();

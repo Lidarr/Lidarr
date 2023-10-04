@@ -105,15 +105,12 @@ namespace NzbDrone.Core.Organizer
 
             var pattern = namingConfig.StandardTrackFormat;
 
-            if (!trackFile.IsSingleFileRelease)
+            if (tracks.First().AlbumRelease.Value.Media.Count > 1)
             {
-                if (tracks.First().AlbumRelease.Value.Media.Count > 1)
-                {
-                    pattern = namingConfig.MultiDiscTrackFormat;
-                }
-
-                tracks = tracks.OrderBy(e => e.AlbumReleaseId).ThenBy(e => e.TrackNumber).ToList();
+                pattern = namingConfig.MultiDiscTrackFormat;
             }
+
+            tracks = tracks.OrderBy(e => e.AlbumReleaseId).ThenBy(e => e.TrackNumber).ToList();
 
             var splitPatterns = pattern.Split(new[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
             var components = new List<string>();
@@ -126,14 +123,14 @@ namespace NzbDrone.Core.Organizer
                 if (!trackFile.IsSingleFileRelease)
                 {
                     splitPattern = FormatTrackNumberTokens(splitPattern, "", tracks);
-                    splitPattern = FormatMediumNumberTokens(splitPattern, "", tracks);
                 }
 
+                splitPattern = FormatMediumNumberTokens(splitPattern, "", tracks);
                 AddArtistTokens(tokenHandlers, artist);
                 AddAlbumTokens(tokenHandlers, album);
+                AddMediumTokens(tokenHandlers, tracks.First().AlbumRelease.Value.Media.SingleOrDefault(m => m.Number == tracks.First().MediumNumber));
                 if (!trackFile.IsSingleFileRelease)
                 {
-                    AddMediumTokens(tokenHandlers, tracks.First().AlbumRelease.Value.Media.SingleOrDefault(m => m.Number == tracks.First().MediumNumber));
                     AddTrackTokens(tokenHandlers, tracks, artist);
                     AddTrackTitlePlaceholderTokens(tokenHandlers);
                     AddTrackFileTokens(tokenHandlers, trackFile);

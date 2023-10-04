@@ -65,13 +65,18 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators
                 || tracks.Any(x => x.FileTrackInfo.DiscNumber == 0))
             {
                 _logger.Debug("Missing data in tags, trying filename augmentation");
-                if (tracks.Count == 1 && tracks[0].IsSingleFileRelease)
+                if (release.IsSingleFileRelease)
                 {
-                    tracks[0].FileTrackInfo.ArtistTitle = tracks[0].Artist.Name;
-                    tracks[0].FileTrackInfo.AlbumTitle = tracks[0].Album.Title;
+                    for (var i = 0; i < tracks.Count; ++i)
+                    {
+                        tracks[i].FileTrackInfo.ArtistTitle = tracks[i].Artist.Name;
+                        tracks[i].FileTrackInfo.AlbumTitle = tracks[i].Album.Title;
+                        tracks[i].FileTrackInfo.DiscNumber = i + 1;
+                        tracks[i].FileTrackInfo.DiscCount = tracks.Count;
 
-                    // TODO this is too bold, the release year is not the one from the .cue file
-                    tracks[0].FileTrackInfo.Year = (uint)tracks[0].Album.ReleaseDate.Value.Year;
+                        // TODO this is too bold, the release year is not the one from the .cue file
+                        tracks[i].FileTrackInfo.Year = (uint)tracks[i].Album.ReleaseDate.Value.Year;
+                    }
                 }
                 else
                 {

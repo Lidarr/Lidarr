@@ -17,7 +17,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
 
         public Decision IsSatisfiedBy(LocalAlbumRelease item, DownloadClientItem downloadClientItem)
         {
-            if (item.LocalTracks.Count == 1 && item.LocalTracks[0].IsSingleFileRelease)
+            if (item.IsSingleFileRelease)
             {
                 return Decision.Accept();
             }

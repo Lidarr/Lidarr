@@ -131,11 +131,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         private List<CandidateAlbumRelease> GetDbCandidatesByAlbum(LocalAlbumRelease localAlbumRelease, Album album, bool includeExisting)
         {
-            if (localAlbumRelease.LocalTracks.Count == 1 && localAlbumRelease.LocalTracks[0].IsSingleFileRelease)
+            if (localAlbumRelease.IsSingleFileRelease)
             {
                 return GetDbCandidatesByRelease(_releaseService.GetReleasesByAlbum(album.Id)
-                                          .OrderBy(x => x.ReleaseDate)
-                                          .ToList(), includeExisting);
+                                      .OrderBy(x => x.ReleaseDate)
+                                      .ToList(), includeExisting);
             }
 
             // sort candidate releases by closest track count so that we stand a chance of

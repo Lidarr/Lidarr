@@ -120,7 +120,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 var releaseYear = release.ReleaseDate?.Year ?? 0;
 
                 // The single file version's year is from the album year already, to avoid false positives here we consider it's always different
-                var isSameWithAlbumYear = (localTracks.Count == 1 && localTracks[0].IsSingleFileRelease) ? false : localYear == albumYear;
+                var isSameWithAlbumYear = localTracks.All(x => x.IsSingleFileRelease == true) ? false : localYear == albumYear;
                 if (isSameWithAlbumYear || localYear == releaseYear)
                 {
                     dist.Add("year", 0.0);
@@ -179,7 +179,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             }
 
             // tracks
-            if (localTracks.Count == 1 && localTracks[0].IsSingleFileRelease)
+            if (localTracks.All(x => x.IsSingleFileRelease == true))
             {
                 dist.Add("tracks", 0);
             }

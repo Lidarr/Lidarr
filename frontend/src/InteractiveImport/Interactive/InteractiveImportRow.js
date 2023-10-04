@@ -65,7 +65,6 @@ class InteractiveImportRow extends Component {
       album,
       tracks,
       isSingleFileRelease,
-      cuesheetPath,
       quality,
       isSelected,
       onValidRowChange
@@ -84,7 +83,7 @@ class InteractiveImportRow extends Component {
     const isValid = !!(
       artist &&
       album &&
-      ((isSingleFileRelease && cuesheetPath) || tracks.length) &&
+      (isSingleFileRelease || tracks.length) &&
       quality
     );
 
@@ -261,7 +260,7 @@ class InteractiveImportRow extends Component {
         </TableRowCellButton>
 
         <TableRowCellButton
-          isDisabled={!artist || !album || isSingleFileRelease}
+          isDisabled={!artist || !album}
           title={artist && album ? translate('ArtistAlbumClickToChangeTrack') : undefined}
           onPress={this.onSelectTrackPress}
         >
@@ -269,7 +268,7 @@ class InteractiveImportRow extends Component {
             showTrackNumbersLoading && <LoadingIndicator size={20} className={styles.loading} />
           }
           {
-            !isSingleFileRelease && showTrackNumbersPlaceholder ? <InteractiveImportRowCellPlaceholder /> : trackNumbers
+            showTrackNumbersPlaceholder ? <InteractiveImportRowCellPlaceholder /> : trackNumbers
           }
 
         </TableRowCellButton>
