@@ -5,6 +5,7 @@ using NzbDrone.Core.Messaging;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Download
 {
@@ -38,6 +39,12 @@ namespace NzbDrone.Core.Download
             if (!_configService.AutoRedownloadFailed)
             {
                 _logger.Debug("Auto redownloading failed albums is disabled");
+                return;
+            }
+
+            if (message.ReleaseSource == ReleaseSourceType.InteractiveSearch && !_configService.AutoRedownloadFailedFromInteractiveSearch)
+            {
+                _logger.Debug("Auto redownloading failed albumbs from interactive search is disabled");
                 return;
             }
 
