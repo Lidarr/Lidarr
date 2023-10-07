@@ -1084,5 +1084,6 @@
     "HealthMessagesInfoBox": "Você pode encontrar mais informações sobre a causa dessas mensagens de verificação de integridade clicando no link da wiki (ícone do livro) no final da linha ou verificando seus [logs]({link}). Se tiver dificuldade em interpretar essas mensagens, você pode entrar em contato com nosso suporte, nos links abaixo.",
     "DownloadClientRemovesCompletedDownloadsHealthCheckMessage": "O cliente de download {0} está configurado para remover downloads concluídos. Isso pode resultar na remoção dos downloads do seu cliente antes que {1} possa importá-los.",
     "InfoUrl": "URL da info",
-    "GrabId": "Obter ID"
+    "GrabId": "Obter ID",
+    "InvalidUILanguage": "Sua IU está configurada com um idioma inválido, corrija-a e salve suas configurações"
 }
