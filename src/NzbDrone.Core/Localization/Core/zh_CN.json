@@ -1084,5 +1084,6 @@
     "FilterArtistPlaceholder": "过滤艺术家",
     "DownloadClientRemovesCompletedDownloadsHealthCheckMessage": "下载客户端{0}设置为删除已完成的下载。这可能导致在{1}可以导入下载之前从您的客户端删除下载。",
     "InfoUrl": "信息 URL",
-    "GrabId": "抓取ID"
+    "GrabId": "抓取ID",
+    "InvalidUILanguage": "您的UI设置的语言无效，请纠正它并保存设置"
 }
