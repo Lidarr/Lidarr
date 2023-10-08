@@ -30,7 +30,7 @@ namespace Lidarr.Api.V1.ManualImport
         public bool ReplaceExistingFiles { get; set; }
         public bool DisableReleaseSwitching { get; set; }
         public bool IsSingleFileRelease { get; set; }
-        public string CuesheetPath { get; set; }
+        public string CueSheetPath { get; set; }
     }
 
     public static class ManualImportResourceMapper
@@ -55,7 +55,7 @@ namespace Lidarr.Api.V1.ManualImport
                 Quality = model.Quality,
                 ReleaseGroup = model.ReleaseGroup,
                 IsSingleFileRelease = model.IsSingleFileRelease,
-                CuesheetPath = model.CuesheetPath,
+                CueSheetPath = model.CueSheetPath,
 
                 // QualityWeight
                 DownloadId = model.DownloadId,

@@ -165,7 +165,18 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     artistFromCue = _parsingService.GetArtist(cueSheet.Performer);
                 }
 
-                var audioFile = audioFiles.Find(x => x.Name == cueSheet.FileName && x.DirectoryName == cueFile.DirectoryName);
+                if (artistFromCue == null)
+                {
+                    continue;
+                }
+
+                // TODO use the audio files from the cue sheet
+                var validAudioFiles = audioFiles.FindAll(x => cueSheet.FileNames.Contains(x.Name));
+                if (validAudioFiles.Count == 0)
+                {
+                    continue;
+                }
+
                 var parsedAlbumInfo = new ParsedAlbumInfo
                 {
                     AlbumTitle = cueSheet.Title,
@@ -178,18 +189,16 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     continue;
                 }
 
-                var tempAudioFiles = new List<IFileInfo> { audioFile };
-
-                results.AddRange(ProcessFolder(downloadId, artistFromCue, albumsFromCue[0], filter, replaceExistingFiles, downloadClientItem, cueSheet.Title, tempAudioFiles, cueFile.FullName));
-                audioFiles.Remove(audioFile);
+                results.AddRange(ProcessFolder(downloadId, artistFromCue, albumsFromCue[0], filter, replaceExistingFiles, downloadClientItem, cueSheet.Title, validAudioFiles, cueSheet));
+                audioFiles.RemoveAll(x => validAudioFiles.Contains(x));
             }
 
-            results.AddRange(ProcessFolder(downloadId, artist, null, filter, replaceExistingFiles, downloadClientItem, directoryInfo.Name, audioFiles, string.Empty));
+            results.AddRange(ProcessFolder(downloadId, artist, null, filter, replaceExistingFiles, downloadClientItem, directoryInfo.Name, audioFiles, null));
 
             return results;
         }
 
-        private List<ManualImportItem> ProcessFolder(string downloadId, Artist overrideArtist, Album overrideAlbum, FilterFilesType filter, bool replaceExistingFiles, DownloadClientItem downloadClientItem, string albumTitle, List<IFileInfo> audioFiles, string cuesheetPath)
+        private List<ManualImportItem> ProcessFolder(string downloadId, Artist overrideArtist, Album overrideAlbum, FilterFilesType filter, bool replaceExistingFiles, DownloadClientItem downloadClientItem, string albumTitle, List<IFileInfo> audioFiles, CueSheet cueSheet)
         {
             var idOverrides = new IdentificationOverrides
             {
@@ -200,7 +209,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             {
                 DownloadClientItem = downloadClientItem,
                 ParsedAlbumInfo = Parser.Parser.ParseAlbumTitle(albumTitle),
-                IsSingleFileRelease = !cuesheetPath.Empty()
+                CueSheet = cueSheet,
+                IsSingleFileRelease = cueSheet != null ? cueSheet.IsSingleFileRelease : false,
             };
             var config = new ImportDecisionMakerConfig
             {
@@ -225,7 +235,10 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             var existingItems = existingDecisions.Select(x => MapItem(x, null, replaceExistingFiles, false));
 
             var itemsList = newItems.Concat(existingItems).ToList();
-            itemsList.ForEach(item => { item.CuesheetPath = cuesheetPath; });
+            if (cueSheet != null)
+            {
+                itemsList.ForEach(item => { item.CueSheetPath = cueSheet.Path; });
+            }
 
             return itemsList;
         }
@@ -265,7 +278,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     IsSingleFileRelease = group.All(x => x.IsSingleFileRelease == true)
                 };
 
-                // TODO support with the cuesheet
+                // TODO support with the cue sheet
                 var decisions = _importDecisionMaker.GetImportDecisions(files, idOverride, itemInfo, config);
 
                 var existingItems = group.Join(decisions,
@@ -353,7 +366,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             item.ReplaceExistingFiles = replaceExistingFiles;
             item.DisableReleaseSwitching = disableReleaseSwitching;
             item.IsSingleFileRelease = decision.Item.IsSingleFileRelease;
-            item.CuesheetPath = decision.Item.CuesheetPath;
+            item.CueSheetPath = decision.Item.CueSheetPath;
 
             return item;
         }
@@ -403,7 +416,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                         Album = album,
                         Release = release,
                         IsSingleFileRelease = file.IsSingleFileRelease,
-                        CuesheetPath = file.CuesheetPath,
+                        CueSheetPath = file.CueSheetPath,
                     };
 
                     if (file.IsSingleFileRelease)

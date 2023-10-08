@@ -91,18 +91,18 @@ namespace NzbDrone.Core.MediaFiles
 
             EnsureTrackFolder(trackFile, localTrack, filePath);
 
-            if (!localTrack.CuesheetPath.Empty())
+            if (localTrack.IsSingleFileRelease && !localTrack.CueSheetPath.Empty())
             {
                 var directory = Path.GetDirectoryName(filePath);
                 var fileName = Path.GetFileNameWithoutExtension(filePath);
-                var cuesheetPath = Path.Combine(directory, fileName + ".cue");
-                _diskTransferService.TransferFile(localTrack.CuesheetPath, cuesheetPath, TransferMode.Copy);
-                var lines = new List<string>(File.ReadAllLines(cuesheetPath));
+                var cueSheetPath = Path.Combine(directory, fileName + ".cue");
+                _diskTransferService.TransferFile(localTrack.CueSheetPath, cueSheetPath, TransferMode.Copy);
+                var lines = new List<string>(File.ReadAllLines(cueSheetPath));
                 var fileLineIndex = lines.FindIndex(line => line.Contains("FILE"));
                 if (fileLineIndex != -1)
                 {
                     lines[fileLineIndex] = "FILE \"" + Path.GetFileName(filePath) + "\" WAVE";
-                    File.WriteAllLines(cuesheetPath, lines);
+                    File.WriteAllLines(cueSheetPath, lines);
                 }
             }
 

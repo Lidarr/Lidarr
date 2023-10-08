@@ -59,8 +59,8 @@ const columns = [
     isVisible: true
   },
   {
-    name: 'cuesheetPath',
-    label: () => 'Cuesheet Path',
+    name: 'cueSheetPath',
+    label: () => 'Cue Sheet Path',
     isVisible: true
   },
   {
@@ -446,7 +446,7 @@ class InteractiveImportModalContent extends Component {
                           onSelectedChange={this.onSelectedChange}
                           onValidRowChange={this.onValidRowChange}
                           isSingleFileRelease={item.isSingleFileRelease}
-                          cuesheetPath={item.cuesheetPath}
+                          cueSheetPath={item.cueSheetPath}
                         />
                       );
                     })
