@@ -8,6 +8,7 @@ namespace NzbDrone.Core.Datastore.Migration
     {
         protected override void MainDbUpgrade()
         {
+            Alter.Table("Tracks").AddColumn("IsSingleFileRelease").AsBoolean().WithDefaultValue(false);
             Alter.Table("TrackFiles").AddColumn("IsSingleFileRelease").AsBoolean().WithDefaultValue(false);
         }
     }
