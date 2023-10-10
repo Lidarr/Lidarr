@@ -1,7 +1,7 @@
-using System.Linq;
 using Lidarr.Http;
 using Lidarr.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Instrumentation;
 
 namespace Lidarr.Api.V1.Logs
@@ -18,9 +18,9 @@ namespace Lidarr.Api.V1.Logs
 
         [HttpGet]
         [Produces("application/json")]
-        public PagingResource<LogResource> GetLogs()
+        public PagingResource<LogResource> GetLogs([FromQuery] PagingRequestResource paging, string level)
         {
-            var pagingResource = Request.ReadPagingResourceFromRequest<LogResource>();
+            var pagingResource = new PagingResource<LogResource>(paging);
             var pageSpec = pagingResource.MapToPagingSpec<LogResource, Log>();
 
             if (pageSpec.SortKey == "time")
@@ -28,11 +28,9 @@ namespace Lidarr.Api.V1.Logs
                 pageSpec.SortKey = "id";
             }
 
-            var levelFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "level");
-
-            if (levelFilter != null)
+            if (level.IsNotNullOrWhiteSpace())
             {
-                switch (levelFilter.Value)
+                switch (level)
                 {
                     case "fatal":
                         pageSpec.FilterExpressions.Add(h => h.Level == "Fatal");

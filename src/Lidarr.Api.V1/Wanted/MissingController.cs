@@ -1,4 +1,3 @@
-using System.Linq;
 using Lidarr.Api.V1.Albums;
 using Lidarr.Http;
 using Lidarr.Http.Extensions;
@@ -26,20 +25,18 @@ namespace Lidarr.Api.V1.Wanted
 
         [HttpGet]
         [Produces("application/json")]
-        public PagingResource<AlbumResource> GetMissingAlbums(bool includeArtist = false)
+        public PagingResource<AlbumResource> GetMissingAlbums([FromQuery] PagingRequestResource paging, bool includeArtist = false, bool monitored = true)
         {
-            var pagingResource = Request.ReadPagingResourceFromRequest<AlbumResource>();
+            var pagingResource = new PagingResource<AlbumResource>(paging);
             var pagingSpec = pagingResource.MapToPagingSpec<AlbumResource, Album>("releaseDate", SortDirection.Descending);
 
-            var monitoredFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "monitored");
-
-            if (monitoredFilter != null && monitoredFilter.Value == "false")
+            if (monitored)
             {
-                pagingSpec.FilterExpressions.Add(v => v.Monitored == false || v.Artist.Value.Monitored == false);
+                pagingSpec.FilterExpressions.Add(v => v.Monitored == true && v.Artist.Value.Monitored == true);
             }
             else
             {
-                pagingSpec.FilterExpressions.Add(v => v.Monitored == true && v.Artist.Value.Monitored == true);
+                pagingSpec.FilterExpressions.Add(v => v.Monitored == false || v.Artist.Value.Monitored == false);
             }
 
             return pagingSpec.ApplyToPage(_albumService.AlbumsWithoutFiles, v => MapToResource(v, includeArtist));

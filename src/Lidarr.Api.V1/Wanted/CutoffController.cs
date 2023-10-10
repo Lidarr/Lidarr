@@ -1,4 +1,3 @@
-using System.Linq;
 using Lidarr.Api.V1.Albums;
 using Lidarr.Http;
 using Lidarr.Http.Extensions;
@@ -30,9 +29,9 @@ namespace Lidarr.Api.V1.Wanted
 
         [HttpGet]
         [Produces("application/json")]
-        public PagingResource<AlbumResource> GetCutoffUnmetAlbums(bool includeArtist = false)
+        public PagingResource<AlbumResource> GetCutoffUnmetAlbums([FromQuery] PagingRequestResource paging, bool includeArtist = false, bool monitored = true)
         {
-            var pagingResource = Request.ReadPagingResourceFromRequest<AlbumResource>();
+            var pagingResource = new PagingResource<AlbumResource>(paging);
             var pagingSpec = new PagingSpec<Album>
             {
                 Page = pagingResource.Page,
@@ -41,15 +40,13 @@ namespace Lidarr.Api.V1.Wanted
                 SortDirection = pagingResource.SortDirection
             };
 
-            var filter = pagingResource.Filters.FirstOrDefault(f => f.Key == "monitored");
-
-            if (filter != null && filter.Value == "false")
+            if (monitored)
             {
-                pagingSpec.FilterExpressions.Add(v => v.Monitored == false || v.Artist.Value.Monitored == false);
+                pagingSpec.FilterExpressions.Add(v => v.Monitored == true && v.Artist.Value.Monitored == true);
             }
             else
             {
-                pagingSpec.FilterExpressions.Add(v => v.Monitored == true && v.Artist.Value.Monitored == true);
+                pagingSpec.FilterExpressions.Add(v => v.Monitored == false || v.Artist.Value.Monitored == false);
             }
 
             return pagingSpec.ApplyToPage(_albumCutoffService.AlbumsWhereCutoffUnmet, v => MapToResource(v, includeArtist));

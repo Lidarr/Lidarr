@@ -129,9 +129,9 @@ namespace Lidarr.Api.V1.Queue
 
         [HttpGet]
         [Produces("application/json")]
-        public PagingResource<QueueResource> GetQueue(bool includeUnknownArtistItems = false, bool includeArtist = false, bool includeAlbum = false)
+        public PagingResource<QueueResource> GetQueue([FromQuery] PagingRequestResource paging, bool includeUnknownArtistItems = false, bool includeArtist = false, bool includeAlbum = false)
         {
-            var pagingResource = Request.ReadPagingResourceFromRequest<QueueResource>();
+            var pagingResource = new PagingResource<QueueResource>(paging);
             var pagingSpec = pagingResource.MapToPagingSpec<QueueResource, NzbDrone.Core.Queue.Queue>("timeleft", SortDirection.Ascending);
 
             return pagingSpec.ApplyToPage((spec) => GetQueue(spec, includeUnknownArtistItems), (q) => MapToResource(q, includeArtist, includeAlbum));

@@ -7,6 +7,7 @@ using Lidarr.Api.V1.Tracks;
 using Lidarr.Http;
 using Lidarr.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.DecisionEngine.Specifications;
@@ -66,30 +67,25 @@ namespace Lidarr.Api.V1.History
         }
 
         [HttpGet]
-        public PagingResource<HistoryResource> GetHistory(bool includeArtist = false, bool includeAlbum = false, bool includeTrack = false)
+        [Produces("application/json")]
+        public PagingResource<HistoryResource> GetHistory([FromQuery] PagingRequestResource paging, bool includeArtist, bool includeAlbum, bool includeTrack, int? eventType, int? albumId, string downloadId)
         {
-            var pagingResource = Request.ReadPagingResourceFromRequest<HistoryResource>();
+            var pagingResource = new PagingResource<HistoryResource>(paging);
             var pagingSpec = pagingResource.MapToPagingSpec<HistoryResource, EntityHistory>("date", SortDirection.Descending);
 
-            var eventTypeFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "eventType");
-            var albumIdFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "albumId");
-            var downloadIdFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "downloadId");
-
-            if (eventTypeFilter != null)
+            if (eventType.HasValue)
             {
-                var filterValue = (EntityHistoryEventType)Convert.ToInt32(eventTypeFilter.Value);
+                var filterValue = (EntityHistoryEventType)eventType.Value;
                 pagingSpec.FilterExpressions.Add(v => v.EventType == filterValue);
             }
 
-            if (albumIdFilter != null)
+            if (albumId.HasValue)
             {
-                var albumId = Convert.ToInt32(albumIdFilter.Value);
                 pagingSpec.FilterExpressions.Add(h => h.AlbumId == albumId);
             }
 
-            if (downloadIdFilter != null)
+            if (downloadId.IsNotNullOrWhiteSpace())
             {
-                var downloadId = downloadIdFilter.Value;
                 pagingSpec.FilterExpressions.Add(h => h.DownloadId == downloadId);
             }
 
@@ -97,12 +93,14 @@ namespace Lidarr.Api.V1.History
         }
 
         [HttpGet("since")]
+        [Produces("application/json")]
         public List<HistoryResource> GetHistorySince(DateTime date, EntityHistoryEventType? eventType = null, bool includeArtist = false, bool includeAlbum = false, bool includeTrack = false)
         {
             return _historyService.Since(date, eventType).Select(h => MapToResource(h, includeArtist, includeAlbum, includeTrack)).ToList();
         }
 
         [HttpGet("artist")]
+        [Produces("application/json")]
         public List<HistoryResource> GetArtistHistory(int artistId, int? albumId = null, EntityHistoryEventType? eventType = null, bool includeArtist = false, bool includeAlbum = false, bool includeTrack = false)
         {
             var artist = _artistService.GetArtist(artistId);

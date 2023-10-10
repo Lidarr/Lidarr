@@ -74,7 +74,7 @@ namespace NzbDrone.Integration.Test.ApiTests.WantedTests
         {
             EnsureArtist("8ac6cc32-8ddf-43b1-9ac4-4b04f9053176", "Alien Ant Farm", false);
 
-            var result = WantedMissing.GetPaged(0, 15, "releaseDate", "desc", "monitored", "false");
+            var result = WantedMissing.GetPaged(0, 15, "releaseDate", "desc", "monitored", false);
 
             result.Records.Should().NotBeEmpty();
         }
