@@ -264,6 +264,23 @@ namespace NzbDrone.Core.Organizer
             return TitlePrefixRegex.Replace(title, "$2, $1$3");
         }
 
+        public static string TitleFirstCharacter(string title)
+        {
+            if (char.IsLetterOrDigit(title[0]))
+            {
+                return title.Substring(0, 1).ToUpper().RemoveAccent();
+            }
+
+            // Try the second character if the first was non alphanumeric
+            if (char.IsLetterOrDigit(title[1]))
+            {
+                return title.Substring(1, 1).ToUpper().RemoveAccent();
+            }
+
+            // Default to "_" if no alphanumeric character can be found in the first 2 positions
+            return "_";
+        }
+
         public static string CleanFileName(string name)
         {
             return CleanFileName(name, NamingConfig.Default);
@@ -282,7 +299,7 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{Artist CleanName}"] = m => CleanTitle(artist.Name);
             tokenHandlers["{Artist NameThe}"] = m => TitleThe(artist.Name);
             tokenHandlers["{Artist Genre}"] = m => artist.Metadata.Value.Genres?.FirstOrDefault() ?? string.Empty;
-            tokenHandlers["{Artist NameFirstCharacter}"] = m => TitleThe(artist.Name).Substring(0, 1).FirstCharToUpper();
+            tokenHandlers["{Artist NameFirstCharacter}"] = m => TitleFirstCharacter(TitleThe(artist.Name));
             tokenHandlers["{Artist MbId}"] = m => artist.ForeignArtistId ?? string.Empty;
 
             if (artist.Metadata.Value.Disambiguation != null)
