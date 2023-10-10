@@ -54,7 +54,7 @@ namespace NzbDrone.Core.Organizer
         public static readonly Regex AlbumTitleRegex = new Regex(@"(?<token>\{(?:Album)(?<separator>[- ._])(Clean)?Title(The)?(?::(?<customFormat>[0-9-]+))?\})",
                                                                             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public static readonly Regex TrackTitleRegex = new Regex(@"(?<token>\{(?:Track)(?<separator>[- ._])(Clean)?Title(The)?(?::(?<customFormat>[0-9-]+))?\})",
+        public static readonly Regex TrackTitleRegex = new Regex(@"(?<token>\{(?:Track)(?<separator>[- ._])(Clean)?Title(?::(?<customFormat>[0-9-]+))?\})",
                                                                             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private static readonly Regex FileNameCleanupRegex = new Regex(@"([- ._])(\1)+", RegexOptions.Compiled);
@@ -266,6 +266,17 @@ namespace NzbDrone.Core.Organizer
             return TitlePrefixRegex.Replace(title, "$2, $1$3");
         }
 
+        public static string CleanTitleThe(string title)
+        {
+            if (TitlePrefixRegex.IsMatch(title))
+            {
+                var splitResult = TitlePrefixRegex.Split(title);
+                return $"{CleanTitle(splitResult[2]).Trim()}, {splitResult[1]}{CleanTitle(splitResult[3])}";
+            }
+
+            return CleanTitle(title);
+        }
+
         public static string TitleFirstCharacter(string title)
         {
             if (char.IsLetterOrDigit(title[0]))
@@ -300,6 +311,7 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{Artist Name}"] = m => Truncate(artist.Name, m.CustomFormat);
             tokenHandlers["{Artist CleanName}"] = m => Truncate(CleanTitle(artist.Name), m.CustomFormat);
             tokenHandlers["{Artist NameThe}"] = m => Truncate(TitleThe(artist.Name), m.CustomFormat);
+            tokenHandlers["{Artist CleanNameThe}"] = m => Truncate(CleanTitleThe(artist.Name), m.CustomFormat);
             tokenHandlers["{Artist Genre}"] = m => artist.Metadata.Value.Genres?.FirstOrDefault() ?? string.Empty;
             tokenHandlers["{Artist NameFirstCharacter}"] = m => TitleFirstCharacter(TitleThe(artist.Name));
             tokenHandlers["{Artist MbId}"] = m => artist.ForeignArtistId ?? string.Empty;
@@ -315,6 +327,7 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{Album Title}"] = m => Truncate(album.Title, m.CustomFormat);
             tokenHandlers["{Album CleanTitle}"] = m => Truncate(CleanTitle(album.Title), m.CustomFormat);
             tokenHandlers["{Album TitleThe}"] = m => Truncate(TitleThe(album.Title), m.CustomFormat);
+            tokenHandlers["{Album CleanTitleThe}"] = m => Truncate(CleanTitleThe(album.Title), m.CustomFormat);
             tokenHandlers["{Album Type}"] = m => album.AlbumType;
             tokenHandlers["{Album Genre}"] = m => album.Genres.FirstOrDefault() ?? string.Empty;
             tokenHandlers["{Album MbId}"] = m => album.ForeignAlbumId ?? string.Empty;
@@ -346,6 +359,7 @@ namespace NzbDrone.Core.Organizer
                 tokenHandlers["{Track ArtistName}"] = m => Truncate(firstArtist.Name, m.CustomFormat);
                 tokenHandlers["{Track ArtistCleanName}"] = m => Truncate(CleanTitle(firstArtist.Name), m.CustomFormat);
                 tokenHandlers["{Track ArtistNameThe}"] = m => Truncate(TitleThe(firstArtist.Name), m.CustomFormat);
+                tokenHandlers["{Track ArtistCleanNameThe}"] = m => Truncate(CleanTitleThe(firstArtist.Name), m.CustomFormat);
                 tokenHandlers["{Track ArtistMbId}"] = m => firstArtist.ForeignArtistId ?? string.Empty;
             }
         }

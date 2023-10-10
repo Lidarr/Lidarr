@@ -15,16 +15,51 @@ import NamingOption from './NamingOption';
 import styles from './NamingModal.css';
 
 const separatorOptions = [
-  { key: ' ', value: 'Space ( )' },
-  { key: '.', value: 'Period (.)' },
-  { key: '_', value: 'Underscore (_)' },
-  { key: '-', value: 'Dash (-)' }
+  {
+    key: ' ',
+    get value() {
+      return `${translate('Space')} ( )`;
+    }
+  },
+  {
+    key: '.',
+    get value() {
+      return `${translate('Period')} (.)`;
+    }
+  },
+  {
+    key: '_',
+    get value() {
+      return `${translate('Underscore')} (_)`;
+    }
+  },
+  {
+    key: '-',
+    get value() {
+      return `${translate('Dash')} (-)`;
+    }
+  }
 ];
 
 const caseOptions = [
-  { key: 'title', value: 'Default Case' },
-  { key: 'lower', value: 'Lowercase' },
-  { key: 'upper', value: 'Uppercase' }
+  {
+    key: 'title',
+    get value() {
+      return translate('DefaultCase');
+    }
+  },
+  {
+    key: 'lower',
+    get value() {
+      return translate('Lowercase');
+    }
+  },
+  {
+    key: 'upper',
+    get value() {
+      return translate('Uppercase');
+    }
+  }
 ];
 
 const fileNameTokens = [
@@ -40,33 +75,23 @@ const fileNameTokens = [
 
 const artistTokens = [
   { token: '{Artist Name}', example: 'Artist Name' },
-
-  { token: '{Artist NameThe}', example: 'Artist Name, The' },
-
-  { token: '{Artist NameFirstCharacter}', example: 'A' },
-
   { token: '{Artist CleanName}', example: 'Artist Name' },
-
+  { token: '{Artist NameThe}', example: 'Artist Name, The' },
+  { token: '{Artist CleanNameThe}', example: 'Artist Name, The' },
+  { token: '{Artist NameFirstCharacter}', example: 'A' },
   { token: '{Artist Disambiguation}', example: 'Disambiguation' },
-
   { token: '{Artist Genre}', example: 'Pop' },
-
   { token: '{Artist MbId}', example: 'db92a151-1ac2-438b-bc43-b82e149ddd50' }
 ];
 
 const albumTokens = [
   { token: '{Album Title}', example: 'Album Title' },
-
-  { token: '{Album TitleThe}', example: 'Album Title, The' },
-
   { token: '{Album CleanTitle}', example: 'Album Title' },
-
+  { token: '{Album TitleThe}', example: 'Album Title, The' },
+  { token: '{Album CleanTitleThe}', example: 'Album Title, The' },
   { token: '{Album Type}', example: 'Album Type' },
-
   { token: '{Album Disambiguation}', example: 'Disambiguation' },
-
   { token: '{Album Genre}', example: 'Rock' },
-
   { token: '{Album MbId}', example: '082c6aff-a7cc-36e0-a960-35a578ecd937' }
 ];
 
@@ -96,8 +121,9 @@ const trackTitleTokens = [
 
 const trackArtistTokens = [
   { token: '{Track ArtistName}', example: 'Artist Name' },
-  { token: '{Track ArtistNameThe}', example: 'Artist Name, The' },
   { token: '{Track ArtistCleanName}', example: 'Artist Name' },
+  { token: '{Track ArtistNameThe}', example: 'Artist Name, The' },
+  { token: '{Track ArtistCleanNameThe}', example: 'Artist Name, The' },
   { token: '{Track ArtistMbId}', example: 'db92a151-1ac2-438b-bc43-b82e149ddd50' }
 ];
 
@@ -213,7 +239,7 @@ class NamingModal extends Component {
       >
         <ModalContent onModalClose={onModalClose}>
           <ModalHeader>
-            File Name Tokens
+            {translate('FileNameTokens')}
           </ModalHeader>
 
           <ModalBody>
@@ -552,7 +578,7 @@ class NamingModal extends Component {
               onSelectionChange={this.onInputSelectionChange}
             />
             <Button onPress={onModalClose}>
-              Close
+              {translate('Close')}
             </Button>
           </ModalFooter>
         </ModalContent>
