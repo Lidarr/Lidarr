@@ -7,6 +7,7 @@ import MenuContent from 'Components/Menu/MenuContent';
 import MenuItem from 'Components/Menu/MenuItem';
 import MenuItemSeparator from 'Components/Menu/MenuItemSeparator';
 import { align, icons, kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './PageHeaderActionsMenu.css';
 
 function PageHeaderActionsMenu(props) {
@@ -23,6 +24,7 @@ function PageHeaderActionsMenu(props) {
         <MenuButton className={styles.menuButton} aria-label="Menu Button">
           <Icon
             name={icons.INTERACTIVE}
+            title={translate('Menu')}
           />
         </MenuButton>
 
@@ -32,7 +34,7 @@ function PageHeaderActionsMenu(props) {
               className={styles.itemIcon}
               name={icons.KEYBOARD}
             />
-            Keyboard Shortcuts
+            {translate('KeyboardShortcuts')}
           </MenuItem>
 
           <MenuItemSeparator />
@@ -42,7 +44,7 @@ function PageHeaderActionsMenu(props) {
               className={styles.itemIcon}
               name={icons.RESTART}
             />
-            Restart
+            {translate('Restart')}
           </MenuItem>
 
           <MenuItem onPress={onShutdownPress}>
@@ -69,7 +71,7 @@ function PageHeaderActionsMenu(props) {
                   className={styles.itemIcon}
                   name={icons.LOGOUT}
                 />
-                Logout
+                {translate('Logout')}
               </MenuItem>
           }
         </MenuContent>

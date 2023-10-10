@@ -81,6 +81,7 @@ class PageHeader extends Component {
             aria-label="Donate"
             to="https://lidarr.audio/donate"
             size={14}
+            title={translate('Donate')}
           />
           <IconButton
             className={styles.translation}

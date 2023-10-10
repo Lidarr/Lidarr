@@ -4,6 +4,7 @@ import IconButton from 'Components/Link/IconButton';
 import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import { icons } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import AlbumInteractiveSearchModalConnector from './Search/AlbumInteractiveSearchModalConnector';
 import styles from './AlbumSearchCell.css';
 
@@ -49,11 +50,13 @@ class AlbumSearchCell extends Component {
           name={icons.SEARCH}
           isSpinning={isSearching}
           onPress={onSearchPress}
+          title={translate('AutomaticSearch')}
         />
 
         <IconButton
           name={icons.INTERACTIVE}
           onPress={this.onManualSearchPress}
+          title={translate('InteractiveSearch')}
         />
 
         <AlbumInteractiveSearchModalConnector
