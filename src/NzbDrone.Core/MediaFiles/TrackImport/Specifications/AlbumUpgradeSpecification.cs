@@ -32,7 +32,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
                 _logger.Debug("Min quality of new files: {0}", newMinQuality);
 
                 // get minimum quality of existing release
-                var existingQualities = currentRelease.Tracks.Value.Where(x => x.TrackFileId != 0).Select(x => x.TrackFile.Value.Quality);
+                var existingQualities = currentRelease.Tracks.Value.Where(x => x.TrackFileId != 0 && x.TrackFile.Value != null).Select(x => x.TrackFile.Value.Quality);
                 if (existingQualities.Any())
                 {
                     var existingMinQuality = existingQualities.OrderBy(x => x, qualityComparer).First();
