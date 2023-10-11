@@ -71,8 +71,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators
                     {
                         tracks[i].FileTrackInfo.ArtistTitle = tracks[i].Artist.Name;
                         tracks[i].FileTrackInfo.AlbumTitle = tracks[i].Album.Title;
-                        tracks[i].FileTrackInfo.DiscNumber = i + 1;
-                        tracks[i].FileTrackInfo.DiscCount = tracks.Count;
 
                         // TODO this is too bold, the release year is not the one from the .cue file
                         tracks[i].FileTrackInfo.Year = (uint)tracks[i].Album.ReleaseDate.Value.Year;

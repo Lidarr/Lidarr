@@ -17,7 +17,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 {
     public interface IIdentificationService
     {
-        List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, IdentificationOverrides idOverrides, ImportDecisionMakerConfig config);
+        List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, IdentificationOverrides idOverrides, ImportDecisionMakerConfig config, List<CueSheetInfo> cueSheetInfos = null);
     }
 
     public class IdentificationService : IIdentificationService
@@ -114,7 +114,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             return releases;
         }
 
-        public List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, IdentificationOverrides idOverrides, ImportDecisionMakerConfig config)
+        public List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, IdentificationOverrides idOverrides, ImportDecisionMakerConfig config, List<CueSheetInfo> cueSheetInfos = null)
         {
             // 1 group localTracks so that we think they represent a single release
             // 2 get candidates given specified artist, album and release.  Candidates can include extra files already on disk.
@@ -132,6 +132,41 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 i++;
                 _logger.ProgressInfo($"Identifying album {i}/{releases.Count}");
                 IdentifyRelease(localRelease, idOverrides, config);
+
+                if (cueSheetInfos != null && localRelease.IsSingleFileRelease)
+                {
+                    var addedMbTracks = new List<Track>();
+                    localRelease.LocalTracks.ForEach(localTrack =>
+                    {
+                        var cueSheetFindResult = cueSheetInfos.Find(x => x.IsForMediaFile(localTrack.Path));
+                        var cueSheet = cueSheetFindResult?.CueSheet;
+                        if (cueSheet == null)
+                        {
+                            return;
+                        }
+
+                        localTrack.Tracks.Clear();
+                        localRelease.AlbumRelease.Tracks.Value.ForEach(mbTrack =>
+                        {
+                            cueSheet.Files[0].Tracks.ForEach(cueTrack =>
+                            {
+                                if (!string.Equals(cueTrack.Title, mbTrack.Title, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    return;
+                                }
+
+                                if (addedMbTracks.Contains(mbTrack))
+                                {
+                                    return;
+                                }
+
+                                mbTrack.IsSingleFileRelease = true;
+                                localTrack.Tracks.Add(mbTrack);
+                                addedMbTracks.Add(mbTrack);
+                            });
+                        });
+                    });
+                }
             }
 
             watch.Stop();
@@ -187,7 +222,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 FileTrackInfo = _audioTagService.ReadTags(x.Path),
                 ExistingFile = true,
                 AdditionalFile = true,
-                Quality = x.Quality
+                Quality = x.Quality,
+                IsSingleFileRelease = x.IsSingleFileRelease,
             }))
             .ToList();
 
@@ -340,19 +376,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                     localAlbumRelease.AlbumRelease = release;
                     localAlbumRelease.ExistingTracks = extraTracks;
                     localAlbumRelease.TrackMapping = mapping;
-                    if (localAlbumRelease.IsSingleFileRelease)
-                    {
-                        localAlbumRelease.LocalTracks.ForEach(x => x.Tracks.Clear());
-                        for (var i = 0; i < release.Tracks.Value.Count; i++)
-                        {
-                            var track = release.Tracks.Value[i];
-                            var localTrackIndex = localAlbumRelease.LocalTracks.FindIndex(x => x.FileTrackInfo.DiscNumber == track.MediumNumber);
-                            if (localTrackIndex != -1)
-                            {
-                                localAlbumRelease.LocalTracks[localTrackIndex].Tracks.Add(track);
-                            }
-                        }
-                    }
 
                     if (currDistance == 0.0)
                     {

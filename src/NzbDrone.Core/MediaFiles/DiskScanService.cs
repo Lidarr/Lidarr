@@ -11,12 +11,14 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Datastore;
 using NzbDrone.Core.MediaFiles.Commands;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.MediaFiles.TrackImport;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.RootFolders;
 
 namespace NzbDrone.Core.MediaFiles
@@ -83,6 +85,66 @@ namespace NzbDrone.Core.MediaFiles
                 artistIds = new List<int>();
             }
 
+            var mediaFileList = GetMediaFiles(folders, artistIds);
+
+            var decisionsStopwatch = Stopwatch.StartNew();
+
+            var itemInfo = new ImportDecisionMakerInfo();
+            var config = new ImportDecisionMakerConfig
+            {
+                Filter = filter,
+                IncludeExisting = true,
+                AddNewArtists = addNewArtists
+            };
+
+            var decisions = new List<ImportDecision<LocalTrack>>();
+            var cueFiles = mediaFileList.Where(x => x.Extension.Equals(".cue")).ToList();
+            mediaFileList.RemoveAll(l => cueFiles.Contains(l));
+            var cueSheetInfos = new List<CueSheetInfo>();
+            foreach (var cueFile in cueFiles)
+            {
+                var cueSheetInfo = _importDecisionMaker.GetCueSheetInfo(cueFile, mediaFileList);
+                cueSheetInfos.Add(cueSheetInfo);
+            }
+
+            var cueSheetInfosGroupedByDiscId = cueSheetInfos.GroupBy(x => x.CueSheet.DiscID).ToList();
+            foreach (var cueSheetInfoGroup in cueSheetInfosGroupedByDiscId)
+            {
+                var audioFilesForCues = new List<IFileInfo>();
+                foreach (var cueSheetInfo in cueSheetInfoGroup)
+                {
+                    audioFilesForCues.AddRange(cueSheetInfo.MusicFiles);
+                }
+
+                decisions.AddRange(_importDecisionMaker.GetImportDecisions(audioFilesForCues, cueSheetInfos[0].IdOverrides, itemInfo, config, cueSheetInfos));
+
+                foreach (var cueSheetInfo in cueSheetInfos)
+                {
+                    if (cueSheetInfo.CueSheet != null)
+                    {
+                        decisions.ForEach(item =>
+                        {
+                            if (cueSheetInfo.IsForMediaFile(item.Item.Path))
+                            {
+                                item.Item.CueSheetPath = cueSheetInfo.CueSheet.Path;
+                            }
+                        });
+                    }
+
+                    mediaFileList.RemoveAll(x => cueSheetInfo.MusicFiles.Contains(x));
+                }
+            }
+
+            decisions.AddRange(_importDecisionMaker.GetImportDecisions(mediaFileList, null, itemInfo, config));
+
+            decisionsStopwatch.Stop();
+            _logger.Debug("Import decisions complete [{0}]", decisionsStopwatch.Elapsed);
+
+            Import(folders, artistIds, decisions);
+        }
+
+        private List<IFileInfo> GetMediaFiles(List<string> folders, List<int> artistIds)
+        {
             var mediaFileList = new List<IFileInfo>();
 
             var musicFilesStopwatch = Stopwatch.StartNew();
@@ -96,7 +158,7 @@ namespace NzbDrone.Core.MediaFiles
                 if (rootFolder == null)
                 {
                     _logger.Error("Not scanning {0}, it's not a subdirectory of a defined root folder", folder);
-                    return;
+                    return mediaFileList;
                 }
 
                 var folderExists = _diskProvider.FolderExists(folder);
@@ -108,7 +170,7 @@ namespace NzbDrone.Core.MediaFiles
                         _logger.Warn("Artists' root folder ({0}) doesn't exist.", rootFolder.Path);
                         var skippedArtists = _artistService.GetArtists(artistIds);
                         skippedArtists.ForEach(x => _eventAggregator.PublishEvent(new ArtistScanSkippedEvent(x, ArtistScanSkippedReason.RootFolderDoesNotExist)));
-                        return;
+                        return mediaFileList;
                     }
 
                     if (_diskProvider.FolderEmpty(rootFolder.Path))
@@ -116,7 +178,7 @@ namespace NzbDrone.Core.MediaFiles
                         _logger.Warn("Artists' root folder ({0}) is empty.", rootFolder.Path);
                         var skippedArtists = _artistService.GetArtists(artistIds);
                         skippedArtists.ForEach(x => _eventAggregator.PublishEvent(new ArtistScanSkippedEvent(x, ArtistScanSkippedReason.RootFolderIsEmpty)));
-                        return;
+                        return mediaFileList;
                     }
                 }
 
@@ -140,26 +202,16 @@ namespace NzbDrone.Core.MediaFiles
 
                 CleanMediaFiles(folder, files.Select(x => x.FullName).ToList());
                 mediaFileList.AddRange(files);
-                mediaFileList.RemoveAll(x => x.Extension == ".cue");
             }
 
             musicFilesStopwatch.Stop();
             _logger.Trace("Finished getting track files for:\n{0} [{1}]", folders.ConcatToString("\n"), musicFilesStopwatch.Elapsed);
 
-            var decisionsStopwatch = Stopwatch.StartNew();
+            return mediaFileList;
+        }
 
-            var config = new ImportDecisionMakerConfig
-            {
-                Filter = filter,
-                IncludeExisting = true,
-                AddNewArtists = addNewArtists
-            };
-
-            var decisions = _importDecisionMaker.GetImportDecisions(mediaFileList, null, null, config);
-
-            decisionsStopwatch.Stop();
-            _logger.Debug("Import decisions complete [{0}]", decisionsStopwatch.Elapsed);
-
+        private void Import(List<string> folders, List<int> artistIds, List<ImportDecision<LocalTrack>> decisions)
+        {
             var importStopwatch = Stopwatch.StartNew();
             _importApprovedTracks.Import(decisions, false);
 
@@ -178,7 +230,8 @@ namespace NzbDrone.Core.MediaFiles
                     Modified = decision.Item.Modified,
                     DateAdded = DateTime.UtcNow,
                     Quality = decision.Item.Quality,
-                    MediaInfo = decision.Item.FileTrackInfo.MediaInfo
+                    MediaInfo = decision.Item.FileTrackInfo.MediaInfo,
+                    IsSingleFileRelease = decision.Item.IsSingleFileRelease,
                 })
                 .ToList();
             _mediaFileService.AddMany(newFiles);

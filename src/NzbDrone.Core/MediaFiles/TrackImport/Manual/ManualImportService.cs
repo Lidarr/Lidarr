@@ -10,6 +10,7 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.CustomFormats;
+using NzbDrone.Core.Datastore;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Download.TrackedDownloads;
@@ -155,63 +156,67 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             // Split cue and non-cue files
             var cueFiles = audioFiles.Where(x => x.Extension.Equals(".cue")).ToList();
             audioFiles.RemoveAll(l => cueFiles.Contains(l));
+            var cueSheetInfos = new List<CueSheetInfo>();
             foreach (var cueFile in cueFiles)
             {
-                var cueSheet = new CueSheet(cueFile);
-
-                Artist artistFromCue = null;
-                if (!cueSheet.Performer.Empty())
-                {
-                    artistFromCue = _parsingService.GetArtist(cueSheet.Performer);
-                }
-
-                if (artistFromCue == null)
-                {
-                    continue;
-                }
-
-                // TODO use the audio files from the cue sheet
-                var validAudioFiles = audioFiles.FindAll(x => cueSheet.FileNames.Contains(x.Name));
-                if (validAudioFiles.Count == 0)
-                {
-                    continue;
-                }
-
-                var parsedAlbumInfo = new ParsedAlbumInfo
-                {
-                    AlbumTitle = cueSheet.Title,
-                    ArtistName = artistFromCue.Name,
-                    ReleaseDate = cueSheet.Date,
-                };
-                var albumsFromCue = _parsingService.GetAlbums(parsedAlbumInfo, artistFromCue);
-                if (albumsFromCue == null || albumsFromCue.Count == 0)
-                {
-                    continue;
-                }
-
-                results.AddRange(ProcessFolder(downloadId, artistFromCue, albumsFromCue[0], filter, replaceExistingFiles, downloadClientItem, cueSheet.Title, validAudioFiles, cueSheet));
-                audioFiles.RemoveAll(x => validAudioFiles.Contains(x));
+                var cueSheetInfo = _importDecisionMaker.GetCueSheetInfo(cueFile, audioFiles);
+                cueSheetInfos.Add(cueSheetInfo);
             }
 
-            results.AddRange(ProcessFolder(downloadId, artist, null, filter, replaceExistingFiles, downloadClientItem, directoryInfo.Name, audioFiles, null));
+            var cueSheetInfosGroupedByDiscId = cueSheetInfos.GroupBy(x => x.CueSheet.DiscID).ToList();
+            foreach (var cueSheetInfoGroup in cueSheetInfosGroupedByDiscId)
+            {
+                var audioFilesForCues = new List<IFileInfo>();
+                foreach (var cueSheetInfo in cueSheetInfoGroup)
+                {
+                    audioFilesForCues.AddRange(cueSheetInfo.MusicFiles);
+                }
+
+                var manualImportItems = ProcessFolder(downloadId, cueSheetInfos[0].IdOverrides, filter, replaceExistingFiles, downloadClientItem, cueSheetInfos[0].IdOverrides.Album.Title, audioFilesForCues, cueSheetInfos);
+                results.AddRange(manualImportItems);
+
+                RemoveProcessedAudioFiles(audioFiles, cueSheetInfos, manualImportItems);
+            }
+
+            var idOverrides = new IdentificationOverrides
+            {
+                Artist = artist,
+                Album = null
+            };
+
+            results.AddRange(ProcessFolder(downloadId, idOverrides, filter, replaceExistingFiles, downloadClientItem, directoryInfo.Name, audioFiles));
 
             return results;
         }
 
-        private List<ManualImportItem> ProcessFolder(string downloadId, Artist overrideArtist, Album overrideAlbum, FilterFilesType filter, bool replaceExistingFiles, DownloadClientItem downloadClientItem, string albumTitle, List<IFileInfo> audioFiles, CueSheet cueSheet)
+        private void RemoveProcessedAudioFiles(List<IFileInfo> audioFiles, List<CueSheetInfo> cueSheetInfos, List<ManualImportItem> manualImportItems)
         {
-            var idOverrides = new IdentificationOverrides
+            foreach (var cueSheetInfo in cueSheetInfos)
             {
-                Artist = overrideArtist,
-                Album = overrideAlbum
-            };
+                if (cueSheetInfo.CueSheet != null)
+                {
+                    manualImportItems.ForEach(item =>
+                    {
+                        if (cueSheetInfo.IsForMediaFile(item.Path))
+                        {
+                            item.CueSheetPath = cueSheetInfo.CueSheet.Path;
+                        }
+                    });
+                }
+
+                audioFiles.RemoveAll(x => cueSheetInfo.MusicFiles.Contains(x));
+            }
+        }
+
+        private List<ManualImportItem> ProcessFolder(string downloadId, IdentificationOverrides idOverrides, FilterFilesType filter, bool replaceExistingFiles, DownloadClientItem downloadClientItem, string albumTitle, List<IFileInfo> audioFiles, List<CueSheetInfo> cueSheetInfos = null)
+        {
+            idOverrides ??= new IdentificationOverrides();
             var itemInfo = new ImportDecisionMakerInfo
             {
                 DownloadClientItem = downloadClientItem,
                 ParsedAlbumInfo = Parser.Parser.ParseAlbumTitle(albumTitle),
-                CueSheet = cueSheet,
-                IsSingleFileRelease = cueSheet != null ? cueSheet.IsSingleFileRelease : false,
             };
+
             var config = new ImportDecisionMakerConfig
             {
                 Filter = filter,
@@ -221,7 +226,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                 AddNewArtists = false
             };
 
-            var decisions = _importDecisionMaker.GetImportDecisions(audioFiles, idOverrides, itemInfo, config);
+            var decisions = _importDecisionMaker.GetImportDecisions(audioFiles, idOverrides, itemInfo, config, cueSheetInfos);
 
             // paths will be different for new and old files which is why we need to map separately
             var newFiles = audioFiles.Join(decisions,
@@ -230,16 +235,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                                             (f, d) => new { File = f, Decision = d },
                                             PathEqualityComparer.Instance);
 
-            var newItems = newFiles.Select(x => MapItem(x.Decision, downloadId, replaceExistingFiles, false));
+            var newItemsList = newFiles.Select(x => MapItem(x.Decision, downloadId, replaceExistingFiles, false)).ToList();
+
             var existingDecisions = decisions.Except(newFiles.Select(x => x.Decision));
             var existingItems = existingDecisions.Select(x => MapItem(x, null, replaceExistingFiles, false));
 
-            var itemsList = newItems.Concat(existingItems).ToList();
-            if (cueSheet != null)
-            {
-                itemsList.ForEach(item => { item.CueSheetPath = cueSheet.Path; });
-            }
-
+            var itemsList = newItemsList.Concat(existingItems.ToList()).ToList();
             return itemsList;
         }
 
@@ -257,13 +258,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
 
                 var disableReleaseSwitching = group.First().DisableReleaseSwitching;
 
-                var files = group.Select(x => _diskProvider.GetFileInfo(x.Path)).ToList();
-                var idOverride = new IdentificationOverrides
-                {
-                    Artist = group.First().Artist,
-                    Album = group.First().Album,
-                    AlbumRelease = group.First().Release
-                };
                 var config = new ImportDecisionMakerConfig
                 {
                     Filter = FilterFilesType.None,
@@ -273,60 +267,95 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     AddNewArtists = false
                 };
 
-                var itemInfo = new ImportDecisionMakerInfo
+                var audioFiles = new List<IFileInfo>();
+                foreach (var item in group)
                 {
-                    IsSingleFileRelease = group.All(x => x.IsSingleFileRelease == true)
-                };
-
-                // TODO support with the cue sheet
-                var decisions = _importDecisionMaker.GetImportDecisions(files, idOverride, itemInfo, config);
-
-                var existingItems = group.Join(decisions,
-                                               i => i.Path,
-                                               d => d.Item.Path,
-                                               (i, d) => new { Item = i, Decision = d },
-                                               PathEqualityComparer.Instance);
-
-                foreach (var pair in existingItems)
-                {
-                    var item = pair.Item;
-                    var decision = pair.Decision;
-
-                    if (decision.Item.Artist != null)
-                    {
-                        item.Artist = decision.Item.Artist;
-                    }
-
-                    if (decision.Item.Album != null)
-                    {
-                        item.Album = decision.Item.Album;
-                        item.Release = decision.Item.Release;
-                    }
-
-                    if (decision.Item.Tracks.Any())
-                    {
-                        item.Tracks = decision.Item.Tracks;
-                    }
-
-                    if (item.Quality?.Quality == Quality.Unknown)
-                    {
-                        item.Quality = decision.Item.Quality;
-                    }
-
-                    if (item.ReleaseGroup.IsNullOrWhiteSpace())
-                    {
-                        item.ReleaseGroup = decision.Item.ReleaseGroup;
-                    }
-
-                    item.Rejections = decision.Rejections;
-                    item.Size = decision.Item.Size;
-
-                    result.Add(item);
+                    var file = _diskProvider.GetFileInfo(item.Path);
+                    audioFiles.Add(file);
                 }
 
-                var newDecisions = decisions.Except(existingItems.Select(x => x.Decision));
-                result.AddRange(newDecisions.Select(x => MapItem(x, null, replaceExistingFiles, disableReleaseSwitching)));
+                var cueSheetInfos = new List<CueSheetInfo>();
+                var audioFilesForCues = new List<IFileInfo>();
+                var itemInfo = new ImportDecisionMakerInfo();
+                foreach (var item in group)
+                {
+                    if (item.IsSingleFileRelease)
+                    {
+                        var cueFile = _diskProvider.GetFileInfo(item.CueSheetPath);
+                        var cueSheetInfo = _importDecisionMaker.GetCueSheetInfo(cueFile, audioFiles);
+                        cueSheetInfos.Add(cueSheetInfo);
+                        audioFilesForCues.AddRange(cueSheetInfo.MusicFiles);
+                    }
+                }
+
+                var singleFileReleaseDecisions = _importDecisionMaker.GetImportDecisions(audioFilesForCues, cueSheetInfos[0].IdOverrides, itemInfo, config, cueSheetInfos);
+                var manualImportItems = UpdateItems(group, singleFileReleaseDecisions, replaceExistingFiles, disableReleaseSwitching);
+                result.AddRange(manualImportItems);
+
+                RemoveProcessedAudioFiles(audioFiles, cueSheetInfos, manualImportItems);
+
+                var idOverride = new IdentificationOverrides
+                {
+                    Artist = group.First().Artist,
+                    Album = group.First().Album,
+                    AlbumRelease = group.First().Release
+                };
+                var decisions = _importDecisionMaker.GetImportDecisions(audioFiles, idOverride, itemInfo, config);
+                result.AddRange(UpdateItems(group, decisions, replaceExistingFiles, disableReleaseSwitching));
             }
+
+            return result;
+        }
+
+        private List<ManualImportItem> UpdateItems(IGrouping<int?, ManualImportItem> group, List<ImportDecision<LocalTrack>> decisions, bool replaceExistingFiles, bool disableReleaseSwitching)
+        {
+            var result = new List<ManualImportItem>();
+
+            var existingItems = group.Join(decisions,
+                                           i => i.Path,
+                                           d => d.Item.Path,
+                                           (i, d) => new { Item = i, Decision = d },
+                                           PathEqualityComparer.Instance);
+
+            foreach (var pair in existingItems)
+            {
+                var item = pair.Item;
+                var decision = pair.Decision;
+
+                if (decision.Item.Artist != null)
+                {
+                    item.Artist = decision.Item.Artist;
+                }
+
+                if (decision.Item.Album != null)
+                {
+                    item.Album = decision.Item.Album;
+                    item.Release = decision.Item.Release;
+                }
+
+                if (decision.Item.Tracks.Any())
+                {
+                    item.Tracks = decision.Item.Tracks;
+                }
+
+                if (item.Quality?.Quality == Quality.Unknown)
+                {
+                    item.Quality = decision.Item.Quality;
+                }
+
+                if (item.ReleaseGroup.IsNullOrWhiteSpace())
+                {
+                    item.ReleaseGroup = decision.Item.ReleaseGroup;
+                }
+
+                item.Rejections = decision.Rejections;
+                item.Size = decision.Item.Size;
+
+                result.Add(item);
+            }
+
+            var newDecisions = decisions.Except(existingItems.Select(x => x.Decision));
+            result.AddRange(newDecisions.Select(x => MapItem(x, null, replaceExistingFiles, disableReleaseSwitching)));
 
             return result;
         }
