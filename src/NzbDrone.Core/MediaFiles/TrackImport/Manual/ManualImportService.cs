@@ -166,13 +166,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             var cueSheetInfosGroupedByDiscId = cueSheetInfos.GroupBy(x => x.CueSheet.DiscID).ToList();
             foreach (var cueSheetInfoGroup in cueSheetInfosGroupedByDiscId)
             {
-                var audioFilesForCues = new List<IFileInfo>();
-                foreach (var cueSheetInfo in cueSheetInfoGroup)
-                {
-                    audioFilesForCues.AddRange(cueSheetInfo.MusicFiles);
-                }
-
-                var manualImportItems = ProcessFolder(downloadId, cueSheetInfos[0].IdOverrides, filter, replaceExistingFiles, downloadClientItem, cueSheetInfos[0].IdOverrides.Album.Title, audioFilesForCues, cueSheetInfos);
+                var manualImportItems = ProcessFolder(downloadId, filter, replaceExistingFiles, downloadClientItem, cueSheetInfoGroup.ToList());
                 results.AddRange(manualImportItems);
 
                 RemoveProcessedAudioFiles(audioFiles, cueSheetInfos, manualImportItems);
@@ -206,6 +200,17 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
 
                 audioFiles.RemoveAll(x => cueSheetInfo.MusicFiles.Contains(x));
             }
+        }
+
+        private List<ManualImportItem> ProcessFolder(string downloadId, FilterFilesType filter, bool replaceExistingFiles, DownloadClientItem downloadClientItem, List<CueSheetInfo> cueSheetInfos)
+        {
+            var audioFilesForCues = new List<IFileInfo>();
+            foreach (var cueSheetInfo in cueSheetInfos)
+            {
+                audioFilesForCues.AddRange(cueSheetInfo.MusicFiles);
+            }
+
+            return ProcessFolder(downloadId, cueSheetInfos[0].IdOverrides, filter, replaceExistingFiles, downloadClientItem, cueSheetInfos[0].CueSheet.Title, audioFilesForCues, cueSheetInfos);
         }
 
         private List<ManualImportItem> ProcessFolder(string downloadId, IdentificationOverrides idOverrides, FilterFilesType filter, bool replaceExistingFiles, DownloadClientItem downloadClientItem, string albumTitle, List<IFileInfo> audioFiles, List<CueSheetInfo> cueSheetInfos = null)

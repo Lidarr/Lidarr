@@ -35,7 +35,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
     public class CueSheetInfo
     {
-        public List<IFileInfo> MusicFiles { get; set; }
+        public List<IFileInfo> MusicFiles { get; set; } = new List<IFileInfo>();
         public IdentificationOverrides IdOverrides { get; set; }
         public CueSheet CueSheet { get; set; }
         public bool IsForMediaFile(string path) => CueSheet != null && CueSheet.Files.Count > 0 && CueSheet.Files.Any(x => Path.GetFileName(path) == x.Name);

@@ -116,7 +116,7 @@ namespace NzbDrone.Core.MediaFiles
                     audioFilesForCues.AddRange(cueSheetInfo.MusicFiles);
                 }
 
-                decisions.AddRange(_importDecisionMaker.GetImportDecisions(audioFilesForCues, cueSheetInfos[0].IdOverrides, itemInfo, config, cueSheetInfos));
+                decisions.AddRange(_importDecisionMaker.GetImportDecisions(audioFilesForCues, cueSheetInfoGroup.First().IdOverrides, itemInfo, config, cueSheetInfos));
 
                 foreach (var cueSheetInfo in cueSheetInfos)
                 {
