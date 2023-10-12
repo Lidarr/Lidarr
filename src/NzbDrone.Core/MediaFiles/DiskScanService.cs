@@ -99,39 +99,42 @@ namespace NzbDrone.Core.MediaFiles
 
             var decisions = new List<ImportDecision<LocalTrack>>();
             var cueFiles = mediaFileList.Where(x => x.Extension.Equals(".cue")).ToList();
-            mediaFileList.RemoveAll(l => cueFiles.Contains(l));
-            var cueSheetInfos = new List<CueSheetInfo>();
-            foreach (var cueFile in cueFiles)
+            if (cueFiles.Count > 0)
             {
-                var cueSheetInfo = _importDecisionMaker.GetCueSheetInfo(cueFile, mediaFileList);
-                cueSheetInfos.Add(cueSheetInfo);
-            }
-
-            var cueSheetInfosGroupedByDiscId = cueSheetInfos.GroupBy(x => x.CueSheet.DiscID).ToList();
-            foreach (var cueSheetInfoGroup in cueSheetInfosGroupedByDiscId)
-            {
-                var audioFilesForCues = new List<IFileInfo>();
-                foreach (var cueSheetInfo in cueSheetInfoGroup)
+                mediaFileList.RemoveAll(l => cueFiles.Contains(l));
+                var cueSheetInfos = new List<CueSheetInfo>();
+                foreach (var cueFile in cueFiles)
                 {
-                    audioFilesForCues.AddRange(cueSheetInfo.MusicFiles);
+                    var cueSheetInfo = _importDecisionMaker.GetCueSheetInfo(cueFile, mediaFileList);
+                    cueSheetInfos.Add(cueSheetInfo);
                 }
 
-                decisions.AddRange(_importDecisionMaker.GetImportDecisions(audioFilesForCues, cueSheetInfoGroup.First().IdOverrides, itemInfo, config, cueSheetInfos));
-
-                foreach (var cueSheetInfo in cueSheetInfos)
+                var cueSheetInfosGroupedByDiscId = cueSheetInfos.GroupBy(x => x.CueSheet.DiscID).ToList();
+                foreach (var cueSheetInfoGroup in cueSheetInfosGroupedByDiscId)
                 {
-                    if (cueSheetInfo.CueSheet != null)
+                    var audioFilesForCues = new List<IFileInfo>();
+                    foreach (var cueSheetInfo in cueSheetInfoGroup)
                     {
-                        decisions.ForEach(item =>
-                        {
-                            if (cueSheetInfo.IsForMediaFile(item.Item.Path))
-                            {
-                                item.Item.CueSheetPath = cueSheetInfo.CueSheet.Path;
-                            }
-                        });
+                        audioFilesForCues.AddRange(cueSheetInfo.MusicFiles);
                     }
 
-                    mediaFileList.RemoveAll(x => cueSheetInfo.MusicFiles.Contains(x));
+                    decisions.AddRange(_importDecisionMaker.GetImportDecisions(audioFilesForCues, cueSheetInfoGroup.First().IdOverrides, itemInfo, config, cueSheetInfos));
+
+                    foreach (var cueSheetInfo in cueSheetInfos)
+                    {
+                        if (cueSheetInfo.CueSheet != null)
+                        {
+                            decisions.ForEach(item =>
+                            {
+                                if (cueSheetInfo.IsForMediaFile(item.Item.Path))
+                                {
+                                    item.Item.CueSheetPath = cueSheetInfo.CueSheet.Path;
+                                }
+                            });
+                        }
+
+                        mediaFileList.RemoveAll(x => cueSheetInfo.MusicFiles.Contains(x));
+                    }
                 }
             }
 

@@ -155,21 +155,24 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
 
             // Split cue and non-cue files
             var cueFiles = audioFiles.Where(x => x.Extension.Equals(".cue")).ToList();
-            audioFiles.RemoveAll(l => cueFiles.Contains(l));
-            var cueSheetInfos = new List<CueSheetInfo>();
-            foreach (var cueFile in cueFiles)
+            if (cueFiles.Count > 0)
             {
-                var cueSheetInfo = _importDecisionMaker.GetCueSheetInfo(cueFile, audioFiles);
-                cueSheetInfos.Add(cueSheetInfo);
-            }
+                audioFiles.RemoveAll(l => cueFiles.Contains(l));
+                var cueSheetInfos = new List<CueSheetInfo>();
+                foreach (var cueFile in cueFiles)
+                {
+                    var cueSheetInfo = _importDecisionMaker.GetCueSheetInfo(cueFile, audioFiles);
+                    cueSheetInfos.Add(cueSheetInfo);
+                }
 
-            var cueSheetInfosGroupedByDiscId = cueSheetInfos.GroupBy(x => x.CueSheet.DiscID).ToList();
-            foreach (var cueSheetInfoGroup in cueSheetInfosGroupedByDiscId)
-            {
-                var manualImportItems = ProcessFolder(downloadId, filter, replaceExistingFiles, downloadClientItem, cueSheetInfoGroup.ToList());
-                results.AddRange(manualImportItems);
+                var cueSheetInfosGroupedByDiscId = cueSheetInfos.GroupBy(x => x.CueSheet.DiscID).ToList();
+                foreach (var cueSheetInfoGroup in cueSheetInfosGroupedByDiscId)
+                {
+                    var manualImportItems = ProcessFolder(downloadId, filter, replaceExistingFiles, downloadClientItem, cueSheetInfoGroup.ToList());
+                    results.AddRange(manualImportItems);
 
-                RemoveProcessedAudioFiles(audioFiles, cueSheetInfos, manualImportItems);
+                    RemoveProcessedAudioFiles(audioFiles, cueSheetInfos, manualImportItems);
+                }
             }
 
             var idOverrides = new IdentificationOverrides
@@ -293,11 +296,15 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     }
                 }
 
-                var singleFileReleaseDecisions = _importDecisionMaker.GetImportDecisions(audioFilesForCues, cueSheetInfos[0].IdOverrides, itemInfo, config, cueSheetInfos);
-                var manualImportItems = UpdateItems(group, singleFileReleaseDecisions, replaceExistingFiles, disableReleaseSwitching);
-                result.AddRange(manualImportItems);
+                if (audioFilesForCues.Count > 0)
+                {
+                    var idOverrides = cueSheetInfos.Count > 0 ? cueSheetInfos[0].IdOverrides : null;
+                    var singleFileReleaseDecisions = _importDecisionMaker.GetImportDecisions(audioFilesForCues, idOverrides, itemInfo, config, cueSheetInfos);
+                    var manualImportItems = UpdateItems(group, singleFileReleaseDecisions, replaceExistingFiles, disableReleaseSwitching);
+                    result.AddRange(manualImportItems);
 
-                RemoveProcessedAudioFiles(audioFiles, cueSheetInfos, manualImportItems);
+                    RemoveProcessedAudioFiles(audioFiles, cueSheetInfos, manualImportItems);
+                }
 
                 var idOverride = new IdentificationOverrides
                 {
