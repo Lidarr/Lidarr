@@ -132,41 +132,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 i++;
                 _logger.ProgressInfo($"Identifying album {i}/{releases.Count}");
                 IdentifyRelease(localRelease, idOverrides, config);
-
-                if (cueSheetInfos != null && localRelease.IsSingleFileRelease)
-                {
-                    var addedMbTracks = new List<Track>();
-                    localRelease.LocalTracks.ForEach(localTrack =>
-                    {
-                        var cueSheetFindResult = cueSheetInfos.Find(x => x.IsForMediaFile(localTrack.Path));
-                        var cueSheet = cueSheetFindResult?.CueSheet;
-                        if (cueSheet == null)
-                        {
-                            return;
-                        }
-
-                        localTrack.Tracks.Clear();
-                        localRelease.AlbumRelease.Tracks.Value.ForEach(mbTrack =>
-                        {
-                            cueSheet.Files[0].Tracks.ForEach(cueTrack =>
-                            {
-                                if (!string.Equals(cueTrack.Title, mbTrack.Title, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    return;
-                                }
-
-                                if (addedMbTracks.Contains(mbTrack))
-                                {
-                                    return;
-                                }
-
-                                mbTrack.IsSingleFileRelease = true;
-                                localTrack.Tracks.Add(mbTrack);
-                                addedMbTracks.Add(mbTrack);
-                            });
-                        });
-                    });
-                }
             }
 
             watch.Stop();

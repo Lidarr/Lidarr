@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using DryIoc.ImTools;
@@ -22,8 +21,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
     public interface IMakeImportDecision
     {
         List<ImportDecision<LocalTrack>> GetImportDecisions(List<IFileInfo> musicFiles, IdentificationOverrides idOverrides, ImportDecisionMakerInfo itemInfo, ImportDecisionMakerConfig config, List<CueSheetInfo> cueSheetInfos = null);
-        List<ImportDecision<LocalTrack>> GetImportDecisions(List<CueSheetInfo> cueSheetInfos, ImportDecisionMakerInfo itemInfo, ImportDecisionMakerConfig config);
-        CueSheetInfo GetCueSheetInfo(IFileInfo cueFile, List<IFileInfo> musicFiles);
     }
 
     public class IdentificationOverrides
@@ -31,14 +28,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         public Artist Artist { get; set; }
         public Album Album { get; set; }
         public AlbumRelease AlbumRelease { get; set; }
-    }
-
-    public class CueSheetInfo
-    {
-        public List<IFileInfo> MusicFiles { get; set; } = new List<IFileInfo>();
-        public IdentificationOverrides IdOverrides { get; set; }
-        public CueSheet CueSheet { get; set; }
-        public bool IsForMediaFile(string path) => CueSheet != null && CueSheet.Files.Count > 0 && CueSheet.Files.Any(x => Path.GetFileName(path) == x.Name);
     }
 
     public class ImportDecisionMakerInfo
@@ -90,46 +79,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             _rootFolderService = rootFolderService;
             _qualityProfileService = qualityProfileService;
             _logger = logger;
-        }
-
-        public CueSheetInfo GetCueSheetInfo(IFileInfo cueFile, List<IFileInfo> musicFiles)
-        {
-            var cueSheetInfo = new CueSheetInfo();
-            var cueSheet = new CueSheet(cueFile);
-            if (cueSheet == null)
-            {
-                return cueSheetInfo;
-            }
-
-            cueSheetInfo.CueSheet = cueSheet;
-            cueSheetInfo.IdOverrides = new IdentificationOverrides();
-
-            Artist artistFromCue = null;
-            if (!cueSheet.Performer.Empty())
-            {
-                artistFromCue = _parsingService.GetArtist(cueSheet.Performer);
-                if (artistFromCue != null)
-                {
-                    cueSheetInfo.IdOverrides.Artist = artistFromCue;
-                }
-            }
-
-            var parsedAlbumInfo = new ParsedAlbumInfo
-            {
-                AlbumTitle = cueSheet.Title,
-                ArtistName = artistFromCue.Name,
-                ReleaseDate = cueSheet.Date,
-            };
-
-            var albumsFromCue = _parsingService.GetAlbums(parsedAlbumInfo, artistFromCue);
-            if (albumsFromCue != null && albumsFromCue.Count > 0)
-            {
-                cueSheetInfo.IdOverrides.Album = albumsFromCue[0];
-            }
-
-            cueSheetInfo.MusicFiles = musicFiles.Where(musicFile => cueSheet.Files.Any(musicFileFromCue => musicFileFromCue.Name == musicFile.Name)).ToList();
-
-            return cueSheetInfo;
         }
 
         public Tuple<List<LocalTrack>, List<ImportDecision<LocalTrack>>> GetLocalTracks(List<IFileInfo> musicFiles, DownloadClientItem downloadClientItem, ParsedAlbumInfo folderInfo, FilterFilesType filter)
@@ -279,17 +228,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                         }
                     }
                 }
-            }
-
-            return decisions;
-        }
-
-        public List<ImportDecision<LocalTrack>> GetImportDecisions(List<CueSheetInfo> cueSheetInfos, ImportDecisionMakerInfo itemInfo, ImportDecisionMakerConfig config)
-        {
-            var decisions = new List<ImportDecision<LocalTrack>>();
-            foreach (var cueSheetInfo in cueSheetInfos)
-            {
-                decisions.AddRange(GetImportDecisions(cueSheetInfo.MusicFiles, cueSheetInfo.IdOverrides, itemInfo, config, cueSheetInfos));
             }
 
             return decisions;
