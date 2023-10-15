@@ -14,7 +14,7 @@ function ArtistInteractiveSearchModal(props) {
   return (
     <Modal
       isOpen={isOpen}
-      size={sizes.EXTRA_LARGE}
+      size={sizes.EXTRA_EXTRA_LARGE}
       closeOnBackgroundClick={false}
       onModalClose={onModalClose}
     >
