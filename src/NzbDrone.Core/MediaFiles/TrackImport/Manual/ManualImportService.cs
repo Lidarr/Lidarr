@@ -186,9 +186,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             };
 
             var decisions = _cueSheetService.GetImportDecisions(ref audioFiles, itemInfo, config);
-            if (audioFiles.Count > 0)
+            if (!audioFiles.Empty())
             {
-                decisions.AddRange(_importDecisionMaker.GetImportDecisions(audioFiles, idOverrides, itemInfo, config, cueSheetInfos));
+                decisions.AddRange(_importDecisionMaker.GetImportDecisions(audioFiles, idOverrides, itemInfo, config));
             }
 
             // paths will be different for new and old files which is why we need to map separately

@@ -73,7 +73,9 @@ namespace NzbDrone.Core.MediaFiles
                     audioFilesForCues.AddRange(cueSheetInfo.MusicFiles);
                 }
 
-                decisions.AddRange(_importDecisionMaker.GetImportDecisions(audioFilesForCues, cueSheetInfoGroup.First().IdOverrides, itemInfo, config, cueSheetInfos));
+                var itemInfoWithCueSheetInfos = itemInfo;
+                itemInfoWithCueSheetInfos.CueSheetInfos = cueSheetInfoGroup.ToList();
+                decisions.AddRange(_importDecisionMaker.GetImportDecisions(audioFilesForCues, cueSheetInfoGroup.First().IdOverrides, itemInfoWithCueSheetInfos, config));
 
                 foreach (var cueSheetInfo in cueSheetInfos)
                 {
@@ -124,7 +126,8 @@ namespace NzbDrone.Core.MediaFiles
                     return;
                 }
 
-                decision.Item.Tracks = tracksFromRelease.Where(trackFromRelease => !addedTracks.Contains(trackFromRelease) && tracksFromCueSheet.Any(trackFromCueSheet => string.Equals(trackFromCueSheet.Title, trackFromRelease.Title, StringComparison.InvariantCultureIgnoreCase))).ToList();
+                // TODO diacritics could cause false positives here
+                decision.Item.Tracks = tracksFromRelease.Where(trackFromRelease => !addedTracks.Contains(trackFromRelease) && tracksFromCueSheet.Any(trackFromCueSheet => string.Equals(trackFromCueSheet.Title, trackFromRelease.Title, StringComparison.OrdinalIgnoreCase))).ToList();
                 addedTracks.AddRange(decision.Item.Tracks);
             });
 
@@ -314,7 +317,7 @@ namespace NzbDrone.Core.MediaFiles
             var parsedAlbumInfo = new ParsedAlbumInfo
             {
                 AlbumTitle = cueSheet.Title,
-                ArtistName = artistFromCue.Name,
+                ArtistName = artistFromCue?.Name,
                 ReleaseDate = cueSheet.Date,
             };
 

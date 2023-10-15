@@ -20,7 +20,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 {
     public interface IMakeImportDecision
     {
-        List<ImportDecision<LocalTrack>> GetImportDecisions(List<IFileInfo> musicFiles, IdentificationOverrides idOverrides, ImportDecisionMakerInfo itemInfo, ImportDecisionMakerConfig config, List<CueSheetInfo> cueSheetInfos = null);
+        List<ImportDecision<LocalTrack>> GetImportDecisions(List<IFileInfo> musicFiles, IdentificationOverrides idOverrides, ImportDecisionMakerInfo itemInfo, ImportDecisionMakerConfig config);
     }
 
     public class IdentificationOverrides
@@ -34,6 +34,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
     {
         public DownloadClientItem DownloadClientItem { get; set; }
         public ParsedAlbumInfo ParsedAlbumInfo { get; set; }
+        public List<CueSheetInfo> CueSheetInfos { get; set; } = new List<CueSheetInfo>();
     }
 
     public class ImportDecisionMakerConfig
@@ -144,7 +145,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             return Tuple.Create(localTracks, decisions);
         }
 
-        public List<ImportDecision<LocalTrack>> GetImportDecisions(List<IFileInfo> musicFiles, IdentificationOverrides idOverrides, ImportDecisionMakerInfo itemInfo, ImportDecisionMakerConfig config, List<CueSheetInfo> cueSheetInfos)
+        public List<ImportDecision<LocalTrack>> GetImportDecisions(List<IFileInfo> musicFiles, IdentificationOverrides idOverrides, ImportDecisionMakerInfo itemInfo, ImportDecisionMakerConfig config)
         {
             idOverrides ??= new IdentificationOverrides();
             itemInfo ??= new ImportDecisionMakerInfo();
@@ -154,11 +155,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             var decisions = trackData.Item2;
 
             localTracks.ForEach(x => x.ExistingFile = !config.NewDownload);
-            if (cueSheetInfos != null)
+            if (!itemInfo.CueSheetInfos.Empty())
             {
                 localTracks.ForEach(localTrack =>
                 {
-                    var cueSheetFindResult = cueSheetInfos.Find(x => x.IsForMediaFile(localTrack.Path));
+                    var cueSheetFindResult = itemInfo.CueSheetInfos.Find(x => x.IsForMediaFile(localTrack.Path));
                     var cueSheet = cueSheetFindResult?.CueSheet;
                     if (cueSheet != null)
                     {
@@ -186,7 +187,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 });
             }
 
-            var releases = _identificationService.Identify(localTracks, idOverrides, config, cueSheetInfos);
+            var releases = _identificationService.Identify(localTracks, idOverrides, config);
 
             var albums = releases.GroupBy(x => x.AlbumRelease?.Album?.Value.ForeignAlbumId);
 

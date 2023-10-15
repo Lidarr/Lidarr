@@ -17,7 +17,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 {
     public interface IIdentificationService
     {
-        List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, IdentificationOverrides idOverrides, ImportDecisionMakerConfig config, List<CueSheetInfo> cueSheetInfos = null);
+        List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, IdentificationOverrides idOverrides, ImportDecisionMakerConfig config);
     }
 
     public class IdentificationService : IIdentificationService
@@ -114,7 +114,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             return releases;
         }
 
-        public List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, IdentificationOverrides idOverrides, ImportDecisionMakerConfig config, List<CueSheetInfo> cueSheetInfos = null)
+        public List<LocalAlbumRelease> Identify(List<LocalTrack> localTracks, IdentificationOverrides idOverrides, ImportDecisionMakerConfig config)
         {
             // 1 group localTracks so that we think they represent a single release
             // 2 get candidates given specified artist, album and release.  Candidates can include extra files already on disk.
