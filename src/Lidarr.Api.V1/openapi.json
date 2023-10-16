@@ -1061,7 +1061,7 @@
             }
           },
           {
-            "name": "tagList",
+            "name": "tags",
             "in": "query",
             "schema": {
               "type": "string",
@@ -11243,6 +11243,10 @@
             "nullable": true
           },
           "artistName": {
+            "type": "string",
+            "nullable": true
+          },
+          "albumType": {
             "type": "string",
             "nullable": true
           },
