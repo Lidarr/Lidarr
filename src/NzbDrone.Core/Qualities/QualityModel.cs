@@ -13,6 +13,9 @@ namespace NzbDrone.Core.Qualities
         [JsonIgnore]
         public QualityDetectionSource QualityDetectionSource { get; set; }
 
+        [JsonIgnore]
+        public QualityDetectionSource RevisionDetectionSource { get; set; }
+
         public QualityModel()
             : this(Quality.Unknown, new Revision())
         {

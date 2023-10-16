@@ -307,13 +307,16 @@ namespace NzbDrone.Core.Test.ParserTests
             QualityParser.ParseCodec(null, null).Should().Be(Codec.Unknown);
         }
 
-        [TestCase("Artist Title - Album Title 2017 REPACK FLAC aAF", true)]
-        [TestCase("Artist Title - Album Title 2017 RERIP FLAC aAF", true)]
-        [TestCase("Artist Title - Album Title 2017 PROPER FLAC aAF", false)]
-        public void should_be_able_to_parse_repack(string title, bool isRepack)
+        [TestCase("Artist Title - Album Title 2017 REPACK FLAC aAF", true, 2)]
+        [TestCase("Artist.Title-Album.Title.2017.REPACK.FLAC-aAF", true, 2)]
+        [TestCase("Artist.Title-Album.Title.2017.REPACK2.FLAC-aAF", true, 3)]
+        [TestCase("Artist Title - Album Title 2017 RERIP FLAC aAF", true, 2)]
+        [TestCase("Artist Title - Album Title 2017 RERIP2 FLAC aAF", true, 3)]
+        [TestCase("Artist Title - Album Title 2017 PROPER FLAC aAF", false, 2)]
+        public void should_be_able_to_parse_repack(string title, bool isRepack, int version)
         {
             var result = QualityParser.ParseQuality(title, null, 0);
-            result.Revision.Version.Should().Be(2);
+            result.Revision.Version.Should().Be(version);
             result.Revision.IsRepack.Should().Be(isRepack);
         }
 
