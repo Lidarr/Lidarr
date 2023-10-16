@@ -129,7 +129,7 @@
   "BypassIfAboveCustomFormatScore": "Bypass if Above Custom Format Score",
   "BypassIfAboveCustomFormatScoreHelpText": "Enable bypass when release has a score higher than the configured minimum custom format score",
   "BypassIfHighestQuality": "Bypass if Highest Quality",
-  "BypassIfHighestQualityHelpText": "Bypass delay when release has the highest enabled quality in the quality profile",
+  "BypassIfHighestQualityHelpText": "Bypass delay when release has the highest enabled quality in the quality profile with the preferred protocol",
   "BypassProxyForLocalAddresses": "Bypass Proxy for Local Addresses",
   "Calendar": "Calendar",
   "CalendarWeekColumnHeaderHelpText": "Shown above each column when week is the active view",
