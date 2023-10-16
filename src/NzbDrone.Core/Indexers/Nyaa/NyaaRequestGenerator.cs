@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -13,8 +14,8 @@ namespace NzbDrone.Core.Indexers.Nyaa
 
         public NyaaRequestGenerator()
         {
-            MaxPages = 30;
-            PageSize = 100;
+            MaxPages = 3;
+            PageSize = 75;
         }
 
         public virtual IndexerPageableRequestChain GetRecentRequests()
@@ -28,12 +29,25 @@ namespace NzbDrone.Core.Indexers.Nyaa
 
         public virtual IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
         {
-            throw new System.NotImplementedException();
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            var artistQuery = searchCriteria.CleanArtistQuery.Replace("+", " ").Trim();
+            var albumQuery = searchCriteria.CleanAlbumQuery.Replace("+", " ").Trim();
+
+            pageableRequests.Add(GetPagedRequests(MaxPages, PrepareQuery($"{artistQuery} {albumQuery}")));
+
+            return pageableRequests;
         }
 
         public virtual IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
         {
-            throw new System.NotImplementedException();
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            var artistQuery = searchCriteria.CleanArtistQuery.Replace("+", " ").Trim();
+
+            pageableRequests.Add(GetPagedRequests(MaxPages, PrepareQuery(artistQuery)));
+
+            return pageableRequests;
         }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(int maxPages, string term)
@@ -62,7 +76,7 @@ namespace NzbDrone.Core.Indexers.Nyaa
 
         private string PrepareQuery(string query)
         {
-            return query.Replace(' ', '+');
+            return Uri.EscapeDataString(query);
         }
     }
 }
