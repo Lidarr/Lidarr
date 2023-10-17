@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Cache;
@@ -18,13 +19,16 @@ namespace NzbDrone.Core.Localization
     public interface ILocalizationService
     {
         Dictionary<string, string> GetLocalizationDictionary();
+
         string GetLocalizedString(string phrase);
-        string GetLocalizedString(string phrase, string language);
+        string GetLocalizedString(string phrase, Dictionary<string, object> tokens);
     }
 
     public class LocalizationService : ILocalizationService, IHandleAsync<ConfigSavedEvent>
     {
         private const string DefaultCulture = "en";
+        private static readonly Regex TokenRegex = new Regex(@"(?:\{)(?<token>[a-z0-9]+)(?:\})",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         private readonly ICached<Dictionary<string, string>> _cache;
 
@@ -52,22 +56,17 @@ namespace NzbDrone.Core.Localization
 
         public string GetLocalizedString(string phrase)
         {
-            var language = GetSetLanguageFileName();
-
-            return GetLocalizedString(phrase, language);
+            return GetLocalizedString(phrase, new Dictionary<string, object>());
         }
 
-        public string GetLocalizedString(string phrase, string language)
+        public string GetLocalizedString(string phrase, Dictionary<string, object> tokens)
         {
             if (string.IsNullOrEmpty(phrase))
             {
                 throw new ArgumentNullException(nameof(phrase));
             }
 
-            if (language.IsNullOrWhiteSpace())
-            {
-                language = GetSetLanguageFileName();
-            }
+            var language = GetSetLanguageFileName();
 
             if (language == null)
             {
@@ -78,10 +77,24 @@ namespace NzbDrone.Core.Localization
 
             if (dictionary.TryGetValue(phrase, out var value))
             {
-                return value;
+                return ReplaceTokens(value, tokens);
             }
 
             return phrase;
+        }
+
+        private string ReplaceTokens(string input, Dictionary<string, object> tokens)
+        {
+            tokens.TryAdd("appName", "Lidarr");
+
+            return TokenRegex.Replace(input, (match) =>
+            {
+                var tokenName = match.Groups["token"].Value;
+
+                tokens.TryGetValue(tokenName, out var token);
+
+                return token?.ToString() ?? $"{{{tokenName}}}";
+            });
         }
 
         private string GetSetLanguageFileName()
