@@ -338,4 +338,8 @@ Queue.propTypes = {
   onRemoveSelectedPress: PropTypes.func.isRequired
 };
 
+Queue.defaultProps = {
+  count: 0
+};
+
 export default Queue;
