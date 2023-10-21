@@ -18,7 +18,6 @@ using NzbDrone.Core.Profiles.Qualities;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Queue;
 using NzbDrone.SignalR;
-using Sentry.Protocol;
 
 namespace Lidarr.Api.V1.Queue
 {
