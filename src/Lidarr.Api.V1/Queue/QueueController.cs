@@ -7,6 +7,7 @@ using Lidarr.Http.REST;
 using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Blocklisting;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.Download;
@@ -17,6 +18,7 @@ using NzbDrone.Core.Profiles.Qualities;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Queue;
 using NzbDrone.SignalR;
+using Sentry.Protocol;
 
 namespace Lidarr.Api.V1.Queue
 {
@@ -32,6 +34,7 @@ namespace Lidarr.Api.V1.Queue
         private readonly IFailedDownloadService _failedDownloadService;
         private readonly IIgnoredDownloadService _ignoredDownloadService;
         private readonly IProvideDownloadClient _downloadClientProvider;
+        private readonly IBlocklistService _blocklistService;
 
         public QueueController(IBroadcastSignalRMessage broadcastSignalRMessage,
                            IQueueService queueService,
@@ -40,7 +43,8 @@ namespace Lidarr.Api.V1.Queue
                            ITrackedDownloadService trackedDownloadService,
                            IFailedDownloadService failedDownloadService,
                            IIgnoredDownloadService ignoredDownloadService,
-                           IProvideDownloadClient downloadClientProvider)
+                           IProvideDownloadClient downloadClientProvider,
+                           IBlocklistService blocklistService)
             : base(broadcastSignalRMessage)
         {
             _queueService = queueService;
@@ -49,6 +53,7 @@ namespace Lidarr.Api.V1.Queue
             _failedDownloadService = failedDownloadService;
             _ignoredDownloadService = ignoredDownloadService;
             _downloadClientProvider = downloadClientProvider;
+            _blocklistService = blocklistService;
 
             _qualityComparer = new QualityModelComparer(qualityProfileService.GetDefaultProfile(string.Empty));
         }
@@ -62,27 +67,60 @@ namespace Lidarr.Api.V1.Queue
         [RestDeleteById]
         public void RemoveAction(int id, bool removeFromClient = true, bool blocklist = false, bool skipRedownload = false)
         {
-            var trackedDownload = Remove(id, removeFromClient, blocklist, skipRedownload);
+            var pendingRelease = _pendingReleaseService.FindPendingQueueItem(id);
 
-            if (trackedDownload != null)
+            if (pendingRelease != null)
             {
-                _trackedDownloadService.StopTracking(trackedDownload.DownloadItem.DownloadId);
+                Remove(pendingRelease);
+
+                return;
             }
+
+            var trackedDownload = GetTrackedDownload(id);
+
+            if (trackedDownload == null)
+            {
+                throw new NotFoundException();
+            }
+
+            Remove(trackedDownload, removeFromClient, blocklist, skipRedownload);
+            _trackedDownloadService.StopTracking(trackedDownload.DownloadItem.DownloadId);
         }
 
         [HttpDelete("bulk")]
         public object RemoveMany([FromBody] QueueBulkResource resource, [FromQuery] bool removeFromClient = true, [FromQuery] bool blocklist = false, [FromQuery] bool skipRedownload = false)
         {
             var trackedDownloadIds = new List<string>();
+            var pendingToRemove = new List<NzbDrone.Core.Queue.Queue>();
+            var trackedToRemove = new List<TrackedDownload>();
 
             foreach (var id in resource.Ids)
             {
-                var trackedDownload = Remove(id, removeFromClient, blocklist, skipRedownload);
+                var pendingRelease = _pendingReleaseService.FindPendingQueueItem(id);
+
+                if (pendingRelease != null)
+                {
+                    pendingToRemove.Add(pendingRelease);
+                    continue;
+                }
+
+                var trackedDownload = GetTrackedDownload(id);
 
                 if (trackedDownload != null)
                 {
-                    trackedDownloadIds.Add(trackedDownload.DownloadItem.DownloadId);
+                    trackedToRemove.Add(trackedDownload);
                 }
+            }
+
+            foreach (var pendingRelease in pendingToRemove.DistinctBy(p => p.Id))
+            {
+                Remove(pendingRelease);
+            }
+
+            foreach (var trackedDownload in trackedToRemove.DistinctBy(t => t.DownloadItem.DownloadId))
+            {
+                Remove(trackedDownload, removeFromClient, blocklist, skipRedownload);
+                trackedDownloadIds.Add(trackedDownload.DownloadItem.DownloadId);
             }
 
             _trackedDownloadService.StopTracking(trackedDownloadIds);
@@ -195,24 +233,14 @@ namespace Lidarr.Api.V1.Queue
             }
         }
 
-        private TrackedDownload Remove(int id, bool removeFromClient, bool blocklist, bool skipRedownload)
+        private void Remove(NzbDrone.Core.Queue.Queue pendingRelease)
         {
-            var pendingRelease = _pendingReleaseService.FindPendingQueueItem(id);
+            _blocklistService.Block(pendingRelease.RemoteAlbum, "Pending release manually blocklisted");
+            _pendingReleaseService.RemovePendingQueueItems(pendingRelease.Id);
+        }
 
-            if (pendingRelease != null)
-            {
-                _pendingReleaseService.RemovePendingQueueItems(pendingRelease.Id);
-
-                return null;
-            }
-
-            var trackedDownload = GetTrackedDownload(id);
-
-            if (trackedDownload == null)
-            {
-                throw new NotFoundException();
-            }
-
+        private TrackedDownload Remove(TrackedDownload trackedDownload, bool removeFromClient, bool blocklist, bool skipRedownload)
+        {
             if (removeFromClient)
             {
                 var downloadClient = _downloadClientProvider.Get(trackedDownload.DownloadClient);

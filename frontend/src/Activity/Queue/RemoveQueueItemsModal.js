@@ -73,7 +73,8 @@ class RemoveQueueItemsModal extends Component {
     const {
       isOpen,
       selectedCount,
-      canIgnore
+      canIgnore,
+      allPending
     } = this.props;
 
     const { removeFromClient, blocklist, skipRedownload } = this.state;
@@ -96,20 +97,22 @@ class RemoveQueueItemsModal extends Component {
               {selectedCount > 1 ? translate('RemoveSelectedItemsQueueMessageText', [selectedCount]) : translate('RemoveSelectedItemQueueMessageText')}
             </div>
 
-            <FormGroup>
-              <FormLabel>
-                {translate('RemoveFromDownloadClient')}
-              </FormLabel>
+            {
+              allPending ?
+                null :
+                <FormGroup>
+                  <FormLabel>{translate('RemoveFromDownloadClient')}</FormLabel>
 
-              <FormInputGroup
-                type={inputTypes.CHECK}
-                name="removeFromClient"
-                value={removeFromClient}
-                helpTextWarning={translate('RemoveFromDownloadClientHelpTextWarning')}
-                isDisabled={!canIgnore}
-                onChange={this.onRemoveFromClientChange}
-              />
-            </FormGroup>
+                  <FormInputGroup
+                    type={inputTypes.CHECK}
+                    name="removeFromClient"
+                    value={removeFromClient}
+                    helpTextWarning={translate('RemoveFromDownloadClientHelpTextWarning')}
+                    isDisabled={!canIgnore}
+                    onChange={this.onRemoveFromClientChange}
+                  />
+                </FormGroup>
+            }
 
             <FormGroup>
               <FormLabel>
@@ -165,6 +168,7 @@ RemoveQueueItemsModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   selectedCount: PropTypes.number.isRequired,
   canIgnore: PropTypes.bool.isRequired,
+  allPending: PropTypes.bool.isRequired,
   onRemovePress: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired
 };

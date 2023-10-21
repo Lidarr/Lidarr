@@ -16,6 +16,7 @@ namespace NzbDrone.Core.Blocklisting
     {
         bool Blocklisted(int artistId, ReleaseInfo release);
         PagingSpec<Blocklist> Paged(PagingSpec<Blocklist> pagingSpec);
+        void Block(RemoteAlbum remoteAlbum, string message);
         void Delete(int id);
         void Delete(List<int> ids);
     }
@@ -64,6 +65,30 @@ namespace NzbDrone.Core.Blocklisting
         public PagingSpec<Blocklist> Paged(PagingSpec<Blocklist> pagingSpec)
         {
             return _blocklistRepository.GetPaged(pagingSpec);
+        }
+
+        public void Block(RemoteAlbum remoteAlbum, string message)
+        {
+            var blocklist = new Blocklist
+            {
+                ArtistId = remoteAlbum.Artist.Id,
+                AlbumIds = remoteAlbum.Albums.Select(e => e.Id).ToList(),
+                SourceTitle = remoteAlbum.Release.Title,
+                Quality = remoteAlbum.ParsedAlbumInfo.Quality,
+                Date = DateTime.UtcNow,
+                PublishedDate = remoteAlbum.Release.PublishDate,
+                Size = remoteAlbum.Release.Size,
+                Indexer = remoteAlbum.Release.Indexer,
+                Protocol = remoteAlbum.Release.DownloadProtocol,
+                Message = message,
+            };
+
+            if (remoteAlbum.Release is TorrentInfo torrentRelease)
+            {
+                blocklist.TorrentInfoHash = torrentRelease.InfoHash;
+            }
+
+            _blocklistRepository.Insert(blocklist);
         }
 
         public void Delete(int id)

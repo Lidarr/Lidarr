@@ -137,13 +137,6 @@ namespace NzbDrone.Core.Download.Pending
             }
         }
 
-        private ILookup<int, PendingRelease> CreateAlbumLookup(IEnumerable<PendingRelease> alreadyPending)
-        {
-            return alreadyPending.SelectMany(v => v.RemoteAlbum.Albums
-                    .Select(d => new { Album = d, PendingRelease = v }))
-                .ToLookup(v => v.Album.Id, v => v.PendingRelease);
-        }
-
         public List<ReleaseInfo> GetPending()
         {
             var releases = _repository.All().Select(p =>
@@ -161,13 +154,6 @@ namespace NzbDrone.Core.Download.Pending
             }
 
             return releases;
-        }
-
-        private List<ReleaseInfo> FilterBlockedIndexers(List<ReleaseInfo> releases)
-        {
-            var blockedIndexers = new HashSet<int>(_indexerStatusService.GetBlockedProviders().Select(v => v.ProviderId));
-
-            return releases.Where(release => !blockedIndexers.Contains(release.IndexerId)).ToList();
         }
 
         public List<RemoteAlbum> GetPendingRemoteAlbums(int artistId)
@@ -263,6 +249,20 @@ namespace NzbDrone.Core.Download.Pending
                                  .MaxBy(p => p.Release.AgeHours);
         }
 
+        private ILookup<int, PendingRelease> CreateAlbumLookup(IEnumerable<PendingRelease> alreadyPending)
+        {
+            return alreadyPending.SelectMany(v => v.RemoteAlbum.Albums
+                    .Select(d => new { Album = d, PendingRelease = v }))
+                .ToLookup(v => v.Album.Id, v => v.PendingRelease);
+        }
+
+        private List<ReleaseInfo> FilterBlockedIndexers(List<ReleaseInfo> releases)
+        {
+            var blockedIndexers = new HashSet<int>(_indexerStatusService.GetBlockedProviders().Select(v => v.ProviderId));
+
+            return releases.Where(release => !blockedIndexers.Contains(release.IndexerId)).ToList();
+        }
+
         private List<PendingRelease> GetPendingReleases()
         {
             return IncludeRemoteAlbums(_repository.All().ToList());
@@ -352,13 +352,6 @@ namespace NzbDrone.Core.Download.Pending
         {
             _repository.Delete(pendingRelease);
             _eventAggregator.PublishEvent(new PendingReleasesUpdatedEvent());
-        }
-
-        private static Func<PendingRelease, bool> MatchingReleasePredicate(ReleaseInfo release)
-        {
-            return p => p.Title == release.Title &&
-                   p.Release.PublishDate == release.PublishDate &&
-                   p.Release.Indexer == release.Indexer;
         }
 
         private int GetDelay(RemoteAlbum remoteAlbum)
@@ -454,6 +447,13 @@ namespace NzbDrone.Core.Download.Pending
         public void Handle(RssSyncCompleteEvent message)
         {
             RemoveRejected(message.ProcessedDecisions.Rejected);
+        }
+
+        private static Func<PendingRelease, bool> MatchingReleasePredicate(ReleaseInfo release)
+        {
+            return p => p.Title == release.Title &&
+                   p.Release.PublishDate == release.PublishDate &&
+                   p.Release.Indexer == release.Indexer;
         }
     }
 }
