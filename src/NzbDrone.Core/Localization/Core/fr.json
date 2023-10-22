@@ -1040,7 +1040,7 @@
     "RootFolderPathHelpText": "Les éléments de la liste du dossier racine seront ajoutés à",
     "SecondaryAlbumTypes": "Types d'albums secondaires",
     "ShowNextAlbumHelpText": "Afficher l'album suivant sous l'affiche",
-    "BypassIfHighestQualityHelpText": "Délai de contournement lorsque la version a la qualité activée la plus élevée dans le profil de qualité",
+    "BypassIfHighestQualityHelpText": "Ignore le délai lorsque la version a la qualité active la plus élevée dans le profil de qualité avec le protocole préféré",
     "ExpandOtherByDefaultHelpText": "Autre",
     "FutureAlbums": "Futurs albums",
     "MusicbrainzId": "Identifiant Musicbrainz",
