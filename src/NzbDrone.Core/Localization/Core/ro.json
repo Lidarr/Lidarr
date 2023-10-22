@@ -340,7 +340,7 @@
     "SourcePath": "Calea sursei",
     "SSLCertPassword": "Parola SSL Cert",
     "SslCertPasswordHelpText": "Parola pentru fișierul pfx",
-    "TimeFormat": "Format de timp",
+    "TimeFormat": "Format ora",
     "TorrentDelayHelpText": "Întârziați în câteva minute pentru a aștepta înainte de a apuca un torent",
     "Tracks": "Urmă",
     "Type": "Tip",
@@ -684,5 +684,6 @@
     "AddIndexerImplementation": "Adăugați Indexator - {implementationName}",
     "AddConnectionImplementation": "Adăugați conexiune - {implementationName}",
     "Album": "Album",
-    "AddConnection": "Adăugați conexiune"
+    "AddConnection": "Adăugați conexiune",
+    "AppUpdated": "{appName} actualizat"
 }
