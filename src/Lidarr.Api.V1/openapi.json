@@ -8828,11 +8828,19 @@
         },
         "additionalProperties": false
       },
+      "AuthenticationRequiredType": {
+        "enum": [
+          "enabled",
+          "disabledForLocalAddresses"
+        ],
+        "type": "string"
+      },
       "AuthenticationType": {
         "enum": [
           "none",
           "basic",
-          "forms"
+          "forms",
+          "external"
         ],
         "type": "string"
       },
@@ -9583,6 +9591,9 @@
             "type": "string",
             "nullable": true
           },
+          "privacy": {
+            "$ref": "#/components/schemas/PrivacyLevel"
+          },
           "placeholder": {
             "type": "string",
             "nullable": true
@@ -9770,6 +9781,9 @@
           },
           "authenticationMethod": {
             "$ref": "#/components/schemas/AuthenticationType"
+          },
+          "authenticationRequired": {
+            "$ref": "#/components/schemas/AuthenticationRequiredType"
           },
           "analyticsEnabled": {
             "type": "boolean"
@@ -11410,6 +11424,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "PrivacyLevel": {
+        "enum": [
+          "normal",
+          "password",
+          "apiKey",
+          "userName"
+        ],
+        "type": "string"
       },
       "ProfileFormatItem": {
         "type": "object",
