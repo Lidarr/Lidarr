@@ -791,7 +791,6 @@
     "Loading": "Cargando",
     "Priority": "Prioridad",
     "RecentChanges": "Cambios recientes",
-    "TrackFileCountTrackCountTotalTotalTrackCountInterp": "{0} / {1} (Total: {2})",
     "WriteMetadataToAudioFiles": "Escribir metadatos en archivos de audio",
     "ExpandAlbumByDefaultHelpText": "álbum",
     "AutomaticUpdatesDisabledDocker": "Las actualizaciones automáticas no son compatibles directamente al usar el mecanismo de actualización de Docker. Deberás actualizar la imagen del contenedor fuera de {appName} o utilizar un script",

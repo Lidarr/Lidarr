@@ -795,7 +795,6 @@
     "TotalTrackCountTracksTotalTrackFileCountTracksWithFilesInterp": "{0} κομμάτια συνολικά. {1} κομμάτια με αρχεία.",
     "TrackCount": "Καταμέτρηση κομματιών",
     "TrackFileCounttotalTrackCountTracksDownloadedInterp": "Λήφθηκαν {0}/{1} κομμάτια",
-    "TrackFileCountTrackCountTotalTotalTrackCountInterp": "{0} / {1} (Σύνολο: {2})",
     "TrackFilesCountMessage": "Δεν υπάρχουν αρχεία κομματιών",
     "EnableRssHelpText": "Θα χρησιμοποιείται όταν το Lidarr αναζητά περιοδικά εκδόσεις μέσω RSS Sync",
     "EpisodeDoesNotHaveAnAbsoluteEpisodeNumber": "Το επεισόδιο δεν έχει απόλυτο αριθμό επεισοδίου",

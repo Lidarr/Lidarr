@@ -436,7 +436,6 @@
     "TotalFileSize": "Gesamte Dateigröße",
     "Track": "Trace",
     "TrackFileCounttotalTrackCountTracksDownloadedInterp": "{0}/{1} Bücher heruntergeladen",
-    "TrackFileCountTrackCountTotalTotalTrackCountInterp": "{0} / {1} (Gesamt: {2})",
     "TrackMissingFromDisk": "Buch fehlt auf der Festplatte",
     "Type": "Typ",
     "UISettings": "Benutzeroberflächen Einstellungen",
