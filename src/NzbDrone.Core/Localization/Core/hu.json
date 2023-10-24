@@ -516,7 +516,6 @@
     "TrackArtist": "Dal előadója",
     "TrackDownloaded": "Dal letöltve",
     "TrackFileCounttotalTrackCountTracksDownloadedInterp": "{0}/{1} dal letöltve",
-    "TrackFileCountTrackCountTotalTotalTrackCountInterp": "{0} / {1} (összesen: {2})",
     "TrackFilesCountMessage": "Nincsenek dalfájlok",
     "TrackMissingFromDisk": "Hiányzik dal a lemezről",
     "TrackNaming": "Dal elnevezése",

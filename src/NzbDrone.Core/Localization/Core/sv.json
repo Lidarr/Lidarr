@@ -292,7 +292,6 @@
     "DeleteRootFolderMessageText": "Är du säker på att du vill ta bort indexeraren '{0}'?",
     "DeleteTrackFileMessageText": "Är du säker på att du vill radera {0}?",
     "ResetAPIKeyMessageText": "Är du säker på att du vill nollställa din API-nyckel?",
-    "TrackFileCountTrackCountTotalTotalTrackCountInterp": "{0} / {1} (Totalt: {2})",
     "MaintenanceRelease": "Underhållsutgåva",
     "Usenet": "Usenet",
     "MaximumSizeHelpText": "Maximal storlek för att en utgåva ska fångas i MB. Ställ in på noll för att ställa in på obegränsad.",

@@ -684,7 +684,6 @@
     "Release": " Julkaisu",
     "ShouldMonitorExisting": "Valvo olemassa olevia albumeita",
     "TrackFileCounttotalTrackCountTracksDownloadedInterp": "{0}/{1} kappaletta ladattu",
-    "TrackFileCountTrackCountTotalTotalTrackCountInterp": "{0}/{1} (yhteensä: {2})",
     "TrackFilesCountMessage": "Kappaletiedostoja ei ole",
     "TrackImported": "Kappale tuotiin",
     "TrackMissingFromDisk": "Levyltä puuttuu kappale",

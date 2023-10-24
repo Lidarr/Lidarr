@@ -519,7 +519,6 @@
     "Country": "Pays",
     "ExistingAlbumsData": "Surveiller les livres qui ne sont pas encore sortis ou partiellement",
     "FirstAlbumData": "Surveiller le premier livre. Tous les autres livres seront ignorés",
-    "TrackFileCountTrackCountTotalTotalTrackCountInterp": "{0} / {1} (Total  : {2})",
     "AddedArtistSettings": "Ajout des paramètres de l'auteur",
     "MetadataProfile": "profil de métadonnées",
     "StatusEndedContinuing": "Continuant",
