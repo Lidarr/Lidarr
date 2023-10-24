@@ -73,15 +73,13 @@ namespace Lidarr.Api.V1.Albums
 
                 foreach (var album in albums)
                 {
-                    album.Artist = artists[album.ArtistMetadataId];
-                    if (releases.TryGetValue(album.Id, out var albumReleases))
+                    if (!artists.TryGetValue(album.ArtistMetadataId, out var albumArtist))
                     {
-                        album.AlbumReleases = albumReleases;
+                        continue;
                     }
-                    else
-                    {
-                        album.AlbumReleases = new List<AlbumRelease>();
-                    }
+
+                    album.Artist = albumArtist;
+                    album.AlbumReleases = releases.TryGetValue(album.Id, out var albumReleases) ? albumReleases : new List<AlbumRelease>();
                 }
 
                 return MapToResource(albums, false);
