@@ -52,9 +52,10 @@ class AlbumStudio extends Component {
   constructor(props, context) {
     super(props, context);
 
+    this.scrollerRef = React.createRef();
+
     this.state = {
       estimatedRowSize: 100,
-      scroller: null,
       jumpBarItems: { order: [] },
       scrollIndex: null,
       jumpCount: 0,
@@ -110,13 +111,6 @@ class AlbumStudio extends Component {
       }
     }
   }
-
-  //
-  // Control
-
-  setScrollerRef = (ref) => {
-    this.setState({ scroller: ref });
-  };
 
   setJumpBarItems() {
     const {
@@ -325,7 +319,6 @@ class AlbumStudio extends Component {
       allSelected,
       allUnselected,
       estimatedRowSize,
-      scroller,
       jumpBarItems,
       scrollIndex
     } = this.state;
@@ -348,7 +341,7 @@ class AlbumStudio extends Component {
 
         <div className={styles.pageContentBodyWrapper}>
           <PageContentBody
-            registerScroller={this.setScrollerRef}
+            ref={this.scrollerRef}
             className={styles.contentBody}
             innerClassName={styles.innerContentBody}
           >
@@ -363,13 +356,16 @@ class AlbumStudio extends Component {
             }
 
             {
-              !error && isPopulated && !!items.length &&
+              !error &&
+              isPopulated &&
+              !!items.length &&
+              this.scrollerRef.current ?
                 <div className={styles.contentBodyContainer}>
                   <VirtualTable
                     items={items}
                     scrollIndex={scrollIndex}
                     columns={columns}
-                    scroller={scroller}
+                    scroller={this.scrollerRef.current}
                     isSmallScreen={isSmallScreen}
                     overscanRowCount={5}
                     rowRenderer={this.rowRenderer}
@@ -391,7 +387,8 @@ class AlbumStudio extends Component {
                     estimatedRowSize={estimatedRowSize}
                     onRecompute={this.onGridRecompute}
                   />
-                </div>
+                </div> :
+                null
             }
 
             {

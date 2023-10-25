@@ -30,7 +30,6 @@ class UnmappedFilesTable extends Component {
     this.scrollerRef = React.createRef();
 
     this.state = {
-      scroller: null,
       allSelected: false,
       allUnselected: false,
       lastToggled: null,
