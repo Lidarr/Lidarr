@@ -19,7 +19,6 @@ namespace Lidarr.Api.V1.AlbumStudio
 
         [HttpPost]
         [Consumes("application/json")]
-        [Produces("application/json")]
         public IActionResult UpdateAll([FromBody] AlbumStudioResource resource)
         {
             var artistToUpdate = _artistService.GetArtists(resource.Artist.Select(s => s.Id));
@@ -46,7 +45,7 @@ namespace Lidarr.Api.V1.AlbumStudio
                 _albumMonitoredService.SetAlbumMonitoredStatus(artist, resource.MonitoringOptions);
             }
 
-            return Accepted(resource);
+            return Accepted(new object());
         }
     }
 }
