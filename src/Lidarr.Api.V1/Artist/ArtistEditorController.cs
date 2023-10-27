@@ -95,9 +95,9 @@ namespace Lidarr.Api.V1.Artist
         [HttpDelete]
         public object DeleteArtist([FromBody] ArtistEditorResource resource)
         {
-            _artistService.DeleteArtists(resource.ArtistIds, resource.DeleteFiles);
+            _artistService.DeleteArtists(resource.ArtistIds, resource.DeleteFiles, resource.AddImportListExclusion);
 
-            return new object();
+            return new { };
         }
     }
 }
