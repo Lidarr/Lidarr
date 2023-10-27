@@ -650,7 +650,7 @@
     "IndexerRssHealthCheckNoIndexers": "Geen indexeerders beschikbaar met \"RSS Synchronisatie\" ingeschakeld, Lidarr zal niet automatisch nieuwe uitgaves ophalen",
     "IndexerStatusCheckSingleClientMessage": "Indexeerders onbeschikbaar wegens fouten: {0}",
     "RemotePathMappingCheckFilesLocalWrongOSPath": "Lokale downloadclient {0} rapporteerde bestanden in {1}, maar dit is geen geldig {2}-pad.  Controleer de instellingen van uw downloadclient.",
-    "Album": "album",
+    "Album": "Album",
     "AppDataLocationHealthCheckMessage": "Updaten zal niet mogelijk zijn om het verwijderen van AppData te voorkomen",
     "ColonReplacement": "Dubbelepunt Vervanging",
     "DownloadClientStatusCheckAllClientMessage": "Alle downloaders zijn onbeschikbaar wegens fouten",
@@ -763,5 +763,7 @@
     "AddConditionImplementation": "Voeg voorwaarde toe - {implementationName}",
     "AddConnectionImplementation": "Voeg connectie toe - {implementationName}",
     "AddDownloadClientImplementation": "Voeg Downloadclient toe - {implementationName}",
-    "AddIndexerImplementation": "Indexeerder toevoegen - {implementationName}"
+    "AddIndexerImplementation": "Indexeerder toevoegen - {implementationName}",
+    "AppUpdated": "{appName} is geüpdatet",
+    "AppUpdatedVersion": "{appName} is geüpdatet naar versie '{version}', om de laatste wijzigingen door te voeren moet je mogelijk {appName} herstarten"
 }
