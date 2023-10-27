@@ -25,71 +25,79 @@ namespace NzbDrone.Core.Music
 
         public void SetAlbumMonitoredStatus(Artist artist, MonitoringOptions monitoringOptions)
         {
-            if (monitoringOptions != null)
+            // Update the artist without changing the albums
+            if (monitoringOptions == null)
             {
-                _logger.Debug("[{0}] Setting album monitored status.", artist.Name);
-
-                var albums = _albumService.GetAlbumsByArtist(artist.Id);
-
-                var albumsWithFiles = _albumService.GetArtistAlbumsWithFiles(artist);
-
-                var albumsWithoutFiles = albums.Where(c => !albumsWithFiles.Select(e => e.Id).Contains(c.Id) && c.ReleaseDate <= DateTime.UtcNow).ToList();
-
-                var monitoredAlbums = monitoringOptions.AlbumsToMonitor;
-
-                // If specific albums are passed use those instead of the monitoring options.
-                if (monitoredAlbums.Any())
-                {
-                    ToggleAlbumsMonitoredState(albums.Where(s => monitoredAlbums.Contains(s.ForeignAlbumId)), true);
-                    ToggleAlbumsMonitoredState(albums.Where(s => !monitoredAlbums.Contains(s.ForeignAlbumId)), false);
-                }
-                else
-                {
-                    switch (monitoringOptions.Monitor)
-                    {
-                        case MonitorTypes.All:
-                            ToggleAlbumsMonitoredState(albums, true);
-                            break;
-                        case MonitorTypes.Future:
-                            _logger.Debug("Unmonitoring Albums with Files");
-                            ToggleAlbumsMonitoredState(albums.Where(e => albumsWithFiles.Select(c => c.Id).Contains(e.Id)), false);
-                            _logger.Debug("Unmonitoring Albums without Files");
-                            ToggleAlbumsMonitoredState(albums.Where(e => albumsWithoutFiles.Select(c => c.Id).Contains(e.Id)), false);
-                            break;
-                        case MonitorTypes.None:
-                            ToggleAlbumsMonitoredState(albums, false);
-                            break;
-                        case MonitorTypes.Missing:
-                            _logger.Debug("Unmonitoring Albums with Files");
-                            ToggleAlbumsMonitoredState(albums.Where(e => albumsWithFiles.Select(c => c.Id).Contains(e.Id)), false);
-                            _logger.Debug("Monitoring Albums without Files");
-                            ToggleAlbumsMonitoredState(albums.Where(e => albumsWithoutFiles.Select(c => c.Id).Contains(e.Id)), true);
-                            break;
-                        case MonitorTypes.Existing:
-                            _logger.Debug("Monitoring Albums with Files");
-                            ToggleAlbumsMonitoredState(albums.Where(e => albumsWithFiles.Select(c => c.Id).Contains(e.Id)), true);
-                            _logger.Debug("Unmonitoring Albums without Files");
-                            ToggleAlbumsMonitoredState(albums.Where(e => albumsWithoutFiles.Select(c => c.Id).Contains(e.Id)), false);
-                            break;
-                        case MonitorTypes.Latest:
-                            ToggleAlbumsMonitoredState(albums, false);
-                            ToggleAlbumsMonitoredState(albums.OrderByDescending(e => e.ReleaseDate).Take(1), true);
-                            break;
-                        case MonitorTypes.First:
-                            ToggleAlbumsMonitoredState(albums, false);
-                            ToggleAlbumsMonitoredState(albums.OrderBy(e => e.ReleaseDate).Take(1), true);
-                            break;
-                        case MonitorTypes.Unknown:
-                            // Ignoring, it's the default value
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
-
-                _albumService.UpdateMany(albums);
+                _artistService.UpdateArtist(artist);
+                return;
             }
 
+            var monitoredAlbums = monitoringOptions.AlbumsToMonitor;
+
+            if (monitoringOptions.Monitor == MonitorTypes.Unknown && monitoredAlbums is not { Count: not 0 })
+            {
+                return;
+            }
+
+            _logger.Debug("[{0}] Setting album monitored status.", artist.Name);
+
+            var albums = _albumService.GetAlbumsByArtist(artist.Id);
+
+            // If specific albums are passed use those instead of the monitoring options.
+            if (monitoredAlbums.Any())
+            {
+                ToggleAlbumsMonitoredState(albums.Where(s => monitoredAlbums.Contains(s.ForeignAlbumId)), true);
+                ToggleAlbumsMonitoredState(albums.Where(s => !monitoredAlbums.Contains(s.ForeignAlbumId)), false);
+            }
+            else
+            {
+                var albumsWithFiles = _albumService.GetArtistAlbumsWithFiles(artist);
+                var albumsWithoutFiles = albums.Where(c => !albumsWithFiles.Select(e => e.Id).Contains(c.Id) && c.ReleaseDate <= DateTime.UtcNow).ToList();
+
+                switch (monitoringOptions.Monitor)
+                {
+                    case MonitorTypes.All:
+                        _logger.Debug("Monitoring all albums");
+                        ToggleAlbumsMonitoredState(albums, true);
+                        break;
+                    case MonitorTypes.Future:
+                        _logger.Debug("Unmonitoring Albums with Files");
+                        ToggleAlbumsMonitoredState(albums.Where(e => albumsWithFiles.Select(c => c.Id).Contains(e.Id)), false);
+                        _logger.Debug("Unmonitoring Albums without Files");
+                        ToggleAlbumsMonitoredState(albums.Where(e => albumsWithoutFiles.Select(c => c.Id).Contains(e.Id)), false);
+                        break;
+                    case MonitorTypes.Missing:
+                        _logger.Debug("Unmonitoring Albums with Files");
+                        ToggleAlbumsMonitoredState(albums.Where(e => albumsWithFiles.Select(c => c.Id).Contains(e.Id)), false);
+                        _logger.Debug("Monitoring Albums without Files");
+                        ToggleAlbumsMonitoredState(albums.Where(e => albumsWithoutFiles.Select(c => c.Id).Contains(e.Id)), true);
+                        break;
+                    case MonitorTypes.Existing:
+                        _logger.Debug("Monitoring Albums with Files");
+                        ToggleAlbumsMonitoredState(albums.Where(e => albumsWithFiles.Select(c => c.Id).Contains(e.Id)), true);
+                        _logger.Debug("Unmonitoring Albums without Files");
+                        ToggleAlbumsMonitoredState(albums.Where(e => albumsWithoutFiles.Select(c => c.Id).Contains(e.Id)), false);
+                        break;
+                    case MonitorTypes.Latest:
+                        _logger.Debug("Monitoring latest album");
+                        ToggleAlbumsMonitoredState(albums, false);
+                        ToggleAlbumsMonitoredState(albums.OrderByDescending(e => e.ReleaseDate).Take(1), true);
+                        break;
+                    case MonitorTypes.First:
+                        _logger.Debug("Monitoring first album");
+                        ToggleAlbumsMonitoredState(albums, false);
+                        ToggleAlbumsMonitoredState(albums.OrderBy(e => e.ReleaseDate).Take(1), true);
+                        break;
+                    case MonitorTypes.None:
+                        _logger.Debug("Unmonitoring all albums");
+                        ToggleAlbumsMonitoredState(albums, false);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            _albumService.UpdateMany(albums);
             _artistService.UpdateArtist(artist);
         }
 
