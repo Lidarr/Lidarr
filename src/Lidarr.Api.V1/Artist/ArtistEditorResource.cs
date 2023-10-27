@@ -15,5 +15,6 @@ namespace Lidarr.Api.V1.Artist
         public ApplyTags ApplyTags { get; set; }
         public bool MoveFiles { get; set; }
         public bool DeleteFiles { get; set; }
+        public bool AddImportListExclusion { get; set; }
     }
 }
