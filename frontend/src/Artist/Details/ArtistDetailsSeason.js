@@ -20,7 +20,7 @@ import AlbumGroupInfo from './AlbumGroupInfo';
 import AlbumRowConnector from './AlbumRowConnector';
 import styles from './ArtistDetailsSeason.css';
 
-function getAlbumTypeStatistics(albums) {
+function getAlbumStatistics(albums) {
   let albumCount = 0;
   let trackFileCount = 0;
   let totalAlbumCount = 0;
@@ -195,9 +195,9 @@ class ArtistDetailsSeason extends Component {
       totalAlbumCount,
       trackFileCount,
       monitoredAlbumCount,
-      sizeOnDisk,
-      hasMonitoredAlbums
-    } = getAlbumTypeStatistics(items);
+      hasMonitoredAlbums,
+      sizeOnDisk
+    } = getAlbumStatistics(items);
 
     const {
       isOrganizeModalOpen,
