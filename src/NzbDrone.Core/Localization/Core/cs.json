@@ -736,5 +736,6 @@
     "CatalogNumber": "katalogové číslo",
     "Album": "album",
     "DeleteCondition": "Odstranit podmínku",
-    "EditMetadataProfile": "profil metadat"
+    "EditMetadataProfile": "profil metadat",
+    "IndexerDownloadClientHelpText": "Zvolte, který klient pro stahování bude použit pro zachytávání z toho indexeru"
 }
