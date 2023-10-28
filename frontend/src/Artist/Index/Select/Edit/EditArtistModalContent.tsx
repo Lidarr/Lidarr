@@ -14,6 +14,7 @@ import styles from './EditArtistModalContent.css';
 
 interface SavePayload {
   monitored?: boolean;
+  monitorNewItems?: string;
   qualityProfileId?: number;
   metadataProfileId?: number;
   rootFolderPath?: string;
@@ -54,6 +55,7 @@ function EditArtistModalContent(props: EditArtistModalContentProps) {
   const { artistIds, onSavePress, onModalClose } = props;
 
   const [monitored, setMonitored] = useState(NO_CHANGE);
+  const [monitorNewItems, setMonitorNewItems] = useState(NO_CHANGE);
   const [qualityProfileId, setQualityProfileId] = useState<string | number>(
     NO_CHANGE
   );
@@ -71,6 +73,11 @@ function EditArtistModalContent(props: EditArtistModalContentProps) {
       if (monitored !== NO_CHANGE) {
         hasChanges = true;
         payload.monitored = monitored === 'monitored';
+      }
+
+      if (monitorNewItems !== NO_CHANGE) {
+        hasChanges = true;
+        payload.monitorNewItems = monitorNewItems;
       }
 
       if (qualityProfileId !== NO_CHANGE) {
@@ -97,6 +104,7 @@ function EditArtistModalContent(props: EditArtistModalContentProps) {
     },
     [
       monitored,
+      monitorNewItems,
       qualityProfileId,
       metadataProfileId,
       rootFolderPath,
@@ -110,6 +118,9 @@ function EditArtistModalContent(props: EditArtistModalContentProps) {
       switch (name) {
         case 'monitored':
           setMonitored(value);
+          break;
+        case 'monitorNewItems':
+          setMonitorNewItems(value);
           break;
         case 'qualityProfileId':
           setQualityProfileId(value);
@@ -165,6 +176,20 @@ function EditArtistModalContent(props: EditArtistModalContentProps) {
             value={monitored}
             values={monitoredOptions}
             onChange={onInputChange}
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <FormLabel>{translate('MonitorNewItems')}</FormLabel>
+
+          <FormInputGroup
+            type={inputTypes.MONITOR_NEW_ITEMS_SELECT}
+            name="monitorNewItems"
+            value={monitorNewItems}
+            includeNoChange={true}
+            includeNoChangeDisabled={false}
+            onChange={onInputChange}
+            helpText={translate('MonitorNewItemsHelpText')}
           />
         </FormGroup>
 
