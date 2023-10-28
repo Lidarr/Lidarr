@@ -141,7 +141,7 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Specifications
 
             GivenHistory(history);
 
-            Subject.IsSatisfiedBy(_localAlbumRelease, _downloadClientItem).Accepted.Should().BeTrue();
+            Subject.IsSatisfiedBy(_localAlbumRelease, _downloadClientItem).Accepted.Should().BeFalse();
         }
     }
 }
