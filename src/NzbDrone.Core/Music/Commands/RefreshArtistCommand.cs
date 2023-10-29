@@ -37,5 +37,7 @@ namespace NzbDrone.Core.Music.Commands
         public override bool SendUpdatesToClient => true;
 
         public override bool UpdateScheduledTask => ArtistIds.Empty();
+
+        public override bool IsLongRunning => true;
     }
 }
