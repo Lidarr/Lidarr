@@ -1,7 +1,10 @@
 import AlbumAppState from './AlbumAppState';
 import ArtistAppState, { ArtistIndexAppState } from './ArtistAppState';
+import QueueAppState from './QueueAppState';
 import SettingsAppState from './SettingsAppState';
 import TagsAppState from './TagsAppState';
+import TrackFilesAppState from './TrackFilesAppState';
+import TracksAppState from './TracksAppState';
 
 interface FilterBuilderPropOption {
   id: string;
@@ -39,8 +42,11 @@ interface AppState {
   albums: AlbumAppState;
   artist: ArtistAppState;
   artistIndex: ArtistIndexAppState;
+  queue: QueueAppState;
   settings: SettingsAppState;
   tags: TagsAppState;
+  trackFiles: TrackFilesAppState;
+  tracksSelection: TracksAppState;
 }
 
 export default AppState;
