@@ -102,6 +102,11 @@ namespace NzbDrone.Core.Download
                 _logger.Trace("Release {0} no longer available on indexer.", remoteAlbum);
                 throw;
             }
+            catch (ReleaseBlockedException)
+            {
+                _logger.Trace("Release {0} previously added to blocklist, not sending to download client again.", remoteAlbum);
+                throw;
+            }
             catch (DownloadClientRejectedReleaseException)
             {
                 _logger.Trace("Release {0} rejected by download client, possible duplicate.", remoteAlbum);
@@ -126,7 +131,7 @@ namespace NzbDrone.Core.Download
             albumGrabbedEvent.DownloadClientId = downloadClient.Definition.Id;
             albumGrabbedEvent.DownloadClientName = downloadClient.Definition.Name;
 
-            if (!string.IsNullOrWhiteSpace(downloadClientId))
+            if (downloadClientId.IsNotNullOrWhiteSpace())
             {
                 albumGrabbedEvent.DownloadId = downloadClientId;
             }

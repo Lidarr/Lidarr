@@ -5,5 +5,6 @@ namespace NzbDrone.Core.Indexers
         int MinimumSeeders { get; set; }
 
         SeedCriteriaSettings SeedCriteria { get; set; }
+        bool RejectBlocklistedTorrentHashesWhileGrabbing { get; set; }
     }
 }
