@@ -8513,6 +8513,9 @@
           },
           "deleteFiles": {
             "type": "boolean"
+          },
+          "addImportListExclusion": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
