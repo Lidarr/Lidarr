@@ -29,10 +29,6 @@ export default function translate(
 ) {
   const translation = translations[key] || key;
 
-  if (!(key in translations)) {
-    console.warn(`MISSING ${key}`);
-  }
-
   if (tokens) {
     // Fallback to the old behaviour for translations not yet updated to use named tokens
     Object.values(tokens).forEach((value, index) => {
