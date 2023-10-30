@@ -63,6 +63,9 @@ namespace Lidarr.Api.V1.Indexers
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int? DownloadClientId { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public string DownloadClient { get; set; }
     }
 
     public static class ReleaseResourceMapper
