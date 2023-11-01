@@ -60,7 +60,7 @@ export const defaultState = {
     },
     {
       name: 'customFormats',
-      label: 'Formats',
+      label: () => translate('Formats'),
       isSortable: false,
       isVisible: true
     },
@@ -91,16 +91,11 @@ export const defaultState = {
       isVisible: false
     },
     {
-      name: 'sourceTitle',
-      label: 'Source Title',
-      isVisible: false
-    },
-    {
       name: 'customFormatScore',
-      columnLabel: 'Custom Format Score',
+      columnLabel: () => translate('CustomFormatScore'),
       label: React.createElement(Icon, {
         name: icons.SCORE,
-        title: 'Custom format score'
+        title: () => translate('CustomFormatScore')
       }),
       isVisible: false
     },
