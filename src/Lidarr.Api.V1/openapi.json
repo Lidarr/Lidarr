@@ -2692,6 +2692,28 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "artistIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          {
+            "name": "quality",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
           }
         ],
         "responses": {
