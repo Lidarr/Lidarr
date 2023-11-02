@@ -64,7 +64,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
         {
             var parsedAlbumInfo = Parser.Parser.ParseAlbumTitle(trackedDownload.DownloadItem.Title);
 
-            trackedDownload.RemoteAlbum = parsedAlbumInfo == null ? null : _parsingService.Map(parsedAlbumInfo, 0, new List<int> { });
+            trackedDownload.RemoteAlbum = parsedAlbumInfo == null ? null : _parsingService.Map(parsedAlbumInfo);
         }
 
         public void StopTracking(string downloadId)
