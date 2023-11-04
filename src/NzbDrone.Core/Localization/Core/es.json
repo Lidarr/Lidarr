@@ -32,7 +32,7 @@
     "DeleteDelayProfile": "Borrar Perfil de Retraso",
     "DeleteDelayProfileMessageText": "Está seguro que quieres borrar este perfil de retraso?",
     "DeleteDownloadClient": "Borrar Gestor de Descargas",
-    "DeleteTagMessageText": "Seguro que quieres eliminar la etiqueta '{0}'?",
+    "DeleteTagMessageText": "¿Seguro que quieres eliminar la etiqueta '{label}'?",
     "DestinationPath": "Ruta de Destino",
     "DetailedProgressBar": "Barra de Progreso Detallada",
     "DetailedProgressBarHelpText": "Mostrar texto en la barra de progreso",
@@ -338,7 +338,7 @@
     "DeleteImportListMessageText": "Seguro que quieres eliminar la lista '{name}'?",
     "DeleteIndexer": "Borrar Indexer",
     "DeleteIndexerMessageText": "Seguro que quieres eliminar el indexer '{name}'?",
-    "DeleteMetadataProfileMessageText": "Seguro que quieres eliminar el perfil de calidad {0}",
+    "DeleteMetadataProfileMessageText": "¿Seguro que quieres eliminar el perfil de metadatos '{name}'?",
     "DeleteNotification": "Borrar Notificación",
     "DeleteNotificationMessageText": "¿Seguro que quieres eliminiar la notificación '{name}'?",
     "DeleteQualityProfile": "Borrar Perfil de Calidad",
@@ -807,5 +807,6 @@
     "AddNewArtistRootFolderHelpText": "La subcarpeta '{folder}' será creada automáticamente",
     "AddConditionImplementation": "Agregar Condición - { implementationName}",
     "EditIndexerImplementation": "Agregar Condición - { implementationName}",
-    "AddImportListImplementation": "Añadir lista de importación - {implementationName}"
+    "AddImportListImplementation": "Añadir lista de importación - {implementationName}",
+    "DisabledForLocalAddresses": "Desactivado para direcciones locales"
 }
