@@ -1153,5 +1153,6 @@
     "ReleaseProfile": "Perfil de Lançamento",
     "RemoveTagsAutomatically": "Remover Tags Automaticamente",
     "RemoveTagsAutomaticallyHelpText": "Remover tags automaticamente se as condições não forem encontradas",
-    "SupportedAutoTaggingProperties": "{appName} oferece suporte às propriedades a seguir para regras de codificação automática"
+    "SupportedAutoTaggingProperties": "{appName} oferece suporte às propriedades a seguir para regras de codificação automática",
+    "QueueFilterHasNoItems": "O filtro de fila selecionado não possui itens"
 }
