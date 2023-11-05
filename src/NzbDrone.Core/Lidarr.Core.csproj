@@ -29,6 +29,7 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
     <PackageReference Include="Equ" Version="2.3.0" />
     <PackageReference Include="MonoTorrent" Version="2.0.7" />
+    <PackageReference Include="UTF.Unknown" Version="2.5.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Common\Lidarr.Common.csproj" />

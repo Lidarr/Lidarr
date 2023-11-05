@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
+using NLog;
 using NzbDrone.Core.MediaFiles.TrackImport;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
+using UtfUnknown;
 
 namespace NzbDrone.Core.MediaFiles
 {
@@ -22,13 +23,14 @@ namespace NzbDrone.Core.MediaFiles
 
     public interface ICueSheetService
     {
-        List<ImportDecision<LocalTrack>> GetImportDecisions(ref List<IFileInfo> mediaFileList, ImportDecisionMakerInfo itemInfo, ImportDecisionMakerConfig config);
+        List<ImportDecision<LocalTrack>> GetImportDecisions(ref List<IFileInfo> mediaFileList, IdentificationOverrides idOverrides, ImportDecisionMakerInfo itemInfo, ImportDecisionMakerConfig config);
     }
 
     public class CueSheetService : ICueSheetService
     {
         private readonly IParsingService _parsingService;
         private readonly IMakeImportDecision _importDecisionMaker;
+        private readonly Logger _logger;
 
         private static string _FileKey = "FILE";
         private static string _TrackKey = "TRACK";
@@ -40,13 +42,15 @@ namespace NzbDrone.Core.MediaFiles
         private static string _TitleKey = "TITLE";
 
         public CueSheetService(IParsingService parsingService,
-                               IMakeImportDecision importDecisionMaker)
+                               IMakeImportDecision importDecisionMaker,
+                               Logger logger)
         {
             _parsingService = parsingService;
             _importDecisionMaker = importDecisionMaker;
+            _logger = logger;
         }
 
-        public List<ImportDecision<LocalTrack>> GetImportDecisions(ref List<IFileInfo> mediaFileList, ImportDecisionMakerInfo itemInfo, ImportDecisionMakerConfig config)
+        public List<ImportDecision<LocalTrack>> GetImportDecisions(ref List<IFileInfo> mediaFileList, IdentificationOverrides idOverrides, ImportDecisionMakerInfo itemInfo, ImportDecisionMakerConfig config)
         {
             var decisions = new List<ImportDecision<LocalTrack>>();
             var cueFiles = mediaFileList.Where(x => x.Extension.Equals(".cue")).ToList();
@@ -60,6 +64,10 @@ namespace NzbDrone.Core.MediaFiles
             foreach (var cueFile in cueFiles)
             {
                 var cueSheetInfo = GetCueSheetInfo(cueFile, mediaFileList);
+                if (idOverrides != null)
+                {
+                    cueSheetInfo.IdOverrides = idOverrides;
+                }
 
                 var addedCueSheetInfo = cueSheetInfos.Find(existingCueSheetInfo => existingCueSheetInfo.CueSheet.DiscID == cueSheetInfo.CueSheet.DiscID);
                 if (addedCueSheetInfo == null)
@@ -161,7 +169,10 @@ namespace NzbDrone.Core.MediaFiles
             using (var fs = fileInfo.OpenRead())
             {
                 var bytes = new byte[fileInfo.Length];
-                var encoding = new UTF8Encoding(true);
+                var result = CharsetDetector.DetectFromFile(fileInfo.FullName); // or pass FileInfo
+                var encoding = result.Detected.Encoding;
+                _logger.Debug("Detected encoding {0} for {1}", encoding.WebName, fileInfo.FullName);
+
                 string content;
                 while (fs.Read(bytes, 0, bytes.Length) > 0)
                 {
@@ -368,6 +379,8 @@ namespace NzbDrone.Core.MediaFiles
             {
                 return cueSheetInfo;
             }
+
+            cueSheetInfo.IdOverrides.Artist = artistFromCue;
 
             var parsedAlbumInfo = new ParsedAlbumInfo
             {

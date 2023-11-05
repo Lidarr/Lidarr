@@ -102,7 +102,7 @@ namespace NzbDrone.Core.MediaFiles
 
             var decisions = new List<ImportDecision<LocalTrack>>();
 
-            decisions.AddRange(_cueSheetService.GetImportDecisions(ref mediaFileList, itemInfo, config));
+            decisions.AddRange(_cueSheetService.GetImportDecisions(ref mediaFileList, null, itemInfo, config));
             decisions.AddRange(_importDecisionMaker.GetImportDecisions(mediaFileList, null, itemInfo, config));
 
             decisionsStopwatch.Stop();

@@ -185,7 +185,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                 AddNewArtists = false
             };
 
-            var decisions = _cueSheetService.GetImportDecisions(ref audioFiles, itemInfo, config);
+            var decisions = _cueSheetService.GetImportDecisions(ref audioFiles, null, itemInfo, config);
             if (!audioFiles.Empty())
             {
                 decisions.AddRange(_importDecisionMaker.GetImportDecisions(audioFiles, idOverrides, itemInfo, config));
@@ -251,7 +251,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     AlbumRelease = group.First().Release
                 };
 
-                var decisions = _cueSheetService.GetImportDecisions(ref audioFiles, itemInfo, config);
+                var decisions = _cueSheetService.GetImportDecisions(ref audioFiles, idOverride, itemInfo, config);
                 if (audioFiles.Count > 0)
                 {
                     decisions.AddRange(_importDecisionMaker.GetImportDecisions(audioFiles, idOverride, itemInfo, config));
