@@ -5,7 +5,6 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Core.MediaFiles.TrackImport;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser;
@@ -61,7 +60,25 @@ namespace NzbDrone.Core.MediaFiles
             foreach (var cueFile in cueFiles)
             {
                 var cueSheetInfo = GetCueSheetInfo(cueFile, mediaFileList);
-                cueSheetInfos.Add(cueSheetInfo);
+
+                var addedCueSheetInfo = cueSheetInfos.Find(existingCueSheetInfo => existingCueSheetInfo.CueSheet.DiscID == cueSheetInfo.CueSheet.DiscID);
+                if (addedCueSheetInfo == null)
+                {
+                    cueSheetInfos.Add(cueSheetInfo);
+                }
+
+                // If there are multiple cue sheet files for the same disc, then we try to keep the last one or the one with the exact same name as the media file, if there's any
+                else if (cueSheetInfo.CueSheet.IsSingleFileRelease && addedCueSheetInfo.CueSheet.Files.Count > 0)
+                {
+                    var mediaFileName = Path.GetFileName(addedCueSheetInfo.CueSheet.Files[0].Name);
+                    var cueSheetFileName = Path.GetFileName(cueFile.Name);
+
+                    if (mediaFileName != cueSheetFileName)
+                    {
+                        cueSheetInfos.Remove(addedCueSheetInfo);
+                        cueSheetInfos.Add(cueSheetInfo);
+                    }
+                }
             }
 
             var cueSheetInfosGroupedByDiscId = cueSheetInfos.GroupBy(x => x.CueSheet.DiscID).ToList();
@@ -120,6 +137,11 @@ namespace NzbDrone.Core.MediaFiles
                     return;
                 }
 
+                if (decision.Item.Release == null)
+                {
+                    return;
+                }
+
                 var tracksFromRelease = decision.Item.Release.Tracks.Value;
                 if (tracksFromRelease.Count == 0)
                 {
@@ -172,124 +194,142 @@ namespace NzbDrone.Core.MediaFiles
             return "";
         }
 
+        private List<string> ExtractPerformers(string line)
+        {
+            var delimiters = new char[] { ',', ';' };
+            var performers = ExtractValue(line, _PerformerKey);
+            return performers.Split(delimiters, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToList();
+        }
+
+        private bool GetNewLine(ref int index, ref string newLine, string[] lines)
+        {
+            if (index < lines.Length)
+            {
+                newLine = lines[index];
+                index++;
+                return true;
+            }
+
+            return false;
+        }
+
         private CueSheet ParseLines(string[] lines)
         {
             var cueSheet = new CueSheet();
 
             var i = 0;
-            try
+            string line = null;
+
+            while (GetNewLine(ref i, ref line, lines))
             {
-                while (true)
+                if (line.StartsWith(_FileKey))
                 {
-                    var line = lines[i];
-                    if (line.StartsWith(_FileKey))
+                    line = line.Trim();
+                    line = line.Substring(_FileKey.Length).Trim();
+                    var filename = line.Split('"')[1];
+                    var fileDetails = new CueSheet.FileEntry { Name = filename };
+
+                    if (!GetNewLine(ref i, ref line, lines))
+                    {
+                        break;
+                    }
+
+                    while (line.StartsWith("  "))
                     {
                         line = line.Trim();
-                        line = line.Substring(_FileKey.Length).Trim();
-                        var filename = line.Split('"')[1];
-                        var fileDetails = new CueSheet.FileEntry { Name = filename };
-
-                        i++;
-                        line = lines[i];
-                        while (line.StartsWith("  "))
+                        if (line.StartsWith(_TrackKey))
                         {
-                            line = line.Trim();
-                            if (line.StartsWith(_TrackKey))
-                            {
-                                line = line.Substring(_TrackKey.Length).Trim();
-                            }
-
-                            var trackDetails = new CueSheet.TrackEntry();
-                            var trackInfo = line.Split(' ');
-                            if (trackInfo.Length > 0)
-                            {
-                                if (int.TryParse(trackInfo[0], out var number))
-                                {
-                                    trackDetails.Number = number;
-                                }
-                            }
-
-                            i++;
-                            line = lines[i];
-                            while (line.StartsWith("    "))
-                            {
-                                line = line.Trim();
-                                if (line.StartsWith(_IndexKey))
-                                {
-                                    line = line.Substring(_IndexKey.Length).Trim();
-                                    var parts = line.Split(' ');
-                                    if (parts.Length > 1)
-                                    {
-                                        if (int.TryParse(parts[0], out var key))
-                                        {
-                                            var value = parts[1].Trim('"');
-                                            trackDetails.Indices.Add(new CueSheet.IndexEntry { Key = key, Time = value });
-                                        }
-                                    }
-
-                                    i++;
-                                    line = lines[i];
-                                }
-                                else if (line.StartsWith(_TitleKey))
-                                {
-                                    trackDetails.Title = ExtractValue(line, _TitleKey);
-                                    i++;
-                                    line = lines[i];
-                                }
-                                else if (line.StartsWith(_PerformerKey))
-                                {
-                                    trackDetails.Performer = ExtractValue(line, _PerformerKey);
-                                    i++;
-                                    line = lines[i];
-                                }
-                                else
-                                {
-                                    i++;
-                                    line = lines[i];
-                                }
-                            }
-
-                            fileDetails.Tracks.Add(trackDetails);
+                            line = line.Substring(_TrackKey.Length).Trim();
                         }
 
-                        cueSheet.Files.Add(fileDetails);
+                        var trackDetails = new CueSheet.TrackEntry();
+                        var trackInfo = line.Split(' ');
+                        if (trackInfo.Length > 0)
+                        {
+                            if (int.TryParse(trackInfo[0], out var number))
+                            {
+                                trackDetails.Number = number;
+                            }
+                        }
+
+                        if (!GetNewLine(ref i, ref line, lines))
+                        {
+                            break;
+                        }
+
+                        while (line.StartsWith("    "))
+                        {
+                            line = line.Trim();
+                            if (line.StartsWith(_IndexKey))
+                            {
+                                line = line.Substring(_IndexKey.Length).Trim();
+                                var parts = line.Split(' ');
+                                if (parts.Length > 1)
+                                {
+                                    if (int.TryParse(parts[0], out var key))
+                                    {
+                                        var value = parts[1].Trim('"');
+                                        trackDetails.Indices.Add(new CueSheet.IndexEntry { Key = key, Time = value });
+                                    }
+                                }
+                            }
+                            else if (line.StartsWith(_TitleKey))
+                            {
+                                trackDetails.Title = ExtractValue(line, _TitleKey);
+                            }
+                            else if (line.StartsWith(_PerformerKey))
+                            {
+                                trackDetails.Performers = ExtractPerformers(line);
+                            }
+
+                            if (!GetNewLine(ref i, ref line, lines))
+                            {
+                                break;
+                            }
+                        }
+
+                        fileDetails.Tracks.Add(trackDetails);
                     }
-                    else if (line.StartsWith(_GenreKey))
-                    {
-                        cueSheet.Genre = ExtractValue(line, _GenreKey);
-                        i++;
-                    }
-                    else if (line.StartsWith(_DateKey))
-                    {
-                        cueSheet.Date = ExtractValue(line, _DateKey);
-                        i++;
-                    }
-                    else if (line.StartsWith(_DiscIdKey))
-                    {
-                        cueSheet.DiscID = ExtractValue(line, _DiscIdKey);
-                        i++;
-                    }
-                    else if (line.StartsWith(_PerformerKey))
-                    {
-                        cueSheet.Performer = ExtractValue(line, _PerformerKey);
-                        i++;
-                    }
-                    else if (line.StartsWith(_TitleKey))
-                    {
-                        cueSheet.Title = ExtractValue(line, _TitleKey);
-                        i++;
-                    }
-                    else
-                    {
-                        i++;
-                    }
+
+                    cueSheet.Files.Add(fileDetails);
                 }
-            }
-            catch (IndexOutOfRangeException)
-            {
+                else if (line.StartsWith(_GenreKey))
+                {
+                    cueSheet.Genre = ExtractValue(line, _GenreKey);
+                }
+                else if (line.StartsWith(_DateKey))
+                {
+                    cueSheet.Date = ExtractValue(line, _DateKey);
+                }
+                else if (line.StartsWith(_DiscIdKey))
+                {
+                    cueSheet.DiscID = ExtractValue(line, _DiscIdKey);
+                }
+                else if (line.StartsWith(_PerformerKey))
+                {
+                    cueSheet.Performers = ExtractPerformers(line);
+                }
+                else if (line.StartsWith(_TitleKey))
+                {
+                    cueSheet.Title = ExtractValue(line, _TitleKey);
+                }
             }
 
             return cueSheet;
+        }
+
+        private Artist GetArtist(List<string> performers)
+        {
+            if (performers.Count == 1)
+            {
+                return _parsingService.GetArtist(performers[0]);
+            }
+            else if (performers.Count > 1)
+            {
+                return _parsingService.GetArtist("Various Artist");
+            }
+
+            return null;
         }
 
         private CueSheetInfo GetCueSheetInfo(IFileInfo cueFile, List<IFileInfo> musicFiles)
@@ -302,22 +342,37 @@ namespace NzbDrone.Core.MediaFiles
             }
 
             cueSheetInfo.CueSheet = cueSheet;
+            cueSheetInfo.MusicFiles = musicFiles.Where(musicFile => cueSheet.Files.Any(musicFileFromCue => musicFileFromCue.Name == musicFile.Name)).ToList();
+
             cueSheetInfo.IdOverrides = new IdentificationOverrides();
 
-            Artist artistFromCue = null;
-            if (!cueSheet.Performer.Empty())
+            var artistFromCue = GetArtist(cueSheet.Performers);
+
+            if (artistFromCue == null && cueSheet.Files.Count > 0)
             {
-                artistFromCue = _parsingService.GetArtist(cueSheet.Performer);
-                if (artistFromCue != null)
+                foreach (var fileEntry in cueSheet.Files)
                 {
-                    cueSheetInfo.IdOverrides.Artist = artistFromCue;
+                    foreach (var track in fileEntry.Tracks)
+                    {
+                        artistFromCue = GetArtist(track.Performers);
+                        if (artistFromCue != null)
+                        {
+                            break;
+                        }
+                    }
                 }
+            }
+
+            // The cue sheet file is too incomplete in this case
+            if (artistFromCue == null)
+            {
+                return cueSheetInfo;
             }
 
             var parsedAlbumInfo = new ParsedAlbumInfo
             {
                 AlbumTitle = cueSheet.Title,
-                ArtistName = artistFromCue?.Name,
+                ArtistName = artistFromCue.Name,
                 ReleaseDate = cueSheet.Date,
             };
 
@@ -326,8 +381,6 @@ namespace NzbDrone.Core.MediaFiles
             {
                 cueSheetInfo.IdOverrides.Album = albumsFromCue[0];
             }
-
-            cueSheetInfo.MusicFiles = musicFiles.Where(musicFile => cueSheet.Files.Any(musicFileFromCue => musicFileFromCue.Name == musicFile.Name)).ToList();
 
             return cueSheetInfo;
         }

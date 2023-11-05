@@ -69,11 +69,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators
                 {
                     for (var i = 0; i < tracks.Count; ++i)
                     {
-                        tracks[i].FileTrackInfo.ArtistTitle = tracks[i].Artist.Name;
-                        tracks[i].FileTrackInfo.AlbumTitle = tracks[i].Album.Title;
+                        tracks[i].FileTrackInfo.ArtistTitle = tracks[i].Artist?.Name;
+                        tracks[i].FileTrackInfo.AlbumTitle = tracks[i].Album?.Title;
 
                         // TODO this is too bold, the release year is not the one from the .cue file
-                        tracks[i].FileTrackInfo.Year = (uint)tracks[i].Album.ReleaseDate.Value.Year;
+                        tracks[i].FileTrackInfo.Year = (uint)(tracks[i].Album?.ReleaseDate?.Year ?? 0);
                     }
                 }
                 else

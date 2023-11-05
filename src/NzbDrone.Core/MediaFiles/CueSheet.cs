@@ -15,7 +15,7 @@ namespace NzbDrone.Core.MediaFiles
         {
             public int Number { get; set; }
             public string Title { get; set; }
-            public string Performer { get; set; }
+            public List<string> Performers { get; set; } = new List<string>();
             public List<IndexEntry> Indices { get; set; } = new List<IndexEntry>();
         }
 
@@ -33,6 +33,6 @@ namespace NzbDrone.Core.MediaFiles
         public string Date { get; set; }
         public string DiscID { get; set; }
         public string Title { get; set; }
-        public string Performer { get; set; }
+        public List<string> Performers { get; set; } = new List<string>();
     }
 }
