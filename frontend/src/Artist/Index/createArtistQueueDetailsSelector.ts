@@ -12,7 +12,10 @@ function createArtistQueueDetailsSelector(artistId: number) {
     (queueItems) => {
       return queueItems.reduce(
         (acc: ArtistQueueDetails, item) => {
-          if (item.artistId !== artistId) {
+          if (
+            item.trackedDownloadState === 'imported' ||
+            item.artistId !== artistId
+          ) {
             return acc;
           }
 

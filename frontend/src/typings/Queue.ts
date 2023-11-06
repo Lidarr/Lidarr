@@ -2,6 +2,18 @@ import ModelBase from 'App/ModelBase';
 import { QualityModel } from 'Quality/Quality';
 import CustomFormat from 'typings/CustomFormat';
 
+export type QueueTrackedDownloadStatus = 'ok' | 'warning' | 'error';
+
+export type QueueTrackedDownloadState =
+  | 'downloading'
+  | 'downloadFailed'
+  | 'downloadFailedPending'
+  | 'importPending'
+  | 'importing'
+  | 'importFailed'
+  | 'imported'
+  | 'ignored';
+
 export interface StatusMessage {
   title: string;
   messages: string[];
@@ -17,8 +29,8 @@ interface Queue extends ModelBase {
   estimatedCompletionTime: string;
   added?: string;
   status: string;
-  trackedDownloadStatus: string;
-  trackedDownloadState: string;
+  trackedDownloadStatus: QueueTrackedDownloadStatus;
+  trackedDownloadState: QueueTrackedDownloadState;
   statusMessages: StatusMessage[];
   errorMessage: string;
   downloadId: string;
