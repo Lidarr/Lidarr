@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
@@ -6,6 +8,7 @@ using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Parser;
+using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers.Gazelle
@@ -17,6 +20,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
         public override int PageSize => 50;
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(3);
 
         private readonly ICached<Dictionary<string, string>> _authCookieCache;
 
@@ -33,7 +37,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new GazelleRequestGenerator()
+            return new GazelleRequestGenerator
             {
                 Settings = Settings,
                 HttpClient = _httpClient,
@@ -45,6 +49,18 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public override IParseIndexerResponse GetParser()
         {
             return new GazelleParser(Settings);
+        }
+
+        protected override IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, bool isRecent = false)
+        {
+            var cleanReleases = base.CleanupReleases(releases, isRecent);
+
+            if (isRecent)
+            {
+                cleanReleases = cleanReleases.Take(50).ToList();
+            }
+
+            return cleanReleases;
         }
 
         public override IEnumerable<ProviderDefinition> DefaultDefinitions

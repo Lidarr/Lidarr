@@ -252,7 +252,7 @@ namespace NzbDrone.Core.Indexers
                 _logger.Error(ex, "An error occurred while processing feed. {0}", url);
             }
 
-            return CleanupReleases(releases);
+            return CleanupReleases(releases, isRecent);
         }
 
         protected virtual bool IsValidRelease(ReleaseInfo release)

@@ -72,7 +72,7 @@ namespace NzbDrone.Core.Indexers
         public abstract Task<IList<ReleaseInfo>> Fetch(ArtistSearchCriteria searchCriteria);
         public abstract HttpRequest GetDownloadRequest(string link);
 
-        protected virtual IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases)
+        protected virtual IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, bool isRecent = false)
         {
             var result = releases.DistinctBy(v => v.Guid).ToList();
 
