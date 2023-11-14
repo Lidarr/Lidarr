@@ -683,5 +683,9 @@
     "AddNewArtistRootFolderHelpText": "'{0}' alt klasörü otomatik olarak oluşturulacak",
     "Priority": "Öncelik",
     "AddMetadataProfile": "üstveri profili",
-    "EditMetadataProfile": "üstveri profili"
+    "EditMetadataProfile": "üstveri profili",
+    "AddConditionImplementation": "Koşul Ekle - {uygulama Adı}",
+    "AddConnection": "Bağlantı Ekle",
+    "AddAutoTag": "Otomatik Etiket Ekle",
+    "AddCondition": "Koşul Ekle"
 }

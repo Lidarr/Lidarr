@@ -1097,5 +1097,6 @@
     "Overview": "概览",
     "OverviewOptions": "概览选项",
     "PosterOptions": "海报选项",
-    "Posters": "海报"
+    "Posters": "海报",
+    "AddAutoTagError": "无法添加新的自动标签，请重试。"
 }
