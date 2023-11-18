@@ -480,12 +480,12 @@
     "Add": "Добавить",
     "AddDelayProfile": "Добавить профиль задержки",
     "Added": "Добавлено",
-    "AddIndexer": "Добавить индексер",
+    "AddIndexer": "Добавить индексатор",
     "AddNew": "Добавить",
     "AddQualityProfile": "Добавить профиль качества",
     "AddRemotePathMapping": "Добавить удаленный путь",
     "AddRootFolder": "Добавить корневой каталог",
-    "AfterManualRefresh": "После обновления в ручную",
+    "AfterManualRefresh": "После обновления вручную",
     "Age": "Возраст",
     "All": "Все",
     "AllFiles": "Все файлы",
@@ -584,7 +584,7 @@
     "Details": "Подробности",
     "TimeLeft": "Оставшееся время",
     "AddConnection": "Добавить соединение",
-    "AddImportListExclusion": "Удалить лист исключения для импорта",
+    "AddImportListExclusion": "Добавить исключение из списка импорта",
     "Date": "Дата",
     "Manual": "Ручной",
     "ImportListExclusions": "Удалить лист исключения для импорта",
@@ -770,5 +770,6 @@
     "DeleteRemotePathMappingMessageText": "Вы уверены, что хотите удалить это сопоставление удаленного пути?",
     "ResetQualityDefinitionsMessageText": "Вы уверены, что хотите сбросить определения качества?",
     "OnHealthRestored": "При восстановлении работоспособности",
-    "OnHealthRestoredHelpText": "При восстановлении работоспособности"
+    "OnHealthRestoredHelpText": "При восстановлении работоспособности",
+    "AllResultsAreHiddenByTheAppliedFilter": "Все результаты скрыты фильтром"
 }
