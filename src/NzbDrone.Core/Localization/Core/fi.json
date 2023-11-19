@@ -56,7 +56,7 @@
     "PackageVersion": "Pakettiversio",
     "Port": "Portti",
     "Indexers": "Tietolähteet",
-    "ChownGroupHelpTextWarning": "Tämä toimii vain, jos {appName}ia käyttävä käyttäjä on tiedoston omistaja. On parempi varmistaa, että lataustyökalu käyttää samaa ryhmää kuin Lidarr.",
+    "ChownGroupHelpTextWarning": "Tämä toimii vain, jos {appName}ia käyttävä käyttäjä on tiedoston omistaja. On parempi varmistaa, että lataustyökalu käyttää samaa ryhmää kuin {appName}.",
     "CopyUsingHardlinksHelpText": "Käytä hardlink-kytköksiä, kun kopioit tiedostoja torrenteista, joita jaetaan vielä.",
     "CopyUsingHardlinksHelpTextWarning": "Tiedostojen käytöstä johtuvat lukitukset saattavat joskus estää jaettavien tiedostojen uudelleennimeämisen. Voit lopettaa jaon väliaikaisesti ja käyttää {appName}in nimeämistoimintoa.",
     "DeleteImportListMessageText": "Haluatko varmasti poistaa tuontilistan '{0}'?",
