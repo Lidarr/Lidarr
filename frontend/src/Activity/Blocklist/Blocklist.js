@@ -36,6 +36,7 @@ class Blocklist extends Component {
       lastToggled: null,
       selectedState: {},
       isConfirmRemoveModalOpen: false,
+      isConfirmClearModalOpen: false,
       items: props.items
     };
   }
@@ -90,6 +91,19 @@ class Blocklist extends Component {
     this.setState({ isConfirmRemoveModalOpen: false });
   };
 
+  onClearBlocklistPress = () => {
+    this.setState({ isConfirmClearModalOpen: true });
+  };
+
+  onClearBlocklistConfirmed = () => {
+    this.props.onClearBlocklistPress();
+    this.setState({ isConfirmClearModalOpen: false });
+  };
+
+  onConfirmClearModalClose = () => {
+    this.setState({ isConfirmClearModalOpen: false });
+  };
+
   //
   // Render
 
@@ -105,7 +119,6 @@ class Blocklist extends Component {
       totalRecords,
       isRemoving,
       isClearingBlocklistExecuting,
-      onClearBlocklistPress,
       ...otherProps
     } = this.props;
 
@@ -116,7 +129,8 @@ class Blocklist extends Component {
       allSelected,
       allUnselected,
       selectedState,
-      isConfirmRemoveModalOpen
+      isConfirmRemoveModalOpen,
+      isConfirmClearModalOpen
     } = this.state;
 
     const selectedIds = this.getSelectedIds();
@@ -136,8 +150,9 @@ class Blocklist extends Component {
             <PageToolbarButton
               label={translate('Clear')}
               iconName={icons.CLEAR}
+              isDisabled={!items.length}
               isSpinning={isClearingBlocklistExecuting}
-              onPress={onClearBlocklistPress}
+              onPress={this.onClearBlocklistPress}
             />
           </PageToolbarSection>
 
@@ -219,6 +234,16 @@ class Blocklist extends Component {
           confirmLabel={translate('RemoveSelected')}
           onConfirm={this.onRemoveSelectedConfirmed}
           onCancel={this.onConfirmRemoveModalClose}
+        />
+
+        <ConfirmModal
+          isOpen={isConfirmClearModalOpen}
+          kind={kinds.DANGER}
+          title={translate('ClearBlocklist')}
+          message={translate('ClearBlocklistMessageText')}
+          confirmLabel={translate('Clear')}
+          onConfirm={this.onClearBlocklistConfirmed}
+          onCancel={this.onConfirmClearModalClose}
         />
       </PageContent>
     );
