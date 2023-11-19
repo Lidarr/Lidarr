@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using Diacritics.Extensions;
 using NLog;
 using NzbDrone.Core.MediaFiles.TrackImport;
 using NzbDrone.Core.Music;
@@ -19,6 +21,15 @@ namespace NzbDrone.Core.MediaFiles
         public IdentificationOverrides IdOverrides { get; set; }
         public CueSheet CueSheet { get; set; }
         public bool IsForMediaFile(string path) => CueSheet != null && CueSheet.Files.Count > 0 && CueSheet.Files.Any(x => Path.GetFileName(path) == x.Name);
+        public CueSheet.FileEntry TryToGetFileEntryForMediaFile(string path)
+        {
+            if (CueSheet != null && CueSheet.Files.Count > 0)
+            {
+                return CueSheet.Files.Find(x => Path.GetFileName(path) == x.Name);
+            }
+
+            return null;
+        }
     }
 
     public interface ICueSheetService
@@ -48,6 +59,39 @@ namespace NzbDrone.Core.MediaFiles
             _parsingService = parsingService;
             _importDecisionMaker = importDecisionMaker;
             _logger = logger;
+        }
+
+        private class PunctuationReplacer
+        {
+            private readonly Dictionary<char, char>  _replacements = new Dictionary<char, char>
+            {
+                { '‘', '\'' }, { '’', '\'' }, // Single quotes
+                { '“', '"' }, { '”', '"' }, // Double quotes
+                { '‹', '<' }, { '›', '>' }, // Angle quotes
+                { '«', '<' }, { '»', '>' }, // Guillemets
+                { '–', '-' }, { '—', '-' }, // Dashes
+                { '…', '.' }, // Ellipsis
+                { '¡', '!' }, { '¿', '?' }, // Inverted punctuation (Spanish)
+            };
+
+            public string ReplacePunctuation(string input)
+            {
+                var output = new StringBuilder(input.Length);
+
+                foreach (var c in input)
+                {
+                    if (_replacements.TryGetValue(c, out var replacement))
+                    {
+                        output.Append(replacement);
+                    }
+                    else
+                    {
+                        output.Append(c);
+                    }
+                }
+
+                return output.ToString();
+            }
         }
 
         public List<ImportDecision<LocalTrack>> GetImportDecisions(ref List<IFileInfo> mediaFileList, IdentificationOverrides idOverrides, ImportDecisionMakerInfo itemInfo, ImportDecisionMakerConfig config)
@@ -119,7 +163,6 @@ namespace NzbDrone.Core.MediaFiles
                 }
             }
 
-            var addedTracks = new List<Track>();
             decisions.ForEach(decision =>
             {
                 if (!decision.Item.IsSingleFileRelease)
@@ -156,12 +199,51 @@ namespace NzbDrone.Core.MediaFiles
                     return;
                 }
 
-                // TODO diacritics could cause false positives here
-                decision.Item.Tracks = tracksFromRelease.Where(trackFromRelease => !addedTracks.Contains(trackFromRelease) && tracksFromCueSheet.Any(trackFromCueSheet => string.Equals(trackFromCueSheet.Title, trackFromRelease.Title, StringComparison.OrdinalIgnoreCase))).ToList();
-                addedTracks.AddRange(decision.Item.Tracks);
+                var replacer = new PunctuationReplacer();
+                var i = 0;
+                while (i < tracksFromRelease.Count)
+                {
+                    var trackFromRelease = tracksFromRelease[i];
+                    var trackFromReleaseTitle = NormalizeTitle(replacer, trackFromRelease.Title);
+
+                    var j = 0;
+                    var anyMatch = false;
+                    while (j < tracksFromCueSheet.Count)
+                    {
+                        var trackFromCueSheet = tracksFromCueSheet[j];
+                        var trackFromCueSheetTitle = NormalizeTitle(replacer, trackFromCueSheet.Title);
+                        anyMatch = string.Equals(trackFromReleaseTitle, trackFromCueSheetTitle, StringComparison.InvariantCultureIgnoreCase);
+
+                        if (anyMatch)
+                        {
+                            decision.Item.Tracks.Add(trackFromRelease);
+                            tracksFromRelease.RemoveAt(i);
+                            tracksFromCueSheet.RemoveAt(j);
+
+                            break;
+                        }
+                        else
+                        {
+                            j++;
+                        }
+                    }
+
+                    if (!anyMatch)
+                    {
+                        i++;
+                    }
+                }
             });
 
             return decisions;
+        }
+
+        private static string NormalizeTitle(PunctuationReplacer replacer, string title)
+        {
+            title.Normalize(NormalizationForm.FormKD);
+            title = title.RemoveDiacritics();
+            title = replacer.ReplacePunctuation(title);
+            return title;
         }
 
         private CueSheet LoadCueSheet(IFileInfo fileInfo)
@@ -337,7 +419,7 @@ namespace NzbDrone.Core.MediaFiles
             }
             else if (performers.Count > 1)
             {
-                return _parsingService.GetArtist("Various Artist");
+                return _parsingService.GetArtist("various artists");
             }
 
             return null;

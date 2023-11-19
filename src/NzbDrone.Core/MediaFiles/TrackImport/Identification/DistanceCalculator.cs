@@ -30,6 +30,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 localTrack.FileTrackInfo.TrackNumbers[0] != totalTrackNumber;
         }
 
+        private static bool TrackIndexIncorrect(CueSheet.TrackEntry cuesheetTrack, Track mbTrack, int totalTrackNumber)
+        {
+            return cuesheetTrack.Number != mbTrack.AbsoluteTrackNumber;
+        }
+
         public static int GetTotalTrackNumber(Track track, List<Track> allTracks)
         {
             return track.AbsoluteTrackNumber + allTracks.Count(t => t.MediumNumber < track.MediumNumber);
@@ -74,6 +79,28 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             if (localTrack.AcoustIdResults != null)
             {
                 dist.AddBool("recording_id", !localTrack.AcoustIdResults.Contains(mbTrack.ForeignRecordingId));
+            }
+
+            return dist;
+        }
+
+        public static Distance TrackDistance(CueSheet.TrackEntry cuesheetTrack, Track mbTrack, int totalTrackNumber, bool includeArtist = false)
+        {
+            var dist = new Distance();
+
+            // musicbrainz never has 'featuring' in the track title
+            // see https://musicbrainz.org/doc/Style/Artist_Credits
+            dist.AddString("track_title", cuesheetTrack.Title ?? "", mbTrack.Title);
+
+            if (includeArtist && cuesheetTrack.Performers.Count == 1
+                && !VariousArtistNames.Any(x => x.Equals(cuesheetTrack.Performers[0], StringComparison.InvariantCultureIgnoreCase)))
+            {
+                dist.AddString("track_artist", cuesheetTrack.Performers[0], mbTrack.ArtistMetadata.Value.Name);
+            }
+
+            if (mbTrack.AbsoluteTrackNumber > 0)
+            {
+                dist.AddBool("track_index", TrackIndexIncorrect(cuesheetTrack, mbTrack, totalTrackNumber));
             }
 
             return dist;
@@ -179,9 +206,14 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             }
 
             // tracks
-            if (localTracks.All(x => x.IsSingleFileRelease == true))
+            if (mapping.CuesheetTrackMapping.Count != 0)
             {
-                dist.Add("tracks", 0);
+                foreach (var pair in mapping.CuesheetTrackMapping)
+                {
+                    dist.Add("tracks", pair.Value.Item2.NormalizedDistance());
+                }
+
+                Logger.Trace("after trackMapping: {0}", dist.NormalizedDistance());
             }
             else
             {
@@ -192,14 +224,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
                 Logger.Trace("after trackMapping: {0}", dist.NormalizedDistance());
 
-                // missing tracks
-                foreach (var track in mapping.MBExtra.Take(localTracks.Count))
-                {
-                    dist.Add("missing_tracks", 1.0);
-                }
-
-                Logger.Trace("after missing tracks: {0}", dist.NormalizedDistance());
-
                 // unmatched tracks
                 foreach (var track in mapping.LocalExtra.Take(localTracks.Count))
                 {
@@ -208,6 +232,14 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
                 Logger.Trace("after unmatched tracks: {0}", dist.NormalizedDistance());
             }
+
+            // missing tracks
+            foreach (var track in mapping.MBExtra.Take(localTracks.Count))
+            {
+                dist.Add("missing_tracks", 1.0);
+            }
+
+            Logger.Trace("after missing tracks: {0}", dist.NormalizedDistance());
 
             return dist;
         }

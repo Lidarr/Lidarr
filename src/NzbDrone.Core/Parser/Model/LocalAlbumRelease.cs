@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.TrackImport.Identification;
 using NzbDrone.Core.Music;
 
@@ -70,11 +71,12 @@ namespace NzbDrone.Core.Parser.Model
         public TrackMapping()
         {
             Mapping = new Dictionary<LocalTrack, Tuple<Track, Distance>>();
+            CuesheetTrackMapping = new Dictionary<CueSheet.TrackEntry, Tuple<Track, Distance>>();
         }
 
         public Dictionary<LocalTrack, Tuple<Track, Distance>> Mapping { get; set; }
         public List<LocalTrack> LocalExtra { get; set; }
         public List<Track> MBExtra { get; set; }
-        public bool IsSingleFileRelease { get; set; }
+        public Dictionary<CueSheet.TrackEntry, Tuple<Track, Distance>> CuesheetTrackMapping { get; set; }
     }
 }

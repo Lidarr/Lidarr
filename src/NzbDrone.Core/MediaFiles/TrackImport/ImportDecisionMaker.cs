@@ -159,11 +159,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             {
                 localTracks.ForEach(localTrack =>
                 {
-                    var cueSheetFindResult = itemInfo.CueSheetInfos.Find(x => x.IsForMediaFile(localTrack.Path));
-                    var cueSheet = cueSheetFindResult?.CueSheet;
+                    var cueSheetInfo = itemInfo.CueSheetInfos.Find(x => x.IsForMediaFile(localTrack.Path));
+                    var cueSheet = cueSheetInfo?.CueSheet;
                     if (cueSheet != null)
                     {
                         localTrack.IsSingleFileRelease = cueSheet.IsSingleFileRelease;
+                        localTrack.CueSheetFileEntry = cueSheetInfo.TryToGetFileEntryForMediaFile(localTrack.Path);
                         localTrack.Artist = idOverrides.Artist;
                         localTrack.Album = idOverrides.Album;
                     }
