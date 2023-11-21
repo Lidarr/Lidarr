@@ -143,10 +143,10 @@
     "WriteMetadataToAudioFiles": "Gravar metadados em arquivos de áudio",
     "Year": "Ano",
     "ChmodFolderHelpText": "Octal, aplicado durante a importação/renomeação de pastas e arquivos de mídia (sem bits de execução)",
-    "ChmodFolderHelpTextWarning": "Isso só funciona se o usuário que está executando o {appName} for o proprietário do arquivo. É melhor garantir que o cliente de download defina as permissões corretamente.",
+    "ChmodFolderHelpTextWarning": "Isso só funciona se o usuário que executa {appName} for o proprietário do arquivo. É melhor garantir que o cliente de download defina as permissões corretamente.",
     "ChownGroup": "Fazer chown de grupo",
     "ChownGroupHelpText": "Nome do grupo ou gid. Use gid para sistemas de arquivos remotos.",
-    "ChownGroupHelpTextWarning": "Isso só funciona se o usuário que está executando o {appName} for o proprietário do arquivo. É melhor garantir que o cliente de download use o mesmo grupo que o {appName}.",
+    "ChownGroupHelpTextWarning": "Isso só funciona se o usuário que executa {appName} for o proprietário do arquivo. É melhor garantir que o cliente de download use o mesmo grupo que {appName}.",
     "Clear": "Limpar",
     "ClickToChangeQuality": "Clique para alterar a qualidade",
     "ClientPriority": "Prioridade do cliente",
@@ -1154,5 +1154,9 @@
     "RemoveTagsAutomatically": "Remover Tags Automaticamente",
     "RemoveTagsAutomaticallyHelpText": "Remover tags automaticamente se as condições não forem encontradas",
     "SupportedAutoTaggingProperties": "{appName} oferece suporte às propriedades a seguir para regras de codificação automática",
-    "QueueFilterHasNoItems": "O filtro de fila selecionado não possui itens"
+    "QueueFilterHasNoItems": "O filtro de fila selecionado não possui itens",
+    "PasswordConfirmation": "Confirmação Da Senha",
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirme a nova senha",
+    "ClearBlocklist": "Limpar lista de bloqueio",
+    "ClearBlocklistMessageText": "Tem certeza de que deseja limpar todos os itens da lista de bloqueio?"
 }
