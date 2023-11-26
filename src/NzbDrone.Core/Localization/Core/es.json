@@ -808,5 +808,7 @@
     "AddConditionImplementation": "Agregar Condición - { implementationName}",
     "EditIndexerImplementation": "Agregar Condición - { implementationName}",
     "AddImportListImplementation": "Añadir lista de importación - {implementationName}",
-    "DisabledForLocalAddresses": "Desactivado para direcciones locales"
+    "DisabledForLocalAddresses": "Desactivado para direcciones locales",
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirma la nueva contraseña",
+    "ClearBlocklist": "Limpiar lista de bloqueadas"
 }
