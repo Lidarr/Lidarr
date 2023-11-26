@@ -950,5 +950,6 @@
     "ManageLists": "Verwalte Listen",
     "NoDownloadClientsFound": "Keine Download Clienten gefunden",
     "NoIndexersFound": "Keine Indexer gefunden",
-    "NoImportListsFound": "Keine Einspiel-Listen gefunden"
+    "NoImportListsFound": "Keine Einspiel-Listen gefunden",
+    "AppUpdated": "{appName} aktualisiert"
 }
