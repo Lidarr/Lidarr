@@ -248,7 +248,7 @@
     "UnmonitoredHelpText": "Incluir las peliculas no monitoreadas en el feed de iCal",
     "UpdateAll": "Actualizar Todo",
     "UpdateAutomaticallyHelpText": "Descargar e instalar actualizaciones automáticamente. Se podrán instalar desde Sistema: Actualizaciones también",
-    "UpdateMechanismHelpText": "Usar el actualizador de {appName} o un script",
+    "UpdateMechanismHelpText": "Usar el actualizador incorporado de {appName} o un script",
     "Updates": "Actualizaciones",
     "UpdateScriptPathHelpText": "Ruta del script propio que toma el paquete de actualización y se encarga del proceso de actualización restante",
     "UpgradeAllowedHelpText": "Si está desactivado las calidades no serán actualizadas",
@@ -381,7 +381,7 @@
     "Group": "Grupo",
     "HasPendingChangesNoChanges": "Sin Cambios",
     "HasPendingChangesSaveChanges": "Guardar Cambios",
-    "History": "Historia",
+    "History": "Historial",
     "Host": "Host",
     "HostHelpText": "El mismo host especificado para el Gestor de Descargas remoto",
     "Hostname": "Nombre del Host",
@@ -418,7 +418,7 @@
     "MIA": "MIA",
     "MinimumAge": "Edad Mínima",
     "Mode": "Modo",
-    "Monitored": "Monitoreadas",
+    "Monitored": "Monitorizado",
     "MoreInfo": "Más Información",
     "MustContain": "Debe Contener",
     "Name": "Nombre",
@@ -810,5 +810,6 @@
     "AddImportListImplementation": "Añadir lista de importación - {implementationName}",
     "DisabledForLocalAddresses": "Desactivado para direcciones locales",
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirma la nueva contraseña",
-    "ClearBlocklist": "Limpiar lista de bloqueadas"
+    "ClearBlocklist": "Limpiar lista de bloqueadas",
+    "NoHistoryBlocklist": "Sin lista de bloqueo de historial"
 }
