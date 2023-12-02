@@ -29,13 +29,31 @@ namespace NzbDrone.Core.ImportLists.LastFm
                 return items;
             }
 
-            foreach (var item in jsonResponse.TopArtists.Artist)
+            if (jsonResponse.TopArtists == null)
             {
-                items.AddIfNotNull(new ImportListItemInfo
+                foreach (var item in jsonResponse.TopAlbums.Album)
                 {
-                    Artist = item.Name,
-                    ArtistMusicBrainzId = item.Mbid
-                });
+                    // Last.fm does provide an album MusicBrainzId, but it's
+                    // for a specific release rather than a group like
+                    // Lidarr wants. Matching on the name works well enough.
+                    items.AddIfNotNull(new ImportListItemInfo
+                    {
+                        Artist = item.Artist.Name,
+                        ArtistMusicBrainzId = item.Artist.Mbid,
+                        Album = item.Name
+                    });
+                }
+            }
+            else
+            {
+                foreach (var item in jsonResponse.TopArtists.Artist)
+                {
+                    items.AddIfNotNull(new ImportListItemInfo
+                    {
+                        Artist = item.Name,
+                        ArtistMusicBrainzId = item.Mbid
+                    });
+                }
             }
 
             return items;
