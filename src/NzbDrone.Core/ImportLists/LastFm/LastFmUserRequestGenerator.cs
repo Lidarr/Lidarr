@@ -27,7 +27,33 @@ namespace NzbDrone.Core.ImportLists.LastFm
 
         private IEnumerable<ImportListRequest> GetPagedRequests()
         {
-            yield return new ImportListRequest(string.Format("{0}&user={1}&limit={2}&api_key={3}&format=json", Settings.BaseUrl.TrimEnd('/'), Settings.UserId, Settings.Count, Settings.ApiKey), HttpAccept.Json);
+            var method = Settings.Method switch
+            {
+                (int)LastFmUserMethodList.TopAlbums => "user.gettopalbums",
+                _ => "user.gettopartists"
+            };
+
+            var period = Settings.Period switch
+            {
+                (int)LastFmUserTimePeriod.LastWeek => "7day",
+                (int)LastFmUserTimePeriod.LastMonth => "1month",
+                (int)LastFmUserTimePeriod.LastThreeMonths => "3month",
+                (int)LastFmUserTimePeriod.LastSixMonths => "6month",
+                (int)LastFmUserTimePeriod.LastTwelveMonths => "12month",
+                _ => "overall"
+            };
+
+            var request = new HttpRequestBuilder(Settings.BaseUrl)
+                .AddQueryParam("api_key", Settings.ApiKey)
+                .AddQueryParam("method", method)
+                .AddQueryParam("user", Settings.UserId)
+                .AddQueryParam("period", period)
+                .AddQueryParam("limit", Settings.Count)
+                .AddQueryParam("format", "json")
+                .Accept(HttpAccept.Json)
+                .Build();
+
+            yield return new ImportListRequest(request);
         }
     }
 }
