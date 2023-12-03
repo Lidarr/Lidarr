@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Music
             _logger = logger;
         }
 
-        private void MoveSingleArtist(Artist artist, string sourcePath, string destinationPath, int? index = null, int? total = null)
+        private void MoveSingleArtist(Artist artist, string sourcePath, string destinationPath, bool moveFiles, int? index = null, int? total = null)
         {
             if (!_diskProvider.FolderExists(sourcePath))
             {
@@ -57,14 +57,17 @@ namespace NzbDrone.Core.Music
 
             try
             {
-                _rootFolderWatchingService.ReportFileSystemChangeBeginning(sourcePath, destinationPath);
+                if (moveFiles)
+                {
+                    _rootFolderWatchingService.ReportFileSystemChangeBeginning(sourcePath, destinationPath);
 
-                // Ensure the parent of the artist folder exists, this will often just be the root folder, but
-                // in cases where people are using subfolders for first letter (etc) it may not yet exist.
-                _diskProvider.CreateFolder(new DirectoryInfo(destinationPath).Parent.FullName);
-                _diskTransferService.TransferFolder(sourcePath, destinationPath, TransferMode.Move);
+                    // Ensure the parent of the artist folder exists, this will often just be the root folder, but
+                    // in cases where people are using subfolders for first letter (etc) it may not yet exist.
+                    _diskProvider.CreateFolder(new DirectoryInfo(destinationPath).Parent.FullName);
+                    _diskTransferService.TransferFolder(sourcePath, destinationPath, TransferMode.Move);
 
-                _logger.ProgressInfo("{0} moved successfully to {1}", artist.Name, destinationPath);
+                    _logger.ProgressInfo("{0} moved successfully to {1}", artist.Name, destinationPath);
+                }
 
                 _eventAggregator.PublishEvent(new ArtistMovedEvent(artist, sourcePath, destinationPath));
             }
@@ -88,7 +91,7 @@ namespace NzbDrone.Core.Music
         {
             var artist = _artistService.GetArtist(message.ArtistId);
 
-            MoveSingleArtist(artist, message.SourcePath, message.DestinationPath);
+            MoveSingleArtist(artist, message.SourcePath, message.DestinationPath, message.MoveFiles);
         }
 
         public void Execute(BulkMoveArtistCommand message)
@@ -104,7 +107,7 @@ namespace NzbDrone.Core.Music
                 var artist = _artistService.GetArtist(s.ArtistId);
                 var destinationPath = Path.Combine(destinationRootFolder, _filenameBuilder.GetArtistFolder(artist));
 
-                MoveSingleArtist(artist, s.SourcePath, destinationPath, index, artistToMove.Count);
+                MoveSingleArtist(artist, s.SourcePath, destinationPath, message.MoveFiles, index, artistToMove.Count);
             }
 
             _logger.ProgressInfo("Finished moving {0} artist to '{1}'", artistToMove.Count, destinationRootFolder);
