@@ -46,13 +46,16 @@ namespace NzbDrone.Core.Music
                 return;
             }
 
-            if (index != null && total != null)
+            if (moveFiles)
             {
-                _logger.ProgressInfo("Moving {0} from '{1}' to '{2}' ({3}/{4})", artist.Name, sourcePath, destinationPath, index + 1, total);
-            }
-            else
-            {
-                _logger.ProgressInfo("Moving {0} from '{1}' to '{2}'", artist.Name, sourcePath, destinationPath);
+                if (index != null && total != null)
+                {
+                    _logger.ProgressInfo("Moving {0} from '{1}' to '{2}' ({3}/{4})", artist.Name, sourcePath, destinationPath, index + 1, total);
+                }
+                else
+                {
+                    _logger.ProgressInfo("Moving {0} from '{1}' to '{2}'", artist.Name, sourcePath, destinationPath);
+                }
             }
 
             try
