@@ -432,16 +432,6 @@
               "schema": {
                 "$ref": "#/components/schemas/ArtistResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ArtistResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ArtistResource"
-              }
             }
           }
         },
@@ -525,23 +515,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ArtistResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ArtistResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -560,16 +534,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ArtistResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ArtistResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/ArtistResource"
               }
@@ -8212,266 +8176,12 @@
         },
         "additionalProperties": false
       },
-      "Album": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "artistMetadataId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "foreignAlbumId": {
-            "type": "string",
-            "nullable": true
-          },
-          "oldForeignAlbumIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "overview": {
-            "type": "string",
-            "nullable": true
-          },
-          "disambiguation": {
-            "type": "string",
-            "nullable": true
-          },
-          "releaseDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "images": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MediaCover"
-            },
-            "nullable": true
-          },
-          "links": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Links"
-            },
-            "nullable": true
-          },
-          "genres": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "albumType": {
-            "type": "string",
-            "nullable": true
-          },
-          "secondaryTypes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SecondaryAlbumType"
-            },
-            "nullable": true
-          },
-          "ratings": {
-            "$ref": "#/components/schemas/Ratings"
-          },
-          "cleanTitle": {
-            "type": "string",
-            "nullable": true
-          },
-          "profileId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "monitored": {
-            "type": "boolean"
-          },
-          "anyReleaseOk": {
-            "type": "boolean"
-          },
-          "lastInfoSync": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "added": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "addOptions": {
-            "$ref": "#/components/schemas/AddAlbumOptions"
-          },
-          "artistMetadata": {
-            "$ref": "#/components/schemas/ArtistMetadataLazyLoaded"
-          },
-          "albumReleases": {
-            "$ref": "#/components/schemas/AlbumReleaseListLazyLoaded"
-          },
-          "artist": {
-            "$ref": "#/components/schemas/ArtistLazyLoaded"
-          }
-        },
-        "additionalProperties": false
-      },
       "AlbumAddType": {
         "enum": [
           "automatic",
           "manual"
         ],
         "type": "string"
-      },
-      "AlbumLazyLoaded": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "$ref": "#/components/schemas/Album"
-          },
-          "isLoaded": {
-            "type": "boolean",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "AlbumListLazyLoaded": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Album"
-            },
-            "nullable": true,
-            "readOnly": true
-          },
-          "isLoaded": {
-            "type": "boolean",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "AlbumRelease": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "albumId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "foreignReleaseId": {
-            "type": "string",
-            "nullable": true
-          },
-          "oldForeignReleaseIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "string",
-            "nullable": true
-          },
-          "duration": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "label": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "disambiguation": {
-            "type": "string",
-            "nullable": true
-          },
-          "country": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "releaseDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "media": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Medium"
-            },
-            "nullable": true
-          },
-          "trackCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "monitored": {
-            "type": "boolean"
-          },
-          "album": {
-            "$ref": "#/components/schemas/AlbumLazyLoaded"
-          },
-          "tracks": {
-            "$ref": "#/components/schemas/TrackListLazyLoaded"
-          }
-        },
-        "additionalProperties": false
-      },
-      "AlbumReleaseLazyLoaded": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "$ref": "#/components/schemas/AlbumRelease"
-          },
-          "isLoaded": {
-            "type": "boolean",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "AlbumReleaseListLazyLoaded": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AlbumRelease"
-            },
-            "nullable": true,
-            "readOnly": true
-          },
-          "isLoaded": {
-            "type": "boolean",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
       },
       "AlbumReleaseResource": {
         "type": "object",
@@ -8795,91 +8505,6 @@
         ],
         "type": "string"
       },
-      "Artist": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "artistMetadataId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "cleanName": {
-            "type": "string",
-            "nullable": true
-          },
-          "sortName": {
-            "type": "string",
-            "nullable": true
-          },
-          "monitored": {
-            "type": "boolean"
-          },
-          "monitorNewItems": {
-            "$ref": "#/components/schemas/NewItemMonitorTypes"
-          },
-          "lastInfoSync": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "path": {
-            "type": "string",
-            "nullable": true
-          },
-          "rootFolderPath": {
-            "type": "string",
-            "nullable": true
-          },
-          "added": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "qualityProfileId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "metadataProfileId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "tags": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "nullable": true
-          },
-          "addOptions": {
-            "$ref": "#/components/schemas/AddArtistOptions"
-          },
-          "metadata": {
-            "$ref": "#/components/schemas/ArtistMetadataLazyLoaded"
-          },
-          "qualityProfile": {
-            "$ref": "#/components/schemas/QualityProfileLazyLoaded"
-          },
-          "metadataProfile": {
-            "$ref": "#/components/schemas/MetadataProfileLazyLoaded"
-          },
-          "albums": {
-            "$ref": "#/components/schemas/AlbumListLazyLoaded"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "foreignArtistId": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "ArtistEditorResource": {
         "type": "object",
         "properties": {
@@ -8931,110 +8556,6 @@
           },
           "addImportListExclusion": {
             "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ArtistLazyLoaded": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "$ref": "#/components/schemas/Artist"
-          },
-          "isLoaded": {
-            "type": "boolean",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ArtistMetadata": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "foreignArtistId": {
-            "type": "string",
-            "nullable": true
-          },
-          "oldForeignArtistIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "aliases": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "overview": {
-            "type": "string",
-            "nullable": true
-          },
-          "disambiguation": {
-            "type": "string",
-            "nullable": true
-          },
-          "type": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "$ref": "#/components/schemas/ArtistStatusType"
-          },
-          "images": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MediaCover"
-            },
-            "nullable": true
-          },
-          "links": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Links"
-            },
-            "nullable": true
-          },
-          "genres": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "ratings": {
-            "$ref": "#/components/schemas/Ratings"
-          },
-          "members": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Member"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ArtistMetadataLazyLoaded": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "$ref": "#/components/schemas/ArtistMetadata"
-          },
-          "isLoaded": {
-            "type": "boolean",
-            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -9101,10 +8622,10 @@
             "nullable": true
           },
           "nextAlbum": {
-            "$ref": "#/components/schemas/Album"
+            "$ref": "#/components/schemas/AlbumResource"
           },
           "lastAlbum": {
-            "$ref": "#/components/schemas/Album"
+            "$ref": "#/components/schemas/AlbumResource"
           },
           "images": {
             "type": "array",
@@ -9668,30 +9189,6 @@
             "items": {
               "type": "object",
               "additionalProperties": { }
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CustomFormat": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "includeCustomFormatWhenRenaming": {
-            "type": "boolean"
-          },
-          "specifications": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ICustomFormatSpecification"
             },
             "nullable": true
           }
@@ -10403,37 +9900,6 @@
             "type": "string",
             "nullable": true,
             "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ICustomFormatSpecification": {
-        "type": "object",
-        "properties": {
-          "order": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "infoLink": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true
-          },
-          "implementationName": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "negate": {
-            "type": "boolean"
-          },
-          "required": {
-            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -11227,24 +10693,6 @@
         },
         "additionalProperties": false
       },
-      "Medium": {
-        "type": "object",
-        "properties": {
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "format": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "MediumResource": {
         "type": "object",
         "properties": {
@@ -11280,54 +10728,6 @@
               "$ref": "#/components/schemas/MediaCover"
             },
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "MetadataProfile": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "primaryAlbumTypes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProfilePrimaryAlbumTypeItem"
-            },
-            "nullable": true
-          },
-          "secondaryAlbumTypes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProfileSecondaryAlbumTypeItem"
-            },
-            "nullable": true
-          },
-          "releaseStatuses": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProfileReleaseStatusItem"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "MetadataProfileLazyLoaded": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "$ref": "#/components/schemas/MetadataProfile"
-          },
-          "isLoaded": {
-            "type": "boolean",
-            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -11889,19 +11289,6 @@
         ],
         "type": "string"
       },
-      "ProfileFormatItem": {
-        "type": "object",
-        "properties": {
-          "format": {
-            "$ref": "#/components/schemas/CustomFormat"
-          },
-          "score": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "ProfileFormatItemResource": {
         "type": "object",
         "properties": {
@@ -11924,18 +11311,6 @@
         },
         "additionalProperties": false
       },
-      "ProfilePrimaryAlbumTypeItem": {
-        "type": "object",
-        "properties": {
-          "primaryAlbumType": {
-            "$ref": "#/components/schemas/PrimaryAlbumType"
-          },
-          "allowed": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
       "ProfilePrimaryAlbumTypeItemResource": {
         "type": "object",
         "properties": {
@@ -11952,18 +11327,6 @@
         },
         "additionalProperties": false
       },
-      "ProfileReleaseStatusItem": {
-        "type": "object",
-        "properties": {
-          "releaseStatus": {
-            "$ref": "#/components/schemas/ReleaseStatus"
-          },
-          "allowed": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
       "ProfileReleaseStatusItemResource": {
         "type": "object",
         "properties": {
@@ -11973,18 +11336,6 @@
           },
           "releaseStatus": {
             "$ref": "#/components/schemas/ReleaseStatus"
-          },
-          "allowed": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ProfileSecondaryAlbumTypeItem": {
-        "type": "object",
-        "properties": {
-          "secondaryAlbumType": {
-            "$ref": "#/components/schemas/SecondaryAlbumType"
           },
           "allowed": {
             "type": "boolean"
@@ -12098,89 +11449,6 @@
           },
           "revision": {
             "$ref": "#/components/schemas/Revision"
-          }
-        },
-        "additionalProperties": false
-      },
-      "QualityProfile": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "upgradeAllowed": {
-            "type": "boolean"
-          },
-          "cutoff": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "minFormatScore": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "cutoffFormatScore": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "formatItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProfileFormatItem"
-            },
-            "nullable": true
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/QualityProfileQualityItem"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "QualityProfileLazyLoaded": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "$ref": "#/components/schemas/QualityProfile"
-          },
-          "isLoaded": {
-            "type": "boolean",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "QualityProfileQualityItem": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "quality": {
-            "$ref": "#/components/schemas/Quality"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/QualityProfileQualityItem"
-            },
-            "nullable": true
-          },
-          "allowed": {
-            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -13240,169 +12508,6 @@
         },
         "additionalProperties": false
       },
-      "Track": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "foreignTrackId": {
-            "type": "string",
-            "nullable": true
-          },
-          "oldForeignTrackIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "foreignRecordingId": {
-            "type": "string",
-            "nullable": true
-          },
-          "oldForeignRecordingIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "albumReleaseId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "artistMetadataId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "trackNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "absoluteTrackNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "duration": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "explicit": {
-            "type": "boolean"
-          },
-          "ratings": {
-            "$ref": "#/components/schemas/Ratings"
-          },
-          "mediumNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "trackFileId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hasFile": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "albumRelease": {
-            "$ref": "#/components/schemas/AlbumReleaseLazyLoaded"
-          },
-          "artistMetadata": {
-            "$ref": "#/components/schemas/ArtistMetadataLazyLoaded"
-          },
-          "trackFile": {
-            "$ref": "#/components/schemas/TrackFileLazyLoaded"
-          },
-          "artist": {
-            "$ref": "#/components/schemas/ArtistLazyLoaded"
-          },
-          "albumId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "album": {
-            "$ref": "#/components/schemas/Album"
-          }
-        },
-        "additionalProperties": false
-      },
-      "TrackFile": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "path": {
-            "type": "string",
-            "nullable": true
-          },
-          "size": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "modified": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "dateAdded": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "originalFilePath": {
-            "type": "string",
-            "nullable": true
-          },
-          "sceneName": {
-            "type": "string",
-            "nullable": true
-          },
-          "releaseGroup": {
-            "type": "string",
-            "nullable": true
-          },
-          "quality": {
-            "$ref": "#/components/schemas/QualityModel"
-          },
-          "mediaInfo": {
-            "$ref": "#/components/schemas/MediaInfoModel"
-          },
-          "albumId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "tracks": {
-            "$ref": "#/components/schemas/TrackListLazyLoaded"
-          },
-          "artist": {
-            "$ref": "#/components/schemas/ArtistLazyLoaded"
-          },
-          "album": {
-            "$ref": "#/components/schemas/AlbumLazyLoaded"
-          }
-        },
-        "additionalProperties": false
-      },
-      "TrackFileLazyLoaded": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "$ref": "#/components/schemas/TrackFile"
-          },
-          "isLoaded": {
-            "type": "boolean",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
       "TrackFileListResource": {
         "type": "object",
         "properties": {
@@ -13489,24 +12594,6 @@
           },
           "audioTags": {
             "$ref": "#/components/schemas/ParsedTrackInfo"
-          }
-        },
-        "additionalProperties": false
-      },
-      "TrackListLazyLoaded": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Track"
-            },
-            "nullable": true,
-            "readOnly": true
-          },
-          "isLoaded": {
-            "type": "boolean",
-            "readOnly": true
           }
         },
         "additionalProperties": false
