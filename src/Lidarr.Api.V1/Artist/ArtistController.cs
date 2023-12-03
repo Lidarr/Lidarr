@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
+using Lidarr.Api.V1.Albums;
 using Lidarr.Http;
 using Lidarr.Http.REST;
 using Lidarr.Http.REST.Attributes;
@@ -127,6 +128,7 @@ namespace Lidarr.Api.V1.Artist
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<ArtistResource> AllArtists(Guid? mbId)
         {
             var artistStats = _artistStatisticsService.ArtistStatistics();
@@ -151,6 +153,7 @@ namespace Lidarr.Api.V1.Artist
         }
 
         [RestPostById]
+        [Consumes("application/json")]
         public ActionResult<ArtistResource> AddArtist(ArtistResource artistResource)
         {
             var artist = _addArtistService.AddArtist(artistResource.ToModel());
@@ -159,6 +162,7 @@ namespace Lidarr.Api.V1.Artist
         }
 
         [RestPutById]
+        [Consumes("application/json")]
         public ActionResult<ArtistResource> UpdateArtist(ArtistResource artistResource, bool moveFiles = false)
         {
             var artist = _artistService.GetArtist(artistResource.Id);
@@ -205,8 +209,8 @@ namespace Lidarr.Api.V1.Artist
 
             foreach (var artistResource in artists)
             {
-                artistResource.NextAlbum = nextAlbums.FirstOrDefault(x => x.ArtistMetadataId == artistResource.ArtistMetadataId);
-                artistResource.LastAlbum = lastAlbums.FirstOrDefault(x => x.ArtistMetadataId == artistResource.ArtistMetadataId);
+                artistResource.NextAlbum = nextAlbums.FirstOrDefault(x => x.ArtistMetadataId == artistResource.ArtistMetadataId).ToResource();
+                artistResource.LastAlbum = lastAlbums.FirstOrDefault(x => x.ArtistMetadataId == artistResource.ArtistMetadataId).ToResource();
             }
         }
 

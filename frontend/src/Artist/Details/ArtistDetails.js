@@ -524,7 +524,7 @@ class ArtistDetails extends Component {
                     />
 
                     <span className={styles.qualityProfileName}>
-                      {monitored ? 'Monitored' : 'Unmonitored'}
+                      {monitored ? translate('Monitored') : translate('Unmonitored')}
                     </span>
                   </Label>
 
@@ -539,7 +539,7 @@ class ArtistDetails extends Component {
                     />
 
                     <span className={styles.qualityProfileName}>
-                      {continuing ? 'Continuing' : endedString}
+                      {continuing ? translate('Continuing') : endedString}
                     </span>
                   </Label>
 

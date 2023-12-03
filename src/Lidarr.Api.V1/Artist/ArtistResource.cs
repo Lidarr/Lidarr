@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Lidarr.Api.V1.Albums;
 using Lidarr.Http.REST;
 using Newtonsoft.Json;
 using NzbDrone.Common.Extensions;
@@ -31,8 +32,8 @@ namespace Lidarr.Api.V1.Artist
         public string Disambiguation { get; set; }
         public List<Links> Links { get; set; }
 
-        public Album NextAlbum { get; set; }
-        public Album LastAlbum { get; set; }
+        public AlbumResource NextAlbum { get; set; }
+        public AlbumResource LastAlbum { get; set; }
 
         public List<MediaCover> Images { get; set; }
         public List<Member> Members { get; set; }
