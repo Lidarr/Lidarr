@@ -722,7 +722,7 @@
     "HideAdvanced": "Ocultar opções avançadas",
     "Ignored": "Ignorado",
     "IndexerDownloadClientHelpText": "Especifique qual cliente de download é usado para baixar deste indexador",
-    "IndexerTagHelpText": "Usar este indexador apenas para artistas com pelo menos uma tag correspondente. Deixe em branco para usar com todos os artistas.",
+    "IndexerTagHelpText": "Use este indexador apenas para artistas com pelo menos uma tag correspondente. Deixe em branco para usar com todos os artistas.",
     "InstanceName": "Nome da instância",
     "InstanceNameHelpText": "Nome da instância na aba e para o nome do aplicativo Syslog",
     "InteractiveImport": "Importação interativa",
