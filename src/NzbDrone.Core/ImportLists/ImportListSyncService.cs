@@ -163,7 +163,7 @@ namespace NzbDrone.Core.ImportLists
 
         private void ProcessAlbumReport(ImportListDefinition importList, ImportListItemInfo report, Dictionary<string, ImportListExclusion> listExclusions, List<Album> albumsToAdd, List<Artist> artistsToAdd)
         {
-            if (report.AlbumMusicBrainzId == null || report.ArtistMusicBrainzId == null)
+            if (report.AlbumMusicBrainzId.IsNullOrWhiteSpace() || report.ArtistMusicBrainzId.IsNullOrWhiteSpace())
             {
                 return;
             }
@@ -267,7 +267,7 @@ namespace NzbDrone.Core.ImportLists
 
         private Artist ProcessArtistReport(ImportListDefinition importList, ImportListItemInfo report, Dictionary<string, ImportListExclusion> listExclusions, List<Artist> artistsToAdd)
         {
-            if (report.ArtistMusicBrainzId == null)
+            if (report.ArtistMusicBrainzId.IsNullOrWhiteSpace())
             {
                 return null;
             }

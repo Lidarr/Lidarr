@@ -47,11 +47,9 @@ namespace NzbDrone.Core.Music
 
         public Artist FindById(string foreignArtistId)
         {
-            Artist artist;
+            var artist = Query(Builder().Where<ArtistMetadata>(m => m.ForeignArtistId == foreignArtistId)).SingleOrDefault();
 
-            artist = Query(Builder().Where<ArtistMetadata>(m => m.ForeignArtistId == foreignArtistId)).SingleOrDefault();
-
-            if (artist == null)
+            if (artist == null && foreignArtistId.IsNotNullOrWhiteSpace())
             {
                 artist = Query(Builder().Where<ArtistMetadata>(x => x.OldForeignArtistIds.Contains(foreignArtistId))).SingleOrDefault();
             }
