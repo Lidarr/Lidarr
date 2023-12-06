@@ -220,6 +220,12 @@ namespace NzbDrone.Core.MediaFiles
 
             var diff = oldTags.Diff(newTags);
 
+            if (!diff.Any())
+            {
+                _logger.Debug("No tags update for {0} due to no difference", trackfile);
+                return;
+            }
+
             _rootFolderWatchingService.ReportFileSystemChangeBeginning(path);
 
             if (_configService.ScrubAudioTags)

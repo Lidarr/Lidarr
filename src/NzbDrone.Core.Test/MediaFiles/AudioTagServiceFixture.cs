@@ -5,11 +5,14 @@ using System.IO;
 using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles;
+using NzbDrone.Core.MediaFiles.Events;
+using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
@@ -166,7 +169,7 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         }
 
         [Test]
-        [TestCaseSource(typeof(TestCaseFactory), "TestCases")]
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCases))]
         public void should_read_duration(string filename, string[] ignored)
         {
             var path = Path.Combine(_testdir, filename);
@@ -177,7 +180,7 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         }
 
         [Test]
-        [TestCaseSource(typeof(TestCaseFactory), "TestCases")]
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCases))]
         public void should_read_write_tags(string filename, string[] skipProperties)
         {
             GivenFileCopy(filename);
@@ -195,7 +198,7 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         }
 
         [Test]
-        [TestCaseSource(typeof(TestCaseFactory), "TestCases")]
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCases))]
         public void should_remove_mb_tags(string filename, string[] skipProperties)
         {
             GivenFileCopy(filename);
@@ -229,7 +232,7 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         }
 
         [Test]
-        [TestCaseSource(typeof(TestCaseFactory), "TestCases")]
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCases))]
         public void should_read_audiotag_from_file_with_no_tags(string filename, string[] skipProperties)
         {
             GivenFileCopy(filename);
@@ -251,7 +254,7 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         }
 
         [Test]
-        [TestCaseSource(typeof(TestCaseFactory), "TestCases")]
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCases))]
         public void should_read_parsedtrackinfo_from_file_with_no_tags(string filename, string[] skipProperties)
         {
             GivenFileCopy(filename);
@@ -266,7 +269,7 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         }
 
         [Test]
-        [TestCaseSource(typeof(TestCaseFactory), "TestCases")]
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCases))]
         public void should_set_quality_and_mediainfo_for_corrupt_file(string filename, string[] skipProperties)
         {
             // use missing to simulate corrupt
@@ -281,7 +284,7 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         }
 
         [Test]
-        [TestCaseSource(typeof(TestCaseFactory), "TestCases")]
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCases))]
         public void should_read_file_with_only_title_tag(string filename, string[] ignored)
         {
             GivenFileCopy(filename);
@@ -301,7 +304,7 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         }
 
         [Test]
-        [TestCaseSource(typeof(TestCaseFactory), "TestCases")]
+        [TestCaseSource(typeof(TestCaseFactory), nameof(TestCaseFactory.TestCases))]
         public void should_remove_date_from_tags_when_not_in_metadata(string filename, string[] ignored)
         {
             GivenFileCopy(filename);
@@ -413,6 +416,29 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
             var fileInfo = _diskProvider.GetFileInfo(file.Path);
             file.Modified.Should().Be(fileInfo.LastWriteTimeUtc);
             file.Size.Should().Be(fileInfo.Length);
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Once());
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_not_update_tags_if_already_updated(string filename)
+        {
+            Mocker.GetMock<IConfigService>()
+                .Setup(x => x.ScrubAudioTags)
+                .Returns(true);
+
+            GivenFileCopy(filename);
+
+            var file = GivenPopulatedTrackfile(0);
+
+            file.Path = _copiedFile;
+            Subject.WriteTags(file, false, true);
+            Subject.WriteTags(file, false, true);
+            Subject.WriteTags(file, false, true);
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Once());
         }
     }
 }
