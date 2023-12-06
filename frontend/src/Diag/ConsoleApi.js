@@ -81,7 +81,8 @@ class ResourceApi {
 
 class ConsoleApi {
   constructor() {
-    this.series = new ResourceApi(this, '/artist');
+    this.artist = new ResourceApi(this, '/artist');
+    this.album = new ResourceApi(this, '/album');
   }
 
   resource(url) {
