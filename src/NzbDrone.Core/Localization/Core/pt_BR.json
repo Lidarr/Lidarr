@@ -1158,5 +1158,9 @@
     "PasswordConfirmation": "Confirmação Da Senha",
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirme a nova senha",
     "ClearBlocklist": "Limpar lista de bloqueio",
-    "ClearBlocklistMessageText": "Tem certeza de que deseja limpar todos os itens da lista de bloqueio?"
+    "ClearBlocklistMessageText": "Tem certeza de que deseja limpar todos os itens da lista de bloqueio?",
+    "AddArtistWithName": "Adicionar {artistName}",
+    "AddNewArtistSearchForMissingAlbums": "Iniciar a procurar álbuns perdidos",
+    "AddAlbumWithTitle": "Adicionar {albumTitle}",
+    "AddNewAlbumSearchForNewAlbum": "Iniciar busca por novo álbum"
 }
