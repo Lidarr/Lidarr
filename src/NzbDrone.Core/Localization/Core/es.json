@@ -807,5 +807,13 @@
     "NoHistoryBlocklist": "Sin lista de bloqueo de historial",
     "Connection": "Conexiones",
     "AutoTaggingNegateHelpText": "Si está marcado, la regla de etiquetado automático no aplicará si la condición {implementationName} coincide.",
-    "AutoTaggingRequiredHelpText": "Esta condición {implementationName} debe coincidir para que la regla de etiquetado automático se aplique. De lo contrario una sola coincidencia de {0} será suficiente."
+    "AutoTaggingRequiredHelpText": "Esta condición {implementationName} debe coincidir para que la regla de etiquetado automático se aplique. De lo contrario una sola coincidencia de {0} será suficiente.",
+    "CloneCustomFormat": "Clonar formato personalizado",
+    "CloneProfile": "Clonar Perfil",
+    "Close": "Cerrar",
+    "CloneIndexer": "Clonar Indexer",
+    "CompletedDownloadHandling": "Manipulación de descargas completas",
+    "ColonReplacement": "Reemplazar dos puntos",
+    "ClearBlocklistMessageText": "¿Estás seguro de que quieres borrar todos los elementos de la lista de bloqueo?",
+    "ClientPriority": "Prioridad del Cliente"
 }

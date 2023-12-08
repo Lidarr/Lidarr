@@ -310,7 +310,7 @@
     "60MinutesSixty": "60 Minuten: {0}",
     "APIKey": "API-sleutel",
     "About": "Over",
-    "AddListExclusion": "Toevoegen aan Uitzonderingenlijst",
+    "AddListExclusion": "Lijst uitzondering toevoegen",
     "AgeWhenGrabbed": "Leeftijd (op moment van ophalen)",
     "AlbumIsDownloadingInterp": "Film is aan het downloaden - {0}% {1}",
     "AlreadyInYourLibrary": "Reeds in uw bibliotheek",
@@ -574,7 +574,7 @@
     "Details": "Details",
     "DownloadFailed": "Download mislukt",
     "Progress": "Voortgang",
-    "AddImportListExclusion": "Verwijder van Uitzonderingenlijst",
+    "AddImportListExclusion": "Importlijst uitzondering toevoegen",
     "IndexerDownloadClientHelpText": "Specificeer welke download cliënt wordt gebruikt voor deze indexer",
     "InteractiveImport": "Interactieve Import",
     "ImportListExclusions": "Verwijder van Uitzonderingenlijst",
@@ -765,5 +765,10 @@
     "AddDownloadClientImplementation": "Voeg Downloadclient toe - {implementationName}",
     "AddIndexerImplementation": "Indexeerder toevoegen - {implementationName}",
     "AppUpdated": "{appName} is geüpdatet",
-    "AppUpdatedVersion": "{appName} is geüpdatet naar versie '{version}', om de laatste wijzigingen door te voeren moet je mogelijk {appName} herstarten"
+    "AppUpdatedVersion": "{appName} is geüpdatet naar versie '{version}', om de laatste wijzigingen door te voeren moet je mogelijk {appName} herstarten",
+    "AuthenticationRequired": "Verificatie vereist",
+    "AddImportList": "Importlijst toevoegen",
+    "AuthenticationMethod": "Authenticatiemethode",
+    "AuthenticationMethodHelpTextWarning": "Selecteer een geldige verificatie methode",
+    "AddImportListImplementation": "Importlijst toevoegen - {implementationName}"
 }
