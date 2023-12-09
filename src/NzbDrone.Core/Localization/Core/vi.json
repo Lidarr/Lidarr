@@ -705,5 +705,9 @@
     "DeleteSpecification": "Xóa thông báo",
     "DeleteSpecificationHelpText": "Bạn có chắc chắn muốn xóa cấu hình chất lượng không {0}",
     "OrganizeSelectedArtists": "Sắp xếp các phim đã chọn",
-    "OverviewOptions": "Tùy chọn Tổng quan"
+    "OverviewOptions": "Tùy chọn Tổng quan",
+    "AddImportListExclusionArtistHelpText": "Ngăn phim được thêm vào {appName} theo danh sách",
+    "AddListExclusionHelpText": "Ngăn phim được thêm vào {appName} theo danh sách",
+    "DeleteArtistFoldersHelpText": "Xóa thư mục phim và nội dung của nó",
+    "AddNewArtistSearchForMissingAlbums": "Bắt đầu tìm kiếm phim bị thiếu"
 }
