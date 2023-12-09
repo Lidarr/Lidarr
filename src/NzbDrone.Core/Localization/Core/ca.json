@@ -764,5 +764,9 @@
     "DeleteAutoTagHelpText": "Esteu segur que voleu suprimir l'etiqueta '{0}'?",
     "Negate": "Negació",
     "OrganizeSelectedArtists": "Organitza les pel·lícules seleccionades",
-    "Small": "Petita"
+    "Small": "Petita",
+    "AddListExclusionHelpText": "Eviteu que la pel·lícula s'afegeixi a {appName} per llistes",
+    "DeleteArtistFoldersHelpText": "Suprimeix la carpeta de pel·lícules i el seu contingut",
+    "AddNewArtistSearchForMissingAlbums": "Comenceu a cercar per pel·lícula absent",
+    "AddImportListExclusionArtistHelpText": "Eviteu que la pel·lícula s'afegeixi a {appName} per llistes"
 }

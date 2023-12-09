@@ -716,5 +716,10 @@
     "ConditionUsingRegularExpressions": "Bu koşul, Normal İfadeler kullanılarak eşleşir. {0} karakterlerinin özel anlamları olduğunu ve {1} ile çıkış yapılması gerektiğini unutmayın.",
     "Connection": "Bağlantılar",
     "RenameFiles": "Yeniden Adlandır",
-    "Small": "Küçük"
+    "Small": "Küçük",
+    "AddImportListExclusionArtistHelpText": "Listelerle filmin {appName}'a eklenmesini önleyin",
+    "AddListExclusionHelpText": "Listelerle filmin {appName}'a eklenmesini önleyin",
+    "EditIndexerImplementation": "Koşul Ekle - {uygulama Adı}",
+    "DeleteArtistFoldersHelpText": "Film klasörünü ve içeriğini silin",
+    "AddNewArtistSearchForMissingAlbums": "Kayıp filmi aramaya başlayın"
 }
