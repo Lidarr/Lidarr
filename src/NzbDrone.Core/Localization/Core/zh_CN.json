@@ -74,7 +74,7 @@
     "EnableCompletedDownloadHandlingHelpText": "自动从下载客户端导入已完成的下载内容",
     "EnableHelpText": "启用此元数据类型的元数据文件创建",
     "EnableInteractiveSearch": "启用手动搜索",
-    "EnableSSL": "启用SSL",
+    "EnableSSL": "启用 SSL",
     "EnableSslHelpText": " 重启生效",
     "ErrorLoadingContents": "加载内容出错",
     "Exception": "例外",
@@ -406,7 +406,7 @@
     "DownloadFailedInterp": "下载失败: {0}",
     "DownloadPropersAndRepacksHelpTexts1": "是否自动更新至合适的或者Repack",
     "DownloadWarningCheckDownloadClientForMoreDetails": "下载警告：查看下载客户端获取更多信息",
-    "EnableRSS": "启用RSS",
+    "EnableRSS": "启用 RSS",
     "Ended": "已完结",
     "ErrorLoadingPreviews": "读取预告片错误",
     "ExpandAlbumByDefaultHelpText": "专辑",
@@ -1149,5 +1149,6 @@
     "Small": "小",
     "AlbumStudioTruncated": "只显示最新的25季，点击详情查看所有的季",
     "ArtistIsMonitored": "作者未监控",
-    "AddNewArtistSearchForMissingAlbums": "开始搜索缺失影片"
+    "AddNewArtistSearchForMissingAlbums": "开始搜索缺失影片",
+    "EnableProfile": "启用配置"
 }
