@@ -56,7 +56,7 @@ namespace NzbDrone.Core.MediaFiles
 
         public static string FormatAudioCodec(MediaInfoModel mediaInfo)
         {
-            var codec = QualityParser.ParseCodec(mediaInfo.AudioFormat, null);
+            var codec = QualityParser.ParseCodec(mediaInfo.AudioFormat);
 
             if (CodecNames.ContainsKey(codec))
             {
