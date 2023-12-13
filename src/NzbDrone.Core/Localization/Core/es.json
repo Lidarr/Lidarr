@@ -453,7 +453,7 @@
     "Automatic": "Automático",
     "DelayingDownloadUntilInterp": "Retrasar descarga hasta {0} en {1}",
     "Docker": "Docker",
-    "AddMissing": "Añadir los que faltan",
+    "AddMissing": "Añadir faltantes",
     "AddNewItem": "Añadir nuevo item",
     "AllExpandedCollapseAll": "Cerrar todo",
     "AllExpandedExpandAll": "Expandir todo",
@@ -799,7 +799,7 @@
     "Absolute": "Absoluto",
     "AddNewArtistRootFolderHelpText": "La subcarpeta '{folder}' será creada automáticamente",
     "AddConditionImplementation": "Agregar Condición - { implementationName}",
-    "EditIndexerImplementation": "Agregar Condición - { implementationName}",
+    "EditIndexerImplementation": "Editar indexador - {implementationName}",
     "AddImportListImplementation": "Añadir lista de importación - {implementationName}",
     "DisabledForLocalAddresses": "Desactivado para direcciones locales",
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirma la nueva contraseña",
@@ -868,5 +868,9 @@
     "CloneAutoTag": "Clonar Etiquetado Automático",
     "ConditionUsingRegularExpressions": "Esta condición coincide con el uso de Expresiones Regulares. Tenga en cuenta que los caracteres {0} tienen significados especiales y necesitan escapar con un {1}",
     "DeleteSpecificationHelpText": "¿Seguro que quieres eliminiar la notificación '{name}'?",
-    "PosterOptions": "Opciones del Poster"
+    "PosterOptions": "Opciones del Poster",
+    "EnableProfile": "Habilitar perfil",
+    "AddNewAlbum": "Añadir nuevo álbum",
+    "AddAlbumWithTitle": "Añadir {albumTitle}",
+    "AddArtistWithName": "Añadir {artistName}"
 }
