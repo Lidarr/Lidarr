@@ -47,28 +47,21 @@ namespace NzbDrone.Core.Indexers.Redacted
                     foreach (var torrent in result.Torrents)
                     {
                         var id = torrent.TorrentId;
+                        var title = WebUtility.HtmlDecode(GetTitle(result, torrent));
                         var artist = WebUtility.HtmlDecode(result.Artist);
                         var album = WebUtility.HtmlDecode(result.GroupName);
-
-                        var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
-                        if (torrent.HasCue)
-                        {
-                            title += " [Cue]";
-                        }
 
                         torrentInfos.Add(new GazelleInfo
                         {
                             Guid = $"Redacted-{id}",
+                            InfoUrl = GetInfoUrl(result.GroupId, id),
+                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken),
+                            Title = title,
                             Artist = artist,
-
-                            // Splice Title from info to avoid calling API again for every torrent.
-                            Title = WebUtility.HtmlDecode(title),
                             Album = album,
                             Container = torrent.Encoding,
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),
-                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken),
-                            InfoUrl = GetInfoUrl(result.GroupId, id),
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                             PublishDate = torrent.Time.ToUniversalTime(),
@@ -85,13 +78,50 @@ namespace NzbDrone.Core.Indexers.Redacted
                     .ToArray();
         }
 
+        private string GetTitle(GazelleRelease result, GazelleTorrent torrent)
+        {
+            var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear})";
+
+            if (result.ReleaseType.IsNotNullOrWhiteSpace() && result.ReleaseType != "Unknown")
+            {
+                title += " [" + result.ReleaseType + "]";
+            }
+
+            if (torrent.RemasterTitle.IsNotNullOrWhiteSpace())
+            {
+                title += $" [{$"{torrent.RemasterTitle} {torrent.RemasterYear}".Trim()}]";
+            }
+
+            var flags = new List<string>
+            {
+                $"{torrent.Format} {torrent.Encoding}",
+                $"{torrent.Media}"
+            };
+
+            if (torrent.HasLog)
+            {
+                flags.Add("Log (" + torrent.LogScore + "%)");
+            }
+
+            if (torrent.HasCue)
+            {
+                flags.Add("Cue");
+            }
+
+            return $"{title} [{string.Join(" / ", flags)}]";
+        }
+
         private string GetDownloadUrl(int torrentId, bool canUseToken)
         {
             var url = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/ajax.php")
                 .AddQueryParam("action", "download")
-                .AddQueryParam("id", torrentId)
-                .AddQueryParam("usetoken", _settings.UseFreeleechToken && canUseToken ? 1 : 0);
+                .AddQueryParam("id", torrentId);
+
+            if (_settings.UseFreeleechToken && canUseToken)
+            {
+                url = url.AddQueryParam("usetoken", "1");
+            }
 
             return url.FullUri;
         }
