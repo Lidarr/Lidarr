@@ -50,7 +50,7 @@ class MissingConnector extends Component {
       gotoMissingFirstPage
     } = this.props;
 
-    registerPagePopulator(this.repopulate, ['trackFileUpdated']);
+    registerPagePopulator(this.repopulate, ['trackFileUpdated', 'trackFileDeleted']);
 
     if (useCurrentPage) {
       fetchMissing();
