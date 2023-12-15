@@ -8,6 +8,7 @@ import EditArtistModalConnector from 'Artist/Edit/EditArtistModalConnector';
 import ArtistHistoryModal from 'Artist/History/ArtistHistoryModal';
 import MonitoringOptionsModal from 'Artist/MonitoringOptions/MonitoringOptionsModal';
 import ArtistInteractiveSearchModalConnector from 'Artist/Search/ArtistInteractiveSearchModalConnector';
+import Alert from 'Components/Alert';
 import HeartRating from 'Components/HeartRating';
 import Icon from 'Components/Icon';
 import Label from 'Components/Label';
@@ -611,17 +612,19 @@ class ArtistDetails extends Component {
             }
 
             {
-              !isFetching && albumsError &&
-                <div>
-                  {translate('LoadingAlbumsFailed')}
-                </div>
+              !isFetching && albumsError ?
+                <Alert kind={kinds.DANGER}>
+                  {translate('AlbumsLoadError')}
+                </Alert> :
+                null
             }
 
             {
-              !isFetching && trackFilesError &&
-                <div>
-                  {translate('LoadingTrackFilesFailed')}
-                </div>
+              !isFetching && trackFilesError ?
+                <Alert kind={kinds.DANGER}>
+                  {translate('TrackFilesLoadError')}
+                </Alert> :
+                null
             }
 
             {

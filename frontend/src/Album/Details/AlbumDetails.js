@@ -9,6 +9,7 @@ import EditAlbumModalConnector from 'Album/Edit/EditAlbumModalConnector';
 import AlbumInteractiveSearchModalConnector from 'Album/Search/AlbumInteractiveSearchModalConnector';
 import ArtistGenres from 'Artist/Details/ArtistGenres';
 import ArtistHistoryModal from 'Artist/History/ArtistHistoryModal';
+import Alert from 'Components/Alert';
 import HeartRating from 'Components/HeartRating';
 import Icon from 'Components/Icon';
 import Label from 'Components/Label';
@@ -531,23 +532,24 @@ class AlbumDetails extends Component {
             }
 
             {
-              !isFetching && albumsError &&
-                <div>
-                  {translate('LoadingAlbumsFailed')}
-                </div>
+              !isFetching && albumsError ?
+                <Alert kind={kinds.DANGER}>
+                  {translate('AlbumsLoadError')}
+                </Alert> :
+                null
             }
 
             {
-              !isFetching && trackFilesError &&
-                <div>
-                  {translate('LoadingTrackFilesFailed')}
-                </div>
+              !isFetching && trackFilesError ?
+                <Alert kind={kinds.DANGER}>
+                  {translate('TrackFilesLoadError')}
+                </Alert> :
+                null
             }
 
             {
               isPopulated && !!media.length &&
                 <div>
-
                   {
                     media.slice(0).map((medium) => {
                       return (
