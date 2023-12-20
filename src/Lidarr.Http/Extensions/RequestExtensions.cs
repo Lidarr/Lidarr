@@ -12,7 +12,7 @@ namespace Lidarr.Http.Extensions
         // See src/Lidarr.Api.V1/Queue/QueueModule.cs
         private static readonly HashSet<string> VALID_SORT_KEYS = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            "artists.sortname", // Workaround authors table properties not being added on isValidSortKey call
+            "artists.sortName", // Workaround authors table properties not being added on isValidSortKey call
             "timeleft",
             "estimatedCompletionTime",
             "protocol",
