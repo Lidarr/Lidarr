@@ -246,7 +246,6 @@
     "ExistingTagsScrubbed": "Tags existentes apagadas",
     "ExpandAlbumByDefaultHelpText": "Álbum",
     "ExpandOtherByDefaultHelpText": "Outros",
-    "ExtraFileExtensionsHelpTexts1": "Lista separada por vírgulas de arquivos adicionais a importar (.nfo será importado como .nfo-orig)",
     "FileDateHelpText": "Alterar a data do arquivo ao importar/verificar novamente",
     "Filename": "Nome do arquivo",
     "FileNames": "Nomes de arquivo",
@@ -543,7 +542,6 @@
     "FileManagement": "Gerenciamento de arquivo",
     "LidarrSupportsMultipleListsForImportingAlbumsAndArtistsIntoTheDatabase": "O {appName} oferece suporte a várias listas para importar livros e autores para o banco de dados.",
     "LidarrTags": "Tags do {appName}",
-    "LoadingTrackFilesFailed": "Falha ao carregar arquivos do livro",
     "Local": "Local",
     "LocalPath": "Caminho local",
     "LocalPathHelpText": "Caminho que o {appName} deve usar para acessar o caminho remoto localmente",
@@ -616,7 +614,6 @@
     "IsExpandedShowTracks": "Mostrar faixas",
     "LatestAlbum": "Último Álbum",
     "LatestAlbumData": "Monitorar os últimos e futuros álbuns",
-    "LoadingAlbumsFailed": "Falha ao carregar álbuns",
     "ManageTracks": "Gerenciar Faixas",
     "MissingAlbums": "Álbuns Ausentes",
     "MissingAlbumsData": "Monitorar álbuns que você não tem arquivos ou não foram lançados ainda",
@@ -650,7 +647,6 @@
     "TheArtistFolderStrongpathstrongAndAllOfItsContentWillBeDeleted": "A pasta do artista '{0}' e todo o seu conteúdo serão excluídos.",
     "ExpandEPByDefaultHelpText": "EPs",
     "ExpandSingleByDefaultHelpText": "Singles",
-    "ExtraFileExtensionsHelpTexts2": "\"Exemplos: \".sub",
     "OnApplicationUpdateHelpText": "Ao atualizar o aplicativo",
     "OnApplicationUpdate": "Na Atualização do Aplicativo",
     "OnRename": "Ao Renomear",
@@ -1162,5 +1158,8 @@
     "AddArtistWithName": "Adicionar {artistName}",
     "AddNewArtistSearchForMissingAlbums": "Iniciar a procurar álbuns perdidos",
     "AddAlbumWithTitle": "Adicionar {albumTitle}",
-    "AddNewAlbumSearchForNewAlbum": "Iniciar busca por novo álbum"
+    "AddNewAlbumSearchForNewAlbum": "Iniciar busca por novo álbum",
+    "TrackFilesLoadError": "Não foi possível carregar arquivos das faixas",
+    "ExtraFileExtensionsHelpTextsExamples": "Exemplos: '.sub, .nfo' or 'sub,nfo'",
+    "ExtraFileExtensionsHelpText": "Lista separada por vírgulas de arquivos extras para importar (.nfo será importado como .nfo-orig)"
 }

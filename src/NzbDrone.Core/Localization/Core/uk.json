@@ -362,7 +362,6 @@
     "Events": "Події",
     "EventType": "Тип події",
     "Exception": "Виняток",
-    "ExtraFileExtensionsHelpTexts1": "Розділений комами список додаткових файлів для імпорту (.nfo буде імпортовано як .nfo-orig)",
     "FileDateHelpText": "Змінити дату файлу під час імпорту/повторного сканування",
     "Filename": "Ім'я файлу",
     "FileNames": "Імена файлів",

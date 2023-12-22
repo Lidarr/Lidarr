@@ -226,7 +226,7 @@
     "Authentication": "Autenticação",
     "AuthenticationMethodHelpText": "Solicitar nome de utilizador e palavra-passe para acessar ao {appName}",
     "AutoRedownloadFailedHelpText": "Procurar automaticamente e tente baixar uma versão diferente",
-    "BackupFolderHelpText": "Caminhos relativos estarão na pasta AppData do {appName}",
+    "BackupFolderHelpText": "Caminhos relativos estarão no diretório AppData do {appName}",
     "BackupIntervalHelpText": "Intervalo para criar cópia de segurança das configurações e da base de dados do {appName}",
     "BackupNow": "Criar cópia de segurança",
     "BackupRetentionHelpText": "Cópias de segurança automáticas anteriores ao período de retenção serão eliminadas automaticamente",
@@ -327,7 +327,6 @@
     "LidarrSupportsAnyIndexerThatUsesTheNewznabStandardAsWellAsOtherIndexersListedBelow": "O {appName} suporta qualquer indexador que utiliza o padrão Newznab, bem como outros listados abaixo.",
     "LidarrSupportsMultipleListsForImportingAlbumsAndArtistsIntoTheDatabase": "O {appName} suporta múltiplas listas para importação de livros e autores para a base de dados.",
     "LidarrTags": "Etiquetas do {appName}",
-    "LoadingTrackFilesFailed": "Falha no carregamento dos ficheiros do livro",
     "Local": "Local",
     "LocalPathHelpText": "Caminho que o {appName} deve usar para acessar localmente ao caminho remoto",
     "LogLevel": "Nível de log",
@@ -448,7 +447,6 @@
     "EnableSSL": "Ativar SSL",
     "ExistingTagsScrubbed": "Etiquetas existentes eliminadas",
     "ExpandOtherByDefaultHelpText": "Outros",
-    "ExtraFileExtensionsHelpTexts1": "Lista separada por vírgulas de ficheiros adicionais a importar (.nfo será importado como .nfo-orig)",
     "FileDateHelpText": "Mudar data do ficheiro ao importar/analisar",
     "FileManagement": "Gestão do ficheiro",
     "Filename": "Nome do ficheiro",
@@ -548,7 +546,7 @@
     "ApplicationUrlHelpText": "O URL desta aplicação externa, incluindo http(s)://, porta e URL base",
     "Apply": "Aplicar",
     "AudioInfo": "Informações do áudio",
-    "Backup": "Cópia de segurança",
+    "Backup": "Backup",
     "BeforeUpdate": "Antes de atualizar",
     "Close": "Fechar",
     "Connect": "Conexões",
@@ -890,5 +888,7 @@
     "PosterOptions": "Opções do cartaz",
     "Posters": "Cartazes",
     "ReleaseProfile": "Perfis de versão",
-    "Small": "Pequeno"
+    "Small": "Pequeno",
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirmar nova senha",
+    "AutoTaggingRequiredHelpText": "Esta condição de {implementationName} deve corresponder para que a regra de marcação automática seja aplicada. Caso contrário, uma única correspondência de {implementationName} é suficiente."
 }

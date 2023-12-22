@@ -1,1 +1,12 @@
-{}
+{
+    "AddConditionImplementation": "Pievienot Nosacījumu - {implementationName}",
+    "AddDelayProfile": "Pievienot Aizkaves Profilu",
+    "AddConnectionImplementation": "Pievienot Savienojumu - {implementationName}",
+    "Actions": "Darbības",
+    "About": "Par",
+    "Activity": "Aktivitāte",
+    "Add": "Pievienot",
+    "AddAutoTag": "Pievienot Automātisko Tagu",
+    "AddCondition": "Pievienot Nosacījumu",
+    "AddConnection": "Pievienot Savienojumu"
+}
