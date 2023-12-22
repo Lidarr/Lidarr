@@ -11437,6 +11437,11 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          },
+          "preferredSize": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
           }
         },
         "additionalProperties": false
