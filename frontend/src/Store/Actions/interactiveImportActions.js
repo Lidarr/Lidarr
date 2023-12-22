@@ -35,6 +35,8 @@ export const defaultState = {
   pendingChanges: {},
   sortKey: 'path',
   sortDirection: sortDirections.ASCENDING,
+  secondarySortKey: 'path',
+  secondarySortDirection: sortDirections.ASCENDING,
   recentFolders: [],
   importMode: 'chooseImportMode',
   sortPredicates: {
@@ -75,6 +77,8 @@ export const defaultState = {
 };
 
 export const persistState = [
+  'interactiveImport.sortKey',
+  'interactiveImport.sortDirection',
   'interactiveImport.recentFolders',
   'interactiveImport.importMode'
 ];
