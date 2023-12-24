@@ -11,7 +11,7 @@ import FilterBuilderRowValueConnector from './FilterBuilderRowValueConnector';
 import HistoryEventTypeFilterBuilderRowValue from './HistoryEventTypeFilterBuilderRowValue';
 import IndexerFilterBuilderRowValueConnector from './IndexerFilterBuilderRowValueConnector';
 import MetadataProfileFilterBuilderRowValueConnector from './MetadataProfileFilterBuilderRowValueConnector';
-import ProtocolFilterBuilderRowValue from './ProtocolFilterBuilderRowValue';
+import ProtocolFilterBuilderRowValue from './ProtocolFilterBuilderRowValueConnector';
 import QualityFilterBuilderRowValueConnector from './QualityFilterBuilderRowValueConnector';
 import QualityProfileFilterBuilderRowValueConnector from './QualityProfileFilterBuilderRowValueConnector';
 import TagFilterBuilderRowValueConnector from './TagFilterBuilderRowValueConnector';

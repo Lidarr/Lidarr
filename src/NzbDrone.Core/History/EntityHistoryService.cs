@@ -162,7 +162,7 @@ namespace NzbDrone.Core.History
                 history.Data.Add("Size", message.Album.Release.Size.ToString());
                 history.Data.Add("DownloadUrl", message.Album.Release.DownloadUrl);
                 history.Data.Add("Guid", message.Album.Release.Guid);
-                history.Data.Add("Protocol", ((int)message.Album.Release.DownloadProtocol).ToString());
+                history.Data.Add("Protocol", message.Album.Release.DownloadProtocol.ToString());
                 history.Data.Add("DownloadForced", (!message.Album.DownloadAllowed).ToString());
                 history.Data.Add("CustomFormatScore", message.Album.CustomFormatScore.ToString());
 

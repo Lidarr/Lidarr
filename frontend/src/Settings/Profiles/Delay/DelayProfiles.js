@@ -82,18 +82,10 @@ class DelayProfiles extends Component {
             >
               <div>
                 <div className={styles.delayProfilesHeader}>
-                  <div className={styles.column}>
-                    {translate('PreferredProtocol')}
-                  </div>
-                  <div className={styles.column}>
-                    {translate('UsenetDelay')}
-                  </div>
-                  <div className={styles.column}>
-                    {translate('TorrentDelay')}
-                  </div>
-                  <div className={styles.tags}>
-                    {translate('Tags')}
-                  </div>
+                  <div className={styles.name}>{translate('Name')}</div>
+                  <div className={styles.fillcolumn}>{translate('Protocols')}</div>
+                  <div className={styles.fillcolumn}>{translate('Tags')}</div>
+                  <div className={styles.actions} />
                 </div>
 
                 <div className={styles.delayProfiles}>

@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         {
             _remoteAlbum = new RemoteAlbum
             {
-                Release = new ReleaseInfo() { DownloadProtocol = DownloadProtocol.Torrent }
+                Release = new ReleaseInfo() { DownloadProtocol = nameof(TorrentDownloadProtocol) }
             };
         }
 

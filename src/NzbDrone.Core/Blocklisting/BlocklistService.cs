@@ -4,7 +4,6 @@ using System.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Download;
-using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music.Events;
@@ -22,44 +21,30 @@ namespace NzbDrone.Core.Blocklisting
     }
 
     public class BlocklistService : IBlocklistService,
-
                                     IExecute<ClearBlocklistCommand>,
                                     IHandle<DownloadFailedEvent>,
                                     IHandleAsync<ArtistsDeletedEvent>
     {
         private readonly IBlocklistRepository _blocklistRepository;
+        private readonly List<IBlocklistForProtocol> _protocolBlocklists;
 
-        public BlocklistService(IBlocklistRepository blocklistRepository)
+        public BlocklistService(IBlocklistRepository blocklistRepository,
+                                IEnumerable<IBlocklistForProtocol> protocolBlocklists)
         {
             _blocklistRepository = blocklistRepository;
+            _protocolBlocklists = protocolBlocklists.ToList();
         }
 
         public bool Blocklisted(int artistId, ReleaseInfo release)
         {
-            var blocklistedByTitle = _blocklistRepository.BlocklistedByTitle(artistId, release.Title);
+            var protocolBlocklist = _protocolBlocklists.FirstOrDefault(x => x.Protocol == release.DownloadProtocol);
 
-            if (release.DownloadProtocol == DownloadProtocol.Torrent)
+            if (protocolBlocklist != null)
             {
-                var torrentInfo = release as TorrentInfo;
-
-                if (torrentInfo == null)
-                {
-                    return false;
-                }
-
-                if (torrentInfo.InfoHash.IsNullOrWhiteSpace())
-                {
-                    return blocklistedByTitle.Where(b => b.Protocol == DownloadProtocol.Torrent)
-                                             .Any(b => SameTorrent(b, torrentInfo));
-                }
-
-                var blocklistedByTorrentInfohash = _blocklistRepository.BlocklistedByTorrentInfoHash(artistId, torrentInfo.InfoHash);
-
-                return blocklistedByTorrentInfohash.Any(b => SameTorrent(b, torrentInfo));
+                return protocolBlocklist.IsBlocklisted(artistId, release);
             }
 
-            return blocklistedByTitle.Where(b => b.Protocol == DownloadProtocol.Usenet)
-                                     .Any(b => SameNzb(b, release));
+            return false;
         }
 
         public PagingSpec<Blocklist> Paged(PagingSpec<Blocklist> pagingSpec)
@@ -168,22 +153,14 @@ namespace NzbDrone.Core.Blocklisting
 
         public void Handle(DownloadFailedEvent message)
         {
-            var blocklist = new Blocklist
-            {
-                ArtistId = message.ArtistId,
-                AlbumIds = message.AlbumIds,
-                SourceTitle = message.SourceTitle,
-                Quality = message.Quality,
-                Date = DateTime.UtcNow,
-                PublishedDate = DateTime.Parse(message.Data.GetValueOrDefault("publishedDate")),
-                Size = long.Parse(message.Data.GetValueOrDefault("size", "0")),
-                Indexer = message.Data.GetValueOrDefault("indexer"),
-                Protocol = (DownloadProtocol)Convert.ToInt32(message.Data.GetValueOrDefault("protocol")),
-                Message = message.Message,
-                TorrentInfoHash = message.Data.GetValueOrDefault("torrentInfoHash")
-            };
+            var protocolBlocklist = _protocolBlocklists.FirstOrDefault(x => x.Protocol == message.Data.GetValueOrDefault("protocol"));
 
-            _blocklistRepository.Insert(blocklist);
+            if (protocolBlocklist != null)
+            {
+                var blocklist = protocolBlocklist.GetBlocklist(message);
+
+                _blocklistRepository.Insert(blocklist);
+            }
         }
 
         public void HandleAsync(ArtistsDeletedEvent message)

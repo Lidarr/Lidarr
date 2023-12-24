@@ -66,8 +66,8 @@ namespace NzbDrone.Core.Download
                     continue;
                 }
 
-                if ((downloadProtocol == DownloadProtocol.Usenet && usenetFailed) ||
-                    (downloadProtocol == DownloadProtocol.Torrent && torrentFailed))
+                if ((downloadProtocol == nameof(UsenetDownloadProtocol) && usenetFailed) ||
+                    (downloadProtocol == nameof(TorrentDownloadProtocol) && torrentFailed))
                 {
                     PreparePending(pendingAddQueue, grabbed, pending, report, PendingReleaseReason.DownloadClientUnavailable);
                     continue;
@@ -91,11 +91,11 @@ namespace NzbDrone.Core.Download
                         _logger.Debug(ex, "Failed to send release to download client, storing until later. " + remoteAlbum);
                         PreparePending(pendingAddQueue, grabbed, pending, report, PendingReleaseReason.DownloadClientUnavailable);
 
-                        if (downloadProtocol == DownloadProtocol.Usenet)
+                        if (downloadProtocol == nameof(UsenetDownloadProtocol))
                         {
                             usenetFailed = true;
                         }
-                        else if (downloadProtocol == DownloadProtocol.Torrent)
+                        else if (downloadProtocol == nameof(TorrentDownloadProtocol))
                         {
                             torrentFailed = true;
                         }

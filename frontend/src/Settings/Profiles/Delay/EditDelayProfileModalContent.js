@@ -12,49 +12,22 @@ import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
-import { inputTypes, kinds } from 'Helpers/Props';
-import { boolSettingShape, numberSettingShape, tagSettingShape } from 'Helpers/Props/Shapes/settingShape';
+import { inputTypes, kinds, sizes } from 'Helpers/Props';
+import { boolSettingShape, numberSettingShape, stringSettingShape, tagSettingShape } from 'Helpers/Props/Shapes/settingShape';
 import translate from 'Utilities/String/translate';
+import DownloadProtocolItems from './DownloadProtocolItems';
 import styles from './EditDelayProfileModalContent.css';
-
-const protocolOptions = [
-  {
-    key: 'preferUsenet',
-    get value() {
-      return translate('PreferUsenet');
-    }
-  },
-  {
-    key: 'preferTorrent',
-    get value() {
-      return translate('PreferTorrent');
-    }
-  },
-  {
-    key: 'onlyUsenet',
-    get value() {
-      return translate('OnlyUsenet');
-    }
-  },
-  {
-    key: 'onlyTorrent',
-    get value() {
-      return translate('OnlyTorrent');
-    }
-  }
-];
 
 function EditDelayProfileModalContent(props) {
   const {
     id,
     isFetching,
+    isPopulated,
     error,
     isSaving,
     saveError,
     item,
-    protocol,
     onInputChange,
-    onProtocolChange,
     onSavePress,
     onModalClose,
     onDeleteDelayProfilePress,
@@ -62,10 +35,8 @@ function EditDelayProfileModalContent(props) {
   } = props;
 
   const {
-    enableUsenet,
-    enableTorrent,
-    usenetDelay,
-    torrentDelay,
+    name,
+    items,
     bypassIfHighestQuality,
     bypassIfAboveCustomFormatScore,
     minimumCustomFormatScore,
@@ -88,60 +59,35 @@ function EditDelayProfileModalContent(props) {
         {
           !isFetching && !!error ?
             <div>
-              {translate('UnableToAddANewQualityProfilePleaseTryAgain')}
+              {translate('UnableToAddANewDelayProfilePleaseTryAgain')}
             </div> :
             null
         }
 
         {
-          !isFetching && !error ?
+          !isFetching && isPopulated && !error ?
             <Form {...otherProps}>
-              <FormGroup>
-                <FormLabel>{translate('PreferredProtocol')}</FormLabel>
+              <FormGroup size={sizes.SMALL}>
+                <FormLabel size={sizes.SMALL}>
+                  {translate('Name')}
+                </FormLabel>
 
                 <FormInputGroup
-                  type={inputTypes.SELECT}
-                  name="protocol"
-                  value={protocol}
-                  values={protocolOptions}
-                  helpText={translate('ProtocolHelpText')}
-                  onChange={onProtocolChange}
+                  type={inputTypes.TEXT}
+                  name="name"
+                  {...name}
+                  onChange={onInputChange}
                 />
               </FormGroup>
 
-              {
-                enableUsenet.value ?
-                  <FormGroup>
-                    <FormLabel>{translate('UsenetDelay')}</FormLabel>
-
-                    <FormInputGroup
-                      type={inputTypes.NUMBER}
-                      name="usenetDelay"
-                      unit="minutes"
-                      {...usenetDelay}
-                      helpText={translate('UsenetDelayHelpText')}
-                      onChange={onInputChange}
-                    />
-                  </FormGroup> :
-                  null
-              }
-
-              {
-                enableTorrent.value ?
-                  <FormGroup>
-                    <FormLabel>{translate('TorrentDelay')}</FormLabel>
-
-                    <FormInputGroup
-                      type={inputTypes.NUMBER}
-                      name="torrentDelay"
-                      unit="minutes"
-                      {...torrentDelay}
-                      helpText={translate('TorrentDelayHelpText')}
-                      onChange={onInputChange}
-                    />
-                  </FormGroup> :
-                  null
-              }
+              <div className={styles.formGroupWrapper}>
+                <DownloadProtocolItems
+                  items={items.value}
+                  errors={items.errors}
+                  warnings={items.warnings}
+                  {...otherProps}
+                />
+              </div>
 
               <FormGroup>
                 <FormLabel>{translate('BypassIfHighestQuality')}</FormLabel>
@@ -186,11 +132,13 @@ function EditDelayProfileModalContent(props) {
               {
                 id === 1 ?
                   <Alert>
-                    {translate('DefaultDelayProfileHelpText')}
+                    This is the default profile. It applies to all artists that don't have an explicit profile.
                   </Alert> :
 
-                  <FormGroup>
-                    <FormLabel>{translate('Tags')}</FormLabel>
+                  <FormGroup size={sizes.SMALL}>
+                    <FormLabel size={sizes.SMALL}>
+                      {translate('Tags')}
+                    </FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.TAG}
@@ -237,13 +185,11 @@ function EditDelayProfileModalContent(props) {
 }
 
 const delayProfileShape = {
-  enableUsenet: PropTypes.shape(boolSettingShape).isRequired,
-  enableTorrent: PropTypes.shape(boolSettingShape).isRequired,
-  usenetDelay: PropTypes.shape(numberSettingShape).isRequired,
-  torrentDelay: PropTypes.shape(numberSettingShape).isRequired,
   bypassIfHighestQuality: PropTypes.shape(boolSettingShape).isRequired,
   bypassIfAboveCustomFormatScore: PropTypes.shape(boolSettingShape).isRequired,
   minimumCustomFormatScore: PropTypes.shape(numberSettingShape).isRequired,
+  name: PropTypes.shape(stringSettingShape).isRequired,
+  items: PropTypes.object.isRequired,
   order: PropTypes.shape(numberSettingShape),
   tags: PropTypes.shape(tagSettingShape).isRequired
 };
@@ -251,13 +197,12 @@ const delayProfileShape = {
 EditDelayProfileModalContent.propTypes = {
   id: PropTypes.number,
   isFetching: PropTypes.bool.isRequired,
+  isPopulated: PropTypes.bool.isRequired,
   error: PropTypes.object,
   isSaving: PropTypes.bool.isRequired,
   saveError: PropTypes.object,
   item: PropTypes.shape(delayProfileShape).isRequired,
-  protocol: PropTypes.string.isRequired,
   onInputChange: PropTypes.func.isRequired,
-  onProtocolChange: PropTypes.func.isRequired,
   onSavePress: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired,
   onDeleteDelayProfilePress: PropTypes.func

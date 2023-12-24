@@ -17,6 +17,7 @@ namespace NzbDrone.Common.Extensions
         private const string LOG_DB = "logs.db";
         private const string NLOG_CONFIG_FILE = "nlog.config";
         private const string UPDATE_CLIENT_EXE_NAME = "Lidarr.Update";
+        private const string PLUGIN_FOLDER_NAME = "plugins";
 
         private static readonly string UPDATE_SANDBOX_FOLDER_NAME = "lidarr_update" + Path.DirectorySeparatorChar;
         private static readonly string UPDATE_PACKAGE_FOLDER_NAME = "Lidarr" + Path.DirectorySeparatorChar;
@@ -308,6 +309,26 @@ namespace NzbDrone.Common.Extensions
         public static string GetConfigPath(this IAppFolderInfo appFolderInfo)
         {
             return Path.Combine(GetAppDataPath(appFolderInfo), APP_CONFIG_FILE);
+        }
+
+        public static string GetPluginPath(this IAppFolderInfo appFolderInfo)
+        {
+            return Path.Combine(GetAppDataPath(appFolderInfo), PLUGIN_FOLDER_NAME);
+        }
+
+        public static List<string> GetPluginAssemblies(this IAppFolderInfo appFolderInfo)
+        {
+            var pluginFolder = appFolderInfo.GetPluginPath();
+
+            if (!Directory.Exists(pluginFolder))
+            {
+                return new List<string>();
+            }
+
+            return Directory.GetDirectories(pluginFolder)
+                .SelectMany(owner => Directory.GetDirectories(owner)
+                    .SelectMany(folder => Directory.GetFiles(folder, "Lidarr.Plugin.*.dll").ToList()))
+                .ToList();
         }
 
         public static string GetMediaCoverPath(this IAppFolderInfo appFolderInfo)
