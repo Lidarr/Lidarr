@@ -19,11 +19,38 @@ namespace NzbDrone.Core.Notifications.Discord
         public DiscordSettings()
         {
             // Set Default Fields
-            GrabFields = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-            ImportFields = new[] { 0, 1, 2, 3, 5, 6, 7, 8, 9 };
+            GrabFields = new[]
+            {
+                (int)DiscordGrabFieldType.Overview,
+                (int)DiscordGrabFieldType.Rating,
+                (int)DiscordGrabFieldType.Genres,
+                (int)DiscordGrabFieldType.Quality,
+                (int)DiscordGrabFieldType.Group,
+                (int)DiscordGrabFieldType.Size,
+                (int)DiscordGrabFieldType.Links,
+                (int)DiscordGrabFieldType.Release,
+                (int)DiscordGrabFieldType.Poster,
+                (int)DiscordGrabFieldType.Fanart,
+                (int)DiscordGrabFieldType.Indexer,
+                (int)DiscordGrabFieldType.CustomFormats,
+                (int)DiscordGrabFieldType.CustomFormatScore
+            };
+            ImportFields = new[]
+            {
+                (int)DiscordImportFieldType.Overview,
+                (int)DiscordImportFieldType.Rating,
+                (int)DiscordImportFieldType.Genres,
+                (int)DiscordImportFieldType.Quality,
+                (int)DiscordImportFieldType.Group,
+                (int)DiscordImportFieldType.Size,
+                (int)DiscordImportFieldType.Links,
+                (int)DiscordImportFieldType.Release,
+                (int)DiscordImportFieldType.Poster,
+                (int)DiscordImportFieldType.Fanart
+            };
         }
 
-        private static readonly DiscordSettingsValidator Validator = new DiscordSettingsValidator();
+        private static readonly DiscordSettingsValidator Validator = new ();
 
         [FieldDefinition(0, Label = "Webhook URL", HelpText = "Discord channel webhook url")]
         public string WebHookUrl { get; set; }
@@ -37,10 +64,10 @@ namespace NzbDrone.Core.Notifications.Discord
         [FieldDefinition(3, Label = "Host", Advanced = true, HelpText = "Override the Host that shows for this notification, Blank is machine name", Type = FieldType.Textbox)]
         public string Author { get; set; }
 
-        [FieldDefinition(4, Label = "On Grab Fields", Advanced = true, SelectOptions = typeof(DiscordGrabFieldType), HelpText = "Change the fields that are passed in for this 'on grab' notification", Type = FieldType.TagSelect)]
+        [FieldDefinition(4, Label = "On Grab Fields", Advanced = true, SelectOptions = typeof(DiscordGrabFieldType), HelpText = "Change the fields that are passed in for this 'on grab' notification", Type = FieldType.Select)]
         public IEnumerable<int> GrabFields { get; set; }
 
-        [FieldDefinition(5, Label = "On Import Fields", Advanced = true, SelectOptions = typeof(DiscordImportFieldType), HelpText = "Change the fields that are passed for this 'on import' notification", Type = FieldType.TagSelect)]
+        [FieldDefinition(5, Label = "On Import Fields", Advanced = true, SelectOptions = typeof(DiscordImportFieldType), HelpText = "Change the fields that are passed for this 'on import' notification", Type = FieldType.Select)]
         public IEnumerable<int> ImportFields { get; set; }
 
         public NzbDroneValidationResult Validate()
