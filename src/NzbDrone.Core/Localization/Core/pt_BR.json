@@ -1159,5 +1159,11 @@
     "AddNewAlbumSearchForNewAlbum": "Iniciar busca por novo álbum",
     "TrackFilesLoadError": "Não foi possível carregar arquivos das faixas",
     "ExtraFileExtensionsHelpTextsExamples": "Exemplos: '.sub, .nfo' or 'sub,nfo'",
-    "ExtraFileExtensionsHelpText": "Lista separada por vírgulas de arquivos extras para importar (.nfo será importado como .nfo-orig)"
+    "ExtraFileExtensionsHelpText": "Lista separada por vírgulas de arquivos extras para importar (.nfo será importado como .nfo-orig)",
+    "DownloadClientQbittorrentSettingsContentLayout": "Layout de Conteúdo",
+    "NoLimitForAnyDuration": "Sem limite para qualquer duração",
+    "NoMinimumForAnyDuration": "Sem mínimo para qualquer duração",
+    "PreferredSize": "Tamanho Preferido",
+    "Unlimited": "Ilimitado",
+    "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Seja para usar o layout de conteúdo configurado do qBittorrent, o layout original do torrent ou sempre criar uma subpasta (qBittorrent 4.3.2+)"
 }
