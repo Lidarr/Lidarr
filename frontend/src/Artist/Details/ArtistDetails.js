@@ -242,7 +242,7 @@ class ArtistDetails extends Component {
     } = this.state;
 
     const continuing = status === 'continuing';
-    const endedString = artistType === 'Person' ? 'Deceased' : 'Inactive';
+    const endedString = artistType === 'Person' ? translate('Deceased') : translate('Inactive');
 
     let trackFilesCountMessage = translate('TrackFilesCountMessage');
 
@@ -556,7 +556,7 @@ class ArtistDetails extends Component {
                         />
 
                         <span className={styles.links}>
-                          Links
+                          {translate('Links')}
                         </span>
                       </Label>
                     }

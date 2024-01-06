@@ -415,6 +415,7 @@ class AlbumDetails extends Component {
 
                   <Label
                     className={styles.detailsLabel}
+                    title={translate('ReleaseDate')}
                     size={sizes.LARGE}
                   >
                     <Icon
@@ -422,10 +423,8 @@ class AlbumDetails extends Component {
                       size={17}
                     />
 
-                    <span className={styles.sizeOnDisk}>
-                      {
-                        moment(releaseDate).format(shortDateFormat)
-                      }
+                    <span className={styles.releaseDate}>
+                      {moment(releaseDate).format(shortDateFormat)}
                     </span>
                   </Label>
 
@@ -466,7 +465,7 @@ class AlbumDetails extends Component {
                     />
 
                     <span className={styles.qualityProfileName}>
-                      {monitored ? 'Monitored' : 'Unmonitored'}
+                      {monitored ? translate('Monitored') : translate('Unmonitored')}
                     </span>
                   </Label>
 
@@ -500,7 +499,7 @@ class AlbumDetails extends Component {
                         />
 
                         <span className={styles.links}>
-                          Links
+                          {translate('Links')}
                         </span>
                       </Label>
                     }
