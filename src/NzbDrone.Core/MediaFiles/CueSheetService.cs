@@ -107,7 +107,7 @@ namespace NzbDrone.Core.MediaFiles
             var cueSheetInfos = new List<CueSheetInfo>();
             foreach (var cueFile in cueFiles)
             {
-                var cueSheetInfo = GetCueSheetInfo(cueFile, mediaFileList);
+                var cueSheetInfo = GetCueSheetInfo(cueFile, mediaFileList, itemInfo.DetectCueFileEncoding);
                 if (idOverrides != null)
                 {
                     cueSheetInfo.IdOverrides = idOverrides;
@@ -246,19 +246,26 @@ namespace NzbDrone.Core.MediaFiles
             return title;
         }
 
-        private CueSheet LoadCueSheet(IFileInfo fileInfo)
+        private CueSheet LoadCueSheet(IFileInfo fileInfo, bool detectCueFileEncoding)
         {
             using (var fs = fileInfo.OpenRead())
             {
                 var bytes = new byte[fileInfo.Length];
-                var result = CharsetDetector.DetectFromFile(fileInfo.FullName); // or pass FileInfo
-                var encoding = result.Detected.Encoding;
-                _logger.Debug("Detected encoding {0} for {1}", encoding.WebName, fileInfo.FullName);
-
-                string content;
                 while (fs.Read(bytes, 0, bytes.Length) > 0)
                 {
-                    content = encoding.GetString(bytes);
+                    string content;
+                    if (detectCueFileEncoding)
+                    {
+                        var result = CharsetDetector.DetectFromFile(fileInfo.FullName); // or pass FileInfo
+                        var encoding = result.Detected.Encoding;
+                        _logger.Debug("Detected encoding {0} for {1}", encoding.WebName, fileInfo.FullName);
+                        content = encoding.GetString(bytes);
+                    }
+                    else
+                    {
+                        content = Encoding.UTF8.GetString(bytes);
+                    }
+
                     var lines = content.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
                     var cueSheet = ParseLines(lines);
 
@@ -425,10 +432,10 @@ namespace NzbDrone.Core.MediaFiles
             return null;
         }
 
-        private CueSheetInfo GetCueSheetInfo(IFileInfo cueFile, List<IFileInfo> musicFiles)
+        private CueSheetInfo GetCueSheetInfo(IFileInfo cueFile, List<IFileInfo> musicFiles, bool detectCueFileEncoding)
         {
             var cueSheetInfo = new CueSheetInfo();
-            var cueSheet = LoadCueSheet(cueFile);
+            var cueSheet = LoadCueSheet(cueFile, detectCueFileEncoding);
             if (cueSheet == null)
             {
                 return cueSheetInfo;

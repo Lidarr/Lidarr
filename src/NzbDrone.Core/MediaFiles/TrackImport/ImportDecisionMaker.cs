@@ -35,6 +35,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         public DownloadClientItem DownloadClientItem { get; set; }
         public ParsedAlbumInfo ParsedAlbumInfo { get; set; }
         public List<CueSheetInfo> CueSheetInfos { get; set; } = new List<CueSheetInfo>();
+        public bool DetectCueFileEncoding { get; set; }
     }
 
     public class ImportDecisionMakerConfig

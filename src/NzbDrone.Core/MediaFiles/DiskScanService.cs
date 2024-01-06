@@ -102,6 +102,7 @@ namespace NzbDrone.Core.MediaFiles
 
             var decisions = new List<ImportDecision<LocalTrack>>();
 
+            itemInfo.DetectCueFileEncoding = false;
             decisions.AddRange(_cueSheetService.GetImportDecisions(ref mediaFileList, null, itemInfo, config));
             decisions.AddRange(_importDecisionMaker.GetImportDecisions(mediaFileList, null, itemInfo, config));
 

@@ -174,6 +174,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             {
                 DownloadClientItem = downloadClientItem,
                 ParsedAlbumInfo = Parser.Parser.ParseAlbumTitle(albumTitle),
+                DetectCueFileEncoding = true,
             };
 
             var config = new ImportDecisionMakerConfig
@@ -251,6 +252,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     AlbumRelease = group.First().Release
                 };
 
+                itemInfo.DetectCueFileEncoding = true;
                 var decisions = _cueSheetService.GetImportDecisions(ref audioFiles, idOverride, itemInfo, config);
                 if (audioFiles.Count > 0)
                 {
