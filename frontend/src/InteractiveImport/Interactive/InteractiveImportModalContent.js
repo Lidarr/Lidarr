@@ -54,11 +54,6 @@ const columns = [
     isVisible: true
   },
   {
-    name: 'isSingleFileRelease',
-    label: () => 'Is Single File Release',
-    isVisible: true
-  },
-  {
     name: 'cueSheetPath',
     label: () => 'Cue Sheet Path',
     isVisible: true

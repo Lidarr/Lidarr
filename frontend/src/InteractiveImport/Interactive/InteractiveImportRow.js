@@ -64,7 +64,6 @@ class InteractiveImportRow extends Component {
       artist,
       album,
       tracks,
-      isSingleFileRelease,
       quality,
       isSelected,
       onValidRowChange
@@ -83,7 +82,7 @@ class InteractiveImportRow extends Component {
     const isValid = !!(
       artist &&
       album &&
-      (isSingleFileRelease || tracks.length) &&
+      tracks.length &&
       quality
     );
 
@@ -168,7 +167,6 @@ class InteractiveImportRow extends Component {
       album,
       albumReleaseId,
       tracks,
-      isSingleFileRelease,
       cueSheetPath,
       quality,
       releaseGroup,
@@ -272,15 +270,6 @@ class InteractiveImportRow extends Component {
           }
 
         </TableRowCellButton>
-
-        <TableRowCell
-          id={id}
-          title={'Is Single File Release'}
-        >
-          {
-            isSingleFileRelease ? 'Yes' : 'No'
-          }
-        </TableRowCell>
 
         <TableRowCell
           id={id}
