@@ -85,9 +85,9 @@ class AlbumRow extends Component {
     } = this.props;
 
     const {
-      trackCount,
-      trackFileCount,
-      totalTrackCount
+      trackCount = 0,
+      trackFileCount = 0,
+      totalTrackCount = 0
     } = statistics;
 
     return (
@@ -257,7 +257,8 @@ AlbumRow.propTypes = {
 AlbumRow.defaultProps = {
   statistics: {
     trackCount: 0,
-    trackFileCount: 0
+    trackFileCount: 0,
+    totalTrackCount: 0
   }
 };
 

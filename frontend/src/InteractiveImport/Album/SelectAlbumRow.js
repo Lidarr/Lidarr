@@ -44,9 +44,9 @@ class SelectAlbumRow extends Component {
     } = this.props;
 
     const {
-      trackCount,
-      trackFileCount,
-      totalTrackCount
+      trackCount = 0,
+      trackFileCount = 0,
+      totalTrackCount = 0
     } = statistics;
 
     const extendedTitle = disambiguation ? `${title} (${disambiguation})` : title;
@@ -134,7 +134,8 @@ SelectAlbumRow.propTypes = {
 SelectAlbumRow.defaultProps = {
   statistics: {
     trackCount: 0,
-    trackFileCount: 0
+    trackFileCount: 0,
+    totalTrackCount: 0
   }
 };
 

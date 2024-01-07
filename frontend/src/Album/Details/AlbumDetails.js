@@ -216,8 +216,8 @@ class AlbumDetails extends Component {
     } = this.props;
 
     const {
-      trackFileCount,
-      sizeOnDisk
+      trackFileCount = 0,
+      sizeOnDisk = 0
     } = statistics;
 
     const {

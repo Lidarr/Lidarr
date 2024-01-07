@@ -58,8 +58,8 @@ class DeleteAlbumModalContent extends Component {
     } = this.props;
 
     const {
-      trackFileCount,
-      sizeOnDisk
+      trackFileCount = 0,
+      sizeOnDisk = 0
     } = statistics;
 
     const deleteFiles = this.state.deleteFiles;
@@ -133,14 +133,14 @@ class DeleteAlbumModalContent extends Component {
 
         <ModalFooter>
           <Button onPress={onModalClose}>
-            Close
+            {translate('Close')}
           </Button>
 
           <Button
             kind={kinds.DANGER}
             onPress={this.onDeleteAlbumConfirmed}
           >
-            Delete
+            {translate('Delete')}
           </Button>
         </ModalFooter>
       </ModalContent>

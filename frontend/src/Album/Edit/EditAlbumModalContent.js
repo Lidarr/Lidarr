@@ -44,6 +44,10 @@ class EditAlbumModalContent extends Component {
     } = this.props;
 
     const {
+      trackFileCount = 0
+    } = statistics;
+
+    const {
       monitored,
       anyReleaseOk,
       releases
@@ -96,7 +100,7 @@ class EditAlbumModalContent extends Component {
                 type={inputTypes.ALBUM_RELEASE_SELECT}
                 name="releases"
                 helpText={translate('ReleasesHelpText')}
-                isDisabled={anyReleaseOk.value && statistics.trackFileCount > 0}
+                isDisabled={anyReleaseOk.value && trackFileCount > 0}
                 albumReleases={releases}
                 onChange={onInputChange}
               />
