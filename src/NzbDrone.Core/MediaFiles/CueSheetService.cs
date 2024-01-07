@@ -20,7 +20,7 @@ namespace NzbDrone.Core.MediaFiles
         public List<IFileInfo> MusicFiles { get; set; } = new List<IFileInfo>();
         public IdentificationOverrides IdOverrides { get; set; }
         public CueSheet CueSheet { get; set; }
-        public bool IsForMediaFile(string path) => CueSheet != null && CueSheet.Files.Count > 0 && CueSheet.Files.Any(x => Path.GetFileName(path) == x.Name);
+        public bool IsForMediaFile(string path) => CueSheet != null && CueSheet.Files.Count > 0 && (Path.GetDirectoryName(path) == Path.GetDirectoryName(CueSheet.Path)) && CueSheet.Files.Any(x => Path.GetFileName(path) == x.Name);
         public CueSheet.FileEntry TryToGetFileEntryForMediaFile(string path)
         {
             if (CueSheet != null && CueSheet.Files.Count > 0)
@@ -442,7 +442,8 @@ namespace NzbDrone.Core.MediaFiles
             }
 
             cueSheetInfo.CueSheet = cueSheet;
-            cueSheetInfo.MusicFiles = musicFiles.Where(musicFile => cueSheet.Files.Any(musicFileFromCue => musicFileFromCue.Name == musicFile.Name)).ToList();
+            var musicFilesInTheSameDir = musicFiles.Where(musicFile => musicFile.DirectoryName == Path.GetDirectoryName(cueSheetInfo.CueSheet.Path)).ToList();
+            cueSheetInfo.MusicFiles = musicFilesInTheSameDir.Where(musicFile => cueSheet.Files.Any(musicFileFromCue => musicFileFromCue.Name == musicFile.Name)).ToList();
 
             cueSheetInfo.IdOverrides = new IdentificationOverrides();
 
