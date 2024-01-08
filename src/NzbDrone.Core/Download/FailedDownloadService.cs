@@ -116,7 +116,7 @@ namespace NzbDrone.Core.Download
 
         private void PublishDownloadFailedEvent(List<EntityHistory> historyItems, string message, TrackedDownload trackedDownload = null, bool skipRedownload = false)
         {
-            var historyItem = historyItems.First();
+            var historyItem = historyItems.Last();
 
             var downloadFailedEvent = new DownloadFailedEvent
             {
