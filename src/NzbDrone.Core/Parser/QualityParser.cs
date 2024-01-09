@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Parser
         private static readonly Regex RepackRegex = new (@"\b(?<repack>repack\d?|rerip\d?)\b",
                                                                 RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static readonly Regex VersionRegex = new (@"\d[-._ ]?v(?<version>\d)[-._ ]|\[v(?<version>\d)\]|repack(?<version>\d)|rerip(?<version>\d)",
+        private static readonly Regex VersionRegex = new (@"(?:\d(?<!\bMP3\b))[-._ ]?v(?<version>\d)[-._ ]|\[v(?<version>\d)\]|repack(?<version>\d)|rerip(?<version>\d)",
                                                                 RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private static readonly Regex RealRegex = new (@"\b(?<real>REAL)\b",
