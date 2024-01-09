@@ -699,5 +699,12 @@
     "DeleteArtistFoldersHelpText": "ムービーフォルダとその内容を削除します",
     "DeleteAutoTagHelpText": "品質プロファイル{0}を削除してもよろしいですか",
     "Negate": "ネゲート",
-    "Table": "テーブル"
+    "Table": "テーブル",
+    "AddImportListExclusionAlbumHelpText": "リストによって映画が{appName}に追加されないようにする",
+    "NoLimitForAnyDuration": "ランタイムに制限はありません",
+    "NoMinimumForAnyDuration": "ランタイムの最小値はありません",
+    "PreferredSize": "推奨サイズ",
+    "Unlimited": "無制限",
+    "ExtraFileExtensionsHelpText": "インポートする追加ファイルのコンマ区切りリスト（.nfoは.nfo-origとしてインポートされます）",
+    "ExtraFileExtensionsHelpTextsExamples": "例： '。sub、.nfo'または 'sub、nfo'"
 }

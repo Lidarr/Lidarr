@@ -705,5 +705,12 @@
     "AddImportListExclusionArtistHelpText": "Ngăn phim được thêm vào {appName} theo danh sách",
     "AddListExclusionHelpText": "Ngăn phim được thêm vào {appName} theo danh sách",
     "DeleteArtistFoldersHelpText": "Xóa thư mục phim và nội dung của nó",
-    "AddNewArtistSearchForMissingAlbums": "Bắt đầu tìm kiếm phim bị thiếu"
+    "AddNewArtistSearchForMissingAlbums": "Bắt đầu tìm kiếm phim bị thiếu",
+    "AddImportListExclusionAlbumHelpText": "Ngăn phim được thêm vào {appName} theo danh sách",
+    "ExtraFileExtensionsHelpText": "Danh sách các tệp bổ sung cần nhập được phân tách bằng dấu phẩy (.nfo sẽ được nhập dưới dạng .nfo-orig)",
+    "ExtraFileExtensionsHelpTextsExamples": "Ví dụ: '.sub, .nfo' hoặc 'sub, nfo'",
+    "NoLimitForAnyDuration": "Không có giới hạn cho bất kỳ thời gian chạy nào",
+    "NoMinimumForAnyDuration": "Không có tối thiểu cho bất kỳ thời gian chạy nào",
+    "PreferredSize": "Kích thước ưa thích",
+    "Unlimited": "Vô hạn"
 }

@@ -703,5 +703,12 @@
     "ConditionUsingRegularExpressions": "يتطابق هذا الشرط مع استخدام التعبيرات العادية. لاحظ أن الأحرف {0} لها معاني خاصة وتحتاج إلى الهروب بعلامة {1}",
     "Connection": "الإتصال",
     "DeleteAutoTagHelpText": "هل أنت متأكد من أنك تريد حذف ملف تعريف الجودة {0}",
-    "RenameFiles": "إعادة تسمية الملفات"
+    "RenameFiles": "إعادة تسمية الملفات",
+    "NoLimitForAnyDuration": "لا يوجد حد لأي وقت تشغيل",
+    "NoMinimumForAnyDuration": "لا يوجد حد أدنى لأي وقت تشغيل",
+    "PreferredSize": "الحجم المفضل",
+    "Unlimited": "غير محدود",
+    "AddImportListExclusionAlbumHelpText": "منع إضافة الفيلم إلى {appName} بواسطة القوائم",
+    "ExtraFileExtensionsHelpTextsExamples": "أمثلة: \".sub أو .nfo\" أو \"sub، nfo\"",
+    "ExtraFileExtensionsHelpText": "قائمة مفصولة بفواصل بالملفات الإضافية المراد استيرادها (سيتم استيراد .nfo كـ .nfo-Orig)"
 }

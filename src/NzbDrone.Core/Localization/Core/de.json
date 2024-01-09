@@ -621,7 +621,7 @@
     "Release": " Veröffentlichung",
     "ReleaseProfiles": "Veröffentlichungsprofile",
     "RemoveDownloadsAlert": "Die Einstellungen zum Entfernen wurden in die individuellen Download Client Einstellungen in der obigen Tabelle verschoben.",
-    "RemoveFailed": "Entfernen fehlgeschlagen",
+    "RemoveFailed": "Fehlgeschlagene entfernen",
     "RootFolderPathHelpText": "Die Elemente im Stammverzeichnis werden hinzugefügt zu",
     "SceneInformation": "Szeneninformationen",
     "SceneNumberHasntBeenVerifiedYet": "Die Szenennummer wurde noch nicht verifiziert",
@@ -973,5 +973,9 @@
     "AddArtistWithName": "{artistName} hinzufügen",
     "AuthenticationRequired": "Authentifizierung benötigt",
     "AuthenticationRequiredPasswordHelpTextWarning": "Gib ein neues Passwort ein",
-    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Neues Passwort bestätigen"
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Neues Passwort bestätigen",
+    "UpdateSelected": "Auswahl aktualisieren",
+    "RemoveFailedDownloads": "Fehlgeschlagene Downloads entfernen",
+    "CloneAutoTag": "Automatische Tags kopieren",
+    "ClearBlocklist": "Sperrliste leeren"
 }

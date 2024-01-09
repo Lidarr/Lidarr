@@ -89,7 +89,7 @@
     "AddDelayProfile": "Додати профіль затримки",
     "Added": "Додано",
     "AddIndexer": "Додати індексатор",
-    "AddNew": "Додати",
+    "AddNew": "Додати новий",
     "AddQualityProfile": "Додати профіль якості",
     "AddRemotePathMapping": "Додати віддалений шлях",
     "AddRootFolder": "Додати корневий каталог",
@@ -472,5 +472,6 @@
     "MetadataSettings": "Налаштування метаданих",
     "Monitored": "Відстежується",
     "MonitoredOnly": "Тільки під контролем",
-    "Usenet": "Usenet"
+    "Usenet": "Usenet",
+    "AddConditionImplementation": "Додати умому"
 }
