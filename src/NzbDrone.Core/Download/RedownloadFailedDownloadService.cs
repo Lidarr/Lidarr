@@ -44,7 +44,7 @@ namespace NzbDrone.Core.Download
 
             if (message.ReleaseSource == ReleaseSourceType.InteractiveSearch && !_configService.AutoRedownloadFailedFromInteractiveSearch)
             {
-                _logger.Debug("Auto redownloading failed albumbs from interactive search is disabled");
+                _logger.Debug("Auto redownloading failed albums from interactive search is disabled");
                 return;
             }
 
