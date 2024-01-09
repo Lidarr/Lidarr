@@ -320,6 +320,7 @@ namespace NzbDrone.Core.Download.Pending
                 {
                     Artist = artist,
                     Albums = albums,
+                    ReleaseSource = release.AdditionalInfo?.ReleaseSource ?? ReleaseSourceType.Unknown,
                     ParsedAlbumInfo = release.ParsedAlbumInfo,
                     Release = release.Release
                 };
@@ -342,7 +343,11 @@ namespace NzbDrone.Core.Download.Pending
                 Release = decision.RemoteAlbum.Release,
                 Title = decision.RemoteAlbum.Release.Title,
                 Added = DateTime.UtcNow,
-                Reason = reason
+                Reason = reason,
+                AdditionalInfo = new PendingReleaseAdditionalInfo
+                {
+                    ReleaseSource = decision.RemoteAlbum.ReleaseSource
+                }
             });
 
             _eventAggregator.PublishEvent(new PendingReleasesUpdatedEvent());
