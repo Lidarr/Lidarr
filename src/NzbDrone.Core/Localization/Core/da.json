@@ -707,5 +707,14 @@
     "RenameFiles": "Omdøb filer",
     "Small": "Lille",
     "ReleaseProfile": "udgivelsesprofil",
-    "DeleteAutoTagHelpText": "Er du sikker på, at du vil slette kvalitetsprofilen {0}"
+    "DeleteAutoTagHelpText": "Er du sikker på, at du vil slette kvalitetsprofilen {0}",
+    "NoLimitForAnyDuration": "Ingen grænse for nogen runtime",
+    "NoMinimumForAnyDuration": "Intet minimum for enhver driftstid",
+    "PreferredSize": "Foretrukken størrelse",
+    "Unlimited": "Ubegrænset",
+    "AddImportListExclusionAlbumHelpText": "Undgå, at film føjes til {appName} af lister",
+    "ExtraFileExtensionsHelpText": "Kommasepareret liste over ekstra filer, der skal importeres (.nfo importeres som .nfo-orig)",
+    "ExtraFileExtensionsHelpTextsExamples": "Eksempler: '.sub, .nfo' eller 'sub, nfo'",
+    "DeleteArtistFoldersHelpText": "Slet filmmappen og dens indhold",
+    "DeleteSpecificationHelpText": "Er du sikker på, at du vil slette kvalitetsprofilen {0}"
 }

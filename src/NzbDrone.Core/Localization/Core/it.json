@@ -831,5 +831,15 @@
     "PosterOptions": "Opzioni dei poster",
     "Posters": "Locandine",
     "Small": "Piccolo",
-    "Table": "Tabella"
+    "Table": "Tabella",
+    "AddImportListExclusionAlbumHelpText": "Impedire che il film venga aggiunto a {appName} dalle liste",
+    "ExtraFileExtensionsHelpText": "Liste di file Extra da importare separate da virgola (.nfo saranno importate come .nfo-orig)",
+    "ExtraFileExtensionsHelpTextsExamples": "Esempi: '.sub, .nfo' or 'sub,nfo'",
+    "NoLimitForAnyDuration": "Nessun limite di durata",
+    "NoMinimumForAnyDuration": "Nessuna durata minima",
+    "PreferredSize": "Dimensione preferita",
+    "Unlimited": "Illimitato",
+    "CloneCondition": "Duplica Condizione",
+    "DeleteArtistFoldersHelpText": "Elimina la cartella del film e il suo contenuto",
+    "AddCondition": "Aggiungi Condizione"
 }

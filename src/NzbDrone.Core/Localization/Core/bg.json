@@ -704,5 +704,13 @@
     "Overview": "Общ преглед",
     "OverviewOptions": "Опции за преглед",
     "PosterOptions": "Опции за плакати",
-    "Small": "Малък"
+    "Small": "Малък",
+    "NoLimitForAnyDuration": "Няма ограничение за всяко време на изпълнение",
+    "NoMinimumForAnyDuration": "Няма минимум за всяко време на изпълнение",
+    "PreferredSize": "Предпочитан размер",
+    "Unlimited": "Неограничен",
+    "AddImportListExclusionAlbumHelpText": "Предотвратете добавянето на филм към {appName} чрез списъци",
+    "ExtraFileExtensionsHelpText": "Списък с допълнителни файлове за импортиране, разделени със запетая (.nfo ще бъде импортиран като .nfo-orig)",
+    "ExtraFileExtensionsHelpTextsExamples": "Примери: '.sub, .nfo' или 'sub, nfo'",
+    "DeleteArtistFoldersHelpText": "Изтрийте папката с филма и съдържанието му"
 }

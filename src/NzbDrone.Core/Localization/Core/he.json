@@ -734,5 +734,15 @@
     "OrganizeSelectedArtists": "ארגן סרטים נבחרים",
     "Overview": "סקירה כללית",
     "OverviewOptions": "אפשרויות סקירה כללית",
-    "PosterOptions": "אפשרויות פוסטר"
+    "PosterOptions": "אפשרויות פוסטר",
+    "NoLimitForAnyDuration": "אין הגבלה לכל זמן ריצה",
+    "NoMinimumForAnyDuration": "אין מינימום לכל זמן ריצה",
+    "PreferredSize": "גודל מועדף",
+    "Unlimited": "ללא הגבלה",
+    "ExtraFileExtensionsHelpText": "רשימה מופרדת באמצעות פסיקים של קבצים נוספים לייבוא (.nfo יובא כ- nfo-orig)",
+    "ExtraFileExtensionsHelpTextsExamples": "דוגמאות: '.sub, .nfo' או 'sub, nfo'",
+    "Release": " מְשׁוּחרָר",
+    "AutoTaggingNegateHelpText": "אם מסומן, הפורמט המותאם אישית לא יחול אם תנאי זה {0} תואם.",
+    "DeleteArtistFoldersHelpText": "מחק את תיקיית הסרט ואת תוכנו",
+    "DeleteSpecificationHelpText": "האם אתה בטוח שברצונך למחוק את פרופיל האיכות {0}"
 }

@@ -1067,5 +1067,14 @@
     "DeleteSelectedArtists": "Διαγραφή επιλεγμένου καλλιτέχνη",
     "DeleteSpecification": "Διαγραφή ειδοποίησης",
     "DeleteSpecificationHelpText": "Είστε σίγουροι πως θέλετε να διαγράψετε τη συνθήκη '{name}';",
-    "ImportList": "Λίστες εισαγωγής"
+    "ImportList": "Λίστες εισαγωγής",
+    "NoLimitForAnyDuration": "Δεν υπάρχει όριο για οποιοδήποτε χρόνο εκτέλεσης",
+    "NoMinimumForAnyDuration": "Χωρίς ελάχιστο για κάθε χρόνο εκτέλεσης",
+    "PreferredSize": "Προτιμώμενο μέγεθος",
+    "Unlimited": "Απεριόριστος",
+    "AddImportListExclusionAlbumHelpText": "Αποτρέψτε την προσθήκη ταινίας στο {appName} από λίστες",
+    "ExtraFileExtensionsHelpText": "Λίστα πρόσθετων αρχείων που διαχωρίζονται με κόμμα για εισαγωγή (το .nfo θα εισαχθεί ως .nfo-orig)",
+    "ExtraFileExtensionsHelpTextsExamples": "Παραδείγματα: «.sub, .nfo» ή «sub, nfo»",
+    "DeleteArtistFoldersHelpText": "Διαγράψτε το φάκελο της ταινίας και τα περιεχόμενά του",
+    "ArtistIsMonitored": "Ο συγγραφέας δεν παρακολουθείται"
 }

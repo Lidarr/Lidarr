@@ -693,5 +693,15 @@
     "RenameFiles": "फ़ाइलों का नाम बदलें",
     "DeleteAutoTagHelpText": "क्या आप वाकई गुणवत्ता प्रोफ़ाइल {0} को हटाना चाहते हैं",
     "Small": "छोटा",
-    "Table": "टेबल"
+    "Table": "टेबल",
+    "NoLimitForAnyDuration": "किसी भी रनटाइम के लिए कोई सीमा नहीं",
+    "NoMinimumForAnyDuration": "किसी रनटाइम के लिए कोई न्यूनतम नहीं",
+    "PreferredSize": "पसंदीदा आकार",
+    "Unlimited": "असीमित",
+    "ExtraFileExtensionsHelpText": "आयात करने के लिए कोमा ने अतिरिक्त फ़ाइलों की सूची अलग कर दी (.nfo को .nfo- मूल के रूप में आयात किया जाएगा)",
+    "ExtraFileExtensionsHelpTextsExamples": "उदाहरण: '.sub, .nfo' या 'सब, nfo'",
+    "Release": " रिहा",
+    "DeleteArtistFoldersHelpText": "फिल्म फ़ोल्डर और उसकी सामग्री को हटा दें",
+    "DeleteSpecificationHelpText": "क्या आप वाकई गुणवत्ता प्रोफ़ाइल {0} को हटाना चाहते हैं",
+    "AutoTaggingNegateHelpText": "यदि जाँच की जाती है, तो कस्टम प्रारूप लागू नहीं होगा यदि यह {0} स्थिति से मेल खाता है।"
 }

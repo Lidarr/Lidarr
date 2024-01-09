@@ -819,5 +819,13 @@
     "AutoTagging": "Automatické označování",
     "ConditionUsingRegularExpressions": "Tato podmínka odpovídá regulárním výrazům. Všimněte si, že znaky `\\^$.|?*+()[{` mají speciální význam a je třeba je negovat pomocí `\\`",
     "Connection": "Spojení",
-    "ImportList": "Seznam k importu"
+    "ImportList": "Seznam k importu",
+    "NoLimitForAnyDuration": "Žádné omezení za běhu",
+    "NoMinimumForAnyDuration": "Žádné minimum za běhu",
+    "PreferredSize": "Preferovaná velikost",
+    "Unlimited": "Neomezený",
+    "ImportLists": "Seznam k importu",
+    "ExtraFileExtensionsHelpText": "Seznam extra souborů k importu oddělených čárkami (.nfo bude importován jako .nfo-orig)",
+    "ExtraFileExtensionsHelpTextsExamples": "Příklady: „.sub, .nfo“ nebo „sub, nfo“",
+    "DeleteArtistFoldersHelpText": "Odstraňte složku filmu a její obsah"
 }
