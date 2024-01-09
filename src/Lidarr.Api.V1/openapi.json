@@ -11103,6 +11103,17 @@
               "$ref": "#/components/schemas/AlbumResource"
             },
             "nullable": true
+          },
+          "customFormats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomFormatResource"
+            },
+            "nullable": true
+          },
+          "customFormatScore": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
