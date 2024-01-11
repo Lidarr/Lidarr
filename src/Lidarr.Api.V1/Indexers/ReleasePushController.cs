@@ -60,7 +60,7 @@ namespace Lidarr.Api.V1.Indexers
 
             lock (PushLock)
             {
-                decisions = _downloadDecisionMaker.GetRssDecision(new List<ReleaseInfo> { info });
+                decisions = _downloadDecisionMaker.GetRssDecision(new List<ReleaseInfo> { info }, true);
                 _downloadDecisionProcessor.ProcessDecisions(decisions).GetAwaiter().GetResult();
             }
 
