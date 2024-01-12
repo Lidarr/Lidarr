@@ -127,7 +127,7 @@ namespace Lidarr.Api.V1.Indexers
                     throw new NzbDroneClientException(HttpStatusCode.NotFound, "Unable to parse albums in the release");
                 }
 
-                await _downloadService.DownloadReport(remoteAlbum);
+                await _downloadService.DownloadReport(remoteAlbum, release.DownloadClientId);
             }
             catch (ReleaseDownloadException ex)
             {

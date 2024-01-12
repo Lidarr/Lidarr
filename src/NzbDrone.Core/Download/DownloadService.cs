@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Download
 {
     public interface IDownloadService
     {
-        Task DownloadReport(RemoteAlbum remoteAlbum);
+        Task DownloadReport(RemoteAlbum remoteAlbum, int? downloadClientId);
     }
 
     public class DownloadService : IDownloadService
@@ -50,13 +50,15 @@ namespace NzbDrone.Core.Download
             _logger = logger;
         }
 
-        public async Task DownloadReport(RemoteAlbum remoteAlbum)
+        public async Task DownloadReport(RemoteAlbum remoteAlbum, int? downloadClientId)
         {
             var filterBlockedClients = remoteAlbum.Release.PendingReleaseReason == PendingReleaseReason.DownloadClientUnavailable;
 
             var tags = remoteAlbum.Artist?.Tags;
 
-            var downloadClient = _downloadClientProvider.GetDownloadClient(remoteAlbum.Release.DownloadProtocol, remoteAlbum.Release.IndexerId, filterBlockedClients, tags);
+            var downloadClient = downloadClientId.HasValue
+                ? _downloadClientProvider.Get(downloadClientId.Value)
+                : _downloadClientProvider.GetDownloadClient(remoteAlbum.Release.DownloadProtocol, remoteAlbum.Release.IndexerId, filterBlockedClients, tags);
 
             await DownloadReport(remoteAlbum, downloadClient);
         }

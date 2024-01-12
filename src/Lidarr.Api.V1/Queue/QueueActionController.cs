@@ -30,7 +30,7 @@ namespace Lidarr.Api.V1.Queue
                 throw new NotFoundException();
             }
 
-            await _downloadService.DownloadReport(pendingRelease.RemoteAlbum);
+            await _downloadService.DownloadReport(pendingRelease.RemoteAlbum, null);
 
             return new { };
         }
@@ -48,7 +48,7 @@ namespace Lidarr.Api.V1.Queue
                     throw new NotFoundException();
                 }
 
-                await _downloadService.DownloadReport(pendingRelease.RemoteAlbum);
+                await _downloadService.DownloadReport(pendingRelease.RemoteAlbum, null);
             }
 
             return new { };
