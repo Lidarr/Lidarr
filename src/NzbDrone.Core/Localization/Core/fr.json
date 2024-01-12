@@ -97,7 +97,7 @@
     "DeleteRootFolderMessageText": "Êtes-vous sûr de vouloir supprimer le dossier racine « {name} » ?",
     "DeleteSelectedTrackFiles": "Supprimer les fichiers film sélectionnés",
     "DeleteSelectedTrackFilesMessageText": "Voulez-vous vraiment supprimer les fichiers vidéo sélectionnés ?",
-    "DeleteTag": "Supprimer le tag",
+    "DeleteTag": "Supprimer l'étiquette",
     "DeleteTagMessageText": "Voulez-vous vraiment supprimer la balise '{0}' ?",
     "DeleteTrackFileMessageText": "Voulez-vous vraiment supprimer {0} ?",
     "DestinationPath": "Chemin de destination",
@@ -1146,5 +1146,6 @@
     "PreferredSize": "Taille préférée",
     "Unlimited": "Illimité",
     "ExtraFileExtensionsHelpText": "Liste de fichiers supplémentaires séparés par des virgules à importer (.nfo sera importé en tant que .nfo-orig)",
-    "ExtraFileExtensionsHelpTextsExamples": "Exemples : '.sub, .nfo' ou 'sub,nfo'"
+    "ExtraFileExtensionsHelpTextsExamples": "Exemples : '.sub, .nfo' ou 'sub,nfo'",
+    "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Utiliser la disposition du contenu configurée par qBittorrent, la disposition originale du torrent ou toujours créer un sous-dossier (qBittorrent 4.3.2+)"
 }
