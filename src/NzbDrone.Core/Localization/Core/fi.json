@@ -1010,5 +1010,7 @@
     "Connection": "Yhteys",
     "Large": "Suuri",
     "ManageDownloadClients": "Hallitse lataustyökaluja",
-    "AuthenticationRequiredPasswordHelpTextWarning": "Syötä salasana"
+    "AuthenticationRequiredPasswordHelpTextWarning": "Syötä salasana",
+    "Table": "Taulukko",
+    "BypassIfAboveCustomFormatScoreHelpText": "Käytä ohitusta, kun julkaisun pisteytys on määritetyn mukautetun muodon vähimmäispisteytystä korkeampi."
 }
