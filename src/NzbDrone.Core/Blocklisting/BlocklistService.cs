@@ -37,30 +37,28 @@ namespace NzbDrone.Core.Blocklisting
 
         public bool Blocklisted(int artistId, ReleaseInfo release)
         {
-            var blocklistedByTitle = _blocklistRepository.BlocklistedByTitle(artistId, release.Title);
-
             if (release.DownloadProtocol == DownloadProtocol.Torrent)
             {
-                var torrentInfo = release as TorrentInfo;
-
-                if (torrentInfo == null)
+                if (release is not TorrentInfo torrentInfo)
                 {
                     return false;
                 }
 
-                if (torrentInfo.InfoHash.IsNullOrWhiteSpace())
+                if (torrentInfo.InfoHash.IsNotNullOrWhiteSpace())
                 {
-                    return blocklistedByTitle.Where(b => b.Protocol == DownloadProtocol.Torrent)
-                                             .Any(b => SameTorrent(b, torrentInfo));
+                    var blocklistedByTorrentInfohash = _blocklistRepository.BlocklistedByTorrentInfoHash(artistId, torrentInfo.InfoHash);
+
+                    return blocklistedByTorrentInfohash.Any(b => SameTorrent(b, torrentInfo));
                 }
 
-                var blocklistedByTorrentInfohash = _blocklistRepository.BlocklistedByTorrentInfoHash(artistId, torrentInfo.InfoHash);
-
-                return blocklistedByTorrentInfohash.Any(b => SameTorrent(b, torrentInfo));
+                return _blocklistRepository.BlocklistedByTitle(artistId, release.Title)
+                    .Where(b => b.Protocol == DownloadProtocol.Torrent)
+                    .Any(b => SameTorrent(b, torrentInfo));
             }
 
-            return blocklistedByTitle.Where(b => b.Protocol == DownloadProtocol.Usenet)
-                                     .Any(b => SameNzb(b, release));
+            return _blocklistRepository.BlocklistedByTitle(artistId, release.Title)
+                .Where(b => b.Protocol == DownloadProtocol.Usenet)
+                .Any(b => SameNzb(b, release));
         }
 
         public bool BlocklistedTorrentHash(int artistId, string hash)
