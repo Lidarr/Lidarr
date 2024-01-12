@@ -47,6 +47,7 @@ namespace Lidarr.Api.V1.Indexers
         }
 
         [HttpPost]
+        [Consumes("application/json")]
         public ActionResult<ReleaseResource> Create(ReleaseResource release)
         {
             _logger.Info("Release pushed: {0} - {1}", release.Title, release.DownloadUrl);
@@ -92,7 +93,7 @@ namespace Lidarr.Api.V1.Indexers
                 }
                 else
                 {
-                    _logger.Debug("Push Release {0} not associated with unknown indexer {1}.", release.Title, release.Indexer);
+                    _logger.Debug("Push Release {0} not associated with known indexer {1}.", release.Title, release.Indexer);
                 }
             }
             else if (release.IndexerId != 0 && release.Indexer.IsNullOrWhiteSpace())
@@ -105,7 +106,7 @@ namespace Lidarr.Api.V1.Indexers
                 }
                 catch (ModelNotFoundException)
                 {
-                    _logger.Debug("Push Release {0} not associated with unknown indexer {1}.", release.Title, release.IndexerId);
+                    _logger.Debug("Push Release {0} not associated with known indexer {1}.", release.Title, release.IndexerId);
                     release.IndexerId = 0;
                 }
             }
