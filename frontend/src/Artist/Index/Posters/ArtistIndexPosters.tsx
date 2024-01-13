@@ -213,13 +213,18 @@ export default function ArtistIndexPosters(props: ArtistIndexPostersProps) {
     if (current) {
       const width = current.clientWidth;
       const padding = bodyPadding - 5;
+      const finalWidth = width - padding * 2;
+
+      if (Math.abs(size.width - finalWidth) < 20 || size.width === finalWidth) {
+        return;
+      }
 
       setSize({
-        width: width - padding * 2,
+        width: finalWidth,
         height: window.innerHeight,
       });
     }
-  }, [isSmallScreen, scrollerRef, bounds]);
+  }, [isSmallScreen, size, scrollerRef, bounds]);
 
   useEffect(() => {
     const currentScrollListener = isSmallScreen ? window : scrollerRef.current;
