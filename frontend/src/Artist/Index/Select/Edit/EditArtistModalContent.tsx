@@ -215,6 +215,7 @@ function EditArtistModalContent(props: EditArtistModalContentProps) {
             value={metadataProfileId}
             includeNoChange={true}
             includeNoChangeDisabled={false}
+            includeNone={true}
             onChange={onInputChange}
           />
         </FormGroup>

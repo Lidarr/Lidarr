@@ -289,6 +289,7 @@ FormInputGroup.propTypes = {
   autoFocus: PropTypes.bool,
   includeNoChange: PropTypes.bool,
   includeNoChangeDisabled: PropTypes.bool,
+  includeNone: PropTypes.bool,
   selectedValueOptions: PropTypes.object,
   pending: PropTypes.bool,
   errors: PropTypes.arrayOf(PropTypes.object),
