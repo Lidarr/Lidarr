@@ -51,11 +51,11 @@ class SelectTrackRow extends Component {
       iconKind = kinds.DEFAULT;
       iconTip = 'Track missing from library and no import selected.';
     } else if (importSelected && hasFile) {
-      iconName = icons.FILEIMPORT;
+      iconName = icons.FILE_IMPORT;
       iconKind = kinds.WARNING;
       iconTip = 'Warning: Existing track will be replaced by download.';
     } else if (importSelected && !hasFile) {
-      iconName = icons.FILEIMPORT;
+      iconName = icons.FILE_IMPORT;
       iconKind = kinds.DEFAULT;
       iconTip = 'Track missing from library and selected for import.';
     }

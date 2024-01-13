@@ -3,9 +3,10 @@ import React from 'react';
 import Icon from 'Components/Icon';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import { icons, kinds } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import styles from './HistoryEventTypeCell.css';
 
-function getIconName(eventType) {
+function getIconName(eventType, data) {
   switch (eventType) {
     case 'grabbed':
       return icons.DOWNLOADING;
@@ -16,7 +17,7 @@ function getIconName(eventType) {
     case 'downloadFailed':
       return icons.DOWNLOADING;
     case 'trackFileDeleted':
-      return icons.DELETE;
+      return data.reason === 'MissingFromDisk' ? icons.FILE_MISSING : icons.DELETE;
     case 'trackFileRenamed':
       return icons.ORGANIZE;
     case 'trackFileRetagged':
@@ -54,11 +55,11 @@ function getTooltip(eventType, data) {
     case 'downloadFailed':
       return 'Album download failed';
     case 'trackFileDeleted':
-      return 'Track file deleted';
+      return data.reason === 'MissingFromDisk' ? translate('TrackFileMissingTooltip') : translate('TrackFileDeletedTooltip');
     case 'trackFileRenamed':
-      return 'Track file renamed';
+      return translate('TrackFileRenamedTooltip');
     case 'trackFileRetagged':
-      return 'Track file tags updated';
+      return translate('TrackFileTagsUpdatedTooltip');
     case 'albumImportIncomplete':
       return 'Files downloaded but not all could be imported';
     case 'downloadImported':
@@ -71,7 +72,7 @@ function getTooltip(eventType, data) {
 }
 
 function HistoryEventTypeCell({ eventType, data }) {
-  const iconName = getIconName(eventType);
+  const iconName = getIconName(eventType, data);
   const iconKind = getIconKind(eventType);
   const tooltip = getTooltip(eventType, data);
 
