@@ -66,5 +66,12 @@
     "AddCondition": "新增條件",
     "AddArtistWithName": "新增{artistName}",
     "AddIndexerImplementation": "新增索引 - {implementationName}",
-    "AddAlbumWithTitle": "新增{albumTitle}"
+    "AddAlbumWithTitle": "新增{albumTitle}",
+    "AppUpdatedVersion": "重新載入",
+    "AppUpdated": "{appName}已更新",
+    "ApplyTagsHelpTextHowToApplyDownloadClients": "如何將標籤套用在被選擇的下載客戶端",
+    "ApplyTagsHelpTextAdd": "加入：將標籤加入已存在的標籤清單",
+    "ApplyTagsHelpTextHowToApplyImportLists": "如何套用標籤在所選擇的輸入清單",
+    "AgeWhenGrabbed": "年齡（當獲取時）",
+    "ApplyChanges": "應用"
 }
