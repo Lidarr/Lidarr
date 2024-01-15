@@ -981,5 +981,8 @@
     "ApplyTagsHelpTextHowToApplyIndexers": "Hogyan adjunk hozzá címkéket a kiválasztott filmhez",
     "AutoAdd": "Automatikus hozzáadás",
     "AddConditionImplementation": "Feltétel hozzáadása –{implementationName}",
-    "AddDownloadClientImplementation": "Letöltési kliens hozzáadása – {implementationName}"
+    "AddDownloadClientImplementation": "Letöltési kliens hozzáadása – {implementationName}",
+    "AddAutoTag": "Automatikus címke hozzáadása",
+    "AddAlbumWithTitle": "{albumTitle} hozzáadása",
+    "AddArtistWithName": "{artistName} hozzáadása"
 }
