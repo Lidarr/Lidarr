@@ -202,6 +202,7 @@ namespace NzbDrone.Core.Download.Pending
                         RemoteAlbum = pendingRelease.RemoteAlbum,
                         Timeleft = timeleft,
                         EstimatedCompletionTime = ect,
+                        Added = pendingRelease.Added,
                         Status = pendingRelease.Reason.ToString(),
                         Protocol = pendingRelease.RemoteAlbum.Release.DownloadProtocol,
                         Indexer = pendingRelease.RemoteAlbum.Release.Indexer
