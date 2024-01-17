@@ -254,7 +254,6 @@
     "OnUpgradeHelpText": "升级中",
     "Original": "原始的",
     "PosterSize": "海报大小",
-    "PriorityHelpText": "搜刮器优先级从1(最高)到50(最低)，默认25，优先级当搜刮结果评分相同时使用，并不是搜刮器的启动顺序。",
     "Proper": "合适的",
     "PropersAndRepacks": "适合的和重封装的Propers and Repacks",
     "ProtocolHelpText": "在其他相同版本之间进行选择时，选择要使用的协议以及首选的协议",

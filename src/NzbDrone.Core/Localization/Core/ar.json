@@ -347,7 +347,6 @@
     "NoLogFiles": "لا توجد ملفات سجل",
     "None": "لا شيء",
     "NotificationTriggers": "مشغلات الإخطار",
-    "PriorityHelpText": "أولوية المفهرس من 1 (الأعلى) إلى 50 (الأدنى). الافتراضي: 25.",
     "ReadTheWikiForMoreInformation": "اقرأ Wiki لمزيد من المعلومات",
     "RemoveTagRemovingTag": "إزالة العلامة",
     "RenameTracksHelpText": "سيستخدم {appName} اسم الملف الحالي إذا تم تعطيل إعادة التسمية",

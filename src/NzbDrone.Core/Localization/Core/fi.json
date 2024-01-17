@@ -335,7 +335,6 @@
     "Quality": "Laatu",
     "Local": "Paikalliset",
     "MonitoredHelpText": "Esittäjän albumeita etsitään ja ne ladataan, jos ne ovat saatavilla.",
-    "PriorityHelpText": "Määritä useiden lataustyökalujen painotus. Tasaveroiset lataajat erotetaan Round-Robin-tekniikalla.",
     "PropersAndRepacks": "Proper- ja repack-julkaisut",
     "UnableToAddANewListPleaseTryAgain": "Tuontilistan lisäys epäonnistui. Yritä uudelleen.",
     "IncludeUnmonitored": "Sisällytä valvomattomat",

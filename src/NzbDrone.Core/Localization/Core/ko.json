@@ -202,7 +202,6 @@
     "Port": "포트",
     "PortNumber": "포트 번호",
     "PreviewRename": "이름 변경 미리보기",
-    "PriorityHelpText": "인덱서 우선 순위는 1 (가장 높음)에서 50 (가장 낮음)까지입니다. 기본값 : 25.",
     "Profiles": "프로필",
     "Proper": "적절한",
     "PropersAndRepacks": "적절하고 재 포장",

@@ -446,7 +446,6 @@
     "PreviewRetag": "Előnézet újrataggelése",
     "PrimaryAlbumTypes": "Elsődleges albumtípusok",
     "PrimaryTypes": "Elsődleges típusok",
-    "PriorityHelpText": "Indexelő prioritás 1-től (legmagasabb) 50-ig (legalacsonyabb). Alapértelmezés: 25. A {appName} továbbra is az összes engedélyezett indexelőt fogja használni az RSS-szinkronizáláshoz és a kereséshez, amikor a kiadásokat megragadja az egyébként egyenlő kiadásokhoz.",
     "Profiles": "Profil(ok)",
     "Proper": "Proper",
     "PropersAndRepacks": "Properek és Repackok",
