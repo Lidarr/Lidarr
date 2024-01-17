@@ -139,7 +139,6 @@
     "Options": "Opcje",
     "Original": "Oryginalny",
     "PackageVersion": "Wersja pakietu",
-    "PriorityHelpText": "Priorytet indeksatora od 1 (najwyższy) do 50 (najniższy). Domyślnie: 25.",
     "Profiles": "Profile",
     "Proper": "Właściwy",
     "PropersAndRepacks": "Propers and Repacks",
@@ -763,5 +762,10 @@
     "NoMinimumForAnyDuration": "Brak minimum dla dowolnego środowiska uruchomieniowego",
     "PreferredSize": "Preferowany rozmiar",
     "Unlimited": "Nieograniczony",
-    "AddImportListExclusionAlbumHelpText": "Zapobiegaj dodawaniu filmu do {appName} przez listy"
+    "AddImportListExclusionAlbumHelpText": "Zapobiegaj dodawaniu filmu do {appName} przez listy",
+    "AddConditionImplementation": "Dodaj condition - {implementationName}",
+    "AddConnectionImplementation": "Dodaj Connection - {implementationName}",
+    "AddDownloadClientImplementation": "Dodaj klienta pobierania - {implementationName}",
+    "AddAlbumWithTitle": "Dodaj {albumTitle}",
+    "AddArtistWithName": "Dodaj {artistName}"
 }

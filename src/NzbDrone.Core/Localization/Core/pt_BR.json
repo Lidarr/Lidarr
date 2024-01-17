@@ -377,7 +377,6 @@
     "PosterSize": "Tamanho do pôster",
     "PreviewRename": "Visualizar renomeação",
     "PreviewRetag": "Visualizar adição de nova tag",
-    "PriorityHelpText": "Prioridade do indexador de 1 (mais alta) a 50 (mais baixa). Padrão: 25. Usado ao obter lançamentos como um desempate para lançamentos iguais, o {appName} ainda usará todos os indexadores habilitados para sincronização e pesquisa de RSS.",
     "NETCore": ".NET",
     "PropersAndRepacks": "Propers e repacks",
     "Protocol": "Protocolo",

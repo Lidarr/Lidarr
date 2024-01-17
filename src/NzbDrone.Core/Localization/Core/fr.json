@@ -234,7 +234,6 @@
     "PortNumber": "Numéro de port",
     "PosterSize": "Poster taille",
     "PreviewRename": "Aperçu Renommer",
-    "PriorityHelpText": "Priorité de l'indexeur de 1 (la plus élevée) à 50 (la plus basse). Valeur par défaut : 25. Utilisé lors de la récupération des versions comme départage pour des versions par ailleurs égales, {appName} utilisera toujours tous les indexeurs activés pour la synchronisation RSS et la recherche.",
     "Profiles": "Profils",
     "Proper": "Approprié",
     "PropersAndRepacks": "Propres et Repacks",
