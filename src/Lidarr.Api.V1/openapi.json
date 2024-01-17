@@ -11606,6 +11606,11 @@
             "format": "date-time",
             "nullable": true
           },
+          "added": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "status": {
             "type": "string",
             "nullable": true
