@@ -223,9 +223,7 @@ namespace NzbDrone.Core.Download
             }
             catch (FormatException ex)
             {
-                _logger.Error(ex, "Failed to parse magnetlink for release '{0}': '{1}'", remoteAlbum.Release.Title, magnetUrl);
-
-                return null;
+                throw new ReleaseDownloadException(remoteAlbum.Release, "Failed to parse magnetlink for release '{0}': '{1}'", ex, remoteAlbum.Release.Title, magnetUrl);
             }
 
             if (hash != null)
