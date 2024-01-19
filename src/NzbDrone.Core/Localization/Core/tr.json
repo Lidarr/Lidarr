@@ -66,7 +66,7 @@
     "SorryThatArtistCannotBeFound": "Maalesef o film bulunamıyor.",
     "Source": "Kaynak",
     "SourcePath": "Kaynak Yolu",
-    "Actions": "Etkiler",
+    "Actions": "Eylemler",
     "ArtistAlbumClickToChangeTrack": "Filmi değiştirmek için tıklayın",
     "Authentication": "Doğrulama",
     "AuthenticationMethodHelpText": "{appName}'a erişmek için Kullanıcı Adı ve Şifre gerektir",
