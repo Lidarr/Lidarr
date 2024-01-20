@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Blocklisting;
 using NzbDrone.Core.History;
@@ -23,10 +24,12 @@ namespace NzbDrone.Core.CustomFormats
     public class CustomFormatCalculationService : ICustomFormatCalculationService
     {
         private readonly ICustomFormatService _formatService;
+        private readonly Logger _logger;
 
-        public CustomFormatCalculationService(ICustomFormatService formatService)
+        public CustomFormatCalculationService(ICustomFormatService formatService, Logger logger)
         {
             _formatService = formatService;
+            _logger = logger;
         }
 
         public List<CustomFormat> ParseCustomFormat(RemoteAlbum remoteAlbum, long size)
@@ -145,26 +148,30 @@ namespace NzbDrone.Core.CustomFormats
             return matches.OrderBy(x => x.Name).ToList();
         }
 
-        private static List<CustomFormat> ParseCustomFormat(TrackFile trackFile, Artist artist, List<CustomFormat> allCustomFormats)
+        private List<CustomFormat> ParseCustomFormat(TrackFile trackFile, Artist artist, List<CustomFormat> allCustomFormats)
         {
-            var sceneName = string.Empty;
+            var releaseTitle = string.Empty;
+
             if (trackFile.SceneName.IsNotNullOrWhiteSpace())
             {
-                sceneName = trackFile.SceneName;
+                _logger.Trace("Using scene name for release title: {0}", trackFile.SceneName);
+                releaseTitle = trackFile.SceneName;
             }
             else if (trackFile.OriginalFilePath.IsNotNullOrWhiteSpace())
             {
-                sceneName = trackFile.OriginalFilePath;
+                _logger.Trace("Using original file path for release title: {0}", Path.GetFileName(trackFile.OriginalFilePath));
+                releaseTitle = trackFile.OriginalFilePath;
             }
             else if (trackFile.Path.IsNotNullOrWhiteSpace())
             {
-                sceneName = Path.GetFileName(trackFile.Path);
+                _logger.Trace("Using path for release title: {0}", Path.GetFileName(trackFile.Path));
+                releaseTitle = Path.GetFileName(trackFile.Path);
             }
 
             var episodeInfo = new ParsedAlbumInfo
             {
                 ArtistName = artist.Name,
-                ReleaseTitle = sceneName,
+                ReleaseTitle = releaseTitle,
                 Quality = trackFile.Quality,
                 ReleaseGroup = trackFile.ReleaseGroup
             };
