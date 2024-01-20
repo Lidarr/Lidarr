@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators;
@@ -26,8 +27,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation
                                  IDiskProvider diskProvider,
                                  Logger logger)
         {
-            _trackAugmenters = trackAugmenters;
-            _albumAugmenters = albumAugmenters;
+            _trackAugmenters = trackAugmenters.OrderBy(a => a.Order).ToList();
+            _albumAugmenters = albumAugmenters.OrderBy(a => a.Order).ToList();
             _diskProvider = diskProvider;
             _logger = logger;
         }

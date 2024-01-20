@@ -5,6 +5,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators
 {
     public class AggregateReleaseGroup : IAggregate<LocalTrack>
     {
+        public int Order => 1;
+
         public LocalTrack Aggregate(LocalTrack localTrack, bool otherFiles)
         {
             var releaseGroup = localTrack.DownloadClientAlbumInfo?.ReleaseGroup;
