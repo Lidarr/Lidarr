@@ -220,7 +220,7 @@
     "CutoffHelpText": "بمجرد الوصول إلى هذه الجودة ، لن يقوم {appName} بتنزيل الأفلام",
     "CutoffUnmet": "قطع غير ملباة",
     "Dates": "تواريخ",
-    "DBMigration": "ترحيل DB",
+    "DatabaseMigration": "ترحيل DB",
     "DelayProfile": "ملف التأخير",
     "DelayProfiles": "ملفات تعريف التأخير",
     "Delete": "حذف",

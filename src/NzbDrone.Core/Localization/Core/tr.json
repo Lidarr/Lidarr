@@ -112,7 +112,7 @@
     "CreateGroup": "Grup oluştur",
     "CutoffHelpText": "Bu kaliteye ulaşıldığında {appName} artık film indirmeyecektir",
     "CutoffUnmet": "Kesme Karşılanmadı",
-    "DBMigration": "DB Geçişi",
+    "DatabaseMigration": "DB Geçişi",
     "DelayProfile": "Gecikme Profilleri",
     "DelayProfiles": "Gecikme Profilleri",
     "Delete": "Sil",

@@ -168,7 +168,7 @@
     "CreateGroup": "Criar grupo",
     "CutoffHelpText": "Assim que esta qualidade for alcançada, o {appName} não baixará mais filmes",
     "CutoffUnmet": "Corte não atendido",
-    "DBMigration": "Migração de banco de dados",
+    "DatabaseMigration": "Migração de banco de dados",
     "DefaultLidarrTags": "Tags padrão do {appName}",
     "DefaultMetadataProfileIdHelpText": "Há um perfil de metadados padrão para autores nesta pasta",
     "DefaultQualityProfileIdHelpText": "Há um perfil de qualidade padrão para autores nesta pasta",

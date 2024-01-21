@@ -72,7 +72,7 @@
     "CutoffHelpText": "Quand cette qualité est atteinte, {appName} ne téléchargera plus de films",
     "CutoffUnmet": "Seuil non atteint",
     "Dates": "Dates",
-    "DBMigration": "Migration de la base de données",
+    "DatabaseMigration": "Migration de la base de données",
     "DelayProfiles": "Profils de retard",
     "Delete": "Supprimer",
     "DeleteBackup": "Supprimer la sauvegarde",

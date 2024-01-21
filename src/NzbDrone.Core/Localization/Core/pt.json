@@ -419,7 +419,7 @@
     "UnableToAddANewNotificationPleaseTryAgain": "Não foi possível adicionar uma nova notificação, tenta novamente.",
     "UnableToAddANewQualityProfilePleaseTryAgain": "Não foi possível adicionar um novo perfil de qualidade, tenta novamente.",
     "UnableToLoadRemotePathMappings": "Não foi possível carregar os mapeamentos de caminhos remoto",
-    "DBMigration": "Migração da base de dados",
+    "DatabaseMigration": "Migração da base de dados",
     "DefaultMetadataProfileIdHelpText": "Há um perfil de qualidade padrão para autores nesta pasta",
     "DefaultQualityProfileIdHelpText": "Há um perfil de qualidade padrão para autores nesta pasta",
     "Delete": "Eliminar",

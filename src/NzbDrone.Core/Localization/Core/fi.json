@@ -40,7 +40,7 @@
     "InteractiveSearch": "Manuaalihaku",
     "BackupRetentionHelpText": "Säilytysjaksoa vanhemmat varmuuskopiot siivotaan automaattisesti.",
     "ConnectSettings": "Kytkösasetukset",
-    "DBMigration": "Tietokannan siirto",
+    "DatabaseMigration": "Tietokannan siirto",
     "DeleteBackupMessageText": "Haluatko varmasti poistaa varmuuskopion \"{name}\"?",
     "DeleteNotificationMessageText": "Haluatko varmasti poistaa ilmoituspalvelun \"{name}\"?",
     "EnableCompletedDownloadHandlingHelpText": "Tuo valmistuneet lataukset lataustyökalusta automaattisesti.",

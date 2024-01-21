@@ -41,7 +41,7 @@
     "ConnectSettings": "Налаштування підключення",
     "CreateGroup": "Створити групу",
     "Dates": "Дати",
-    "DBMigration": "Міграція БД",
+    "DatabaseMigration": "Міграція БД",
     "DelayingDownloadUntilInterp": "Завантаження відкладається до {0} о {1}",
     "DelayProfile": "Профіль затримки",
     "DelayProfiles": "Профілі затримки",

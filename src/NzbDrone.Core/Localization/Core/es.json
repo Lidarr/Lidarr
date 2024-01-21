@@ -317,7 +317,7 @@
     "CreateEmptyArtistFolders": "Crear carpetas de películas vacías",
     "CreateEmptyArtistFoldersHelpText": "Crear carpetas de películas que faltan durante la exploración del disco",
     "CreateGroup": "Crear grupo",
-    "DBMigration": "Migración de DB",
+    "DatabaseMigration": "Migración de DB",
     "DelayProfile": "Perfil de retardo",
     "DelayProfiles": "Perfiles de retardo",
     "Delete": "Eliminar",

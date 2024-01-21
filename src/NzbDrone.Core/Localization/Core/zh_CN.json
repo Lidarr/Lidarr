@@ -54,7 +54,7 @@
     "Columns": "列",
     "Connections": "连接",
     "ConnectSettings": "连接设置",
-    "DBMigration": "数据库迁移版本",
+    "DatabaseMigration": "数据库迁移版本",
     "DelayProfile": "延时配置",
     "Delete": "删除",
     "DeleteBackup": "删除备份",

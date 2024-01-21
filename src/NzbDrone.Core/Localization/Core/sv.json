@@ -111,7 +111,7 @@
     "CutoffHelpText": "När denna kvalitet har uppnåtts kommer {appName} inte längre att ladda ner filmer",
     "CutoffUnmet": "Avgränsande ej tillgodosedd",
     "Dates": "Datum",
-    "DBMigration": "DB Migration",
+    "DatabaseMigration": "DB Migration",
     "DefaultMonitorOptionHelpText": "Standard Metadata Profil för albums upptäckta i den här mappen",
     "DefaultQualityProfileIdHelpText": "Standard Kvalitet Profil för artister upptäckta i den här mappen",
     "DelayingDownloadUntilInterp": "Försenar nedladdningen till {0} kl. {1}",

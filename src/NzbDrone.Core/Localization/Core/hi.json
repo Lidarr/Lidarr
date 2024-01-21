@@ -40,7 +40,7 @@
     "CutoffHelpText": "एक बार जब यह गुणवत्ता पहुँच जाती है तो Redarr फिल्में डाउनलोड नहीं करेगा",
     "CutoffUnmet": "कट-ऑफ Unmet",
     "Dates": "खजूर",
-    "DBMigration": "DB प्रवासन",
+    "DatabaseMigration": "DB प्रवासन",
     "DeleteImportListExclusionMessageText": "क्या आप वाकई इस आयात सूची बहिष्करण को हटाना चाहते हैं?",
     "DeleteImportListMessageText": "क्या आप वाकई '{0}' सूची को हटाना चाहते हैं?",
     "DeleteIndexer": "अनुक्रमणिका हटाएं",

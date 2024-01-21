@@ -270,7 +270,7 @@
     "CutoffHelpText": "เมื่อถึงคุณภาพนี้แล้ว {appName} จะไม่ดาวน์โหลดภาพยนตร์อีกต่อไป",
     "CutoffUnmet": "ตัด Unmet",
     "Dates": "วันที่",
-    "DBMigration": "การย้ายฐานข้อมูล",
+    "DatabaseMigration": "การย้ายฐานข้อมูล",
     "DelayProfile": "โปรไฟล์ล่าช้า",
     "DelayProfiles": "โปรไฟล์ล่าช้า",
     "Delete": "ลบ",

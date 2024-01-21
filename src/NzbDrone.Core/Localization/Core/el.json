@@ -445,7 +445,7 @@
     "AnalyticsEnabledHelpTextWarning": "Απαιτείται επανεκκίνηση για να τεθεί σε ισχύ",
     "Automatic": "Αυτόματο",
     "BackupNow": "Δημιουργία Αντιγράφου Ασφαλείας",
-    "DBMigration": "Μετεγκατάσταση DB",
+    "DatabaseMigration": "Μετεγκατάσταση DB",
     "Dates": "Ημερομηνίες",
     "MarkAsFailed": "Επισήμανση ως αποτυχημένου",
     "DelayingDownloadUntilInterp": "Καθυστέρηση λήψης έως τις {0} στις {1}",

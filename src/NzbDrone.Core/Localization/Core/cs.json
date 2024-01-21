@@ -150,7 +150,7 @@
     "BackupNow": "Ihned zálohovat",
     "BypassProxyForLocalAddresses": "Obcházení proxy serveru pro místní adresy",
     "ConnectSettings": "Nastavení připojení",
-    "DBMigration": "Migrace databáze",
+    "DatabaseMigration": "Migrace databáze",
     "Dates": "Termíny",
     "DelayingDownloadUntilInterp": "Zpoždění stahování do {0} o {1}",
     "Delete": "Vymazat",

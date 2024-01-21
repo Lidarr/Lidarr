@@ -38,7 +38,7 @@
     "CutoffHelpText": "Po osiągnięciu tej jakości {appName} nie będzie już pobierał filmów",
     "CutoffUnmet": "Odcięcie niespełnione",
     "Dates": "Daktyle",
-    "DBMigration": "Migracja bazy danych",
+    "DatabaseMigration": "Migracja bazy danych",
     "DelayProfile": "Profil opóźnienia",
     "DelayProfiles": "Profile opóźnień",
     "Delete": "Usunąć",

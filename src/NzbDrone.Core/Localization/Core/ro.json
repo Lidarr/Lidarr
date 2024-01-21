@@ -220,7 +220,7 @@
     "CutoffHelpText": "Odată atinsă această calitate, {appName} nu va mai descărca filme",
     "CutoffUnmet": "Calitate maximă neatinsă",
     "Dates": "Date",
-    "DBMigration": "Migrarea DB",
+    "DatabaseMigration": "Migrarea DB",
     "DelayProfile": "Profile de întârziere",
     "DelayProfiles": "Profile de întârziere",
     "Delete": "Șterge",

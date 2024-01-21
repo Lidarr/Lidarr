@@ -47,7 +47,7 @@
     "CutoffHelpText": "Þegar þessum gæðum er náð mun {appName} ekki lengur hlaða niður kvikmyndum",
     "CutoffUnmet": "Cut-off Ómetið",
     "Dates": "Dagsetningar",
-    "DBMigration": "DB fólksflutningar",
+    "DatabaseMigration": "DB fólksflutningar",
     "DelayProfile": "Seinka prófíl",
     "DelayProfiles": "Seinka snið",
     "Delete": "Eyða",

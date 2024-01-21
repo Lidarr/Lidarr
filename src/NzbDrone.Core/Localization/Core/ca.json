@@ -256,7 +256,7 @@
     "CutoffHelpText": "Un cop s'assoleixi aquesta qualitat, {appName} ja no baixarà pel·lícules",
     "CutoffUnmet": "Tall no assolit",
     "Dates": "Dates",
-    "DBMigration": "Migració de BD",
+    "DatabaseMigration": "Migració de BD",
     "DelayingDownloadUntilInterp": "S'està retardant la baixada fins a les {0} a les {1}",
     "DelayProfile": "Perfil de retard",
     "DelayProfiles": "Perfils de retard",

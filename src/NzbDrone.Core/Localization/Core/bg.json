@@ -91,7 +91,7 @@
     "CreateGroup": "Създай група",
     "CutoffHelpText": "След достигане на това качество {appName} вече няма да изтегля филми",
     "CutoffUnmet": "Прекъсване Неудовлетворено",
-    "DBMigration": "DB миграция",
+    "DatabaseMigration": "DB миграция",
     "Dates": "Дати",
     "DelayingDownloadUntilInterp": "Забавя се изтеглянето до {0} в {1}",
     "DeleteImportListExclusionMessageText": "Наистина ли искате да изтриете това изключване от списъка за импортиране?",

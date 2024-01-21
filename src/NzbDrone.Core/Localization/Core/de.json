@@ -21,7 +21,7 @@
     "CopyUsingHardlinksHelpText": "Hardlinks erstellen wenn Torrents die noch geseeded werden kopiert werden sollen",
     "CopyUsingHardlinksHelpTextWarning": "Dateisperren Gelegentlich kann es vorkommen, dass Dateisperren das Umbenennen von Dateien verhindern, die gerade geseeded werden. Sie können das Seeding vorübergehend deaktivieren und die Umbenennungsfunktion von {appName} als Workaround verwenden.",
     "CreateGroup": "Gruppe erstellen",
-    "DBMigration": "DB Migration",
+    "DatabaseMigration": "DB Migration",
     "DelayProfile": "Verzögerungsprofil",
     "DeleteBackup": "Backup löschen",
     "DeleteBackupMessageText": "Backup '{0}' wirkich löschen?",

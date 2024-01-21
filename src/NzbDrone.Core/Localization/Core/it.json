@@ -80,7 +80,7 @@
     "CutoffHelpText": "Una volta raggiunta questa qualità, {appName} non scaricherà più film",
     "CutoffUnmet": "Soglia Non Raggiunta",
     "Dates": "Date",
-    "DBMigration": "Migrazione del DataBase",
+    "DatabaseMigration": "Migrazione del DataBase",
     "DelayProfile": "Profili di Ritardo",
     "DelayProfiles": "Profili di Ritardo",
     "Delete": "Cancella",

@@ -293,7 +293,7 @@
     "CreateGroup": "Tạo nhóm",
     "CutoffHelpText": "Khi đạt đến chất lượng này {appName} sẽ không tải phim nữa",
     "CutoffUnmet": "Cắt bỏ chưa được đáp ứng",
-    "DBMigration": "Di chuyển DB",
+    "DatabaseMigration": "Di chuyển DB",
     "DelayProfile": "Hồ sơ trì hoãn",
     "DelayProfiles": "Hồ sơ trì hoãn",
     "Delete": "Xóa bỏ",

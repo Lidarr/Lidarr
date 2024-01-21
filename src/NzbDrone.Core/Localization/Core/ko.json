@@ -54,7 +54,7 @@
     "CreateGroup": "그룹 만들기",
     "CutoffHelpText": "이 품질에 도달하면 Radarr는 더 이상 영화를 다운로드 하지 않습니다.",
     "CutoffUnmet": "컷오프 미충족",
-    "DBMigration": "DB 마이그레이션",
+    "DatabaseMigration": "DB 마이그레이션",
     "DelayProfile": "지연 프로필",
     "DelayProfiles": "지연 프로필",
     "Delete": "지우다",

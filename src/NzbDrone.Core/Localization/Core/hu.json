@@ -29,7 +29,7 @@
     "Connections": "Kapcsolatok",
     "ConnectSettings": "Kapcsolódási Beállítások",
     "Dates": "Dátumok",
-    "DBMigration": "DB Migráció",
+    "DatabaseMigration": "DB Migráció",
     "Delete": "Törlés",
     "DeleteBackupMessageText": "Biztosan törli a '{name}' biztonsági mentést?",
     "DeleteDownloadClient": "Letöltőkliens törlése",

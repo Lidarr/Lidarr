@@ -260,7 +260,7 @@
     "CutoffHelpText": "この品質に達すると、Radarrは映画をダウンロードしなくなります",
     "CutoffUnmet": "カットオフアンメット",
     "Dates": "日付",
-    "DBMigration": "DB移行",
+    "DatabaseMigration": "DB移行",
     "Delete": "削除",
     "DeleteImportListExclusion": "インポートリストの除外を削除する",
     "DeleteImportListExclusionMessageText": "このインポートリストの除外を削除してもよろしいですか？",

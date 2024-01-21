@@ -21,7 +21,7 @@
     "CreateGroup": "צור קבוצה",
     "CutoffHelpText": "לאחר שהאיכות הזו תושג {appName} כבר לא תוריד סרטים",
     "Dates": "תאריכים",
-    "DBMigration": "הגירת DB",
+    "DatabaseMigration": "הגירת DB",
     "DelayProfile": "עיכוב פרופיל",
     "DelayProfiles": "עיכוב פרופילים",
     "Delete": "לִמְחוֹק",
