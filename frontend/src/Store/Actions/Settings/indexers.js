@@ -98,7 +98,12 @@ export default {
     items: [],
     pendingChanges: {},
     sortKey: 'name',
-    sortDirection: sortDirections.DESCENDING
+    sortDirection: sortDirections.ASCENDING,
+    sortPredicates: {
+      name: function(item) {
+        return item.name.toLowerCase();
+      }
+    }
   },
 
   //
