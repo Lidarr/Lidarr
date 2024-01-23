@@ -239,6 +239,8 @@
   "CustomFormatScore": "Custom Format Score",
   "CustomFormatSettings": "Custom Format Settings",
   "CustomFormats": "Custom Formats",
+  "CustomFormatsSpecificationRegularExpression": "Regular Expression",
+  "CustomFormatsSpecificationRegularExpressionHelpText": "Custom Format RegEx is Case Insensitive",
   "Customformat": "Custom Format",
   "CutoffFormatScoreHelpText": "Once this custom format score is reached {appName} will no longer grab album releases",
   "CutoffHelpText": "Once this quality is reached {appName} will no longer download albums",
