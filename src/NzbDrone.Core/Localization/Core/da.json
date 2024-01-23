@@ -654,7 +654,6 @@
     "SetTags": "Indstil tags",
     "NoEventsFound": "Ingen begivenheder fundet",
     "ApplyTagsHelpTextRemove": "Fjern: Fjern de indtastede tags",
-    "RemoveFromDownloadClientHelpTextWarning": "Fjernelse fjerner download og fil (er) fra download-klienten.",
     "RemoveSelectedItemQueueMessageText": "Er du sikker på, at du vil fjerne {0} element {1} fra køen?",
     "RemoveSelectedItemsQueueMessageText": "Er du sikker på, at du vil fjerne {0} element {1} fra køen?",
     "Yes": "Ja",

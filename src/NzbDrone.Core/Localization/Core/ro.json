@@ -653,7 +653,6 @@
     "ApplyTagsHelpTextRemove": "Eliminați: eliminați etichetele introduse",
     "RemoveSelectedItemQueueMessageText": "Sigur doriți să eliminați {0} elementul {1} din coadă?",
     "RemoveSelectedItemsQueueMessageText": "Sigur doriți să eliminați {0} elementul {1} din coadă?",
-    "RemoveFromDownloadClientHelpTextWarning": "Eliminarea va elimina descărcarea și fișierele din clientul de descărcare.",
     "DeleteSelectedDownloadClientsMessageText": "Sigur doriți să ștergeți indexatorul „{0}”?",
     "ApplyTagsHelpTextHowToApplyArtists": "Cum se aplică etichete indexatoarelor selectate",
     "ApplyTagsHelpTextHowToApplyDownloadClients": "Cum se aplică etichete clienților de descărcare selectați",

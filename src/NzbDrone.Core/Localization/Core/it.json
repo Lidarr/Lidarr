@@ -766,7 +766,6 @@
     "ApplyTagsHelpTextRemove": "Rimuovi: Rimuove le etichette inserite",
     "DownloadClientTagHelpText": "Usa questo indicizzatore per i film con almeno un tag corrispondente. Lascia in bianco per usarlo con tutti i film.",
     "Yes": "Si",
-    "RemoveFromDownloadClientHelpTextWarning": "La rimozione eliminerà il download e i file dal client di download.",
     "RemoveSelectedItemQueueMessageText": "Sei sicuro di voler rimuovere {0} dalla coda?",
     "RemoveSelectedItemsQueueMessageText": "Sei sicuro di voler rimuovere {0} dalla coda?",
     "DeleteSelectedDownloadClientsMessageText": "Sei sicuro di voler eliminare l'indexer '{0}'?",

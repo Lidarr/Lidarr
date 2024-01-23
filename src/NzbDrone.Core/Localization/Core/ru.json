@@ -706,7 +706,6 @@
     "Required": "Необходимо",
     "ResetTitlesHelpText": "Сбросить заголовки определений, а также значения",
     "ApplyTagsHelpTextRemove": "Удалить: удалить введенные теги",
-    "RemoveFromDownloadClientHelpTextWarning": "Удаление приведет к удалению загрузки и файла(ов) из клиента загрузки.",
     "RemoveSelectedItemQueueMessageText": "Вы уверены, что хотите удалить 1 элемент из очереди?",
     "RemoveSelectedItemsQueueMessageText": "Вы действительно хотите удалить {0} из очереди?",
     "SetTags": "Установить теги",

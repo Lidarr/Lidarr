@@ -636,7 +636,6 @@
     "ApplyTagsHelpTextAdd": "Ekle: Etiketleri mevcut etiket listesine ekleyin",
     "ApplyTagsHelpTextRemove": "Kaldır: Girilen etiketleri kaldırın",
     "ApplyTagsHelpTextReplace": "Değiştir: Etiketleri girilen etiketlerle değiştirin (tüm etiketleri temizlemek için hiçbir etiket girmeyin)",
-    "RemoveFromDownloadClientHelpTextWarning": "Kaldırma, indirmeyi ve dosyaları indirme istemcisinden kaldırır.",
     "RemoveSelectedItemQueueMessageText": "Sıradan {0} öğeyi {1} kaldırmak istediğinizden emin misiniz?",
     "RemoveSelectedItemsQueueMessageText": "Sıradan {0} öğeyi {1} kaldırmak istediğinizden emin misiniz?",
     "SetTags": "Etiketleri Ayarla",

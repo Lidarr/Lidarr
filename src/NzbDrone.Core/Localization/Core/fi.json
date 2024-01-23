@@ -974,7 +974,6 @@
     "EditConnectionImplementation": "Muokataan kytköstä - {implementationName}",
     "EditAutoTag": "Muokkaa automaattimerkintää",
     "ManageIndexers": "Hallitse tietolähteitä",
-    "RemoveFromDownloadClientHelpTextWarning": "Poistaminen poistaa latauksen ja sen sisältämät tiedostot lataustyökalusta.",
     "RenameFiles": "Nimeä tiedostot",
     "Small": "Pieni",
     "RemoveSelectedItems": "Poista valitut kohteet",

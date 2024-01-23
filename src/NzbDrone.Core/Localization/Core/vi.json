@@ -659,7 +659,6 @@
     "NoEventsFound": "Không tìm thấy sự kiện",
     "RemovingTag": "Xóa thẻ",
     "AutomaticAdd": "Tự động thêm",
-    "RemoveFromDownloadClientHelpTextWarning": "Việc xóa sẽ xóa phần tải xuống và (các) tệp khỏi ứng dụng khách tải xuống.",
     "RemoveSelectedItemQueueMessageText": "Bạn có chắc chắn muốn xóa {0} khỏi hàng đợi không?",
     "SetTags": "Đặt thẻ",
     "Required": "Cần thiết",

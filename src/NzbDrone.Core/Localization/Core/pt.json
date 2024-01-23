@@ -756,7 +756,6 @@
     "ApplyTagsHelpTextRemove": "Remover: eliminar as etiquetas adicionadas",
     "ApplyTagsHelpTextAdd": "Adicionar: agregar as etiquetas à lista existente de etiquetas",
     "ApplyTagsHelpTextReplace": "Substituir: mudar as etiquetas pelas adicionadas (deixe em branco para limpar todas as etiquetas)",
-    "RemoveFromDownloadClientHelpTextWarning": "Remover eliminará a transferência e o(s) ficheiro(s) do cliente de transferências.",
     "RemoveSelectedItemQueueMessageText": "Tem a certeza que deseja remover {0} da fila?",
     "RemoveSelectedItemsQueueMessageText": "Tem a certeza que deseja remover {0} da fila?",
     "BlocklistReleases": "Bloquear versão",

@@ -648,7 +648,6 @@
     "ApplyTagsHelpTextAdd": "追加：既存のタグリストにタグを追加します",
     "ApplyTagsHelpTextRemove": "削除：入力したタグを削除します",
     "ApplyTagsHelpTextReplace": "置換：タグを入力したタグに置き換えます（すべてのタグをクリアするには、タグを入力しないでください）",
-    "RemoveFromDownloadClientHelpTextWarning": "削除すると、ダウンロードとファイルがダウンロードクライアントから削除されます。",
     "RemoveSelectedItemQueueMessageText": "キューから{0}アイテム{1}を削除してもよろしいですか？",
     "RemoveSelectedItemsQueueMessageText": "キューから{0}アイテム{1}を削除してもよろしいですか？",
     "SetTags": "タグを設定する",
