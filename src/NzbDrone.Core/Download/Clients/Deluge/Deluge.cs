@@ -135,7 +135,7 @@ namespace NzbDrone.Core.Download.Clients.Deluge
                 item.Title = torrent.Name;
                 item.Category = Settings.MusicCategory;
 
-                item.DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this);
+                item.DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this, Settings.MusicImportedCategory.IsNotNullOrWhiteSpace());
 
                 var outputPath = _remotePathMappingService.RemapRemoteToLocal(Settings.Host, new OsPath(torrent.DownloadPath));
                 item.OutputPath = outputPath + torrent.Name;

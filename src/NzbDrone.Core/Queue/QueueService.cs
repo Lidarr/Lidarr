@@ -90,7 +90,8 @@ namespace NzbDrone.Core.Queue
                 Indexer = trackedDownload.Indexer,
                 OutputPath = trackedDownload.DownloadItem.OutputPath.ToString(),
                 DownloadForced = downloadForced,
-                Added = trackedDownload.Added
+                Added = trackedDownload.Added,
+                DownloadClientHasPostImportCategory = trackedDownload.DownloadItem.DownloadClientInfo.HasPostImportCategory
             };
 
             queue.Id = HashConverter.GetHashInt31($"trackedDownload-{trackedDownload.DownloadClient}-{trackedDownload.DownloadItem.DownloadId}-album{album?.Id ?? 0}");
