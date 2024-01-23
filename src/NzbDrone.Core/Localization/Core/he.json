@@ -672,7 +672,6 @@
     "DownloadClientTagHelpText": "השתמש באינדקסר זה רק לסרטים שתואמים לתויות. השאר ריק כדי לחפש את כל הסרטים.",
     "SetTags": "הגדר תגים",
     "Yes": "כן",
-    "RemoveFromDownloadClientHelpTextWarning": "הסרה תסיר את ההורדה ואת הקבצים מלקוח ההורדה.",
     "RemoveSelectedItemQueueMessageText": "האם אתה בטוח שברצונך להסיר את {0} פריט {1} מהתור?",
     "RemoveSelectedItemsQueueMessageText": "האם אתה בטוח שברצונך להסיר את {0} פריט {1} מהתור?",
     "DeleteSelectedDownloadClientsMessageText": "האם אתה בטוח שברצונך למחוק את האינדקס '{0}'?",

@@ -1,7 +1,7 @@
 {
     "New": "Nou",
     "Actions": "Accions",
-    "Password": "Contrassenya",
+    "Password": "Contrasenya",
     "QualityProfile": "Perfil de qualitat",
     "QualityProfiles": "Perfil de qualitat",
     "Queue": "Cua",
@@ -293,7 +293,7 @@
     "Duration": "Durada",
     "Edit": "Edita",
     "Enable": "Activa",
-    "EnableAutomaticAdd": "Activa l'Afegit automàtic",
+    "EnableAutomaticAdd": "Activa la captura automàtica",
     "EnableAutomaticSearch": "Activa la cerca automàtica",
     "EnableColorImpairedModeHelpText": "Estil alterat per a permetre als usuaris amb problemes de color distingir millor la informació codificada per colors",
     "EnableSslHelpText": " Cal reiniciar l'execució com a administrador perquè tingui efecte",
@@ -318,7 +318,7 @@
     "ImportExtraFiles": "Importa fitxers addicionals",
     "ImportExtraFilesHelpText": "Importeu fitxers addicionals coincidents (subtítols, nfo, etc.) després d'importar un fitxer de pel·lícula",
     "ImportFailedInterp": "ImportFailedInterp",
-    "Importing": "s'està important",
+    "Importing": "S'està important",
     "IncludeHealthWarningsHelpText": "Inclou advertències de salut",
     "IncludeUnmonitored": "Inclou no monitorat",
     "Indexer": "Indexador",
@@ -708,7 +708,6 @@
     "QueueIsEmpty": "La cua està buida",
     "RemoveSelectedItem": "Elimina l'element seleccionat",
     "RemoveSelectedItems": "Elimina els elements seleccionats",
-    "RemoveFromDownloadClientHelpTextWarning": "L'eliminació esborrarà la baixada i els fitxers del client de baixada.",
     "RemoveSelectedItemQueueMessageText": "Esteu segur que voleu eliminar 1 element de la cua?",
     "RemoveSelectedItemsQueueMessageText": "Esteu segur que voleu eliminar {0} de la cua?",
     "DeleteSelectedDownloadClientsMessageText": "Esteu segur que voleu suprimir {count} client(s) de baixada seleccionat(s)?",
@@ -865,5 +864,9 @@
     "AllExpandedCollapseAll": "Contreure-ho tot",
     "DeleteArtistFolderCountConfirmation": "Esteu segur que voleu suprimir {count} llista(es) d'importació seleccionada(es)?",
     "No": "No",
-    "Yes": "Si"
+    "Yes": "Si",
+    "Other": "Altres",
+    "External": "Extern",
+    "AutoRedownloadFailedFromInteractiveSearch": "Tornar a baixar baixades fallades des de la cerca interactiva",
+    "AutoRedownloadFailed": "Tornar a baixar les baixades fallades"
 }

@@ -650,7 +650,6 @@
     "DeleteSelectedIndexers": "Odstranit indexer",
     "NoEventsFound": "Nebyly nalezeny žádné události",
     "Yes": "Ano",
-    "RemoveFromDownloadClientHelpTextWarning": "Odebráním odstraníte stažené soubory a soubory z klienta pro stahování.",
     "RemoveSelectedItemQueueMessageText": "Opravdu chcete odebrat {0} položku {1} z fronty?",
     "RemoveSelectedItemsQueueMessageText": "Opravdu chcete odebrat {0} položku {1} z fronty?",
     "DeleteSelectedDownloadClientsMessageText": "Opravdu chcete smazat {count} vybraných klientů pro stahování?",

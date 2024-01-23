@@ -651,7 +651,6 @@
     "ApplyTagsHelpTextRemove": "Премахване: Премахнете въведените тагове",
     "NoEventsFound": "Няма намерени събития",
     "RemoveSelectedItemQueueMessageText": "Наистина ли искате да премахнете {0} елемент {1} от опашката?",
-    "RemoveFromDownloadClientHelpTextWarning": "Премахването ще премахне изтеглянето и файловете от клиента за изтегляне.",
     "RemoveSelectedItemsQueueMessageText": "Наистина ли искате да премахнете {0} елемент {1} от опашката?",
     "ApplyTagsHelpTextHowToApplyArtists": "Как да приложите тагове към избраните филми",
     "ApplyTagsHelpTextHowToApplyDownloadClients": "Как да приложите тагове към избраните филми",

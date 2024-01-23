@@ -988,7 +988,6 @@
     "ExistingTag": "Υφιστάμενη ετικέτα",
     "RemovingTag": "Κατάργηση ετικέτας",
     "Required": "Απαιτείται",
-    "RemoveFromDownloadClientHelpTextWarning": "Η κατάργηση θα καταργήσει τη λήψη και τα αρχεία από τον πελάτη λήψης.",
     "RemoveSelectedItemQueueMessageText": "Είστε σίγουροι πως θέλετε να διαγράψετε 1 αντικείμενο από την ουρά;",
     "ApplyTagsHelpTextHowToApplyArtists": "Πώς να εφαρμόσετε ετικέτες στις επιλεγμένες ταινίες",
     "DeleteSelectedDownloadClientsMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε το ευρετήριο \"{0}\";",
