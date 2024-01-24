@@ -13,7 +13,7 @@ import translate from 'Utilities/String/translate';
 import styles from './RemoveQueueItemModal.css';
 
 interface RemovePressProps {
-  remove: boolean;
+  removeFromClient: boolean;
   changeCategory: boolean;
   blocklist: boolean;
   skipRedownload: boolean;
@@ -148,7 +148,7 @@ function RemoveQueueItemModal(props: RemoveQueueItemModalProps) {
 
   const handleConfirmRemove = useCallback(() => {
     onRemovePress({
-      remove: removalMethod === 'removeFromClient',
+      removeFromClient: removalMethod === 'removeFromClient',
       changeCategory: removalMethod === 'changeCategory',
       blocklist: blocklistMethod !== 'doNotBlocklist',
       skipRedownload: blocklistMethod === 'blocklistOnly',
