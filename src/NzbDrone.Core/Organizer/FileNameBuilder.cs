@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Organizer
         private readonly ICached<AbsoluteTrackFormat[]> _absoluteTrackFormatCache;
         private readonly Logger _logger;
 
-        private static readonly Regex TitleRegex = new Regex(@"(?<escaped>\{\{|\}\})|\{(?<prefix>[- ._\[(]*)(?<token>(?:[a-z0-9]+)(?:(?<separator>[- ._]+)(?:[a-z0-9]+))?)(?::(?<customFormat>[a-z0-9]+))?(?<suffix>[- ._)\]]*)\}",
+        private static readonly Regex TitleRegex = new Regex(@"(?<escaped>\{\{|\}\})|\{(?<prefix>[- ._\[(]*)(?<token>(?:[a-z0-9]+)(?:(?<separator>[- ._]+)(?:[a-z0-9]+))?)(?::(?<customFormat>[a-z0-9+-]+(?<!-)))?(?<suffix>[- ._)\]]*)\}",
                                                              RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         public static readonly Regex TrackRegex = new Regex(@"(?<track>\{track(?:\:0+)?})",
@@ -241,6 +241,7 @@ namespace NzbDrone.Core.Organizer
                 var component = ReplaceTokens(splitPattern, tokenHandlers, namingConfig);
                 component = CleanFolderName(component);
                 component = ReplaceReservedDeviceNames(component);
+                component = component.Replace("{ellipsis}", "...");
 
                 if (component.IsNotNullOrWhiteSpace())
                 {
@@ -296,9 +297,9 @@ namespace NzbDrone.Core.Organizer
 
         private void AddArtistTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, Artist artist)
         {
-            tokenHandlers["{Artist Name}"] = m => artist.Name;
-            tokenHandlers["{Artist CleanName}"] = m => CleanTitle(artist.Name);
-            tokenHandlers["{Artist NameThe}"] = m => TitleThe(artist.Name);
+            tokenHandlers["{Artist Name}"] = m => Truncate(artist.Name, m.CustomFormat);
+            tokenHandlers["{Artist CleanName}"] = m => Truncate(CleanTitle(artist.Name), m.CustomFormat);
+            tokenHandlers["{Artist NameThe}"] = m => Truncate(TitleThe(artist.Name), m.CustomFormat);
             tokenHandlers["{Artist Genre}"] = m => artist.Metadata.Value.Genres?.FirstOrDefault() ?? string.Empty;
             tokenHandlers["{Artist NameFirstCharacter}"] = m => TitleFirstCharacter(TitleThe(artist.Name));
             tokenHandlers["{Artist MbId}"] = m => artist.ForeignArtistId ?? string.Empty;
@@ -311,9 +312,9 @@ namespace NzbDrone.Core.Organizer
 
         private void AddAlbumTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, Album album)
         {
-            tokenHandlers["{Album Title}"] = m => album.Title;
-            tokenHandlers["{Album CleanTitle}"] = m => CleanTitle(album.Title);
-            tokenHandlers["{Album TitleThe}"] = m => TitleThe(album.Title);
+            tokenHandlers["{Album Title}"] = m => Truncate(album.Title, m.CustomFormat);
+            tokenHandlers["{Album CleanTitle}"] = m => Truncate(CleanTitle(album.Title), m.CustomFormat);
+            tokenHandlers["{Album TitleThe}"] = m => Truncate(TitleThe(album.Title), m.CustomFormat);
             tokenHandlers["{Album Type}"] = m => album.AlbumType;
             tokenHandlers["{Album Genre}"] = m => album.Genres.FirstOrDefault() ?? string.Empty;
             tokenHandlers["{Album MbId}"] = m => album.ForeignAlbumId ?? string.Empty;
@@ -323,14 +324,9 @@ namespace NzbDrone.Core.Organizer
                 tokenHandlers["{Album Disambiguation}"] = m => album.Disambiguation;
             }
 
-            if (album.ReleaseDate.HasValue)
-            {
-                tokenHandlers["{Release Year}"] = m => album.ReleaseDate.Value.Year.ToString();
-            }
-            else
-            {
-                tokenHandlers["{Release Year}"] = m => "Unknown";
-            }
+            tokenHandlers["{Release Year}"] = album.ReleaseDate.HasValue
+                ? m => album.ReleaseDate.Value.Year.ToString()
+                : m => "Unknown";
         }
 
         private void AddMediumTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, Medium medium)
@@ -347,9 +343,9 @@ namespace NzbDrone.Core.Organizer
             var firstArtist = tracks.Select(t => t.ArtistMetadata?.Value).FirstOrDefault() ?? artist.Metadata;
             if (firstArtist != null)
             {
-                tokenHandlers["{Track ArtistName}"] = m => firstArtist.Name;
-                tokenHandlers["{Track ArtistCleanName}"] = m => CleanTitle(firstArtist.Name);
-                tokenHandlers["{Track ArtistNameThe}"] = m => TitleThe(firstArtist.Name);
+                tokenHandlers["{Track ArtistName}"] = m => Truncate(firstArtist.Name, m.CustomFormat);
+                tokenHandlers["{Track ArtistCleanName}"] = m => Truncate(CleanTitle(firstArtist.Name), m.CustomFormat);
+                tokenHandlers["{Track ArtistNameThe}"] = m => Truncate(TitleThe(firstArtist.Name), m.CustomFormat);
                 tokenHandlers["{Track ArtistMbId}"] = m => firstArtist.ForeignArtistId ?? string.Empty;
             }
         }
@@ -362,15 +358,15 @@ namespace NzbDrone.Core.Organizer
 
         private void AddTrackTitleTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, List<Track> tracks, int maxLength)
         {
-            tokenHandlers["{Track Title}"] = m => GetTrackTitle(GetTrackTitles(tracks), "+", maxLength);
-            tokenHandlers["{Track CleanTitle}"] = m => GetTrackTitle(GetTrackTitles(tracks).Select(CleanTitle).ToList(), "and", maxLength);
+            tokenHandlers["{Track Title}"] = m => GetTrackTitle(GetTrackTitles(tracks), "+", maxLength, m.CustomFormat);
+            tokenHandlers["{Track CleanTitle}"] = m => GetTrackTitle(GetTrackTitles(tracks).Select(CleanTitle).ToList(), "and", maxLength, m.CustomFormat);
         }
 
         private void AddTrackFileTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, TrackFile trackFile)
         {
             tokenHandlers["{Original Title}"] = m => GetOriginalTitle(trackFile);
             tokenHandlers["{Original Filename}"] = m => GetOriginalFileName(trackFile);
-            tokenHandlers["{Release Group}"] = m => trackFile.ReleaseGroup ?? m.DefaultValue("Lidarr");
+            tokenHandlers["{Release Group}"] = m => Truncate(trackFile.ReleaseGroup, m.CustomFormat) ?? m.DefaultValue("Lidarr");
         }
 
         private void AddQualityTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, Artist artist, TrackFile trackFile)
@@ -573,8 +569,15 @@ namespace NzbDrone.Core.Organizer
             return titles;
         }
 
-        private string GetTrackTitle(List<string> titles, string separator, int maxLength)
+        private string GetTrackTitle(List<string> titles, string separator, int maxLength, string formatter)
         {
+            var maxFormatterLength = GetMaxLengthFromFormatter(formatter);
+
+            if (maxFormatterLength > 0)
+            {
+                maxLength = Math.Min(maxLength, maxFormatterLength);
+            }
+
             separator = $" {separator.Trim()} ";
 
             var joined = string.Join(separator, titles);
@@ -660,6 +663,7 @@ namespace NzbDrone.Core.Organizer
             var tokenHandlers = new Dictionary<string, Func<TokenMatch, string>>(FileNameBuilderTokenEqualityComparer.Instance);
             tokenHandlers["{Track Title}"] = m => string.Empty;
             tokenHandlers["{Track CleanTitle}"] = m => string.Empty;
+            tokenHandlers["{ellipsis}"] = m => "...";
 
             var result = ReplaceTokens(pattern, tokenHandlers, namingConfig);
 
@@ -717,6 +721,30 @@ namespace NzbDrone.Core.Organizer
             }
 
             return result.TrimStart(' ', '.').TrimEnd(' ');
+        }
+
+        private string Truncate(string input, string formatter)
+        {
+            var maxLength = GetMaxLengthFromFormatter(formatter);
+
+            if (maxLength == 0 || input.Length <= Math.Abs(maxLength))
+            {
+                return input;
+            }
+
+            if (maxLength < 0)
+            {
+                return $"{{ellipsis}}{input.Reverse().Truncate(Math.Abs(maxLength) - 3).TrimEnd(' ', '.').Reverse()}";
+            }
+
+            return $"{input.Truncate(maxLength - 3).TrimEnd(' ', '.')}{{ellipsis}}";
+        }
+
+        private int GetMaxLengthFromFormatter(string formatter)
+        {
+            int.TryParse(formatter, out var maxCustomLength);
+
+            return maxCustomLength;
         }
     }
 
