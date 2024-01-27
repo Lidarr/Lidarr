@@ -195,31 +195,30 @@ namespace NzbDrone.Core.Download
         private async Task<ProcessedDecisionResult> ProcessDecisionInternal(DownloadDecision decision, int? downloadClientId = null)
         {
             var remoteAlbum = decision.RemoteAlbum;
+            var remoteIndexer = remoteAlbum.Release.Indexer;
 
             try
             {
-                _logger.Trace("Grabbing from Indexer {0} at priority {1}.", remoteAlbum.Release.Indexer, remoteAlbum.Release.IndexerPriority);
+                _logger.Trace("Grabbing release '{0}' from Indexer {1} at priority {2}.", remoteAlbum, remoteIndexer, remoteAlbum.Release.IndexerPriority);
                 await _downloadService.DownloadReport(remoteAlbum, downloadClientId);
 
                 return ProcessedDecisionResult.Grabbed;
             }
             catch (ReleaseUnavailableException)
             {
-                _logger.Warn("Failed to download release from indexer, no longer available. " + remoteAlbum);
+                _logger.Warn("Failed to download release '{0}' from Indexer {1}. Release not available", remoteAlbum, remoteIndexer);
                 return ProcessedDecisionResult.Rejected;
             }
             catch (Exception ex)
             {
                 if (ex is DownloadClientUnavailableException || ex is DownloadClientAuthenticationException)
                 {
-                    _logger.Debug(ex,
-                        "Failed to send release to download client, storing until later. " + remoteAlbum);
-
+                    _logger.Debug(ex, "Failed to send release '{0}' from Indexer {1} to download client, storing until later.", remoteAlbum, remoteIndexer);
                     return ProcessedDecisionResult.Failed;
                 }
                 else
                 {
-                    _logger.Warn(ex, "Couldn't add report to download queue. " + remoteAlbum);
+                    _logger.Warn(ex, "Couldn't add release '{0}' from Indexer {1} to download queue.", remoteAlbum, remoteIndexer);
                     return ProcessedDecisionResult.Skipped;
                 }
             }
