@@ -1,5 +1,5 @@
 {
-    "About": "Деталі",
+    "About": "Про нас",
     "Actions": "Дії",
     "AddingTag": "Додавання тегу",
     "AddListExclusion": "Додати винятки списку",
@@ -86,7 +86,7 @@
     "Deleted": "Видалено",
     "Activity": "Активність",
     "Add": "Додати",
-    "AddDelayProfile": "Додати профіль затримки",
+    "AddDelayProfile": "Додати Профіль Затримки",
     "Added": "Додано",
     "AddIndexer": "Додати індексатор",
     "AddNew": "Додати новий",
@@ -473,5 +473,14 @@
     "Monitored": "Відстежується",
     "MonitoredOnly": "Тільки під контролем",
     "Usenet": "Usenet",
-    "AddConditionImplementation": "Додати умому"
+    "AddConditionImplementation": "Додати умову - {implementationName}",
+    "UpdateMechanismHelpText": "Використайте вбудоване оновлення {appName}'у або скрипт",
+    "AddImportListExclusion": "Додати виняток до списку імпорту",
+    "AddConnection": "Додати Підключення",
+    "AddConnectionImplementation": "Додати Підключення - {implementationName}",
+    "Absolute": "Абсолютний",
+    "AddAutoTag": "Додати Авто Тег",
+    "AddAutoTagError": "Не вдалося додати новий авто тег, спробуйте ще раз.",
+    "AddConditionError": "Не вдалося додати нову умову, спробуйте ще раз.",
+    "AddCondition": "Додати Умову"
 }
