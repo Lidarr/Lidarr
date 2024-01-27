@@ -858,5 +858,7 @@
     "ClearBlocklistMessageText": "Sicuro di voler cancellare la Lista dei Blocchi?",
     "CloneAutoTag": "Copia Auto Tag",
     "AuthenticationRequiredUsernameHelpTextWarning": "Inserisci username",
-    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Conferma la nuova password"
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Conferma la nuova password",
+    "AddImportListImplementation": "Aggiungi lista di importazione - {implementationName}",
+    "AutoRedownloadFailed": "Download fallito"
 }
