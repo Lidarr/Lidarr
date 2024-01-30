@@ -72,6 +72,13 @@ namespace NzbDrone.Core.Organizer
 
         private static readonly Regex ReservedDeviceNamesRegex = new Regex(@"^(?:aux|com[1-9]|con|lpt[1-9]|nul|prn)\.", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        private static readonly List<(string Range, string Group)> ArtistNameGroups = new List<(string Range, string Group)>
+        {
+            ("0-9", "0-9"), ("A-C", "ABC"), ("D-F", "DEF"), ("G-I", "GHI"),
+            ("J-L", "JKL"), ("M-O", "MNO"), ("P-R", "PQR"), ("S-U", "STU"),
+            ("V-X", "VWX"), ("Y-Z", "YZ")
+        };
+
         public FileNameBuilder(INamingConfigService namingConfigService,
                                IQualityDefinitionService qualityDefinitionService,
                                ICacheManager cacheManager,
@@ -282,6 +289,24 @@ namespace NzbDrone.Core.Organizer
             return "_";
         }
 
+        public static string TitleFirstCharacterGroup(string title)
+        {
+            var firstChar = TitleFirstCharacter(title);
+            if (firstChar == "_")
+            {
+                return firstChar;
+            }
+
+            var group = ArtistNameGroups.FirstOrDefault(g => firstChar[0] >= g.Range[0] && firstChar[0] <= g.Range[2]);
+            if (group == default)
+            {
+                // If it turns out not to be a Latin character, fall back to the single character
+                return firstChar;
+            }
+
+            return group.Group;
+        }
+
         public static string CleanFileName(string name)
         {
             return CleanFileName(name, NamingConfig.Default);
@@ -301,6 +326,7 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{Artist NameThe}"] = m => TitleThe(artist.Name);
             tokenHandlers["{Artist Genre}"] = m => artist.Metadata.Value.Genres?.FirstOrDefault() ?? string.Empty;
             tokenHandlers["{Artist NameFirstCharacter}"] = m => TitleFirstCharacter(TitleThe(artist.Name));
+            tokenHandlers["{Artist NameFirstCharacterGroup"] = m => TitleFirstCharacterGroup(TitleThe(artist.Name));
             tokenHandlers["{Artist MbId}"] = m => artist.ForeignArtistId ?? string.Empty;
 
             if (artist.Metadata.Value.Disambiguation != null)

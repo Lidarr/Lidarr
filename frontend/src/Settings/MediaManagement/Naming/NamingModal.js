@@ -45,6 +45,8 @@ const artistTokens = [
 
   { token: '{Artist NameFirstCharacter}', example: 'A' },
 
+  { token: '{Artist NameFirstCharacterGroup}', example: 'ABC' },
+
   { token: '{Artist CleanName}', example: 'Artist Name' },
 
   { token: '{Artist Disambiguation}', example: 'Disambiguation' },
