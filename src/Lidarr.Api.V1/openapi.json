@@ -11019,10 +11019,13 @@
           "onRename": {
             "type": "boolean"
           },
-          "onAlbumDelete": {
+          "onArtistAdd": {
             "type": "boolean"
           },
           "onArtistDelete": {
+            "type": "boolean"
+          },
+          "onAlbumDelete": {
             "type": "boolean"
           },
           "onHealthIssue": {
@@ -11055,10 +11058,13 @@
           "supportsOnRename": {
             "type": "boolean"
           },
-          "supportsOnAlbumDelete": {
+          "supportsOnArtistAdd": {
             "type": "boolean"
           },
           "supportsOnArtistDelete": {
+            "type": "boolean"
+          },
+          "supportsOnAlbumDelete": {
             "type": "boolean"
           },
           "supportsOnHealthIssue": {
