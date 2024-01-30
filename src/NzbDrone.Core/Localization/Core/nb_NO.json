@@ -227,5 +227,7 @@
     "ConnectionLostToBackend": "Radarr har mistet tilkoblingen til baksystemet og må lastes inn på nytt for å gjenopprette funksjonalitet.",
     "ImportLists": "importeringsliste",
     "Enabled": "Aktiver",
-    "Release": " utgivelse"
+    "Release": " utgivelse",
+    "AddAlbumWithTitle": "Legg til {albumTitle}",
+    "AddArtistWithName": "Legg til {artistName}"
 }
