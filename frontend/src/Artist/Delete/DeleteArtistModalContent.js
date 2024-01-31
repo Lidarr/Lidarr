@@ -56,8 +56,8 @@ class DeleteArtistModalContent extends Component {
     } = this.props;
 
     const {
-      trackFileCount,
-      sizeOnDisk
+      trackFileCount = 0,
+      sizeOnDisk = 0
     } = statistics;
 
     const deleteFiles = this.state.deleteFiles;

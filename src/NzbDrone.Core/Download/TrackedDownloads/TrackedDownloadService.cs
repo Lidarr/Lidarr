@@ -145,6 +145,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                     var grabbedEvent = historyItems.FirstOrDefault(v => v.EventType == EntityHistoryEventType.Grabbed);
 
                     trackedDownload.Indexer = grabbedEvent?.Data["indexer"];
+                    trackedDownload.Added = grabbedEvent?.Date;
 
                     if (parsedAlbumInfo == null ||
                         trackedDownload.RemoteAlbum == null ||

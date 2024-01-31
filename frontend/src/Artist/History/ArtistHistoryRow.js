@@ -11,7 +11,6 @@ import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellCo
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import Popover from 'Components/Tooltip/Popover';
-import Tooltip from 'Components/Tooltip/Tooltip';
 import { icons, kinds, tooltipPositions } from 'Helpers/Props';
 import formatCustomFormatScore from 'Utilities/Number/formatCustomFormatScore';
 import translate from 'Utilities/String/translate';
@@ -112,11 +111,19 @@ class ArtistHistoryRow extends Component {
           />
         </TableRowCell>
 
+        <TableRowCell>
+          <AlbumFormats formats={customFormats} />
+        </TableRowCell>
+
+        <TableRowCell>
+          {formatCustomFormatScore(customFormatScore, customFormats.length)}
+        </TableRowCell>
+
         <RelativeDateCellConnector
           date={date}
         />
 
-        <TableRowCell className={styles.details}>
+        <TableRowCell className={styles.actions}>
           <Popover
             anchor={
               <Icon
@@ -134,25 +141,13 @@ class ArtistHistoryRow extends Component {
             }
             position={tooltipPositions.LEFT}
           />
-        </TableRowCell>
 
-        <TableRowCell className={styles.customFormatScore}>
-          <Tooltip
-            anchor={formatCustomFormatScore(
-              customFormatScore,
-              customFormats.length
-            )}
-            tooltip={<AlbumFormats formats={customFormats} />}
-            position={tooltipPositions.BOTTOM}
-          />
-        </TableRowCell>
-
-        <TableRowCell className={styles.actions}>
           {
             eventType === 'grabbed' &&
               <IconButton
                 title={translate('MarkAsFailed')}
                 name={icons.REMOVE}
+                size={14}
                 onPress={this.onMarkAsFailedPress}
               />
           }

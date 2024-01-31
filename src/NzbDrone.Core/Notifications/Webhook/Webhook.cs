@@ -50,14 +50,19 @@ namespace NzbDrone.Core.Notifications.Webhook
             _proxy.SendWebhook(BuildOnTrackRetagPayload(message), Settings);
         }
 
-        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        public override void OnArtistAdd(ArtistAddMessage message)
         {
-            _proxy.SendWebhook(BuildOnAlbumDelete(deleteMessage), Settings);
+            _proxy.SendWebhook(BuildOnArtistAdd(message), Settings);
         }
 
         public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
         {
             _proxy.SendWebhook(BuildOnArtistDelete(deleteMessage), Settings);
+        }
+
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            _proxy.SendWebhook(BuildOnAlbumDelete(deleteMessage), Settings);
         }
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)

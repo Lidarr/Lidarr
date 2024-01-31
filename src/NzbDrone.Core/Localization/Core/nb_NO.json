@@ -149,7 +149,7 @@
     "Seeders": "Delere",
     "Title": "Tittel",
     "UI": "Grensesnitt",
-    "Add": "Legge til",
+    "Add": "Legg til",
     "EditDelayProfile": "Legg til forsinkelsesprofil",
     "Peers": "Likemenn",
     "EditMetadataProfile": "metadataprofil",
@@ -227,5 +227,7 @@
     "ConnectionLostToBackend": "Radarr har mistet tilkoblingen til baksystemet og må lastes inn på nytt for å gjenopprette funksjonalitet.",
     "ImportLists": "importeringsliste",
     "Enabled": "Aktiver",
-    "Release": " utgivelse"
+    "Release": " utgivelse",
+    "AddAlbumWithTitle": "Legg til {albumTitle}",
+    "AddArtistWithName": "Legg til {artistName}"
 }

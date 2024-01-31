@@ -12,8 +12,14 @@ namespace NzbDrone.Core.Download.Pending
         public ParsedAlbumInfo ParsedAlbumInfo { get; set; }
         public ReleaseInfo Release { get; set; }
         public PendingReleaseReason Reason { get; set; }
+        public PendingReleaseAdditionalInfo AdditionalInfo { get; set; }
 
         // Not persisted
         public RemoteAlbum RemoteAlbum { get; set; }
+    }
+
+    public class PendingReleaseAdditionalInfo
+    {
+        public ReleaseSourceType ReleaseSource { get; set; }
     }
 }

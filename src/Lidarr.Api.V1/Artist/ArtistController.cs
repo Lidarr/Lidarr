@@ -145,7 +145,7 @@ namespace Lidarr.Api.V1.Artist
 
             MapCoversToLocal(artistsResources.ToArray());
             LinkNextPreviousAlbums(artistsResources.ToArray());
-            LinkArtistStatistics(artistsResources, artistStats);
+            LinkArtistStatistics(artistsResources, artistStats.ToDictionary(x => x.ArtistId));
             artistsResources.ForEach(LinkRootFolderPath);
 
             // PopulateAlternateTitles(seriesResources);
@@ -219,17 +219,14 @@ namespace Lidarr.Api.V1.Artist
             LinkArtistStatistics(resource, _artistStatisticsService.ArtistStatistics(resource.Id));
         }
 
-        private void LinkArtistStatistics(List<ArtistResource> resources, List<ArtistStatistics> artistStatistics)
+        private void LinkArtistStatistics(List<ArtistResource> resources, Dictionary<int, ArtistStatistics> artistStatistics)
         {
             foreach (var artist in resources)
             {
-                var stats = artistStatistics.SingleOrDefault(ss => ss.ArtistId == artist.Id);
-                if (stats == null)
+                if (artistStatistics.TryGetValue(artist.Id, out var stats))
                 {
-                    continue;
+                    LinkArtistStatistics(artist, stats);
                 }
-
-                LinkArtistStatistics(artist, stats);
             }
         }
 

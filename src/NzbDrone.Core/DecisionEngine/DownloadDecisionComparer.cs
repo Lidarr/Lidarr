@@ -13,14 +13,16 @@ namespace NzbDrone.Core.DecisionEngine
     {
         private readonly IConfigService _configService;
         private readonly IDelayProfileService _delayProfileService;
+        private readonly IQualityDefinitionService _qualityDefinitionService;
 
         public delegate int CompareDelegate(DownloadDecision x, DownloadDecision y);
         public delegate int CompareDelegate<TSubject, TValue>(DownloadDecision x, DownloadDecision y);
 
-        public DownloadDecisionComparer(IConfigService configService, IDelayProfileService delayProfileService)
+        public DownloadDecisionComparer(IConfigService configService, IDelayProfileService delayProfileService, IQualityDefinitionService qualityDefinitionService)
         {
             _configService = configService;
             _delayProfileService = delayProfileService;
+            _qualityDefinitionService = qualityDefinitionService;
         }
 
         public int Compare(DownloadDecision x, DownloadDecision y)
@@ -166,8 +168,27 @@ namespace NzbDrone.Core.DecisionEngine
 
         private int CompareSize(DownloadDecision x, DownloadDecision y)
         {
-            // TODO: Is smaller better? Smaller for usenet could mean no par2 files.
-            return CompareBy(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum => remoteAlbum.Release.Size.Round(200.Megabytes()));
+            var sizeCompare =  CompareBy(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum =>
+            {
+                var preferredSize = _qualityDefinitionService.Get(remoteAlbum.ParsedAlbumInfo.Quality.Quality).PreferredSize;
+
+                var releaseDuration = remoteAlbum.Albums.Select(a => a.AlbumReleases.Value.Where(r => r.Monitored || a.AnyReleaseOk).Select(r => r.Duration).MaxOrDefault()).Sum() / 1000;
+
+                // If no value for preferred it means unlimited so fallback to sort largest is best
+                if (preferredSize.HasValue && releaseDuration > 0)
+                {
+                    var preferredAlbumSize = releaseDuration * preferredSize.Value.Kilobits();
+
+                    // Calculate closest to the preferred size
+                    return Math.Abs((remoteAlbum.Release.Size - preferredAlbumSize).Round(100.Megabytes())) * (-1);
+                }
+                else
+                {
+                    return remoteAlbum.Release.Size.Round(100.Megabytes());
+                }
+            });
+
+            return sizeCompare;
         }
     }
 }

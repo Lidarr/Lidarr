@@ -68,15 +68,14 @@ namespace Lidarr.Api.V1.History
 
         [HttpGet]
         [Produces("application/json")]
-        public PagingResource<HistoryResource> GetHistory([FromQuery] PagingRequestResource paging, bool includeArtist, bool includeAlbum, bool includeTrack, int? eventType, int? albumId, string downloadId, [FromQuery] int[] artistIds = null, [FromQuery] int[] quality = null)
+        public PagingResource<HistoryResource> GetHistory([FromQuery] PagingRequestResource paging, bool includeArtist, bool includeAlbum, bool includeTrack, [FromQuery(Name = "eventType")] int[] eventTypes, int? albumId, string downloadId, [FromQuery] int[] artistIds = null, [FromQuery] int[] quality = null)
         {
             var pagingResource = new PagingResource<HistoryResource>(paging);
             var pagingSpec = pagingResource.MapToPagingSpec<HistoryResource, EntityHistory>("date", SortDirection.Descending);
 
-            if (eventType.HasValue)
+            if (eventTypes != null && eventTypes.Any())
             {
-                var filterValue = (EntityHistoryEventType)eventType.Value;
-                pagingSpec.FilterExpressions.Add(v => v.EventType == filterValue);
+                pagingSpec.FilterExpressions.Add(v => eventTypes.Contains((int)v.EventType));
             }
 
             if (albumId.HasValue)

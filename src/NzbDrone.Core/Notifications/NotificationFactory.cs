@@ -14,8 +14,9 @@ namespace NzbDrone.Core.Notifications
         List<INotification> OnReleaseImportEnabled(bool filterBlockedNotifications = true);
         List<INotification> OnUpgradeEnabled(bool filterBlockedNotifications = true);
         List<INotification> OnRenameEnabled(bool filterBlockedNotifications = true);
-        List<INotification> OnAlbumDeleteEnabled(bool filterBlockedNotifications = true);
+        List<INotification> OnArtistAddEnabled(bool filterBlockedNotifications = true);
         List<INotification> OnArtistDeleteEnabled(bool filterBlockedNotifications = true);
+        List<INotification> OnAlbumDeleteEnabled(bool filterBlockedNotifications = true);
         List<INotification> OnHealthIssueEnabled(bool filterBlockedNotifications = true);
         List<INotification> OnHealthRestoredEnabled(bool filterBlockedNotifications = true);
         List<INotification> OnDownloadFailureEnabled(bool filterBlockedNotifications = true);
@@ -81,14 +82,14 @@ namespace NzbDrone.Core.Notifications
             return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnRename).ToList();
         }
 
-        public List<INotification> OnAlbumDeleteEnabled(bool filterBlockedNotifications = true)
+        public List<INotification> OnArtistAddEnabled(bool filterBlockedNotifications = true)
         {
             if (filterBlockedNotifications)
             {
-                return FilterBlockedNotifications(GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnAlbumDelete)).ToList();
+                return FilterBlockedNotifications(GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnArtistAdd)).ToList();
             }
 
-            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnAlbumDelete).ToList();
+            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnArtistAdd).ToList();
         }
 
         public List<INotification> OnArtistDeleteEnabled(bool filterBlockedNotifications = true)
@@ -99,6 +100,16 @@ namespace NzbDrone.Core.Notifications
             }
 
             return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnArtistDelete).ToList();
+        }
+
+        public List<INotification> OnAlbumDeleteEnabled(bool filterBlockedNotifications = true)
+        {
+            if (filterBlockedNotifications)
+            {
+                return FilterBlockedNotifications(GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnAlbumDelete)).ToList();
+            }
+
+            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnAlbumDelete).ToList();
         }
 
         public List<INotification> OnHealthIssueEnabled(bool filterBlockedNotifications = true)
@@ -185,8 +196,9 @@ namespace NzbDrone.Core.Notifications
             definition.SupportsOnReleaseImport = provider.SupportsOnReleaseImport;
             definition.SupportsOnUpgrade = provider.SupportsOnUpgrade;
             definition.SupportsOnRename = provider.SupportsOnRename;
-            definition.SupportsOnAlbumDelete = provider.SupportsOnAlbumDelete;
+            definition.SupportsOnArtistAdd = provider.SupportsOnArtistAdd;
             definition.SupportsOnArtistDelete = provider.SupportsOnArtistDelete;
+            definition.SupportsOnAlbumDelete = provider.SupportsOnAlbumDelete;
             definition.SupportsOnHealthIssue = provider.SupportsOnHealthIssue;
             definition.SupportsOnHealthRestored = provider.SupportsOnHealthRestored;
             definition.SupportsOnDownloadFailure = provider.SupportsOnDownloadFailure;

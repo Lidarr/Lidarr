@@ -5,6 +5,7 @@ interface CssExports {
   'customFormatScore': string;
   'duration': string;
   'monitored': string;
+  'size': string;
   'status': string;
   'title': string;
   'trackNumber': string;

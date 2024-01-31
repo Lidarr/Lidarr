@@ -310,9 +310,15 @@ namespace NzbDrone.Core.Test.ParserTests
         [TestCase("Artist Title - Album Title 2017 REPACK FLAC aAF", true, 2)]
         [TestCase("Artist.Title-Album.Title.2017.REPACK.FLAC-aAF", true, 2)]
         [TestCase("Artist.Title-Album.Title.2017.REPACK2.FLAC-aAF", true, 3)]
-        [TestCase("Artist Title - Album Title 2017 RERIP FLAC aAF", true, 2)]
-        [TestCase("Artist Title - Album Title 2017 RERIP2 FLAC aAF", true, 3)]
-        [TestCase("Artist Title - Album Title 2017 PROPER FLAC aAF", false, 2)]
+        [TestCase("Artist.Title-Album.Title.2017.PROPER.FLAC-aAF", false, 2)]
+        [TestCase("Artist.Title-Album.Title.2017.RERIP.FLAC-DEMAND", true, 2)]
+        [TestCase("Artist.Title-Album.Title.2017.RERIP2.FLAC-DEMAND", true, 3)]
+        [TestCase("Artist Title - Album Title 2017 MP3 V2 (VBR) aAF", false, 1)]
+        [TestCase("Artist.Title-Album.Title.2017.MP3.V2.VBR-aAF", false, 1)]
+        [TestCase("Artist.Title-Album.Title.2017.MP3.V2.VBR-aAF", false, 1)]
+        [TestCase("Artist.Title-Album.Title.2017.MP3.V2.VBR-aAF", false, 1)]
+        [TestCase("Artist.Title-Album.Title.2017.MP3.V2.VBR-DEMAND", false, 1)]
+        [TestCase("Artist.Title-Album.Title.2017.MP3.V2.VBR-DEMAND", false, 1)]
         public void should_be_able_to_parse_repack(string title, bool isRepack, int version)
         {
             var result = QualityParser.ParseQuality(title, null, 0);

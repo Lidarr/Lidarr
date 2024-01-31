@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Modal from 'Components/Modal/Modal';
+import { sizes } from 'Helpers/Props';
 import ArtistHistoryModalContentConnector from './ArtistHistoryModalContentConnector';
 
 function ArtistHistoryModal(props) {
@@ -13,6 +14,7 @@ function ArtistHistoryModal(props) {
   return (
     <Modal
       isOpen={isOpen}
+      size={sizes.EXTRA_LARGE}
       onModalClose={onModalClose}
     >
       <ArtistHistoryModalContentConnector

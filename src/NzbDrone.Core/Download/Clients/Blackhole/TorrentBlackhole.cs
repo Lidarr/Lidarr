@@ -7,6 +7,7 @@ using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Blocklisting;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles.TorrentInfo;
 using NzbDrone.Core.Organizer;
@@ -29,8 +30,9 @@ namespace NzbDrone.Core.Download.Clients.Blackhole
                                 IConfigService configService,
                                 IDiskProvider diskProvider,
                                 IRemotePathMappingService remotePathMappingService,
+                                IBlocklistService blocklistService,
                                 Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, remotePathMappingService, logger)
+            : base(torrentFileInfoReader, httpClient, configService, diskProvider, remotePathMappingService, blocklistService, logger)
         {
             _scanWatchFolder = scanWatchFolder;
 
@@ -87,7 +89,7 @@ namespace NzbDrone.Core.Download.Clients.Blackhole
             {
                 yield return new DownloadClientItem
                 {
-                    DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this),
+                    DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this, false),
                     DownloadId = Definition.Name + "_" + item.DownloadId,
                     Category = "Lidarr",
                     Title = item.Title,

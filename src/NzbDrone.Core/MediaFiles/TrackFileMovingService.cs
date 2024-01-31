@@ -92,7 +92,7 @@ namespace NzbDrone.Core.MediaFiles
 
             if (_configService.CopyUsingHardlinks)
             {
-                _logger.Debug("Hardlinking track file: {0} to {1}", trackFile.Path, filePath);
+                _logger.Debug("Attempting to hardlink track file: {0} to {1}", trackFile.Path, filePath);
                 return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.HardLinkOrCopy);
             }
 

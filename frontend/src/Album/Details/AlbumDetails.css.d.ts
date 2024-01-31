@@ -19,6 +19,7 @@ interface CssExports {
   'monitorToggleButton': string;
   'overview': string;
   'qualityProfileName': string;
+  'releaseDate': string;
   'sizeOnDisk': string;
   'tags': string;
   'title': string;

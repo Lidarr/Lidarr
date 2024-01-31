@@ -33,7 +33,11 @@ function AlbumStudioAlbum(props: AlbumStudioAlbumProps) {
     isSaving = false,
   } = props;
 
-  const { trackFileCount, totalTrackCount, percentOfTracks } = statistics;
+  const {
+    trackFileCount = 0,
+    totalTrackCount = 0,
+    percentOfTracks = 0,
+  } = statistics;
 
   const dispatch = useDispatch();
   const onAlbumMonitoredPress = useCallback(() => {

@@ -265,26 +265,24 @@ class MediaManagement extends Component {
                       </FormGroup>
 
                       {
-                        settings.importExtraFiles.value &&
+                        settings.importExtraFiles.value ?
                           <FormGroup
                             advancedSettings={advancedSettings}
                             isAdvanced={true}
                           >
-                            <FormLabel>
-                              {translate('ImportExtraFiles')}
-                            </FormLabel>
+                            <FormLabel>{translate('ImportExtraFiles')}</FormLabel>
 
                             <FormInputGroup
                               type={inputTypes.TEXT}
                               name="extraFileExtensions"
                               helpTexts={[
-                                translate('ExtraFileExtensionsHelpTexts1'),
-                                translate('ExtraFileExtensionsHelpTexts2')
+                                translate('ExtraFileExtensionsHelpText'),
+                                translate('ExtraFileExtensionsHelpTextsExamples')
                               ]}
                               onChange={onInputChange}
                               {...settings.extraFileExtensions}
                             />
-                          </FormGroup>
+                          </FormGroup> : null
                       }
                     </FieldSet>
                 }

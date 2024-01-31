@@ -165,15 +165,14 @@ namespace NzbDrone.Core.History
                 history.Data.Add("Protocol", ((int)message.Album.Release.DownloadProtocol).ToString());
                 history.Data.Add("DownloadForced", (!message.Album.DownloadAllowed).ToString());
                 history.Data.Add("CustomFormatScore", message.Album.CustomFormatScore.ToString());
+                history.Data.Add("ReleaseSource", message.Album.ReleaseSource.ToString());
 
                 if (!message.Album.ParsedAlbumInfo.ReleaseHash.IsNullOrWhiteSpace())
                 {
                     history.Data.Add("ReleaseHash", message.Album.ParsedAlbumInfo.ReleaseHash);
                 }
 
-                var torrentRelease = message.Album.Release as TorrentInfo;
-
-                if (torrentRelease != null)
+                if (message.Album.Release is TorrentInfo torrentRelease)
                 {
                     history.Data.Add("TorrentInfoHash", torrentRelease.InfoHash);
                 }
@@ -241,6 +240,7 @@ namespace NzbDrone.Core.History
                 history.Data.Add("ImportedPath", message.ImportedTrack.Path);
                 history.Data.Add("DownloadClient", message.DownloadClientInfo?.Name);
                 history.Data.Add("ReleaseGroup", message.TrackInfo.ReleaseGroup);
+                history.Data.Add("Size", message.TrackInfo.Size.ToString());
 
                 _historyRepository.Insert(history);
             }
@@ -263,6 +263,7 @@ namespace NzbDrone.Core.History
 
                 history.Data.Add("DownloadClient", message.DownloadClient);
                 history.Data.Add("Message", message.Message);
+                history.Data.Add("Size", message.TrackedDownload?.DownloadItem.TotalSize.ToString());
 
                 _historyRepository.Insert(history);
             }
@@ -322,6 +323,7 @@ namespace NzbDrone.Core.History
 
                 history.Data.Add("Reason", message.Reason.ToString());
                 history.Data.Add("ReleaseGroup", message.TrackFile.ReleaseGroup);
+                history.Data.Add("Size", message.TrackFile.Size.ToString());
 
                 _historyRepository.Insert(history);
             }
@@ -348,6 +350,7 @@ namespace NzbDrone.Core.History
                 history.Data.Add("SourcePath", sourcePath);
                 history.Data.Add("Path", path);
                 history.Data.Add("ReleaseGroup", message.TrackFile.ReleaseGroup);
+                history.Data.Add("Size", message.TrackFile.Size.ToString());
 
                 _historyRepository.Insert(history);
             }
@@ -405,8 +408,9 @@ namespace NzbDrone.Core.History
                 };
 
                 history.Data.Add("DownloadClient", message.DownloadClientInfo?.Name);
-                history.Data.Add("ReleaseGroup", message.TrackedDownload?.RemoteAlbum?.ParsedAlbumInfo?.ReleaseGroup);
                 history.Data.Add("Message", message.Message);
+                history.Data.Add("ReleaseGroup", message.TrackedDownload?.RemoteAlbum?.ParsedAlbumInfo?.ReleaseGroup);
+                history.Data.Add("Size", message.TrackedDownload?.DownloadItem.TotalSize.ToString());
 
                 historyToAdd.Add(history);
             }

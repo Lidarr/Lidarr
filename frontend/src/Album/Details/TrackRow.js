@@ -9,6 +9,7 @@ import { tooltipPositions } from 'Helpers/Props';
 import MediaInfoConnector from 'TrackFile/MediaInfoConnector';
 import * as mediaInfoTypes from 'TrackFile/mediaInfoTypes';
 import formatTimeSpan from 'Utilities/Date/formatTimeSpan';
+import formatBytes from 'Utilities/Number/formatBytes';
 import formatCustomFormatScore from 'Utilities/Number/formatCustomFormatScore';
 import TrackActionsCell from './TrackActionsCell';
 import styles from './TrackRow.css';
@@ -28,6 +29,7 @@ class TrackRow extends Component {
       title,
       duration,
       trackFilePath,
+      trackFileSize,
       customFormats,
       customFormatScore,
       columns,
@@ -145,6 +147,17 @@ class TrackRow extends Component {
               );
             }
 
+            if (name === 'size') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.size}
+                >
+                  {!!trackFileSize && formatBytes(trackFileSize)}
+                </TableRowCell>
+              );
+            }
+
             if (name === 'status') {
               return (
                 <TableRowCell
@@ -192,6 +205,7 @@ TrackRow.propTypes = {
   duration: PropTypes.number.isRequired,
   isSaving: PropTypes.bool,
   trackFilePath: PropTypes.string,
+  trackFileSize: PropTypes.number,
   customFormats: PropTypes.arrayOf(PropTypes.object),
   customFormatScore: PropTypes.number.isRequired,
   mediaInfo: PropTypes.object,

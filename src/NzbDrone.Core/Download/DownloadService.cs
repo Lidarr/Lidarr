@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Download
 {
     public interface IDownloadService
     {
-        Task DownloadReport(RemoteAlbum remoteAlbum);
+        Task DownloadReport(RemoteAlbum remoteAlbum, int? downloadClientId);
     }
 
     public class DownloadService : IDownloadService
@@ -50,13 +50,15 @@ namespace NzbDrone.Core.Download
             _logger = logger;
         }
 
-        public async Task DownloadReport(RemoteAlbum remoteAlbum)
+        public async Task DownloadReport(RemoteAlbum remoteAlbum, int? downloadClientId)
         {
             var filterBlockedClients = remoteAlbum.Release.PendingReleaseReason == PendingReleaseReason.DownloadClientUnavailable;
 
             var tags = remoteAlbum.Artist?.Tags;
 
-            var downloadClient = _downloadClientProvider.GetDownloadClient(remoteAlbum.Release.DownloadProtocol, remoteAlbum.Release.IndexerId, filterBlockedClients, tags);
+            var downloadClient = downloadClientId.HasValue
+                ? _downloadClientProvider.Get(downloadClientId.Value)
+                : _downloadClientProvider.GetDownloadClient(remoteAlbum.Release.DownloadProtocol, remoteAlbum.Release.IndexerId, filterBlockedClients, tags);
 
             await DownloadReport(remoteAlbum, downloadClient);
         }
@@ -102,6 +104,11 @@ namespace NzbDrone.Core.Download
                 _logger.Trace("Release {0} no longer available on indexer.", remoteAlbum);
                 throw;
             }
+            catch (ReleaseBlockedException)
+            {
+                _logger.Trace("Release {0} previously added to blocklist, not sending to download client again.", remoteAlbum);
+                throw;
+            }
             catch (DownloadClientRejectedReleaseException)
             {
                 _logger.Trace("Release {0} rejected by download client, possible duplicate.", remoteAlbum);
@@ -126,7 +133,7 @@ namespace NzbDrone.Core.Download
             albumGrabbedEvent.DownloadClientId = downloadClient.Definition.Id;
             albumGrabbedEvent.DownloadClientName = downloadClient.Definition.Name;
 
-            if (!string.IsNullOrWhiteSpace(downloadClientId))
+            if (downloadClientId.IsNotNullOrWhiteSpace())
             {
                 albumGrabbedEvent.DownloadId = downloadClientId;
             }

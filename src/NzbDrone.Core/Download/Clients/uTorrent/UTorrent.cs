@@ -8,6 +8,7 @@ using NzbDrone.Common.Cache;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Blocklisting;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles.TorrentInfo;
 using NzbDrone.Core.Parser.Model;
@@ -28,8 +29,9 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
                         IConfigService configService,
                         IDiskProvider diskProvider,
                         IRemotePathMappingService remotePathMappingService,
+                        IBlocklistService blocklistService,
                         Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, remotePathMappingService, logger)
+            : base(torrentFileInfoReader, httpClient, configService, diskProvider, remotePathMappingService, blocklistService, logger)
         {
             _proxy = proxy;
 
@@ -118,7 +120,7 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
                 item.Title = torrent.Name;
                 item.TotalSize = torrent.Size;
                 item.Category = torrent.Label;
-                item.DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this);
+                item.DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this, Settings.MusicImportedCategory.IsNotNullOrWhiteSpace());
                 item.RemainingSize = torrent.Remaining;
                 item.SeedRatio = torrent.Ratio;
 

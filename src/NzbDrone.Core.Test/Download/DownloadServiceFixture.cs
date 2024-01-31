@@ -83,7 +83,7 @@ namespace NzbDrone.Core.Test.Download
             var mock = WithUsenetClient();
             mock.Setup(s => s.Download(It.IsAny<RemoteAlbum>(), It.IsAny<IIndexer>()));
 
-            await Subject.DownloadReport(_parseResult);
+            await Subject.DownloadReport(_parseResult, null);
 
             VerifyEventPublished<AlbumGrabbedEvent>();
         }
@@ -94,7 +94,7 @@ namespace NzbDrone.Core.Test.Download
             var mock = WithUsenetClient();
             mock.Setup(s => s.Download(It.IsAny<RemoteAlbum>(), It.IsAny<IIndexer>()));
 
-            await Subject.DownloadReport(_parseResult);
+            await Subject.DownloadReport(_parseResult, null);
 
             mock.Verify(s => s.Download(It.IsAny<RemoteAlbum>(), It.IsAny<IIndexer>()), Times.Once());
         }
@@ -106,7 +106,7 @@ namespace NzbDrone.Core.Test.Download
             mock.Setup(s => s.Download(It.IsAny<RemoteAlbum>(), It.IsAny<IIndexer>()))
                 .Throws(new WebException());
 
-            Assert.ThrowsAsync<WebException>(async () => await Subject.DownloadReport(_parseResult));
+            Assert.ThrowsAsync<WebException>(async () => await Subject.DownloadReport(_parseResult, null));
 
             VerifyEventNotPublished<AlbumGrabbedEvent>();
         }
@@ -121,7 +121,7 @@ namespace NzbDrone.Core.Test.Download
                     throw new ReleaseDownloadException(v.Release, "Error", new WebException());
                 });
 
-            Assert.ThrowsAsync<ReleaseDownloadException>(async () => await Subject.DownloadReport(_parseResult));
+            Assert.ThrowsAsync<ReleaseDownloadException>(async () => await Subject.DownloadReport(_parseResult, null));
 
             Mocker.GetMock<IIndexerStatusService>()
                 .Verify(v => v.RecordFailure(It.IsAny<int>(), It.IsAny<TimeSpan>()), Times.Once());
@@ -141,7 +141,7 @@ namespace NzbDrone.Core.Test.Download
                     throw new ReleaseDownloadException(v.Release, "Error", new TooManyRequestsException(request, response));
                 });
 
-            Assert.ThrowsAsync<ReleaseDownloadException>(async () => await Subject.DownloadReport(_parseResult));
+            Assert.ThrowsAsync<ReleaseDownloadException>(async () => await Subject.DownloadReport(_parseResult, null));
 
             Mocker.GetMock<IIndexerStatusService>()
                 .Verify(v => v.RecordFailure(It.IsAny<int>(), TimeSpan.FromMinutes(5.0)), Times.Once());
@@ -161,7 +161,7 @@ namespace NzbDrone.Core.Test.Download
                     throw new ReleaseDownloadException(v.Release, "Error", new TooManyRequestsException(request, response));
                 });
 
-            Assert.ThrowsAsync<ReleaseDownloadException>(async () => await Subject.DownloadReport(_parseResult));
+            Assert.ThrowsAsync<ReleaseDownloadException>(async () => await Subject.DownloadReport(_parseResult, null));
 
             Mocker.GetMock<IIndexerStatusService>()
                 .Verify(v => v.RecordFailure(It.IsAny<int>(),
@@ -175,7 +175,7 @@ namespace NzbDrone.Core.Test.Download
             mock.Setup(s => s.Download(It.IsAny<RemoteAlbum>(), It.IsAny<IIndexer>()))
                 .Throws(new DownloadClientException("Some Error"));
 
-            Assert.ThrowsAsync<DownloadClientException>(async () => await Subject.DownloadReport(_parseResult));
+            Assert.ThrowsAsync<DownloadClientException>(async () => await Subject.DownloadReport(_parseResult, null));
 
             Mocker.GetMock<IIndexerStatusService>()
                 .Verify(v => v.RecordFailure(It.IsAny<int>(), It.IsAny<TimeSpan>()), Times.Never());
@@ -191,7 +191,7 @@ namespace NzbDrone.Core.Test.Download
                     throw new ReleaseUnavailableException(v.Release, "Error", new WebException());
                 });
 
-            Assert.ThrowsAsync<ReleaseUnavailableException>(async () => await Subject.DownloadReport(_parseResult));
+            Assert.ThrowsAsync<ReleaseUnavailableException>(async () => await Subject.DownloadReport(_parseResult, null));
 
             Mocker.GetMock<IIndexerStatusService>()
                 .Verify(v => v.RecordFailure(It.IsAny<int>(), It.IsAny<TimeSpan>()), Times.Never());
@@ -200,7 +200,7 @@ namespace NzbDrone.Core.Test.Download
         [Test]
         public void should_not_attempt_download_if_client_isnt_configured()
         {
-            Assert.ThrowsAsync<DownloadClientUnavailableException>(async () => await Subject.DownloadReport(_parseResult));
+            Assert.ThrowsAsync<DownloadClientUnavailableException>(async () => await Subject.DownloadReport(_parseResult, null));
 
             Mocker.GetMock<IDownloadClient>().Verify(c => c.Download(It.IsAny<RemoteAlbum>(), It.IsAny<IIndexer>()), Times.Never());
             VerifyEventNotPublished<AlbumGrabbedEvent>();
@@ -222,7 +222,7 @@ namespace NzbDrone.Core.Test.Download
                         }
                     });
 
-            await Subject.DownloadReport(_parseResult);
+            await Subject.DownloadReport(_parseResult, null);
 
             Mocker.GetMock<IDownloadClientStatusService>().Verify(c => c.GetBlockedProviders(), Times.Never());
             mockUsenet.Verify(c => c.Download(It.IsAny<RemoteAlbum>(), It.IsAny<IIndexer>()), Times.Once());
@@ -235,7 +235,7 @@ namespace NzbDrone.Core.Test.Download
             var mockTorrent = WithTorrentClient();
             var mockUsenet = WithUsenetClient();
 
-            await Subject.DownloadReport(_parseResult);
+            await Subject.DownloadReport(_parseResult, null);
 
             mockTorrent.Verify(c => c.Download(It.IsAny<RemoteAlbum>(), It.IsAny<IIndexer>()), Times.Never());
             mockUsenet.Verify(c => c.Download(It.IsAny<RemoteAlbum>(), It.IsAny<IIndexer>()), Times.Once());
@@ -249,7 +249,7 @@ namespace NzbDrone.Core.Test.Download
 
             _parseResult.Release.DownloadProtocol = DownloadProtocol.Torrent;
 
-            await Subject.DownloadReport(_parseResult);
+            await Subject.DownloadReport(_parseResult, null);
 
             mockTorrent.Verify(c => c.Download(It.IsAny<RemoteAlbum>(), It.IsAny<IIndexer>()), Times.Once());
             mockUsenet.Verify(c => c.Download(It.IsAny<RemoteAlbum>(), It.IsAny<IIndexer>()), Times.Never());

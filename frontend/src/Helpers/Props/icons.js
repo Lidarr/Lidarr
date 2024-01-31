@@ -55,6 +55,7 @@ import {
   faEye as fasEye,
   faFastBackward as fasFastBackward,
   faFastForward as fasFastForward,
+  faFileCircleQuestion as fasFileCircleQuestion,
   faFileExport as fasFileExport,
   faFileImport as fasFileImport,
   faFileInvoice as farFileInvoice,
@@ -154,7 +155,8 @@ export const EXPORT = fasFileExport;
 export const EXTERNAL_LINK = fasExternalLinkAlt;
 export const FATAL = fasTimesCircle;
 export const FILE = farFile;
-export const FILEIMPORT = fasFileImport;
+export const FILE_IMPORT = fasFileImport;
+export const FILE_MISSING = fasFileCircleQuestion;
 export const FILTER = fasFilter;
 export const FOLDER = farFolder;
 export const FOLDER_OPEN = fasFolderOpen;

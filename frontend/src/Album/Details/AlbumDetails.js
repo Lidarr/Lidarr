@@ -9,6 +9,7 @@ import EditAlbumModalConnector from 'Album/Edit/EditAlbumModalConnector';
 import AlbumInteractiveSearchModalConnector from 'Album/Search/AlbumInteractiveSearchModalConnector';
 import ArtistGenres from 'Artist/Details/ArtistGenres';
 import ArtistHistoryModal from 'Artist/History/ArtistHistoryModal';
+import Alert from 'Components/Alert';
 import HeartRating from 'Components/HeartRating';
 import Icon from 'Components/Icon';
 import Label from 'Components/Label';
@@ -215,8 +216,8 @@ class AlbumDetails extends Component {
     } = this.props;
 
     const {
-      trackFileCount,
-      sizeOnDisk
+      trackFileCount = 0,
+      sizeOnDisk = 0
     } = statistics;
 
     const {
@@ -414,6 +415,7 @@ class AlbumDetails extends Component {
 
                   <Label
                     className={styles.detailsLabel}
+                    title={translate('ReleaseDate')}
                     size={sizes.LARGE}
                   >
                     <Icon
@@ -421,10 +423,8 @@ class AlbumDetails extends Component {
                       size={17}
                     />
 
-                    <span className={styles.sizeOnDisk}>
-                      {
-                        moment(releaseDate).format(shortDateFormat)
-                      }
+                    <span className={styles.releaseDate}>
+                      {moment(releaseDate).format(shortDateFormat)}
                     </span>
                   </Label>
 
@@ -465,7 +465,7 @@ class AlbumDetails extends Component {
                     />
 
                     <span className={styles.qualityProfileName}>
-                      {monitored ? 'Monitored' : 'Unmonitored'}
+                      {monitored ? translate('Monitored') : translate('Unmonitored')}
                     </span>
                   </Label>
 
@@ -499,7 +499,7 @@ class AlbumDetails extends Component {
                         />
 
                         <span className={styles.links}>
-                          Links
+                          {translate('Links')}
                         </span>
                       </Label>
                     }
@@ -531,23 +531,24 @@ class AlbumDetails extends Component {
             }
 
             {
-              !isFetching && albumsError &&
-                <div>
-                  {translate('LoadingAlbumsFailed')}
-                </div>
+              !isFetching && albumsError ?
+                <Alert kind={kinds.DANGER}>
+                  {translate('AlbumsLoadError')}
+                </Alert> :
+                null
             }
 
             {
-              !isFetching && trackFilesError &&
-                <div>
-                  {translate('LoadingTrackFilesFailed')}
-                </div>
+              !isFetching && trackFilesError ?
+                <Alert kind={kinds.DANGER}>
+                  {translate('TrackFilesLoadError')}
+                </Alert> :
+                null
             }
 
             {
               isPopulated && !!media.length &&
                 <div>
-
                   {
                     media.slice(0).map((medium) => {
                       return (

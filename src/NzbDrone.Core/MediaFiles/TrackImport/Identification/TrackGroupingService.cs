@@ -22,8 +22,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private const string MultiDiscPatternFormat = @"^(?<root>.*%s[\W_]*)\d";
         private static readonly Logger _logger = NzbDroneLogger.GetLogger(typeof(TrackGroupingService));
 
-        private static readonly List<string> MultiDiscMarkers = new List<string> { @"dis[ck]", @"cd" };
-        private static readonly List<string> VariousArtistTitles = new List<string> { "", "various artists", "various", "va", "unknown" };
+        private static readonly List<string> MultiDiscMarkers = new () { @"dis[ck]", @"cd" };
+        private static readonly List<string> VariousArtistTitles = new () { "", "various artists", "various", "va", "unknown" };
 
         public List<LocalAlbumRelease> GroupTracks(List<LocalTrack> localTracks)
         {
@@ -115,8 +115,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             const double tagFuzz = 0.9;
 
             // check that any Album/Release MBID is unique
-            if (tracks.Select(x => x.FileTrackInfo.AlbumMBId).Distinct().Where(x => x.IsNotNullOrWhiteSpace()).Count() > 1 ||
-                tracks.Select(x => x.FileTrackInfo.ReleaseMBId).Distinct().Where(x => x.IsNotNullOrWhiteSpace()).Count() > 1)
+            if (tracks.Select(x => x.FileTrackInfo.AlbumMBId).Distinct().Count(x => x.IsNotNullOrWhiteSpace()) > 1 ||
+                tracks.Select(x => x.FileTrackInfo.ReleaseMBId).Distinct().Count(x => x.IsNotNullOrWhiteSpace()) > 1)
             {
                 _logger.Trace("LooksLikeSingleRelease: MBIDs are not unique");
                 return false;
@@ -152,7 +152,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             const double artistTagThreshold = 0.75;
             const double tagFuzz = 0.9;
 
-            var artistTags = tracks.Select(x => x.FileTrackInfo.ArtistTitle);
+            var artistTags = tracks.Select(x => x.FileTrackInfo.ArtistTitle).ToList();
 
             if (!HasCommonEntry(artistTags, artistTagThreshold, tagFuzz))
             {
@@ -178,7 +178,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             // and group them.
 
             // we only bother doing this for the immediate parent directory.
-            var trackFolders = tracks.Select(x => Tuple.Create(x, Path.GetDirectoryName(x.Path)));
+            var trackFolders = tracks.Select(x => Tuple.Create(x, Path.GetDirectoryName(x.Path))).ToList();
 
             var distinctFolders = trackFolders.Select(x => x.Item2).Distinct().ToList();
             distinctFolders.Sort();

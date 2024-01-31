@@ -53,22 +53,21 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Wdtv
                 return null;
             }
 
-            var metadata = new MetadataFile
+            if (Path.GetExtension(filename).ToLowerInvariant() == ".xml")
             {
-                ArtistId = artist.Id,
-                Consumer = GetType().Name,
-                RelativePath = artist.Path.GetRelativePath(path)
-            };
-
-            var parseResult = Parser.Parser.ParseMusicTitle(filename);
-
-            if (parseResult != null)
-            {
-                switch (Path.GetExtension(filename).ToLowerInvariant())
+                var metadata = new MetadataFile
                 {
-                    case ".xml":
-                        metadata.Type = MetadataType.TrackMetadata;
-                        return metadata;
+                    ArtistId = artist.Id,
+                    Consumer = GetType().Name,
+                    RelativePath = artist.Path.GetRelativePath(path)
+                };
+
+                var parseResult = Parser.Parser.ParseMusicTitle(filename);
+
+                if (parseResult != null)
+                {
+                    metadata.Type = MetadataType.TrackMetadata;
+                    return metadata;
                 }
             }
 

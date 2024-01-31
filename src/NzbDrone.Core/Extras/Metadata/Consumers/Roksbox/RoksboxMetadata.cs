@@ -91,13 +91,11 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Roksbox
                 return metadata;
             }
 
-            var parseResult = Parser.Parser.ParseMusicTitle(filename);
-
-            if (parseResult != null)
+            if (Path.GetExtension(filename).ToLowerInvariant() == ".xml")
             {
-                var extension = Path.GetExtension(filename).ToLowerInvariant();
+                var parseResult = Parser.Parser.ParseMusicTitle(filename);
 
-                if (extension == ".xml")
+                if (parseResult != null)
                 {
                     metadata.Type = MetadataType.TrackMetadata;
                     return metadata;

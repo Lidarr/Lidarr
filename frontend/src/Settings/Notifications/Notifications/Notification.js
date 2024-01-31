@@ -60,8 +60,9 @@ class Notification extends Component {
       onReleaseImport,
       onUpgrade,
       onRename,
-      onAlbumDelete,
+      onArtistAdd,
       onArtistDelete,
+      onAlbumDelete,
       onHealthIssue,
       onHealthRestored,
       onDownloadFailure,
@@ -72,8 +73,9 @@ class Notification extends Component {
       supportsOnReleaseImport,
       supportsOnUpgrade,
       supportsOnRename,
-      supportsOnAlbumDelete,
+      supportsOnArtistAdd,
       supportsOnArtistDelete,
+      supportsOnAlbumDelete,
       supportsOnHealthIssue,
       supportsOnHealthRestored,
       supportsOnDownloadFailure,
@@ -95,59 +97,75 @@ class Notification extends Component {
         </div>
 
         {
-          supportsOnGrab && onGrab &&
+          supportsOnGrab && onGrab ?
             <Label kind={kinds.SUCCESS}>
               {translate('OnGrab')}
-            </Label>
+            </Label> :
+            null
         }
 
         {
-          supportsOnReleaseImport && onReleaseImport &&
+          supportsOnReleaseImport && onReleaseImport ?
             <Label kind={kinds.SUCCESS}>
               {translate('OnReleaseImport')}
-            </Label>
+            </Label> :
+            null
         }
 
         {
-          supportsOnUpgrade && onReleaseImport && onUpgrade &&
+          supportsOnUpgrade && onReleaseImport && onUpgrade ?
             <Label kind={kinds.SUCCESS}>
               {translate('OnUpgrade')}
-            </Label>
+            </Label> :
+            null
         }
 
         {
-          supportsOnRename && onRename &&
+          supportsOnRename && onRename ?
             <Label kind={kinds.SUCCESS}>
               {translate('OnRename')}
-            </Label>
+            </Label> :
+            null
         }
 
         {
-          supportsOnTrackRetag && onTrackRetag &&
+          supportsOnTrackRetag && onTrackRetag ?
             <Label kind={kinds.SUCCESS}>
               {translate('OnTrackRetag')}
-            </Label>
+            </Label> :
+            null
         }
 
         {
-          supportsOnAlbumDelete && onAlbumDelete &&
+          supportsOnArtistAdd && onArtistAdd ?
             <Label kind={kinds.SUCCESS}>
-              {translate('OnAlbumDelete')}
-            </Label>
+              {translate('OnArtistAdd')}
+            </Label> :
+            null
         }
 
         {
-          supportsOnArtistDelete && onArtistDelete &&
+          supportsOnArtistDelete && onArtistDelete ?
             <Label kind={kinds.SUCCESS}>
               {translate('OnArtistDelete')}
-            </Label>
+            </Label> :
+            null
         }
 
         {
-          supportsOnHealthIssue && onHealthIssue &&
+          supportsOnAlbumDelete && onAlbumDelete ?
+            <Label kind={kinds.SUCCESS}>
+              {translate('OnAlbumDelete')}
+            </Label> :
+            null
+        }
+
+        {
+          supportsOnHealthIssue && onHealthIssue ?
             <Label kind={kinds.SUCCESS}>
               {translate('OnHealthIssue')}
-            </Label>
+            </Label> :
+            null
         }
 
         {
@@ -159,35 +177,38 @@ class Notification extends Component {
         }
 
         {
-          supportsOnDownloadFailure && onDownloadFailure &&
+          supportsOnDownloadFailure && onDownloadFailure ?
             <Label kind={kinds.SUCCESS} >
               {translate('OnDownloadFailure')}
-            </Label>
+            </Label> :
+            null
         }
 
         {
-          supportsOnImportFailure && onImportFailure &&
+          supportsOnImportFailure && onImportFailure ?
             <Label kind={kinds.SUCCESS} >
               {translate('OnImportFailure')}
-            </Label>
+            </Label> :
+            null
         }
 
         {
-          supportsOnApplicationUpdate && onApplicationUpdate &&
+          supportsOnApplicationUpdate && onApplicationUpdate ?
             <Label kind={kinds.SUCCESS} >
               {translate('OnApplicationUpdate')}
-            </Label>
+            </Label> :
+            null
         }
 
         {
-          !onGrab && !onReleaseImport && !onRename && !onTrackRetag && !onAlbumDelete && !onArtistDelete &&
-            !onHealthIssue && !onHealthRestored && !onDownloadFailure && !onImportFailure && !onApplicationUpdate &&
-              <Label
-                kind={kinds.DISABLED}
-                outline={true}
-              >
-                {translate('Disabled')}
-              </Label>
+          !onGrab && !onReleaseImport && !onRename && !onTrackRetag && !onArtistAdd && !onArtistDelete && !onAlbumDelete && !onHealthIssue && !onHealthRestored && !onDownloadFailure && !onImportFailure && !onApplicationUpdate ?
+            <Label
+              kind={kinds.DISABLED}
+              outline={true}
+            >
+              {translate('Disabled')}
+            </Label> :
+            null
         }
 
         <TagList
@@ -223,8 +244,9 @@ Notification.propTypes = {
   onReleaseImport: PropTypes.bool.isRequired,
   onUpgrade: PropTypes.bool.isRequired,
   onRename: PropTypes.bool.isRequired,
-  onAlbumDelete: PropTypes.bool.isRequired,
+  onArtistAdd: PropTypes.bool.isRequired,
   onArtistDelete: PropTypes.bool.isRequired,
+  onAlbumDelete: PropTypes.bool.isRequired,
   onHealthIssue: PropTypes.bool.isRequired,
   onHealthRestored: PropTypes.bool.isRequired,
   onDownloadFailure: PropTypes.bool.isRequired,
@@ -235,8 +257,9 @@ Notification.propTypes = {
   supportsOnReleaseImport: PropTypes.bool.isRequired,
   supportsOnUpgrade: PropTypes.bool.isRequired,
   supportsOnRename: PropTypes.bool.isRequired,
-  supportsOnAlbumDelete: PropTypes.bool.isRequired,
+  supportsOnArtistAdd: PropTypes.bool.isRequired,
   supportsOnArtistDelete: PropTypes.bool.isRequired,
+  supportsOnAlbumDelete: PropTypes.bool.isRequired,
   supportsOnHealthIssue: PropTypes.bool.isRequired,
   supportsOnHealthRestored: PropTypes.bool.isRequired,
   supportsOnDownloadFailure: PropTypes.bool.isRequired,

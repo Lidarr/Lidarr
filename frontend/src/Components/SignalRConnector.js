@@ -216,6 +216,8 @@ class SignalRConnector extends Component {
       this.props.dispatchUpdateItem({ section, ...body.resource });
     } else if (body.action === 'deleted') {
       this.props.dispatchRemoveItem({ section, id: body.resource.id });
+
+      repopulatePage('trackFileDeleted');
     }
 
     // Repopulate the page to handle recently imported file

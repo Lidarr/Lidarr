@@ -234,20 +234,20 @@ namespace NzbDrone.Core.Notifications.Discord
             _proxy.SendPayload(payload, Settings);
         }
 
-        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        public override void OnArtistAdd(ArtistAddMessage message)
         {
-            var album = deleteMessage.Album;
+            var artist = message.Artist;
 
             var attachments = new List<Embed>
-                              {
-                                  new Embed
-                                  {
-                                      Title = album.Title,
-                                      Description = deleteMessage.DeletedFilesMessage
-                                  }
-                              };
+            {
+                new Embed
+                {
+                    Title = artist.Name,
+                    Description = message.Message
+                }
+            };
 
-            var payload = CreatePayload("Album Deleted", attachments);
+            var payload = CreatePayload("Artist Added", attachments);
 
             _proxy.SendPayload(payload, Settings);
         }
@@ -257,15 +257,33 @@ namespace NzbDrone.Core.Notifications.Discord
             var artist = deleteMessage.Artist;
 
             var attachments = new List<Embed>
-                              {
-                                  new Embed
-                                  {
-                                      Title = artist.Metadata.Value.Name,
-                                      Description = deleteMessage.DeletedFilesMessage
-                                  }
-                              };
+            {
+                new Embed
+                {
+                    Title = artist.Name,
+                    Description = deleteMessage.DeletedFilesMessage
+                }
+            };
 
             var payload = CreatePayload("Artist Deleted", attachments);
+
+            _proxy.SendPayload(payload, Settings);
+        }
+
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            var album = deleteMessage.Album;
+
+            var attachments = new List<Embed>
+            {
+                new Embed
+                {
+                    Title = album.Title,
+                    Description = deleteMessage.DeletedFilesMessage
+                }
+            };
+
+            var payload = CreatePayload("Album Deleted", attachments);
 
             _proxy.SendPayload(payload, Settings);
         }

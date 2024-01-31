@@ -52,14 +52,19 @@ namespace NzbDrone.Core.Notifications.Notifiarr
             _proxy.SendNotification(BuildOnTrackRetagPayload(message), Settings);
         }
 
-        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        public override void OnArtistAdd(ArtistAddMessage message)
         {
-            _proxy.SendNotification(BuildOnAlbumDelete(deleteMessage), Settings);
+            _proxy.SendNotification(BuildOnArtistAdd(message), Settings);
         }
 
         public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
         {
             _proxy.SendNotification(BuildOnArtistDelete(deleteMessage), Settings);
+        }
+
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            _proxy.SendNotification(BuildOnAlbumDelete(deleteMessage), Settings);
         }
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)

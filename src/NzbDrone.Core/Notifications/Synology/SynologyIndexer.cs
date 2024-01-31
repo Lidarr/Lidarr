@@ -55,14 +55,11 @@ namespace NzbDrone.Core.Notifications.Synology
             }
         }
 
-        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        public override void OnArtistAdd(ArtistAddMessage message)
         {
-            if (deleteMessage.DeletedFiles)
+            if (Settings.UpdateLibrary)
             {
-                if (Settings.UpdateLibrary)
-                {
-                    _indexerProxy.DeleteFolder(deleteMessage.Album.Artist.Value.Path);
-                }
+                _indexerProxy.UpdateFolder(message.Artist.Path);
             }
         }
 
@@ -73,6 +70,17 @@ namespace NzbDrone.Core.Notifications.Synology
                 if (Settings.UpdateLibrary)
                 {
                     _indexerProxy.DeleteFolder(deleteMessage.Artist.Path);
+                }
+            }
+        }
+
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            if (deleteMessage.DeletedFiles)
+            {
+                if (Settings.UpdateLibrary)
+                {
+                    _indexerProxy.DeleteFolder(deleteMessage.Album.Artist.Value.Path);
                 }
             }
         }

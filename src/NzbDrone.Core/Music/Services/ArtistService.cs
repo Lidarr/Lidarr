@@ -224,9 +224,13 @@ namespace NzbDrone.Core.Music
         public Artist UpdateArtist(Artist artist, bool publishUpdatedEvent = true)
         {
             _cache.Clear();
-            var storedArtist = GetArtist(artist.Id);
-            var updatedArtist = _artistRepository.Update(artist);
 
+            var storedArtist = GetArtist(artist.Id);
+
+            // Never update AddOptions when updating an artist, keep it the same as the existing stored artist.
+            artist.AddOptions = storedArtist.AddOptions;
+
+            var updatedArtist = _artistRepository.Update(artist);
             if (publishUpdatedEvent)
             {
                 _eventAggregator.PublishEvent(new ArtistEditedEvent(updatedArtist, storedArtist));

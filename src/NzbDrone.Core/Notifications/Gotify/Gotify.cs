@@ -33,14 +33,19 @@ namespace NzbDrone.Core.Notifications.Gotify
             SendNotification(ALBUM_DOWNLOADED_TITLE, message.Message, message.Artist);
         }
 
-        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        public override void OnArtistAdd(ArtistAddMessage message)
         {
-            SendNotification(ALBUM_DELETED_TITLE, deleteMessage.Message, deleteMessage.Album?.Artist);
+            SendNotification(ARTIST_ADDED_TITLE, message.Message, message.Artist);
         }
 
         public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
         {
             SendNotification(ARTIST_DELETED_TITLE, deleteMessage.Message, deleteMessage.Artist);
+        }
+
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            SendNotification(ALBUM_DELETED_TITLE, deleteMessage.Message, deleteMessage.Album?.Artist);
         }
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)

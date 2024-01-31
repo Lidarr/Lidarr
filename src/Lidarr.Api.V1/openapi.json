@@ -2638,8 +2638,11 @@
             "name": "eventType",
             "in": "query",
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
             }
           },
           {
@@ -6031,6 +6034,14 @@
               "type": "boolean",
               "default": false
             }
+          },
+          {
+            "name": "changeCategory",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
           }
         ],
         "responses": {
@@ -6064,6 +6075,14 @@
           },
           {
             "name": "skipRedownload",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "changeCategory",
             "in": "query",
             "schema": {
               "type": "boolean",
@@ -6633,16 +6652,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReleaseResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReleaseResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/ReleaseResource"
               }
@@ -9407,6 +9416,9 @@
           },
           "autoRedownloadFailed": {
             "type": "boolean"
+          },
+          "autoRedownloadFailedFromInteractiveSearch": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -11100,6 +11112,17 @@
               "$ref": "#/components/schemas/AlbumResource"
             },
             "nullable": true
+          },
+          "customFormats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomFormatResource"
+            },
+            "nullable": true
+          },
+          "customFormatScore": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -11437,6 +11460,11 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          },
+          "preferredSize": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -11594,6 +11622,11 @@
             "format": "date-time",
             "nullable": true
           },
+          "added": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "status": {
             "type": "string",
             "nullable": true
@@ -11625,6 +11658,9 @@
           "downloadClient": {
             "type": "string",
             "nullable": true
+          },
+          "downloadClientHasPostImportCategory": {
+            "type": "boolean"
           },
           "indexer": {
             "type": "string",
@@ -11935,6 +11971,15 @@
           "albumId": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          },
+          "downloadClientId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "downloadClient": {
+            "type": "string",
             "nullable": true
           }
         },

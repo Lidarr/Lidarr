@@ -70,6 +70,12 @@ function createMapStateToProps() {
         isCommandExecuting(isSearchingCommand) &&
         isSearchingCommand.body.albumIds.indexOf(album.id) > -1
       );
+      const isRenamingFiles = isCommandExecuting(findCommand(commands, { name: commandNames.RENAME_FILES, artistId: artist.id }));
+      const isRenamingArtistCommand = findCommand(commands, { name: commandNames.RENAME_ARTIST });
+      const isRenamingArtist = (
+        isCommandExecuting(isRenamingArtistCommand) &&
+        isRenamingArtistCommand.body.artistIds.indexOf(artist.id) > -1
+      );
 
       const isFetching = tracks.isFetching || isTrackFilesFetching;
       const isPopulated = tracks.isPopulated && isTrackFilesPopulated;
@@ -80,6 +86,8 @@ function createMapStateToProps() {
         shortDateFormat: uiSettings.shortDateFormat,
         artist,
         isSearching,
+        isRenamingFiles,
+        isRenamingArtist,
         isFetching,
         isPopulated,
         tracksError,
@@ -113,8 +121,27 @@ class AlbumDetailsConnector extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!_.isEqual(getMonitoredReleases(prevProps), getMonitoredReleases(this.props)) ||
-        (prevProps.anyReleaseOk === false && this.props.anyReleaseOk === true)) {
+    const {
+      id,
+      anyReleaseOk,
+      isRenamingFiles,
+      isRenamingArtist
+    } = this.props;
+
+    if (
+      (prevProps.isRenamingFiles && !isRenamingFiles) ||
+      (prevProps.isRenamingArtist && !isRenamingArtist) ||
+      !_.isEqual(getMonitoredReleases(prevProps), getMonitoredReleases(this.props)) ||
+      (prevProps.anyReleaseOk === false && anyReleaseOk === true)
+    ) {
+      this.unpopulate();
+      this.populate();
+    }
+
+    // If the id has changed we need to clear the album
+    // files and fetch from the server.
+
+    if (prevProps.id !== id) {
       this.unpopulate();
       this.populate();
     }
@@ -174,6 +201,8 @@ class AlbumDetailsConnector extends Component {
 AlbumDetailsConnector.propTypes = {
   id: PropTypes.number,
   anyReleaseOk: PropTypes.bool,
+  isRenamingFiles: PropTypes.bool.isRequired,
+  isRenamingArtist: PropTypes.bool.isRequired,
   isAlbumFetching: PropTypes.bool,
   isAlbumPopulated: PropTypes.bool,
   foreignAlbumId: PropTypes.string.isRequired,

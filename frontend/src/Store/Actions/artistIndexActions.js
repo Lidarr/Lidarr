@@ -176,7 +176,7 @@ export const defaultState = {
 
       const {
         trackCount = 0,
-        trackFileCount
+        trackFileCount = 0
       } = statistics;
 
       const progress = trackCount ? trackFileCount / trackCount * 100 : 100;
@@ -201,7 +201,7 @@ export const defaultState = {
     albumCount: function(item) {
       const { statistics = {} } = item;
 
-      return statistics.albumCount;
+      return statistics.albumCount || 0;
     },
 
     trackCount: function(item) {
@@ -229,7 +229,7 @@ export const defaultState = {
 
       const {
         trackCount = 0,
-        trackFileCount
+        trackFileCount = 0
       } = statistics;
 
       const progress = trackCount ?

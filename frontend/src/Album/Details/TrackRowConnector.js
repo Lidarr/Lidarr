@@ -11,6 +11,7 @@ function createMapStateToProps() {
     (id, trackFile) => {
       return {
         trackFilePath: trackFile ? trackFile.path : null,
+        trackFileSize: trackFile ? trackFile.size : null,
         customFormats: trackFile ? trackFile.customFormats : [],
         customFormatScore: trackFile ? trackFile.customFormatScore : 0
       };

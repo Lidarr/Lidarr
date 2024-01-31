@@ -59,6 +59,11 @@ export const defaultState = {
       isVisible: true
     },
     {
+      name: 'size',
+      label: () => translate('Size'),
+      isVisible: false
+    },
+    {
       name: 'customFormats',
       label: 'Formats',
       isVisible: false

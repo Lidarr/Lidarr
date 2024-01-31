@@ -39,8 +39,17 @@ export interface CustomFilter {
   filers: PropertyFilter[];
 }
 
+export interface AppSectionState {
+  dimensions: {
+    isSmallScreen: boolean;
+    width: number;
+    height: number;
+  };
+}
+
 interface AppState {
   albums: AlbumAppState;
+  app: AppSectionState;
   artist: ArtistAppState;
   artistIndex: ArtistIndexAppState;
   history: HistoryAppState;

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentValidation;
@@ -10,10 +11,7 @@ namespace NzbDrone.Core.Indexers.Torznab
 {
     public class TorznabSettingsValidator : AbstractValidator<TorznabSettings>
     {
-        private static readonly string[] ApiKeyWhiteList =
-        {
-            "hd4free.xyz",
-        };
+        private static readonly string[] ApiKeyWhiteList = Array.Empty<string>();
 
         private static bool ShouldHaveApiKey(TorznabSettings settings)
         {
@@ -51,11 +49,14 @@ namespace NzbDrone.Core.Indexers.Torznab
             MinimumSeeders = IndexerDefaults.MINIMUM_SEEDERS;
         }
 
-        [FieldDefinition(6, Type = FieldType.Textbox, Label = "Minimum Seeders", HelpText = "Minimum number of seeders required.", Advanced = true)]
+        [FieldDefinition(7, Type = FieldType.Textbox, Label = "Minimum Seeders", HelpText = "Minimum number of seeders required.", Advanced = true)]
         public int MinimumSeeders { get; set; }
 
-        [FieldDefinition(7)]
+        [FieldDefinition(8)]
         public SeedCriteriaSettings SeedCriteria { get; set; } = new SeedCriteriaSettings();
+
+        [FieldDefinition(9, Type = FieldType.Checkbox, Label = "IndexerSettingsRejectBlocklistedTorrentHashes", HelpText = "IndexerSettingsRejectBlocklistedTorrentHashesHelpText", Advanced = true)]
+        public bool RejectBlocklistedTorrentHashesWhileGrabbing { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

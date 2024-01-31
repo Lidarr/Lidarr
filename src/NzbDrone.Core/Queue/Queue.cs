@@ -19,6 +19,7 @@ namespace NzbDrone.Core.Queue
         public decimal Sizeleft { get; set; }
         public TimeSpan? Timeleft { get; set; }
         public DateTime? EstimatedCompletionTime { get; set; }
+        public DateTime? Added { get; set; }
         public string Status { get; set; }
         public TrackedDownloadStatus? TrackedDownloadStatus { get; set; }
         public TrackedDownloadState? TrackedDownloadState { get; set; }
@@ -27,6 +28,7 @@ namespace NzbDrone.Core.Queue
         public RemoteAlbum RemoteAlbum { get; set; }
         public DownloadProtocol Protocol { get; set; }
         public string DownloadClient { get; set; }
+        public bool DownloadClientHasPostImportCategory { get; set; }
         public string Indexer { get; set; }
         public string OutputPath { get; set; }
         public string ErrorMessage { get; set; }

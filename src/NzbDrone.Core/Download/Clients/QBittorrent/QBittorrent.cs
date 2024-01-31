@@ -8,6 +8,7 @@ using NzbDrone.Common.Cache;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Blocklisting;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles.TorrentInfo;
 using NzbDrone.Core.Parser.Model;
@@ -34,8 +35,9 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                            IDiskProvider diskProvider,
                            IRemotePathMappingService remotePathMappingService,
                            ICacheManager cacheManager,
+                           IBlocklistService blocklistService,
                            Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, remotePathMappingService, logger)
+            : base(torrentFileInfoReader, httpClient, configService, diskProvider, remotePathMappingService, blocklistService, logger)
         {
             _proxySelector = proxySelector;
 
@@ -227,7 +229,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                     Category = torrent.Category.IsNotNullOrWhiteSpace() ? torrent.Category : torrent.Label,
                     Title = torrent.Name,
                     TotalSize = torrent.Size,
-                    DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this),
+                    DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this, Settings.MusicImportedCategory.IsNotNullOrWhiteSpace()),
                     RemainingSize = (long)(torrent.Size * (1.0 - torrent.Progress)),
                     RemainingTime = GetRemainingTime(torrent),
                     SeedRatio = torrent.Ratio
@@ -609,7 +611,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             }
             else if (torrent.RatioLimit == -2 && config.MaxRatioEnabled)
             {
-                if (torrent.Ratio >= config.MaxRatio)
+                if (Math.Round(torrent.Ratio, 2) >= config.MaxRatio)
                 {
                     return true;
                 }

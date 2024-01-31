@@ -30,8 +30,8 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
             _detectNfo = detectNfo;
         }
 
-        private static readonly Regex ArtistImagesRegex = new Regex(@"^(?<type>folder|banner|fanart|logo)\.(?:png|jpg|jpeg)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex AlbumImagesRegex = new Regex(@"^(?<type>cover|disc)\.(?:png|jpg|jpeg)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex ArtistImagesRegex = new Regex(@"^(?<type>folder|banner|fanart|logo|landscape|clearart|clearlogo)\.(?:png|jpe?g)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex AlbumImagesRegex = new Regex(@"^(?<type>cover|disc|discart|back|spine)\.(?:png|jpe?g)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public override string Name => "Kodi (XBMC) / Emby";
 

@@ -41,14 +41,19 @@ namespace NzbDrone.Core.Notifications.Subsonic
             Update();
         }
 
-        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        public override void OnArtistAdd(ArtistAddMessage message)
         {
-            Notify(Settings, ALBUM_DELETED_TITLE_BRANDED, deleteMessage.Message);
+            Notify(Settings, ARTIST_ADDED_TITLE_BRANDED, message.Message);
         }
 
         public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
         {
             Notify(Settings, ARTIST_DELETED_TITLE_BRANDED, deleteMessage.Message);
+        }
+
+        public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
+        {
+            Notify(Settings, ALBUM_DELETED_TITLE_BRANDED, deleteMessage.Message);
         }
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)

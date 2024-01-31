@@ -17,7 +17,6 @@ function createMapStateToProps() {
     (state, { includeMixed }) => includeMixed,
     (state, { includeNone }) => includeNone,
     (metadataProfiles, includeNoChange, includeNoChangeDisabled = true, includeMixed, includeNone) => {
-
       const profiles = metadataProfiles.items.filter((item) => item.name !== metadataProfileNames.NONE);
       const noneProfile = metadataProfiles.items.find((item) => item.name === metadataProfileNames.NONE);
 

@@ -11,6 +11,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Aggregation.Aggregators
 {
     public class AggregateFilenameInfo : IAggregate<LocalAlbumRelease>
     {
+        public int Order => 1;
+
         private readonly Logger _logger;
 
         private static readonly List<Tuple<string, string>> CharsAndSeps = new List<Tuple<string, string>>

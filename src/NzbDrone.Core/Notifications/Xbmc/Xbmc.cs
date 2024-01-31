@@ -42,6 +42,25 @@ namespace NzbDrone.Core.Notifications.Xbmc
             UpdateAndClean(artist);
         }
 
+        public override void OnArtistAdd(ArtistAddMessage message)
+        {
+            const string header = "Lidarr - Artist Added";
+
+            Notify(Settings, header, message.Message);
+            UpdateAndClean(message.Artist, true);
+        }
+
+        public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
+        {
+            if (deleteMessage.DeletedFiles)
+            {
+                const string header = "Lidarr - Artist Deleted";
+
+                Notify(Settings, header, deleteMessage.Message);
+                UpdateAndClean(deleteMessage.Artist, true);
+            }
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             Notify(Settings, HEALTH_ISSUE_TITLE_BRANDED, healthCheck.Message);

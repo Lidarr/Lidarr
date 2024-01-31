@@ -116,7 +116,9 @@ namespace NzbDrone.Core.MediaFiles
             try
             {
                 var audioFiles = _diskScanService.GetAudioFiles(directoryInfo.FullName);
-                var rarFiles = _diskProvider.GetFiles(directoryInfo.FullName, true).Where(f => Path.GetExtension(f).Equals(".rar", StringComparison.OrdinalIgnoreCase));
+                var rarFiles = _diskProvider.GetFiles(directoryInfo.FullName, true).Where(f =>
+                    Path.GetExtension(f).Equals(".rar",
+                        StringComparison.OrdinalIgnoreCase));
 
                 foreach (var audioFile in audioFiles)
                 {
@@ -143,6 +145,11 @@ namespace NzbDrone.Core.MediaFiles
             catch (DirectoryNotFoundException e)
             {
                 _logger.Debug(e, "Folder {0} has already been removed", directoryInfo.FullName);
+                return false;
+            }
+            catch (Exception e)
+            {
+                _logger.Debug(e, "Unable to determine whether folder {0} should be removed", directoryInfo.FullName);
                 return false;
             }
         }

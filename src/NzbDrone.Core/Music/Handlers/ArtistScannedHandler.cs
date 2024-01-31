@@ -3,6 +3,7 @@ using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Music.Events;
 
 namespace NzbDrone.Core.Music
 {
@@ -13,38 +14,46 @@ namespace NzbDrone.Core.Music
         private readonly IArtistService _artistService;
         private readonly IManageCommandQueue _commandQueueManager;
         private readonly IAlbumAddedService _albumAddedService;
+        private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
         public ArtistScannedHandler(IAlbumMonitoredService albumMonitoredService,
                                     IArtistService artistService,
                                     IManageCommandQueue commandQueueManager,
                                     IAlbumAddedService albumAddedService,
+                                    IEventAggregator eventAggregator,
                                     Logger logger)
         {
             _albumMonitoredService = albumMonitoredService;
             _artistService = artistService;
             _commandQueueManager = commandQueueManager;
             _albumAddedService = albumAddedService;
+            _eventAggregator = eventAggregator;
             _logger = logger;
         }
 
         private void HandleScanEvents(Artist artist)
         {
-            if (artist.AddOptions != null)
+            var addOptions = artist.AddOptions;
+
+            if (addOptions == null)
             {
-                _logger.Info("[{0}] was recently added, performing post-add actions", artist.Name);
-                _albumMonitoredService.SetAlbumMonitoredStatus(artist, artist.AddOptions);
-
-                if (artist.AddOptions.SearchForMissingAlbums)
-                {
-                    _commandQueueManager.Push(new MissingAlbumSearchCommand(artist.Id));
-                }
-
-                artist.AddOptions = null;
-                _artistService.RemoveAddOptions(artist);
+                _albumAddedService.SearchForRecentlyAdded(artist.Id);
+                return;
             }
 
-            _albumAddedService.SearchForRecentlyAdded(artist.Id);
+            _logger.Info("[{0}] was recently added, performing post-add actions", artist.Name);
+            _albumMonitoredService.SetAlbumMonitoredStatus(artist, addOptions);
+
+            _eventAggregator.PublishEvent(new ArtistAddCompletedEvent(artist));
+
+            if (artist.AddOptions.SearchForMissingAlbums)
+            {
+                _commandQueueManager.Push(new MissingAlbumSearchCommand(artist.Id));
+            }
+
+            artist.AddOptions = null;
+            _artistService.RemoveAddOptions(artist);
         }
 
         public void Handle(ArtistScannedEvent message)

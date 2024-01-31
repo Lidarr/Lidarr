@@ -20,6 +20,7 @@ namespace NzbDrone.Core.Configuration
         bool EnableCompletedDownloadHandling { get; set; }
 
         bool AutoRedownloadFailed { get; set; }
+        bool AutoRedownloadFailedFromInteractiveSearch { get; set; }
 
         // Media Management
         bool AutoUnmonitorPreviouslyDownloadedTracks { get; set; }

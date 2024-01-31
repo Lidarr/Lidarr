@@ -3,9 +3,9 @@
 interface CssExports {
   'addButton': string;
   'addImportListExclusion': string;
-  'host': string;
+  'foreignId': string;
   'importListExclusionsHeader': string;
-  'path': string;
+  'name': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
