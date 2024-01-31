@@ -11676,6 +11676,14 @@
             "type": "string",
             "nullable": true
           },
+          "trackFileCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "trackHasFileCount": {
+            "type": "integer",
+            "format": "int32"
+          },
           "downloadForced": {
             "type": "boolean"
           }
