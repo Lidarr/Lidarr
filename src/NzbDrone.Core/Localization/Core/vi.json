@@ -705,5 +705,8 @@
     "NoLimitForAnyDuration": "Không có giới hạn cho bất kỳ thời gian chạy nào",
     "NoMinimumForAnyDuration": "Không có tối thiểu cho bất kỳ thời gian chạy nào",
     "PreferredSize": "Kích thước ưa thích",
-    "Unlimited": "Vô hạn"
+    "Unlimited": "Vô hạn",
+    "RemoveQueueItemConfirmation": "Bạn có chắc chắn muốn xóa {0} khỏi hàng đợi không?",
+    "AutoRedownloadFailed": "Tải xuống không thành công",
+    "IncludeHealthWarnings": "Bao gồm các cảnh báo về sức khỏe"
 }

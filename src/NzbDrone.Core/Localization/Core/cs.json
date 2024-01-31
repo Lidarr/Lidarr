@@ -820,5 +820,10 @@
     "ImportLists": "Seznam k importu",
     "ExtraFileExtensionsHelpText": "Seznam extra souborů k importu oddělených čárkami (.nfo bude importován jako .nfo-orig)",
     "ExtraFileExtensionsHelpTextsExamples": "Příklady: „.sub, .nfo“ nebo „sub, nfo“",
-    "DeleteArtistFoldersHelpText": "Odstraňte složku filmu a její obsah"
+    "DeleteArtistFoldersHelpText": "Odstraňte složku filmu a její obsah",
+    "RemoveQueueItemConfirmation": "Opravdu chcete odebrat {0} položku {1} z fronty?",
+    "AutoRedownloadFailed": "Opětovné stažení se nezdařilo",
+    "AutoRedownloadFailedFromInteractiveSearch": "Opětovné stažení z interaktivního vyhledávání selhalo",
+    "AutoRedownloadFailedFromInteractiveSearchHelpText": "Automaticky vyhledat a pokusit se o stažení jiného vydání, pokud bylo neúspěšné vydání zachyceno z interaktivního vyhledávání",
+    "IncludeHealthWarnings": "Zahrnout zdravotní varování"
 }

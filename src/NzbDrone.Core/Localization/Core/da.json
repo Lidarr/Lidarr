@@ -709,5 +709,8 @@
     "ExtraFileExtensionsHelpText": "Kommasepareret liste over ekstra filer, der skal importeres (.nfo importeres som .nfo-orig)",
     "ExtraFileExtensionsHelpTextsExamples": "Eksempler: '.sub, .nfo' eller 'sub, nfo'",
     "DeleteArtistFoldersHelpText": "Slet filmmappen og dens indhold",
-    "DeleteSpecificationHelpText": "Er du sikker på, at du vil slette kvalitetsprofilen {0}"
+    "DeleteSpecificationHelpText": "Er du sikker på, at du vil slette kvalitetsprofilen {0}",
+    "IncludeHealthWarnings": "Inkluder sundhedsadvarsler",
+    "RemoveQueueItemConfirmation": "Er du sikker på, at du vil fjerne {0} element {1} fra køen?",
+    "AutoRedownloadFailed": "Download fejlede"
 }

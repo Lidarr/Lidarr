@@ -861,5 +861,14 @@
     "Other": "Altres",
     "External": "Extern",
     "AutoRedownloadFailedFromInteractiveSearch": "Tornar a baixar baixades fallades des de la cerca interactiva",
-    "AutoRedownloadFailed": "Tornar a baixar les baixades fallades"
+    "AutoRedownloadFailed": "Tornar a baixar les baixades fallades",
+    "StatusEndedContinuing": "Continua",
+    "DeleteTrackFileMessageText": "Esteu segur que voleu suprimir '{path}'?",
+    "NoCutoffUnmetItems": "No hi ha elements de tall no assolits",
+    "Release": " Llançament",
+    "DeleteEmptyFoldersHelpText": "Suprimeix les carpetes de sèries buides durant l'exploració del disc i quan s'esborren els fitxers de sèries",
+    "ExpandOtherByDefaultHelpText": "Altres",
+    "IncludeHealthWarnings": "Inclou advertències de salut",
+    "AutoRedownloadFailedFromInteractiveSearchHelpText": "Cerqueu i intenteu baixar automàticament una versió diferent quan es trobi una versió fallida a la cerca interactiva",
+    "RemoveQueueItemConfirmation": "Esteu segur que voleu eliminar '{sourceTitle}' de la cua?"
 }

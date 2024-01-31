@@ -760,5 +760,12 @@
     "AddConnectionImplementation": "Dodaj Connection - {implementationName}",
     "AddDownloadClientImplementation": "Dodaj klienta pobierania - {implementationName}",
     "AddAlbumWithTitle": "Dodaj {albumTitle}",
-    "AddArtistWithName": "Dodaj {artistName}"
+    "AddArtistWithName": "Dodaj {artistName}",
+    "AutoRedownloadFailed": "Pobieranie nie udane",
+    "EditDownloadClientImplementation": "Dodaj klienta pobierania - {implementationName}",
+    "EditConditionImplementation": "Dodaj condition - {implementationName}",
+    "AddIndexerImplementation": "Dodaj condition - {implementationName}",
+    "IncludeHealthWarnings": "Uwzględnij ostrzeżenia zdrowotne",
+    "EditConnectionImplementation": "Dodaj Connection - {implementationName}",
+    "RemoveQueueItemConfirmation": "Czy na pewno chcesz usunąć elementy ({0}) z kolejki?"
 }
