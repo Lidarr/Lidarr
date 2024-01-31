@@ -817,5 +817,10 @@
     "AddConditionError": "Kon geen nieuwe conditie toevoegen, gelieve opnieuw te proberen.",
     "AddNewArtistSearchForMissingAlbums": "Begin met zoeken naar ontbrekende film",
     "AuthBasic": "Basic (Browser Pop-up)",
-    "DeleteArtistFoldersHelpText": "Verwijder de film map en zijn inhoud"
+    "DeleteArtistFoldersHelpText": "Verwijder de film map en zijn inhoud",
+    "AutoRedownloadFailed": "Opnieuw downloaden mislukt",
+    "AutoRedownloadFailedFromInteractiveSearch": "Opnieuw downloaden mislukt vanuit interactief zoeken",
+    "AutoRedownloadFailedFromInteractiveSearchHelpText": "Zoek en download automatisch een andere release als een release vanuit interactief zoeken mislukt is",
+    "RemoveQueueItemConfirmation": "Weet je zeker dat je {0} van de wachtrij wilt verwijderen?",
+    "IncludeHealthWarnings": "Voeg Gezondheidswaarschuwingen Toe"
 }

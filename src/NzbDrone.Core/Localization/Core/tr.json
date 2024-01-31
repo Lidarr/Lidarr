@@ -717,5 +717,8 @@
     "NoLimitForAnyDuration": "Herhangi bir çalışma zamanı için sınır yok",
     "NoMinimumForAnyDuration": "Herhangi bir çalışma süresi için minimum değer yok",
     "PreferredSize": "Tercih Edilen Boyut",
-    "Unlimited": "Sınırsız"
+    "Unlimited": "Sınırsız",
+    "IncludeHealthWarnings": "Sağlık Uyarılarını Dahil Et",
+    "RemoveQueueItemConfirmation": "Sıradan {0} öğeyi {1} kaldırmak istediğinizden emin misiniz?",
+    "AutoRedownloadFailed": "Yükleme başarısız"
 }

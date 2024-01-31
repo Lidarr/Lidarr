@@ -705,5 +705,8 @@
     "AddImportListExclusionAlbumHelpText": "Предотвратете добавянето на филм към {appName} чрез списъци",
     "ExtraFileExtensionsHelpText": "Списък с допълнителни файлове за импортиране, разделени със запетая (.nfo ще бъде импортиран като .nfo-orig)",
     "ExtraFileExtensionsHelpTextsExamples": "Примери: '.sub, .nfo' или 'sub, nfo'",
-    "DeleteArtistFoldersHelpText": "Изтрийте папката с филма и съдържанието му"
+    "DeleteArtistFoldersHelpText": "Изтрийте папката с филма и съдържанието му",
+    "IncludeHealthWarnings": "Включете здравни предупреждения",
+    "AutoRedownloadFailed": "Изтеглянето се провали",
+    "RemoveQueueItemConfirmation": "Наистина ли искате да премахнете {0} елемент {1} от опашката?"
 }

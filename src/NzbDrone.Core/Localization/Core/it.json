@@ -854,5 +854,17 @@
     "AuthenticationRequiredUsernameHelpTextWarning": "Inserisci username",
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Conferma la nuova password",
     "AddImportListImplementation": "Aggiungi lista di importazione - {implementationName}",
-    "AutoRedownloadFailed": "Download fallito"
+    "AutoRedownloadFailed": "Download fallito",
+    "AppUpdatedVersion": "{appName} è stato aggiornato alla versione `{version}`, per vedere le modifiche devi ricaricare {appName}",
+    "EditConditionImplementation": "Aggiungi Condizione - {implementationName}",
+    "EditConnectionImplementation": "Aggiungi Connessione - {implementationName}",
+    "EditDownloadClientImplementation": "Aggiungi un Client di Download - {implementationName}",
+    "ImportList": "importa lista",
+    "ReleaseProfile": "profilo release",
+    "TBA": "TBA",
+    "ReleaseProfiles": "profilo release",
+    "EditImportListImplementation": "Aggiungi lista di importazione - {implementationName}",
+    "EditIndexerImplementation": "Aggiungi indicizzatore - {implementationName}",
+    "IncludeHealthWarnings": "Includi gli avvisi di salute",
+    "RemoveQueueItemConfirmation": "Sei sicuro di voler rimuovere {0} dalla coda?"
 }

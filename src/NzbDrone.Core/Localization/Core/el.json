@@ -1061,5 +1061,8 @@
     "ExtraFileExtensionsHelpText": "Λίστα πρόσθετων αρχείων που διαχωρίζονται με κόμμα για εισαγωγή (το .nfo θα εισαχθεί ως .nfo-orig)",
     "ExtraFileExtensionsHelpTextsExamples": "Παραδείγματα: «.sub, .nfo» ή «sub, nfo»",
     "DeleteArtistFoldersHelpText": "Διαγράψτε το φάκελο της ταινίας και τα περιεχόμενά του",
-    "ArtistIsMonitored": "Ο συγγραφέας δεν παρακολουθείται"
+    "ArtistIsMonitored": "Ο συγγραφέας δεν παρακολουθείται",
+    "IncludeHealthWarnings": "Συμπεριλάβετε προειδοποιήσεις για την υγεία",
+    "AutoRedownloadFailed": "Η λήψη απέτυχε",
+    "RemoveQueueItemConfirmation": "Είστε σίγουροι πως θέλετε να διαγράψετε {0} αντικείμενα από την ουρά;"
 }

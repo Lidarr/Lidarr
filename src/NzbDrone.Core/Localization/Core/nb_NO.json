@@ -229,5 +229,22 @@
     "Enabled": "Aktiver",
     "Release": " utgivelse",
     "AddAlbumWithTitle": "Legg til {albumTitle}",
-    "AddArtistWithName": "Legg til {artistName}"
+    "AddArtistWithName": "Legg til {artistName}",
+    "Connection": "Tilkobling",
+    "DeleteSpecificationHelpText": "Er du sikker på at du vil slette formattaggen {0}?",
+    "AuthForm": "Skjemaer (påloggingsside)",
+    "DisabledForLocalAddresses": "Deaktivert for lokale adresser",
+    "RemoveQueueItemConfirmation": "Er du sikker på at du vil fjerne {0} elementet {1} fra køen?",
+    "ImportList": "importeringsliste",
+    "ReleaseProfile": "utgivelseprofil",
+    "AddListExclusionHelpText": "Forhindre at filmen legges til i {appName} av lister",
+    "Auto": "Auto",
+    "AddAutoTag": "Legg til automatisk tagg",
+    "BypassIfHighestQualityHelpText": "Omgåelsesforsinkelse når utgivelsen har den høyeste aktiverte kvaliteten i kvalitetsprofilen med den foretrukne protokollen",
+    "Posters": "Plakater",
+    "AddCondition": "Legg til betingelse",
+    "AddImportListExclusionArtistHelpText": "Forhindre at filmen legges til i {appName} av lister",
+    "AuthBasic": "Grunnleggende (nettleser -popup)",
+    "DeleteArtistFolderCountConfirmation": "Er du sikker på at du vil slette formattaggen {0}?",
+    "DeleteAutoTagHelpText": "Er du sikker på at du vil slette formattaggen {0}?"
 }

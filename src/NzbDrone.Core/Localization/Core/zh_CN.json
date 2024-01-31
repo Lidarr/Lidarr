@@ -1143,5 +1143,13 @@
     "PreferredSize": "首选影片大小",
     "Unlimited": "无限制",
     "DownloadClientPriorityHelpText": "下载客户端优先级，从1（最高）到50（最低），默认为1。具有相同优先级的客户端将轮换使用。",
-    "IndexerSettingsRejectBlocklistedTorrentHashes": "抓取时舍弃列入黑名单的种子散列值"
+    "IndexerSettingsRejectBlocklistedTorrentHashes": "抓取时舍弃列入黑名单的种子散列值",
+    "AutoRedownloadFailedFromInteractiveSearch": "从交互式搜索中重新下载失败",
+    "IncludeHealthWarnings": "包含健康度警告",
+    "RemoveQueueItem": "删除- {sourceTitle}",
+    "AutoRedownloadFailedFromInteractiveSearchHelpText": "当从交互式搜索中获取失败的版本时，自动搜索并尝试下载其他版本",
+    "DownloadClientAriaSettingsDirectoryHelpText": "可选的下载位置，留空使用 Aria2 默认位置",
+    "CustomFormatsSpecificationRegularExpression": "正则表达式",
+    "RemoveQueueItemConfirmation": "您确定要从队列中删除'{sourceTitle}'吗?",
+    "AutoRedownloadFailed": "重新下载失败"
 }

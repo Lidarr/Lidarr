@@ -888,5 +888,10 @@
     "PreferredSize": "Tamanho preferido",
     "Unlimited": "Ilimitado",
     "DeleteArtistFoldersHelpText": "Elimine a pasta do filme e seu conteúdo",
-    "ArtistIsMonitored": "Autor não monitorado"
+    "ArtistIsMonitored": "Autor não monitorado",
+    "AutoRedownloadFailed": "Falha na transferência",
+    "AutoRedownloadFailedFromInteractiveSearch": "Falha na transferência a partir da Pesquisa interactiva",
+    "IncludeHealthWarnings": "Incluir avisos de estado de funcionamento",
+    "AutoRedownloadFailedFromInteractiveSearchHelpText": "Procurar automaticamente e tentar transferir uma versão diferente quando a versão falhada foi obtida a partir da pesquisa interactiva",
+    "RemoveQueueItemConfirmation": "Tem a certeza que deseja remover {0} da fila?"
 }
