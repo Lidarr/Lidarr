@@ -3,13 +3,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { deleteRootFolder, fetchRootFolders } from 'Store/Actions/settingsActions';
-import createSortedSectionSelector from 'Store/Selectors/createSortedSectionSelector';
-import sortByName from 'Utilities/Array/sortByName';
+import createRootFoldersSelector from 'Store/Selectors/createRootFoldersSelector';
 import RootFolders from './RootFolders';
 
 function createMapStateToProps() {
   return createSelector(
-    createSortedSectionSelector('settings.rootFolders', sortByName),
+    createRootFoldersSelector(),
     (state) => state.settings.qualityProfiles,
     (state) => state.settings.metadataProfiles,
     (rootFolders, quality, metadata) => {

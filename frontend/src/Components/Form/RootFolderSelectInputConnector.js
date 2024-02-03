@@ -2,13 +2,14 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import createRootFoldersSelector from 'Store/Selectors/createRootFoldersSelector';
 import RootFolderSelectInput from './RootFolderSelectInput';
 
 const ADD_NEW_KEY = 'addNew';
 
 function createMapStateToProps() {
   return createSelector(
-    (state) => state.settings.rootFolders,
+    createRootFoldersSelector(),
     (state, { value }) => value,
     (state, { includeMissingValue }) => includeMissingValue,
     (state, { includeNoChange }) => includeNoChange,

@@ -9,6 +9,7 @@ import Indexer from 'typings/Indexer';
 import MetadataProfile from 'typings/MetadataProfile';
 import Notification from 'typings/Notification';
 import QualityProfile from 'typings/QualityProfile';
+import RootFolder from 'typings/RootFolder';
 import { UiSettings } from 'typings/UiSettings';
 
 export interface DownloadClientAppState
@@ -38,6 +39,11 @@ export interface MetadataProfilesAppState
   extends AppSectionState<MetadataProfile>,
     AppSectionSchemaState<MetadataProfile> {}
 
+export interface RootFolderAppState
+  extends AppSectionState<RootFolder>,
+    AppSectionDeleteState,
+    AppSectionSaveState {}
+
 export type UiSettingsAppState = AppSectionState<UiSettings>;
 
 interface SettingsAppState {
@@ -47,6 +53,7 @@ interface SettingsAppState {
   metadataProfiles: MetadataProfilesAppState;
   notifications: NotificationAppState;
   qualityProfiles: QualityProfilesAppState;
+  rootFolders: RootFolderAppState;
   uiSettings: UiSettingsAppState;
 }
 
