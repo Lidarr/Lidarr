@@ -49,7 +49,7 @@ namespace NzbDrone.Integration.Test
         public LogsClient Logs;
         public ClientBase<NamingConfigResource> NamingConfig;
         public NotificationClient Notifications;
-        public ClientBase<QualityProfileResource> Profiles;
+        public ClientBase<QualityProfileResource> QualityProfiles;
         public ReleaseClient Releases;
         public ReleasePushClient ReleasePush;
         public ClientBase<RootFolderResource> RootFolders;
@@ -115,7 +115,7 @@ namespace NzbDrone.Integration.Test
             Logs = new LogsClient(RestClient, ApiKey);
             NamingConfig = new ClientBase<NamingConfigResource>(RestClient, ApiKey, "config/naming");
             Notifications = new NotificationClient(RestClient, ApiKey);
-            Profiles = new ClientBase<QualityProfileResource>(RestClient, ApiKey);
+            QualityProfiles = new ClientBase<QualityProfileResource>(RestClient, ApiKey);
             Releases = new ReleaseClient(RestClient, ApiKey);
             ReleasePush = new ReleasePushClient(RestClient, ApiKey);
             RootFolders = new ClientBase<RootFolderResource>(RestClient, ApiKey);
@@ -331,10 +331,10 @@ namespace NzbDrone.Integration.Test
             }
         }
 
-        public QualityProfileResource EnsureProfileCutoff(int profileId, string cutoff, bool upgradeAllowed)
+        public QualityProfileResource EnsureQualityProfileCutoff(int profileId, string cutoff, bool upgradeAllowed)
         {
             var needsUpdate = false;
-            var profile = Profiles.Get(profileId);
+            var profile = QualityProfiles.Get(profileId);
             var cutoffItem = profile.Items.First(x => x.Name == cutoff);
 
             if (profile.Cutoff != cutoffItem.Id)
@@ -351,7 +351,7 @@ namespace NzbDrone.Integration.Test
 
             if (needsUpdate)
             {
-                profile = Profiles.Put(profile);
+                profile = QualityProfiles.Put(profile);
             }
 
             return profile;

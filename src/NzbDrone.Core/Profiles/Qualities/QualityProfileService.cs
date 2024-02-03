@@ -29,21 +29,21 @@ namespace NzbDrone.Core.Profiles.Qualities
                                          IHandle<CustomFormatAddedEvent>,
                                          IHandle<CustomFormatDeletedEvent>
     {
-        private readonly IProfileRepository _profileRepository;
+        private readonly IQualityProfileRepository _qualityProfileRepository;
         private readonly IArtistService _artistService;
         private readonly IImportListFactory _importListFactory;
         private readonly ICustomFormatService _formatService;
         private readonly IRootFolderService _rootFolderService;
         private readonly Logger _logger;
 
-        public QualityProfileService(IProfileRepository profileRepository,
+        public QualityProfileService(IQualityProfileRepository qualityProfileRepository,
                                      IArtistService artistService,
                                      IImportListFactory importListFactory,
                                      ICustomFormatService formatService,
                                      IRootFolderService rootFolderService,
                                      Logger logger)
         {
-            _profileRepository = profileRepository;
+            _qualityProfileRepository = qualityProfileRepository;
             _artistService = artistService;
             _importListFactory = importListFactory;
             _rootFolderService = rootFolderService;
@@ -53,12 +53,12 @@ namespace NzbDrone.Core.Profiles.Qualities
 
         public QualityProfile Add(QualityProfile profile)
         {
-            return _profileRepository.Insert(profile);
+            return _qualityProfileRepository.Insert(profile);
         }
 
         public void Update(QualityProfile profile)
         {
-            _profileRepository.Update(profile);
+            _qualityProfileRepository.Update(profile);
         }
 
         public void Delete(int id)
@@ -67,26 +67,26 @@ namespace NzbDrone.Core.Profiles.Qualities
                 _importListFactory.All().Any(c => c.ProfileId == id) ||
                 _rootFolderService.All().Any(c => c.DefaultQualityProfileId == id))
             {
-                var profile = _profileRepository.Get(id);
+                var profile = _qualityProfileRepository.Get(id);
                 throw new QualityProfileInUseException(profile.Name);
             }
 
-            _profileRepository.Delete(id);
+            _qualityProfileRepository.Delete(id);
         }
 
         public List<QualityProfile> All()
         {
-            return _profileRepository.All().ToList();
+            return _qualityProfileRepository.All().ToList();
         }
 
         public QualityProfile Get(int id)
         {
-            return _profileRepository.Get(id);
+            return _qualityProfileRepository.Get(id);
         }
 
         public bool Exists(int id)
         {
-            return _profileRepository.Exists(id);
+            return _qualityProfileRepository.Exists(id);
         }
 
         public void Handle(ApplicationStartedEvent message)

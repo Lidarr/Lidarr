@@ -28,7 +28,7 @@ namespace NzbDrone.Integration.Test.ApiTests.WantedTests
         [Order(1)]
         public void cutoff_should_have_monitored_items()
         {
-            EnsureProfileCutoff(1, "Lossless", true);
+            EnsureQualityProfileCutoff(1, "Lossless", true);
             var artist = EnsureArtist("8ac6cc32-8ddf-43b1-9ac4-4b04f9053176", "Alien Ant Farm", true);
             EnsureTrackFile(artist, 1, 1, 1, Quality.MP3_192);
 
@@ -41,7 +41,7 @@ namespace NzbDrone.Integration.Test.ApiTests.WantedTests
         [Order(1)]
         public void cutoff_should_not_have_unmonitored_items()
         {
-            EnsureProfileCutoff(1, "Lossless", true);
+            EnsureQualityProfileCutoff(1, "Lossless", true);
             var artist = EnsureArtist("8ac6cc32-8ddf-43b1-9ac4-4b04f9053176", "Alien Ant Farm", false);
             EnsureTrackFile(artist, 1, 1, 1, Quality.MP3_192);
 
@@ -54,7 +54,7 @@ namespace NzbDrone.Integration.Test.ApiTests.WantedTests
         [Order(1)]
         public void cutoff_should_have_artist()
         {
-            EnsureProfileCutoff(1, "Lossless", true);
+            EnsureQualityProfileCutoff(1, "Lossless", true);
             var artist = EnsureArtist("8ac6cc32-8ddf-43b1-9ac4-4b04f9053176", "Alien Ant Farm", true);
             EnsureTrackFile(artist, 1, 1, 1, Quality.MP3_192);
 
@@ -68,7 +68,7 @@ namespace NzbDrone.Integration.Test.ApiTests.WantedTests
         [Order(2)]
         public void cutoff_should_have_unmonitored_items()
         {
-            EnsureProfileCutoff(1, "Lossless", true);
+            EnsureQualityProfileCutoff(1, "Lossless", true);
             var artist = EnsureArtist("8ac6cc32-8ddf-43b1-9ac4-4b04f9053176", "Alien Ant Farm", false);
             EnsureTrackFile(artist, 1, 1, 1, Quality.MP3_192);
 

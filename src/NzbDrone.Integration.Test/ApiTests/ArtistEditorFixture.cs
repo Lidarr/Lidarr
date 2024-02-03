@@ -11,7 +11,7 @@ namespace NzbDrone.Integration.Test.ApiTests
     {
         private void GivenExistingArtist()
         {
-            WaitForCompletion(() => Profiles.All().Count > 0);
+            WaitForCompletion(() => QualityProfiles.All().Count > 0);
 
             foreach (var name in new[] { "Alien Ant Farm", "Kiss" })
             {
