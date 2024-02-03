@@ -712,5 +712,10 @@
     "DeleteSpecificationHelpText": "Er du sikker på, at du vil slette kvalitetsprofilen {0}",
     "IncludeHealthWarnings": "Inkluder sundhedsadvarsler",
     "RemoveQueueItemConfirmation": "Er du sikker på, at du vil fjerne {0} element {1} fra køen?",
-    "AutoRedownloadFailed": "Download fejlede"
+    "AutoRedownloadFailed": "Download fejlede",
+    "AddConditionImplementation": "Tilføj betingelse - {implementationName}",
+    "AddConnectionImplementation": "Tilføj forbindelse - {implementationName}",
+    "AddConnection": "Tilføj forbindelse",
+    "AddAutoTag": "Tilføj automatisk Tag",
+    "AddCondition": "Tilføj betingelse"
 }
