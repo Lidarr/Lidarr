@@ -624,7 +624,8 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 case "disc":
                     return MediaCoverTypes.Disc;
                 case "logo":
-                    return MediaCoverTypes.Logo;
+                case "clearlogo":
+                    return MediaCoverTypes.Clearlogo;
                 default:
                     return MediaCoverTypes.Unknown;
             }
