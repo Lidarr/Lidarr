@@ -61,6 +61,23 @@ function MetadataProvider(props) {
                 />
               </FormGroup>
 
+              {
+                settings.writeAudioTags.value !== 'no' &&
+                  <FormGroup>
+                    <FormLabel>
+                      {translate('EmbedCoverArtInAudioFiles')}
+                    </FormLabel>
+
+                    <FormInputGroup
+                      type={inputTypes.CHECK}
+                      name="embedCoverArt"
+                      helpText={translate('EmbedCoverArtHelpText')}
+                      onChange={onInputChange}
+                      {...settings.embedCoverArt}
+                    />
+                  </FormGroup>
+              }
+
               <FormGroup>
                 <FormLabel>
                   {translate('ScrubExistingTags')}
