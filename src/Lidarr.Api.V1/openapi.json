@@ -10795,6 +10795,9 @@
           },
           "scrubAudioTags": {
             "type": "boolean"
+          },
+          "embedCoverArt": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
