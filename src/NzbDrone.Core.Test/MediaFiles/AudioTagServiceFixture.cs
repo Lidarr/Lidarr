@@ -65,6 +65,10 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
                 .Setup(x => x.WriteAudioTags)
                 .Returns(WriteAudioTagsType.Sync);
 
+            Mocker.GetMock<IConfigService>()
+                .Setup(x => x.EmbedCoverArt)
+                .Returns(true);
+
             var imageFile = Path.Combine(_testdir, "nin.png");
             var imageSize = _diskProvider.GetFileSize(imageFile);
 

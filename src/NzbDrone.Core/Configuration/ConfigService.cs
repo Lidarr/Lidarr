@@ -283,6 +283,13 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("ScrubAudioTags", value); }
         }
 
+        public bool EmbedCoverArt
+        {
+            get { return GetValueBoolean("EmbedCoverArt", true); }
+
+            set { SetValue("EmbedCoverArt", value); }
+        }
+
         public int FirstDayOfWeek
         {
             get { return GetValueInt("FirstDayOfWeek", (int)CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek); }

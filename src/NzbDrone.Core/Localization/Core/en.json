@@ -402,6 +402,8 @@
   "EditSelectedDownloadClients": "Edit Selected Download Clients",
   "EditSelectedImportLists": "Edit Selected Import Lists",
   "EditSelectedIndexers": "Edit Selected Indexers",
+  "EmbedCoverArtInAudioFiles": "Embed Cover Art In Audio Files",
+  "EmbedCoverArtHelpText": "Embed Lidarr album art into audio files when writing tags",
   "Enable": "Enable",
   "EnableAutomaticAdd": "Enable Automatic Add",
   "EnableAutomaticAddHelpText": "Add artist/albums to {appName} when syncs are performed via the UI or by {appName}",

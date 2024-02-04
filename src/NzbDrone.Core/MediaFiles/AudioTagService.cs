@@ -80,21 +80,25 @@ namespace NzbDrone.Core.MediaFiles
             var albumartist = album.Artist.Value;
             var artist = track.ArtistMetadata.Value;
 
-            var cover = album.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Cover);
             string imageFile = null;
             long imageSize = 0;
-            if (cover != null)
+
+            if (_configService.EmbedCoverArt)
             {
-                imageFile = _mediaCoverService.GetCoverPath(album.Id, MediaCoverEntity.Album, cover.CoverType, cover.Extension, null);
-                _logger.Trace($"Embedding: {imageFile}");
-                var fileInfo = _diskProvider.GetFileInfo(imageFile);
-                if (fileInfo.Exists)
+                var cover = album.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Cover);
+                if (cover != null)
                 {
-                    imageSize = fileInfo.Length;
-                }
-                else
-                {
-                    imageFile = null;
+                    imageFile = _mediaCoverService.GetCoverPath(album.Id, MediaCoverEntity.Album, cover.CoverType, cover.Extension, null);
+                    _logger.Trace("Embedding: {0}", imageFile);
+                    var fileInfo = _diskProvider.GetFileInfo(imageFile);
+                    if (fileInfo.Exists)
+                    {
+                        imageSize = fileInfo.Length;
+                    }
+                    else
+                    {
+                        imageFile = null;
+                    }
                 }
             }
 
