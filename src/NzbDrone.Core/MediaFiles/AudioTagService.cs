@@ -89,7 +89,7 @@ namespace NzbDrone.Core.MediaFiles
                 if (cover != null)
                 {
                     imageFile = _mediaCoverService.GetCoverPath(album.Id, MediaCoverEntity.Album, cover.CoverType, cover.Extension, null);
-                    _logger.Trace($"Embedding: {imageFile}");
+                    _logger.Trace("Embedding: {0}", imageFile);
                     var fileInfo = _diskProvider.GetFileInfo(imageFile);
                     if (fileInfo.Exists)
                     {
