@@ -24,6 +24,7 @@ import TagListConnector from 'Components/TagListConnector';
 import { icons } from 'Helpers/Props';
 import { executeCommand } from 'Store/Actions/commandActions';
 import formatBytes from 'Utilities/Number/formatBytes';
+import titleCase from 'Utilities/String/titleCase';
 import translate from 'Utilities/String/translate';
 import AlbumsCell from './AlbumsCell';
 import hasGrowableColumns from './hasGrowableColumns';
@@ -56,6 +57,7 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
     monitored,
     status,
     path,
+    monitorNewItems,
     nextAlbum,
     lastAlbum,
     added,
@@ -234,6 +236,14 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
           return (
             <VirtualTableRowCell key={name} className={styles[name]}>
               {metadataProfile.name}
+            </VirtualTableRowCell>
+          );
+        }
+
+        if (name === 'monitorNewItems') {
+          return (
+            <VirtualTableRowCell key={name} className={styles[name]}>
+              {titleCase(monitorNewItems)}
             </VirtualTableRowCell>
           );
         }

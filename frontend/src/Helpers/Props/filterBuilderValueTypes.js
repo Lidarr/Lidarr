@@ -5,6 +5,7 @@ export const DEFAULT = 'default';
 export const HISTORY_EVENT_TYPE = 'historyEventType';
 export const INDEXER = 'indexer';
 export const METADATA_PROFILE = 'metadataProfile';
+export const MONITOR_NEW_ITEMS = 'monitorNewItems';
 export const PROTOCOL = 'protocol';
 export const QUALITY = 'quality';
 export const QUALITY_PROFILE = 'qualityProfile';

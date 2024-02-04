@@ -95,6 +95,12 @@ export const defaultState = {
       isVisible: false
     },
     {
+      name: 'monitorNewItems',
+      label: () => translate('MonitorNewItems'),
+      isSortable: true,
+      isVisible: false
+    },
+    {
       name: 'nextAlbum',
       label: () => translate('NextAlbum'),
       isSortable: true,
@@ -266,6 +272,12 @@ export const defaultState = {
       label: () => translate('MetadataProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.METADATA_PROFILE
+    },
+    {
+      name: 'monitorNewItems',
+      label: () => translate('MonitorNewItems'),
+      type: filterBuilderTypes.EXACT,
+      valueType: filterBuilderValueTypes.MONITOR_NEW_ITEMS
     },
     {
       name: 'nextAlbum',

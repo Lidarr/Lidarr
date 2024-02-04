@@ -11,6 +11,7 @@ interface CssExports {
   'lastAlbum': string;
   'latestAlbum': string;
   'metadataProfileId': string;
+  'monitorNewItems': string;
   'nextAlbum': string;
   'path': string;
   'qualityProfileId': string;

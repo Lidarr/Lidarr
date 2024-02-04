@@ -36,6 +36,7 @@ interface Artist extends ModelBase {
   nextAlbum?: Album;
   qualityProfileId: number;
   metadataProfileId: number;
+  monitorNewItems: string;
   ratings: Ratings;
   rootFolderPath: string;
   sortName: string;

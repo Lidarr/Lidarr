@@ -11,6 +11,7 @@ import FilterBuilderRowValueConnector from './FilterBuilderRowValueConnector';
 import HistoryEventTypeFilterBuilderRowValue from './HistoryEventTypeFilterBuilderRowValue';
 import IndexerFilterBuilderRowValueConnector from './IndexerFilterBuilderRowValueConnector';
 import MetadataProfileFilterBuilderRowValueConnector from './MetadataProfileFilterBuilderRowValueConnector';
+import MonitorNewItemsFilterBuilderRowValue from './MonitorNewItemsFilterBuilderRowValue';
 import ProtocolFilterBuilderRowValue from './ProtocolFilterBuilderRowValue';
 import QualityFilterBuilderRowValueConnector from './QualityFilterBuilderRowValueConnector';
 import QualityProfileFilterBuilderRowValueConnector from './QualityProfileFilterBuilderRowValueConnector';
@@ -67,6 +68,9 @@ function getRowValueConnector(selectedFilterBuilderProp) {
 
     case filterBuilderValueTypes.METADATA_PROFILE:
       return MetadataProfileFilterBuilderRowValueConnector;
+
+    case filterBuilderValueTypes.MONITOR_NEW_ITEMS:
+      return MonitorNewItemsFilterBuilderRowValue;
 
     case filterBuilderValueTypes.PROTOCOL:
       return ProtocolFilterBuilderRowValue;
