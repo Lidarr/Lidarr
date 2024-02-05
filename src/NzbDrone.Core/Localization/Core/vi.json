@@ -168,7 +168,6 @@
     "TestAllClients": "Kiểm tra tất cả khách hàng",
     "TestAllIndexers": "Kiểm tra tất cả các chỉ mục",
     "TestAllLists": "Kiểm tra tất cả danh sách",
-    "ThisCannotBeCancelled": "Điều này không thể bị hủy sau khi bắt đầu mà không khởi động lại Whisparr.",
     "ThisWillApplyToAllIndexersPleaseFollowTheRulesSetForthByThem": "Điều này sẽ áp dụng cho tất cả người lập chỉ mục, vui lòng tuân theo các quy tắc do họ đặt ra",
     "Time": "Thời gian",
     "TorrentDelayHelpText": "Trì hoãn trong vài phút để đợi trước khi lấy một torrent",

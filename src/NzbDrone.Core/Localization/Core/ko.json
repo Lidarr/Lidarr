@@ -446,7 +446,6 @@
     "UrlBaseHelpText": "역방향 프록시 지원의 경우 기본값은 비어 있습니다.",
     "OnRename": "이름 변경시",
     "ShowUnknownArtistItems": "알 수없는 영화 항목 표시",
-    "ThisCannotBeCancelled": "Whisparr를 다시 시작하지 않고 시작한 후에는 취소 할 수 없습니다.",
     "Time": "시간",
     "HostHelpText": "원격 다운로드 클라이언트에 지정한 것과 동일한 호스트",
     "ReleaseStatuses": "출시 상태",

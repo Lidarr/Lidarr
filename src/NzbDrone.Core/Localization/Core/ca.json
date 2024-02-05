@@ -79,7 +79,6 @@
     "TagIsNotUsedAndCanBeDeleted": "L'etiqueta no està en ús i es pot suprimir",
     "Tags": "Etiquetes",
     "Tasks": "Tasques",
-    "ThisCannotBeCancelled": "No es pot cancel·lar un cop iniciat sense desactivar tots els vostres indexadors.",
     "TorrentDelay": "Retard del torrent",
     "TorrentDelayHelpText": "Retard en minuts per a esperar abans de capturar un torrent",
     "Torrents": "Torrents",

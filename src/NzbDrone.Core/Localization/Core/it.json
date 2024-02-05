@@ -474,7 +474,6 @@
     "BackupIntervalHelpText": "Intervallo per eseguire il backup del DB {appName} e delle impostazioni",
     "RemoveCompleted": "Rimuovi completati",
     "RemoveFailed": "Rimozione fallita",
-    "ThisCannotBeCancelled": "Questo non può essere annullato una volta avviato senza disabilitare tutti i tuoi indexers.",
     "RemoveDownloadsAlert": "Le impostazioni per la rimozione sono stati spostati nelle impostazioni individuali dei Client di Download nella tabella sopra.",
     "OnApplicationUpdate": "All'aggiornamento dell'applicazione",
     "OnGrab": "Quando viene prelevato",

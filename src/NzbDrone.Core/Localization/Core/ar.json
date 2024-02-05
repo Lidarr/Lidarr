@@ -119,7 +119,6 @@
     "TestAllIndexers": "اختبار كافة المفهرسات",
     "TestAllLists": "اختبر كل القوائم",
     "SendAnonymousUsageData": "إرسال بيانات الاستخدام المجهولة",
-    "ThisCannotBeCancelled": "لا يمكن إلغاء هذا بمجرد البدء دون إعادة تشغيل Whisparr.",
     "TorrentDelayHelpText": "تأخير في دقائق للانتظار قبل الاستيلاء على سيل",
     "ShowSearch": "إظهار البحث",
     "Size": " بحجم",

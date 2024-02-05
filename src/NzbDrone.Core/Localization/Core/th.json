@@ -139,7 +139,6 @@
     "TestAll": "ทดสอบทั้งหมด",
     "TestAllClients": "ทดสอบลูกค้าทั้งหมด",
     "TestAllIndexers": "ทดสอบดัชนีทั้งหมด",
-    "ThisCannotBeCancelled": "ไม่สามารถยกเลิกได้เมื่อเริ่มต้นโดยไม่ต้องรีสตาร์ท Whisparr",
     "ThisWillApplyToAllIndexersPleaseFollowTheRulesSetForthByThem": "สิ่งนี้จะนำไปใช้กับผู้จัดทำดัชนีทั้งหมดโปรดปฏิบัติตามกฎที่กำหนดโดยพวกเขา",
     "Time": "เวลา",
     "TimeFormat": "รูปแบบเวลา",

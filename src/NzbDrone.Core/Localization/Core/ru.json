@@ -151,7 +151,6 @@
     "Tags": "Тэги",
     "Tasks": "Задачи",
     "TestAll": "Тестировать все",
-    "ThisCannotBeCancelled": "Нельзя отменить после запуска без перезапуска Whisparr.",
     "ThisWillApplyToAllIndexersPleaseFollowTheRulesSetForthByThem": "Это будет применяться ко всем индексаторам, пожалуйста, следуйте установленным ими правилам",
     "TimeFormat": "Формат времени",
     "TorrentDelay": "Задержка торрента",
