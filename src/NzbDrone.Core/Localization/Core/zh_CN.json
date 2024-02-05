@@ -208,7 +208,6 @@
     "Year": "年",
     "BackupIntervalHelpText": "备份 {appName} 数据库和设置的时间间隔",
     "CalendarWeekColumnHeaderHelpText": "当使用周视图时显示上面的每一列",
-    "ThisCannotBeCancelled": "在不禁用所有索引器的情况下，一旦启动就无法取消。",
     "APIKey": "API Key",
     "AutomaticallySwitchRelease": "自动切换发行版本",
     "ApiKeyHelpTextWarning": "需重启以生效",

@@ -643,7 +643,6 @@
     "MusicbrainzId": "MusicBrainz Id",
     "AlbumStudio": "Albumstudio",
     "OnHealthIssue": "Bei Zustandsproblem",
-    "ThisCannotBeCancelled": "Nach dem Start kann dies nicht mehr abgebrochen werden ohne alle Indexer zu deaktivieren.",
     "AddedArtistSettings": "Autor Einstellungen hinzugefügt",
     "ImportListSpecificSettings": "Listenspezifische Einstellungen importieren",
     "Activity": "Aktivität",

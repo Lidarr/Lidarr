@@ -448,7 +448,6 @@
     "OnRename": "Při přejmenování",
     "OnUpgrade": "Při upgradu",
     "OnHealthIssue": "K otázce zdraví",
-    "ThisCannotBeCancelled": "Toto nelze zrušit po spuštění bez restartování Whisparru.",
     "OnGrab": "Chyť",
     "NETCore": ".NET Core",
     "Activity": "Aktivita",

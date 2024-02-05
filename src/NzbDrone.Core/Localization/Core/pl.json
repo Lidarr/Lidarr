@@ -446,7 +446,6 @@
     "Source": "Źródło",
     "OnRename": "Zmiana nazwy",
     "OnUpgrade": "Przy aktualizacji",
-    "ThisCannotBeCancelled": "Nie można tego anulować po uruchomieniu bez ponownego uruchamiania Whisparr.",
     "NETCore": ".NET Core",
     "OnGrab": "Na Grab",
     "OnHealthIssue": "W kwestii zdrowia",

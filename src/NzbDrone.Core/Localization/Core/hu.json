@@ -647,7 +647,6 @@
     "OnImportFailure": "Importálási hiba esetén",
     "SearchForAllMissingAlbumsConfirmationCount": "Biztos benne, hogy megkeresi az összes \"{0}\" hiányzó albumot?",
     "MassAlbumsCutoffUnmetWarning": "Biztosan megkeresi az összes „{0}” Küszöbhatár alatti albumot?",
-    "ThisCannotBeCancelled": "Ezt folyamatot az összes indexelő letiltása nélkül nem lehet visszavonni, ha egyszer elindult.",
     "AddedArtistSettings": "Szerzői beállítások hozzáadva",
     "ImportListSpecificSettings": "Listaspecifikus beállítások importálása",
     "MonitorAlbumExistingOnlyWarning": "Ez az egyes könyvek felügyelt beállításának egyszeri módosítása.  A Szerző/Szerkesztés alatti lehetőség segítségével szabályozhatja, hogy mi történjen az újonnan hozzáadott könyvekkel",

@@ -360,7 +360,6 @@
     "TestAllClients": "Testar todos os clientes",
     "TestAllIndexers": "Testar todos os indexadores",
     "TestAllLists": "Testar todas as listas",
-    "ThisCannotBeCancelled": "Isso não pode ser cancelado uma vez iniciado sem desabilitar todos os seus indexadores.",
     "ThisWillApplyToAllIndexersPleaseFollowTheRulesSetForthByThem": "Isto se aplicará a todos os indexadores, siga as regras estabelecidas por eles",
     "Time": "Hora",
     "TimeFormat": "Formato de hora",

@@ -510,7 +510,6 @@
     "OnUpgrade": "Päivitettäessä",
     "RemoveDownloadsAlert": "Poistoasetukset on siirretty yllä olevan taulukon lataustyökalukohtaisiin asetuksiin.",
     "SearchForAllMissingAlbums": "Etsi kaikkia puuttuvia albumeita",
-    "ThisCannotBeCancelled": "Tämän peruminen on aloituksen jälkeen mahdollista vain poistamalla kaikki tietolähteet käytöstä.",
     "OnGrab": "Kun julkaisu kaapataan",
     "OnHealthIssue": "Vakausongelmat",
     "OnRename": "Uudelleennimeäminen",
