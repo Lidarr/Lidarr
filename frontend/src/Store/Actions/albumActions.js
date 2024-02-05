@@ -36,6 +36,11 @@ export const defaultState = {
   sortPredicates: {
     rating: function(item) {
       return item.ratings.value;
+    },
+    size: function(item) {
+      const { statistics = {} } = item;
+
+      return statistics.sizeOnDisk || 0;
     }
   },
 
@@ -78,6 +83,12 @@ export const defaultState = {
     {
       name: 'duration',
       label: () => translate('Duration'),
+      isSortable: true,
+      isVisible: false
+    },
+    {
+      name: 'size',
+      label: () => translate('Size'),
       isSortable: true,
       isVisible: false
     },

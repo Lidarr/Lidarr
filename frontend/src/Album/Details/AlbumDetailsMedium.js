@@ -175,7 +175,7 @@ class AlbumDetailsMedium extends Component {
                     </Table> :
 
                     <div className={styles.noTracks}>
-                      No tracks in this medium
+                      {translate('NoTracksInThisMedium')}
                     </div>
                 }
                 <div className={styles.collapseButtonContainer}>

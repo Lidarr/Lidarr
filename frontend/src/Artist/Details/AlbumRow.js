@@ -10,6 +10,7 @@ import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import { kinds, sizes } from 'Helpers/Props';
 import formatTimeSpan from 'Utilities/Date/formatTimeSpan';
+import formatBytes from 'Utilities/Number/formatBytes';
 import translate from 'Utilities/String/translate';
 import styles from './AlbumRow.css';
 
@@ -87,7 +88,8 @@ class AlbumRow extends Component {
     const {
       trackCount = 0,
       trackFileCount = 0,
-      totalTrackCount = 0
+      totalTrackCount = 0,
+      sizeOnDisk = 0
     } = statistics;
 
     return (
@@ -193,6 +195,17 @@ class AlbumRow extends Component {
                   key={name}
                   date={releaseDate}
                 />
+              );
+            }
+
+            if (name === 'size') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.size}
+                >
+                  {!!sizeOnDisk && formatBytes(sizeOnDisk)}
+                </TableRowCell>
               );
             }
 

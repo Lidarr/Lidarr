@@ -196,7 +196,7 @@ class ArtistDetailsSeason extends Component {
       trackFileCount,
       monitoredAlbumCount,
       hasMonitoredAlbums,
-      sizeOnDisk
+      sizeOnDisk = 0
     } = getAlbumStatistics(items);
 
     const {

@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'monitored': string;
+  'size': string;
   'status': string;
   'title': string;
 }

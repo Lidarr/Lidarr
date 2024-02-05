@@ -10,6 +10,7 @@
   width: 42px;
 }
 
+.size,
 .status {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
