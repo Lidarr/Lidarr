@@ -802,7 +802,7 @@
     "SelectAlbum": "Valitse albumi",
     "SelectAlbumRelease": "Valitse albumin julkaisu",
     "FutureAlbumsData": "Seuraa albumeita, joita ei ole vielä julkaistu.",
-    "MassAlbumsSearchWarning": "Haluatko varmasti etsiä '{0}' puuttuvaa albumia?",
+    "SearchForAllMissingAlbumsConfirmationCount": "Haluatko varmasti etsiä '{0}' puuttuvaa albumia?",
     "EditArtist": "Muokkaa esittäjää",
     "DeleteSelected": "Poista valitut",
     "ClickToChangeReleaseGroup": "Vaihda julkaisuryhmää painamalla tästä",

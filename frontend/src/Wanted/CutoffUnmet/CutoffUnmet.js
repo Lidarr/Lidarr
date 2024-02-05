@@ -244,10 +244,10 @@ class CutoffUnmet extends Component {
                   message={
                     <div>
                       <div>
-                        {translate('MassAlbumsCutoffUnmetWarning', [totalRecords])}
+                        {translate('SearchForAllCutoffUnmetAlbumsConfirmationCount', { totalRecords })}
                       </div>
                       <div>
-                        {translate('ThisCannotBeCancelled')}
+                        {translate('MassSearchCancelWarning')}
                       </div>
                     </div>
                   }

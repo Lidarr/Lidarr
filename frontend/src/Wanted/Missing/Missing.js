@@ -261,10 +261,10 @@ class Missing extends Component {
                   message={
                     <div>
                       <div>
-                        {translate('MassAlbumsSearchWarning', [totalRecords])}
+                        {translate('SearchForAllMissingAlbumsConfirmationCount', { totalRecords })}
                       </div>
                       <div>
-                        {translate('ThisCannotBeCancelled')}
+                        {translate('MassSearchCancelWarning')}
                       </div>
                     </div>
                   }

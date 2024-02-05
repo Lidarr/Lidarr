@@ -645,7 +645,7 @@
     "OnUpgrade": "Minőségjavítás alatt",
     "OnApplicationUpdate": "Alkalmazásfrissítésről",
     "OnImportFailure": "Importálási hiba esetén",
-    "MassAlbumsSearchWarning": "Biztos benne, hogy megkeresi az összes \"{0}\" hiányzó albumot?",
+    "SearchForAllMissingAlbumsConfirmationCount": "Biztos benne, hogy megkeresi az összes \"{0}\" hiányzó albumot?",
     "MassAlbumsCutoffUnmetWarning": "Biztosan megkeresi az összes „{0}” Küszöbhatár alatti albumot?",
     "ThisCannotBeCancelled": "Ezt folyamatot az összes indexelő letiltása nélkül nem lehet visszavonni, ha egyszer elindult.",
     "AddedArtistSettings": "Szerzői beállítások hozzáadva",

@@ -748,7 +748,7 @@
     "CombineWithExistingFiles": "和现有文件合并",
     "Episode": "集",
     "TrackNaming": "歌曲命名",
-    "MassAlbumsSearchWarning": "你确定要搜索所有 '{0}' 个缺失专辑么？",
+    "SearchForAllMissingAlbumsConfirmationCount": "你确定要搜索所有 '{0}' 个缺失专辑么？",
     "MediumFormat": "媒体格式",
     "MissingAlbums": "缺失专辑",
     "MissingTracksArtistMonitored": "缺失歌曲（歌手已监控）",

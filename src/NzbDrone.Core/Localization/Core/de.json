@@ -790,7 +790,7 @@
     "ImportFailed": "Import fehlgeschlagen",
     "EndedOnly": "Nur abgeschlossene",
     "MassAlbumsCutoffUnmetWarning": "Bist du dir sicher, dass du nach allen '{0}' Alben suchen willst deren Schwelle nicht erreicht worden ist?",
-    "MassAlbumsSearchWarning": "Bist du dir sicher, dass du nach allen '{0}' fehlenden Alben suchen willst?",
+    "SearchForAllMissingAlbumsConfirmationCount": "Bist du dir sicher, dass du nach allen '{0}' fehlenden Alben suchen willst?",
     "MissingTracks": "Fehlende Tracks",
     "MonitorNewItems": "Neues Album überwachen",
     "MonitoringOptionsHelpText": "Welche Alben sollen überwacht werden nachdem der Künstler hinzugefügt wurde (einmalige Anpassung)",

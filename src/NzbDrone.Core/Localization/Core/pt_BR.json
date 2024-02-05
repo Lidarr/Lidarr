@@ -645,7 +645,7 @@
     "OnImportFailure": "Ao Falhar na Importação",
     "OnHealthIssue": "Ao Problema de Saúde",
     "ExpandBroadcastByDefaultHelpText": "Transmissão",
-    "MassAlbumsSearchWarning": "Tem certeza de que deseja pesquisar todos os '{0}' álbuns ausentes?",
+    "SearchForAllMissingAlbumsConfirmationCount": "Tem certeza de que deseja pesquisar todos os '{0}' álbuns ausentes?",
     "MassAlbumsCutoffUnmetWarning": "Tem certeza de que deseja pesquisar todos os álbuns '{0}' que não atingiram o corte?",
     "ThisCannotBeCancelled": "Isso não pode ser cancelado uma vez iniciado sem desabilitar todos os seus indexadores.",
     "ImportListSpecificSettings": "Importar configurações específicas da lista",

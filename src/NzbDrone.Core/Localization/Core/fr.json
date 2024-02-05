@@ -991,7 +991,7 @@
     "SearchForMonitoredAlbums": "Rechercher des albums surveillés",
     "ImportListSpecificSettings": "Paramètres spécifiques à la liste d'importation",
     "MissingTracks": "Pistes manquantes",
-    "MassAlbumsSearchWarning": "Êtes-vous sûr de vouloir rechercher tous les albums manquants « {0} » ?",
+    "SearchForAllMissingAlbumsConfirmationCount": "Êtes-vous sûr de vouloir rechercher tous les albums manquants « {0} » ?",
     "MonitoredHelpText": "Téléchargez les albums surveillés de cet artiste",
     "ContinuingMoreAlbumsAreExpected": "D'autres albums sont attendus",
     "MusicBrainzRecordingID": "Identifiant d'enregistrement MusicBrainz",
