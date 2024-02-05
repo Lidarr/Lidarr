@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Instrumentation.Extensions;
@@ -40,21 +38,31 @@ namespace NzbDrone.Core.IndexerSearch
             _logger = logger;
         }
 
-        private async Task SearchForMissingAlbums(List<Album> albums, bool userInvokedSearch)
+        private async Task SearchForBulkAlbums(List<Album> albums, bool userInvokedSearch)
         {
             _logger.ProgressInfo("Performing missing search for {0} albums", albums.Count);
             var downloadedCount = 0;
 
-            foreach (var album in albums)
+            foreach (var album in albums.OrderBy(a => a.LastSearchTime ?? DateTime.MinValue))
             {
                 List<DownloadDecision> decisions;
-                decisions = await _releaseSearchService.AlbumSearch(album.Id, false, userInvokedSearch, false);
+
+                try
+                {
+                    decisions = await _releaseSearchService.AlbumSearch(album.Id, false, userInvokedSearch, false);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, "Unable to search for album: [{0}]", album);
+                    continue;
+                }
+
                 var processed = await _processDownloadDecisions.ProcessDecisions(decisions);
 
                 downloadedCount += processed.Grabbed.Count;
             }
 
-            _logger.ProgressInfo("Completed missing search for {0} albums. {1} reports downloaded.", albums.Count, downloadedCount);
+            _logger.ProgressInfo("Completed search for {0} albums. {1} reports downloaded.", albums.Count, downloadedCount);
         }
 
         public void Execute(AlbumSearchCommand message)
@@ -106,17 +114,11 @@ namespace NzbDrone.Core.IndexerSearch
             var queue = _queueService.GetQueue().Where(q => q.Album != null).Select(q => q.Album.Id);
             var missing = albums.Where(e => !queue.Contains(e.Id)).ToList();
 
-            SearchForMissingAlbums(missing, message.Trigger == CommandTrigger.Manual).GetAwaiter().GetResult();
+            SearchForBulkAlbums(missing, message.Trigger == CommandTrigger.Manual).GetAwaiter().GetResult();
         }
 
         public void Execute(CutoffUnmetAlbumSearchCommand message)
         {
-            Expression<Func<Album, bool>> filterExpression;
-
-            filterExpression = v =>
-                v.Monitored == true &&
-                v.Artist.Value.Monitored == true;
-
             var pagingSpec = new PagingSpec<Album>
             {
                 Page = 1,
@@ -125,14 +127,13 @@ namespace NzbDrone.Core.IndexerSearch
                 SortKey = "Id"
             };
 
-            pagingSpec.FilterExpressions.Add(filterExpression);
+            pagingSpec.FilterExpressions.Add(v => v.Monitored == true && v.Artist.Value.Monitored == true);
 
             var albums = _albumCutoffService.AlbumsWhereCutoffUnmet(pagingSpec).Records.ToList();
-
             var queue = _queueService.GetQueue().Where(q => q.Album != null).Select(q => q.Album.Id);
-            var missing = albums.Where(e => !queue.Contains(e.Id)).ToList();
+            var cutoffUnmet = albums.Where(e => !queue.Contains(e.Id)).ToList();
 
-            SearchForMissingAlbums(missing, message.Trigger == CommandTrigger.Manual).GetAwaiter().GetResult();
+            SearchForBulkAlbums(cutoffUnmet, message.Trigger == CommandTrigger.Manual).GetAwaiter().GetResult();
         }
     }
 }
