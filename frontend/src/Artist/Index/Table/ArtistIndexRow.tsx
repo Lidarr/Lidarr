@@ -24,7 +24,7 @@ import TagListConnector from 'Components/TagListConnector';
 import { icons } from 'Helpers/Props';
 import { executeCommand } from 'Store/Actions/commandActions';
 import formatBytes from 'Utilities/Number/formatBytes';
-import titleCase from 'Utilities/String/titleCase';
+import firstCharToUpper from 'Utilities/String/firstCharToUpper';
 import translate from 'Utilities/String/translate';
 import AlbumsCell from './AlbumsCell';
 import hasGrowableColumns from './hasGrowableColumns';
@@ -224,14 +224,6 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
           );
         }
 
-        if (name === 'qualityProfileId') {
-          return (
-            <VirtualTableRowCell key={name} className={styles[name]}>
-              {qualityProfile.name}
-            </VirtualTableRowCell>
-          );
-        }
-
         if (name === 'metadataProfileId') {
           return (
             <VirtualTableRowCell key={name} className={styles[name]}>
@@ -243,7 +235,7 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
         if (name === 'monitorNewItems') {
           return (
             <VirtualTableRowCell key={name} className={styles[name]}>
-              {titleCase(monitorNewItems)}
+              {translate(firstCharToUpper(monitorNewItems))}
             </VirtualTableRowCell>
           );
         }
@@ -262,7 +254,7 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
           }
           return (
             <VirtualTableRowCell key={name} className={styles[name]}>
-              None
+              {translate('None')}
             </VirtualTableRowCell>
           );
         }
@@ -281,7 +273,7 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
           }
           return (
             <VirtualTableRowCell key={name} className={styles[name]}>
-              None
+              {translate('None')}
             </VirtualTableRowCell>
           );
         }
@@ -338,7 +330,7 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
         if (name === 'path') {
           return (
             <VirtualTableRowCell key={name} className={styles[name]}>
-              {path}
+              <span title={path}>{path}</span>
             </VirtualTableRowCell>
           );
         }
