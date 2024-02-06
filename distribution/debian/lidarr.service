@@ -1,0 +1,20 @@
+# This file is owned by the lidarr package, DO NOT MODIFY MANUALLY
+# Instead use 'dpkg-reconfigure -plow lidarr' to modify User/Group/UMask/-data
+# Or use systemd built-in override functionality using 'systemctl edit lidarr'
+[Unit]
+Description=Lidarr Daemon
+After=network.target
+
+[Service]
+User=lidarr
+Group=lidarr
+UMask=002
+
+Type=simple
+ExecStart=/opt/Lidarr/Lidarr -nobrowser -data=/var/lib/lidarr
+TimeoutStopSec=20
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
