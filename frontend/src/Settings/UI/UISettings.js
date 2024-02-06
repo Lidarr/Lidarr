@@ -69,7 +69,7 @@ class UISettings extends Component {
       .map((theme) => ({ key: theme, value: titleCase(theme) }));
 
     return (
-      <PageContent title={translate('UISettings')}>
+      <PageContent title={translate('UiSettings')}>
         <SettingsToolbarConnector
           {...otherProps}
           onSavePress={onSavePress}
@@ -259,13 +259,13 @@ class UISettings extends Component {
                 </FieldSet>
                 <FieldSet legend={translate('Language')}>
                   <FormGroup>
-                    <FormLabel>{translate('UILanguage')}</FormLabel>
+                    <FormLabel>{translate('UiLanguage')}</FormLabel>
                     <FormInputGroup
                       type={inputTypes.SELECT}
                       name="uiLanguage"
                       values={uiLanguages}
-                      helpText={translate('UILanguageHelpText')}
-                      helpTextWarning={translate('UILanguageHelpTextWarning')}
+                      helpText={translate('UiLanguageHelpText')}
+                      helpTextWarning={translate('UiLanguageHelpTextWarning')}
                       onChange={onInputChange}
                       {...settings.uiLanguage}
                       errors={

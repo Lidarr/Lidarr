@@ -55,7 +55,7 @@
     "BlocklistReleaseHelpText": "Mencegah Sonarr memperoleh rilis ini secara otomatis",
     "LogFiles": "File Log",
     "Name": "Nama",
-    "UILanguageHelpText": "Bahasa yang digunakan UI Sonarr",
+    "UiLanguageHelpText": "Bahasa yang digunakan UI Sonarr",
     "Enable": "Aktif",
     "Profiles": "Profil",
     "Queue": "Antrean",
