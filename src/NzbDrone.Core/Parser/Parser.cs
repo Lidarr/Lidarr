@@ -202,6 +202,13 @@ namespace NzbDrone.Core.Parser
         private static readonly Regex AnimeReleaseGroupRegex = new Regex(@"^(?:\[(?<subgroup>(?!\s).+?(?<!\s))\](?:_|-|\s|\.)?)",
                                                                 RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
+        // Handle Exception Release Groups that don't follow -RlsGrp; Manual List
+        // name only...be very careful with this last; high chance of false positives
+        private static readonly Regex ExceptionReleaseGroupRegexExact = new Regex(@"(?<releasegroup>(?:D\-Z0N3|Fight-BB|VARYG|E\.N\.D)\b)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        // groups whose releases end with RlsGroup) or RlsGroup]
+        private static readonly Regex ExceptionReleaseGroupRegex = new Regex(@"(?<releasegroup>(Silence|afm72|Panda|Ghost|MONOLITH|Tigole|Joy|ImE|UTR|t3nzin|Anime Time|Project Angel|Hakata Ramen|HONE|Vyndros|SEV|Garshasp|Kappa|Natty|RCVR|SAMPA|YOGI|r00t|EDGE2020|RZeroX)(?=\]|\)))", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
         private static readonly Regex WordDelimiterRegex = new Regex(@"(\s|\.|,|_|-|=|\|)+", RegexOptions.Compiled);
         private static readonly Regex PunctuationRegex = new Regex(@"[^\w\s]", RegexOptions.Compiled);
         private static readonly Regex CommonWordRegex = new Regex(@"\b(a|an|the|and|or|of)\b\s?", RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -551,6 +558,20 @@ namespace NzbDrone.Core.Parser
             }
 
             title = CleanReleaseGroupRegex.Replace(title);
+
+            var exceptionReleaseGroupRegex = ExceptionReleaseGroupRegex.Matches(title);
+
+            if (exceptionReleaseGroupRegex.Count != 0)
+            {
+                return exceptionReleaseGroupRegex.OfType<Match>().Last().Groups["releasegroup"].Value;
+            }
+
+            var exceptionExactMatch = ExceptionReleaseGroupRegexExact.Matches(title);
+
+            if (exceptionExactMatch.Count != 0)
+            {
+                return exceptionExactMatch.OfType<Match>().Last().Groups["releasegroup"].Value;
+            }
 
             var matches = ReleaseGroupRegex.Matches(title);
 
