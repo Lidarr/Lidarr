@@ -160,6 +160,7 @@ namespace NzbDrone.Core.Notifications.Webhook
                 EventType = WebhookEventType.AlbumDelete,
                 InstanceName = _configFileProvider.InstanceName,
                 ApplicationUrl = _configService.ApplicationUrl,
+                Artist = new WebhookArtist(deleteMessage.Album.Artist),
                 Album = new WebhookAlbum(deleteMessage.Album),
                 DeletedFiles = deleteMessage.DeletedFiles
             };
