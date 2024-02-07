@@ -1,6 +1,6 @@
 .option {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   flex-wrap: wrap;
   margin: 3px;
   border: 1px solid var(--borderColor);
@@ -17,7 +17,7 @@
 }
 
 .small {
-  width: 460px;
+  width: 490px;
 }
 
 .large {
@@ -26,7 +26,7 @@
 
 .token {
   flex: 0 0 50%;
-  padding: 6px 16px;
+  padding: 6px;
   background-color: var(--popoverTitleBackgroundColor);
   font-family: $monoSpaceFontFamily;
 }
@@ -34,9 +34,9 @@
 .example {
   display: flex;
   align-items: center;
-  align-self: stretch;
+  justify-content: space-between;
   flex: 0 0 50%;
-  padding: 6px 16px;
+  padding: 6px;
   background-color: var(--popoverBodyBackgroundColor);
 
   .footNote {
