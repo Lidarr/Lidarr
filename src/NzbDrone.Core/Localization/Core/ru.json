@@ -362,7 +362,7 @@
     "Remove": "Удалить",
     "RemovedFromTaskQueue": "Удалено из очереди задач",
     "Analytics": "Аналитика",
-    "AnalyticsEnabledHelpText": "Отправлять в {appName} информацию о использовании и ошибках. Анонимная статистика включает в себя информацию о браузере, какие страницы загружены, сообщения об ошибках, а так же операционной системе. Мы используем эту информацию для выявления ошибок, а так же для разработки нового функционала.",
+    "AnalyticsEnabledHelpText": "Отправлять в {appName} анонимную информацию об использовании и ошибках. Анонимная статистика включает в себя информацию о браузере, какие страницы веб-интерфейса {appName} загружены, сообщения об ошибках, а также операционной системе. Мы используем эту информацию для выявления ошибок, а также для разработки нового функционала.",
     "AnalyticsEnabledHelpTextWarning": "Для вступления в силу требуется перезапуск",
     "RestartNow": "Перезапустить сейчас",
     "ShowUnknownArtistItems": "Показать неизвестные элементы фильма",
@@ -402,7 +402,7 @@
     "Ungroup": "Разгруппировать",
     "Actions": "Действия",
     "ApiKeyHelpTextWarning": "Для вступления в силу требуется перезапуск",
-    "AppDataDirectory": "AppData директория",
+    "AppDataDirectory": "Директория AppData",
     "ForMoreInformationOnTheIndividualDownloadClientsClickOnTheInfoButtons": "Для получения дополнительной информации о каждом из клиентов загрузки нажмите на кнопки с дополнительной информацией.",
     "FileManagement": "Управление файлами",
     "Filename": "Имя файла",
@@ -757,5 +757,7 @@
     "DeleteRemotePathMappingMessageText": "Вы уверены, что хотите удалить это сопоставление удаленного пути?",
     "ResetQualityDefinitionsMessageText": "Вы уверены, что хотите сбросить определения качества?",
     "OnHealthRestored": "При восстановлении работоспособности",
-    "AllResultsAreHiddenByTheAppliedFilter": "Все результаты скрыты фильтром"
+    "AllResultsAreHiddenByTheAppliedFilter": "Все результаты скрыты фильтром",
+    "CustomFormatsSettings": "Настройки пользовательских форматов",
+    "CustomFormatsSpecificationRegularExpression": "Регулярное выражение"
 }

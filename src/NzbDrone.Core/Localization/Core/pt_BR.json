@@ -1203,5 +1203,22 @@
     "EmbedCoverArtInAudioFiles": "Incorporar capa em arquivos de áudio",
     "EmbedCoverArtHelpText": "Incorpore a arte do álbum Lidarr em arquivos de áudio ao escrever etiquetas",
     "Lowercase": "Minúscula",
-    "Underscore": "Sublinhar"
+    "Underscore": "Sublinhar",
+    "MassSearchCancelWarning": "Isso não pode ser cancelado depois de iniciado sem reiniciar {appName} ou desabilitar todos os seus indexadores.",
+    "NoTracksInThisMedium": "Nenhuma faixa neste meio",
+    "MonitoredStatus": "Monitorado/Status",
+    "SearchForAllCutoffUnmetAlbumsConfirmationCount": "Tem certeza de que deseja pesquisar todos os álbuns do {totalRecords} corte não atingido?",
+    "ConnectSettingsSummary": "Notificações, conexões com servidores/players de mídia e scripts personalizados",
+    "CustomFormatsSettingsSummary": "Configurações e Formatos Personalizados",
+    "IndexersSettingsSummary": "Indexadores e opções de indexador",
+    "MediaManagementSettingsSummary": "Nomenclatura, configurações de gerenciamento de arquivos e pastas raiz",
+    "QualitySettingsSummary": "Tamanhos e nomenclatura de qualidade",
+    "TagsSettingsSummary": "Veja todas as etiquetas e como elas são usadas. Etiquetas não utilizadas podem ser removidas",
+    "UiSettingsSummary": "Opções de calendário, data e cores para daltônicos",
+    "CustomFormatsSettings": "Configurações de Formatos Personalizados",
+    "DownloadClientsSettingsSummary": "Clientes de download, gerenciamento de download e mapeamentos de caminhos remotos",
+    "GeneralSettingsSummary": "Porta, SSL, nome de usuário/senha, proxy, análises e atualizações",
+    "ImportListsSettingsSummary": "Importe de outra instância do {appName} ou listas do Trakt e gerencie exclusões de listas",
+    "MetadataSettingsArtistSummary": "Crie arquivos de metadados quando as faixas forem importadas ou o artista for atualizado",
+    "ProfilesSettingsArtistSummary": "Perfis de Qualidade, Metadados, Atraso e Lançamento"
 }

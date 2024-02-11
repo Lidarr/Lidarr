@@ -802,7 +802,7 @@
     "AuthenticationRequiredHelpText": "Cambia a quali richieste l'autenticazione verrà chiesta. Non cambiare se non comprendi i rischi.",
     "Auto": "Auto",
     "UpdateFiltered": "Aggiorna Filtrati",
-    "AddAutoTagError": "Non è stato possibile aggiungere una nuova etichetta automatica. Riprova.",
+    "AddAutoTagError": "Impossibile aggiungere un nuovo tag automatico, riprova.",
     "AddConditionError": "Non è stato possibile aggiungere una nuova condizione. Riprova.",
     "DeleteSpecification": "Cancella la Notifica",
     "DeleteSpecificationHelpText": "Sei sicuro di voler eliminare la condizione '{name}'?",
