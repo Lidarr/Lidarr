@@ -1099,7 +1099,6 @@
     "AuthenticationRequiredWarning": "Pour empêcher l'accès à distance sans authentification, {appName} exige désormais que l'authentification soit activée. Vous pouvez éventuellement désactiver l'authentification pour les adresses locales.",
     "UpdateFiltered": "Mise à jour filtrée",
     "AddAutoTag": "Ajouter un tag automatique",
-    "AddAutoTagError": "Impossible d'ajouter un nouveau tag automatique, veuillez réessayer.",
     "AddCondition": "Ajouter une condition",
     "AddConditionError": "Impossible d'ajouter une nouvelle condition, Réessayer.",
     "QueueFilterHasNoItems": "Le filtre de file d'attente sélectionné ne contient aucun élément",
@@ -1184,5 +1183,6 @@
     "RemoveQueueItem": "Retirer - {sourceTitle}",
     "RemoveQueueItemConfirmation": "Êtes-vous sûr de vouloir retirer '{sourceTitle}' de la file d'attente ?",
     "RemoveQueueItemRemovalMethod": "Méthode de suppression",
-    "RemoveQueueItemsRemovalMethodHelpTextWarning": "Supprimer du client de téléchargement\" supprimera les téléchargements et les fichiers du client de téléchargement."
+    "RemoveQueueItemsRemovalMethodHelpTextWarning": "Supprimer du client de téléchargement\" supprimera les téléchargements et les fichiers du client de téléchargement.",
+    "AddAutoTagError": "Impossible d'ajouter un nouveau tag automatique, veuillez réessayer."
 }
