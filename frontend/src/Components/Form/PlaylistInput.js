@@ -9,7 +9,6 @@ import TableBody from 'Components/Table/TableBody';
 import TableRow from 'Components/Table/TableRow';
 import tagShape from 'Helpers/Props/Shapes/tagShape';
 import translate from 'Utilities/String/translate';
-import getSelectedIds from 'Utilities/Table/getSelectedIds';
 import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
 import styles from './PlaylistInput.css';
@@ -46,7 +45,17 @@ class PlaylistInput extends Component {
       onChange
     } = this.props;
 
-    const oldSelected = getSelectedIds(prevState.selectedState, { parseIds: false }).sort();
+    const oldSelected = _.reduce(
+      prevState.selectedState,
+      (result, value, id) => {
+        if (value) {
+          result.push(id);
+        }
+
+        return result;
+      },
+      []
+    ).sort();
     const newSelected = this.getSelectedIds().sort();
 
     if (!_.isEqual(oldSelected, newSelected)) {
@@ -61,7 +70,17 @@ class PlaylistInput extends Component {
   // Control
 
   getSelectedIds = () => {
-    return getSelectedIds(this.state.selectedState, { parseIds: false });
+    return _.reduce(
+      this.state.selectedState,
+      (result, value, id) => {
+        if (value) {
+          result.push(id);
+        }
+
+        return result;
+      },
+      []
+    );
   };
 
   //
