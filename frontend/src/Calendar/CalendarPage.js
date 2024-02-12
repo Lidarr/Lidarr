@@ -14,6 +14,7 @@ import { align, icons } from 'Helpers/Props';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import translate from 'Utilities/String/translate';
 import CalendarConnector from './CalendarConnector';
+import CalendarFilterModal from './CalendarFilterModal';
 import CalendarLinkModal from './iCal/CalendarLinkModal';
 import LegendConnector from './Legend/LegendConnector';
 import CalendarOptionsModal from './Options/CalendarOptionsModal';
@@ -78,6 +79,7 @@ class CalendarPage extends Component {
     const {
       selectedFilterKey,
       filters,
+      customFilters,
       hasArtist,
       artistError,
       artistIsFetching,
@@ -137,7 +139,8 @@ class CalendarPage extends Component {
               isDisabled={!hasArtist}
               selectedFilterKey={selectedFilterKey}
               filters={filters}
-              customFilters={[]}
+              customFilters={customFilters}
+              filterModalConnectorComponent={CalendarFilterModal}
               onFilterSelect={onFilterSelect}
             />
           </PageToolbarSection>
@@ -204,6 +207,7 @@ class CalendarPage extends Component {
 CalendarPage.propTypes = {
   selectedFilterKey: PropTypes.string.isRequired,
   filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  customFilters: PropTypes.arrayOf(PropTypes.object).isRequired,
   hasArtist: PropTypes.bool.isRequired,
   artistError: PropTypes.object,
   artistIsFetching: PropTypes.bool.isRequired,
