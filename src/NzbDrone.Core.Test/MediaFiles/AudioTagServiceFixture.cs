@@ -330,7 +330,7 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         [Test]
         public void should_ignore_non_parsable_id3v23_date()
         {
-            GivenFileCopy("nin.mp3");
+            GivenFileCopy("nin.mp2");
 
             using (var file = TagLib.File.Create(_copiedFile))
             {
@@ -443,38 +443,6 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
 
             Mocker.GetMock<IEventAggregator>()
                 .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Once());
-        }
-
-        [TestCase("nin.mp3")]
-        public void should_ignore_replaygain_tags_during_scrub(string filename)
-        {
-            Mocker.GetMock<IConfigService>()
-                .Setup(x => x.ScrubAudioTags)
-                .Returns(true);
-
-            GivenFileCopy(filename);
-
-            using (var preFile = TagLib.File.Create(_copiedFile))
-            {
-                preFile.Tag.ReplayGainAlbumPeak = 1;
-                preFile.Tag.ReplayGainAlbumGain = 500;
-                preFile.Tag.ReplayGainTrackPeak = 2;
-                preFile.Tag.ReplayGainTrackGain = 250;
-                preFile.Save();
-            }
-
-            var file = GivenPopulatedTrackfile(0);
-
-            file.Path = _copiedFile;
-            Subject.WriteTags(file, false, true);
-
-            using (var postFile = TagLib.File.Create(_copiedFile))
-            {
-                postFile.Tag.ReplayGainAlbumGain.Should().Be(500);
-                postFile.Tag.ReplayGainAlbumPeak.Should().Be(1);
-                postFile.Tag.ReplayGainTrackGain.Should().Be(250);
-                postFile.Tag.ReplayGainTrackPeak.Should().Be(2);
-            }
         }
     }
 }

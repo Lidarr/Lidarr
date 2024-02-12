@@ -155,23 +155,7 @@ namespace NzbDrone.Core.MediaFiles
             try
             {
                 file = TagLib.File.Create(path);
-
-                var replayGainAlbumGain = file.Tag.ReplayGainAlbumGain;
-                var replayGainAlbumPeak = file.Tag.ReplayGainAlbumPeak;
-                var replayGainTrackGain = file.Tag.ReplayGainTrackGain;
-                var replayGainTrackPeak = file.Tag.ReplayGainTrackPeak;
-
                 file.RemoveTags(TagLib.TagTypes.AllTags);
-                file.Save();
-                file.Dispose();
-
-                file = TagLib.File.Create(path);
-
-                file.Tag.ReplayGainAlbumGain = replayGainAlbumGain;
-                file.Tag.ReplayGainAlbumPeak = replayGainAlbumPeak;
-                file.Tag.ReplayGainTrackGain = replayGainTrackGain;
-                file.Tag.ReplayGainTrackPeak = replayGainTrackPeak;
-
                 file.Save();
             }
             catch (CorruptFileException ex)
