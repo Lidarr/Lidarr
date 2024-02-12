@@ -4,19 +4,19 @@ const monitorNewItemsOptions = [
   {
     key: 'all',
     get value() {
-      return translate('AllAlbums');
+      return translate('MonitorAllAlbums');
     }
   },
   {
     key: 'none',
     get value() {
-      return translate('None');
+      return translate('MonitorNoNewAlbums');
     }
   },
   {
     key: 'new',
     get value() {
-      return translate('New');
+      return translate('MonitorNewAlbums');
     }
   }
 ];

@@ -1,11 +1,48 @@
+import translate from 'Utilities/String/translate';
+
 const monitorOptions = [
-  { key: 'all', value: 'All Albums' },
-  { key: 'future', value: 'Future Albums' },
-  { key: 'missing', value: 'Missing Albums' },
-  { key: 'existing', value: 'Existing Albums' },
-  { key: 'first', value: 'Only First Album' },
-  { key: 'latest', value: 'Only Latest Album' },
-  { key: 'none', value: 'None' }
+  {
+    key: 'all',
+    get value() {
+      return translate('MonitorAllAlbums');
+    }
+  },
+  {
+    key: 'future',
+    get value() {
+      return translate('MonitorFutureAlbums');
+    }
+  },
+  {
+    key: 'missing',
+    get value() {
+      return translate('MonitorMissingAlbums');
+    }
+  },
+  {
+    key: 'existing',
+    get value() {
+      return translate('MonitorExistingAlbums');
+    }
+  },
+  {
+    key: 'first',
+    get value() {
+      return translate('MonitorFirstAlbum');
+    }
+  },
+  {
+    key: 'latest',
+    get value() {
+      return translate('MonitorLastestAlbum');
+    }
+  },
+  {
+    key: 'none',
+    get value() {
+      return translate('MonitorNoAlbums');
+    }
+  }
 ];
 
 export default monitorOptions;
