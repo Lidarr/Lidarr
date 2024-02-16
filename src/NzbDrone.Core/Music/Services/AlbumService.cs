@@ -310,7 +310,14 @@ namespace NzbDrone.Core.Music
         public void Handle(ArtistsDeletedEvent message)
         {
             // TODO Do this in one call instead of one for each artist?
-            var albums = message.Artists.SelectMany(x => GetAlbumsByArtistMetadataId(x.ArtistMetadataId)).ToList();
+            var albums = message.Artists.SelectMany(artist =>
+            {
+                var artistAlbums = GetAlbumsByArtistMetadataId(artist.ArtistMetadataId);
+                artistAlbums.ForEach(a => a.Artist = artist);
+
+                return artistAlbums;
+            }).ToList();
+
             DeleteMany(albums);
         }
     }
