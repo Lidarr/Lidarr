@@ -29,6 +29,8 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
         public override string Name => "Spotify Playlists";
 
+        private const string LIKEDSONGSID = "LikedSongs";
+
         public override IList<SpotifyImportListItemInfo> Fetch(SpotifyWebAPI api)
         {
             return Settings.PlaylistIds.SelectMany(x => Fetch(api, x)).ToList();
@@ -40,7 +42,27 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
             _logger.Trace($"Processing playlist {playlistId}");
 
-            var playlistTracks = _spotifyProxy.GetPlaylistTracks(this, api, playlistId, "next, items(track(name, artists(id, name), album(id, name, release_date, release_date_precision, artists(id, name))))");
+            Paging<PlaylistTrack> playlistTracks;
+
+            if (playlistId.Equals(LIKEDSONGSID))
+            {
+                var savedTracks = _spotifyProxy.GetSavedTracks(this, api);
+                playlistTracks = new Paging<PlaylistTrack>
+                {
+                    Href = savedTracks.Href,
+                    Limit = savedTracks.Limit,
+                    Offset = savedTracks.Offset,
+                    Next = savedTracks.Next,
+                    Previous = savedTracks.Previous,
+                    Total = savedTracks.Total,
+                    Error = savedTracks.Error,
+                    Items = savedTracks.Items.Select(t => new PlaylistTrack { AddedAt = t.AddedAt, Track = t.Track }).ToList()
+                };
+            }
+            else
+            {
+                playlistTracks = _spotifyProxy.GetPlaylistTracks(this, api, playlistId, "next, items(track(name, artists(id, name), album(id, name, release_date, release_date_precision, artists(id, name))))");
+            }
 
             while (true)
             {
@@ -140,7 +162,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
                                     {
                                         id = p.Id,
                                         name = p.Name
-                                    })
+                                    }).Prepend(new { id = LIKEDSONGSID, name = "Liked Songs" }) // TODO : Add Translation
                             }
                         };
                     }
