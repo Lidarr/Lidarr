@@ -5,6 +5,7 @@ using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.MetadataSource;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Validation;
@@ -22,14 +23,18 @@ namespace NzbDrone.Core.ImportLists.Spotify
                                IConfigService configService,
                                IParsingService parsingService,
                                IHttpClient httpClient,
+                               ILocalizationService localizationService,
                                Logger logger)
         : base(spotifyProxy, requestBuilder, importListStatusService, importListRepository, configService, parsingService, httpClient, logger)
         {
+            _localizationService = localizationService;
         }
 
         public override string Name => "Spotify Playlists";
 
         private const string LIKEDSONGSID = "LikedSongs";
+
+        private readonly ILocalizationService _localizationService;
 
         public override IList<SpotifyImportListItemInfo> Fetch(SpotifyWebAPI api)
         {
@@ -162,7 +167,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
                                     {
                                         id = p.Id,
                                         name = p.Name
-                                    }).Prepend(new { id = LIKEDSONGSID, name = "Liked Songs" }) // TODO : Add Translation
+                                    }).Prepend(new { id = LIKEDSONGSID, name = _localizationService.GetLocalizedString("LikedSongs") })
                             }
                         };
                     }
