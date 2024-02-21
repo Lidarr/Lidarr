@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ProtocolLabel from 'Activity/Queue/ProtocolLabel';
 import AlbumFormats from 'Album/AlbumFormats';
+import IndexerFlags from 'Album/IndexerFlags';
 import TrackQuality from 'Album/TrackQuality';
 import Icon from 'Components/Icon';
 import Link from 'Components/Link/Link';
@@ -129,6 +130,7 @@ class InteractiveSearchRow extends Component {
       quality,
       customFormatScore,
       customFormats,
+      indexerFlags = 0,
       rejections,
       downloadAllowed,
       isGrabbing,
@@ -187,8 +189,19 @@ class InteractiveSearchRow extends Component {
               formatCustomFormatScore(customFormatScore, customFormats.length)
             }
             tooltip={<AlbumFormats formats={customFormats} />}
-            position={tooltipPositions.BOTTOM}
+            position={tooltipPositions.LEFT}
           />
+        </TableRowCell>
+
+        <TableRowCell className={styles.indexerFlags}>
+          {indexerFlags ? (
+            <Popover
+              anchor={<Icon name={icons.FLAG} kind={kinds.PRIMARY} />}
+              title={translate('IndexerFlags')}
+              body={<IndexerFlags indexerFlags={indexerFlags} />}
+              position={tooltipPositions.LEFT}
+            />
+          ) : null}
         </TableRowCell>
 
         <TableRowCell className={styles.rejected}>
@@ -265,6 +278,7 @@ InteractiveSearchRow.propTypes = {
   quality: PropTypes.object.isRequired,
   customFormats: PropTypes.arrayOf(PropTypes.object),
   customFormatScore: PropTypes.number.isRequired,
+  indexerFlags: PropTypes.number.isRequired,
   rejections: PropTypes.arrayOf(PropTypes.string).isRequired,
   downloadAllowed: PropTypes.bool.isRequired,
   isGrabbing: PropTypes.bool.isRequired,
@@ -277,6 +291,7 @@ InteractiveSearchRow.propTypes = {
 };
 
 InteractiveSearchRow.defaultProps = {
+  indexerFlags: 0,
   rejections: [],
   isGrabbing: false,
   isGrabbed: false

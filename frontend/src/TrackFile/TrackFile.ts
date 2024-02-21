@@ -13,6 +13,7 @@ export interface TrackFile extends ModelBase {
   releaseGroup: string;
   quality: QualityModel;
   customFormats: CustomFormat[];
+  indexerFlags: number;
   mediaInfo: MediaInfo;
   qualityCutoffNotMet: boolean;
 }

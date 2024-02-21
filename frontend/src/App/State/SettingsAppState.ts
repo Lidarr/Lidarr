@@ -6,6 +6,7 @@ import AppSectionState, {
 import DownloadClient from 'typings/DownloadClient';
 import ImportList from 'typings/ImportList';
 import Indexer from 'typings/Indexer';
+import IndexerFlag from 'typings/IndexerFlag';
 import MetadataProfile from 'typings/MetadataProfile';
 import Notification from 'typings/Notification';
 import QualityProfile from 'typings/QualityProfile';
@@ -44,11 +45,13 @@ export interface RootFolderAppState
     AppSectionDeleteState,
     AppSectionSaveState {}
 
+export type IndexerFlagSettingsAppState = AppSectionState<IndexerFlag>;
 export type UiSettingsAppState = AppSectionState<UiSettings>;
 
 interface SettingsAppState {
   downloadClients: DownloadClientAppState;
   importLists: ImportListAppState;
+  indexerFlags: IndexerFlagSettingsAppState;
   indexers: IndexerAppState;
   metadataProfiles: MetadataProfilesAppState;
   notifications: NotificationAppState;

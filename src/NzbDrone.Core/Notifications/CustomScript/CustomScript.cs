@@ -75,6 +75,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Release_Quality", remoteAlbum.ParsedAlbumInfo.Quality.Quality.Name);
             environmentVariables.Add("Lidarr_Release_QualityVersion", remoteAlbum.ParsedAlbumInfo.Quality.Revision.Version.ToString());
             environmentVariables.Add("Lidarr_Release_ReleaseGroup", releaseGroup ?? string.Empty);
+            environmentVariables.Add("Lidarr_Release_IndexerFlags", remoteAlbum.Release.IndexerFlags.ToString());
             environmentVariables.Add("Lidarr_Download_Client", message.DownloadClientName ?? string.Empty);
             environmentVariables.Add("Lidarr_Download_Client_Type", message.DownloadClientType ?? string.Empty);
             environmentVariables.Add("Lidarr_Download_Id", message.DownloadId ?? string.Empty);

@@ -78,6 +78,15 @@ export const defaultState = {
       isVisible: false
     },
     {
+      name: 'indexerFlags',
+      columnLabel: () => translate('IndexerFlags'),
+      label: React.createElement(Icon, {
+        name: icons.FLAG,
+        title: () => translate('IndexerFlags')
+      }),
+      isVisible: false
+    },
+    {
       name: 'status',
       label: () => translate('Status'),
       isVisible: true

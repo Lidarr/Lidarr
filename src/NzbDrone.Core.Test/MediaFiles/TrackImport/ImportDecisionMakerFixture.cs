@@ -8,6 +8,7 @@ using Moq;
 using NUnit.Framework;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Download;
+using NzbDrone.Core.History;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.TrackImport;
 using NzbDrone.Core.MediaFiles.TrackImport.Aggregation;
@@ -129,6 +130,10 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport
             Mocker.GetMock<IMediaFileService>()
                 .Setup(c => c.FilterUnchangedFiles(It.IsAny<List<IFileInfo>>(), It.IsAny<FilterFilesType>()))
                 .Returns((List<IFileInfo> files, FilterFilesType filter) => files);
+
+            Mocker.GetMock<IHistoryService>()
+                .Setup(x => x.FindByDownloadId(It.IsAny<string>()))
+                .Returns(new List<EntityHistory>());
 
             GivenSpecifications(_albumpass1);
         }

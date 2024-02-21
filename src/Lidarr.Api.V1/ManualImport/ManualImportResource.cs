@@ -24,6 +24,7 @@ namespace Lidarr.Api.V1.ManualImport
         public string ReleaseGroup { get; set; }
         public int QualityWeight { get; set; }
         public string DownloadId { get; set; }
+        public int IndexerFlags { get; set; }
         public IEnumerable<Rejection> Rejections { get; set; }
         public ParsedTrackInfo AudioTags { get; set; }
         public bool AdditionalFile { get; set; }
@@ -55,7 +56,9 @@ namespace Lidarr.Api.V1.ManualImport
 
                 // QualityWeight
                 DownloadId = model.DownloadId,
+                IndexerFlags = model.IndexerFlags,
                 Rejections = model.Rejections,
+
                 AudioTags = model.Tags,
                 AdditionalFile = model.AdditionalFile,
                 ReplaceExistingFiles = model.ReplaceExistingFiles,

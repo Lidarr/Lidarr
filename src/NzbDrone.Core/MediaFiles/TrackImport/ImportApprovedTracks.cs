@@ -9,6 +9,7 @@ using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Extras;
+using NzbDrone.Core.History;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
@@ -40,6 +41,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         private readonly IRecycleBinProvider _recycleBinProvider;
         private readonly IExtraService _extraService;
         private readonly IDiskProvider _diskProvider;
+        private readonly IHistoryService _historyService;
         private readonly IReleaseService _releaseService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IManageCommandQueue _commandQueueManager;
@@ -57,6 +59,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                                     IRecycleBinProvider recycleBinProvider,
                                     IExtraService extraService,
                                     IDiskProvider diskProvider,
+                                    IHistoryService historyService,
                                     IReleaseService releaseService,
                                     IEventAggregator eventAggregator,
                                     IManageCommandQueue commandQueueManager,
@@ -74,6 +77,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             _recycleBinProvider = recycleBinProvider;
             _extraService = extraService;
             _diskProvider = diskProvider;
+            _historyService = historyService;
             _releaseService = releaseService;
             _eventAggregator = eventAggregator;
             _commandQueueManager = commandQueueManager;
@@ -196,6 +200,22 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                         Album = localTrack.Album,
                         Tracks = localTrack.Tracks
                     };
+
+                    if (downloadClientItem?.DownloadId.IsNotNullOrWhiteSpace() == true)
+                    {
+                        var grabHistory = _historyService.FindByDownloadId(downloadClientItem.DownloadId)
+                            .OrderByDescending(h => h.Date)
+                            .FirstOrDefault(h => h.EventType == EntityHistoryEventType.Grabbed);
+
+                        if (Enum.TryParse(grabHistory?.Data.GetValueOrDefault("indexerFlags"), true, out IndexerFlags flags))
+                        {
+                            trackFile.IndexerFlags = flags;
+                        }
+                    }
+                    else
+                    {
+                        trackFile.IndexerFlags = localTrack.IndexerFlags;
+                    }
 
                     bool copyOnly;
                     switch (importMode)

@@ -20,6 +20,7 @@ import SelectAlbumModal from 'InteractiveImport/Album/SelectAlbumModal';
 import SelectAlbumReleaseModal from 'InteractiveImport/AlbumRelease/SelectAlbumReleaseModal';
 import SelectArtistModal from 'InteractiveImport/Artist/SelectArtistModal';
 import ConfirmImportModal from 'InteractiveImport/Confirmation/ConfirmImportModal';
+import SelectIndexerFlagsModal from 'InteractiveImport/IndexerFlags/SelectIndexerFlagsModal';
 import SelectQualityModal from 'InteractiveImport/Quality/SelectQualityModal';
 import SelectReleaseGroupModal from 'InteractiveImport/ReleaseGroup/SelectReleaseGroupModal';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
@@ -30,7 +31,7 @@ import toggleSelected from 'Utilities/Table/toggleSelected';
 import InteractiveImportRow from './InteractiveImportRow';
 import styles from './InteractiveImportModalContent.css';
 
-const columns = [
+const COLUMNS = [
   {
     name: 'path',
     label: () => translate('Path'),
@@ -80,10 +81,20 @@ const columns = [
     isVisible: true
   },
   {
+    name: 'indexerFlags',
+    label: React.createElement(Icon, {
+      name: icons.FLAG,
+      title: () => translate('IndexerFlags')
+    }),
+    isSortable: true,
+    isVisible: true
+  },
+  {
     name: 'rejections',
     label: React.createElement(Icon, {
       name: icons.DANGER,
-      kind: kinds.DANGER
+      kind: kinds.DANGER,
+      title: () => translate('Rejections')
     }),
     isSortable: true,
     isVisible: true
@@ -107,6 +118,7 @@ const ALBUM = 'album';
 const ALBUM_RELEASE = 'albumRelease';
 const RELEASE_GROUP = 'releaseGroup';
 const QUALITY = 'quality';
+const INDEXER_FLAGS = 'indexerFlags';
 
 const replaceExistingFilesOptions = {
   COMBINE: 'combine',
@@ -301,6 +313,21 @@ class InteractiveImportModalContent extends Component {
       inconsistentAlbumReleases
     } = this.state;
 
+    const allColumns = _.cloneDeep(COLUMNS);
+    const columns = allColumns.map((column) => {
+      const showIndexerFlags = items.some((item) => item.indexerFlags);
+
+      if (!showIndexerFlags) {
+        const indexerFlagsColumn = allColumns.find((c) => c.name === 'indexerFlags');
+
+        if (indexerFlagsColumn) {
+          indexerFlagsColumn.isVisible = false;
+        }
+      }
+
+      return column;
+    });
+
     const selectedIds = this.getSelectedIds();
     const selectedItem = selectedIds.length ? _.find(items, { id: selectedIds[0] }) : null;
     const errorMessage = getErrorMessage(error, 'Unable to load manual import items');
@@ -310,7 +337,8 @@ class InteractiveImportModalContent extends Component {
       { key: ALBUM, value: translate('SelectAlbum') },
       { key: ALBUM_RELEASE, value: translate('SelectAlbumRelease') },
       { key: QUALITY, value: translate('SelectQuality') },
-      { key: RELEASE_GROUP, value: translate('SelectReleaseGroup') }
+      { key: RELEASE_GROUP, value: translate('SelectReleaseGroup') },
+      { key: INDEXER_FLAGS, value: translate('SelectIndexerFlags') }
     ];
 
     if (allowArtistChange) {
@@ -433,6 +461,7 @@ class InteractiveImportModalContent extends Component {
                           isSaving={isSaving}
                           {...item}
                           allowArtistChange={allowArtistChange}
+                          columns={columns}
                           onSelectedChange={this.onSelectedChange}
                           onValidRowChange={this.onValidRowChange}
                         />
@@ -544,6 +573,13 @@ class InteractiveImportModalContent extends Component {
           qualityId={0}
           proper={false}
           real={false}
+          onModalClose={this.onSelectModalClose}
+        />
+
+        <SelectIndexerFlagsModal
+          isOpen={selectModalOpen === INDEXER_FLAGS}
+          ids={selectedIds}
+          indexerFlags={0}
           onModalClose={this.onSelectModalClose}
         />
 

@@ -38,8 +38,7 @@ namespace NzbDrone.Core.Indexers.FileList
             {
                 var id = result.Id;
 
-                // if (result.FreeLeech)
-                torrentInfos.Add(new TorrentInfo()
+                torrentInfos.Add(new TorrentInfo
                 {
                     Guid = $"FileList-{id}",
                     Title = result.Name,
@@ -48,11 +47,29 @@ namespace NzbDrone.Core.Indexers.FileList
                     InfoUrl = GetInfoUrl(id),
                     Seeders = result.Seeders,
                     Peers = result.Leechers + result.Seeders,
-                    PublishDate = result.UploadDate.ToUniversalTime()
+                    PublishDate = result.UploadDate.ToUniversalTime(),
+                    IndexerFlags = GetIndexerFlags(result)
                 });
             }
 
             return torrentInfos.ToArray();
+        }
+
+        private static IndexerFlags GetIndexerFlags(FileListTorrent item)
+        {
+            IndexerFlags flags = 0;
+
+            if (item.FreeLeech)
+            {
+                flags |= IndexerFlags.Freeleech;
+            }
+
+            if (item.Internal)
+            {
+                flags |= IndexerFlags.Internal;
+            }
+
+            return flags;
         }
 
         private string GetDownloadUrl(string torrentId)

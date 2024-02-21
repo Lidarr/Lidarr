@@ -74,6 +74,18 @@ namespace NzbDrone.Core.Indexers.Torznab
             return true;
         }
 
+        protected override ReleaseInfo ProcessItem(XElement item, ReleaseInfo releaseInfo)
+        {
+            var torrentInfo = base.ProcessItem(item, releaseInfo) as TorrentInfo;
+
+            if (torrentInfo != null)
+            {
+                torrentInfo.IndexerFlags = GetFlags(item);
+            }
+
+            return torrentInfo;
+        }
+
         protected override string GetInfoUrl(XElement item)
         {
             return ParseUrl(item.TryGetValue("comments").TrimEnd("#comments"));
@@ -180,6 +192,53 @@ namespace NzbDrone.Core.Indexers.Torznab
             return base.GetPeers(item);
         }
 
+        protected IndexerFlags GetFlags(XElement item)
+        {
+            IndexerFlags flags = 0;
+
+            var downloadFactor = TryGetFloatTorznabAttribute(item, "downloadvolumefactor", 1);
+            var uploadFactor = TryGetFloatTorznabAttribute(item, "uploadvolumefactor", 1);
+
+            if (downloadFactor == 0.5)
+            {
+                flags |= IndexerFlags.Halfleech;
+            }
+
+            if (downloadFactor == 0.75)
+            {
+                flags |= IndexerFlags.Freeleech25;
+            }
+
+            if (downloadFactor == 0.25)
+            {
+                flags |= IndexerFlags.Freeleech75;
+            }
+
+            if (downloadFactor == 0.0)
+            {
+                flags |= IndexerFlags.Freeleech;
+            }
+
+            if (uploadFactor == 2.0)
+            {
+                flags |= IndexerFlags.DoubleUpload;
+            }
+
+            var tags = TryGetMultipleTorznabAttributes(item, "tag");
+
+            if (tags.Any(t => t.EqualsIgnoreCase("internal")))
+            {
+                flags |= IndexerFlags.Internal;
+            }
+
+            if (tags.Any(t => t.EqualsIgnoreCase("scene")))
+            {
+                flags |= IndexerFlags.Scene;
+            }
+
+            return flags;
+        }
+
         protected string TryGetTorznabAttribute(XElement item, string key, string defaultValue = "")
         {
             var attrElement = item.Elements(ns + "attr").FirstOrDefault(e => e.Attribute("name").Value.Equals(key, StringComparison.OrdinalIgnoreCase));
@@ -193,6 +252,13 @@ namespace NzbDrone.Core.Indexers.Torznab
             }
 
             return defaultValue;
+        }
+
+        protected float TryGetFloatTorznabAttribute(XElement item, string key, float defaultValue = 0)
+        {
+            var attr = TryGetTorznabAttribute(item, key, defaultValue.ToString());
+
+            return float.TryParse(attr, out var result) ? result : defaultValue;
         }
 
         protected List<string> TryGetMultipleTorznabAttributes(XElement item, string key)

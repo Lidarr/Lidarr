@@ -8,6 +8,7 @@ namespace NzbDrone.Core.CustomFormats
         public ParsedAlbumInfo AlbumInfo { get; set; }
         public Artist Artist { get; set; }
         public long Size { get; set; }
+        public IndexerFlags IndexerFlags { get; set; }
         public string Filename { get; set; }
 
         // public CustomFormatInput(ParsedEpisodeInfo episodeInfo, Series series)

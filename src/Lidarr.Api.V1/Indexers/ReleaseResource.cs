@@ -49,6 +49,7 @@ namespace Lidarr.Api.V1.Indexers
         public int? Seeders { get; set; }
         public int? Leechers { get; set; }
         public DownloadProtocol Protocol { get; set; }
+        public int IndexerFlags { get; set; }
 
         // Sent when queuing an unknown release
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
@@ -76,6 +77,7 @@ namespace Lidarr.Api.V1.Indexers
             var parsedAlbumInfo = model.RemoteAlbum.ParsedAlbumInfo;
             var remoteAlbum = model.RemoteAlbum;
             var torrentInfo = (model.RemoteAlbum.Release as TorrentInfo) ?? new TorrentInfo();
+            var indexerFlags = torrentInfo.IndexerFlags;
 
             // TODO: Clean this mess up. don't mix data from multiple classes, use sub-resources instead? (Got a huge Deja Vu, didn't we talk about this already once?)
             return new ReleaseResource
@@ -115,6 +117,7 @@ namespace Lidarr.Api.V1.Indexers
                 Seeders = torrentInfo.Seeders,
                 Leechers = (torrentInfo.Peers.HasValue && torrentInfo.Seeders.HasValue) ? (torrentInfo.Peers.Value - torrentInfo.Seeders.Value) : (int?)null,
                 Protocol = releaseInfo.DownloadProtocol,
+                IndexerFlags = (int)indexerFlags,
             };
         }
 
