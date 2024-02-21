@@ -65,7 +65,7 @@ namespace NzbDrone.Core.Indexers.Redacted
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                             PublishDate = torrent.Time.ToUniversalTime(),
-                            Scene = torrent.Scene
+                            IndexerFlags = GetIndexerFlags(torrent)
                         });
                     }
                 }
@@ -109,6 +109,23 @@ namespace NzbDrone.Core.Indexers.Redacted
             }
 
             return $"{title} [{string.Join(" / ", flags)}]";
+        }
+
+        private static IndexerFlags GetIndexerFlags(GazelleTorrent torrent)
+        {
+            IndexerFlags flags = 0;
+
+            if (torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsFreeload || torrent.IsPersonalFreeLeech)
+            {
+                flags |= IndexerFlags.Freeleech;
+            }
+
+            if (torrent.Scene)
+            {
+                flags |= IndexerFlags.Scene;
+            }
+
+            return flags;
         }
 
         private string GetDownloadUrl(int torrentId, bool canUseToken)

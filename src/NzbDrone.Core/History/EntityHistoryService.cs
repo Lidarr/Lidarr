@@ -166,6 +166,7 @@ namespace NzbDrone.Core.History
                 history.Data.Add("DownloadForced", (!message.Album.DownloadAllowed).ToString());
                 history.Data.Add("CustomFormatScore", message.Album.CustomFormatScore.ToString());
                 history.Data.Add("ReleaseSource", message.Album.ReleaseSource.ToString());
+                history.Data.Add("IndexerFlags", message.Album.Release.IndexerFlags.ToString());
 
                 if (!message.Album.ParsedAlbumInfo.ReleaseHash.IsNullOrWhiteSpace())
                 {
@@ -203,6 +204,8 @@ namespace NzbDrone.Core.History
 
                 history.Data.Add("StatusMessages", message.TrackedDownload.StatusMessages.ToJson());
                 history.Data.Add("ReleaseGroup", message.TrackedDownload?.RemoteAlbum?.ParsedAlbumInfo?.ReleaseGroup);
+                history.Data.Add("IndexerFlags", message.TrackedDownload?.RemoteAlbum?.Release?.IndexerFlags.ToString());
+
                 _historyRepository.Insert(history);
             }
         }
@@ -241,6 +244,7 @@ namespace NzbDrone.Core.History
                 history.Data.Add("DownloadClient", message.DownloadClientInfo?.Name);
                 history.Data.Add("ReleaseGroup", message.TrackInfo.ReleaseGroup);
                 history.Data.Add("Size", message.TrackInfo.Size.ToString());
+                history.Data.Add("IndexerFlags", message.ImportedTrack.IndexerFlags.ToString());
 
                 _historyRepository.Insert(history);
             }
@@ -324,6 +328,7 @@ namespace NzbDrone.Core.History
                 history.Data.Add("Reason", message.Reason.ToString());
                 history.Data.Add("ReleaseGroup", message.TrackFile.ReleaseGroup);
                 history.Data.Add("Size", message.TrackFile.Size.ToString());
+                history.Data.Add("IndexerFlags", message.TrackFile.IndexerFlags.ToString());
 
                 _historyRepository.Insert(history);
             }
@@ -351,6 +356,7 @@ namespace NzbDrone.Core.History
                 history.Data.Add("Path", path);
                 history.Data.Add("ReleaseGroup", message.TrackFile.ReleaseGroup);
                 history.Data.Add("Size", message.TrackFile.Size.ToString());
+                history.Data.Add("IndexerFlags", message.TrackFile.IndexerFlags.ToString());
 
                 _historyRepository.Insert(history);
             }

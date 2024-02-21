@@ -80,6 +80,7 @@ namespace Lidarr.Api.V1.ManualImport
                     Release = resource.AlbumReleaseId.HasValue ? _releaseService.GetRelease(resource.AlbumReleaseId.Value) : null,
                     Quality = resource.Quality,
                     ReleaseGroup = resource.ReleaseGroup,
+                    IndexerFlags = resource.IndexerFlags,
                     DownloadId = resource.DownloadId,
                     AdditionalFile = resource.AdditionalFile,
                     ReplaceExistingFiles = resource.ReplaceExistingFiles,

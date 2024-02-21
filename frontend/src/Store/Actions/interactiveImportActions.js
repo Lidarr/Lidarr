@@ -208,6 +208,7 @@ export const actionHandlers = handleThunks({
         trackIds: (item.tracks || []).map((e) => e.id),
         quality: item.quality,
         releaseGroup: item.releaseGroup,
+        indexerFlags: item.indexerFlags,
         downloadId: item.downloadId,
         additionalFile: item.additionalFile,
         replaceExistingFiles: item.replaceExistingFiles,

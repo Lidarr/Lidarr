@@ -13,6 +13,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
         public int AlbumReleaseId { get; set; }
         public List<int> TrackIds { get; set; }
         public QualityModel Quality { get; set; }
+        public int IndexerFlags { get; set; }
         public string DownloadId { get; set; }
         public bool DisableReleaseSwitching { get; set; }
 

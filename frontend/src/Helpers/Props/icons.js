@@ -60,6 +60,7 @@ import {
   faFileImport as fasFileImport,
   faFileInvoice as farFileInvoice,
   faFilter as fasFilter,
+  faFlag as fasFlag,
   faFolderOpen as fasFolderOpen,
   faForward as fasForward,
   faHeart as fasHeart,
@@ -158,6 +159,7 @@ export const FILE = farFile;
 export const FILE_IMPORT = fasFileImport;
 export const FILE_MISSING = fasFileCircleQuestion;
 export const FILTER = fasFilter;
+export const FLAG = fasFlag;
 export const FOLDER = farFolder;
 export const FOLDER_OPEN = fasFolderOpen;
 export const GROUP = farObjectGroup;

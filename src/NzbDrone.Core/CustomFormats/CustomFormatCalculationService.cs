@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -38,7 +39,8 @@ namespace NzbDrone.Core.CustomFormats
             {
                 AlbumInfo = remoteAlbum.ParsedAlbumInfo,
                 Artist = remoteAlbum.Artist,
-                Size = size
+                Size = size,
+                IndexerFlags = remoteAlbum.Release?.IndexerFlags ?? 0
             };
 
             return ParseCustomFormat(input);
@@ -70,7 +72,8 @@ namespace NzbDrone.Core.CustomFormats
             {
                 AlbumInfo = albumInfo,
                 Artist = artist,
-                Size = blocklist.Size ?? 0
+                Size = blocklist.Size ?? 0,
+                IndexerFlags = blocklist.IndexerFlags
             };
 
             return ParseCustomFormat(input);
@@ -81,6 +84,7 @@ namespace NzbDrone.Core.CustomFormats
             var parsed = Parser.Parser.ParseAlbumTitle(history.SourceTitle);
 
             long.TryParse(history.Data.GetValueOrDefault("size"), out var size);
+            Enum.TryParse(history.Data.GetValueOrDefault("indexerFlags"), true, out IndexerFlags indexerFlags);
 
             var albumInfo = new ParsedAlbumInfo
             {
@@ -94,7 +98,8 @@ namespace NzbDrone.Core.CustomFormats
             {
                 AlbumInfo = albumInfo,
                 Artist = artist,
-                Size = size
+                Size = size,
+                IndexerFlags = indexerFlags
             };
 
             return ParseCustomFormat(input);
@@ -115,7 +120,8 @@ namespace NzbDrone.Core.CustomFormats
                 AlbumInfo = albumInfo,
                 Artist = localTrack.Artist,
                 Size = localTrack.Size,
-                Filename = Path.GetFileName(localTrack.Path)
+                Filename = Path.GetFileName(localTrack.Path),
+                IndexerFlags = localTrack.IndexerFlags,
             };
 
             return ParseCustomFormat(input);
@@ -182,6 +188,7 @@ namespace NzbDrone.Core.CustomFormats
                 AlbumInfo = albumInfo,
                 Artist = artist,
                 Size = trackFile.Size,
+                IndexerFlags = trackFile.IndexerFlags,
                 Filename = Path.GetFileName(trackFile.Path)
             };
 

@@ -27,6 +27,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
         public string ReleaseGroup { get; set; }
         public string DownloadId { get; set; }
         public List<CustomFormat> CustomFormats { get; set; }
+        public int IndexerFlags { get; set; }
         public IEnumerable<Rejection> Rejections { get; set; }
         public ParsedTrackInfo Tags { get; set; }
         public bool AdditionalFile { get; set; }

@@ -63,7 +63,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                             title += " [Cue]";
                         }
 
-                        torrentInfos.Add(new GazelleInfo()
+                        torrentInfos.Add(new GazelleInfo
                         {
                             Guid = string.Format("Gazelle-{0}", id),
                             Artist = artist,
@@ -79,7 +79,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                             PublishDate = torrent.Time.ToUniversalTime(),
-                            Scene = torrent.Scene,
+                            IndexerFlags = GetIndexerFlags(torrent)
                         });
                     }
                 }
@@ -90,6 +90,23 @@ namespace NzbDrone.Core.Indexers.Gazelle
                 torrentInfos
                     .OrderByDescending(o => o.PublishDate)
                     .ToArray();
+        }
+
+        private static IndexerFlags GetIndexerFlags(GazelleTorrent torrent)
+        {
+            IndexerFlags flags = 0;
+
+            if (torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsFreeload || torrent.IsPersonalFreeLeech)
+            {
+                flags |= IndexerFlags.Freeleech;
+            }
+
+            if (torrent.Scene)
+            {
+                flags |= IndexerFlags.Scene;
+            }
+
+            return flags;
         }
 
         private string GetDownloadUrl(int torrentId)

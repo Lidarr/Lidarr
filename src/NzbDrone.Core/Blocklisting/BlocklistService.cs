@@ -188,6 +188,11 @@ namespace NzbDrone.Core.Blocklisting
                 TorrentInfoHash = message.Data.GetValueOrDefault("torrentInfoHash")
             };
 
+            if (Enum.TryParse(message.Data.GetValueOrDefault("indexerFlags"), true, out IndexerFlags flags))
+            {
+                blocklist.IndexerFlags = flags;
+            }
+
             _blocklistRepository.Insert(blocklist);
         }
 

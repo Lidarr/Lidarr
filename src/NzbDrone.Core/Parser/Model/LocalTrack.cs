@@ -26,6 +26,7 @@ namespace NzbDrone.Core.Parser.Model
         public List<Track> Tracks { get; set; }
         public Distance Distance { get; set; }
         public QualityModel Quality { get; set; }
+        public IndexerFlags IndexerFlags { get; set; }
         public bool ExistingFile { get; set; }
         public bool AdditionalFile { get; set; }
         public bool SceneSource { get; set; }

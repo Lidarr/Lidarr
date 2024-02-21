@@ -293,6 +293,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             }
 
             item.Quality = decision.Item.Quality;
+            item.IndexerFlags = (int)decision.Item.IndexerFlags;
             item.Size = _diskProvider.GetFileSize(decision.Item.Path);
             item.Rejections = decision.Rejections;
             item.Tags = decision.Item.FileTrackInfo;
@@ -344,6 +345,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                         Size = fileInfo.Length,
                         Modified = fileInfo.LastWriteTimeUtc,
                         Quality = file.Quality,
+                        IndexerFlags = (IndexerFlags)file.IndexerFlags,
                         Artist = artist,
                         Album = album,
                         Release = release

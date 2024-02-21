@@ -11,6 +11,7 @@ import downloadClients from './Settings/downloadClients';
 import general from './Settings/general';
 import importListExclusions from './Settings/importListExclusions';
 import importLists from './Settings/importLists';
+import indexerFlags from './Settings/indexerFlags';
 import indexerOptions from './Settings/indexerOptions';
 import indexers from './Settings/indexers';
 import languages from './Settings/languages';
@@ -38,6 +39,7 @@ export * from './Settings/downloadClientOptions';
 export * from './Settings/general';
 export * from './Settings/importLists';
 export * from './Settings/importListExclusions';
+export * from './Settings/indexerFlags';
 export * from './Settings/indexerOptions';
 export * from './Settings/indexers';
 export * from './Settings/languages';
@@ -73,6 +75,7 @@ export const defaultState = {
   downloadClients: downloadClients.defaultState,
   downloadClientOptions: downloadClientOptions.defaultState,
   general: general.defaultState,
+  indexerFlags: indexerFlags.defaultState,
   indexerOptions: indexerOptions.defaultState,
   indexers: indexers.defaultState,
   importLists: importLists.defaultState,
@@ -119,6 +122,7 @@ export const actionHandlers = handleThunks({
   ...downloadClients.actionHandlers,
   ...downloadClientOptions.actionHandlers,
   ...general.actionHandlers,
+  ...indexerFlags.actionHandlers,
   ...indexerOptions.actionHandlers,
   ...indexers.actionHandlers,
   ...importLists.actionHandlers,
@@ -156,6 +160,7 @@ export const reducers = createHandleActions({
   ...downloadClients.reducers,
   ...downloadClientOptions.reducers,
   ...general.reducers,
+  ...indexerFlags.reducers,
   ...indexerOptions.reducers,
   ...indexers.reducers,
   ...importLists.reducers,

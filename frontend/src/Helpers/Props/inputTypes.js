@@ -15,6 +15,7 @@ export const QUALITY_PROFILE_SELECT = 'qualityProfileSelect';
 export const METADATA_PROFILE_SELECT = 'metadataProfileSelect';
 export const ALBUM_RELEASE_SELECT = 'albumReleaseSelect';
 export const INDEXER_SELECT = 'indexerSelect';
+export const INDEXER_FLAGS_SELECT = 'indexerFlagsSelect';
 export const DOWNLOAD_CLIENT_SELECT = 'downloadClientSelect';
 export const ROOT_FOLDER_SELECT = 'rootFolderSelect';
 export const SELECT = 'select';

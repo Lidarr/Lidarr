@@ -12,6 +12,7 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Music.Events;
 using NzbDrone.Core.Parser;
+using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Download.TrackedDownloads
 {
@@ -144,12 +145,11 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                     var firstHistoryItem = historyItems.First();
                     var grabbedEvent = historyItems.FirstOrDefault(v => v.EventType == EntityHistoryEventType.Grabbed);
 
-                    trackedDownload.Indexer = grabbedEvent?.Data["indexer"];
+                    trackedDownload.Indexer = grabbedEvent?.Data?.GetValueOrDefault("indexer");
                     trackedDownload.Added = grabbedEvent?.Date;
 
                     if (parsedAlbumInfo == null ||
-                        trackedDownload.RemoteAlbum == null ||
-                        trackedDownload.RemoteAlbum.Artist == null ||
+                        trackedDownload.RemoteAlbum?.Artist == null ||
                         trackedDownload.RemoteAlbum.Albums.Empty())
                     {
                         // Try parsing the original source title and if that fails, try parsing it as a special
@@ -180,6 +180,13 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                                         .Distinct());
                             }
                         }
+                    }
+
+                    if (trackedDownload.RemoteAlbum != null &&
+                        Enum.TryParse(grabbedEvent?.Data?.GetValueOrDefault("indexerFlags"), true, out IndexerFlags flags))
+                    {
+                        trackedDownload.RemoteAlbum.Release ??= new ReleaseInfo();
+                        trackedDownload.RemoteAlbum.Release.IndexerFlags = flags;
                     }
                 }
 

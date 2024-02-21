@@ -4,6 +4,7 @@ interface CssExports {
   'audio': string;
   'customFormatScore': string;
   'duration': string;
+  'indexerFlags': string;
   'monitored': string;
   'size': string;
   'status': string;

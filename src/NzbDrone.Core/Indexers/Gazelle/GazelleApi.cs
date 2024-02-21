@@ -34,6 +34,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public string Leechers { get; set; }
         public bool IsFreeLeech { get; set; }
         public bool IsNeutralLeech { get; set; }
+        public bool IsFreeload { get; set; }
         public bool IsPersonalFreeLeech { get; set; }
         public bool CanUseToken { get; set; }
     }
