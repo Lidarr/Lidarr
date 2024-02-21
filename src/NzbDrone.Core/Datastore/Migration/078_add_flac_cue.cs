@@ -3,7 +3,7 @@ using NzbDrone.Core.Datastore.Migration.Framework;
 
 namespace NzbDrone.Core.Datastore.Migration
 {
-    [Migration(076)]
+    [Migration(078)]
     public class add_flac_cue : NzbDroneMigrationBase
     {
         protected override void MainDbUpgrade()
