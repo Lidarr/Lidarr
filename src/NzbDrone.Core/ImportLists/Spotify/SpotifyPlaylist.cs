@@ -30,9 +30,8 @@ namespace NzbDrone.Core.ImportLists.Spotify
             _localizationService = localizationService;
         }
 
+        private const string LIKED_SONGS_ID = "LikedSongs";
         public override string Name => "Spotify Playlists";
-
-        private const string LIKEDSONGSID = "LikedSongs";
 
         private readonly ILocalizationService _localizationService;
 
@@ -49,7 +48,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
             Paging<PlaylistTrack> playlistTracks;
 
-            if (playlistId.Equals(LIKEDSONGSID))
+            if (playlistId.Equals(LIKED_SONGS_ID))
             {
                 var savedTracks = _spotifyProxy.GetSavedTracks(this, api);
                 playlistTracks = new Paging<PlaylistTrack>
@@ -167,7 +166,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
                                     {
                                         id = p.Id,
                                         name = p.Name
-                                    }).Prepend(new { id = LIKEDSONGSID, name = _localizationService.GetLocalizedString("LikedSongs") })
+                                    }).Prepend(new { id = LIKED_SONGS_ID, name = _localizationService.GetLocalizedString("LikedSongs") })
                             }
                         };
                     }
