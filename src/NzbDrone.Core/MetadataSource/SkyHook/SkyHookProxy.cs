@@ -233,7 +233,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             catch (WebException ex)
             {
                 _logger.Warn(ex);
-                throw new SkyHookException("Search for '{0}' failed. Unable to communicate with SkyHook.", ex, title, ex.Message);
+                throw new SkyHookException("Search for '{0}' failed. Unable to communicate with LidarrAPI.", ex, title, ex.Message);
             }
             catch (Exception ex)
             {
