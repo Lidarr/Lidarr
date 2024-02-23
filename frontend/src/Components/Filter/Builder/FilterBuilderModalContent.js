@@ -1,3 +1,4 @@
+import { maxBy } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import FormInputGroup from 'Components/Form/FormInputGroup';
@@ -50,7 +51,7 @@ class FilterBuilderModalContent extends Component {
       if (id) {
         dispatchSetFilter({ selectedFilterKey: id });
       } else {
-        const last = customFilters[customFilters.length -1];
+        const last = maxBy(customFilters, 'id');
         dispatchSetFilter({ selectedFilterKey: last.id });
       }
 
@@ -108,7 +109,7 @@ class FilterBuilderModalContent extends Component {
       this.setState({
         labelErrors: [
           {
-            message: 'Label is required'
+            message: translate('LabelIsRequired')
           }
         ]
       });
@@ -146,7 +147,7 @@ class FilterBuilderModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Custom Filter
+          {translate('CustomFilter')}
         </ModalHeader>
 
         <ModalBody>
@@ -166,7 +167,9 @@ class FilterBuilderModalContent extends Component {
             </div>
           </div>
 
-          <div className={styles.label}>{translate('Filters')}</div>
+          <div className={styles.label}>
+            {translate('Filters')}
+          </div>
 
           <div className={styles.rows}>
             {
