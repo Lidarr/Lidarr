@@ -881,7 +881,7 @@
     "ArtistIndexFooterDownloading": "Scaricando",
     "KeyboardShortcuts": "Scorciatoie Tastiera",
     "Links": "Collegamenti",
-    "RegularExpressionsCanBeTested": "Le espressioni regolari possono essere testate [qui](http://regexstorm.net/tester).",
+    "RegularExpressionsCanBeTested": "Le espressioni regolari possono essere testate [qui]({url}).",
     "AddListExclusion": "Aggiungi elenco esclusioni",
     "AddToDownloadQueue": "Aggiungi alla coda di download",
     "AddedToDownloadQueue": "Aggiunto alla coda di download",

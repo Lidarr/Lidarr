@@ -905,7 +905,7 @@
     "ChangeCategory": "Canvia categoria",
     "ChangeCategoryHint": "Canvia la baixada a la \"Categoria post-importació\" des del client de descàrrega",
     "ChangeCategoryMultipleHint": "Canvia les baixades a la \"Categoria post-importació\" des del client de descàrrega",
-    "RegularExpressionsCanBeTested": "Les expressions regulars es poden provar [aquí](http://regexstorm.net/tester).",
+    "RegularExpressionsCanBeTested": "Les expressions regulars es poden provar [aquí]({url}).",
     "CustomFormatsSpecificationRegularExpression": "Expressió regular",
     "BlocklistMultipleOnlyHint": "Afegeix a la llista de bloqueig sense cercar substituts",
     "BlocklistOnly": "Sols afegir a la llista de bloqueig",
