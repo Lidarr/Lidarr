@@ -44,7 +44,7 @@ namespace NzbDrone.Common.Instrumentation
                 RegisterDebugger();
             }
 
-            RegisterSentry(updateApp);
+            RegisterSentry(updateApp, appFolderInfo);
 
             if (updateApp)
             {
@@ -65,7 +65,7 @@ namespace NzbDrone.Common.Instrumentation
             LogManager.ReconfigExistingLoggers();
         }
 
-        private static void RegisterSentry(bool updateClient)
+        private static void RegisterSentry(bool updateClient, IAppFolderInfo appFolderInfo)
         {
             string dsn;
 
@@ -80,7 +80,7 @@ namespace NzbDrone.Common.Instrumentation
                     : "https://0522924d625c497f86fc2a1b22aaf21d@sentry.servarr.com/16";
             }
 
-            var target = new SentryTarget(dsn)
+            var target = new SentryTarget(dsn, appFolderInfo)
             {
                 Name = "sentryTarget",
                 Layout = "${message}"
