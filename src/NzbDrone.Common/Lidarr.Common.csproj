@@ -12,7 +12,7 @@
     <PackageReference Include="NLog" Version="5.3.4" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.2" />
     <PackageReference Include="NLog.Layouts.ClefJsonLayout" Version="1.0.2" />
-    <PackageReference Include="Sentry" Version="3.25.0" />
+    <PackageReference Include="Sentry" Version="4.0.2" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="System.IO.Abstractions" Version="17.0.24" />
     <PackageReference Include="System.Text.Json" Version="6.0.10" />
