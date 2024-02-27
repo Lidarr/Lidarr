@@ -785,7 +785,7 @@
     "Clone": "Luk",
     "AddReleaseProfile": "Rediger forsinkelsesprofil",
     "AddDelayProfileError": "Kan ikke tilføje en ny forsinkelsesprofil. Prøv igen.",
-    "RegularExpressionsCanBeTested": "Regulære udtryk kan testes [her](http://regexstorm.net/tester).",
+    "RegularExpressionsCanBeTested": "Regulære udtryk kan testes [her]({url}).",
     "AddToDownloadQueue": "Føj til downloadkø",
     "AddedToDownloadQueue": "Føjet til downloadkø"
 }

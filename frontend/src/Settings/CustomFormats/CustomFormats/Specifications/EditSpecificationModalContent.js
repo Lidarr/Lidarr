@@ -7,8 +7,8 @@ import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
 import ProviderFieldFormGroup from 'Components/Form/ProviderFieldFormGroup';
 import Button from 'Components/Link/Button';
-import Link from 'Components/Link/Link';
 import SpinnerErrorButton from 'Components/Link/SpinnerErrorButton';
+import InlineMarkdown from 'Components/Markdown/InlineMarkdown';
 import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
@@ -52,12 +52,13 @@ function EditSpecificationModalContent(props) {
             fields && fields.some((x) => x.label === translate('CustomFormatsSpecificationRegularExpression')) &&
               <Alert kind={kinds.INFO}>
                 <div>
-                  <div dangerouslySetInnerHTML={{ __html: 'This condition matches using Regular Expressions. Note that the characters <code>\\^$.|?*+()[{</code> have special meanings and need escaping with a <code>\\</code>' }} />
-                  {'More details'} <Link to="https://www.regular-expressions.info/tutorial.html">{'Here'}</Link>
+                  <InlineMarkdown data={translate('ConditionUsingRegularExpressions')} />
                 </div>
                 <div>
-                  {'Regular expressions can be tested '}
-                  <Link to="http://regexstorm.net/tester">Here</Link>
+                  <InlineMarkdown data={translate('RegularExpressionsTutorialLink', { url: 'https://www.regular-expressions.info/tutorial.html' })} />
+                </div>
+                <div>
+                  <InlineMarkdown data={translate('RegularExpressionsCanBeTested', { url: 'http://regexstorm.net/tester' })} />
                 </div>
               </Alert>
           }

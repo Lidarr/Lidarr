@@ -840,7 +840,7 @@
     "FormatAgeMinutes": "minuten",
     "ClearBlocklistMessageText": "Weet je zeker dat je de blokkeerlijst wil legen?",
     "ChangeCategory": "Verander categorie",
-    "RegularExpressionsCanBeTested": "Reguliere expressies kunnen [hier] worden getest (http:://regexstorm.net/tester).",
+    "RegularExpressionsCanBeTested": "Reguliere expressies kunnen [hier] worden getest ({url}).",
     "AutomaticUpdatesDisabledDocker": "Automatische updates zijn niet ondersteund wanneer je het docker update mechanisme gebruikt. Je dient de container image up te daten buiten {appName} om of een script te gebruiken",
     "ChownGroup": "chown groep",
     "AddAlbumWithTitle": "Toevoegen",

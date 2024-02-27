@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import Alert from 'Components/Alert';
 import PathInput from 'Components/Form/PathInput';
 import Button from 'Components/Link/Button';
-import Link from 'Components/Link/Link';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
+import InlineMarkdown from 'Components/Markdown/InlineMarkdown';
 import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
@@ -117,7 +117,7 @@ class FileBrowserModalContent extends Component {
                 className={styles.mappedDrivesWarning}
                 kind={kinds.WARNING}
               >
-                Mapped network drives are not available when running as a Windows Service, see the <Link className={styles.faqLink} to="https://wiki.servarr.com/lidarr/faq">FAQ</Link> for more information.
+                <InlineMarkdown data={translate('MappedNetworkDrivesWindowsService', { url: 'https://wiki.servarr.com/lidarr/faq#why-cant-lidarr-see-my-files-on-a-remote-server' })} />
               </Alert>
           }
 
