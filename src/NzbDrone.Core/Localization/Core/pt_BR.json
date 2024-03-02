@@ -1154,8 +1154,8 @@
     "AutoRedownloadFailedFromInteractiveSearch": "Falha no Novo Download da Pesquisa Interativa",
     "AutoRedownloadFailedFromInteractiveSearchHelpText": "Procure e tente baixar automaticamente uma versão diferente quando a versão com falha for obtida da pesquisa interativa",
     "DownloadClientAriaSettingsDirectoryHelpText": "Local opcional para colocar downloads, deixe em branco para usar o local padrão do Aria2",
-    "IndexerSettingsRejectBlocklistedTorrentHashes": "Rejeitar Torrent com Hashes na Lista de Bloqueio Enquanto Capturando",
-    "IndexerSettingsRejectBlocklistedTorrentHashesHelpText": "se um torrent for bloqueado por hash, ele pode não ser rejeitado corretamente durante o RSS/Pesquisa de alguns indexadores. Ativar isso permitirá que ele seja rejeitado após o torrent ser capturado, mas antes de ser enviado ao cliente.",
+    "IndexerSettingsRejectBlocklistedTorrentHashes": "Rejeitar Hashes de Torrent Bloqueados Durante a Captura",
+    "IndexerSettingsRejectBlocklistedTorrentHashesHelpText": "Se um torrent for bloqueado por hash, ele pode não ser rejeitado corretamente durante o RSS/Pesquisa de alguns indexadores. Ativar isso permitirá que ele seja rejeitado após o torrent ser capturado, mas antes de ser enviado ao cliente.",
     "TrackFileDeletedTooltip": "Arquivo da faixa excluído",
     "TrackFileMissingTooltip": "Arquivo da faixa ausente",
     "TrackFileRenamedTooltip": "Arquivo da faixa renomeado",
@@ -1243,5 +1243,7 @@
     "FormatShortTimeSpanMinutes": "{minutes} minuto(s)",
     "MonitorAllAlbums": "Todos os Álbuns",
     "MonitorMissingAlbums": "Álbuns Ausentes",
-    "Tomorrow": "Amanhã"
+    "Tomorrow": "Amanhã",
+    "CustomFilter": "Filtro Personalizado",
+    "LabelIsRequired": "Rótulo é requerido"
 }
