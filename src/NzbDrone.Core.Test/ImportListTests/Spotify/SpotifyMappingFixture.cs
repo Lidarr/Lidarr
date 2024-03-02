@@ -80,6 +80,7 @@ namespace NzbDrone.Core.Test.ImportListTests
         }
 
         [Test]
+        [Ignore("Pending mapping fixes", Until = "2024-03-20 00:00:00Z")]
         public void map_artist_should_work()
         {
             UseRealHttp();
@@ -158,7 +159,7 @@ namespace NzbDrone.Core.Test.ImportListTests
         }
 
         [Test]
-        [Ignore("Pending mapping fixes", Until = "2024-02-20 00:00:00Z")]
+        [Ignore("Pending mapping fixes", Until = "2024-03-20 00:00:00Z")]
         public void map_album_should_work()
         {
             UseRealHttp();
