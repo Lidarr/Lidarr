@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Test.ParserTests
         [TestCase("[TR24][OF] Good Charlotte - Generation Rx - 2018", null)]
         [TestCase("The.Good.Series.S05E03.Series.of.Intelligence.1080p.10bit.AMZN.WEB-DL.DDP5.1.HEVC-Vyndros", "Vyndros")]
         [TestCase("Artist.Title-Album.Title.1080p.DSNP.WEB-DL.DDP2.0.H.264-VARYG", "VARYG")]
+        [TestCase("Artist Title - Album Title (Showtime) (1080p.BD.DD5.1.x265-TheSickle[TAoE])", "TheSickle")]
 
         // [TestCase("", "")]
         public void should_parse_release_group(string title, string expected)
