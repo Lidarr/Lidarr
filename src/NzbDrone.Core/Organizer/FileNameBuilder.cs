@@ -380,7 +380,7 @@ namespace NzbDrone.Core.Organizer
         {
             tokenHandlers["{Original Title}"] = m => GetOriginalTitle(trackFile);
             tokenHandlers["{Original Filename}"] = m => GetOriginalFileName(trackFile);
-            tokenHandlers["{Release Group}"] = m => Truncate(trackFile.ReleaseGroup, m.CustomFormat) ?? m.DefaultValue("Lidarr");
+            tokenHandlers["{Release Group}"] = m => trackFile.ReleaseGroup.IsNullOrWhiteSpace() ? m.DefaultValue("Lidarr") : Truncate(trackFile.ReleaseGroup, m.CustomFormat);
         }
 
         private void AddQualityTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, Artist artist, TrackFile trackFile)
@@ -739,6 +739,11 @@ namespace NzbDrone.Core.Organizer
 
         private string Truncate(string input, string formatter)
         {
+            if (input.IsNullOrWhiteSpace())
+            {
+                return string.Empty;
+            }
+
             var maxLength = GetMaxLengthFromFormatter(formatter);
 
             if (maxLength == 0 || input.Length <= Math.Abs(maxLength))
