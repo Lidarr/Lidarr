@@ -1114,5 +1114,6 @@
     "RenameFiles": "Fájlok átnevezése",
     "RemoveTagsAutomatically": "Címkék automatikus eltávolítása",
     "RemoveTagsAutomaticallyHelpText": "Ha a feltételek nem teljesülnek, automatikusan távolítsa el a címkéket",
-    "PasswordConfirmation": "Jelszó megerősítése"
+    "PasswordConfirmation": "Jelszó megerősítése",
+    "FormatRuntimeMinutes": "{minutes} p"
 }
