@@ -700,7 +700,7 @@
     "AuthBasic": "Temel (Tarayıcı Açılır Penceresi)",
     "DeleteSpecificationHelpText": "Kalite profilini silmek istediğinizden emin misiniz {0}",
     "AutoTaggingNegateHelpText": "İşaretlenirse, {implementationName} koşulu eşleştiğinde otomatik etiketleme kuralı uygulanmayacaktır.",
-    "ConditionUsingRegularExpressions": "Bu koşul Normal İfadeler kullanılarak eşleşir. `\\^$.|?*+()[{` karakterlerinin özel anlamlara sahip olduğunu ve `\\` ile kaçılması gerektiğini unutmayın.",
+    "ConditionUsingRegularExpressions": "Bu koşul Normal İfadeler kullanılarak eşleşir. `\\^$.|?*+()[{` karakterlerinin özel anlamlara sahip olduğunu ve `\\` ile kaçılması gerektiğini unutmayın",
     "Connection": "Bağlantılar",
     "RenameFiles": "Yeniden Adlandır",
     "Small": "Küçük",

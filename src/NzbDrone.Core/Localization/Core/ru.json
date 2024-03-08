@@ -215,7 +215,7 @@
     "UnableToLoadDelayProfiles": "Невозможно загрузить профили задержки",
     "UnableToLoadDownloadClientOptions": "Не удалось загрузить параметры клиента загрузки",
     "AddingTag": "Добавить ярлык",
-    "AddListExclusion": "Добавить исключения списка",
+    "AddListExclusion": "Добавить исключение из списка",
     "ApplyTags": "Применить тэги",
     "ApplyTagsHelpTextReplace": "Заменить: заменить теги введенными тегами (оставьте поле пустым, чтобы удалить все теги)",
     "ArtistAlbumClickToChangeTrack": "Нажать для смены фильма",
@@ -759,5 +759,7 @@
     "OnHealthRestored": "При восстановлении работоспособности",
     "AllResultsAreHiddenByTheAppliedFilter": "Все результаты скрыты фильтром",
     "CustomFormatsSettings": "Настройки пользовательских форматов",
-    "CustomFormatsSpecificationRegularExpression": "Регулярное выражение"
+    "CustomFormatsSpecificationRegularExpression": "Регулярное выражение",
+    "AddAutoTag": "Добавить автоматический тег",
+    "AddAutoTagError": "Не удалось добавить новый авто тег, пожалуйста повторите попытку."
 }
