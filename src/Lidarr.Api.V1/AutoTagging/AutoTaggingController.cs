@@ -11,7 +11,7 @@ using NzbDrone.Core.AutoTagging;
 using NzbDrone.Core.AutoTagging.Specifications;
 using NzbDrone.Core.Validation;
 
-namespace Lidarr.Api.V3.AutoTagging
+namespace Lidarr.Api.V1.AutoTagging
 {
     [V1ApiController]
     public class AutoTaggingController : RestController<AutoTaggingResource>

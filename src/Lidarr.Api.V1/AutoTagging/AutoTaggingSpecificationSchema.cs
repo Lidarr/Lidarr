@@ -3,7 +3,7 @@ using Lidarr.Http.ClientSchema;
 using Lidarr.Http.REST;
 using NzbDrone.Core.AutoTagging.Specifications;
 
-namespace Lidarr.Api.V3.AutoTagging
+namespace Lidarr.Api.V1.AutoTagging
 {
     public class AutoTaggingSpecificationSchema : RestResource
     {
