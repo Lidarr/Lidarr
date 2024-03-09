@@ -203,7 +203,6 @@
     "SSLPort": "SSL Port",
     "SupportsSearchvalueSearchIsNotSupportedWithThisIndexer": "Der Indexer unterstützt keine Suchen",
     "GrabRelease": "Release erfassen",
-    "GrabReleaseMessageText": "Das Release konnte keinem Film zugeordnet werden. Ein automatischer Import wird nicht möglich sein. Trotzdem '{0}' erfassen?",
     "GrabSelected": "Auswahl erfassen",
     "Group": "Gruppe",
     "SupportsSearchvalueWillBeUsedWhenAutomaticSearchesArePerformedViaTheUIOrByLidarr": "Wird für automatische Suchen genutzt die vom Benutzer oder von {appName} gestartet werden",

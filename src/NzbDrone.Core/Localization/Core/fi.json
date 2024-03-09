@@ -46,7 +46,6 @@
     "EnableCompletedDownloadHandlingHelpText": "Tuo valmistuneet lataukset lataustyökalusta automaattisesti.",
     "Indexer": "Tietolähde",
     "UnableToAddANewDownloadClientPleaseTryAgain": "Uuden lataustyökalun lisäys epäonnistui. Yitä uudelleen.",
-    "GrabReleaseMessageText": "{appName} ei tunnista mille esittäjälle ja albumille julkaisu kuuluu, eikä sen automaattinen tuonti onnistu. Haluatko kaapata julkaisun \"{0}\"?",
     "CalendarWeekColumnHeaderHelpText": "Näkyy jokaisen sarakkeen yläpuolella käytettäessä viikkonäkymää.",
     "ShownAboveEachColumnWhenWeekIsTheActiveView": "Näkyy jokaisen sarakkeen yläpuolella käytettäessä viikkonäkymää.",
     "NotificationTriggers": "Laukaisimet",

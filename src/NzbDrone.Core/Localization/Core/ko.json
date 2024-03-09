@@ -126,7 +126,6 @@
     "GoToInterp": "{0}로 이동",
     "Grab": "붙잡다",
     "GrabRelease": "그랩 릴리스",
-    "GrabReleaseMessageText": "Radarr는이 릴리스의 영화를 확인할 수 없습니다. Radarr는이 릴리스를 자동으로 가져 오지 못할 수 있습니다. '{0}'을 (를) 잡으시겠습니까?",
     "GrabSelected": "선택한 항목 잡아",
     "Group": "그룹",
     "HasPendingChangesNoChanges": "변경 사항 없음",

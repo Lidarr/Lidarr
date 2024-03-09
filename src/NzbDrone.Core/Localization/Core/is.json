@@ -118,7 +118,6 @@
     "Global": "Alheimslegt",
     "GoToInterp": "Farðu í {0}",
     "Grab": "Grípa",
-    "GrabReleaseMessageText": "{appName} gat ekki ákvarðað fyrir hvaða kvikmynd þessi útgáfa var gerð. {appName} gæti hugsanlega ekki flutt þessa útgáfu sjálfkrafa inn. Viltu grípa '{0}'?",
     "GrabSelected": "Grípa valið",
     "Group": "Hópur",
     "HasPendingChangesNoChanges": "Engar breytingar",

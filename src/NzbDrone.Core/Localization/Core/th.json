@@ -353,7 +353,6 @@
     "GoToInterp": "ไปที่ {0}",
     "Grab": "คว้า",
     "GrabRelease": "คว้ารีลีส",
-    "GrabReleaseMessageText": "{appName} ไม่สามารถระบุได้ว่าภาพยนตร์เรื่องนี้เป็นภาพยนตร์เรื่องใด {appName} อาจไม่สามารถนำเข้ารุ่นนี้โดยอัตโนมัติได้ คุณต้องการคว้า \"{0}\" ไหม",
     "GrabSelected": "Grab Selected",
     "Group": "กลุ่ม",
     "HasPendingChangesNoChanges": "ไม่มีการเปลี่ยนแปลง",

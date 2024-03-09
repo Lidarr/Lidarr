@@ -300,7 +300,6 @@
     "ForMoreInformationOnTheIndividualIndexersClickOnTheInfoButtons": "Per obtenir més informació sobre els indexadors individuals, feu clic als botons d'informació.",
     "Grab": "Captura",
     "GrabRelease": "Captura novetat",
-    "GrabReleaseMessageText": "{appName} no ha pogut determinar per a quina pel·lícula era aquest llançament. És possible que {appName} no pugui importar automàticament aquesta versió. Voleu capturar \"{0}\"?",
     "GrabSelected": "Captura sel·leccionada",
     "Group": "Grup",
     "History": "Història",

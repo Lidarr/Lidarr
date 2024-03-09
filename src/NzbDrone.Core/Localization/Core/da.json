@@ -341,7 +341,6 @@
     "GeneralSettings": "Generelle indstillinger",
     "Global": "Global",
     "GoToInterp": "Gå til {0}",
-    "GrabReleaseMessageText": "{appName} var ikke i stand til at bestemme, hvilken film denne udgivelse var til. {appName} kan muligvis ikke automatisk importere denne udgivelse. Vil du hente '{0}'?",
     "GrabSelected": "Greb Valgt",
     "Group": "Gruppe",
     "HasPendingChangesNoChanges": "Ingen ændringer",

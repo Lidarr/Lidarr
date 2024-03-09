@@ -153,7 +153,6 @@
     "GoToInterp": "Vai a {0}",
     "Grab": "Preleva",
     "GrabRelease": "Preleva Release",
-    "GrabReleaseMessageText": "{appName} non è stato in grado di determinare a quale film si riferisce questa release. {appName} potrebbe non essere in grado di importarla automaticamente. Vuoi catturare '{0}'?",
     "GrabSelected": "Recupera selezione",
     "Group": "Gruppo",
     "HasPendingChangesNoChanges": "Nessuna Modifica",

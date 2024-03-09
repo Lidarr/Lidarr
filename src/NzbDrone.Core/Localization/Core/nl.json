@@ -95,7 +95,6 @@
     "GoToInterp": "Ga naar {0}",
     "Grab": "Ophalen",
     "GrabRelease": "Uitgave Ophalen",
-    "GrabReleaseMessageText": "{appName} was niet in staat om deze uitgave aan een film te koppelen. {appName} zal waarschijnlijk deze uitgave niet automatisch kunnen importeren. Wilt u '{0}' ophalen?",
     "Group": "Groep",
     "HasPendingChangesNoChanges": "Geen Wijzigingen",
     "HasPendingChangesSaveChanges": "Wijzigingen Opslaan",

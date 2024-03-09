@@ -19,7 +19,6 @@
     "ExistingAlbums": "Existerande Albums",
     "ExpandItemsByDefault": "Expandera Saker som Standard",
     "ForMoreInformationOnTheIndividualDownloadClientsClickOnTheInfoButtons": "För mer information om individuella nedladdningsklienter, klicka på informationsknappen.",
-    "GrabReleaseMessageText": "{appName} kunde inte avgöra vilken artist och album denna utgåva tillhör. {appName} kanske inte kan importera den här utgåvan automatiskt. Vill du ta hämta \"{0}\"?",
     "Global": "Global",
     "GoToArtistListing": "Gå till artistlista",
     "GoToInterp": "Gå till {0}",

@@ -158,7 +158,6 @@
     "DownloadFailedCheckDownloadClientForMoreDetails": "Stahování se nezdařilo: pro více podrobností zkontrolujte stahovacího klienta",
     "DownloadPropersAndRepacksHelpTexts1": "Zda se má automaticky upgradovat na Propers / Repacks",
     "ForMoreInformationOnTheIndividualListsClickOnTheInfoButtons": "Další informace o jednotlivých seznamech importů získáte kliknutím na informační tlačítka.",
-    "GrabReleaseMessageText": "{appName} nebyl schopen určit, pro který film je toto vydání určeno. {appName} nemusí být schopen toto vydání automaticky importovat. Chcete chytit „{0}“?",
     "HasPendingChangesSaveChanges": "Uložit změny",
     "IgnoredHelpText": "Vydání bude odmítnuto, pokud obsahuje jeden nebo více výrazů (nerozlišují se malá a velká písmena)",
     "LidarrSupportsAnyIndexerThatUsesTheNewznabStandardAsWellAsOtherIndexersListedBelow": "{appName} podporuje jakýkoli indexer, který používá standard Newznab, stejně jako další indexery uvedené níže.",

@@ -410,7 +410,6 @@
     "GoToInterp": "跳转到 {0}",
     "Grab": "抓取",
     "GrabRelease": "抓取版本",
-    "GrabReleaseMessageText": "{appName}无法确定这个发布版本是哪部电影，{appName}可能无法自动导入此版本，你想要获取“{0}”吗？",
     "Group": "组",
     "HasPendingChangesNoChanges": "无修改",
     "HasPendingChangesSaveChanges": "保存更改",

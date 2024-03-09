@@ -144,7 +144,6 @@
     "GoToInterp": "Aller à {0}",
     "Grab": "Saisir",
     "GrabRelease": "Saisir Release",
-    "GrabReleaseMessageText": "{appName} n'a pas été en mesure de déterminer à quel film cette version était destinée. {appName} peut être incapable d'importer automatiquement cette version. Voulez-vous récupérer '{0}' ?",
     "GrabSelected": "Saisir la sélection",
     "Group": "Groupe",
     "HasPendingChangesNoChanges": "Aucune modification",

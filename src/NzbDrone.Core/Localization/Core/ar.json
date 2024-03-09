@@ -287,7 +287,6 @@
     "GoToInterp": "انتقل إلى {0}",
     "Grab": "إختطاف",
     "GrabRelease": "انتزاع الإصدار",
-    "GrabReleaseMessageText": "لم يتمكن {appName} من تحديد الفيلم الذي كان هذا الإصدار من أجله. قد يتعذر على {appName} استيراد هذا الإصدار تلقائيًا. هل تريد انتزاع \"{0}\"؟",
     "GrabSelected": "انتزاع المحدد",
     "Group": "مجموعة",
     "HasPendingChangesNoChanges": "لا تغيرات",
