@@ -48,12 +48,12 @@ function getDownloadTooltip(isGrabbing, isGrabbed, grabError) {
   if (isGrabbing) {
     return '';
   } else if (isGrabbed) {
-    return 'Added to downloaded queue';
+    return translate('AddedToDownloadQueue');
   } else if (grabError) {
     return grabError;
   }
 
-  return 'Add to downloaded queue';
+  return translate('AddToDownloadQueue');
 }
 
 class InteractiveSearchRow extends Component {
@@ -236,7 +236,9 @@ class InteractiveSearchRow extends Component {
           isOpen={this.state.isConfirmGrabModalOpen}
           kind={kinds.WARNING}
           title={translate('GrabRelease')}
-          message={translate('GrabReleaseMessageText', [title])}
+          message={translate('GrabReleaseUnknownArtistOrAlbumMessageText', {
+            title
+          })}
           confirmLabel={translate('Grab')}
           onConfirm={this.onGrabConfirm}
           onCancel={this.onGrabCancel}
