@@ -4,9 +4,10 @@
   width: 80px;
 }
 
-.title {
-  composes: cell from '~Components/Table/Cells/TableRowCell.css';
-
+.titleContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   word-break: break-all;
 }
 
@@ -34,8 +35,7 @@
   cursor: default;
 }
 
-.rejected,
-.download {
+.rejected {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
   width: 50px;
@@ -52,4 +52,40 @@
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
   width: 75px;
+}
+
+.download {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 80px;
+}
+
+.manualDownloadContent {
+  position: relative;
+  display: inline-block;
+  margin: 0 2px;
+  width: 22px;
+  height: 20.39px;
+  vertical-align: middle;
+  line-height: 20.39px;
+
+  &:hover {
+    color: var(--iconButtonHoverColor);
+  }
+}
+
+.interactiveIcon {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  /* width: 100%; */
+  text-align: center;
+}
+
+.downloadIcon {
+  position: absolute;
+  top: 7px;
+  left: 8px;
+  /* width: 100%; */
+  text-align: center;
 }
