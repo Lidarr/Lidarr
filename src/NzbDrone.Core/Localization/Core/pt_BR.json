@@ -266,7 +266,6 @@
     "GoToInterp": "Ir para {0}",
     "Grab": "Obter",
     "GrabRelease": "Obter lançamento",
-    "GrabReleaseMessageText": "O {appName} não conseguiu determinar para qual artista e álbum é este lançamento. O {appName} pode não conseguir importar automaticamente este lançamento. Deseja obter \"{0}\"?",
     "GrabSelected": "Baixar Selecionado",
     "Group": "Grupo",
     "HasPendingChangesNoChanges": "Sem alterações",

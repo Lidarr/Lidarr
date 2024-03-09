@@ -65,7 +65,6 @@
     "GoToInterp": "עבור אל {0}",
     "Grab": "לִתְפּוֹס",
     "GrabRelease": "שחרור תפוס",
-    "GrabReleaseMessageText": "רדאר לא הצליח לקבוע לאיזה סרט הסרט הזה נועד. ייתכן ש- {appName} לא תוכל לייבא גרסה זו באופן אוטומטי. האם אתה רוצה לתפוס את '{0}'?",
     "Group": "קְבוּצָה",
     "HasPendingChangesNoChanges": "אין שינויים",
     "HasPendingChangesSaveChanges": "שמור שינויים",

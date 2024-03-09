@@ -291,7 +291,6 @@
     "WriteAudioTagsHelpTextWarning": "Az „Összes fájl” kiválasztása megváltoztatja a meglévő fájlokat az importáláskor.",
     "DetailedProgressBarHelpText": "Szöveg megjelenítése a folyamatjelző sávon",
     "GoToArtistListing": "Ugrás az előadók listájára",
-    "GrabReleaseMessageText": "{appName} nem tudta meghatározni, hogy melyik filmhez készült ez a kiadás. Lehet, hogy a {appName} nem tudja automatikusan importálni ezt a kiadást. Meg szeretnéd ragadni a (z) „{0}”-t?",
     "IfYouDontAddAnImportListExclusionAndTheArtistHasAMetadataProfileOtherThanNoneThenThisAlbumMayBeReaddedDuringTheNextArtistRefresh": "Ha nem ad hozzá importlista-kizárást, és az előadó metaadat-profilja a „Nincs”-től eltérő, akkor az albumot a következő előadói frissítés során újra hozzáadhatja.",
     "ImportListSettings": "Általános importálási lista beállításai",
     "IsInUseCantDeleteAMetadataProfileThatIsAttachedToAnArtistOrImportList": "Előadóhoz vagy importáló listához csatolt metaadatprofil nem törölhető",

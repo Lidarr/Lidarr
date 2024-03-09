@@ -211,7 +211,6 @@
     "GoToInterp": "Отидете на {0}",
     "Grab": "Грабнете",
     "GrabRelease": "Grab Release",
-    "GrabReleaseMessageText": "{appName} не успя да определи за кой филм е предназначено това издание. {appName} може да не може автоматично да импортира тази версия. Искате ли да вземете „{0}“?",
     "GrabSelected": "Grab Selected",
     "Group": "Група",
     "HasPendingChangesNoChanges": "Без промени",

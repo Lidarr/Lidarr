@@ -365,7 +365,6 @@
     "GoToInterp": "Ir a {0}",
     "Grab": "Capturar",
     "GrabRelease": "Capturar lanzamiento",
-    "GrabReleaseMessageText": "{appName} no pudo determinar para qué película es este lanzamiento. {appName} no podrá importar este lanzamiento automáticamente. Quieres descargar {0}?",
     "GrabSelected": "Capturar seleccionado",
     "Group": "Grupo",
     "HasPendingChangesNoChanges": "Sin Cambios",

@@ -324,7 +324,6 @@
     "GoToInterp": "Перейти {0}",
     "Grab": "Захватить",
     "GrabRelease": "Захватить релиз",
-    "GrabReleaseMessageText": "{appName} не смог определить для какого фильма был релиз. {appName} не сможет автоматически его импортировать. Хотите захватить '{0}'?",
     "GrabSelected": "Захватить выбранные",
     "Group": "Группа",
     "HasPendingChangesNoChanges": "Нет изменений",

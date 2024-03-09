@@ -309,7 +309,6 @@
     "GoToInterp": "Idź do {0}",
     "Grab": "Chwycić",
     "GrabRelease": "Grab Release",
-    "GrabReleaseMessageText": "{appName} nie był w stanie określić, dla którego filmu jest to wydanie. {appName} może nie być w stanie automatycznie zaimportować tej wersji. Czy chcesz złapać „{0}”?",
     "GrabSelected": "Wybierz wybrane",
     "Group": "Grupa",
     "HasPendingChangesNoChanges": "Bez zmian",

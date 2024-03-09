@@ -279,7 +279,6 @@
     "GoToInterp": "Accesați {0}",
     "Grab": "Apuca",
     "GrabRelease": "Grab Release",
-    "GrabReleaseMessageText": "{appName} nu a putut stabili pentru ce film a fost lansată această lansare. Este posibil ca {appName} să nu poată importa automat această versiune. Doriți să luați „{0}”?",
     "GrabSelected": "Prinderea selectată",
     "IgnoredPlaceHolder": "Adăugați o restricție nouă",
     "ImportedTo": "Importat în",

@@ -452,7 +452,6 @@
     "GoToInterp": "Ir para {0}",
     "Grab": "Capturar",
     "GrabRelease": "Capturar versão",
-    "GrabReleaseMessageText": "O {appName} não pode determinar a que autor e livro pertence esta versão. O {appName} pode ser incapaz de importar automaticamente esta versão. Deseja capturar \"{0}\"?",
     "GrabSelected": "Capturar seleção",
     "Group": "Grupo",
     "HasPendingChangesNoChanges": "Sem mudanças",
