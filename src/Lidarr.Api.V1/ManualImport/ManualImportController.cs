@@ -83,7 +83,9 @@ namespace Lidarr.Api.V1.ManualImport
                     DownloadId = resource.DownloadId,
                     AdditionalFile = resource.AdditionalFile,
                     ReplaceExistingFiles = resource.ReplaceExistingFiles,
-                    DisableReleaseSwitching = resource.DisableReleaseSwitching
+                    DisableReleaseSwitching = resource.DisableReleaseSwitching,
+                    IsSingleFileRelease = resource.IsSingleFileRelease,
+                    CueSheetPath = resource.CueSheetPath,
                 });
             }
 

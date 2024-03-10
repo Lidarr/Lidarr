@@ -32,5 +32,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
         public bool AdditionalFile { get; set; }
         public bool ReplaceExistingFiles { get; set; }
         public bool DisableReleaseSwitching { get; set; }
+        public bool IsSingleFileRelease { get; set; }
+        public string CueSheetPath { get; set; }
     }
 }

@@ -54,6 +54,11 @@ const columns = [
     isVisible: true
   },
   {
+    name: 'cueSheetPath',
+    label: () => 'Cue Sheet Path',
+    isVisible: true
+  },
+  {
     name: 'releaseGroup',
     label: () => translate('ReleaseGroup'),
     isVisible: true
@@ -435,6 +440,8 @@ class InteractiveImportModalContent extends Component {
                           allowArtistChange={allowArtistChange}
                           onSelectedChange={this.onSelectedChange}
                           onValidRowChange={this.onValidRowChange}
+                          isSingleFileRelease={item.isSingleFileRelease}
+                          cueSheetPath={item.cueSheetPath}
                         />
                       );
                     })

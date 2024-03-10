@@ -17,6 +17,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
 
         public Decision IsSatisfiedBy(LocalAlbumRelease item, DownloadClientItem downloadClientItem)
         {
+            if (item.IsSingleFileRelease)
+            {
+                return Decision.Accept();
+            }
+
             var existingRelease = item.AlbumRelease.Album.Value.AlbumReleases.Value.Single(x => x.Monitored);
             var existingTrackCount = existingRelease.Tracks.Value.Count(x => x.HasFile);
             if (item.AlbumRelease.Id != existingRelease.Id &&

@@ -16,6 +16,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
 
         public Decision IsSatisfiedBy(LocalAlbumRelease item, DownloadClientItem downloadClientItem)
         {
+            if (item.IsSingleFileRelease)
+            {
+                return Decision.Accept();
+            }
+
             if (item.NewDownload && item.TrackMapping.LocalExtra.Count > 0)
             {
                 _logger.Debug("This release has track files that have not been matched. Skipping {0}", item);

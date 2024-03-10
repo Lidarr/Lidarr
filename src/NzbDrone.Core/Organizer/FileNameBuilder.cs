@@ -119,15 +119,23 @@ namespace NzbDrone.Core.Organizer
             {
                 var splitPattern = splitPatterns[i];
                 var tokenHandlers = new Dictionary<string, Func<TokenMatch, string>>(FileNameBuilderTokenEqualityComparer.Instance);
-                splitPattern = FormatTrackNumberTokens(splitPattern, "", tracks);
-                splitPattern = FormatMediumNumberTokens(splitPattern, "", tracks);
 
+                if (!trackFile.IsSingleFileRelease)
+                {
+                    splitPattern = FormatTrackNumberTokens(splitPattern, "", tracks);
+                }
+
+                splitPattern = FormatMediumNumberTokens(splitPattern, "", tracks);
                 AddArtistTokens(tokenHandlers, artist);
                 AddAlbumTokens(tokenHandlers, album);
                 AddMediumTokens(tokenHandlers, tracks.First().AlbumRelease.Value.Media.SingleOrDefault(m => m.Number == tracks.First().MediumNumber));
-                AddTrackTokens(tokenHandlers, tracks, artist);
-                AddTrackTitlePlaceholderTokens(tokenHandlers);
-                AddTrackFileTokens(tokenHandlers, trackFile);
+                if (!trackFile.IsSingleFileRelease)
+                {
+                    AddTrackTokens(tokenHandlers, tracks, artist);
+                    AddTrackTitlePlaceholderTokens(tokenHandlers);
+                    AddTrackFileTokens(tokenHandlers, trackFile);
+                }
+
                 AddQualityTokens(tokenHandlers, artist, trackFile);
                 AddMediaInfoTokens(tokenHandlers, trackFile);
                 AddCustomFormats(tokenHandlers, artist, trackFile, customFormats);
@@ -141,9 +149,12 @@ namespace NzbDrone.Core.Organizer
 
                 var maxTrackTitleLength = maxPathSegmentLength - GetLengthWithoutTrackTitle(component, namingConfig);
 
-                AddTrackTitleTokens(tokenHandlers, tracks, maxTrackTitleLength);
-                component = ReplaceTokens(component, tokenHandlers, namingConfig).Trim();
+                if (!trackFile.IsSingleFileRelease)
+                {
+                    AddTrackTitleTokens(tokenHandlers, tracks, maxTrackTitleLength);
+                }
 
+                component = ReplaceTokens(component, tokenHandlers, namingConfig).Trim();
                 component = FileNameCleanupRegex.Replace(component, match => match.Captures[0].Value[0].ToString());
                 component = TrimSeparatorsRegex.Replace(component, string.Empty);
                 component = component.Replace("{ellipsis}", "...");

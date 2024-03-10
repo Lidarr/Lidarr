@@ -4,6 +4,7 @@ using System.IO;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnsureThat;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.MediaFiles.TrackImport;
@@ -79,6 +80,8 @@ namespace NzbDrone.Core.MediaFiles
 
             EnsureTrackFolder(trackFile, localTrack, filePath);
 
+            TryToCreateCueFile(localTrack, filePath);
+
             _logger.Debug("Moving track file: {0} to {1}", trackFile.Path, filePath);
 
             return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.Move);
@@ -90,6 +93,8 @@ namespace NzbDrone.Core.MediaFiles
 
             EnsureTrackFolder(trackFile, localTrack, filePath);
 
+            TryToCreateCueFile(localTrack, filePath);
+
             if (_configService.CopyUsingHardlinks)
             {
                 _logger.Debug("Attempting to hardlink track file: {0} to {1}", trackFile.Path, filePath);
@@ -98,6 +103,24 @@ namespace NzbDrone.Core.MediaFiles
 
             _logger.Debug("Copying track file: {0} to {1}", trackFile.Path, filePath);
             return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.Copy);
+        }
+
+        private void TryToCreateCueFile(LocalTrack localTrack, string trackFilePath)
+        {
+            if (localTrack.IsSingleFileRelease && !localTrack.CueSheetPath.Empty())
+            {
+                var directory = Path.GetDirectoryName(trackFilePath);
+                var fileName = Path.GetFileNameWithoutExtension(trackFilePath);
+                var cueSheetPath = Path.Combine(directory, fileName + ".cue");
+                _diskTransferService.TransferFile(localTrack.CueSheetPath, cueSheetPath, TransferMode.Copy, true);
+                var lines = new List<string>(File.ReadAllLines(cueSheetPath));
+                var fileLineIndex = lines.FindIndex(line => line.Contains("FILE"));
+                if (fileLineIndex != -1)
+                {
+                    lines[fileLineIndex] = "FILE \"" + Path.GetFileName(trackFilePath) + "\" WAVE";
+                    File.WriteAllLines(cueSheetPath, lines);
+                }
+            }
         }
 
         private TrackFile TransferFile(TrackFile trackFile, Artist artist, List<Track> tracks, string destinationFilePath, TransferMode mode)

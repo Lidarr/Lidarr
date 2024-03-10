@@ -206,6 +206,8 @@ export const actionHandlers = handleThunks({
         albumId: item.album ? item.album.id : undefined,
         albumReleaseId: item.albumReleaseId ? item.albumReleaseId : undefined,
         trackIds: (item.tracks || []).map((e) => e.id),
+        isSingleFileRelease: item.isSingleFileRelease,
+        cueSheetPath: item.cueSheetPath,
         quality: item.quality,
         releaseGroup: item.releaseGroup,
         downloadId: item.downloadId,

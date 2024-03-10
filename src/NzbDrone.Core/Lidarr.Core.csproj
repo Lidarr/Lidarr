@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Diacritics" Version="3.3.18" />
     <PackageReference Include="Diacritical.Net" Version="1.0.4" />
     <PackageReference Include="Polly" Version="8.2.1" />
     <PackageReference Include="System.Text.Json" Version="6.0.9" />
@@ -29,6 +30,7 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
     <PackageReference Include="Equ" Version="2.3.0" />
     <PackageReference Include="MonoTorrent" Version="2.0.7" />
+    <PackageReference Include="UTF.Unknown" Version="2.5.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Common\Lidarr.Common.csproj" />

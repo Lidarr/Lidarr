@@ -22,11 +22,17 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
         {
             double dist;
             string reasons;
+            if (item.IsSingleFileRelease)
+            {
+                _logger.Debug($"Accepting single file release {item}: {item.Distance.Reasons}");
+                return Decision.Accept();
+            }
 
             // strict when a new download
             if (item.NewDownload)
             {
                 dist = item.Distance.NormalizedDistance();
+
                 reasons = item.Distance.Reasons;
                 if (dist > _albumThreshold)
                 {

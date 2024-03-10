@@ -167,6 +167,7 @@ class InteractiveImportRow extends Component {
       album,
       albumReleaseId,
       tracks,
+      cueSheetPath,
       quality,
       releaseGroup,
       size,
@@ -267,7 +268,17 @@ class InteractiveImportRow extends Component {
           {
             showTrackNumbersPlaceholder ? <InteractiveImportRowCellPlaceholder /> : trackNumbers
           }
+
         </TableRowCellButton>
+
+        <TableRowCell
+          id={id}
+          title={'Cue Sheet Path'}
+        >
+          {
+            cueSheetPath
+          }
+        </TableRowCell>
 
         <TableRowCellButton
           title={translate('ClickToChangeReleaseGroup')}
@@ -408,7 +419,9 @@ InteractiveImportRow.propTypes = {
   artist: PropTypes.object,
   album: PropTypes.object,
   albumReleaseId: PropTypes.number,
-  tracks: PropTypes.arrayOf(PropTypes.object).isRequired,
+  tracks: PropTypes.arrayOf(PropTypes.object),
+  isSingleFileRelease: PropTypes.bool.isRequired,
+  cueSheetPath: PropTypes.string.isRequired,
   releaseGroup: PropTypes.string,
   quality: PropTypes.object,
   size: PropTypes.number.isRequired,

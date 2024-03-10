@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
+using DryIoc.ImTools;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
@@ -10,6 +11,7 @@ using NzbDrone.Core.Download;
 using NzbDrone.Core.MediaFiles.TrackImport.Aggregation;
 using NzbDrone.Core.MediaFiles.TrackImport.Identification;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Profiles.Qualities;
 using NzbDrone.Core.RootFolders;
@@ -32,6 +34,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
     {
         public DownloadClientItem DownloadClientItem { get; set; }
         public ParsedAlbumInfo ParsedAlbumInfo { get; set; }
+        public List<CueSheetInfo> CueSheetInfos { get; set; } = new List<CueSheetInfo>();
+        public bool DetectCueFileEncoding { get; set; }
     }
 
     public class ImportDecisionMakerConfig
@@ -48,6 +52,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         private readonly IEnumerable<IImportDecisionEngineSpecification<LocalTrack>> _trackSpecifications;
         private readonly IEnumerable<IImportDecisionEngineSpecification<LocalAlbumRelease>> _albumSpecifications;
         private readonly IMediaFileService _mediaFileService;
+        private readonly IParsingService _parsingService;
         private readonly IAudioTagService _audioTagService;
         private readonly IAugmentingService _augmentingService;
         private readonly IIdentificationService _identificationService;
@@ -58,6 +63,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         public ImportDecisionMaker(IEnumerable<IImportDecisionEngineSpecification<LocalTrack>> trackSpecifications,
                                    IEnumerable<IImportDecisionEngineSpecification<LocalAlbumRelease>> albumSpecifications,
                                    IMediaFileService mediaFileService,
+                                   IParsingService parsingService,
                                    IAudioTagService audioTagService,
                                    IAugmentingService augmentingService,
                                    IIdentificationService identificationService,
@@ -68,6 +74,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             _trackSpecifications = trackSpecifications;
             _albumSpecifications = albumSpecifications;
             _mediaFileService = mediaFileService;
+            _parsingService = parsingService;
             _audioTagService = audioTagService;
             _augmentingService = augmentingService;
             _identificationService = identificationService;
@@ -113,7 +120,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                     Size = file.Length,
                     Modified = file.LastWriteTimeUtc,
                     FileTrackInfo = _audioTagService.ReadTags(file.FullName),
-                    AdditionalFile = false
+                    AdditionalFile = false,
                 };
 
                 try
@@ -149,6 +156,38 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             var decisions = trackData.Item2;
 
             localTracks.ForEach(x => x.ExistingFile = !config.NewDownload);
+            if (!itemInfo.CueSheetInfos.Empty())
+            {
+                localTracks.ForEach(localTrack =>
+                {
+                    var cueSheetInfo = itemInfo.CueSheetInfos.Find(x => x.IsForMediaFile(localTrack.Path));
+                    var cueSheet = cueSheetInfo?.CueSheet;
+                    if (cueSheet != null)
+                    {
+                        localTrack.IsSingleFileRelease = cueSheet.IsSingleFileRelease;
+                        localTrack.CueSheetFileEntry = cueSheetInfo.TryToGetFileEntryForMediaFile(localTrack.Path);
+                        localTrack.Artist = idOverrides.Artist;
+                        localTrack.Album = idOverrides.Album;
+                    }
+                });
+            }
+
+            var localTracksByAlbums = localTracks.GroupBy(x => x.Album);
+            foreach (var localTracksByAlbum in localTracksByAlbums)
+            {
+                if (!localTracksByAlbum.All(x => x.IsSingleFileRelease == true))
+                {
+                    continue;
+                }
+
+                localTracks.ForEach(x =>
+                {
+                    if (x.IsSingleFileRelease && localTracksByAlbum.Contains(x))
+                    {
+                        x.FileTrackInfo.DiscCount = localTracksByAlbum.Count();
+                    }
+                });
+            }
 
             var releases = _identificationService.Identify(localTracks, idOverrides, config);
 
@@ -246,7 +285,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         {
             ImportDecision<LocalTrack> decision = null;
 
-            if (localTrack.Tracks.Empty())
+            if (!localTrack.IsSingleFileRelease && localTrack.Tracks.Empty())
             {
                 decision = localTrack.Album != null ? new ImportDecision<LocalTrack>(localTrack, new Rejection($"Couldn't parse track from: {localTrack.FileTrackInfo}")) :
                     new ImportDecision<LocalTrack>(localTrack, new Rejection($"Couldn't parse album from: {localTrack.FileTrackInfo}"));

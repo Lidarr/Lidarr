@@ -194,7 +194,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                         AlbumId = localTrack.Album.Id,
                         Artist = localTrack.Artist,
                         Album = localTrack.Album,
-                        Tracks = localTrack.Tracks
+                        Tracks = localTrack.Tracks,
+                        IsSingleFileRelease = localTrack.IsSingleFileRelease,
                     };
 
                     bool copyOnly;

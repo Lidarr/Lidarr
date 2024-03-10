@@ -154,6 +154,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         private bool ShouldFingerprint(LocalAlbumRelease localAlbumRelease)
         {
+            if (localAlbumRelease.IsSingleFileRelease)
+            {
+                return false;
+            }
+
             var worstTrackMatchDist = localAlbumRelease.TrackMapping?.Mapping
                 .DefaultIfEmpty()
                 .MaxBy(x => x.Value.Item2.NormalizedDistance())
@@ -182,7 +187,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 FileTrackInfo = _audioTagService.ReadTags(x.Path),
                 ExistingFile = true,
                 AdditionalFile = true,
-                Quality = x.Quality
+                Quality = x.Quality,
+                IsSingleFileRelease = x.IsSingleFileRelease,
             }))
             .ToList();
 
@@ -317,7 +323,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 var extraTracks = extraTracksOnDisk.Where(x => extraTrackPaths.Contains(x.Path)).ToList();
                 var allLocalTracks = localAlbumRelease.LocalTracks.Concat(extraTracks).DistinctBy(x => x.Path).ToList();
 
-                var mapping = MapReleaseTracks(allLocalTracks, release.Tracks.Value);
+                var isSingleFileRelease = allLocalTracks.All(x => x.IsSingleFileRelease == true);
+                var mapping = isSingleFileRelease ? MapSingleFileReleaseTracks(allLocalTracks, release.Tracks.Value) : MapReleaseTracks(allLocalTracks, release.Tracks.Value);
                 var distance = DistanceCalculator.AlbumReleaseDistance(allLocalTracks, release, mapping);
                 var currDistance = distance.NormalizedDistance();
 
@@ -335,6 +342,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                     localAlbumRelease.AlbumRelease = release;
                     localAlbumRelease.ExistingTracks = extraTracks;
                     localAlbumRelease.TrackMapping = mapping;
+
                     if (currDistance == 0.0)
                     {
                         break;
@@ -348,6 +356,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         public TrackMapping MapReleaseTracks(List<LocalTrack> localTracks, List<Track> mbTracks)
         {
+            var result = new TrackMapping();
             var distances = new Distance[localTracks.Count, mbTracks.Count];
             var costs = new double[localTracks.Count, mbTracks.Count];
 
@@ -364,7 +373,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             var m = new Munkres(costs);
             m.Run();
 
-            var result = new TrackMapping();
             foreach (var pair in m.Solution)
             {
                 result.Mapping.Add(localTracks[pair.Item1], Tuple.Create(mbTracks[pair.Item2], distances[pair.Item1, pair.Item2]));
@@ -375,6 +383,47 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             _logger.Trace($"Unmapped files:\n{string.Join("\n", result.LocalExtra)}");
 
             result.MBExtra = mbTracks.Except(result.Mapping.Values.Select(x => x.Item1)).ToList();
+            _logger.Trace($"Missing tracks:\n{string.Join("\n", result.MBExtra)}");
+
+            return result;
+        }
+
+        public TrackMapping MapSingleFileReleaseTracks(List<LocalTrack> localTracks, List<Track> mbTracks)
+        {
+            var result = new TrackMapping();
+
+            var cuesheetTracks = new List<CueSheet.TrackEntry>();
+            foreach (var localTrack in localTracks)
+            {
+                if (localTrack.CueSheetFileEntry != null)
+                {
+                    cuesheetTracks.AddRange(localTrack.CueSheetFileEntry.Tracks);
+                }
+            }
+
+            var distances = new Distance[cuesheetTracks.Count, mbTracks.Count];
+            var costs = new double[cuesheetTracks.Count, mbTracks.Count];
+
+            for (var col = 0; col < mbTracks.Count; col++)
+            {
+                var totalTrackNumber = DistanceCalculator.GetTotalTrackNumber(mbTracks[col], mbTracks);
+                for (var row = 0; row < cuesheetTracks.Count; row++)
+                {
+                    distances[row, col] = DistanceCalculator.TrackDistance(cuesheetTracks[row], mbTracks[col], totalTrackNumber, false);
+                    costs[row, col] = distances[row, col].NormalizedDistance();
+                }
+            }
+
+            var m = new Munkres(costs);
+            m.Run();
+
+            foreach (var pair in m.Solution)
+            {
+                result.CuesheetTrackMapping.Add(cuesheetTracks[pair.Item1], Tuple.Create(mbTracks[pair.Item2], distances[pair.Item1, pair.Item2]));
+                _logger.Trace("Mapped {0} to {1}, dist: {2}", cuesheetTracks[pair.Item1], mbTracks[pair.Item2], costs[pair.Item1, pair.Item2]);
+            }
+
+            result.MBExtra = mbTracks.Except(result.CuesheetTrackMapping.Values.Select(x => x.Item1)).ToList();
             _logger.Trace($"Missing tracks:\n{string.Join("\n", result.MBExtra)}");
 
             return result;

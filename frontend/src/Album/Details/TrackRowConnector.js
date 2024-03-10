@@ -13,7 +13,8 @@ function createMapStateToProps() {
         trackFilePath: trackFile ? trackFile.path : null,
         trackFileSize: trackFile ? trackFile.size : null,
         customFormats: trackFile ? trackFile.customFormats : [],
-        customFormatScore: trackFile ? trackFile.customFormatScore : 0
+        customFormatScore: trackFile ? trackFile.customFormatScore : 0,
+        isSingleFileRelease: trackFile ? trackFile.isSingleFileRelease : false
       };
     }
   );

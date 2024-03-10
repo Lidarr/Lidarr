@@ -28,6 +28,7 @@ class TrackRow extends Component {
       absoluteTrackNumber,
       title,
       duration,
+      isSingleFileRelease,
       trackFilePath,
       trackFileSize,
       customFormats,
@@ -86,7 +87,7 @@ class TrackRow extends Component {
               return (
                 <TableRowCell key={name}>
                   {
-                    trackFilePath
+                    isSingleFileRelease ? `${trackFilePath} (Single File)` : trackFilePath
                   }
                 </TableRowCell>
               );
@@ -203,6 +204,7 @@ TrackRow.propTypes = {
   absoluteTrackNumber: PropTypes.number,
   title: PropTypes.string.isRequired,
   duration: PropTypes.number.isRequired,
+  isSingleFileRelease: PropTypes.bool.isRequired,
   isSaving: PropTypes.bool,
   trackFilePath: PropTypes.string,
   trackFileSize: PropTypes.number,

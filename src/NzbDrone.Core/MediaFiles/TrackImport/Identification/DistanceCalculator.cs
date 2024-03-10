@@ -30,6 +30,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 localTrack.FileTrackInfo.TrackNumbers[0] != totalTrackNumber;
         }
 
+        private static bool TrackIndexIncorrect(CueSheet.TrackEntry cuesheetTrack, Track mbTrack, int totalTrackNumber)
+        {
+            return cuesheetTrack.Number != mbTrack.AbsoluteTrackNumber;
+        }
+
         public static int GetTotalTrackNumber(Track track, List<Track> allTracks)
         {
             return track.AbsoluteTrackNumber + allTracks.Count(t => t.MediumNumber < track.MediumNumber);
@@ -79,6 +84,28 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             return dist;
         }
 
+        public static Distance TrackDistance(CueSheet.TrackEntry cuesheetTrack, Track mbTrack, int totalTrackNumber, bool includeArtist = false)
+        {
+            var dist = new Distance();
+
+            // musicbrainz never has 'featuring' in the track title
+            // see https://musicbrainz.org/doc/Style/Artist_Credits
+            dist.AddString("track_title", cuesheetTrack.Title ?? "", mbTrack.Title);
+
+            if (includeArtist && cuesheetTrack.Performers.Count == 1
+                && !VariousArtistNames.Any(x => x.Equals(cuesheetTrack.Performers[0], StringComparison.InvariantCultureIgnoreCase)))
+            {
+                dist.AddString("track_artist", cuesheetTrack.Performers[0], mbTrack.ArtistMetadata.Value.Name);
+            }
+
+            if (mbTrack.AbsoluteTrackNumber > 0)
+            {
+                dist.AddBool("track_index", TrackIndexIncorrect(cuesheetTrack, mbTrack, totalTrackNumber));
+            }
+
+            return dist;
+        }
+
         public static Distance AlbumReleaseDistance(List<LocalTrack> localTracks, AlbumRelease release, TrackMapping mapping)
         {
             var dist = new Distance();
@@ -118,13 +145,16 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             {
                 var albumYear = release.Album.Value.ReleaseDate?.Year ?? 0;
                 var releaseYear = release.ReleaseDate?.Year ?? 0;
-                if (localYear == albumYear || localYear == releaseYear)
+
+                // The single file version's year is from the album year already, to avoid false positives here we consider it's always different
+                var isSameWithAlbumYear = localTracks.All(x => x.IsSingleFileRelease == true) ? false : localYear == albumYear;
+                if (isSameWithAlbumYear || localYear == releaseYear)
                 {
                     dist.Add("year", 0.0);
                 }
                 else
                 {
-                    var remoteYear = albumYear > 0 ? albumYear : releaseYear;
+                    var remoteYear = (albumYear > 0 && isSameWithAlbumYear) ? albumYear : releaseYear;
                     var diff = Math.Abs(localYear - remoteYear);
                     var diff_max = Math.Abs(DateTime.Now.Year - remoteYear);
                     dist.AddRatio("year", diff, diff_max);
@@ -176,12 +206,32 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             }
 
             // tracks
-            foreach (var pair in mapping.Mapping)
+            if (mapping.CuesheetTrackMapping.Count != 0)
             {
-                dist.Add("tracks", pair.Value.Item2.NormalizedDistance());
-            }
+                foreach (var pair in mapping.CuesheetTrackMapping)
+                {
+                    dist.Add("tracks", pair.Value.Item2.NormalizedDistance());
+                }
 
-            Logger.Trace("after trackMapping: {0}", dist.NormalizedDistance());
+                Logger.Trace("after trackMapping: {0}", dist.NormalizedDistance());
+            }
+            else
+            {
+                foreach (var pair in mapping.Mapping)
+                {
+                    dist.Add("tracks", pair.Value.Item2.NormalizedDistance());
+                }
+
+                Logger.Trace("after trackMapping: {0}", dist.NormalizedDistance());
+
+                // unmatched tracks
+                foreach (var track in mapping.LocalExtra.Take(localTracks.Count))
+                {
+                    dist.Add("unmatched_tracks", 1.0);
+                }
+
+                Logger.Trace("after unmatched tracks: {0}", dist.NormalizedDistance());
+            }
 
             // missing tracks
             foreach (var track in mapping.MBExtra.Take(localTracks.Count))
@@ -190,14 +240,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             }
 
             Logger.Trace("after missing tracks: {0}", dist.NormalizedDistance());
-
-            // unmatched tracks
-            foreach (var track in mapping.LocalExtra.Take(localTracks.Count))
-            {
-                dist.Add("unmatched_tracks", 1.0);
-            }
-
-            Logger.Trace("after unmatched tracks: {0}", dist.NormalizedDistance());
 
             return dist;
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.TrackImport.Identification;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Qualities;
@@ -31,7 +32,9 @@ namespace NzbDrone.Core.Parser.Model
         public bool SceneSource { get; set; }
         public string ReleaseGroup { get; set; }
         public string SceneName { get; set; }
-
+        public bool IsSingleFileRelease { get; set; }
+        public CueSheet.FileEntry CueSheetFileEntry { get; set; }
+        public string CueSheetPath { get; set; }
         public override string ToString()
         {
             return Path;
