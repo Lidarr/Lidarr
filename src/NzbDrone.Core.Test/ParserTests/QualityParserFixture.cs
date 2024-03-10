@@ -304,7 +304,7 @@ namespace NzbDrone.Core.Test.ParserTests
         [Test]
         public void should_parse_null_quality_description_as_unknown()
         {
-            QualityParser.ParseCodec(null, null).Should().Be(Codec.Unknown);
+            QualityParser.ParseCodec(null).Should().Be(Codec.Unknown);
         }
 
         [TestCase("Artist Title - Album Title 2017 REPACK FLAC aAF", true, 2)]

@@ -308,7 +308,7 @@ namespace NzbDrone.Core.Parser
 
                             if (result != null)
                             {
-                                result.Quality = QualityParser.ParseQuality(title, null, 0);
+                                result.Quality = QualityParser.ParseQuality(title, null);
                                 Logger.Debug("Quality parsed: {0}", result.Quality);
 
                                 return result;
@@ -374,7 +374,7 @@ namespace NzbDrone.Core.Parser
 
                         if (result != null)
                         {
-                            result.Quality = QualityParser.ParseQuality(title, null, 0);
+                            result.Quality = QualityParser.ParseQuality(title, null);
                             Logger.Debug("Quality parsed: {0}", result.Quality);
 
                             result.ReleaseGroup = ParseReleaseGroup(releaseTitle);
@@ -469,7 +469,7 @@ namespace NzbDrone.Core.Parser
 
                             if (result != null)
                             {
-                                result.Quality = QualityParser.ParseQuality(title, null, 0);
+                                result.Quality = QualityParser.ParseQuality(title, null);
                                 Logger.Debug("Quality parsed: {0}", result.Quality);
 
                                 result.ReleaseGroup = ParseReleaseGroup(releaseTitle);
