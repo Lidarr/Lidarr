@@ -1,6 +1,7 @@
 import AlbumAppState from './AlbumAppState';
 import ArtistAppState, { ArtistIndexAppState } from './ArtistAppState';
 import CalendarAppState from './CalendarAppState';
+import CommandAppState from './CommandAppState';
 import HistoryAppState from './HistoryAppState';
 import QueueAppState from './QueueAppState';
 import SettingsAppState from './SettingsAppState';
@@ -54,6 +55,7 @@ interface AppState {
   artist: ArtistAppState;
   artistIndex: ArtistIndexAppState;
   calendar: CalendarAppState;
+  commands: CommandAppState;
   history: HistoryAppState;
   queue: QueueAppState;
   settings: SettingsAppState;

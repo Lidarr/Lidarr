@@ -13,6 +13,7 @@ export interface CommandBody {
   trigger: string;
   suppressMessages: boolean;
   artistId?: number;
+  artistIds?: number[];
 }
 
 interface Command extends ModelBase {
