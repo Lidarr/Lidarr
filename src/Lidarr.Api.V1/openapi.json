@@ -3869,6 +3869,44 @@
         }
       }
     },
+    "/api/v1/indexerflag": {
+      "get": {
+        "tags": [
+          "IndexerFlag"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IndexerFlagResource"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IndexerFlagResource"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IndexerFlagResource"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/language/{id}": {
       "get": {
         "tags": [
@@ -10143,6 +10181,25 @@
         },
         "additionalProperties": false
       },
+      "IndexerFlagResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "nameLower": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "IndexerResource": {
         "type": "object",
         "properties": {
@@ -10437,6 +10494,10 @@
             "type": "string",
             "nullable": true
           },
+          "indexerFlags": {
+            "type": "integer",
+            "format": "int32"
+          },
           "rejections": {
             "type": "array",
             "items": {
@@ -10510,6 +10571,10 @@
           "releaseGroup": {
             "type": "string",
             "nullable": true
+          },
+          "indexerFlags": {
+            "type": "integer",
+            "format": "int32"
           },
           "downloadId": {
             "type": "string",
@@ -11972,6 +12037,10 @@
           "protocol": {
             "$ref": "#/components/schemas/DownloadProtocol"
           },
+          "indexerFlags": {
+            "type": "integer",
+            "format": "int32"
+          },
           "artistId": {
             "type": "integer",
             "format": "int32",
@@ -12639,6 +12708,11 @@
           "customFormatScore": {
             "type": "integer",
             "format": "int32"
+          },
+          "indexerFlags": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           },
           "mediaInfo": {
             "$ref": "#/components/schemas/MediaInfoResource"
