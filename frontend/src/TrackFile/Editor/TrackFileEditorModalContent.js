@@ -146,7 +146,7 @@ class TrackFileEditorModalContent extends Component {
       });
 
       return acc;
-    }, [{ key: 'selectQuality', value: 'Select Quality', disabled: true }]);
+    }, [{ key: 'selectQuality', value: translate('SelectQuality'), isDisabled: true }]);
 
     const hasSelectedFiles = this.getSelectedIds().length > 0;
 

@@ -22,7 +22,7 @@ function SeriesTypeSelectInput(props) {
     values.unshift({
       key: 'noChange',
       value: translate('NoChange'),
-      disabled: includeNoChangeDisabled
+      isDisabled: includeNoChangeDisabled
     });
   }
 
@@ -30,7 +30,7 @@ function SeriesTypeSelectInput(props) {
     values.unshift({
       key: 'mixed',
       value: '(Mixed)',
-      disabled: true
+      isDisabled: true
     });
   }
 
