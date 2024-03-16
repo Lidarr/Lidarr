@@ -1269,5 +1269,14 @@
     "DownloadClientDelugeSettingsDirectoryCompletedHelpText": "Local opcional para mover os downloads concluídos, deixe em branco para usar o local padrão do Deluge",
     "NotificationsEmbySettingsUpdateLibraryHelpText": "Atualizar Biblioteca ao Importar, Renomear ou Excluir?",
     "NotificationsKodiSettingsDisplayTimeHelpText": "Por quanto tempo a notificação será exibida (em segundos)",
-    "NotificationsSettingsUpdateMapPathsFromHelpText": "Caminho {appName}, usado para modificar caminhos de série quando {serviceName} vê a localização do caminho da biblioteca de forma diferente de {appName} (requer 'Atualizar Biblioteca')"
+    "NotificationsSettingsUpdateMapPathsFromHelpText": "Caminho {appName}, usado para modificar caminhos de série quando {serviceName} vê a localização do caminho da biblioteca de forma diferente de {appName} (requer 'Atualizar Biblioteca')",
+    "AddToDownloadQueue": "Adicionar à fila de download",
+    "AddedToDownloadQueue": "Adicionado à fila de download",
+    "GrabReleaseUnknownArtistOrAlbumMessageText": "{appName} não conseguiu determinar a qual artista e álbum se destinava este lançamento. {appName} pode não conseguir importar esta versão automaticamente. Você quer pegar '{title}'?",
+    "ClickToChangeIndexerFlags": "Clique para alterar sinalizadores do indexador",
+    "CustomFormatsSpecificationFlag": "Sinalizador",
+    "IndexerFlags": "Sinalizadores do Indexador",
+    "Rejections": "Rejeições",
+    "SelectIndexerFlags": "Selecionar Sinalizadores do Indexador",
+    "SetIndexerFlags": "Definir Sinalizadores de Indexador"
 }
