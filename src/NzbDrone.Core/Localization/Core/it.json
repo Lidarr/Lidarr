@@ -882,5 +882,6 @@
     "AutomaticSearch": "Ricerca Automatica",
     "ArtistIndexFooterDownloading": "Scaricando",
     "KeyboardShortcuts": "Scorciatoie Tastiera",
-    "Links": "Collegamenti"
+    "Links": "Collegamenti",
+    "RegularExpressionsCanBeTested": "Le espressioni regolari possono essere testate [qui](http://regexstorm.net/tester)."
 }

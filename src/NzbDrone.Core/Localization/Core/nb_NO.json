@@ -246,5 +246,8 @@
     "AddImportListExclusionArtistHelpText": "Forhindre at filmen legges til i {appName} av lister",
     "AuthBasic": "Grunnleggende (nettleser -popup)",
     "DeleteArtistFolderCountConfirmation": "Er du sikker på at du vil slette formattaggen {0}?",
-    "DeleteAutoTagHelpText": "Er du sikker på at du vil slette formattaggen {0}?"
+    "DeleteAutoTagHelpText": "Er du sikker på at du vil slette formattaggen {0}?",
+    "AddConditionImplementation": "Legg til betingelse - {implementationName}",
+    "AddAutoTagError": "Ikke mulig å legge til ny automatisk tagg, vennligst prøv igjen",
+    "AddConditionError": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen"
 }
