@@ -20,5 +20,7 @@ namespace NzbDrone.Core.Music.Commands
         public override bool SendUpdatesToClient => true;
 
         public override bool UpdateScheduledTask => !AlbumId.HasValue;
+
+        public override string CompletionMessage => "Completed";
     }
 }
