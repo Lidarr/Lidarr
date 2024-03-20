@@ -324,6 +324,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 var album = _albumService.GetAlbum(albumImport.First().ImportDecision.Item.Album.Id);
                 var artist = albumImport.First().ImportDecision.Item.Artist;
 
+                if (album != null)
+                {
+                    var albumTrackFiles = filesToAdd.Where(x => x.AlbumId == album.Id);
+                    _extraService.ImportAlbumExtras(albumImport.Select(x => x.ImportDecision).ToList());
+                }
+
                 if (albumImport.Where(e => e.Errors.Count == 0).ToList().Count > 0 && artist != null && album != null)
                 {
                     _eventAggregator.PublishEvent(new AlbumImportedEvent(
