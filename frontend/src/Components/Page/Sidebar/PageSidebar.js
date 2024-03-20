@@ -164,6 +164,10 @@ const links = [
       {
         title: () => translate('LogFiles'),
         to: '/system/logs/files'
+      },
+      {
+        title: 'Parse Testing',
+        to: '/system/parse'
       }
     ]
   }
