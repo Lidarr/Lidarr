@@ -50,6 +50,9 @@ namespace NzbDrone.Core.Download.Clients.Deluge
         [FieldDefinition(6, Label = "Post-Import Category", Type = FieldType.Textbox, Advanced = true, HelpText = "Category for Lidarr to set after it has imported the download. Lidarr will not remove torrents in that category even if seeding finished. Leave blank to keep same category.")]
         public string MusicImportedCategory { get; set; }
 
+        [FieldDefinition(6, Label = "Failure Category", Type = FieldType.Textbox, Advanced = true, HelpText = "Category for Lidarr to treat a download as failed (applied externally). Leave blank to ignore.")]
+        public string MusicFailureCategory { get; set; }
+
         [FieldDefinition(7, Label = "Recent Priority", Type = FieldType.Select, SelectOptions = typeof(DelugePriority), HelpText = "Priority to use when grabbing albums released within the last 14 days")]
         public int RecentMusicPriority { get; set; }
 

@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Download.Clients.Deluge
 
     public class DelugeProxy : IDelugeProxy
     {
-        private static readonly string[] RequiredProperties = new string[] { "hash", "name", "state", "progress", "eta", "message", "is_finished", "save_path", "total_size", "total_done", "time_added", "active_time", "ratio", "is_auto_managed", "stop_at_ratio", "remove_at_ratio", "stop_ratio" };
+        private static readonly string[] RequiredProperties = new string[] { "hash", "name", "state", "progress", "eta", "message", "is_finished", "save_path", "total_size", "total_done", "time_added", "active_time", "ratio", "is_auto_managed", "stop_at_ratio", "remove_at_ratio", "stop_ratio", "label" };
 
         private readonly IHttpClient _httpClient;
         private readonly Logger _logger;

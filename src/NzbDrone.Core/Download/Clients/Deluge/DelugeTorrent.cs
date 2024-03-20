@@ -51,5 +51,8 @@ namespace NzbDrone.Core.Download.Clients.Deluge
 
         [JsonProperty(PropertyName = "stop_ratio")]
         public double StopRatio { get; set; }
+
+        [JsonProperty(PropertyName = "label")]
+        public string Label { get; set; }
     }
 }
