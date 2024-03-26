@@ -1152,7 +1152,7 @@
     "AutoRedownloadFailed": "重新下载失败",
     "AlbumStudioTracksDownloaded": "{trackFileCount}/{totalTrackCount} 首曲目已下载",
     "ArtistProgressBarText": "{trackFileCount} / {trackCount} (共: {totalTrackCount}, 正在下载: {downloadingCount})",
-    "ChangeCategory": "改变分类",
+    "ChangeCategory": "修改分类",
     "ArtistMonitoring": "监控中的艺术家",
     "ArtistIndexFooterDownloading": "正在下载",
     "AutomaticSearch": "自动搜索",
