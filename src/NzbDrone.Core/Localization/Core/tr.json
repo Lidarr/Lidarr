@@ -708,7 +708,7 @@
     "EditIndexerImplementation": "Koşul Ekle - {implementationName}",
     "DeleteArtistFoldersHelpText": "Film klasörünü ve içeriğini silin",
     "AddNewArtistSearchForMissingAlbums": "Kayıp filmi aramaya başlayın",
-    "AddConnectionImplementation": "Koşul Ekle - {implementationName}",
+    "AddConnectionImplementation": "Bağlantı Ekle - {implementationName}",
     "AddImportListExclusionAlbumHelpText": "Listelerle filmin {appName}'a eklenmesini önleyin",
     "ExtraFileExtensionsHelpText": "İçe aktarılacak ekstra dosyaların virgülle ayrılmış listesi (.nfo, .nfo-orig olarak içe aktarılacaktır)",
     "ExtraFileExtensionsHelpTextsExamples": "Örnekler: \".sub, .nfo\" veya \"sub, nfo\"",
