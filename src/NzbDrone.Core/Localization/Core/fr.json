@@ -4,7 +4,7 @@
     "AppDataDirectory": "Dossier AppData",
     "AddingTag": "Ajout d'une étiquette",
     "Analytics": "Statistiques",
-    "About": "Tagalog",
+    "About": "À propos",
     "ApplyTags": "Appliquer les étiquettes",
     "Authentication": "Authentification",
     "Automatic": "Automatique",
@@ -1184,7 +1184,7 @@
     "RemoveQueueItemRemovalMethod": "Méthode de suppression",
     "RemoveQueueItemsRemovalMethodHelpTextWarning": "Supprimer du client de téléchargement\" supprimera les téléchargements et les fichiers du client de téléchargement.",
     "AddAutoTagError": "Impossible d'ajouter un nouveau tag automatique, veuillez réessayer.",
-    "Donate": "Faire un don",
+    "Donate": "Donation",
     "CustomFilter": "Filtre personnalisé",
     "DownloadClientDelugeSettingsDirectoryCompletedHelpText": "Destination pour les téléchargements terminés (facultative), laissez ce champ vide pour utiliser le répertoire par défaut de Deluge",
     "DownloadClientDelugeSettingsDirectoryHelpText": "Emplacement dans lequel placer les téléchargements (facultatif), laissez vide pour utiliser l'emplacement Deluge par défaut",
@@ -1202,5 +1202,13 @@
     "AutomaticSearch": "Recherche automatique",
     "NotificationsSettingsUpdateMapPathsToHelpText": "Chemin {serviceName}, utilisé pour modifier les chemins des séries quand {serviceName} voit un chemin d'emplacement de bibliothèque différemment de {appName} (nécessite 'Mise à jour bibliothèque')",
     "Period": "Période",
-    "NotificationsSettingsUpdateMapPathsFromHelpText": "Chemin d'accès {appName}, utilisé pour modifier les chemins d'accès aux séries lorsque {serviceName} voit l'emplacement du chemin d'accès à la bibliothèque différemment de {appName} (Nécessite 'Mettre à jour la bibliothèque')"
+    "NotificationsSettingsUpdateMapPathsFromHelpText": "Chemin d'accès {appName}, utilisé pour modifier les chemins d'accès aux séries lorsque {serviceName} voit l'emplacement du chemin d'accès à la bibliothèque différemment de {appName} (Nécessite 'Mettre à jour la bibliothèque')",
+    "DefaultCase": "Case par défaut",
+    "ClickToChangeIndexerFlags": "Cliquez pour changer les drapeaux de l'indexeur",
+    "CustomFormatsSpecificationFlag": "Drapeau",
+    "CustomFormatsSettings": "Paramètre des formats personnalisés",
+    "CustomFormatsSettingsSummary": "Formats et paramètres personnalisés",
+    "DownloadClientsSettingsSummary": "Clients de téléchargement, gestion des téléchargements et mappages de chemins d'accès à distance",
+    "AddToDownloadQueue": "Ajouter à la file d'attente de téléchargement",
+    "AddedToDownloadQueue": "Ajouté à la file d'attente de téléchargement"
 }
