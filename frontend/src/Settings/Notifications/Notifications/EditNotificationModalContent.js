@@ -14,6 +14,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds } from 'Helpers/Props';
+import AdvancedSettingsButton from 'Settings/AdvancedSettingsButton';
 import translate from 'Utilities/String/translate';
 import NotificationEventItems from './NotificationEventItems';
 import styles from './EditNotificationModalContent.css';
@@ -32,6 +33,7 @@ function EditNotificationModalContent(props) {
     onModalClose,
     onSavePress,
     onTestPress,
+    onAdvancedSettingsPress,
     onDeleteNotificationPress,
     ...otherProps
   } = props;
@@ -140,6 +142,12 @@ function EditNotificationModalContent(props) {
             </Button>
         }
 
+        <AdvancedSettingsButton
+          advancedSettings={advancedSettings}
+          onAdvancedSettingsPress={onAdvancedSettingsPress}
+          showLabel={false}
+        />
+
         <SpinnerErrorButton
           isSpinning={isTesting}
           error={saveError}
@@ -179,6 +187,7 @@ EditNotificationModalContent.propTypes = {
   onModalClose: PropTypes.func.isRequired,
   onSavePress: PropTypes.func.isRequired,
   onTestPress: PropTypes.func.isRequired,
+  onAdvancedSettingsPress: PropTypes.func.isRequired,
   onDeleteNotificationPress: PropTypes.func
 };
 
