@@ -5620,6 +5620,23 @@
             }
           }
         }
+      },
+      "head": {
+        "tags": [
+          "Ping"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PingResource"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/qualitydefinition/{id}": {
