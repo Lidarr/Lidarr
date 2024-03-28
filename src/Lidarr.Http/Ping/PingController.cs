@@ -21,6 +21,7 @@ namespace Lidarr.Http.Ping
 
         [AllowAnonymous]
         [HttpGet("/ping")]
+        [HttpHead("/ping")]
         [Produces("application/json")]
         public ActionResult<PingResource> GetStatus()
         {
