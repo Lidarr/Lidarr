@@ -1,10 +1,9 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import FormInputGroup from 'Components/Form/FormInputGroup';
+import SelectInput from 'Components/Form/SelectInput';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
-import { inputTypes } from 'Helpers/Props';
 import shortenList from 'Utilities/String/shortenList';
 import titleCase from 'Utilities/String/titleCase';
 
@@ -56,8 +55,7 @@ class SelectAlbumReleaseRow extends Component {
             if (name === 'release') {
               return (
                 <TableRowCell key={name}>
-                  <FormInputGroup
-                    type={inputTypes.SELECT}
+                  <SelectInput
                     name={id.toString()}
                     values={_.map(releases, (r) => ({
                       key: r.id,
