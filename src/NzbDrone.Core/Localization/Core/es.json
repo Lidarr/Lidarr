@@ -663,7 +663,7 @@
     "AppDataLocationHealthCheckMessage": "No será posible actualizar para evitar la eliminación de AppData al actualizar",
     "DownloadClientCheckNoneAvailableMessage": "Ningún gestor de descargas disponible",
     "DownloadClientCheckUnableToCommunicateMessage": "Incapaz de comunicarse con {0}.",
-    "IndexerStatusCheckSingleClientMessage": "Indexadores no disponibles debido a errores: {indexerNames}",
+    "IndexerStatusCheckSingleClientMessage": "Indexadores no disponibles debido a errores: {0}",
     "MountCheckMessage": "El punto de montaje que contiene la ruta de una película es de read-only: ",
     "RemotePathMappingCheckFilesGenericPermissions": "El cliente de descarga {0} informó de la existencia de archivos en {1} pero {appName} no puede ver este directorio.  Es posible que tenga que ajustar los permisos de la carpeta.",
     "RemotePathMappingCheckFilesLocalWrongOSPath": "El cliente de descarga local {0} informó de la existencia de archivos en {1}, pero no es una ruta válida {2}.  Revise la configuración de su cliente de descarga.",
@@ -1054,5 +1054,6 @@
     "NotificationsEmbySettingsSendNotificationsHelpText": "Hacer que MediaBrowser envíe notificaciones a los proveedores configurados",
     "NotificationsKodiSettingsUpdateLibraryHelpText": "¿Actualiza la biblioteca durante Importar y renombrar?",
     "NotificationsSettingsUpdateMapPathsFromHelpText": "Ruta de {appName}, usado para modificar rutas de series cuando {serviceName} ve la ubicación de ruta de biblioteca de forma distinta a {appName} (Requiere 'Actualizar biblioteca')",
-    "NotificationsSettingsUpdateMapPathsToHelpText": "Ruta de {appName}, usado para modificar rutas de series cuando {serviceName} ve la ubicación de ruta de biblioteca de forma distinta a {appName} (Requiere 'Actualizar biblioteca')"
+    "NotificationsSettingsUpdateMapPathsToHelpText": "Ruta de {appName}, usado para modificar rutas de series cuando {serviceName} ve la ubicación de ruta de biblioteca de forma distinta a {appName} (Requiere 'Actualizar biblioteca')",
+    "Menu": "Menú"
 }

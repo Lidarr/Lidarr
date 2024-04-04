@@ -672,5 +672,6 @@
     "AddConnectionImplementation": "Adăugați conexiune - {implementationName}",
     "Album": "Album",
     "AddConnection": "Adăugați conexiune",
-    "AppUpdated": "{appName} actualizat"
+    "AppUpdated": "{appName} actualizat",
+    "CustomFilter": "Filtru personalizat"
 }
