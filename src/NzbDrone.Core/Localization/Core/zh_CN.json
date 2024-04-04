@@ -1103,7 +1103,7 @@
     "RenameFiles": "重命名文件",
     "AutoTagging": "自动标记",
     "AutoTaggingLoadError": "无法加载自动标记",
-    "AutoTaggingNegateHelpText": "如果选中，当 {0} 条件匹配时，自动标记不会应用。",
+    "AutoTaggingNegateHelpText": "如果选中，当 {implementationName} 条件匹配时，自动标记不会应用。",
     "AutoTaggingRequiredHelpText": "这个{0}条件必须匹配自动标记规则才能应用。否则，一个{0}匹配就足够了。",
     "CloneAutoTag": "复制自动标签",
     "Connection": "连接",
