@@ -53,9 +53,14 @@ namespace NzbDrone.Core.Indexers.Gazelle
                 {
                     foreach (var torrent in result.Torrents)
                     {
+                        // skip releases that cannot be used with freeleech tokens when the option is enabled
+                        if (_settings.UseFreeleechToken && !torrent.CanUseToken)
+                        {
+                            continue;
+                        }
+
                         var id = torrent.TorrentId;
-                        var artist = WebUtility.HtmlDecode(result.Artist);
-                        var album = WebUtility.HtmlDecode(result.GroupName);
+                        var infoUrl = GetInfoUrl(result.GroupId, id);
 
                         var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
                         if (torrent.HasCue)
@@ -65,17 +70,17 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
                         torrentInfos.Add(new GazelleInfo
                         {
-                            Guid = string.Format("Gazelle-{0}", id),
-                            Artist = artist,
+                            Guid = infoUrl,
+                            InfoUrl = infoUrl,
+                            DownloadUrl = GetDownloadUrl(id, !torrent.IsFreeLeech && !torrent.IsNeutralLeech && !torrent.IsFreeload && !torrent.IsPersonalFreeLeech),
 
                             // Splice Title from info to avoid calling API again for every torrent.
                             Title = WebUtility.HtmlDecode(title),
-                            Album = album,
+                            Artist = WebUtility.HtmlDecode(result.Artist),
+                            Album = WebUtility.HtmlDecode(result.GroupName),
                             Container = torrent.Encoding,
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),
-                            DownloadUrl = GetDownloadUrl(id),
-                            InfoUrl = GetInfoUrl(result.GroupId, id),
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                             PublishDate = torrent.Time.ToUniversalTime(),
@@ -109,7 +114,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
             return flags;
         }
 
-        private string GetDownloadUrl(int torrentId)
+        private string GetDownloadUrl(int torrentId, bool canUseToken)
         {
             var url = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/torrents.php")
@@ -119,7 +124,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                 .AddQueryParam("torrent_pass", _settings.PassKey);
 
             // Orpheus fails to download if usetoken=0 so we need to only add if we will use one
-            if (_settings.UseFreeleechToken)
+            if (_settings.UseFreeleechToken && canUseToken)
             {
                 url = url.AddQueryParam("usetoken", "1");
             }

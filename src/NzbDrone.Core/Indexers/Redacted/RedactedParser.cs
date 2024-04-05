@@ -46,19 +46,24 @@ namespace NzbDrone.Core.Indexers.Redacted
                 {
                     foreach (var torrent in result.Torrents)
                     {
+                        // skip releases that cannot be used with freeleech tokens when the option is enabled
+                        if (_settings.UseFreeleechToken && !torrent.CanUseToken)
+                        {
+                            continue;
+                        }
+
                         var id = torrent.TorrentId;
                         var title = WebUtility.HtmlDecode(GetTitle(result, torrent));
-                        var artist = WebUtility.HtmlDecode(result.Artist);
-                        var album = WebUtility.HtmlDecode(result.GroupName);
+                        var infoUrl = GetInfoUrl(result.GroupId, id);
 
                         torrentInfos.Add(new GazelleInfo
                         {
-                            Guid = $"Redacted-{id}",
-                            InfoUrl = GetInfoUrl(result.GroupId, id),
-                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken),
+                            Guid = infoUrl,
+                            InfoUrl = infoUrl,
+                            DownloadUrl = GetDownloadUrl(id, !torrent.IsFreeLeech && !torrent.IsNeutralLeech && !torrent.IsFreeload && !torrent.IsPersonalFreeLeech),
                             Title = title,
-                            Artist = artist,
-                            Album = album,
+                            Artist = WebUtility.HtmlDecode(result.Artist),
+                            Album = WebUtility.HtmlDecode(result.GroupName),
                             Container = torrent.Encoding,
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),
