@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Alert from 'Components/Alert';
 import Card from 'Components/Card';
 import FieldSet from 'Components/FieldSet';
 import Form from 'Components/Form/Form';
@@ -150,6 +151,11 @@ class EditCustomFormatModalContent extends Component {
                   </Form>
 
                   <FieldSet legend={translate('Conditions')}>
+                    <Alert kind={kinds.INFO}>
+                      <div>
+                        {translate('CustomFormatsSettingsTriggerInfo')}
+                      </div>
+                    </Alert>
                     <div className={styles.customFormats}>
                       {
                         specifications.map((tag) => {
