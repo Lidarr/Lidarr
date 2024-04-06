@@ -111,18 +111,18 @@ namespace NzbDrone.Core.Notifications.Ntfy
         {
             try
             {
-                requestBuilder.Headers.Add("X-Title", title);
-                requestBuilder.Headers.Add("X-Message", message);
-                requestBuilder.Headers.Add("X-Priority", settings.Priority.ToString());
+                requestBuilder.AddQueryParam("title", title);
+                requestBuilder.AddQueryParam("message", message);
+                requestBuilder.AddQueryParam("priority", settings.Priority.ToString());
 
                 if (settings.Tags.Any())
                 {
-                    requestBuilder.Headers.Add("X-Tags", settings.Tags.Join(","));
+                    requestBuilder.AddQueryParam("tags", settings.Tags.Join(","));
                 }
 
                 if (!settings.ClickUrl.IsNullOrWhiteSpace())
                 {
-                    requestBuilder.Headers.Add("X-Click", settings.ClickUrl);
+                    requestBuilder.AddQueryParam("click", settings.ClickUrl);
                 }
 
                 if (!settings.AccessToken.IsNullOrWhiteSpace())
