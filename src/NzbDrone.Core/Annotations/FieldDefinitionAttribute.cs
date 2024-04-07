@@ -86,7 +86,8 @@ namespace NzbDrone.Core.Annotations
         TagSelect,
         RootFolder,
         QualityProfile,
-        MetadataProfile
+        MetadataProfile,
+        ArtistTag
     }
 
     public enum HiddenType

@@ -4,6 +4,7 @@ import Link from 'Components/Link/Link';
 import { inputTypes, kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import AlbumReleaseSelectInputConnector from './AlbumReleaseSelectInputConnector';
+import ArtistTagInput from './ArtistTagInput';
 import AutoCompleteInput from './AutoCompleteInput';
 import CaptchaInputConnector from './CaptchaInputConnector';
 import CheckInput from './CheckInput';
@@ -98,6 +99,9 @@ function getComponent(type) {
 
     case inputTypes.DYNAMIC_SELECT:
       return EnhancedSelectInputConnector;
+
+    case inputTypes.ARTIST_TAG:
+      return ArtistTagInput;
 
     case inputTypes.SERIES_TYPE_SELECT:
       return SeriesTypeSelectInput;

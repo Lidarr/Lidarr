@@ -20,6 +20,7 @@ export const DOWNLOAD_CLIENT_SELECT = 'downloadClientSelect';
 export const ROOT_FOLDER_SELECT = 'rootFolderSelect';
 export const SELECT = 'select';
 export const SERIES_TYPE_SELECT = 'artistTypeSelect';
+export const ARTIST_TAG = 'artistTag';
 export const DYNAMIC_SELECT = 'dynamicSelect';
 export const TAG = 'tag';
 export const TAG_SELECT = 'tagSelect';
@@ -49,6 +50,7 @@ export const all = [
   DOWNLOAD_CLIENT_SELECT,
   ROOT_FOLDER_SELECT,
   SELECT,
+  ARTIST_TAG,
   DYNAMIC_SELECT,
   SERIES_TYPE_SELECT,
   TAG,
