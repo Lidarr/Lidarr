@@ -1084,5 +1084,22 @@
     "UiSettingsSummary": "Ημερολόγιο, ημερομηνία και επιλογές με προβλήματα χρώματος",
     "ArtistIndexFooterDownloading": "Λήψη",
     "AutomaticSearch": "Αυτόματη αναζήτηση",
-    "KeyboardShortcuts": "Συντομεύσεις πληκτρολογίου"
+    "KeyboardShortcuts": "Συντομεύσεις πληκτρολογίου",
+    "GrabReleaseUnknownArtistOrAlbumMessageText": "Ο {appName} δεν μπόρεσε να προσδιορίσει ποια ταινία ήταν αυτή η κυκλοφορία. Το {appName} ενδέχεται να μην μπορεί να εισαγάγει αυτόματα αυτήν την κυκλοφορία. Θέλετε να τραβήξετε το \"{0}\";",
+    "IndexerFlags": "Σημαίες ευρετηρίου",
+    "CustomFilter": "Custom Φιλτρα",
+    "Tomorrow": "Αύριο",
+    "Yesterday": "Εχθές",
+    "FormatAgeHours": "Ωρες",
+    "FormatAgeMinute": "Λεπτά",
+    "FormatAgeMinutes": "Λεπτά",
+    "MonitorAllAlbums": "Όλα Τα Άλμπουμ",
+    "MonitorFirstAlbum": "Πρώτο άλμπουμ",
+    "MonitorFutureAlbums": "Μελλοντικά άλμπουμ",
+    "MonitorLastestAlbum": "Τελευταίο άλμπουμ",
+    "MonitorMissingAlbums": "Λείπουν άλμπουμ",
+    "MonitorNoAlbums": "Κανένας",
+    "AddToDownloadQueue": "Προστέθηκε για λήψη ουράς",
+    "AddedToDownloadQueue": "Προστέθηκε στην ουρά λήψης",
+    "UseSsl": "Χρησιμοποιήστε SSL"
 }

@@ -1210,5 +1210,7 @@
     "CustomFormatsSettingsSummary": "Formats et paramètres personnalisés",
     "DownloadClientsSettingsSummary": "Clients de téléchargement, gestion des téléchargements et mappages de chemins d'accès à distance",
     "AddToDownloadQueue": "Ajouter à la file d'attente de téléchargement",
-    "AddedToDownloadQueue": "Ajouté à la file d'attente de téléchargement"
+    "AddedToDownloadQueue": "Ajouté à la file d'attente de téléchargement",
+    "IncludeHealthWarnings": "Inclure les avertissements de santé",
+    "CustomFormatsSettingsTriggerInfo": "Un format personnalisé sera appliqué à une version ou à un fichier lorsqu'il correspond à au moins un de chacun des différents types de conditions choisis."
 }

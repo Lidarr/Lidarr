@@ -726,5 +726,16 @@
     "TagsSettingsSummary": "Xem tất cả các thẻ và cách chúng được sử dụng. Các thẻ không sử dụng có thể bị xóa",
     "UiSettingsSummary": "Lịch, ngày tháng và các tùy chọn bị suy giảm màu sắc",
     "ArtistIndexFooterDownloading": "Đang tải xuống",
-    "AutomaticSearch": "Tìm kiếm tự động"
+    "AutomaticSearch": "Tìm kiếm tự động",
+    "IndexerFlags": "Cờ chỉ mục",
+    "CustomFilter": "Bộ lọc tùy chỉnh",
+    "FormatAgeHours": "Giờ",
+    "FormatAgeMinute": "Phút",
+    "MonitorNoAlbums": "không ai",
+    "Tomorrow": "Ngày mai",
+    "Yesterday": "Hôm qua",
+    "AddToDownloadQueue": "Thêm vào hàng đợi tải xuống",
+    "AddedToDownloadQueue": "Đã thêm vào hàng đợi tải xuống",
+    "FormatAgeMinutes": "Phút",
+    "GrabReleaseUnknownArtistOrAlbumMessageText": "{appName} không thể xác định bộ phim này được phát hành. {appName} có thể không tự động nhập bản phát hành này. Bạn có muốn lấy '{0}' không?"
 }

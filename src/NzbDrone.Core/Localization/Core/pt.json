@@ -939,5 +939,18 @@
     "AnchorTooltip": "Este arquivo já está na sua biblioteca para uma versão que você está importando no momento",
     "ArtistFolderFormat": "Formato da pasta do artista",
     "AlbumIsDownloading": "O álbum está sendo baixado",
-    "AlbumStudioTruncated": "Apenas os últimos 20 álbuns são mostrados, acesse os detalhes para ver todos os álbuns"
+    "AlbumStudioTruncated": "Apenas os últimos 20 álbuns são mostrados, acesse os detalhes para ver todos os álbuns",
+    "GrabReleaseUnknownArtistOrAlbumMessageText": "O {appName} não pode determinar a que filme pertence esta versão. O {appName} pode ser incapaz de importar automaticamente esta versão. Deseja capturar \"{0}\"?",
+    "IndexerFlags": "Sinalizadores do indexador",
+    "CustomFilter": "Filtros personalizados",
+    "FormatAgeHours": "Horas",
+    "FormatAgeMinute": "Minutos",
+    "FormatAgeMinutes": "Minutos",
+    "MonitorAllAlbums": "Todos os Álbuns",
+    "Tomorrow": "Amanhã",
+    "Yesterday": "Ontem",
+    "AddToDownloadQueue": "Adicionar à fila de download",
+    "AddedToDownloadQueue": "Adicionado à fila de download",
+    "UseSsl": "Usar SSL",
+    "MonitorNoAlbums": "Nenhum"
 }
