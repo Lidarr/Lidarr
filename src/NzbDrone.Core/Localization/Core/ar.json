@@ -724,5 +724,17 @@
     "ImportLists": "القوائم",
     "ArtistIndexFooterDownloading": "جارى التحميل",
     "ImportList": "القوائم",
-    "AutomaticSearch": "البحث التلقائي"
+    "AutomaticSearch": "البحث التلقائي",
+    "FormatAgeMinutes": "الدقائق",
+    "IndexerFlags": "أعلام المفهرس",
+    "CustomFilter": "مرشحات مخصصة",
+    "FormatAgeMinute": "الدقائق",
+    "MonitorNoAlbums": "لا شيء",
+    "Yesterday": "في الامس",
+    "FormatAgeHours": "ساعات",
+    "FormatAgeHour": "ساعات",
+    "Tomorrow": "غدا",
+    "GrabReleaseUnknownArtistOrAlbumMessageText": "لم يتمكن Radarr من تحديد الفيلم الذي كان هذا الإصدار من أجله. قد يتعذر على Radarr استيراد هذا الإصدار تلقائيًا. هل تريد انتزاع \"{0}\"؟",
+    "AddToDownloadQueue": "إضافة إلى قائمة انتظار التنزيل",
+    "AddedToDownloadQueue": "تمت الإضافة إلى قائمة انتظار التنزيلات"
 }

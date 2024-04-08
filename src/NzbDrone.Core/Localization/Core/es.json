@@ -1055,5 +1055,6 @@
     "NotificationsKodiSettingsUpdateLibraryHelpText": "¿Actualiza la biblioteca durante Importar y renombrar?",
     "NotificationsSettingsUpdateMapPathsFromHelpText": "Ruta de {appName}, usado para modificar rutas de series cuando {serviceName} ve la ubicación de ruta de biblioteca de forma distinta a {appName} (Requiere 'Actualizar biblioteca')",
     "NotificationsSettingsUpdateMapPathsToHelpText": "Ruta de {appName}, usado para modificar rutas de series cuando {serviceName} ve la ubicación de ruta de biblioteca de forma distinta a {appName} (Requiere 'Actualizar biblioteca')",
-    "Menu": "Menú"
+    "Menu": "Menú",
+    "CustomFormatsSettingsTriggerInfo": "Un formato personalizado será aplicado al lanzamiento o archivo cuando coincida con al menos uno de los diferentes tipos de condición elegidos."
 }

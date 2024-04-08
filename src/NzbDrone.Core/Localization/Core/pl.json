@@ -786,5 +786,17 @@
     "UiSettingsSummary": "Opcje z osłabionym kalendarzem, datą i kolorem",
     "ArtistIndexFooterDownloading": "Ściąganie",
     "ImportLists": "Listy",
-    "AutomaticSearch": "Automatyczne wyszukiwanie"
+    "AutomaticSearch": "Automatyczne wyszukiwanie",
+    "IndexerFlags": "Flagi indeksujące",
+    "CustomFilter": "Filtry niestandardowe",
+    "FormatAgeHour": "godziny",
+    "FormatAgeHours": "godziny",
+    "MonitorNoAlbums": "Żaden",
+    "Yesterday": "Wczoraj",
+    "AddToDownloadQueue": "Dodaj do kolejki pobierania",
+    "AddedToDownloadQueue": "Dodano do kolejki pobierania",
+    "GrabReleaseUnknownArtistOrAlbumMessageText": "Radarr nie był w stanie określić, dla którego filmu jest to wydanie. Radarr może nie być w stanie automatycznie zaimportować tej wersji. Czy chcesz złapać „{0}”?",
+    "Tomorrow": "Jutro",
+    "FormatAgeMinute": "Minuty",
+    "FormatAgeMinutes": "Minuty"
 }

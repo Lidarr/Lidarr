@@ -726,5 +726,15 @@
     "MonitoredStatus": "Наблюдавано / Състояние",
     "ArtistIndexFooterDownloading": "Изтегляне",
     "ImportList": "Списъци",
-    "AutomaticSearch": "Автоматично търсене"
+    "AutomaticSearch": "Автоматично търсене",
+    "GrabReleaseUnknownArtistOrAlbumMessageText": "Radarr не успя да определи за кой филм е предназначено това издание. Radarr може да не може автоматично да импортира тази версия. Искате ли да вземете „{0}“?",
+    "CustomFilter": "Персонализирани филтри",
+    "FormatAgeHour": "Часа",
+    "FormatAgeHours": "Часа",
+    "FormatAgeMinute": "Минути",
+    "FormatAgeMinutes": "Минути",
+    "MonitorNoAlbums": "Нито един",
+    "Tomorrow": "Утре",
+    "Yesterday": "Вчера",
+    "IndexerFlags": "Индексиращи знамена"
 }

@@ -1185,7 +1185,7 @@
     "RemoveQueueItemRemovalMethod": "Método de Remoção",
     "RemoveQueueItemRemovalMethodHelpTextWarning": "'Remover do cliente de download' removerá o download e os arquivos do cliente de download.",
     "ArtistIndexFooterDownloading": "Baixando",
-    "IncludeHealthWarnings": "Incluir Advertências de Saúde",
+    "IncludeHealthWarnings": "Incluir Alertas de Saúde",
     "OnArtistAdd": "Ao Adicionar Artista",
     "Donate": "Doar",
     "Menu": "Menu",
@@ -1278,5 +1278,7 @@
     "IndexerFlags": "Sinalizadores do Indexador",
     "Rejections": "Rejeições",
     "SelectIndexerFlags": "Selecionar Sinalizadores do Indexador",
-    "SetIndexerFlags": "Definir Sinalizadores de Indexador"
+    "SetIndexerFlags": "Definir Sinalizadores de Indexador",
+    "CustomFormatsSettingsTriggerInfo": "Um formato personalizado será aplicado a um lançamento ou arquivo quando corresponder a pelo menos um de cada um dos diferentes tipos de condição escolhidos.",
+    "IndexerPriorityHelpText": "Prioridade do indexador de 1 (mais alta) a 50 (mais baixa). Padrão: 25. Usado ao capturar lançamentos como desempate para lançamentos iguais, {appName} ainda usará todos os indexadores habilitados para sincronização e pesquisa de RSS"
 }

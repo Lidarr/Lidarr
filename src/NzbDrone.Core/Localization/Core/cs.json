@@ -842,5 +842,20 @@
     "UiSettingsSummary": "Možnosti kalendáře, data a barev",
     "CustomFormatsSettingsSummary": "Vlastní formáty a nastavení",
     "ArtistIndexFooterDownloading": "Stahování",
-    "AutomaticSearch": "Vyhledat automaticky"
+    "AutomaticSearch": "Vyhledat automaticky",
+    "GrabReleaseUnknownArtistOrAlbumMessageText": "{appName} nebyl schopen určit, pro který film je toto vydání určeno. {appName} nemusí být schopen toto vydání automaticky importovat. Chcete chytit „{0}“?",
+    "IndexerFlags": "Příznaky indexeru",
+    "CustomFilter": "Vlastní filtry",
+    "FormatAgeHour": "hodina",
+    "FormatAgeHours": "hodin",
+    "FormatAgeMinute": "minuta",
+    "FormatAgeMinutes": "minut",
+    "MonitorNoAlbums": "Žádný",
+    "Tomorrow": "Zítra",
+    "FormatAgeDay": "den",
+    "FormatAgeDays": "dnů",
+    "FormatDateTime": "{formattedDate} {formattedTime}",
+    "Yesterday": "Včera",
+    "AddToDownloadQueue": "Přidat stahování do fronty",
+    "AddedToDownloadQueue": "Stahování přidáno do fronty"
 }
