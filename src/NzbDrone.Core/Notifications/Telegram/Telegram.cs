@@ -18,52 +18,72 @@ namespace NzbDrone.Core.Notifications.Telegram
 
         public override void OnGrab(GrabMessage grabMessage)
         {
-            _proxy.SendNotification(ALBUM_GRABBED_TITLE, grabMessage.Message, Settings);
+            var title = Settings.IncludeAppNameInTitle ? ALBUM_GRABBED_TITLE_BRANDED : ALBUM_GRABBED_TITLE;
+
+            _proxy.SendNotification(title, grabMessage.Message, Settings);
         }
 
         public override void OnReleaseImport(AlbumDownloadMessage message)
         {
-            _proxy.SendNotification(ALBUM_DOWNLOADED_TITLE, message.Message, Settings);
+            var title = Settings.IncludeAppNameInTitle ? ALBUM_DOWNLOADED_TITLE_BRANDED : ALBUM_DOWNLOADED_TITLE;
+
+            _proxy.SendNotification(title, message.Message, Settings);
         }
 
         public override void OnArtistAdd(ArtistAddMessage message)
         {
-            _proxy.SendNotification(ARTIST_ADDED_TITLE, message.Message, Settings);
+            var title = Settings.IncludeAppNameInTitle ? ARTIST_ADDED_TITLE_BRANDED : ARTIST_ADDED_TITLE;
+
+            _proxy.SendNotification(title, message.Message, Settings);
         }
 
         public override void OnArtistDelete(ArtistDeleteMessage deleteMessage)
         {
-            _proxy.SendNotification(ARTIST_DELETED_TITLE, deleteMessage.Message, Settings);
+            var title = Settings.IncludeAppNameInTitle ? ARTIST_DELETED_TITLE_BRANDED : ARTIST_DELETED_TITLE;
+
+            _proxy.SendNotification(title, deleteMessage.Message, Settings);
         }
 
         public override void OnAlbumDelete(AlbumDeleteMessage deleteMessage)
         {
-            _proxy.SendNotification(ALBUM_DELETED_TITLE, deleteMessage.Message, Settings);
+            var title = Settings.IncludeAppNameInTitle ? ALBUM_DELETED_TITLE_BRANDED : ALBUM_DELETED_TITLE;
+
+            _proxy.SendNotification(title, deleteMessage.Message, Settings);
         }
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
-            _proxy.SendNotification(HEALTH_ISSUE_TITLE, healthCheck.Message, Settings);
+            var title = Settings.IncludeAppNameInTitle ? HEALTH_ISSUE_TITLE_BRANDED : HEALTH_ISSUE_TITLE;
+
+            _proxy.SendNotification(title, healthCheck.Message, Settings);
         }
 
         public override void OnHealthRestored(HealthCheck.HealthCheck previousCheck)
         {
-            _proxy.SendNotification(HEALTH_RESTORED_TITLE, $"The following issue is now resolved: {previousCheck.Message}", Settings);
+            var title = Settings.IncludeAppNameInTitle ? HEALTH_RESTORED_TITLE_BRANDED : HEALTH_RESTORED_TITLE;
+
+            _proxy.SendNotification(title, $"The following issue is now resolved: {previousCheck.Message}", Settings);
         }
 
         public override void OnDownloadFailure(DownloadFailedMessage message)
         {
-            _proxy.SendNotification(DOWNLOAD_FAILURE_TITLE, message.Message, Settings);
+            var title = Settings.IncludeAppNameInTitle ? DOWNLOAD_FAILURE_TITLE_BRANDED : DOWNLOAD_FAILURE_TITLE;
+
+            _proxy.SendNotification(title, message.Message, Settings);
         }
 
         public override void OnImportFailure(AlbumDownloadMessage message)
         {
-            _proxy.SendNotification(IMPORT_FAILURE_TITLE, message.Message, Settings);
+            var title = Settings.IncludeAppNameInTitle ? IMPORT_FAILURE_TITLE_BRANDED : IMPORT_FAILURE_TITLE;
+
+            _proxy.SendNotification(title, message.Message, Settings);
         }
 
         public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
         {
-            _proxy.SendNotification(APPLICATION_UPDATE_TITLE, updateMessage.Message, Settings);
+            var title = Settings.IncludeAppNameInTitle ? APPLICATION_UPDATE_TITLE_BRANDED : APPLICATION_UPDATE_TITLE;
+
+            _proxy.SendNotification(title, updateMessage.Message, Settings);
         }
 
         public override ValidationResult Test()
