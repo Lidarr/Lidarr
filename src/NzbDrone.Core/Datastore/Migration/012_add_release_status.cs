@@ -39,7 +39,7 @@ namespace NzbDrone.Core.Datastore.Migration
     public enum ReleaseStatus12
     {
         Official = 0,
-        Promotion = 1,
+        Promotional = 1,
         Bootleg = 2,
         Pseudo = 3
     }
