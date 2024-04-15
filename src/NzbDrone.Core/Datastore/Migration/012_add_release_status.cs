@@ -39,9 +39,11 @@ namespace NzbDrone.Core.Datastore.Migration
     public enum ReleaseStatus12
     {
         Official = 0,
-        Promotional = 1,
+        Promotion = 1,
         Bootleg = 2,
-        Pseudo = 3
+        Pseudo = 3,
+        Withdrawn = 4,
+        Cancelled = 5
     }
 
     public class ProfileUpdater11
@@ -91,7 +93,7 @@ namespace NzbDrone.Core.Datastore.Migration
                     },
                     new ProfileItem12
                     {
-                        ReleaseStatus = (int)ReleaseStatus12.Promotional,
+                        ReleaseStatus = (int)ReleaseStatus12.Promotion,
                         Allowed = false
                     },
                     new ProfileItem12
@@ -102,6 +104,16 @@ namespace NzbDrone.Core.Datastore.Migration
                     new ProfileItem12
                     {
                         ReleaseStatus = (int)ReleaseStatus12.Pseudo,
+                        Allowed = false
+                    },
+                    new ProfileItem12
+                    {
+                        ReleaseStatus = (int)ReleaseStatus12.Withdrawn,
+                        Allowed = false
+                    },
+                    new ProfileItem12
+                    {
+                        ReleaseStatus = (int)ReleaseStatus12.Cancelled,
                         Allowed = false
                     }
                 };
