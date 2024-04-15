@@ -91,7 +91,7 @@ namespace NzbDrone.Core.Datastore.Migration
                     },
                     new ProfileItem12
                     {
-                        ReleaseStatus = (int)ReleaseStatus12.Promotion,
+                        ReleaseStatus = (int)ReleaseStatus12.Promotional,
                         Allowed = false
                     },
                     new ProfileItem12
