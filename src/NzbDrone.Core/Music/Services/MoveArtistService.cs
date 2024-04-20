@@ -1,6 +1,7 @@
 using System.IO;
 using NLog;
 using NzbDrone.Common.Disk;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Messaging.Commands;
@@ -55,6 +56,12 @@ namespace NzbDrone.Core.Music
                 else
                 {
                     _logger.ProgressInfo("Moving {0} from '{1}' to '{2}'", artist.Name, sourcePath, destinationPath);
+                }
+
+                if (sourcePath.PathEquals(destinationPath))
+                {
+                    _logger.ProgressInfo("{0} is already in the specified location '{1}'.", artist, destinationPath);
+                    return;
                 }
             }
 
