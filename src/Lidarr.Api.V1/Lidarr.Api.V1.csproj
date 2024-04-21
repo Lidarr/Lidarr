@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lidarr.Http\Lidarr.Http.csproj" />
@@ -10,9 +10,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
-    <PackageReference Include="FluentValidation" Version="9.5.4" />
+    <PackageReference Include="FluentValidation" Version="11.9.0" />
     <PackageReference Include="Ical.Net" Version="4.2.0" />
-    <PackageReference Include="NLog" Version="5.2.0" />
-    <PackageReference Include="System.IO.Abstractions" Version="17.0.24" />
+    <PackageReference Include="NLog" Version="5.2.8" />
+    <PackageReference Include="System.IO.Abstractions" Version="21.0.2" />
   </ItemGroup>
 </Project>

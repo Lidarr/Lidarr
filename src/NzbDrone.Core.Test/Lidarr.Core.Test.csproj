@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NBuilder" Version="6.1.0" />
-    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="17.0.24" />
-    <PackageReference Include="AutoFixture" Version="4.17.0" />
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="21.0.2" />
+    <PackageReference Include="AutoFixture" Version="4.18.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Test.Common\Lidarr.Test.Common.csproj" />
