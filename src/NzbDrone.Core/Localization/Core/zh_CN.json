@@ -1074,7 +1074,6 @@
     "OverviewOptions": "概览选项",
     "PosterOptions": "海报选项",
     "Posters": "海报",
-    "AddAutoTagError": "无法添加新的自动标签，请重试。",
     "OrganizeSelectedArtists": "整理选定的剧集",
     "Table": "表格",
     "AddAutoTag": "添加自动标签",
@@ -1262,5 +1261,8 @@
     "NotificationsKodiSettingsUpdateLibraryHelpText": "导入和重命名时更新资源库？",
     "ConnectionSettingsUrlBaseHelpText": "向 {clientName} url 添加前缀，例如 {url}",
     "DownloadClientDelugeSettingsDirectoryHelpText": "可选的下载位置，留空使用 Aria2 默认位置",
-    "UseSsl": "使用 SSL"
+    "UseSsl": "使用 SSL",
+    "CustomFormatsSpecificationFlag": "标记",
+    "AutoTaggingSpecificationTag": "标签",
+    "AddAutoTagError": "无法添加新的自动标签，请重试。"
 }
