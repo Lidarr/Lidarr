@@ -48,14 +48,16 @@ class InteractiveImportRow extends Component {
       artist,
       album,
       tracks,
-      quality
+      quality,
+      size
     } = this.props;
 
     if (
       artist &&
       album != null &&
       tracks.length &&
-      quality
+      quality &&
+      size > 0
     ) {
       this.props.onSelectedChange({ id, value: true });
     }
