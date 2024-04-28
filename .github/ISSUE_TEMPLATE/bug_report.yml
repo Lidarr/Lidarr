@@ -37,7 +37,7 @@ body:
     label: Environment
     description: |
       examples:
-        - **OS**: Ubuntu 20.04
+        - **OS**: Ubuntu 22.04
         - **Lidarr**: Lidarr 0.8.1.2135
         - **Docker Install**: Yes
         - **Using Reverse Proxy**: No
