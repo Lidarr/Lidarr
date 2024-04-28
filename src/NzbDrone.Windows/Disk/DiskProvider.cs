@@ -181,6 +181,11 @@ namespace NzbDrone.Windows.Disk
         {
             try
             {
+                if (source.Length > 256 && !source.StartsWith(@"\\?\"))
+                {
+                    source = @"\\?\" + source;
+                }
+
                 return CreateHardLink(destination, source, IntPtr.Zero);
             }
             catch (Exception ex)

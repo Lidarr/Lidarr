@@ -537,5 +537,9 @@
     "AuthenticationRequiredPasswordHelpTextWarning": "Введіть новий пароль",
     "AuthenticationRequiredUsernameHelpTextWarning": "Введіть нове ім'я користувача",
     "AuthenticationRequiredWarning": "Щоб запобігти віддаленому доступу без автентифікації, {appName} тепер вимагає ввімкнення автентифікації. За бажанням можна вимкнути автентифікацію з локальних адрес.",
-    "UpdateAll": "Оновити все"
+    "UpdateAll": "Оновити все",
+    "20MinutesTwenty": "20 хвилин: {0}",
+    "45MinutesFourtyFive": "45 хвилин: {0}",
+    "60MinutesSixty": "60 хвилин: {0}",
+    "AddAlbumWithTitle": "Додати {albumTitle}"
 }
