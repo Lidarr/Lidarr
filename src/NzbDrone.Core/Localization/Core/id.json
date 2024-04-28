@@ -103,5 +103,6 @@
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Konfirmasi sandi baru",
     "AuthenticationRequiredWarning": "Untuk mencegah akses jarak jauh tanpa autentikasi, {appName} kini mewajibkan pengaktifkan autentikasi. Kamu dapat menonaktifkan autentikasi dari jaringan lokal.",
     "Files": "File",
-    "TotalFileSize": "Jumlah Ukuran File"
+    "TotalFileSize": "Jumlah Ukuran File",
+    "20MinutesTwenty": "Indonesia"
 }

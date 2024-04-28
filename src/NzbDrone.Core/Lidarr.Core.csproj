@@ -23,7 +23,6 @@
     <PackageReference Include="NLog.Targets.Syslog" Version="7.0.0" />
     <PackageReference Include="System.IO.Abstractions" Version="21.0.2" />
     <PackageReference Include="TagLibSharp-Lidarr" Version="2.4.0.36" />
-    <PackageReference Include="Kveer.XmlRPC" Version="1.2.1" />
     <PackageReference Include="Npgsql" Version="8.0.2" />
     <PackageReference Include="SpotifyAPI.Web" Version="7.1.1" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />

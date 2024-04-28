@@ -1280,5 +1280,8 @@
     "SelectIndexerFlags": "Selecionar Sinalizadores do Indexador",
     "SetIndexerFlags": "Definir Sinalizadores de Indexador",
     "CustomFormatsSettingsTriggerInfo": "Um formato personalizado será aplicado a um lançamento ou arquivo quando corresponder a pelo menos um de cada um dos diferentes tipos de condição escolhidos.",
-    "IndexerPriorityHelpText": "Prioridade do indexador de 1 (mais alta) a 50 (mais baixa). Padrão: 25. Usado ao capturar lançamentos como desempate para lançamentos iguais, {appName} ainda usará todos os indexadores habilitados para sincronização e pesquisa de RSS"
+    "IndexerPriorityHelpText": "Prioridade do indexador de 1 (mais alta) a 50 (mais baixa). Padrão: 25. Usado ao capturar lançamentos como desempate para lançamentos iguais, {appName} ainda usará todos os indexadores habilitados para sincronização e pesquisa de RSS",
+    "AutoTaggingSpecificationTag": "Etiqueta",
+    "NotificationsTelegramSettingsIncludeAppName": "Incluir {appName} no Título",
+    "NotificationsTelegramSettingsIncludeAppNameHelpText": "Opcionalmente, prefixe o título da mensagem com {appName} para diferenciar notificações de diferentes aplicativos"
 }
