@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using DryIoc;
 using Lidarr.Api.V1.System;
 using Lidarr.Http;
 using Lidarr.Http.Authentication;
+using Lidarr.Http.ClientSchema;
 using Lidarr.Http.ErrorManagement;
 using Lidarr.Http.Frontend;
 using Lidarr.Http.Middleware;
@@ -209,6 +211,7 @@ namespace NzbDrone.Host
         }
 
         public void Configure(IApplicationBuilder app,
+                              IContainer container,
                               IStartupContext startupContext,
                               Lazy<IMainDatabase> mainDatabaseFactory,
                               Lazy<ILogDatabase> logDatabaseFactory,
@@ -239,6 +242,7 @@ namespace NzbDrone.Host
             _ = logDatabaseFactory.Value;
 
             dbTarget.Register();
+            SchemaBuilder.Initialize(container);
 
             if (OsInfo.IsNotWindows)
             {
