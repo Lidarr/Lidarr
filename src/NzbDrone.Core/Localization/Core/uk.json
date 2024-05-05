@@ -1,7 +1,7 @@
 {
     "About": "Про нас",
     "Actions": "Дії",
-    "AddingTag": "Додавання тегу",
+    "AddingTag": "Додавання тега",
     "AddListExclusion": "Додати виняток зі списку",
     "AgeWhenGrabbed": "Вік (коли схоплено)",
     "AutoRedownloadFailedHelpText": "Автоматичний пошук і спроба завантажити інший випуск",
@@ -541,5 +541,9 @@
     "20MinutesTwenty": "20 хвилин: {0}",
     "45MinutesFourtyFive": "45 хвилин: {0}",
     "60MinutesSixty": "60 хвилин: {0}",
-    "AddAlbumWithTitle": "Додати {albumTitle}"
+    "AddAlbumWithTitle": "Додати {albumTitle}",
+    "AddNewAlbum": "Додати новий альбом",
+    "AddNewAlbumSearchForNewAlbum": "Почати пошук нового альбому",
+    "AddToDownloadQueue": "Додати до черги завантажень",
+    "AlbumDetails": "Деталі альбому"
 }
