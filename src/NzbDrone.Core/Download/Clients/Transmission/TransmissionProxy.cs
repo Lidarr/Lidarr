@@ -221,6 +221,7 @@ namespace NzbDrone.Core.Download.Clients.Transmission
                 "seedIdleLimit",
                 "seedIdleMode",
                 "fileCount",
+                "file-count",
                 "labels"
             };
 
