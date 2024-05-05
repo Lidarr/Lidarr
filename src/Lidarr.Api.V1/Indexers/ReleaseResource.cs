@@ -132,7 +132,8 @@ namespace Lidarr.Api.V1.Indexers
                     MagnetUrl = resource.MagnetUrl,
                     InfoHash = resource.InfoHash,
                     Seeders = resource.Seeders,
-                    Peers = (resource.Seeders.HasValue && resource.Leechers.HasValue) ? (resource.Seeders + resource.Leechers) : null
+                    Peers = (resource.Seeders.HasValue && resource.Leechers.HasValue) ? (resource.Seeders + resource.Leechers) : null,
+                    IndexerFlags = (IndexerFlags)resource.IndexerFlags
                 };
             }
             else
