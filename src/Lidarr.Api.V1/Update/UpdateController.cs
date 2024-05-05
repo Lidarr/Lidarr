@@ -3,6 +3,7 @@ using System.Linq;
 using Lidarr.Http;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.EnvironmentInfo;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Update;
 using NzbDrone.Core.Update.History;
 
@@ -13,11 +14,13 @@ namespace Lidarr.Api.V1.Update
     {
         private readonly IRecentUpdateProvider _recentUpdateProvider;
         private readonly IUpdateHistoryService _updateHistoryService;
+        private readonly IConfigFileProvider _configFileProvider;
 
-        public UpdateController(IRecentUpdateProvider recentUpdateProvider, IUpdateHistoryService updateHistoryService)
+        public UpdateController(IRecentUpdateProvider recentUpdateProvider, IUpdateHistoryService updateHistoryService, IConfigFileProvider configFileProvider)
         {
             _recentUpdateProvider = recentUpdateProvider;
             _updateHistoryService = updateHistoryService;
+            _configFileProvider = configFileProvider;
         }
 
         [HttpGet]
@@ -45,7 +48,13 @@ namespace Lidarr.Api.V1.Update
                     installed.Installed = true;
                 }
 
-                var installDates = _updateHistoryService.InstalledSince(resources.Last().ReleaseDate)
+                if (!_configFileProvider.LogDbEnabled)
+                {
+                    return resources;
+                }
+
+                var updateHistory = _updateHistoryService.InstalledSince(resources.Last().ReleaseDate);
+                var installDates = updateHistory
                                                         .DistinctBy(v => v.Version)
                                                         .ToDictionary(v => v.Version);
 
