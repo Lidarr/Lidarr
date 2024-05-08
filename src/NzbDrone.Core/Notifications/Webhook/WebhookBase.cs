@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.Tags;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Notifications.Webhook
@@ -13,12 +15,14 @@ namespace NzbDrone.Core.Notifications.Webhook
     {
         private readonly IConfigFileProvider _configFileProvider;
         private readonly IConfigService _configService;
+        private readonly ITagRepository _tagRepository;
         private readonly IMapCoversToLocal _mediaCoverService;
 
-        protected WebhookBase(IConfigFileProvider configFileProvider, IConfigService configService, IMapCoversToLocal mediaCoverService)
+        protected WebhookBase(IConfigFileProvider configFileProvider, IConfigService configService, ITagRepository tagRepository, IMapCoversToLocal mediaCoverService)
         {
             _configFileProvider = configFileProvider;
             _configService = configService;
+            _tagRepository = tagRepository;
             _mediaCoverService = mediaCoverService;
         }
 
@@ -221,7 +225,8 @@ namespace NzbDrone.Core.Notifications.Webhook
                     Id = 1,
                     Name = "Test Name",
                     Path = "C:\\testpath",
-                    MBId = "aaaaa-aaa-aaaa-aaaaaa"
+                    MBId = "aaaaa-aaa-aaaa-aaaaaa",
+                    Tags = new List<string> { "test-tag" }
                 },
                 Albums = new List<WebhookAlbum>
                 {
@@ -243,7 +248,7 @@ namespace NzbDrone.Core.Notifications.Webhook
 
             _mediaCoverService.ConvertToLocalUrls(artist.Id, MediaCoverEntity.Artist, artist.Metadata.Value.Images);
 
-            return new WebhookArtist(artist);
+            return new WebhookArtist(artist, GetTagLabels(artist));
         }
 
         private WebhookAlbum GetAlbum(Album album)
@@ -256,6 +261,20 @@ namespace NzbDrone.Core.Notifications.Webhook
             _mediaCoverService.ConvertToLocalUrls(album.Id, MediaCoverEntity.Album, album.Images);
 
             return new WebhookAlbum(album);
+        }
+
+        private List<string> GetTagLabels(Artist artist)
+        {
+            if (artist == null)
+            {
+                return null;
+            }
+
+            return _tagRepository.GetTags(artist.Tags)
+                .Select(s => s.Label)
+                .Where(l => l.IsNotNullOrWhiteSpace())
+                .OrderBy(l => l)
+                .ToList();
         }
     }
 }
