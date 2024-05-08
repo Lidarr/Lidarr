@@ -6,6 +6,7 @@ using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Notifications.Webhook;
+using NzbDrone.Core.Tags;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Notifications.Notifiarr
@@ -14,8 +15,8 @@ namespace NzbDrone.Core.Notifications.Notifiarr
     {
         private readonly INotifiarrProxy _proxy;
 
-        public Notifiarr(INotifiarrProxy proxy, IConfigFileProvider configFileProvider, IConfigService configService, IMapCoversToLocal mediaCoverService)
-            : base(configFileProvider, configService, mediaCoverService)
+        public Notifiarr(INotifiarrProxy proxy, IConfigFileProvider configFileProvider, IConfigService configService, ITagRepository tagRepository, IMapCoversToLocal mediaCoverService)
+            : base(configFileProvider, configService, tagRepository, mediaCoverService)
         {
             _proxy = proxy;
         }

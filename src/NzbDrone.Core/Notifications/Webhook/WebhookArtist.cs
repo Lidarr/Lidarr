@@ -15,12 +15,13 @@ namespace NzbDrone.Core.Notifications.Webhook
         public string Overview { get; set; }
         public List<string> Genres { get; set; }
         public List<WebhookImage> Images { get; set; }
+        public List<string> Tags { get; set; }
 
         public WebhookArtist()
         {
         }
 
-        public WebhookArtist(Artist artist)
+        public WebhookArtist(Artist artist, List<string> tags)
         {
             Id = artist.Id;
             Name = artist.Name;
@@ -31,6 +32,7 @@ namespace NzbDrone.Core.Notifications.Webhook
             Overview = artist.Metadata.Value.Overview;
             Genres = artist.Metadata.Value.Genres;
             Images = artist.Metadata.Value.Images.Select(i => new WebhookImage(i)).ToList();
+            Tags = tags;
         }
     }
 }

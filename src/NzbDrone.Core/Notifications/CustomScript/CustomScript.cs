@@ -63,7 +63,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId);
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
             environmentVariables.Add("Lidarr_Artist_Genres", string.Join("|", artist.Metadata.Value.Genres));
-            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", artist.Tags.Select(t => _tagRepository.Get(t).Label)));
+            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", GetTagLabels(artist)));
             environmentVariables.Add("Lidarr_Release_AlbumCount", remoteAlbum.Albums.Count.ToString());
             environmentVariables.Add("Lidarr_Release_AlbumReleaseDates", string.Join(",", remoteAlbum.Albums.Select(e => e.ReleaseDate)));
             environmentVariables.Add("Lidarr_Release_AlbumTitles", string.Join("|", remoteAlbum.Albums.Select(e => e.Title)));
@@ -101,7 +101,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId);
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
             environmentVariables.Add("Lidarr_Artist_Genres", string.Join("|", artist.Metadata.Value.Genres));
-            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", artist.Tags.Select(t => _tagRepository.Get(t).Label)));
+            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", GetTagLabels(artist)));
             environmentVariables.Add("Lidarr_Album_Id", album.Id.ToString());
             environmentVariables.Add("Lidarr_Album_Title", album.Title);
             environmentVariables.Add("Lidarr_Album_Overview", album.Overview);
@@ -139,7 +139,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId);
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
             environmentVariables.Add("Lidarr_Artist_Genres", string.Join("|", artist.Metadata.Value.Genres));
-            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", artist.Tags.Select(t => _tagRepository.Get(t).Label)));
+            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", GetTagLabels(artist)));
             environmentVariables.Add("Lidarr_TrackFile_Ids", string.Join(",", renamedFiles.Select(e => e.TrackFile.Id)));
             environmentVariables.Add("Lidarr_TrackFile_Paths", string.Join("|", renamedFiles.Select(e => e.TrackFile.Path)));
             environmentVariables.Add("Lidarr_TrackFile_PreviousPaths", string.Join("|", renamedFiles.Select(e => e.PreviousPath)));
@@ -164,7 +164,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId);
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
             environmentVariables.Add("Lidarr_Artist_Genres", string.Join("|", artist.Metadata.Value.Genres));
-            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", artist.Tags.Select(t => _tagRepository.Get(t).Label)));
+            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", GetTagLabels(artist)));
             environmentVariables.Add("Lidarr_Album_Id", album.Id.ToString());
             environmentVariables.Add("Lidarr_Album_Title", album.Title);
             environmentVariables.Add("Lidarr_Album_Overview", album.Overview);
@@ -201,7 +201,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId.ToString());
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
             environmentVariables.Add("Lidarr_Artist_Genres", string.Join("|", artist.Metadata.Value.Genres));
-            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", artist.Tags.Select(t => _tagRepository.Get(t).Label)));
+            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", GetTagLabels(artist)));
 
             ExecuteScript(environmentVariables);
         }
@@ -220,7 +220,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId.ToString());
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
             environmentVariables.Add("Lidarr_Artist_Genres", string.Join("|", artist.Metadata.Value.Genres));
-            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", artist.Tags.Select(t => _tagRepository.Get(t).Label)));
+            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", GetTagLabels(artist)));
             environmentVariables.Add("Lidarr_Artist_DeletedFiles", deleteMessage.DeletedFiles.ToString());
 
             ExecuteScript(environmentVariables);
@@ -241,7 +241,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId);
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
             environmentVariables.Add("Lidarr_Artist_Genres", string.Join("|", artist.Metadata.Value.Genres));
-            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", artist.Tags.Select(t => _tagRepository.Get(t).Label)));
+            environmentVariables.Add("Lidarr_Artist_Tags", string.Join("|", GetTagLabels(artist)));
             environmentVariables.Add("Lidarr_Album_Id", album.Id.ToString());
             environmentVariables.Add("Lidarr_Album_Title", album.Title);
             environmentVariables.Add("Lidarr_Album_Overview", album.Overview);
@@ -341,6 +341,20 @@ namespace NzbDrone.Core.Notifications.CustomScript
             _logger.Debug($"Script Output: {System.Environment.NewLine}{string.Join(System.Environment.NewLine, processOutput.Lines)}");
 
             return processOutput;
+        }
+
+        private List<string> GetTagLabels(Artist artist)
+        {
+            if (artist == null)
+            {
+                return null;
+            }
+
+            return _tagRepository.GetTags(artist.Tags)
+                .Select(s => s.Label)
+                .Where(l => l.IsNotNullOrWhiteSpace())
+                .OrderBy(l => l)
+                .ToList();
         }
     }
 }
