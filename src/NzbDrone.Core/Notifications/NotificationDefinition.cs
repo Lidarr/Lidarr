@@ -32,6 +32,6 @@ namespace NzbDrone.Core.Notifications
         public bool SupportsOnTrackRetag { get; set; }
         public bool SupportsOnApplicationUpdate { get; set; }
 
-        public override bool Enable => OnGrab || OnReleaseImport || (OnReleaseImport && OnUpgrade) || OnArtistAdd || OnArtistDelete || OnAlbumDelete || OnHealthIssue || OnHealthRestored || OnDownloadFailure || OnImportFailure || OnTrackRetag || OnApplicationUpdate;
+        public override bool Enable => OnGrab || OnReleaseImport || (OnReleaseImport && OnUpgrade) || OnRename || OnArtistAdd || OnArtistDelete || OnAlbumDelete || OnHealthIssue || OnHealthRestored || OnDownloadFailure || OnImportFailure || OnTrackRetag || OnApplicationUpdate;
     }
 }
