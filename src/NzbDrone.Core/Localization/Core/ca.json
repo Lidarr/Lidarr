@@ -937,5 +937,7 @@
     "AddToDownloadQueue": "Afegeix a la cua de baixades",
     "AddedToDownloadQueue": "Afegit a la cua de baixades",
     "FormatAgeMinute": "minut",
-    "FormatAgeMinutes": "Minuts"
+    "FormatAgeMinutes": "Minuts",
+    "AutoTaggingSpecificationTag": "Etiqueta",
+    "Logout": "Tanca la sessió"
 }
