@@ -5,28 +5,23 @@ namespace NzbDrone.Core.Validation
 {
     public class MetadataProfileExistsValidator : PropertyValidator
     {
-        private readonly IMetadataProfileService _profileService;
+        private readonly IMetadataProfileService _metadataProfileService;
 
-        public MetadataProfileExistsValidator(IMetadataProfileService profileService)
+        public MetadataProfileExistsValidator(IMetadataProfileService metadataProfileService)
         {
-            _profileService = profileService;
+            _metadataProfileService = metadataProfileService;
         }
 
         protected override string GetDefaultMessageTemplate() => "Metadata profile does not exist";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (context.PropertyValue == null)
+            if (context?.PropertyValue == null || (int)context.PropertyValue == 0)
             {
                 return true;
             }
 
-            if ((int)context.PropertyValue == 0)
-            {
-                return true;
-            }
-
-            return _profileService.Exists((int)context.PropertyValue);
+            return _metadataProfileService.Exists((int)context.PropertyValue);
         }
     }
 }
