@@ -35,7 +35,7 @@ class EditAlbumModalContent extends Component {
       title,
       artistName,
       albumType,
-      statistics,
+      statistics = {},
       item,
       isSaving,
       onInputChange,

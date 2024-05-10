@@ -192,7 +192,7 @@ class ArtistDetails extends Component {
       artistName,
       ratings,
       path,
-      statistics,
+      statistics = {},
       qualityProfileId,
       monitored,
       genres,

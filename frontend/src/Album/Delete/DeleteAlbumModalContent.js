@@ -53,7 +53,7 @@ class DeleteAlbumModalContent extends Component {
   render() {
     const {
       title,
-      statistics,
+      statistics = {},
       onModalClose
     } = this.props;
 

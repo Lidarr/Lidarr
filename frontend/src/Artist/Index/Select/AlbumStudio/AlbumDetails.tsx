@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Statistics } from 'Album/Album';
 import Alert from 'Components/Alert';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import { kinds } from 'Helpers/Props';
@@ -56,7 +57,7 @@ function AlbumDetails(props: AlbumDetailsProps) {
               disambiguation,
               albumType,
               monitored,
-              statistics,
+              statistics = {} as Statistics,
               isSaving = false,
             } = album;
 

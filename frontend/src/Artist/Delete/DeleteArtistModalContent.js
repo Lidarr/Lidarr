@@ -135,14 +135,14 @@ class DeleteArtistModalContent extends Component {
 
         <ModalFooter>
           <Button onPress={onModalClose}>
-            Close
+            {translate('Close')}
           </Button>
 
           <Button
             kind={kinds.DANGER}
             onPress={this.onDeleteArtistConfirmed}
           >
-            Delete
+            {translate('Delete')}
           </Button>
         </ModalFooter>
       </ModalContent>
@@ -161,9 +161,7 @@ DeleteArtistModalContent.propTypes = {
 };
 
 DeleteArtistModalContent.defaultProps = {
-  statistics: {
-    trackFileCount: 0
-  }
+  statistics: {}
 };
 
 export default DeleteArtistModalContent;
