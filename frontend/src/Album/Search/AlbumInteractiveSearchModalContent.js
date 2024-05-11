@@ -7,6 +7,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { scrollDirections } from 'Helpers/Props';
 import InteractiveSearchConnector from 'InteractiveSearch/InteractiveSearchConnector';
+import translate from 'Utilities/String/translate';
 
 function AlbumInteractiveSearchModalContent(props) {
   const {
@@ -18,7 +19,10 @@ function AlbumInteractiveSearchModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        Interactive Search  {albumId != null && `- ${albumTitle}`}
+        {albumTitle === undefined ?
+          translate('InteractiveSearchModalHeader') :
+          translate('InteractiveSearchModalHeaderTitle', { title: albumTitle })
+        }
       </ModalHeader>
 
       <ModalBody scrollDirection={scrollDirections.BOTH}>
@@ -32,7 +36,7 @@ function AlbumInteractiveSearchModalContent(props) {
 
       <ModalFooter>
         <Button onPress={onModalClose}>
-          Close
+          {translate('Close')}
         </Button>
       </ModalFooter>
     </ModalContent>

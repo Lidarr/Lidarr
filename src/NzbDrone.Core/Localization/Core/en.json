@@ -609,6 +609,8 @@
   "InstanceNameHelpText": "Instance name in tab and for Syslog app name",
   "InteractiveImport": "Interactive Import",
   "InteractiveSearch": "Interactive Search",
+  "InteractiveSearchModalHeader": "Interactive Search",
+  "InteractiveSearchModalHeaderTitle": "Interactive Search - {title}",
   "Interval": "Interval",
   "InvalidUILanguage": "Your UI is set to an invalid language, correct it and save your settings",
   "IsCutoffCutoff": "Cutoff",
