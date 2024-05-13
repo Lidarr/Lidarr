@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Lidarr.Api.V1.Artist;
 using Lidarr.Http.REST;
-using Newtonsoft.Json;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.Music;
 using Swashbuckle.AspNetCore.Annotations;
@@ -49,7 +49,7 @@ namespace Lidarr.Api.V1.Albums
         public string RemoteCover { get; set; }
 
         // Hiding this so people don't think its usable (only used to set the initial state)
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         [SwaggerIgnore]
         public bool Grabbed { get; set; }
     }
