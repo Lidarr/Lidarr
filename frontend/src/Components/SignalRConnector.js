@@ -266,7 +266,7 @@ class SignalRConnector extends Component {
   handleWantedCutoff = (body) => {
     if (body.action === 'updated') {
       this.props.dispatchUpdateItem({
-        section: 'cutoffUnmet',
+        section: 'wanted.cutoffUnmet',
         updateOnly: true,
         ...body.resource
       });
@@ -276,7 +276,7 @@ class SignalRConnector extends Component {
   handleWantedMissing = (body) => {
     if (body.action === 'updated') {
       this.props.dispatchUpdateItem({
-        section: 'missing',
+        section: 'wanted.missing',
         updateOnly: true,
         ...body.resource
       });
