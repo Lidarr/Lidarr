@@ -383,6 +383,42 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
             AssertImported();
         }
 
+        [Test]
+        public void should_not_mark_as_imported_if_nothing_was_imported()
+        {
+            _trackedDownload.RemoteAlbum.Albums = new List<Album>
+            {
+                CreateAlbum(1, 1)
+            };
+
+            Mocker.GetMock<IDownloadedTracksImportService>()
+                  .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()))
+                  .Returns(new List<ImportResult>());
+
+            var history = Builder<EntityHistory>.CreateListOfSize(2)
+                                                  .BuildList();
+
+            Mocker.GetMock<IHistoryService>()
+                  .Setup(s => s.FindByDownloadId(It.IsAny<string>()))
+                  .Returns(history);
+
+            Mocker.GetMock<ITrackedDownloadAlreadyImported>()
+                  .Setup(s => s.IsImported(_trackedDownload, history))
+                  .Returns(true);
+
+            Subject.Import(_trackedDownload);
+
+            AssertImportPending();
+        }
+        
+        private void AssertImportPending()
+        {
+            Mocker.GetMock<IEventAggregator>()
+                  .Verify(v => v.PublishEvent(It.IsAny<DownloadCompletedEvent>()), Times.Never());
+
+            _trackedDownload.State.Should().Be(TrackedDownloadState.ImportPending);
+        }
+
         private void AssertNotImported()
         {
             Mocker.GetMock<IEventAggregator>()

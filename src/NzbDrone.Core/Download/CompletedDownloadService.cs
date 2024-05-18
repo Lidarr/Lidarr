@@ -166,7 +166,7 @@ namespace NzbDrone.Core.Download
 
         public bool VerifyImport(TrackedDownload trackedDownload, List<ImportResult> importResults)
         {
-            var allTracksImported = importResults.All(c => c.Result == ImportResultType.Imported) ||
+            var allTracksImported = (importResults.Any() && importResults.All(c => c.Result == ImportResultType.Imported)) ||
                 importResults.Count(c => c.Result == ImportResultType.Imported) >=
                 Math.Max(1, trackedDownload.RemoteAlbum.Albums.Sum(x => x.AlbumReleases.Value.Where(y => y.Monitored).Sum(z => z.TrackCount)));
 
