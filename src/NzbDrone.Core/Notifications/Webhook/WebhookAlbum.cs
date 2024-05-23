@@ -7,6 +7,17 @@ namespace NzbDrone.Core.Notifications.Webhook
 {
     public class WebhookAlbum
     {
+        public int Id { get; set; }
+        public string MBId { get; set; }
+        public string Title { get; set; }
+        public string Disambiguation { get; set; }
+        public string Overview { get; set; }
+        public string AlbumType { get; set; }
+        public List<string> SecondaryAlbumTypes { get; set; }
+        public DateTime? ReleaseDate { get; set; }
+        public List<string> Genres { get; set; }
+        public List<WebhookImage> Images { get; set; }
+
         public WebhookAlbum()
         {
         }
@@ -20,18 +31,9 @@ namespace NzbDrone.Core.Notifications.Webhook
             Overview = album.Overview;
             AlbumType = album.AlbumType;
             SecondaryAlbumTypes = album.SecondaryTypes.Select(x => x.Name).ToList();
-            Genres = album.Genres;
             ReleaseDate = album.ReleaseDate;
+            Genres = album.Genres;
+            Images = album.Images.Select(i => new WebhookImage(i)).ToList();
         }
-
-        public int Id { get; set; }
-        public string MBId { get; set; }
-        public string Title { get; set; }
-        public string Disambiguation { get; set; }
-        public string Overview { get; set; }
-        public string AlbumType { get; set; }
-        public List<string> SecondaryAlbumTypes { get; set; }
-        public List<string> Genres { get; set; }
-        public DateTime? ReleaseDate { get; set; }
     }
 }
