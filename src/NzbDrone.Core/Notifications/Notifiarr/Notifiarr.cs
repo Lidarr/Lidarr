@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Notifications.Webhook;
@@ -13,8 +14,8 @@ namespace NzbDrone.Core.Notifications.Notifiarr
     {
         private readonly INotifiarrProxy _proxy;
 
-        public Notifiarr(INotifiarrProxy proxy, IConfigFileProvider configFileProvider, IConfigService configService)
-            : base(configFileProvider, configService)
+        public Notifiarr(INotifiarrProxy proxy, IConfigFileProvider configFileProvider, IConfigService configService, IMapCoversToLocal mediaCoverService)
+            : base(configFileProvider, configService, mediaCoverService)
         {
             _proxy = proxy;
         }

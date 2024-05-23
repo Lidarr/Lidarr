@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.Notifications.Webhook
@@ -13,6 +14,7 @@ namespace NzbDrone.Core.Notifications.Webhook
         public string Type { get; set; }
         public string Overview { get; set; }
         public List<string> Genres { get; set; }
+        public List<WebhookImage> Images { get; set; }
 
         public WebhookArtist()
         {
@@ -24,10 +26,11 @@ namespace NzbDrone.Core.Notifications.Webhook
             Name = artist.Name;
             Disambiguation = artist.Metadata.Value.Disambiguation;
             Path = artist.Path;
+            MBId = artist.Metadata.Value.ForeignArtistId;
             Type = artist.Metadata.Value.Type;
             Overview = artist.Metadata.Value.Overview;
             Genres = artist.Metadata.Value.Genres;
-            MBId = artist.Metadata.Value.ForeignArtistId;
+            Images = artist.Metadata.Value.Images.Select(i => new WebhookImage(i)).ToList();
         }
     }
 }
