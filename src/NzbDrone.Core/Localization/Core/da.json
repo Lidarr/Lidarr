@@ -550,7 +550,7 @@
     "RejectionCount": "Afvisningstal",
     "ReleaseTitle": "Udgiv titel",
     "MoveFiles": "Flyt filer",
-    "AddImportListExclusion": "Slet udelukkelse af importliste",
+    "AddImportListExclusion": "Tilføj ekslusion til importeringslisten",
     "ImportListExclusions": "Slet udelukkelse af importliste",
     "DoneEditingGroups": "Udført redigering af grupper",
     "QualitiesHelpText": "Kvaliteter højere på listen foretrækkes. Kvaliteter inden for samme gruppe er ens. Kun kontrollerede kvaliteter er ønsket",

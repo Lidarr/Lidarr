@@ -844,5 +844,7 @@
     "ChangeCategory": "Verander categorie",
     "RegularExpressionsCanBeTested": "Reguliere expressies kunnen [hier] worden getest (http:://regexstorm.net/tester).",
     "AutomaticUpdatesDisabledDocker": "Automatische updates zijn niet ondersteund wanneer je het docker update mechanisme gebruikt. Je dient de container image up te daten buiten {appName} om of een script te gebruiken",
-    "ChownGroup": "chown groep"
+    "ChownGroup": "chown groep",
+    "AddAlbumWithTitle": "Toevoegen",
+    "AutoTaggingSpecificationTag": "Tag"
 }
