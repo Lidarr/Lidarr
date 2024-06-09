@@ -8,5 +8,12 @@
     "Add": "Pievienot",
     "AddAutoTag": "Pievienot Automātisko Tagu",
     "AddCondition": "Pievienot Nosacījumu",
-    "AddConnection": "Pievienot Savienojumu"
+    "AddConnection": "Pievienot Savienojumu",
+    "New": "Jauns",
+    "EditConditionImplementation": "Pievienot Nosacījumu - {implementationName}",
+    "EditIndexerImplementation": "Pievienot Nosacījumu - {implementationName}",
+    "ExportCustomFormat": "Pievienot Pielāgotu Formātu",
+    "AddIndexerImplementation": "Pievienot Nosacījumu - {implementationName}",
+    "EditConnectionImplementation": "Pievienot Savienojumu - {implementationName}",
+    "EditDelayProfile": "Pievienot Aizkaves Profilu"
 }

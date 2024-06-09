@@ -736,5 +736,7 @@
     "Tomorrow": "غدا",
     "GrabReleaseUnknownArtistOrAlbumMessageText": "لم يتمكن Radarr من تحديد الفيلم الذي كان هذا الإصدار من أجله. قد يتعذر على Radarr استيراد هذا الإصدار تلقائيًا. هل تريد انتزاع \"{0}\"؟",
     "AddToDownloadQueue": "إضافة إلى قائمة انتظار التنزيل",
-    "AddedToDownloadQueue": "تمت الإضافة إلى قائمة انتظار التنزيلات"
+    "AddedToDownloadQueue": "تمت الإضافة إلى قائمة انتظار التنزيلات",
+    "InteractiveSearchModalHeader": "بحث تفاعلي",
+    "IndexerPriorityHelpText": "أولوية المفهرس من 1 (الأعلى) إلى 50 (الأدنى). الافتراضي: 25."
 }

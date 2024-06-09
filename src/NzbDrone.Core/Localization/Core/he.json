@@ -757,5 +757,22 @@
     "RemoveQueueItemConfirmation": "האם אתה בטוח שברצונך להסיר את {0} פריט {1} מהתור?",
     "ArtistIndexFooterDownloading": "מוריד",
     "AutoRedownloadFailed": "הורדה נכשלה",
-    "AutomaticSearch": "חיפוש אוטומטי"
+    "AutomaticSearch": "חיפוש אוטומטי",
+    "IndexerFlags": "אינדקס דגלים",
+    "RemotePathMappingCheckFilesLocalWrongOSPath": "אתה משתמש בדוקר; קליינט ההורדות {downloadClientName} שם הורדות ב-{path} אבל הנתיב לא תקין {osName}. בחן מחדש את ניתוב התיקיות והגדרות קליינט ההורדות.",
+    "InteractiveSearchModalHeader": "חיפוש אינטראקטיבי",
+    "Tomorrow": "מָחָר",
+    "AddImportListExclusionArtistHelpText": "מנע מלהוסיף סרט לרדאר על ידי רשימות",
+    "CustomFilter": "מסננים מותאמים אישית",
+    "MonitorNoAlbums": "אף אחד",
+    "Yesterday": "אתמול",
+    "AutoTaggingSpecificationTag": "טאג",
+    "GrabReleaseUnknownArtistOrAlbumMessageText": "רדאר לא הצליח לקבוע לאיזה סרט הסרט הזה נועד. ייתכן ש- {appName} לא תוכל לייבא גרסה זו באופן אוטומטי. האם אתה רוצה לתפוס את '{0}'?",
+    "RemotePathMappingCheckLocalWrongOSPath": "אתה משתמש בדוקר; קליינט ההורדות {downloadClientName} שם הורדות ב-{path} אבל הנתיב לא תקין {osName}. בחן מחדש את ניתוב התיקיות והגדרות קליינט ההורדות.",
+    "IndexerPriorityHelpText": "עדיפות אינדקס מ -1 (הגבוה ביותר) ל -50 (הנמוך ביותר). ברירת מחדל: 25.",
+    "AddListExclusionHelpText": "מנע מלהוסיף סרט לרדאר על ידי רשימות",
+    "FormatAgeHour": "שעה (ות",
+    "FormatAgeHours": "שעה (ות",
+    "FormatAgeMinute": "דקות",
+    "FormatAgeMinutes": "דקות"
 }

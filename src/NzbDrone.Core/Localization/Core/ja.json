@@ -720,5 +720,17 @@
     "IncludeHealthWarnings": "健康上の警告を含める",
     "ArtistIndexFooterDownloading": "ダウンロード",
     "AutomaticSearch": "自動検索",
-    "KeyboardShortcuts": "キーボードショートカット"
+    "KeyboardShortcuts": "キーボードショートカット",
+    "Tomorrow": "明日",
+    "IndexerFlags": "インデクサフラグ",
+    "InteractiveSearchModalHeader": "インタラクティブ検索",
+    "CustomFilter": "カスタムフィルター",
+    "FormatAgeMinute": "議事録",
+    "FormatAgeHour": "時間",
+    "FormatAgeHours": "時間",
+    "IndexerPriorityHelpText": "インデクサーの優先度は1（最高）から50（最低）です。デフォルト：25。",
+    "GrabReleaseUnknownArtistOrAlbumMessageText": "Radarrは、このリリースの対象となる映画を特定できませんでした。 Radarrは、このリリースを自動的にインポートできない場合があります。 '{0}'を取得しますか？",
+    "FormatAgeMinutes": "議事録",
+    "MonitorNoAlbums": "なし",
+    "Yesterday": "昨日"
 }

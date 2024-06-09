@@ -939,5 +939,8 @@
     "FormatAgeMinute": "minut",
     "FormatAgeMinutes": "Minuts",
     "AutoTaggingSpecificationTag": "Etiqueta",
-    "Logout": "Tanca la sessió"
+    "Logout": "Tanca la sessió",
+    "InteractiveSearchModalHeader": "Cerca interactiva",
+    "Menu": "Menú",
+    "IndexerPriorityHelpText": "Prioritat de l'indexador d'1 (la més alta) a 50 (la més baixa). Per defecte: 25. S'utilitza quan es capturen llançaments com a desempat per a versions iguals, {appName} encara utilitzarà tots els indexadors habilitats per a la sincronització i la cerca RSS"
 }

@@ -761,5 +761,9 @@
     "Tomorrow": "I morgen",
     "Yesterday": "I går",
     "Albums": "album",
-    "IndexerFlags": "Indexer Flag"
+    "IndexerFlags": "Indexer Flag",
+    "Release": " udgivelse",
+    "InteractiveSearchModalHeader": "Interaktiv søgning",
+    "FormatAgeHour": "Timer",
+    "IndexerPriorityHelpText": "Indekseringsprioritet fra 1 (højest) til 50 (lavest). Standard: 25."
 }
