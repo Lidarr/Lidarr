@@ -1278,5 +1278,15 @@
     "Yesterday": "Hier",
     "OnArtistAdd": "Lors de l'ajout de l'artiste",
     "IndexerPriorityHelpText": "Priorité de l'indexeur de 1 (la plus élevée) à 50 (la plus basse). Par défaut : 25. Utilisé lors de la récupération de versions pour départager des versions égales, {appName} utilisera toujours tous les indexeurs activés pour la synchronisation et la recherche RSS",
-    "NotificationsKodiSettingAlwaysUpdate": "Toujours mettre à jour"
+    "NotificationsKodiSettingAlwaysUpdate": "Toujours mettre à jour",
+    "GrabReleaseUnknownArtistOrAlbumMessageText": "{appName} n'a pas pu déterminer à quelle série et à quel épisode cette version était destinée. Il est possible que {appName} ne parvienne pas à importer automatiquement cette version. Voulez-vous récupérer « {title} » ?",
+    "InteractiveSearchModalHeader": "Recherche interactive",
+    "InteractiveSearchModalHeaderTitle": "Recherche interactive - {title}",
+    "SearchForAllCutoffUnmetAlbumsConfirmationCount": "Êtes-vous sûr de vouloir rechercher tous les épisodes {totalRecords} Cutoff Unmet ?",
+    "IndexerSettingsSeedRatioHelpText": "Le ratio qu'un torrent doit atteindre avant de s'arrêter, vide utilise la valeur par défaut du client de téléchargement. Le ratio doit être d'au moins 1.0 et suivre les règles des indexeurs",
+    "IndexerSettingsSeedTimeHelpText": "Durée pendant laquelle un torrent doit être envoyé avant de s'arrêter, vide utilise la valeur par défaut du client de téléchargement",
+    "UiSettingsSummary": "Calendrier, date et les options d'altération des couleurs",
+    "MonitorFutureAlbums": "Futurs albums",
+    "IndexerSettingsSeedRatio": "Ratio d'envoie",
+    "IndexerSettingsSeedTime": "Temps d'envoie"
 }

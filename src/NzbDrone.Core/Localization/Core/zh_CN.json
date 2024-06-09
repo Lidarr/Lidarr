@@ -1266,5 +1266,12 @@
     "AutoTaggingSpecificationTag": "标签",
     "AddAutoTagError": "无法添加新的自动标签，请重试。",
     "ClickToChangeIndexerFlags": "点击修改索引器标志",
-    "CustomFormatsSettingsTriggerInfo": "当一个发布版本或文件至少匹配其中一个条件时，自定义格式将会被应用到这个版本或文件上。"
+    "CustomFormatsSettingsTriggerInfo": "当一个发布版本或文件至少匹配其中一个条件时，自定义格式将会被应用到这个版本或文件上。",
+    "IndexerPriorityHelpText": "索引器优先级从1(最高)到50(最低)，默认25。当资源连接中断时寻找同等资源时使用，否则{appName}将依旧使用已启用的索引器进行RSS同步并搜索",
+    "IndexerSettingsSeedRatio": "做种比率",
+    "IndexerSettingsSeedRatioHelpText": "种子在停止之前应达到的比率，留空使用下载客户端的默认值。 比率应至少为 1.0 并遵循索引器规则",
+    "IndexerSettingsSeedTimeHelpText": "停止前应做种的时间，留空使用下载客户端的默认值",
+    "InteractiveSearchModalHeader": "手动搜索",
+    "DownloadClientDelugeSettingsDirectoryCompletedHelpText": "可选的下载位置，留空使用 Aria2 默认位置",
+    "IndexerSettingsSeedTime": "做种时间"
 }

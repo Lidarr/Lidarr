@@ -249,5 +249,22 @@
     "DeleteAutoTagHelpText": "Er du sikker på at du vil slette formattaggen {0}?",
     "AddConditionImplementation": "Legg til betingelse - {implementationName}",
     "AddAutoTagError": "Ikke mulig å legge til ny automatisk tagg, vennligst prøv igjen",
-    "AddConditionError": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen"
+    "AddConditionError": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen",
+    "UnableToAddANewIndexerPleaseTryAgain": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen",
+    "UnableToAddANewListPleaseTryAgain": "Ikke mulig å legge til ny automatisk tagg, vennligst prøv igjen",
+    "Docker": "Docker",
+    "AutomaticSearch": "Automatisk Søk",
+    "AutoTaggingSpecificationTag": "Merke",
+    "ConnectSettingsSummary": "Varslinger, tilkoblinger til mediaservere/avspillere, og tilpassede scripts",
+    "EditConnectionImplementation": "Legg til betingelse - {implementationName}",
+    "EditIndexerImplementation": "Legg til betingelse - {implementationName}",
+    "UnableToAddANewDownloadClientPleaseTryAgain": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen",
+    "UnableToAddANewNotificationPleaseTryAgain": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen",
+    "UnableToAddANewRootFolderPleaseTryAgain": "Ikke mulig å legge til ny automatisk tagg, vennligst prøv igjen",
+    "AddConnectionImplementation": "Legg til betingelse - {implementationName}",
+    "AddImportListExclusionAlbumHelpText": "Forhindre at filmen legges til i {appName} av lister",
+    "EditConditionImplementation": "Legg til betingelse - {implementationName}",
+    "AddToDownloadQueue": "Legg til i nedlastingskø",
+    "AddedToDownloadQueue": "Lagt til i nedlastingskø",
+    "AddIndexerImplementation": "Legg til betingelse - {implementationName}"
 }

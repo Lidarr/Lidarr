@@ -736,5 +736,7 @@
     "MonitorNoAlbums": "Нито един",
     "Tomorrow": "Утре",
     "Yesterday": "Вчера",
-    "IndexerFlags": "Индексиращи знамена"
+    "IndexerFlags": "Индексиращи знамена",
+    "InteractiveSearchModalHeader": "Интерактивно търсене",
+    "IndexerPriorityHelpText": "Приоритет на индексатора от 1 (най-висок) до 50 (най-нисък). По подразбиране: 25."
 }

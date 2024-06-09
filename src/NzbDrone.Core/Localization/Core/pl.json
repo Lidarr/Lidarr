@@ -798,5 +798,7 @@
     "GrabReleaseUnknownArtistOrAlbumMessageText": "Radarr nie był w stanie określić, dla którego filmu jest to wydanie. Radarr może nie być w stanie automatycznie zaimportować tej wersji. Czy chcesz złapać „{0}”?",
     "Tomorrow": "Jutro",
     "FormatAgeMinute": "Minuty",
-    "FormatAgeMinutes": "Minuty"
+    "FormatAgeMinutes": "Minuty",
+    "InteractiveSearchModalHeader": "Wyszukiwanie interaktywne",
+    "IndexerPriorityHelpText": "Priorytet indeksera od 1 (najwyższy) do 50 (najniższy). Domyślnie: 25. Używany podczas pobierania wydań przy wystąpieniu równoważnych wydań. Przy synchronizacji RSS i wyszukiwaniu, Radarr wciąż będzie korzystał ze wszystkich indekserów"
 }

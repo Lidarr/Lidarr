@@ -857,5 +857,9 @@
     "FormatDateTime": "{formattedDate} {formattedTime}",
     "Yesterday": "Včera",
     "AddToDownloadQueue": "Přidat stahování do fronty",
-    "AddedToDownloadQueue": "Stahování přidáno do fronty"
+    "AddedToDownloadQueue": "Stahování přidáno do fronty",
+    "InteractiveSearchModalHeader": "Interaktivní vyhledávání",
+    "Release": " Uvolněno",
+    "AutoTaggingSpecificationTag": "Značka",
+    "IndexerPriorityHelpText": "Priorita indexovacího modulu od 1 (nejvyšší) do 50 (nejnižší). Výchozí: 25. Používá se při získávání verzí jako rozhodující prvek pro jinak stejné verze, {appName} bude stále používat všechny povolené indexovací moduly pro Synchronizaci RSS a vyhledávání"
 }
