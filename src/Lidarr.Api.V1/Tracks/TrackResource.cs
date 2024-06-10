@@ -5,6 +5,7 @@ using Lidarr.Api.V1.TrackFiles;
 using Lidarr.Http.REST;
 using Newtonsoft.Json;
 using NzbDrone.Core.Music;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Lidarr.Api.V1.Tracks
 {
@@ -29,6 +30,7 @@ namespace Lidarr.Api.V1.Tracks
 
         // Hiding this so people don't think its usable (only used to set the initial state)
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [SwaggerIgnore]
         public bool Grabbed { get; set; }
     }
 

@@ -6,6 +6,7 @@ using Lidarr.Http.REST;
 using Newtonsoft.Json;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.Music;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Lidarr.Api.V1.Albums
 {
@@ -49,6 +50,7 @@ namespace Lidarr.Api.V1.Albums
 
         // Hiding this so people don't think its usable (only used to set the initial state)
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [SwaggerIgnore]
         public bool Grabbed { get; set; }
     }
 
