@@ -47,7 +47,7 @@ namespace NzbDrone.Core.Music
 
             _eventAggregator.PublishEvent(new ArtistAddCompletedEvent(artist));
 
-            if (artist.AddOptions.SearchForMissingAlbums)
+            if (addOptions.SearchForMissingAlbums)
             {
                 _commandQueueManager.Push(new MissingAlbumSearchCommand(artist.Id));
             }
