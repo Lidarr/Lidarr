@@ -25,6 +25,11 @@ namespace NzbDrone.Core.Download.Aggregation
 
         public RemoteAlbum Augment(RemoteAlbum remoteAlbum)
         {
+            if (remoteAlbum == null)
+            {
+                return null;
+            }
+
             foreach (var augmenter in _augmenters)
             {
                 try
