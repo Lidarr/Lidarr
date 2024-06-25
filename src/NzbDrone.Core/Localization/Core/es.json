@@ -1126,7 +1126,7 @@
     "DefaultLidarrTags": "Etiquetas predeterminadas de {appName}",
     "ExpandItemsByDefault": "Expandir elementos predeterminados",
     "DownloadedWaitingToImport": "'Descargados - Esperando para importar'",
-    "ImportFailed": "La importación falló",
+    "ImportCompleteFailed": "La importación falló",
     "IsInUseCantDeleteAMetadataProfileThatIsAttachedToAnArtistOrImportList": "No se puede eliminar un perfil de metadatos que está enlazado a un artista o a una lista de importación",
     "IsExpandedShowTracks": "Mostrar pistas",
     "IsInUseCantDeleteAQualityProfileThatIsAttachedToAnArtistOrImportList": "No se puede eliminar un perfil de calidad que está enlazado a un artista o a una lista de importación",

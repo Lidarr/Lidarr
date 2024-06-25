@@ -789,7 +789,7 @@
     "EditMetadata": "Editar metadados",
     "EditReleaseProfile": "Editar perfil de lançamento",
     "ForNewImportsOnly": "Para novas importações somente",
-    "ImportFailed": "Falha na importação",
+    "ImportCompleteFailed": "Falha na importação",
     "MissingTracks": "Faixas Ausentes",
     "NewAlbums": "Novos Álbuns",
     "NextAlbum": "Próximo Álbum",

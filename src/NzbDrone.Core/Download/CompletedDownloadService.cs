@@ -63,8 +63,8 @@ namespace NzbDrone.Core.Download
 
             SetImportItem(trackedDownload);
 
-            // Only process tracked downloads that are still downloading
-            if (trackedDownload.State != TrackedDownloadState.Downloading)
+            // Only process tracked downloads that are still downloading or have been blocked for importing due to an issue with matching
+            if (trackedDownload.State != TrackedDownloadState.Downloading && trackedDownload.State != TrackedDownloadState.ImportBlocked)
             {
                 return;
             }
@@ -93,7 +93,9 @@ namespace NzbDrone.Core.Download
 
                 if (artist == null)
                 {
-                    trackedDownload.Warn("Artist name mismatch, automatic import is not possible.");
+                    trackedDownload.Warn("Artist name mismatch, automatic import is not possible. Check the download troubleshooting entry on the wiki for common causes.");
+                    SetStateToImportBlocked(trackedDownload);
+
                     return;
                 }
             }
@@ -113,6 +115,8 @@ namespace NzbDrone.Core.Download
             if (trackedDownload.RemoteAlbum == null)
             {
                 trackedDownload.Warn("Unable to parse download, automatic import is not possible.");
+                SetStateToImportBlocked(trackedDownload);
+
                 return;
             }
 
@@ -169,9 +173,7 @@ namespace NzbDrone.Core.Download
             if (statusMessages.Any())
             {
                 trackedDownload.Warn(statusMessages.ToArray());
-
-                // Mark as failed to prevent further attempts at processing
-                trackedDownload.State = TrackedDownloadState.ImportFailed;
+                SetStateToImportBlocked(trackedDownload);
             }
         }
 
@@ -235,6 +237,11 @@ namespace NzbDrone.Core.Download
 
             _logger.Debug("Not all albums have been imported for the release '{0}'", trackedDownload.DownloadItem.Title);
             return false;
+        }
+
+        private void SetStateToImportBlocked(TrackedDownload trackedDownload)
+        {
+            trackedDownload.State = TrackedDownloadState.ImportBlocked;
         }
 
         private void SetImportItem(TrackedDownload trackedDownload)

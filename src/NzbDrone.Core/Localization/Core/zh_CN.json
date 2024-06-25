@@ -708,7 +708,7 @@
     "Other": "其他",
     "OutputPath": "输出路径",
     "QualitiesHelpText": "即使未勾选，列表中靠前的质量优先级更高。同组内的质量优先级相同。仅需勾选需要的质量",
-    "ImportFailed": "导入失败",
+    "ImportCompleteFailed": "导入失败",
     "TrackArtist": "歌曲歌手",
     "OnAlbumDelete": "当专辑删除时",
     "OnArtistDelete": "当歌手删除时",

@@ -150,7 +150,7 @@ export const defaultState = {
     },
     {
       key: 'importFailed',
-      label: () => translate('ImportFailed'),
+      label: () => translate('ImportCompleteFailed'),
       filters: [
         {
           key: 'eventType',

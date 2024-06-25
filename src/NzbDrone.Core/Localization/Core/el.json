@@ -751,7 +751,7 @@
     "GoToArtistListing": "Μεταβείτε στη λίστα καλλιτεχνών",
     "HideAlbums": "Απόκρυψη άλμπουμ",
     "HideTracks": "Απόκρυψη κομματιών",
-    "ImportFailed": "Η εισαγωγή απέτυχε",
+    "ImportCompleteFailed": "Η εισαγωγή απέτυχε",
     "ImportFailures": "Αστοχίες εισαγωγής",
     "ImportLists": "Λίστες εισαγωγής",
     "ImportListSpecificSettings": "Εισαγωγή ειδικών ρυθμίσεων λίστας",

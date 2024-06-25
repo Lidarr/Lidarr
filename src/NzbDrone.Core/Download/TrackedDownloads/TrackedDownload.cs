@@ -41,6 +41,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
         Downloading,
         DownloadFailed,
         DownloadFailedPending,
+        ImportBlocked,
         ImportPending,
         Importing,
         ImportFailed,

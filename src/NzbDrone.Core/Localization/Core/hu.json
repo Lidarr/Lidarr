@@ -790,7 +790,7 @@
     "ForNewImportsOnly": "Csak új importokra",
     "EndedOnly": "Csak a véget értek",
     "ContinuingOnly": "Csak folytatás",
-    "ImportFailed": "Az importálás sikertelen",
+    "ImportCompleteFailed": "Az importálás sikertelen",
     "MediaCount": "Médiaszám",
     "MissingTracks": "Hiányzó számok",
     "MonitorNewItems": "Új albumok monitorozása",
