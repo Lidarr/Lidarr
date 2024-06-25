@@ -773,7 +773,7 @@
     "ExistingAlbumsData": "Valvo albumeita, joille on tiedostoja tai joita ei ole vielä julkaistu.",
     "ForNewImportsOnly": "Vain uusille tuonneille",
     "HasMonitoredAlbumsNoMonitoredAlbumsForThisArtist": "Esittäjältä ei valvota albumeita",
-    "ImportFailed": "Tuonti epäonnistui",
+    "ImportCompleteFailed": "Tuonti epäonnistui",
     "ImportFailures": "Tuontivirheet",
     "ImportLists": "Tuontilistat",
     "ImportListSettings": "Tuontilistojen yleisasetukset",

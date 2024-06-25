@@ -897,7 +897,7 @@
     "DeleteMetadataProfile": "Supprimer le profil de métadonnées",
     "HasMonitoredAlbumsNoMonitoredAlbumsForThisArtist": "Aucun album surveillé pour cet artiste",
     "ImportFailures": "Échecs d’importation",
-    "ImportFailed": "Échec de l'importation",
+    "ImportCompleteFailed": "Échec de l'importation",
     "IndexerIdHelpTextWarning": "L'utilisation d'un indexeur spécifique avec les mots préférés peut conduire à la saisie de versions en double",
     "LastAlbum": "Dernier album",
     "ListRefreshInterval": "Intervalle d'actualisation de la liste",
