@@ -25,7 +25,7 @@ const EVENT_TYPE_OPTIONS = [
   {
     id: 7,
     get name() {
-      return translate('ImportFailed');
+      return translate('ImportCompleteFailed');
     },
   },
   {
