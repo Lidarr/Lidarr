@@ -48,10 +48,12 @@ namespace Lidarr.Api.V1.RootFolders
             SharedValidator.RuleFor(c => c.Name)
                 .NotEmpty();
 
-            SharedValidator.RuleFor(c => c.DefaultMetadataProfileId)
+            SharedValidator.RuleFor(c => c.DefaultMetadataProfileId).Cascade(CascadeMode.Stop)
+                .ValidId()
                 .SetValidator(metadataProfileExistsValidator);
 
-            SharedValidator.RuleFor(c => c.DefaultQualityProfileId)
+            SharedValidator.RuleFor(c => c.DefaultQualityProfileId).Cascade(CascadeMode.Stop)
+                .ValidId()
                 .SetValidator(qualityProfileExistsValidator);
         }
 

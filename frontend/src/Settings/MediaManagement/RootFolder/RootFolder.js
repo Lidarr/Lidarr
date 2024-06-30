@@ -75,12 +75,12 @@ class RootFolder extends Component {
             {path}
           </Label>
 
-          <Label kind={kinds.SUCCESS}>
-            {qualityProfile.name}
+          <Label kind={qualityProfile?.name ? kinds.SUCCESS : kinds.DANGER}>
+            {qualityProfile?.name || translate('None')}
           </Label>
 
-          <Label kind={kinds.SUCCESS}>
-            {metadataProfile.name}
+          <Label kind={metadataProfile?.name ? kinds.SUCCESS : kinds.DANGER}>
+            {metadataProfile?.name || translate('None')}
           </Label>
         </div>
 
