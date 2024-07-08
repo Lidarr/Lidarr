@@ -71,7 +71,7 @@ namespace Lidarr.Api.V1.Queue
 
             if (pendingRelease != null)
             {
-                Remove(pendingRelease);
+                Remove(pendingRelease, blocklist);
 
                 return;
             }
@@ -114,7 +114,7 @@ namespace Lidarr.Api.V1.Queue
 
             foreach (var pendingRelease in pendingToRemove.DistinctBy(p => p.Id))
             {
-                Remove(pendingRelease);
+                Remove(pendingRelease, blocklist);
             }
 
             foreach (var trackedDownload in trackedToRemove.DistinctBy(t => t.DownloadItem.DownloadId))
@@ -263,9 +263,13 @@ namespace Lidarr.Api.V1.Queue
             }
         }
 
-        private void Remove(NzbDrone.Core.Queue.Queue pendingRelease)
+        private void Remove(NzbDrone.Core.Queue.Queue pendingRelease, bool blocklist)
         {
-            _blocklistService.Block(pendingRelease.RemoteAlbum, "Pending release manually blocklisted");
+            if (blocklist)
+            {
+                _blocklistService.Block(pendingRelease.RemoteAlbum, "Pending release manually blocklisted");
+            }
+
             _pendingReleaseService.RemovePendingQueueItems(pendingRelease.Id);
         }
 
