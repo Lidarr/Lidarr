@@ -67,7 +67,7 @@ namespace Lidarr.Api.V1.RootFolders
                 DefaultQualityProfileId = resource.DefaultQualityProfileId,
                 DefaultMonitorOption = resource.DefaultMonitorOption,
                 DefaultNewItemMonitorOption = resource.DefaultNewItemMonitorOption,
-                DefaultTags = resource.DefaultTags,
+                DefaultTags = resource.DefaultTags ?? new HashSet<int>()
             };
         }
 

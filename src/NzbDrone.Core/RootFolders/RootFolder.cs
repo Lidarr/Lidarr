@@ -12,7 +12,7 @@ namespace NzbDrone.Core.RootFolders
         public int DefaultQualityProfileId { get; set; }
         public MonitorTypes DefaultMonitorOption { get; set; }
         public NewItemMonitorTypes DefaultNewItemMonitorOption { get; set; }
-        public HashSet<int> DefaultTags { get; set; }
+        public HashSet<int> DefaultTags { get; set; } = new ();
 
         public bool Accessible { get; set; }
         public long? FreeSpace { get; set; }
