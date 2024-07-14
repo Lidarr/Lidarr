@@ -10,6 +10,7 @@ function AlbumGroupInfo(props) {
   const {
     totalAlbumCount,
     monitoredAlbumCount,
+    albumFileCount,
     trackFileCount,
     sizeOnDisk
   } = props;
@@ -33,6 +34,13 @@ function AlbumGroupInfo(props) {
       <DescriptionListItem
         titleClassName={styles.title}
         descriptionClassName={styles.description}
+        title={translate('WithFiles')}
+        data={albumFileCount}
+      />
+
+      <DescriptionListItem
+        titleClassName={styles.title}
+        descriptionClassName={styles.description}
         title={translate('TrackFiles')}
         data={trackFileCount}
       />
@@ -50,6 +58,7 @@ function AlbumGroupInfo(props) {
 AlbumGroupInfo.propTypes = {
   totalAlbumCount: PropTypes.number.isRequired,
   monitoredAlbumCount: PropTypes.number.isRequired,
+  albumFileCount: PropTypes.number.isRequired,
   trackFileCount: PropTypes.number.isRequired,
   sizeOnDisk: PropTypes.number.isRequired
 };
