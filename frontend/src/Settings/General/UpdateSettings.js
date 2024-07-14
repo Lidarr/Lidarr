@@ -18,7 +18,6 @@ function UpdateSettings(props) {
   const {
     advancedSettings,
     settings,
-    isWindows,
     packageUpdateMechanism,
     onInputChange
   } = props;
@@ -44,10 +43,10 @@ function UpdateSettings(props) {
       value: titleCase(packageUpdateMechanism)
     });
   } else {
-    updateOptions.push({ key: 'builtIn', value: 'Built-In' });
+    updateOptions.push({ key: 'builtIn', value: translate('BuiltIn') });
   }
 
-  updateOptions.push({ key: 'script', value: 'Script' });
+  updateOptions.push({ key: 'script', value: translate('Script') });
 
   return (
     <FieldSet legend={translate('Updates')}>
@@ -69,62 +68,59 @@ function UpdateSettings(props) {
         />
       </FormGroup>
 
-      {
-        !isWindows &&
-          <div>
+      <div>
+        <FormGroup
+          advancedSettings={advancedSettings}
+          isAdvanced={true}
+          size={sizes.MEDIUM}
+        >
+          <FormLabel>{translate('Automatic')}</FormLabel>
+
+          <FormInputGroup
+            type={inputTypes.CHECK}
+            name="updateAutomatically"
+            helpText={translate('UpdateAutomaticallyHelpText')}
+            helpTextWarning={updateMechanism.value === 'docker' ? translate('AutomaticUpdatesDisabledDocker') : undefined}
+            onChange={onInputChange}
+            {...updateAutomatically}
+          />
+        </FormGroup>
+
+        <FormGroup
+          advancedSettings={advancedSettings}
+          isAdvanced={true}
+        >
+          <FormLabel>{translate('Mechanism')}</FormLabel>
+
+          <FormInputGroup
+            type={inputTypes.SELECT}
+            name="updateMechanism"
+            values={updateOptions}
+            helpText={translate('UpdateMechanismHelpText')}
+            helpLink="https://wiki.servarr.com/lidarr/faq#how-do-i-update-lidarr"
+            onChange={onInputChange}
+            {...updateMechanism}
+          />
+        </FormGroup>
+
+        {
+          updateMechanism.value === 'script' &&
             <FormGroup
               advancedSettings={advancedSettings}
               isAdvanced={true}
-              size={sizes.MEDIUM}
             >
-              <FormLabel>{translate('Automatic')}</FormLabel>
+              <FormLabel>{translate('ScriptPath')}</FormLabel>
 
               <FormInputGroup
-                type={inputTypes.CHECK}
-                name="updateAutomatically"
-                helpText={translate('UpdateAutomaticallyHelpText')}
-                helpTextWarning={updateMechanism.value === 'docker' ? translate('AutomaticUpdatesDisabledDocker') : undefined}
+                type={inputTypes.TEXT}
+                name="updateScriptPath"
+                helpText={translate('UpdateScriptPathHelpText')}
                 onChange={onInputChange}
-                {...updateAutomatically}
+                {...updateScriptPath}
               />
             </FormGroup>
-
-            <FormGroup
-              advancedSettings={advancedSettings}
-              isAdvanced={true}
-            >
-              <FormLabel>{translate('Mechanism')}</FormLabel>
-
-              <FormInputGroup
-                type={inputTypes.SELECT}
-                name="updateMechanism"
-                values={updateOptions}
-                helpText={translate('UpdateMechanismHelpText')}
-                helpLink="https://wiki.servarr.com/lidarr/faq#how-do-i-update-lidarr"
-                onChange={onInputChange}
-                {...updateMechanism}
-              />
-            </FormGroup>
-
-            {
-              updateMechanism.value === 'script' &&
-                <FormGroup
-                  advancedSettings={advancedSettings}
-                  isAdvanced={true}
-                >
-                  <FormLabel>{translate('ScriptPath')}</FormLabel>
-
-                  <FormInputGroup
-                    type={inputTypes.TEXT}
-                    name="updateScriptPath"
-                    helpText={translate('UpdateScriptPathHelpText')}
-                    onChange={onInputChange}
-                    {...updateScriptPath}
-                  />
-                </FormGroup>
-            }
-          </div>
-      }
+        }
+      </div>
     </FieldSet>
   );
 }
