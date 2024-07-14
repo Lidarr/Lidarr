@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Lidarr.Api.V1.Albums;
 using Lidarr.Http;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
@@ -13,11 +14,13 @@ namespace Lidarr.Api.V1.Artist
     public class ArtistEditorController : Controller
     {
         private readonly IArtistService _artistService;
+        private readonly IAlbumService _albumService;
         private readonly IManageCommandQueue _commandQueueManager;
 
-        public ArtistEditorController(IArtistService artistService, IManageCommandQueue commandQueueManager)
+        public ArtistEditorController(IArtistService artistService, IAlbumService albumService, IManageCommandQueue commandQueueManager)
         {
             _artistService = artistService;
+            _albumService = albumService;
             _commandQueueManager = commandQueueManager;
         }
 
@@ -89,7 +92,11 @@ namespace Lidarr.Api.V1.Artist
                 });
             }
 
-            return Accepted(_artistService.UpdateArtists(artistToUpdate, !resource.MoveFiles).ToResource());
+            var resources = _artistService.UpdateArtists(artistToUpdate, !resource.MoveFiles).ToResource();
+
+            LinkNextPreviousAlbums(resources.ToArray());
+
+            return Accepted(resources);
         }
 
         [HttpDelete]
@@ -98,6 +105,20 @@ namespace Lidarr.Api.V1.Artist
             _artistService.DeleteArtists(resource.ArtistIds, resource.DeleteFiles, resource.AddImportListExclusion);
 
             return new { };
+        }
+
+        private void LinkNextPreviousAlbums(params ArtistResource[] artists)
+        {
+            var artistMetadataIds = artists.Select(x => x.ArtistMetadataId).Distinct().ToList();
+
+            var nextAlbums = _albumService.GetNextAlbumsByArtistMetadataId(artistMetadataIds);
+            var lastAlbums = _albumService.GetLastAlbumsByArtistMetadataId(artistMetadataIds);
+
+            foreach (var artistResource in artists)
+            {
+                artistResource.NextAlbum = nextAlbums.FirstOrDefault(x => x.ArtistMetadataId == artistResource.ArtistMetadataId).ToResource();
+                artistResource.LastAlbum = lastAlbums.FirstOrDefault(x => x.ArtistMetadataId == artistResource.ArtistMetadataId).ToResource();
+            }
         }
     }
 }

@@ -16,6 +16,7 @@ namespace NzbDrone.Core.ArtistStats
 
     public class ArtistStatisticsService : IArtistStatisticsService,
         IHandle<ArtistAddedEvent>,
+        IHandle<ArtistEditedEvent>,
         IHandle<ArtistUpdatedEvent>,
         IHandle<ArtistsDeletedEvent>,
         IHandle<AlbumAddedEvent>,
@@ -72,6 +73,13 @@ namespace NzbDrone.Core.ArtistStats
 
         [EventHandleOrder(EventHandleOrder.First)]
         public void Handle(ArtistAddedEvent message)
+        {
+            _cache.Remove("AllArtists");
+            _cache.Remove(message.Artist.Id.ToString());
+        }
+
+        [EventHandleOrder(EventHandleOrder.First)]
+        public void Handle(ArtistEditedEvent message)
         {
             _cache.Remove("AllArtists");
             _cache.Remove(message.Artist.Id.ToString());
