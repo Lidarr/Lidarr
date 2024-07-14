@@ -79,7 +79,7 @@ function ArtistIndexSortMenu(props: SeriesIndexSortMenuProps) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          {translate('Last Album')}
+          {translate('LastAlbum')}
         </SortMenuItem>
 
         <SortMenuItem
