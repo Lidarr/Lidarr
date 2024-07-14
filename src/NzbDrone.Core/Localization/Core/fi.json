@@ -150,7 +150,7 @@
     "GrabSelected": "Kaappaa valitut",
     "Group": "Ryhmä",
     "Hostname": "Osoite",
-    "Importing": "Tuonti",
+    "Importing": "Tuodaan",
     "IncludeUnknownArtistItemsHelpText": "Näytä jonossa kohteet, joissa ei ole esittäjää. Tämä voi sisältää poistettuja esittäjiä, kappaleita tai mitä tahansa muuta {appName}ille luokiteltua.",
     "Interval": "Ajoitus",
     "IndexerSettings": "Tietolähdeasetukset",
@@ -1238,5 +1238,15 @@
     "DownloadClientDelugeSettingsDirectoryCompletedHelpText": "Valinnainen latuasten tallennussijainti. Käytä Aria2-oletusta jättämällä tyhjäksi.",
     "DownloadClientDelugeSettingsDirectoryHelpText": "Valinnainen latuasten tallennussijainti. Käytä Aria2-oletusta jättämällä tyhjäksi.",
     "IndexerSettingsSeedRatio": "Jakosuhde",
-    "IndexerSettingsSeedTime": "Jakoaika"
+    "IndexerSettingsSeedTime": "Jakoaika",
+    "ArtistIsMonitored": "Kirjailijaa ei valvota",
+    "False": "Epätosi",
+    "Parse": "Jäsennä",
+    "ParseModalErrorParsing": "Virhe jäsennettäessä. Yritä uudelleen.",
+    "ParseModalHelpText": "Syötä julkaisunimike yllä olevaan kenttään.",
+    "ParseModalHelpTextDetails": "{appName} pyrkii jäsentämään nimikkeen ja näyttämään sen tiedot.",
+    "ParseModalUnableToParse": "Annetun nimikkeen jäsennys ei onnistunut. Yritä uudelleen.",
+    "Repack": "Uudelleenpaketoitu",
+    "TestParsing": "Testaa jäsennystä",
+    "True": "Tosi"
 }

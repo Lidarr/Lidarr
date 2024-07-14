@@ -286,5 +286,7 @@
     "DeleteAutoTagHelpText": "Naozaj chcete zmazať tento profil oneskorenia?",
     "DisabledForLocalAddresses": "Zakázané pre miestne adresy",
     "AutomaticSearch": "Automatické vyhľadávanie",
-    "BlocklistReleases": "Blocklistnúť vydanie"
+    "BlocklistReleases": "Blocklistnúť vydanie",
+    "UnableToAddANewMetadataProfilePleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
+    "UnableToAddANewQualityProfilePleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova."
 }

@@ -729,5 +729,6 @@
     "Lowercase": "ตัวพิมพ์เล็ก",
     "OverviewOptions": "ตัวเลือกภาพรวม",
     "PosterOptions": "ตัวเลือกโปสเตอร์",
-    "TagsSettingsSummary": "ดูแท็กทั้งหมดและวิธีการใช้งาน แท็กที่ไม่ได้ใช้สามารถลบออกได้"
+    "TagsSettingsSummary": "ดูแท็กทั้งหมดและวิธีการใช้งาน แท็กที่ไม่ได้ใช้สามารถลบออกได้",
+    "AddImportListExclusionAlbumHelpText": "ป้องกันไม่ให้เพิ่มภาพยนตร์ไปยัง {appName} ตามรายการ"
 }

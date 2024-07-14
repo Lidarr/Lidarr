@@ -902,5 +902,7 @@
     "Negate": "Förneka",
     "NotificationStatusAllClientHealthCheckMessage": "Samtliga listor otillgängliga på grund av fel",
     "UseSsl": "Använd SSL",
-    "Links": "Länkar"
+    "Links": "Länkar",
+    "AddImportListExclusionAlbumHelpText": "Förhindra TV-serie att läggas till i {appName} från listor",
+    "ArtistIsMonitored": "Författare är obevakad"
 }
