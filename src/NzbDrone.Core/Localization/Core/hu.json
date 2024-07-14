@@ -1202,5 +1202,11 @@
     "DownloadClientDelugeSettingsDirectoryHelpText": "Választható hely a letöltések elhelyezéséhez, hagyja üresen az alapértelmezett Aria2 hely használatához",
     "Enabled": "Engedélyezés",
     "MonitorFirstAlbum": "Első album",
-    "Yesterday": "Tegnap"
+    "Yesterday": "Tegnap",
+    "Repack": "Újracsomagolás",
+    "True": "Igaz",
+    "False": "Hamis",
+    "ParseModalHelpText": "Adja meg a kiadás címét a fenti bevitelben",
+    "ParseModalUnableToParse": "A megadott cím nem elemezhető, próbálkozzon újra.",
+    "TestParsing": "Tesztelemzés"
 }

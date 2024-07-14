@@ -731,5 +731,7 @@
     "DefaultCase": "Sjálfgefið mál",
     "DeleteArtistFolderHelpText": "Eyddu kvikmyndamöppunni og innihaldi hennar",
     "AutomaticSearch": "Sjálfvirk leit",
-    "Release": " Sleppt"
+    "Release": " Sleppt",
+    "AddImportListExclusionAlbumHelpText": "Koma í veg fyrir að kvikmyndum verði bætt við {appName} af listum",
+    "DeleteArtistFoldersHelpText": "Eyddu kvikmyndamöppunni og innihaldi hennar"
 }

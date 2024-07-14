@@ -765,5 +765,6 @@
     "Release": " udgivelse",
     "InteractiveSearchModalHeader": "Interaktiv søgning",
     "FormatAgeHour": "Timer",
-    "IndexerPriorityHelpText": "Indekseringsprioritet fra 1 (højest) til 50 (lavest). Standard: 25."
+    "IndexerPriorityHelpText": "Indekseringsprioritet fra 1 (højest) til 50 (lavest). Standard: 25.",
+    "AutoTaggingNegateHelpText": "Hvis dette er markeret, gælder det tilpassede format ikke, hvis denne {0} betingelse stemmer overens."
 }

@@ -774,5 +774,6 @@
     "FormatAgeHour": "שעה (ות",
     "FormatAgeHours": "שעה (ות",
     "FormatAgeMinute": "דקות",
-    "FormatAgeMinutes": "דקות"
+    "FormatAgeMinutes": "דקות",
+    "AddImportListExclusionAlbumHelpText": "מנע מלהוסיף סרט לרדאר על ידי רשימות"
 }

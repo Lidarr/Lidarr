@@ -252,5 +252,6 @@
     "ItsEasyToAddANewArtistJustStartTypingTheNameOfTheArtistYouWantToAdd": "Lako je dodati nove filmove, samo kreni upisivati ime filma kojeg želiš dodati",
     "AddToDownloadQueue": "Dodano u red za preuzimanje",
     "AddedToDownloadQueue": "Dodano u red za preuzimanje",
-    "EditRootFolder": "asdf"
+    "EditRootFolder": "asdf",
+    "AddImportListExclusionAlbumHelpText": "Spriječi dodavanje ovog filma na {appName} preko listi"
 }
