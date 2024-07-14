@@ -1176,5 +1176,7 @@
     "DeleteSpecificationHelpText": "Sind Sie sicher, dass Sie die Spezifikation „{name}“ löschen möchten?",
     "DownloadClientDelugeSettingsDirectoryCompletedHelpText": "Optionaler Speicherort für Downloads. Lassen Sie das Feld leer, um den standardmäßigen rTorrent-Speicherort zu verwenden",
     "DownloadClientDelugeSettingsDirectoryHelpText": "Optionaler Speicherort für Downloads. Lassen Sie das Feld leer, um den standardmäßigen rTorrent-Speicherort zu verwenden",
-    "WhatsNew": "Was ist neu?"
+    "WhatsNew": "Was ist neu?",
+    "TestParsing": "Parsing testen",
+    "True": "WAHR"
 }

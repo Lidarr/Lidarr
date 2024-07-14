@@ -1289,5 +1289,15 @@
     "IndexerSettingsSeedTime": "Tiempo de sembrado",
     "IndexerSettingsSeedTimeHelpText": "El tiempo que un torrent debería ser sembrado antes de parar, vacío usa el predeterminado del cliente de descarga",
     "InteractiveSearchModalHeader": "Búsqueda interactiva",
-    "InteractiveSearchModalHeaderTitle": "Búsqueda interactiva - {title}"
+    "InteractiveSearchModalHeaderTitle": "Búsqueda interactiva - {title}",
+    "Parse": "Analizar",
+    "ParseModalErrorParsing": "Error analizando, por favor inténtalo de nuevo.",
+    "False": "Falso",
+    "ParseModalHelpText": "Introduce un título de lanzamiento en la entrada anterior",
+    "ParseModalHelpTextDetails": "{appName} intentará analizar el título y te mostrará detalles sobre ello",
+    "ParseModalUnableToParse": "No se pudo analizar el título proporcionado, por favor inténtalo de nuevo.",
+    "Repack": "Repack",
+    "TestParsing": "Probar análisis",
+    "True": "Verdadero",
+    "AlbumInfo": "Información del álbum"
 }

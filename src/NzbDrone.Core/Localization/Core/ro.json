@@ -768,5 +768,12 @@
     "InfoUrl": "URL informații",
     "AutomaticSearch": "Căutare automată",
     "PosterOptions": "Opțiuni poster",
-    "ResetDefinitions": "Resetare definitii"
+    "ResetDefinitions": "Resetare definitii",
+    "AddImportListExclusionAlbumHelpText": "Împiedicați ca filmele să fie adăugate la {appName} pe liste",
+    "False": "Fals",
+    "Parse": "Analiza",
+    "ParseModalErrorParsing": "Eroare la analizare, încercați din nou.",
+    "ParseModalHelpTextDetails": "Radarr va încerca să analizeze titlul și să vă arate detalii despre acesta",
+    "ParseModalUnableToParse": "Nu se poate analiza titlul furnizat, vă rugăm să încercați din nou.",
+    "True": "Adevărat"
 }

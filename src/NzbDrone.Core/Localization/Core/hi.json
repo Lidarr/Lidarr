@@ -241,8 +241,8 @@
     "RecyclingBinCleanup": "रीसायकल बिन सफाई",
     "Redownload": "redownload",
     "Refresh": "ताज़ा करना",
-    "20MinutesTwenty": "90 मिनट: {0}",
-    "45MinutesFourtyFive": "90 मिनट: {0}",
+    "20MinutesTwenty": "20 मिनट: {0}",
+    "45MinutesFourtyFive": "45 मिनट: {0}",
     "60MinutesSixty": "60 मिनट: {0}",
     "AgeWhenGrabbed": "आयु (जब पकड़ा गया)",
     "AlbumIsDownloadingInterp": "मूवी डाउनलोड हो रही है - {0}% {1}",
@@ -281,7 +281,7 @@
     "Actions": "कार्रवाई",
     "AddingTag": "टैग जोड़ना",
     "AddListExclusion": "सूची बहिष्करण जोड़ें",
-    "APIKey": "एपीआई कुंजी",
+    "APIKey": "एपीआई पासवर्ड",
     "ApiKeyHelpTextWarning": "प्रभावी करने के लिए पुनरारंभ की आवश्यकता है",
     "AppDataDirectory": "AppData निर्देशिका",
     "ApplyTags": "टैग लागू करें",
@@ -731,5 +731,7 @@
     "RemoveQueueItemConfirmation": "क्या आप वाकई {0} आइटम {1} को कतार से हटाना चाहते हैं?",
     "ArtistIndexFooterDownloading": "डाउनलोड",
     "AutoRedownloadFailed": "डाउनलोड विफल",
-    "AutomaticSearch": "स्वचालित खोज"
+    "AutomaticSearch": "स्वचालित खोज",
+    "Absolute": "पूर्ण",
+    "AddImportListExclusionAlbumHelpText": "मूवी को रेडर से सूचियों में जोड़े जाने से रोकें"
 }

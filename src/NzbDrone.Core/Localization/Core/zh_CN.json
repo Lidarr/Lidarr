@@ -1273,5 +1273,14 @@
     "IndexerSettingsSeedTimeHelpText": "停止前应做种的时间，留空使用下载客户端的默认值",
     "InteractiveSearchModalHeader": "手动搜索",
     "DownloadClientDelugeSettingsDirectoryCompletedHelpText": "可选的下载位置，留空使用 Aria2 默认位置",
-    "IndexerSettingsSeedTime": "做种时间"
+    "IndexerSettingsSeedTime": "做种时间",
+    "Parse": "解析",
+    "Repack": "重新打包",
+    "False": "否",
+    "ParseModalErrorParsing": "解析错误，请重试。",
+    "ParseModalHelpText": "在上面的输入框中输入一个发行版标题",
+    "ParseModalHelpTextDetails": "{appName} 将尝试解析标题并向您显示有关详情",
+    "ParseModalUnableToParse": "无法解析提供的标题，请重试。",
+    "TestParsing": "测试解析",
+    "True": "是"
 }
