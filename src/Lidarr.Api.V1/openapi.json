@@ -8670,10 +8670,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "artistMetadataId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "status": {
             "$ref": "#/components/schemas/ArtistStatusType"
           },

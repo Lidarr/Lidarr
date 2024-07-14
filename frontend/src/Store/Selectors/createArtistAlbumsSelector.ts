@@ -11,7 +11,7 @@ function createArtistAlbumsSelector(artistId: number) {
       const { isFetching, isPopulated, error, items } = albums;
 
       const filteredAlbums = items.filter(
-        (album) => album.artist.artistMetadataId === artist.artistMetadataId
+        (album) => album.artistId === artist.id
       );
 
       return {
