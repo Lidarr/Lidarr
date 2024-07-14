@@ -204,8 +204,10 @@ namespace Lidarr.Api.V1.Artist
 
         private void LinkNextPreviousAlbums(params ArtistResource[] artists)
         {
-            var nextAlbums = _albumService.GetNextAlbumsByArtistMetadataId(artists.Select(x => x.ArtistMetadataId));
-            var lastAlbums = _albumService.GetLastAlbumsByArtistMetadataId(artists.Select(x => x.ArtistMetadataId));
+            var artistMetadataIds = artists.Select(x => x.ArtistMetadataId).Distinct().ToList();
+
+            var nextAlbums = _albumService.GetNextAlbumsByArtistMetadataId(artistMetadataIds);
+            var lastAlbums = _albumService.GetLastAlbumsByArtistMetadataId(artistMetadataIds);
 
             foreach (var artistResource in artists)
             {
