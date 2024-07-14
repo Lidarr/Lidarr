@@ -25,7 +25,7 @@ function MonitorAlbumsSelectInput(props) {
   if (includeMixed) {
     values.unshift({
       key: 'mixed',
-      value: '(Mixed)',
+      value: `(${translate('Mixed')})`,
       isDisabled: true
     });
   }
