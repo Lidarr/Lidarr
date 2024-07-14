@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Lidarr.Api.V1.Albums;
 using Lidarr.Http.REST;
-using Newtonsoft.Json;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.Music;
@@ -32,7 +32,10 @@ namespace Lidarr.Api.V1.Artist
         public string Disambiguation { get; set; }
         public List<Links> Links { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         public AlbumResource NextAlbum { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         public AlbumResource LastAlbum { get; set; }
 
         public List<MediaCover> Images { get; set; }
@@ -74,7 +77,6 @@ namespace Lidarr.Api.V1.Artist
             return new ArtistResource
             {
                 Id = model.Id,
-                ArtistMetadataId = model.ArtistMetadataId,
 
                 ArtistName = model.Name,
 

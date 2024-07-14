@@ -4,10 +4,11 @@ import Link from 'Components/Link/Link';
 
 function AlbumTitleLink({ foreignAlbumId, title, disambiguation }) {
   const link = `/album/${foreignAlbumId}`;
+  const albumTitle = `${title}${disambiguation ? ` (${disambiguation})` : ''}`;
 
   return (
-    <Link to={link}>
-      {title}{disambiguation ? ` (${disambiguation})` : ''}
+    <Link to={link} title={albumTitle}>
+      {albumTitle}
     </Link>
   );
 }
