@@ -77,6 +77,7 @@ namespace Lidarr.Api.V1.Artist
             return new ArtistResource
             {
                 Id = model.Id,
+                ArtistMetadataId = model.ArtistMetadataId,
 
                 ArtistName = model.Name,
 
