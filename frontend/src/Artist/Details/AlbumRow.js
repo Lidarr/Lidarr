@@ -160,7 +160,7 @@ class AlbumRow extends Component {
               return (
                 <TableRowCell key={name}>
                   {
-                    statistics.totalTrackCount
+                    totalTrackCount
                   }
                 </TableRowCell>
               );

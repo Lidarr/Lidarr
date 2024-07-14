@@ -22,32 +22,43 @@ import styles from './ArtistDetailsSeason.css';
 
 function getAlbumStatistics(albums) {
   let albumCount = 0;
+  let albumFileCount = 0;
   let trackFileCount = 0;
   let totalAlbumCount = 0;
   let monitoredAlbumCount = 0;
   let hasMonitoredAlbums = false;
   let sizeOnDisk = 0;
 
-  albums.forEach((album) => {
-    if (album.statistics) {
-      sizeOnDisk = sizeOnDisk + album.statistics.sizeOnDisk;
-      trackFileCount = trackFileCount + album.statistics.trackFileCount;
+  albums.forEach(({ monitored, releaseDate, statistics = {} }) => {
+    const {
+      trackFileCount: albumTrackFileCount = 0,
+      totalTrackCount: albumTotalTrackCount = 0,
+      sizeOnDisk: albumSizeOnDisk = 0
+    } = statistics;
 
-      if (album.statistics.trackFileCount === album.statistics.totalTrackCount || (album.monitored && isBefore(album.airDateUtc))) {
-        albumCount++;
-      }
+    const hasFiles = albumTrackFileCount > 0 && albumTrackFileCount === albumTotalTrackCount;
+
+    if (hasFiles || (monitored && isBefore(releaseDate))) {
+      albumCount++;
     }
 
-    if (album.monitored) {
+    if (hasFiles) {
+      albumFileCount++;
+    }
+
+    if (monitored) {
       monitoredAlbumCount++;
       hasMonitoredAlbums = true;
     }
 
     totalAlbumCount++;
+    trackFileCount = trackFileCount + albumTrackFileCount;
+    sizeOnDisk = sizeOnDisk + albumSizeOnDisk;
   });
 
   return {
     albumCount,
+    albumFileCount,
     totalAlbumCount,
     trackFileCount,
     monitoredAlbumCount,
@@ -56,8 +67,8 @@ function getAlbumStatistics(albums) {
   };
 }
 
-function getAlbumCountKind(monitored, albumCount, monitoredAlbumCount) {
-  if (albumCount === monitoredAlbumCount && monitoredAlbumCount > 0) {
+function getAlbumCountKind(monitored, albumCount, albumFileCount) {
+  if (albumCount === albumFileCount && albumFileCount > 0) {
     return kinds.SUCCESS;
   }
 
@@ -192,6 +203,7 @@ class ArtistDetailsSeason extends Component {
 
     const {
       albumCount,
+      albumFileCount,
       totalAlbumCount,
       trackFileCount,
       monitoredAlbumCount,
@@ -226,9 +238,9 @@ class ArtistDetailsSeason extends Component {
               anchor={
                 <Label
                   size={sizes.LARGE}
-                  kind={getAlbumCountKind(hasMonitoredAlbums, albumCount, monitoredAlbumCount)}
+                  kind={getAlbumCountKind(hasMonitoredAlbums, albumCount, albumFileCount)}
                 >
-                  <span>{albumCount} / {monitoredAlbumCount}</span>
+                  <span>{albumFileCount} / {albumCount}</span>
                 </Label>
               }
               title={translate('GroupInformation')}
@@ -237,6 +249,7 @@ class ArtistDetailsSeason extends Component {
                   <AlbumGroupInfo
                     totalAlbumCount={totalAlbumCount}
                     monitoredAlbumCount={monitoredAlbumCount}
+                    albumFileCount={albumFileCount}
                     trackFileCount={trackFileCount}
                     sizeOnDisk={sizeOnDisk}
                   />

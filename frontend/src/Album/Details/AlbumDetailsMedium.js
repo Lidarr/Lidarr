@@ -12,16 +12,13 @@ import TrackRowConnector from './TrackRowConnector';
 import styles from './AlbumDetailsMedium.css';
 
 function getMediumStatistics(tracks) {
-  let trackCount = 0;
+  const trackCount = tracks.length;
   let trackFileCount = 0;
   let totalTrackCount = 0;
 
   tracks.forEach((track) => {
     if (track.trackFileId) {
-      trackCount++;
       trackFileCount++;
-    } else {
-      trackCount++;
     }
 
     totalTrackCount++;
