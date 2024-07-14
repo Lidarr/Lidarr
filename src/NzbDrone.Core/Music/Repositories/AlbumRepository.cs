@@ -46,13 +46,13 @@ namespace NzbDrone.Core.Music
             var now = DateTime.UtcNow;
 
             var inner = Builder()
-                .Select("MIN(\"Albums\".\"Id\") as id, MAX(\"Albums\".\"ReleaseDate\") as date")
-                .Where<Album>(x => artistMetadataIds.Contains(x.ArtistMetadataId) && x.ReleaseDate < now)
+                .Select("\"Albums\".\"ArtistMetadataId\" AS artist_metadata_id, MAX(\"Albums\".\"ReleaseDate\") AS date")
+                .Where<Album>(x => artistMetadataIds.Contains(x.ArtistMetadataId) && x.Monitored == true && x.ReleaseDate < now)
                 .GroupBy<Album>(x => x.ArtistMetadataId)
                 .AddSelectTemplate(typeof(Album));
 
             var outer = Builder()
-                .Join($"({inner.RawSql}) ids on ids.id = \"Albums\".\"Id\" and ids.date = \"Albums\".\"ReleaseDate\"")
+                .Join($"({inner.RawSql}) ids ON ids.artist_metadata_id = \"Albums\".\"ArtistMetadataId\" AND ids.date = \"Albums\".\"ReleaseDate\"")
                 .AddParameters(inner.Parameters);
 
             return Query(outer);
@@ -63,13 +63,13 @@ namespace NzbDrone.Core.Music
             var now = DateTime.UtcNow;
 
             var inner = Builder()
-                .Select("MIN(\"Albums\".\"Id\") as id, MIN(\"Albums\".\"ReleaseDate\") as date")
-                .Where<Album>(x => artistMetadataIds.Contains(x.ArtistMetadataId) && x.ReleaseDate > now)
+                .Select("\"Albums\".\"ArtistMetadataId\" AS artist_metadata_id, MIN(\"Albums\".\"ReleaseDate\") AS date")
+                .Where<Album>(x => artistMetadataIds.Contains(x.ArtistMetadataId) && x.Monitored == true && x.ReleaseDate > now)
                 .GroupBy<Album>(x => x.ArtistMetadataId)
                 .AddSelectTemplate(typeof(Album));
 
             var outer = Builder()
-                .Join($"({inner.RawSql}) ids on ids.id = \"Albums\".\"Id\" and ids.date = \"Albums\".\"ReleaseDate\"")
+                .Join($"({inner.RawSql}) ids ON ids.artist_metadata_id = \"Albums\".\"ArtistMetadataId\" AND ids.date = \"Albums\".\"ReleaseDate\"")
                 .AddParameters(inner.Parameters);
 
             return Query(outer);

@@ -193,7 +193,7 @@ namespace NzbDrone.Core.Test.MusicTests.AlbumRepositoryTests
             GivenMultipleAlbums();
 
             var result = _albumRepo.GetNextAlbums(new[] { _artist.ArtistMetadataId });
-            result.Should().BeEquivalentTo(_albums.Take(1), AlbumComparerOptions);
+            result.Should().BeEquivalentTo(_albums.Skip(1).Take(1), AlbumComparerOptions);
         }
 
         [Test]
@@ -202,7 +202,7 @@ namespace NzbDrone.Core.Test.MusicTests.AlbumRepositoryTests
             GivenMultipleAlbums();
 
             var result = _albumRepo.GetLastAlbums(new[] { _artist.ArtistMetadataId });
-            result.Should().BeEquivalentTo(_albums.Skip(2).Take(1), AlbumComparerOptions);
+            result.Should().BeEquivalentTo(_albums.Skip(3).Take(1), AlbumComparerOptions);
         }
 
         private EquivalencyAssertionOptions<Album> AlbumComparerOptions(EquivalencyAssertionOptions<Album> opts) => opts.ComparingByMembers<Album>()

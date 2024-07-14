@@ -23,7 +23,6 @@ export interface Ratings {
 
 interface Artist extends ModelBase {
   added: string;
-  artistMetadataId: string;
   foreignArtistId: string;
   cleanName: string;
   ended: boolean;

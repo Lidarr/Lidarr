@@ -10,6 +10,7 @@ export interface Statistics {
 }
 
 interface Album extends ModelBase {
+  artistId: number;
   artist: Artist;
   foreignAlbumId: string;
   title: string;
