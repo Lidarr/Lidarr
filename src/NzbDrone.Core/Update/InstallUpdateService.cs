@@ -20,7 +20,7 @@ using NzbDrone.Core.Update.Commands;
 
 namespace NzbDrone.Core.Update
 {
-    public class InstallUpdateService : IExecute<ApplicationUpdateCheckCommand>, IExecute<ApplicationUpdateCommand>, IHandle<ApplicationStartingEvent>
+    public class InstallUpdateService : IExecute<ApplicationUpdateCommand>, IExecute<ApplicationUpdateCheckCommand>, IHandle<ApplicationStartingEvent>
     {
         private readonly ICheckUpdateService _checkUpdateService;
         private readonly Logger _logger;
@@ -232,7 +232,7 @@ namespace NzbDrone.Core.Update
             }
         }
 
-        private UpdatePackage GetUpdatePackage(CommandTrigger updateTrigger)
+        private UpdatePackage GetUpdatePackage(CommandTrigger updateTrigger, bool installMajorUpdate)
         {
             _logger.ProgressDebug("Checking for updates");
 
@@ -244,7 +244,13 @@ namespace NzbDrone.Core.Update
                 return null;
             }
 
-            if (OsInfo.IsNotWindows && !_configFileProvider.UpdateAutomatically && updateTrigger != CommandTrigger.Manual)
+            if (latestAvailable.Version.Major > BuildInfo.Version.Major && !installMajorUpdate)
+            {
+                _logger.ProgressInfo("Unable to install major update, please update update manually from System: Updates");
+                return null;
+            }
+
+            if (!_configFileProvider.UpdateAutomatically && updateTrigger != CommandTrigger.Manual)
             {
                 _logger.ProgressDebug("Auto-update not enabled, not installing available update.");
                 return null;
@@ -273,7 +279,7 @@ namespace NzbDrone.Core.Update
 
         public void Execute(ApplicationUpdateCheckCommand message)
         {
-            if (GetUpdatePackage(message.Trigger) != null)
+            if (GetUpdatePackage(message.Trigger, true) != null)
             {
                 _commandQueueManager.Push(new ApplicationUpdateCommand(), trigger: message.Trigger);
             }
@@ -281,7 +287,7 @@ namespace NzbDrone.Core.Update
 
         public void Execute(ApplicationUpdateCommand message)
         {
-            var latestAvailable = GetUpdatePackage(message.Trigger);
+            var latestAvailable = GetUpdatePackage(message.Trigger, message.InstallMajorUpdate);
 
             if (latestAvailable != null)
             {

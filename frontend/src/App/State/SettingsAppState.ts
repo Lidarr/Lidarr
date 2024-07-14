@@ -13,12 +13,15 @@ import MetadataProfile from 'typings/MetadataProfile';
 import Notification from 'typings/Notification';
 import QualityProfile from 'typings/QualityProfile';
 import RootFolder from 'typings/RootFolder';
-import { UiSettings } from 'typings/UiSettings';
+import General from 'typings/Settings/General';
+import UiSettings from 'typings/Settings/UiSettings';
 
 export interface DownloadClientAppState
   extends AppSectionState<DownloadClient>,
     AppSectionDeleteState,
     AppSectionSaveState {}
+
+export type GeneralAppState = AppSectionItemState<General>;
 
 export interface ImportListAppState
   extends AppSectionState<ImportList>,
@@ -59,6 +62,7 @@ interface SettingsAppState {
   advancedSettings: boolean;
   customFormats: CustomFormatAppState;
   downloadClients: DownloadClientAppState;
+  general: GeneralAppState;
   importLists: ImportListAppState;
   indexerFlags: IndexerFlagSettingsAppState;
   indexers: IndexerAppState;
