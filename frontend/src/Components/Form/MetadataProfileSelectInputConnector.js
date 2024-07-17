@@ -5,13 +5,13 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { metadataProfileNames } from 'Helpers/Props';
 import createSortedSectionSelector from 'Store/Selectors/createSortedSectionSelector';
-import sortByName from 'Utilities/Array/sortByName';
+import sortByProp from 'Utilities/Array/sortByProp';
 import translate from 'Utilities/String/translate';
 import EnhancedSelectInput from './EnhancedSelectInput';
 
 function createMapStateToProps() {
   return createSelector(
-    createSortedSectionSelector('settings.metadataProfiles', sortByName),
+    createSortedSectionSelector('settings.metadataProfiles', sortByProp('name')),
     (state, { includeNoChange }) => includeNoChange,
     (state, { includeNoChangeDisabled }) => includeNoChangeDisabled,
     (state, { includeMixed }) => includeMixed,

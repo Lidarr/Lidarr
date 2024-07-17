@@ -13,7 +13,7 @@ import {
 } from 'Store/Actions/settingsActions';
 import createSortedSectionSelector from 'Store/Selectors/createSortedSectionSelector';
 import createTagsSelector from 'Store/Selectors/createTagsSelector';
-import sortByName from 'Utilities/Array/sortByName';
+import sortByProp from 'Utilities/Array/sortByProp';
 import translate from 'Utilities/String/translate';
 import AutoTagging from './AutoTagging';
 import EditAutoTaggingModal from './EditAutoTaggingModal';
@@ -27,7 +27,7 @@ export default function AutoTaggings() {
     isFetching,
     isPopulated
   } = useSelector(
-    createSortedSectionSelector('settings.autoTaggings', sortByName)
+    createSortedSectionSelector('settings.autoTaggings', sortByProp('name'))
   );
 
   const tagList = useSelector(createTagsSelector());

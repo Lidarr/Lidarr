@@ -4,7 +4,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { fetchIndexers } from 'Store/Actions/settingsActions';
-import sortByName from 'Utilities/Array/sortByName';
+import sortByProp from 'Utilities/Array/sortByProp';
+import translate from 'Utilities/String/translate';
 import EnhancedSelectInput from './EnhancedSelectInput';
 
 function createMapStateToProps() {
@@ -19,7 +20,7 @@ function createMapStateToProps() {
         items
       } = indexers;
 
-      const values = _.map(items.sort(sortByName), (indexer) => {
+      const values = _.map(items.sort(sortByProp('name')), (indexer) => {
         return {
           key: indexer.id,
           value: indexer.name
@@ -29,7 +30,7 @@ function createMapStateToProps() {
       if (includeAny) {
         values.unshift({
           key: 0,
-          value: '(Any)'
+          value: `(${translate('Any')})`
         });
       }
 
