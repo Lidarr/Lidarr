@@ -5,7 +5,7 @@ import FieldSet from 'Components/FieldSet';
 import Icon from 'Components/Icon';
 import PageSectionContent from 'Components/Page/PageSectionContent';
 import { icons, metadataProfileNames } from 'Helpers/Props';
-import sortByName from 'Utilities/Array/sortByName';
+import sortByProp from 'Utilities/Array/sortByProp';
 import translate from 'Utilities/String/translate';
 import EditMetadataProfileModalConnector from './EditMetadataProfileModalConnector';
 import MetadataProfile from './MetadataProfile';
@@ -59,17 +59,20 @@ class MetadataProfiles extends Component {
         >
           <div className={styles.metadataProfiles}>
             {
-              items.filter((item) => item.name !== metadataProfileNames.NONE).sort(sortByName).map((item) => {
-                return (
-                  <MetadataProfile
-                    key={item.id}
-                    {...item}
-                    isDeleting={isDeleting}
-                    onConfirmDeleteMetadataProfile={onConfirmDeleteMetadataProfile}
-                    onCloneMetadataProfilePress={this.onCloneMetadataProfilePress}
-                  />
-                );
-              })
+              items
+                .filter((item) => item.name !== metadataProfileNames.NONE)
+                .sort(sortByProp('name'))
+                .map((item) => {
+                  return (
+                    <MetadataProfile
+                      key={item.id}
+                      {...item}
+                      isDeleting={isDeleting}
+                      onConfirmDeleteMetadataProfile={onConfirmDeleteMetadataProfile}
+                      onCloneMetadataProfilePress={this.onCloneMetadataProfilePress}
+                    />
+                  );
+                })
             }
 
             <Card
