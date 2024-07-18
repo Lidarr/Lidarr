@@ -1248,5 +1248,8 @@
     "ParseModalUnableToParse": "Annetun nimikkeen jäsennys ei onnistunut. Yritä uudelleen.",
     "Repack": "Uudelleenpaketoitu",
     "TestParsing": "Testaa jäsennystä",
-    "True": "Tosi"
+    "True": "Tosi",
+    "Any": "Mikä vain",
+    "BuiltIn": "Sisäänrakennettu",
+    "Script": "Skripti"
 }

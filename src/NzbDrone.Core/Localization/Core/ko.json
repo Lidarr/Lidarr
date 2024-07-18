@@ -707,5 +707,6 @@
     "ImportListsSettingsSummary": "가져오기 목록, 목록 제외",
     "AddToDownloadQueue": "다운로드 대기열에 추가됨",
     "AddedToDownloadQueue": "다운로드 대기열에 추가됨",
-    "GrabReleaseUnknownArtistOrAlbumMessageText": "{appName}는 이 출시의 영화를 확인할 수 없습니다. {appName}는 이 출시를 자동으로 가져오지 못할 수 있습니다. '{0}'을(를) 잡으시겠습니까?"
+    "GrabReleaseUnknownArtistOrAlbumMessageText": "{appName}는 이 출시의 영화를 확인할 수 없습니다. {appName}는 이 출시를 자동으로 가져오지 못할 수 있습니다. '{0}'을(를) 잡으시겠습니까?",
+    "BuiltIn": "내장"
 }

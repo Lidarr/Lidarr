@@ -288,5 +288,6 @@
     "AutomaticSearch": "Automatické vyhľadávanie",
     "BlocklistReleases": "Blocklistnúť vydanie",
     "UnableToAddANewMetadataProfilePleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
-    "UnableToAddANewQualityProfilePleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova."
+    "UnableToAddANewQualityProfilePleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
+    "BuiltIn": "Vstavaný"
 }

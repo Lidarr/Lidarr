@@ -775,5 +775,7 @@
     "ParseModalErrorParsing": "Eroare la analizare, încercați din nou.",
     "ParseModalHelpTextDetails": "Radarr va încerca să analizeze titlul și să vă arate detalii despre acesta",
     "ParseModalUnableToParse": "Nu se poate analiza titlul furnizat, vă rugăm să încercați din nou.",
-    "True": "Adevărat"
+    "True": "Adevărat",
+    "BuiltIn": "Incorporat",
+    "Script": "Script"
 }
