@@ -578,7 +578,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.QBittorrentTests
             Mocker.GetMock<IQBittorrentProxy>()
                 .Setup(s => s.GetLabels(It.IsAny<QBittorrentSettings>()))
                 .Returns(new Dictionary<string, QBittorrentLabel>
-                    { { "tv", new QBittorrentLabel { Name = "tv", SavePath = "//server/store/downloads" } } });
+                    { { "music", new QBittorrentLabel { Name = "music", SavePath = "//server/store/downloads" } } });
 
             var result = Subject.GetStatus();
 
