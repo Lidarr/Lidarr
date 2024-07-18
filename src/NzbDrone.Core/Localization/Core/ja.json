@@ -732,5 +732,7 @@
     "GrabReleaseUnknownArtistOrAlbumMessageText": "Radarrは、このリリースの対象となる映画を特定できませんでした。 Radarrは、このリリースを自動的にインポートできない場合があります。 '{0}'を取得しますか？",
     "FormatAgeMinutes": "議事録",
     "MonitorNoAlbums": "なし",
-    "Yesterday": "昨日"
+    "Yesterday": "昨日",
+    "BuiltIn": "ビルトイン",
+    "Script": "脚本"
 }

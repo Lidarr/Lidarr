@@ -737,5 +737,10 @@
     "AddToDownloadQueue": "Thêm vào hàng đợi tải xuống",
     "AddedToDownloadQueue": "Đã thêm vào hàng đợi tải xuống",
     "FormatAgeMinutes": "Phút",
-    "GrabReleaseUnknownArtistOrAlbumMessageText": "{appName} không thể xác định bộ phim này được phát hành. {appName} có thể không tự động nhập bản phát hành này. Bạn có muốn lấy '{0}' không?"
+    "GrabReleaseUnknownArtistOrAlbumMessageText": "{appName} không thể xác định bộ phim này được phát hành. {appName} có thể không tự động nhập bản phát hành này. Bạn có muốn lấy '{0}' không?",
+    "InteractiveSearchModalHeader": "Tìm kiếm tương tác",
+    "IndexerPriorityHelpText": "Mức độ ưu tiên của người lập chỉ mục từ 1 (Cao nhất) đến 50 (Thấp nhất). Mặc định: 25.",
+    "FormatAgeHour": "Giờ",
+    "Script": "Kịch bản",
+    "BuiltIn": "Được xây dựng trong"
 }

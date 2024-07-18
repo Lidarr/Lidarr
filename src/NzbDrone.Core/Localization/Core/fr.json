@@ -1298,5 +1298,9 @@
     "ParseModalHelpTextDetails": "{appName} va tenter d'analyser le titre et de vous afficher les détails à son sujet",
     "ParseModalUnableToParse": "Impossible d'analyser le titre fourni, veuillez réessayer.",
     "TestParsing": "Tester le parsage",
-    "True": "Vrai"
+    "True": "Vrai",
+    "WithFiles": "Avec les fichiers",
+    "Script": "Script",
+    "Any": "Tous",
+    "BuiltIn": "Intégré"
 }

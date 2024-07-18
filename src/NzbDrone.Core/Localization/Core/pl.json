@@ -800,5 +800,7 @@
     "FormatAgeMinute": "Minuty",
     "FormatAgeMinutes": "Minuty",
     "InteractiveSearchModalHeader": "Wyszukiwanie interaktywne",
-    "IndexerPriorityHelpText": "Priorytet indeksera od 1 (najwyższy) do 50 (najniższy). Domyślnie: 25. Używany podczas pobierania wydań przy wystąpieniu równoważnych wydań. Przy synchronizacji RSS i wyszukiwaniu, Radarr wciąż będzie korzystał ze wszystkich indekserów"
+    "IndexerPriorityHelpText": "Priorytet indeksera od 1 (najwyższy) do 50 (najniższy). Domyślnie: 25. Używany podczas pobierania wydań przy wystąpieniu równoważnych wydań. Przy synchronizacji RSS i wyszukiwaniu, Radarr wciąż będzie korzystał ze wszystkich indekserów",
+    "BuiltIn": "Wbudowany",
+    "Script": "Scenariusz"
 }

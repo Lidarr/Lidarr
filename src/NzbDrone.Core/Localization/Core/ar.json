@@ -738,5 +738,7 @@
     "AddToDownloadQueue": "إضافة إلى قائمة انتظار التنزيل",
     "AddedToDownloadQueue": "تمت الإضافة إلى قائمة انتظار التنزيلات",
     "InteractiveSearchModalHeader": "بحث تفاعلي",
-    "IndexerPriorityHelpText": "أولوية المفهرس من 1 (الأعلى) إلى 50 (الأدنى). الافتراضي: 25."
+    "IndexerPriorityHelpText": "أولوية المفهرس من 1 (الأعلى) إلى 50 (الأدنى). الافتراضي: 25.",
+    "BuiltIn": "مدمج",
+    "Script": "النصي"
 }

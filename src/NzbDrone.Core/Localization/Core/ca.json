@@ -946,5 +946,8 @@
     "False": "Fals",
     "Parse": "Analitza",
     "True": "Vertader",
-    "Repack": "Tornat a empaquetar"
+    "Repack": "Tornat a empaquetar",
+    "Any": "Qualsevol",
+    "BuiltIn": "Integrat",
+    "Script": "Script"
 }

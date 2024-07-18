@@ -1208,5 +1208,8 @@
     "False": "Hamis",
     "ParseModalHelpText": "Adja meg a kiadás címét a fenti bevitelben",
     "ParseModalUnableToParse": "A megadott cím nem elemezhető, próbálkozzon újra.",
-    "TestParsing": "Tesztelemzés"
+    "TestParsing": "Tesztelemzés",
+    "Any": "Bármi",
+    "BuiltIn": "Beépített",
+    "Script": "Szkript"
 }
