@@ -733,5 +733,7 @@
     "AutoRedownloadFailed": "डाउनलोड विफल",
     "AutomaticSearch": "स्वचालित खोज",
     "Absolute": "पूर्ण",
-    "AddImportListExclusionAlbumHelpText": "मूवी को रेडर से सूचियों में जोड़े जाने से रोकें"
+    "AddImportListExclusionAlbumHelpText": "मूवी को रेडर से सूचियों में जोड़े जाने से रोकें",
+    "BuiltIn": "में निर्मित",
+    "Script": "लिपि"
 }

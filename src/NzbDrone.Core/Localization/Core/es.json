@@ -268,7 +268,7 @@
     "ScriptPath": "Ruta del script",
     "Search": "Buscar",
     "SearchAll": "Buscar todo",
-    "SearchForMissing": "Buscar perdidos",
+    "SearchForMissing": "Buscar faltantes",
     "SearchSelected": "Buscar seleccionados",
     "Security": "Seguridad",
     "SendAnonymousUsageData": "Enviar datos de uso anónimos",
@@ -546,7 +546,7 @@
     "ShowAdvanced": "Mostrar avanzado",
     "SizeLimit": "Límite de tamaño",
     "SizeOnDisk": "Tamaño en Disco",
-    "SourceTitle": "Título de la fuente",
+    "SourceTitle": "Título de origen",
     "System": "Sistema",
     "Test": "Prueba",
     "TimeLeft": "Tiempo restante",
@@ -1299,5 +1299,11 @@
     "Repack": "Repack",
     "TestParsing": "Probar análisis",
     "True": "Verdadero",
-    "AlbumInfo": "Información del álbum"
+    "AlbumInfo": "Información del álbum",
+    "MatchedToAlbums": "Emparejado a álbumes",
+    "MatchedToArtist": "Emparejado a artista",
+    "WithFiles": "Con archivos",
+    "Any": "Cualquiera",
+    "BuiltIn": "Integrado",
+    "Script": "Script"
 }

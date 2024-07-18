@@ -1004,5 +1004,8 @@
     "IndexerPriorityHelpText": "Prioridade do Indexador de 1 (Mais Alta) a 50 (Mais Baixa). Padrão: 25. Usado para obter versões como critério de desempate para versões iguais, o {appName} ainda usará todos os indexadores habilitados para sincronização e pesquisa de RSS",
     "Release": " lançamento",
     "FormatAgeHour": "Horas",
-    "DeleteSelectedArtists": "Eliminar artista selecionado"
+    "DeleteSelectedArtists": "Eliminar artista selecionado",
+    "Any": "Quaisquer",
+    "Script": "Script",
+    "BuiltIn": "Incorporado"
 }

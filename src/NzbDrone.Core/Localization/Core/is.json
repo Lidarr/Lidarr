@@ -733,5 +733,7 @@
     "AutomaticSearch": "Sjálfvirk leit",
     "Release": " Sleppt",
     "AddImportListExclusionAlbumHelpText": "Koma í veg fyrir að kvikmyndum verði bætt við {appName} af listum",
-    "DeleteArtistFoldersHelpText": "Eyddu kvikmyndamöppunni og innihaldi hennar"
+    "DeleteArtistFoldersHelpText": "Eyddu kvikmyndamöppunni og innihaldi hennar",
+    "BuiltIn": "Innbyggð",
+    "Script": "Handrit"
 }

@@ -864,5 +864,8 @@
     "AddToDownloadQueue": "Toevoegen aan download wachtrij",
     "AddedToDownloadQueue": "Toegevoegd aan download wachtrij",
     "Artists": "artiest",
-    "Tomorrow": "Morgen"
+    "Tomorrow": "Morgen",
+    "Any": "Elke",
+    "BuiltIn": "Ingebouwd",
+    "Script": "Script"
 }

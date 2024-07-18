@@ -894,5 +894,8 @@
     "MinimumCustomFormatScoreHelpText": "Мінімальна оцінка користувацького формату, необхідна для обходу затримки для обраного протоколу",
     "ReleaseProfile": "профіль релізу",
     "CountArtistsSelected": "Вибрано {count} списків імпорту",
-    "BypassIfAboveCustomFormatScore": "Пропустити, якщо перевищено оцінку користувацького формату"
+    "BypassIfAboveCustomFormatScore": "Пропустити, якщо перевищено оцінку користувацького формату",
+    "Any": "Будь-який",
+    "BuiltIn": "Вбудований",
+    "Script": "Сценарій"
 }

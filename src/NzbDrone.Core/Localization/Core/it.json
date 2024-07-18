@@ -996,5 +996,12 @@
     "RemoveMultipleFromDownloadClientHint": "Rimuovi i download e i file dal client di download",
     "RemoveQueueItem": "Rimuovi - {sourceTitle}",
     "ResetTitles": "Reimposta Titoli",
-    "True": "Vero"
+    "True": "Vero",
+    "CountImportListsSelected": "{selectedCount} autore/i selezionato/i",
+    "MassAlbumsCutoffUnmetWarning": "Sei sicuro di volere cercare tutti i {totalRecords} film mancanti?",
+    "ArtistIsMonitored": "Autore non monitorato",
+    "WithFiles": "Con i File",
+    "Any": "Qualunque",
+    "BuiltIn": "Incorporato",
+    "Script": "Script"
 }

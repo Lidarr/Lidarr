@@ -217,5 +217,6 @@
     "CatalogNumber": "類別編號",
     "CustomFormats": "自訂格式",
     "ItsEasyToAddANewArtistJustStartTypingTheNameOfTheArtistYouWantToAdd": "加入新的電影很簡單，只需要輸入您想加入的電影名稱",
-    "EditMetadataProfile": "中繼資料配置"
+    "EditMetadataProfile": "中繼資料配置",
+    "BuiltIn": "內建"
 }

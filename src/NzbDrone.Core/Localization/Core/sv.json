@@ -904,5 +904,7 @@
     "UseSsl": "Använd SSL",
     "Links": "Länkar",
     "AddImportListExclusionAlbumHelpText": "Förhindra TV-serie att läggas till i {appName} från listor",
-    "ArtistIsMonitored": "Författare är obevakad"
+    "ArtistIsMonitored": "Författare är obevakad",
+    "BuiltIn": "Inbyggd",
+    "Script": "Skript"
 }
