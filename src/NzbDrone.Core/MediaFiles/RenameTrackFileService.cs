@@ -108,7 +108,7 @@ namespace NzbDrone.Core.MediaFiles
             }
         }
 
-        private void RenameFiles(List<TrackFile> trackFiles, Artist artist)
+        private List<RenamedTrackFile> RenameFiles(List<TrackFile> trackFiles, Artist artist)
         {
             var renamed = new List<RenamedTrackFile>();
 
@@ -149,11 +149,13 @@ namespace NzbDrone.Core.MediaFiles
 
             if (renamed.Any())
             {
-                _eventAggregator.PublishEvent(new ArtistRenamedEvent(artist, renamed));
-
-                _logger.Debug("Removing Empty Subfolders from: {0}", artist.Path);
+                _logger.Debug("Removing empty subfolders from: {0}", artist.Path);
                 _diskProvider.RemoveEmptySubfolders(artist.Path);
+
+                _eventAggregator.PublishEvent(new ArtistRenamedEvent(artist, renamed));
             }
+
+            return renamed;
         }
 
         public void Execute(RenameFilesCommand message)
@@ -162,8 +164,8 @@ namespace NzbDrone.Core.MediaFiles
             var trackFiles = _mediaFileService.Get(message.Files);
 
             _logger.ProgressInfo("Renaming {0} files for {1}", trackFiles.Count, artist.Name);
-            RenameFiles(trackFiles, artist);
-            _logger.ProgressInfo("Selected track files renamed for {0}", artist.Name);
+            var renamedFiles = RenameFiles(trackFiles, artist);
+            _logger.ProgressInfo("{0} selected track files renamed for {1}", renamedFiles.Count, artist.Name);
 
             _eventAggregator.PublishEvent(new RenameCompletedEvent());
         }
@@ -177,8 +179,8 @@ namespace NzbDrone.Core.MediaFiles
             {
                 var trackFiles = _mediaFileService.GetFilesByArtist(artist.Id);
                 _logger.ProgressInfo("Renaming all files in artist: {0}", artist.Name);
-                RenameFiles(trackFiles, artist);
-                _logger.ProgressInfo("All track files renamed for {0}", artist.Name);
+                var renamedFiles = RenameFiles(trackFiles, artist);
+                _logger.ProgressInfo("{0} track files renamed for {1}",  renamedFiles.Count, artist.Name);
             }
 
             _eventAggregator.PublishEvent(new RenameCompletedEvent());
