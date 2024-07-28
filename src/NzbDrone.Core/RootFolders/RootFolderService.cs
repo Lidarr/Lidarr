@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common;
+using NzbDrone.Common.Cache;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.MediaFiles;
@@ -33,15 +34,20 @@ namespace NzbDrone.Core.RootFolders
         private readonly IManageCommandQueue _commandQueueManager;
         private readonly Logger _logger;
 
+        private readonly ICached<string> _cache;
+
         public RootFolderService(IRootFolderRepository rootFolderRepository,
                                  IDiskProvider diskProvider,
                                  IManageCommandQueue commandQueueManager,
+                                 ICacheManager cacheManager,
                                  Logger logger)
         {
             _rootFolderRepository = rootFolderRepository;
             _diskProvider = diskProvider;
             _commandQueueManager = commandQueueManager;
             _logger = logger;
+
+            _cache = cacheManager.GetCache<string>(GetType());
         }
 
         public List<RootFolder> All()
@@ -89,7 +95,7 @@ namespace NzbDrone.Core.RootFolders
 
             if (!_diskProvider.FolderWritable(rootFolder.Path))
             {
-                throw new UnauthorizedAccessException(string.Format("Root folder path '{0}' is not writable by user '{1}'", rootFolder.Path, Environment.UserName));
+                throw new UnauthorizedAccessException($"Root folder path '{rootFolder.Path}' is not writable by user '{Environment.UserName}'");
             }
         }
 
@@ -107,6 +113,7 @@ namespace NzbDrone.Core.RootFolders
             _commandQueueManager.Push(new RescanFoldersCommand(new List<string> { rootFolder.Path }, FilterFilesType.None, true, null));
 
             GetDetails(rootFolder, true);
+            _cache.Clear();
 
             return rootFolder;
         }
@@ -118,6 +125,7 @@ namespace NzbDrone.Core.RootFolders
             _rootFolderRepository.Update(rootFolder);
 
             GetDetails(rootFolder, true);
+            _cache.Clear();
 
             return rootFolder;
         }
@@ -125,6 +133,7 @@ namespace NzbDrone.Core.RootFolders
         public void Remove(int id)
         {
             _rootFolderRepository.Delete(id);
+            _cache.Clear();
         }
 
         public RootFolder Get(int id, bool timeout)
@@ -148,16 +157,7 @@ namespace NzbDrone.Core.RootFolders
 
         public string GetBestRootFolderPath(string path)
         {
-            var possibleRootFolder = GetBestRootFolder(path);
-
-            if (possibleRootFolder == null)
-            {
-                var osPath = new OsPath(path);
-
-                return osPath.Directory.ToString().TrimEnd(osPath.IsUnixPath ? '/' : '\\');
-            }
-
-            return possibleRootFolder?.Path;
+            return _cache.Get(path, () => GetBestRootFolderPathInternal(path), TimeSpan.FromDays(1));
         }
 
         private void GetDetails(RootFolder rootFolder, bool timeout)
@@ -171,6 +171,20 @@ namespace NzbDrone.Core.RootFolders
                     rootFolder.TotalSpace = _diskProvider.GetTotalSize(rootFolder.Path);
                 }
             }).Wait(timeout ? 5000 : -1);
+        }
+
+        private string GetBestRootFolderPathInternal(string path)
+        {
+            var possibleRootFolder = GetBestRootFolder(path);
+
+            if (possibleRootFolder == null)
+            {
+                var osPath = new OsPath(path);
+
+                return osPath.Directory.ToString().TrimEnd(osPath.IsUnixPath ? '/' : '\\');
+            }
+
+            return possibleRootFolder?.Path;
         }
     }
 }
