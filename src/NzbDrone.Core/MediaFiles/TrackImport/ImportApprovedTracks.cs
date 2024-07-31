@@ -222,7 +222,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                     {
                         default:
                         case ImportMode.Auto:
-                            copyOnly = downloadClientItem != null && !downloadClientItem.CanMoveFiles;
+                            copyOnly = downloadClientItem is { CanMoveFiles: false };
                             break;
                         case ImportMode.Move:
                             copyOnly = false;

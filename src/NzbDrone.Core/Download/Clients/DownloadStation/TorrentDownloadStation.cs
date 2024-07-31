@@ -86,7 +86,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
                     }
                 }
 
-                var item = new DownloadClientItem()
+                var item = new DownloadClientItem
                 {
                     Category = Settings.MusicCategory,
                     DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this, false),
@@ -97,10 +97,10 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
                     RemainingTime = GetRemainingTime(torrent),
                     SeedRatio = GetSeedRatio(torrent),
                     Status = GetStatus(torrent),
-                    Message = GetMessage(torrent),
-                    CanMoveFiles = IsFinished(torrent),
-                    CanBeRemoved = IsFinished(torrent)
+                    Message = GetMessage(torrent)
                 };
+
+                item.CanMoveFiles = item.CanBeRemoved = item.DownloadClientInfo.RemoveCompletedDownloads && IsFinished(torrent);
 
                 if (item.Status == DownloadItemStatus.Completed || item.Status == DownloadItemStatus.Failed)
                 {

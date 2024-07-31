@@ -87,7 +87,7 @@ namespace NzbDrone.Core.Download.Clients.Blackhole
         {
             foreach (var item in _scanWatchFolder.GetItems(Settings.WatchFolder, ScanGracePeriod))
             {
-                yield return new DownloadClientItem
+                var queueItem = new DownloadClientItem
                 {
                     DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this, false),
                     DownloadId = Definition.Name + "_" + item.DownloadId,
@@ -99,11 +99,14 @@ namespace NzbDrone.Core.Download.Clients.Blackhole
 
                     OutputPath = item.OutputPath,
 
-                    Status = item.Status,
-
-                    CanMoveFiles = !Settings.ReadOnly,
-                    CanBeRemoved = !Settings.ReadOnly
+                    Status = item.Status
                 };
+
+                queueItem.CanMoveFiles = queueItem.CanBeRemoved =
+                    queueItem.DownloadClientInfo.RemoveCompletedDownloads &&
+                    !Settings.ReadOnly;
+
+                yield return queueItem;
             }
         }
 
