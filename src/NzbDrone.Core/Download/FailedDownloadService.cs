@@ -129,7 +129,7 @@ namespace NzbDrone.Core.Download
 
         private void PublishDownloadFailedEvent(List<EntityHistory> historyItems, string message, TrackedDownload trackedDownload = null, bool skipRedownload = false)
         {
-            var historyItem = historyItems.Last();
+            var historyItem = historyItems.First(); // items are returned in reverse chronological order, so first is the most recent
             Enum.TryParse(historyItem.Data.GetValueOrDefault(EntityHistory.RELEASE_SOURCE, ReleaseSourceType.Unknown.ToString()), out ReleaseSourceType releaseSource);
 
             var downloadFailedEvent = new DownloadFailedEvent
