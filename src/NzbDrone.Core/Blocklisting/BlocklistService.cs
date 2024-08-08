@@ -185,7 +185,7 @@ namespace NzbDrone.Core.Blocklisting
                 Indexer = message.Data.GetValueOrDefault("indexer"),
                 Protocol = (DownloadProtocol)Convert.ToInt32(message.Data.GetValueOrDefault("protocol")),
                 Message = message.Message,
-                TorrentInfoHash = message.Data.GetValueOrDefault("torrentInfoHash")
+                TorrentInfoHash = message.TrackedDownload == null ? message.Data.GetValueOrDefault("torrentInfoHash") : message.TrackedDownload.DownloadItem.DownloadId
             };
 
             if (Enum.TryParse(message.Data.GetValueOrDefault("indexerFlags"), true, out IndexerFlags flags))
