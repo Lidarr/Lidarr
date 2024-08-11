@@ -302,7 +302,7 @@ namespace Lidarr.Api.V1.Queue
 
             if (blocklist)
             {
-                _failedDownloadService.MarkAsFailed(trackedDownload.DownloadItem.DownloadId, skipRedownload);
+                _failedDownloadService.MarkAsFailed(trackedDownload, skipRedownload);
             }
 
             if (!removeFromClient && !blocklist && !changeCategory)
