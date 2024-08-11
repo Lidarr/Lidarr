@@ -12,7 +12,7 @@ namespace NzbDrone.Core.Download
     public interface IFailedDownloadService
     {
         void MarkAsFailed(int historyId, bool skipRedownload = false);
-        void MarkAsFailed(string downloadId, bool skipRedownload = false);
+        void MarkAsFailed(TrackedDownload trackedDownload, bool skipRedownload = false);
         void Check(TrackedDownload trackedDownload);
         void ProcessFailed(TrackedDownload trackedDownload);
     }
@@ -20,15 +20,12 @@ namespace NzbDrone.Core.Download
     public class FailedDownloadService : IFailedDownloadService
     {
         private readonly IHistoryService _historyService;
-        private readonly ITrackedDownloadService _trackedDownloadService;
         private readonly IEventAggregator _eventAggregator;
 
         public FailedDownloadService(IHistoryService historyService,
-                                     ITrackedDownloadService trackedDownloadService,
                                      IEventAggregator eventAggregator)
         {
             _historyService = historyService;
-            _trackedDownloadService = trackedDownloadService;
             _eventAggregator = eventAggregator;
         }
 
@@ -37,9 +34,10 @@ namespace NzbDrone.Core.Download
             var history = _historyService.Get(historyId);
 
             var downloadId = history.DownloadId;
+
             if (downloadId.IsNullOrWhiteSpace())
             {
-                PublishDownloadFailedEvent(new List<EntityHistory> { history }, "Manually marked as failed", skipRedownload: skipRedownload);
+                PublishDownloadFailedEvent(history, new List<int> { history.AlbumId }, "Manually marked as failed", skipRedownload: skipRedownload);
 
                 return;
             }
@@ -53,21 +51,19 @@ namespace NzbDrone.Core.Download
             }
 
             // Add any other history items for the download ID then filter out any duplicate history items.
-            grabbedHistory.AddRange(_historyService.Find(downloadId, EntityHistoryEventType.Grabbed));
+            grabbedHistory.AddRange(GetGrabbedHistory(downloadId));
             grabbedHistory = grabbedHistory.DistinctBy(h => h.Id).ToList();
 
-            PublishDownloadFailedEvent(grabbedHistory, "Manually marked as failed");
+            PublishDownloadFailedEvent(history, GetAlbumIds(grabbedHistory), "Manually marked as failed");
         }
 
-        public void MarkAsFailed(string downloadId, bool skipRedownload = false)
+        public void MarkAsFailed(TrackedDownload trackedDownload, bool skipRedownload = false)
         {
-            var history = _historyService.Find(downloadId, EntityHistoryEventType.Grabbed);
+            var history = GetGrabbedHistory(trackedDownload.DownloadItem.DownloadId);
 
             if (history.Any())
             {
-                var trackedDownload = _trackedDownloadService.Find(downloadId);
-
-                PublishDownloadFailedEvent(history, "Manually marked as failed", trackedDownload, skipRedownload: skipRedownload);
+                PublishDownloadFailedEvent(history.First(), GetAlbumIds(history), "Manually marked as failed", trackedDownload, skipRedownload: skipRedownload);
             }
         }
 
@@ -82,9 +78,7 @@ namespace NzbDrone.Core.Download
             if (trackedDownload.DownloadItem.IsEncrypted ||
                 trackedDownload.DownloadItem.Status == DownloadItemStatus.Failed)
             {
-                var grabbedItems = _historyService
-                                   .Find(trackedDownload.DownloadItem.DownloadId, EntityHistoryEventType.Grabbed)
-                                   .ToList();
+                var grabbedItems = GetGrabbedHistory(trackedDownload.DownloadItem.DownloadId);
 
                 if (grabbedItems.Empty())
                 {
@@ -103,9 +97,7 @@ namespace NzbDrone.Core.Download
                 return;
             }
 
-            var grabbedItems = _historyService
-                               .Find(trackedDownload.DownloadItem.DownloadId, EntityHistoryEventType.Grabbed)
-                               .ToList();
+            var grabbedItems = GetGrabbedHistory(trackedDownload.DownloadItem.DownloadId);
 
             if (grabbedItems.Empty())
             {
@@ -124,18 +116,17 @@ namespace NzbDrone.Core.Download
             }
 
             trackedDownload.State = TrackedDownloadState.DownloadFailed;
-            PublishDownloadFailedEvent(grabbedItems, failure, trackedDownload);
+            PublishDownloadFailedEvent(grabbedItems.First(), GetAlbumIds(grabbedItems), failure, trackedDownload);
         }
 
-        private void PublishDownloadFailedEvent(List<EntityHistory> historyItems, string message, TrackedDownload trackedDownload = null, bool skipRedownload = false)
+        private void PublishDownloadFailedEvent(EntityHistory historyItem, List<int> albumIds, string message, TrackedDownload trackedDownload = null, bool skipRedownload = false)
         {
-            var historyItem = historyItems.Last();
             Enum.TryParse(historyItem.Data.GetValueOrDefault(EntityHistory.RELEASE_SOURCE, ReleaseSourceType.Unknown.ToString()), out ReleaseSourceType releaseSource);
 
             var downloadFailedEvent = new DownloadFailedEvent
             {
                 ArtistId = historyItem.ArtistId,
-                AlbumIds = historyItems.Select(h => h.AlbumId).Distinct().ToList(),
+                AlbumIds = albumIds,
                 Quality = historyItem.Quality,
                 SourceTitle = historyItem.SourceTitle,
                 DownloadClient = historyItem.Data.GetValueOrDefault(EntityHistory.DOWNLOAD_CLIENT),
@@ -144,10 +135,23 @@ namespace NzbDrone.Core.Download
                 Data = historyItem.Data,
                 TrackedDownload = trackedDownload,
                 SkipRedownload = skipRedownload,
-                ReleaseSource = releaseSource
+                ReleaseSource = releaseSource,
             };
 
             _eventAggregator.PublishEvent(downloadFailedEvent);
+        }
+
+        private List<int> GetAlbumIds(List<EntityHistory> historyItems)
+        {
+            return historyItems.Select(h => h.AlbumId).Distinct().ToList();
+        }
+
+        private List<EntityHistory> GetGrabbedHistory(string downloadId)
+        {
+            // Sort by date so items are always in the same order
+            return _historyService.Find(downloadId, EntityHistoryEventType.Grabbed)
+                .OrderByDescending(h => h.Date)
+                .ToList();
         }
     }
 }
