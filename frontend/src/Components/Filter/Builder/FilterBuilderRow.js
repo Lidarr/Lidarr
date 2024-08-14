@@ -11,11 +11,11 @@ import DateFilterBuilderRowValue from './DateFilterBuilderRowValue';
 import FilterBuilderRowValueConnector from './FilterBuilderRowValueConnector';
 import HistoryEventTypeFilterBuilderRowValue from './HistoryEventTypeFilterBuilderRowValue';
 import IndexerFilterBuilderRowValueConnector from './IndexerFilterBuilderRowValueConnector';
-import MetadataProfileFilterBuilderRowValueConnector from './MetadataProfileFilterBuilderRowValueConnector';
+import MetadataProfileFilterBuilderRowValue from './MetadataProfileFilterBuilderRowValue';
 import MonitorNewItemsFilterBuilderRowValue from './MonitorNewItemsFilterBuilderRowValue';
 import ProtocolFilterBuilderRowValue from './ProtocolFilterBuilderRowValue';
 import QualityFilterBuilderRowValueConnector from './QualityFilterBuilderRowValueConnector';
-import QualityProfileFilterBuilderRowValueConnector from './QualityProfileFilterBuilderRowValueConnector';
+import QualityProfileFilterBuilderRowValue from './QualityProfileFilterBuilderRowValue';
 import TagFilterBuilderRowValueConnector from './TagFilterBuilderRowValueConnector';
 import styles from './FilterBuilderRow.css';
 
@@ -68,7 +68,7 @@ function getRowValueConnector(selectedFilterBuilderProp) {
       return IndexerFilterBuilderRowValueConnector;
 
     case filterBuilderValueTypes.METADATA_PROFILE:
-      return MetadataProfileFilterBuilderRowValueConnector;
+      return MetadataProfileFilterBuilderRowValue;
 
     case filterBuilderValueTypes.MONITOR_NEW_ITEMS:
       return MonitorNewItemsFilterBuilderRowValue;
@@ -80,7 +80,7 @@ function getRowValueConnector(selectedFilterBuilderProp) {
       return QualityFilterBuilderRowValueConnector;
 
     case filterBuilderValueTypes.QUALITY_PROFILE:
-      return QualityProfileFilterBuilderRowValueConnector;
+      return QualityProfileFilterBuilderRowValue;
 
     case filterBuilderValueTypes.ARTIST:
       return ArtistFilterBuilderRowValue;
