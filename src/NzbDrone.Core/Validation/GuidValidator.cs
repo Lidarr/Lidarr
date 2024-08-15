@@ -14,7 +14,7 @@ namespace NzbDrone.Core.Validation
                 return false;
             }
 
-            return Guid.TryParse(context.PropertyValue.ToString(), out var guidOutput);
+            return Guid.TryParse(context.PropertyValue.ToString(), out _);
         }
     }
 }

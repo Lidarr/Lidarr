@@ -1,6 +1,7 @@
 using FluentValidation.Validators;
+using NzbDrone.Core.ImportLists.Exclusions;
 
-namespace NzbDrone.Core.ImportLists.Exclusions
+namespace Lidarr.Api.V1.ImportLists
 {
     public class ImportListExclusionExistsValidator : PropertyValidator
     {
@@ -20,7 +21,12 @@ namespace NzbDrone.Core.ImportLists.Exclusions
                 return true;
             }
 
-            return !_importListExclusionService.All().Exists(s => s.ForeignId == context.PropertyValue.ToString());
+            if (context.InstanceToValidate is not ImportListExclusionResource listExclusionResource)
+            {
+                return true;
+            }
+
+            return !_importListExclusionService.All().Exists(v => v.ForeignId == context.PropertyValue.ToString() && v.Id != listExclusionResource.Id);
         }
     }
 }
