@@ -688,7 +688,7 @@
     "ConditionUsingRegularExpressions": "この条件は、正規表現を使用して一致します。文字{0}には特別な意味があり、{1}でエスケープする必要があることに注意してください",
     "DeleteArtistFolderHelpText": "ムービーフォルダとその内容を削除します",
     "DeleteArtistFoldersHelpText": "ムービーフォルダとその内容を削除します",
-    "DeleteAutoTagHelpText": "品質プロファイル{0}を削除してもよろしいですか",
+    "DeleteAutoTagHelpText": "オートタグ'{name}'を削除してもよろしいですか？",
     "Negate": "ネゲート",
     "Table": "テーブル",
     "AddImportListExclusionAlbumHelpText": "リストによって映画が{appName}に追加されないようにする",
@@ -734,5 +734,6 @@
     "MonitorNoAlbums": "なし",
     "Yesterday": "昨日",
     "BuiltIn": "ビルトイン",
-    "Script": "脚本"
+    "Script": "脚本",
+    "AddCondition": "条件の追加"
 }
