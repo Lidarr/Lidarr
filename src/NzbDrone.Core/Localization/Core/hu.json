@@ -912,7 +912,7 @@
     "RootFolderCheckMultipleMessage": "Több gyökérmappa hiányzik: {0}",
     "RootFolderCheckSingleMessage": "Hiányzó gyökérmappa: {0}",
     "SystemTimeCheckMessage": "A rendszeridő több mint 1 napja nem frissült. Előfordulhat, hogy az ütemezett feladatok az idő kijavításáig nem futnak megfelelően",
-    "UpdateAvailable": "Új frissítés elérhető",
+    "UpdateAvailableHealthCheckMessage": "Új frissítés elérhető",
     "UpdateCheckStartupNotWritableMessage": "A frissítés nem telepíthető, mert a (z) „{0}” indítási mappát a „{1}” felhasználó nem írhatja.",
     "UpdateCheckStartupTranslocationMessage": "Nem lehet telepíteni a frissítést, mert a (z) „{0}” indítási mappa az Alkalmazások Transzlokációs mappájában található.",
     "UpdateCheckUINotWritableMessage": "Nem lehet telepíteni a frissítést, mert a(z) „{0}” felhasználói felület mappát nem írhatja a „{1}” felhasználó.",

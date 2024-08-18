@@ -665,7 +665,7 @@
     "RootFolderCheckMultipleMessage": "Meerdere hoofdmappen ontbreken: {0}",
     "RootFolderCheckSingleMessage": "Ontbrekende hoofdmap: {0}",
     "SystemTimeCheckMessage": "De systeemtijd loopt verkeerd met meer dan 1 dag. Geplande taken worden mogelijk niet goed uitgevoerd tot dit is opgelost",
-    "UpdateAvailable": "Nieuwe update is beschikbaar",
+    "UpdateAvailableHealthCheckMessage": "Nieuwe update is beschikbaar",
     "UpdateCheckStartupNotWritableMessage": "Kan de update niet installeren omdat de map '{0}' niet schrijfbaar is voor de gebruiker '{1}'.",
     "UpdateCheckStartupTranslocationMessage": "Kan de update niet installeren omdat de map '{0}' zich in een 'App Translocation' map bevindt.",
     "UpdateCheckUINotWritableMessage": "Kan de update niet installeren omdat de UI map '{0}' niet schrijfbaar is voor de gebruiker '{1}'.",

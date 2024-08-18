@@ -928,7 +928,7 @@
     "SystemTimeCheckMessage": "A hora do sistema está desligada por mais de 1 dia. Tarefas agendadas podem não ser executadas corretamente até que o horário seja corrigido",
     "ThereWasAnErrorLoadingThisItem": "Ocorreu um erro ao carregar este item",
     "ThereWasAnErrorLoadingThisPage": "Ocorreu um erro ao carregar esta página",
-    "UpdateAvailable": "Nova atualização está disponível",
+    "UpdateAvailableHealthCheckMessage": "Nova atualização está disponível",
     "UpdateCheckStartupNotWritableMessage": "Não é possível instalar a atualização porque a pasta de inicialização '{0}' não pode ser gravada pelo usuário '{1}'.",
     "UpdateCheckStartupTranslocationMessage": "Não é possível instalar a atualização porque a pasta de inicialização '{0}' está em uma pasta de translocação de aplicativo.",
     "Total": "Total",

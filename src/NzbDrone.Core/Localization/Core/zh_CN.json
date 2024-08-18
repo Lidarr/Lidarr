@@ -913,7 +913,7 @@
     "ThereWasAnErrorLoadingThisPage": "加载此页时出错",
     "UnableToLoadCustomFormats": "无法加载自定义格式",
     "UnableToLoadInteractiveSearch": "无法加载该专辑的搜索结果，请稍后重试",
-    "UpdateAvailable": "有新的更新可用",
+    "UpdateAvailableHealthCheckMessage": "有新的更新可用",
     "UpdateCheckStartupNotWritableMessage": "无法安装更新，因为用户“{1}”对于启动文件夹“{0}”没有写入权限。",
     "UpdateCheckStartupTranslocationMessage": "无法安装更新，因为启动文件夹“{0}”在一个应用程序迁移文件夹。Cannot install update because startup folder '{0}' is in an App Translocation folder.",
     "UpdateCheckUINotWritableMessage": "无法安装升级，因为用户“{1}”不可写入界面文件夹“{0}”。",

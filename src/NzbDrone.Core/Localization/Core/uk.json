@@ -518,7 +518,7 @@
     "AuthenticationRequired": "Потрібна Автентифікація",
     "Yesterday": "Вчора",
     "ArtistType": "Тип Виконавця",
-    "UpdateAvailable": "Доступне нове оновлення",
+    "UpdateAvailableHealthCheckMessage": "Доступне нове оновлення",
     "AddArtistWithName": "Додати {artistName}",
     "AddNewArtist": "Додати Нового Виконавця",
     "AddNewArtistSearchForMissingAlbums": "Почніть пошук відсутніх альбомів",
