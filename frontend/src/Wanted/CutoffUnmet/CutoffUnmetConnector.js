@@ -53,7 +53,7 @@ class CutoffUnmetConnector extends Component {
       gotoCutoffUnmetFirstPage
     } = this.props;
 
-    registerPagePopulator(this.repopulate, ['trackFileUpdated', 'trackFileDeleted']);
+    registerPagePopulator(this.repopulate, ['artistUpdated', 'trackFileUpdated', 'trackFileDeleted']);
 
     if (useCurrentPage) {
       fetchCutoffUnmet();

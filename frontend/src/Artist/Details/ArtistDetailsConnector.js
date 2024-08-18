@@ -166,7 +166,7 @@ class ArtistDetailsConnector extends Component {
   // Lifecycle
 
   componentDidMount() {
-    registerPagePopulator(this.populate);
+    registerPagePopulator(this.populate, ['artistUpdated']);
     this.populate();
   }
 
