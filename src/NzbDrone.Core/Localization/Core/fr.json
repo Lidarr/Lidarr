@@ -745,7 +745,7 @@
     "ThereWasAnErrorLoadingThisItem": "Une erreur s'est produite lors du chargement de cet élément",
     "ThereWasAnErrorLoadingThisPage": "Une erreur s'est produite lors du chargement de cette page",
     "UpdateCheckUINotWritableMessage": "Impossible d'installer la mise à jour car le dossier d'interface utilisateur '{0}' n'est pas accessible en écriture par l'utilisateur '{1}'.",
-    "UpdateAvailable": "Une nouvelle mise à jour est disponible",
+    "UpdateAvailableHealthCheckMessage": "Une nouvelle mise à jour est disponible",
     "UpdateCheckStartupNotWritableMessage": "Impossible d'installer la mise à jour car le dossier de démarrage '{0}' n'est pas accessible en écriture par l'utilisateur '{1}'.",
     "UpdateCheckStartupTranslocationMessage": "Impossible d'installer la mise à jour car le dossier de démarrage '{0}' se trouve dans un dossier App Translocation.",
     "DeleteRemotePathMapping": "Supprimer la correspondance de chemin distant",

@@ -972,7 +972,7 @@
     "DownloadClientRemovesCompletedDownloadsHealthCheckMessage": "Lataustyökalu \"{0}\" on määritetty poistamaan valmistuneet lataukset, jonka seuraksena ne saatetaan poistaa ennen kuin {1} ehtii tuoda niitä.",
     "Enabled": "Käytössä",
     "RemotePathMappingCheckLocalFolderMissing": "Etälataustyökalu \"{0}\" tallentaa lataukset kohteeseen \"{1}\", mutta sitä ei näytä olevan olemassa. Todennäköinen syy on puuttuva tai virheellinen etäsijainnin kohdistus.",
-    "UpdateAvailable": "Uusi päivitys on saatavilla",
+    "UpdateAvailableHealthCheckMessage": "Uusi päivitys on saatavilla",
     "UpdateMonitoring": "Päivitä valvontatila",
     "ApplyTagsHelpTextHowToApplyImportLists": "Tunnisteiden käyttö valituissa tuontilistoissa",
     "AutomaticUpdatesDisabledDocker": "Automaattisia päivityksiä ei tueta suoraan käytettäessä Dockerin päivitysmekanismia. Docker-säiliö on päivitettävä {appName}in ulkopuolella tai päivitys on suoritettava komentosarjalla.",

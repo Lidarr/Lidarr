@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
@@ -68,9 +69,20 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 }
             }
 
-            if (BuildInfo.BuildDateTime < DateTime.UtcNow.AddDays(-14) && _checkUpdateService.AvailableUpdate() != null)
+            if (BuildInfo.BuildDateTime < DateTime.UtcNow.AddDays(-14))
             {
-                return new HealthCheck(GetType(), HealthCheckResult.Warning, _localizationService.GetLocalizedString("UpdateAvailable"), "#new-update-is-available");
+                var latestAvailable = _checkUpdateService.AvailableUpdate();
+
+                if (latestAvailable != null)
+                {
+                    return new HealthCheck(GetType(),
+                        HealthCheckResult.Warning,
+                        _localizationService.GetLocalizedString("UpdateAvailableHealthCheckMessage", new Dictionary<string, object>
+                        {
+                            { "version", $"v{latestAvailable.Version}" }
+                        }),
+                        "#new-update-is-available");
+                }
             }
 
             return new HealthCheck(GetType());

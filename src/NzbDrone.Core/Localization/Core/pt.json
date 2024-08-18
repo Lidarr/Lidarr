@@ -733,7 +733,7 @@
     "RootFolderCheckMultipleMessage": "Múltiplas pastas raiz estão ausentes: {0}",
     "RootFolderCheckSingleMessage": "Pasta raiz não encontrada: {0}",
     "SystemTimeCheckMessage": "A hora do sistema está atrasada em mais de 1 dia. As tarefas agendadas podem não ocorrer corretamente até a hora ser corrigida",
-    "UpdateAvailable": "Nova atualização disponível",
+    "UpdateAvailableHealthCheckMessage": "Nova atualização disponível",
     "UpdateCheckStartupNotWritableMessage": "Não é possível instalar a atualização porque a pasta de arranque \"{0}\" não tem permissões de escrita para o utilizador \"{1}\".",
     "ApiKeyValidationHealthCheckMessage": "Por favor, atualize a sua API Key para ter no mínimo {0} caracteres. Pode fazer através das definições ou do ficheiro de configuração",
     "DeleteRemotePathMapping": "Editar mapeamento de caminho remoto",

@@ -926,7 +926,7 @@
     "SizeLimit": "Boyut Limiti",
     "OnHealthRestored": "Sağlığın İyileştirilmesi Hakkında",
     "RemoveTagsAutomaticallyHelpText": "Koşullar karşılanmazsa otomatik etiketlemeyi kaldırın",
-    "UpdateAvailable": "Yeni güncelleme mevcut",
+    "UpdateAvailableHealthCheckMessage": "Yeni güncelleme mevcut",
     "NotificationsTelegramSettingsIncludeAppName": "{appName}'i Başlığa dahil et",
     "NotificationsTelegramSettingsIncludeAppNameHelpText": "Farklı uygulamalardan gelen bildirimleri ayırt etmek için isteğe bağlı olarak mesaj başlığının önüne {appName} ekleyin",
     "RemotePathMappingCheckImportFailed": "{appName} filmi içe aktaramadı. Ayrıntılar için günlüklerinizi kontrol edin.",

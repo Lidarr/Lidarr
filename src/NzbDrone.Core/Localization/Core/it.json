@@ -731,7 +731,7 @@
     "RootFolderCheckMultipleMessage": "Ci sono più cartelle radice mancanti: {0}",
     "RootFolderCheckSingleMessage": "Cartella radice mancante: {0}",
     "SystemTimeCheckMessage": "L'orario di sistema è sbagliato di più di un giorno. Le attività pianificate potrebbero non essere eseguite correttamente fino alla correzione",
-    "UpdateAvailable": "É disponibile un nuovo aggiornamento",
+    "UpdateAvailableHealthCheckMessage": "É disponibile un nuovo aggiornamento",
     "DeleteRemotePathMapping": "Elimina la Mappatura dei Percorsi Remoti",
     "BlocklistReleaseHelpText": "Impedisci a {appName} di re-acquisire automaticamente questa versione",
     "FailedToLoadQueue": "Impossibile caricare la coda",

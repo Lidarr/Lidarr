@@ -658,7 +658,7 @@
     "RootFolderCheckSingleMessage": "Falta la carpeta arrel: {0}",
     "SystemTimeCheckMessage": "L'hora del sistema està apagada durant més d'1 dia. És possible que les tasques programades no s'executin correctament fins que no es corregeixi l'hora",
     "CutoffFormatScoreHelpText": "Un cop s'arribi a aquesta puntuació de format personalitzat, {appName} ja no baixarà pel·lícules",
-    "UpdateAvailable": "Nova actualització disponible",
+    "UpdateAvailableHealthCheckMessage": "Nova actualització disponible",
     "ImportListStatusCheckSingleClientMessage": "Llistes no disponibles a causa d'errors: {0}",
     "ImportMechanismHealthCheckMessage": "Activa la gestió de baixades completades",
     "IndexerRssHealthCheckNoIndexers": "No hi ha indexadors disponibles amb la sincronització RSS activada, {appName} no capturarà les noves versions automàticament",

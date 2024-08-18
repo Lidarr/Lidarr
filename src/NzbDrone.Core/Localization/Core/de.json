@@ -888,7 +888,7 @@
     "ReplaceWithSpaceDash": "Mit Leerzeichen Bindestrich ersetzen",
     "RootFolderCheckSingleMessage": "Fehlender Stammordner: {0}",
     "RootFolderCheckMultipleMessage": "Es fehlen mehrere Stammordner: {0}",
-    "UpdateAvailable": "Neue Version verfügbar",
+    "UpdateAvailableHealthCheckMessage": "Neue Version verfügbar",
     "UpdateCheckStartupNotWritableMessage": "Update kann nicht installiert werden, da der Startordner '{0}' vom Benutzer '{1}' nicht beschreibbar ist.",
     "UpdateCheckStartupTranslocationMessage": "Update kann nicht installiert werden, da sich der Startordner '{0}' in einem App Translocation-Ordner befindet.",
     "UpdateCheckUINotWritableMessage": "Update kann nicht installiert werden, da der Benutzeroberflächenordner '{0}' vom Benutzer '{1}' nicht beschreibbar ist.",

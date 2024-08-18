@@ -658,7 +658,7 @@
     "RootFolderCheckMultipleMessage": "Brakuje wielu folderów głównych: {0}",
     "RootFolderCheckSingleMessage": "Brak folderu głównego: {0}",
     "SystemTimeCheckMessage": "Czas systemowy jest wyłączony o więcej niż 1 dzień. Zaplanowane zadania mogą nie działać poprawnie, dopóki czas nie zostanie skorygowany",
-    "UpdateAvailable": "Dostępna jest aktualizacja",
+    "UpdateAvailableHealthCheckMessage": "Dostępna jest aktualizacja",
     "UpdateCheckStartupNotWritableMessage": "Nie można zainstalować aktualizacji, ponieważ użytkownik „{1}” nie ma prawa zapisu do folderu startowego „{0}”.",
     "Language": "Język",
     "DeleteRemotePathMapping": "Edytuj zdalne mapowanie ścieżki",

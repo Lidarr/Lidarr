@@ -905,7 +905,7 @@
     "ReplaceWithDash": "Αντικαταστήστε με Dash",
     "RootFolderCheckSingleMessage": "Λείπει ριζικός φάκελος: {0}",
     "SystemTimeCheckMessage": "Ο χρόνος συστήματος είναι απενεργοποιημένος για περισσότερο από 1 ημέρα. Οι προγραμματισμένες εργασίες ενδέχεται να μην εκτελούνται σωστά έως ότου διορθωθεί η ώρα",
-    "UpdateAvailable": "Νέα ενημέρωση είναι διαθέσιμη",
+    "UpdateAvailableHealthCheckMessage": "Νέα ενημέρωση είναι διαθέσιμη",
     "DownloadClientCheckNoneAvailableMessage": "Δεν υπάρχει διαθέσιμο πρόγραμμα Λήψης",
     "DownloadClientStatusCheckSingleClientMessage": "Προγράμματα λήψης που είναι μη διαθέσιμα λόγων αποτυχιών: {0}",
     "IndexerLongTermStatusCheckAllClientMessage": "Όλοι οι δείκτες δεν είναι διαθέσιμοι λόγω αστοχιών για περισσότερο από 6 ώρες",
