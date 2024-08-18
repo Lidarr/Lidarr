@@ -219,8 +219,9 @@ export const defaultState = {
 };
 
 export const persistState = [
-  'releases.selectedFilterKey',
+  'releases.album.selectedFilterKey',
   'releases.album.customFilters',
+  'releases.artist.selectedFilterKey',
   'releases.artist.customFilters'
 ];
 
