@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import PageContent from 'Components/Page/PageContent';
@@ -8,6 +8,7 @@ import ParseToolbarButton from 'Parse/ParseToolbarButton';
 import SettingsToolbarConnector from 'Settings/SettingsToolbarConnector';
 import translate from 'Utilities/String/translate';
 import CustomFormatsConnector from './CustomFormats/CustomFormatsConnector';
+import ManageCustomFormatsToolbarButton from './CustomFormats/Manage/ManageCustomFormatsToolbarButton';
 
 function CustomFormatSettingsPage() {
   return (
@@ -17,11 +18,13 @@ function CustomFormatSettingsPage() {
         // @ts-ignore
         showSave={false}
         additionalButtons={
-          <Fragment>
+          <>
             <PageToolbarSeparator />
 
             <ParseToolbarButton />
-          </Fragment>
+
+            <ManageCustomFormatsToolbarButton />
+          </>
         }
       />
 
