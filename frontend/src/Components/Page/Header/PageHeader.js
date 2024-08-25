@@ -7,7 +7,7 @@ import { icons } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import ArtistSearchInputConnector from './ArtistSearchInputConnector';
 import KeyboardShortcutsModal from './KeyboardShortcutsModal';
-import PageHeaderActionsMenuConnector from './PageHeaderActionsMenuConnector';
+import PageHeaderActionsMenu from './PageHeaderActionsMenu';
 import styles from './PageHeader.css';
 
 class PageHeader extends Component {
@@ -83,6 +83,7 @@ class PageHeader extends Component {
             size={14}
             title={translate('Donate')}
           />
+
           <IconButton
             className={styles.translation}
             title={translate('SuggestTranslationChange')}
@@ -90,7 +91,8 @@ class PageHeader extends Component {
             to="https://translate.servarr.com/projects/servarr/lidarr/"
             size={24}
           />
-          <PageHeaderActionsMenuConnector
+
+          <PageHeaderActionsMenu
             onKeyboardShortcutsPress={this.onOpenKeyboardShortcutsModal}
           />
         </div>
