@@ -9,7 +9,7 @@
     <PackageReference Include="IPAddressRange" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="NLog" Version="5.2.0" />
+    <PackageReference Include="NLog" Version="5.3.3" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.2" />
     <PackageReference Include="Sentry" Version="3.25.0" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
