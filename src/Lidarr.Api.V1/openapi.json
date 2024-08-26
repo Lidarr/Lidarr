@@ -439,17 +439,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ArtistResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ArtistResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ArtistResource"
                 }
@@ -544,17 +534,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ArtistResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ArtistResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ArtistResource"
                 }
@@ -1633,6 +1613,26 @@
       }
     },
     "/api/v1/customformat": {
+      "get": {
+        "tags": [
+          "CustomFormat"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomFormatResource"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "CustomFormat"
@@ -1668,24 +1668,51 @@
             }
           }
         }
-      },
-      "get": {
+      }
+    },
+    "/api/v1/customformat/bulk": {
+      "put": {
         "tags": [
           "CustomFormat"
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomFormatBulkResource"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CustomFormatResource"
-                  }
+                  "$ref": "#/components/schemas/CustomFormatResource"
                 }
               }
             }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "CustomFormat"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomFormatBulkResource"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -9296,6 +9323,25 @@
         },
         "additionalProperties": false
       },
+      "CustomFormatBulkResource": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "includeCustomFormatWhenRenaming": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CustomFormatResource": {
         "type": "object",
         "properties": {
@@ -9876,6 +9922,10 @@
           "logLevel": {
             "type": "string",
             "nullable": true
+          },
+          "logSizeLimit": {
+            "type": "integer",
+            "format": "int32"
           },
           "consoleLogLevel": {
             "type": "string",
