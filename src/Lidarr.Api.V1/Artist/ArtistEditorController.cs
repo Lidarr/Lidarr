@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using FluentValidation;
 using Lidarr.Api.V1.Albums;
 using Lidarr.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +17,14 @@ namespace Lidarr.Api.V1.Artist
         private readonly IArtistService _artistService;
         private readonly IAlbumService _albumService;
         private readonly IManageCommandQueue _commandQueueManager;
+        private readonly ArtistEditorValidator _artistEditorValidator;
 
-        public ArtistEditorController(IArtistService artistService, IAlbumService albumService, IManageCommandQueue commandQueueManager)
+        public ArtistEditorController(IArtistService artistService, IAlbumService albumService, IManageCommandQueue commandQueueManager, ArtistEditorValidator artistEditorValidator)
         {
             _artistService = artistService;
             _albumService = albumService;
             _commandQueueManager = commandQueueManager;
+            _artistEditorValidator = artistEditorValidator;
         }
 
         [HttpPut]
@@ -79,6 +82,13 @@ namespace Lidarr.Api.V1.Artist
                             artist.Tags = new HashSet<int>(newTags);
                             break;
                     }
+                }
+
+                var validationResult = _artistEditorValidator.Validate(artist);
+
+                if (!validationResult.IsValid)
+                {
+                    throw new ValidationException(validationResult.Errors);
                 }
             }
 
