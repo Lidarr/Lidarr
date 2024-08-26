@@ -63,6 +63,7 @@ namespace Lidarr.Api.V1.Artist
                             SystemFolderValidator systemFolderValidator,
                             QualityProfileExistsValidator qualityProfileExistsValidator,
                             MetadataProfileExistsValidator metadataProfileExistsValidator,
+                            RootFolderExistsValidator rootFolderExistsValidator,
                             ArtistFolderAsRootFolderValidator artistFolderAsRootFolderValidator)
             : base(signalRBroadcaster)
         {
@@ -95,6 +96,7 @@ namespace Lidarr.Api.V1.Artist
             PostValidator.RuleFor(s => s.Path).IsValidPath().When(s => s.RootFolderPath.IsNullOrWhiteSpace());
             PostValidator.RuleFor(s => s.RootFolderPath)
                          .IsValidPath()
+                         .SetValidator(rootFolderExistsValidator)
                          .SetValidator(artistFolderAsRootFolderValidator)
                          .When(s => s.Path.IsNullOrWhiteSpace());
             PostValidator.RuleFor(s => s.ArtistName).NotEmpty();
@@ -154,6 +156,7 @@ namespace Lidarr.Api.V1.Artist
 
         [RestPostById]
         [Consumes("application/json")]
+        [Produces("application/json")]
         public ActionResult<ArtistResource> AddArtist(ArtistResource artistResource)
         {
             var artist = _addArtistService.AddArtist(artistResource.ToModel());
@@ -163,6 +166,7 @@ namespace Lidarr.Api.V1.Artist
 
         [RestPutById]
         [Consumes("application/json")]
+        [Produces("application/json")]
         public ActionResult<ArtistResource> UpdateArtist(ArtistResource artistResource, bool moveFiles = false)
         {
             var artist = _artistService.GetArtist(artistResource.Id);
