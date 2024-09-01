@@ -107,7 +107,7 @@ namespace NzbDrone.Core.Test.MetadataSource.SkyHook
 
         [TestCase("Eminem", 0, typeof(Artist), "Eminem")]
         [TestCase("Eminem Kamikaze", 0, typeof(Artist), "Eminem")]
-        [TestCase("Eminem Kamikaze", 2, typeof(Album), "Kamikaze")]
+        [TestCase("Eminem Kamikaze", 1, typeof(Album), "Kamikaze")]
         [TestCase("lidarr:f59c5520-5f46-4d2c-b2c4-822eabf53419", 0, typeof(Artist), "Linkin Park")]
         [TestCase("lidarr: d77df681-b779-3d6d-b66a-3bfd15985e3e", 0, typeof(Album), "Pyromania")]
         public void successful_combined_search(string query, int position, Type resultType, string expected)
