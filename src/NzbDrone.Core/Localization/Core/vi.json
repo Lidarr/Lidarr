@@ -742,5 +742,7 @@
     "IndexerPriorityHelpText": "Mức độ ưu tiên của người lập chỉ mục từ 1 (Cao nhất) đến 50 (Thấp nhất). Mặc định: 25.",
     "FormatAgeHour": "Giờ",
     "Script": "Kịch bản",
-    "BuiltIn": "Được xây dựng trong"
+    "BuiltIn": "Được xây dựng trong",
+    "DeleteSelectedCustomFormats": "Xóa định dạng tùy chỉnh",
+    "IncludeCustomFormatWhenRenaming": "Bao gồm định dạng tùy chỉnh khi đổi tên"
 }

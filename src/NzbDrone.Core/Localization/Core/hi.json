@@ -735,5 +735,7 @@
     "Absolute": "पूर्ण",
     "AddImportListExclusionAlbumHelpText": "मूवी को रेडर से सूचियों में जोड़े जाने से रोकें",
     "BuiltIn": "में निर्मित",
-    "Script": "लिपि"
+    "Script": "लिपि",
+    "DeleteSelectedCustomFormats": "कस्टम प्रारूप हटाएं",
+    "IncludeCustomFormatWhenRenaming": "नाम बदलने पर कस्टम प्रारूप शामिल करें"
 }

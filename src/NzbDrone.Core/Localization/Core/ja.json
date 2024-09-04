@@ -735,5 +735,7 @@
     "Yesterday": "昨日",
     "BuiltIn": "ビルトイン",
     "Script": "脚本",
-    "AddCondition": "条件の追加"
+    "AddCondition": "条件の追加",
+    "DeleteSelectedCustomFormats": "カスタムフォーマットを削除する",
+    "IncludeCustomFormatWhenRenaming": "名前を変更するときにカスタム形式を含める"
 }

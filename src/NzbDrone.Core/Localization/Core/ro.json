@@ -777,5 +777,9 @@
     "ParseModalUnableToParse": "Nu se poate analiza titlul furnizat, vă rugăm să încercați din nou.",
     "True": "Adevărat",
     "BuiltIn": "Incorporat",
-    "Script": "Script"
+    "Script": "Script",
+    "UpdateAvailableHealthCheckMessage": "O nouă versiune este disponibilă: {version}",
+    "DeleteSelectedCustomFormats": "Ștergeți formatul personalizat",
+    "DeleteSelectedCustomFormatsMessageText": "Sigur doriți să ștergeți {count} clienți de descărcare selectați?",
+    "IncludeCustomFormatWhenRenaming": "Includeți format personalizat la redenumire"
 }
