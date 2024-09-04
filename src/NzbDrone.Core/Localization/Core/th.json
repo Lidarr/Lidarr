@@ -732,5 +732,7 @@
     "TagsSettingsSummary": "ดูแท็กทั้งหมดและวิธีการใช้งาน แท็กที่ไม่ได้ใช้สามารถลบออกได้",
     "AddImportListExclusionAlbumHelpText": "ป้องกันไม่ให้เพิ่มภาพยนตร์ไปยัง {appName} ตามรายการ",
     "BuiltIn": "สร้างขึ้นใน",
-    "Script": "สคริปต์"
+    "Script": "สคริปต์",
+    "DeleteSelectedCustomFormats": "ลบรูปแบบที่กำหนดเอง",
+    "IncludeCustomFormatWhenRenaming": "รวมรูปแบบที่กำหนดเองเมื่อเปลี่ยนชื่อ"
 }

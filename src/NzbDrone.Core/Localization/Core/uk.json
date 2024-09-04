@@ -897,5 +897,8 @@
     "BypassIfAboveCustomFormatScore": "Пропустити, якщо перевищено оцінку користувацького формату",
     "Any": "Будь-який",
     "BuiltIn": "Вбудований",
-    "Script": "Сценарій"
+    "Script": "Сценарій",
+    "DeleteSelectedCustomFormatsMessageText": "Ви впевнені, що хочете видалити тег {0} ?",
+    "DeleteSelectedCustomFormats": "Видалити спеціальний формат",
+    "IncludeCustomFormatWhenRenaming": "Включати спеціальний формат під час перейменування"
 }

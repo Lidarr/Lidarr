@@ -254,5 +254,6 @@
     "AddedToDownloadQueue": "Dodano u red za preuzimanje",
     "EditRootFolder": "asdf",
     "AddImportListExclusionAlbumHelpText": "Spriječi dodavanje ovog filma na {appName} preko listi",
-    "BuiltIn": "Ugrađeno"
+    "BuiltIn": "Ugrađeno",
+    "DeleteSelectedCustomFormats": "Kloniraj Prilagođeni Format"
 }

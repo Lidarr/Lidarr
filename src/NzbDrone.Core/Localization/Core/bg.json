@@ -740,5 +740,7 @@
     "InteractiveSearchModalHeader": "Интерактивно търсене",
     "IndexerPriorityHelpText": "Приоритет на индексатора от 1 (най-висок) до 50 (най-нисък). По подразбиране: 25.",
     "BuiltIn": "Вграден",
-    "Script": "Сценарий"
+    "Script": "Сценарий",
+    "DeleteSelectedCustomFormats": "Изтриване на потребителски формат",
+    "IncludeCustomFormatWhenRenaming": "Включете персонализиран формат при преименуване"
 }

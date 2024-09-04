@@ -906,5 +906,7 @@
     "AddImportListExclusionAlbumHelpText": "Förhindra TV-serie att läggas till i {appName} från listor",
     "ArtistIsMonitored": "Författare är obevakad",
     "BuiltIn": "Inbyggd",
-    "Script": "Skript"
+    "Script": "Skript",
+    "DeleteSelectedCustomFormats": "Ta bort anpassat format",
+    "IncludeCustomFormatWhenRenaming": "Inkludera anpassat format när du byter namn"
 }
