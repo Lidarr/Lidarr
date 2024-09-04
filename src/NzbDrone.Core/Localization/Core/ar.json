@@ -740,5 +740,7 @@
     "InteractiveSearchModalHeader": "بحث تفاعلي",
     "IndexerPriorityHelpText": "أولوية المفهرس من 1 (الأعلى) إلى 50 (الأدنى). الافتراضي: 25.",
     "BuiltIn": "مدمج",
-    "Script": "النصي"
+    "Script": "النصي",
+    "DeleteSelectedCustomFormats": "حذف التنسيق المخصص",
+    "IncludeCustomFormatWhenRenaming": "قم بتضمين تنسيق مخصص عند إعادة التسمية"
 }

@@ -1251,5 +1251,8 @@
     "True": "Tosi",
     "Any": "Mikä vain",
     "BuiltIn": "Sisäänrakennettu",
-    "Script": "Skripti"
+    "Script": "Skripti",
+    "DeleteSelectedCustomFormats": "Poista mukautettu muoto",
+    "DeleteSelectedCustomFormatsMessageText": "Haluatko varmasti poistaa valitut {count} tuontilistaa?",
+    "IncludeCustomFormatWhenRenaming": "Sisällytä mukautetut muodot uudelleennimetessä"
 }

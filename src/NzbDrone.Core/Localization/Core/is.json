@@ -735,5 +735,7 @@
     "AddImportListExclusionAlbumHelpText": "Koma í veg fyrir að kvikmyndum verði bætt við {appName} af listum",
     "DeleteArtistFoldersHelpText": "Eyddu kvikmyndamöppunni og innihaldi hennar",
     "BuiltIn": "Innbyggð",
-    "Script": "Handrit"
+    "Script": "Handrit",
+    "DeleteSelectedCustomFormats": "Eyða sérsniðnu sniði",
+    "IncludeCustomFormatWhenRenaming": "Láttu sérsniðið snið fylgja með þegar þú endurnefnir"
 }

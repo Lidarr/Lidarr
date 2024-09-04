@@ -1182,5 +1182,8 @@
     "WithFiles": "Mit Dateien",
     "Any": "Beliebig",
     "BuiltIn": "Eingebaut",
-    "Script": "Skript"
+    "Script": "Skript",
+    "DeleteSelectedCustomFormats": "Benutzerdefiniertes Format löschen",
+    "IncludeCustomFormatWhenRenaming": "Eigenes Format beim umbennen einfügen",
+    "DeleteSelectedCustomFormatsMessageText": "Sind Sie sicher, dass Sie {count} ausgewählte Importliste(n) löschen möchten?"
 }

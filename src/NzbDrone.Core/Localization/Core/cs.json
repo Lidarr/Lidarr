@@ -872,5 +872,8 @@
     "BlocklistOnlyHint": "Blokovat a nehledat náhradu",
     "Any": "Jakákoliv",
     "BuiltIn": "Vestavěný",
-    "Script": "Skript"
+    "Script": "Skript",
+    "DeleteSelectedCustomFormats": "Odstranění vlastního formátu",
+    "DeleteSelectedCustomFormatsMessageText": "Opravdu chcete smazat {count} vybraných seznamů k importu?",
+    "IncludeCustomFormatWhenRenaming": "Při přejmenování zahrnout vlastní formát"
 }

@@ -777,5 +777,7 @@
     "FormatAgeMinutes": "דקות",
     "AddImportListExclusionAlbumHelpText": "מנע מלהוסיף סרט לרדאר על ידי רשימות",
     "BuiltIn": "נִבנָה בְּ",
-    "Script": "תַסרִיט"
+    "Script": "תַסרִיט",
+    "DeleteSelectedCustomFormats": "מחק פורמט מותאם אישית",
+    "IncludeCustomFormatWhenRenaming": "כלול פורמט מותאם אישית בעת שינוי שם"
 }

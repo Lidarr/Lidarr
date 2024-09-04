@@ -949,5 +949,8 @@
     "Repack": "Tornat a empaquetar",
     "Any": "Qualsevol",
     "BuiltIn": "Integrat",
-    "Script": "Script"
+    "Script": "Script",
+    "DeleteSelectedCustomFormats": "Suprimeix el format personalitzat",
+    "DeleteSelectedCustomFormatsMessageText": "Esteu segur que voleu suprimir {count} llista(es) d'importació seleccionada(es)?",
+    "IncludeCustomFormatWhenRenaming": "Inclou el format personalitzat en canviar el nom"
 }

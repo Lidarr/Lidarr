@@ -1007,5 +1007,8 @@
     "DeleteSelectedArtists": "Eliminar artista selecionado",
     "Any": "Quaisquer",
     "Script": "Script",
-    "BuiltIn": "Incorporado"
+    "BuiltIn": "Incorporado",
+    "DeleteSelectedCustomFormats": "Eliminar formato personalizado",
+    "DeleteSelectedCustomFormatsMessageText": "Tem a certeza de que pretende eliminar a(s) lista(s) de {count} importação selecionada(s)?",
+    "IncludeCustomFormatWhenRenaming": "Incluir formato personalizado ao renomear"
 }
