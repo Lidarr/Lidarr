@@ -3,6 +3,7 @@ using Lidarr.Http;
 using Lidarr.Http.REST;
 using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
+using NzbDrone.Core.AutoTagging;
 using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Tags;
@@ -11,7 +12,9 @@ using NzbDrone.SignalR;
 namespace Lidarr.Api.V1.Tags
 {
     [V1ApiController]
-    public class TagController : RestControllerWithSignalR<TagResource, Tag>, IHandle<TagsUpdatedEvent>
+    public class TagController : RestControllerWithSignalR<TagResource, Tag>,
+                                 IHandle<TagsUpdatedEvent>,
+                                 IHandle<AutoTagsUpdatedEvent>
     {
         private readonly ITagService _tagService;
 
@@ -57,6 +60,12 @@ namespace Lidarr.Api.V1.Tags
 
         [NonAction]
         public void Handle(TagsUpdatedEvent message)
+        {
+            BroadcastResourceChange(ModelAction.Sync);
+        }
+
+        [NonAction]
+        public void Handle(AutoTagsUpdatedEvent message)
         {
             BroadcastResourceChange(ModelAction.Sync);
         }
