@@ -3,6 +3,7 @@
 interface CssExports {
   'albumNavigationButton': string;
   'albumNavigationButtons': string;
+  'albumType': string;
   'alternateTitlesIconContainer': string;
   'backdrop': string;
   'backdropOverlay': string;
@@ -20,6 +21,7 @@ interface CssExports {
   'overview': string;
   'qualityProfileName': string;
   'releaseDate': string;
+  'secondaryTypes': string;
   'sizeOnDisk': string;
   'tags': string;
   'title': string;
