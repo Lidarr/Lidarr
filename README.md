@@ -1,6 +1,7 @@
 # Lidarr
 
 [![Build Status](https://dev.azure.com/Lidarr/Lidarr/_apis/build/status/lidarr.Lidarr?branchName=develop)](https://dev.azure.com/Lidarr/Lidarr/_build/latest?definitionId=1&branchName=develop)
+[![Translation status](https://translate.servarr.com/widget/servarr/lidarr/svg-badge.svg)](https://translate.servarr.com/engage/servarr/?utm_source=widget)
 [![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/lidarr.svg)](https://wiki.servarr.com/lidarr/installation#docker)
 ![Github Downloads](https://img.shields.io/github/downloads/lidarr/lidarr/total.svg)
 [![Backers on Open Collective](https://opencollective.com/lidarr/backers/badge.svg)](#backers) 
