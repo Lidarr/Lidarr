@@ -192,6 +192,7 @@ class AlbumDetails extends Component {
       duration,
       overview,
       albumType,
+      secondaryTypes,
       statistics = {},
       monitored,
       releaseDate,
@@ -396,10 +397,11 @@ class AlbumDetails extends Component {
                 <div className={styles.details}>
                   <div>
                     {
-                      !!duration &&
+                      duration ?
                         <span className={styles.duration}>
                           {formatDuration(duration)}
-                        </span>
+                        </span> :
+                        null
                     }
 
                     <HeartRating
@@ -418,14 +420,15 @@ class AlbumDetails extends Component {
                     title={translate('ReleaseDate')}
                     size={sizes.LARGE}
                   >
-                    <Icon
-                      name={icons.CALENDAR}
-                      size={17}
-                    />
-
-                    <span className={styles.releaseDate}>
-                      {moment(releaseDate).format(shortDateFormat)}
-                    </span>
+                    <div>
+                      <Icon
+                        name={icons.CALENDAR}
+                        size={17}
+                      />
+                      <span className={styles.releaseDate}>
+                        {moment(releaseDate).format(shortDateFormat)}
+                      </span>
+                    </div>
                   </Label>
 
                   <Tooltip
@@ -434,16 +437,15 @@ class AlbumDetails extends Component {
                         className={styles.detailsLabel}
                         size={sizes.LARGE}
                       >
-                        <Icon
-                          name={icons.DRIVE}
-                          size={17}
-                        />
-
-                        <span className={styles.sizeOnDisk}>
-                          {
-                            formatBytes(sizeOnDisk || 0)
-                          }
-                        </span>
+                        <div>
+                          <Icon
+                            name={icons.DRIVE}
+                            size={17}
+                          />
+                          <span className={styles.sizeOnDisk}>
+                            {formatBytes(sizeOnDisk)}
+                          </span>
+                        </div>
                       </Label>
                     }
                     tooltip={
@@ -459,32 +461,55 @@ class AlbumDetails extends Component {
                     className={styles.detailsLabel}
                     size={sizes.LARGE}
                   >
-                    <Icon
-                      name={monitored ? icons.MONITORED : icons.UNMONITORED}
-                      size={17}
-                    />
-
-                    <span className={styles.qualityProfileName}>
-                      {monitored ? translate('Monitored') : translate('Unmonitored')}
-                    </span>
+                    <div>
+                      <Icon
+                        name={monitored ? icons.MONITORED : icons.UNMONITORED}
+                        size={17}
+                      />
+                      <span className={styles.qualityProfileName}>
+                        {monitored ? translate('Monitored') : translate('Unmonitored')}
+                      </span>
+                    </div>
                   </Label>
 
                   {
-                    !!albumType &&
+                    albumType ?
                       <Label
                         className={styles.detailsLabel}
                         title={translate('Type')}
                         size={sizes.LARGE}
                       >
-                        <Icon
-                          name={icons.INFO}
-                          size={17}
-                        />
+                        <div>
+                          <Icon
+                            name={icons.INFO}
+                            size={17}
+                          />
+                          <span className={styles.albumType}>
+                            {albumType}
+                          </span>
+                        </div>
+                      </Label> :
+                      null
+                  }
 
-                        <span className={styles.qualityProfileName}>
-                          {albumType}
-                        </span>
-                      </Label>
+                  {
+                    secondaryTypes.length ?
+                      <Label
+                        className={styles.detailsLabel}
+                        title={translate('SecondaryTypes')}
+                        size={sizes.LARGE}
+                      >
+                        <div>
+                          <Icon
+                            name={icons.INFO}
+                            size={17}
+                          />
+                          <span className={styles.secondaryTypes}>
+                            {secondaryTypes.join(', ')}
+                          </span>
+                        </div>
+                      </Label> :
+                      null
                   }
 
                   <Tooltip
@@ -493,14 +518,15 @@ class AlbumDetails extends Component {
                         className={styles.detailsLabel}
                         size={sizes.LARGE}
                       >
-                        <Icon
-                          name={icons.EXTERNAL_LINK}
-                          size={17}
-                        />
-
-                        <span className={styles.links}>
-                          {translate('Links')}
-                        </span>
+                        <div>
+                          <Icon
+                            name={icons.EXTERNAL_LINK}
+                            size={17}
+                          />
+                          <span className={styles.links}>
+                            {translate('Links')}
+                          </span>
+                        </div>
                       </Label>
                     }
                     tooltip={
@@ -632,6 +658,7 @@ AlbumDetails.propTypes = {
   duration: PropTypes.number,
   overview: PropTypes.string,
   albumType: PropTypes.string.isRequired,
+  secondaryTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
   statistics: PropTypes.object.isRequired,
   releaseDate: PropTypes.string.isRequired,
   ratings: PropTypes.object.isRequired,
@@ -658,6 +685,7 @@ AlbumDetails.propTypes = {
 };
 
 AlbumDetails.defaultProps = {
+  secondaryTypes: [],
   isSaving: false
 };
 

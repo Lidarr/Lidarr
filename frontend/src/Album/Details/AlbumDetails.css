@@ -121,6 +121,8 @@
 
 .releaseDate,
 .sizeOnDisk,
+.albumType,
+.secondaryTypes,
 .qualityProfileName,
 .links,
 .tags {

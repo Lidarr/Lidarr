@@ -149,9 +149,7 @@ class AlbumRow extends Component {
             if (name === 'secondaryTypes') {
               return (
                 <TableRowCell key={name}>
-                  {
-                    secondaryTypes
-                  }
+                  {secondaryTypes.join(', ')}
                 </TableRowCell>
               );
             }
