@@ -17,6 +17,7 @@ function MissingRow(props) {
     albumType,
     foreignAlbumId,
     title,
+    lastSearchTime,
     disambiguation,
     isSelected,
     columns,
@@ -86,6 +87,15 @@ function MissingRow(props) {
             );
           }
 
+          if (name === 'albums.lastSearchTime') {
+            return (
+              <RelativeDateCellConnector
+                key={name}
+                date={lastSearchTime}
+              />
+            );
+          }
+
           if (name === 'actions') {
             return (
               <AlbumSearchCellConnector
@@ -113,6 +123,7 @@ MissingRow.propTypes = {
   foreignAlbumId: PropTypes.string.isRequired,
   albumType: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  lastSearchTime: PropTypes.string,
   disambiguation: PropTypes.string,
   isSelected: PropTypes.bool,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,

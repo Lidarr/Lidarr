@@ -52,6 +52,12 @@ export const defaultState = {
         isSortable: true,
         isVisible: true
       },
+      {
+        name: 'albums.lastSearchTime',
+        label: () => translate('LastSearched'),
+        isSortable: true,
+        isVisible: false
+      },
       // {
       //   name: 'status',
       //   label: 'Status',
@@ -131,6 +137,12 @@ export const defaultState = {
       //  label: 'Status',
       //  isVisible: true
       // },
+      {
+        name: 'albums.lastSearchTime',
+        label: () => translate('LastSearched'),
+        isSortable: true,
+        isVisible: false
+      },
       {
         name: 'actions',
         columnLabel: () => translate('Actions'),

@@ -121,13 +121,15 @@ class MissingConnector extends Component {
   onSearchSelectedPress = (selected) => {
     this.props.executeCommand({
       name: commandNames.ALBUM_SEARCH,
-      albumIds: selected
+      albumIds: selected,
+      commandFinished: this.repopulate
     });
   };
 
   onSearchAllMissingPress = () => {
     this.props.executeCommand({
-      name: commandNames.MISSING_ALBUM_SEARCH
+      name: commandNames.MISSING_ALBUM_SEARCH,
+      commandFinished: this.repopulate
     });
   };
 
