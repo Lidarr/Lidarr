@@ -144,6 +144,15 @@ function ArtistIndexSortMenu(props: SeriesIndexSortMenuProps) {
         >
           {translate('Tags')}
         </SortMenuItem>
+
+        <SortMenuItem
+          name="ratings"
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onPress={onSortSelect}
+        >
+          {translate('Rating')}
+        </SortMenuItem>
       </MenuContent>
     </SortMenu>
   );
