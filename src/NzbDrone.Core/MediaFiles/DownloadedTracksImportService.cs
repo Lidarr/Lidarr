@@ -177,10 +177,12 @@ namespace NzbDrone.Core.MediaFiles
             if (_artistService.ArtistPathExists(directoryInfo.FullName))
             {
                 _logger.Warn("Unable to process folder that is mapped to an existing artist");
-                return new List<ImportResult>();
+                return new List<ImportResult>
+                {
+                    RejectionResult("Import path is mapped to an artist folder")
+                };
             }
 
-            var cleanedUpName = GetCleanedUpFolderName(directoryInfo.Name);
             var folderInfo = Parser.Parser.ParseAlbumTitle(directoryInfo.Name);
 
             var audioFiles = _diskScanService.FilterFiles(directoryInfo.FullName, _diskScanService.GetAudioFiles(directoryInfo.FullName));
@@ -239,6 +241,10 @@ namespace NzbDrone.Core.MediaFiles
                 {
                     _logger.Debug(e, "Unable to delete folder after importing: {0}", e.Message);
                 }
+            }
+            else if (importResults.Empty())
+            {
+                importResults.AddIfNotNull(CheckEmptyResultForIssue(directoryInfo.FullName));
             }
 
             return importResults;
@@ -339,6 +345,28 @@ namespace NzbDrone.Core.MediaFiles
             var localTrack = audioFile == null ? null : new LocalTrack { Path = audioFile };
 
             return new ImportResult(new ImportDecision<LocalTrack>(localTrack, new Rejection("Unknown Artist")), message);
+        }
+
+        private ImportResult RejectionResult(string message)
+        {
+            return new ImportResult(new ImportDecision<LocalTrack>(null, new Rejection(message)), message);
+        }
+
+        private ImportResult CheckEmptyResultForIssue(string folder)
+        {
+            var files = _diskProvider.GetFiles(folder, true).ToList();
+
+            if (files.Any(file => FileExtensions.ExecutableExtensions.Contains(Path.GetExtension(file))))
+            {
+                return RejectionResult("Caution: Found executable file");
+            }
+
+            if (files.Any(file => FileExtensions.ArchiveExtensions.Contains(Path.GetExtension(file))))
+            {
+                return RejectionResult("Found archive file, might need to be extracted");
+            }
+
+            return null;
         }
 
         private void LogInaccessiblePathError(string path)
