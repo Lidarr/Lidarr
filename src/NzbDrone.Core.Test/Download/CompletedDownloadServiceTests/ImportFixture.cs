@@ -183,6 +183,8 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
         {
             GivenArtistMatch();
 
+            var tracks = Builder<Track>.CreateListOfSize(3).BuildList();
+
             _trackedDownload.RemoteAlbum.Albums = new List<Album>
             {
                 CreateAlbum(1, 3)
@@ -192,9 +194,9 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
                   .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()))
                   .Returns(new List<ImportResult>
                            {
-                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic() })),
-                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic() })),
-                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic() })),
+                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic(), Tracks = new List<Track> { tracks[0] } })),
+                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic(), Tracks = new List<Track> { tracks[1] } })),
+                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic(), Tracks = new List<Track> { tracks[2] } })),
                                new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic() }), "Test Failure")
                            });
 
@@ -290,6 +292,9 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
         [Test]
         public void should_mark_as_imported_if_all_tracks_were_imported()
         {
+            var track1 = new Track { Id = 1 };
+            var track2 = new Track { Id = 2 };
+
             _trackedDownload.RemoteAlbum.Albums = new List<Album>
             {
                 CreateAlbum(1, 2)
@@ -301,11 +306,11 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
                            {
                                new ImportResult(
                                    new ImportDecision<LocalTrack>(
-                                       new LocalTrack { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic() })),
+                                       new LocalTrack { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic(), Tracks = new List<Track> { track1 } })),
 
                                new ImportResult(
                                    new ImportDecision<LocalTrack>(
-                                       new LocalTrack { Path = @"C:\TestPath\Droned.S01E02.mkv".AsOsAgnostic() }))
+                                       new LocalTrack { Path = @"C:\TestPath\Droned.S01E02.mkv".AsOsAgnostic(), Tracks = new List<Track> { track2 } }))
                            });
 
             Subject.Import(_trackedDownload);
@@ -367,11 +372,13 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
         {
             GivenABadlyNamedDownload();
 
+            var track1 = new Track { Id = 1 };
+
             Mocker.GetMock<IDownloadedTracksImportService>()
                   .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()))
                   .Returns(new List<ImportResult>
                            {
-                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic() }))
+                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic(), Tracks = new List<Track> { track1 } }))
                            });
 
             Mocker.GetMock<IArtistService>()
