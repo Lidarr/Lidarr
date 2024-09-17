@@ -336,6 +336,74 @@ namespace NzbDrone.Core.Test.MediaFiles
             DiskProvider.FolderExists(_subFolders[0]).Should().BeTrue();
         }
 
+        [Test]
+        public void should_return_rejection_if_nothing_imported_and_contains_rar_file()
+        {
+            GivenValidArtist();
+
+            var path = @"C:\Test\Unsorted\Artist.Title-Album.Title.2017-Lidarr".AsOsAgnostic();
+            var imported = new List<ImportDecision<LocalTrack>>();
+
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(s => s.FolderExists(path))
+                .Returns(true);
+
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(s => s.GetDirectoryInfo(It.IsAny<string>()))
+                .Returns(DiskProvider.GetDirectoryInfo(path));
+
+            Mocker.GetMock<IMakeImportDecision>()
+                .Setup(v => v.GetImportDecisions(It.IsAny<List<IFileInfo>>(), It.IsAny<IdentificationOverrides>(), It.IsAny<ImportDecisionMakerInfo>(), It.IsAny<ImportDecisionMakerConfig>()))
+                .Returns(imported);
+
+            Mocker.GetMock<IImportApprovedTracks>()
+                .Setup(s => s.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), true, null, ImportMode.Auto))
+                .Returns(imported.Select(i => new ImportResult(i)).ToList());
+
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(s => s.GetFiles(It.IsAny<string>(), true))
+                .Returns(new[] { _audioFiles.First().Replace(".ext", ".rar") });
+
+            var result = Subject.ProcessPath(path);
+
+            result.Count.Should().Be(1);
+            result.First().Result.Should().Be(ImportResultType.Rejected);
+        }
+
+        [Test]
+        public void should_return_rejection_if_nothing_imported_and_contains_executable_file()
+        {
+            GivenValidArtist();
+
+            var path = @"C:\Test\Unsorted\Artist.Title-Album.Title.2017-Lidarr".AsOsAgnostic();
+            var imported = new List<ImportDecision<LocalTrack>>();
+
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(s => s.FolderExists(path))
+                .Returns(true);
+
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(s => s.GetDirectoryInfo(It.IsAny<string>()))
+                .Returns(DiskProvider.GetDirectoryInfo(path));
+
+            Mocker.GetMock<IMakeImportDecision>()
+                .Setup(v => v.GetImportDecisions(It.IsAny<List<IFileInfo>>(), It.IsAny<IdentificationOverrides>(), It.IsAny<ImportDecisionMakerInfo>(), It.IsAny<ImportDecisionMakerConfig>()))
+                .Returns(imported);
+
+            Mocker.GetMock<IImportApprovedTracks>()
+                .Setup(s => s.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), true, null, ImportMode.Auto))
+                .Returns(imported.Select(i => new ImportResult(i)).ToList());
+
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(s => s.GetFiles(It.IsAny<string>(), true))
+                .Returns(new[] { _audioFiles.First().Replace(".ext", ".exe") });
+
+            var result = Subject.ProcessPath(path);
+
+            result.Count.Should().Be(1);
+            result.First().Result.Should().Be(ImportResultType.Rejected);
+        }
+
         private void VerifyNoImport()
         {
             Mocker.GetMock<IImportApprovedTracks>().Verify(c => c.Import(It.IsAny<List<ImportDecision<LocalTrack>>>(), true, null, ImportMode.Auto),
