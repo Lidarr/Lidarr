@@ -6,6 +6,7 @@ using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.CustomFormats;
+using NzbDrone.Core.Download.Aggregation;
 using NzbDrone.Core.Download.History;
 using NzbDrone.Core.History;
 using NzbDrone.Core.Messaging.Events;
@@ -36,6 +37,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
         private readonly IHistoryService _historyService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IDownloadHistoryService _downloadHistoryService;
+        private readonly IRemoteAlbumAggregationService _aggregationService;
         private readonly ICustomFormatCalculationService _formatCalculator;
         private readonly Logger _logger;
         private readonly ICached<TrackedDownload> _cache;
@@ -46,6 +48,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                                       ICustomFormatCalculationService formatCalculator,
                                       IEventAggregator eventAggregator,
                                       IDownloadHistoryService downloadHistoryService,
+                                      IRemoteAlbumAggregationService aggregationService,
                                       Logger logger)
         {
             _parsingService = parsingService;
@@ -54,6 +57,7 @@ namespace NzbDrone.Core.Download.TrackedDownloads
             _formatCalculator = formatCalculator;
             _eventAggregator = eventAggregator;
             _downloadHistoryService = downloadHistoryService;
+            _aggregationService = aggregationService;
             _logger = logger;
         }
 
@@ -67,6 +71,8 @@ namespace NzbDrone.Core.Download.TrackedDownloads
             var parsedAlbumInfo = Parser.Parser.ParseAlbumTitle(trackedDownload.DownloadItem.Title);
 
             trackedDownload.RemoteAlbum = parsedAlbumInfo == null ? null : _parsingService.Map(parsedAlbumInfo);
+
+            _aggregationService.Augment(trackedDownload.RemoteAlbum);
         }
 
         public void StopTracking(string downloadId)
@@ -191,9 +197,11 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                     }
                 }
 
-                // Calculate custom formats
                 if (trackedDownload.RemoteAlbum != null)
                 {
+                    _aggregationService.Augment(trackedDownload.RemoteAlbum);
+
+                    // Calculate custom formats
                     trackedDownload.RemoteAlbum.CustomFormats = _formatCalculator.ParseCustomFormat(trackedDownload.RemoteAlbum, downloadItem.TotalSize);
                 }
 
