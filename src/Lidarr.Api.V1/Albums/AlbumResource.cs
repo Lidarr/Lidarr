@@ -110,8 +110,8 @@ namespace Lidarr.Api.V1.Albums
                 AlbumType = resource.AlbumType,
                 Monitored = resource.Monitored,
                 AnyReleaseOk = resource.AnyReleaseOk,
-                AlbumReleases = resource.Releases.ToModel(),
-                AddOptions = resource.AddOptions,
+                AlbumReleases = resource.Releases?.ToModel() ?? new List<AlbumRelease>(),
+                AddOptions = resource.AddOptions ?? new AddAlbumOptions(),
                 Artist = artist,
                 ArtistMetadata = artist.Metadata.Value
             };

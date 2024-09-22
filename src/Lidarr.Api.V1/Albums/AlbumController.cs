@@ -42,6 +42,14 @@ namespace Lidarr.Api.V1.Albums
                            IMapCoversToLocal coverMapper,
                            IUpgradableSpecification upgradableSpecification,
                            IBroadcastSignalRMessage signalRBroadcaster,
+                           RootFolderValidator rootFolderValidator,
+                           MappedNetworkDriveValidator mappedNetworkDriveValidator,
+                           ArtistPathValidator artistPathValidator,
+                           ArtistAncestorValidator artistAncestorValidator,
+                           RecycleBinValidator recycleBinValidator,
+                           SystemFolderValidator systemFolderValidator,
+                           AlbumExistsValidator albumExistsValidator,
+                           RootFolderExistsValidator rootFolderExistsValidator,
                            QualityProfileExistsValidator qualityProfileExistsValidator,
                            MetadataProfileExistsValidator metadataProfileExistsValidator)
 
@@ -51,11 +59,34 @@ namespace Lidarr.Api.V1.Albums
             _releaseService = releaseService;
             _addAlbumService = addAlbumService;
 
-            PostValidator.RuleFor(s => s.ForeignAlbumId).NotEmpty();
-            PostValidator.RuleFor(s => s.Artist.QualityProfileId).SetValidator(qualityProfileExistsValidator);
-            PostValidator.RuleFor(s => s.Artist.MetadataProfileId).SetValidator(metadataProfileExistsValidator);
-            PostValidator.RuleFor(s => s.Artist.RootFolderPath).IsValidPath().When(s => s.Artist.Path.IsNullOrWhiteSpace());
-            PostValidator.RuleFor(s => s.Artist.ForeignArtistId).NotEmpty();
+            PostValidator.RuleFor(s => s.ForeignAlbumId).NotEmpty().SetValidator(albumExistsValidator);
+            PostValidator.RuleFor(s => s.Artist).NotNull();
+            PostValidator.RuleFor(s => s.Artist.ForeignArtistId).NotEmpty().When(s => s.Artist != null);
+
+            PostValidator.RuleFor(s => s.Artist.QualityProfileId).Cascade(CascadeMode.Stop)
+                .ValidId()
+                .SetValidator(qualityProfileExistsValidator)
+                .When(s => s.Artist != null);
+
+            PostValidator.RuleFor(s => s.Artist.MetadataProfileId).Cascade(CascadeMode.Stop)
+                .ValidId()
+                .SetValidator(metadataProfileExistsValidator)
+                .When(s => s.Artist != null);
+
+            PostValidator.RuleFor(s => s.Artist.Path).Cascade(CascadeMode.Stop)
+                .IsValidPath()
+                .SetValidator(rootFolderValidator)
+                .SetValidator(mappedNetworkDriveValidator)
+                .SetValidator(artistPathValidator)
+                .SetValidator(artistAncestorValidator)
+                .SetValidator(recycleBinValidator)
+                .SetValidator(systemFolderValidator)
+                .When(s => s.Artist != null && s.Artist.Path.IsNotNullOrWhiteSpace());
+
+            PostValidator.RuleFor(s => s.Artist.RootFolderPath)
+                .IsValidPath()
+                .SetValidator(rootFolderExistsValidator)
+                .When(s => s.Artist != null && s.Artist.Path.IsNullOrWhiteSpace());
         }
 
         [HttpGet]
