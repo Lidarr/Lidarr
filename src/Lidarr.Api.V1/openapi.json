@@ -5,7 +5,7 @@
     "description": "Lidarr API docs",
     "license": {
       "name": "GPL-3.0",
-      "url": "https://github.com/Lidarr/Lidarr/blob/develop/LICENSE"
+      "url": "https://github.com/Lidarr/Lidarr/blob/develop/LICENSE.md"
     },
     "version": "1.0.0"
   },
