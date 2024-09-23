@@ -44,7 +44,6 @@ namespace Lidarr.Api.V1.Albums
                            IBroadcastSignalRMessage signalRBroadcaster,
                            RootFolderValidator rootFolderValidator,
                            MappedNetworkDriveValidator mappedNetworkDriveValidator,
-                           ArtistPathValidator artistPathValidator,
                            ArtistAncestorValidator artistAncestorValidator,
                            RecycleBinValidator recycleBinValidator,
                            SystemFolderValidator systemFolderValidator,
@@ -77,7 +76,6 @@ namespace Lidarr.Api.V1.Albums
                 .IsValidPath()
                 .SetValidator(rootFolderValidator)
                 .SetValidator(mappedNetworkDriveValidator)
-                .SetValidator(artistPathValidator)
                 .SetValidator(artistAncestorValidator)
                 .SetValidator(recycleBinValidator)
                 .SetValidator(systemFolderValidator)
