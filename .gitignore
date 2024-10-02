@@ -121,6 +121,7 @@ _artifacts
 _rawPackage/
 _dotTrace*
 _tests/
+_temp*
 *.Result.xml
 coverage*.xml
 coverage*.json
@@ -132,7 +133,6 @@ setup/Output/
 bin
 obj
 output/*
-_temp*
 
 # .NET Core
 project.lock.json
@@ -143,7 +143,6 @@ artifacts/
 # macOS metadata files
 ._*
 .DS_Store
-
 _start
 _temp_*/**/*
 
