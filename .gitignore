@@ -143,6 +143,7 @@ artifacts/
 # macOS metadata files
 ._*
 .DS_Store
+
 _start
 _temp_*/**/*
 
