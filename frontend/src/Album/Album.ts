@@ -20,6 +20,7 @@ interface Album extends ModelBase {
   monitored: boolean;
   releaseDate: string;
   statistics: Statistics;
+  lastSearchTime?: string;
   isSaving?: boolean;
 }
 

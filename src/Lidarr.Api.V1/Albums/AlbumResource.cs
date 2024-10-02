@@ -44,6 +44,7 @@ namespace Lidarr.Api.V1.Albums
         public ArtistResource Artist { get; set; }
         public List<MediaCover> Images { get; set; }
         public List<Links> Links { get; set; }
+        public DateTime? LastSearchTime { get; set; }
         public AlbumStatisticsResource Statistics { get; set; }
         public AddAlbumOptions AddOptions { get; set; }
         public string RemoteCover { get; set; }
@@ -86,7 +87,8 @@ namespace Lidarr.Api.V1.Albums
                 SecondaryTypes = model.SecondaryTypes.Select(s => s.Name).ToList(),
                 Releases = model.AlbumReleases?.Value.ToResource() ?? new List<AlbumReleaseResource>(),
                 Media = selectedRelease?.Media.ToResource() ?? new List<MediumResource>(),
-                Artist = model.Artist?.Value.ToResource()
+                Artist = model.Artist?.Value.ToResource(),
+                LastSearchTime = model.LastSearchTime
             };
         }
 
