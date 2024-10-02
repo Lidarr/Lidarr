@@ -20,6 +20,7 @@ function CutoffUnmetRow(props) {
     foreignAlbumId,
     albumType,
     title,
+    lastSearchTime,
     disambiguation,
     isSelected,
     columns,
@@ -89,6 +90,15 @@ function CutoffUnmetRow(props) {
             );
           }
 
+          if (name === 'albums.lastSearchTime') {
+            return (
+              <RelativeDateCellConnector
+                key={name}
+                date={lastSearchTime}
+              />
+            );
+          }
+
           if (name === 'status') {
             return (
               <TableRowCell
@@ -132,6 +142,7 @@ CutoffUnmetRow.propTypes = {
   foreignAlbumId: PropTypes.string.isRequired,
   albumType: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  lastSearchTime: PropTypes.string,
   disambiguation: PropTypes.string,
   isSelected: PropTypes.bool,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
