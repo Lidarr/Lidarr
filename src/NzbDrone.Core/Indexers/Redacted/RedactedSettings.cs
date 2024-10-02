@@ -20,10 +20,14 @@ namespace NzbDrone.Core.Indexers.Redacted
         public RedactedSettings()
         {
             BaseUrl = "https://redacted.ch";
-            Categories = new[] { (int)RedactedCategory.Music };
+            Categories = new[]
+            {
+                (int)RedactedCategory.Music
+            };
             MinimumSeeders = IndexerDefaults.MINIMUM_SEEDERS;
         }
 
+        [FieldDefinition(0, Label = "IndexerSettingsApiUrl", Advanced = true, HelpTextWarning = "IndexerSettingsApiUrlHelpText")]
         public string BaseUrl { get; set; }
 
         [FieldDefinition(1, Label = "ApiKey", HelpText = "Generate this in 'Access Settings' in your Redacted profile", Privacy = PrivacyLevel.ApiKey)]
