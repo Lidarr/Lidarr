@@ -132,13 +132,18 @@ setup/Output/
 bin
 obj
 output/*
-_temp*
 
 # .NET Core
 project.lock.json
 project.fragment.lock.json
 artifacts/
 **/Properties/launchSettings.json
+
+#VS outout folders
+bin
+obj
+output/*
+
 
 # macOS metadata files
 ._*
