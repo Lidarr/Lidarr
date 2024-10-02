@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Indexers.FileList
 
     public class FileListSettings : ITorrentIndexerSettings
     {
-        private static readonly FileListSettingsValidator Validator = new FileListSettingsValidator();
+        private static readonly FileListSettingsValidator Validator = new ();
 
         public FileListSettings()
         {
@@ -33,14 +33,14 @@ namespace NzbDrone.Core.Indexers.FileList
             };
         }
 
-        [FieldDefinition(0, Label = "Username", Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(0, Label = "IndexerSettingsApiUrl", Advanced = true, HelpTextWarning = "IndexerSettingsApiUrlHelpText")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(1, Label = "Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(1, Label = "Passkey", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(2, Label = "Passkey", Privacy = PrivacyLevel.ApiKey)]
         public string Passkey { get; set; }
-
-        [FieldDefinition(3, Label = "API URL", Advanced = true, HelpText = "Do not change this unless you know what you're doing. Since your API key will be sent to that host.")]
-        public string BaseUrl { get; set; }
 
         [FieldDefinition(4, Label = "Categories", Type = FieldType.Select, SelectOptions = typeof(FileListCategories), HelpText = "Categories for use in search and feeds")]
         public IEnumerable<int> Categories { get; set; }
@@ -52,7 +52,7 @@ namespace NzbDrone.Core.Indexers.FileList
         public int MinimumSeeders { get; set; }
 
         [FieldDefinition(7)]
-        public SeedCriteriaSettings SeedCriteria { get; set; } = new SeedCriteriaSettings();
+        public SeedCriteriaSettings SeedCriteria { get; set; } = new ();
 
         [FieldDefinition(8, Type = FieldType.Checkbox, Label = "IndexerSettingsRejectBlocklistedTorrentHashes", HelpText = "IndexerSettingsRejectBlocklistedTorrentHashesHelpText", Advanced = true)]
         public bool RejectBlocklistedTorrentHashesWhileGrabbing { get; set; }

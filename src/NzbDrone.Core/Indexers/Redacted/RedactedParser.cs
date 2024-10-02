@@ -55,12 +55,13 @@ namespace NzbDrone.Core.Indexers.Redacted
                         var id = torrent.TorrentId;
                         var title = WebUtility.HtmlDecode(GetTitle(result, torrent));
                         var infoUrl = GetInfoUrl(result.GroupId, id);
+                        var isFreeLeech = torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsFreeload || torrent.IsPersonalFreeLeech;
 
                         torrentInfos.Add(new GazelleInfo
                         {
                             Guid = infoUrl,
                             InfoUrl = infoUrl,
-                            DownloadUrl = GetDownloadUrl(id, !torrent.IsFreeLeech && !torrent.IsNeutralLeech && !torrent.IsFreeload && !torrent.IsPersonalFreeLeech),
+                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken && !isFreeLeech),
                             Title = title,
                             Artist = WebUtility.HtmlDecode(result.Artist),
                             Album = WebUtility.HtmlDecode(result.GroupName),
