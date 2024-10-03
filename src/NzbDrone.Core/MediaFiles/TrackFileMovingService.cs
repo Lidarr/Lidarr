@@ -4,6 +4,7 @@ using System.IO;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnsureThat;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.MediaFiles.TrackImport;
@@ -11,6 +12,7 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Organizer;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.RootFolders;
 
 namespace NzbDrone.Core.MediaFiles
 {
@@ -31,6 +33,7 @@ namespace NzbDrone.Core.MediaFiles
         private readonly IDiskProvider _diskProvider;
         private readonly IRootFolderWatchingService _rootFolderWatchingService;
         private readonly IMediaFileAttributeService _mediaFileAttributeService;
+        private readonly IRootFolderService _rootFolderService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IConfigService _configService;
         private readonly Logger _logger;
@@ -43,6 +46,7 @@ namespace NzbDrone.Core.MediaFiles
                                       IDiskProvider diskProvider,
                                       IRootFolderWatchingService rootFolderWatchingService,
                                       IMediaFileAttributeService mediaFileAttributeService,
+                                      IRootFolderService rootFolderService,
                                       IEventAggregator eventAggregator,
                                       IConfigService configService,
                                       Logger logger)
@@ -55,6 +59,7 @@ namespace NzbDrone.Core.MediaFiles
             _diskProvider = diskProvider;
             _rootFolderWatchingService = rootFolderWatchingService;
             _mediaFileAttributeService = mediaFileAttributeService;
+            _rootFolderService = rootFolderService;
             _eventAggregator = eventAggregator;
             _configService = configService;
             _logger = logger;
@@ -148,11 +153,16 @@ namespace NzbDrone.Core.MediaFiles
         {
             var trackFolder = Path.GetDirectoryName(filePath);
             var artistFolder = artist.Path;
-            var rootFolder = new OsPath(artistFolder).Directory.FullPath;
+            var rootFolder = _rootFolderService.GetBestRootFolder(artistFolder);
 
-            if (!_diskProvider.FolderExists(rootFolder))
+            if (rootFolder == null || rootFolder.Path.IsNullOrWhiteSpace())
             {
-                throw new RootFolderNotFoundException(string.Format("Root folder '{0}' was not found.", rootFolder));
+                throw new RootFolderNotFoundException($"Root folder was not found, '{artistFolder}' is not a subdirectory of a defined root folder.");
+            }
+
+            if (!_diskProvider.FolderExists(rootFolder.Path))
+            {
+                throw new RootFolderNotFoundException($"Root folder '{rootFolder.Path}' was not found.");
             }
 
             var changed = false;
