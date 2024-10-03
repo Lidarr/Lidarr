@@ -14,6 +14,7 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Organizer;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.RootFolders;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
 
@@ -48,6 +49,11 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackFileMovingServiceTests
                 .Returns(@"C:\Test\Music\Artist\Album\File Name.mp3".AsOsAgnostic());
 
             var rootFolder = @"C:\Test\Music\".AsOsAgnostic();
+
+            Mocker.GetMock<IRootFolderService>()
+                .Setup(s => s.GetBestRootFolder(It.IsAny<string>()))
+                .Returns(new RootFolder { Path = rootFolder });
+
             Mocker.GetMock<IDiskProvider>()
                   .Setup(s => s.FolderExists(rootFolder))
                   .Returns(true);
