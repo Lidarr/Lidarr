@@ -8490,6 +8490,11 @@
             },
             "nullable": true
           },
+          "lastSearchTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "statistics": {
             "$ref": "#/components/schemas/AlbumStatisticsResource"
           },
