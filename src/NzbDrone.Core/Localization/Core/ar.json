@@ -96,7 +96,6 @@
     "ShowSizeOnDisk": "عرض الحجم على القرص",
     "ShowUnknownArtistItems": "إظهار عناصر الفيلم غير المعروفة",
     "SkipFreeSpaceCheck": "تخطي فحص المساحة الخالية",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "استخدم عندما يتعذر على {appName} اكتشاف مساحة خالية من مجلد جذر الفيلم",
     "SorryThatArtistCannotBeFound": "آسف ، لا يمكن العثور على هذا الفيلم.",
     "SSLCertPassword": "كلمة مرور شهادة SSL",
     "SslCertPasswordHelpText": "كلمة المرور لملف pfx",

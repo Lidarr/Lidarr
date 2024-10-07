@@ -230,7 +230,6 @@
     "ShowMonitoredHelpText": "Vis overvåget status under plakat",
     "Size": " Størrelse",
     "SkipFreeSpaceCheck": "Spring fri pladscheck over",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Brug, når {appName} ikke er i stand til at registrere ledig plads fra din filmrodmappe",
     "SorryThatAlbumCannotBeFound": "Beklager, den film kan ikke findes.",
     "SorryThatArtistCannotBeFound": "Beklager, den film kan ikke findes.",
     "Source": "Kilde",
@@ -770,5 +769,8 @@
     "BuiltIn": "Indbygget",
     "Script": "Manuskript",
     "DeleteSelectedCustomFormats": "Slet brugerdefineret format",
-    "IncludeCustomFormatWhenRenaming": "Inkluder brugerdefineret format, når du omdøber"
+    "IncludeCustomFormatWhenRenaming": "Inkluder brugerdefineret format, når du omdøber",
+    "AddMissing": "Tilføj manglende",
+    "AddAlbumWithTitle": "Tilføj {albumTitle}",
+    "AddArtistWithName": "Tilføj {artistName}"
 }

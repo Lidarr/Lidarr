@@ -682,7 +682,6 @@
     "ImportExtraFilesHelpText": "Імпортуйте відповідні додаткові файли (субтитри, nfo тощо) після імпортування файлу фільму",
     "RemotePathMappingCheckGenericPermissions": "Клієнт завантаження {0} розміщує завантаження в {1}, але Radarr не бачить цей каталог. Можливо, вам знадобиться налаштувати дозволи для папки.",
     "RenameTracksHelpText": "{appName} використовуватиме існуючу назву файлу, якщо перейменування вимкнено",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Використовуйте, коли {appName} не може виявити вільне місце в кореневій папці фільму",
     "ExtraFileExtensionsHelpTextsExamples": "Приклади: '.sub, .nfo' або 'sub,nfo'",
     "SuccessMyWorkIsDoneNoFilesToRename": "Успіх! Мою роботу виконано, немає файлів для перейменування.",
     "TagsSettingsSummary": "Перегляньте всі теги та те, як вони використовуються. Невикористані теги можна видалити",
@@ -900,5 +899,6 @@
     "Script": "Сценарій",
     "DeleteSelectedCustomFormatsMessageText": "Ви впевнені, що хочете видалити тег {0} ?",
     "DeleteSelectedCustomFormats": "Видалити спеціальний формат",
-    "IncludeCustomFormatWhenRenaming": "Включати спеціальний формат під час перейменування"
+    "IncludeCustomFormatWhenRenaming": "Включати спеціальний формат під час перейменування",
+    "IndexerSettingsApiUrl": "API URL"
 }

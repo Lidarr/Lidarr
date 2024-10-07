@@ -516,7 +516,6 @@
     "ShowMonitoredHelpText": "Mostrar status de monitoramento sob o pôster",
     "Size": " Tamanho",
     "SkipFreeSpaceCheck": "Ignorar verificação de espaço livre",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Use quando o {appName} não consegue detectar espaço livre em sua pasta raiz durante a importação do arquivo",
     "SkipRedownload": "Ignorar o Redownload",
     "SorryThatAlbumCannotBeFound": "Desculpe, esse filme não pode ser encontrado.",
     "SorryThatArtistCannotBeFound": "Desculpe, esse autor não pode ser encontrado.",
@@ -898,7 +897,7 @@
     "IndexerRssHealthCheckNoIndexers": "Nenhum indexador disponível com a sincronização RSS habilitada, {appName} não capturará novos lançamentos automaticamente",
     "IndexerSearchCheckNoAutomaticMessage": "Nenhum indexador disponível com a Pesquisa Automática habilitada, {appName} não fornecerá nenhum resultado de pesquisa automática",
     "IndexerSearchCheckNoAvailableIndexersMessage": "Todos os indexadores com capacidade de pesquisa estão temporariamente indisponíveis devido a erros recentes do indexador",
-    "IndexerSearchCheckNoInteractiveMessage": "Nenhum indexador disponível com a Pesquisa Interativa habilitada, {appName} não fornecerá resultados de pesquisa interativas",
+    "IndexerSearchCheckNoInteractiveMessage": "Nenhum indexador disponível com a Pesquisa Interativa habilitada, {appName} não fornecerá resultados para pesquisas interativas",
     "IndexerStatusCheckAllClientMessage": "Todos os indexadores estão indisponíveis devido a falhas",
     "IndexerStatusCheckSingleClientMessage": "Indexadores indisponíveis devido a falhas: {0}",
     "Loading": "carregando",
@@ -1111,7 +1110,7 @@
     "ImportList": "Importar Lista",
     "RegularExpressionsCanBeTested": "Expressões regulares podem ser testadas [aqui](http://regexstorm.net/tester).",
     "RegularExpressionsTutorialLink": "Mais detalhes sobre expressões regulares podem ser encontrados [aqui](https://www.regular-expressions.info/tutorial.html).",
-    "AddAutoTag": "Adicionar Tag Automática",
+    "AddAutoTag": "Adicionar tag automática",
     "AddAutoTagError": "Não foi possível adicionar uma nova etiqueta automática, tente novamente.",
     "AutoTaggingNegateHelpText": "se marcada, a regra de etiqueta automática não será aplicada se esta condição {implementationName} corresponder.",
     "AutoTaggingRequiredHelpText": "Esta condição {implementationName} deve corresponder para que a regra de etiqueta automática seja aplicada. Caso contrário, uma única correspondência de {implementationName} será suficiente.",
@@ -1314,5 +1313,9 @@
     "IncludeCustomFormatWhenRenaming": "Incluir formato personalizado ao renomear",
     "NoCustomFormatsFound": "Nenhum formato personalizado encontrado",
     "LogSizeLimit": "Limite de Tamanho do Registro",
-    "LogSizeLimitHelpText": "Tamanho máximo do arquivo de registro em MB antes do arquivamento. O padrão é 1 MB."
+    "LogSizeLimitHelpText": "Tamanho máximo do arquivo de registro em MB antes do arquivamento. O padrão é 1 MB.",
+    "SkipFreeSpaceCheckHelpText": "Usar quando {appName} não consegue detectar espaço livre em sua pasta raiz",
+    "IndexerSettingsApiUrl": "URL da API",
+    "IndexerSettingsApiUrlHelpText": "Não mude isso a menos que você saiba o que está fazendo. Já que sua chave API será enviada para esse host.",
+    "LastSearched": "Última Pesquisa"
 }

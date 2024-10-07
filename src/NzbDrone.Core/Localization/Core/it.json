@@ -414,7 +414,6 @@
     "ShowDateAdded": "Mostra data di aggiunta",
     "ShowMonitored": "Mostra i monitorati",
     "ShowMonitoredHelpText": "Mostra lo stato Monitorato sotto il poster",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Usa quando {appName} non è in grado di determinare lo spazio libero della cartella di root dei film",
     "SorryThatArtistCannotBeFound": "Mi spiace, impossibile trovare il film.",
     "Source": "Fonte",
     "SourcePath": "Percorso origine",
@@ -1030,5 +1029,6 @@
     "DownloadClientDelugeSettingsDirectory": "Cartella Download",
     "DownloadedImporting": "'Scaricato - Importando'",
     "DownloadedWaitingToImport": "'Scaricato - In attesa di Importazione'",
-    "MonitorFirstAlbum": "Primo Album"
+    "MonitorFirstAlbum": "Primo Album",
+    "IndexerSettingsApiUrl": "API URL"
 }

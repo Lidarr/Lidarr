@@ -145,7 +145,6 @@
     "ShowSizeOnDisk": "Hiển thị kích thước trên đĩa",
     "Size": " Kích thước",
     "SkipFreeSpaceCheck": "Bỏ qua kiểm tra dung lượng trống",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Sử dụng khi {appName} không thể phát hiện dung lượng trống từ thư mục gốc phim của bạn",
     "SorryThatAlbumCannotBeFound": "Xin lỗi, không thể tìm thấy bộ phim đó.",
     "SorryThatArtistCannotBeFound": "Xin lỗi, không thể tìm thấy bộ phim đó.",
     "Source": "Nguồn",
