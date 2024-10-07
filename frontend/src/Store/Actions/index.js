@@ -1,5 +1,6 @@
 import * as albums from './albumActions';
 import * as albumHistory from './albumHistoryActions';
+import * as albumSelection from './albumSelectionActions';
 import * as app from './appActions';
 import * as artist from './artistActions';
 import * as artistHistory from './artistHistoryActions';
@@ -29,14 +30,18 @@ import * as wanted from './wantedActions';
 
 export default [
   app,
+  albums,
+  albumHistory,
+  albumSelection,
+  artist,
+  artistHistory,
+  artistIndex,
   blocklist,
   captcha,
   calendar,
   commands,
   customFilters,
-  albums,
   trackFiles,
-  albumHistory,
   history,
   interactiveImportActions,
   oAuth,
@@ -47,9 +52,6 @@ export default [
   providerOptions,
   queue,
   releases,
-  artist,
-  artistHistory,
-  artistIndex,
   search,
   settings,
   system,

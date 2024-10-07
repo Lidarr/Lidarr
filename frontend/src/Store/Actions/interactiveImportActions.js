@@ -16,7 +16,6 @@ import createSetClientSideCollectionSortReducer from './Creators/Reducers/create
 
 export const section = 'interactiveImport';
 
-const albumsSection = `${section}.albums`;
 const trackFilesSection = `${section}.trackFiles`;
 let abortCurrentFetchRequest = null;
 let abortCurrentRequest = null;
@@ -58,15 +57,6 @@ export const defaultState = {
     }
   },
 
-  albums: {
-    isFetching: false,
-    isPopulated: false,
-    error: null,
-    sortKey: 'albumTitle',
-    sortDirection: sortDirections.ASCENDING,
-    items: []
-  },
-
   trackFiles: {
     isFetching: false,
     isPopulated: false,
@@ -97,10 +87,6 @@ export const ADD_RECENT_FOLDER = 'interactiveImport/addRecentFolder';
 export const REMOVE_RECENT_FOLDER = 'interactiveImport/removeRecentFolder';
 export const SET_INTERACTIVE_IMPORT_MODE = 'interactiveImport/setInteractiveImportMode';
 
-export const FETCH_INTERACTIVE_IMPORT_ALBUMS = 'interactiveImport/fetchInteractiveImportAlbums';
-export const SET_INTERACTIVE_IMPORT_ALBUMS_SORT = 'interactiveImport/clearInteractiveImportAlbumsSort';
-export const CLEAR_INTERACTIVE_IMPORT_ALBUMS = 'interactiveImport/clearInteractiveImportAlbums';
-
 export const FETCH_INTERACTIVE_IMPORT_TRACKFILES = 'interactiveImport/fetchInteractiveImportTrackFiles';
 export const CLEAR_INTERACTIVE_IMPORT_TRACKFILES = 'interactiveImport/clearInteractiveImportTrackFiles';
 
@@ -116,10 +102,6 @@ export const clearInteractiveImport = createAction(CLEAR_INTERACTIVE_IMPORT);
 export const addRecentFolder = createAction(ADD_RECENT_FOLDER);
 export const removeRecentFolder = createAction(REMOVE_RECENT_FOLDER);
 export const setInteractiveImportMode = createAction(SET_INTERACTIVE_IMPORT_MODE);
-
-export const fetchInteractiveImportAlbums = createThunk(FETCH_INTERACTIVE_IMPORT_ALBUMS);
-export const setInteractiveImportAlbumsSort = createAction(SET_INTERACTIVE_IMPORT_ALBUMS_SORT);
-export const clearInteractiveImportAlbums = createAction(CLEAR_INTERACTIVE_IMPORT_ALBUMS);
 
 export const fetchInteractiveImportTrackFiles = createThunk(FETCH_INTERACTIVE_IMPORT_TRACKFILES);
 export const clearInteractiveImportTrackFiles = createAction(CLEAR_INTERACTIVE_IMPORT_TRACKFILES);
@@ -253,8 +235,6 @@ export const actionHandlers = handleThunks({
     });
   },
 
-  [FETCH_INTERACTIVE_IMPORT_ALBUMS]: createFetchHandler(albumsSection, '/album'),
-
   [FETCH_INTERACTIVE_IMPORT_TRACKFILES]: createFetchHandler(trackFilesSection, '/trackFile')
 });
 
@@ -334,14 +314,6 @@ export const reducers = createHandleActions({
 
   [SET_INTERACTIVE_IMPORT_MODE]: function(state, { payload }) {
     return Object.assign({}, state, { importMode: payload.importMode });
-  },
-
-  [SET_INTERACTIVE_IMPORT_ALBUMS_SORT]: createSetClientSideCollectionSortReducer(albumsSection),
-
-  [CLEAR_INTERACTIVE_IMPORT_ALBUMS]: (state) => {
-    return updateSectionState(state, albumsSection, {
-      ...defaultState.albums
-    });
   },
 
   [CLEAR_INTERACTIVE_IMPORT_TRACKFILES]: (state) => {
