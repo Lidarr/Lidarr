@@ -283,7 +283,6 @@
     "ShowMonitoredHelpText": "Muestra el estado monitorizado bajo el póster",
     "Size": " Tamaño",
     "SkipFreeSpaceCheck": "Saltar comprobación de espacio libre",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Se usa cuando {appName} no puede detectar el espacio libre de tu carpeta raíz durante la importación de archivo",
     "SorryThatAlbumCannotBeFound": "Lo siento, no he encontrado esa película.",
     "SorryThatArtistCannotBeFound": "Lo siento, no he encontrado esa película.",
     "Source": "Fuente",
@@ -863,7 +862,7 @@
     "DownloadClientQbittorrentSettingsContentLayout": "Diseño del contenido",
     "InfoUrl": "Información de la URL",
     "InvalidUILanguage": "Su interfaz de usuario está configurada en un idioma no válido, corríjalo y guarde la configuración",
-    "HealthMessagesInfoBox": "Puede encontrar más información sobre la causa de estos mensajes de comprobación de salud haciendo clic en el enlace wiki (icono de libro) al final de la fila, o comprobando sus [logs]({link}). Si tienes dificultades para interpretar estos mensajes, puedes ponerte en contacto con nuestro servicio de asistencia en los enlaces que aparecen a continuación.",
+    "HealthMessagesInfoBox": "Puedes encontrar más información sobre la causa de estos mensajes de comprobación de salud haciendo clic en el enlace wiki (icono de libro) al final de la fila, o comprobando tus [registros]({link}). Si tienes dificultades para interpretar estos mensajes, puedes ponerte en contacto con nuestro soporte en los enlaces que aparecen a continuación.",
     "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Si usar el diseño de contenido configurado de qBittorrent, el diseño original del torrent o siempre crear una subcarpeta (qBittorrent 4.3.2+)",
     "ChownGroup": "chown grupo",
     "NoLimitForAnyDuration": "SIn límite para el tiempo de ejecución",
@@ -1314,5 +1313,9 @@
     "NoCustomFormatsFound": "Ningún formato personalizado encontrado",
     "DeleteSelectedCustomFormatsMessageText": "¿Estás seguro que quieres borrar los {count} formato(s) personalizado(s) seleccionado(s)?",
     "LogSizeLimit": "Límite de tamaño de registro",
-    "LogSizeLimitHelpText": "Máximo tamaño de archivo de registro en MB antes de archivarlo. Predeterminado es 1MB."
+    "LogSizeLimitHelpText": "Máximo tamaño de archivo de registro en MB antes de archivarlo. Predeterminado es 1MB.",
+    "SkipFreeSpaceCheckHelpText": "Se usa cuando {appName} no puede detectar el espacio libre de tu carpeta raíz",
+    "IndexerSettingsApiUrl": "URL de API",
+    "IndexerSettingsApiUrlHelpText": "No cambie esto a menos que sepa lo que está haciendo. Ya que tu clave API será enviada a ese host.",
+    "LastSearched": "Último buscado"
 }

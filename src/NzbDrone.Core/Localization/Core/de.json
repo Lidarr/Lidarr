@@ -301,7 +301,6 @@
     "ICalLink": "iCal Link",
     "IconForCutoffUnmet": "Symbol für Schwelle nicht erreicht",
     "IgnoredAddresses": "Ignorierte Adressen",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Aktiviere diese Option wenn es {appName} nicht möglich ist den freien Speicherplatz des Stammverzeichnis deines Künstlers zu erkennen",
     "SorryThatAlbumCannotBeFound": "Schade, dieser Film kann nicht gefunden werden.",
     "SorryThatArtistCannotBeFound": "Schade, dieser Film kann nicht gefunden werden.",
     "Source": "Quelle",
@@ -1185,5 +1184,6 @@
     "Script": "Skript",
     "DeleteSelectedCustomFormats": "Benutzerdefiniertes Format löschen",
     "IncludeCustomFormatWhenRenaming": "Eigenes Format beim umbennen einfügen",
-    "DeleteSelectedCustomFormatsMessageText": "Sind Sie sicher, dass Sie {count} ausgewählte Importliste(n) löschen möchten?"
+    "DeleteSelectedCustomFormatsMessageText": "Sind Sie sicher, dass Sie {count} ausgewählte Importliste(n) löschen möchten?",
+    "IndexerSettingsApiUrl": "API-URL"
 }

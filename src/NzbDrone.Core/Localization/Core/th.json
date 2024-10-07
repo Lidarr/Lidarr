@@ -120,7 +120,6 @@
     "ShowUnknownArtistItems": "แสดงรายการภาพยนตร์ที่ไม่รู้จัก",
     "Size": " ขนาด",
     "SkipFreeSpaceCheck": "ข้ามการตรวจสอบพื้นที่ว่าง",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "ใช้เมื่อ {appName} ไม่สามารถตรวจจับพื้นที่ว่างจากโฟลเดอร์รากภาพยนตร์ของคุณ",
     "SorryThatAlbumCannotBeFound": "ขออภัยไม่พบภาพยนตร์เรื่องนั้น",
     "Source": "ที่มา",
     "SourcePath": "เส้นทางแหล่งที่มา",

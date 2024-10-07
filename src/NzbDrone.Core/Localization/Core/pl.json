@@ -259,7 +259,6 @@
     "ShowMonitored": "Pokaż monitorowane",
     "ShowMonitoredHelpText": "Pokaż monitorowany status pod plakatem",
     "SkipFreeSpaceCheck": "Pomiń sprawdzanie wolnego miejsca",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Użyj, gdy {appName} nie może wykryć wolnego miejsca w folderze głównym filmu",
     "SorryThatAlbumCannotBeFound": "Przepraszamy, nie można znaleźć tego filmu.",
     "SorryThatArtistCannotBeFound": "Przepraszamy, nie można znaleźć tego filmu.",
     "SourcePath": "Ścieżka źródłowa",

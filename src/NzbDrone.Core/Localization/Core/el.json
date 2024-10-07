@@ -181,7 +181,6 @@
     "ShowMonitoredHelpText": "Εμφάνιση της παρακολούθησης κατάστασης στην αφίσα",
     "Size": " Μέγεθος",
     "SkipFreeSpaceCheck": "Παράλειψη ελέγχου ελεύθερου χώρου",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Χρησιμοποιήστε το όταν το {appName} δεν μπορεί να εντοπίσει ελεύθερο χώρο από τον ριζικό φάκελο του καλλιτέχνη",
     "SorryThatAlbumCannotBeFound": "Δυστυχώς, δεν είναι δυνατή η εύρεση αυτής της ταινίας.",
     "SorryThatArtistCannotBeFound": "Δυστυχώς, δεν είναι δυνατή η εύρεση αυτής της ταινίας.",
     "Source": "Πηγή",

@@ -374,7 +374,6 @@
     "ShownAboveEachColumnWhenWeekIsTheActiveView": "Visas ovanför varje kolumn när veckan är den aktiva vyn",
     "Size": " Storlek",
     "SkipFreeSpaceCheck": "Hoppa över ledig platskontroll",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Används när {appName} inte kan upptäcka ledigt utrymme från filmappens rotmapp",
     "SorryThatAlbumCannotBeFound": "Tyvärr kan den filmen inte hittas.",
     "SorryThatArtistCannotBeFound": "Tyvärr kan den filmen inte hittas.",
     "Source": "Källa",

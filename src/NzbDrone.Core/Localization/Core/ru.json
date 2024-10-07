@@ -128,7 +128,6 @@
     "ShowSizeOnDisk": "Показать размер на диске",
     "Size": " Размер",
     "SkipFreeSpaceCheck": "Пропустить проверку свободного места",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Используйте, когда {appName} не может обнаружить свободное место в вашей корневой папке во время импорта файлов",
     "SorryThatAlbumCannotBeFound": "Извините, этот фильм не найден.",
     "SorryThatArtistCannotBeFound": "Извините, этот фильм не найден.",
     "Source": "Исходный код",
@@ -1061,5 +1060,7 @@
     "Artist": "Исполнитель",
     "LogSizeLimit": "Ограничение размера журнала",
     "LogSizeLimitHelpText": "Максимальный размер файла журнала в МБ перед архивированием. По умолчанию - 1 МБ.",
-    "Artists": "Исполнитель"
+    "Artists": "Исполнитель",
+    "IndexerSettingsApiUrlHelpText": "Не меняйте это, если вы не знаете, что делаете. Поскольку ваш ключ API будет отправлен на этот хост.",
+    "IndexerSettingsApiUrl": "URL-адрес API"
 }

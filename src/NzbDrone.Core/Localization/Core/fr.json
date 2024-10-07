@@ -445,7 +445,6 @@
     "ShowMonitoredHelpText": "Afficher l'état de surveillance sous le poster",
     "Size": " Taille",
     "SkipFreeSpaceCheck": "Ignorer la vérification de l'espace libre",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "À utiliser lorsque {appName} ne parvient pas à détecter l'espace libre de votre dossier racine lors de l'importation de fichiers",
     "SorryThatAlbumCannotBeFound": "Désolé, ce film est introuvable.",
     "SorryThatArtistCannotBeFound": "Désolé, ce film est introuvable.",
     "Source": "Source",
@@ -714,7 +713,7 @@
     "IndexerRssHealthCheckNoIndexers": "Aucun indexeur disponible avec la synchronisation RSS activée, {appName} ne récupérera pas automatiquement les nouvelles versions",
     "IndexerSearchCheckNoAutomaticMessage": "Aucun indexeur disponible avec la recherche automatique activée, {appName} ne fournira aucun résultat de recherche automatique",
     "IndexerSearchCheckNoAvailableIndexersMessage": "Tous les indexeurs compatibles avec la recherche sont temporairement indisponibles en raison d'erreurs d'indexation récentes",
-    "IndexerSearchCheckNoInteractiveMessage": "Aucun indexeur n'est disponible avec la recherche interactive activée, {appName} ne fournira aucun résultat de recherche interactive",
+    "IndexerSearchCheckNoInteractiveMessage": "Aucun indexeur n'est disponible avec la recherche interactive activée, {appName} ne fournira aucun résultats de recherche interactive",
     "IndexerStatusCheckAllClientMessage": "Tous les indexeurs sont indisponibles en raison d'échecs",
     "IndexerStatusCheckSingleClientMessage": "Indexeurs indisponibles en raison d'échecs : {0}",
     "Loading": "Chargement",
@@ -1314,5 +1313,7 @@
     "ManageCustomFormats": "Gérer les formats personnalisés",
     "NoCustomFormatsFound": "Aucun format personnalisé n'a été trouvé",
     "LogSizeLimit": "Limite de taille du journal",
-    "LogSizeLimitHelpText": "Taille maximale du fichier journal en Mo avant archivage. La valeur par défaut est de 1 Mo."
+    "LogSizeLimitHelpText": "Taille maximale du fichier journal en Mo avant archivage. La valeur par défaut est de 1 Mo.",
+    "IndexerSettingsApiUrl": "URL DE L'API",
+    "IndexerSettingsApiUrlHelpText": "Ne le modifiez pas à moins de savoir ce que vous faites, car votre clé API sera envoyée à cet hôte."
 }

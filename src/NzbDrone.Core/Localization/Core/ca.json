@@ -66,7 +66,6 @@
     "ShowSizeOnDisk": "Mostra la mida al disc",
     "ShowUnknownArtistItems": "Mostra elements de pel·lícula desconeguda",
     "SkipFreeSpaceCheck": "Omet la comprovació d'espai lliure",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Utilitzeu-lo quan {appName} no pugui detectar espai lliure a la carpeta arrel de la pel·lícula",
     "SSLCertPassword": "Contrasenya de certificat SSL",
     "SslPortHelpTextWarning": "Cal reiniciar perquè tingui efecte",
     "StartTypingOrSelectAPathBelow": "Comenceu a escriure o seleccioneu un camí a continuació",

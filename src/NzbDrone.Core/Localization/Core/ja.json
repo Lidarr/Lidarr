@@ -231,7 +231,6 @@
     "ShowMonitoredHelpText": "ポスターの下に監視ステータスを表示する",
     "Size": " サイズ",
     "SkipFreeSpaceCheck": "フリースペースチェックをスキップする",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Radarrがムービールートフォルダから空き領域を検出できない場合に使用します",
     "SorryThatAlbumCannotBeFound": "申し訳ありませんが、その映画は見つかりません。",
     "SorryThatArtistCannotBeFound": "申し訳ありませんが、その映画は見つかりません。",
     "Source": "ソース",
