@@ -238,7 +238,6 @@
     "Search": "Haku",
     "Size": " Koko",
     "SkipFreeSpaceCheck": "Ohita vapaan tilan tarkastus",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Käytä kun juurikansion tallennusmedian vapaata tilaa ei tunnisteta tiedostotuonnin yhteydessä.",
     "WeekColumnHeader": "Viikkosarakkeen otsikko",
     "ChmodFolder": "chmod-kansio",
     "UnableToAddANewNotificationPleaseTryAgain": "Kytköksen lisäys epäonnistui. Yritä uudelleen.",
@@ -1254,5 +1253,7 @@
     "Script": "Skripti",
     "DeleteSelectedCustomFormats": "Poista mukautettu muoto",
     "DeleteSelectedCustomFormatsMessageText": "Haluatko varmasti poistaa valitut {count} tuontilistaa?",
-    "IncludeCustomFormatWhenRenaming": "Sisällytä mukautetut muodot uudelleennimetessä"
+    "IncludeCustomFormatWhenRenaming": "Sisällytä mukautetut muodot uudelleennimetessä",
+    "IndexerSettingsApiUrl": "Rajapinnan URL-osoite",
+    "IndexerSettingsApiUrlHelpText": "Älä muuta tätä, jos et tiedä mitä teet, koska rajapinta-avaimesi lähetetään kyseiselle palvelimelle."
 }

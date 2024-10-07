@@ -375,7 +375,6 @@
     "ShowMonitoredHelpText": "포스터 아래에 모니터링 상태 표시",
     "Size": " 크기",
     "SkipFreeSpaceCheck": "여유 공간 확인 건너 뛰기",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Radarr가 영화 루트 폴더에서 여유 공간을 감지 할 수 없을 때 사용",
     "SorryThatAlbumCannotBeFound": "죄송합니다. 해당 영화를 찾을 수 없습니다.",
     "SorryThatArtistCannotBeFound": "죄송합니다. 해당 영화를 찾을 수 없습니다.",
     "Source": "출처",

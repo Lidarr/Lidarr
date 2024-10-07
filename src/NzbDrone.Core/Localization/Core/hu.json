@@ -270,7 +270,6 @@
     "DeleteQualityProfile": "Törölje a minőségi profilt",
     "DeleteQualityProfileMessageText": "Biztosan törli a(z) „{name}” minőségi profilt?",
     "RemotePathHelpText": "Gyökérútvonal a könyvtárhoz, amelyhez a letöltőkliens hozzáfér",
-    "SkipFreeSpaceCheckWhenImportingHelpText": "Akkor használja, ha a(z) {appName} nem tud szabad helyet észlelni a gyökérmappában a fájlimportálás során",
     "UpdateMechanismHelpText": "Használja a {appName} beépített frissítőjét vagy szkriptjét",
     "SupportsSearchvalueWillBeUsedWhenAutomaticSearchesArePerformedViaTheUIOrByLidarr": "Akkor használatos, ha az automatikus keresést a felhasználói felületen vagy a {appName} segítségével hajtja végre",
     "TagsHelpText": "A kiadási profilok azokra az előadókra vonatkoznak, akik legalább egy megfelelő címkével rendelkeznek. Hagyja üresen, ha minden előadóra vonatkozik",
