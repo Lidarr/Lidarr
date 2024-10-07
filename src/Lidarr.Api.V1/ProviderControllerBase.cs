@@ -86,9 +86,16 @@ namespace Lidarr.Api.V1
         [RestPutById]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public ActionResult<TProviderResource> UpdateProvider([FromBody] TProviderResource providerResource, [FromQuery] bool forceSave = false)
+        public ActionResult<TProviderResource> UpdateProvider([FromRoute] int id, [FromBody] TProviderResource providerResource, [FromQuery] bool forceSave = false)
         {
-            var existingDefinition = _providerFactory.Find(providerResource.Id);
+            // TODO: Remove fallback to Id from body in next API version bump
+            var existingDefinition = _providerFactory.Find(id) ?? _providerFactory.Find(providerResource.Id);
+
+            if (existingDefinition == null)
+            {
+                return NotFound();
+            }
+
             var providerDefinition = GetDefinition(providerResource, existingDefinition, true, !forceSave, false);
 
             // Comparing via JSON string to eliminate the need for every provider implementation to implement equality checks.
@@ -107,7 +114,7 @@ namespace Lidarr.Api.V1
                 _providerFactory.Update(providerDefinition);
             }
 
-            return Accepted(providerResource.Id);
+            return Accepted(existingDefinition.Id);
         }
 
         [HttpPut("bulk")]
