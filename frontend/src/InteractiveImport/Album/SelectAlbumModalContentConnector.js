@@ -3,18 +3,14 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import {
-  clearInteractiveImportAlbums,
-  fetchInteractiveImportAlbums,
-  saveInteractiveImportItem,
-  setInteractiveImportAlbumsSort,
-  updateInteractiveImportItem } from 'Store/Actions/interactiveImportActions';
+import { clearAlbums, fetchAlbums, setAlbumsSort } from 'Store/Actions/albumSelectionActions';
+import { saveInteractiveImportItem, updateInteractiveImportItem } from 'Store/Actions/interactiveImportActions';
 import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
 import SelectAlbumModalContent from './SelectAlbumModalContent';
 
 function createMapStateToProps() {
   return createSelector(
-    createClientSideCollectionSelector('interactiveImport.albums'),
+    createClientSideCollectionSelector('albumSelection'),
     (albums) => {
       return albums;
     }
@@ -22,9 +18,9 @@ function createMapStateToProps() {
 }
 
 const mapDispatchToProps = {
-  fetchInteractiveImportAlbums,
-  setInteractiveImportAlbumsSort,
-  clearInteractiveImportAlbums,
+  fetchAlbums,
+  setAlbumsSort,
+  clearAlbums,
   updateInteractiveImportItem,
   saveInteractiveImportItem
 };
@@ -39,20 +35,20 @@ class SelectAlbumModalContentConnector extends Component {
       artistId
     } = this.props;
 
-    this.props.fetchInteractiveImportAlbums({ artistId });
+    this.props.fetchAlbums({ artistId });
   }
 
   componentWillUnmount() {
     // This clears the albums for the queue and hides the queue
     // We'll need another place to store albums for manual import
-    this.props.clearInteractiveImportAlbums();
+    this.props.clearAlbums();
   }
 
   //
   // Listeners
 
   onSortPress = (sortKey, sortDirection) => {
-    this.props.setInteractiveImportAlbumsSort({ sortKey, sortDirection });
+    this.props.setAlbumsSort({ sortKey, sortDirection });
   };
 
   onAlbumSelect = (albumId) => {
@@ -82,6 +78,7 @@ class SelectAlbumModalContentConnector extends Component {
     return (
       <SelectAlbumModalContent
         {...this.props}
+        onSortPress={this.onSortPress}
         onAlbumSelect={this.onAlbumSelect}
       />
     );
@@ -92,9 +89,9 @@ SelectAlbumModalContentConnector.propTypes = {
   ids: PropTypes.arrayOf(PropTypes.number).isRequired,
   artistId: PropTypes.number.isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
-  fetchInteractiveImportAlbums: PropTypes.func.isRequired,
-  setInteractiveImportAlbumsSort: PropTypes.func.isRequired,
-  clearInteractiveImportAlbums: PropTypes.func.isRequired,
+  fetchAlbums: PropTypes.func.isRequired,
+  setAlbumsSort: PropTypes.func.isRequired,
+  clearAlbums: PropTypes.func.isRequired,
   saveInteractiveImportItem: PropTypes.func.isRequired,
   updateInteractiveImportItem: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired

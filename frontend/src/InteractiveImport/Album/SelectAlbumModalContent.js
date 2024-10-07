@@ -11,6 +11,7 @@ import Scroller from 'Components/Scroller/Scroller';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import { scrollDirections } from 'Helpers/Props';
+import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import translate from 'Utilities/String/translate';
 import SelectAlbumRow from './SelectAlbumRow';
 import styles from './SelectAlbumModalContent.css';
@@ -19,6 +20,7 @@ const columns = [
   {
     name: 'title',
     label: () => translate('AlbumTitle'),
+    isSortable: true,
     isVisible: true
   },
   {
@@ -29,6 +31,7 @@ const columns = [
   {
     name: 'releaseDate',
     label: () => translate('ReleaseDate'),
+    isSortable: true,
     isVisible: true
   },
   {
@@ -63,15 +66,21 @@ class SelectAlbumModalContent extends Component {
 
   render() {
     const {
-      items,
-      onAlbumSelect,
-      onModalClose,
       isFetching,
-      ...otherProps
+      isPopulated,
+      error,
+      items,
+      sortKey,
+      sortDirection,
+      onSortPress,
+      onAlbumSelect,
+      onModalClose
     } = this.props;
 
     const filter = this.state.filter;
     const filterLower = filter.toLowerCase();
+
+    const errorMessage = getErrorMessage(error, 'Unable to load albums');
 
     return (
       <ModalContent onModalClose={onModalClose}>
@@ -83,27 +92,29 @@ class SelectAlbumModalContent extends Component {
           className={styles.modalBody}
           scrollDirection={scrollDirections.NONE}
         >
-          {
-            isFetching &&
-              <LoadingIndicator />
-          }
-          <TextInput
-            className={styles.filterInput}
-            placeholder={translate('FilterAlbumPlaceholder')}
-            name="filter"
-            value={filter}
-            autoFocus={true}
-            onChange={this.onFilterChange}
-          />
-
           <Scroller
             className={styles.scroller}
             autoFocus={false}
           >
-            {
+            {isFetching ? <LoadingIndicator /> : null}
+
+            {error ? <div>{errorMessage}</div> : null}
+
+            <TextInput
+              className={styles.filterInput}
+              placeholder={translate('FilterAlbumPlaceholder')}
+              name="filter"
+              value={filter}
+              autoFocus={true}
+              onChange={this.onFilterChange}
+            />
+
+            {isPopulated && !!items.length ? (
               <Table
                 columns={columns}
-                {...otherProps}
+                sortKey={sortKey}
+                sortDirection={sortDirection}
+                onSortPress={onSortPress}
               >
                 <TableBody>
                   {
@@ -122,7 +133,7 @@ class SelectAlbumModalContent extends Component {
                   }
                 </TableBody>
               </Table>
-            }
+            ) : null}
           </Scroller>
         </ModalBody>
 
@@ -137,8 +148,13 @@ class SelectAlbumModalContent extends Component {
 }
 
 SelectAlbumModalContent.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.object).isRequired,
   isFetching: PropTypes.bool.isRequired,
+  isPopulated: PropTypes.bool.isRequired,
+  error: PropTypes.object,
+  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  sortKey: PropTypes.string,
+  sortDirection: PropTypes.string,
+  onSortPress: PropTypes.func.isRequired,
   onAlbumSelect: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired
 };
