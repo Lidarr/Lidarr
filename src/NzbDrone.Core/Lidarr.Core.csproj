@@ -5,11 +5,11 @@
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.151" />
     <PackageReference Include="Diacritical.Net" Version="1.0.4" />
-    <PackageReference Include="Polly" Version="8.4.1" />
-    <PackageReference Include="System.Text.Json" Version="6.0.9" />
+    <PackageReference Include="Polly" Version="8.4.2" />
+    <PackageReference Include="System.Text.Json" Version="6.0.10" />
     <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.32" />
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.35" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
     <PackageReference Include="Servarr.FluentMigrator.Runner" Version="3.3.2.9" />
@@ -23,7 +23,7 @@
     <PackageReference Include="NLog.Targets.Syslog" Version="7.0.0" />
     <PackageReference Include="System.IO.Abstractions" Version="17.0.24" />
     <PackageReference Include="TagLibSharp-Lidarr" Version="2.2.0.27" />
-    <PackageReference Include="Npgsql" Version="7.0.7" />
+    <PackageReference Include="Npgsql" Version="7.0.8" />
     <PackageReference Include="SpotifyAPI.Web" Version="5.1.1" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
     <PackageReference Include="Equ" Version="2.3.0" />
