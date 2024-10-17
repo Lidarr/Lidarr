@@ -179,9 +179,8 @@ namespace Lidarr.Api.V1.Artist
                 ArtistId = artist.Id,
                 SourcePath = sourcePath,
                 DestinationPath = destinationPath,
-                MoveFiles = moveFiles,
-                Trigger = CommandTrigger.Manual
-            });
+                MoveFiles = moveFiles
+            }, trigger: CommandTrigger.Manual);
 
             var model = artistResource.ToModel(artist);
 
