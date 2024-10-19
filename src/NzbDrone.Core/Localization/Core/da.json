@@ -772,5 +772,6 @@
     "IncludeCustomFormatWhenRenaming": "Inkluder brugerdefineret format, når du omdøber",
     "AddMissing": "Tilføj manglende",
     "AddAlbumWithTitle": "Tilføj {albumTitle}",
-    "AddArtistWithName": "Tilføj {artistName}"
+    "AddArtistWithName": "Tilføj {artistName}",
+    "AddedArtistSettings": "Indstillinger for tilføjede forfattere"
 }
