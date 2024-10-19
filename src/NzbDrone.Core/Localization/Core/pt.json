@@ -875,7 +875,7 @@
     "ReleaseProfile": "Perfis de versão",
     "Small": "Pequeno",
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirmar nova senha",
-    "AutoTaggingRequiredHelpText": "Esta condição de {implementationName} deve corresponder para que a regra de marcação automática seja aplicada. Caso contrário, uma única correspondência de {implementationName} é suficiente.",
+    "AutoTaggingRequiredHelpText": "Esta condição {implementationName} tem de corresponder para que a regra de marcação automática seja aplicada. Caso contrário, uma única correspondência {implementationName} é suficiente.",
     "AddImportListExclusionAlbumHelpText": "Impedir série de ser adicionada ao {appName} através de listas",
     "ExtraFileExtensionsHelpText": "Lista separada por vírgulas de ficheiros adicionais a importar (.nfo será importado como .nfo-orig)",
     "ExtraFileExtensionsHelpTextsExamples": "Exemplos: \".sub, .nfo\" ou \"sub,nfo\"",
@@ -1009,5 +1009,6 @@
     "BuiltIn": "Incorporado",
     "DeleteSelectedCustomFormats": "Eliminar formato personalizado",
     "DeleteSelectedCustomFormatsMessageText": "Tem a certeza de que pretende eliminar a(s) lista(s) de {count} importação selecionada(s)?",
-    "IncludeCustomFormatWhenRenaming": "Incluir formato personalizado ao renomear"
+    "IncludeCustomFormatWhenRenaming": "Incluir formato personalizado ao renomear",
+    "CountCustomFormatsSelected": "{count} formatos selecionados"
 }
