@@ -18,7 +18,7 @@
     "Calendar": "Kalendář",
     "CalendarWeekColumnHeaderHelpText": "Zobrazuje se nad každým sloupcem, když je aktivní zobrazení týden",
     "Cancel": "Zrušit",
-    "CancelMessageText": "Opravdu chcete zrušit tento nevyřízený úkol?",
+    "CancelPendingTask": "Opravdu chcete zrušit tento nevyřízený úkol?",
     "CertificateValidation": "Ověření certifikátu",
     "CertificateValidationHelpText": "Změňte přísnost ověřování certifikátů HTTPS. Neměňte, pokud nerozumíte rizikům.",
     "ChangeFileDate": "Změnit datum souboru",

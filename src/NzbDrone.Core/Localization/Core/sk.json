@@ -81,7 +81,7 @@
     "BeforeUpdate": "Pred aktualizáciou",
     "Blocklist": "Blocklist",
     "BlocklistRelease": "Blocklistnúť vydanie",
-    "CancelMessageText": "Naozaj chcete zrušiť túto prebiehajúcu úlohu?",
+    "CancelPendingTask": "Naozaj chcete zrušiť túto prebiehajúcu úlohu?",
     "CertificateValidation": "Overenie certifikátu",
     "ChangeFileDate": "Zmeniť dátum súboru",
     "ChangeHasNotBeenSavedYet": "Zmena ešte nebola uložená",

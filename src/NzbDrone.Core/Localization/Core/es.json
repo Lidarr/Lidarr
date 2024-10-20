@@ -16,7 +16,7 @@
     "Branch": "Rama",
     "BypassProxyForLocalAddresses": "Omitir Proxy para Direcciones Locales",
     "CalendarWeekColumnHeaderHelpText": "Mostrado sobre cada columna cuando la vista activa es semana",
-    "CancelMessageText": "Seguro que quieres cancelar esta tarea pendiente?",
+    "CancelPendingTask": "Seguro que quieres cancelar esta tarea pendiente?",
     "CertificateValidation": "Validacion de certificado",
     "ChmodFolderHelpTextWarning": "Esto solo funciona si el usuario que ejecuta {appName} es el propietario del archivo. Es mejor asegurarse de que el cliente de descarga establezca los permisos correctamente.",
     "ChownGroupHelpTextWarning": "Esto solo funciona si el usuario que ejecuta {appName} es el propietario del archivo. Es mejor asegurarse de que el cliente de descarga use el mismo grupo que {appName}.",

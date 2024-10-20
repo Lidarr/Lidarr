@@ -45,7 +45,7 @@
     "BlocklistRelease": "Version sur liste noire",
     "Calendar": "Calendrier",
     "CalendarWeekColumnHeaderHelpText": "Affiché au dessus de chaque colonne quand \"Semaine\" est l'affichage actif",
-    "CancelMessageText": "Êtes-vous sur de vouloir annuler cette tâche en attente ?",
+    "CancelPendingTask": "Êtes-vous sur de vouloir annuler cette tâche en attente ?",
     "ChangeFileDate": "Changer la date du fichier",
     "ChangeHasNotBeenSavedYet": "Les changements n'ont pas encore été sauvegardés",
     "ChmodFolder": "chmod Dossier",

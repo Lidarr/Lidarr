@@ -255,7 +255,7 @@
     "Branch": "Afdeling",
     "BypassProxyForLocalAddresses": "Bypass-proxy til lokale adresser",
     "Cancel": "Afbryd",
-    "CancelMessageText": "Er du sikker på, at du vil annullere denne afventende opgave?",
+    "CancelPendingTask": "Er du sikker på, at du vil annullere denne afventende opgave?",
     "CertificateValidation": "Validering af certifikat",
     "CertificateValidationHelpText": "Skift, hvor streng HTTPS-certificering er",
     "ChangeFileDate": "Skift fildato",

@@ -236,7 +236,7 @@
     "Calendar": "Calendari",
     "CalendarWeekColumnHeaderHelpText": "Es mostra a sobre de cada columna quan la setmana és la visualització activa",
     "Cancel": "Cancel·la",
-    "CancelMessageText": "Esteu segur que voleu cancel·lar aquesta tasca pendent?",
+    "CancelPendingTask": "Esteu segur que voleu cancel·lar aquesta tasca pendent?",
     "CertificateValidation": "Validació del certificat",
     "ChmodFolderHelpText": "Octal, aplicat durant la importació/reanomenat de carpetes i fitxers multimèdia (sense bits d'execució)",
     "ChmodFolderHelpTextWarning": "Això només funciona si l'usuari que executa {appName} és el propietari del fitxer. És millor assegurar-se que el client de descàrrega estableixi correctament els permisos.",

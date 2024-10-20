@@ -432,7 +432,7 @@
     "AnalyticsEnabledHelpTextWarning": "يتطلب إعادة التشغيل ليصبح ساري المفعول",
     "Automatic": "تلقائي",
     "Cancel": "إلغاء",
-    "CancelMessageText": "هل أنت متأكد أنك تريد إلغاء هذه المهمة المعلقة؟",
+    "CancelPendingTask": "هل أنت متأكد أنك تريد إلغاء هذه المهمة المعلقة؟",
     "CertificateValidation": "التحقق من صحة الشهادة",
     "ChangeFileDate": "تغيير تاريخ الملف",
     "DelayingDownloadUntil": "تأجيل التنزيل حتى {0} الساعة {1}",

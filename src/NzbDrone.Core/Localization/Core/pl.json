@@ -271,7 +271,7 @@
     "ArtistAlbumClickToChangeTrack": "Kliknij, aby zmienić film",
     "CalendarWeekColumnHeaderHelpText": "Wyświetlany nad każdą kolumną, gdy tydzień jest aktywnym widokiem",
     "Cancel": "Anuluj",
-    "CancelMessageText": "Czy na pewno chcesz anulować to oczekujące zadanie?",
+    "CancelPendingTask": "Czy na pewno chcesz anulować to oczekujące zadanie?",
     "CertificateValidation": "Walidacja certyfikatu",
     "CertificateValidationHelpText": "Zmień ścisłą walidację certyfikatu HTTPS",
     "ChangeFileDate": "Zmień datę pliku",

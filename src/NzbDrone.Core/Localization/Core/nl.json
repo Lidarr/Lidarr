@@ -18,7 +18,7 @@
     "Calendar": "Kalender",
     "CalendarWeekColumnHeaderHelpText": "Wordt getoond boven elke kolom wanneer de actieve weergave Week is",
     "Cancel": "Annuleer",
-    "CancelMessageText": "Bent u zeker dat u deze taak in afwachting wilt annuleren?",
+    "CancelPendingTask": "Bent u zeker dat u deze taak in afwachting wilt annuleren?",
     "CertificateValidation": "Certificaat Validatie",
     "CertificateValidationHelpText": "Wijzig hoe strict HTTPS certificaat validatie is. Wijzig dit niet behalve als je de risico's begrijpt.",
     "ChangeFileDate": "Wijzig Bestandsdatum",

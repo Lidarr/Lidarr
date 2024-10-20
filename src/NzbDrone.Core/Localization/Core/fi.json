@@ -88,7 +88,7 @@
     "Calendar": "Kalenteri",
     "CompletedDownloadHandling": "Valmistuneiden latausten käsittely",
     "CloneIndexer": "Monista tietolähde",
-    "CancelMessageText": "Haluatko varmasti perua tämän odottavan tehtävän?",
+    "CancelPendingTask": "Haluatko varmasti perua tämän odottavan tehtävän?",
     "CertificateValidation": "Varmenteen vahvistus",
     "CertificateValidationHelpText": "Määritä HTTPS-varmennevahvistuksen tiukkuus. Älä muta, jos et ymmärrä riskejä.",
     "ClientPriority": "Lataustyökalun painotus",

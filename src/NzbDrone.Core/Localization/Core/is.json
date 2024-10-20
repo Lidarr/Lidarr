@@ -23,7 +23,7 @@
     "Calendar": "Dagatal",
     "CalendarWeekColumnHeaderHelpText": "Sýnt fyrir ofan hvern dálk þegar vikan er virka skjámyndin",
     "Cancel": "Hætta við",
-    "CancelMessageText": "Ertu viss um að þú viljir hætta við þetta verkefni í bið?",
+    "CancelPendingTask": "Ertu viss um að þú viljir hætta við þetta verkefni í bið?",
     "CertificateValidation": "Staðfesting skírteina",
     "CertificateValidationHelpText": "Breyttu hversu ströng HTTPS vottun er",
     "ChangeFileDate": "Breyttu dagsetningu skráar",

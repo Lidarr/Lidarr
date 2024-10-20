@@ -84,7 +84,7 @@
     "Calendar": "Takvim",
     "CalendarWeekColumnHeaderHelpText": "Aktif görünüm hafta olduğunda her bir sütunun üzerinde gösterilir",
     "Cancel": "Vazgeç",
-    "CancelMessageText": "Bu bekleyen görevi iptal etmek istediğinizden emin misiniz?",
+    "CancelPendingTask": "Bu bekleyen görevi iptal etmek istediğinizden emin misiniz?",
     "CertificateValidation": "Sertifika Doğrulama",
     "CertificateValidationHelpText": "HTTPS sertifika doğrulamasının sıkılığını değiştirin. Riskleri anlamadığınız sürece değişmeyin.",
     "ChangeFileDate": "Dosya Tarihini Değiştir",

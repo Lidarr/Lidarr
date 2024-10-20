@@ -216,7 +216,7 @@
     "BlocklistRelease": "Blokklista Release",
     "Calendar": "Naptár",
     "CalendarWeekColumnHeaderHelpText": "Minden oszlop felett jelenjen meg, hogy melyik hét az aktuális",
-    "CancelMessageText": "Biztosan törlöd ezt a függőben lévő feladatot?",
+    "CancelPendingTask": "Biztosan törlöd ezt a függőben lévő feladatot?",
     "CatalogNumber": "Katalógus szám",
     "ChangeFileDate": "Fájl Dátumának Módosítása",
     "ChmodFolder": "chmod Mappa",
