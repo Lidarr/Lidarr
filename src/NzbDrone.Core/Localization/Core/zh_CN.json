@@ -225,7 +225,7 @@
     "BlocklistRelease": "发布资源黑名单",
     "Calendar": "日历",
     "ClickToChangeQuality": "点击更改质量",
-    "CancelMessageText": "您确定要取消这个挂起的任务吗？",
+    "CancelPendingTask": "您确定要取消这个挂起的任务吗？",
     "ChangeFileDate": "修改文件日期",
     "ChmodFolder": "修改文件夹权限",
     "ForMoreInformationOnTheIndividualDownloadClientsClickOnTheInfoButtons": "若需要查看有关下载客户端的详细信息，请点击“更多信息”按钮。",

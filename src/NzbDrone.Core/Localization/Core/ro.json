@@ -188,7 +188,7 @@
     "Calendar": "Calendar",
     "CalendarWeekColumnHeaderHelpText": "Afișat deasupra fiecărei coloane când săptămâna este vizualizarea activă",
     "Cancel": "Anulează",
-    "CancelMessageText": "Sigur doriți să anulați această sarcină în așteptare?",
+    "CancelPendingTask": "Sigur doriți să anulați această sarcină în așteptare?",
     "CertificateValidation": "Validarea certificatului",
     "ChangeFileDate": "Schimbați data fișierului",
     "ChangeHasNotBeenSavedYet": "Modificarea nu a fost încă salvată",

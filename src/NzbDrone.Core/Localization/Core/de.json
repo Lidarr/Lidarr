@@ -111,7 +111,7 @@
     "ArtistAlbumClickToChangeTrack": "Klicken um den Film zu bearbeiten",
     "ArtistNameHelpText": "Der Name des auszuschließenden Autors/Buches (kann etwas Sinnvolles sein)",
     "CalendarWeekColumnHeaderHelpText": "Wird in der Wochenansicht über jeder Spalte angezeigt",
-    "CancelMessageText": "Diese laufende Aufgabe wirklich abbrechen?",
+    "CancelPendingTask": "Diese laufende Aufgabe wirklich abbrechen?",
     "ChownGroupHelpText": "Gruppenname oder gid. Verwenden Sie gid für entfernte Dateisysteme.",
     "ChownGroupHelpTextWarning": "Dies funktioniert nur, wenn der Benutzer, der {appName} ausführt, der Eigentümer der Datei ist. Es ist besser, sicherzustellen, dass der Download-Client die gleiche Gruppe wie {appName} verwendet.",
     "CreateEmptyArtistFoldersHelpText": "Leere Filmordner für fehlende Filme beim Scan erstellen",

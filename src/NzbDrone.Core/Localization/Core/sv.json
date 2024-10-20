@@ -77,7 +77,7 @@
     "BypassProxyForLocalAddresses": "Bypass Proxy för lokala adresser",
     "Calendar": "Kalender",
     "Cancel": "Avbryt",
-    "CancelMessageText": "Är du säker på att du vill avbryta den väntande uppgiften?",
+    "CancelPendingTask": "Är du säker på att du vill avbryta den väntande uppgiften?",
     "CatalogNumber": "Katalog Nummer",
     "CertificateValidationHelpText": "Ändra hur strikt valideringen av HTTPS certifikat är",
     "ChangeFileDate": "Ändra fildatum",

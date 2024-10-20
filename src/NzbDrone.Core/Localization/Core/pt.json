@@ -226,7 +226,7 @@
     "BypassProxyForLocalAddresses": "Ignorar proxy para endereços locais",
     "Calendar": "Calendário",
     "CalendarWeekColumnHeaderHelpText": "Mostrar acima de cada coluna quando a semana é a vista ativa",
-    "CancelMessageText": "Tem a certeza que quer cancelar esta tarefa pendente?",
+    "CancelPendingTask": "Tem a certeza que quer cancelar esta tarefa pendente?",
     "CertificateValidation": "Validação de certificado",
     "ChangeHasNotBeenSavedYet": "A mudança ainda não foi guardada",
     "ChmodFolder": "Pasta chmod",

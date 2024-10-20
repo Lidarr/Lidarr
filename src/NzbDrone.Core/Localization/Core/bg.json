@@ -158,7 +158,7 @@
     "Calendar": "Календар",
     "CalendarWeekColumnHeaderHelpText": "Показва се над всяка колона, когато седмицата е активният изглед",
     "Cancel": "Отказ",
-    "CancelMessageText": "Наистина ли искате да отмените тази чакаща задача?",
+    "CancelPendingTask": "Наистина ли искате да отмените тази чакаща задача?",
     "CertificateValidation": "Валидиране на сертификат",
     "CertificateValidationHelpText": "Променете колко строго е валидирането на HTTPS сертифициране",
     "ChangeFileDate": "Промяна на датата на файла",

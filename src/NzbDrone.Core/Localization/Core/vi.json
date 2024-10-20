@@ -261,7 +261,7 @@
     "Calendar": "Lịch",
     "CalendarWeekColumnHeaderHelpText": "Được hiển thị phía trên mỗi cột khi tuần là chế độ xem đang hoạt động",
     "Cancel": "Huỷ bỏ",
-    "CancelMessageText": "Bạn có chắc chắn muốn hủy nhiệm vụ đang chờ xử lý này không?",
+    "CancelPendingTask": "Bạn có chắc chắn muốn hủy nhiệm vụ đang chờ xử lý này không?",
     "CertificateValidation": "Xác thực chứng chỉ",
     "ChangeFileDate": "Thay đổi ngày tệp",
     "ChangeHasNotBeenSavedYet": "Thay đổi vẫn chưa được lưu",

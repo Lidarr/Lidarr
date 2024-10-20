@@ -238,7 +238,7 @@
     "Calendar": "ปฏิทิน",
     "CalendarWeekColumnHeaderHelpText": "แสดงอยู่เหนือแต่ละคอลัมน์เมื่อสัปดาห์เป็นมุมมองที่ใช้งานอยู่",
     "Cancel": "ยกเลิก",
-    "CancelMessageText": "แน่ใจไหมว่าต้องการยกเลิกงานที่รอดำเนินการนี้",
+    "CancelPendingTask": "แน่ใจไหมว่าต้องการยกเลิกงานที่รอดำเนินการนี้",
     "CertificateValidation": "การตรวจสอบใบรับรอง",
     "ChangeFileDate": "เปลี่ยนวันที่ของไฟล์",
     "ChangeHasNotBeenSavedYet": "ยังไม่ได้บันทึกการเปลี่ยนแปลง",

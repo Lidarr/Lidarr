@@ -18,7 +18,7 @@
     "Calendar": "पंचांग",
     "CalendarWeekColumnHeaderHelpText": "प्रत्येक स्तंभ के ऊपर दिखाया गया जब सप्ताह सक्रिय दृश्य होता है",
     "Cancel": "रद्द करना",
-    "CancelMessageText": "क्या आप वाकई इस लंबित कार्य को रद्द करना चाहते हैं?",
+    "CancelPendingTask": "क्या आप वाकई इस लंबित कार्य को रद्द करना चाहते हैं?",
     "CertificateValidationHelpText": "बदलें कि HTTPS प्रमाणन सत्यापन कितना सख्त है",
     "ChangeFileDate": "फ़ाइल दिनांक बदलें",
     "ChangeHasNotBeenSavedYet": "परिवर्तन अभी तक सहेजा नहीं गया है",

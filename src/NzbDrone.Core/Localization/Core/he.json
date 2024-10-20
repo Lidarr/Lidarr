@@ -376,7 +376,7 @@
     "BypassProxyForLocalAddresses": "עקיפת פרוקסי לכתובות מקומיות",
     "Calendar": "לוּחַ שָׁנָה",
     "CalendarWeekColumnHeaderHelpText": "מוצג מעל כל עמודה כאשר השבוע היא התצוגה הפעילה",
-    "CancelMessageText": "האם אתה בטוח שברצונך לבטל משימה זו בהמתנה?",
+    "CancelPendingTask": "האם אתה בטוח שברצונך לבטל משימה זו בהמתנה?",
     "CertificateValidation": "אימות תעודה",
     "CertificateValidationHelpText": "שנה את מידת אימות ההסמכה של HTTPS",
     "ChangeFileDate": "שנה את תאריך הקובץ",
