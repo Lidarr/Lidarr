@@ -3,6 +3,7 @@ using Lidarr.Http;
 using NzbDrone.Core.ImportLists;
 using NzbDrone.Core.Validation;
 using NzbDrone.Core.Validation.Paths;
+using NzbDrone.SignalR;
 
 namespace Lidarr.Api.V1.ImportLists
 {
@@ -12,11 +13,12 @@ namespace Lidarr.Api.V1.ImportLists
         public static readonly ImportListResourceMapper ResourceMapper = new ();
         public static readonly ImportListBulkResourceMapper BulkResourceMapper = new ();
 
-        public ImportListController(IImportListFactory importListFactory,
-                                    RootFolderExistsValidator rootFolderExistsValidator,
-                                    QualityProfileExistsValidator qualityProfileExistsValidator,
-                                    MetadataProfileExistsValidator metadataProfileExistsValidator)
-            : base(importListFactory, "importlist", ResourceMapper, BulkResourceMapper)
+        public ImportListController(IBroadcastSignalRMessage signalRBroadcaster,
+            IImportListFactory importListFactory,
+            RootFolderExistsValidator rootFolderExistsValidator,
+            QualityProfileExistsValidator qualityProfileExistsValidator,
+            MetadataProfileExistsValidator metadataProfileExistsValidator)
+            : base(signalRBroadcaster, importListFactory, "importlist", ResourceMapper, BulkResourceMapper)
         {
             SharedValidator.RuleFor(c => c.RootFolderPath).Cascade(CascadeMode.Stop)
                 .IsValidPath()
