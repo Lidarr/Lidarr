@@ -7,12 +7,19 @@ using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Serializer;
+using NzbDrone.Core.Datastore.Events;
+using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
+using NzbDrone.Core.ThingiProvider.Events;
 using NzbDrone.Core.Validation;
+using NzbDrone.SignalR;
 
 namespace Lidarr.Api.V1
 {
-    public abstract class ProviderControllerBase<TProviderResource, TBulkProviderResource, TProvider, TProviderDefinition> : RestController<TProviderResource>
+    public abstract class ProviderControllerBase<TProviderResource, TBulkProviderResource, TProvider, TProviderDefinition> : RestControllerWithSignalR<TProviderResource, TProviderDefinition>,
+        IHandle<ProviderAddedEvent<TProvider>>,
+        IHandle<ProviderUpdatedEvent<TProvider>>,
+        IHandle<ProviderDeletedEvent<TProvider>>
         where TProviderDefinition : ProviderDefinition, new()
         where TProvider : IProvider
         where TProviderResource : ProviderResource<TProviderResource>, new()
@@ -22,11 +29,13 @@ namespace Lidarr.Api.V1
         private readonly ProviderResourceMapper<TProviderResource, TProviderDefinition> _resourceMapper;
         private readonly ProviderBulkResourceMapper<TBulkProviderResource, TProviderDefinition> _bulkResourceMapper;
 
-        protected ProviderControllerBase(IProviderFactory<TProvider,
+        protected ProviderControllerBase(IBroadcastSignalRMessage signalRBroadcaster,
+            IProviderFactory<TProvider,
             TProviderDefinition> providerFactory,
             string resource,
             ProviderResourceMapper<TProviderResource, TProviderDefinition> resourceMapper,
             ProviderBulkResourceMapper<TBulkProviderResource, TProviderDefinition> bulkResourceMapper)
+            : base(signalRBroadcaster)
         {
             _providerFactory = providerFactory;
             _resourceMapper = resourceMapper;
@@ -259,6 +268,24 @@ namespace Lidarr.Api.V1
             var data = _providerFactory.RequestAction(providerDefinition, name, query);
 
             return Content(data.ToJson(), "application/json");
+        }
+
+        [NonAction]
+        public virtual void Handle(ProviderAddedEvent<TProvider> message)
+        {
+            BroadcastResourceChange(ModelAction.Created, message.Definition.Id);
+        }
+
+        [NonAction]
+        public virtual void Handle(ProviderUpdatedEvent<TProvider> message)
+        {
+            BroadcastResourceChange(ModelAction.Updated, message.Definition.Id);
+        }
+
+        [NonAction]
+        public virtual void Handle(ProviderDeletedEvent<TProvider> message)
+        {
+            BroadcastResourceChange(ModelAction.Deleted, message.ProviderId);
         }
 
         protected virtual void Validate(TProviderDefinition definition, bool includeWarnings)
