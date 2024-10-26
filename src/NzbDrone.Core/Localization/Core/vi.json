@@ -743,5 +743,12 @@
     "Script": "Kịch bản",
     "BuiltIn": "Được xây dựng trong",
     "DeleteSelectedCustomFormats": "Xóa định dạng tùy chỉnh",
-    "IncludeCustomFormatWhenRenaming": "Bao gồm định dạng tùy chỉnh khi đổi tên"
+    "IncludeCustomFormatWhenRenaming": "Bao gồm định dạng tùy chỉnh khi đổi tên",
+    "AptUpdater": "Sử dụng apt để cài đặt bản cập nhật",
+    "DockerUpdater": "cập nhật vùng chứa docker để nhận bản cập nhật",
+    "InstallLatest": "Cài đặt mới nhất",
+    "OnLatestVersion": "Phiên bản mới nhất của {appName} đã được cài đặt",
+    "Shutdown": "Tắt",
+    "UpdateAppDirectlyLoadError": "Không thể cập nhật {appName} trực tiếp,",
+    "ExternalUpdater": "{appName} được định cấu hình để sử dụng cơ chế cập nhật bên ngoài"
 }

@@ -741,5 +741,13 @@
     "BuiltIn": "مدمج",
     "Script": "النصي",
     "DeleteSelectedCustomFormats": "حذف التنسيق المخصص",
-    "IncludeCustomFormatWhenRenaming": "قم بتضمين تنسيق مخصص عند إعادة التسمية"
+    "IncludeCustomFormatWhenRenaming": "قم بتضمين تنسيق مخصص عند إعادة التسمية",
+    "AptUpdater": "استخدم apt لتثبيت التحديث",
+    "CancelPendingTask": "هل أنت متأكد أنك تريد إلغاء هذه المهمة المعلقة؟",
+    "ExternalUpdater": "تم تكوين {appName} لاستخدام آلية تحديث خارجية",
+    "DockerUpdater": "تحديث حاوية عامل الإرساء لتلقي التحديث",
+    "InstallLatest": "تثبيت الأحدث",
+    "OnLatestVersion": "تم بالفعل تثبيت أحدث إصدار من {appName}",
+    "Shutdown": "اغلق",
+    "UpdateAppDirectlyLoadError": "تعذر تحديث {appName} مباشرة ،"
 }

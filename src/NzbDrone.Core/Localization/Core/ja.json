@@ -736,5 +736,13 @@
     "Script": "脚本",
     "AddCondition": "条件の追加",
     "DeleteSelectedCustomFormats": "カスタムフォーマットを削除する",
-    "IncludeCustomFormatWhenRenaming": "名前を変更するときにカスタム形式を含める"
+    "IncludeCustomFormatWhenRenaming": "名前を変更するときにカスタム形式を含める",
+    "AptUpdater": "aptを使用してアップデートをインストールします",
+    "CancelPendingTask": "この保留中のタスクをキャンセルしてもよろしいですか？",
+    "DockerUpdater": "Dockerコンテナを更新して、更新を受信します",
+    "ExternalUpdater": "{appName}は、外部更新メカニズムを使用するように構成されています",
+    "InstallLatest": "最新のインストール",
+    "OnLatestVersion": "{appName}の最新バージョンはすでにインストールされています",
+    "Shutdown": "シャットダウン",
+    "UpdateAppDirectlyLoadError": "{appName}を直接更新できません。"
 }

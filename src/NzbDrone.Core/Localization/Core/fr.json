@@ -1315,5 +1315,18 @@
     "LogSizeLimit": "Limite de taille du journal",
     "LogSizeLimitHelpText": "Taille maximale du fichier journal en Mo avant archivage. La valeur par défaut est de 1 Mo.",
     "IndexerSettingsApiUrl": "URL DE L'API",
-    "IndexerSettingsApiUrlHelpText": "Ne le modifiez pas à moins de savoir ce que vous faites, car votre clé API sera envoyée à cet hôte."
+    "IndexerSettingsApiUrlHelpText": "Ne le modifiez pas à moins de savoir ce que vous faites, car votre clé API sera envoyée à cet hôte.",
+    "AptUpdater": "Utiliser apt pour installer la mise à jour",
+    "CancelPendingTask": "Êtes-vous sur de vouloir annuler cette tâche en attente ?",
+    "DockerUpdater": "Mettez à jour le conteneur Docker pour recevoir la mise à jour",
+    "ExternalUpdater": "{appName} est configuré pour utiliser un mécanisme de mise à jour externe",
+    "Install": "Installer",
+    "InstallLatest": "Installer la dernière",
+    "InstallMajorVersionUpdate": "Installer la mise à jour",
+    "InstallMajorVersionUpdateMessage": "Cette mise à jour installera une nouvelle version majeure et pourrait ne pas être compatible avec votre système. Êtes-vous sûr de vouloir installer cette mise à jour ?",
+    "InstallMajorVersionUpdateMessageLink": "Veuillez consulter [{domain}]({url}) pour plus d'informations.",
+    "OnLatestVersion": "La dernière version de {appName} est déjà installée",
+    "PreviouslyInstalled": "Installé précédemment",
+    "Shutdown": "Éteindre",
+    "UpdateAppDirectlyLoadError": "Impossible de mettre à jour directement {appName},"
 }

@@ -778,5 +778,12 @@
     "BuiltIn": "נִבנָה בְּ",
     "Script": "תַסרִיט",
     "DeleteSelectedCustomFormats": "מחק פורמט מותאם אישית",
-    "IncludeCustomFormatWhenRenaming": "כלול פורמט מותאם אישית בעת שינוי שם"
+    "IncludeCustomFormatWhenRenaming": "כלול פורמט מותאם אישית בעת שינוי שם",
+    "AptUpdater": "השתמש ב- apt כדי להתקין את העדכון",
+    "ExternalUpdater": "{appName} מוגדר להשתמש במנגנון עדכון חיצוני",
+    "UpdateAppDirectlyLoadError": "לא ניתן לעדכן את {appName} ישירות,",
+    "DockerUpdater": "עדכן את מיכל העגינה לקבל את העדכון",
+    "InstallLatest": "התקן את האחרונה",
+    "OnLatestVersion": "הגרסה האחרונה של {appName} כבר מותקנת",
+    "Shutdown": "לכבות"
 }

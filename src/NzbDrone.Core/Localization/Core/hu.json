@@ -1213,5 +1213,14 @@
     "Script": "Szkript",
     "DeleteSelectedCustomFormats": "Egyéni formátum törlése",
     "DeleteSelectedCustomFormatsMessageText": "Biztosan törölni szeretne {count} kiválasztott importlistát?",
-    "IncludeCustomFormatWhenRenaming": "Átnevezéskor adja meg az Egyéni formátumot"
+    "IncludeCustomFormatWhenRenaming": "Átnevezéskor adja meg az Egyéni formátumot",
+    "AptUpdater": "A frissítés telepítéséhez használja az apt-t",
+    "CancelPendingTask": "Biztosan törölni szeretné ezt a függőben lévő feladatot?",
+    "DockerUpdater": "Frissítse a docker-tárolót a frissítés fogadásához",
+    "ExternalUpdater": "A {appName} egy külső frissítési mechanizmus használatára van konfigurálva",
+    "InstallLatest": "Legfrissebb telepítése",
+    "OnLatestVersion": "A {appName} legújabb verziója már telepítva van",
+    "PreviouslyInstalled": "Korábban telepítve",
+    "Shutdown": "Leállitás",
+    "UpdateAppDirectlyLoadError": "Nem lehetséges közvetlenül frissíteni a {appName}-t"
 }

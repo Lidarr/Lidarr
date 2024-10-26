@@ -1185,5 +1185,13 @@
     "DeleteSelectedCustomFormats": "Benutzerdefiniertes Format löschen",
     "IncludeCustomFormatWhenRenaming": "Eigenes Format beim umbennen einfügen",
     "DeleteSelectedCustomFormatsMessageText": "Sind Sie sicher, dass Sie {count} ausgewählte Importliste(n) löschen möchten?",
-    "IndexerSettingsApiUrl": "API-URL"
+    "IndexerSettingsApiUrl": "API-URL",
+    "AptUpdater": "Verwenden Sie apt, um das Update zu installieren",
+    "CancelPendingTask": "Möchten Sie diese ausstehende Aufgabe wirklich abbrechen?",
+    "DockerUpdater": "Aktualisieren Sie den Docker-Container, um das Update zu erhalten",
+    "ExternalUpdater": "{appName} wurde so konfiguriert, dass ein externer Update Mechanismus benutzt wird",
+    "InstallLatest": "Jetzt updaten",
+    "Shutdown": "Herunterfahren",
+    "UpdateAppDirectlyLoadError": "{appName} kann nicht direkt aktualisiert werden.",
+    "OnLatestVersion": "Die aktuellste Version ist bereits installiert"
 }
