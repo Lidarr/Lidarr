@@ -708,5 +708,12 @@
     "AddedToDownloadQueue": "다운로드 대기열에 추가됨",
     "GrabReleaseUnknownArtistOrAlbumMessageText": "{appName}는 이 출시의 영화를 확인할 수 없습니다. {appName}는 이 출시를 자동으로 가져오지 못할 수 있습니다. '{0}'을(를) 잡으시겠습니까?",
     "BuiltIn": "내장",
-    "DeleteSelectedCustomFormats": "사용자 지정 형식 삭제"
+    "DeleteSelectedCustomFormats": "사용자 지정 형식 삭제",
+    "AptUpdater": "apt를 사용하여 업데이트 설치",
+    "CancelPendingTask": "이 보류중인 작업을 취소 하시겠습니까?",
+    "DockerUpdater": "Docker 컨테이너를 업데이트하여 업데이트를 받으십시오.",
+    "ExternalUpdater": "{appName}는 외부 업데이트 메커니즘을 사용하도록 구성됩니다.",
+    "OnLatestVersion": "최신 버전의 {appName}가 이미 설치되어 있습니다.",
+    "Shutdown": "종료",
+    "UpdateAppDirectlyLoadError": "{appName}를 직접 업데이트 할 수 없습니다."
 }

@@ -736,5 +736,12 @@
     "BuiltIn": "में निर्मित",
     "Script": "लिपि",
     "DeleteSelectedCustomFormats": "कस्टम प्रारूप हटाएं",
-    "IncludeCustomFormatWhenRenaming": "नाम बदलने पर कस्टम प्रारूप शामिल करें"
+    "IncludeCustomFormatWhenRenaming": "नाम बदलने पर कस्टम प्रारूप शामिल करें",
+    "AptUpdater": "अद्यतन स्थापित करने के लिए उपयुक्त का उपयोग करें",
+    "CancelPendingTask": "क्या आप वाकई इस लंबित कार्य को रद्द करना चाहते हैं?",
+    "DockerUpdater": "अपडेट प्राप्त करने के लिए docker कंटेनर को अपडेट करें",
+    "InstallLatest": "नवीनतम स्थापित करें",
+    "OnLatestVersion": "रेडर का नवीनतम संस्करण पहले से ही स्थापित है",
+    "Shutdown": "बंद करना",
+    "UpdateAppDirectlyLoadError": "सीधे {appName} अद्यतन करने में असमर्थ,"
 }

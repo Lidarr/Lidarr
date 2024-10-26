@@ -300,5 +300,7 @@
     "UnableToAddANewNotificationPleaseTryAgain": "Neuspješno dodavanje nove obavijesti, molimo pokušaj ponovno.",
     "UnableToAddANewQualityProfilePleaseTryAgain": "Neuspješno dodavanje novog profila kvalitete, molimo pokušaj ponovno.",
     "UnableToAddANewRootFolderPleaseTryAgain": "Neuspješno dodavanje novog indexera, molimo pokušaj ponovno.",
-    "UnableToLoadRootFolders": "Neuspješno dodavanje korijenske mape"
+    "UnableToLoadRootFolders": "Neuspješno dodavanje korijenske mape",
+    "AptUpdater": "Koristi apt kako bi instalirao ažuriranje",
+    "CancelPendingTask": "Jeste li sigurni da želite otkazati ovaj zadatak na čekanju?"
 }

@@ -1317,5 +1317,18 @@
     "SkipFreeSpaceCheckHelpText": "Usar quando {appName} não consegue detectar espaço livre em sua pasta raiz",
     "IndexerSettingsApiUrl": "URL da API",
     "IndexerSettingsApiUrlHelpText": "Não mude isso a menos que você saiba o que está fazendo. Já que sua chave API será enviada para esse host.",
-    "LastSearched": "Última Pesquisa"
+    "LastSearched": "Última Pesquisa",
+    "AptUpdater": "Usar apt para instalar atualizações",
+    "CancelPendingTask": "Tem certeza de que deseja cancelar esta tarefa pendente?",
+    "DockerUpdater": "Atualize o contêiner docker para receber a atualização",
+    "ExternalUpdater": "O {appName} está configurado para usar um mecanismo de atualização externo",
+    "Install": "Instalar",
+    "InstallLatest": "Instalar o mais recente",
+    "InstallMajorVersionUpdate": "Instalar Atualização",
+    "InstallMajorVersionUpdateMessageLink": "Verifique [{domain}]({url}) para obter mais informações.",
+    "OnLatestVersion": "A versão mais recente do {appName} já está instalada",
+    "PreviouslyInstalled": "Instalado anteriormente",
+    "Shutdown": "Desligar",
+    "UpdateAppDirectlyLoadError": "Incapaz de atualizar o {appName} diretamente,",
+    "InstallMajorVersionUpdateMessage": "Esta atualização instalará uma nova versão principal e pode não ser compatível com o seu sistema. Tem certeza de que deseja instalar esta atualização?"
 }

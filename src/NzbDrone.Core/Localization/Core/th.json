@@ -733,5 +733,12 @@
     "BuiltIn": "สร้างขึ้นใน",
     "Script": "สคริปต์",
     "DeleteSelectedCustomFormats": "ลบรูปแบบที่กำหนดเอง",
-    "IncludeCustomFormatWhenRenaming": "รวมรูปแบบที่กำหนดเองเมื่อเปลี่ยนชื่อ"
+    "IncludeCustomFormatWhenRenaming": "รวมรูปแบบที่กำหนดเองเมื่อเปลี่ยนชื่อ",
+    "AptUpdater": "ใช้ apt เพื่อติดตั้งการอัปเดต",
+    "DockerUpdater": "อัปเดตคอนเทนเนอร์นักเทียบท่าเพื่อรับการอัปเดต",
+    "ExternalUpdater": "{appName} ถูกกำหนดค่าให้ใช้กลไกการอัพเดตภายนอก",
+    "InstallLatest": "ติดตั้งล่าสุด",
+    "OnLatestVersion": "มีการติดตั้ง {appName} เวอร์ชันล่าสุดแล้ว",
+    "Shutdown": "ปิดตัวลง",
+    "UpdateAppDirectlyLoadError": "ไม่สามารถอัปเดต {appName} ได้โดยตรง"
 }

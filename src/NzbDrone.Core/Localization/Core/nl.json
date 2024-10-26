@@ -889,5 +889,13 @@
     "CountArtistsSelected": "{count} importeer lijst(en) geselecteerd",
     "BypassIfAboveCustomFormatScore": "Omzeilen indien boven aangepaste opmaak score",
     "BypassIfAboveCustomFormatScoreHelpText": "Schakel omleiding in als de release een score heeft die hoger is dan de geconfigureerde minimale aangepaste formaatscore",
-    "MinimumCustomFormatScoreHelpText": "Minimumscore aangepast formaat vereist om vertraging voor het voorkeursprotocol te omzeilen"
+    "MinimumCustomFormatScoreHelpText": "Minimumscore aangepast formaat vereist om vertraging voor het voorkeursprotocol te omzeilen",
+    "AptUpdater": "Gebruik apt om de update te installeren",
+    "CancelPendingTask": "Ben je zeker dat je deze onafgewerkte taak wil annuleren?",
+    "DockerUpdater": "Update de docker container om de update te ontvangen",
+    "InstallLatest": "Installeer Nieuwste Versie",
+    "OnLatestVersion": "De nieuwste versie van {appName} is al geïnstalleerd",
+    "Shutdown": "Afsluiten",
+    "ExternalUpdater": "{appName} is geconfigureerd om een extern update mechanisme te gebruiken",
+    "UpdateAppDirectlyLoadError": "Kan {appName} niet rechtstreeks updaten,"
 }

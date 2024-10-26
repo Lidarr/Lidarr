@@ -290,5 +290,7 @@
     "UnableToAddANewMetadataProfilePleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
     "UnableToAddANewQualityProfilePleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
     "BuiltIn": "Vstavaný",
-    "DeleteSelectedCustomFormats": "Klonovať vlastný formát"
+    "DeleteSelectedCustomFormats": "Klonovať vlastný formát",
+    "AptUpdater": "Použiť apt pre inštaláciu aktualizácie",
+    "CancelPendingTask": "Naozaj chcete zrušiť túto prebiehajúcu úlohu?"
 }

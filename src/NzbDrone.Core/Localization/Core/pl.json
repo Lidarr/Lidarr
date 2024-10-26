@@ -838,5 +838,13 @@
     "Season": "Sezon",
     "Episode": "odcinek",
     "AddMetadataProfile": "profil metadanych",
-    "EditMetadataProfile": "profil metadanych"
+    "EditMetadataProfile": "profil metadanych",
+    "AptUpdater": "Użyj apt, aby zainstalować aktualizację",
+    "CancelPendingTask": "Czy na pewno chcesz anulować to oczekujące zadanie?",
+    "DockerUpdater": "zaktualizuj kontener Dockera, aby otrzymać aktualizację",
+    "ExternalUpdater": "{appName} jest skonfigurowany do korzystania z zewnętrznego mechanizmu aktualizacji",
+    "InstallLatest": "Zainstaluj najnowsze",
+    "OnLatestVersion": "Najnowsza wersja {appName} jest już zainstalowana",
+    "Shutdown": "Zamknąć",
+    "UpdateAppDirectlyLoadError": "Nie można bezpośrednio zaktualizować {appName},"
 }
