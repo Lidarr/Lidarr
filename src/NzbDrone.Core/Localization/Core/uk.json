@@ -900,5 +900,13 @@
     "DeleteSelectedCustomFormatsMessageText": "Ви впевнені, що хочете видалити тег {0} ?",
     "DeleteSelectedCustomFormats": "Видалити спеціальний формат",
     "IncludeCustomFormatWhenRenaming": "Включати спеціальний формат під час перейменування",
-    "IndexerSettingsApiUrl": "API URL"
+    "IndexerSettingsApiUrl": "API URL",
+    "CancelPendingTask": "Ви впевнені, що хочете скасувати це незавершене завдання?",
+    "DockerUpdater": "Оновіть контейнер docker, щоб отримати оновлення",
+    "ExternalUpdater": "{appName} налаштовано на використання зовнішнього механізму оновлення",
+    "InstallLatest": "Встановити останній",
+    "OnLatestVersion": "Остання версія {appName} вже встановлена",
+    "Shutdown": "Вимкнення",
+    "UpdateAppDirectlyLoadError": "Неможливо оновити {appName} безпосередньо,",
+    "AptUpdater": "Використовуйте apt для інсталяції оновлення"
 }

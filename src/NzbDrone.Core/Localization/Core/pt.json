@@ -1010,5 +1010,13 @@
     "DeleteSelectedCustomFormats": "Eliminar formato personalizado",
     "DeleteSelectedCustomFormatsMessageText": "Tem a certeza de que pretende eliminar a(s) lista(s) de {count} importação selecionada(s)?",
     "IncludeCustomFormatWhenRenaming": "Incluir formato personalizado ao renomear",
-    "CountCustomFormatsSelected": "{count} formatos selecionados"
+    "CountCustomFormatsSelected": "{count} formatos selecionados",
+    "AptUpdater": "Utilize o apt para instalar a atualização",
+    "CancelPendingTask": "Tem a certeza que quer cancelar esta tarefa pendente?",
+    "ExternalUpdater": "O {appName} está definido para usar um mecanismo de atualização externo",
+    "InstallLatest": "Instalar o mais recente",
+    "OnLatestVersion": "A versão mais recente do {appName} já está instalada",
+    "Shutdown": "Encerrar",
+    "UpdateAppDirectlyLoadError": "Não foi possível atualizar o {appName} diretamente,",
+    "DockerUpdater": "atualize o contentor do Docker para receber a atualização"
 }

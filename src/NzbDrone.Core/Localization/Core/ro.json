@@ -681,7 +681,7 @@
     "DownloadClientStatusCheckSingleClientMessage": "Clienții de descărcare indisponibili datorită erorilor: {0}",
     "ExpandAlbumByDefaultHelpText": "Album",
     "ExtraFileExtensionsHelpText": "Lista separată prin virgulă a fișierelor suplimentare de importat (.nfo va fi importat ca .nfo-orig)",
-    "FileNameTokens": "Jetoane cu nume de fișier",
+    "FileNameTokens": "Jetoane pentru nume de fișier",
     "IncludeHealthWarnings": "Includeți avertismente de sănătate",
     "Lowercase": "Minuscule",
     "NoResultsFound": "Nici un rezultat gasit",
@@ -780,5 +780,12 @@
     "UpdateAvailableHealthCheckMessage": "O nouă versiune este disponibilă: {version}",
     "DeleteSelectedCustomFormats": "Ștergeți formatul personalizat",
     "DeleteSelectedCustomFormatsMessageText": "Sigur doriți să ștergeți {count} clienți de descărcare selectați?",
-    "IncludeCustomFormatWhenRenaming": "Includeți format personalizat la redenumire"
+    "IncludeCustomFormatWhenRenaming": "Includeți format personalizat la redenumire",
+    "AptUpdater": "Utilizați apt pentru a instala actualizarea",
+    "DockerUpdater": "Actualizați containerul Docker pentru a primi actualizarea",
+    "ExternalUpdater": "{appName} este configurat pentru a utiliza un mecanism de actualizare extern",
+    "InstallLatest": "Instalați cel mai recent",
+    "OnLatestVersion": "Cea mai recentă versiune a {appName} este deja instalată",
+    "Shutdown": "Oprește",
+    "UpdateAppDirectlyLoadError": "Imposibil de actualizat direct {appName},"
 }

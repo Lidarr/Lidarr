@@ -128,5 +128,6 @@
     "Priority": "Prioritas",
     "AutomaticSearch": "Penelusuran Otomatis",
     "AddToDownloadQueue": "Tambahkan ke antrean pengunduhan",
-    "AddedToDownloadQueue": "Ditambahkan ke antrean pengunduhan"
+    "AddedToDownloadQueue": "Ditambahkan ke antrean pengunduhan",
+    "AptUpdater": "Gunakan apt untuk memasang pembaruan"
 }

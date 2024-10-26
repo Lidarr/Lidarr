@@ -1029,5 +1029,14 @@
     "SkipFreeSpaceCheckHelpText": "{appName} kök klasörünüzde boş alan tespit edemediğinde bunu kullansın",
     "Logout": "Çıkış",
     "IndexerSettingsApiUrl": "API URL'si",
-    "LastSearched": "Son Aranan"
+    "LastSearched": "Son Aranan",
+    "AptUpdater": "Güncellemeyi yüklemek için apt kullanın",
+    "CancelPendingTask": "Bu bekleyen görevi iptal etmek istediğinizden emin misiniz?",
+    "DockerUpdater": "güncellemeyi almak için docker konteynerini güncelleyin",
+    "ExternalUpdater": "{appName}, harici bir güncelleme mekanizması kullanacak şekilde yapılandırıldı",
+    "InstallLatest": "En Sonu Yükle",
+    "OnLatestVersion": "{appName}'ın en son sürümü zaten kurulu",
+    "PreviouslyInstalled": "Önceden Yüklenmiş",
+    "Shutdown": "Kapat",
+    "UpdateAppDirectlyLoadError": "{appName} doğrudan güncellenemiyor,"
 }

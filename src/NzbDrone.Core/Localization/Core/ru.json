@@ -1062,5 +1062,18 @@
     "LogSizeLimitHelpText": "Максимальный размер файла журнала в МБ перед архивированием. По умолчанию - 1 МБ.",
     "Artists": "Исполнитель",
     "IndexerSettingsApiUrlHelpText": "Не меняйте это, если вы не знаете, что делаете. Поскольку ваш ключ API будет отправлен на этот хост.",
-    "IndexerSettingsApiUrl": "URL-адрес API"
+    "IndexerSettingsApiUrl": "URL-адрес API",
+    "AptUpdater": "Использовать apt для установки обновления",
+    "ExternalUpdater": "{appName} настроен на использование внешнего механизма обновления",
+    "Install": "Установить",
+    "InstallLatest": "Установить последнюю версию",
+    "InstallMajorVersionUpdate": "Установить обновление",
+    "InstallMajorVersionUpdateMessage": "Это обновление установит новую основную версию и может быть несовместимо с вашей системой. Вы уверены, что хотите установить это обновление?",
+    "InstallMajorVersionUpdateMessageLink": "Пожалуйста, проверьте [{domain}]({url}) для получения дополнительной информации.",
+    "OnLatestVersion": "Последняя версия {appName} уже установлена",
+    "PreviouslyInstalled": "Ранее установленный",
+    "Shutdown": "Выключить",
+    "UpdateAppDirectlyLoadError": "Невозможно обновить {appName} напрямую,",
+    "CancelPendingTask": "Вы уверены, что хотите отменить эту ожидающую задачу?",
+    "DockerUpdater": "Обновите контейнер Docker, чтобы получить обновление"
 }

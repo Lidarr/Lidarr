@@ -1255,5 +1255,14 @@
     "DeleteSelectedCustomFormatsMessageText": "Haluatko varmasti poistaa valitut {count} tuontilistaa?",
     "IncludeCustomFormatWhenRenaming": "Sisällytä mukautetut muodot uudelleennimetessä",
     "IndexerSettingsApiUrl": "Rajapinnan URL-osoite",
-    "IndexerSettingsApiUrlHelpText": "Älä muuta tätä, jos et tiedä mitä teet, koska rajapinta-avaimesi lähetetään kyseiselle palvelimelle."
+    "IndexerSettingsApiUrlHelpText": "Älä muuta tätä, jos et tiedä mitä teet, koska rajapinta-avaimesi lähetetään kyseiselle palvelimelle.",
+    "AptUpdater": "Asenna päivitys APT-työkalun avulla",
+    "CancelPendingTask": "Haluatko varmasti perua tämän odottavan tehtävän?",
+    "DockerUpdater": "Hanki päivitys päivittämällä Docker-säiliö",
+    "ExternalUpdater": "{appName} on määritetty käyttämään ulkoista päivitysratkaisua.",
+    "InstallLatest": "Asenna uusin",
+    "OnLatestVersion": "Uusin {appName}-versio on jo asennettu",
+    "PreviouslyInstalled": "Edellinen asennettu versio",
+    "Shutdown": "Sammuta",
+    "UpdateAppDirectlyLoadError": "{appName}ia ei voida päivittää suoraan,"
 }
