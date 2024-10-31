@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Music;
 
 namespace NzbDrone.Core.Download.Pending
 {
@@ -30,7 +31,11 @@ namespace NzbDrone.Core.Download.Pending
 
         public List<PendingRelease> WithoutFallback()
         {
-            return Query(p => p.Reason != PendingReleaseReason.Fallback);
+            var builder = new SqlBuilder(_database.DatabaseType)
+                .InnerJoin<PendingRelease, Artist>((p, s) => p.ArtistId == s.Id)
+                .Where<PendingRelease>(p => p.Reason != PendingReleaseReason.Fallback);
+
+            return Query(builder);
         }
     }
 }

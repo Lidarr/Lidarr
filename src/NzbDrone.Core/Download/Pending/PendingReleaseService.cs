@@ -273,10 +273,7 @@ namespace NzbDrone.Core.Download.Pending
             {
                 foreach (var artist in knownRemoteAlbums.Values.Select(v => v.Artist))
                 {
-                    if (!artistMap.ContainsKey(artist.Id))
-                    {
-                        artistMap[artist.Id] = artist;
-                    }
+                    artistMap.TryAdd(artist.Id, artist);
                 }
             }
 
@@ -292,7 +289,7 @@ namespace NzbDrone.Core.Download.Pending
                 // Just in case the artist was removed, but wasn't cleaned up yet (housekeeper will clean it up)
                 if (artist == null)
                 {
-                    return null;
+                    continue;
                 }
 
                 release.RemoteAlbum = new RemoteAlbum
