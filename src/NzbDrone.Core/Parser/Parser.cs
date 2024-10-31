@@ -154,7 +154,7 @@ namespace NzbDrone.Core.Parser
                 new Regex(@"^b00bs$", RegexOptions.Compiled | RegexOptions.IgnoreCase)
             };
 
-        private static readonly RegexReplace NormalizeRegex = new RegexReplace(@"((?:\b|_)(?<!^)(a(?!$)|an|the|and|or|of)(?!$)(?:\b|_))|\W|_",
+        private static readonly RegexReplace NormalizeRegex = new RegexReplace(@"((?:\b|_)(?<!^)([aà](?!$)|an|the|and|or|of)(?!$)(?:\b|_))|\W|_",
                                                                 string.Empty,
                                                                 RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
@@ -521,7 +521,7 @@ namespace NzbDrone.Core.Parser
 
             name = PercentRegex.Replace(name, "percent");
 
-            return NormalizeRegex.Replace(name).ToLower().RemoveAccent();
+            return NormalizeRegex.Replace(name).ToLowerInvariant().RemoveAccent();
         }
 
         public static string NormalizeTrackTitle(this string title)
