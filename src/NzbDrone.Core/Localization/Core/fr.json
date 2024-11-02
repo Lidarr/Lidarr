@@ -1317,7 +1317,6 @@
     "IndexerSettingsApiUrl": "URL DE L'API",
     "IndexerSettingsApiUrlHelpText": "Ne le modifiez pas à moins de savoir ce que vous faites, car votre clé API sera envoyée à cet hôte.",
     "AptUpdater": "Utiliser apt pour installer la mise à jour",
-    "CancelPendingTask": "Êtes-vous sur de vouloir annuler cette tâche en attente ?",
     "DockerUpdater": "Mettez à jour le conteneur Docker pour recevoir la mise à jour",
     "ExternalUpdater": "{appName} est configuré pour utiliser un mécanisme de mise à jour externe",
     "Install": "Installer",
@@ -1328,5 +1327,7 @@
     "OnLatestVersion": "La dernière version de {appName} est déjà installée",
     "PreviouslyInstalled": "Installé précédemment",
     "Shutdown": "Éteindre",
-    "UpdateAppDirectlyLoadError": "Impossible de mettre à jour directement {appName},"
+    "UpdateAppDirectlyLoadError": "Impossible de mettre à jour directement {appName},",
+    "SkipFreeSpaceCheckHelpText": "Utiliser quand {appName} ne parvient pas à détecter l'espace disponible de votre dossier racine",
+    "LastSearched": "Dernière recherche"
 }
