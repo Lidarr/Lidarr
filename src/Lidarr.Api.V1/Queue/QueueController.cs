@@ -130,15 +130,15 @@ namespace Lidarr.Api.V1.Queue
 
         [HttpGet]
         [Produces("application/json")]
-        public PagingResource<QueueResource> GetQueue([FromQuery] PagingRequestResource paging, bool includeUnknownArtistItems = false, bool includeArtist = false, bool includeAlbum = false, [FromQuery] int[] artistIds = null, DownloadProtocol? protocol = null, int? quality = null)
+        public PagingResource<QueueResource> GetQueue([FromQuery] PagingRequestResource paging, bool includeUnknownArtistItems = false, bool includeArtist = false, bool includeAlbum = false, [FromQuery] int[] artistIds = null, DownloadProtocol? protocol = null, [FromQuery] int[] quality = null)
         {
             var pagingResource = new PagingResource<QueueResource>(paging);
             var pagingSpec = pagingResource.MapToPagingSpec<QueueResource, NzbDrone.Core.Queue.Queue>("timeleft", SortDirection.Ascending);
 
-            return pagingSpec.ApplyToPage((spec) => GetQueue(spec, artistIds?.ToHashSet(), protocol, quality, includeUnknownArtistItems), (q) => MapToResource(q, includeArtist, includeAlbum));
+            return pagingSpec.ApplyToPage((spec) => GetQueue(spec, artistIds?.ToHashSet(), protocol, quality?.ToHashSet(), includeUnknownArtistItems), (q) => MapToResource(q, includeArtist, includeAlbum));
         }
 
-        private PagingSpec<NzbDrone.Core.Queue.Queue> GetQueue(PagingSpec<NzbDrone.Core.Queue.Queue> pagingSpec, HashSet<int> artistIds, DownloadProtocol? protocol, int? quality, bool includeUnknownArtistItems)
+        private PagingSpec<NzbDrone.Core.Queue.Queue> GetQueue(PagingSpec<NzbDrone.Core.Queue.Queue> pagingSpec, HashSet<int> artistIds, DownloadProtocol? protocol, HashSet<int> quality, bool includeUnknownArtistItems)
         {
             var ascending = pagingSpec.SortDirection == SortDirection.Ascending;
             var orderByFunc = GetOrderByFunc(pagingSpec);
@@ -148,6 +148,8 @@ namespace Lidarr.Api.V1.Queue
             var pending = _pendingReleaseService.GetPendingQueue();
 
             var hasArtistIdFilter = artistIds.Any();
+            var hasQualityFilter = quality.Any();
+
             var fullQueue = filteredQueue.Concat(pending).Where(q =>
             {
                 var include = true;
@@ -162,9 +164,9 @@ namespace Lidarr.Api.V1.Queue
                     include &= q.Protocol == protocol.Value;
                 }
 
-                if (include && quality.HasValue)
+                if (include && hasQualityFilter)
                 {
-                    include &= q.Quality.Quality.Id == quality.Value;
+                    include &= quality.Contains(q.Quality.Quality.Id);
                 }
 
                 return include;
