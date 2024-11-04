@@ -59,6 +59,10 @@ namespace NzbDrone.Common.Extensions
 
         public static bool PathEquals(this string firstPath, string secondPath, StringComparison? comparison = null)
         {
+            // Normalize paths to ensure unicode characters are represented the same way
+            firstPath = firstPath.Normalize();
+            secondPath = secondPath?.Normalize();
+
             if (!comparison.HasValue)
             {
                 comparison = DiskProviderBase.PathStringComparison;
