@@ -710,10 +710,17 @@
     "BuiltIn": "내장",
     "DeleteSelectedCustomFormats": "사용자 지정 형식 삭제",
     "AptUpdater": "apt를 사용하여 업데이트 설치",
-    "CancelPendingTask": "이 보류중인 작업을 취소 하시겠습니까?",
     "DockerUpdater": "Docker 컨테이너를 업데이트하여 업데이트를 받으십시오.",
     "ExternalUpdater": "{appName}는 외부 업데이트 메커니즘을 사용하도록 구성됩니다.",
     "OnLatestVersion": "최신 버전의 {appName}가 이미 설치되어 있습니다.",
     "Shutdown": "종료",
-    "UpdateAppDirectlyLoadError": "{appName}를 직접 업데이트 할 수 없습니다."
+    "UpdateAppDirectlyLoadError": "{appName}를 직접 업데이트 할 수 없습니다.",
+    "Album": "앨범",
+    "AddDownloadClientImplementation": "다운로드 클라이언트 추가 - {implementationName}",
+    "AddIndexerImplementation": "인덱서 추가 - {implementationName}",
+    "Any": "모두",
+    "AppUpdatedVersion": "{appName}이 버전 `{version}`으로 업데이트되었습니다. 최신 변경 사항을 받으려면 {appName}을 다시 로드해야 합니다",
+    "AppUpdated": "{appName} 업데이트",
+    "AddConnectionImplementation": "연결 추가 - {implementationName}",
+    "AddConnection": "연결 추가"
 }
