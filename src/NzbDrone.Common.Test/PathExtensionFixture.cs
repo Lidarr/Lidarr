@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -315,6 +316,15 @@ namespace NzbDrone.Common.Test
             result[1].Should().Be(@"Test");
             result[2].Should().Be(@"Music");
             result[3].Should().Be(@"Artist Title");
+        }
+
+        [Test]
+        public void should_be_equal_with_different_unicode_representations()
+        {
+            var path1 = @"C:\Test\file.mkv".AsOsAgnostic().Normalize(NormalizationForm.FormC);
+            var path2 = @"C:\Test\file.mkv".AsOsAgnostic().Normalize(NormalizationForm.FormD);
+
+            path1.PathEquals(path2);
         }
     }
 }
