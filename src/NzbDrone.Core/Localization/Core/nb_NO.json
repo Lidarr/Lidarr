@@ -184,7 +184,7 @@
     "PreferredProtocol": "Foretrukket Protokoll",
     "Artist": "artist",
     "CatalogNumber": "katalognummer",
-    "AddConnection": "Legg til kobling",
+    "AddConnection": "Legg til tilkobling",
     "AddImportListExclusion": "Legg til importeringsliste unntak",
     "AddMissing": "Legg til manglende",
     "AddNewItem": "Legg til nytt item",
@@ -273,6 +273,5 @@
     "BuiltIn": "Bygget inn",
     "DeleteSelectedCustomFormats": "Klon egendefinert format",
     "DeleteSelectedCustomFormatsMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
-    "AptUpdater": "Bruk apt til å installere oppdateringen",
-    "CancelPendingTask": "Er du sikker på at du vil avbryte denne ventende oppgaven?"
+    "AptUpdater": "Bruk apt til å installere oppdateringen"
 }
