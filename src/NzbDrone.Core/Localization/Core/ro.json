@@ -584,7 +584,7 @@
     "IndexerSearchCheckNoInteractiveMessage": "Niciun indexator cu Căutare interactivă nu este activ, {appName} nu va afișa niciun rezultat de căutare interactivă",
     "MinFormatScoreHelpText": "Scorul minim de format personalizat permis pentru descărcare",
     "Monitor": "Monitorizează",
-    "MountCheckMessage": "Calea ce conține filme este montată în mod de read-only: ",
+    "MountArtistHealthCheckMessage": "Calea ce conține filme este montată în mod de read-only: ",
     "NegateHelpText": "Dacă este bifat, formatul personalizat nu se va aplica dacă această {0} condiție se potrivește.",
     "PreferTorrent": "Prefer Torrent",
     "PreferUsenet": "Prefer Usenet",

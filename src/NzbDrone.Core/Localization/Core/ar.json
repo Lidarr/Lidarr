@@ -591,7 +591,7 @@
     "ImportListStatusCheckSingleClientMessage": "القوائم غير متاحة بسبب الإخفاقات: {0}",
     "IndexerRssHealthCheckNoIndexers": "لا توجد مفهرسات متاحة مع تمكين مزامنة RSS ، ولن يحصل {appName} على الإصدارات الجديدة تلقائيًا",
     "IndexerSearchCheckNoAutomaticMessage": "لا تتوفر مفهرسات مع تمكين البحث التلقائي ، ولن يقدم {appName} أي نتائج بحث تلقائية",
-    "MountCheckMessage": "تم تثبيت الحامل الذي يحتوي على مسار فيلم للقراءة فقط: ",
+    "MountArtistHealthCheckMessage": "تم تثبيت الحامل الذي يحتوي على مسار فيلم للقراءة فقط: ",
     "ProxyCheckResolveIpMessage": "فشل حل عنوان IP لمضيف الخادم الوكيل المكون {0}",
     "ReplaceWithDash": "استبدل بـ داش",
     "AppDataLocationHealthCheckMessage": "لن يكون التحديث ممكنًا لمنع حذف AppData عند التحديث",

@@ -642,7 +642,7 @@
     "DownloadClientStatusCheckAllClientMessage": "Alle downloaders zijn onbeschikbaar wegens fouten",
     "ImportListStatusCheckAllClientMessage": "Alle lijsten zijn onbeschikbaar wegens fouten",
     "ImportListStatusCheckSingleClientMessage": "Lijsten onbeschikbaar wegens fouten: {0}",
-    "MountCheckMessage": "Een mount dat een film pad bevat is gemount als alleen-lezen: ",
+    "MountArtistHealthCheckMessage": "Een mount dat een film pad bevat is gemount als alleen-lezen: ",
     "ProxyCheckBadRequestMessage": "Testen van proxy is mislukt. Statuscode: {0}",
     "ProxyCheckFailedToTestMessage": "Testen van proxy is mislukt: {0}",
     "RemotePathMappingCheckDownloadPermissions": "{appName} kan gedownloade film {0} zien, maar niet openen.  Waarschijnlijk fout met machtigingen.",

@@ -849,7 +849,7 @@
     "ItsEasyToAddANewArtistJustStartTypingTheNameOfTheArtistYouWantToAdd": "添加新的艺术家很容易，只需开始输入要添加的艺术家的名称即可。",
     "Loading": "加载中",
     "Monitor": "追踪",
-    "MountCheckMessage": "挂载的电影目录包含只读的目录： ",
+    "MountArtistHealthCheckMessage": "挂载的电影目录包含只读的目录： ",
     "NegateHelpText": "如勾选，当条件 {0} 满足时不会应用自定义格式。",
     "PreferTorrent": "首选Torrent",
     "PreferUsenet": "首选Usenet",

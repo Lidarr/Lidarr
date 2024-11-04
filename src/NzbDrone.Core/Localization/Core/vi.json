@@ -577,7 +577,7 @@
     "HiddenClickToShow": "Ẩn, bấm để hiển thị",
     "ImportListStatusCheckAllClientMessage": "Tất cả danh sách không có sẵn do lỗi",
     "MaintenanceRelease": "Bản phát hành bảo trì: sửa lỗi và các cải tiến khác. Xem Lịch sử cam kết Github để biết thêm chi tiết",
-    "MountCheckMessage": "Mount chứa đường dẫn phim được mount ở chế độ chỉ đọc: ",
+    "MountArtistHealthCheckMessage": "Mount chứa đường dẫn phim được mount ở chế độ chỉ đọc: ",
     "PreferTorrent": "Thích Torrent",
     "PreferUsenet": "Ưu tiên Usenet",
     "ReplaceWithSpaceDash": "Thay thế bằng Dấu gạch ngang",

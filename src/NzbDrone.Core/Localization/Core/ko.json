@@ -610,7 +610,7 @@
     "ImportMechanismHealthCheckMessage": "완료된 다운로드 처리 활성화",
     "IndexerRssHealthCheckNoIndexers": "RSS 동기화가 활성화 된 상태에서 사용할 수있는 인덱서가 없습니다. Whisparr는 새 출시를 자동으로 가져 오지 않습니다.",
     "IndexerSearchCheckNoAutomaticMessage": "자동 검색이 활성화 된 상태에서 사용할 수있는 인덱서가 없습니다. Whisparr는 자동 검색 결과를 제공하지 않습니다.",
-    "MountCheckMessage": "동영상 경로가 포함된 마운트는 읽기 전용으로 마운트됩니다. ",
+    "MountArtistHealthCheckMessage": "동영상 경로가 포함된 마운트는 읽기 전용으로 마운트됩니다. ",
     "ProxyCheckFailedToTestMessage": "프록시 테스트 실패 : {0}",
     "ProxyCheckResolveIpMessage": "구성된 프록시 호스트 {0}의 IP 주소를 확인하지 못했습니다.",
     "UpdateCheckStartupNotWritableMessage": "'{1}'사용자가 '{0}'시작 폴더에 쓸 수 없기 때문에 업데이트를 설치할 수 없습니다.",

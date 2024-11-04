@@ -610,7 +610,7 @@
     "IndexerStatusCheckSingleClientMessage": "ตัวจัดทำดัชนีไม่พร้อมใช้งานเนื่องจากความล้มเหลว: {0}",
     "MaintenanceRelease": "รุ่นการบำรุงรักษา: การแก้ไขข้อบกพร่องและการปรับปรุงอื่น ๆ ดู Github Commit History สำหรับรายละเอียดเพิ่มเติม",
     "MinFormatScoreHelpText": "คะแนนรูปแบบกำหนดเองขั้นต่ำที่อนุญาตให้ดาวน์โหลด",
-    "MountCheckMessage": "เมาท์ที่มีเส้นทางภาพยนตร์ถูกเมาท์แบบอ่านอย่างเดียว: ",
+    "MountArtistHealthCheckMessage": "เมาท์ที่มีเส้นทางภาพยนตร์ถูกเมาท์แบบอ่านอย่างเดียว: ",
     "NegateHelpText": "หากเลือกรูปแบบที่กำหนดเองจะใช้ไม่ได้หากเงื่อนไข {0} นี้ตรง",
     "ReplaceWithDash": "แทนที่ด้วย Dash",
     "ReplaceWithSpaceDash": "แทนที่ด้วย Space Dash",

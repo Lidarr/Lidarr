@@ -762,7 +762,7 @@
   "MonitoringOptions": "Monitoring Options",
   "MonitoringOptionsHelpText": "Which albums should be monitored after the artist is added (one-time adjustment)",
   "MoreInfo": "More Info",
-  "MountCheckMessage": "Mount containing music path is mounted read-only: ",
+  "MountArtistHealthCheckMessage": "Mount containing an artist path is mounted read-only: ",
   "MoveAutomatically": "Move Automatically",
   "MoveFiles": "Move Files",
   "MultiDiscTrackFormat": "Multi Disc Track Format",

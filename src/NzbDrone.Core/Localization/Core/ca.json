@@ -630,7 +630,7 @@
     "IndexerStatusCheckAllClientMessage": "Tots els indexadors no estan disponibles a causa d'errors",
     "IndexerLongTermStatusCheckSingleClientMessage": "Els indexadors no estan disponibles a causa d'errors durant més de 6 hores: {0}",
     "IndexerStatusCheckSingleClientMessage": "Els indexadors no estan disponibles a causa d'errors: {0}",
-    "MountCheckMessage": "El muntatge que conté una ruta de pel·lícula es munta com a només de lectura: ",
+    "MountArtistHealthCheckMessage": "El muntatge que conté una ruta de pel·lícula es munta com a només de lectura: ",
     "ReplaceWithDash": "Substitueix per guió",
     "ReplaceWithSpaceDash": "Substitueix per espai i guió",
     "ReplaceWithSpaceDashSpace": "Substitueix per espai, guió i espai",

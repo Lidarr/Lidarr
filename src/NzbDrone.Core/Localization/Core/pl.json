@@ -645,7 +645,7 @@
     "IndexerSearchCheckNoInteractiveMessage": "Brak dostępnych indeksatorów z włączoną funkcją wyszukiwania interaktywnego, {appName} nie zapewni żadnych interaktywnych wyników wyszukiwania",
     "IndexerStatusCheckAllClientMessage": "Wszystkie indeksatory są niedostępne z powodu błędów",
     "IndexerStatusCheckSingleClientMessage": "Indeksatory niedostępne z powodu błędów: {0}",
-    "MountCheckMessage": "Montaż zawierający ścieżkę filmu jest montowany tylko do odczytu: ",
+    "MountArtistHealthCheckMessage": "Montaż zawierający ścieżkę filmu jest montowany tylko do odczytu: ",
     "RemotePathMappingCheckFileRemoved": "Plik {0} został usunięty w trakcie przetwarzania.",
     "RemotePathMappingCheckBadDockerPath": "Korzystasz z Dockera. Klient pobierania {0} umieszcza pobrane pliki w {1}, lecz nie jest to poprawna ścieżka {2}. Zmień ustawienia zdalnego mapowania ścieżek i klienta pobierania.",
     "RemotePathMappingCheckDockerFolderMissing": "Korzystasz z Dockera. Klient pobierania {0} umieszcza pobrane pliki w {1}, lecz tej folder nie istnieje wewnątrz kontenera. Zmień ustawienia zdalnego mapowania ścieżek i woluminów kontenera.",
