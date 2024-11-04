@@ -751,7 +751,7 @@
     "ResetTitlesHelpText": "Скинути заголовки визначень, а також значення",
     "NoChange": "Без змін",
     "PreferredSize": "Бажаний розмір",
-    "MountCheckMessage": "Монтування, що містить шлях до фільму, монтується лише для читання: ",
+    "MountArtistHealthCheckMessage": "Монтування, що містить шлях до фільму, монтується лише для читання: ",
     "PreferUsenet": "Віддавайте перевагу Usenet",
     "ForMoreInformationOnTheIndividualListsClickOnTheInfoButtons": "Щоб отримати додаткову інформацію про окремі списки імпорту, натисніть інформаційні кнопки.",
     "DeleteSelectedDownloadClientsMessageText": "Ви впевнені, що хочете видалити тег {0} ?",

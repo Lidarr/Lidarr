@@ -1079,7 +1079,7 @@
     "UnableToLoadCustomFormats": "Virhe ladattaessa mukautettuja muotoja",
     "Customformat": "Mukautettu muoto",
     "ExportCustomFormat": "Vie mukautettu muoto",
-    "MountCheckMessage": "Kohteen sijainnin sisältävä media on kytketty vain luku -tilassa: ",
+    "MountArtistHealthCheckMessage": "Kohteen sijainnin sisältävä media on kytketty vain luku -tilassa: ",
     "NoResultsFound": "Tuloksia ei löytynyt.",
     "CustomFormatSettings": "Mukautettujen muotojen asetukset",
     "AlbumStudioTracksDownloaded": "{trackFileCount}/{totalTrackCount} kappaletta ladattu",

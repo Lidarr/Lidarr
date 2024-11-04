@@ -708,7 +708,7 @@
     "ImportListStatusCheckAllClientMessage": "Todas as listas estão indisponíveis devido a erros",
     "ImportListStatusCheckSingleClientMessage": "Listas indisponíveis devido a erros: {0}",
     "ImportMechanismHealthCheckMessage": "Ativar processamento de transferências terminadas",
-    "MountCheckMessage": "O volume que contém um caminho de filme é somente leitura: ",
+    "MountArtistHealthCheckMessage": "O volume que contém um caminho de filme é somente leitura: ",
     "ProxyCheckBadRequestMessage": "Falha ao testar o proxy. Código de estado: {0}",
     "ProxyCheckFailedToTestMessage": "Falha ao testar o proxy: {0}",
     "ProxyCheckResolveIpMessage": "Não é possível resolver o Endereço IP para o Anfitrião de proxy {0} definido",

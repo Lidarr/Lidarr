@@ -773,7 +773,7 @@
     "MinFormatScoreHelpText": "Lägsta möjliga anpassade formatpoäng tillåtet att ladda ner",
     "Monitor": "Bevakning",
     "Monitoring": "Bevakar",
-    "MountCheckMessage": "Montering (eng. Mount) innehållande filmsökväg är monterad med endast Läs-behörighet: ",
+    "MountArtistHealthCheckMessage": "Montering (eng. Mount) innehållande filmsökväg är monterad med endast Läs-behörighet: ",
     "PreferTorrent": "Föredrar Torrent",
     "PreferUsenet": "Föredra Usenet",
     "ReplaceWithDash": "Ersätt med bindestreck",

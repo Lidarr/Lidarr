@@ -717,7 +717,7 @@
     "IndexerStatusCheckAllClientMessage": "Tous les indexeurs sont indisponibles en raison d'échecs",
     "IndexerStatusCheckSingleClientMessage": "Indexeurs indisponibles en raison d'échecs : {0}",
     "Loading": "Chargement",
-    "MountCheckMessage": "Le montage contenant un chemin de film est monté en lecture seule : ",
+    "MountArtistHealthCheckMessage": "Le montage contenant un chemin de film est monté en lecture seule : ",
     "ProxyCheckBadRequestMessage": "Échec du test du proxy. StatusCode : {0}",
     "ProxyCheckFailedToTestMessage": "Échec du test du proxy : {0}",
     "ProxyCheckResolveIpMessage": "Impossible de résoudre l'adresse IP de l'hôte proxy configuré {0}",

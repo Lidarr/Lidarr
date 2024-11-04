@@ -609,7 +609,7 @@
     "IndexerSearchCheckNoInteractiveMessage": "Etkileşimli Arama etkinleştirilmiş fakat dizinleyici mevcut değil; {appName} herhangi bir etkileşimli arama sonucu sağlayamayacaktır",
     "IndexerStatusCheckAllClientMessage": "Hatalar nedeniyle tüm dizinleyiciler kullanılamıyor",
     "IndexerStatusCheckSingleClientMessage": "Hatalar nedeniyle dizinleyiciler kullanılamıyor: {0}",
-    "MountCheckMessage": "Bir film yolu içeren bağlama, salt okunur olarak bağlanır: ",
+    "MountArtistHealthCheckMessage": "Bir film yolu içeren bağlama, salt okunur olarak bağlanır: ",
     "ProxyCheckBadRequestMessage": "Proxy ile test edilemedi. DurumKodu: {0}",
     "ProxyCheckFailedToTestMessage": "Proxy ile test edilemedi: {0}",
     "ProxyCheckResolveIpMessage": "{0} Yapılandırılmış Proxy Ana Bilgisayarının IP Adresi çözülemedi",

@@ -867,7 +867,7 @@
     "IndexerSearchCheckNoInteractiveMessage": "Keine Indexer mit aktivierter interaktiver Suche verfügbar, {appName} wird keine interaktiven Suchergebnisse liefern",
     "IndexerStatusCheckAllClientMessage": "Alle Indexer sind aufgrund von Fehlern nicht verfügbar",
     "IndexerStatusCheckSingleClientMessage": "Indexer aufgrund von Fehlern nicht verfügbar: {0}",
-    "MountCheckMessage": "Der Einhängepunkt, welcher einen Filmpfad enthält, ist schreibgeschützt eingehängt: ",
+    "MountArtistHealthCheckMessage": "Der Einhängepunkt, welcher einen Filmpfad enthält, ist schreibgeschützt eingehängt: ",
     "ProxyCheckBadRequestMessage": "Proxy konnte nicht getestet werden. StatusCode: {0}",
     "ProxyCheckFailedToTestMessage": "Proxy konnte nicht getestet werden: {0}",
     "ProxyCheckResolveIpMessage": "Fehler beim Auflösen der IP-Adresse für den konfigurierten Proxy-Host {0}",

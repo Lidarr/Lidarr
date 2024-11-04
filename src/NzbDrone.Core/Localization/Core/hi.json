@@ -613,7 +613,7 @@
     "IndexerSearchCheckNoInteractiveMessage": "इंटरएक्टिव सर्च सक्षम के साथ कोई भी इंडेक्स उपलब्ध नहीं है, रेडर किसी भी इंटरैक्टिव खोज परिणाम प्रदान नहीं करेगा",
     "IndexerStatusCheckAllClientMessage": "विफलताओं के कारण सभी अनुक्रमणिका अनुपलब्ध हैं",
     "IndexerStatusCheckSingleClientMessage": "अनुक्रमणिका विफलताओं के कारण अनुपलब्ध: {0}",
-    "MountCheckMessage": "मूवी पथ पर माउंट माउंट केवल पढ़ने योग्य है: ",
+    "MountArtistHealthCheckMessage": "मूवी पथ पर माउंट माउंट केवल पढ़ने योग्य है: ",
     "ProxyCheckBadRequestMessage": "प्रॉक्सी का परीक्षण करने में विफल। स्थिति कोड: {0}",
     "ProxyCheckFailedToTestMessage": "प्रॉक्सी का परीक्षण करने में विफल: {0}",
     "ProxyCheckResolveIpMessage": "कॉन्फ़िगर प्रॉक्सी होस्ट {0} के लिए आईपी एड्रेस को हल करने में विफल",

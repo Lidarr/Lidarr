@@ -717,7 +717,7 @@
     "IndexerSearchCheckNoInteractiveMessage": "Non è disponibile nessun indexer con abilitata la Ricerca Interattiva, {appName} non fornirà nessun risultato tramite la ricerca interattiva",
     "IndexerStatusCheckAllClientMessage": "Nessun Indicizzatore disponibile a causa di errori",
     "IndexerStatusCheckSingleClientMessage": "Indicizzatori non disponibili a causa di errori: {0}",
-    "MountCheckMessage": "La destinazione contenente il percorso di un film è montata in sola lettura: ",
+    "MountArtistHealthCheckMessage": "La destinazione contenente il percorso di un film è montata in sola lettura: ",
     "ProxyCheckFailedToTestMessage": "Test del proxy fallito: {0}",
     "ProxyCheckBadRequestMessage": "Il test del proxy è fallito. Codice Stato: {0}",
     "RemotePathMappingCheckBadDockerPath": "Stai utilizzando docker; Il client di download {0} mette i download in {1} ma questo non è un percorso valido {2}. Controlla la mappa dei percorsi remoti e le impostazioni del client di download.",

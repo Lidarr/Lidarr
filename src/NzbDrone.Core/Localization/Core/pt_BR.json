@@ -902,7 +902,7 @@
     "IndexerStatusCheckSingleClientMessage": "Indexadores indisponíveis devido a falhas: {0}",
     "Loading": "carregando",
     "MonitorAlbum": "Monitorar Álbum",
-    "MountCheckMessage": "A montagem que contém o caminho da música é montada somente para leitura: ",
+    "MountArtistHealthCheckMessage": "A montagem que contém o caminho da música é montada somente para leitura: ",
     "OnHealthRestored": "Com a Saúde Restaurada",
     "ProxyCheckBadRequestMessage": "Falha ao testar o proxy. Código de status: {0}",
     "ProxyCheckFailedToTestMessage": "Falha ao testar o proxy: {0}",

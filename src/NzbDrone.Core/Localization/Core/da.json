@@ -615,7 +615,7 @@
     "IndexerSearchCheckNoInteractiveMessage": "Ingen indexere er tilgængelige med Interaktiv Søg aktiveret, {appName} vil ikke give nogle interaktive søge resultater",
     "IndexerStatusCheckAllClientMessage": "Alle indeksører er utilgængelige på grund af fejl",
     "IndexerStatusCheckSingleClientMessage": "Indexere utilgængelige på grund af fejl: {0}",
-    "MountCheckMessage": "Mount, der indeholder en filmsti, er monteret skrivebeskyttet: ",
+    "MountArtistHealthCheckMessage": "Mount, der indeholder en filmsti, er monteret skrivebeskyttet: ",
     "ProxyCheckBadRequestMessage": "Kunne ikke teste proxy. Statuskode: {0}",
     "ProxyCheckFailedToTestMessage": "Kunne ikke teste proxy: {0}",
     "ProxyCheckResolveIpMessage": "Mislykkedes at løse IP-adressen til den konfigurerede proxyhost {0}",

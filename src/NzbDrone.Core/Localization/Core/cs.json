@@ -601,7 +601,7 @@
     "IndexerSearchCheckNoAutomaticMessage": "Nejsou k dispozici žádné indexery se zapnutým automatickým vyhledáváním, {appName} neposkytne žádné automatické výsledky hledání",
     "IndexerSearchCheckNoAvailableIndexersMessage": "Všechny indexery podporující vyhledávání jsou dočasně nedostupné kvůli nedávným chybám indexeru",
     "IndexerStatusCheckSingleClientMessage": "Indexery nedostupné z důvodu selhání: {0}",
-    "MountCheckMessage": "Mount obsahující filmovou cestu je připojen jen pro čtení: ",
+    "MountArtistHealthCheckMessage": "Mount obsahující filmovou cestu je připojen jen pro čtení: ",
     "ProxyCheckBadRequestMessage": "Nepodařilo se otestovat proxy. StatusCode: {0}",
     "ProxyCheckFailedToTestMessage": "Nepodařilo se otestovat proxy: {0}",
     "ProxyCheckResolveIpMessage": "Nepodařilo se vyřešit adresu IP konfigurovaného hostitele proxy {0}",

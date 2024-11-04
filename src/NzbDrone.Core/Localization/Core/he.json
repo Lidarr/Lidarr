@@ -622,7 +622,7 @@
     "DownloadClientStatusCheckSingleClientMessage": "הורדת לקוחות לא זמינה עקב כשלים: {0}",
     "IndexerStatusCheckAllClientMessage": "כל האינדקסים אינם זמינים עקב כשלים",
     "IndexerStatusCheckSingleClientMessage": "אינדקסים לא זמינים בגלל כשלים: {0}",
-    "MountCheckMessage": "הר המכיל נתיב סרט מותקן לקריאה בלבד: ",
+    "MountArtistHealthCheckMessage": "הר המכיל נתיב סרט מותקן לקריאה בלבד: ",
     "ProxyCheckBadRequestMessage": "נכשל בדיקת ה- proxy. קוד קוד: {0}",
     "ProxyCheckFailedToTestMessage": "נכשל בדיקת ה- proxy: {0}",
     "ProxyCheckResolveIpMessage": "פתרון כתובת ה- IP עבור מארח ה- Proxy המוגדר {0} נכשל",

@@ -596,7 +596,7 @@
     "IndexerRssHealthCheckNoAvailableIndexers": "最近のインデクサーエラーのため、すべてのrss対応インデクサーは一時的に利用できません",
     "IndexerStatusCheckAllClientMessage": "障害のため、すべてのインデクサーを使用できません",
     "IndexerStatusCheckSingleClientMessage": "失敗のためインデクサーを利用できません：{0}",
-    "MountCheckMessage": "ムービーパスを含むマウントは読み取り専用でマウントされます。 ",
+    "MountArtistHealthCheckMessage": "ムービーパスを含むマウントは読み取り専用でマウントされます。 ",
     "RootFolderCheckMultipleMessage": "複数のルートフォルダがありません：{0}",
     "RootFolderCheckSingleMessage": "ルートフォルダがありません：{0}",
     "ShownClickToHide": "表示、クリックして非表示",

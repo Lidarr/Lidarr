@@ -614,7 +614,7 @@
     "IndexerLongTermStatusCheckSingleClientMessage": "Vísitölufólk er ekki tiltækt vegna bilana í meira en 6 klukkustundir: {0}",
     "IndexerRssHealthCheckNoAvailableIndexers": "Allir indexers sem styðja rss eru tímabundið ófáanlegir vegna nýlegra villubreytinga",
     "IndexerRssHealthCheckNoIndexers": "Engir verðtryggingaraðilar í boði með RSS samstillingu virkt, {appName} mun ekki grípa í nýjar útgáfur sjálfkrafa",
-    "MountCheckMessage": "Fjall sem inniheldur kvikmyndaslóð er aðeins skrifvarið: ",
+    "MountArtistHealthCheckMessage": "Fjall sem inniheldur kvikmyndaslóð er aðeins skrifvarið: ",
     "ReplaceWithDash": "Skiptu um með Dash",
     "ReplaceWithSpaceDashSpace": "Skiptu um með Space Dash Space",
     "RootFolderCheckMultipleMessage": "Margar rótarmöppur vantar: {0}",

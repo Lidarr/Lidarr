@@ -603,7 +603,7 @@
     "IndexerSearchCheckNoAutomaticMessage": "Няма налични индексатори с активирано автоматично търсене, {appName} няма да предоставя резултати от автоматично търсене",
     "IndexerSearchCheckNoAvailableIndexersMessage": "Всички индексатори с възможност за търсене са временно недостъпни поради скорошни грешки в индексатора",
     "IndexerStatusCheckAllClientMessage": "Всички индексатори са недостъпни поради грешки",
-    "MountCheckMessage": "Монтажът, съдържащ път на филм, е монтиран само за четене: ",
+    "MountArtistHealthCheckMessage": "Монтажът, съдържащ път на филм, е монтиран само за четене: ",
     "ProxyCheckBadRequestMessage": "Неуспешно тестване на прокси. Код на състоянието: {0}",
     "ProxyCheckResolveIpMessage": "Неуспешно разрешаване на IP адреса за конфигурирания прокси хост {0}",
     "ReplaceWithDash": "Заменете с Dash",

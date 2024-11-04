@@ -887,7 +887,7 @@
     "DownloadClientCheckUnableToCommunicateMessage": "Nem lehet kommunikálni a következővel: {0}.",
     "DownloadClientStatusCheckAllClientMessage": "Az összes letöltőkliens elérhetetlen, hiba miatt",
     "DownloadClientStatusCheckSingleClientMessage": "Letöltőkliens hiba miatt nem elérhető: {0}",
-    "MountCheckMessage": "A filmútvonalat tartalmazó mappa csak olvasható: ",
+    "MountArtistHealthCheckMessage": "A filmútvonalat tartalmazó mappa csak olvasható: ",
     "ProxyCheckBadRequestMessage": "Proxy tesztelése sikertelen. Állapotkód: {0}",
     "ProxyCheckFailedToTestMessage": "Proxy tesztelése sikertelen: {0}",
     "ProxyCheckResolveIpMessage": "Nem sikerült megoldani a konfigurált proxykiszolgáló IP-címét {0}",
