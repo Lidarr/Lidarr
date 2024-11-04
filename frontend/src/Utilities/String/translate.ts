@@ -27,6 +27,12 @@ export default function translate(
   key: string,
   tokens: Record<string, string | number | boolean> = {}
 ) {
+  const { isProduction = true } = window.Lidarr;
+
+  if (!isProduction && !(key in translations)) {
+    console.warn(`Missing translation for key: ${key}`);
+  }
+
   const translation = translations[key] || key;
 
   tokens.appName = 'Lidarr';
