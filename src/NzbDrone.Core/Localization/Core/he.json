@@ -785,5 +785,9 @@
     "DockerUpdater": "עדכן את מיכל העגינה לקבל את העדכון",
     "InstallLatest": "התקן את האחרונה",
     "OnLatestVersion": "הגרסה האחרונה של {appName} כבר מותקנת",
-    "Shutdown": "לכבות"
+    "Shutdown": "לכבות",
+    "AddReleaseProfile": "ערוך פרופיל עיכוב",
+    "UnmappedFiles": "תיקיות לא ממופות",
+    "Clone": "סגור",
+    "EditReleaseProfile": "ערוך פרופיל עיכוב"
 }

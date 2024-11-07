@@ -787,5 +787,9 @@
     "InstallLatest": "Instalați cel mai recent",
     "OnLatestVersion": "Cea mai recentă versiune a {appName} este deja instalată",
     "Shutdown": "Oprește",
-    "UpdateAppDirectlyLoadError": "Imposibil de actualizat direct {appName},"
+    "UpdateAppDirectlyLoadError": "Imposibil de actualizat direct {appName},",
+    "UnmappedFiles": "Foldere nemapate",
+    "EditReleaseProfile": "Editați profilul de întârziere",
+    "Clone": "Închide",
+    "AddReleaseProfile": "Editați profilul de întârziere"
 }

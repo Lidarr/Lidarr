@@ -909,11 +909,13 @@
     "DeleteSelectedCustomFormats": "Ta bort anpassat format",
     "IncludeCustomFormatWhenRenaming": "Inkludera anpassat format när du byter namn",
     "AptUpdater": "Använd apt för att installera uppdateringen",
-    "CancelPendingTask": "Är du säker på att du vill avbryta den väntande uppgiften?",
     "DockerUpdater": "uppdatera dockerbehållaren för att ta emot uppdateringen",
     "ExternalUpdater": "{appName} är konfigurerad för att använda en extern uppdateringsmekanism",
     "InstallLatest": "Installera senaste",
     "OnLatestVersion": "Den senaste versionen av {appName} är redan installerad",
     "Shutdown": "Stäng av",
-    "UpdateAppDirectlyLoadError": "Det går inte att uppdatera {appName} direkt,"
+    "UpdateAppDirectlyLoadError": "Det går inte att uppdatera {appName} direkt,",
+    "AddReleaseProfile": "Redigera fördröjningsprofil",
+    "Clone": "Avsluta",
+    "EditReleaseProfile": "Redigera fördröjningsprofil"
 }

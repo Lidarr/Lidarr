@@ -219,5 +219,8 @@
     "ItsEasyToAddANewArtistJustStartTypingTheNameOfTheArtistYouWantToAdd": "加入新的電影很簡單，只需要輸入您想加入的電影名稱",
     "EditMetadataProfile": "中繼資料配置",
     "BuiltIn": "內建",
-    "AptUpdater": "使用apt安裝更新"
+    "AptUpdater": "使用apt安裝更新",
+    "AddReleaseProfile": "新增延時配置",
+    "EditReleaseProfile": "新增延時配置",
+    "Reason": "季"
 }

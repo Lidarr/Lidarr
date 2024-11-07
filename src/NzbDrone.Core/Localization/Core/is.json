@@ -738,11 +738,14 @@
     "DeleteSelectedCustomFormats": "Eyða sérsniðnu sniði",
     "IncludeCustomFormatWhenRenaming": "Láttu sérsniðið snið fylgja með þegar þú endurnefnir",
     "AptUpdater": "Notaðu apt til að setja uppfærsluna upp",
-    "CancelPendingTask": "Ertu viss um að þú viljir hætta við þetta verkefni í bið?",
     "DockerUpdater": "uppfærðu bryggjugáminn til að fá uppfærsluna",
     "ExternalUpdater": "{appName} er stilltur til að nota ytri uppfærslu",
     "InstallLatest": "Settu upp nýjustu",
     "OnLatestVersion": "Nýjasta útgáfan af {appName} er þegar uppsett",
     "Shutdown": "Lokun",
-    "UpdateAppDirectlyLoadError": "Ekki er hægt að uppfæra {appName} beint,"
+    "UpdateAppDirectlyLoadError": "Ekki er hægt að uppfæra {appName} beint,",
+    "EditReleaseProfile": "Breyta seinkunarprófíl",
+    "UnmappedFiles": "Ókortlagðar möppur",
+    "Clone": "Lokaðu",
+    "AddReleaseProfile": "Breyta seinkunarprófíl"
 }

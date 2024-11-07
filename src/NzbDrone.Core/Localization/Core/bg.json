@@ -743,11 +743,14 @@
     "DeleteSelectedCustomFormats": "Изтриване на потребителски формат",
     "IncludeCustomFormatWhenRenaming": "Включете персонализиран формат при преименуване",
     "AptUpdater": "Използвайте apt, за да инсталирате актуализацията",
-    "CancelPendingTask": "Наистина ли искате да отмените тази чакаща задача?",
     "DockerUpdater": "актуализирайте контейнера на докера, за да получите актуализацията",
     "ExternalUpdater": "{appName} е конфигуриран да използва външен механизъм за актуализация",
     "InstallLatest": "Инсталирайте най-новите",
     "OnLatestVersion": "Вече е инсталирана най-новата версия на {appName}",
     "Shutdown": "Изключвам",
-    "UpdateAppDirectlyLoadError": "Не може да се актуализира {appName} директно,"
+    "UpdateAppDirectlyLoadError": "Не може да се актуализира {appName} директно,",
+    "EditReleaseProfile": "Редактиране на профил за забавяне",
+    "Clone": "Близо",
+    "AddReleaseProfile": "Редактиране на профил за забавяне",
+    "UnmappedFiles": "Немапирани папки"
 }

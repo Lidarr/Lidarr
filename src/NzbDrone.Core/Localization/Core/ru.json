@@ -1075,5 +1075,6 @@
     "Shutdown": "Выключить",
     "UpdateAppDirectlyLoadError": "Невозможно обновить {appName} напрямую,",
     "DockerUpdater": "Обновите контейнер Docker, чтобы получить обновление",
-    "CountCustomFormatsSelected": "{count} пользовательских форматов выбрано"
+    "CountCustomFormatsSelected": "{count} пользовательских форматов выбрано",
+    "UnmappedFiles": "Несопоставленные папки"
 }

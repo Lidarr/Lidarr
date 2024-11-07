@@ -1042,5 +1042,11 @@
     "InstallMajorVersionUpdate": "Güncellemeyi Kur",
     "InstallMajorVersionUpdateMessage": "Bu güncelleştirme yeni bir ana sürüm yükleyecek ve sisteminizle uyumlu olmayabilir. Bu güncelleştirmeyi yüklemek istediğinizden emin misiniz?",
     "InstallMajorVersionUpdateMessageLink": "Daha fazla bilgi için lütfen [{domain}]({url}) adresini kontrol edin.",
-    "SmartReplace": "Akıllı Değiştir"
+    "SmartReplace": "Akıllı Değiştir",
+    "DashOrSpaceDashDependingOnName": "İsme bağlı olarak Dash veya Space Dash",
+    "Discography": "diskografi",
+    "UnmappedFiles": "Eşlenmemiş Klasörler",
+    "Artist": "sanatçı",
+    "Season": "Sezon",
+    "CatalogNumber": "katalog numarası"
 }
