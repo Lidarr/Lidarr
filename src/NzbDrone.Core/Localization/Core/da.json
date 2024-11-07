@@ -781,5 +781,7 @@
     "OnLatestVersion": "Den seneste version af {appName} er allerede installeret",
     "Shutdown": "Lukke ned",
     "UpdateAppDirectlyLoadError": "Kan ikke opdatere {appName} direkte,",
-    "CancelPendingTask": "Er du sikker på, at du vil annullere denne afventende opgave?"
+    "EditReleaseProfile": "Rediger forsinkelsesprofil",
+    "UnmappedFiles": "Ikke-kortlagte mapper",
+    "Clone": "Luk"
 }

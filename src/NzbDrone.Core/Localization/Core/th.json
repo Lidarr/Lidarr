@@ -740,5 +740,9 @@
     "InstallLatest": "ติดตั้งล่าสุด",
     "OnLatestVersion": "มีการติดตั้ง {appName} เวอร์ชันล่าสุดแล้ว",
     "Shutdown": "ปิดตัวลง",
-    "UpdateAppDirectlyLoadError": "ไม่สามารถอัปเดต {appName} ได้โดยตรง"
+    "UpdateAppDirectlyLoadError": "ไม่สามารถอัปเดต {appName} ได้โดยตรง",
+    "Clone": "ปิด",
+    "AddReleaseProfile": "แก้ไขโปรไฟล์ความล่าช้า",
+    "UnmappedFiles": "โฟลเดอร์ที่ไม่ได้แมป",
+    "EditReleaseProfile": "แก้ไขโปรไฟล์ความล่าช้า"
 }

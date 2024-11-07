@@ -953,11 +953,11 @@
     "DeleteSelectedCustomFormatsMessageText": "Esteu segur que voleu suprimir {count} llista(es) d'importació seleccionada(es)?",
     "IncludeCustomFormatWhenRenaming": "Inclou el format personalitzat en canviar el nom",
     "AptUpdater": "Utilitzeu apt per a instal·lar l'actualització",
-    "CancelPendingTask": "Esteu segur que voleu cancel·lar aquesta tasca pendent?",
     "DockerUpdater": "actualitzeu el contenidor Docker per a rebre l'actualització",
     "ExternalUpdater": "{appName} està configurat per a utilitzar un mecanisme d'actualització extern",
     "InstallLatest": "Instal·la l'últim",
     "OnLatestVersion": "La darrera versió de {appName} ja està instal·lada",
     "Shutdown": "Apaga",
-    "UpdateAppDirectlyLoadError": "No es pot actualitzar {appName} directament,"
+    "UpdateAppDirectlyLoadError": "No es pot actualitzar {appName} directament,",
+    "UnmappedFiles": "Carpetes sense mapejar"
 }

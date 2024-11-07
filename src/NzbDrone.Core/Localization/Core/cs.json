@@ -876,11 +876,11 @@
     "DeleteSelectedCustomFormatsMessageText": "Opravdu chcete smazat {count} vybraných seznamů k importu?",
     "IncludeCustomFormatWhenRenaming": "Při přejmenování zahrnout vlastní formát",
     "AptUpdater": "K instalaci aktualizace použijte apt",
-    "CancelPendingTask": "Opravdu chcete zrušit tento nevyřízený úkol?",
     "DockerUpdater": "aktualizujte kontejner dockeru, abyste aktualizaci obdrželi",
     "InstallLatest": "Nainstalujte nejnovější",
     "Shutdown": "Vypnout",
     "UpdateAppDirectlyLoadError": "{appName} nelze aktualizovat přímo,",
     "ExternalUpdater": "{appName} je nakonfigurován pro použití externího aktualizačního mechanismu",
-    "OnLatestVersion": "Nejnovější verze aplikace {appName} je již nainstalována"
+    "OnLatestVersion": "Nejnovější verze aplikace {appName} je již nainstalována",
+    "UnmappedFiles": "Nezmapované složky"
 }
