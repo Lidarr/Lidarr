@@ -292,5 +292,6 @@
     "BuiltIn": "Vstavaný",
     "DeleteSelectedCustomFormats": "Klonovať vlastný formát",
     "AptUpdater": "Použiť apt pre inštaláciu aktualizácie",
-    "CancelPendingTask": "Naozaj chcete zrušiť túto prebiehajúcu úlohu?"
+    "Clone": "Zatvoriť",
+    "Reason": "Séria"
 }

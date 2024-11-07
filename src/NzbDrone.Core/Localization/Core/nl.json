@@ -18,7 +18,7 @@
     "Calendar": "Kalender",
     "CalendarWeekColumnHeaderHelpText": "Wordt getoond boven elke kolom wanneer de actieve weergave Week is",
     "Cancel": "Annuleer",
-    "CancelPendingTask": "Bent u zeker dat u deze taak in afwachting wilt annuleren?",
+    "CancelPendingTask": "Ben je zeker dat je deze onafgewerkte taak wil annuleren?",
     "CertificateValidation": "Certificaat Validatie",
     "CertificateValidationHelpText": "Wijzig hoe strict HTTPS certificaat validatie is. Wijzig dit niet behalve als je de risico's begrijpt.",
     "ChangeFileDate": "Wijzig Bestandsdatum",
@@ -891,11 +891,11 @@
     "BypassIfAboveCustomFormatScoreHelpText": "Schakel omleiding in als de release een score heeft die hoger is dan de geconfigureerde minimale aangepaste formaatscore",
     "MinimumCustomFormatScoreHelpText": "Minimumscore aangepast formaat vereist om vertraging voor het voorkeursprotocol te omzeilen",
     "AptUpdater": "Gebruik apt om de update te installeren",
-    "CancelPendingTask": "Ben je zeker dat je deze onafgewerkte taak wil annuleren?",
     "DockerUpdater": "Update de docker container om de update te ontvangen",
     "InstallLatest": "Installeer Nieuwste Versie",
     "OnLatestVersion": "De nieuwste versie van {appName} is al geïnstalleerd",
     "Shutdown": "Afsluiten",
     "ExternalUpdater": "{appName} is geconfigureerd om een extern update mechanisme te gebruiken",
-    "UpdateAppDirectlyLoadError": "Kan {appName} niet rechtstreeks updaten,"
+    "UpdateAppDirectlyLoadError": "Kan {appName} niet rechtstreeks updaten,",
+    "UnmappedFiles": "Niet-toegewezen Mappen"
 }

@@ -15,5 +15,7 @@
     "ExportCustomFormat": "Pievienot Pielāgotu Formātu",
     "AddIndexerImplementation": "Pievienot Nosacījumu - {implementationName}",
     "EditConnectionImplementation": "Pievienot Savienojumu - {implementationName}",
-    "EditDelayProfile": "Pievienot Aizkaves Profilu"
+    "EditDelayProfile": "Pievienot Aizkaves Profilu",
+    "AddReleaseProfile": "Pievienot Aizkaves Profilu",
+    "EditReleaseProfile": "Pievienot Aizkaves Profilu"
 }

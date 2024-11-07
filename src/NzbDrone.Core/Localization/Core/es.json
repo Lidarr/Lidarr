@@ -1329,5 +1329,6 @@
     "PreviouslyInstalled": "Previamente instalado",
     "Shutdown": "Apagar",
     "UpdateAppDirectlyLoadError": "No se pudo actualizar {appName} directamente,",
-    "InstallMajorVersionUpdateMessageLink": "Por favor revisa [{domain}]({url}) para más información."
+    "InstallMajorVersionUpdateMessageLink": "Por favor revisa [{domain}]({url}) para más información.",
+    "ManageFormats": "Gestionar formatos"
 }

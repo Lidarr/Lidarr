@@ -273,5 +273,7 @@
     "BuiltIn": "Bygget inn",
     "DeleteSelectedCustomFormats": "Klon egendefinert format",
     "DeleteSelectedCustomFormatsMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
-    "AptUpdater": "Bruk apt til å installere oppdateringen"
+    "AptUpdater": "Bruk apt til å installere oppdateringen",
+    "Clone": "Lukk",
+    "Reason": "Sesong"
 }
