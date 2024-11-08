@@ -19,7 +19,12 @@ const messages = [
   'I\'ll be here all week',
   'Don\'t forget to tip your waitress',
   'Apply directly to the forehead',
-  'Loading Battlestation'
+  'Loading Battlestation',
+  'Adding more cowbell…',
+  'Loading… feel the rhythm!',
+  'Spinning the vinyl…',
+  'Syncing with the beat…',
+  'Preparing the setlist…'
 ];
 
 let message = null;
