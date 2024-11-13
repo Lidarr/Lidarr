@@ -6,6 +6,7 @@
 ![Github Downloads](https://img.shields.io/github/downloads/lidarr/lidarr/total.svg)
 [![Backers on Open Collective](https://opencollective.com/lidarr/backers/badge.svg)](#backers) 
 [![Sponsors on Open Collective](https://opencollective.com/lidarr/sponsors/badge.svg)](#sponsors)
+[![Gurubase](https://img.shields.io/badge/Gurubase-Ask%20Lidarr%20Guru-006BFF)](https://gurubase.io/g/lidarr)
 
 Lidarr is a music collection manager for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new tracks from your favorite artists and will grab, sort and rename them. It can also be configured to automatically upgrade the quality of files already downloaded when a better quality format becomes available.
 
