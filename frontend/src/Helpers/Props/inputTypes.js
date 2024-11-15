@@ -2,8 +2,8 @@ export const AUTO_COMPLETE = 'autoComplete';
 export const CAPTCHA = 'captcha';
 export const CHECK = 'check';
 export const DEVICE = 'device';
-export const PLAYLIST = 'playlist';
 export const KEY_VALUE_LIST = 'keyValueList';
+export const PLAYLIST = 'playlist';
 export const MONITOR_ALBUMS_SELECT = 'monitorAlbumsSelect';
 export const MONITOR_NEW_ITEMS_SELECT = 'monitorNewItemsSelect';
 export const FLOAT = 'float';
@@ -34,8 +34,8 @@ export const all = [
   CAPTCHA,
   CHECK,
   DEVICE,
-  PLAYLIST,
   KEY_VALUE_LIST,
+  PLAYLIST,
   MONITOR_ALBUMS_SELECT,
   MONITOR_NEW_ITEMS_SELECT,
   FLOAT,
