@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
@@ -17,6 +18,8 @@ namespace NzbDrone.Core.Download.Clients.Transmission
 {
     public abstract class TransmissionBase : TorrentClientBase<TransmissionSettings>
     {
+        public abstract bool SupportsLabels { get; }
+
         protected readonly ITransmissionProxy _proxy;
 
         public TransmissionBase(ITransmissionProxy proxy,
@@ -35,7 +38,7 @@ namespace NzbDrone.Core.Download.Clients.Transmission
         public override IEnumerable<DownloadClientItem> GetItems()
         {
             var configFunc = new Lazy<TransmissionConfig>(() => _proxy.GetConfig(Settings));
-            var torrents = _proxy.GetTorrents(Settings);
+            var torrents = _proxy.GetTorrents(null, Settings);
 
             var items = new List<DownloadClientItem>();
 
@@ -43,36 +46,45 @@ namespace NzbDrone.Core.Download.Clients.Transmission
             {
                 var outputPath = new OsPath(torrent.DownloadDir);
 
-                if (Settings.MusicDirectory.IsNotNullOrWhiteSpace())
+                if (Settings.MusicCategory.IsNotNullOrWhiteSpace() && SupportsLabels && torrent.Labels is { Count: > 0 })
                 {
-                    if (!new OsPath(Settings.MusicDirectory).Contains(outputPath))
+                    if (!torrent.Labels.Contains(Settings.MusicCategory, StringComparer.InvariantCultureIgnoreCase))
                     {
                         continue;
                     }
                 }
-                else if (Settings.MusicCategory.IsNotNullOrWhiteSpace())
+                else
                 {
-                    var directories = outputPath.FullPath.Split('\\', '/');
-                    if (!directories.Contains(Settings.MusicCategory))
+                    if (Settings.MusicDirectory.IsNotNullOrWhiteSpace())
                     {
-                        continue;
+                        if (!new OsPath(Settings.MusicDirectory).Contains(outputPath))
+                        {
+                            continue;
+                        }
+                    }
+                    else if (Settings.MusicCategory.IsNotNullOrWhiteSpace())
+                    {
+                        var directories = outputPath.FullPath.Split('\\', '/');
+                        if (!directories.Contains(Settings.MusicCategory))
+                        {
+                            continue;
+                        }
                     }
                 }
 
                 outputPath = _remotePathMappingService.RemapRemoteToLocal(Settings.Host, outputPath);
 
-                var item = new DownloadClientItem();
-                item.DownloadId = torrent.HashString.ToUpper();
-                item.Category = Settings.MusicCategory;
-                item.Title = torrent.Name;
-
-                item.DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this, false);
-
-                item.OutputPath = GetOutputPath(outputPath, torrent);
-                item.TotalSize = torrent.TotalSize;
-                item.RemainingSize = torrent.LeftUntilDone;
-                item.SeedRatio = torrent.DownloadedEver <= 0 ? 0 :
-                    (double)torrent.UploadedEver / torrent.DownloadedEver;
+                var item = new DownloadClientItem
+                {
+                    DownloadId = torrent.HashString.ToUpper(),
+                    Category = Settings.MusicCategory,
+                    Title = torrent.Name,
+                    DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this, Settings.MusicImportedCategory.IsNotNullOrWhiteSpace() && SupportsLabels),
+                    OutputPath = GetOutputPath(outputPath, torrent),
+                    TotalSize = torrent.TotalSize,
+                    RemainingSize = torrent.LeftUntilDone,
+                    SeedRatio = torrent.DownloadedEver <= 0 ? 0 : (double)torrent.UploadedEver / torrent.DownloadedEver
+                };
 
                 if (torrent.Eta >= 0)
                 {
@@ -297,7 +309,7 @@ namespace NzbDrone.Core.Download.Clients.Transmission
         {
             try
             {
-                _proxy.GetTorrents(Settings);
+                _proxy.GetTorrents(null, Settings);
             }
             catch (Exception ex)
             {
@@ -306,6 +318,16 @@ namespace NzbDrone.Core.Download.Clients.Transmission
             }
 
             return null;
+        }
+
+        protected bool HasClientVersion(int major, int minor)
+        {
+            var rawVersion = _proxy.GetClientVersion(Settings);
+
+            var versionResult = Regex.Match(rawVersion, @"(?<!\(|(\d|\.)+)(\d|\.)+(?!\)|(\d|\.)+)").Value;
+            var clientVersion = Version.Parse(versionResult);
+
+            return clientVersion >= new Version(major, minor);
         }
     }
 }
