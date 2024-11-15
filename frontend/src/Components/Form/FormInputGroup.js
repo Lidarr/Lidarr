@@ -49,11 +49,11 @@ function getComponent(type) {
     case inputTypes.DEVICE:
       return DeviceInputConnector;
 
-    case inputTypes.PLAYLIST:
-      return PlaylistInputConnector;
-
     case inputTypes.KEY_VALUE_LIST:
       return KeyValueListInput;
+
+    case inputTypes.PLAYLIST:
+      return PlaylistInputConnector;
 
     case inputTypes.MONITOR_ALBUMS_SELECT:
       return MonitorAlbumsSelectInput;

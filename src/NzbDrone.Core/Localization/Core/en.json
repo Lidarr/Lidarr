@@ -844,6 +844,7 @@
   "NotificationsSettingsUpdateMapPathsTo": "Map Paths To",
   "NotificationsSettingsUpdateMapPathsToHelpText": "{serviceName} path, used to modify series paths when {serviceName} sees library path location differently from {appName} (Requires 'Update Library')",
   "NotificationsSettingsUseSslHelpText": "Connect to {serviceName} over HTTPS instead of HTTP",
+  "NotificationsSettingsWebhookHeaders": "Headers",
   "NotificationsTagsArtistHelpText": "Only send notifications for artists with at least one matching tag",
   "NotificationsTelegramSettingsIncludeAppName": "Include {appName} in Title",
   "NotificationsTelegramSettingsIncludeAppNameHelpText": "Optionally prefix message title with {appName} to differentiate notifications from different applications",
