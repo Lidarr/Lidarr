@@ -1,7 +1,7 @@
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
-using System.Text.RegularExpressions;
 using Dapper;
 using NLog;
 using NzbDrone.Common.Instrumentation;
@@ -39,10 +39,9 @@ namespace NzbDrone.Core.Datastore
         {
             get
             {
-                using (var db = _datamapperFactory())
-                {
-                    return db is SQLiteConnection ? DatabaseType.SQLite : DatabaseType.PostgreSQL;
-                }
+                using var db = _datamapperFactory();
+
+                return db is SQLiteConnection ? DatabaseType.SQLite : DatabaseType.PostgreSQL;
             }
         }
 
@@ -50,24 +49,10 @@ namespace NzbDrone.Core.Datastore
         {
             get
             {
-                using (var db = _datamapperFactory())
-                {
-                    string version;
+                using var db = _datamapperFactory();
+                var dbConnection = db as DbConnection;
 
-                    try
-                    {
-                        version = db.QueryFirstOrDefault<string>("SHOW server_version");
-
-                        // Postgres can return extra info about operating system on version call, ignore this
-                        version = Regex.Replace(version, @"\(.*?\)", "");
-                    }
-                    catch
-                    {
-                        version = db.QueryFirstOrDefault<string>("SELECT sqlite_version()");
-                    }
-
-                    return new Version(version);
-                }
+                return DatabaseVersionParser.ParseServerVersion(dbConnection.ServerVersion);
             }
         }
 
