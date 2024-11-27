@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using FluentValidation;
 using NzbDrone.Common.Extensions;
@@ -28,12 +29,25 @@ namespace NzbDrone.Core.Download.Clients.Transmission
     {
         private static readonly TransmissionSettingsValidator Validator = new TransmissionSettingsValidator();
 
+        // This constructor is used when creating a new instance, such as the user adding a new Transmission client.
         public TransmissionSettings()
         {
             Host = "localhost";
             Port = 9091;
             UrlBase = "/transmission/";
             MusicCategory = "lidarr";
+        }
+
+        // TODO: Remove this in v3
+        // This constructor is used when deserializing from JSON, it will set the
+        // category to the deserialized value, defaulting to null.
+        [JsonConstructor]
+        public TransmissionSettings(string musicCategory = null)
+        {
+            Host = "localhost";
+            Port = 9091;
+            UrlBase = "/transmission/";
+            MusicCategory = musicCategory;
         }
 
         [FieldDefinition(0, Label = "Host", Type = FieldType.Textbox)]
