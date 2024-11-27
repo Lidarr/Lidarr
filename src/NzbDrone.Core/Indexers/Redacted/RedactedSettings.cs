@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Indexers.Redacted
 
         public RedactedSettings()
         {
-            BaseUrl = "https://redacted.ch";
+            BaseUrl = "https://redacted.sh";
             Categories = new[]
             {
                 (int)RedactedCategory.Music
