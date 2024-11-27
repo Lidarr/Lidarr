@@ -11,7 +11,7 @@ namespace NzbDrone.Core.Indexers.Redacted
 {
     public class Redacted : HttpIndexerBase<RedactedSettings>
     {
-        public override string Name => "Redacted.ch";
+        public override string Name => "Redacted";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
