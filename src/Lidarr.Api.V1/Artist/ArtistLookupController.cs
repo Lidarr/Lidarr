@@ -23,7 +23,7 @@ namespace Lidarr.Api.V1.Artist
         }
 
         [HttpGet]
-        public object Search([FromQuery] string term)
+        public IEnumerable<SeriesResource> Search([FromQuery] string term)
         {
             var searchResults = _searchProxy.SearchForNewArtist(term);
             return MapToResource(searchResults).ToList();
