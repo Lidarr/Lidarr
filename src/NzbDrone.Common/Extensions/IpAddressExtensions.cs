@@ -58,5 +58,11 @@ namespace NzbDrone.Common.Extensions
             var bytes = ipAddress.GetAddressBytes();
             return bytes.Length == 4 && bytes[0] == 100 && bytes[1] >= 64 && bytes[1] <= 127;
         }
+
+        public static bool IsCgnatIpAddress(this IPAddress ipAddress)
+        {
+            var bytes = ipAddress.GetAddressBytes();
+            return bytes.Length == 4 && bytes[0] == 100 && bytes[1] >= 64 && bytes[1] <= 127;
+        }
     }
 }
