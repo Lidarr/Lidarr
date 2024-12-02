@@ -64,6 +64,7 @@ namespace NzbDrone.Core.Configuration
         string PostgresPassword { get; }
         string PostgresMainDb { get; }
         string PostgresLogDb { get; }
+        bool TrustCgnatIpAddresses { get; }
     }
 
     public class ConfigFileProvider : IConfigFileProvider
@@ -470,5 +471,7 @@ namespace NzbDrone.Core.Configuration
         {
             SetValue("ApiKey", GenerateApiKey());
         }
+
+        public bool TrustCgnatIpAddresses => _authOptions.TrustCgnatIpAddresses ?? GetValueBoolean("TrustCgnatIpAddresses", false, persist: false);
     }
 }
