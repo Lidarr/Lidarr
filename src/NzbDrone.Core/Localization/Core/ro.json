@@ -471,7 +471,6 @@
     "Connect": "Conectează",
     "Custom": "Personalizat",
     "CustomFilters": "Filtre personalizate",
-    "DefaultDelayProfileHelpText": "Acesta este profilul implicit. Se aplică tuturor filmelor care nu au un profil explicit.",
     "Deleted": "Șters",
     "Details": "Detalii",
     "Donations": "Donații",
@@ -791,5 +790,8 @@
     "UnmappedFiles": "Foldere nemapate",
     "EditReleaseProfile": "Editați profilul de întârziere",
     "Clone": "Clonează",
-    "AddReleaseProfile": "Editați profilul de întârziere"
+    "AddReleaseProfile": "Editați profilul de întârziere",
+    "DownloadImported": "Descărcarea ignorată",
+    "Season": "Motiv",
+    "AddDelayProfileError": "Imposibil de adăugat un nou profil de calitate, încercați din nou."
 }

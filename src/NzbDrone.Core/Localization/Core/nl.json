@@ -482,7 +482,6 @@
     "Custom": "Aangepast",
     "CustomFilters": "Aangepaste Filters",
     "Date": "Datum",
-    "DefaultDelayProfileHelpText": "Dit is het standaard profiel. Het wordt toegepast op alle films die geen specifiek profiel hebben.",
     "Donations": "Donaties",
     "DoNotPrefer": "Niet De Voorkeur Geven",
     "DoNotUpgradeAutomatically": "Niet Automatisch Upgraden",
@@ -897,5 +896,6 @@
     "Shutdown": "Afsluiten",
     "ExternalUpdater": "{appName} is geconfigureerd om een extern update mechanisme te gebruiken",
     "UpdateAppDirectlyLoadError": "Kan {appName} niet rechtstreeks updaten,",
-    "UnmappedFiles": "Niet-toegewezen Mappen"
+    "UnmappedFiles": "Niet-toegewezen Mappen",
+    "AddDelayProfileError": "Mislukt om vertragingsprofiel toe te voegen, probeer het later nog eens."
 }

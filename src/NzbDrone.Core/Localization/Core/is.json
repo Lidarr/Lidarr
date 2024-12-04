@@ -470,7 +470,6 @@
     "Custom": "Sérsniðin",
     "CustomFilters": "Sérsniðin síur",
     "Date": "Dagsetning",
-    "DefaultDelayProfileHelpText": "Þetta er sjálfgefið snið. Það á við um allar kvikmyndir sem hafa ekki skýran prófíl.",
     "Deleted": "Eytt",
     "Donations": "Framlög",
     "DoNotPrefer": "Ekki frekar",
@@ -747,5 +746,7 @@
     "EditReleaseProfile": "Breyta seinkunarprófíl",
     "UnmappedFiles": "Ókortlagðar möppur",
     "Clone": "Lokaðu",
-    "AddReleaseProfile": "Breyta seinkunarprófíl"
+    "AddReleaseProfile": "Breyta seinkunarprófíl",
+    "Season": "Ástæða",
+    "AddDelayProfileError": "Ekki er hægt að bæta við nýjum gæðaprófíl, reyndu aftur."
 }

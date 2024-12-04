@@ -27,7 +27,6 @@
     "RemoveTagRemovingTag": "Tunniste poistetaan",
     "ChmodFolderHelpText": "Octal, sovelletaan tuonnin/nimeämisen yhteydessä mediakansioihin ja -tiedostoihin (ilman suoritusbittejä).",
     "LaunchBrowserHelpText": " Avaa {appName}in verkkokäyttöliittymä verkkoselaimeen sovelluksen käynnistyksen yhteydessä.",
-    "TagsHelpText": "Käytetään vähintään yhdellä täsmäävällä tunnisteella merkityille esittäjille. Käytä kaikille jättämällä tyhjäksi.",
     "WriteAudioTagsHelpTextWarning": "'Kaikki tiedostot' -valinnat käsittelevät myös olemassa olevien tiedostojen tagit tuonnin yhteydessä.",
     "Refresh": "Päivitä",
     "ResetAPIKey": "Korvaa rajapinnan avain",
@@ -543,7 +542,6 @@
     "Custom": "Mukautettu",
     "CustomFilters": "Omat suodattimet",
     "Date": "Päiväys",
-    "DefaultDelayProfileHelpText": "Tämä on oletusprofiili, jota sovelletaan kaikkiin esittäjiin, joille ei ole määritetty erillistä profiilia.",
     "Deleted": "Poistettu",
     "Details": "Tiedot",
     "Donations": "Lahjoitukset",
@@ -1257,12 +1255,13 @@
     "IndexerSettingsApiUrl": "Rajapinnan URL-osoite",
     "IndexerSettingsApiUrlHelpText": "Älä muuta tätä, jos et tiedä mitä teet, koska rajapinta-avaimesi lähetetään kyseiselle palvelimelle.",
     "AptUpdater": "Asenna päivitys APT-työkalun avulla",
-    "CancelPendingTask": "Haluatko varmasti perua tämän odottavan tehtävän?",
     "DockerUpdater": "Hanki päivitys päivittämällä Docker-säiliö",
     "ExternalUpdater": "{appName} on määritetty käyttämään ulkoista päivitysratkaisua.",
     "InstallLatest": "Asenna uusin",
     "OnLatestVersion": "Uusin {appName}-versio on jo asennettu",
     "PreviouslyInstalled": "Edellinen asennettu versio",
     "Shutdown": "Sammuta",
-    "UpdateAppDirectlyLoadError": "{appName}ia ei voida päivittää suoraan,"
+    "UpdateAppDirectlyLoadError": "{appName}ia ei voida päivittää suoraan,",
+    "AddDelayProfileError": "Virhe lisättäessä viiveporofiilia. Yritä uudelleen.",
+    "ImportListTagsHelpText": "Tunnisteet, joilla tältä tuontilistalta lisätyt kohteet merkitään."
 }

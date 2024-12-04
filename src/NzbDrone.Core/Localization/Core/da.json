@@ -466,7 +466,6 @@
     "Close": "Luk",
     "Connect": "Tilslut",
     "Date": "Dato",
-    "DefaultDelayProfileHelpText": "Dette er standardprofilen. Det gælder for alle film, der ikke har en eksplicit profil.",
     "Deleted": "Slettet",
     "Details": "Detaljer",
     "DownloadFailed": "Download fejlede",
@@ -783,5 +782,7 @@
     "UpdateAppDirectlyLoadError": "Kan ikke opdatere {appName} direkte,",
     "EditReleaseProfile": "Rediger forsinkelsesprofil",
     "UnmappedFiles": "Ikke-kortlagte mapper",
-    "Clone": "Luk"
+    "Clone": "Luk",
+    "AddReleaseProfile": "Rediger forsinkelsesprofil",
+    "AddDelayProfileError": "Kan ikke tilføje en ny forsinkelsesprofil. Prøv venligst igen."
 }

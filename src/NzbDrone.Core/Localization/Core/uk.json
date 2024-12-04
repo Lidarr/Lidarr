@@ -105,7 +105,6 @@
     "Custom": "Настроюваний",
     "CustomFilters": "Користувацькі фільтри",
     "Date": "Дата",
-    "DefaultDelayProfileHelpText": "Це профіль за замовчуванням. Це стосується всіх фільмів, які не мають явного профілю.",
     "EditDelayProfile": "Додати профіль затримки",
     "EditQualityProfile": "Додати профіль якості",
     "EditRemotePathMapping": "Додати віддалений шлях",
@@ -908,5 +907,9 @@
     "Shutdown": "Вимкнення",
     "UpdateAppDirectlyLoadError": "Неможливо оновити {appName} безпосередньо,",
     "AptUpdater": "Використовуйте apt для інсталяції оновлення",
-    "UnmappedFiles": "Невідповідні папки"
+    "UnmappedFiles": "Невідповідні папки",
+    "Season": "Причина",
+    "CountCustomFormatsSelected": "Користувацькі формати обрано {count}",
+    "AutoTaggingRequiredHelpText": "Ця умова {0} має збігатися, щоб користувацький формат застосовувався. В іншому випадку достатньо одного збігу {1}.",
+    "AddDelayProfileError": "Неможливо додати новий профіль затримки, будь ласка спробуйте ще."
 }

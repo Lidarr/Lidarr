@@ -471,7 +471,6 @@
     "Connect": "לְחַבֵּר",
     "Custom": "המותאם אישית",
     "CustomFilters": "מסננים מותאמים אישית",
-    "DefaultDelayProfileHelpText": "זהו פרופיל ברירת המחדל. זה חל על כל הסרטים שאין להם פרופיל מפורש.",
     "Deleted": "נמחק",
     "Donations": "תרומות",
     "DoNotPrefer": "לא מעדיפים",
@@ -789,5 +788,7 @@
     "AddReleaseProfile": "ערוך פרופיל עיכוב",
     "UnmappedFiles": "תיקיות לא ממופות",
     "Clone": "סגור",
-    "EditReleaseProfile": "ערוך פרופיל עיכוב"
+    "EditReleaseProfile": "ערוך פרופיל עיכוב",
+    "Season": "סיבה",
+    "AddDelayProfileError": "לא ניתן להוסיף פרופיל איכות חדש, נסה שוב."
 }

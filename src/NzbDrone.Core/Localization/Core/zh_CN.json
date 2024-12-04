@@ -570,7 +570,6 @@
     "Country": "国家",
     "CustomFilters": "自定义过滤器",
     "Date": "日期",
-    "DefaultDelayProfileHelpText": "这是默认配置档案，它适用于所有没有明确配置档案的歌手。",
     "Deleted": "已删除",
     "DeleteFilesHelpText": "删除曲目文件及艺术家文件夹",
     "DeleteImportList": "删除导入的列表",
@@ -845,7 +844,7 @@
     "IncludeCustomFormatWhenRenamingHelpText": "在 {Custom Formats} 中包含重命名格式",
     "IndexerRssHealthCheckNoAvailableIndexers": "由于最近索引器错误，所有支持 RSS 的索引器暂时不可用",
     "IndexerRssHealthCheckNoIndexers": "没有索引器开启 RSS 同步，{appName} 将不会自动抓取新版本",
-    "IndexerSearchCheckNoInteractiveMessage": "没有索引器开启手动搜索，{appName} 将不会提供任何手动搜索结果",
+    "IndexerSearchCheckNoInteractiveMessage": "没有启用交互式搜索的索引器，{appName}将不提供任何交互式搜索结果",
     "ItsEasyToAddANewArtistJustStartTypingTheNameOfTheArtistYouWantToAdd": "添加新的艺术家很容易，只需开始输入要添加的艺术家的名称即可。",
     "Loading": "加载中",
     "Monitor": "追踪",
@@ -885,7 +884,7 @@
     "RemotePathMappingCheckLocalFolderMissing": "远程下载客户端 {0} 的下载目录为 {1} ，但该目录似乎不存在。可能是远程路径映射缺失或错误。",
     "RemotePathMappingCheckRemoteDownloadClient": "远程下载客户端 {0} 的下载目录为 {1} ，但该目录似乎不存在。可能是远程路径映射缺失。",
     "RemotePathMappingCheckWrongOSPath": "远程下载客户端 {0} 的下载目录为 {1} ，但该路径 {2} 无效。请检查您的远程路径映射和下载客户端设置。",
-    "AppDataLocationHealthCheckMessage": "无法更新，以防止在更新时删除 AppData",
+    "AppDataLocationHealthCheckMessage": "为防止在更新时删除 AppData，更新将无法进行",
     "ColonReplacement": "替换冒号",
     "CopyToClipboard": "复制到剪贴板",
     "DeleteCustomFormat": "删除自定义格式",
@@ -1033,7 +1032,6 @@
     "MinimumCustomFormatScoreHelpText": "跳过首选协议延迟所需的最低自定义格式分数",
     "SmartReplace": "智能替换",
     "IndexerDownloadClientHealthCheckMessage": "有无效下载客户端的索引器：{0}。",
-    "TagsHelpText": "发布配置将应用于至少有一个匹配标记的剧集。留空适用于所有剧集",
     "AddNewArtistRootFolderHelpText": "将自动创建 '{folder}' 子文件夹",
     "NoAlbums": "没有专辑",
     "AlbumCount": "专辑数量",
@@ -1325,5 +1323,8 @@
     "Install": "安装",
     "InstallMajorVersionUpdateMessage": "此更新将安装新的主要版本，这可能与您的系统不兼容。您确定要安装此更新吗？",
     "InstallMajorVersionUpdate": "安装更新",
-    "InstallMajorVersionUpdateMessageLink": "请查看 [{domain}]({url}) 以获取更多信息。"
+    "InstallMajorVersionUpdateMessageLink": "请查看 [{domain}]({url}) 以获取更多信息。",
+    "ManageFormats": "管理格式",
+    "AddDelayProfileError": "无法添加新的延迟配置，请重试。",
+    "ImportListTagsHelpText": "从此列表导入时将添加标记"
 }

@@ -131,5 +131,6 @@
     "AddedToDownloadQueue": "Ditambahkan ke antrean pengunduhan",
     "AptUpdater": "Gunakan apt untuk memasang pembaruan",
     "Clone": "Tutup",
-    "EnableSSL": "Aktifkan RSS"
+    "EnableSSL": "Aktifkan RSS",
+    "AddDelayProfile": "Tambah Delay Profile"
 }

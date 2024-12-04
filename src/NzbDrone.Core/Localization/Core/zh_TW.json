@@ -81,7 +81,7 @@
     "UpdateMechanismHelpText": "使用 {appName}內建的更新程式或是腳本文件",
     "Username": "使用者名稱",
     "Artist": "演員",
-    "UnableToAddANewIndexerPleaseTryAgain": "無法加入新的條件，請重新嘗試。",
+    "UnableToAddANewIndexerPleaseTryAgain": "無法加入新的索引器，請重新嘗試。",
     "Updates": "更新",
     "Rating": "評分",
     "Connection": "連接",
@@ -222,5 +222,18 @@
     "AptUpdater": "使用apt安裝更新",
     "AddReleaseProfile": "新增延時配置",
     "EditReleaseProfile": "新增延時配置",
-    "Reason": "季"
+    "Reason": "季",
+    "UnableToLoadUISettings": "無法載入 UI 設定",
+    "Any": "任何",
+    "UpdateAvailableHealthCheckMessage": "可用的新版本: {version}",
+    "UnableToLoadIndexers": "無法載入索引器",
+    "UnableToLoadTags": "無法載入標籤",
+    "Uptime": "上線時間",
+    "UpdateAppDirectlyLoadError": "無法直接更新 {appName}，",
+    "Version": "版本",
+    "UiSettings": "使用者介面設定",
+    "UiLanguage": "使用者介面語言",
+    "UnableToLoadHistory": "無法載入歷史記錄",
+    "UiLanguageHelpText": "{appName} 介面所使用的語言",
+    "AddDelayProfileError": "無法加入新的條件，請重新嘗試。"
 }

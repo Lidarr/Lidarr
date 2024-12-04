@@ -483,7 +483,6 @@
     "Backup": "Copia de seguridad",
     "Connect": "Conectar",
     "Date": "Fecha",
-    "DefaultDelayProfileHelpText": "Este es el perfil predeterminado. Se aplica a todas las películas que no tienen un perfil explícito.",
     "Deleted": "Eliminado",
     "Details": "Detalles",
     "Donations": "Donaciones",
@@ -1207,7 +1206,6 @@
     "MusicBrainzArtistID": "ID de artista de MusicBrainz",
     "SetIndexerFlags": "Establecer indicadores del indexador",
     "SelectIndexerFlags": "Seleccionar indicadores del indexador",
-    "TagsHelpText": "Los perfiles de lanzamiento se aplicarán a artistas con al menos una etiqueta coincidente. Dejar en blanco para aplicar a todos los artistas",
     "MultiDiscTrackFormat": "Formato de pista multi-disco",
     "SecondaryAlbumTypes": "Tipos de álbum secundario",
     "ShouldMonitorExistingHelpText": "Monitoriza automáticamente los álbumes de esta lista que ya estén en {appName}",
@@ -1330,5 +1328,7 @@
     "Shutdown": "Apagar",
     "UpdateAppDirectlyLoadError": "No se pudo actualizar {appName} directamente,",
     "InstallMajorVersionUpdateMessageLink": "Por favor revisa [{domain}]({url}) para más información.",
-    "ManageFormats": "Gestionar formatos"
+    "ManageFormats": "Gestionar formatos",
+    "AddDelayProfileError": "No se pudo añadir un nuevo perfil de retraso, por favor inténtalo de nuevo.",
+    "ImportListTagsHelpText": "Etiquetas que se añadirán en la importación a partir de esta lista"
 }

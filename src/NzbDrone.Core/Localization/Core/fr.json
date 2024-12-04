@@ -533,7 +533,6 @@
     "Custom": "Personnaliser",
     "CustomFilters": "Filtres personnalisés",
     "Date": "Date",
-    "DefaultDelayProfileHelpText": "Ceci est le profil par défaut. Il est appliqué à tous les films qui n'ont pas de profils spécifiques.",
     "Deleted": "Supprimé",
     "Details": "Détails",
     "Donations": "Dons",
@@ -977,7 +976,6 @@
     "ShouldMonitorExistingHelpText": "Surveiller automatiquement les albums de cette liste qui sont déjà dans {appName}",
     "ShowNextAlbum": "Afficher l'album suivant",
     "ShowName": "Afficher le nom",
-    "TagsHelpText": "Baliser les fichiers audio avec des métadonnées, les profils de publication s'appliqueront aux artistes avec au moins une balise correspondante. Laisser vide pour postuler à tous les artistes",
     "TrackImported": "Piste importée",
     "TrackMissingFromDisk": "Piste manquante sur le disque",
     "TrackDownloaded": "Piste téléchargée",
@@ -1329,5 +1327,7 @@
     "Shutdown": "Éteindre",
     "UpdateAppDirectlyLoadError": "Impossible de mettre à jour directement {appName},",
     "SkipFreeSpaceCheckHelpText": "Utiliser quand {appName} ne parvient pas à détecter l'espace disponible de votre dossier racine",
-    "LastSearched": "Dernière recherche"
+    "LastSearched": "Dernière recherche",
+    "AddDelayProfileError": "Impossible d'ajouter un nouveau profil de délai, veuillez réessayer.",
+    "ImportListTagsHelpText": "Balises qui seront ajoutées lors de l'importation à partir de cette liste"
 }

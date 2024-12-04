@@ -651,7 +651,6 @@
     "Custom": "Beställnings",
     "CustomFilters": "Anpassade Filter",
     "Date": "Datum",
-    "DefaultDelayProfileHelpText": "Detta är standardprofilen. Det gäller alla filmer som inte har en uttrycklig profil.",
     "Deleted": "Raderad",
     "Details": "Detaljer",
     "Donations": "Donationer",
@@ -917,5 +916,9 @@
     "UpdateAppDirectlyLoadError": "Det går inte att uppdatera {appName} direkt,",
     "AddReleaseProfile": "Redigera fördröjningsprofil",
     "Clone": "Avsluta",
-    "EditReleaseProfile": "Redigera fördröjningsprofil"
+    "EditReleaseProfile": "Redigera fördröjningsprofil",
+    "MonitorMissingAlbums": "Existerande Albums",
+    "MissingAlbums": "Existerande Albums",
+    "DownloadImported": "Nerladdning ignorerad",
+    "AddDelayProfileError": "Det gick inte att lägga till en ny kvalitetsprofil. Försök igen."
 }
