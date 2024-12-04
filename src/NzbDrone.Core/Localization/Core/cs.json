@@ -477,7 +477,6 @@
     "Custom": "Zvyk",
     "CustomFilters": "Vlastní filtry",
     "Date": "datum",
-    "DefaultDelayProfileHelpText": "Toto je výchozí profil. Platí pro všechny filmy, které nemají explicitní profil.",
     "DoNotPrefer": "Nepřednostňovat",
     "DoNotUpgradeAutomatically": "Neupgradovat automaticky",
     "DownloadFailed": "Stažení se nezdařilo",
@@ -882,5 +881,7 @@
     "UpdateAppDirectlyLoadError": "{appName} nelze aktualizovat přímo,",
     "ExternalUpdater": "{appName} je nakonfigurován pro použití externího aktualizačního mechanismu",
     "OnLatestVersion": "Nejnovější verze aplikace {appName} je již nainstalována",
-    "UnmappedFiles": "Nezmapované složky"
+    "UnmappedFiles": "Nezmapované složky",
+    "DownloadImported": "Stahování ignorováno",
+    "AddDelayProfileError": "Nelze přidat nový kvalitní profil, zkuste to znovu."
 }

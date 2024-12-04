@@ -293,5 +293,6 @@
     "DeleteSelectedCustomFormats": "Klonovať vlastný formát",
     "AptUpdater": "Použiť apt pre inštaláciu aktualizácie",
     "Clone": "Zatvoriť",
-    "Reason": "Séria"
+    "Reason": "Séria",
+    "AddDelayProfileError": "Nie je možné pridať novú podmienku, skúste to znova."
 }

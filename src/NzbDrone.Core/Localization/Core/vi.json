@@ -474,7 +474,6 @@
     "Custom": "Tập quán",
     "CustomFilters": "Bộ lọc tùy chỉnh",
     "Date": "Ngày",
-    "DefaultDelayProfileHelpText": "Đây là cấu hình mặc định. Nó áp dụng cho tất cả các phim không có hồ sơ rõ ràng.",
     "Deleted": "Đã xóa",
     "Details": "Chi tiết",
     "Donations": "Quyên góp",
@@ -774,5 +773,14 @@
     "AuthenticationRequiredPasswordHelpTextWarning": "Nhập mật khẩu mới",
     "AuthenticationRequiredUsernameHelpTextWarning": "Nhập tên người dùng mới",
     "AuthenticationRequiredWarning": "Để ngăn truy cập từ xa mà không cần xác thực, {appName} hiện yêu cầu bật xác thực. Bạn có thể tùy ý tắt xác thực từ các địa chỉ cục bộ.",
-    "AutomaticUpdatesDisabledDocker": "Cập nhật tự động không được hỗ trợ trực tiếp khi sử dụng cơ chế cập nhật Docker. Bạn sẽ cần cập nhật container image của {appName} hoặc sử dụng tập lệnh"
+    "AutomaticUpdatesDisabledDocker": "Cập nhật tự động không được hỗ trợ trực tiếp khi sử dụng cơ chế cập nhật Docker. Bạn sẽ cần cập nhật container image của {appName} hoặc sử dụng tập lệnh",
+    "UnmappedFiles": "Thư mục chưa được ánh xạ",
+    "EditIndexerImplementation": "Thêm điều kiện - {implementationName}",
+    "EditReleaseProfile": "Chỉnh sửa hồ sơ độ trễ",
+    "Clone": "Đóng",
+    "EditConditionImplementation": "Thêm điều kiện - {implementationName}",
+    "Season": "Lý do",
+    "AddReleaseProfile": "Chỉnh sửa hồ sơ độ trễ",
+    "EditConnectionImplementation": "Thêm điều kiện - {implementationName}",
+    "AddDelayProfileError": "Không thể thêm hồ sơ chất lượng mới, vui lòng thử lại."
 }

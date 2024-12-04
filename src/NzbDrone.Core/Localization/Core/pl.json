@@ -474,7 +474,6 @@
     "Backup": "Kopia zapasowa",
     "BeforeUpdate": "Przed aktualizacją",
     "Close": "Blisko",
-    "DefaultDelayProfileHelpText": "To jest profil domyślny. Dotyczy to wszystkich filmów, które nie mają wyraźnego profilu.",
     "Deleted": "Usunięto",
     "Details": "Detale",
     "Donations": "Darowizny",
@@ -847,5 +846,6 @@
     "Shutdown": "Zamknąć",
     "UpdateAppDirectlyLoadError": "Nie można bezpośrednio zaktualizować {appName},",
     "UnmappedFiles": "Niezmapowane foldery",
-    "Clone": "Zamknij"
+    "Clone": "Zamknij",
+    "AddDelayProfileError": "Nie można dodać nowego profilu opóźnienia, spróbuj później."
 }
