@@ -470,7 +470,6 @@
     "Custom": "カスタム",
     "CustomFilters": "カスタムフィルター",
     "Date": "日付",
-    "DefaultDelayProfileHelpText": "これはデフォルトのプロファイルです。これは、明示的なプロファイルを持たないすべての映画に適用されます。",
     "Deleted": "削除",
     "Details": "詳細",
     "Donations": "寄付",
@@ -746,5 +745,8 @@
     "UpdateAppDirectlyLoadError": "{appName}を直接更新できません。",
     "EditReleaseProfile": "遅延プロファイルの編集",
     "UnmappedFiles": "マップされていないフォルダ",
-    "Clone": "閉じる"
+    "Clone": "閉じる",
+    "AddReleaseProfile": "遅延プロファイルの編集",
+    "Season": "理由",
+    "AddDelayProfileError": "新しい品質プロファイルを追加できません。再試行してください。"
 }

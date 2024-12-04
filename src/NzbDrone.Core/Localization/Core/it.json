@@ -513,7 +513,6 @@
     "Custom": "Personalizzato",
     "CustomFilters": "Filtri Personalizzati",
     "Date": "Data",
-    "DefaultDelayProfileHelpText": "Questo è il profilo predefinito. Si applica a tutti i film che non hanno un profilo esplicito.",
     "Deleted": "Cancellato",
     "Details": "Dettagli",
     "DoNotPrefer": "Non Preferire",
@@ -1039,5 +1038,8 @@
     "PreviouslyInstalled": "Precedentemente Installato",
     "Shutdown": "Spegnimento",
     "UpdateAppDirectlyLoadError": "Impossibile aggiornare {appName} direttamente,",
-    "UnmappedFiles": "Cartelle Non Mappate"
+    "UnmappedFiles": "Cartelle Non Mappate",
+    "MissingAlbums": "Albums esistente",
+    "MonitorMissingAlbums": "Albums esistente",
+    "AddDelayProfileError": "Impossibile aggiungere un nuovo profilo di ritardo, riprova."
 }

@@ -467,7 +467,6 @@
     "Connect": "الاتصال",
     "CustomFilters": "مرشحات مخصصة",
     "Date": "تاريخ",
-    "DefaultDelayProfileHelpText": "هذا هو ملف التعريف الافتراضي. ينطبق هذا على جميع الأفلام التي ليس لها ملف تعريف صريح.",
     "Deleted": "تم الحذف",
     "Details": "تفاصيل",
     "Donations": "التبرعات",
@@ -752,5 +751,7 @@
     "UnmappedFiles": "المجلدات غير المعينة",
     "Clone": "قريب",
     "EditReleaseProfile": "تحرير ملف تعريف التأخير",
-    "AddReleaseProfile": "تحرير ملف تعريف التأخير"
+    "AddReleaseProfile": "تحرير ملف تعريف التأخير",
+    "Season": "السبب",
+    "AddDelayProfileError": "غير قادر على إضافة ملف تعريف جودة جديد ، يرجى المحاولة مرة أخرى."
 }

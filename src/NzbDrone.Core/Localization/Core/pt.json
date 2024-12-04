@@ -538,7 +538,6 @@
     "Connect": "Conexões",
     "Custom": "Personalizado",
     "CustomFilters": "Filtros personalizados",
-    "DefaultDelayProfileHelpText": "Este é o perfil padrão. Isso se aplica a todos os filmes que não têm um perfil explícito.",
     "Deleted": "Eliminado",
     "Details": "Detalhes",
     "Donations": "Doações",
@@ -1012,11 +1011,12 @@
     "IncludeCustomFormatWhenRenaming": "Incluir formato personalizado ao renomear",
     "CountCustomFormatsSelected": "{count} formatos selecionados",
     "AptUpdater": "Utilize o apt para instalar a atualização",
-    "CancelPendingTask": "Tem a certeza que quer cancelar esta tarefa pendente?",
     "ExternalUpdater": "O {appName} está definido para usar um mecanismo de atualização externo",
     "InstallLatest": "Instalar o mais recente",
     "OnLatestVersion": "A versão mais recente do {appName} já está instalada",
     "Shutdown": "Encerrar",
     "UpdateAppDirectlyLoadError": "Não foi possível atualizar o {appName} diretamente,",
-    "DockerUpdater": "atualize o contentor do Docker para receber a atualização"
+    "DockerUpdater": "atualize o contentor do Docker para receber a atualização",
+    "DownloadImported": "Transferência Ignorada",
+    "AddDelayProfileError": "Não foi possível adicionar um novo perfil de qualidade, tenta novamente."
 }

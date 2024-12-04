@@ -482,7 +482,6 @@
     "Custom": "Personalitzat",
     "CustomFilters": "Filtres personalitzats",
     "Date": "Data",
-    "DefaultDelayProfileHelpText": "Aquest és el perfil predeterminat. S'aplica a totes les pel·lícules que no tenen un perfil explícit.",
     "Deleted": "S'ha suprimit",
     "Details": "Detalls",
     "Error": "Error",
@@ -959,5 +958,6 @@
     "OnLatestVersion": "La darrera versió de {appName} ja està instal·lada",
     "Shutdown": "Apaga",
     "UpdateAppDirectlyLoadError": "No es pot actualitzar {appName} directament,",
-    "UnmappedFiles": "Carpetes sense mapejar"
+    "UnmappedFiles": "Carpetes sense mapejar",
+    "AddDelayProfileError": "No s'ha pogut afegir un perfil de retard, torna-ho a provar."
 }

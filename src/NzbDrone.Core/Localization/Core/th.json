@@ -483,7 +483,6 @@
     "Custom": "กำหนดเอง",
     "CustomFilters": "ตัวกรองที่กำหนดเอง",
     "Date": "วันที่",
-    "DefaultDelayProfileHelpText": "นี่คือโปรไฟล์เริ่มต้น ใช้กับภาพยนตร์ทุกเรื่องที่ไม่มีโปรไฟล์โจ่งแจ้ง",
     "Deleted": "ลบแล้ว",
     "Details": "รายละเอียด",
     "Donations": "การบริจาค",
@@ -744,5 +743,7 @@
     "Clone": "ปิด",
     "AddReleaseProfile": "แก้ไขโปรไฟล์ความล่าช้า",
     "UnmappedFiles": "โฟลเดอร์ที่ไม่ได้แมป",
-    "EditReleaseProfile": "แก้ไขโปรไฟล์ความล่าช้า"
+    "EditReleaseProfile": "แก้ไขโปรไฟล์ความล่าช้า",
+    "Season": "เหตุผล",
+    "AddDelayProfileError": "ไม่สามารถเพิ่มโปรไฟล์คุณภาพใหม่ได้โปรดลองอีกครั้ง"
 }

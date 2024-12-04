@@ -471,7 +471,6 @@
     "Custom": "रिवाज",
     "CustomFilters": "कस्टम फ़िल्टर",
     "Date": "दिनांक",
-    "DefaultDelayProfileHelpText": "यह डिफ़ॉल्ट प्रोफ़ाइल है। यह उन सभी फिल्मों पर लागू होता है जिनमें स्पष्ट प्रोफ़ाइल नहीं है।",
     "Deleted": "हटाए गए",
     "Details": "विवरण",
     "Donations": "दान",
@@ -746,5 +745,7 @@
     "AddReleaseProfile": "देरी प्रोफ़ाइल संपादित करें",
     "UnmappedFiles": "बिना मोड़े हुए फोल्डर",
     "Clone": "बंद करे",
-    "EditReleaseProfile": "देरी प्रोफ़ाइल संपादित करें"
+    "EditReleaseProfile": "देरी प्रोफ़ाइल संपादित करें",
+    "Season": "कारण",
+    "AddDelayProfileError": "नई गुणवत्ता प्रोफ़ाइल जोड़ने में असमर्थ, कृपया पुनः प्रयास करें।"
 }
