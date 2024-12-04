@@ -18,6 +18,7 @@
   "AddConnection": "Add Connection",
   "AddConnectionImplementation": "Add Connection - {implementationName}",
   "AddDelayProfile": "Add Delay Profile",
+  "AddDelayProfileError": "Unable to add a new delay profile, please try again.",
   "AddDownloadClientImplementation": "Add Download Client - {implementationName}",
   "AddImportList": "Add Import List",
   "AddImportListExclusion": "Add Import List Exclusion",
