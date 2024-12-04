@@ -105,7 +105,7 @@ function EditNotificationModalContent(props) {
                 <FormInputGroup
                   type={inputTypes.TAG}
                   name="tags"
-                  helpText={translate('TagsHelpText')}
+                  helpText={translate('NotificationsTagsArtistHelpText')}
                   {...tags}
                   onChange={onInputChange}
                 />

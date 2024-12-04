@@ -164,7 +164,7 @@ class CalendarLinkModalContent extends Component {
                 type={inputTypes.TAG}
                 name="tags"
                 value={tags}
-                helpText={translate('TagsHelpText')}
+                helpText={translate('ICalTagsArtistHelpText')}
                 onChange={this.onInputChange}
               />
             </FormGroup>
