@@ -10025,6 +10025,9 @@
           "backupRetention": {
             "type": "integer",
             "format": "int32"
+          },
+          "trustCgnatIpAddresses": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
