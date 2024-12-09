@@ -6,15 +6,33 @@ import isTomorrow from 'Utilities/Date/isTomorrow';
 import isYesterday from 'Utilities/Date/isYesterday';
 import translate from 'Utilities/String/translate';
 
-function getRelativeDate(date, shortDateFormat, showRelativeDates, { timeFormat, includeSeconds = false, timeForToday = false } = {}) {
+interface GetRelativeDateOptions {
+  timeFormat?: string;
+  includeSeconds?: boolean;
+  timeForToday?: boolean;
+}
+
+function getRelativeDate(
+  date: string | undefined,
+  shortDateFormat: string,
+  showRelativeDates: boolean,
+  {
+    timeFormat,
+    includeSeconds = false,
+    timeForToday = false,
+  }: GetRelativeDateOptions = {}
+) {
   if (!date) {
-    return null;
+    return '';
   }
 
   const isTodayDate = isToday(date);
 
   if (isTodayDate && timeForToday && timeFormat) {
-    return formatTime(date, timeFormat, { includeMinuteZero: true, includeSeconds });
+    return formatTime(date, timeFormat, {
+      includeMinuteZero: true,
+      includeSeconds,
+    });
   }
 
   if (!showRelativeDates) {
