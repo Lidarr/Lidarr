@@ -959,5 +959,10 @@
     "Shutdown": "Apaga",
     "UpdateAppDirectlyLoadError": "No es pot actualitzar {appName} directament,",
     "UnmappedFiles": "Carpetes sense mapejar",
-    "AddDelayProfileError": "No s'ha pogut afegir un perfil de retard, torna-ho a provar."
+    "AddDelayProfileError": "No s'ha pogut afegir un perfil de retard, torna-ho a provar.",
+    "AddAlbumWithTitle": "Afegeix {albumTitle}",
+    "AddArtistWithName": "Afegeix {artistName}",
+    "AddNewAlbumSearchForNewAlbum": "Inicia la cerca de nous àlbums",
+    "AddMissing": "Afegeix faltants",
+    "AddNewAlbum": "Afegeix nou àlbum"
 }

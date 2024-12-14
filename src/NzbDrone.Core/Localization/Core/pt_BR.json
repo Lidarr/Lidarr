@@ -1330,5 +1330,10 @@
     "InstallMajorVersionUpdateMessage": "Esta atualização instalará uma nova versão principal e pode não ser compatível com o seu sistema. Tem certeza de que deseja instalar esta atualização?",
     "ManageFormats": "Gerenciar Formatos",
     "AddDelayProfileError": "Não foi possível adicionar um novo perfil de atraso. Tente novamente.",
-    "ImportListTagsHelpText": "Tags que serão adicionadas ao importar esta lista"
+    "ImportListTagsHelpText": "Tags que serão adicionadas ao importar esta lista",
+    "DefaultDelayProfileArtist": "Este é o perfil padrão. Aplica-se a todos os artistas que não possuem um perfil explícito.",
+    "ICalTagsArtistHelpText": "O feed conterá apenas artistas com pelo menos uma etiqueta correspondente",
+    "NotificationsTagsArtistHelpText": "Envie notificações apenas para artistas com pelo menos uma etiqueta correspondente",
+    "ReleaseProfileTagArtistHelpText": "Os perfis de lançamento serão aplicados as artistas com pelo menos uma etiqueta correspondente. Deixe em branco para aplicar a todos os artistas",
+    "DelayProfileArtistTagsHelpText": "Aplica-se a artistas com pelo menos uma etiqueta correspondente"
 }
