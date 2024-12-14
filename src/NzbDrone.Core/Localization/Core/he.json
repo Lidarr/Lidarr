@@ -707,9 +707,9 @@
     "AlbumsLoadError": "לא ניתן לטעון גיבויים",
     "ConditionUsingRegularExpressions": "תנאי זה תואם שימוש בביטויים רגולריים. שים לב שלדמויות {0} יש משמעויות מיוחדות וצריך לברוח באמצעות {1}",
     "Connection": "חיבור",
-    "AddAutoTagError": "לא ניתן להוסיף רשימה חדשה, אנא נסה שוב.",
-    "AddAutoTag": "הוסף טגית אוטומטית",
-    "AddConditionError": "לא ניתן להוסיף תנאי חדש, נסה שוב.",
+    "AddAutoTagError": "לא ניתן להוסיף תג חדש, נסה שנית.",
+    "AddAutoTag": "הוסף תג אוטומטית",
+    "AddConditionError": "לא ניתן להוסיף תנאי חדש, נסה שנית.",
     "DeleteSpecification": "מחק הודעה",
     "Large": "גָדוֹל",
     "Negate": "לִשְׁלוֹל",
@@ -790,5 +790,6 @@
     "Clone": "סגור",
     "EditReleaseProfile": "ערוך פרופיל עיכוב",
     "Season": "סיבה",
-    "AddDelayProfileError": "לא ניתן להוסיף פרופיל איכות חדש, נסה שוב."
+    "AddDelayProfileError": "לא ניתן להוסיף פרופיל איכות חדש, נסה שוב.",
+    "AddCondition": "הוסף תנאי"
 }

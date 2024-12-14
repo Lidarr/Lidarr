@@ -1330,5 +1330,10 @@
     "InstallMajorVersionUpdateMessageLink": "Por favor revisa [{domain}]({url}) para más información.",
     "ManageFormats": "Gestionar formatos",
     "AddDelayProfileError": "No se pudo añadir un nuevo perfil de retraso, por favor inténtalo de nuevo.",
-    "ImportListTagsHelpText": "Etiquetas que se añadirán en la importación a partir de esta lista"
+    "ImportListTagsHelpText": "Etiquetas que se añadirán en la importación a partir de esta lista",
+    "ReleaseProfileTagArtistHelpText": "El lanzamiento de perfiles se aplica a los artistas con al menos una etiqueta coincidente. Dejar en blanco para aplicar a todos los artistas",
+    "DefaultDelayProfileArtist": "Este es el perfil predeterminado. Se aplica a todos los artistas que no tienen un perfil explícito.",
+    "DelayProfileArtistTagsHelpText": "Se aplica a los artistas con al menos una etiqueta coincidente",
+    "NotificationsTagsArtistHelpText": "Envía notificaciones solo para artistas con al menos una etiqueta coincidente",
+    "ICalTagsArtistHelpText": "El canal solo contendrá artistas con al menos una etiqueta coincidente"
 }
