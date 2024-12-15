@@ -188,7 +188,7 @@ module.exports = (env) => {
                       loose: true,
                       debug: false,
                       useBuiltIns: 'entry',
-                      corejs: 3
+                      corejs: '3.39'
                     }
                   ]
                 ]
