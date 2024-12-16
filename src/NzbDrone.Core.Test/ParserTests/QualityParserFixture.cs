@@ -126,6 +126,9 @@ namespace NzbDrone.Core.Test.ParserTests
         [TestCase("Green_Day-Father_Of_All-24-44-WEB-FLAC-2020-OBZEN", null, 0, 0)]
         [TestCase("", "Flac Audio", 5057, 24)]
         [TestCase("[TR24][OF] Good Charlotte - Generation Rx - 2018 (Pop-Punk | Alternative Rock)", null, 0, 0)]
+        [TestCase("Green Day - Father Of All [FLAC (M4A) 24-bit Lossless]", null, 0, 0)]
+        [TestCase("Green_Day-Father_Of_All_FLAC_M4A_24_bit_Lossless", null, 0, 0)]
+        [TestCase("Green.Day-Father.Of.All.FLAC.M4A.24.bit.Lossless", null, 0, 0)]
         public void should_parse_flac_24bit_quality(string title, string desc, int bitrate, int sampleSize)
         {
             ParseAndVerifyQuality(title, desc, bitrate, Quality.FLAC_24, sampleSize);

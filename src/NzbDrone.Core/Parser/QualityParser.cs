@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Parser
                                                                 (?<VBRV2>V2[ ]?kbps|V2|[\[\(].*V2.*[\]\)]))\b",
                                                                 RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
 
-        private static readonly Regex SampleSizeRegex = new (@"\b(?:(?<S24>24[ ]?bit|tr24|24-(?:44|48|96|192)|[\[\(].*24bit.*[\]\)]))\b", RegexOptions.Compiled);
+        private static readonly Regex SampleSizeRegex = new (@"\b(?:(?<S24>24[-._ ]?bit|tr24|24-(?:44|48|96|192)|[\[\(].*24bit.*[\]\)]))\b", RegexOptions.Compiled);
 
         private static readonly Regex CodecRegex = new (@"\b(?:(?<MP1>MPEG Version \d(.5)? Audio, Layer 1|MP1)|(?<MP2>MPEG Version \d(.5)? Audio, Layer 2|MP2)|(?<MP3VBR>MP3.*VBR|MPEG Version \d(.5)? Audio, Layer 3 vbr)|(?<MP3CBR>MP3|MPEG Version \d(.5)? Audio, Layer 3)|(?<FLAC>(web)?flac|TR24)|(?<WAVPACK>wavpack|wv)|(?<ALAC>alac)|(?<WMA>WMA\d?)|(?<WAV>WAV|PCM)|(?<AAC>M4A|M4P|M4B|AAC|mp4a|MPEG-4 Audio(?!.*alac))|(?<OGG>OGG|OGA|Vorbis))\b|(?<APE>monkey's audio|[\[|\(].*\bape\b.*[\]|\)])|(?<OPUS>Opus Version \d(.5)? Audio|[\[|\(].*\bopus\b.*[\]|\)])",
                                                                   RegexOptions.Compiled | RegexOptions.IgnoreCase);
