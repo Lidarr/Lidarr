@@ -20,7 +20,8 @@ namespace Lidarr.Api.V1.Albums
         }
 
         [HttpGet]
-        public object Search(string term)
+        [Produces("application/json")]
+        public IEnumerable<AlbumResource> Search(string term)
         {
             var searchResults = _searchProxy.SearchForNewAlbum(term, null);
             return MapToResource(searchResults).ToList();
