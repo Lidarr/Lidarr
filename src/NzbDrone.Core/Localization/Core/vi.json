@@ -782,5 +782,9 @@
     "Season": "Lý do",
     "AddReleaseProfile": "Chỉnh sửa hồ sơ độ trễ",
     "EditConnectionImplementation": "Thêm điều kiện - {implementationName}",
-    "AddDelayProfileError": "Không thể thêm hồ sơ chất lượng mới, vui lòng thử lại."
+    "AddDelayProfileError": "Không thể thêm hồ sơ chất lượng mới, vui lòng thử lại.",
+    "Max": "Max",
+    "Min": "Min",
+    "Preferred": "Ưu tiên",
+    "Today": "Hôm nay"
 }

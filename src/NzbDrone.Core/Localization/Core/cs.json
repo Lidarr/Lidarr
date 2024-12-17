@@ -883,5 +883,9 @@
     "OnLatestVersion": "Nejnovější verze aplikace {appName} je již nainstalována",
     "UnmappedFiles": "Nezmapované složky",
     "DownloadImported": "Stahování ignorováno",
-    "AddDelayProfileError": "Nelze přidat nový kvalitní profil, zkuste to znovu."
+    "AddDelayProfileError": "Nelze přidat nový kvalitní profil, zkuste to znovu.",
+    "Max": "Max",
+    "Min": "Min",
+    "Preferred": "Upřednostňováno",
+    "Today": "Dnes"
 }

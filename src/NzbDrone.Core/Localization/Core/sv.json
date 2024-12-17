@@ -920,5 +920,9 @@
     "MonitorMissingAlbums": "Existerande Albums",
     "MissingAlbums": "Existerande Albums",
     "DownloadImported": "Nerladdning ignorerad",
-    "AddDelayProfileError": "Det gick inte att lägga till en ny kvalitetsprofil. Försök igen."
+    "AddDelayProfileError": "Det gick inte att lägga till en ny kvalitetsprofil. Försök igen.",
+    "Max": "Max",
+    "Min": "Min",
+    "Preferred": "Föredraget",
+    "Today": "Idag"
 }

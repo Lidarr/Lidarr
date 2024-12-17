@@ -847,5 +847,9 @@
     "UpdateAppDirectlyLoadError": "Nie można bezpośrednio zaktualizować {appName},",
     "UnmappedFiles": "Niezmapowane foldery",
     "Clone": "Zamknij",
-    "AddDelayProfileError": "Nie można dodać nowego profilu opóźnienia, spróbuj później."
+    "AddDelayProfileError": "Nie można dodać nowego profilu opóźnienia, spróbuj później.",
+    "Max": "Maks",
+    "Min": "Min",
+    "Preferred": "Preferowane",
+    "Today": "Dzisiaj"
 }
