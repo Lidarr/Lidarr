@@ -114,7 +114,7 @@ namespace NzbDrone.Core.Music
             // so that the album doesn't just disappear.
 
             // TODO filter by metadata id before hitting database
-            _logger.Trace($"Ensuring parent artist exists [{remote.ArtistMetadata.Value.ForeignArtistId}]");
+            _logger.Trace("Ensuring parent artist exists [{0}]", remote.ArtistMetadata.Value.ForeignArtistId);
 
             var newArtist = _artistService.FindById(remote.ArtistMetadata.Value.ForeignArtistId);
 
@@ -130,7 +130,8 @@ namespace NzbDrone.Core.Music
                     Monitored = oldArtist.Monitored,
                     Tags = oldArtist.Tags
                 };
-                _logger.Debug($"Adding missing parent artist {addArtist}");
+
+                _logger.Info("Adding missing parent artist {0}", addArtist);
                 _addArtistService.AddArtist(addArtist);
             }
         }
