@@ -793,5 +793,9 @@
     "AddReleaseProfile": "Editați profilul de întârziere",
     "DownloadImported": "Descărcarea ignorată",
     "Season": "Motiv",
-    "AddDelayProfileError": "Imposibil de adăugat un nou profil de calitate, încercați din nou."
+    "AddDelayProfileError": "Imposibil de adăugat un nou profil de calitate, încercați din nou.",
+    "Min": "Min",
+    "Preferred": "Preferat",
+    "Max": "Max",
+    "Today": "Astăzi"
 }
