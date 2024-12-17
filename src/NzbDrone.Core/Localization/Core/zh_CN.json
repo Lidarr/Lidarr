@@ -1326,5 +1326,9 @@
     "InstallMajorVersionUpdateMessageLink": "请查看 [{domain}]({url}) 以获取更多信息。",
     "ManageFormats": "管理格式",
     "AddDelayProfileError": "无法添加新的延迟配置，请重试。",
-    "ImportListTagsHelpText": "从此列表导入时将添加标记"
+    "ImportListTagsHelpText": "从此列表导入时将添加标记",
+    "Max": "最大的",
+    "Min": "最小的",
+    "Preferred": "首选的",
+    "Today": "今天"
 }
