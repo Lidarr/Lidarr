@@ -24,7 +24,8 @@ namespace Lidarr.Api.V1.Search
         }
 
         [HttpGet]
-        public object Search([FromQuery] string term)
+        [Produces("application/json")]
+        public IEnumerable<SearchResource> Search([FromQuery] string term)
         {
             var searchResults = _searchProxy.SearchForNewEntity(term);
             return MapToResource(searchResults).ToList();
