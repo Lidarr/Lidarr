@@ -1335,5 +1335,10 @@
     "ICalTagsArtistHelpText": "O feed conterá apenas artistas com pelo menos uma etiqueta correspondente",
     "NotificationsTagsArtistHelpText": "Envie notificações apenas para artistas com pelo menos uma etiqueta correspondente",
     "ReleaseProfileTagArtistHelpText": "Os perfis de lançamento serão aplicados as artistas com pelo menos uma etiqueta correspondente. Deixe em branco para aplicar a todos os artistas",
-    "DelayProfileArtistTagsHelpText": "Aplica-se a artistas com pelo menos uma etiqueta correspondente"
+    "DelayProfileArtistTagsHelpText": "Aplica-se a artistas com pelo menos uma etiqueta correspondente",
+    "Min": "Mín.",
+    "Today": "Hoje",
+    "Max": "Máx.",
+    "Preferred": "Preferido",
+    "MappedNetworkDrivesWindowsService": "As unidades de rede mapeadas não estão disponíveis quando executadas como um serviço do Windows. Consulte as [FAQ]({url}) para obter mais informações."
 }

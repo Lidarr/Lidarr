@@ -748,5 +748,10 @@
     "Clone": "閉じる",
     "AddReleaseProfile": "遅延プロファイルの編集",
     "Season": "理由",
-    "AddDelayProfileError": "新しい品質プロファイルを追加できません。再試行してください。"
+    "AddDelayProfileError": "新しい品質プロファイルを追加できません。再試行してください。",
+    "Max": "マックス",
+    "Min": "最小",
+    "Preferred": "優先",
+    "Today": "今日",
+    "MappedNetworkDrivesWindowsService": "マップされたネットワークドライブは、Windowsサービスとして実行している場合は使用できません。詳細については、FAQを参照してください"
 }

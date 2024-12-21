@@ -1263,5 +1263,10 @@
     "Shutdown": "Sammuta",
     "UpdateAppDirectlyLoadError": "{appName}ia ei voida päivittää suoraan,",
     "AddDelayProfileError": "Virhe lisättäessä viiveporofiilia. Yritä uudelleen.",
-    "ImportListTagsHelpText": "Tunnisteet, joilla tältä tuontilistalta lisätyt kohteet merkitään."
+    "ImportListTagsHelpText": "Tunnisteet, joilla tältä tuontilistalta lisätyt kohteet merkitään.",
+    "Min": "Alin",
+    "Preferred": "Tavoite",
+    "Max": "Korkein",
+    "Today": "Tänään",
+    "MappedNetworkDrivesWindowsService": "Yhdistetyt verkkoasemat eivät ole käytettävissä kun sovellus suoritetaan Windows-palveluna. Saat lisätietoja [UKK:sta]({url})."
 }

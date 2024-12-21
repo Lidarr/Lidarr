@@ -1335,5 +1335,10 @@
     "DefaultDelayProfileArtist": "Este es el perfil predeterminado. Se aplica a todos los artistas que no tienen un perfil explícito.",
     "DelayProfileArtistTagsHelpText": "Se aplica a los artistas con al menos una etiqueta coincidente",
     "NotificationsTagsArtistHelpText": "Envía notificaciones solo para artistas con al menos una etiqueta coincidente",
-    "ICalTagsArtistHelpText": "El canal solo contendrá artistas con al menos una etiqueta coincidente"
+    "ICalTagsArtistHelpText": "El canal solo contendrá artistas con al menos una etiqueta coincidente",
+    "Preferred": "Preferido",
+    "Max": "Máximo",
+    "Today": "Hoy",
+    "Min": "Min",
+    "MappedNetworkDrivesWindowsService": "Los discos de red mapeados no están disponibles cuando se ejecutan como un servicio de Windows, consulta el [FAQ]({url}) para más información."
 }

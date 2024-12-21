@@ -897,5 +897,10 @@
     "ExternalUpdater": "{appName} is geconfigureerd om een extern update mechanisme te gebruiken",
     "UpdateAppDirectlyLoadError": "Kan {appName} niet rechtstreeks updaten,",
     "UnmappedFiles": "Niet-toegewezen Mappen",
-    "AddDelayProfileError": "Mislukt om vertragingsprofiel toe te voegen, probeer het later nog eens."
+    "AddDelayProfileError": "Mislukt om vertragingsprofiel toe te voegen, probeer het later nog eens.",
+    "Max": "Max",
+    "Today": "Vandaag",
+    "Min": "Min",
+    "Preferred": "Voorkeur gegeven",
+    "MappedNetworkDrivesWindowsService": "Toegewezen netwerkstation is niet beschikbaar wanneer Prowlarr wordt uitgevoerd als een Windows Service. Bekijk de Veelgestelde Vragen voor meer informatie"
 }

@@ -742,5 +742,7 @@
     "AddAutoTag": "자동 태그 추가",
     "AddCondition": "조건 추가",
     "AddImportList": "가져오기 목록 추가",
-    "UpdateAvailableHealthCheckMessage": "새 업데이트 사용 가능: {version}"
+    "UpdateAvailableHealthCheckMessage": "새 업데이트 사용 가능: {version}",
+    "Today": "오늘",
+    "MappedNetworkDrivesWindowsService": "Windows 서비스로 실행할 때는 매핑 된 네트워크 드라이브를 사용할 수 없습니다. 자세한 내용은 FAQ를 참조하십시오."
 }

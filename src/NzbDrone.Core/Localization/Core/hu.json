@@ -1221,5 +1221,10 @@
     "Shutdown": "Leállitás",
     "UpdateAppDirectlyLoadError": "Nem lehetséges közvetlenül frissíteni a {appName}-t",
     "ImportListTagsHelpText": "Címkék, amelyek a listáról történő importáláskor kerülnek hozzáadásra",
-    "AddDelayProfileError": "Nem sikerült új késleltetési profilt hozzáadni, próbálkozzon újra."
+    "AddDelayProfileError": "Nem sikerült új késleltetési profilt hozzáadni, próbálkozzon újra.",
+    "MappedNetworkDrivesWindowsService": "A leképezett hálózati meghajtók nem érhetők el, ha Windows szolgáltatásként futnak, lásd a [GYIK]({url}) for more information.",
+    "Max": "Max",
+    "Min": "Min",
+    "Preferred": "Előnyben részesített",
+    "Today": "Ma"
 }

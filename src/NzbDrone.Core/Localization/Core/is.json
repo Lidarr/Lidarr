@@ -748,5 +748,10 @@
     "Clone": "Lokaðu",
     "AddReleaseProfile": "Breyta seinkunarprófíl",
     "Season": "Ástæða",
-    "AddDelayProfileError": "Ekki er hægt að bæta við nýjum gæðaprófíl, reyndu aftur."
+    "AddDelayProfileError": "Ekki er hægt að bæta við nýjum gæðaprófíl, reyndu aftur.",
+    "Max": "Hámark",
+    "Min": "Mín",
+    "Preferred": "Æskilegt",
+    "Today": "Í dag",
+    "MappedNetworkDrivesWindowsService": "Kortlagðar netdrif eru ekki fáanlegar þegar þær eru keyrðar sem Windows þjónusta. Vinsamlegast skoðaðu algengar spurningar fyrir frekari upplýsingar"
 }

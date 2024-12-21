@@ -1329,5 +1329,10 @@
     "SkipFreeSpaceCheckHelpText": "Utiliser quand {appName} ne parvient pas à détecter l'espace disponible de votre dossier racine",
     "LastSearched": "Dernière recherche",
     "AddDelayProfileError": "Impossible d'ajouter un nouveau profil de délai, veuillez réessayer.",
-    "ImportListTagsHelpText": "Balises qui seront ajoutées lors de l'importation à partir de cette liste"
+    "ImportListTagsHelpText": "Balises qui seront ajoutées lors de l'importation à partir de cette liste",
+    "Max": "Max",
+    "Min": "Min",
+    "Preferred": "Préféré",
+    "Today": "Aujourd'hui",
+    "MappedNetworkDrivesWindowsService": "Les lecteurs réseau mappés ne sont pas disponibles lors de l'exécution en tant que service Windows, consultez la [FAQ]({url}) pour plus d'informations."
 }
