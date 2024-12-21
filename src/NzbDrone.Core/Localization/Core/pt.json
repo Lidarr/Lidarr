@@ -1018,5 +1018,10 @@
     "UpdateAppDirectlyLoadError": "Não foi possível atualizar o {appName} diretamente,",
     "DockerUpdater": "atualize o contentor do Docker para receber a atualização",
     "DownloadImported": "Transferência Ignorada",
-    "AddDelayProfileError": "Não foi possível adicionar um novo perfil de qualidade, tenta novamente."
+    "AddDelayProfileError": "Não foi possível adicionar um novo perfil de qualidade, tenta novamente.",
+    "Max": "Máx.",
+    "Min": "Mín.",
+    "Preferred": "Preferido",
+    "Today": "Hoje",
+    "MappedNetworkDrivesWindowsService": "As unidades de rede mapeadas não estão disponíveis quando executadas como um serviço do Windows. Veja as Perguntas mais frequentes para obter mais informações"
 }

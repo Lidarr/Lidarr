@@ -964,5 +964,10 @@
     "AddArtistWithName": "Afegeix {artistName}",
     "AddNewAlbumSearchForNewAlbum": "Inicia la cerca de nous àlbums",
     "AddMissing": "Afegeix faltants",
-    "AddNewAlbum": "Afegeix nou àlbum"
+    "AddNewAlbum": "Afegeix nou àlbum",
+    "Max": "Màx",
+    "Min": "Min",
+    "Preferred": "Preferit",
+    "Today": "Avui",
+    "MappedNetworkDrivesWindowsService": "Les unitats de xarxa assignades no estan disponibles quan s'executen com a servei de Windows. Si us plau, consulteu les PMF per a obtenir més informació"
 }
