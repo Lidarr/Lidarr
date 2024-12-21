@@ -12,8 +12,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.6.2" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
     <PackageReference Include="FluentValidation" Version="9.5.4" />
-    <PackageReference Include="Ical.Net" Version="4.2.0" />
-    <PackageReference Include="NLog" Version="5.3.3" />
+    <PackageReference Include="Ical.Net" Version="4.3.1" />
+    <PackageReference Include="NLog" Version="5.3.4" />
     <PackageReference Include="System.IO.Abstractions" Version="17.0.24" />
   </ItemGroup>
 </Project>
