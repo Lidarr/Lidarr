@@ -787,5 +787,15 @@
     "AddDelayProfileError": "Kan ikke tilføje en ny forsinkelsesprofil. Prøv igen.",
     "RegularExpressionsCanBeTested": "Regulære udtryk kan testes [her]({url}).",
     "AddToDownloadQueue": "Føj til downloadkø",
-    "AddedToDownloadQueue": "Føjet til downloadkø"
+    "AddedToDownloadQueue": "Føjet til downloadkø",
+    "Artist": "kunstner",
+    "Max": "Maks.",
+    "Preferred": "Foretrukket",
+    "AutoTaggingSpecificationTag": "Etiket",
+    "TBA": "Afventer",
+    "MappedNetworkDrivesWindowsService": "Tilsluttede netværksdrev er ikke tilgængelige, når programmet kører som en Windows-tjeneste. Se FAQ'en ({url}) for mere information.",
+    "Today": "I dag",
+    "Episode": "afsnit",
+    "MetadataProfile": "metadataprofil",
+    "Min": "Min"
 }

@@ -1330,5 +1330,6 @@
     "Max": "最大的",
     "Min": "最小的",
     "Preferred": "首选的",
-    "Today": "今天"
+    "Today": "今天",
+    "MappedNetworkDrivesWindowsService": "作为 Windows 服务运行时，映射的网络驱动器不可用，请参阅 [FAQ]({url}) 获取更多信息。"
 }

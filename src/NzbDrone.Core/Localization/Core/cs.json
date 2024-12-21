@@ -887,5 +887,6 @@
     "Max": "Max",
     "Min": "Min",
     "Preferred": "Upřednostňováno",
-    "Today": "Dnes"
+    "Today": "Dnes",
+    "MappedNetworkDrivesWindowsService": "Mapované síťové jednotky nejsou k dispozici, když běží jako služba Windows. Další informace najdete v častých dotazech"
 }

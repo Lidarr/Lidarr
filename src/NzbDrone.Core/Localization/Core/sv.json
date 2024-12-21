@@ -924,5 +924,6 @@
     "Max": "Max",
     "Min": "Min",
     "Preferred": "Föredraget",
-    "Today": "Idag"
+    "Today": "Idag",
+    "MappedNetworkDrivesWindowsService": "Mappade nätverksenheter är inte tillgängliga när de körs som en Windows-tjänst. Se FAQ för mer information"
 }

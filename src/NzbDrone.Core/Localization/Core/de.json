@@ -1281,5 +1281,10 @@
     "NotificationsSettingsUpdateMapPathsFromHelpText": "{appName}-Pfad, wird verwendet, um Serienpfade zu ändern, wenn {serviceName} den Bibliothekspfad anders sieht als {appName} (benötigt 'Bibliothek aktualisieren')",
     "NotificationsSettingsUpdateMapPathsToHelpText": "{serviceName}-Pfad, wird verwendet, um Serienpfade zu ändern, wenn {serviceName} den Bibliothekspfad anders sieht als {appName} (benötigt 'Bibliothek aktualisieren')",
     "DashOrSpaceDashDependingOnName": "Dash oder Space Dash je nach Name",
-    "NotificationsEmbySettingsUpdateLibraryHelpText": "Bibliothek bei Import, Umbenennung oder Löschung aktualisieren"
+    "NotificationsEmbySettingsUpdateLibraryHelpText": "Bibliothek bei Import, Umbenennung oder Löschung aktualisieren",
+    "Preferred": "Bevorzugt",
+    "Max": "Max",
+    "Min": "Min",
+    "Today": "Heute",
+    "MappedNetworkDrivesWindowsService": "Zugriff auf gemappte Netzlaufwerke ist nicht verfügbar, wenn als Windows-Dienst ausgeführt. Weitere Informationen findest du in den [FAQ]({url})."
 }

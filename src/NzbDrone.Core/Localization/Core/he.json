@@ -791,5 +791,10 @@
     "EditReleaseProfile": "ערוך פרופיל עיכוב",
     "Season": "סיבה",
     "AddDelayProfileError": "לא ניתן להוסיף פרופיל איכות חדש, נסה שוב.",
-    "AddCondition": "הוסף תנאי"
+    "AddCondition": "הוסף תנאי",
+    "Today": "היום",
+    "Max": "מקסימום",
+    "Min": "דקה",
+    "Preferred": "מועדף",
+    "MappedNetworkDrivesWindowsService": "כונני רשת ממופים אינם זמינים כאשר הם פועלים כשירות Windows. אנא עיין בשאלות הנפוצות למידע נוסף"
 }
