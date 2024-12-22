@@ -77,10 +77,10 @@ namespace NzbDrone.Core.Download.Clients.Transmission
         [FieldDefinition(8, Label = "Directory", Type = FieldType.Textbox, Advanced = true, HelpText = "Optional location to put downloads in, leave blank to use the default Transmission location")]
         public string MusicDirectory { get; set; }
 
-        [FieldDefinition(9, Label = "Recent Priority", Type = FieldType.Select, SelectOptions = typeof(TransmissionPriority), HelpText = "Priority to use when grabbing albums released within the last 14 days")]
+        [FieldDefinition(9, Label = "DownloadClientSettingsRecentPriority", Type = FieldType.Select, SelectOptions = typeof(TransmissionPriority), HelpText = "DownloadClientSettingsRecentPriorityAlbumHelpText")]
         public int RecentMusicPriority { get; set; }
 
-        [FieldDefinition(10, Label = "Older Priority", Type = FieldType.Select, SelectOptions = typeof(TransmissionPriority), HelpText = "Priority to use when grabbing albums released over 14 days ago")]
+        [FieldDefinition(10, Label = "DownloadClientSettingsOlderPriority", Type = FieldType.Select, SelectOptions = typeof(TransmissionPriority), HelpText = "DownloadClientSettingsOlderPriorityAlbumHelpText")]
         public int OlderMusicPriority { get; set; }
 
         [FieldDefinition(11, Label = "Add Paused", Type = FieldType.Checkbox)]

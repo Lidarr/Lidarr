@@ -69,10 +69,10 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
         [FieldDefinition(7, Label = "Category", Type = FieldType.Textbox, HelpText = "Adding a category specific to Lidarr avoids conflicts with unrelated downloads, but it's optional")]
         public string MusicCategory { get; set; }
 
-        [FieldDefinition(8, Label = "Recent Priority", Type = FieldType.Select, SelectOptions = typeof(SabnzbdPriority), HelpText = "Priority to use when grabbing albums released within the last 14 days")]
+        [FieldDefinition(8, Label = "DownloadClientSettingsRecentPriority", Type = FieldType.Select, SelectOptions = typeof(SabnzbdPriority), HelpText = "DownloadClientSettingsRecentPriorityAlbumHelpText")]
         public int RecentMusicPriority { get; set; }
 
-        [FieldDefinition(9, Label = "Older Priority", Type = FieldType.Select, SelectOptions = typeof(SabnzbdPriority), HelpText = "Priority to use when grabbing albums released over 14 days ago")]
+        [FieldDefinition(9, Label = "DownloadClientSettingsOlderPriority", Type = FieldType.Select, SelectOptions = typeof(SabnzbdPriority), HelpText = "DownloadClientSettingsOlderPriorityAlbumHelpText")]
         public int OlderMusicPriority { get; set; }
 
         public NzbDroneValidationResult Validate()

@@ -57,10 +57,10 @@ namespace NzbDrone.Core.Download.Clients.Nzbget
         [FieldDefinition(6, Label = "Category", Type = FieldType.Textbox, HelpText = "Adding a category specific to Lidarr avoids conflicts with unrelated downloads, but it's optional")]
         public string MusicCategory { get; set; }
 
-        [FieldDefinition(7, Label = "Recent Priority", Type = FieldType.Select, SelectOptions = typeof(NzbgetPriority), HelpText = "Priority to use when grabbing albums released within the last 14 days")]
+        [FieldDefinition(7, Label = "DownloadClientSettingsRecentPriority", Type = FieldType.Select, SelectOptions = typeof(NzbgetPriority), HelpText = "DownloadClientSettingsRecentPriorityAlbumHelpText")]
         public int RecentMusicPriority { get; set; }
 
-        [FieldDefinition(8, Label = "Older Priority", Type = FieldType.Select, SelectOptions = typeof(NzbgetPriority), HelpText = "Priority to use when grabbing albums released over 14 days ago")]
+        [FieldDefinition(8, Label = "DownloadClientSettingsOlderPriority", Type = FieldType.Select, SelectOptions = typeof(NzbgetPriority), HelpText = "DownloadClientSettingsOlderPriorityAlbumHelpText")]
         public int OlderMusicPriority { get; set; }
 
         [FieldDefinition(9, Label = "Add Paused", Type = FieldType.Checkbox, HelpText = "This option requires at least NzbGet version 16.0")]

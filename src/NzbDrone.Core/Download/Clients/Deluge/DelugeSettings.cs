@@ -47,13 +47,13 @@ namespace NzbDrone.Core.Download.Clients.Deluge
         [FieldDefinition(5, Label = "Category", Type = FieldType.Textbox, HelpText = "Adding a category specific to Lidarr avoids conflicts with unrelated downloads, but it's optional")]
         public string MusicCategory { get; set; }
 
-        [FieldDefinition(6, Label = "Post-Import Category", Type = FieldType.Textbox, Advanced = true, HelpText = "Category for Lidarr to set after it has imported the download. Lidarr will not remove torrents in that category even if seeding finished. Leave blank to keep same category.")]
+        [FieldDefinition(6, Label = "PostImportCategory", Type = FieldType.Textbox, Advanced = true, HelpText = "DownloadClientSettingsPostImportCategoryHelpText")]
         public string MusicImportedCategory { get; set; }
 
-        [FieldDefinition(7, Label = "Recent Priority", Type = FieldType.Select, SelectOptions = typeof(DelugePriority), HelpText = "Priority to use when grabbing albums released within the last 14 days")]
+        [FieldDefinition(7, Label = "DownloadClientSettingsRecentPriority", Type = FieldType.Select, SelectOptions = typeof(DelugePriority), HelpText = "DownloadClientSettingsRecentPriorityAlbumHelpText")]
         public int RecentMusicPriority { get; set; }
 
-        [FieldDefinition(8, Label = "Older Priority", Type = FieldType.Select, SelectOptions = typeof(DelugePriority), HelpText = "Priority to use when grabbing albums released over 14 days ago")]
+        [FieldDefinition(8, Label = "DownloadClientSettingsOlderPriority", Type = FieldType.Select, SelectOptions = typeof(DelugePriority), HelpText = "DownloadClientSettingsOlderPriorityAlbumHelpText")]
         public int OlderMusicPriority { get; set; }
 
         [FieldDefinition(9, Label = "Add Paused", Type = FieldType.Checkbox)]
