@@ -70,10 +70,10 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
         [FieldDefinition(7, Label = "Category", Type = FieldType.Textbox, HelpText = "Adding a category specific to Lidarr avoids conflicts with unrelated non-Lidarr downloads (will create a [category] subdirectory in the output directory)")]
         public string Category { get; set; }
 
-        [FieldDefinition(8, Label = "Recent Priority", Type = FieldType.Select, SelectOptions = typeof(FreeboxDownloadPriority), HelpText = "Priority to use when grabbing albums that released within the last 14 days")]
+        [FieldDefinition(8, Label = "DownloadClientSettingsRecentPriority", Type = FieldType.Select, SelectOptions = typeof(FreeboxDownloadPriority), HelpText = "DownloadClientSettingsRecentPriorityAlbumHelpText")]
         public int RecentPriority { get; set; }
 
-        [FieldDefinition(9, Label = "Older Priority", Type = FieldType.Select, SelectOptions = typeof(FreeboxDownloadPriority), HelpText = "Priority to use when grabbing albums that released over 14 days ago")]
+        [FieldDefinition(9, Label = "DownloadClientSettingsOlderPriority", Type = FieldType.Select, SelectOptions = typeof(FreeboxDownloadPriority), HelpText = "DownloadClientSettingsOlderPriorityAlbumHelpText")]
         public int OlderPriority { get; set; }
 
         [FieldDefinition(10, Label = "Add Paused", Type = FieldType.Checkbox)]
