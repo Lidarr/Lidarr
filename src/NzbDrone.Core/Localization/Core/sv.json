@@ -925,5 +925,6 @@
     "Min": "Min",
     "Preferred": "Föredraget",
     "Today": "Idag",
-    "MappedNetworkDrivesWindowsService": "Mappade nätverksenheter är inte tillgängliga när de körs som en Windows-tjänst. Se FAQ för mer information"
+    "MappedNetworkDrivesWindowsService": "Mappade nätverksenheter är inte tillgängliga när de körs som en Windows-tjänst. Se FAQ för mer information",
+    "DownloadClientSettingsRecentPriority": "Klient prioritet"
 }

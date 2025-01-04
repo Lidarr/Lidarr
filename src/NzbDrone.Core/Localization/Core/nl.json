@@ -902,5 +902,6 @@
     "Today": "Vandaag",
     "Min": "Min",
     "Preferred": "Voorkeur gegeven",
-    "MappedNetworkDrivesWindowsService": "Toegewezen netwerkstation is niet beschikbaar wanneer Prowlarr wordt uitgevoerd als een Windows Service. Bekijk de Veelgestelde Vragen voor meer informatie"
+    "MappedNetworkDrivesWindowsService": "Toegewezen netwerkstation is niet beschikbaar wanneer Prowlarr wordt uitgevoerd als een Windows Service. Bekijk de Veelgestelde Vragen voor meer informatie",
+    "DownloadClientSettingsRecentPriority": "Client Prioriteit"
 }

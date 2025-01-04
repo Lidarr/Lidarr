@@ -916,5 +916,6 @@
     "Min": "Мінімум",
     "Preferred": "Бажано",
     "Max": "Максимальний",
-    "MappedNetworkDrivesWindowsService": "Підключені мережеві диски недоступні під час роботи як служби Windows. Щоб отримати додаткову інформацію, перегляньте FAQ"
+    "MappedNetworkDrivesWindowsService": "Підключені мережеві диски недоступні під час роботи як служби Windows. Щоб отримати додаткову інформацію, перегляньте FAQ",
+    "DownloadClientSettingsRecentPriority": "Пріоритет клієнта"
 }

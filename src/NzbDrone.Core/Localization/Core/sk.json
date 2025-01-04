@@ -294,5 +294,6 @@
     "AptUpdater": "Použiť apt pre inštaláciu aktualizácie",
     "Clone": "Zatvoriť",
     "Reason": "Séria",
-    "AddDelayProfileError": "Nie je možné pridať novú podmienku, skúste to znova."
+    "AddDelayProfileError": "Nie je možné pridať novú podmienku, skúste to znova.",
+    "DownloadClientSettingsRecentPriority": "Priorita klienta"
 }

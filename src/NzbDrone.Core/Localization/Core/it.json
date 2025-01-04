@@ -1046,5 +1046,6 @@
     "Max": "Massimo",
     "Min": "Min",
     "Today": "Oggi",
-    "MappedNetworkDrivesWindowsService": "Le unità di rete mappate non sono disponibili eseguendo come servizio di Windows. Vedere le FAQ per maggiori informazioni"
+    "MappedNetworkDrivesWindowsService": "Le unità di rete mappate non sono disponibili eseguendo come servizio di Windows. Vedere le FAQ per maggiori informazioni",
+    "DownloadClientSettingsRecentPriority": "Priorità Client"
 }

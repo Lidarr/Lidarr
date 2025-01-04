@@ -796,5 +796,6 @@
     "Max": "מקסימום",
     "Min": "דקה",
     "Preferred": "מועדף",
-    "MappedNetworkDrivesWindowsService": "כונני רשת ממופים אינם זמינים כאשר הם פועלים כשירות Windows. אנא עיין בשאלות הנפוצות למידע נוסף"
+    "MappedNetworkDrivesWindowsService": "כונני רשת ממופים אינם זמינים כאשר הם פועלים כשירות Windows. אנא עיין בשאלות הנפוצות למידע נוסף",
+    "DownloadClientSettingsRecentPriority": "עדיפות לקוח"
 }
