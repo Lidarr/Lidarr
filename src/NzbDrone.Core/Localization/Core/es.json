@@ -1340,5 +1340,11 @@
     "Max": "Máximo",
     "Today": "Hoy",
     "Min": "Min",
-    "MappedNetworkDrivesWindowsService": "Los discos de red mapeados no están disponibles cuando se ejecutan como un servicio de Windows, consulta el [FAQ]({url}) para más información."
+    "MappedNetworkDrivesWindowsService": "Los discos de red mapeados no están disponibles cuando se ejecutan como un servicio de Windows, consulta el [FAQ]({url}) para más información.",
+    "DownloadClientSettingsOlderPriority": "Priorizar más antiguos",
+    "DownloadClientSettingsPostImportCategoryHelpText": "Categoría para que {appName} establezca una vez se haya importado la descarga. {appName} no eliminará torrents en esa categoría incluso si finalizó el sembrado. Dejar en blanco para mantener la misma categoría.",
+    "DownloadClientSettingsRecentPriority": "Priorizar recientes",
+    "PostImportCategory": "Categoría de post-importación",
+    "DownloadClientSettingsRecentPriorityAlbumHelpText": "Prioridad a usar cuando se capturen álbumes lanzados en los últimos 14 días",
+    "DownloadClientSettingsOlderPriorityAlbumHelpText": "Prioridad a usar cuando se capturen álbumes lanzados hace más de 14 días"
 }

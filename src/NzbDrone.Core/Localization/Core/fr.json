@@ -301,7 +301,7 @@
     "ShownAboveEachColumnWhenWeekIsTheActiveView": "Affiché au dessus de chaque colonne quand \"Semaine\" est l'affichage actif",
     "ShowPath": "Afficher le chemin",
     "ShowQualityProfile": "Afficher le profil de qualité",
-    "ShowQualityProfileHelpText": "Afficher le profil de qualité sous l'affiche",
+    "ShowQualityProfileHelpText": "Affiche le profil de qualité sous l'affiche",
     "ShowRelativeDates": "Afficher les dates relatives",
     "ShowRelativeDatesHelpText": "Afficher les dates relatives (Aujourd'hui/Hier/etc) ou absolues",
     "ShowSearch": "Afficher la recherche",
@@ -441,8 +441,8 @@
     "ShortDateFormat": "Format de date courte",
     "ShowCutoffUnmetIconHelpText": "Afficher l'icône des fichiers lorsque la limite n'a pas été atteinte",
     "ShowDateAdded": "Afficher la date d'ajout",
-    "ShowMonitored": "Afficher le chemin",
-    "ShowMonitoredHelpText": "Afficher l'état de surveillance sous le poster",
+    "ShowMonitored": "Afficher l'état de surveillance",
+    "ShowMonitoredHelpText": "Affiche l'état de surveillance sous le poster",
     "Size": " Taille",
     "SkipFreeSpaceCheck": "Ignorer la vérification de l'espace libre",
     "SorryThatAlbumCannotBeFound": "Désolé, ce film est introuvable.",
@@ -1334,5 +1334,9 @@
     "Min": "Min",
     "Preferred": "Préféré",
     "Today": "Aujourd'hui",
-    "MappedNetworkDrivesWindowsService": "Les lecteurs réseau mappés ne sont pas disponibles lors de l'exécution en tant que service Windows, consultez la [FAQ]({url}) pour plus d'informations."
+    "MappedNetworkDrivesWindowsService": "Les lecteurs réseau mappés ne sont pas disponibles lors de l'exécution en tant que service Windows, consultez la [FAQ]({url}) pour plus d'informations.",
+    "DownloadClientSettingsOlderPriority": "Priorité plus ancienne",
+    "DownloadClientSettingsPostImportCategoryHelpText": "Catégorie que {appName} doit définir après avoir importé le téléchargement. {appName} ne supprimera pas les torrents de cette catégorie même si l'ensemencement est terminé. Laisser vide pour conserver la même catégorie.",
+    "DownloadClientSettingsRecentPriority": "Priorité récente",
+    "PostImportCategory": "Catégorie après l'importation"
 }

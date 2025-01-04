@@ -758,5 +758,6 @@
     "Min": "دقيقة",
     "Preferred": "يفضل",
     "Today": "اليوم",
-    "MappedNetworkDrivesWindowsService": "لا تتوفر محركات أقراص الشبكة المعينة عند التشغيل كخدمة Windows. يرجى الاطلاع على التعليمات لمزيد من المعلومات"
+    "MappedNetworkDrivesWindowsService": "لا تتوفر محركات أقراص الشبكة المعينة عند التشغيل كخدمة Windows. يرجى الاطلاع على التعليمات لمزيد من المعلومات",
+    "DownloadClientSettingsRecentPriority": "أولوية العميل"
 }

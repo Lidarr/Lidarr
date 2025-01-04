@@ -750,5 +750,6 @@
     "Min": "นาที",
     "Preferred": "ที่ต้องการ",
     "Today": "วันนี้",
-    "MappedNetworkDrivesWindowsService": "ไดรฟ์เครือข่ายที่แมปไม่พร้อมใช้งานเมื่อเรียกใช้เป็นบริการ Windows โปรดดูคำถามที่พบบ่อยสำหรับข้อมูลเพิ่มเติม"
+    "MappedNetworkDrivesWindowsService": "ไดรฟ์เครือข่ายที่แมปไม่พร้อมใช้งานเมื่อเรียกใช้เป็นบริการ Windows โปรดดูคำถามที่พบบ่อยสำหรับข้อมูลเพิ่มเติม",
+    "DownloadClientSettingsRecentPriority": "ลำดับความสำคัญของลูกค้า"
 }

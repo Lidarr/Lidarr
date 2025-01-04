@@ -753,5 +753,6 @@
     "Min": "最小",
     "Preferred": "優先",
     "Today": "今日",
-    "MappedNetworkDrivesWindowsService": "マップされたネットワークドライブは、Windowsサービスとして実行している場合は使用できません。詳細については、FAQを参照してください"
+    "MappedNetworkDrivesWindowsService": "マップされたネットワークドライブは、Windowsサービスとして実行している場合は使用できません。詳細については、FAQを参照してください",
+    "DownloadClientSettingsRecentPriority": "クライアントの優先順位"
 }
