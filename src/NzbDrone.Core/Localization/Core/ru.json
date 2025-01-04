@@ -558,7 +558,7 @@
     "Test": "Тест",
     "Title": "Название",
     "TotalSpace": "Общее сводное место",
-    "Ui": "Пользовательский интерфейс",
+    "Ui": "Интерфейс",
     "UnmappedFilesOnly": "Только несопоставленные файлы",
     "UnmonitoredOnly": "Только не отслеживаемые",
     "UpgradesAllowed": "Обновления разрешены",
@@ -1084,5 +1084,9 @@
     "RegularExpressionsTutorialLink": "Более подробную информацию о регулярных выражениях можно найти [здесь]({url}).",
     "Today": "Сегодня",
     "Min": "Минимум",
-    "MappedNetworkDrivesWindowsService": "Подключенные сетевые диски недоступны при работе в качестве службы Windows. Дополнительную информацию см. в [FAQ]({url})."
+    "MappedNetworkDrivesWindowsService": "Подключенные сетевые диски недоступны при работе в качестве службы Windows. Дополнительную информацию см. в [FAQ]({url}).",
+    "DownloadClientSettingsOlderPriority": "Более старый приоритет",
+    "DownloadClientSettingsPostImportCategoryHelpText": "Категория для приложения {appName}, которую необходимо установить после импорта загрузки. {appName} не удалит торренты в этой категории, даже если раздача завершена. Оставьте пустым, чтобы сохранить ту же категорию.",
+    "DownloadClientSettingsRecentPriority": "Недавний приоритет",
+    "PostImportCategory": "Категория после импорта"
 }

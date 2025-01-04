@@ -1286,5 +1286,9 @@
     "Max": "Max",
     "Min": "Min",
     "Today": "Heute",
-    "MappedNetworkDrivesWindowsService": "Zugriff auf gemappte Netzlaufwerke ist nicht verfügbar, wenn als Windows-Dienst ausgeführt. Weitere Informationen findest du in den [FAQ]({url})."
+    "MappedNetworkDrivesWindowsService": "Zugriff auf gemappte Netzlaufwerke ist nicht verfügbar, wenn als Windows-Dienst ausgeführt. Weitere Informationen findest du in den [FAQ]({url}).",
+    "DownloadClientSettingsOlderPriority": "Ältere Priorität",
+    "DownloadClientSettingsPostImportCategoryHelpText": "Kategorie für {appName}, die nach dem Importieren des Downloads festgelegt wird. {appName} wird Torrents in dieser Kategorie nicht entfernen, auch wenn das Seeding beendet ist. Leer lassen, um dieselbe Kategorie beizubehalten.",
+    "DownloadClientSettingsRecentPriority": "Neueste Priorität",
+    "PostImportCategory": "Post-Import-Kategorie"
 }

@@ -1023,5 +1023,6 @@
     "Min": "Mín.",
     "Preferred": "Preferido",
     "Today": "Hoje",
-    "MappedNetworkDrivesWindowsService": "As unidades de rede mapeadas não estão disponíveis quando executadas como um serviço do Windows. Veja as Perguntas mais frequentes para obter mais informações"
+    "MappedNetworkDrivesWindowsService": "As unidades de rede mapeadas não estão disponíveis quando executadas como um serviço do Windows. Veja as Perguntas mais frequentes para obter mais informações",
+    "DownloadClientSettingsRecentPriority": "Prioridade do cliente"
 }

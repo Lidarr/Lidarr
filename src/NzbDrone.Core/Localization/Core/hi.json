@@ -752,5 +752,6 @@
     "Min": "मिनट",
     "Preferred": "पसंदीदा",
     "Today": "आज",
-    "MappedNetworkDrivesWindowsService": "विंडोज सर्विस के रूप में चलने पर मैप्ड नेटवर्क ड्राइव उपलब्ध नहीं हैं। अधिक जानकारी के लिए कृपया FAQ देखें"
+    "MappedNetworkDrivesWindowsService": "विंडोज सर्विस के रूप में चलने पर मैप्ड नेटवर्क ड्राइव उपलब्ध नहीं हैं। अधिक जानकारी के लिए कृपया FAQ देखें",
+    "DownloadClientSettingsRecentPriority": "ग्राहक प्राथमिकता"
 }

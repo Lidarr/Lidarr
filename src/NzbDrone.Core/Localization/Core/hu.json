@@ -1226,5 +1226,8 @@
     "Max": "Max",
     "Min": "Min",
     "Preferred": "Előnyben részesített",
-    "Today": "Ma"
+    "Today": "Ma",
+    "DownloadClientSettingsOlderPriority": "Régebbi prioritás",
+    "DownloadClientSettingsRecentPriority": "Legutóbbi prioritás",
+    "PostImportCategory": "Import utáni kategória"
 }

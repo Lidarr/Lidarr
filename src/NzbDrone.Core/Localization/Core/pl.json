@@ -852,5 +852,6 @@
     "Min": "Min",
     "Preferred": "Preferowane",
     "Today": "Dzisiaj",
-    "MappedNetworkDrivesWindowsService": "Zmapowane dyski sieciowe nie są dostępne, gdy działają jako usługa systemu Windows. Więcej informacji można znaleźć w FAQ"
+    "MappedNetworkDrivesWindowsService": "Zmapowane dyski sieciowe nie są dostępne, gdy działają jako usługa systemu Windows. Więcej informacji można znaleźć w FAQ",
+    "DownloadClientSettingsRecentPriority": "Priorytet klienta"
 }

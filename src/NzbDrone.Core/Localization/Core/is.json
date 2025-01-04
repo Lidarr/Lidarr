@@ -753,5 +753,6 @@
     "Min": "Mín",
     "Preferred": "Æskilegt",
     "Today": "Í dag",
-    "MappedNetworkDrivesWindowsService": "Kortlagðar netdrif eru ekki fáanlegar þegar þær eru keyrðar sem Windows þjónusta. Vinsamlegast skoðaðu algengar spurningar fyrir frekari upplýsingar"
+    "MappedNetworkDrivesWindowsService": "Kortlagðar netdrif eru ekki fáanlegar þegar þær eru keyrðar sem Windows þjónusta. Vinsamlegast skoðaðu algengar spurningar fyrir frekari upplýsingar",
+    "DownloadClientSettingsRecentPriority": "Forgangur viðskiptavinar"
 }

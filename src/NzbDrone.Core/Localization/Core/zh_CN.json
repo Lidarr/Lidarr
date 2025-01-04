@@ -1331,5 +1331,9 @@
     "Min": "最小的",
     "Preferred": "首选的",
     "Today": "今天",
-    "MappedNetworkDrivesWindowsService": "作为 Windows 服务运行时，映射的网络驱动器不可用，请参阅 [FAQ]({url}) 获取更多信息。"
+    "MappedNetworkDrivesWindowsService": "作为 Windows 服务运行时，映射的网络驱动器不可用，请参阅 [FAQ]({url}) 获取更多信息。",
+    "DownloadClientSettingsOlderPriority": "最早优先",
+    "DownloadClientSettingsPostImportCategoryHelpText": "导入下载后要设置的 {appName} 的分类。 即使做种完成，{appName} 也不会删除该分类中的种子。 留空以保留同一分类。",
+    "DownloadClientSettingsRecentPriority": "最近优先",
+    "PostImportCategory": "导入后分类"
 }

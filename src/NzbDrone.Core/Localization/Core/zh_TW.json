@@ -235,7 +235,7 @@
     "UiLanguage": "使用者介面語言",
     "UnableToLoadHistory": "無法載入歷史記錄",
     "UiLanguageHelpText": "{appName} 介面所使用的語言",
-    "AddDelayProfileError": "無法加入新的條件，請重新嘗試。",
+    "AddDelayProfileError": "無法加入新的延遲配置，請重新嘗試。",
     "AutoRedownloadFailed": "失敗時重新下載",
     "AuthenticationRequiredPasswordHelpTextWarning": "請輸入新密碼",
     "AuthenticationRequiredHelpText": "更改需要進行驗證的請求。除非你了解其中的風險，否則請勿修改。",
@@ -245,5 +245,8 @@
     "AuthenticationRequired": "需要驗證",
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "確認新密碼",
     "AuthenticationRequiredUsernameHelpTextWarning": "請輸入新用戶名",
-    "AutoRedownloadFailedFromInteractiveSearch": "失敗時重新下載來自手動搜索的資源"
+    "AutoRedownloadFailedFromInteractiveSearch": "失敗時重新下載來自手動搜索的資源",
+    "IgnoredPlaceHolder": "加入新的限制",
+    "RequiredPlaceHolder": "加入新的限制",
+    "UnableToAddANewRemotePathMappingPleaseTryAgain": "無法加入新的遠程路徑對應，請重試。"
 }

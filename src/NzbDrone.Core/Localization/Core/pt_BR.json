@@ -1340,5 +1340,11 @@
     "Today": "Hoje",
     "Max": "Máx.",
     "Preferred": "Preferido",
-    "MappedNetworkDrivesWindowsService": "As unidades de rede mapeadas não estão disponíveis quando executadas como um serviço do Windows. Consulte as [FAQ]({url}) para obter mais informações."
+    "MappedNetworkDrivesWindowsService": "As unidades de rede mapeadas não estão disponíveis quando executadas como um serviço do Windows. Consulte as [FAQ]({url}) para obter mais informações.",
+    "DownloadClientSettingsPostImportCategoryHelpText": "Categoria para o {appName} definir após importar o download. O {appName} não removerá torrents nessa categoria mesmo que a semeadura esteja concluída. Deixe em branco para manter a mesma categoria.",
+    "DownloadClientSettingsOlderPriority": "Priorizar mais antigos",
+    "DownloadClientSettingsRecentPriority": "Priorizar recentes",
+    "PostImportCategory": "Categoria Pós-Importação",
+    "DownloadClientSettingsOlderPriorityAlbumHelpText": "Prioridade para usar ao pegar álbuns lançados há mais de 14 dias",
+    "DownloadClientSettingsRecentPriorityAlbumHelpText": "Prioridade de uso ao adquirir álbuns lançados nos últimos 14 dias"
 }

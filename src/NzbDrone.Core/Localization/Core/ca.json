@@ -969,5 +969,6 @@
     "Min": "Min",
     "Preferred": "Preferit",
     "Today": "Avui",
-    "MappedNetworkDrivesWindowsService": "Les unitats de xarxa assignades no estan disponibles quan s'executen com a servei de Windows. Si us plau, consulteu les PMF per a obtenir més informació"
+    "MappedNetworkDrivesWindowsService": "Les unitats de xarxa assignades no estan disponibles quan s'executen com a servei de Windows. Si us plau, consulteu les PMF per a obtenir més informació",
+    "DownloadClientSettingsRecentPriority": "Prioritat del client"
 }

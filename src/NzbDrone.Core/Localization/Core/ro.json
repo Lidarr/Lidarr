@@ -798,5 +798,7 @@
     "Preferred": "Preferat",
     "Max": "Max",
     "Today": "Astăzi",
-    "MappedNetworkDrivesWindowsService": "Unitățile de rețea mapate nu sunt disponibile atunci când rulează ca serviciu Windows. Vă rugăm să consultați [FAQ]({url}) pentru mai multe informații"
+    "MappedNetworkDrivesWindowsService": "Unitățile de rețea mapate nu sunt disponibile atunci când rulează ca serviciu Windows. Vă rugăm să consultați [FAQ]({url}) pentru mai multe informații",
+    "DownloadClientSettingsRecentPriority": "Prioritate recente",
+    "DownloadClientSettingsOlderPriority": "Prioritate mai vechi"
 }

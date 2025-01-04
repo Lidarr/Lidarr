@@ -797,5 +797,6 @@
     "Today": "I dag",
     "Episode": "afsnit",
     "MetadataProfile": "metadataprofil",
-    "Min": "Min"
+    "Min": "Min",
+    "DownloadClientSettingsRecentPriority": "Kundens prioritet"
 }
