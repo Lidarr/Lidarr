@@ -33,7 +33,6 @@ namespace Lidarr.Api.V1.Config
 
             SharedValidator.RuleFor(c => c.BindAddress)
                            .ValidIpAddress()
-                           .NotListenAllIp4Address()
                            .When(c => c.BindAddress != "*" && c.BindAddress != "localhost");
 
             SharedValidator.RuleFor(c => c.Port).ValidPort();
