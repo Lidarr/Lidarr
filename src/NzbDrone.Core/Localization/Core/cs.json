@@ -889,5 +889,7 @@
     "Preferred": "Upřednostňováno",
     "Today": "Dnes",
     "MappedNetworkDrivesWindowsService": "Mapované síťové jednotky nejsou k dispozici, když běží jako služba Windows. Další informace najdete v častých dotazech",
-    "DownloadClientSettingsRecentPriority": "Priorita klienta"
+    "DownloadClientSettingsRecentPriority": "Priorita klienta",
+    "IndexerSettingsRejectBlocklistedTorrentHashesHelpText": "Pokud je torrent blokován pomocí hash, nemusí být u některých indexerů správně odmítnut během RSS/vyhledávání. Povolení této funkce umožní jeho odmítnutí po zachycení torrentu, ale před jeho odesláním klientovi.",
+    "IndexerSettingsApiUrl": "URL API"
 }

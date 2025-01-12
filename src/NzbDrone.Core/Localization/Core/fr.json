@@ -64,7 +64,7 @@
     "Component": "Composant",
     "Connections": "Connexions",
     "ConnectSettings": "Paramètres de connexion",
-    "CopyUsingHardlinksHelpText": "Les liens fixes permettent à {appName} d'importer des torrents seedés dans le dossier de l'artiste sans prendre d'espace disque supplémentaire ou copier tout le contenu du fichier. Les liens fixes ne fonctionnent que si la source et la destination se trouvent sur le même volume.",
+    "CopyUsingHardlinksHelpText": "Les liens fixes permettent à {appName} d'importer des torrents seedés dans le dossier de l'artiste sans prendre d'espace disque supplémentaire ou copier tout le contenu du fichier. Les liens fixes ne fonctionnent que si la source et la destination se trouvent sur le même volume",
     "CopyUsingHardlinksHelpTextWarning": "De temps en temps, des verrouillages de fichiers peuvent empêcher de renommer des fichiers qui sont en cours de partage. Vous pouvez temporairement arrêter le partage et utiliser la fonction de renommage de {appName} comme solution de contournement.",
     "CreateEmptyArtistFolders": "Créer des dossiers d'artistes vides",
     "CreateEmptyArtistFoldersHelpText": "Créer les dossiers films manquants pendant le scan du disque",
