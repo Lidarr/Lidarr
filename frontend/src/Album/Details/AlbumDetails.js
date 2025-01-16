@@ -205,6 +205,7 @@ class AlbumDetails extends Component {
       isFetching,
       isPopulated,
       albumsError,
+      tracksError,
       trackFilesError,
       hasTrackFiles,
       shortDateFormat,
@@ -552,14 +553,23 @@ class AlbumDetails extends Component {
 
           <div className={styles.contentContainer}>
             {
-              !isPopulated && !albumsError && !trackFilesError &&
-                <LoadingIndicator />
+              !isPopulated && !albumsError && !tracksError && !trackFilesError ?
+                <LoadingIndicator /> :
+                null
             }
 
             {
               !isFetching && albumsError ?
                 <Alert kind={kinds.DANGER}>
                   {translate('AlbumsLoadError')}
+                </Alert> :
+                null
+            }
+
+            {
+              !isFetching && tracksError ?
+                <Alert kind={kinds.DANGER}>
+                  {translate('TracksLoadError')}
                 </Alert> :
                 null
             }
@@ -590,6 +600,14 @@ class AlbumDetails extends Component {
                     })
                   }
                 </div>
+            }
+
+            {
+              isPopulated && !media.length ?
+                <Alert kind={kinds.WARNING}>
+                  {translate('NoMediumInformation')}
+                </Alert> :
+                null
             }
 
           </div>
@@ -686,6 +704,7 @@ AlbumDetails.propTypes = {
 
 AlbumDetails.defaultProps = {
   secondaryTypes: [],
+  statistics: {},
   isSaving: false
 };
 
