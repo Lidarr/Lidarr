@@ -21,7 +21,7 @@ namespace NzbDrone.Common.Disk
         private readonly IDiskProvider _diskProvider;
         private readonly Logger _logger;
 
-        private static readonly string[] _reflinkFilesystems = { "btrfs", "xfs" };
+        private static readonly string[] ReflinkFilesystems = { "btrfs", "xfs", "zfs" };
 
         public DiskTransferService(IDiskProvider diskProvider, Logger logger)
         {
@@ -343,7 +343,7 @@ namespace NzbDrone.Common.Disk
             var targetDriveFormat = targetMount?.DriveFormat ?? string.Empty;
 
             var isCifs = targetDriveFormat == "cifs";
-            var tryReflink = sourceDriveFormat == targetDriveFormat && _reflinkFilesystems.Contains(sourceDriveFormat);
+            var tryReflink = sourceDriveFormat == targetDriveFormat && ReflinkFilesystems.Contains(sourceDriveFormat);
 
             if (mode.HasFlag(TransferMode.Copy))
             {
