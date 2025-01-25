@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NLog;
 using NzbDrone.Common;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
@@ -23,9 +25,12 @@ namespace NzbDrone.Core.MediaFiles
 
     public class MediaFileRepository : BasicRepository<TrackFile>, IMediaFileRepository
     {
-        public MediaFileRepository(IMainDatabase database, IEventAggregator eventAggregator)
+        private readonly Logger _logger;
+
+        public MediaFileRepository(IMainDatabase database, IEventAggregator eventAggregator, Logger logger)
             : base(database, eventAggregator)
         {
+            _logger = logger;
         }
 
         // always join with all the other good stuff
@@ -133,6 +138,9 @@ namespace NzbDrone.Core.MediaFiles
             var dict = new Dictionary<int, TrackFile>();
             _ = _database.QueryJoined<TrackFile, Track>(builder, (file, track) => MapTrack(dict, file, track)).ToList();
             var all = dict.Values.ToList();
+
+            _logger.Trace("{0}", paths.ToJson());
+            _logger.Trace("{0} tracks were found in db:\n{1}", all.Count, all.Select(f => f.Path).ToJson());
 
             var joined = all.Join(paths, x => x.Path, x => x, (file, path) => file, PathEqualityComparer.Instance).ToList();
             return joined;

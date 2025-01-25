@@ -4,6 +4,7 @@ using System.IO.Abstractions;
 using System.Linq;
 using NLog;
 using NzbDrone.Common;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Events;
@@ -104,7 +105,7 @@ namespace NzbDrone.Core.MediaFiles
                 return files;
             }
 
-            _logger.Debug($"Filtering {files.Count} files for unchanged files");
+            _logger.Debug($"Filtering {files.Count} files for unchanged files:\n{files.Select(x => x.FullName).ToJson()}");
 
             var knownFiles = GetFileWithPath(files.Select(x => x.FullName).ToList());
             _logger.Trace($"Got {knownFiles.Count} existing files");

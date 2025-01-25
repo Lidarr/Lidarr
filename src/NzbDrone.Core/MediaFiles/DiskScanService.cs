@@ -10,6 +10,7 @@ using NzbDrone.Common;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles.Commands;
 using NzbDrone.Core.MediaFiles.Events;
@@ -242,8 +243,8 @@ namespace NzbDrone.Core.MediaFiles
             var mediaFileList = filesOnDisk.Where(file => MediaFileExtensions.Extensions.Contains(file.Extension))
                                            .ToList();
 
-            _logger.Trace("{0} files were found in {1}", filesOnDisk.Count, path);
-            _logger.Debug("{0} audio files were found in {1}", mediaFileList.Count, path);
+            _logger.Trace("{0} files were found in {1}:\n{2}", filesOnDisk.Count, path, filesOnDisk.Select(f => f.FullName).ToJson());
+            _logger.Debug("{0} audio files were found in {1}:\n{2}", mediaFileList.Count, path, mediaFileList.Select(f => f.FullName).ToJson());
 
             return mediaFileList.ToArray();
         }
