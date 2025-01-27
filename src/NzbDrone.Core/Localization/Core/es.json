@@ -1346,5 +1346,8 @@
     "DownloadClientSettingsRecentPriority": "Priorizar recientes",
     "PostImportCategory": "Categoría de post-importación",
     "DownloadClientSettingsRecentPriorityAlbumHelpText": "Prioridad a usar cuando se capturen álbumes lanzados en los últimos 14 días",
-    "DownloadClientSettingsOlderPriorityAlbumHelpText": "Prioridad a usar cuando se capturen álbumes lanzados hace más de 14 días"
+    "DownloadClientSettingsOlderPriorityAlbumHelpText": "Prioridad a usar cuando se capturen álbumes lanzados hace más de 14 días",
+    "NotificationsSettingsWebhookHeaders": "Cabeceras",
+    "NoMediumInformation": "Ninguna información del medio disponible.",
+    "TracksLoadError": "No se pudo cargar las pistas"
 }
