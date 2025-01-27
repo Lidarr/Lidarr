@@ -1338,5 +1338,7 @@
     "DownloadClientSettingsOlderPriority": "Priorité plus ancienne",
     "DownloadClientSettingsPostImportCategoryHelpText": "Catégorie que {appName} doit définir après avoir importé le téléchargement. {appName} ne supprimera pas les torrents de cette catégorie même si l'ensemencement est terminé. Laisser vide pour conserver la même catégorie.",
     "DownloadClientSettingsRecentPriority": "Priorité récente",
-    "PostImportCategory": "Catégorie après l'importation"
+    "PostImportCategory": "Catégorie après l'importation",
+    "ManageFormats": "Gérer les formats",
+    "NotificationsSettingsWebhookHeaders": "En-têtes"
 }

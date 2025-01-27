@@ -277,5 +277,13 @@
     "Clone": "Lukk",
     "Reason": "Sesong",
     "AddDelayProfileError": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen",
-    "DownloadClientSettingsRecentPriority": "Klientprioritet"
+    "DownloadClientSettingsRecentPriority": "Klientprioritet",
+    "AddDownloadClientImplementation": "Ny Nedlastingsklient - {implementationName}",
+    "UnableToAddANewRemotePathMappingPleaseTryAgain": "Kunne ikke legge til ny ekstern stimapping, vennligst prøv igjen.",
+    "RequiredPlaceHolder": "Legg til ny begrensning",
+    "FailedLoadingSearchResults": "Kunne ikke laste søkeresultat, vennligst prøv igjen.",
+    "AddImportListImplementation": "Legg til importliste - {implementationName}",
+    "IgnoredPlaceHolder": "Legg til ny begrensning",
+    "AddImportList": "Ny Importliste",
+    "AddNewArtistRootFolderHelpText": "Undermappa \"{folder}\" vil bli automatisk laget"
 }
