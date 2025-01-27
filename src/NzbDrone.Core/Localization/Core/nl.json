@@ -903,5 +903,9 @@
     "Min": "Min",
     "Preferred": "Voorkeur gegeven",
     "MappedNetworkDrivesWindowsService": "Toegewezen netwerkstation is niet beschikbaar wanneer Prowlarr wordt uitgevoerd als een Windows Service. Bekijk de Veelgestelde Vragen voor meer informatie",
-    "DownloadClientSettingsRecentPriority": "Client Prioriteit"
+    "DownloadClientSettingsRecentPriority": "Client Prioriteit",
+    "AddArtistWithName": "{artistName} toevoegen",
+    "AddNewArtist": "Voeg nieuwe artiest toe",
+    "AddNewAlbum": "Voeg nieuw album toe",
+    "AddNewAlbumSearchForNewAlbum": "Start zoektoch voor een nieuw album"
 }

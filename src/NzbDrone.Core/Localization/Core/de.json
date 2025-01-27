@@ -1290,5 +1290,6 @@
     "DownloadClientSettingsOlderPriority": "Ältere Priorität",
     "DownloadClientSettingsPostImportCategoryHelpText": "Kategorie für {appName}, die nach dem Importieren des Downloads festgelegt wird. {appName} wird Torrents in dieser Kategorie nicht entfernen, auch wenn das Seeding beendet ist. Leer lassen, um dieselbe Kategorie beizubehalten.",
     "DownloadClientSettingsRecentPriority": "Neueste Priorität",
-    "PostImportCategory": "Post-Import-Kategorie"
+    "PostImportCategory": "Post-Import-Kategorie",
+    "NotificationsSettingsWebhookHeaders": "Header"
 }

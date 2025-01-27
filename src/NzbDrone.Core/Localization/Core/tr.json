@@ -1082,5 +1082,6 @@
     "DownloadClientSettingsPostImportCategoryHelpText": "{appName}'in indirmeyi içe aktardıktan sonra ayarlayacağı kategori. {appName}, seed tamamlanmış olsa bile bu kategorideki torrentleri kaldırmayacaktır. Aynı kategoriyi korumak için boş bırakın.",
     "DownloadClientSettingsRecentPriority": "Yeni Önceliği",
     "PostImportCategory": "İçe Aktarma Sonrası Kategorisi",
-    "DownloadClientSettingsOlderPriority": "Eski Önceliği"
+    "DownloadClientSettingsOlderPriority": "Eski Önceliği",
+    "NotificationsSettingsWebhookHeaders": "Başlıklar"
 }
