@@ -183,7 +183,7 @@ namespace NzbDrone.Core.MediaFiles
             }
             else
             {
-                _logger.Error(ex, "Error in Directory watcher for: {0}" + dw.Path);
+                _logger.Error(ex, "Error in Directory watcher for: {0}", dw.Path);
 
                 DisposeWatcher(dw, true);
             }
