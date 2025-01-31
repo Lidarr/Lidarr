@@ -852,7 +852,7 @@
     "AppDataLocationHealthCheckMessage": "Ein Update ist nicht möglich, um das Löschen von AppData beim Update zu verhindern",
     "ColonReplacement": "Doppelpunkt-Ersatz",
     "Disabled": "Deaktiviert",
-    "DownloadClientCheckDownloadingToRoot": "Download-Client {0} legt Downloads im Stammordner {1} ab. Sie sollten nicht in einen Stammordner herunterladen.",
+    "DownloadClientRootFolderHealthCheckMessage": "Download-Client {downloadClientName} legt Downloads im Stammordner {rootFolderPath} ab. Sie sollten nicht in einen Stammordner herunterladen.",
     "DownloadClientCheckNoneAvailableMessage": "Kein Download Client verfügbar",
     "DownloadClientCheckUnableToCommunicateMessage": "Kommunikation mit {0} nicht möglich.",
     "DownloadClientStatusCheckAllClientMessage": "Alle Download Clients sind aufgrund von Fehlern nicht verfügbar",

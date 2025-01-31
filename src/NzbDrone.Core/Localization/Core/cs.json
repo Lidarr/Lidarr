@@ -590,7 +590,7 @@
     "AppDataLocationHealthCheckMessage": "Aktualizace nebude možná, aby se zabránilo odstranění AppData při aktualizaci",
     "ColonReplacement": "Nahrazení dvojtečky",
     "Disabled": "Zakázáno",
-    "DownloadClientCheckDownloadingToRoot": "Stahovací klient {0} umístí stažené soubory do kořenové složky {1}. Neměli byste stahovat do kořenové složky.",
+    "DownloadClientRootFolderHealthCheckMessage": "Stahovací klient {downloadClientName} umístí stažené soubory do kořenové složky {rootFolderPath}. Neměli byste stahovat do kořenové složky.",
     "DownloadClientCheckNoneAvailableMessage": "Není k dispozici žádný klient pro stahování",
     "DownloadClientCheckUnableToCommunicateMessage": "S uživatelem {0} nelze komunikovat.",
     "DownloadClientStatusCheckSingleClientMessage": "Stahování klientů není k dispozici z důvodu selhání: {0}",

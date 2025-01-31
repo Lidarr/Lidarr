@@ -595,7 +595,7 @@
     "ReplaceWithDash": "استبدل بـ داش",
     "AppDataLocationHealthCheckMessage": "لن يكون التحديث ممكنًا لمنع حذف AppData عند التحديث",
     "ColonReplacement": "استبدال القولون",
-    "DownloadClientCheckDownloadingToRoot": "يقوم برنامج التنزيل {0} بوضع التنزيلات في المجلد الجذر {1}. يجب ألا تقوم بالتنزيل إلى مجلد جذر.",
+    "DownloadClientRootFolderHealthCheckMessage": "يقوم برنامج التنزيل {downloadClientName} بوضع التنزيلات في المجلد الجذر {rootFolderPath}. يجب ألا تقوم بالتنزيل إلى مجلد جذر.",
     "Disabled": "معاق",
     "DownloadClientCheckNoneAvailableMessage": "لا يوجد عميل تنزيل متاح",
     "DownloadClientCheckUnableToCommunicateMessage": "تعذر الاتصال بـ {0}.",

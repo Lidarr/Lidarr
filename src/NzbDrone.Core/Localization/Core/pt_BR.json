@@ -880,7 +880,7 @@
     "DashOrSpaceDashDependingOnName": "Traço ou Espaço e Traço, dependendo do nome",
     "DeleteFormat": "Excluir Formato",
     "Disabled": "Desabilitado",
-    "DownloadClientCheckDownloadingToRoot": "O cliente de download {0} coloca os downloads na pasta raiz {1}. Você não deve baixar para uma pasta raiz.",
+    "DownloadClientRootFolderHealthCheckMessage": "O cliente de download {downloadClientName} coloca os downloads na pasta raiz {rootFolderPath}. Você não deve baixar para uma pasta raiz.",
     "DownloadClientCheckNoneAvailableMessage": "Nenhum cliente de download está disponível",
     "DownloadClientCheckUnableToCommunicateMessage": "Não é possível se comunicar com {0}.",
     "DownloadClientStatusCheckAllClientMessage": "Todos os clientes de download estão indisponíveis devido a falhas",

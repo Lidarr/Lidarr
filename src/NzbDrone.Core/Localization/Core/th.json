@@ -589,7 +589,7 @@
     "DeleteCustomFormat": "ลบรูปแบบที่กำหนดเอง",
     "DeleteCustomFormatMessageText": "แน่ใจไหมว่าต้องการลบตัวสร้างดัชนี \"{0}\"",
     "Disabled": "ปิดการใช้งาน",
-    "DownloadClientCheckDownloadingToRoot": "ดาวน์โหลดไคลเอนต์ {0} จะทำการดาวน์โหลดในโฟลเดอร์รูท {1} คุณไม่ควรดาวน์โหลดไปยังโฟลเดอร์รูท",
+    "DownloadClientRootFolderHealthCheckMessage": "ดาวน์โหลดไคลเอนต์ {downloadClientName} จะทำการดาวน์โหลดในโฟลเดอร์รูท {rootFolderPath} คุณไม่ควรดาวน์โหลดไปยังโฟลเดอร์รูท",
     "DownloadClientCheckNoneAvailableMessage": "ไม่มีไคลเอนต์ดาวน์โหลด",
     "DownloadClientCheckUnableToCommunicateMessage": "ไม่สามารถสื่อสารกับ {0}",
     "ExportCustomFormat": "ส่งออกรูปแบบที่กำหนดเอง",

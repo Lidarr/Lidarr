@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using NLog;
@@ -48,11 +49,18 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 try
                 {
                     var status = client.GetStatus();
-                    var folders = status.OutputRootFolders.Where(folder => rootFolders.Any(r => r.Path.PathEquals(folder.FullPath)));
+                    var folders = rootFolders.Where(r => status.OutputRootFolders.Any(folder => r.Path.PathEquals(folder.FullPath) || r.Path.IsParentPath(folder.FullPath)));
 
                     foreach (var folder in folders)
                     {
-                        return new HealthCheck(GetType(), HealthCheckResult.Warning, string.Format(_localizationService.GetLocalizedString("DownloadClientCheckDownloadingToRoot"), client.Definition.Name, folder.FullPath), "#downloads-in-root-folder");
+                        return new HealthCheck(GetType(),
+                            HealthCheckResult.Warning,
+                            _localizationService.GetLocalizedString("DownloadClientRootFolderHealthCheckMessage", new Dictionary<string, object>
+                            {
+                                { "downloadClientName", client.Definition.Name },
+                                { "rootFolderPath", folder.Path }
+                            }),
+                            "#downloads-in-root-folder");
                     }
                 }
                 catch (DownloadClientException ex)

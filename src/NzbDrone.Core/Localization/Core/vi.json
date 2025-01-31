@@ -565,7 +565,7 @@
     "DeleteCustomFormatMessageText": "Bạn có chắc chắn muốn xóa trình lập chỉ mục '{0}' không?",
     "DeleteFormatMessageText": "Bạn có chắc chắn muốn xóa thẻ định dạng {0} không?",
     "Disabled": "Tàn tật",
-    "DownloadClientCheckDownloadingToRoot": "Tải xuống ứng dụng khách {0} đặt các bản tải xuống trong thư mục gốc {1}. Bạn không nên tải xuống thư mục gốc.",
+    "DownloadClientRootFolderHealthCheckMessage": "Tải xuống ứng dụng khách {downloadClientName} đặt các bản tải xuống trong thư mục gốc {rootFolderPath}. Bạn không nên tải xuống thư mục gốc.",
     "DownloadClientCheckUnableToCommunicateMessage": "Không thể giao tiếp với {0}.",
     "DownloadClientStatusCheckAllClientMessage": "Tất cả các ứng dụng khách tải xuống không khả dụng do lỗi",
     "DownloadClientStatusCheckSingleClientMessage": "Ứng dụng khách tải xuống không khả dụng do lỗi: {0}",

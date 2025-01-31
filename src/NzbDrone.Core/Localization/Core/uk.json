@@ -823,7 +823,7 @@
     "UiSettingsSummary": "Параметри календаря, дати та кольору",
     "AllExpandedCollapseAll": "Закрити все",
     "CustomFormat": "Користувацький формат",
-    "DownloadClientCheckDownloadingToRoot": "Клієнт завантаження {0} розміщує завантаження в кореневій папці {1}. Ви не повинні завантажувати в кореневу папку.",
+    "DownloadClientRootFolderHealthCheckMessage": "Клієнт завантаження {downloadClientName} розміщує завантаження в кореневій папці {rootFolderPath}. Ви не повинні завантажувати в кореневу папку.",
     "FailedLoadingSearchResults": "Не вдалося завантажити результати пошуку, спробуйте ще.",
     "ExportCustomFormat": "Додати свій формат",
     "FailedToLoadQueue": "Не вдалося завантажити чергу",

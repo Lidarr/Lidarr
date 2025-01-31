@@ -641,7 +641,7 @@
     "CopyToClipboard": "Копировать в буфер обмена",
     "CouldntFindAnyResultsForTerm": "Не найдено результатов для '{0}'",
     "Disabled": "Выключено",
-    "DownloadClientCheckDownloadingToRoot": "Клиент загрузки {0} помещает загрузки в корневую папку {1}. Вы не должны загружать в корневую папку.",
+    "DownloadClientRootFolderHealthCheckMessage": "Клиент загрузки {downloadClientName} помещает загрузки в корневую папку {rootFolderPath}. Вы не должны загружать в корневую папку.",
     "DownloadClientCheckNoneAvailableMessage": "Ни один загрузчик не доступен",
     "DownloadClientCheckUnableToCommunicateMessage": "Невозможно связаться с {0}.",
     "DownloadClientStatusCheckAllClientMessage": "Все клиенты для скачивания недоступны из-за ошибок",

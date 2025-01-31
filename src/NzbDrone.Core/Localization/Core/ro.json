@@ -567,7 +567,7 @@
     "CustomFormats": "Formate personalizate",
     "DeleteFormatMessageText": "Sigur doriți să ștergeți eticheta format {0}?",
     "Disabled": "Dezactivat",
-    "DownloadClientCheckDownloadingToRoot": "Clientul de descărcare {0} plasează descărcările în folderul rădăcină {1}. Nu trebuie să descărcați într-un folder rădăcină.",
+    "DownloadClientRootFolderHealthCheckMessage": "Clientul de descărcare {downloadClientName} plasează descărcările în folderul rădăcină {rootFolderPath}. Nu trebuie să descărcați într-un folder rădăcină.",
     "DownloadClientCheckNoneAvailableMessage": "Niciun client de descărcare disponibil",
     "DownloadPropersAndRepacksHelpTextWarning": "Utilizați formate personalizate pentru upgrade-uri automate la Propers / Repacks",
     "HiddenClickToShow": "Ascuns, faceți clic pentru afișare",
