@@ -586,7 +586,7 @@
     "MaintenanceRelease": "Bakım Sürümü: hata düzeltmeleri ve diğer iyileştirmeler. Daha fazla ayrıntı için Github İşlem Geçmişine bakın",
     "Conditions": "Koşullar",
     "Disabled": "Devre dışı",
-    "DownloadClientCheckDownloadingToRoot": "İndirme istemcisi {0}, indirmeleri kök klasöre yerleştirir {1}. Bir kök klasöre indirmemelisiniz.",
+    "DownloadClientRootFolderHealthCheckMessage": "İndirme istemcisi {downloadClientName}, indirmeleri kök klasöre yerleştirir {rootFolderPath}. Bir kök klasöre indirmemelisiniz.",
     "DownloadClientCheckNoneAvailableMessage": "İndirme istemcisi yok",
     "DownloadClientCheckUnableToCommunicateMessage": "{0} ile iletişim kurulamıyor.",
     "ReplaceWithSpaceDashSpace": "Space Dash Space ile değiştirin",

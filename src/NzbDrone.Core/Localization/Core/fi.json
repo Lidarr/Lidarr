@@ -894,7 +894,7 @@
     "DeleteCustomFormat": "Poista mukautettu muoto",
     "DeleteCustomFormatMessageText": "Haluatko varmasti poistaa mukautetun muodon \"{name}\"?",
     "Disabled": "Ei käytössä",
-    "DownloadClientCheckDownloadingToRoot": "Latauspalvelu {0} tallentaa lataukset juurikansioon \"{1}\", mutta niitä ei tulisi tallentaa sinne.",
+    "DownloadClientRootFolderHealthCheckMessage": "Latauspalvelu {downloadClientName} tallentaa lataukset juurikansioon \"{rootFolderPath}\", mutta niitä ei tulisi tallentaa sinne.",
     "DownloadClientStatusCheckAllClientMessage": "Latauspalveluita ei ole ongelmien vuoksi käytettävissä",
     "GroupInformation": "Ryhmän tiedot",
     "MinimumCustomFormatScore": "Mukautetun muodon vähimmäispisteytys",

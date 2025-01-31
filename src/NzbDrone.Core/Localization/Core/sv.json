@@ -751,7 +751,7 @@
     "TheArtistFolderStrongpathstrongAndAllOfItsContentWillBeDeleted": "Författar-mappen {0} och allt dess innehåll kommer bli raderat.",
     "DeleteFormatMessageText": "Är du säker på att du vill ta bort formattaggen {0}?",
     "Disabled": "Inaktiverad",
-    "DownloadClientCheckDownloadingToRoot": "Ladda ner klient {0} placerar nedladdningar i rotmappen {1}. Du bör inte ladda ner till en rotmapp.",
+    "DownloadClientRootFolderHealthCheckMessage": "Ladda ner klient {downloadClientName} placerar nedladdningar i rotmappen {rootFolderPath}. Du bör inte ladda ner till en rotmapp.",
     "DownloadClientCheckNoneAvailableMessage": "Ingen nedladdningsklient tillgänglig",
     "DownloadClientCheckUnableToCommunicateMessage": "Kommunikation med {0} ej möjlig.",
     "DownloadClientStatusCheckAllClientMessage": "Samtliga nedladdningsklienter är otillgängliga på grund av misslyckade anslutningsförsök",

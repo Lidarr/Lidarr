@@ -629,7 +629,7 @@
     "ProxyCheckResolveIpMessage": "Achterhalen van het IP-adres voor de geconfigureerde proxy host {0} is mislukt",
     "RemotePathMappingCheckBadDockerPath": "U gebruikt docker; downloadclient {0} plaatst downloads in {1} maar dit is geen geldig {2}-pad.  Controleer uw externe padtoewijzingen en download clientinstellingen.",
     "ShownClickToHide": "Getoond, klik om te verbergen",
-    "DownloadClientCheckDownloadingToRoot": "Downloadclient {0} plaatst downloads in de hoofdmap {1}. U mag niet naar een hoofdmap downloaden.",
+    "DownloadClientRootFolderHealthCheckMessage": "Downloadclient {downloadClientName} plaatst downloads in de hoofdmap {rootFolderPath}. U mag niet naar een hoofdmap downloaden.",
     "DownloadClientCheckUnableToCommunicateMessage": "Niet in staat om te communiceren met {0}.",
     "DownloadClientStatusCheckSingleClientMessage": "Downloaders onbeschikbaar wegens fouten: {0}",
     "IndexerRssHealthCheckNoIndexers": "Geen indexeerders beschikbaar met \"RSS Synchronisatie\" ingeschakeld, {appName} zal niet automatisch nieuwe uitgaves ophalen",

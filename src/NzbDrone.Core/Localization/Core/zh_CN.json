@@ -828,7 +828,7 @@
     "CloneCustomFormat": "复制自定义格式",
     "Conditions": "条件",
     "CouldntFindAnyResultsForTerm": "未找到 '{0}' 的任何结果",
-    "DownloadClientCheckDownloadingToRoot": "下载客户端{0}将下载内容放在根文件夹{1}中。您不应该下载到根文件夹。",
+    "DownloadClientRootFolderHealthCheckMessage": "下载客户端{downloadClientName}将下载内容放在根文件夹{rootFolderPath}中。您不应该下载到根文件夹。",
     "DownloadClientCheckNoneAvailableMessage": "无可用的下载客户端",
     "DownloadClientCheckUnableToCommunicateMessage": "无法与 {0} 进行通讯。",
     "DownloadClientStatusCheckAllClientMessage": "下载客户端因故障均不可用",

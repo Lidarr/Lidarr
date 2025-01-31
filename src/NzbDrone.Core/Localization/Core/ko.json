@@ -586,7 +586,7 @@
     "MaintenanceRelease": "유지 관리 출시 : 버그 수정 및 기타 개선. 자세한 내용은 Github 커밋 내역을 참조하십시오.",
     "TheArtistFolderStrongpathstrongAndAllOfItsContentWillBeDeleted": "동영상 폴더 '{0}' 및 모든 콘텐츠가 삭제됩니다.",
     "Disabled": "비활성화됨",
-    "DownloadClientCheckDownloadingToRoot": "다운로드 클라이언트 {0} 은(는) 루트 폴더 {1}에 다운로드를 저장합니다. 루트 폴더에 다운로드해서는 안됩니다.",
+    "DownloadClientRootFolderHealthCheckMessage": "다운로드 클라이언트 {downloadClientName} 은(는) 루트 폴더 {rootFolderPath}에 다운로드를 저장합니다. 루트 폴더에 다운로드해서는 안됩니다.",
     "DownloadClientCheckNoneAvailableMessage": "사용 가능한 다운로드 클라이언트가 없습니다.",
     "DownloadClientStatusCheckSingleClientMessage": "실패로 인해 다운 불러올 수 없는 클라이언트 : {0}",
     "HiddenClickToShow": "숨김, 클릭하여 표시",

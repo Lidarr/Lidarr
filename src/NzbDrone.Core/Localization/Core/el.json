@@ -873,7 +873,7 @@
     "AppDataLocationHealthCheckMessage": "Η ενημέρωση δεν θα είναι δυνατή για να αποτραπεί η διαγραφή των δεδομένων εφαρμογής κατά την ενημέρωση",
     "ColonReplacement": "Αντικατάσταση παχέος εντέρου",
     "Disabled": "άτομα με ειδικές ανάγκες",
-    "DownloadClientCheckDownloadingToRoot": "Λήψη προγράμματος-πελάτη {0} τοποθετεί λήψεις στον ριζικό φάκελο {1}. Δεν πρέπει να κάνετε λήψη σε έναν ριζικό φάκελο.",
+    "DownloadClientRootFolderHealthCheckMessage": "Λήψη προγράμματος-πελάτη {downloadClientName} τοποθετεί λήψεις στον ριζικό φάκελο {rootFolderPath}. Δεν πρέπει να κάνετε λήψη σε έναν ριζικό φάκελο.",
     "DownloadClientCheckUnableToCommunicateMessage": "Αδύνατο να επικοινωνήσει με {0}.",
     "DownloadClientStatusCheckAllClientMessage": "Όλα τα προγράμματα λήψης είναι μη διαθέσιμα λόγων αποτυχιών",
     "ImportListStatusCheckAllClientMessage": "Όλες οι λίστες δεν είναι διαθέσιμες λόγω αστοχιών",

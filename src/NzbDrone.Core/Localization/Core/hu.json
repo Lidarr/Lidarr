@@ -880,7 +880,7 @@
     "AppDataLocationHealthCheckMessage": "A frissítés nem lehetséges az alkalmazás adatok törlése nélkül",
     "ColonReplacement": "Kettőspont Helyettesítés",
     "Disabled": "Tiltva",
-    "DownloadClientCheckDownloadingToRoot": "A Letöltőkliens {0} a letöltéseket a gyökérmappába helyezi {1}. Nem szabad letölteni egy gyökérmappába.",
+    "DownloadClientRootFolderHealthCheckMessage": "A Letöltőkliens {downloadClientName} a letöltéseket a gyökérmappába helyezi {rootFolderPath}. Nem szabad letölteni egy gyökérmappába.",
     "DownloadClientCheckNoneAvailableMessage": "Nem található letöltési kliens",
     "DownloadClientCheckUnableToCommunicateMessage": "Nem lehet kommunikálni a következővel: {0}.",
     "DownloadClientStatusCheckAllClientMessage": "Az összes letöltőkliens elérhetetlen, hiba miatt",

@@ -590,7 +590,7 @@
     "AppDataLocationHealthCheckMessage": "Актуализирането няма да е възможно, за да се предотврати изтриването на AppData при актуализация",
     "ColonReplacement": "Подмяна на дебелото черво",
     "Disabled": "хора с увреждания",
-    "DownloadClientCheckDownloadingToRoot": "Клиентът за изтегляне {0} поставя изтеглянията в основната папка {1}. Не трябва да изтегляте в основна папка.",
+    "DownloadClientRootFolderHealthCheckMessage": "Клиентът за изтегляне {downloadClientName} поставя изтеглянията в основната папка {rootFolderPath}. Не трябва да изтегляте в основна папка.",
     "DownloadClientCheckNoneAvailableMessage": "Няма наличен клиент за изтегляне",
     "DownloadClientStatusCheckAllClientMessage": "Всички клиенти за изтегляне са недостъпни поради неуспехи",
     "ImportListStatusCheckAllClientMessage": "Всички списъци са недостъпни поради неуспехи",

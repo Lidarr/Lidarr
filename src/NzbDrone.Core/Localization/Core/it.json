@@ -701,7 +701,7 @@
     "AppDataLocationHealthCheckMessage": "L'aggiornamento non sarà possibile per evitare la cancellazione di AppData durante l'aggiornamento",
     "ColonReplacement": "Sostituzione Due Punti",
     "Disabled": "Disabilitato",
-    "DownloadClientCheckDownloadingToRoot": "Il client di download {0} colloca i download nella cartella radice {1}. Non dovresti scaricare in una cartella radice.",
+    "DownloadClientRootFolderHealthCheckMessage": "Il client di download {downloadClientName} colloca i download nella cartella radice {rootFolderPath}. Non dovresti scaricare in una cartella radice.",
     "DownloadClientCheckNoneAvailableMessage": "Non è disponibile nessun client di download",
     "DownloadClientCheckUnableToCommunicateMessage": "Impossibile comunicare con {0}.",
     "DownloadClientStatusCheckAllClientMessage": "Nessun client di download è disponibile a causa di errori",

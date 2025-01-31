@@ -697,7 +697,7 @@
     "AppDataLocationHealthCheckMessage": "La mise à jour ne sera pas possible afin empêcher la suppression de AppData lors de la mise à jour",
     "ColonReplacement": "Remplacement pour le « deux-points »",
     "Disabled": "Désactivé",
-    "DownloadClientCheckDownloadingToRoot": "Le client de téléchargement {0} place les téléchargements dans le dossier racine {1}. Vous ne devez pas télécharger dans un dossier racine.",
+    "DownloadClientRootFolderHealthCheckMessage": "Le client de téléchargement {downloadClientName} place les téléchargements dans le dossier racine {rootFolderPath}. Vous ne devez pas télécharger dans un dossier racine.",
     "DownloadClientCheckNoneAvailableMessage": "Aucun client de téléchargement n'est disponible",
     "DownloadClientCheckUnableToCommunicateMessage": "Impossible de communiquer avec {0}.",
     "DownloadClientStatusCheckAllClientMessage": "Aucun client de téléchargement n'est disponible en raison d'échecs",

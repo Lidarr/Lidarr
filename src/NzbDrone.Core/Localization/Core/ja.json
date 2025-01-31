@@ -586,7 +586,7 @@
     "MaintenanceRelease": "メンテナンスリリース：バグ修正およびその他の改善。詳細については、Githubのコミット履歴を参照してください",
     "TheArtistFolderStrongpathstrongAndAllOfItsContentWillBeDeleted": "ムービーフォルダ「{0}」とそのすべてのコンテンツが削除されます。",
     "AppDataLocationHealthCheckMessage": "更新時にAppDataが削除されないように更新することはできません",
-    "DownloadClientCheckDownloadingToRoot": "ダウンロードクライアント{0}は、ダウンロードをルートフォルダ{1}に配置します。ルートフォルダにダウンロードしないでください。",
+    "DownloadClientRootFolderHealthCheckMessage": "ダウンロードクライアント{downloadClientName}は、ダウンロードをルートフォルダ{rootFolderPath}に配置します。ルートフォルダにダウンロードしないでください。",
     "DownloadClientCheckNoneAvailableMessage": "ダウンロードクライアントは利用できません",
     "HiddenClickToShow": "非表示、クリックして表示",
     "ImportListStatusCheckAllClientMessage": "障害のため、すべてのリストを利用できません",

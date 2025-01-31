@@ -604,7 +604,7 @@
     "UpdateCheckUINotWritableMessage": "Ekki er hægt að setja uppfærslu vegna þess að notendamöppan '{0}' er ekki skrifuð af notandanum '{1}'.",
     "AppDataLocationHealthCheckMessage": "Uppfærsla verður ekki möguleg til að koma í veg fyrir að AppData sé eytt við uppfærslu",
     "ColonReplacement": "Skipt um ristil",
-    "DownloadClientCheckDownloadingToRoot": "Sæktu viðskiptavinur {0} setur niðurhal í rótarmöppuna {1}. Þú ættir ekki að hlaða niður í rótarmöppu.",
+    "DownloadClientRootFolderHealthCheckMessage": "Sæktu viðskiptavinur {downloadClientName} setur niðurhal í rótarmöppuna {rootFolderPath}. Þú ættir ekki að hlaða niður í rótarmöppu.",
     "DownloadClientCheckNoneAvailableMessage": "Enginn niðurhalsþjónn er í boði",
     "DownloadClientCheckUnableToCommunicateMessage": "Ekki er hægt að eiga samskipti við {0}.",
     "DownloadClientStatusCheckAllClientMessage": "Allir viðskiptavinir sem hlaða niður eru ekki tiltækir vegna bilana",

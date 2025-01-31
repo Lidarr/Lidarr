@@ -596,7 +596,7 @@
     "AppDataLocationHealthCheckMessage": "अद्यतन पर अद्यतन AppData को रोकने के लिए अद्यतन करना संभव नहीं होगा",
     "ColonReplacement": "कोलन रिप्लेसमेंट",
     "Disabled": "विकलांग",
-    "DownloadClientCheckDownloadingToRoot": "डाउनलोड क्लाइंट {0} रूट फ़ोल्डर में डाउनलोड करता है {1}। आपको रूट फ़ोल्डर में डाउनलोड नहीं करना चाहिए।",
+    "DownloadClientRootFolderHealthCheckMessage": "डाउनलोड क्लाइंट {downloadClientName} रूट फ़ोल्डर में डाउनलोड करता है {rootFolderPath}। आपको रूट फ़ोल्डर में डाउनलोड नहीं करना चाहिए।",
     "DownloadClientCheckNoneAvailableMessage": "कोई डाउनलोड क्लाइंट उपलब्ध नहीं है",
     "DownloadClientCheckUnableToCommunicateMessage": "{0} के साथ संवाद करने में असमर्थ।",
     "DownloadClientStatusCheckSingleClientMessage": "विफलताओं के कारण अनुपलब्ध ग्राहक डाउनलोड करें: {0}",

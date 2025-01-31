@@ -614,7 +614,7 @@
     "IndexerSearchCheckNoInteractiveMessage": "אין אינדקסים זמינים כאשר חיפוש אינטראקטיבי מופעל, {appName} לא תספק תוצאות חיפוש אינטראקטיביות",
     "RemotePathMappingCheckFolderPermissions": "ראדארר יכול לראות אבל לא לגשת לסרטים שירדו {0}. ככל הנראה בעיית הרשאות.",
     "AppDataLocationHealthCheckMessage": "לא ניתן יהיה לעדכן את מחיקת AppData בעדכון",
-    "DownloadClientCheckDownloadingToRoot": "הורד לקוח {0} ממקם הורדות בתיקיית הבסיס {1}. אתה לא צריך להוריד לתיקיית שורש.",
+    "DownloadClientRootFolderHealthCheckMessage": "הורד לקוח {downloadClientName} ממקם הורדות בתיקיית הבסיס {rootFolderPath}. אתה לא צריך להוריד לתיקיית שורש.",
     "DownloadClientCheckNoneAvailableMessage": "אין לקוח להורדה זמין",
     "DownloadClientCheckUnableToCommunicateMessage": "לא ניתן לתקשר עם {0}.",
     "DownloadClientStatusCheckAllClientMessage": "כל לקוחות ההורדה אינם זמינים עקב כשלים",

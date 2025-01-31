@@ -622,7 +622,7 @@
     "EnableRssHelpText": "Se utilizará cuando {appName} busque periódicamente publicaciones a través de la sincronización por RSS",
     "HiddenClickToShow": "Oculto, pulsa para mostrar",
     "Disabled": "Deshabilitado",
-    "DownloadClientCheckDownloadingToRoot": "El cliente de descargas {0} coloca las descargas en la carpeta raíz {1}. No debe descargar a una carpeta raíz.",
+    "DownloadClientRootFolderHealthCheckMessage": "El cliente de descargas {downloadClientName} coloca las descargas en la carpeta raíz {rootFolderPath}. No debe descargar a una carpeta raíz.",
     "DownloadClientStatusCheckAllClientMessage": "Los clientes de descargas no están disponibles debido a errores",
     "DownloadClientStatusCheckSingleClientMessage": "Clientes de descargas no disponibles debido a errores: {0}",
     "ImportListStatusCheckAllClientMessage": "Las listas no están disponibles debido a errores",

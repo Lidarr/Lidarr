@@ -699,7 +699,7 @@
     "AppDataLocationHealthCheckMessage": "Não foi possível actualizar para prevenir apagar a AppData durante a actualização",
     "ColonReplacement": "Substituição de dois-pontos",
     "Disabled": "Desativado",
-    "DownloadClientCheckDownloadingToRoot": "O cliente {0} coloca as transferências na pasta raiz {1}. Não transfira para a pasta raiz.",
+    "DownloadClientRootFolderHealthCheckMessage": "O cliente {downloadClientName} coloca as transferências na pasta raiz {rootFolderPath}. Não transfira para a pasta raiz.",
     "DownloadClientCheckNoneAvailableMessage": "Nenhum cliente de transferências disponível",
     "DownloadClientCheckUnableToCommunicateMessage": "Não é possível ligar-se a {0}.",
     "DownloadClientStatusCheckSingleClientMessage": "Clientes de transferências indisponíveis devido a falhas: {0}",

@@ -597,7 +597,7 @@
     "AppDataLocationHealthCheckMessage": "Opdatering vil ikke være muligt for at undgå at slette AppData under opdatering",
     "ColonReplacement": "Udskiftning af kolon",
     "Disabled": "deaktiveret",
-    "DownloadClientCheckDownloadingToRoot": "Download klient {0} placerer downloads i rodmappen {1}. Du skal ikke downloade til en rodmappe.",
+    "DownloadClientRootFolderHealthCheckMessage": "Download klient {downloadClientName} placerer downloads i rodmappen {rootFolderPath}. Du skal ikke downloade til en rodmappe.",
     "DownloadClientCheckNoneAvailableMessage": "Ingen download klient tilgængelig",
     "DownloadClientCheckUnableToCommunicateMessage": "Ude af stand til at kommunikere med {0}.",
     "DownloadClientStatusCheckAllClientMessage": "Alle download klienter er utilgængelige på grund af fejl",

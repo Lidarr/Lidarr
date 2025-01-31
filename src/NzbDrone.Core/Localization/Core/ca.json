@@ -637,7 +637,7 @@
     "AppDataLocationHealthCheckMessage": "No es podrà actualitzar per a evitar que s'eliminin AppData a l'actualització",
     "ColonReplacement": "Substitució de dos punts",
     "Disabled": "Desactivat",
-    "DownloadClientCheckDownloadingToRoot": "El client de baixada {0} col·loca les baixades a la carpeta arrel {1}. No s'hauria de baixar a una carpeta arrel.",
+    "DownloadClientRootFolderHealthCheckMessage": "El client de baixada {downloadClientName} col·loca les baixades a la carpeta arrel {rootFolderPath}. No s'hauria de baixar a una carpeta arrel.",
     "DownloadClientCheckNoneAvailableMessage": "No hi ha cap client de baixada disponible",
     "DownloadClientCheckUnableToCommunicateMessage": "No es pot comunicar amb {0}.",
     "ProxyCheckBadRequestMessage": "No s'ha pogut provar el servidor intermediari. Codi d'estat: {0}",

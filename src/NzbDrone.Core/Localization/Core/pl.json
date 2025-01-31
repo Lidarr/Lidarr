@@ -627,7 +627,7 @@
     "UpdateCheckUINotWritableMessage": "Nie można zainstalować aktualizacji, ponieważ użytkownik „{1}” nie ma prawa zapisu w folderze interfejsu użytkownika „{0}”.",
     "AppDataLocationHealthCheckMessage": "Aktualizacja nie będzie możliwa w celu uniknięcia usunięcia danych aplikacji",
     "Disabled": "Wyłączone",
-    "DownloadClientCheckDownloadingToRoot": "Klient pobierania {0} umieszcza pliki do pobrania w folderze głównym {1}. Nie należy pobierać do folderu głównego.",
+    "DownloadClientRootFolderHealthCheckMessage": "Klient pobierania {downloadClientName} umieszcza pliki do pobrania w folderze głównym {rootFolderPath}. Nie należy pobierać do folderu głównego.",
     "DownloadClientCheckNoneAvailableMessage": "Żaden klient pobierania nie jest dostępny",
     "DownloadClientCheckUnableToCommunicateMessage": "Nie można skomunikować się z {0}.",
     "DownloadClientStatusCheckAllClientMessage": "Wszyscy klienci pobierania są niedostępni z powodu błędów",
