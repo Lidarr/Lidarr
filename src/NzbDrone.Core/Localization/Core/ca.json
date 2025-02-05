@@ -973,5 +973,16 @@
     "DownloadClientSettingsRecentPriority": "Prioritat del client",
     "AddNewArtist": "Afegeix Nou Artista",
     "AddNewItem": "Afegeix un nou element",
-    "AlbumCount": "Recompte d'àlbums"
+    "AlbumCount": "Recompte d'àlbums",
+    "NotificationsSettingsWebhookHeaders": "Capçaleres",
+    "NotificationsKodiSettingsDisplayTime": "Temps de visualització",
+    "TestParsing": "Prova anàlisi",
+    "PasswordConfirmation": "Confirmeu la contrasenya",
+    "NotificationsKodiSettingsGuiNotification": "Notificació d'interfície gràfica",
+    "PreviouslyInstalled": "Instal·lat anteriorment",
+    "ContinuingOnly": "Només en emissió",
+    "UpdateFiltered": "Actualitza filtrats",
+    "IndexerSettingsApiUrl": "URL de l'API",
+    "CountCustomFormatsSelected": "{count} format(s) personalitzat(s) seleccionat(s)",
+    "Install": "Instal·la"
 }

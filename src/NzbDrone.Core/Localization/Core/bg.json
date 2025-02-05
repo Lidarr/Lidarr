@@ -818,5 +818,16 @@
     "BlocklistAndSearch": "Списък за блокиране и търсене",
     "CustomFormatsSpecificationRegularExpression": "Регулярни изрази",
     "DownloadClientDelugeSettingsDirectoryHelpText": "Незадължителна локация за изтеглянията, оставете празно, за да използвате мястото по подразбиране на Deluge",
-    "Absolute": "Абсолютен"
+    "Absolute": "Абсолютен",
+    "Episode": "епизод",
+    "Library": "Библиотека",
+    "Artist": "изпълнител",
+    "Theme": "Тема",
+    "ReleaseProfile": "Профил за издания",
+    "TBA": "TBA",
+    "Label": "Етикет",
+    "Album": "албум",
+    "AutoAdd": "Автоматично добавяне",
+    "CatalogNumber": "каталожен номер",
+    "Discography": "дискография"
 }
