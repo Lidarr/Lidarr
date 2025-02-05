@@ -1347,5 +1347,7 @@
     "PostImportCategory": "Categoria Pós-Importação",
     "DownloadClientSettingsOlderPriorityAlbumHelpText": "Prioridade para usar ao pegar álbuns lançados há mais de 14 dias",
     "DownloadClientSettingsRecentPriorityAlbumHelpText": "Prioridade de uso ao adquirir álbuns lançados nos últimos 14 dias",
-    "NotificationsSettingsWebhookHeaders": "Cabeçalhos"
+    "NotificationsSettingsWebhookHeaders": "Cabeçalhos",
+    "TracksLoadError": "Incapaz de carregar faixas",
+    "NoMediumInformation": "Nenhuma informação da mídia está disponível."
 }
