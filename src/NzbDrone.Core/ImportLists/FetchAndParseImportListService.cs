@@ -86,7 +86,7 @@ namespace NzbDrone.Core.ImportLists
 
             Task.WaitAll(taskList.ToArray());
 
-            result = result.DistinctBy(r => new { r.Artist, r.Album }).ToList();
+            result = result.DistinctBy(r => new { r.Artist, r.Album,  r.ArtistMusicBrainzId}).ToList();
 
             _logger.Debug("Found {0} total reports from {1} lists", result.Count, importLists.Count);
 
