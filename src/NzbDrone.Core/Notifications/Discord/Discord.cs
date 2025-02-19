@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
@@ -14,10 +15,12 @@ namespace NzbDrone.Core.Notifications.Discord
     public class Discord : NotificationBase<DiscordSettings>
     {
         private readonly IDiscordProxy _proxy;
+        private readonly IConfigFileProvider _configFileProvider;
 
-        public Discord(IDiscordProxy proxy)
+        public Discord(IDiscordProxy proxy, IConfigFileProvider configFileProvider)
         {
             _proxy = proxy;
+            _configFileProvider = configFileProvider;
         }
 
         public override string Name => "Discord";
@@ -33,7 +36,7 @@ namespace NzbDrone.Core.Notifications.Discord
             {
                 Author = new DiscordAuthor
                 {
-                    Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
+                    Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
                     IconUrl = "https://raw.githubusercontent.com/lidarr/Lidarr/develop/Logo/256.png"
                 },
                 Url = $"https://musicbrainz.org/artist/{artist.ForeignArtistId}",
@@ -138,7 +141,7 @@ namespace NzbDrone.Core.Notifications.Discord
             {
                 Author = new DiscordAuthor
                 {
-                    Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
+                    Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
                     IconUrl = "https://raw.githubusercontent.com/lidarr/Lidarr/develop/Logo/256.png"
                 },
                 Url = $"https://musicbrainz.org/artist/{artist.ForeignArtistId}",
@@ -296,7 +299,7 @@ namespace NzbDrone.Core.Notifications.Discord
                                   {
                                       Author = new DiscordAuthor
                                       {
-                                          Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
+                                          Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
                                           IconUrl = "https://raw.githubusercontent.com/lidarr/Lidarr/develop/Logo/256.png"
                                       },
                                       Title = healthCheck.Source.Name,
@@ -319,7 +322,7 @@ namespace NzbDrone.Core.Notifications.Discord
                 {
                     Author = new DiscordAuthor
                     {
-                        Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
+                        Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
                         IconUrl = "https://raw.githubusercontent.com/Lidarr/Lidarr/develop/Logo/256.png"
                     },
                     Title = "Health Issue Resolved: " + previousCheck.Source.Name,
@@ -342,7 +345,7 @@ namespace NzbDrone.Core.Notifications.Discord
                                   {
                                       Author = new DiscordAuthor
                                       {
-                                          Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
+                                          Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
                                           IconUrl = "https://raw.githubusercontent.com/lidarr/Lidarr/develop/Logo/256.png"
                                       },
                                       Title = TRACK_RETAGGED_TITLE,
@@ -363,7 +366,7 @@ namespace NzbDrone.Core.Notifications.Discord
                 {
                     Author = new DiscordAuthor
                     {
-                        Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
+                        Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
                         IconUrl = "https://raw.githubusercontent.com/lidarr/Lidarr/develop/Logo/256.png"
                     },
                     Description = message.Message,
@@ -385,7 +388,7 @@ namespace NzbDrone.Core.Notifications.Discord
                 {
                     Author = new DiscordAuthor
                     {
-                        Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
+                        Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
                         IconUrl = "https://raw.githubusercontent.com/lidarr/Lidarr/develop/Logo/256.png"
                     },
                     Description = message.Message,
@@ -407,7 +410,7 @@ namespace NzbDrone.Core.Notifications.Discord
                                   {
                                       Author = new DiscordAuthor
                                       {
-                                          Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
+                                          Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
                                           IconUrl = "https://raw.githubusercontent.com/lidarr/Lidarr/develop/Logo/256.png"
                                       },
                                       Title = APPLICATION_UPDATE_TITLE,
