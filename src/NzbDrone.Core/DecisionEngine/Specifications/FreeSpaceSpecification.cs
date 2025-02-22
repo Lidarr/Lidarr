@@ -20,7 +20,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             _logger = logger;
         }
 
-        public SpecificationPriority Priority => SpecificationPriority.Default;
+        public SpecificationPriority Priority => SpecificationPriority.Disk;
         public RejectionType Type => RejectionType.Permanent;
 
         public Decision IsSatisfiedBy(RemoteAlbum subject, SearchCriteriaBase searchCriteria)
