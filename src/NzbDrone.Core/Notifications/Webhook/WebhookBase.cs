@@ -241,7 +241,7 @@ namespace NzbDrone.Core.Notifications.Webhook
 
         private WebhookArtist GetArtist(Artist artist)
         {
-            if (artist == null)
+            if (artist?.Metadata?.Value == null)
             {
                 return null;
             }
