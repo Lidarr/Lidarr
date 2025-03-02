@@ -64,7 +64,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
         }
 
         [TestCase("Florence + the Machine", "Florence + the Machine")]
-        [TestCase("Beyoncé X10", "Beyoncé X10")]
+        [TestCase("Beyoncé X10", "Beyonce X10")]
         [TestCase("Girlfriends' Guide to Divorce", "Girlfriends Guide to Divorce")]
         [TestCase("Rule #23: Never Lie to the Kids", "Rule #23 Never Lie to the Kids")]
         [TestCase("Anne Hathaway/Florence + The Machine", "Anne Hathaway Florence + The Machine")]
@@ -81,6 +81,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
         [TestCase("[a] title", "a title")]
         [TestCase("backslash \\ backlash", "backslash backlash")]
         [TestCase("I'm the Boss", "Im the Boss")]
+        [TestCase("Joker: Folie à deux", "Joker Folie a deux")]
         public void should_get_expected_title_back(string name, string expected)
         {
             _artist.Name = name;
