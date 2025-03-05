@@ -1348,5 +1348,6 @@
     "Disambiguation": "Yksinkertaistaminen",
     "NotificationsTagsArtistHelpText": "Ilmoita vain vähintään yhdellä täsmäävällä tunnisteella merkityistä esittäjistä.",
     "NotificationsSettingsWebhookHeaders": "Otsakkeet",
-    "TracksLoadError": "Virhe ladattaessa kappaleita."
+    "TracksLoadError": "Virhe ladattaessa kappaleita.",
+    "NoMediumInformation": "Julkaisumuodon tietoja ei ole saatavilla."
 }
