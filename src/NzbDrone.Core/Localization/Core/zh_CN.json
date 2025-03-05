@@ -1336,5 +1336,6 @@
     "DownloadClientSettingsPostImportCategoryHelpText": "导入下载后要设置的 {appName} 的分类。 即使做种完成，{appName} 也不会删除该分类中的种子。 留空以保留同一分类。",
     "DownloadClientSettingsRecentPriority": "最近优先",
     "PostImportCategory": "导入后分类",
-    "NotificationsSettingsWebhookHeaders": "标头"
+    "NotificationsSettingsWebhookHeaders": "标头",
+    "DefaultDelayProfileArtist": "This is the default profile. It applies to all artists that don't have an explicit profile."
 }
