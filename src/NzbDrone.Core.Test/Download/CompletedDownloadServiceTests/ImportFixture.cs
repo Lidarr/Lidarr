@@ -395,7 +395,7 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
             Mocker.GetMock<IEventAggregator>()
                   .Verify(v => v.PublishEvent(It.IsAny<DownloadCompletedEvent>()), Times.Never());
 
-            _trackedDownload.State.Should().Be(TrackedDownloadState.ImportBlocked);
+            _trackedDownload.State.Should().Be(TrackedDownloadState.ImportFailed);
         }
 
         private void AssertImported()
