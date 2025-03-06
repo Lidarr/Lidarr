@@ -12922,6 +12922,7 @@
           "downloading",
           "downloadFailed",
           "downloadFailedPending",
+          "importBlocked",
           "importPending",
           "importing",
           "importFailed",
