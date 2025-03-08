@@ -169,6 +169,11 @@ namespace NzbDrone.Core.Download
                 // Mark as failed to prevent further attempts at processing
                 trackedDownload.State = TrackedDownloadState.ImportFailed;
 
+                if (statusMessages.Any())
+                {
+                    trackedDownload.Warn(statusMessages.ToArray());
+                }
+
                 // Publish event to notify album was imported incomplete
                 _eventAggregator.PublishEvent(new AlbumImportIncompleteEvent(trackedDownload));
 
