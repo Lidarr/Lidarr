@@ -267,7 +267,9 @@ namespace NzbDrone.Core.History
 
                 history.Data.Add("DownloadClient", message.DownloadClient);
                 history.Data.Add("Message", message.Message);
-                history.Data.Add("Size", message.TrackedDownload?.DownloadItem.TotalSize.ToString());
+                history.Data.Add("ReleaseGroup", message.TrackedDownload?.RemoteAlbum?.ParsedAlbumInfo?.ReleaseGroup ?? message.Data.GetValueOrDefault(EntityHistory.RELEASE_GROUP));
+                history.Data.Add("Size", message.TrackedDownload?.DownloadItem.TotalSize.ToString() ?? message.Data.GetValueOrDefault(EntityHistory.SIZE));
+                history.Data.Add("Indexer", message.TrackedDownload?.RemoteAlbum?.Release?.Indexer ?? message.Data.GetValueOrDefault(EntityHistory.INDEXER));
 
                 _historyRepository.Insert(history);
             }
@@ -417,6 +419,7 @@ namespace NzbDrone.Core.History
                 history.Data.Add("Message", message.Message);
                 history.Data.Add("ReleaseGroup", message.TrackedDownload?.RemoteAlbum?.ParsedAlbumInfo?.ReleaseGroup);
                 history.Data.Add("Size", message.TrackedDownload?.DownloadItem.TotalSize.ToString());
+                history.Data.Add("Indexer", message.TrackedDownload?.RemoteAlbum?.Release?.Indexer);
 
                 historyToAdd.Add(history);
             }
