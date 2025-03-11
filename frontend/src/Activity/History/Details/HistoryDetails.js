@@ -172,7 +172,8 @@ function HistoryDetails(props) {
 
   if (eventType === 'downloadFailed') {
     const {
-      message
+      message,
+      indexer
     } = data;
 
     return (
@@ -191,6 +192,14 @@ function HistoryDetails(props) {
             /> :
             null
         }
+
+        {
+          indexer ? (
+            <DescriptionListItem
+              title={translate('Indexer')}
+              data={indexer}
+            />
+          ) : null}
 
         {
           message ?
