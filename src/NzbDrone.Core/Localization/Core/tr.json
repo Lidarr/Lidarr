@@ -1083,5 +1083,15 @@
     "DownloadClientSettingsRecentPriority": "Yeni Önceliği",
     "PostImportCategory": "İçe Aktarma Sonrası Kategorisi",
     "DownloadClientSettingsOlderPriority": "Eski Önceliği",
-    "NotificationsSettingsWebhookHeaders": "Başlıklar"
+    "NotificationsSettingsWebhookHeaders": "Başlıklar",
+    "DownloadWarning": "İndirme Uyası: {warningMessage}",
+    "Downloaded": "İndirildi",
+    "Paused": "Duraklatıldı",
+    "Pending": "Bekliyor",
+    "PendingDownloadClientUnavailable": "Beklemede - İndirme istemcisi kullanılamıyor",
+    "UnableToImportAutomatically": "Otomatikman İçe Aktarılamıyor",
+    "CheckDownloadClientForDetails": "daha fazla ayrıntı için indirme istemcisini kontrol edin",
+    "WaitingToImport": "İçe Aktarma Bekleniyor",
+    "WaitingToProcess": "İşlenmek için Bekleniyor",
+    "ImportFailed": "İçe aktarma başarısız oldu: {sourceTitle}"
 }

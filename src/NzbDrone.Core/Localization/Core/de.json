@@ -1349,5 +1349,15 @@
     "Inactive": "Inaktiv",
     "AlbumInfo": "Album Informationen",
     "Banners": "Banner",
-    "DeleteArtistFolders": "Künstlerordner löschen"
+    "DeleteArtistFolders": "Künstlerordner löschen",
+    "ImportFailed": "Import fehlgeschlagen: {sourceTitle}",
+    "DownloadWarning": "Download Warnung: {warningMessage}",
+    "Downloaded": "Heruntergeladen",
+    "Pending": "Ausstehend",
+    "PendingDownloadClientUnavailable": "Ausstehend - Download-Client nicht verfügbar",
+    "UnableToImportAutomatically": "Kann nicht automatisch importiert werden",
+    "CheckDownloadClientForDetails": "Weitere Informationen finden Sie im Download-Client",
+    "Paused": "Pausiert",
+    "WaitingToImport": "Warten auf Import",
+    "WaitingToProcess": "Warten auf Bearbeitung"
 }

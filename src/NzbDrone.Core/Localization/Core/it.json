@@ -1047,5 +1047,19 @@
     "Min": "Min",
     "Today": "Oggi",
     "MappedNetworkDrivesWindowsService": "Le unità di rete mappate non sono disponibili eseguendo come servizio di Windows. Vedere le FAQ per maggiori informazioni",
-    "DownloadClientSettingsRecentPriority": "Priorità Client"
+    "DownloadClientSettingsRecentPriority": "Priorità Client",
+    "AutoTaggingRequiredHelpText": "Questa condizione {implementationName} deve corrispondere perché si applichi la regola di auto tagging. Altrimenti è sufficiente una singola corrispondenza {implementationName}.",
+    "CheckDownloadClientForDetails": "controlla il client di download per maggiori dettagli",
+    "PendingDownloadClientUnavailable": "In Attesa - Client di Download in attesa",
+    "WaitingToImport": "In attesa di importazione",
+    "WaitingToProcess": "In attesa di processo",
+    "AutoRedownloadFailedFromInteractiveSearchHelpText": "Cerca automaticamente e tenta di scaricare una versione diversa quando il rilascio non riuscito è stato acquisito dalla ricerca interattiva",
+    "AutoRedownloadFailedFromInteractiveSearch": "Riesecuzione del download non riuscita dalla ricerca interattiva",
+    "AutoTaggingLoadError": "Impossibile caricare auto tagging",
+    "DownloadWarning": "Avviso di download: {warningMessage}",
+    "Downloaded": "Scaricato",
+    "ImportFailed": "Importazione fallita: {sourceTitle}",
+    "Paused": "In Pausa",
+    "Pending": "In Attesa",
+    "UnableToImportAutomatically": "Impossibile Importare Automaticamente"
 }

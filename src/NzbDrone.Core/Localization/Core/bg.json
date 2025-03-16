@@ -829,5 +829,11 @@
     "Album": "албум",
     "AutoAdd": "Автоматично добавяне",
     "CatalogNumber": "каталожен номер",
-    "Discography": "дискография"
+    "Discography": "дискография",
+    "CheckDownloadClientForDetails": "проверете клиента за изтегляне за повече подробности",
+    "WaitingToImport": "Изчаква се импортиране",
+    "WaitingToProcess": "Изчаква се обработка",
+    "Downloaded": "Изтеглено",
+    "Paused": "На пауза",
+    "Pending": "В очакване"
 }

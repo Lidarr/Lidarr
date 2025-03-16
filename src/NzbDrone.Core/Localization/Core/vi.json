@@ -788,5 +788,11 @@
     "Preferred": "Ưu tiên",
     "Today": "Hôm nay",
     "MappedNetworkDrivesWindowsService": "Các ổ đĩa mạng được ánh xạ không khả dụng khi chạy dưới dạng Dịch vụ Windows. Vui lòng xem Câu hỏi thường gặp để biết thêm thông tin",
-    "DownloadClientSettingsRecentPriority": "Ưu tiên khách hàng"
+    "DownloadClientSettingsRecentPriority": "Ưu tiên khách hàng",
+    "Pending": "Đang chờ xử lý",
+    "WaitingToImport": "Đang chờ nhập",
+    "CheckDownloadClientForDetails": "kiểm tra ứng dụng khách tải xuống để biết thêm chi tiết",
+    "Downloaded": "Đã tải xuống",
+    "Paused": "Tạm dừng",
+    "WaitingToProcess": "Đang chờ xử lý"
 }

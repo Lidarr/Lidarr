@@ -754,5 +754,11 @@
     "Preferred": "優先",
     "Today": "今日",
     "MappedNetworkDrivesWindowsService": "マップされたネットワークドライブは、Windowsサービスとして実行している場合は使用できません。詳細については、FAQを参照してください",
-    "DownloadClientSettingsRecentPriority": "クライアントの優先順位"
+    "DownloadClientSettingsRecentPriority": "クライアントの優先順位",
+    "Downloaded": "ダウンロード済み",
+    "Paused": "一時停止",
+    "Pending": "保留中",
+    "WaitingToProcess": "処理を待っています",
+    "CheckDownloadClientForDetails": "詳細については、ダウンロードクライアントを確認してください",
+    "WaitingToImport": "インポートを待機中"
 }

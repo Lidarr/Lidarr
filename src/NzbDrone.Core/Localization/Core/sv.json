@@ -926,5 +926,12 @@
     "Preferred": "Föredraget",
     "Today": "Idag",
     "MappedNetworkDrivesWindowsService": "Mappade nätverksenheter är inte tillgängliga när de körs som en Windows-tjänst. Se FAQ för mer information",
-    "DownloadClientSettingsRecentPriority": "Klient prioritet"
+    "DownloadClientSettingsRecentPriority": "Klient prioritet",
+    "DownloadWarning": "Hämtningsmeddelande: {warningMessage}",
+    "Downloaded": "Nerladdad",
+    "Paused": "Pausad",
+    "Pending": "I väntan på",
+    "WaitingToImport": "Väntar på att importera",
+    "WaitingToProcess": "Väntar på att bearbeta",
+    "CheckDownloadClientForDetails": "Kontrollera nedladdningsklienten för mer detaljer"
 }
