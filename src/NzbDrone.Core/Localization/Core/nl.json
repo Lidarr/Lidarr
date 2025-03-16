@@ -907,5 +907,13 @@
     "AddArtistWithName": "{artistName} toevoegen",
     "AddNewArtist": "Voeg nieuwe artiest toe",
     "AddNewAlbum": "Voeg nieuw album toe",
-    "AddNewAlbumSearchForNewAlbum": "Start zoektoch voor een nieuw album"
+    "AddNewAlbumSearchForNewAlbum": "Start zoektoch voor een nieuw album",
+    "DownloadWarning": "Download waarschuwing: {warningMessage}",
+    "Downloaded": "Gedownload",
+    "Pending": "In afwachting",
+    "WaitingToProcess": "Wachten tot Verwerking",
+    "CheckDownloadClientForDetails": "controleer downloader voor meer details",
+    "ImportFailed": "Importeren mislukt: {sourceTitle}",
+    "Paused": "Gepauzeerd",
+    "WaitingToImport": "Wachten tot Importeren"
 }

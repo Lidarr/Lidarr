@@ -1229,5 +1229,14 @@
     "Today": "Ma",
     "DownloadClientSettingsOlderPriority": "Régebbi prioritás",
     "DownloadClientSettingsRecentPriority": "Legutóbbi prioritás",
-    "PostImportCategory": "Import utáni kategória"
+    "PostImportCategory": "Import utáni kategória",
+    "CheckDownloadClientForDetails": "További részletekért ellenőrizze a letöltési klienst",
+    "DownloadWarning": "Letöltési figyelmeztetés: {warningMessage}",
+    "Downloaded": "Letöltve",
+    "Paused": "Szüneteltetve",
+    "Pending": "Függőben levő",
+    "PendingDownloadClientUnavailable": "Függőben – A letöltési kliens nem érhető el",
+    "ImportFailed": "Sikertelen importálás: {sourceTitle}",
+    "WaitingToImport": "Várakozás importálásra",
+    "WaitingToProcess": "Várakozás feldolgozásra"
 }

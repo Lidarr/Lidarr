@@ -984,5 +984,13 @@
     "UpdateFiltered": "Actualitza filtrats",
     "IndexerSettingsApiUrl": "URL de l'API",
     "CountCustomFormatsSelected": "{count} format(s) personalitzat(s) seleccionat(s)",
-    "Install": "Instal·la"
+    "Install": "Instal·la",
+    "CheckDownloadClientForDetails": "Consulteu el client de descàrrega per a obtenir més detalls",
+    "DownloadWarning": "Avís de baixada: {warningMessage}",
+    "Downloaded": "S'ha baixat",
+    "ImportFailed": "La importació ha fallat: {sourceTitle}",
+    "Paused": "En pausa",
+    "Pending": "Pendents",
+    "WaitingToImport": "S’està esperant per a importar",
+    "WaitingToProcess": "S’està esperant per a processar"
 }

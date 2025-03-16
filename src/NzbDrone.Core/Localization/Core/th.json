@@ -751,5 +751,11 @@
     "Preferred": "ที่ต้องการ",
     "Today": "วันนี้",
     "MappedNetworkDrivesWindowsService": "ไดรฟ์เครือข่ายที่แมปไม่พร้อมใช้งานเมื่อเรียกใช้เป็นบริการ Windows โปรดดูคำถามที่พบบ่อยสำหรับข้อมูลเพิ่มเติม",
-    "DownloadClientSettingsRecentPriority": "ลำดับความสำคัญของลูกค้า"
+    "DownloadClientSettingsRecentPriority": "ลำดับความสำคัญของลูกค้า",
+    "CheckDownloadClientForDetails": "ตรวจสอบไคลเอนต์ดาวน์โหลดสำหรับรายละเอียดเพิ่มเติม",
+    "Pending": "รอดำเนินการ",
+    "WaitingToImport": "กำลังรอการนำเข้า",
+    "WaitingToProcess": "กำลังรอดำเนินการ",
+    "Downloaded": "ดาวน์โหลดแล้ว",
+    "Paused": "หยุดชั่วคราว"
 }

@@ -1349,5 +1349,15 @@
     "NotificationsTagsArtistHelpText": "Ilmoita vain vähintään yhdellä täsmäävällä tunnisteella merkityistä esittäjistä.",
     "NotificationsSettingsWebhookHeaders": "Otsakkeet",
     "TracksLoadError": "Virhe ladattaessa kappaleita.",
-    "NoMediumInformation": "Julkaisumuodon tietoja ei ole saatavilla."
+    "NoMediumInformation": "Julkaisumuodon tietoja ei ole saatavilla.",
+    "DownloadWarning": "Latausvaroitus: {warningMessage}",
+    "UnableToImportAutomatically": "Virhe automaattituonnissa.",
+    "WaitingToImport": "Odottaa tuontia",
+    "WaitingToProcess": "Odottaa käsittelyä",
+    "CheckDownloadClientForDetails": "katso lisätietoja latauspalvelusta",
+    "Downloaded": "Ladattu",
+    "Paused": "Keskeytetty",
+    "Pending": "Odottaa",
+    "PendingDownloadClientUnavailable": "Odottaa – Latauspalvelu ei ole käytettävissä",
+    "ImportFailed": "Tuonti epäonnistui: {sourceTitle}"
 }

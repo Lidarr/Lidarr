@@ -759,5 +759,11 @@
     "Preferred": "يفضل",
     "Today": "اليوم",
     "MappedNetworkDrivesWindowsService": "لا تتوفر محركات أقراص الشبكة المعينة عند التشغيل كخدمة Windows. يرجى الاطلاع على التعليمات لمزيد من المعلومات",
-    "DownloadClientSettingsRecentPriority": "أولوية العميل"
+    "DownloadClientSettingsRecentPriority": "أولوية العميل",
+    "CheckDownloadClientForDetails": "تحقق من برنامج التحميل لمزيد من التفاصيل",
+    "Downloaded": "تم التنزيل",
+    "Paused": "متوقف مؤقتًا",
+    "Pending": "قيد الانتظار",
+    "WaitingToImport": "في انتظار الاستيراد",
+    "WaitingToProcess": "في انتظار المعالجة"
 }

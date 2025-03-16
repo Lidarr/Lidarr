@@ -1121,5 +1121,11 @@
     "Min": "Ελάχ",
     "Today": "Σήμερα",
     "MappedNetworkDrivesWindowsService": "Οι αντιστοιχισμένες μονάδες δίσκου δικτύου δεν είναι διαθέσιμες κατά την εκτέλεση ως υπηρεσία Windows. Ανατρέξτε στις Συχνές Ερωτήσεις για περισσότερες πληροφορίες",
-    "DownloadClientSettingsRecentPriority": "Προτεραιότητα πελάτη"
+    "DownloadClientSettingsRecentPriority": "Προτεραιότητα πελάτη",
+    "Pending": "εκκρεμής",
+    "WaitingToImport": "Αναμονή για εισαγωγή",
+    "WaitingToProcess": "Αναμονή για επεξεργασία",
+    "CheckDownloadClientForDetails": "ελέγξτε το πρόγραμμα-πελάτη λήψης για περισσότερες λεπτομέρειες",
+    "Downloaded": "Κατεβασμένα",
+    "Paused": "Σε παύση"
 }
