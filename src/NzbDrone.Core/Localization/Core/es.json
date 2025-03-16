@@ -1349,5 +1349,15 @@
     "DownloadClientSettingsOlderPriorityAlbumHelpText": "Prioridad a usar cuando se capturen álbumes lanzados hace más de 14 días",
     "NotificationsSettingsWebhookHeaders": "Cabeceras",
     "NoMediumInformation": "Ninguna información del medio disponible.",
-    "TracksLoadError": "No se pudo cargar las pistas"
+    "TracksLoadError": "No se pudo cargar las pistas",
+    "CheckDownloadClientForDetails": "Revisar el cliente de descarga para más detalles",
+    "DownloadWarning": "Alerta de descarga: {warningMessage}",
+    "Downloaded": "Descargado",
+    "ImportFailed": "La importación falló: {sourceTitle}",
+    "Paused": "Pausado",
+    "Pending": "Pendiente",
+    "PendingDownloadClientUnavailable": "Pendiente - El cliente de descarga no está disponible",
+    "UnableToImportAutomatically": "No se pudo importar automáticamente",
+    "WaitingToImport": "Esperar para importar",
+    "WaitingToProcess": "Esperar al proceso"
 }

@@ -1024,5 +1024,12 @@
     "Preferred": "Preferido",
     "Today": "Hoje",
     "MappedNetworkDrivesWindowsService": "As unidades de rede mapeadas não estão disponíveis quando executadas como um serviço do Windows. Veja as Perguntas mais frequentes para obter mais informações",
-    "DownloadClientSettingsRecentPriority": "Prioridade do cliente"
+    "DownloadClientSettingsRecentPriority": "Prioridade do cliente",
+    "Downloaded": "Transferido",
+    "Paused": "Em pausa",
+    "WaitingToProcess": "Aguardando para processar",
+    "CheckDownloadClientForDetails": "verifique o cliente de transferências para obter mais detalhes",
+    "DownloadWarning": "Alerta de transferência: {warningMessage}",
+    "Pending": "Pendente",
+    "WaitingToImport": "Aguardando para importar"
 }

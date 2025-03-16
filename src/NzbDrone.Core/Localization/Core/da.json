@@ -798,5 +798,13 @@
     "Episode": "afsnit",
     "MetadataProfile": "metadataprofil",
     "Min": "Min",
-    "DownloadClientSettingsRecentPriority": "Kundens prioritet"
+    "DownloadClientSettingsRecentPriority": "Kundens prioritet",
+    "Pending": "Verserende",
+    "ImportFailed": "Import mislykkedes: »{sourceTitle}«",
+    "CheckDownloadClientForDetails": "tjek download klient for flere detaljer",
+    "DownloadWarning": "Downloadadvarsel: »{warningMessage}«",
+    "Downloaded": "Downloadet",
+    "Paused": "Pauset",
+    "WaitingToImport": "Venter på at importere",
+    "WaitingToProcess": "Venter på at behandle"
 }

@@ -754,5 +754,11 @@
     "Preferred": "Æskilegt",
     "Today": "Í dag",
     "MappedNetworkDrivesWindowsService": "Kortlagðar netdrif eru ekki fáanlegar þegar þær eru keyrðar sem Windows þjónusta. Vinsamlegast skoðaðu algengar spurningar fyrir frekari upplýsingar",
-    "DownloadClientSettingsRecentPriority": "Forgangur viðskiptavinar"
+    "DownloadClientSettingsRecentPriority": "Forgangur viðskiptavinar",
+    "CheckDownloadClientForDetails": "athugaðu niðurhals viðskiptavinur til að fá frekari upplýsingar",
+    "Downloaded": "Sótt",
+    "Pending": "Í bið",
+    "Paused": "Hlé gert",
+    "WaitingToImport": "Bið eftir að flytja inn",
+    "WaitingToProcess": "Bið eftir að vinna"
 }

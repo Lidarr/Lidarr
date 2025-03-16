@@ -917,5 +917,14 @@
     "DoNotBlocklistHint": "Odstraň bez přidání do seznamu blokování",
     "DownloadClientAriaSettingsDirectoryHelpText": "Volitelné umístění pro stahování, pokud chcete použít výchozí umístění Aria2, ponechte prázdné",
     "DownloadClientQbittorrentSettingsContentLayout": "Rozvržení obsahu",
-    "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Zda použít rozvržení obsahu nakonfigurované v qBittorrentu, původní rozvržení z torrentu nebo vždy vytvořit podsložku (qBittorrent 4.3.2+)"
+    "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Zda použít rozvržení obsahu nakonfigurované v qBittorrentu, původní rozvržení z torrentu nebo vždy vytvořit podsložku (qBittorrent 4.3.2+)",
+    "DownloadClientDelugeSettingsDirectoryCompletedHelpText": "Nepovinné - umístění kam přesunout dokončená stahování, pokud ponecháte prázné, použije se výchozí umístění Deluge",
+    "DownloadClientDelugeSettingsDirectoryHelpText": "Nepovinné - umístění stahovaných souborů, pokud ponecháte prázné, použije se výchozí umístění Deluge",
+    "WaitingToImport": "Čekání na import",
+    "WaitingToProcess": "Čekání na zpracování",
+    "DownloadClientDelugeSettingsDirectoryCompleted": "Adresář kam přesunout po dokončení",
+    "CheckDownloadClientForDetails": "zkontrolujte klienta pro stahování pro více informací",
+    "Downloaded": "Staženo",
+    "Paused": "Pozastaveno",
+    "Pending": "čekající"
 }

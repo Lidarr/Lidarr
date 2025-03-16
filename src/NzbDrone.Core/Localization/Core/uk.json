@@ -917,5 +917,11 @@
     "Preferred": "Бажано",
     "Max": "Максимальний",
     "MappedNetworkDrivesWindowsService": "Підключені мережеві диски недоступні під час роботи як служби Windows. Щоб отримати додаткову інформацію, перегляньте FAQ",
-    "DownloadClientSettingsRecentPriority": "Пріоритет клієнта"
+    "DownloadClientSettingsRecentPriority": "Пріоритет клієнта",
+    "Downloaded": "Завантажено",
+    "Paused": "Призупинено",
+    "Pending": "В очікуванні",
+    "WaitingToImport": "Очікування імпорту",
+    "WaitingToProcess": "Очікування обробки",
+    "CheckDownloadClientForDetails": "перевірте клієнт завантаження, щоб дізнатися більше"
 }

@@ -295,5 +295,6 @@
     "Clone": "Zatvoriť",
     "Reason": "Séria",
     "AddDelayProfileError": "Nie je možné pridať novú podmienku, skúste to znova.",
-    "DownloadClientSettingsRecentPriority": "Priorita klienta"
+    "DownloadClientSettingsRecentPriority": "Priorita klienta",
+    "CheckDownloadClientForDetails": "ďalšie podrobnosti nájdete v klientovi na sťahovanie"
 }

@@ -1349,5 +1349,15 @@
     "DownloadClientSettingsRecentPriorityAlbumHelpText": "Prioridade de uso ao adquirir álbuns lançados nos últimos 14 dias",
     "NotificationsSettingsWebhookHeaders": "Cabeçalhos",
     "TracksLoadError": "Incapaz de carregar faixas",
-    "NoMediumInformation": "Nenhuma informação da mídia está disponível."
+    "NoMediumInformation": "Nenhuma informação da mídia está disponível.",
+    "ImportFailed": "Falha na importação: {sourceTitle}",
+    "Pending": "Pendente",
+    "PendingDownloadClientUnavailable": "Pendente - O cliente de download não está disponível",
+    "WaitingToImport": "Aguardando para Importar",
+    "WaitingToProcess": "Aguardando para Processar",
+    "CheckDownloadClientForDetails": "verifique o cliente de download para saber mais",
+    "DownloadWarning": "Aviso de download: {warningMessage}",
+    "Downloaded": "Baixado",
+    "Paused": "Pausado",
+    "UnableToImportAutomatically": "Não foi possível importar automaticamente"
 }

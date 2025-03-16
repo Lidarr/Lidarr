@@ -800,5 +800,16 @@
     "Today": "Astăzi",
     "MappedNetworkDrivesWindowsService": "Unitățile de rețea mapate nu sunt disponibile atunci când rulează ca serviciu Windows. Vă rugăm să consultați [FAQ]({url}) pentru mai multe informații",
     "DownloadClientSettingsRecentPriority": "Prioritate recente",
-    "DownloadClientSettingsOlderPriority": "Prioritate mai vechi"
+    "DownloadClientSettingsOlderPriority": "Prioritate mai vechi",
+    "Paused": "Întrerupt",
+    "Pending": "În așteptare",
+    "PendingDownloadClientUnavailable": "În așteptare - Clientul de descărcare nu este disponibil",
+    "WaitingToImport": "Se așteaptă importul",
+    "WaitingToProcess": "Se așteaptă procesarea",
+    "AddAutoTag": "Adăugați Tagare Automata",
+    "AddCondition": "Adăugați Condiție",
+    "Any": "Oricare",
+    "CheckDownloadClientForDetails": "Verificați clientul de descărcare pentru mai multe detalii",
+    "Downloaded": "Descărcat",
+    "AddImportList": "Adăugați Lista de Import"
 }

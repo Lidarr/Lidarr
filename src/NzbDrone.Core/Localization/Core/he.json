@@ -797,5 +797,11 @@
     "Min": "דקה",
     "Preferred": "מועדף",
     "MappedNetworkDrivesWindowsService": "כונני רשת ממופים אינם זמינים כאשר הם פועלים כשירות Windows. אנא עיין בשאלות הנפוצות למידע נוסף",
-    "DownloadClientSettingsRecentPriority": "עדיפות לקוח"
+    "DownloadClientSettingsRecentPriority": "עדיפות לקוח",
+    "Paused": "מושהית",
+    "CheckDownloadClientForDetails": "בדוק את לקוח ההורדות לפרטים נוספים",
+    "Downloaded": "הורד",
+    "Pending": "ממתין ל",
+    "WaitingToImport": "ממתין לייבוא",
+    "WaitingToProcess": "מחכה לעיבוד"
 }

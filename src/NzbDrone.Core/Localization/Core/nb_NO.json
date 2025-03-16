@@ -285,5 +285,6 @@
     "AddImportListImplementation": "Legg til importliste - {implementationName}",
     "IgnoredPlaceHolder": "Legg til ny begrensning",
     "AddImportList": "Ny Importliste",
-    "AddNewArtistRootFolderHelpText": "Undermappa \"{folder}\" vil bli automatisk laget"
+    "AddNewArtistRootFolderHelpText": "Undermappa \"{folder}\" vil bli automatisk laget",
+    "CheckDownloadClientForDetails": "sjekk nedlastningsklienten for mer informasjon"
 }
