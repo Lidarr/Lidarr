@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Threading;
 using NLog;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Common.EnvironmentInfo;
@@ -306,9 +307,26 @@ namespace NzbDrone.Common.Disk
         {
             Ensure.That(path, () => path).IsValidPath(PathValidationType.CurrentOs);
 
-            var files = GetFiles(path, recursive);
+            var files = GetFiles(path, recursive).ToList();
 
-            files.ToList().ForEach(RemoveReadOnly);
+            files.ForEach(RemoveReadOnly);
+
+            var attempts = 0;
+
+            while (attempts < 3 && files.Any())
+            {
+                EmptyFolder(path);
+
+                if (GetFiles(path, recursive).Any())
+                {
+                    // Wait for IO operations to complete  after emptying the folder since they aren't always
+                    // instantly removed and it can lead to false positives that files are still present.
+                    Thread.Sleep(3000);
+                }
+
+                attempts++;
+                files = GetFiles(path, recursive).ToList();
+            }
 
             _fileSystem.Directory.Delete(path, recursive);
         }
