@@ -104,6 +104,7 @@ namespace NzbDrone.Core.History
             var builder = Builder()
                 .Join<EntityHistory, Artist>((h, a) => h.ArtistId == a.Id)
                 .Join<EntityHistory, Album>((h, a) => h.AlbumId == a.Id)
+                .LeftJoin<EntityHistory, Track>((h, t) => h.TrackId == t.Id)
                 .Where<EntityHistory>(x => x.Date >= date);
 
             if (eventType.HasValue)
@@ -111,10 +112,11 @@ namespace NzbDrone.Core.History
                 builder.Where<EntityHistory>(h => h.EventType == eventType);
             }
 
-            return _database.QueryJoined<EntityHistory, Artist, Album>(builder, (history, artist, album) =>
+            return _database.QueryJoined<EntityHistory, Artist, Album, Track>(builder, (history, artist, album, track) =>
             {
                 history.Artist = artist;
                 history.Album = album;
+                history.Track = track;
                 return history;
             }).OrderBy(h => h.Date).ToList();
         }
