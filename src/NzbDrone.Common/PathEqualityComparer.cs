@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
@@ -6,7 +7,7 @@ namespace NzbDrone.Common
 {
     public class PathEqualityComparer : IEqualityComparer<string>
     {
-        public static readonly PathEqualityComparer Instance = new PathEqualityComparer();
+        public static readonly PathEqualityComparer Instance = new ();
 
         private PathEqualityComparer()
         {
@@ -19,12 +20,19 @@ namespace NzbDrone.Common
 
         public int GetHashCode(string obj)
         {
-            if (OsInfo.IsWindows)
+            try
             {
-                return obj.CleanFilePath().Normalize().ToLower().GetHashCode();
-            }
+                if (OsInfo.IsWindows)
+                {
+                    return obj.CleanFilePath().Normalize().ToLower().GetHashCode();
+                }
 
-            return obj.CleanFilePath().Normalize().GetHashCode();
+                return obj.CleanFilePath().Normalize().GetHashCode();
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException($"Invalid path: {obj}", ex);
+            }
         }
     }
 }
