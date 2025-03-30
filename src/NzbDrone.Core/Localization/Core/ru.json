@@ -834,7 +834,7 @@
     "Absolute": "Абсолютный",
     "RecycleBinUnableToWriteHealthCheck": "Не удается выполнить запись в настроенную папку корзины: {path}. Убедитесь, что этот путь существует и доступен для записи пользователем, запускающим {appName}",
     "AddListExclusionHelpText": "Запретить добавление серий в {appName} по спискам",
-    "AddNewArtistRootFolderHelpText": "Подпапка \"{0}\" будет создана автоматически",
+    "AddNewArtistRootFolderHelpText": "Подпапка \"{folder}\" будет создана автоматически",
     "AuthenticationRequiredHelpText": "Отредактируйте, для каких запросов требуется авторизация. Не изменяйте, если не понимаете риски.",
     "DeleteArtistFolderCountConfirmation": "Вы уверены, что хотите удалить {count} выбранных индексатора?",
     "RenameFiles": "Переименовать файлы",
@@ -1108,5 +1108,8 @@
     "Pending": "В ожидании",
     "PendingDownloadClientUnavailable": "Ожидание – Клиент для загрузки недоступен",
     "SkipFreeSpaceCheckHelpText": "Используете, когда {appName} не может верно определить свободное место в вашей корневой папке",
-    "ManageFormats": "Управлять форматами"
+    "ManageFormats": "Управлять форматами",
+    "AddArtistWithName": "Добавить {artistName}",
+    "AddNewAlbum": "Добавить новый альбом",
+    "AddMetadataProfile": "Добавить мета-данные профиля"
 }
