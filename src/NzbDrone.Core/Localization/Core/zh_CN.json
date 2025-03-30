@@ -1337,7 +1337,7 @@
     "DownloadClientSettingsRecentPriority": "最近优先",
     "PostImportCategory": "导入后分类",
     "NotificationsSettingsWebhookHeaders": "标头",
-    "DefaultDelayProfileArtist": "This is the default profile. It applies to all artists that don't have an explicit profile.",
+    "DefaultDelayProfileArtist": "这是默认的配置。此配置用于所有的没有配置的艺术家",
     "CheckDownloadClientForDetails": "查看下载客户端了解更多详细信息",
     "DownloadWarning": "下载警告：{warningMessage}",
     "UnableToImportAutomatically": "无法自动导入",
@@ -1347,5 +1347,7 @@
     "Pending": "挂起",
     "PendingDownloadClientUnavailable": "挂起 - 下载客户端不可用",
     "WaitingToImport": "等待导入",
-    "WaitingToProcess": "等待处理"
+    "WaitingToProcess": "等待处理",
+    "DelayProfileArtistTagsHelpText": "应用到至少有一个标签匹配的艺术家",
+    "AlbumInfo": "专辑 信息"
 }
