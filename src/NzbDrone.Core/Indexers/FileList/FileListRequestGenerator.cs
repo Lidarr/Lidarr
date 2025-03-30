@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
@@ -44,6 +45,11 @@ namespace NzbDrone.Core.Indexers.FileList
 
         private IEnumerable<IndexerRequest> GetRequest(string searchType, IEnumerable<int> categories, string parameters)
         {
+            if (categories.Empty())
+            {
+                yield break;
+            }
+
             var categoriesQuery = string.Join(",", categories.Distinct());
 
             var baseUrl = string.Format("{0}/api.php?action={1}&category={2}{3}", Settings.BaseUrl.TrimEnd('/'), searchType, categoriesQuery, parameters);

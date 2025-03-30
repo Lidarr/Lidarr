@@ -13,6 +13,8 @@ namespace NzbDrone.Core.Indexers.FileList
             RuleFor(c => c.Username).NotEmpty();
             RuleFor(c => c.Passkey).NotEmpty();
 
+            RuleFor(c => c.Categories).NotEmpty();
+
             RuleFor(c => c.SeedCriteria).SetValidator(_ => new SeedCriteriaSettingsValidator());
         }
     }
