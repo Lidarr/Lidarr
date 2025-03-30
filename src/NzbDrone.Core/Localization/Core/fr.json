@@ -1350,5 +1350,7 @@
     "PendingDownloadClientUnavailable": "En attente – Le client de téléchargement n'est pas disponible",
     "UnableToImportAutomatically": "Impossible d'importer automatiquement",
     "WaitingToImport": "En attente d'import",
-    "WaitingToProcess": "En attente de traitement"
+    "WaitingToProcess": "En attente de traitement",
+    "DefaultDelayProfileArtist": "Il s'agit du profil par défaut. Il s'applique à tous les artistes qui n'ont pas de profil explicite.",
+    "DelayProfileArtistTagsHelpText": "S'applique aux artistes avec au moins une balise correspondante"
 }
