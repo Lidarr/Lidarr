@@ -10,6 +10,7 @@ using NzbDrone.Core.Blocklisting;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.MediaFiles.TorrentInfo;
 using NzbDrone.Core.Organizer;
 using NzbDrone.Core.Parser.Model;
@@ -30,9 +31,10 @@ namespace NzbDrone.Core.Download
             IConfigService configService,
             IDiskProvider diskProvider,
             IRemotePathMappingService remotePathMappingService,
+            ILocalizationService localizationService,
             IBlocklistService blocklistService,
             Logger logger)
-            : base(configService, diskProvider, remotePathMappingService, logger)
+            : base(configService, diskProvider, remotePathMappingService, localizationService, logger)
         {
             _httpClient = httpClient;
             _blocklistService = blocklistService;
