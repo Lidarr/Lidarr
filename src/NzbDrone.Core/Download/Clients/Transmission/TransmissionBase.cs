@@ -9,6 +9,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Blocklisting;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.MediaFiles.TorrentInfo;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.RemotePathMappings;
@@ -28,9 +29,10 @@ namespace NzbDrone.Core.Download.Clients.Transmission
             IConfigService configService,
             IDiskProvider diskProvider,
             IRemotePathMappingService remotePathMappingService,
+            ILocalizationService localizationService,
             IBlocklistService blocklistService,
             Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, remotePathMappingService, blocklistService, logger)
+            : base(torrentFileInfoReader, httpClient, configService, diskProvider, remotePathMappingService, localizationService, blocklistService, logger)
         {
             _proxy = proxy;
         }
@@ -101,7 +103,11 @@ namespace NzbDrone.Core.Download.Clients.Transmission
                 if (!torrent.ErrorString.IsNullOrWhiteSpace())
                 {
                     item.Status = DownloadItemStatus.Warning;
-                    item.Message = torrent.ErrorString;
+                    item.Message = _localizationService.GetLocalizedString("DownloadClientItemErrorMessage", new Dictionary<string, object>
+                    {
+                        { "clientName", Name },
+                        { "message", torrent.ErrorString }
+                    });
                 }
                 else if (torrent.TotalSize == 0)
                 {

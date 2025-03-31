@@ -8,6 +8,7 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.RemotePathMappings;
 using NzbDrone.Core.ThingiProvider;
@@ -23,6 +24,7 @@ namespace NzbDrone.Core.Download
         protected readonly IConfigService _configService;
         protected readonly IDiskProvider _diskProvider;
         protected readonly IRemotePathMappingService _remotePathMappingService;
+        protected readonly ILocalizationService _localizationService;
         protected readonly Logger _logger;
 
         protected ResiliencePipeline<HttpResponse> RetryStrategy => new ResiliencePipelineBuilder<HttpResponse>()
@@ -77,11 +79,13 @@ namespace NzbDrone.Core.Download
         protected DownloadClientBase(IConfigService configService,
             IDiskProvider diskProvider,
             IRemotePathMappingService remotePathMappingService,
+            ILocalizationService localizationService,
             Logger logger)
         {
             _configService = configService;
             _diskProvider = diskProvider;
             _remotePathMappingService = remotePathMappingService;
+            _localizationService = localizationService;
             _logger = logger;
         }
 
