@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Lidarr.Http.REST;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.HealthCheck;
 
 namespace Lidarr.Api.V1.Health
@@ -11,7 +10,7 @@ namespace Lidarr.Api.V1.Health
         public string Source { get; set; }
         public HealthCheckResult Type { get; set; }
         public string Message { get; set; }
-        public HttpUri WikiUrl { get; set; }
+        public string WikiUrl { get; set; }
     }
 
     public static class HealthResourceMapper
@@ -29,7 +28,7 @@ namespace Lidarr.Api.V1.Health
                 Source = model.Source.Name,
                 Type = model.Type,
                 Message = model.Message,
-                WikiUrl = model.WikiUrl
+                WikiUrl = model.WikiUrl.FullUri
             };
         }
 
