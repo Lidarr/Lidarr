@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FluentValidation;
 using Lidarr.Http;
 using Lidarr.Http.REST;
 using Lidarr.Http.REST.Attributes;
@@ -23,6 +24,8 @@ namespace Lidarr.Api.V1.Tags
             : base(signalRBroadcaster)
         {
             _tagService = tagService;
+
+            SharedValidator.RuleFor(c => c.Label).NotEmpty();
         }
 
         public override TagResource GetResourceById(int id)
