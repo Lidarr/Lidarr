@@ -65,6 +65,10 @@ namespace NzbDrone.Core.MediaFiles
                     _logger.Debug("Removing existing track file: {0}", file);
                     _recycleBinProvider.DeleteFile(trackFilePath, subfolder);
                 }
+                else
+                {
+                    _logger.Warn("Existing track file missing from disk: {0}", trackFilePath);
+                }
 
                 moveFileResult.OldFiles.Add(file);
                 _mediaFileService.Delete(file, DeleteMediaFileReason.Upgrade);
