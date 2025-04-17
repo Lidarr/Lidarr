@@ -15,7 +15,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import Popover from 'Components/Tooltip/Popover';
-import { icons, inputTypes, kinds, tooltipPositions } from 'Helpers/Props';
+import { icons, inputTypes, kinds, sizes, tooltipPositions } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import styles from './EditArtistModalContent.css';
 
@@ -93,7 +93,7 @@ class EditArtistModalContent extends Component {
 
         <ModalBody>
           <Form {...otherProps}>
-            <FormGroup>
+            <FormGroup size={sizes.MEDIUM}>
               <FormLabel>
                 {translate('Monitored')}
               </FormLabel>
@@ -107,9 +107,10 @@ class EditArtistModalContent extends Component {
               />
             </FormGroup>
 
-            <FormGroup>
+            <FormGroup size={sizes.MEDIUM}>
               <FormLabel>
                 {translate('MonitorNewItems')}
+
                 <Popover
                   anchor={
                     <Icon
@@ -132,7 +133,7 @@ class EditArtistModalContent extends Component {
               />
             </FormGroup>
 
-            <FormGroup>
+            <FormGroup size={sizes.MEDIUM}>
               <FormLabel>
                 {translate('QualityProfile')}
               </FormLabel>
@@ -146,10 +147,10 @@ class EditArtistModalContent extends Component {
             </FormGroup>
 
             {
-              showMetadataProfile &&
-                <FormGroup>
+              showMetadataProfile ?
+                <FormGroup size={sizes.MEDIUM}>
                   <FormLabel>
-                    Metadata Profile
+                    {translate('MetadataProfile')}
 
                     <Popover
                       anchor={
@@ -173,10 +174,11 @@ class EditArtistModalContent extends Component {
                     {...metadataProfileId}
                     onChange={onInputChange}
                   />
-                </FormGroup>
+                </FormGroup> :
+                null
             }
 
-            <FormGroup>
+            <FormGroup size={sizes.MEDIUM}>
               <FormLabel>
                 {translate('Path')}
               </FormLabel>
@@ -189,7 +191,7 @@ class EditArtistModalContent extends Component {
               />
             </FormGroup>
 
-            <FormGroup>
+            <FormGroup size={sizes.MEDIUM}>
               <FormLabel>
                 {translate('Tags')}
               </FormLabel>
@@ -209,7 +211,7 @@ class EditArtistModalContent extends Component {
             kind={kinds.DANGER}
             onPress={onDeleteArtistPress}
           >
-            Delete
+            {translate('Delete')}
           </Button>
 
           <Button
