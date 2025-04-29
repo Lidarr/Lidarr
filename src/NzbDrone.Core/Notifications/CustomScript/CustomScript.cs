@@ -347,7 +347,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
         {
             if (artist == null)
             {
-                return null;
+                return new List<string>();
             }
 
             return _tagRepository.GetTags(artist.Tags)
