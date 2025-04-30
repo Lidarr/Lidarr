@@ -92,7 +92,7 @@ namespace Lidarr.Api.V1.System.Backup
         }
 
         [HttpPost("restore/upload")]
-        [RequestFormLimits(MultipartBodyLengthLimit = 1000000000)]
+        [RequestFormLimits(MultipartBodyLengthLimit = 5000000000)]
         public object UploadAndRestore()
         {
             var files = Request.Form.Files;
