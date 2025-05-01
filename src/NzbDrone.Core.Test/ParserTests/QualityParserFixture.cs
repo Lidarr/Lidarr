@@ -129,6 +129,9 @@ namespace NzbDrone.Core.Test.ParserTests
         [TestCase("Green Day - Father Of All [FLAC (M4A) 24-bit Lossless]", null, 0, 0)]
         [TestCase("Green_Day-Father_Of_All_FLAC_M4A_24_bit_Lossless", null, 0, 0)]
         [TestCase("Green.Day-Father.Of.All.FLAC.M4A.24.bit.Lossless", null, 0, 0)]
+        [TestCase("Linkin Park - Studio Collection 2000-2012 (2013) [WEB FLAC24-44.1]", null, 0, 0)]
+        [TestCase("Linkin Park - Studio Collection 2000-2012 (2013) [WEB FLAC24bit]", null, 0, 0)]
+        [TestCase("Linkin Park - Studio Collection 2000-2012 (2013) [WEB FLAC24-bit]", null, 0, 0)]
         public void should_parse_flac_24bit_quality(string title, string desc, int bitrate, int sampleSize)
         {
             ParseAndVerifyQuality(title, desc, bitrate, Quality.FLAC_24, sampleSize);
