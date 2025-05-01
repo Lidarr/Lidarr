@@ -60,6 +60,7 @@ body:
       - Master
       - Develop
       - Nightly
+      - Plugins (experimental)
       - Other (This issue will be closed)
   validations:
     required: true
