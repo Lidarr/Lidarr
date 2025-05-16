@@ -105,8 +105,6 @@ namespace NzbDrone.Core.ImportLists.Youtube
 
         public override object RequestAction(string action, IDictionary<string, string> query)
         {
-            Console.Out.WriteLine(action);
-
             return base.RequestAction(action, query);
         }
     }

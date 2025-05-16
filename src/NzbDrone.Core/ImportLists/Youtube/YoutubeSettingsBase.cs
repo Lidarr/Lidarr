@@ -19,11 +19,6 @@ namespace NzbDrone.Core.ImportLists.Youtube
     {
         protected virtual AbstractValidator<TSettings> Validator => new YoutubeSettingsBaseValidator<TSettings>();
 
-        public YoutubeSettingsBase()
-        {
-            BaseUrl = "todo";
-        }
-
         public string BaseUrl { get; set; }
 
         public virtual string Scope => "";
