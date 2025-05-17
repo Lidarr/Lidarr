@@ -1031,5 +1031,9 @@
     "CheckDownloadClientForDetails": "verifique o cliente de transferências para obter mais detalhes",
     "DownloadWarning": "Alerta de transferência: {warningMessage}",
     "Pending": "Pendente",
-    "WaitingToImport": "Aguardando para importar"
+    "WaitingToImport": "Aguardando para importar",
+    "TBA": "TBA",
+    "ThereWasAnErrorLoadingThisItem": "Houve um erro ao carregar este item",
+    "ThereWasAnErrorLoadingThisPage": "Houve um erro ao carregar esta página",
+    "EpisodeDoesNotHaveAnAbsoluteEpisodeNumber": "Episódio não tem um número de episódio absoluto"
 }

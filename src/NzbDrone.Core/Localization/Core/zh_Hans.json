@@ -4,5 +4,9 @@
     "Always": "总是",
     "Analytics": "分析",
     "Username": "用户名",
-    "Activity": "活动"
+    "Activity": "活动",
+    "UseProxy": "使用代理",
+    "Uptime": "运行时间",
+    "Warn": "警告",
+    "Updates": "更新"
 }
