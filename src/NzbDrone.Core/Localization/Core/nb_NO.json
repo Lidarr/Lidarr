@@ -286,5 +286,7 @@
     "IgnoredPlaceHolder": "Legg til ny begrensning",
     "AddImportList": "Ny Importliste",
     "AddNewArtistRootFolderHelpText": "Undermappa \"{folder}\" vil bli automatisk laget",
-    "CheckDownloadClientForDetails": "sjekk nedlastningsklienten for mer informasjon"
+    "CheckDownloadClientForDetails": "sjekk nedlastningsklienten for mer informasjon",
+    "TBA": "Venter",
+    "History": "Historikk"
 }
