@@ -58,7 +58,7 @@ namespace NzbDrone.Core.Download
             }
             catch (HttpException ex)
             {
-                if (ex.Response.StatusCode == HttpStatusCode.NotFound)
+                if (ex.Response.StatusCode is HttpStatusCode.NotFound or HttpStatusCode.Gone)
                 {
                     _logger.Error(ex, "Downloading nzb file for album '{0}' failed since it no longer exists ({1})", remoteAlbum.Release.Title, url);
                     throw new ReleaseUnavailableException(remoteAlbum.Release, "Downloading nzb failed", ex);
