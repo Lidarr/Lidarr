@@ -19,26 +19,34 @@ namespace NzbDrone.Core.Music
 
         public bool ShouldRefresh(Album album)
         {
-            if (album.LastInfoSync < DateTime.UtcNow.AddDays(-60))
+            try
             {
-                _logger.Trace("Album {0} last updated more than 60 days ago, should refresh.", album.Title);
-                return true;
-            }
+                if (album.LastInfoSync < DateTime.UtcNow.AddDays(-60))
+                {
+                    _logger.Trace("Album {0} last updated more than 60 days ago, should refresh.", album.Title);
+                    return true;
+                }
 
-            if (album.LastInfoSync >= DateTime.UtcNow.AddHours(-12))
-            {
-                _logger.Trace("Album {0} last updated less than 12 hours ago, should not be refreshed.", album.Title);
+                if (album.LastInfoSync >= DateTime.UtcNow.AddHours(-12))
+                {
+                    _logger.Trace("Album {0} last updated less than 12 hours ago, should not be refreshed.", album.Title);
+                    return false;
+                }
+
+                if (album.ReleaseDate > DateTime.UtcNow.AddDays(-30))
+                {
+                    _logger.Trace("album {0} released less than 30 days ago, should refresh.", album.Title);
+                    return true;
+                }
+
+                _logger.Trace("Album {0} released long ago and recently refreshed, should not be refreshed.", album.Title);
                 return false;
             }
-
-            if (album.ReleaseDate > DateTime.UtcNow.AddDays(-30))
+            catch (Exception e)
             {
-                _logger.Trace("album {0} released less than 30 days ago, should refresh.", album.Title);
+                _logger.Error(e, "Unable to determine if album should refresh, will try to refresh.");
                 return true;
             }
-
-            _logger.Trace("Album {0} released long ago and recently refreshed, should not be refreshed.", album.Title);
-            return false;
         }
     }
 }
