@@ -151,7 +151,7 @@ export const defaultState = {
     {
       name: 'genres',
       label: () => translate('Genres'),
-      isSortable: false,
+      isSortable: true,
       isVisible: false
     },
     {
