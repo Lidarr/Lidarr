@@ -1349,5 +1349,7 @@
     "WaitingToImport": "等待导入",
     "WaitingToProcess": "等待处理",
     "DelayProfileArtistTagsHelpText": "应用到至少有一个标签匹配的艺术家",
-    "AlbumInfo": "专辑 信息"
+    "AlbumInfo": "专辑 信息",
+    "DownloadClientSettingsOlderPriorityAlbumHelpText": "优先使用14天前发布的专辑",
+    "DownloadClientSettingsRecentPriorityAlbumHelpText": "优先使用过去14天内发布的专辑"
 }

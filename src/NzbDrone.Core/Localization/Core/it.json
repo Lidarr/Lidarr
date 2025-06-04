@@ -1061,5 +1061,6 @@
     "ImportFailed": "Importazione fallita: {sourceTitle}",
     "Paused": "In Pausa",
     "Pending": "In Attesa",
-    "UnableToImportAutomatically": "Impossibile Importare Automaticamente"
+    "UnableToImportAutomatically": "Impossibile Importare Automaticamente",
+    "AlbumCount": "Numero album"
 }
