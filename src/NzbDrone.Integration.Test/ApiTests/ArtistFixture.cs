@@ -7,6 +7,7 @@ using NUnit.Framework;
 namespace NzbDrone.Integration.Test.ApiTests
 {
     [TestFixture]
+    [Ignore("Waiting for metadata to be back again", Until = "2025-07-01 00:00:00Z")]
     public class ArtistFixture : IntegrationTest
     {
         [Test]
