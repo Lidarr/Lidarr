@@ -270,7 +270,7 @@ function Updates() {
 
         {generalSettingsError ? (
           <Alert kind={kinds.DANGER}>
-            {translate('FailedToUpdateSettings')}
+            {translate('FailedToFetchSettings')}
           </Alert>
         ) : null}
 
