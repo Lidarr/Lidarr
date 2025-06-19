@@ -98,11 +98,6 @@ namespace NzbDrone.Core.ImportLists.Youtube
             return (playlistItem.ContentDetails.VideoPublishedAtDateTimeOffset ?? DateTimeOffset.UnixEpoch).DateTime;
         }
 
-        private DateTime ParseYoutubeDate(string date, PlaylistItem song)
-        {
-            return DateTime.Now;
-        }
-
         public override object RequestAction(string action, IDictionary<string, string> query)
         {
             return base.RequestAction(action, query);

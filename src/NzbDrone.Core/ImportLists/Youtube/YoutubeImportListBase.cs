@@ -42,8 +42,6 @@ namespace NzbDrone.Core.ImportLists.Youtube
                 releases = Fetch(service);
             }
 
-            // TODO remap
-
             return CleanupListItems(releases);
         }
 

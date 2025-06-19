@@ -8,10 +8,6 @@ namespace NzbDrone.Core.ImportLists.Youtube
     public class YoutubeSettingsBaseValidator<TSettings> : AbstractValidator<TSettings>
         where TSettings : YoutubeSettingsBase<TSettings>
     {
-        public YoutubeSettingsBaseValidator()
-        {
-            // TODO
-        }
     }
 
     public class YoutubeSettingsBase<TSettings> : IImportListSettings
@@ -31,9 +27,6 @@ namespace NzbDrone.Core.ImportLists.Youtube
 
         [FieldDefinition(0, Label = "Expires", Type = FieldType.Textbox, Hidden = HiddenType.Hidden)]
         public DateTime Expires { get; set; }
-
-        // [FieldDefinition(99, Label = "Authenticate with Google", Type = FieldType.OAuth)]
-        // public string SignIn { get; set; }
 
         public NzbDroneValidationResult Validate()
         {
