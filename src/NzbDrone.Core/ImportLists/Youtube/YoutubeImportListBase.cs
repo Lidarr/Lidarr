@@ -57,9 +57,17 @@ namespace NzbDrone.Core.ImportLists.Youtube
             failures.AddIfNotNull(TestConnection());
         }
 
+        public abstract ValidationFailure TestConnection(YouTubeService service);
+
         private ValidationFailure TestConnection()
         {
-            return null;
+            using (var service = new YouTubeService(new BaseClientService.Initializer()
+                   {
+                       ApiKey = Settings.YoutubeApiKey,
+                   }))
+            {
+             return   TestConnection(service);
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DryIoc.ImTools;
+using FluentValidation.Results;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using NLog;
@@ -93,6 +94,26 @@ namespace NzbDrone.Core.ImportLists.Youtube
         private DateTime ParseDateTimeOffset(PlaylistItem playlistItem)
         {
             return (playlistItem.ContentDetails.VideoPublishedAtDateTimeOffset ?? DateTimeOffset.UnixEpoch).DateTime;
+        }
+
+        public override ValidationFailure TestConnection(YouTubeService service)
+        {
+            foreach (var id in Settings.PlaylistIds)
+            {
+                try
+                {
+                    var req = service.PlaylistItems.List("contentDetails,snippet");
+                    req.PlaylistId = id;
+                    req.MaxResults = 1;
+                    req.Execute();
+                }
+                catch (Exception e)
+                {
+                    return new ValidationFailure(string.Empty, e.Message);
+                }
+            }
+
+            return null;
         }
     }
 }
