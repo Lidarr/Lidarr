@@ -23,7 +23,8 @@ namespace NzbDrone.Core.ImportLists.Youtube
             PlaylistIds = System.Array.Empty<string>();
         }
 
-        // public override string Scope => "playlist-read-private";
+        [FieldDefinition(1, Label = "Youtube API key", Type = FieldType.Textbox)]
+        public string YoutubeApiKey { get; set; }
 
         [FieldDefinition(1, Label = "Playlists", Type = FieldType.Textbox)]
         public IEnumerable<string> PlaylistIds { get; set; }

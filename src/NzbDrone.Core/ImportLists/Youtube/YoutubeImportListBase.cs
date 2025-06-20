@@ -13,7 +13,7 @@ using NzbDrone.Core.Parser.Model;
 namespace NzbDrone.Core.ImportLists.Youtube
 {
     public abstract class  YoutubeImportListBase<TSettings> : ImportListBase<TSettings>
-        where TSettings : YoutubeSettingsBase<TSettings>, new()
+        where TSettings : YoutubePlaylistSettings, new()
     {
         private IHttpClient _httpClient;
 
@@ -36,7 +36,7 @@ namespace NzbDrone.Core.ImportLists.Youtube
 
             using (var service = new YouTubeService(new BaseClientService.Initializer()
                    {
-                       ApiKey = ""
+                       ApiKey = Settings.YoutubeApiKey,
                    }))
             {
                 releases = Fetch(service);

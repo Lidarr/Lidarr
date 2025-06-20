@@ -32,15 +32,15 @@ namespace NzbDrone.Core.ImportLists.Youtube
 
         public IList<YoutubeImportListItemInfo> Fetch(YouTubeService service, string playlistId)
         {
-            // TODO playlist
             var results = new List<YoutubeImportListItemInfo>();
             var req = service.PlaylistItems.List("contentDetails,snippet");
             req.PlaylistId = playlistId;
             req.MaxResults = 50;
-
-            while (true)
+            var page = 0;
+            var playlist = req.Execute();
+            do
             {
-                var playlist = req.Execute();
+                page++;
                 req.PageToken = playlist.NextPageToken;
 
                 foreach (var song in playlist.Items)
@@ -61,12 +61,9 @@ namespace NzbDrone.Core.ImportLists.Youtube
                     results.Add(listItem);
                 }
 
-                if (playlist.NextPageToken == null)
-                {
-                    break;
-                }
+                playlist = req.Execute();
             }
-
+            while (playlist.NextPageToken != null && page < 10);
             return results;
         }
 
@@ -96,11 +93,6 @@ namespace NzbDrone.Core.ImportLists.Youtube
         private DateTime ParseDateTimeOffset(PlaylistItem playlistItem)
         {
             return (playlistItem.ContentDetails.VideoPublishedAtDateTimeOffset ?? DateTimeOffset.UnixEpoch).DateTime;
-        }
-
-        public override object RequestAction(string action, IDictionary<string, string> query)
-        {
-            return base.RequestAction(action, query);
         }
     }
 }
