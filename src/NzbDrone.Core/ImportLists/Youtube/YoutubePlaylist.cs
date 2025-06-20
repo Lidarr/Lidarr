@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DryIoc.ImTools;
 using FluentValidation.Results;
 using Google.Apis.YouTube.v3;
@@ -62,6 +63,7 @@ namespace NzbDrone.Core.ImportLists.Youtube
                     results.Add(listItem);
                 }
 
+                Thread.Sleep(TimeSpan.FromSeconds(1));
                 playlist = req.Execute();
             }
             while (playlist.NextPageToken != null && page < 10);

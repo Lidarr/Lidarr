@@ -15,8 +15,6 @@ namespace NzbDrone.Core.ImportLists.Youtube
     public abstract class  YoutubeImportListBase<TSettings> : ImportListBase<TSettings>
         where TSettings : YoutubePlaylistSettings, new()
     {
-        private IHttpClient _httpClient;
-
         protected YoutubeImportListBase(IImportListStatusService importListStatusService,
                                         IConfigService configService,
                                         IParsingService parsingService,
@@ -24,7 +22,6 @@ namespace NzbDrone.Core.ImportLists.Youtube
                                         Logger logger)
             : base(importListStatusService, configService, parsingService, logger)
         {
-            _httpClient = httpClient;
         }
 
         public override ImportListType ListType => ImportListType.Youtube;
@@ -43,11 +40,6 @@ namespace NzbDrone.Core.ImportLists.Youtube
             }
 
             return CleanupListItems(releases);
-        }
-
-        public IList<YoutubeImportListItemInfo> MapYoutubeReleases(IList<YoutubeImportListItemInfo> items)
-        {
-            return items;
         }
 
         public abstract IList<YoutubeImportListItemInfo> Fetch(YouTubeService service);
