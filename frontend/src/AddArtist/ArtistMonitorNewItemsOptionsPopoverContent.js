@@ -8,17 +8,17 @@ function ArtistMonitorNewItemsOptionsPopoverContent() {
     <DescriptionList>
       <DescriptionListItem
         title={translate('AllAlbums')}
-        data="Monitor all new albums"
+        data={translate('MonitorAllAlbums')}
       />
 
       <DescriptionListItem
         title={translate('NewAlbums')}
-        data="Monitor new albums released after the newest existing album"
+        data={translate('MonitorNewAlbumsData')}
       />
 
       <DescriptionListItem
         title={translate('None')}
-        data="Don't monitor any new albums"
+        data={translate('MonitorNoAlbumsData')}
       />
     </DescriptionList>
   );
