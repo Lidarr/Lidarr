@@ -528,7 +528,7 @@
   "Formats": "Formats",
   "FreeSpace": "Free Space",
   "FutureAlbums": "Future Albums",
-  "FutureAlbumsData": "Monitor albums that have not released yet",
+  "FutureAlbumsData": "Monitor albums currently in the database that have a release date in the future.",
   "FutureDays": "Future Days",
   "FutureDaysHelpText": "Days for iCal feed to look into the future",
   "General": "General",

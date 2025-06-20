@@ -13,7 +13,7 @@ function ArtistMonitorNewItemsOptionsPopoverContent() {
 
       <DescriptionListItem
         title={translate('NewAlbums')}
-        data="Monitor new albums released after the newest existing album"
+        data="Monitor albums added to database in future with a release date after the latest album"
       />
 
       <DescriptionListItem
