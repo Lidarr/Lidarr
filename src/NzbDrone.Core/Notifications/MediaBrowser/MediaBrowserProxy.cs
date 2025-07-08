@@ -19,6 +19,16 @@ namespace NzbDrone.Core.Notifications.Emby
             _logger = logger;
         }
 
+        public void TestConnection(MediaBrowserSettings settings)
+        {
+            var path = "/System/Configuration";
+            var request = BuildRequest(path, settings);
+            request.Headers.Add("X-MediaBrowser-Token", settings.ApiKey);
+
+            var response = _httpClient.Get(request);
+            _logger.Trace("Response: {0}", response.Content);
+        }
+
         public void Notify(MediaBrowserSettings settings, string title, string message)
         {
             var path = "/Notifications/Admin";
