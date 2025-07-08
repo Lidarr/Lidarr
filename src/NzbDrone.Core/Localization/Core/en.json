@@ -741,6 +741,8 @@
   "MetadataProfiles": "Metadata Profiles",
   "MetadataSettings": "Metadata Settings",
   "MetadataSettingsArtistSummary": "Create metadata files when tracks are imported or artist are refreshed",
+  "MetadataSourceUrl": "Metadata Source URL",
+  "MetadataSourceUrlHelpText": "The URL for the metadata source to use for additional information.",
   "Min": "Min",
   "MinFormatScoreHelpText": "Minimum custom format score allowed to download",
   "MinimumAge": "Minimum Age",

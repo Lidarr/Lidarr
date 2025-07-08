@@ -19,6 +19,7 @@ const writeAudioTagOptions = [
 
 function MetadataProvider(props) {
   const {
+    advancedSettings,
     isFetching,
     error,
     settings,
@@ -89,6 +90,24 @@ function MetadataProvider(props) {
                   helpText={translate('ScrubAudioTagsHelpText')}
                   onChange={onInputChange}
                   {...settings.scrubAudioTags}
+                />
+              </FormGroup>
+
+              <FormGroup
+                advancedSettings={advancedSettings}
+                isAdvanced={true}
+              >
+                <FormLabel>
+                  {translate('MetadataSourceUrl')}
+                </FormLabel>
+
+                <FormInputGroup
+                  type={inputTypes.TEXT}
+                  name="metadataSource"
+                  helpText={translate('MetadataSourceUrlHelpText')}
+                  onChange={onInputChange}
+                  placeholder="https://api.lidarr.audio/api/v0.4/"
+                  {...settings.metadataSource}
                 />
               </FormGroup>
 
