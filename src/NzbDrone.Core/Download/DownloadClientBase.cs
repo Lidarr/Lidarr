@@ -89,6 +89,17 @@ namespace NzbDrone.Core.Download
             _logger = logger;
         }
 
+        protected DownloadClientBase(IConfigService configService,
+           IDiskProvider diskProvider,
+           IRemotePathMappingService remotePathMappingService,
+           Logger logger)
+        {
+            _configService = configService;
+            _diskProvider = diskProvider;
+            _remotePathMappingService = remotePathMappingService;
+            _logger = logger;
+        }
+
         public override string ToString()
         {
             return GetType().Name;
