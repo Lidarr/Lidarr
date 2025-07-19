@@ -94,7 +94,6 @@
     "DeleteQualityProfileMessageText": "Êtes-vous sûr de vouloir supprimer le profil de qualité \"{name}\" ?",
     "DeleteReleaseProfile": "Supprimer le profil de version",
     "DeleteReleaseProfileMessageText": "Êtes-vous sûr de vouloir supprimer ce profil de version ?",
-    "DeleteRootFolderMessageText": "Êtes-vous sûr de vouloir supprimer le dossier racine « {name} » ?",
     "DeleteSelectedTrackFiles": "Supprimer les fichiers film sélectionnés",
     "DeleteSelectedTrackFilesMessageText": "Voulez-vous vraiment supprimer les fichiers vidéo sélectionnés ?",
     "DeleteTag": "Supprimer l'étiquette",
@@ -832,7 +831,6 @@
     "IndexerDownloadClientHealthCheckMessage": "Indexeurs avec des clients de téléchargement invalides : {0}.",
     "EditDownloadClientImplementation": "Modifier le client de téléchargement - {implementationName}",
     "ListWillRefreshEveryInterp": "La liste se rafraîchira tous/toutes la/les {0}",
-    "DeleteRootFolder": "Supprimer le dossier racine",
     "NoIndexersFound": "Aucun indexeur n'a été trouvé",
     "SmartReplace": "Remplacement intelligent",
     "PreferProtocol": "Préférer {preferredProtocol}",
@@ -1359,5 +1357,12 @@
     "DownloadClientSettingsRecentPriorityAlbumHelpText": "Priorité à utiliser lors de la récupération des albums sortis au cours des 14 derniers jours",
     "NotificationsTagsArtistHelpText": "Envoyer des notifications uniquement pour les artistes ayant au moins un tag correspondant",
     "ReleaseProfileTagArtistHelpText": "Les profils de sortie s'appliqueront aux artistes ayant au moins un tag correspondant. Laisser vide pour appliquer à tous les artistes",
-    "TracksLoadError": "Impossible de charger les pistes"
+    "TracksLoadError": "Impossible de charger les pistes",
+    "CurrentlyInstalled": "Actuellement installé",
+    "FailedToFetchSettings": "Échec de la récupération des paramètres",
+    "FailedToFetchUpdates": "Échec de la récupération des mises à jour",
+    "LogFilesLocation": "Les fichiers journaux sont situés dans : {location}",
+    "DownloadClientItemErrorMessage": "{clientName} signale une erreur : {message}",
+    "RemoveRootFolder": "Supprimer le dossier racine",
+    "RemoveRootFolderArtistsMessageText": "Êtes vous sure de vouloir enlever le dossier racine '{name}' ? Les fichiers et les dossiers ne seront pas supprimer du disque et les artistes dans le dossier racine ne seront pas retirés de {appName}."
 }

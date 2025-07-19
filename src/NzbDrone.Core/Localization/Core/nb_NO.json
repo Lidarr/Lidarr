@@ -47,7 +47,6 @@
     "DeleteImportListExclusionMessageText": "Er du sikker på at du vil slette denne ekskluderingen av importlister?",
     "DeleteNotificationMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
     "DeleteReleaseProfileMessageText": "Er du sikker på at du vil slette denne forsinkelsesprofilen?",
-    "DeleteRootFolderMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
     "DeleteTagMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
     "ResetAPIKeyMessageText": "Er du sikker på at du vil tilbakestille API -nøkkelen din?",
     "ShowQualityProfile": "Legg til kvalitetsprofil",

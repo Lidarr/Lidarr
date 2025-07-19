@@ -251,8 +251,6 @@
     "DefaultTagsHelpText": "Az ebben a mappában észlelt előadók alapértelmezett {appName} címkéi",
     "DeleteReleaseProfile": "Release profil törlése",
     "DeleteReleaseProfileMessageText": "Biztos hogy törölni szeretnéd ezt a késleltetési profilt?",
-    "DeleteRootFolder": "Gyökérmappa törlés",
-    "DeleteRootFolderMessageText": "Biztosan törli a(z) \"{name}\" gyökérmappát?",
     "Time": "Idő",
     "DeleteDelayProfileMessageText": "Biztosan törli ezt a késleltetési profilt?",
     "DeleteEmptyFolders": "Üres Mappa Törlése",
@@ -1238,5 +1236,9 @@
     "PendingDownloadClientUnavailable": "Függőben – A letöltési kliens nem érhető el",
     "ImportFailed": "Sikertelen importálás: {sourceTitle}",
     "WaitingToImport": "Várakozás importálásra",
-    "WaitingToProcess": "Várakozás feldolgozásra"
+    "WaitingToProcess": "Várakozás feldolgozásra",
+    "CurrentlyInstalled": "Jelenleg telepítve",
+    "FailedToFetchUpdates": "Nem sikerült lekérni a frissítéseket",
+    "RemoveRootFolder": "A gyökérmappa eltávolítása",
+    "LogFilesLocation": "A naplófájlok itt találhatók: {location}"
 }

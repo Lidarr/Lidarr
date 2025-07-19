@@ -77,7 +77,6 @@
     "DeleteQualityProfileMessageText": "품질 프로필 {0}을 (를) 삭제 하시겠습니까?",
     "DeleteReleaseProfile": "지연 프로필 삭제",
     "DeleteReleaseProfileMessageText": "이 지연 프로필을 삭제 하시겠습니까?",
-    "DeleteRootFolderMessageText": "인덱서 '{0}'을 (를) 삭제 하시겠습니까?",
     "DeleteSelectedTrackFiles": "선택한 동영상 파일 삭제",
     "DeleteSelectedTrackFilesMessageText": "선택한 동영상 파일을 삭제 하시겠습니까?",
     "DeleteTag": "태그 삭제",
@@ -822,7 +821,6 @@
     "CustomFormatsSpecificationRegularExpressionHelpText": "사용자 정의 형식 정규표현식은 대소문자를 구분하지 않습니다",
     "DeleteAutoTag": "자동 태그 삭제",
     "DeleteImportList": "가져오기 목록 삭제",
-    "DeleteRootFolder": "루트 폴더 삭제",
     "DeleteSelectedCustomFormatsMessageText": "정말로 {count}개의 선택한 사용자 정의 형식을 삭제하시겠습니까?",
     "DoNotBlocklist": "차단 목록에 추가하지 않음",
     "DownloadClientDelugeSettingsDirectory": "다운로드 디렉토리",
@@ -967,5 +965,9 @@
     "Paused": "일시중지",
     "RootFolderPathHelpText": "루트 폴더 목록 항목이 다음에 추가됩니다:",
     "WaitingToImport": "가져오기 대기 중",
-    "AddNewArtistRootFolderHelpText": "'{folder}' 하위 폴더가 자동으로 생성됩니다"
+    "AddNewArtistRootFolderHelpText": "'{folder}' 하위 폴더가 자동으로 생성됩니다",
+    "CurrentlyInstalled": "현재 설치됨",
+    "FailedToFetchSettings": "설정을 가져오는데 실패함",
+    "FailedToFetchUpdates": "업데이트를 가져오는데 실패함",
+    "RemoveRootFolder": "루트 폴더 제거"
 }

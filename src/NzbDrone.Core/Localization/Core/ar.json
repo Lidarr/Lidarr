@@ -239,7 +239,6 @@
     "DeleteQualityProfileMessageText": "هل أنت متأكد من أنك تريد حذف ملف تعريف الجودة {0}",
     "DeleteReleaseProfile": "حذف ملف تعريف التأخير",
     "DeleteReleaseProfileMessageText": "هل أنت متأكد أنك تريد حذف ملف تعريف التأخير هذا؟",
-    "DeleteRootFolderMessageText": "هل أنت متأكد أنك تريد حذف المفهرس \"{0}\"؟",
     "DeleteSelectedTrackFiles": "حذف ملفات الأفلام المحددة",
     "DeleteSelectedTrackFilesMessageText": "هل أنت متأكد أنك تريد حذف ملفات الأفلام المحددة؟",
     "DeleteTagMessageText": "هل أنت متأكد أنك تريد حذف العلامة \"{0}\"؟",
@@ -765,5 +764,7 @@
     "Paused": "متوقف مؤقتًا",
     "Pending": "قيد الانتظار",
     "WaitingToImport": "في انتظار الاستيراد",
-    "WaitingToProcess": "في انتظار المعالجة"
+    "WaitingToProcess": "في انتظار المعالجة",
+    "CurrentlyInstalled": "مثبتة حاليا",
+    "RemoveRootFolder": "قم بإزالة المجلد الجذر"
 }

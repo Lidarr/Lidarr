@@ -43,7 +43,6 @@
     "DeleteQualityProfileMessageText": "האם אתה בטוח שברצונך למחוק את פרופיל האיכות {0}",
     "DeleteReleaseProfile": "מחק פרופיל עיכוב",
     "DeleteReleaseProfileMessageText": "האם אתה בטוח שברצונך למחוק פרופיל עיכוב זה?",
-    "DeleteRootFolderMessageText": "האם אתה בטוח שברצונך למחוק את האינדקס '{0}'?",
     "DeleteSelectedTrackFiles": "מחק קבצי סרטים שנבחרו",
     "DeleteSelectedTrackFilesMessageText": "האם אתה בטוח שברצונך למחוק את קבצי הסרט שנבחרו?",
     "DeleteTagMessageText": "האם אתה בטוח שברצונך למחוק את התג '{0}'?",
@@ -803,5 +802,7 @@
     "Downloaded": "הורד",
     "Pending": "ממתין ל",
     "WaitingToImport": "ממתין לייבוא",
-    "WaitingToProcess": "מחכה לעיבוד"
+    "WaitingToProcess": "מחכה לעיבוד",
+    "CurrentlyInstalled": "מותקן כעת",
+    "RemoveRootFolder": "הסר את תיקיית השורש"
 }
