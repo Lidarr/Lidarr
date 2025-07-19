@@ -333,7 +333,6 @@
     "DeleteQualityProfileMessageText": "¿Estás seguro que quieres eliminar el perfil de calidad {name}?",
     "DeleteReleaseProfile": "Eliminar perfil de lanzamiento",
     "DeleteReleaseProfileMessageText": "¿Estás seguro que quieres eliminar este perfil de lanzamiento?",
-    "DeleteRootFolderMessageText": "¿Estás seguro que quieres eliminar la carpeta raíz '{name}'?",
     "DeleteSelectedTrackFiles": "Borrar Archivos Seleccionados",
     "DeleteSelectedTrackFilesMessageText": "Seguro que quieres eliminar el archivo de la película seleccionada?",
     "DeleteTag": "Eliminar Etiqueta",
@@ -740,7 +739,6 @@
     "CountIndexersSelected": "{selectedCount} indexador(es) seleccionado(s)",
     "ManageDownloadClients": "Administrar Clientes de Descarga",
     "AddReleaseProfile": "Añadir perfil de lanzamiento",
-    "DeleteRootFolder": "Eliminar Carpeta Raíz",
     "ImportListRootFolderMissingRootHealthCheckMessage": "Falta la capeta raíz para las listas: {0}",
     "ImportListRootFolderMultipleMissingRootsHealthCheckMessage": "Múltiples carpetas raíz faltan para las listas de importación: {0}",
     "ConnectionLostToBackend": "{appName} ha perdido su conexión con el backend y tendrá que ser recargado para restaurar su funcionalidad.",
@@ -1359,5 +1357,13 @@
     "PendingDownloadClientUnavailable": "Pendiente - El cliente de descarga no está disponible",
     "UnableToImportAutomatically": "No se pudo importar automáticamente",
     "WaitingToImport": "Esperar para importar",
-    "WaitingToProcess": "Esperar al proceso"
+    "WaitingToProcess": "Esperar al proceso",
+    "CurrentlyInstalled": "Actualmente instalado",
+    "FailedToFetchSettings": "Error al recuperar la configuración",
+    "FailedToFetchUpdates": "Fallo al buscar las actualizaciones",
+    "LogFilesLocation": "Los archivos de registro se encuentran en: {location}",
+    "RemoveRootFolder": "Eliminar la carpeta raíz",
+    "DownloadClientItemErrorMessage": "{clientName} está informando de un error: {message}",
+    "TheLogLevelDefault": "El nivel de registro por defecto es 'Depuración' y puede ser cambiado en [Opciones generales](/settings/general)",
+    "RemoveRootFolderArtistsMessageText": "¿Estás seguro que quieres eliminar la carpeta raíz '{name}'? Los archivos y carpetas no serán borrados del disco, y los artistas en esta carpeta raíz no serán eliminados de {appName}."
 }

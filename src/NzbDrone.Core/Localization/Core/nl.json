@@ -362,7 +362,6 @@
     "DeleteQualityProfileMessageText": "Bent u zeker dat u het kwaliteitsprofiel {name} wilt verwijderen?",
     "DeleteReleaseProfile": "Verwijder Vertragingsprofiel",
     "DeleteReleaseProfileMessageText": "Weet u zeker dat u dit vertragingsprofiel wilt verwijderen?",
-    "DeleteRootFolderMessageText": "Bent u zeker dat u de indexeerder '{0}' wilt verwijderen?",
     "DeleteSelectedTrackFiles": "Verwijder Geselecteerde Filmbestanden",
     "DeleteSelectedTrackFilesMessageText": "Bent u zeker dat u de geselecteerde filmbestanden wilt verwijderen?",
     "DeleteTag": "Verwijder Tag",
@@ -915,5 +914,11 @@
     "CheckDownloadClientForDetails": "controleer downloader voor meer details",
     "ImportFailed": "Importeren mislukt: {sourceTitle}",
     "Paused": "Gepauzeerd",
-    "WaitingToImport": "Wachten tot Importeren"
+    "WaitingToImport": "Wachten tot Importeren",
+    "StatusEndedContinuing": "Doorgaan",
+    "Continuing": "Doorgaan",
+    "CurrentlyInstalled": "Momenteel Geïnstalleerd",
+    "Country": "Land",
+    "CountImportListsSelected": "{selectedCount} importeerlijst(en) geselecteerd",
+    "RemoveRootFolder": "Verwijder hoofdmap"
 }

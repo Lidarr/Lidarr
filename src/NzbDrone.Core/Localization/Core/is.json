@@ -70,7 +70,6 @@
     "DeleteQualityProfileMessageText": "Ertu viss um að þú viljir eyða gæðasniðinu {0}",
     "DeleteReleaseProfile": "Eyða seinkunarprófíl",
     "DeleteReleaseProfileMessageText": "Ertu viss um að þú viljir eyða þessum seinkunarprófíl?",
-    "DeleteRootFolderMessageText": "Ertu viss um að þú viljir eyða vísitölunni '{0}'?",
     "DeleteSelectedTrackFiles": "Eyða völdum kvikmyndaskrám",
     "DeleteSelectedTrackFilesMessageText": "Ertu viss um að þú viljir eyða völdum kvikmyndaskrám?",
     "DeleteTag": "Eyða tagi",
@@ -760,5 +759,7 @@
     "Pending": "Í bið",
     "Paused": "Hlé gert",
     "WaitingToImport": "Bið eftir að flytja inn",
-    "WaitingToProcess": "Bið eftir að vinna"
+    "WaitingToProcess": "Bið eftir að vinna",
+    "CurrentlyInstalled": "Nú sett upp",
+    "RemoveRootFolder": "Fjarlægðu rótarmöppuna"
 }

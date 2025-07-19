@@ -332,7 +332,6 @@
     "DeleteQualityProfileMessageText": "Opravdu chcete smazat profil kvality '{name}'?",
     "DeleteReleaseProfile": "Smazat profil zpoždění",
     "DeleteReleaseProfileMessageText": "Opravdu chcete smazat tento profil zpoždění?",
-    "DeleteRootFolderMessageText": "Opravdu chcete odstranit indexer „{0}“?",
     "DeleteSelectedTrackFiles": "Odstranit vybrané filmové soubory",
     "DeleteSelectedTrackFilesMessageText": "Opravdu chcete odstranit vybrané filmové soubory?",
     "DeleteTag": "Smazat značku",
@@ -765,7 +764,6 @@
     "ClearBlocklist": "Vyčistit blocklist",
     "AutoTaggingLoadError": "Nepodařilo se načíst automatické značky",
     "ClearBlocklistMessageText": "Určitě chcete smazat všechny položky z blocklistu?",
-    "DeleteRootFolder": "Smazat kořenový adresář",
     "EditAutoTag": "Upravit automatickou značku",
     "EnableProfile": "Povolit profil",
     "EditSelectedIndexers": "Upravit vybrané indexery",
@@ -926,5 +924,12 @@
     "CheckDownloadClientForDetails": "zkontrolujte klienta pro stahování pro více informací",
     "Downloaded": "Staženo",
     "Paused": "Pozastaveno",
-    "Pending": "čekající"
+    "Pending": "čekající",
+    "ImportFailed": "Import se nezdařil: {sourceTitle}",
+    "CurrentlyInstalled": "Aktuálně nainstalováno",
+    "DownloadWarning": "Varování při stahování: {warningMessage}",
+    "FailedToFetchSettings": "Nepodařilo se načíst nastavení",
+    "FailedToFetchUpdates": "Nepodařilo se načíst aktualizace",
+    "DownloadClientItemErrorMessage": "{clientName} hlásí chybu: {message}",
+    "RemoveRootFolder": "Odeberte kořenovou složku"
 }

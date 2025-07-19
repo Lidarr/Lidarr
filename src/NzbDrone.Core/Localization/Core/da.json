@@ -297,7 +297,6 @@
     "DeleteQualityProfileMessageText": "Er du sikker på, at du vil slette kvalitetsprofilen »{name}«?",
     "DeleteReleaseProfile": "Slet udgivelsesprofil",
     "DeleteReleaseProfileMessageText": "Er du sikker på, at du vil slette denne forsinkelsesprofil?",
-    "DeleteRootFolderMessageText": "Er du sikker på, at du vil slette indeksøren '{0}'?",
     "DeleteSelectedTrackFiles": "Slet valgte filmfiler",
     "DeleteSelectedTrackFilesMessageText": "Er du sikker på, at du vil slette de valgte filmfiler?",
     "DeleteTag": "Slet tag",
@@ -806,5 +805,7 @@
     "Downloaded": "Downloadet",
     "Paused": "Pauset",
     "WaitingToImport": "Venter på at importere",
-    "WaitingToProcess": "Venter på at behandle"
+    "WaitingToProcess": "Venter på at behandle",
+    "CurrentlyInstalled": "Aktuelt installeret",
+    "RemoveRootFolder": "Fjern rodmappen"
 }

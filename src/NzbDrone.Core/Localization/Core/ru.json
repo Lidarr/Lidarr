@@ -281,7 +281,6 @@
     "DeleteQualityProfileMessageText": "Вы уверены, что хотите удалить профиль качества '{name}'?",
     "DeleteReleaseProfile": "Удалить профиль релиза",
     "DeleteReleaseProfileMessageText": "Вы уверены, что хотите удалить этот профиль задержки?",
-    "DeleteRootFolderMessageText": "Вы уверены что хотите удалить индексер '{0}'?",
     "DeleteSelectedTrackFiles": "Удалить выбранные файлы фильма",
     "DeleteSelectedTrackFilesMessageText": "Вы уверены, что хотите удалить выбранные файлы?",
     "DeleteTag": "Удалить тег",
@@ -730,7 +729,6 @@
     "NoIndexersFound": "Индексаторы не найдены",
     "DeleteImportList": "Удалить список импорта",
     "RemoveCompletedDownloads": "Удалить завершенные загрузки",
-    "DeleteRootFolder": "Удалить корневую папку",
     "IndexerDownloadClientHealthCheckMessage": "Индексаторы с недопустимыми клиентами загрузки: {0}.",
     "AddDownloadClientImplementation": "Добавить клиент загрузки - {implementationName}",
     "AddConditionImplementation": "Добавить условие - {implementationName}",
@@ -1111,5 +1109,13 @@
     "ManageFormats": "Управлять форматами",
     "AddArtistWithName": "Добавить {artistName}",
     "AddNewAlbum": "Добавить новый альбом",
-    "AddMetadataProfile": "Добавить мета-данные профиля"
+    "AddMetadataProfile": "Добавить мета-данные профиля",
+    "CurrentlyInstalled": "Установлено",
+    "FailedToFetchSettings": "Не удалось загрузить настройки",
+    "FailedToFetchUpdates": "Не удалось загрузить обновления",
+    "DownloadClientItemErrorMessage": "{clientName} сообщает об ошибке: {message}",
+    "LogFilesLocation": "Файлы журнала расположены в: {location}",
+    "RemoveRootFolder": "Удалить корневой каталог",
+    "TheLogLevelDefault": "Уровень журналирования по умолчанию установлен на 'Отладка' и может быть изменён в [Общих настройках](/settings/general)",
+    "RemoveRootFolderArtistsMessageText": "Вы уверены, что хотите удалить корневой каталог '{name}'? Файлы и папки не будут удалены с диска, а исполнители в этом корневом каталоге не будут удалены из {appName}."
 }
