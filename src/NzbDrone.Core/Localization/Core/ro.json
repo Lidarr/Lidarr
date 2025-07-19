@@ -233,7 +233,6 @@
     "DeleteQualityProfileMessageText": "Sigur doriți să ștergeți profilul de calitate '{name}'?",
     "DeleteReleaseProfile": "Ștergeți profilul de întârziere",
     "DeleteReleaseProfileMessageText": "Sigur doriți să ștergeți acest profil de întârziere?",
-    "DeleteRootFolderMessageText": "Sigur doriți să ștergeți indexatorul „{0}”?",
     "DeleteSelectedTrackFiles": "Ștergeți fișierele film selectate",
     "DeleteSelectedTrackFilesMessageText": "Sigur doriți să ștergeți fișierele de film selectate?",
     "DestinationPath": "Calea de destinație",
@@ -811,5 +810,7 @@
     "Any": "Oricare",
     "CheckDownloadClientForDetails": "Verificați clientul de descărcare pentru mai multe detalii",
     "Downloaded": "Descărcat",
-    "AddImportList": "Adăugați Lista de Import"
+    "AddImportList": "Adăugați Lista de Import",
+    "CurrentlyInstalled": "În prezent instalat",
+    "RemoveRootFolder": "Elimină folder rădăcină"
 }

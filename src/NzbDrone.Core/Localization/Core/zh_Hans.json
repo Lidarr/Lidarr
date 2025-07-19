@@ -8,5 +8,10 @@
     "UseProxy": "使用代理",
     "Uptime": "运行时间",
     "Warn": "警告",
-    "Updates": "更新"
+    "Updates": "更新",
+    "Yesterday": "昨天",
+    "BackupNow": "立即备份",
+    "YesCancel": "确认 ,取消",
+    "AddAutoTagError": "添加",
+    "Backup": "备份"
 }

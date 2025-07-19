@@ -201,7 +201,6 @@
     "ChmodFolderHelpTextWarning": "Ovo jedino radi ako je korisnik koji je pokrenuo Radarr vlasnik datoteke. Bolje je osigurati da klijent za preuzimanje postavi dozvolu ispravno.",
     "ChownGroupHelpTextWarning": "Ovo jedino radi ako je korisnik koji je pokrenuo Radarr vlasnik datoteke. Bolje je osigurati da klijent za preuzimanje koristi istu grupu kao Radarr.",
     "DeleteReleaseProfileMessageText": "Jeste li sigurni da želite obrisati ovaj profil odgode?",
-    "DeleteRootFolderMessageText": "Jeste li sigurni da želite obrisati ovaj profil odgode?",
     "DeleteTagMessageText": "Jeste li sigurni da želite obrisati oznaku formata {0}?",
     "EditImportListExclusion": "Dodaj na Listu Isključenja",
     "EditQualityProfile": "Dodaj Profil Kvalitete",

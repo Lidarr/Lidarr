@@ -26,7 +26,6 @@
     "CompletedDownloadHandling": "Διαχείριση Ολοκληρωμένων Λήψεων",
     "Component": "Στοιχείο",
     "DeleteReleaseProfileMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτό το προφίλ καθυστέρησης;",
-    "DeleteRootFolderMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε το ευρετήριο \"{0}\";",
     "DeleteSelectedTrackFiles": "Διαγραφή επιλεγμένων αρχείων ταινιών",
     "DeleteSelectedTrackFilesMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε τα επιλεγμένα αρχεία ταινιών;",
     "DeleteTag": "Διαγραφή ετικέτας",
@@ -821,7 +820,6 @@
     "DefaultMetadataProfileIdHelpText": "Προεπιλεγμένο προφίλ μεταδεδομένων για καλλιτέχνες που εντοπίστηκαν σε αυτόν τον φάκελο",
     "DefaultQualityProfileIdHelpText": "Προεπιλεγμένο προφίλ ποιότητας για καλλιτέχνες που εντοπίστηκαν σε αυτόν τον φάκελο",
     "DefaultTagsHelpText": "Προεπιλεγμένες ετικέτες {appName} για καλλιτέχνες που εντοπίστηκαν σε αυτόν τον φάκελο",
-    "DeleteRootFolder": "Διαγραφή ριζικού φακέλου",
     "EndedAllTracksDownloaded": "Τελειώθηκε (Λήφθηκαν όλα τα κομμάτια)",
     "Library": "Βιβλιοθήκη",
     "MonitoringOptionsHelpText": "Ποια άλμπουμ πρέπει να παρακολουθούνται μετά την προσθήκη του καλλιτέχνη (εφάπαξ προσαρμογή)",
@@ -1127,5 +1125,7 @@
     "WaitingToProcess": "Αναμονή για επεξεργασία",
     "CheckDownloadClientForDetails": "ελέγξτε το πρόγραμμα-πελάτη λήψης για περισσότερες λεπτομέρειες",
     "Downloaded": "Κατεβασμένα",
-    "Paused": "Σε παύση"
+    "Paused": "Σε παύση",
+    "CurrentlyInstalled": "Εγκατεστημένο αυτήν τη στιγμή",
+    "RemoveRootFolder": "Κατάργηση ριζικού φακέλου"
 }
