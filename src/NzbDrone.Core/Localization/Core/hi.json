@@ -302,7 +302,6 @@
     "DeleteQualityProfileMessageText": "क्या आप वाकई गुणवत्ता प्रोफ़ाइल {0} को हटाना चाहते हैं",
     "DeleteReleaseProfile": "डिलीट प्रोफाइल को डिलीट करें",
     "DeleteReleaseProfileMessageText": "क्या आप वाकई इस विलंब प्रोफ़ाइल को हटाना चाहते हैं?",
-    "DeleteRootFolderMessageText": "क्या आप वाकई '{0}' इंडेक्स को हटाना चाहते हैं?",
     "DeleteSelectedTrackFiles": "चयनित मूवी फ़ाइलें हटाएं",
     "DeleteSelectedTrackFilesMessageText": "क्या आप वाकई चयनित मूवी फ़ाइलों को हटाना चाहते हैं?",
     "DeleteTag": "टैग हटाएं",
@@ -759,5 +758,7 @@
     "Paused": "रोके गए",
     "Pending": "विचाराधीन",
     "WaitingToImport": "आयात की प्रतीक्षा में",
-    "WaitingToProcess": "प्रक्रिया की प्रतीक्षा की जा रही है"
+    "WaitingToProcess": "प्रक्रिया की प्रतीक्षा की जा रही है",
+    "CurrentlyInstalled": "वर्तमान में स्थापित है",
+    "RemoveRootFolder": "रूट फ़ोल्डर निकालें"
 }

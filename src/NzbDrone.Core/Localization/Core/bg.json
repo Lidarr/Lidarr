@@ -184,7 +184,6 @@
     "DeleteDelayProfile": "Изтриване на профила за забавяне",
     "DeleteEmptyFolders": "Изтрийте празни папки",
     "DeleteImportListExclusion": "Изтриване на изключването на списъка за импортиране",
-    "DeleteRootFolderMessageText": "Наистина ли искате да изтриете индексатора „{0}“?",
     "DeleteSelectedTrackFiles": "Изтриване на избрани филмови файлове",
     "DeleteTag": "Изтриване на маркера",
     "DownloadPropersAndRepacksHelpTexts1": "Дали автоматично да надстроите до Propers / Repacks",
@@ -835,5 +834,7 @@
     "WaitingToProcess": "Изчаква се обработка",
     "Downloaded": "Изтеглено",
     "Paused": "На пауза",
-    "Pending": "В очакване"
+    "Pending": "В очакване",
+    "CurrentlyInstalled": "Понастоящем инсталиран",
+    "RemoveRootFolder": "Премахнете основната папка"
 }

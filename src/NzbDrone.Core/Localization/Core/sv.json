@@ -152,7 +152,6 @@
     "DeleteNotification": "Radera Avisering",
     "DeleteReleaseProfile": "Radera UtgåveProfil",
     "DeleteReleaseProfileMessageText": "Är du säker på att du vill ta bort den här utgåvoPofilen?",
-    "DeleteRootFolder": "Radera Rotmapp",
     "DeleteSelectedTrackFiles": "Radera markerade Spårfiler",
     "DeleteSelectedTrackFilesMessageText": "Är du säker på att du vill radera de markerade spårfilerna?",
     "DeleteTag": "Radera Tagg",
@@ -283,7 +282,6 @@
     "DeleteEmptyFoldersHelpText": "Ta bort tomma filmmappar under skivsökning och när filmfiler raderas",
     "DeleteImportListMessageText": "Är du säker på att du vill radera listan '{0}'?",
     "DeleteNotificationMessageText": "Är du säker på att du vill radera aviseringen '{0}'?",
-    "DeleteRootFolderMessageText": "Är du säker på att du vill ta bort indexeraren '{0}'?",
     "DeleteTrackFileMessageText": "Är du säker på att du vill radera {0}?",
     "ResetAPIKeyMessageText": "Är du säker på att du vill nollställa din API-nyckel?",
     "MaintenanceRelease": "Underhållsutgåva",
@@ -933,5 +931,7 @@
     "Pending": "I väntan på",
     "WaitingToImport": "Väntar på att importera",
     "WaitingToProcess": "Väntar på att bearbeta",
-    "CheckDownloadClientForDetails": "Kontrollera nedladdningsklienten för mer detaljer"
+    "CheckDownloadClientForDetails": "Kontrollera nedladdningsklienten för mer detaljer",
+    "CurrentlyInstalled": "För närvarande installerad",
+    "RemoveRootFolder": "Ta bort rotmapp"
 }

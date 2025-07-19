@@ -268,7 +268,6 @@
     "DeleteQualityProfileMessageText": "品質プロファイル{0}を削除してもよろしいですか",
     "DeleteReleaseProfile": "遅延プロファイルの削除",
     "DeleteReleaseProfileMessageText": "この遅延プロファイルを削除してもよろしいですか？",
-    "DeleteRootFolderMessageText": "インデクサー「{0}」を削除してもよろしいですか？",
     "DeleteSelectedTrackFiles": "選択したムービーファイルを削除する",
     "DeleteSelectedTrackFilesMessageText": "選択したムービーファイルを削除してもよろしいですか？",
     "DeleteTag": "タグを削除",
@@ -760,5 +759,7 @@
     "Pending": "保留中",
     "WaitingToProcess": "処理を待っています",
     "CheckDownloadClientForDetails": "詳細については、ダウンロードクライアントを確認してください",
-    "WaitingToImport": "インポートを待機中"
+    "WaitingToImport": "インポートを待機中",
+    "CurrentlyInstalled": "現在インストール中",
+    "RemoveRootFolder": "ルートフォルダを削除します"
 }

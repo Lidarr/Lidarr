@@ -303,7 +303,6 @@
     "DeleteQualityProfileMessageText": "แน่ใจไหมว่าต้องการลบโปรไฟล์คุณภาพ {0}",
     "DeleteReleaseProfile": "ลบโปรไฟล์ความล่าช้า",
     "DeleteReleaseProfileMessageText": "แน่ใจไหมว่าต้องการลบโปรไฟล์การหน่วงเวลานี้",
-    "DeleteRootFolderMessageText": "แน่ใจไหมว่าต้องการลบตัวสร้างดัชนี \"{0}\"",
     "DeleteSelectedTrackFiles": "ลบไฟล์ภาพยนตร์ที่เลือก",
     "DeleteSelectedTrackFilesMessageText": "แน่ใจไหมว่าต้องการลบไฟล์ภาพยนตร์ที่เลือก",
     "DeleteTag": "ลบแท็ก",
@@ -757,5 +756,7 @@
     "WaitingToImport": "กำลังรอการนำเข้า",
     "WaitingToProcess": "กำลังรอดำเนินการ",
     "Downloaded": "ดาวน์โหลดแล้ว",
-    "Paused": "หยุดชั่วคราว"
+    "Paused": "หยุดชั่วคราว",
+    "CurrentlyInstalled": "ติดตั้งแล้ว",
+    "RemoveRootFolder": "ลบโฟลเดอร์รูท"
 }

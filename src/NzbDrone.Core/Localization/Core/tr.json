@@ -134,7 +134,6 @@
     "DeleteQualityProfileMessageText": "'{name}' kalite profilini silmek istediğinizden emin misiniz?",
     "DeleteReleaseProfile": "Yayımlama Profilini Sil",
     "DeleteReleaseProfileMessageText": "Bu gecikme profilini silmek istediğinizden emin misiniz?",
-    "DeleteRootFolderMessageText": "Dizin oluşturucuyu '{0}' silmek istediğinizden emin misiniz?",
     "DeleteSelectedTrackFiles": "Seçili Film Dosyalarını Sil",
     "DeleteSelectedTrackFilesMessageText": "Seçili film dosyalarını silmek istediğinizden emin misiniz?",
     "DeleteTag": "Etiketi Sil",
@@ -813,7 +812,6 @@
     "Donate": "Bağış yap",
     "DownloadClientAriaSettingsDirectoryHelpText": "İndirilenlerin yerleştirileceği isteğe bağlı konum, varsayılan Aria2 konumunu kullanmak için boş bırakın",
     "Database": "Veri tabanı",
-    "DeleteRootFolder": "Kök Klasörü Sil",
     "RegularExpressionsCanBeTested": "Düzenli ifadeler [burada]({url}) test edilebilir.",
     "AutoTaggingSpecificationTag": "Etiket",
     "DoNotBlocklistHint": "Engellenenler listesine eklemeden kaldır",
@@ -1093,5 +1091,12 @@
     "CheckDownloadClientForDetails": "daha fazla ayrıntı için indirme istemcisini kontrol edin",
     "WaitingToImport": "İçe Aktarma Bekleniyor",
     "WaitingToProcess": "İşlenmek için Bekleniyor",
-    "ImportFailed": "İçe aktarma başarısız oldu: {sourceTitle}"
+    "ImportFailed": "İçe aktarma başarısız oldu: {sourceTitle}",
+    "CurrentlyInstalled": "Şuan Kurulu",
+    "FailedToFetchSettings": "Ayarlar alınamadı",
+    "FailedToFetchUpdates": "Güncellemeler getirilemedi",
+    "DownloadClientItemErrorMessage": "{clientName} bir hata bildirdi: {message}",
+    "LogFilesLocation": "Log kayıtlarının bulunduğu konum: {location}",
+    "RemoveRootFolder": "Kök klasörü kaldır",
+    "TheLogLevelDefault": "Log seviyesi varsayılan olarak 'Bilgi' şeklindedir ve [Genel Ayarlar](/ayarlar/genel) bölümünden değiştirilebilir"
 }

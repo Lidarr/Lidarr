@@ -198,8 +198,6 @@
     "DeleteQualityProfileMessageText": "Tem certeza de que deseja excluir o perfil de qualidade '{name}'?",
     "DeleteReleaseProfile": "Excluir perfil de lançamento",
     "DeleteReleaseProfileMessageText": "Tem certeza de que deseja excluir este perfil de lançamento?",
-    "DeleteRootFolder": "Excluir pasta raiz",
-    "DeleteRootFolderMessageText": "Tem certeza de que deseja excluir a pasta raiz '{name}'?",
     "DeleteSelectedTrackFiles": "Excluir arquivos do livro selecionado",
     "DeleteSelectedTrackFilesMessageText": "Tem certeza de que deseja excluir os arquivos do livro selecionado?",
     "DeleteTag": "Excluir etiqueta",
@@ -1359,5 +1357,13 @@
     "DownloadWarning": "Aviso de download: {warningMessage}",
     "Downloaded": "Baixado",
     "Paused": "Pausado",
-    "UnableToImportAutomatically": "Não foi possível importar automaticamente"
+    "UnableToImportAutomatically": "Não foi possível importar automaticamente",
+    "CurrentlyInstalled": "Atualmente instalado",
+    "FailedToFetchSettings": "Falha ao obter configurações",
+    "FailedToFetchUpdates": "Falha ao buscar atualizações",
+    "TheLogLevelDefault": "O nível de registro padrão é ' Debug ' e pode ser alterado em [ Configurações gerais](/ configurações/geral)",
+    "DownloadClientItemErrorMessage": "{clientName} está relatando um erro: {message}",
+    "LogFilesLocation": "Os arquivos de log estão localizados em: {location}",
+    "RemoveRootFolder": "Remover Pasta Raiz",
+    "RemoveRootFolderArtistsMessageText": "Tem certeza de que deseja remover a pasta raiz '{name}'? Arquivos e pastas não serão excluídos do disco, e os artistas nesta pasta raiz não serão removidos de {appName}."
 }

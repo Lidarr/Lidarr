@@ -384,7 +384,6 @@
     "DeleteQualityProfileMessageText": "您确定要删除质量配置 “{name}” 吗?",
     "DeleteReleaseProfile": "删除发布资源配置",
     "DeleteReleaseProfileMessageText": "你确定你要删除这个发行版配置文件?",
-    "DeleteRootFolderMessageText": "您确定要删除根文件夹“{name}”吗?",
     "DeleteSelectedTrackFiles": "删除选择的电影文件",
     "DeleteSelectedTrackFilesMessageText": "您确定要删除选择的电影文件吗？",
     "DeleteTrackFileMessageText": "您确认您想删除吗？",
@@ -574,7 +573,6 @@
     "DeleteFilesHelpText": "删除曲目文件及艺术家文件夹",
     "DeleteImportList": "删除导入的列表",
     "DeleteMetadataProfile": "删除元数据配置",
-    "DeleteRootFolder": "删除根目录",
     "Details": "详情",
     "Donations": "赞助",
     "DoNotUpgradeAutomatically": "不要自动升级",
@@ -1351,5 +1349,13 @@
     "DelayProfileArtistTagsHelpText": "应用到至少有一个标签匹配的艺术家",
     "AlbumInfo": "专辑 信息",
     "DownloadClientSettingsOlderPriorityAlbumHelpText": "优先使用14天前发布的专辑",
-    "DownloadClientSettingsRecentPriorityAlbumHelpText": "优先使用过去14天内发布的专辑"
+    "DownloadClientSettingsRecentPriorityAlbumHelpText": "优先使用过去14天内发布的专辑",
+    "CurrentlyInstalled": "已安装",
+    "FailedToFetchSettings": "设置同步失败",
+    "FailedToFetchUpdates": "获取更新失败",
+    "LogFilesLocation": "日志文件位于: {location}",
+    "RemoveRootFolder": "移除根目录",
+    "TracksLoadError": "无法载入进度",
+    "MatchedToArtist": "与歌手匹配",
+    "MatchedToAlbums": "与专辑匹配"
 }

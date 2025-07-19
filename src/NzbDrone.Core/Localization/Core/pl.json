@@ -59,7 +59,6 @@
     "DeleteQualityProfileMessageText": "Czy na pewno chcesz usunąć profil jakości {0}",
     "DeleteReleaseProfile": "Usuń profil opóźnienia",
     "DeleteReleaseProfileMessageText": "Czy na pewno chcesz usunąć ten profil opóźnienia?",
-    "DeleteRootFolderMessageText": "Czy na pewno chcesz usunąć indeksator „{0}”?",
     "DeleteSelectedTrackFiles": "Usuń wybrane pliki filmowe",
     "DeleteSelectedTrackFilesMessageText": "Czy na pewno chcesz usunąć wybrane pliki filmowe?",
     "DeleteTag": "Usuń tag",
@@ -859,5 +858,8 @@
     "Paused": "Wstrzymano",
     "Pending": "W oczekiwaniu",
     "WaitingToImport": "Czekam na import",
-    "WaitingToProcess": "Czekam na przetworzenie"
+    "WaitingToProcess": "Czekam na przetworzenie",
+    "True": "Prawda",
+    "CurrentlyInstalled": "Aktualnie zainstalowane",
+    "RemoveRootFolder": "Usuń folder główny"
 }

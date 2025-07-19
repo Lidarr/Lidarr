@@ -28,7 +28,6 @@
     "DeleteNotificationMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
     "DeleteQualityProfileMessageText": "Naozaj chcete zmazať tento profil oneskorenia?",
     "DeleteReleaseProfileMessageText": "Naozaj chcete zmazať tento profil oneskorenia?",
-    "DeleteRootFolderMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
     "DeleteTagMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
     "APIKey": "Kľúč rozhrania API",
     "About": "O",
@@ -296,5 +295,7 @@
     "Reason": "Séria",
     "AddDelayProfileError": "Nie je možné pridať novú podmienku, skúste to znova.",
     "DownloadClientSettingsRecentPriority": "Priorita klienta",
-    "CheckDownloadClientForDetails": "ďalšie podrobnosti nájdete v klientovi na sťahovanie"
+    "CheckDownloadClientForDetails": "ďalšie podrobnosti nájdete v klientovi na sťahovanie",
+    "RequiredPlaceHolder": "Pridať nové obmedzenie",
+    "IgnoredPlaceHolder": "Pridať nové obmedzenie"
 }

@@ -310,7 +310,6 @@
     "DeleteQualityProfileMessageText": "Bạn có chắc chắn muốn xóa cấu hình chất lượng không {0}",
     "DeleteReleaseProfile": "Xóa hồ sơ độ trễ",
     "DeleteReleaseProfileMessageText": "Bạn có chắc chắn muốn xóa hồ sơ trì hoãn này không?",
-    "DeleteRootFolderMessageText": "Bạn có chắc chắn muốn xóa trình lập chỉ mục '{0}' không?",
     "DeleteSelectedTrackFiles": "Xóa các tệp phim đã chọn",
     "DeleteSelectedTrackFilesMessageText": "Bạn có chắc chắn muốn xóa các tệp phim đã chọn không?",
     "DeleteTag": "Xóa thẻ",
@@ -794,5 +793,7 @@
     "CheckDownloadClientForDetails": "kiểm tra ứng dụng khách tải xuống để biết thêm chi tiết",
     "Downloaded": "Đã tải xuống",
     "Paused": "Tạm dừng",
-    "WaitingToProcess": "Đang chờ xử lý"
+    "WaitingToProcess": "Đang chờ xử lý",
+    "CurrentlyInstalled": "Mới cài đặt",
+    "RemoveRootFolder": "Xóa thư mục gốc"
 }
