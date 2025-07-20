@@ -427,7 +427,10 @@ class AlbumDetails extends Component {
                         size={17}
                       />
                       <span className={styles.releaseDate}>
-                        {moment(releaseDate).format(shortDateFormat)}
+                        {releaseDate ?
+                          moment(releaseDate).format(shortDateFormat) :
+                          translate('Unknown')
+                        }
                       </span>
                     </div>
                   </Label>
