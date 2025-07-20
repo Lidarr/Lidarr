@@ -10,13 +10,18 @@ import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import { kinds, sizes } from 'Helpers/Props';
 import formatTimeSpan from 'Utilities/Date/formatTimeSpan';
+import isAfter from 'Utilities/Date/isAfter';
 import formatBytes from 'Utilities/Number/formatBytes';
 import translate from 'Utilities/String/translate';
 import styles from './AlbumRow.css';
 
-function getTrackCountKind(monitored, trackFileCount, trackCount) {
+function getTrackCountKind(monitored, releaseDate, trackFileCount, trackCount) {
   if (trackFileCount === trackCount && trackCount > 0) {
     return kinds.SUCCESS;
+  }
+
+  if (!releaseDate || isAfter(releaseDate)) {
+    return kinds.DISABLED;
   }
 
   if (!monitored) {
@@ -215,7 +220,7 @@ class AlbumRow extends Component {
                 >
                   <Label
                     title={translate('TotalTrackCountTracksTotalTrackFileCountTracksWithFilesInterp', [totalTrackCount, trackFileCount])}
-                    kind={getTrackCountKind(monitored, trackFileCount, trackCount)}
+                    kind={getTrackCountKind(monitored, releaseDate, trackFileCount, trackCount)}
                     size={sizes.MEDIUM}
                   >
                     {
