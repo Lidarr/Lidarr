@@ -595,6 +595,7 @@ class AlbumDetails extends Component {
                           key={medium.mediumNumber}
                           albumId={id}
                           albumMonitored={monitored}
+                          albumReleaseDate={releaseDate}
                           {...medium}
                           isExpanded={expandedState[medium.mediumNumber]}
                           onExpandPress={this.onExpandPress}

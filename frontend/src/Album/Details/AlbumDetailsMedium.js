@@ -7,6 +7,7 @@ import Link from 'Components/Link/Link';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import { icons, kinds, sizes } from 'Helpers/Props';
+import isAfter from 'Utilities/Date/isAfter';
 import translate from 'Utilities/String/translate';
 import TrackRowConnector from './TrackRowConnector';
 import styles from './AlbumDetailsMedium.css';
@@ -31,9 +32,13 @@ function getMediumStatistics(tracks) {
   };
 }
 
-function getTrackCountKind(monitored, trackFileCount, trackCount) {
+function getTrackCountKind(monitored, releaseDate, trackFileCount, trackCount) {
   if (trackFileCount === trackCount && trackCount > 0) {
     return kinds.SUCCESS;
+  }
+
+  if (!releaseDate || isAfter(releaseDate)) {
+    return kinds.DISABLED;
   }
 
   if (!monitored) {
@@ -90,6 +95,7 @@ class AlbumDetailsMedium extends Component {
       mediumNumber,
       mediumFormat,
       albumMonitored,
+      albumReleaseDate,
       items,
       columns,
       onTableOptionChange,
@@ -119,7 +125,7 @@ class AlbumDetailsMedium extends Component {
 
             <Label
               title={translate('TotalTrackCountTracksTotalTrackFileCountTracksWithFilesInterp', [totalTrackCount, trackFileCount])}
-              kind={getTrackCountKind(albumMonitored, trackFileCount, trackCount)}
+              kind={getTrackCountKind(albumMonitored, albumReleaseDate, trackFileCount, trackCount)}
               size={sizes.LARGE}
             >
               {
@@ -194,6 +200,7 @@ class AlbumDetailsMedium extends Component {
 AlbumDetailsMedium.propTypes = {
   albumId: PropTypes.number.isRequired,
   albumMonitored: PropTypes.bool.isRequired,
+  albumReleaseDate: PropTypes.string,
   mediumNumber: PropTypes.number.isRequired,
   mediumFormat: PropTypes.string.isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,

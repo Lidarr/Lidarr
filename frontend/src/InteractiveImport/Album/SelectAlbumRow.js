@@ -5,12 +5,17 @@ import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellCo
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import { kinds, sizes } from 'Helpers/Props';
+import isAfter from 'Utilities/Date/isAfter';
 import translate from 'Utilities/String/translate';
 import styles from './SelectAlbumRow.css';
 
-function getTrackCountKind(monitored, trackFileCount, trackCount) {
+function getTrackCountKind(monitored, releaseDate, trackFileCount, trackCount) {
   if (trackFileCount === trackCount && trackCount > 0) {
     return kinds.SUCCESS;
+  }
+
+  if (!releaseDate || isAfter(releaseDate)) {
+    return kinds.DISABLED;
   }
 
   if (!monitored) {
@@ -99,7 +104,7 @@ class SelectAlbumRow extends Component {
                 >
                   <Label
                     title={translate('TotalTrackCountTracksTotalTrackFileCountTracksWithFilesInterp', [totalTrackCount, trackFileCount])}
-                    kind={getTrackCountKind(monitored, trackFileCount, trackCount)}
+                    kind={getTrackCountKind(monitored, releaseDate, trackFileCount, trackCount)}
                     size={sizes.MEDIUM}
                   >
                     {
