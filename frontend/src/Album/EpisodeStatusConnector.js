@@ -15,7 +15,7 @@ function createMapStateToProps() {
     createTrackFileSelector(),
     (album, queueItem, trackFile) => {
       const result = _.pick(album, [
-        'airDateUtc',
+        'releaseDate',
         'monitored',
         'grabbed'
       ]);
