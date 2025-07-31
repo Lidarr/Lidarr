@@ -9,7 +9,7 @@ using NzbDrone.Integration.Test.Client;
 namespace NzbDrone.Integration.Test.ApiTests
 {
     [TestFixture]
-    [Ignore("Waiting for metadata to be back again", Until = "2025-08-01 00:00:00Z")]
+    [Ignore("Waiting for metadata to be back again", Until = "2025-09-01 00:00:00Z")]
     public class CalendarFixture : IntegrationTest
     {
         public ClientBase<AlbumResource> Calendar;

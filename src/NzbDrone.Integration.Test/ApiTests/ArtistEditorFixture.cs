@@ -7,7 +7,7 @@ using NzbDrone.Test.Common;
 namespace NzbDrone.Integration.Test.ApiTests
 {
     [TestFixture]
-    [Ignore("Waiting for metadata to be back again", Until = "2025-08-01 00:00:00Z")]
+    [Ignore("Waiting for metadata to be back again", Until = "2025-09-01 00:00:00Z")]
     public class ArtistEditorFixture : IntegrationTest
     {
         private void GivenExistingArtist()
