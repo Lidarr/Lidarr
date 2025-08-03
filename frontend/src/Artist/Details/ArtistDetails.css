@@ -5,7 +5,6 @@
 .header {
   position: relative;
   width: 100%;
-  height: 310px;
 }
 
 .errorMessage {
@@ -36,20 +35,18 @@
   width: 100%;
   height: 100%;
   color: var(--white);
+  gap: 35px;
 }
 
 .poster {
   flex-shrink: 0;
-  margin-right: 35px;
   width: 250px;
   height: 250px;
 }
 
 .info {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
   overflow: hidden;
+  width: 100%;
 }
 
 .metadataMessage {
@@ -72,6 +69,8 @@
 }
 
 .title {
+  overflow: hidden;
+  max-height: calc(2 * 50px);
   font-weight: 300;
   font-size: 50px;
   line-height: 50px;
@@ -144,8 +143,12 @@
 
 .overview {
   flex: 1 0 auto;
+  overflow-x: auto;
   margin-top: 8px;
   min-height: 0;
+  max-height: 150px;
+  text-wrap: balance;
+  white-space: pre-wrap;
   font-size: $intermediateFontSize;
 }
 
@@ -163,6 +166,7 @@
   }
 
   .title {
+    max-height: calc(3 * 30px);
     font-weight: 300;
     font-size: 30px;
     line-height: 30px;
