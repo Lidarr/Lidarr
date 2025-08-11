@@ -134,5 +134,12 @@
     "EnableSSL": "Aktifkan RSS",
     "AddDelayProfile": "Tambah Delay Profile",
     "Today": "Hari Ini",
-    "CurrentlyInstalled": "Saat Ini Terpasang"
+    "CurrentlyInstalled": "Saat Ini Terpasang",
+    "AddAutoTag": "tambah label otomatis",
+    "AddAutoTagError": "tidak dapat menambahkan label otomatis, coba lagi..",
+    "AddCondition": "tambah persyaratan",
+    "AddConditionImplementation": "tambah persyaratan {implementationName}",
+    "AddConnectionImplementation": "tambah koneksi - {implementationName}",
+    "AddConnection": "tambah koneksi",
+    "AddConditionError": "tidak dapat menambahkan persyaratan baru, coba lagi.."
 }
