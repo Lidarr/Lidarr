@@ -1020,7 +1020,7 @@
     "AlbumStudioTracksDownloaded": "{trackFileCount}/{totalTrackCount} pistes baixades",
     "AlbumStudioTruncated": "Només es mostren els últims 20 àlbums, ves als detalls per veure tots els àlbums",
     "AlbumType": "Tipus d'àlbum",
-    "AllAlbumsData": "Controla tots els àlbums excepte els especials",
+    "AllAlbumsData": "Monitora tots els àlbums",
     "AllArtistAlbums": "Tots els àlbums d'artista",
     "AllMonitoringOptionHelpText": "Monitora els artistes i tots els àlbums de cada artista inclosos a la llista d'importació",
     "AllowFingerprintingHelpTextWarning": "Això requereix que {appName} llegeixi parts del fitxer que alentiran els escanejos i poden causar una activitat de disc o xarxa alta.",
@@ -1162,7 +1162,7 @@
     "FirstAlbum": "Primer àlbum",
     "FirstAlbumData": "Controla els primers àlbums. Tots els altres àlbums seran ignorats",
     "ForeignIdHelpText": "L'ID del Musicbrainz de l'artista/àlbum a excloure",
-    "FutureAlbumsData": "Monitora els àlbums que encara no s'han publicat",
+    "FutureAlbumsData": "Monitora els àlbums actualment en la base de dades que tenen una data de llançament en el futur.",
     "HideTracks": "Oculta les pistes",
     "ICalTagsArtistHelpText": "Feed només contindrà artistes amb almenys una etiqueta coincident",
     "IfYouDontAddAnImportListExclusionAndTheArtistHasAMetadataProfileOtherThanNoneThenThisAlbumMayBeReaddedDuringTheNextArtistRefresh": "Si no afegiu una exclusió de la llista d'importació i l'artista té un perfil de metadades diferent de 'None'.",
@@ -1365,5 +1365,7 @@
     "RemoveRootFolder": "Elimina la carpeta arrel",
     "DownloadClientItemErrorMessage": "{clientName} está informant d'un error: {message}",
     "TheLogLevelDefault": "El nivell de registre per defecte és \"Info\" i es pot canviar a [Configuració general](/configuració/general)",
-    "RemoveRootFolderArtistsMessageText": "Esteu segur que voleu eliminar la carpeta arrel '{name}'? Els arxius i carpetes no seran esborrats del disc, i els artistes en aquesta carpeta arrel no seran eliminats de {appName}."
+    "RemoveRootFolderArtistsMessageText": "Esteu segur que voleu eliminar la carpeta arrel '{name}'? Els arxius i carpetes no seran esborrats del disc, i els artistes en aquesta carpeta arrel no seran eliminats de {appName}.",
+    "MonitorNoAlbumsData": "No monitora cap nou àlbum",
+    "MonitorNewAlbumsData": "Monitora els àlbums afegits a la base de dades en el futur amb una data de llançament posterior a l'últim àlbum"
 }
