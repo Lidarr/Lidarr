@@ -34,7 +34,7 @@
     "AlbumIsNotMonitored": "O álbum não está sendo monitorado",
     "AlbumStudio": "Album Studio",
     "AllAlbums": "Todos os álbuns",
-    "AllAlbumsData": "Monitorar todos os álbuns, exceto os especiais",
+    "AllAlbumsData": "Monitorar todos os álbuns",
     "AllArtistAlbums": "Todos os álbuns do artista",
     "AllExpandedCollapseAll": "Recolher tudo",
     "AllExpandedExpandAll": "Expandir tudo",
@@ -588,7 +588,7 @@
     "FirstAlbum": "Filtrar Álbum",
     "FirstAlbumData": "Monitorar os primeiros álbuns. Todos os outros álbuns serão ignorados",
     "FutureAlbums": "Álbuns Futuros",
-    "FutureAlbumsData": "Monitorar álbuns que ainda não foram lançados",
+    "FutureAlbumsData": "Monitorar os álbuns atualmente no banco de dados que têm uma data de lançamento no futuro.",
     "HasMonitoredAlbumsNoMonitoredAlbumsForThisArtist": "Não monitorar álbuns para este artista",
     "HideAlbums": "Ocultar álbuns",
     "HideTracks": "Ocultar faixas",
@@ -1365,5 +1365,7 @@
     "DownloadClientItemErrorMessage": "{clientName} está relatando um erro: {message}",
     "LogFilesLocation": "Os arquivos de log estão localizados em: {location}",
     "RemoveRootFolder": "Remover Pasta Raiz",
-    "RemoveRootFolderArtistsMessageText": "Tem certeza de que deseja remover a pasta raiz '{name}'? Arquivos e pastas não serão excluídos do disco, e os artistas nesta pasta raiz não serão removidos de {appName}."
+    "RemoveRootFolderArtistsMessageText": "Tem certeza de que deseja remover a pasta raiz '{name}'? Arquivos e pastas não serão excluídos do disco, e os artistas nesta pasta raiz não serão removidos de {appName}.",
+    "MonitorNewAlbumsData": "Monitorar álbuns adicionados ao banco de dados no futuro com uma data de lançamento após o último álbum",
+    "MonitorNoAlbumsData": "Não monitorar novos álbuns"
 }

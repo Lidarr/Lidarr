@@ -91,7 +91,7 @@
     "PosterSize": "Tamaño de póster",
     "PreviewRename": "Previsualizar renombrado",
     "Profiles": "Perfiles",
-    "Proper": "Proper",
+    "Proper": "Correcto",
     "PropersAndRepacks": "Propers y Repacks",
     "Protocol": "Protocolo",
     "ProtocolHelpText": "Elige qué protocolo(s) usar y cuál se prefiere cuando se elige entre lanzamientos equivalentes",
@@ -903,7 +903,7 @@
     "ArtistEditor": "Artista Editor",
     "AlbumDetails": "Detalles del álbum",
     "AlbumStudioTruncated": "Sólo se muestran los últimos 20 álbumes, vaya a detalles para ver todos los álbumes",
-    "AllAlbumsData": "Controlar todos los álbumes excepto los especiales",
+    "AllAlbumsData": "Monitorizar todos los álbumes",
     "Banners": "Pancartas",
     "BannerOptions": "Opciones de banner",
     "CombineWithExistingFiles": "Combinar con archivos existentes",
@@ -1151,7 +1151,7 @@
     "FutureAlbums": "Álbumes futuros",
     "MissingTracks": "Pistas faltantes",
     "MassAlbumsCutoffUnmetWarning": "¿Estás seguro que quieres buscar todos los álbumes '{0}' que no alcancen el umbral?",
-    "FutureAlbumsData": "Monitoriza álbumes que no han sido lanzados aún",
+    "FutureAlbumsData": "Monitoriza los álbumes actualmente en la base de datos que tienen una fecha de lanzamiento en el futuro.",
     "MetadataSettingsArtistSummary": "Crea archivos de metadatos cuando las pistas son importados o los artistas refrescados",
     "DefaultTagsHelpText": "Etiquetas predeterminadas de {appName} para artistas en esta carpeta",
     "LidarrSupportsMultipleListsForImportingAlbumsAndArtistsIntoTheDatabase": "{appName} soporta múltiples listas para importar álbumes y artistas en la base de datos.",
@@ -1365,5 +1365,7 @@
     "RemoveRootFolder": "Eliminar la carpeta raíz",
     "DownloadClientItemErrorMessage": "{clientName} está informando de un error: {message}",
     "TheLogLevelDefault": "El nivel de registro por defecto es 'Depuración' y puede ser cambiado en [Opciones generales](/settings/general)",
-    "RemoveRootFolderArtistsMessageText": "¿Estás seguro que quieres eliminar la carpeta raíz '{name}'? Los archivos y carpetas no serán borrados del disco, y los artistas en esta carpeta raíz no serán eliminados de {appName}."
+    "RemoveRootFolderArtistsMessageText": "¿Estás seguro que quieres eliminar la carpeta raíz '{name}'? Los archivos y carpetas no serán borrados del disco, y los artistas en esta carpeta raíz no serán eliminados de {appName}.",
+    "MonitorNoAlbumsData": "No monitoriza ningún álbum nuevo",
+    "MonitorNewAlbumsData": "Monitoriza los álbumes añadidos a la base de datos en el futuro con una fecha de lanzamiento posterior al último álbum"
 }
