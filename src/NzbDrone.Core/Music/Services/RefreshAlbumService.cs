@@ -346,7 +346,7 @@ namespace NzbDrone.Core.Music
                     }
                     catch (Exception e)
                     {
-                        _logger.Error(e, "Couldn't refresh info for {0}", album);
+                        _logger.Error(e, "Couldn't refresh info for album {0}", album.Title);
                     }
                 }
                 else
