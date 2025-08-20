@@ -340,7 +340,14 @@ namespace NzbDrone.Core.Music
                     (updatedMusicbrainzAlbums == null && _checkIfAlbumShouldBeRefreshed.ShouldRefresh(album)) ||
                     (updatedMusicbrainzAlbums != null && updatedMusicbrainzAlbums.Contains(album.ForeignAlbumId)))
                 {
-                    updated |= RefreshAlbumInfo(album, remoteAlbums, forceUpdateFileTags);
+                    try
+                    {
+                        updated |= RefreshAlbumInfo(album, remoteAlbums, forceUpdateFileTags);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.Error(e, "Couldn't refresh info for album {0}", album.Title);
+                    }
                 }
                 else
                 {
