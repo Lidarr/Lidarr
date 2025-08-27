@@ -384,13 +384,13 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 catch (SkyHookException ex)
                 {
                     _logger.Warn(ex, $"Album search failed for '{lowerTitle}'.");
+                    throw new SkyHookException("Search for '{0}' failed. Unable to communicate with LidarrAPI. {1}", ex, title, ex.Message);
                 }
                 catch (Exception ex)
                 {
                     _logger.Warn(ex, $"Album search failed for '{lowerTitle}'.");
+                    throw new SkyHookException("Search for '{0}' failed. Unable to communicate with LidarrAPI. {1}", ex, title, ex.Message);
                 }
-
-                throw new SkyHookException("Search for '{0}' failed. Unable to find artist or album.", title);
             }
 
             try
