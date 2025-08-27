@@ -390,7 +390,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                     _logger.Warn(ex, $"Album search failed for '{lowerTitle}'.");
                 }
 
-                return new List<object>();
+                throw new SkyHookException("Search for '{0}' failed. Unable to find artist or album.", title);
             }
 
             try
