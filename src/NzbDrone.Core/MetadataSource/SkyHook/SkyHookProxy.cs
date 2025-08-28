@@ -233,6 +233,10 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
                 return httpResponse.Resource.SelectList(MapSearchResult);
             }
+            catch (SkyHookException)
+            {
+                throw;
+            }
             catch (HttpException ex)
             {
                 _logger.Warn(ex);
@@ -310,11 +314,14 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             {
                 if (ex.Response != null && ex.Response.StatusCode == HttpStatusCode.ServiceUnavailable)
                 {
-                    _logger.Warn("Album search failed for '{0}', service temporarily unavailable", title);
-                    return new List<Album>();
+                    throw new SkyHookException("Search for '{0}' failed. LidarrAPI Temporarily Unavailable (503)", title);
                 }
 
-                throw new SkyHookException("Search for '{0}' failed. Unable to communicate with LidarrAPI.", title);
+                throw new SkyHookException("Search for '{0}' failed. Unable to communicate with LidarrAPI. {1}", ex, title, ex.Message);
+            }
+            catch (SkyHookException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -346,51 +353,34 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
             if (IsMbidQuery(lowerTitle))
             {
-                List<Artist> artist = null;
                 try
                 {
-                    artist = SearchForNewArtist(lowerTitle);
-                }
-                catch (SkyHookException ex)
-                {
-                    _logger.Warn(ex, $"Artist search failed for '{lowerTitle}', will try album search.");
-                }
-                catch (Exception ex)
-                {
-                    _logger.Warn(ex, $"Artist search failed for '{lowerTitle}', will try album search.");
-                }
-
-                if (artist != null && artist.Any())
-                {
-                    return new List<object> { artist.First() };
-                }
-
-                try
-                {
-                    var album = SearchForNewAlbum(lowerTitle, null);
-                    if (album.Any())
+                    var artist = SearchForNewArtist(lowerTitle);
+                    if (artist.Any())
                     {
-                        var result = album.Where(x => x.AlbumReleases.Value.Any()).FirstOrDefault();
-                        if (result != null)
-                        {
-                            return new List<object> { result };
-                        }
-                        else
-                        {
-                            return new List<object>();
-                        }
+                        return new List<object> { artist.First() };
                     }
                 }
-                catch (SkyHookException ex)
+                catch (Exception)
                 {
-                    _logger.Warn(ex, $"Album search failed for '{lowerTitle}'.");
-                    throw new SkyHookException("Search for '{0}' failed. Unable to communicate with LidarrAPI. {1}", ex, title, ex.Message);
+                    _logger.Debug("Artist search failed for '{0}', trying album search", lowerTitle);
                 }
-                catch (Exception ex)
+
+                var album = SearchForNewAlbum(lowerTitle, null);
+                if (album.Any())
                 {
-                    _logger.Warn(ex, $"Album search failed for '{lowerTitle}'.");
-                    throw new SkyHookException("Search for '{0}' failed. Unable to communicate with LidarrAPI. {1}", ex, title, ex.Message);
+                    var result = album.Where(x => x.AlbumReleases.Value.Any()).FirstOrDefault();
+                    if (result != null)
+                    {
+                        return new List<object> { result };
+                    }
+                    else
+                    {
+                        return new List<object>();
+                    }
                 }
+
+                return new List<object>();
             }
 
             try
@@ -411,11 +401,14 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             {
                 if (ex.Response != null && ex.Response.StatusCode == HttpStatusCode.ServiceUnavailable)
                 {
-                    _logger.Warn("Entity search failed for '{0}', service temporarily unavailable", title);
-                    return new List<object>();
+                    throw new SkyHookException("Search for '{0}' failed. LidarrAPI Temporarily Unavailable (503)", title);
                 }
 
-                throw new SkyHookException("Search for '{0}' failed. Unable to communicate with LidarrAPI.", title);
+                throw new SkyHookException("Search for '{0}' failed. Unable to communicate with LidarrAPI. {1}", ex, title, ex.Message);
+            }
+            catch (SkyHookException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
