@@ -381,6 +381,7 @@ namespace NzbDrone.Core.MediaFiles
                     var flactag = (TagLib.Ogg.XiphComment)file.GetTag(TagLib.TagTypes.Xiph);
 
                     flactag.SetField("DATE", Date.HasValue ? Date.Value.ToString("yyyy-MM-dd") : null);
+                    flactag.SetField("YEAR", Date.HasValue ? Date.Value.Year.ToString() : null);
                     flactag.SetField("ORIGINALDATE", OriginalReleaseDate.HasValue ? OriginalReleaseDate.Value.ToString("yyyy-MM-dd") : null);
                     flactag.SetField("ORIGINALYEAR", OriginalReleaseDate.HasValue ? OriginalReleaseDate.Value.Year.ToString() : null);
                     flactag.SetField("TRACKTOTAL", TrackCount);
@@ -400,7 +401,8 @@ namespace NzbDrone.Core.MediaFiles
                 {
                     var apetag = (TagLib.Ape.Tag)file.GetTag(TagTypes.Ape);
 
-                    apetag.SetValue("Year", Date.HasValue ? Date.Value.ToString("yyyy-MM-dd") : null);
+                    apetag.SetValue("Date", Date.HasValue ? Date.Value.ToString("yyyy-MM-dd") : null);
+                    apetag.SetValue("Year", Date.HasValue ? Date.Value.Year.ToString() : null);
                     apetag.SetValue("Original Date", OriginalReleaseDate.HasValue ? OriginalReleaseDate.Value.ToString("yyyy-MM-dd") : null);
                     apetag.SetValue("Original Year", OriginalReleaseDate.HasValue ? OriginalReleaseDate.Value.Year.ToString() : null);
                     apetag.SetValue("Media", Media);
