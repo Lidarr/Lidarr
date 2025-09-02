@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace NzbDrone.Integration.Test.ApiTests
 {
     [TestFixture]
-    [Ignore("Waiting for metadata to be back again", Until = "2025-09-01 00:00:00Z")]
+    [Ignore("Waiting for metadata to be back again", Until = "2025-10-01 00:00:00Z")]
     public class BlocklistFixture : IntegrationTest
     {
         private ArtistResource _artist;
