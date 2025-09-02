@@ -328,19 +328,36 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
         public List<Album> SearchForNewAlbumByRecordingIds(List<string> recordingIds)
         {
-            var ids = recordingIds.Where(x => x.IsNotNullOrWhiteSpace()).Distinct();
-            var httpRequest = _requestBuilder.GetRequestBuilder().Create()
-                .SetSegment("route", "search/fingerprint")
-                .Build();
+            try
+            {
+                var ids = recordingIds.Where(x => x.IsNotNullOrWhiteSpace()).Distinct();
+                var httpRequest = _requestBuilder.GetRequestBuilder().Create()
+                    .SetSegment("route", "search/fingerprint")
+                    .Build();
 
-            httpRequest.SetContent(ids.ToJson());
-            httpRequest.Headers.ContentType = "application/json";
+                httpRequest.SetContent(ids.ToJson());
+                httpRequest.Headers.ContentType = "application/json";
 
-            var httpResponse = _httpClient.Post<List<AlbumResource>>(httpRequest);
+                var httpResponse = _httpClient.Post<List<AlbumResource>>(httpRequest);
 
-            return httpResponse.Resource.Select(MapSearchResult)
-                .Where(x => x != null)
-                .ToList();
+                return httpResponse.Resource.Select(MapSearchResult)
+                    .Where(x => x != null)
+                    .ToList();
+            }
+            catch (HttpException ex)
+            {
+                if (ex.Response != null && ex.Response.StatusCode == HttpStatusCode.ServiceUnavailable)
+                {
+                    throw new SkyHookException("Search by fingerprint failed. LidarrAPI Temporarily Unavailable (503)");
+                }
+
+                throw new SkyHookException("Search by fingerprint failed. Unable to communicate with LidarrAPI. {0}", ex, ex.Message);
+            }
+            catch (Exception ex) when (ex is not SkyHookException)
+            {
+                _logger.Warn(ex, ex.Message);
+                throw new SkyHookException("Search by fingerprint failed. Invalid response received from LidarrAPI.");
+            }
         }
 
         public List<object> SearchForNewEntity(string title)
