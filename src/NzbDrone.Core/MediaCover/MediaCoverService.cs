@@ -18,7 +18,7 @@ namespace NzbDrone.Core.MediaCover
 {
     public interface IMapCoversToLocal
     {
-        void ConvertToLocalUrls(int entityId, MediaCoverEntity coverEntity, IEnumerable<MediaCover> covers);
+        void ConvertToLocalUrls(int entityId, MediaCoverEntity coverEntity, ICollection<MediaCover> covers);
         string GetCoverPath(int entityId, MediaCoverEntity coverEntity, MediaCoverTypes coverType, string extension, int? height = null);
         bool EnsureAlbumCovers(Album album);
     }
@@ -82,7 +82,7 @@ namespace NzbDrone.Core.MediaCover
             return Path.Combine(GetArtistCoverPath(entityId), coverType.ToString().ToLower() + heightSuffix + GetExtension(coverType, extension));
         }
 
-        public void ConvertToLocalUrls(int entityId, MediaCoverEntity coverEntity, IEnumerable<MediaCover> covers)
+        public void ConvertToLocalUrls(int entityId, MediaCoverEntity coverEntity, ICollection<MediaCover> covers)
         {
             if (entityId == 0)
             {
@@ -92,34 +92,39 @@ namespace NzbDrone.Core.MediaCover
                     mediaCover.RemoteUrl = mediaCover.Url;
                     mediaCover.Url = _mediaCoverProxy.RegisterUrl(mediaCover.RemoteUrl);
                 }
+
+                return;
             }
-            else
+
+            if (!covers.Any())
             {
-                foreach (var mediaCover in covers)
+                PopulateCoverWithCache(entityId, coverEntity, covers);
+            }
+
+            foreach (var mediaCover in covers)
+            {
+                if (mediaCover.CoverType == MediaCoverTypes.Unknown)
                 {
-                    if (mediaCover.CoverType == MediaCoverTypes.Unknown)
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    var filePath = GetCoverPath(entityId, coverEntity, mediaCover.CoverType, mediaCover.Extension, null);
+                var filePath = GetCoverPath(entityId, coverEntity, mediaCover.CoverType, mediaCover.Extension, null);
 
-                    mediaCover.RemoteUrl = mediaCover.Url;
+                mediaCover.RemoteUrl = mediaCover.Url;
 
-                    if (coverEntity == MediaCoverEntity.Album)
-                    {
-                        mediaCover.Url = _configFileProvider.UrlBase + @"/MediaCover/Albums/" + entityId + "/" + mediaCover.CoverType.ToString().ToLower() + GetExtension(mediaCover.CoverType, mediaCover.Extension);
-                    }
-                    else
-                    {
-                        mediaCover.Url = _configFileProvider.UrlBase + @"/MediaCover/" + entityId + "/" + mediaCover.CoverType.ToString().ToLower() + GetExtension(mediaCover.CoverType, mediaCover.Extension);
-                    }
+                if (coverEntity == MediaCoverEntity.Album)
+                {
+                    mediaCover.Url = _configFileProvider.UrlBase + @"/MediaCover/Albums/" + entityId + "/" + mediaCover.CoverType.ToString().ToLower() + GetExtension(mediaCover.CoverType, mediaCover.Extension);
+                }
+                else
+                {
+                    mediaCover.Url = _configFileProvider.UrlBase + @"/MediaCover/" + entityId + "/" + mediaCover.CoverType.ToString().ToLower() + GetExtension(mediaCover.CoverType, mediaCover.Extension);
+                }
 
-                    if (_diskProvider.FileExists(filePath))
-                    {
-                        var lastWrite = _diskProvider.FileGetLastWrite(filePath);
-                        mediaCover.Url += "?lastWrite=" + lastWrite.Ticks;
-                    }
+                if (_diskProvider.FileExists(filePath))
+                {
+                    var lastWrite = _diskProvider.FileGetLastWrite(filePath);
+                    mediaCover.Url += "?lastWrite=" + lastWrite.Ticks;
                 }
             }
         }
@@ -192,6 +197,35 @@ namespace NzbDrone.Core.MediaCover
             }
 
             return updated;
+        }
+
+        private void PopulateCoverWithCache(int entityId, MediaCoverEntity coverEntity, ICollection<MediaCover> covers)
+        {
+            var folderPath = coverEntity == MediaCoverEntity.Album ? GetAlbumCoverPath(entityId) : GetArtistCoverPath(entityId);
+
+            if (_diskProvider.FolderExists(folderPath))
+            {
+                foreach (var fileInfo in _diskProvider.GetFileInfos(folderPath))
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(fileInfo.Name);
+                    var extension = Path.GetExtension(fileInfo.Name);
+                    if (fileName.Contains('-'))
+                    {
+                        continue;
+                    }
+
+                    if (Enum.TryParse(fileName, true, out MediaCoverTypes coverType) && !covers.Any(c => c.CoverType == coverType))
+                    {
+                        var filePath = fileInfo.FullName;
+                        var diskCover = new MediaCover(coverType, filePath)
+                        {
+                            RemoteUrl = filePath
+                        };
+
+                        covers.Add(diskCover);
+                    }
+                }
+            }
         }
 
         public bool EnsureAlbumCovers(Album album)
