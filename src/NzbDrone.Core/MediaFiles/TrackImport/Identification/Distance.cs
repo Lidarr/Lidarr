@@ -125,8 +125,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         public void AddString(string key, string value, string target)
         {
             // Adds a penaltly based on the distance between value and target
-            var cleanValue = Clean(value);
-            var cleanTarget = Clean(target);
+            var cleanValue = Clean(value ?? string.Empty);
+            var cleanTarget = Clean(target ?? string.Empty);
 
             if (cleanValue.IsNullOrWhiteSpace() && cleanTarget.IsNotNullOrWhiteSpace())
             {

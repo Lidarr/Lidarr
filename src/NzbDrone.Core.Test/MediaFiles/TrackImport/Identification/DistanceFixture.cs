@@ -163,5 +163,29 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Identification
 
             dist.RawDistance().Should().Be(2.25);
         }
+
+        [Test]
+        public void test_add_string_null_handling()
+        {
+            var dist = new Distance();
+
+            dist.AddString("string", null, "target");
+            dist.Penalties.Should().BeEquivalentTo(new Dictionary<string, List<double>> { { "string", new List<double> { 1.0 } } });
+
+            dist.AddString("string2", "value", null);
+            dist.Penalties.Should().BeEquivalentTo(new Dictionary<string, List<double>>
+            {
+                { "string", new List<double> { 1.0 } },
+                { "string2", new List<double> { 1.0 } }
+            });
+
+            dist.AddString("string3", null, null);
+            dist.Penalties.Should().BeEquivalentTo(new Dictionary<string, List<double>>
+            {
+                { "string", new List<double> { 1.0 } },
+                { "string2", new List<double> { 1.0 } },
+                { "string3", new List<double> { 0.0 } }
+            });
+        }
     }
 }
