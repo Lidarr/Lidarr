@@ -139,7 +139,7 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
                 }
                 else
                 {
-                    item.OutputPath = outputPath + torrent.Name;
+                    item.OutputPath = outputPath + new OsPath(torrent.Name, OsPathKind.Unknown);
                 }
 
                 if (torrent.Status.HasFlag(UTorrentTorrentStatus.Error))

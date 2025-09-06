@@ -158,7 +158,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
 
             var remotePath = _remotePathMappingService.RemapRemoteToLocal(Settings.Host, fullPath);
 
-            var finalPath = remotePath + torrent.Title;
+            var finalPath = remotePath + new OsPath(torrent.Title, OsPathKind.Unknown);
 
             return finalPath;
         }

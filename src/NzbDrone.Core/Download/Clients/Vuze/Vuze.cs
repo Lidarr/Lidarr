@@ -48,7 +48,7 @@ namespace NzbDrone.Core.Download.Clients.Vuze
             }
             else
             {
-                outputPath = outputPath + torrent.Name;
+                outputPath = outputPath + new OsPath(torrent.Name, OsPathKind.Unknown);
                 _logger.Trace("Vuze output file: {0}", outputPath);
             }
 

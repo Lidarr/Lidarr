@@ -145,7 +145,7 @@ namespace NzbDrone.Core.Download.Clients.Deluge
                 item.DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this, Settings.MusicImportedCategory.IsNotNullOrWhiteSpace());
 
                 var outputPath = _remotePathMappingService.RemapRemoteToLocal(Settings.Host, new OsPath(torrent.DownloadPath));
-                item.OutputPath = outputPath + torrent.Name;
+                item.OutputPath = outputPath + new OsPath(torrent.Name, OsPathKind.Unknown);
                 item.RemainingSize = torrent.Size - torrent.BytesDownloaded;
                 item.SeedRatio = torrent.Ratio;
 

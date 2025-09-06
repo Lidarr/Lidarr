@@ -188,7 +188,7 @@ namespace NzbDrone.Core.Download.Clients.Flood
             if (contentPaths.Count == 1)
             {
                 // For single-file torrent, OutputPath should be the path of file.
-                result.OutputPath = item.OutputPath + new OsPath(contentPaths[0]);
+                result.OutputPath = item.OutputPath + new OsPath(contentPaths[0], OsPathKind.Unknown);
             }
             else
             {
@@ -199,7 +199,7 @@ namespace NzbDrone.Core.Download.Clients.Flood
                 // Check first segment (directory) of paths of contents. If all contents share the same directory, use that directory.
                 if (baseDirectoryPaths.TrueForAll(path => path == baseDirectoryPaths[0]))
                 {
-                    result.OutputPath = item.OutputPath + new OsPath(baseDirectoryPaths[0]);
+                    result.OutputPath = item.OutputPath + new OsPath(baseDirectoryPaths[0], OsPathKind.Unknown);
                 }
 
                 // Otherwise, OutputPath is already the base directory.

@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Download.Clients.Hadouken
                 {
                     DownloadClientInfo = DownloadClientItemClientInfo.FromDownloadClient(this, false),
                     DownloadId = torrent.InfoHash.ToUpper(),
-                    OutputPath = outputPath + torrent.Name,
+                    OutputPath = outputPath + new OsPath(torrent.Name, OsPathKind.Unknown),
                     RemainingSize = torrent.TotalSize - torrent.DownloadedBytes,
                     RemainingTime = eta,
                     Title = torrent.Name,
