@@ -8914,7 +8914,8 @@
       "ArtistStatusType": {
         "enum": [
           "continuing",
-          "ended"
+          "ended",
+          "deleted"
         ],
         "type": "string"
       },
@@ -10870,11 +10871,15 @@
           "copyUsingHardlinks": {
             "type": "boolean"
           },
+          "enableMediaInfo": {
+            "type": "boolean"
+          },
           "useScriptImport": {
             "type": "boolean"
           },
           "scriptImportPath": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "importExtraFiles": {
             "type": "boolean"
