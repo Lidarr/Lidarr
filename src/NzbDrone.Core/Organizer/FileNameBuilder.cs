@@ -661,10 +661,10 @@ namespace NzbDrone.Core.Organizer
         {
             if (trackFile.SceneName.IsNullOrWhiteSpace())
             {
-                return GetOriginalFileName(trackFile);
+                return CleanFileName(GetOriginalFileName(trackFile));
             }
 
-            return trackFile.SceneName;
+            return CleanFileName(trackFile.SceneName);
         }
 
         private string GetOriginalFileName(TrackFile trackFile)
