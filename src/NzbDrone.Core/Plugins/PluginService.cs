@@ -52,51 +52,69 @@ namespace NzbDrone.Core.Plugins
 
         public RemotePlugin GetRemotePlugin(string repoUrl)
         {
-            var (owner, name) = ParseUrl(repoUrl);
-            var releaseUrl = $"https://api.github.com/repos/{owner}/{name}/releases";
-
-            var releases = _httpClient.Get<List<Release>>(new HttpRequest(releaseUrl)).Resource;
-
-            if (!releases?.Any() ?? true)
+            try
             {
-                _logger.Warn($"No releases found for {name}");
+                var (owner, name) = ParseUrl(repoUrl);
+                var releaseUrl = $"https://api.github.com/repos/{owner}/{name}/releases";
+
+                var releases = _httpClient.Get<List<Release>>(new HttpRequest(releaseUrl)).Resource;
+
+                if (!releases?.Any() ?? true)
+                {
+                    _logger.Warn($"No releases found for {name}");
+                    return null;
+                }
+
+                var latest = releases.OrderByDescending(x => x.PublishedAt).FirstOrDefault(x => IsSupported(x));
+
+                if (latest == null)
+                {
+                    _logger.Warn($"Plugin {name} requires newer version of Lidarr");
+                    return null;
+                }
+
+                var version = Version.Parse(latest.TagName.TrimStart('v'));
+                var framework = "net6.0";
+                var asset = latest.Assets.FirstOrDefault(x => x.Name.EndsWith($"{framework}.zip"));
+
+                if (asset == null)
+                {
+                    _logger.Warn($"No plugin package found for {framework} for {name}");
+                    return null;
+                }
+
+                return new RemotePlugin
+                {
+                    GithubUrl = repoUrl,
+                    Name = name,
+                    Owner = owner,
+                    Version = version,
+                    PackageUrl = asset.BrowserDownloadUrl
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Unable to get remote plugin information for {0}", repoUrl);
                 return null;
             }
-
-            var latest = releases.OrderByDescending(x => x.PublishedAt).FirstOrDefault(x => IsSupported(x));
-
-            if (latest == null)
-            {
-                _logger.Warn($"Plugin {name} requires newer version of Lidarr");
-                return null;
-            }
-
-            var version = Version.Parse(latest.TagName.TrimStart('v'));
-            var framework = "net6.0";
-            var asset = latest.Assets.FirstOrDefault(x => x.Name.EndsWith($"{framework}.zip"));
-
-            if (asset == null)
-            {
-                _logger.Warn($"No plugin package found for {framework} for {name}");
-                return null;
-            }
-
-            return new RemotePlugin
-            {
-                GithubUrl = repoUrl,
-                Name = name,
-                Owner = owner,
-                Version = version,
-                PackageUrl = asset.BrowserDownloadUrl
-            };
         }
 
         public List<IPlugin> GetInstalledPlugins()
         {
             foreach (var plugin in _installedPlugins)
             {
-                var remote = GetRemotePlugin(plugin.GithubUrl);
-                plugin.AvailableVersion = remote.Version;
+                try
+                {
+                    var remote = GetRemotePlugin(plugin.GithubUrl);
+                    if (remote != null)
+                    {
+                        plugin.AvailableVersion = remote.Version;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "Unable to check for updates for plugin {0}/{1}", plugin.Owner, plugin.Name);
+                }
             }
 
             return _installedPlugins;
