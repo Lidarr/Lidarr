@@ -1367,5 +1367,9 @@
     "TheLogLevelDefault": "Lokikirjauksen oletusarvoinen laajuus on \"Vianselvitys\". Laajuutta voidaan muuttaa [Yleisistä asetuksista](/settings/general).",
     "RemoveRootFolderArtistsMessageText": "Haluatko varmasti poistaa juurikansion \"{name}\"? Tiedostoja ja kansioita ei poisteta levyltä, eikä tämän juurikansion artisteja poisteta {appName}ista.",
     "MonitorNoAlbumsData": "Älä valvo uusia albumeita lainkaan.",
-    "MonitorNewAlbumsData": "Valvo tietokantaan tulevaisuudessa lisättäviä albumeita, joiden julkaisupäivä on uusimman albumin jälkeen."
+    "MonitorNewAlbumsData": "Valvo tietokantaan tulevaisuudessa lisättäviä albumeita, joiden julkaisupäivä on uusimman albumin jälkeen.",
+    "ImportScriptPath": "Tuontikomentosarjan sijainti",
+    "ImportScriptPathHelpText": "Tuontiin käytettävän komentosarjan sijainti.",
+    "ImportUsingScript": "Tuo komentosarjan avulla",
+    "ImportUsingScriptHelpText": "Kopioi tiedostot tuontia varten oman komentosarjan avulla (esim. transkoodausta varten)."
 }

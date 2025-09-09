@@ -1367,5 +1367,9 @@
     "RemoveRootFolderArtistsMessageText": "Êtes vous sûr de vouloir retirer le dossier racine '{name}' ? Les fichiers et les dossiers ne seront pas supprimés du disque et les artistes dans le dossier racine ne seront pas retirés de {appName}.",
     "TheLogLevelDefault": "Le niveau de journalisation est par défaut à « Information » et peut être modifié dans les [paramètres généraux](/settings/general)",
     "MonitorNewAlbumsData": "Surveiller les albums ajoutés à la base de donnée dans le future avec une date de sortie après le dernier album",
-    "MonitorNoAlbumsData": "Ne pas surveiller aucun nouvel album"
+    "MonitorNoAlbumsData": "Ne pas surveiller aucun nouvel album",
+    "ImportScriptPath": "Chemin du script d'importation",
+    "ImportScriptPathHelpText": "Le chemin d'accès au script à utiliser pour l'importation",
+    "ImportUsingScript": "Importer à l'aide d'un script",
+    "ImportUsingScriptHelpText": "Copier des fichiers pour les importer à l'aide d'un script (ex. pour le transcodage)"
 }

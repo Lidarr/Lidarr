@@ -1367,5 +1367,9 @@
     "TheLogLevelDefault": "El nivell de registre per defecte és \"Info\" i es pot canviar a [Configuració general](/configuració/general)",
     "RemoveRootFolderArtistsMessageText": "Esteu segur que voleu eliminar la carpeta arrel '{name}'? Els arxius i carpetes no seran esborrats del disc, i els artistes en aquesta carpeta arrel no seran eliminats de {appName}.",
     "MonitorNoAlbumsData": "No monitora cap nou àlbum",
-    "MonitorNewAlbumsData": "Monitora els àlbums afegits a la base de dades en el futur amb una data de llançament posterior a l'últim àlbum"
+    "MonitorNewAlbumsData": "Monitora els àlbums afegits a la base de dades en el futur amb una data de llançament posterior a l'últim àlbum",
+    "ImportScriptPath": "Importa la ruta de l'script",
+    "ImportScriptPathHelpText": "El camí a l'script que s'ha d'utilitzar per importar",
+    "ImportUsingScript": "Importa amb script",
+    "ImportUsingScriptHelpText": "Copia els fitxers per importar usant un script (ex. per transcodificar)"
 }

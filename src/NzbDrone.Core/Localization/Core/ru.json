@@ -1127,5 +1127,9 @@
     "AlbumIsDownloading": "Альбом скачивается",
     "AlbumIsNotMonitored": "Альбом не отслеживается",
     "AlbumRelease": "Релиз альбома",
-    "AlbumReleaseDate": "Дата релиза альбома"
+    "AlbumReleaseDate": "Дата релиза альбома",
+    "ImportScriptPath": "Путь к скрипту импорта",
+    "ImportScriptPathHelpText": "Путь к скрипту, который будет использоваться для импорта",
+    "ImportUsingScript": "Импорт с помощью скрипта",
+    "ImportUsingScriptHelpText": "Копирование файлов для импорта с помощью скрипта (например, для перекодирования)"
 }

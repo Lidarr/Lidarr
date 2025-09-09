@@ -1357,5 +1357,9 @@
     "RemoveRootFolder": "移除根目录",
     "TracksLoadError": "无法载入进度",
     "MatchedToArtist": "与歌手匹配",
-    "MatchedToAlbums": "与专辑匹配"
+    "MatchedToAlbums": "与专辑匹配",
+    "ImportScriptPath": "导入脚本路径",
+    "ImportUsingScript": "使用脚本导入",
+    "ImportScriptPathHelpText": "用于导入的脚本的路径",
+    "ImportUsingScriptHelpText": "使用脚本复制文件以进行导入（例如用于转码）"
 }
