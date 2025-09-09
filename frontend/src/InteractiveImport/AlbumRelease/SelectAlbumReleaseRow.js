@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import SelectInput from 'Components/Form/SelectInput';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
@@ -12,7 +12,7 @@ class SelectAlbumReleaseRow extends Component {
   //
   // Listeners
 
-  onInputChange = ({ name, value }) => {
+  onInputChange = ({name, value}) => {
     this.props.onAlbumReleaseSelect(parseInt(name), parseInt(value));
   };
 
@@ -64,7 +64,8 @@ class SelectAlbumReleaseRow extends Component {
                         `, ${r.mediumCount} med, ${r.trackCount} tracks` +
                         `${r.country.length > 0 ? ', ' : ''}${shortenList(r.country)}` +
                         `${r.format ? ', [' : ''}${r.format}${r.format ? ']' : ''}` +
-                        `${r.monitored ? ', Monitored' : ''}`
+                        `${r.monitored ? ', Monitored' : ''}` +
+                        `, ${r.id.toString()}`
                     }))}
                     value={matchedReleaseId}
                     onChange={this.onInputChange}
