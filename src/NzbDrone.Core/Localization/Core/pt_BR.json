@@ -1367,5 +1367,9 @@
     "RemoveRootFolder": "Remover Pasta Raiz",
     "RemoveRootFolderArtistsMessageText": "Tem certeza de que deseja remover a pasta raiz '{name}'? Arquivos e pastas não serão excluídos do disco, e os artistas nesta pasta raiz não serão removidos de {appName}.",
     "MonitorNewAlbumsData": "Monitorar álbuns adicionados ao banco de dados no futuro com uma data de lançamento após o último álbum",
-    "MonitorNoAlbumsData": "Não monitorar novos álbuns"
+    "MonitorNoAlbumsData": "Não monitorar novos álbuns",
+    "ImportScriptPath": "Caminho para script de importação",
+    "ImportScriptPathHelpText": "O caminho para o script a ser usado para importar",
+    "ImportUsingScript": "Importar usando script",
+    "ImportUsingScriptHelpText": "Copiar arquivos para importar usando um script (p. ex. para transcodificação)"
 }

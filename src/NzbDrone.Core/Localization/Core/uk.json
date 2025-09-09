@@ -1363,5 +1363,9 @@
     "ManageClients": "Керування клієнтами",
     "LogFilesLocation": "Файли журналу знаходяться в: {location}",
     "RemoveRootFolder": "Видалити кореневу папку",
-    "DownloadClientItemErrorMessage": "{clientName} повертає помилку: {message}"
+    "DownloadClientItemErrorMessage": "{clientName} повертає помилку: {message}",
+    "ImportUsingScript": "Імпорт за допомогою скрипта",
+    "ImportUsingScriptHelpText": "Копіювання файлів для імпорту за допомогою скрипта (наприклад, для перекодування)",
+    "ImportScriptPath": "Шлях до скрипту імпорта",
+    "ImportScriptPathHelpText": "Шлях до скрипта, який буде використовуватися для імпорту"
 }

@@ -1367,5 +1367,9 @@
     "DownloadClientItemErrorMessage": "{clientName} meldet einen Fehler: {message}",
     "RemoveRootFolderArtistsMessageText": "Sind sie sicher dass Sie den Stammordner '{name}' löschen möchten? Dateien und Ordner werden nicht gelöscht. Künstler in diesem Stammordner werden nicht von {appName} entfernt.",
     "MonitorNewAlbumsData": "Überwache künftig hinzugefügte Alben, deren VÖ nach dem aktuellsten Album liegt.",
-    "MonitorNoAlbumsData": "Keine neuen Alben überwachen"
+    "MonitorNoAlbumsData": "Keine neuen Alben überwachen",
+    "ImportScriptPath": "Import-Skript-Pfad",
+    "ImportScriptPathHelpText": "Der Pfad zum Skript, das für den Import verwendet wird",
+    "ImportUsingScript": "Mit Skript importieren",
+    "ImportUsingScriptHelpText": "Dateien für den Import mit einem Skript kopieren (z. B. für Transkodierung)"
 }

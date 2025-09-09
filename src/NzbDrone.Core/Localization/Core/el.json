@@ -1127,5 +1127,9 @@
     "Downloaded": "Κατεβασμένα",
     "Paused": "Σε παύση",
     "CurrentlyInstalled": "Εγκατεστημένο αυτήν τη στιγμή",
-    "RemoveRootFolder": "Κατάργηση ριζικού φακέλου"
+    "RemoveRootFolder": "Κατάργηση ριζικού φακέλου",
+    "ImportScriptPath": "Εισαγωγή Μονοπατιού Script",
+    "ImportScriptPathHelpText": "Μονοπάτι για το script που θα χρησιμοποιηθεί για την εισαγωγή",
+    "ImportUsingScript": "Εισαγωγή με χρήση Script",
+    "ImportUsingScriptHelpText": "Αντιγραφή αρχείων για εισαγωγή χρησιμοποιώντας ένα script (π.χ. για μετατροπή)"
 }

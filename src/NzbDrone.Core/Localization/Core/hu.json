@@ -1240,5 +1240,9 @@
     "CurrentlyInstalled": "Jelenleg telepítve",
     "FailedToFetchUpdates": "Nem sikerült lekérni a frissítéseket",
     "RemoveRootFolder": "A gyökérmappa eltávolítása",
-    "LogFilesLocation": "A naplófájlok itt találhatók: {location}"
+    "LogFilesLocation": "A naplófájlok itt találhatók: {location}",
+    "ImportScriptPath": "Szkript elérési út importálása",
+    "ImportScriptPathHelpText": "Az importáláshoz használandó szkript elérési útja",
+    "ImportUsingScript": "Importálás Script használatával",
+    "ImportUsingScriptHelpText": "Fájlok másolása szkript segítségével történő importáláshoz (pl. átkódoláshoz)"
 }
