@@ -1367,5 +1367,9 @@
     "TheLogLevelDefault": "El nivel de registro por defecto es 'Depuración' y puede ser cambiado en [Opciones generales](/settings/general)",
     "RemoveRootFolderArtistsMessageText": "¿Estás seguro que quieres eliminar la carpeta raíz '{name}'? Los archivos y carpetas no serán borrados del disco, y los artistas en esta carpeta raíz no serán eliminados de {appName}.",
     "MonitorNoAlbumsData": "No monitoriza ningún álbum nuevo",
-    "MonitorNewAlbumsData": "Monitoriza los álbumes añadidos a la base de datos en el futuro con una fecha de lanzamiento posterior al último álbum"
+    "MonitorNewAlbumsData": "Monitoriza los álbumes añadidos a la base de datos en el futuro con una fecha de lanzamiento posterior al último álbum",
+    "ImportScriptPath": "Importar Ruta de Script",
+    "ImportScriptPathHelpText": "La ruta al script a usar para importar",
+    "ImportUsingScript": "Importar usando un script",
+    "ImportUsingScriptHelpText": "Copia archivos para importar usando un script (p. ej. para transcodificación)"
 }

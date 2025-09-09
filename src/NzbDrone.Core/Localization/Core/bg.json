@@ -836,5 +836,6 @@
     "Paused": "На пауза",
     "Pending": "В очакване",
     "CurrentlyInstalled": "Понастоящем инсталиран",
-    "RemoveRootFolder": "Премахнете основната папка"
+    "RemoveRootFolder": "Премахнете основната папка",
+    "DeleteSelected": "Изтрийте избраните"
 }

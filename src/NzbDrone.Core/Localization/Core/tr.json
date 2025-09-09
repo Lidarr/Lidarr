@@ -1098,5 +1098,9 @@
     "DownloadClientItemErrorMessage": "{clientName} bir hata bildirdi: {message}",
     "LogFilesLocation": "Log kayıtlarının bulunduğu konum: {location}",
     "RemoveRootFolder": "Kök klasörü kaldır",
-    "TheLogLevelDefault": "Log seviyesi varsayılan olarak 'Bilgi' şeklindedir ve [Genel Ayarlar](/ayarlar/genel) bölümünden değiştirilebilir"
+    "TheLogLevelDefault": "Log seviyesi varsayılan olarak 'Bilgi' şeklindedir ve [Genel Ayarlar](/ayarlar/genel) bölümünden değiştirilebilir",
+    "ImportScriptPath": "Komut Dosyası Yolunu İçe Aktar",
+    "ImportUsingScript": "Komut Dosyası Kullanarak İçe Aktar",
+    "ImportUsingScriptHelpText": "Bir komut dosyası kullanarak içe aktarmak için dosyaları kopyalayın (ör. kod dönüştürme için)",
+    "ImportScriptPathHelpText": "İçe aktarma için kullanılacak komut dosyasının yolu"
 }
