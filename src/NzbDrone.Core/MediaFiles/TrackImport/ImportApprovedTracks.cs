@@ -250,7 +250,18 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                             _mediaFileService.Delete(previousFile, DeleteMediaFileReason.ManualOverride);
                         }
 
-                        _audioTagService.WriteTags(trackFile, false);
+                        try
+                        {
+                            _audioTagService.WriteTags(trackFile, false);
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            _logger.Warn(ex, "Failed to write tags for {0}: {1}. Try refreshing the artist to fix missing information.", trackFile.Path, ex.Message);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error(ex, "Unexpected error writing tags for existing track file {0}", trackFile.Path);
+                        }
                     }
 
                     filesToAdd.Add(trackFile);
