@@ -193,25 +193,26 @@ class AlbumRow extends Component {
             }
 
             if (name === 'releaseDate') {
-              if ( releaseDate && releaseDate !== '0001-01-01T00:00:00Z' ) {
+              if ( ! releaseDate ) {
                 return (
-                  <RelativeDateCellConnector
-                    key={name}
-                    date={releaseDate}
-                  />
+                  <TableRowCell key={name} />
                 );
               }
-              return (
-                <TableRowCell key={name}>
-                  { // This is probably a temporary thing. When the metadata server is in full health, this should not happen.
-                    // We can either delete it or add a proper translation if we decide to keep it.
-                    releaseDate ?
-                      translate('Unknown') :
-                      'No metadata'
-                  }
-                </TableRowCell>
-              );
 
+              if ( releaseDate === '0001-01-01T00:00:00Z' ) {
+                return (
+                  <TableRowCell key={name}>
+                    {translate('Unknown')}
+                  </TableRowCell>
+                );
+              }
+
+              return (
+                <RelativeDateCellConnector
+                  key={name}
+                  date={releaseDate}
+                />
+              );
             }
 
             if (name === 'size') {
