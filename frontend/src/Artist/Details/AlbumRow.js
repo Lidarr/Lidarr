@@ -253,7 +253,7 @@ AlbumRow.propTypes = {
   id: PropTypes.number.isRequired,
   artistId: PropTypes.number.isRequired,
   monitored: PropTypes.bool.isRequired,
-  releaseDate: PropTypes.string.isRequired,
+  releaseDate: PropTypes.string,
   mediumCount: PropTypes.number.isRequired,
   duration: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,

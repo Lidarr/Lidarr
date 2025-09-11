@@ -1,5 +1,3 @@
-/* eslint max-params: 0 */
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -22,19 +20,10 @@ function createMapStateToProps() {
     createDimensionsSelector(),
     createUISettingsSelector(),
     (label, albums, artist, commands, dimensions, uiSettings) => {
-
-      const albumsInGroup = _.filter(albums.items, { albumType: label });
-
-      let sortDir = 'asc';
-
-      if (albums.sortDirection === 'descending') {
-        sortDir = 'desc';
-      }
-
-      const sortedAlbums = _.orderBy(albumsInGroup, albums.sortKey, sortDir);
+      const albumsByType = albums.items.filter(({ albumType }) => albumType === label);
 
       return {
-        items: sortedAlbums,
+        items: albumsByType,
         columns: albums.columns,
         artistMonitored: artist.monitored,
         sortKey: albums.sortKey,

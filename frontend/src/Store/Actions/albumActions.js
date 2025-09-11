@@ -31,9 +31,14 @@ export const defaultState = {
   saveError: null,
   sortKey: 'releaseDate',
   sortDirection: sortDirections.DESCENDING,
+  secondarySortKey: 'title',
+  secondarySortDirection: sortDirections.ASCENDING,
   items: [],
   pendingChanges: {},
   sortPredicates: {
+    title: ({ title }) => {
+      return title.toLocaleLowerCase();
+    },
     rating: function(item) {
       return item.ratings.value;
     },
@@ -41,6 +46,9 @@ export const defaultState = {
       const { statistics = {} } = item;
 
       return statistics.sizeOnDisk || 0;
+    },
+    releaseDate: function({ releaseDate }) {
+      return releaseDate || '0';
     }
   },
 
