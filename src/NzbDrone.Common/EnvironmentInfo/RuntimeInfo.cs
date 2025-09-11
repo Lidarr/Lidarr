@@ -12,12 +12,14 @@ namespace NzbDrone.Common.EnvironmentInfo
     public class RuntimeInfo : IRuntimeInfo
     {
         private readonly Logger _logger;
+        private readonly IOsInfo _osInfo;
         private readonly DateTime _startTime = DateTime.UtcNow;
 
-        public RuntimeInfo(Logger logger, IHostLifetime hostLifetime = null)
+        public RuntimeInfo(Logger logger, IOsInfo osInfo, IHostLifetime hostLifetime = null)
         {
             _logger = logger;
 
+            _osInfo = osInfo;
             IsWindowsService = hostLifetime is WindowsServiceLifetime;
             IsStarting = true;
 
@@ -58,6 +60,46 @@ namespace NzbDrone.Common.EnvironmentInfo
         public static bool IsUserInteractive => Environment.UserInteractive;
 
         bool IRuntimeInfo.IsUserInteractive => IsUserInteractive;
+
+        public bool IsContainerized => _osInfo.IsDocker;
+
+        public bool IsSystemdService
+        {
+            get
+            {
+                if (!OsInfo.IsLinux)
+                {
+                    _logger.Info("SystemD detection not available");
+                    Console.WriteLine("SystemD detection not available");
+                    return false;
+                }
+
+                try
+                {
+                    var invocationId = Environment.GetEnvironmentVariable("INVOCATION_ID");
+                    var isSystemd = !string.IsNullOrEmpty(invocationId);
+
+                    if (isSystemd)
+                    {
+                        _logger.Info("SystemD detection: Running as systemd service (INVOCATION_ID={0})", invocationId);
+                        Console.WriteLine("SystemD detection: Running as systemd service (INVOCATION_ID={0})", invocationId);
+                    }
+                    else
+                    {
+                        _logger.Info("SystemD detection: Not running as systemd service (INVOCATION_ID is null/empty)");
+                        Console.WriteLine("SystemD detection: Not running as systemd service (INVOCATION_ID is null/empty)");
+                    }
+
+                    return isSystemd;
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "SystemD detection: Error checking if running under systemd");
+                    Console.WriteLine("SystemD detection: Error checking if running under systemd");
+                    return false;
+                }
+            }
+        }
 
         public bool IsAdmin
         {
@@ -157,12 +199,12 @@ namespace NzbDrone.Common.EnvironmentInfo
             try
             {
                 var currentAssemblyLocation = typeof(RuntimeInfo).Assembly.Location;
-                if (currentAssemblyLocation.ToLower().Contains("_output"))
+                if (currentAssemblyLocation.Contains("_output", StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }
 
-                if (currentAssemblyLocation.ToLower().Contains("_tests"))
+                if (currentAssemblyLocation.Contains("_tests", StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }

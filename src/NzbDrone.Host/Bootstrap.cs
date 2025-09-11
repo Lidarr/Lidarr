@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -10,6 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -87,38 +89,84 @@ namespace NzbDrone.Host
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static void StartService(StartupContext context)
         {
-            Logger.Debug("Service selected");
+            Logger.Info("BOOTSTRAP Service mode selected");
+            Console.WriteLine("BOOTSTRAP Service mode selected");
 
-            var success = StartService(context, true, out var pluginRefs);
-
-            if (!success)
+            try
             {
-                var unloadSuccess = PluginLoader.UnloadPlugins(pluginRefs);
+                var success = StartService(context, true, out var pluginRefs);
 
-                if (unloadSuccess)
+                if (!success)
                 {
-                    StartService(context, false, out _);
+                    Logger.Info("BOOTSTRAP Service startup with plugins failed, checking if retry is appropriate");
+                    Console.WriteLine("BOOTSTRAP Service startup with plugins failed, checking if retry is appropriate");
+
+                    var unloadSuccess = PluginLoader.UnloadPlugins(pluginRefs);
+
+                    if (unloadSuccess)
+                    {
+                        Logger.Info("BOOTSTRAP Plugins unloaded successfully, attempting service startup without plugins");
+                        Console.WriteLine("BOOTSTRAP Plugins unloaded successfully, attempting service startup without plugins");
+                        StartService(context, false, out _);
+                    }
+                    else
+                    {
+                        Logger.Info("BOOTSTRAP Plugin unload failed, skipping retry to prevent issues");
+                        Console.WriteLine("BOOTSTRAP Plugin unload failed, skipping retry to prevent issues");
+                    }
                 }
             }
+            catch (Exception e) when (IsPortBindingError(e))
+            {
+                Logger.Info("BOOTSTRAP Port binding error detected in service startup, skipping retry to prevent restart loop");
+                Console.WriteLine("BOOTSTRAP Port binding error detected in service startup, skipping retry to prevent restart loop");
+                Logger.Info("BOOTSTRAP Port binding exception type: {0} message: {1}", e.GetType().Name, e.Message);
+                Console.WriteLine("BOOTSTRAP Port binding exception type: {0} message: {1}", e.GetType().Name, e.Message);
+                return;
+            }
 
+            Logger.Info("BOOTSTRAP Creating final service host builder without plugins");
+            Console.WriteLine("BOOTSTRAP Creating final service host builder without plugins");
             CreateConsoleHostBuilder(context, false, out _).UseWindowsService().Build().Run();
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static void StartInteractive(StartupContext context, Action<IHostBuilder> trayCallback)
         {
-            Logger.Debug(trayCallback != null ? "Tray selected" : "Console selected");
+            Logger.Info("BOOTSTRAP Interactive mode selected with tray callback {0}", trayCallback != null ? "enabled" : "disabled");
+            Console.WriteLine("BOOTSTRAP Interactive mode selected with tray callback {0}", trayCallback != null ? "enabled" : "disabled");
 
-            var success = StartInteractive(context, trayCallback, true, out var pluginRefs);
-
-            if (!success)
+            try
             {
-                var unloadSuccess = PluginLoader.UnloadPlugins(pluginRefs);
+                var success = StartInteractive(context, trayCallback, true, out var pluginRefs);
 
-                if (unloadSuccess)
+                if (!success)
                 {
-                    StartInteractive(context, trayCallback, false, out _);
+                    Logger.Info("BOOTSTRAP Interactive startup with plugins failed, checking if retry is appropriate");
+                    Console.WriteLine("BOOTSTRAP Interactive startup with plugins failed, checking if retry is appropriate");
+
+                    var unloadSuccess = PluginLoader.UnloadPlugins(pluginRefs);
+
+                    if (unloadSuccess)
+                    {
+                        Logger.Info("BOOTSTRAP Plugins unloaded successfully, attempting interactive startup without plugins");
+                        Console.WriteLine("BOOTSTRAP Plugins unloaded successfully, attempting interactive startup without plugins");
+                        StartInteractive(context, trayCallback, false, out _);
+                    }
+                    else
+                    {
+                        Logger.Info("BOOTSTRAP Plugin unload failed, skipping retry to prevent issues");
+                        Console.WriteLine("BOOTSTRAP Plugin unload failed, skipping retry to prevent issues");
+                    }
                 }
+            }
+            catch (Exception e) when (IsPortBindingError(e))
+            {
+                Logger.Info("BOOTSTRAP Port binding error detected in interactive startup, skipping retry to prevent restart loop");
+                Console.WriteLine("BOOTSTRAP Port binding error detected in interactive startup, skipping retry to prevent restart loop");
+                Logger.Info("BOOTSTRAP Port binding exception type: {0} message: {1}", e.GetType().Name, e.Message);
+                Console.WriteLine("BOOTSTRAP Port binding exception type: {0} message: {1}", e.GetType().Name, e.Message);
+                return;
             }
         }
 
@@ -147,20 +195,102 @@ namespace NzbDrone.Host
         {
             try
             {
+                Logger.Info("BOOTSTRAP Building host with plugins enabled {0}", usePlugins);
+                Console.WriteLine("BOOTSTRAP Building host with plugins enabled {0}", usePlugins);
                 using var host = builder.Build();
+                Logger.Info("BOOTSTRAP Host built successfully, starting host execution");
+                Console.WriteLine("BOOTSTRAP Host built successfully, starting host execution");
                 host.Run();
+                Logger.Info("BOOTSTRAP Host execution completed normally");
+                Console.WriteLine("BOOTSTRAP Host execution completed normally");
+            }
+            catch (Exception e) when (IsPortBindingError(e))
+            {
+                Logger.Info("BOOTSTRAP Port binding error detected, re-throwing to prevent retry loop");
+                Console.WriteLine("BOOTSTRAP Port binding error detected, re-throwing to prevent retry loop");
+                throw;
             }
             catch (Exception e)
             {
                 if (usePlugins)
                 {
-                    Logger.Warn(e, "Error starting with plugins enabled");
+                    Logger.Info("BOOTSTRAP Error starting with plugins enabled: {0}", e.Message);
+                    Console.WriteLine("BOOTSTRAP Error starting with plugins enabled: {0}", e.Message);
+                }
+                else
+                {
+                    Logger.Info("BOOTSTRAP Error starting without plugins, this is likely a configuration or system issue: {0}", e.Message);
+                    Console.WriteLine("BOOTSTRAP Error starting without plugins, this is likely a configuration or system issue: {0}", e.Message);
                 }
 
+                Logger.Info("BOOTSTRAP Returning false to indicate startup failure");
+                Console.WriteLine("BOOTSTRAP Returning false to indicate startup failure");
                 return false;
             }
 
+            Logger.Info("BOOTSTRAP Returning true to indicate successful startup");
+            Console.WriteLine("BOOTSTRAP Returning true to indicate successful startup");
             return true;
+        }
+
+        private static bool IsPortBindingError(Exception e)
+        {
+            Logger.Info("BOOTSTRAP Checking exception type {0} for port binding error patterns", e.GetType().Name);
+            Console.WriteLine("BOOTSTRAP Checking exception type {0} for port binding error patterns", e.GetType().Name);
+
+            // Check for direct AddressInUseException
+            if (e is AddressInUseException)
+            {
+                Logger.Info("BOOTSTRAP Port binding error detected: Direct AddressInUseException");
+                Console.WriteLine("BOOTSTRAP Port binding error detected: Direct AddressInUseException");
+                return true;
+            }
+
+            // Check for SocketException with AddressAlreadyInUse error code
+            if (e is SocketException socketEx)
+            {
+                Logger.Info("BOOTSTRAP Found SocketException with error code {0}", socketEx.SocketErrorCode);
+                Console.WriteLine("BOOTSTRAP Found SocketException with error code {0}", socketEx.SocketErrorCode);
+
+                if (socketEx.SocketErrorCode == SocketError.AddressAlreadyInUse)
+                {
+                    Logger.Info("BOOTSTRAP Port binding error detected: SocketException with AddressAlreadyInUse error code");
+                    Console.WriteLine("BOOTSTRAP Port binding error detected: SocketException with AddressAlreadyInUse error code");
+                    return true;
+                }
+            }
+
+            // Check for IOException wrapping AddressInUseException
+            if (e is IOException ioEx)
+            {
+                Logger.Info("BOOTSTRAP Found IOException, checking inner exception type {0}", ioEx.InnerException?.GetType().Name ?? "null");
+                Console.WriteLine("BOOTSTRAP Found IOException, checking inner exception type {0}", ioEx.InnerException?.GetType().Name ?? "null");
+
+                if (ioEx.InnerException is AddressInUseException)
+                {
+                    Logger.Info("BOOTSTRAP Port binding error detected: IOException wrapping AddressInUseException");
+                    Console.WriteLine("BOOTSTRAP Port binding error detected: IOException wrapping AddressInUseException");
+                    return true;
+                }
+
+                // Check for IOException wrapping SocketException with AddressAlreadyInUse
+                if (ioEx.InnerException is SocketException innerSocketEx)
+                {
+                    Logger.Info("BOOTSTRAP Found IOException wrapping SocketException with error code {0}", innerSocketEx.SocketErrorCode);
+                    Console.WriteLine("BOOTSTRAP Found IOException wrapping SocketException with error code {0}", innerSocketEx.SocketErrorCode);
+
+                    if (innerSocketEx.SocketErrorCode == SocketError.AddressAlreadyInUse)
+                    {
+                        Logger.Info("BOOTSTRAP Port binding error detected: IOException wrapping SocketException with AddressAlreadyInUse error code");
+                        Console.WriteLine("BOOTSTRAP Port binding error detected: IOException wrapping SocketException with AddressAlreadyInUse error code");
+                        return true;
+                    }
+                }
+            }
+
+            Logger.Info("BOOTSTRAP No port binding error pattern detected for exception type {0}", e.GetType().Name);
+            Console.WriteLine("BOOTSTRAP No port binding error pattern detected for exception type {0}", e.GetType().Name);
+            return false;
         }
 
         private static void StartUtility(StartupContext context, ApplicationModes mode, IConfiguration config)
@@ -329,7 +459,7 @@ namespace NzbDrone.Host
             {
                 return new ConfigurationBuilder()
                     .AddXmlFile(configPath, optional: true, reloadOnChange: false)
-                    .AddInMemoryCollection(new List<KeyValuePair<string, string>> { new ("dataProtectionFolder", appFolder.GetDataProtectionPath()) })
+                    .AddInMemoryCollection(new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("dataProtectionFolder", appFolder.GetDataProtectionPath()) })
                     .AddEnvironmentVariables()
                     .Build();
             }

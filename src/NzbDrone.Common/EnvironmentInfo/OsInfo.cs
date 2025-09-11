@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
+using NzbDrone.Common.Instrumentation;
 
 namespace NzbDrone.Common.EnvironmentInfo
 {
@@ -78,6 +79,9 @@ namespace NzbDrone.Common.EnvironmentInfo
                 Name = Os.ToString();
                 FullName = Name;
             }
+
+            var dotnetContainer = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER");
+            NzbDroneLogger.GetLogger(this).Info($"Container detection: Running in container (DOTNET_RUNNING_IN_CONTAINER={dotnetContainer})");
 
             if (IsLinux &&
                 (File.Exists("/.dockerenv") ||

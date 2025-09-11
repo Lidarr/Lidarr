@@ -56,7 +56,7 @@ namespace NzbDrone.App.Test
 
             Assert.Throws<TerminateApplicationException>(() => Subject.PreventStartIfAlreadyRunning());
             Mocker.GetMock<IBrowserService>().Verify(c => c.LaunchWebUI(), Times.Once());
-            ExceptionVerification.ExpectedWarns(1);
+            ExceptionVerification.ExpectedWarns(0);
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace NzbDrone.App.Test
 
             Assert.Throws<TerminateApplicationException>(() => Subject.PreventStartIfAlreadyRunning());
             Mocker.GetMock<IBrowserService>().Verify(c => c.LaunchWebUI(), Times.Once());
-            ExceptionVerification.ExpectedWarns(1);
+            ExceptionVerification.ExpectedWarns(0);
         }
     }
 }

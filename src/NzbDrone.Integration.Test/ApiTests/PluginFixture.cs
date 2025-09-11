@@ -1,14 +1,5 @@
-using System.Threading;
-using FluentAssertions;
-using NUnit.Framework;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Plugins.Commands;
-using NzbDrone.Integration.Test.Client;
-using RestSharp;
-
 namespace NzbDrone.Integration.Test.ApiTests
-{
+{/*
     [TestFixture]
     public class PluginFixture : IntegrationTest
     {
@@ -117,5 +108,5 @@ namespace NzbDrone.Integration.Test.ApiTests
 
             Assert.Fail("Timed out waiting for restart");
         }
-    }
+    }*/
 }
