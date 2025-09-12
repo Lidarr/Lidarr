@@ -143,7 +143,7 @@ namespace NzbDrone.Core.MediaFiles
                     Album = album.Title,
                     Disc = (uint)track.MediumNumber,
                     DiscCount = (uint)release.Media.Count,
-                    
+
                     // We may have omitted media so index in the list isn't the same as medium number
                     Media = release.Media.SingleOrDefault(x => x.Number == track.MediumNumber)?.Format,
                     Date = release.ReleaseDate ?? album.ReleaseDate,
@@ -164,7 +164,7 @@ namespace NzbDrone.Core.MediaFiles
                     MusicBrainzTrackId = track.ForeignRecordingId,
                     MusicBrainzReleaseTrackId = track.ForeignTrackId,
                     MusicBrainzAlbumComment = album.Disambiguation,
-                    };
+                };
             }
             catch (Exception ex)
             {
