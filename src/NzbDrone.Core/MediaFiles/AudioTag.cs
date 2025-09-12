@@ -401,8 +401,7 @@ namespace NzbDrone.Core.MediaFiles
                 {
                     var apetag = (TagLib.Ape.Tag)file.GetTag(TagTypes.Ape);
 
-                    apetag.SetValue("Date", Date.HasValue ? Date.Value.ToString("yyyy-MM-dd") : null);
-                    apetag.SetValue("Year", Date.HasValue ? Date.Value.Year.ToString() : null);
+                    apetag.SetValue("Year", Date.HasValue ? Date.Value.ToString("yyyy-MM-dd") : null);
                     apetag.SetValue("Original Date", OriginalReleaseDate.HasValue ? OriginalReleaseDate.Value.ToString("yyyy-MM-dd") : null);
                     apetag.SetValue("Original Year", OriginalReleaseDate.HasValue ? OriginalReleaseDate.Value.Year.ToString() : null);
                     apetag.SetValue("Media", Media);
