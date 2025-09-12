@@ -123,10 +123,27 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     AddNewArtists = false
                 };
 
-                var decision = _importDecisionMaker.GetImportDecisions(files, null, null, config);
-                var result = MapItem(decision.First(), downloadId, replaceExistingFiles, false);
+                var decisions = _importDecisionMaker.GetImportDecisions(files, null, null, config);
 
-                return new List<ManualImportItem> { result };
+                if (decisions.Any())
+                {
+                    var result = MapItem(decisions.First(), downloadId, replaceExistingFiles, false);
+                    return new List<ManualImportItem> { result };
+                }
+
+                return new List<ManualImportItem>
+                {
+                    new ManualImportItem()
+                    {
+                        Id = HashConverter.GetHashInt31(path),
+                        DownloadId = downloadId,
+                        Path = path,
+                        Name = Path.GetFileNameWithoutExtension(path),
+                        Size = _diskProvider.GetFileSize(path),
+                        Rejections = new List<Rejection> { new Rejection("Unable to process file") },
+                        ReplaceExistingFiles = replaceExistingFiles
+                    }
+                };
             }
 
             return ProcessFolder(path, downloadId, artist, filter, replaceExistingFiles);
@@ -150,6 +167,13 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             }
 
             var artistFiles = _diskScanService.GetAudioFiles(folder).ToList();
+
+            if (artist == null && artistFiles.Count > 100)
+            {
+                _logger.Warn("Unable to determine artist from folder name and found more than 100 files. Skipping parsing");
+                return ProcessDownloadDirectory(folder, artistFiles);
+            }
+
             var idOverrides = new IdentificationOverrides
             {
                 Artist = artist
@@ -182,6 +206,23 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             var existingItems = existingDecisions.Select(x => MapItem(x, null, replaceExistingFiles, false));
 
             return newItems.Concat(existingItems).ToList();
+        }
+
+        private List<ManualImportItem> ProcessDownloadDirectory(string folder, List<IFileInfo> audioFiles)
+        {
+            var items = new List<ManualImportItem>();
+
+            foreach (var file in audioFiles)
+            {
+                var localTrack = new LocalTrack();
+                localTrack.Path = file.FullName;
+                localTrack.Quality = new QualityModel(Quality.Unknown);
+                localTrack.Size = file.Length;
+
+                items.Add(MapItem(new ImportDecision<LocalTrack>(localTrack), null, false, false));
+            }
+
+            return items;
         }
 
         public List<ManualImportItem> UpdateItems(List<ManualImportItem> items)

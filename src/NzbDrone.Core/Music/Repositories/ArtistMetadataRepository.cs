@@ -39,6 +39,12 @@ namespace NzbDrone.Core.Music
                 var existing = existingMetadata.SingleOrDefault(x => x.ForeignArtistId == meta.ForeignArtistId);
                 if (existing != null)
                 {
+                    if (IsPlaceholderData(meta) && !IsPlaceholderData(existing))
+                    {
+                        _logger.Warn($"Skipping metadata downgrade: {existing.Name} -> {meta.Name}, for artist {meta.ForeignArtistId}");
+                        continue;
+                    }
+
                     meta.UseDbFieldsFrom(existing);
                     if (!meta.Equals(existing))
                     {
@@ -62,5 +68,10 @@ namespace NzbDrone.Core.Music
 
             return updateMetadataList.Count > 0 || addMetadataList.Count > 0;
         }
+
+        private static bool IsPlaceholderData(ArtistMetadata metadata) =>
+          metadata.Name?.StartsWith("Unknown Artist", System.StringComparison.OrdinalIgnoreCase) != false ||
+          metadata.Disambiguation == "Artist not found in database" ||
+          metadata.Type == "Unknown";
     }
 }

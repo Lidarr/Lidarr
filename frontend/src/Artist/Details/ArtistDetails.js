@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import TextTruncate from 'react-text-truncate';
 import ArtistPoster from 'Artist/ArtistPoster';
 import DeleteArtistModal from 'Artist/Delete/DeleteArtistModal';
 import EditArtistModalConnector from 'Artist/Edit/EditArtistModalConnector';
@@ -28,7 +27,6 @@ import { align, icons, kinds, sizes, tooltipPositions } from 'Helpers/Props';
 import OrganizePreviewModalConnector from 'Organize/OrganizePreviewModalConnector';
 import RetagPreviewModalConnector from 'Retag/RetagPreviewModalConnector';
 import QualityProfileNameConnector from 'Settings/Profiles/Quality/QualityProfileNameConnector';
-import fonts from 'Styles/Variables/fonts';
 import TrackFileEditorModal from 'TrackFile/Editor/TrackFileEditorModal';
 import formatBytes from 'Utilities/Number/formatBytes';
 import translate from 'Utilities/String/translate';
@@ -41,9 +39,6 @@ import ArtistDetailsSeasonConnector from './ArtistDetailsSeasonConnector';
 import ArtistGenres from './ArtistGenres';
 import ArtistTagsConnector from './ArtistTagsConnector';
 import styles from './ArtistDetails.css';
-
-const defaultFontSize = parseInt(fonts.defaultFontSize);
-const lineHeight = parseFloat(fonts.lineHeight);
 
 function getFanartUrl(images) {
   return _.find(images, { coverType: 'fanart' })?.url;
@@ -394,7 +389,7 @@ class ArtistDetails extends Component {
                       />
                     </div>
 
-                    <div className={styles.title}>
+                    <div className={styles.title} title={artistName}>
                       {artistName}
                     </div>
 
@@ -595,12 +590,8 @@ class ArtistDetails extends Component {
 
                   }
                 </div>
-                <div className={styles.overview}>
-                  <TextTruncate
-                    line={Math.floor(125 / (defaultFontSize * lineHeight))}
-                    text={overview}
-                  />
-                </div>
+
+                <div className={styles.overview}>{overview}</div>
               </div>
             </div>
           </div>

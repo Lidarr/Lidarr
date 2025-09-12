@@ -67,6 +67,7 @@ namespace NzbDrone.Core.Music
         {
             var added = DateTime.UtcNow;
             var artistsToAdd = new List<Artist>();
+            var existingArtists = _artistService.GetAllArtists();
 
             foreach (var s in newArtists)
             {
@@ -84,6 +85,12 @@ namespace NzbDrone.Core.Music
                     var artist = AddSkyhookData(s);
                     artist = SetPropertiesAndValidate(artist);
                     artist.Added = added;
+                    if (existingArtists.Any(f => f.ForeignArtistId == artist.ForeignArtistId))
+                    {
+                        _logger.Debug("Musicbrainz ID {0} was not added due to validation failure: Artist already exists in database", s.ForeignArtistId);
+                        continue;
+                    }
+
                     if (artistsToAdd.Any(f => f.ForeignArtistId == artist.ForeignArtistId))
                     {
                         _logger.Debug("Musicbrainz ID {0} was not added due to validation failure: Artist already exists on list", s.ForeignArtistId);

@@ -26,7 +26,6 @@ import Tooltip from 'Components/Tooltip/Tooltip';
 import { align, icons, kinds, sizes, tooltipPositions } from 'Helpers/Props';
 import OrganizePreviewModalConnector from 'Organize/OrganizePreviewModalConnector';
 import RetagPreviewModalConnector from 'Retag/RetagPreviewModalConnector';
-import fonts from 'Styles/Variables/fonts';
 import TrackFileEditorModal from 'TrackFile/Editor/TrackFileEditorModal';
 import formatBytes from 'Utilities/Number/formatBytes';
 import translate from 'Utilities/String/translate';
@@ -35,9 +34,6 @@ import toggleSelected from 'Utilities/Table/toggleSelected';
 import AlbumDetailsLinks from './AlbumDetailsLinks';
 import AlbumDetailsMediumConnector from './AlbumDetailsMediumConnector';
 import styles from './AlbumDetails.css';
-
-const intermediateFontSize = parseInt(fonts.intermediateFontSize);
-const lineHeight = parseFloat(fonts.lineHeight);
 
 function getFanartUrl(images) {
   return _.find(images, { coverType: 'fanart' })?.url;
@@ -427,7 +423,10 @@ class AlbumDetails extends Component {
                         size={17}
                       />
                       <span className={styles.releaseDate}>
-                        {moment(releaseDate).format(shortDateFormat)}
+                        {releaseDate ?
+                          moment(releaseDate).format(shortDateFormat) :
+                          translate('Unknown')
+                        }
                       </span>
                     </div>
                   </Label>
@@ -541,12 +540,8 @@ class AlbumDetails extends Component {
                   />
 
                 </div>
-                <div className={styles.overview} title={overview}>
-                  <TextTruncate
-                    line={Math.floor(125 / (intermediateFontSize * lineHeight))}
-                    text={overview}
-                  />
-                </div>
+
+                <div className={styles.overview}>{overview}</div>
               </div>
             </div>
           </div>
@@ -592,6 +587,7 @@ class AlbumDetails extends Component {
                           key={medium.mediumNumber}
                           albumId={id}
                           albumMonitored={monitored}
+                          albumReleaseDate={releaseDate}
                           {...medium}
                           isExpanded={expandedState[medium.mediumNumber]}
                           onExpandPress={this.onExpandPress}

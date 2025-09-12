@@ -35,6 +35,7 @@ namespace NzbDrone.Core.MediaFiles
         private readonly IMediaFileAttributeService _mediaFileAttributeService;
         private readonly IRootFolderService _rootFolderService;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IImportScript _scriptImportDecider;
         private readonly IConfigService _configService;
         private readonly Logger _logger;
 
@@ -48,6 +49,7 @@ namespace NzbDrone.Core.MediaFiles
                                       IMediaFileAttributeService mediaFileAttributeService,
                                       IRootFolderService rootFolderService,
                                       IEventAggregator eventAggregator,
+                                      IImportScript scriptImportDecider,
                                       IConfigService configService,
                                       Logger logger)
         {
@@ -61,6 +63,7 @@ namespace NzbDrone.Core.MediaFiles
             _mediaFileAttributeService = mediaFileAttributeService;
             _rootFolderService = rootFolderService;
             _eventAggregator = eventAggregator;
+            _scriptImportDecider = scriptImportDecider;
             _configService = configService;
             _logger = logger;
         }
@@ -86,7 +89,7 @@ namespace NzbDrone.Core.MediaFiles
 
             _logger.Debug("Moving track file: {0} to {1}", trackFile.Path, filePath);
 
-            return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.Move);
+            return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.Move, localTrack);
         }
 
         public TrackFile CopyTrackFile(TrackFile trackFile, LocalTrack localTrack)
@@ -98,14 +101,14 @@ namespace NzbDrone.Core.MediaFiles
             if (_configService.CopyUsingHardlinks)
             {
                 _logger.Debug("Attempting to hardlink track file: {0} to {1}", trackFile.Path, filePath);
-                return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.HardLinkOrCopy);
+                return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.HardLinkOrCopy, localTrack);
             }
 
             _logger.Debug("Copying track file: {0} to {1}", trackFile.Path, filePath);
-            return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.Copy);
+            return TransferFile(trackFile, localTrack.Artist, localTrack.Tracks, filePath, TransferMode.Copy, localTrack);
         }
 
-        private TrackFile TransferFile(TrackFile trackFile, Artist artist, List<Track> tracks, string destinationFilePath, TransferMode mode)
+        private TrackFile TransferFile(TrackFile trackFile, Artist artist, List<Track> tracks, string destinationFilePath, TransferMode mode, LocalTrack localTrack = null)
         {
             Ensure.That(trackFile, () => trackFile).IsNotNull();
             Ensure.That(artist, () => artist).IsNotNull();
@@ -123,8 +126,31 @@ namespace NzbDrone.Core.MediaFiles
                 throw new SameFilenameException("File not moved, source and destination are the same", trackFilePath);
             }
 
-            _rootFolderWatchingService.ReportFileSystemChangeBeginning(trackFilePath, destinationFilePath);
-            _diskTransferService.TransferFile(trackFilePath, destinationFilePath, mode);
+            var transfer = true;
+
+            if (localTrack is not null)
+            {
+                var scriptImportDecision = _scriptImportDecider.TryImport(trackFilePath, destinationFilePath, localTrack, trackFile, mode, null);
+
+                switch (scriptImportDecision)
+                {
+                    case ScriptImportDecision.DeferMove:
+                        break;
+                    case ScriptImportDecision.RenameRequested:
+                        MoveTrackFile(trackFile, artist);
+                        transfer = false;
+                        break;
+                    case ScriptImportDecision.MoveComplete:
+                        transfer = false;
+                        break;
+                }
+            }
+
+            if (transfer)
+            {
+                _rootFolderWatchingService.ReportFileSystemChangeBeginning(trackFilePath, destinationFilePath);
+                _diskTransferService.TransferFile(trackFilePath, destinationFilePath, mode);
+            }
 
             trackFile.Path = destinationFilePath;
 

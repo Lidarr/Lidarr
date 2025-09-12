@@ -74,66 +74,103 @@ namespace NzbDrone.Core.MediaFiles
 
         public AudioTag GetTrackMetadata(TrackFile trackfile)
         {
-            var track = trackfile.Tracks.Value[0];
-            var release = track.AlbumRelease.Value;
-            var album = release.Album.Value;
-            var albumartist = album.Artist.Value;
-            var artist = track.ArtistMetadata.Value;
-
-            string imageFile = null;
-            long imageSize = 0;
-
-            if (_configService.EmbedCoverArt)
+            try
             {
-                var cover = album.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Cover);
-                if (cover != null)
+                if (trackfile.Tracks?.Value == null || !trackfile.Tracks.Value.Any())
                 {
-                    imageFile = _mediaCoverService.GetCoverPath(album.Id, MediaCoverEntity.Album, cover.CoverType, cover.Extension, null);
-                    _logger.Trace("Embedding: {0}", imageFile);
-                    var fileInfo = _diskProvider.GetFileInfo(imageFile);
-                    if (fileInfo.Exists)
+                    throw new InvalidOperationException("Unable to write tags: Track information is missing from the database");
+                }
+
+                var track = trackfile.Tracks.Value[0];
+
+                if (track.AlbumRelease?.Value == null)
+                {
+                    throw new InvalidOperationException("Unable to write tags: Album release information is missing from the database");
+                }
+
+                var release = track.AlbumRelease.Value;
+
+                if (release.Album?.Value == null)
+                {
+                    throw new InvalidOperationException("Unable to write tags: Album information is missing from the database");
+                }
+
+                var album = release.Album.Value;
+
+                if (album.Artist?.Value == null)
+                {
+                    throw new InvalidOperationException("Unable to write tags: Artist information is missing from the database");
+                }
+
+                var albumartist = album.Artist.Value;
+
+                if (track.ArtistMetadata?.Value == null)
+                {
+                    throw new InvalidOperationException("Unable to write tags: Artist metadata is missing from the database");
+                }
+
+                var artist = track.ArtistMetadata.Value;
+
+                string imageFile = null;
+                long imageSize = 0;
+
+                if (_configService.EmbedCoverArt)
+                {
+                    var cover = album.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Cover);
+                    if (cover != null)
                     {
-                        imageSize = fileInfo.Length;
-                    }
-                    else
-                    {
-                        imageFile = null;
+                        imageFile = _mediaCoverService.GetCoverPath(album.Id, MediaCoverEntity.Album, cover.CoverType, cover.Extension, null);
+                        _logger.Trace("Embedding: {0}", imageFile);
+                        var fileInfo = _diskProvider.GetFileInfo(imageFile);
+                        if (fileInfo.Exists)
+                        {
+                            imageSize = fileInfo.Length;
+                        }
+                        else
+                        {
+                            imageFile = null;
+                        }
                     }
                 }
+
+                return new AudioTag
+                {
+                    Title = track.Title,
+                    Performers = new[] { artist.Name },
+                    AlbumArtists = new[] { albumartist.Name },
+                    Track = (uint)track.AbsoluteTrackNumber,
+                    TrackCount = (uint)release.Tracks.Value.Count(x => x.MediumNumber == track.MediumNumber),
+                    Album = album.Title,
+                    Disc = (uint)track.MediumNumber,
+                    DiscCount = (uint)release.Media.Count,
+                    
+                    // We may have omitted media so index in the list isn't the same as medium number
+                    Media = release.Media.SingleOrDefault(x => x.Number == track.MediumNumber)?.Format,
+                    Date = release.ReleaseDate ?? album.ReleaseDate,
+                    Year = (uint)(album.ReleaseDate?.Year ?? release.ReleaseDate?.Year ?? 0),
+                    OriginalReleaseDate = album.ReleaseDate,
+                    OriginalYear = (uint)(album.ReleaseDate?.Year ?? 0),
+                    Publisher = release.Label.FirstOrDefault(),
+                    Genres = album.Genres.Any() ? album.Genres.ToArray() : artist.Genres.ToArray(),
+                    ImageFile = imageFile,
+                    ImageSize = imageSize,
+                    MusicBrainzReleaseCountry = IsoCountries.Find(release.Country.FirstOrDefault())?.TwoLetterCode,
+                    MusicBrainzReleaseStatus = release.Status.ToLower(),
+                    MusicBrainzReleaseType = album.AlbumType.ToLower(),
+                    MusicBrainzReleaseId = release.ForeignReleaseId,
+                    MusicBrainzArtistId = artist.ForeignArtistId,
+                    MusicBrainzReleaseArtistId = albumartist.ForeignArtistId,
+                    MusicBrainzReleaseGroupId = album.ForeignAlbumId,
+                    MusicBrainzTrackId = track.ForeignRecordingId,
+                    MusicBrainzReleaseTrackId = track.ForeignTrackId,
+                    MusicBrainzAlbumComment = album.Disambiguation,
+                    };
             }
-
-            return new AudioTag
+            catch (Exception ex)
             {
-                Title = track.Title,
-                Performers = new[] { artist.Name },
-                AlbumArtists = new[] { albumartist.Name },
-                Track = (uint)track.AbsoluteTrackNumber,
-                TrackCount = (uint)release.Tracks.Value.Count(x => x.MediumNumber == track.MediumNumber),
-                Album = album.Title,
-                Disc = (uint)track.MediumNumber,
-                DiscCount = (uint)release.Media.Count,
-
-                // We may have omitted media so index in the list isn't the same as medium number
-                Media = release.Media.SingleOrDefault(x => x.Number == track.MediumNumber)?.Format,
-                Date = release.ReleaseDate ?? album.ReleaseDate,
-                Year = (uint)(album.ReleaseDate?.Year ?? release.ReleaseDate?.Year ?? 0),
-                OriginalReleaseDate = album.ReleaseDate,
-                OriginalYear = (uint)(album.ReleaseDate?.Year ?? 0),
-                Publisher = release.Label.FirstOrDefault(),
-                Genres = album.Genres.Any() ? album.Genres.ToArray() : artist.Genres.ToArray(),
-                ImageFile = imageFile,
-                ImageSize = imageSize,
-                MusicBrainzReleaseCountry = IsoCountries.Find(release.Country.FirstOrDefault())?.TwoLetterCode,
-                MusicBrainzReleaseStatus = release.Status.ToLower(),
-                MusicBrainzReleaseType = album.AlbumType.ToLower(),
-                MusicBrainzReleaseId = release.ForeignReleaseId,
-                MusicBrainzArtistId = artist.ForeignArtistId,
-                MusicBrainzReleaseArtistId = albumartist.ForeignArtistId,
-                MusicBrainzReleaseGroupId = album.ForeignAlbumId,
-                MusicBrainzTrackId = track.ForeignRecordingId,
-                MusicBrainzReleaseTrackId = track.ForeignTrackId,
-                MusicBrainzAlbumComment = album.Disambiguation,
-            };
+                _logger.Error(ex, "Failed to get track metadata for {0}", trackfile.Path);
+                throw;
+            }
         }
 
         private void UpdateTrackfileSizeAndModified(TrackFile trackfile, string path)
