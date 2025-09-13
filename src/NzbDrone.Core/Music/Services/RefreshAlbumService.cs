@@ -145,7 +145,7 @@ namespace NzbDrone.Core.Music
 
         protected override void LogProgress(Album local)
         {
-            _logger.ProgressInfo("Updating Info for {0}", local.Title);
+            _logger.ProgressInfo("Updating Info for Album '{0}' [{1}]", local.Title, local.ForeignAlbumId);
         }
 
         protected override bool IsMerge(Album local, Album remote)
@@ -346,12 +346,12 @@ namespace NzbDrone.Core.Music
                     }
                     catch (Exception e)
                     {
-                        _logger.Error(e, "Couldn't refresh info for album {0}", album.Title);
+                        _logger.Error(e, "Couldn't refresh info for Album '{0}' [{1}]", album.Title, album.ForeignAlbumId);
                     }
                 }
                 else
                 {
-                    _logger.Debug("Skipping refresh of album: {0}", album.Title);
+                    _logger.Debug("Skipping refresh of Album '{0}' [{1}]", album.Title, album.ForeignAlbumId);
                 }
             }
 
