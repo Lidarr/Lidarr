@@ -108,7 +108,7 @@ namespace NzbDrone.Core.Music
 
         protected override void LogProgress(Artist local)
         {
-            _logger.ProgressInfo("Updating Info for {0}", local.Name);
+            _logger.ProgressInfo("Updating Info for Artist '{0}' [{1}]", local.Name, local.ForeignArtistId);
         }
 
         protected override bool IsMerge(Artist local, Artist remote)
@@ -348,7 +348,7 @@ namespace NzbDrone.Core.Music
                 }
                 catch (Exception e)
                 {
-                    _logger.Error(e, "Couldn't refresh info for {0}", artist);
+                    _logger.Error(e, "Couldn't refresh info for Artist '{0}' [{1}]", artist.Name, artist.ForeignArtistId);
                     UpdateTags(artist);
                 }
             }
@@ -430,14 +430,14 @@ namespace NzbDrone.Core.Music
                         }
                         catch (Exception e)
                         {
-                            _logger.Error(e, "Couldn't refresh info for {0}", artist);
+                            _logger.Error(e, "Couldn't refresh info for Artist '{0}' [{1}]", artist.Name, artist.ForeignArtistId);
                         }
 
                         UpdateTags(artist);
                     }
                     else
                     {
-                        _logger.Info("Skipping refresh of artist: {0}", artist.Name);
+                        _logger.Info("Skipping refresh of Artist '{0}' [{1}]", artist.Name, artist.ForeignArtistId);
                         UpdateTags(artist);
                     }
                 }
