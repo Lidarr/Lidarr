@@ -196,8 +196,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
                 if (IsMbidQuery(lowerTitle))
                 {
-                    var slug = lowerTitle.Split(':')[1].Trim();
-
+                    var slug = ExtractGuidFromQuery(lowerTitle);
                     var isValid = Guid.TryParse(slug, out var searchGuid);
 
                     if (slug.IsNullOrWhiteSpace() || slug.Any(char.IsWhiteSpace) || isValid == false)
@@ -258,8 +257,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
                 if (IsMbidQuery(lowerTitle))
                 {
-                    var slug = lowerTitle.Split(':')[1].Trim();
-
+                    var slug = ExtractGuidFromQuery(lowerTitle);
                     var isValid = Guid.TryParse(slug, out var searchGuid);
 
                     if (slug.IsNullOrWhiteSpace() || slug.Any(char.IsWhiteSpace) || isValid == false)
@@ -432,7 +430,31 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
         private static bool IsMbidQuery(string query)
         {
-            return query.StartsWith("lidarr:") || query.StartsWith("lidarrid:") || query.StartsWith("mbid:");
+            return query.StartsWith("lidarr:") || query.StartsWith("lidarrid:") || query.StartsWith("mbid:") ||
+                   query.StartsWith("http://") || query.StartsWith("https://");
+        }
+
+        private static string ExtractGuidFromQuery(string query)
+        {
+            if (query.StartsWith("http://") || query.StartsWith("https://"))
+            {
+                var lastSlash = query.LastIndexOf('/');
+                if (lastSlash >= 0 && lastSlash < query.Length - 1)
+                {
+                    return query.Substring(lastSlash + 1).Trim();
+                }
+                return string.Empty;
+            }
+            else if (query.StartsWith("lidarr:") || query.StartsWith("lidarrid:") || query.StartsWith("mbid:"))
+            {
+                var parts = query.Split(':');
+                if (parts.Length > 1)
+                {
+                    return parts[1].Trim();
+                }
+                return string.Empty;
+            }
+            return string.Empty;
         }
 
         private Artist MapSearchResult(ArtistResource resource)
