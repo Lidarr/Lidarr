@@ -41,6 +41,7 @@ namespace NzbDrone.Core.Music
 
             if (toSearch.Any())
             {
+                _logger.Trace("Found {0} albums flagged for search on add", toSearch.Count);
                 toSearch.ForEach(x => x.AddOptions.SearchForNewAlbum = false);
 
                 _albumService.SetAddOptions(toSearch);
@@ -49,11 +50,13 @@ namespace NzbDrone.Core.Music
             var recentlyAddedIds = _addedAlbumsCache.Find(artistId.ToString());
             if (recentlyAddedIds != null)
             {
+                _logger.Trace("Found and monitored {0} albums by artist [{1}] during metadata refresh.", recentlyAddedIds.Count, artistId);
                 toSearch.AddRange(allAlbums.Where(x => recentlyAddedIds.Contains(x.Id)));
             }
 
             if (toSearch.Any())
             {
+                _logger.Debug("Searching for {0} monitored albums for artist [{1}] added during metadata refresh.", toSearch.Count, artistId);
                 _commandQueueManager.Push(new AlbumSearchCommand(toSearch.Select(e => e.Id).ToList()));
             }
 
