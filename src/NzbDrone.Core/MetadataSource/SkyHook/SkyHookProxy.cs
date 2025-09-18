@@ -194,9 +194,10 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             {
                 var lowerTitle = title.ToLowerInvariant();
 
-                if (IsMbidQuery(lowerTitle))
+                if (IsMbidQuery(lowerTitle) || IsMbidUrl(lowerTitle))
                 {
                     var slug = ExtractGuidFromQuery(lowerTitle);
+
                     var isValid = Guid.TryParse(slug, out var searchGuid);
 
                     if (slug.IsNullOrWhiteSpace() || slug.Any(char.IsWhiteSpace) || isValid == false)
@@ -255,9 +256,10 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             {
                 var lowerTitle = title.ToLowerInvariant();
 
-                if (IsMbidQuery(lowerTitle))
+                if (IsMbidQuery(lowerTitle) || IsMbidUrl(lowerTitle))
                 {
                     var slug = ExtractGuidFromQuery(lowerTitle);
+
                     var isValid = Guid.TryParse(slug, out var searchGuid);
 
                     if (slug.IsNullOrWhiteSpace() || slug.Any(char.IsWhiteSpace) || isValid == false)
@@ -362,7 +364,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
         {
             var lowerTitle = title.ToLowerInvariant();
 
-            if (IsMbidQuery(lowerTitle))
+            if (IsMbidQuery(lowerTitle) || IsMbidUrl(lowerTitle))
             {
                 try
                 {
@@ -430,19 +432,24 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
         private static bool IsMbidQuery(string query)
         {
-            return query.StartsWith("lidarr:") || query.StartsWith("lidarrid:") || query.StartsWith("mbid:") ||
-                   query.StartsWith("http://") || query.StartsWith("https://");
+            return query.StartsWith("lidarr:") || query.StartsWith("lidarrid:") || query.StartsWith("mbid:");
+        }
+
+        private static bool IsMbidUrl(string query)
+        {
+            return query.StartsWith("https://musicbrainz.org/") || query.StartsWith("http://musicbrainz.org/");
         }
 
         private static string ExtractGuidFromQuery(string query)
         {
-            if (query.StartsWith("http://") || query.StartsWith("https://"))
+            if (query.StartsWith("https://musicbrainz.org/") || query.StartsWith("http://musicbrainz.org/"))
             {
                 var lastSlash = query.LastIndexOf('/');
                 if (lastSlash >= 0 && lastSlash < query.Length - 1)
                 {
                     return query.Substring(lastSlash + 1).Trim();
                 }
+
                 return string.Empty;
             }
             else if (query.StartsWith("lidarr:") || query.StartsWith("lidarrid:") || query.StartsWith("mbid:"))
@@ -452,8 +459,10 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 {
                     return parts[1].Trim();
                 }
+
                 return string.Empty;
             }
+
             return string.Empty;
         }
 
