@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import SelectInput from 'Components/Form/SelectInput';
+import EnhancedSelectInput from 'Components/Form/EnhancedSelectInput';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import shortenList from 'Utilities/String/shortenList';
@@ -55,7 +55,7 @@ class SelectAlbumReleaseRow extends Component {
             if (name === 'release') {
               return (
                 <TableRowCell key={name}>
-                  <SelectInput
+                  <EnhancedSelectInput
                     name={id.toString()}
                     values={_.map(releases, (r) => ({
                       key: r.id,
@@ -64,8 +64,8 @@ class SelectAlbumReleaseRow extends Component {
                         `, ${r.mediumCount} med, ${r.trackCount} tracks` +
                         `${r.country.length > 0 ? ', ' : ''}${shortenList(r.country)}` +
                         `${r.format ? ', [' : ''}${r.format}${r.format ? ']' : ''}` +
-                        `${r.monitored ? ', Monitored' : ''}` +
-                        `, [...${r.id.toString().slice(-4)}]`
+                        `${r.monitored ? ', Monitored' : ''}`,
+                      hint: `MBID: ${r.id.toString().slice(0, 8)}`
                     }))}
                     value={matchedReleaseId}
                     onChange={this.onInputChange}
