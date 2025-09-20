@@ -65,7 +65,7 @@ class SelectAlbumReleaseRow extends Component {
                         `${r.country.length > 0 ? ', ' : ''}${shortenList(r.country)}` +
                         `${r.format ? ', [' : ''}${r.format}${r.format ? ']' : ''}` +
                         `${r.monitored ? ', Monitored' : ''}`,
-                      hint: `MBID: ${r.id.toString().slice(0, 8)}`
+                      hint: `MBID: ${r.id.toString().slice(0, 8)}...`
                     }))}
                     value={matchedReleaseId}
                     onChange={this.onInputChange}
