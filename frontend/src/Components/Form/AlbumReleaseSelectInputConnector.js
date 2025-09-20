@@ -30,7 +30,7 @@ function createMapStateToProps() {
             `, ${mediumCount} med, ${trackCount} tracks` +
             `${country && country.length > 0 ? `, ${shortenList(country)}` : ''}` +
             `${format ? `, [${format}]` : ''}`,
-          hint: `MBID: ${foreignReleaseId.toString().slice(0, 8)}`
+          hint: `MBID: ${foreignReleaseId.toString().slice(0, 8)}...`
         };
       });
 
