@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import ArtistMetadataProfilePopoverContent from 'AddArtist/ArtistMetadataProfilePopoverContent';
 import ArtistMonitoringOptionsPopoverContent from 'AddArtist/ArtistMonitoringOptionsPopoverContent';
 import ArtistMonitorNewItemsOptionsPopoverContent from 'AddArtist/ArtistMonitorNewItemsOptionsPopoverContent';
+import SearchAliasInput from 'Artist/Edit/SearchAliasInput';
 import Form from 'Components/Form/Form';
 import FormGroup from 'Components/Form/FormGroup';
 import FormInputGroup from 'Components/Form/FormInputGroup';
@@ -11,7 +12,6 @@ import Icon from 'Components/Icon';
 import Popover from 'Components/Tooltip/Popover';
 import { icons, inputTypes, tooltipPositions } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
-import SearchAliasInput from 'Artist/Edit/SearchAliasInput';
 import styles from './AddArtistOptionsForm.css';
 
 class AddArtistOptionsForm extends Component {
