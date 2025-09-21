@@ -38,6 +38,7 @@ export const defaultState = {
     metadataProfileId: 0,
     searchForMissingAlbums: false,
     searchForNewAlbum: false,
+    searchAlias: null,
     tags: []
   }
 };

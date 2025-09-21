@@ -79,6 +79,7 @@ class AddNewArtistSearchResult extends Component {
       ratings,
       folder,
       images,
+      aliases,
       isExistingArtist,
       isSmallScreen
     } = this.props;
@@ -211,6 +212,7 @@ class AddNewArtistSearchResult extends Component {
           overview={overview}
           folder={folder}
           images={images}
+          aliases={aliases}
           onModalClose={this.onAddArtistModalClose}
         />
       </div>
@@ -229,6 +231,7 @@ AddNewArtistSearchResult.propTypes = {
   ratings: PropTypes.object.isRequired,
   folder: PropTypes.string.isRequired,
   images: PropTypes.arrayOf(PropTypes.object).isRequired,
+  aliases: PropTypes.arrayOf(PropTypes.string),
   isExistingArtist: PropTypes.bool.isRequired,
   isSmallScreen: PropTypes.bool.isRequired
 };

@@ -20,7 +20,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public List<Album> Albums { get; set; }
         public List<Track> Tracks { get; set; }
 
-        public string ArtistQuery => Artist.Name;
+        public string ArtistQuery => Artist.SearchName;
         public string CleanArtistQuery => GetQueryTitle(ArtistQuery);
 
         public static string GetQueryTitle(string title)

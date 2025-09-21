@@ -17,6 +17,7 @@ import ModalHeader from 'Components/Modal/ModalHeader';
 import Popover from 'Components/Tooltip/Popover';
 import { icons, inputTypes, kinds, sizes, tooltipPositions } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
+import SearchAliasInput from './SearchAliasInput';
 import styles from './EditArtistModalContent.css';
 
 class EditArtistModalContent extends Component {
@@ -130,6 +131,19 @@ class EditArtistModalContent extends Component {
                 helpText={translate('MonitorNewItemsHelpText')}
                 {...monitorNewItems}
                 onChange={onInputChange}
+              />
+            </FormGroup>
+
+            <FormGroup size={sizes.MEDIUM}>
+              <FormLabel>
+                {translate('SearchAlias')}
+              </FormLabel>
+
+              <SearchAliasInput
+                aliases={item.aliases}
+                artistName={artistName}
+                {...item.searchAlias}
+                onInputChange={onInputChange}
               />
             </FormGroup>
 
