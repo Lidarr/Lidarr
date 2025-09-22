@@ -4,7 +4,7 @@
     <DataCollectors>
       <DataCollector friendlyName="XPlat code coverage">
         <Configuration>
-          <Format>opencover</Format>
+          <Format>cobertura</Format>
           <Exclude>[Lidarr.*.Test]*,[Lidarr.Test.*]*,[Lidarr.Api.V1]*</Exclude>
         </Configuration>
       </DataCollector>
