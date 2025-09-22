@@ -166,12 +166,10 @@ namespace NzbDrone.Core.ImportLists
 
         protected virtual bool IsValidRelease(ImportListItemInfo release)
         {
-            if (release.Album.IsNullOrWhiteSpace() && release.Artist.IsNullOrWhiteSpace())
-            {
-                return false;
-            }
-
-            return true;
+            return release.Album.IsNotNullOrWhiteSpace()
+                || release.Artist.IsNotNullOrWhiteSpace()
+                || release.AlbumMusicBrainzId.IsNotNullOrWhiteSpace()
+                || release.ArtistMusicBrainzId.IsNotNullOrWhiteSpace();
         }
 
         protected virtual bool IsFullPage(IList<ImportListItemInfo> page)
