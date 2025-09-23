@@ -64,7 +64,6 @@ class AddNewArtistModalContentConnector extends Component {
       qualityProfileId,
       metadataProfileId,
       searchForMissingAlbums,
-      searchAlias,
       tags
     } = this.props;
 
@@ -76,7 +75,6 @@ class AddNewArtistModalContentConnector extends Component {
       qualityProfileId: qualityProfileId.value,
       metadataProfileId: metadataProfileId.value,
       searchForMissingAlbums: searchForMissingAlbums.value,
-      searchAlias: searchAlias.value,
       tags: tags.value
     });
   };
@@ -103,7 +101,6 @@ AddNewArtistModalContentConnector.propTypes = {
   qualityProfileId: PropTypes.object,
   metadataProfileId: PropTypes.object,
   searchForMissingAlbums: PropTypes.object.isRequired,
-  searchAlias: PropTypes.object.isRequired,
   tags: PropTypes.object.isRequired,
   onModalClose: PropTypes.func.isRequired,
   setAddDefault: PropTypes.func.isRequired,

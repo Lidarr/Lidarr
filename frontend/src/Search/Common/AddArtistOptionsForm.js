@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import ArtistMetadataProfilePopoverContent from 'AddArtist/ArtistMetadataProfilePopoverContent';
 import ArtistMonitoringOptionsPopoverContent from 'AddArtist/ArtistMonitoringOptionsPopoverContent';
 import ArtistMonitorNewItemsOptionsPopoverContent from 'AddArtist/ArtistMonitorNewItemsOptionsPopoverContent';
-import SearchAliasInput from 'Artist/Edit/SearchAliasInput';
 import Form from 'Components/Form/Form';
 import FormGroup from 'Components/Form/FormGroup';
 import FormInputGroup from 'Components/Form/FormInputGroup';
@@ -42,9 +41,6 @@ class AddArtistOptionsForm extends Component {
       folder,
       tags,
       isWindows,
-      aliases,
-      artistName,
-      searchAlias,
       onInputChange,
       ...otherProps
     } = this.props;
@@ -126,19 +122,6 @@ class AddArtistOptionsForm extends Component {
 
         <FormGroup>
           <FormLabel>
-            {translate('SearchAlias')}
-          </FormLabel>
-
-          <SearchAliasInput
-            aliases={aliases}
-            artistName={artistName}
-            {...searchAlias}
-            onInputChange={onInputChange}
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <FormLabel>
             {translate('QualityProfile')}
           </FormLabel>
 
@@ -206,9 +189,6 @@ AddArtistOptionsForm.propTypes = {
   includeNoneMetadataProfile: PropTypes.bool.isRequired,
   folder: PropTypes.string.isRequired,
   tags: PropTypes.object.isRequired,
-  aliases: PropTypes.arrayOf(PropTypes.string),
-  artistName: PropTypes.string.isRequired,
-  searchAlias: PropTypes.object.isRequired,
   isWindows: PropTypes.bool.isRequired,
   onInputChange: PropTypes.func.isRequired
 };

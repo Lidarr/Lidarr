@@ -43,8 +43,7 @@ function createMapStateToProps() {
         'qualityProfileId',
         'metadataProfileId',
         'path',
-        'tags',
-        'searchAlias'
+        'tags'
       ]);
 
       const settings = selectSettings(artistSettings, pendingChanges, saveError);
@@ -55,10 +54,7 @@ function createMapStateToProps() {
         saveError,
         isPathChanging,
         originalPath: artist.path,
-        item: {
-          ...settings.settings,
-          aliases: artist.aliases
-        },
+        item: settings.settings,
         showMetadataProfile: metadataProfiles.items.length > 1,
         ...settings
       };

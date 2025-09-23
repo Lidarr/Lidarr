@@ -31,7 +31,6 @@ class AddNewArtistModalContent extends Component {
       disambiguation,
       overview,
       images,
-      aliases,
       searchForMissingAlbums,
       isAdding,
       isSmallScreen,
@@ -84,8 +83,6 @@ class AddNewArtistModalContent extends Component {
 
               <AddArtistOptionsForm
                 includeNoneMetadataProfile={false}
-                artistName={artistName}
-                aliases={aliases}
                 onInputChange={onInputChange}
                 {...otherProps}
               />
@@ -128,7 +125,6 @@ AddNewArtistModalContent.propTypes = {
   disambiguation: PropTypes.string.isRequired,
   overview: PropTypes.string,
   images: PropTypes.arrayOf(PropTypes.object).isRequired,
-  aliases: PropTypes.arrayOf(PropTypes.string),
   isAdding: PropTypes.bool.isRequired,
   addError: PropTypes.object,
   searchForMissingAlbums: PropTypes.object.isRequired,
