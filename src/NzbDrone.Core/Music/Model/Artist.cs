@@ -20,7 +20,6 @@ namespace NzbDrone.Core.Music
         public int ArtistMetadataId { get; set; }
         public string CleanName { get; set; }
         public string SortName { get; set; }
-        public string SearchAlias { get; set; }
         public bool Monitored { get; set; }
         public NewItemMonitorTypes MonitorNewItems { get; set; }
         public DateTime? LastInfoSync { get; set; }
@@ -57,7 +56,7 @@ namespace NzbDrone.Core.Music
         }
 
         [MemberwiseEqualityIgnore]
-        public string SearchName => !string.IsNullOrEmpty(SearchAlias) ? SearchAlias : Name;
+        public string SearchName => Name;
 
         public override string ToString()
         {
@@ -84,7 +83,6 @@ namespace NzbDrone.Core.Music
             MetadataProfileId = other.MetadataProfileId;
             Tags = other.Tags;
             AddOptions = other.AddOptions;
-            SearchAlias = other.SearchAlias;
         }
 
         public override void ApplyChanges(Artist other)
@@ -101,7 +99,6 @@ namespace NzbDrone.Core.Music
             RootFolderPath = other.RootFolderPath;
             Monitored = other.Monitored;
             MonitorNewItems = other.MonitorNewItems;
-            SearchAlias = other.SearchAlias;
         }
     }
 }

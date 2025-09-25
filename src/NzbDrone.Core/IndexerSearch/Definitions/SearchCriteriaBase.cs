@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Common.Extensions;
@@ -19,9 +20,11 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public Artist Artist { get; set; }
         public List<Album> Albums { get; set; }
         public List<Track> Tracks { get; set; }
+        public List<string> ArtistTitles { get; set; }
 
         public string ArtistQuery => Artist.SearchName;
         public string CleanArtistQuery => GetQueryTitle(ArtistQuery);
+        public List<string> CleanArtistTitles => ArtistTitles?.Select(GetQueryTitle).Distinct().ToList() ?? new List<string> { CleanArtistQuery };
 
         public static string GetQueryTitle(string title)
         {
