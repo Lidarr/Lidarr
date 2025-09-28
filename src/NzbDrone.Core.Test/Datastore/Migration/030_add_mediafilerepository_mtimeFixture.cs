@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
+using FluentMigrator;
+using FluentMigrator.Postgres;
 using NUnit.Framework;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Datastore.Migration;
@@ -20,7 +22,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
         private void GivenArtist(add_mediafilerepository_mtime c, int id, string name)
         {
             _artistPath = $"/mnt/data/path/{name}".AsOsAgnostic();
-            c.Insert.IntoTable("Artists").Row(new
+            var artist = new
             {
                 Id = id,
                 CleanName = name,
@@ -30,12 +32,15 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 LanguageProfileId = 1,
                 MetadataProfileId = 1,
                 ArtistMetadataId = id
-            });
+            };
+
+            c.IfDatabase(ProcessorId.PostgreSQL).Insert.IntoTable("Artists").WithOverridingSystemValue().Row(artist);
+            c.IfDatabase(ProcessorId.SQLite).Insert.IntoTable("Artists").Row(artist);
         }
 
         private void GivenAlbum(add_mediafilerepository_mtime c, int id, int artistMetadataId, string title)
         {
-            c.Insert.IntoTable("Albums").Row(new
+            var album = new
             {
                 Id = id,
                 ForeignAlbumId = id.ToString(),
@@ -46,14 +51,16 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 Monitored = true,
                 AlbumType = "Studio",
                 AnyReleaseOk = true
-            });
+            };
+
+            c.IfDatabase(ProcessorId.PostgreSQL).Insert.IntoTable("Albums").WithOverridingSystemValue().Row(album);
+            c.IfDatabase(ProcessorId.SQLite).Insert.IntoTable("Albums").Row(album);
         }
 
         private void GivenAlbumRelease(add_mediafilerepository_mtime c, int id, int albumId, bool monitored)
         {
             c.Insert.IntoTable("AlbumReleases").Row(new
             {
-                Id = id,
                 ForeignReleaseId = id.ToString(),
                 AlbumId = albumId,
                 Title = "Title",
@@ -70,7 +77,6 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             {
                 c.Insert.IntoTable("TrackFiles").Row(new
                 {
-                    Id = id,
                     RelativePath = track?.AsOsAgnostic(),
                     Size = 100,
                     DateAdded = DateTime.UtcNow,
@@ -83,7 +89,6 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 {
                     c.Insert.IntoTable("Tracks").Row(new
                     {
-                        Id = id,
                         ForeignTrackId = id.ToString(),
                         Explicit = false,
                         TrackFileId = id,

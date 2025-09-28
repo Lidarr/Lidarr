@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
+using FluentMigrator;
+using FluentMigrator.Postgres;
 using NUnit.Framework;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Datastore.Migration;
@@ -15,7 +17,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
     {
         private void GivenArtist(add_release_groups_etc c, int id, string name)
         {
-            c.Insert.IntoTable("Artists").Row(new
+            var artist = new
             {
                 Id = id,
                 ForeignArtistId = id.ToString(),
@@ -28,12 +30,15 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 AlbumFolder = true,
                 LanguageProfileId = 1,
                 MetadataProfileId = 1
-            });
+            };
+
+            c.IfDatabase(ProcessorId.PostgreSQL).Insert.IntoTable("Artists").WithOverridingSystemValue().Row(artist);
+            c.IfDatabase(ProcessorId.SQLite).Insert.IntoTable("Artists").Row(artist);
         }
 
         private void GivenAlbum(add_release_groups_etc c, int id, int artistId, string title, string currentRelease)
         {
-            c.Insert.IntoTable("Albums").Row(new
+            var album = new
             {
                 Id = id,
                 ForeignAlbumId = id.ToString(),
@@ -47,7 +52,10 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 Media = "",
                 Releases = "",
                 CurrentRelease = currentRelease
-            });
+            };
+
+            c.IfDatabase(ProcessorId.PostgreSQL).Insert.IntoTable("Albums").WithOverridingSystemValue().Row(album);
+            c.IfDatabase(ProcessorId.SQLite).Insert.IntoTable("Albums").Row(album);
         }
 
         private void GivenTracks(add_release_groups_etc c, int artistid, int albumid, int firstId, int count)
@@ -57,7 +65,6 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 var id = firstId + i;
                 c.Insert.IntoTable("Tracks").Row(new
                 {
-                    Id = id,
                     ForeignTrackId = id.ToString(),
                     ArtistId = artistid,
                     AlbumId = albumid,
