@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Datastore.Migration
                     OR ""AlbumReleases"".""Monitored"" IS NULL)");
 
             // Remove anything linked to unmonitored or unidentified releases.  This should ensure uniqueness of track files.
-            IfDatabase("postgres").Execute.Sql(@"DELETE FROM ""TrackFiles""
+            IfDatabase("postgresql").Execute.Sql(@"DELETE FROM ""TrackFiles""
                 WHERE ""Id"" IN (
                     SELECT ""TrackFiles"".""Id"" FROM ""TrackFiles""
                     LEFT JOIN ""Tracks"" ON ""TrackFiles"".""Id"" = ""Tracks"".""TrackFileId""
