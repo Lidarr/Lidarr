@@ -11,8 +11,8 @@ namespace NzbDrone.Core.Datastore.Migration
     {
         protected override void MainDbUpgrade()
         {
-            IfDatabase("sqlite").Execute.Sql("DELETE FROM config WHERE Key IN ('folderchmod', 'chownuser')");
-            IfDatabase("sqlite").Execute.WithConnection(ConvertFileChmodToFolderChmod);
+            IfDatabase(ProcessorId.SQLite).Execute.Sql("DELETE FROM config WHERE Key IN ('folderchmod', 'chownuser')");
+            IfDatabase(ProcessorId.SQLite).Execute.WithConnection(ConvertFileChmodToFolderChmod);
         }
 
         private void ConvertFileChmodToFolderChmod(IDbConnection conn, IDbTransaction tran)

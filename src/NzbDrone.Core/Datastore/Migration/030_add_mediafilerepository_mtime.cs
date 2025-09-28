@@ -31,7 +31,7 @@ namespace NzbDrone.Core.Datastore.Migration
                     WHERE ""Artists"".""Path"" IS NULL)");
 
             // Remove anything linked to unmonitored or unidentified releases.  This should ensure uniqueness of track files.
-            IfDatabase("sqlite").Execute.Sql(@"DELETE FROM ""TrackFiles""
+            IfDatabase(ProcessorId.SQLite).Execute.Sql(@"DELETE FROM ""TrackFiles""
                 WHERE ""Id"" IN (
                     SELECT ""TrackFiles"".""Id"" FROM ""TrackFiles""
                     LEFT JOIN ""Tracks"" ON ""TrackFiles"".""Id"" = ""Tracks"".""TrackFileId""
@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Datastore.Migration
                     OR ""AlbumReleases"".""Monitored"" IS NULL)");
 
             // Remove anything linked to unmonitored or unidentified releases.  This should ensure uniqueness of track files.
-            IfDatabase("postgresql").Execute.Sql(@"DELETE FROM ""TrackFiles""
+            IfDatabase(ProcessorId.PostgreSQL).Execute.Sql(@"DELETE FROM ""TrackFiles""
                 WHERE ""Id"" IN (
                     SELECT ""TrackFiles"".""Id"" FROM ""TrackFiles""
                     LEFT JOIN ""Tracks"" ON ""TrackFiles"".""Id"" = ""Tracks"".""TrackFileId""
