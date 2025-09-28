@@ -22,7 +22,6 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             {
                 c.Insert.IntoTable("Profiles").Row(new
                 {
-                    Id = 0,
                     Name = "Lossless",
                     Cutoff = 1,
                     Items = $"[{GenerateQualityJson(1, true)}, {GenerateQualityJson((int)Quality.MP3_320, false)}, {GenerateQualityJson((int)Quality.FLAC, true)}]"
@@ -45,7 +44,6 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             {
                 c.Insert.IntoTable("Profiles").Row(new
                 {
-                    Id = 0,
                     Name = "Lossless",
                     Cutoff = 1,
                     Items = $"[{GenerateQualityJson(1, true)}, {GenerateQualityJson((int)Quality.MP3_320, false)}, {GenerateQualityJson((int)Quality.FLAC, true)}]"
