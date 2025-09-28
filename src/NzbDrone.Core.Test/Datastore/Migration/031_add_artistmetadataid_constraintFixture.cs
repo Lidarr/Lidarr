@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using FluentMigrator;
+using FluentMigrator.Postgres;
 using NUnit.Framework;
 using NzbDrone.Core.Datastore.Migration;
 using NzbDrone.Core.Test.Framework;
@@ -15,20 +17,23 @@ namespace NzbDrone.Core.Test.Datastore.Migration
 
         private void GivenArtistMetadata(add_artistmetadataid_constraint c, int id, string name)
         {
-            c.Insert.IntoTable("ArtistMetadata").Row(new
+            var artistMetadata = new
             {
                 Id = id,
                 ForeignArtistId = id,
                 Name = name,
                 Status = 1,
                 Images = "images"
-            });
+            };
+
+            c.IfDatabase(ProcessorId.PostgreSQL).Insert.IntoTable("ArtistMetadata").WithOverridingSystemValue().Row(artistMetadata);
+            c.IfDatabase(ProcessorId.SQLite).Insert.IntoTable("ArtistMetadata").Row(artistMetadata);
         }
 
         private void GivenArtist(add_artistmetadataid_constraint c, int id, int artistMetadataId, string name)
         {
             _artistPath = $"/mnt/data/path/{name}".AsOsAgnostic();
-            c.Insert.IntoTable("Artists").Row(new
+            var artist = new
             {
                 Id = id,
                 ArtistMetadataId = artistMetadataId,
@@ -38,7 +43,10 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 AlbumFolder = true,
                 LanguageProfileId = 1,
                 MetadataProfileId = 1,
-            });
+            };
+
+            c.IfDatabase(ProcessorId.PostgreSQL).Insert.IntoTable("Artists").WithOverridingSystemValue().Row(artist);
+            c.IfDatabase(ProcessorId.SQLite).Insert.IntoTable("Artists").Row(artist);
         }
 
         private void VerifyArtists(IDirectDataMapper db, List<int> ids)
