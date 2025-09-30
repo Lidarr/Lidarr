@@ -138,8 +138,8 @@ PackageLinux()
     echo "Adding Lidarr.Mono to UpdatePackage"
     cp $folder/Lidarr.Mono.* $folder/Lidarr.Update
     if [ "$framework" = "net10.0" ]; then
-        cp $folder/Mono.Posix.NETStandard.* $folder/Lidarr.Update
-        cp $folder/libMonoPosixHelper.* $folder/Lidarr.Update
+        cp $folder/Openur.Mono.Unix.* $folder/Lidarr.Update
+        cp $folder/libMono.Unix.* $folder/Lidarr.Update
     fi
 
     ProgressEnd "Creating $runtime Package for $framework"
@@ -166,8 +166,8 @@ PackageMacOS()
     echo "Adding Lidarr.Mono to UpdatePackage"
     cp $folder/Lidarr.Mono.* $folder/Lidarr.Update
     if [ "$framework" = "net10.0" ]; then
-        cp $folder/Mono.Posix.NETStandard.* $folder/Lidarr.Update
-        cp $folder/libMonoPosixHelper.* $folder/Lidarr.Update
+        cp $folder/Openur.Mono.Unix.* $folder/Lidarr.Update
+        cp $folder/libMono.Unix.* $folder/Lidarr.Update
     fi
 
     ProgressEnd 'Creating MacOS Package'
@@ -209,9 +209,9 @@ PackageWindows()
     cp -r $outputFolder/$framework-windows/$runtime/publish/* $folder
 
     echo "Removing Lidarr.Mono"
-    rm -f $folder/Lidarr.Mono.*
-    rm -f $folder/Mono.Posix.NETStandard.*
-    rm -f $folder/libMonoPosixHelper.*
+    rm -f $folder/Liddarr.Mono.*
+    rm -f $folder/Openur.Mono.Unix.*
+    rm -f $folder/libMono.Unix.*
 
     echo "Adding Lidarr.Windows to UpdatePackage"
     cp $folder/Lidarr.Windows.* $folder/Lidarr.Update
