@@ -29,11 +29,11 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
         {
             _artist = Builder<Artist>
                     .CreateNew()
-                    .With(s => s.Name = "Linkin Park")
+                    .With(s => s.Name = "Metallica")
                     .With(s => s.Metadata = new ArtistMetadata
                     {
-                        Disambiguation = "US Rock Band",
-                        Name = "Linkin Park"
+                        Disambiguation = "US Metal Band",
+                        Name = "Metallica"
                     })
                     .Build();
 
@@ -57,7 +57,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
 
             _album = Builder<Album>
                 .CreateNew()
-                .With(s => s.Title = "Hybrid Theory")
+                .With(s => s.Title = "...And Justice For All")
                 .With(s => s.ReleaseDate = new DateTime(2020, 1, 15))
                 .With(s => s.AlbumType = "Album")
                 .With(s => s.Disambiguation = "The Best Album")
@@ -99,7 +99,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
             _namingConfig.StandardTrackFormat = "{Album Title} {(Release Year)}/{Artist Name} - {track:00} [{Quality Title}] {[Quality Proper]}";
 
             Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
-                   .Should().Be("Hybrid Theory (2020)\\Linkin Park - 06 [MP3-256]".AsOsAgnostic());
+                   .Should().Be("And Justice For All (2020)\\Metallica - 06 [MP3-256]".AsOsAgnostic());
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
             _namingConfig.StandardTrackFormat = "{Album Title} {(Release Year)}\\{Artist Name} - {track:00} [{Quality Title}] {[Quality Proper]}";
 
             Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
-                   .Should().Be("Hybrid Theory (2020)\\Linkin Park - 06 [MP3-256]".AsOsAgnostic());
+                   .Should().Be("And Justice For All (2020)\\Metallica - 06 [MP3-256]".AsOsAgnostic());
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
             _release.Media.Add(_medium2);
 
             Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
-                   .Should().Be("Hybrid Theory (2020)\\CD 03\\Linkin Park - 06 [MP3-256]".AsOsAgnostic());
+                   .Should().Be("And Justice For All (2020)\\CD 03\\Metallica - 06 [MP3-256]".AsOsAgnostic());
         }
 
         [Test]
@@ -130,7 +130,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
             _release.Media.Add(_medium2);
 
             Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
-                   .Should().Be("Hybrid Theory (2020)\\CD 03\\Linkin Park - 06 [MP3-256]".AsOsAgnostic());
+                   .Should().Be("And Justice For All (2020)\\CD 03\\Metallica - 06 [MP3-256]".AsOsAgnostic());
         }
 
         [Test]
