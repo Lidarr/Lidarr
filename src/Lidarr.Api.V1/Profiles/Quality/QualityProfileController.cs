@@ -44,7 +44,7 @@ namespace Lidarr.Api.V1.Profiles.Quality
         }
 
         [RestPostById]
-        public ActionResult<QualityProfileResource> Create(QualityProfileResource resource)
+        public ActionResult<QualityProfileResource> Create([FromBody] QualityProfileResource resource)
         {
             var model = resource.ToModel();
             model = _qualityProfileService.Add(model);
@@ -58,7 +58,7 @@ namespace Lidarr.Api.V1.Profiles.Quality
         }
 
         [RestPutById]
-        public ActionResult<QualityProfileResource> Update(QualityProfileResource resource)
+        public ActionResult<QualityProfileResource> Update([FromBody] QualityProfileResource resource)
         {
             var model = resource.ToModel();
 

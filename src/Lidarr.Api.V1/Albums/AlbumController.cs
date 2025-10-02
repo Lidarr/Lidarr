@@ -142,7 +142,7 @@ namespace Lidarr.Api.V1.Albums
         }
 
         [RestPostById]
-        public ActionResult<AlbumResource> AddAlbum(AlbumResource albumResource)
+        public ActionResult<AlbumResource> AddAlbum([FromBody] AlbumResource albumResource)
         {
             var album = _addAlbumService.AddAlbum(albumResource.ToModel());
 
@@ -150,7 +150,7 @@ namespace Lidarr.Api.V1.Albums
         }
 
         [RestPutById]
-        public ActionResult<AlbumResource> UpdateAlbum(AlbumResource albumResource)
+        public ActionResult<AlbumResource> UpdateAlbum([FromBody] AlbumResource albumResource)
         {
             var album = _albumService.GetAlbum(albumResource.Id);
 
@@ -171,7 +171,7 @@ namespace Lidarr.Api.V1.Albums
         }
 
         [HttpPut("monitor")]
-        public IActionResult SetAlbumsMonitored([FromBody]AlbumsMonitoredResource resource)
+        public IActionResult SetAlbumsMonitored([FromBody] AlbumsMonitoredResource resource)
         {
             _albumService.SetMonitored(resource.AlbumIds, resource.Monitored);
 

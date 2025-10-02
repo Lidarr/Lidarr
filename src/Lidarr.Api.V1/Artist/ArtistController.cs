@@ -157,7 +157,7 @@ namespace Lidarr.Api.V1.Artist
         [RestPostById]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public ActionResult<ArtistResource> AddArtist(ArtistResource artistResource)
+        public ActionResult<ArtistResource> AddArtist([FromBody] ArtistResource artistResource)
         {
             var artist = _addArtistService.AddArtist(artistResource.ToModel());
 
@@ -167,7 +167,7 @@ namespace Lidarr.Api.V1.Artist
         [RestPutById]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public ActionResult<ArtistResource> UpdateArtist(ArtistResource artistResource, bool moveFiles = false)
+        public ActionResult<ArtistResource> UpdateArtist([FromBody] ArtistResource artistResource, bool moveFiles = false)
         {
             var artist = _artistService.GetArtist(artistResource.Id);
 
