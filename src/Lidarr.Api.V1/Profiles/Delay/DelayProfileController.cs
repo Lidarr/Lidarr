@@ -34,7 +34,7 @@ namespace Lidarr.Api.V1.Profiles.Delay
         }
 
         [RestPostById]
-        public ActionResult<DelayProfileResource> Create(DelayProfileResource resource)
+        public ActionResult<DelayProfileResource> Create([FromBody] DelayProfileResource resource)
         {
             var model = resource.ToModel();
             model = _delayProfileService.Add(model);
@@ -54,7 +54,7 @@ namespace Lidarr.Api.V1.Profiles.Delay
         }
 
         [RestPutById]
-        public ActionResult<DelayProfileResource> Update(DelayProfileResource resource)
+        public ActionResult<DelayProfileResource> Update([FromBody] DelayProfileResource resource)
         {
             var model = resource.ToModel();
             _delayProfileService.Update(model);
