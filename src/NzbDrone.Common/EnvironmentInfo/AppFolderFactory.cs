@@ -18,6 +18,7 @@ namespace NzbDrone.Common.EnvironmentInfo
     {
         private readonly IAppFolderInfo _appFolderInfo;
         private readonly IDiskProvider _diskProvider;
+        private readonly IDiskTransferService _diskTransferService;
         private readonly Logger _logger;
 
         public AppFolderFactory(IAppFolderInfo appFolderInfo,
@@ -27,6 +28,7 @@ namespace NzbDrone.Common.EnvironmentInfo
         {
             _appFolderInfo = appFolderInfo;
             _diskProvider = diskProvider;
+            _diskTransferService = diskTransferService;
             _logger = NzbDroneLogger.GetLogger(this);
         }
 
@@ -34,6 +36,7 @@ namespace NzbDrone.Common.EnvironmentInfo
         {
             try
             {
+                MigrateAppDataFolder();
                 _diskProvider.EnsureFolder(_appFolderInfo.AppDataFolder);
             }
             catch (UnauthorizedAccessException)
@@ -63,6 +66,28 @@ namespace NzbDrone.Common.EnvironmentInfo
             catch (Exception ex)
             {
                 _logger.Warn(ex, "Couldn't set app folder permission");
+            }
+        }
+
+        private void MigrateAppDataFolder()
+        {
+            try
+            {
+                if (OsInfo.IsOsx)
+                {
+                    var userAppDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile, Environment.SpecialFolderOption.DoNotVerify), ".config", "Lidarr");
+
+                    if (_diskProvider.FolderExists(userAppDataFolder) && !_diskProvider.FileExists(_appFolderInfo.GetConfigPath()))
+                    {
+                        _diskTransferService.MirrorFolder(userAppDataFolder, _appFolderInfo.AppDataFolder);
+                        _diskProvider.DeleteFolder(userAppDataFolder, true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Debug(ex, ex.Message);
+                throw new LidarrStartupException(ex, "Unable to migrate configuration folder to {0}. Migrate manually", _appFolderInfo.AppDataFolder);
             }
         }
 

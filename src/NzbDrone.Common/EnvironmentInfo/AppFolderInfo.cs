@@ -26,9 +26,9 @@ namespace NzbDrone.Common.EnvironmentInfo
                 _dataSpecialFolder = Environment.SpecialFolder.ApplicationData;
             }
 
-            if (startupContext.Args.ContainsKey(StartupContext.APPDATA))
+            if (startupContext.Args.TryGetValue(StartupContext.APPDATA, out var argsAppDataFolder))
             {
-                AppDataFolder = startupContext.Args[StartupContext.APPDATA];
+                AppDataFolder = argsAppDataFolder;
                 Logger.Info("Data directory is being overridden to [{0}]", AppDataFolder);
             }
             else
