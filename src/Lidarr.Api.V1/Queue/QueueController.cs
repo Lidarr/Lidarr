@@ -147,8 +147,8 @@ namespace Lidarr.Api.V1.Queue
             var filteredQueue = includeUnknownArtistItems ? queue : queue.Where(q => q.Artist != null);
             var pending = _pendingReleaseService.GetPendingQueue();
 
-            var hasArtistIdFilter = artistIds.Any();
-            var hasQualityFilter = quality.Any();
+            var hasArtistIdFilter = artistIds is { Count: > 0 };
+            var hasQualityFilter = quality is { Count: > 0 };
 
             var fullQueue = filteredQueue.Concat(pending).Where(q =>
             {

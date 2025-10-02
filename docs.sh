@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-FRAMEWORK="net6.0"
+FRAMEWORK="net8.0"
 PLATFORM=$1
 ARCHITECTURE="${2:-x64}"
 
@@ -38,7 +38,7 @@ dotnet clean $slnFile -c Release
 dotnet msbuild -restore $slnFile -p:Configuration=Debug -p:Platform=$platform -p:RuntimeIdentifiers=$RUNTIME -t:PublishAllRids
 
 dotnet new tool-manifest
-dotnet tool install --version 6.6.2 Swashbuckle.AspNetCore.Cli
+dotnet tool install --version 9.0.6 Swashbuckle.AspNetCore.Cli
 
 dotnet tool run swagger tofile --output ./src/Lidarr.Api.V1/openapi.json "$outputFolder/$FRAMEWORK/$RUNTIME/$application" v1 &
 
