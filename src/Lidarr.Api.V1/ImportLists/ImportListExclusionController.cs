@@ -40,7 +40,7 @@ namespace Lidarr.Api.V1.ImportLists
         }
 
         [RestPostById]
-        public ActionResult<ImportListExclusionResource> AddImportListExclusion(ImportListExclusionResource resource)
+        public ActionResult<ImportListExclusionResource> AddImportListExclusion([FromBody] ImportListExclusionResource resource)
         {
             var customFilter = _importListExclusionService.Add(resource.ToModel());
 
@@ -48,7 +48,7 @@ namespace Lidarr.Api.V1.ImportLists
         }
 
         [RestPutById]
-        public ActionResult<ImportListExclusionResource> UpdateImportListExclusion(ImportListExclusionResource resource)
+        public ActionResult<ImportListExclusionResource> UpdateImportListExclusion([FromBody] ImportListExclusionResource resource)
         {
             _importListExclusionService.Update(resource.ToModel());
             return Accepted(resource.Id);
