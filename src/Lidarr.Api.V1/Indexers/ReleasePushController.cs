@@ -49,7 +49,7 @@ namespace Lidarr.Api.V1.Indexers
 
         [HttpPost]
         [Consumes("application/json")]
-        public ActionResult<ReleaseResource> Create(ReleaseResource release)
+        public ActionResult<ReleaseResource> Create([FromBody] ReleaseResource release)
         {
             _logger.Info("Release pushed: {0} - {1}", release.Title, release.DownloadUrl ?? release.MagnetUrl);
 

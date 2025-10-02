@@ -23,7 +23,7 @@ namespace Lidarr.Api.V1.Qualities
         }
 
         [RestPutById]
-        public ActionResult<QualityDefinitionResource> Update(QualityDefinitionResource resource)
+        public ActionResult<QualityDefinitionResource> Update([FromBody] QualityDefinitionResource resource)
         {
             var model = resource.ToModel();
             _qualityDefinitionService.Update(model);

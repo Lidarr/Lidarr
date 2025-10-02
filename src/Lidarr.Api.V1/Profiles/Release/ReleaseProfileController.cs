@@ -47,13 +47,13 @@ namespace Lidarr.Api.V1.Profiles.Release
         }
 
         [RestPostById]
-        public ActionResult<ReleaseProfileResource> Create(ReleaseProfileResource resource)
+        public ActionResult<ReleaseProfileResource> Create([FromBody] ReleaseProfileResource resource)
         {
             return Created(_releaseProfileService.Add(resource.ToModel()).Id);
         }
 
         [RestPutById]
-        public ActionResult<ReleaseProfileResource> Update(ReleaseProfileResource resource)
+        public ActionResult<ReleaseProfileResource> Update([FromBody] ReleaseProfileResource resource)
         {
             _releaseProfileService.Update(resource.ToModel());
             return Accepted(resource.Id);
