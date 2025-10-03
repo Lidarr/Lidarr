@@ -29,6 +29,7 @@
     <PackageReference Include="SpotifyAPI.Web" Version="5.1.1" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
     <PackageReference Include="MonoTorrent" Version="3.0.2" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.20" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Common\Lidarr.Common.csproj" />
