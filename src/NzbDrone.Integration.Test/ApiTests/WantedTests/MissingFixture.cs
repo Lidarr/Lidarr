@@ -7,7 +7,7 @@ using NzbDrone.Core.Music;
 namespace NzbDrone.Integration.Test.ApiTests.WantedTests
 {
     [TestFixture]
-    [Ignore("Waiting for metadata to be back again", Until = "2025-10-01 00:00:00Z")]
+    [Ignore("Waiting for metadata to be back again", Until = "2025-11-15 00:00:00Z")]
     public class MissingFixture : IntegrationTest
     {
         [SetUp]
