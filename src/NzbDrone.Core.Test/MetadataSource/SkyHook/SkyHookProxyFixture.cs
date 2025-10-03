@@ -14,7 +14,7 @@ using NzbDrone.Core.Test.Framework;
 namespace NzbDrone.Core.Test.MetadataSource.SkyHook
 {
     [TestFixture]
-    [Ignore("Waiting for metadata to be back again", Until = "2025-10-01 00:00:00Z")]
+    [Ignore("Waiting for metadata to be back again", Until = "2025-11-15 00:00:00Z")]
     public class SkyHookProxyFixture : CoreTest<SkyHookProxy>
     {
         private MetadataProfile _metadataProfile;
