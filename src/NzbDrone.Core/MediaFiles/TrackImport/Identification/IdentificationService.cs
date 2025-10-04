@@ -157,7 +157,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             var worstTrackMatchDist = localAlbumRelease.TrackMapping?.Mapping
                 .Select(x => x.Value.Item2.NormalizedDistance())
                 .DefaultIfEmpty(1.0)
-                .Max();
+                .Max() ?? 1.0;
 
             if (localAlbumRelease.Distance.NormalizedDistance() > 0.15 ||
                 localAlbumRelease.TrackMapping.LocalExtra.Any() ||
