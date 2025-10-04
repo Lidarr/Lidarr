@@ -424,8 +424,8 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                 }
                 catch (HttpException ex)
                 {
-                    _logger.Debug("qbitTorrent authentication failed.");
-                    if (ex.Response.StatusCode == HttpStatusCode.Forbidden)
+                    _logger.Debug(ex, "qbitTorrent authentication failed.");
+                    if (ex.Response.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden)
                     {
                         throw new DownloadClientAuthenticationException("Failed to authenticate with qBittorrent.", ex);
                     }
@@ -438,7 +438,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                 }
 
                 // returns "Fails." on bad login
-                if (response.Content != "Ok.")
+                if (response.Content.IsNotNullOrWhiteSpace() && response.Content != "Ok.")
                 {
                     _logger.Debug("qbitTorrent authentication failed.");
                     throw new DownloadClientAuthenticationException("Failed to authenticate with qBittorrent.");
