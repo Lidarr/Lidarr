@@ -55,6 +55,7 @@ export const defaultState = {
 
 export const SHOW_MESSAGE = 'app/showMessage';
 export const HIDE_MESSAGE = 'app/hideMessage';
+export const CLEAR_MESSAGES = 'app/clearMessages';
 export const SAVE_DIMENSIONS = 'app/saveDimensions';
 export const SET_VERSION = 'app/setVersion';
 export const SET_APP_VALUE = 'app/setAppValue';
@@ -72,6 +73,7 @@ export const setIsSidebarVisible = createAction(SET_IS_SIDEBAR_VISIBLE);
 export const setAppValue = createAction(SET_APP_VALUE);
 export const showMessage = createAction(SHOW_MESSAGE);
 export const hideMessage = createAction(HIDE_MESSAGE);
+export const clearMessages = createAction(CLEAR_MESSAGES);
 export const pingServer = createThunk(PING_SERVER);
 export const fetchTranslations = createThunk(FETCH_TRANSLATIONS);
 
@@ -188,6 +190,14 @@ export const reducers = createHandleActions({
 
     newState.items = [...newState.items];
     _.remove(newState.items, { id: payload.id });
+
+    return updateSectionState(state, messagesSection, newState);
+  },
+
+  [CLEAR_MESSAGES]: function(state) {
+    const newState = getSectionState(state, messagesSection);
+
+    newState.items = [];
 
     return updateSectionState(state, messagesSection, newState);
   },

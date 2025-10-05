@@ -12,12 +12,16 @@
   font-weight: bold;
 }
 
-.column {
+.name {
   flex: 0 0 200px;
 }
 
-.tags {
+.fillcolumn {
   flex: 1 0 auto;
+}
+
+.actions {
+  flex: 0 0 80px;
 }
 
 .addDelayProfile {
