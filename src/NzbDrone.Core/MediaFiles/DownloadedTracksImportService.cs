@@ -126,11 +126,11 @@ namespace NzbDrone.Core.MediaFiles
 
                     if (albumParseResult == null)
                     {
-                        _logger.Warn("Unable to parse file on import: [{0}]", audioFile);
+                        _logger.Warn("Unable to parse file on import: [{0}]", audioFile.FullName);
                         return false;
                     }
 
-                    _logger.Warn("Audio file detected: [{0}]", audioFile);
+                    _logger.Warn("Audio file detected: [{0}]", audioFile.FullName);
                     return false;
                 }
 
