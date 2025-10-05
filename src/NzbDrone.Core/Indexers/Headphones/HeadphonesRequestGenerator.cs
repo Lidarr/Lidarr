@@ -37,10 +37,13 @@ namespace NzbDrone.Core.Indexers.Headphones
 
             pageableRequests.AddTier();
 
-            pageableRequests.Add(GetPagedRequests(MaxPages,
-                Settings.Categories,
-                "search",
-                $"&q={NewsnabifyTitle(searchCriteria.CleanArtistQuery)}+{NewsnabifyTitle(searchCriteria.CleanAlbumQuery)}"));
+            foreach (var artistTitle in searchCriteria.CleanArtistTitles)
+            {
+                pageableRequests.Add(GetPagedRequests(MaxPages,
+                    Settings.Categories,
+                    "search",
+                    $"&q={NewsnabifyTitle(artistTitle)}+{NewsnabifyTitle(searchCriteria.CleanAlbumQuery)}"));
+            }
 
             return pageableRequests;
         }
@@ -51,10 +54,13 @@ namespace NzbDrone.Core.Indexers.Headphones
 
             pageableRequests.AddTier();
 
-            pageableRequests.Add(GetPagedRequests(MaxPages,
-                Settings.Categories,
-                "search",
-                $"&q={NewsnabifyTitle(searchCriteria.CleanArtistQuery)}"));
+            foreach (var artistTitle in searchCriteria.CleanArtistTitles)
+            {
+                pageableRequests.Add(GetPagedRequests(MaxPages,
+                    Settings.Categories,
+                    "search",
+                    $"&q={NewsnabifyTitle(artistTitle)}"));
+            }
 
             return pageableRequests;
         }

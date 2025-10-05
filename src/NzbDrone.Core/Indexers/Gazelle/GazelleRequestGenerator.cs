@@ -32,13 +32,16 @@ namespace NzbDrone.Core.Indexers.Gazelle
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            if (searchCriteria.CleanArtistQuery == "VA")
+            foreach (var artistTitle in searchCriteria.CleanArtistTitles)
             {
-                pageableRequests.Add(GetRequest(string.Format("&groupname={0}", searchCriteria.CleanAlbumQuery)));
-            }
-            else
-            {
-                pageableRequests.Add(GetRequest(string.Format("&artistname={0}&groupname={1}", searchCriteria.CleanArtistQuery, searchCriteria.CleanAlbumQuery)));
+                if (artistTitle == "VA")
+                {
+                    pageableRequests.Add(GetRequest(string.Format("&groupname={0}", searchCriteria.CleanAlbumQuery)));
+                }
+                else
+                {
+                    pageableRequests.Add(GetRequest(string.Format("&artistname={0}&groupname={1}", artistTitle, searchCriteria.CleanAlbumQuery)));
+                }
             }
 
             return pageableRequests;
@@ -47,7 +50,12 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(string.Format("&artistname={0}", searchCriteria.CleanArtistQuery)));
+
+            foreach (var artistTitle in searchCriteria.CleanArtistTitles)
+            {
+                pageableRequests.Add(GetRequest(string.Format("&artistname={0}", artistTitle)));
+            }
+
             return pageableRequests;
         }
 

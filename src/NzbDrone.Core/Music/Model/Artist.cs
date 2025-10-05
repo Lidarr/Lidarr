@@ -55,6 +55,9 @@ namespace NzbDrone.Core.Music
             get { return Metadata.Value.ForeignArtistId; } set { Metadata.Value.ForeignArtistId = value; }
         }
 
+        [MemberwiseEqualityIgnore]
+        public string SearchName => Name;
+
         public override string ToString()
         {
             return string.Format("[{0}][{1}]", Metadata.Value.ForeignArtistId.NullSafe(), Metadata.Value.Name.NullSafe());

@@ -13,7 +13,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
 
         public override string ToString()
         {
-            return $"[{Artist.Name} - {AlbumTitle}{(Disambiguation.IsNullOrWhiteSpace() ? string.Empty : $" ({Disambiguation})")} ({AlbumYear})]";
+            return $"[{Artist.SearchName} - {AlbumTitle}{(Disambiguation.IsNullOrWhiteSpace() ? string.Empty : $" ({Disambiguation})")} ({AlbumYear})]";
         }
     }
 }
