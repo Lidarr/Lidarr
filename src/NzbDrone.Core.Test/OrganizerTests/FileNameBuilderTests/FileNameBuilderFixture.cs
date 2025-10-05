@@ -563,6 +563,20 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
         }
 
         [Test]
+        public void should_replace_illegal_characters_when_renaming_is_disabled()
+        {
+            _namingConfig.RenameTracks = false;
+            _namingConfig.ReplaceIllegalCharacters = true;
+            _namingConfig.ColonReplacementFormat = ColonReplacementFormat.Smart;
+
+            _trackFile.SceneName = "Linkin.Park.06.FLAC:LOL";
+            _trackFile.Path = "Linkin Park - 06 - Test";
+
+            Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
+                .Should().Be("Linkin.Park.06.FLAC-LOL");
+        }
+
+        [Test]
         public void should_not_clean_track_title_if_there_is_only_one()
         {
             var title = "City Sushi (1)";
