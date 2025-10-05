@@ -25,7 +25,6 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
         private readonly IMetadataProfileService _metadataProfileService;
         private readonly ICached<HashSet<string>> _cache;
 
-        private static readonly List<string> NonAudioMedia = new List<string> { "DVD", "DVD-Video", "Blu-ray", "HD-DVD", "VCD", "SVCD", "UMD", "VHS" };
         private static readonly List<string> SkippedTracks = new List<string> { "[data track]" };
 
         public SkyHookProxy(IHttpClient httpClient,
@@ -548,11 +547,8 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 }
             }
 
-            // Skip non-audio media
-            var audioMediaNumbers = allMedia.Where(x => !NonAudioMedia.Contains(x.Format)).Select(x => x.Number);
-
             // Get tracks on the audio media and omit any that are skipped
-            release.Tracks = allTracks.Where(x => audioMediaNumbers.Contains(x.MediumNumber) && !SkippedTracks.Contains(x.Title)).ToList();
+            release.Tracks = allTracks.Where(x => !SkippedTracks.Contains(x.Title)).ToList();
             release.TrackCount = release.Tracks.Value.Count;
 
             // Only include the media that contain the tracks we have selected
