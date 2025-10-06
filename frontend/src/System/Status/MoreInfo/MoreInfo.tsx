@@ -14,7 +14,7 @@ function MoreInfo() {
           {translate('HomePage')}
         </DescriptionListItemTitle>
         <DescriptionListItemDescription>
-          <Link to="https://lidarr.audio/">lidarr.audi</Link>
+          <Link to="https://lidarr.audio/">lidarr.audio</Link>
         </DescriptionListItemDescription>
 
         <DescriptionListItemTitle>{translate('Wiki')}</DescriptionListItemTitle>
