@@ -24,9 +24,7 @@ function MoreInfo() {
           </Link>
         </DescriptionListItemDescription>
 
-        <DescriptionListItemTitle>
-          Reddit
-        </DescriptionListItemTitle>
+        <DescriptionListItemTitle>Reddit</DescriptionListItemTitle>
         <DescriptionListItemDescription>
           <Link to="https://www.reddit.com/r/Lidarr/">/r/Lidarr</Link>
         </DescriptionListItemDescription>

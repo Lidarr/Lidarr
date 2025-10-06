@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import translate from 'Utilities/String/translate';
-import Donations from './Donations/Donations';
 import About from './About/About';
 import DiskSpace from './DiskSpace/DiskSpace';
+import Donations from './Donations/Donations';
 import Health from './Health/Health';
 import MoreInfo from './MoreInfo/MoreInfo';
 
