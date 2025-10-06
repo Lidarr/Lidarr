@@ -42,8 +42,8 @@ function MoreInfo() {
           {translate('Source')}
         </DescriptionListItemTitle>
         <DescriptionListItemDescription>
-          <Link to="https://github.com/lidarr/Lidarr/">
-            github.com/lidarr/Lidarr
+          <Link to="https://github.com/Lidarr/Lidarr/">
+            github.com/Lidarr/Lidarr
           </Link>
         </DescriptionListItemDescription>
 
