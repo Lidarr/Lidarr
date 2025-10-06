@@ -14,7 +14,7 @@ function MoreInfo() {
           {translate('HomePage')}
         </DescriptionListItemTitle>
         <DescriptionListItemDescription>
-          <Link to="https://lidarr.audio/">lidarr.audi</Link>
+          <Link to="https://lidarr.audio/">lidarr.audio</Link>
         </DescriptionListItemDescription>
 
         <DescriptionListItemTitle>{translate('Wiki')}</DescriptionListItemTitle>
@@ -40,8 +40,8 @@ function MoreInfo() {
           {translate('Source')}
         </DescriptionListItemTitle>
         <DescriptionListItemDescription>
-          <Link to="https://github.com/lidarr/Lidarr/">
-            github.com/lidarr/Lidarr
+          <Link to="https://github.com/Lidarr/Lidarr/">
+            github.com/Lidarr/Lidarr
           </Link>
         </DescriptionListItemDescription>
 
@@ -49,7 +49,7 @@ function MoreInfo() {
           {translate('FeatureRequests')}
         </DescriptionListItemTitle>
         <DescriptionListItemDescription>
-          <Link to="https://github.com/lidarr/Lidarr/issues">
+          <Link to="https://github.com/Lidarr/Lidarr/issues">
             github.com/Lidarr/Lidarr/issues
           </Link>
         </DescriptionListItemDescription>
