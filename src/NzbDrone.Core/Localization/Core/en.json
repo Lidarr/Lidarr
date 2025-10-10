@@ -687,6 +687,7 @@
   "LidarrSupportsAnyIndexerThatUsesTheNewznabStandardAsWellAsOtherIndexersListedBelow": "{appName} supports any indexer that uses the Newznab standard, as well as other indexers listed below.",
   "LidarrSupportsMultipleListsForImportingAlbumsAndArtistsIntoTheDatabase": "{appName} supports multiple lists for importing Albums and Artists into the database.",
   "LidarrTags": "{appName} Tags",
+  "LikedSongs": "Liked Songs",
   "Links": "Links",
   "ListRefreshInterval": "List Refresh Interval",
   "ListWillRefreshEveryInterp": "List will refresh every {0}",

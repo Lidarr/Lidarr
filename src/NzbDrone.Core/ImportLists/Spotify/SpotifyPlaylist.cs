@@ -5,6 +5,7 @@ using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.MetadataSource;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Validation;
@@ -22,12 +23,17 @@ namespace NzbDrone.Core.ImportLists.Spotify
                                IConfigService configService,
                                IParsingService parsingService,
                                IHttpClient httpClient,
+                               ILocalizationService localizationService,
                                Logger logger)
         : base(spotifyProxy, requestBuilder, importListStatusService, importListRepository, configService, parsingService, httpClient, logger)
         {
+            _localizationService = localizationService;
         }
 
+        private const string LIKED_SONGS_ID = "LikedSongs";
         public override string Name => "Spotify Playlists";
+
+        private readonly ILocalizationService _localizationService;
 
         public override IList<SpotifyImportListItemInfo> Fetch(SpotifyWebAPI api)
         {
@@ -40,7 +46,27 @@ namespace NzbDrone.Core.ImportLists.Spotify
 
             _logger.Trace($"Processing playlist {playlistId}");
 
-            var playlistTracks = _spotifyProxy.GetPlaylistTracks(this, api, playlistId, "next, items(track(name, artists(id, name), album(id, name, release_date, release_date_precision, artists(id, name))))");
+            Paging<PlaylistTrack> playlistTracks;
+
+            if (playlistId.Equals(LIKED_SONGS_ID))
+            {
+                var savedTracks = _spotifyProxy.GetSavedTracks(this, api);
+                playlistTracks = new Paging<PlaylistTrack>
+                {
+                    Href = savedTracks.Href,
+                    Limit = savedTracks.Limit,
+                    Offset = savedTracks.Offset,
+                    Next = savedTracks.Next,
+                    Previous = savedTracks.Previous,
+                    Total = savedTracks.Total,
+                    Error = savedTracks.Error,
+                    Items = savedTracks.Items.Select(t => new PlaylistTrack { AddedAt = t.AddedAt, Track = t.Track }).ToList()
+                };
+            }
+            else
+            {
+                playlistTracks = _spotifyProxy.GetPlaylistTracks(this, api, playlistId, "next, items(track(name, artists(id, name), album(id, name, release_date, release_date_precision, artists(id, name))))");
+            }
 
             while (true)
             {
@@ -140,7 +166,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
                                     {
                                         id = p.Id,
                                         name = p.Name
-                                    })
+                                    }).Prepend(new { id = LIKED_SONGS_ID, name = _localizationService.GetLocalizedString("LikedSongs") })
                             }
                         };
                     }
