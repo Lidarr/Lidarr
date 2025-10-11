@@ -8,6 +8,6 @@ export function isLocked() {
   return scrollLock;
 }
 
-export function setScrollLock(locked) {
+export function setScrollLock(locked: boolean) {
   scrollLock = locked;
 }

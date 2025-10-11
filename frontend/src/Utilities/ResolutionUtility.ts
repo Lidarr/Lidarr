@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 module.exports = {
   resolutions: {
     desktopLarge: 1200,
