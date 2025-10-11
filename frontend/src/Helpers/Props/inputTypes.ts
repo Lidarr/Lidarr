@@ -58,5 +58,36 @@ export const all = [
   TEXT,
   TEXT_AREA,
   TEXT_TAG,
-  UMASK
+  UMASK,
 ];
+
+export type InputType =
+  | 'autoComplete'
+  | 'captcha'
+  | 'check'
+  | 'device'
+  | 'keyValueList'
+  | 'monitorEpisodesSelect'
+  | 'monitorNewItemsSelect'
+  | 'file'
+  | 'float'
+  | 'number'
+  | 'oauth'
+  | 'password'
+  | 'path'
+  | 'qualityProfileSelect'
+  | 'indexerSelect'
+  | 'indexerFlagsSelect'
+  | 'languageSelect'
+  | 'downloadClientSelect'
+  | 'rootFolderSelect'
+  | 'select'
+  | 'seriesTag'
+  | 'dynamicSelect'
+  | 'seriesTypeSelect'
+  | 'tag'
+  | 'text'
+  | 'textArea'
+  | 'textTag'
+  | 'tagSelect'
+  | 'umask';

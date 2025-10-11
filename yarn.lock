@@ -1480,6 +1480,13 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.14.tgz#1433419d73b2a7ebfc6918dcefd2ec0d5cd698f2"
   integrity sha512-gNMvNH49DJ7OJYv+KAKn0Xp45p8PLl6zo2YnvDIbTd4J6MER2BmWN49TG7n9LvkyihINxeKW8+3bfS2yDC9dzQ==
 
+"@types/react-autosuggest@10.1.11":
+  version "10.1.11"
+  resolved "https://registry.yarnpkg.com/@types/react-autosuggest/-/react-autosuggest-10.1.11.tgz#d087dbfc03e092ac742d18b8b80f5986f03929f3"
+  integrity sha512-lneJrX/5TZJzKHPJ6UuUjsh9OfeyQHKYEVHyBh5Y7LeRbCZxyIsjBmpxdPy1iH++Ger0qcyW+phPpYH+g3naLA==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-document-title@2.0.9":
   version "2.0.9"
   resolved "https://registry.yarnpkg.com/@types/react-document-title/-/react-document-title-2.0.9.tgz#65fd57e6086ef8ced5ad45ac8a439dd878ca71d6"

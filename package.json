@@ -97,6 +97,7 @@
     "@babel/preset-react": "7.26.3",
     "@babel/preset-typescript": "7.26.0",
     "@types/lodash": "4.14.195",
+    "@types/react-autosuggest": "10.1.11",
     "@types/react-document-title": "2.0.9",
     "@types/react-lazyload": "3.2.3",
     "@types/react-router-dom": "5.3.3",
