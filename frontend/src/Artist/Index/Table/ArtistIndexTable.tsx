@@ -10,7 +10,6 @@ import ArtistIndexTableHeader from 'Artist/Index/Table/ArtistIndexTableHeader';
 import Scroller from 'Components/Scroller/Scroller';
 import Column from 'Components/Table/Column';
 import useMeasure from 'Helpers/Hooks/useMeasure';
-import ScrollDirection from 'Helpers/Props/ScrollDirection';
 import SortDirection from 'Helpers/Props/SortDirection';
 import dimensions from 'Styles/Variables/dimensions';
 import getIndexOfFirstCharacter from 'Utilities/Array/getIndexOfFirstCharacter';
@@ -178,7 +177,7 @@ function ArtistIndexTable(props: ArtistIndexTableProps) {
     <div ref={measureRef}>
       <Scroller
         className={styles.tableScroller}
-        scrollDirection={ScrollDirection.Horizontal}
+        scrollDirection={'horizontal'}
       >
         <ArtistIndexTableHeader
           showBanners={showBanners}
