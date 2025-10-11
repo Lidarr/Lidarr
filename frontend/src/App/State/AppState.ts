@@ -1,9 +1,10 @@
-import ParseAppState from 'App/State/ParseAppState';
 import AlbumAppState from './AlbumAppState';
 import ArtistAppState, { ArtistIndexAppState } from './ArtistAppState';
 import CalendarAppState from './CalendarAppState';
 import CommandAppState from './CommandAppState';
 import HistoryAppState from './HistoryAppState';
+import ParseAppState from './ParseAppState';
+import PathsAppState from './PathsAppState';
 import QueueAppState from './QueueAppState';
 import RootFolderAppState from './RootFolderAppState';
 import SettingsAppState from './SettingsAppState';
@@ -62,6 +63,7 @@ interface AppState {
   commands: CommandAppState;
   history: HistoryAppState;
   parse: ParseAppState;
+  paths: PathsAppState;
   queue: QueueAppState;
   rootFolders: RootFolderAppState;
   settings: SettingsAppState;
