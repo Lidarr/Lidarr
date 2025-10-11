@@ -5,6 +5,7 @@ import CalendarAppState from './CalendarAppState';
 import CommandAppState from './CommandAppState';
 import HistoryAppState from './HistoryAppState';
 import QueueAppState from './QueueAppState';
+import RootFolderAppState from './RootFolderAppState';
 import SettingsAppState from './SettingsAppState';
 import SystemAppState from './SystemAppState';
 import TagsAppState from './TagsAppState';
@@ -62,6 +63,7 @@ interface AppState {
   history: HistoryAppState;
   parse: ParseAppState;
   queue: QueueAppState;
+  rootFolders: RootFolderAppState;
   settings: SettingsAppState;
   tags: TagsAppState;
   trackFiles: TrackFilesAppState;
