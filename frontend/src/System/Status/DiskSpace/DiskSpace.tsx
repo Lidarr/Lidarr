@@ -11,6 +11,7 @@ import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import TableRow from 'Components/Table/TableRow';
 import { kinds, sizes } from 'Helpers/Props';
+import { Kind } from 'Helpers/Props/kinds';
 import { fetchDiskSpace } from 'Store/Actions/systemActions';
 import formatBytes from 'Utilities/Number/formatBytes';
 import translate from 'Utilities/String/translate';
@@ -69,7 +70,7 @@ function DiskSpace() {
               const diskUsage = Math.round(
                 100 - (freeSpace / totalSpace) * 100
               );
-              let diskUsageKind = kinds.PRIMARY;
+              let diskUsageKind: Kind = kinds.PRIMARY;
 
               if (diskUsage > 90) {
                 diskUsageKind = kinds.DANGER;
