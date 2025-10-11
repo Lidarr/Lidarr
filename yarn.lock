@@ -1480,6 +1480,13 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.14.tgz#1433419d73b2a7ebfc6918dcefd2ec0d5cd698f2"
   integrity sha512-gNMvNH49DJ7OJYv+KAKn0Xp45p8PLl6zo2YnvDIbTd4J6MER2BmWN49TG7n9LvkyihINxeKW8+3bfS2yDC9dzQ==
 
+"@types/react-document-title@2.0.9":
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/@types/react-document-title/-/react-document-title-2.0.9.tgz#65fd57e6086ef8ced5ad45ac8a439dd878ca71d6"
+  integrity sha512-Q8bSnESgyVoMCo0vAKJj2N4wD/yl7EnutaFntKpaL/edUUo4kTNH8M6A5iCoje9sknRdLx7cfB39cpdTNr5Z+Q==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-dom@18.3.1":
   version "18.3.1"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.3.1.tgz#1e4654c08a9cdcfb6594c780ac59b55aad42fe07"
