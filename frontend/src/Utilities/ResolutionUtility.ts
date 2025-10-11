@@ -1,9 +1,11 @@
+import $ from 'jquery';
+
 module.exports = {
   resolutions: {
     desktopLarge: 1200,
     desktop: 992,
     tablet: 768,
-    mobile: 480
+    mobile: 480,
   },
 
   isDesktopLarge() {
@@ -20,5 +22,5 @@ module.exports = {
 
   isMobile() {
     return $(window).width() < this.resolutions.mobile;
-  }
+  },
 };

@@ -38,16 +38,11 @@ function RelativeDateCell(props: RelativeDateCellProps) {
       })}
       {...otherProps}
     >
-      {getRelativeDate(
-        date,
-        shortDateFormat,
-        showRelativeDates,
-        {
-          timeFormat,
-          includeSeconds,
-          timeForToday: true,
-        }
-      )}
+      {getRelativeDate(date, shortDateFormat, showRelativeDates, {
+        timeFormat,
+        includeSeconds,
+        timeForToday: true,
+      })}
     </Component>
   );
 }

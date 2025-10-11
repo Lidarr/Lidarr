@@ -175,10 +175,7 @@ function ArtistIndexTable(props: ArtistIndexTableProps) {
 
   return (
     <div ref={measureRef}>
-      <Scroller
-        className={styles.tableScroller}
-        scrollDirection={'horizontal'}
-      >
+      <Scroller className={styles.tableScroller} scrollDirection={'horizontal'}>
         <ArtistIndexTableHeader
           showBanners={showBanners}
           columns={columns}
