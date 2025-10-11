@@ -23,11 +23,8 @@ interface TableHeaderCellProps {
 function TableHeaderCell({
   className = styles.headerCell,
   name,
-  label,
   columnLabel,
   isSortable = false,
-  isVisible,
-  isModifiable,
   sortKey,
   sortDirection,
   fixedSortDirection,

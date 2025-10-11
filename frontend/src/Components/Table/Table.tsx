@@ -70,7 +70,7 @@ function Table({
           ) : null}
 
           {columns.map((column) => {
-            const { name, isVisible, isSortable, ...otherColumnProps } = column;
+            const { name, isVisible, ...otherColumnProps } = column;
 
             if (!isVisible) {
               return null;
