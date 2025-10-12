@@ -17,7 +17,11 @@ namespace NzbDrone.Core.HealthCheck.Checks
         {
             if (!_status.Enabled)
             {
-                return new HealthCheck(GetType(), HealthCheckResult.Error, "Plugins failed to load, check log for details", "#plugins-failed-to-load");
+                return new HealthCheck(GetType(),
+                    HealthCheckResult.Error,
+                    HealthCheckReason.PluginFailed,
+                    "Plugins failed to load, check log for details",
+                    "#plugins-failed-to-load");
             }
 
             return new HealthCheck(GetType());

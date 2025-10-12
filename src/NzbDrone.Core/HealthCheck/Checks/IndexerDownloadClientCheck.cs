@@ -35,6 +35,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
             {
                 return new HealthCheck(GetType(),
                     HealthCheckResult.Warning,
+                    HealthCheckReason.IndexerDownloadClient,
                     string.Format(_localizationService.GetLocalizedString("IndexerDownloadClientHealthCheckMessage"), string.Join(", ", invalidIndexers.Select(v => v.Name).ToArray())),
                     "#invalid-indexer-download-client-setting");
             }

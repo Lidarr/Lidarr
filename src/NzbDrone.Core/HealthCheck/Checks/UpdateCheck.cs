@@ -48,6 +48,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 {
                     return new HealthCheck(GetType(),
                         HealthCheckResult.Error,
+                        HealthCheckReason.UpdateStartupTranslocation,
                         string.Format(_localizationService.GetLocalizedString("UpdateCheckStartupTranslocationMessage"), startupFolder),
                         "#cannot-install-update-because-startup-folder-is-in-an-app-translocation-folder.");
                 }
@@ -56,6 +57,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 {
                     return new HealthCheck(GetType(),
                         HealthCheckResult.Error,
+                        HealthCheckReason.UpdateStartupNotWritable,
                         string.Format(_localizationService.GetLocalizedString("UpdateCheckStartupNotWritableMessage"), startupFolder, Environment.UserName),
                         "#cannot-install-update-because-startup-folder-is-not-writable-by-the-user");
                 }
@@ -64,6 +66,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 {
                     return new HealthCheck(GetType(),
                         HealthCheckResult.Error,
+                        HealthCheckReason.UpdateUiNotWritable,
                         string.Format(_localizationService.GetLocalizedString("UpdateCheckUINotWritableMessage"), uiFolder, Environment.UserName),
                         "#cannot-install-update-because-ui-folder-is-not-writable-by-the-user");
                 }
@@ -77,6 +80,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 {
                     return new HealthCheck(GetType(),
                         HealthCheckResult.Warning,
+                        HealthCheckReason.UpdateAvailable,
                         _localizationService.GetLocalizedString("UpdateAvailableHealthCheckMessage", new Dictionary<string, object>
                         {
                             { "version", $"v{latestAvailable.Version}" }
