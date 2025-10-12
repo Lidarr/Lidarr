@@ -41,8 +41,8 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
             return new HealthCheck(GetType(),
                 HealthCheckResult.Warning,
-                string.Format(_localizationService.GetLocalizedString("IndexerJackettAll"),
-                    string.Join(", ", jackettAllProviders.Select(i => i.Name))),
+                HealthCheckReason.IndexerJackettAll,
+                string.Format(_localizationService.GetLocalizedString("IndexerJackettAll"), string.Join(", ", jackettAllProviders.Select(i => i.Name))),
                 "#jackett-all-endpoint-used");
         }
     }

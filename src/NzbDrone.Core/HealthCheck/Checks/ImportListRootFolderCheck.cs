@@ -68,12 +68,14 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
                     return new HealthCheck(GetType(),
                         HealthCheckResult.Error,
+                        HealthCheckReason.ImportListRootFolderMissing,
                         string.Format(_localizationService.GetLocalizedString("ImportListRootFolderMissingRootHealthCheckMessage"), FormatRootFolder(missingRootFolder.Key, missingRootFolder.Value)),
                         "#import-list-missing-root-folder");
                 }
 
                 return new HealthCheck(GetType(),
                     HealthCheckResult.Error,
+                    HealthCheckReason.ImportListRootFolderMultipleMissing,
                     string.Format(_localizationService.GetLocalizedString("ImportListRootFolderMultipleMissingRootsHealthCheckMessage"), string.Join(" | ", missingRootFolders.Select(m => FormatRootFolder(m.Key, m.Value)))),
                     "#import-list-missing-root-folder");
             }

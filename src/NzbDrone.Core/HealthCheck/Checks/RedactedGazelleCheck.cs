@@ -28,7 +28,10 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
                 if (definition.Settings is GazelleSettings { BaseUrl: "https://redacted.sh" or "https://redacted.ch" })
                 {
-                    return new HealthCheck(GetType(), HealthCheckResult.Warning, "You have set up Redacted as a Gazelle indexer, please reconfigure using the Redacted indexer setting");
+                    return new HealthCheck(GetType(),
+                        HealthCheckResult.Warning,
+                        HealthCheckReason.RedactedGazelle,
+                        "You have set up Redacted as a Gazelle indexer, please reconfigure using the Redacted indexer setting");
                 }
             }
 

@@ -31,8 +31,9 @@ namespace NzbDrone.Core.HealthCheck.Checks
             {
                 return new HealthCheck(GetType(),
                     HealthCheckResult.Error,
+                    HealthCheckReason.MountArtist,
                     $"{_localizationService.GetLocalizedString("MountArtistHealthCheckMessage")}{string.Join(", ", mounts.Select(m => $"{m.Item1.Name} ({m.Item2})"))}",
-                    "#artist-mount-ro");
+                    "#artist-mount-is-read-only");
             }
 
             return new HealthCheck(GetType());

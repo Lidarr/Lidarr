@@ -31,7 +31,11 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
             if (!_diskProvider.FolderWritable(recycleBin))
             {
-                return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RecycleBinUnableToWriteHealthCheck"), recycleBin), "#cannot-write-recycle-bin");
+                return new HealthCheck(GetType(),
+                    HealthCheckResult.Error,
+                    HealthCheckReason.RecycleBinUnableToWrite,
+                    string.Format(_localizationService.GetLocalizedString("RecycleBinUnableToWriteHealthCheck"), recycleBin),
+                    "#cannot-write-recycle-bin");
             }
 
             return new HealthCheck(GetType());
