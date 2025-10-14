@@ -6,6 +6,7 @@
     <PackageReference Include="Dapper" Version="2.0.151" />
     <PackageReference Include="Diacritical.Net" Version="1.0.4" />
     <PackageReference Include="Equ" Version="2.3.0" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.69.0.3680" />
     <PackageReference Include="MailKit" Version="4.8.0" />
     <PackageReference Include="Polly" Version="8.5.2" />
     <PackageReference Include="System.Text.Json" Version="6.0.10" />
