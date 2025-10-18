@@ -169,7 +169,13 @@ namespace NzbDrone.Common.Http
 
             if (request.LogResponseContent && response.ResponseData != null)
             {
-                _logger.Trace("Response content ({0} bytes): {1}", response.ResponseData.Length, response.Content);
+                // Logging large response.Content is time consuming, pegs the CPU, and blocks the UI.
+                // Only evaluate the Trace call when tracing is actually enabled.
+                // Datapoint: NZBGet history endpoint with 500 items is about 1MB and takes 2m30s to log.
+                if (_logger.IsTraceEnabled)
+                {
+                    _logger.Trace("Response content ({0} bytes): {1}", response.ResponseData.Length, response.Content);
+                }
             }
 
             return response;
