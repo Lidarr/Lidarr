@@ -410,12 +410,11 @@ namespace NzbDrone.Core.Music
             else
             {
                 var updated = false;
-                var artists = _artistService.GetAllArtists().OrderBy(c => c.Name).ToList();
-                var artistIds = artists.Select(x => x.Id).ToList();
+                var artists = _artistService.GetAllArtists();
 
-                var updatedMusicbrainzArtists = new HashSet<string>();
+                HashSet<string> updatedMusicbrainzArtists = null;
 
-                if (message.LastExecutionTime.HasValue && message.LastExecutionTime.Value.AddDays(14) > DateTime.UtcNow)
+                if (message.LastStartTime.HasValue && message.LastStartTime.Value.AddDays(14) > DateTime.UtcNow)
                 {
                     updatedMusicbrainzArtists = _artistInfo.GetChangedArtists(message.LastStartTime.Value);
                 }
@@ -425,8 +424,8 @@ namespace NzbDrone.Core.Music
                     var artistLocal = artist;
                     var manualTrigger = message.Trigger == CommandTrigger.Manual;
 
-                    if ((updatedMusicbrainzArtists == null && _checkIfArtistShouldBeRefreshed.ShouldRefresh(artistLocal)) ||
-                        (updatedMusicbrainzArtists != null && updatedMusicbrainzArtists.Contains(artistLocal.ForeignArtistId)) ||
+                    if ((updatedMusicbrainzArtists is not { Count: not 0 } && _checkIfArtistShouldBeRefreshed.ShouldRefresh(artistLocal)) ||
+                        (updatedMusicbrainzArtists is { Count: > 0 } && updatedMusicbrainzArtists.Contains(artistLocal.ForeignArtistId)) ||
                         manualTrigger)
                     {
                         try

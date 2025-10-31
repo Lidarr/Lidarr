@@ -337,8 +337,8 @@ namespace NzbDrone.Core.Music
             foreach (var album in albums)
             {
                 if (forceAlbumRefresh ||
-                    (updatedMusicbrainzAlbums == null && _checkIfAlbumShouldBeRefreshed.ShouldRefresh(album)) ||
-                    (updatedMusicbrainzAlbums != null && updatedMusicbrainzAlbums.Contains(album.ForeignAlbumId)))
+                    (updatedMusicbrainzAlbums is not { Count: not 0 } && _checkIfAlbumShouldBeRefreshed.ShouldRefresh(album)) ||
+                    (updatedMusicbrainzAlbums is { Count: > 0 } && updatedMusicbrainzAlbums.Contains(album.ForeignAlbumId)))
                 {
                     try
                     {
