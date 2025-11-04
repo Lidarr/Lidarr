@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Linq;
 using NLog;
@@ -39,7 +38,7 @@ namespace NzbDrone.Core.Plugins
 
         public void Execute(UninstallPluginCommand message)
         {
-            var (owner, name) = _pluginService.ParseUrl(message.GithubUrl);
+            var (owner, name, tree) = _pluginService.ParseRepositoryInput(message.GithubUrl);
 
             // Get installed version before uninstalling
             var installedPlugins = _pluginService.GetInstalledPlugins();
@@ -79,7 +78,7 @@ namespace NzbDrone.Core.Plugins
             _logger.ProgressInfo($"Plugin [{package.Owner}/{package.Name}] v{package.Version} installed. Please restart Lidarr.");
         }
 
-        private void UninstallPlugin(string owner, string name, Version version)
+        private void UninstallPlugin(string owner, string name, PluginVersion version)
         {
             _logger.ProgressInfo($"Uninstalling plugin [{owner}/{name}]");
             var pluginFolder = Path.Combine(PluginFolder(), owner, name);
