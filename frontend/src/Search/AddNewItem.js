@@ -176,6 +176,8 @@ class AddNewItem extends Component {
                   You can also search using the
                   <Link to="https://musicbrainz.org/search"> MusicBrainz ID </Link>
                   of an artist or release group e.g. lidarr:cc197bad-dc9c-440d-a5b5-d52ba2e14234
+                  <br />
+                  <Link to={`https://musicbrainz.org/search?query=${encodeURIComponent(term)}&limit=25`}>Search for '{term}' on MusicBrainz</Link>
                 </div>
               </div>
           }
