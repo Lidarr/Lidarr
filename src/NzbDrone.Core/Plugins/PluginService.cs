@@ -74,7 +74,7 @@ namespace NzbDrone.Core.Plugins
                 }
 
                 var version = Version.Parse(latest.TagName.TrimStart('v'));
-                var framework = "net6.0";
+                var framework = "net8.0";
                 var asset = latest.Assets.FirstOrDefault(x => x.Name.EndsWith($"{framework}.zip"));
 
                 if (asset == null)
