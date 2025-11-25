@@ -75,10 +75,13 @@ const fileNameTokens = [
 
 const artistTokens = [
   { token: '{Artist Name}', example: 'Artist Name' },
+  { token: '{Artist SortName}', example: 'Artist LastName, Artist FirstName'},
   { token: '{Artist CleanName}', example: 'Artist Name' },
+  { token: '{Artist CleanSortName}', example: 'Artist LastName, Artist FirstName'},
   { token: '{Artist NameThe}', example: 'Artist Name, The' },
   { token: '{Artist CleanNameThe}', example: 'Artist Name, The' },
   { token: '{Artist NameFirstCharacter}', example: 'A' },
+  { token: '{Artist SortNameFirstCharacter}', example: 'A' },
   { token: '{Artist Disambiguation}', example: 'Disambiguation' },
   { token: '{Artist Genre}', example: 'Pop' },
   { token: '{Artist MbId}', example: 'db92a151-1ac2-438b-bc43-b82e149ddd50' }
