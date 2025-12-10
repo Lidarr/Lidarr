@@ -5,29 +5,26 @@ namespace NzbDrone.Core.ImportLists.Discogs
 {
     public class DiscogsListsRequestGenerator : IImportListRequestGenerator
     {
-        public DiscogsListsSettings Settings { get; set; }
+        private readonly DiscogsListsSettings _settings;
 
-        public int MaxPages { get; set; }
-        public int PageSize { get; set; }
-
-        public DiscogsListsRequestGenerator()
+        public DiscogsListsRequestGenerator(DiscogsListsSettings settings)
         {
-            MaxPages = 1;
-            PageSize = 0; // Discogs doesn't support pagination for lists currently
+            _settings = settings;
         }
 
         public virtual ImportListPageableRequestChain GetListItems()
         {
             var pageableRequests = new ImportListPageableRequestChain();
             pageableRequests.Add(GetPagedRequests());
+
             return pageableRequests;
         }
 
         private IEnumerable<ImportListRequest> GetPagedRequests()
         {
-            var request = new HttpRequestBuilder(Settings.BaseUrl.TrimEnd('/'))
-                .Resource($"/lists/{Settings.ListId}")
-                .SetHeader("Authorization", $"Discogs token={Settings.Token}")
+            var request = new HttpRequestBuilder(_settings.BaseUrl.TrimEnd('/'))
+                .Resource($"/lists/{_settings.ListId}")
+                .SetHeader("Authorization", $"Discogs token={_settings.Token}")
                 .Build();
 
             yield return new ImportListRequest(request);
