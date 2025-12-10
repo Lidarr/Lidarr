@@ -167,15 +167,3 @@ node_modules.nosync
 
 # Ignore Jetbrains IntelliJ Workspace Directories
 .idea/
-
-# Ignore Claude
-**/.claude
-
-# Ignore markdown files (except essential tracked ones)
-*.md
-!README.md
-!CONTRIBUTING.md
-!SECURITY.md
-!LICENSE.md
-!CODE_OF_CONDUCT.md
-!CLA.md
