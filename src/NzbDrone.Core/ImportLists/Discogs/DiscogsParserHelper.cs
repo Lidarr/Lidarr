@@ -37,6 +37,33 @@ internal static class DiscogsParserHelper
         };
     }
 
+    public static ImportListItemInfo FetchArtistDetails(IHttpClient httpClient, string token, string resourceUrl)
+    {
+        var request = new HttpRequestBuilder(resourceUrl)
+            .SetHeader("Authorization", $"Discogs token={token}")
+            .Build();
+
+        var response = httpClient.Execute(request);
+
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            return null;
+        }
+
+        var artistResponse = Json.Deserialize<DiscogsArtistResponse>(response.Content);
+
+        if (artistResponse?.Name.IsNullOrWhiteSpace() == true)
+        {
+            return null;
+        }
+
+        return new ImportListItemInfo
+        {
+            Artist = artistResponse.Name,
+            Album = null // Artists don't have a specific album, just the artist name
+        };
+    }
+
     public static void EnsureValidResponse(ImportListResponse importListResponse, string htmlContentMessage)
     {
         if (importListResponse.HttpResponse.StatusCode != HttpStatusCode.OK)

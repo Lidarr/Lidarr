@@ -31,6 +31,12 @@ public class DiscogsReleaseArtist
     public int Id { get; set; }
 }
 
+public class DiscogsArtistResponse
+{
+    public string Name { get; set; }
+    public int Id { get; set; }
+}
+
 public class DiscogsWantlistResponse
 {
     public List<DiscogsWantlistItem> Wants { get; set; }

@@ -8,18 +8,11 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.ImportLists.Discogs;
 
-public class DiscogsListsParser : IParseImportListResponse
+public class DiscogsListsParser(DiscogsListsSettings settings, IHttpClient httpClient, Logger logger) : IParseImportListResponse
 {
-    private readonly DiscogsListsSettings _settings;
-    private readonly IHttpClient _httpClient;
-    private readonly Logger _logger;
-
-    public DiscogsListsParser(DiscogsListsSettings settings, IHttpClient httpClient, Logger logger)
-    {
-        _settings = settings;
-        _httpClient = httpClient;
-        _logger = logger;
-    }
+    private readonly DiscogsListsSettings _settings = settings;
+    private readonly IHttpClient _httpClient = httpClient;
+    private readonly Logger _logger = logger;
 
     public IList<ImportListItemInfo> ParseResponse(ImportListResponse importListResponse)
     {
@@ -39,17 +32,29 @@ public class DiscogsListsParser : IParseImportListResponse
 
         foreach (var item in jsonResponse.Items)
         {
-            if (item.Type == "release" && item.ResourceUrl.IsNotNullOrWhiteSpace())
+            if (item.ResourceUrl.IsNullOrWhiteSpace())
             {
-                try
+                continue;
+            }
+
+            try
+            {
+                ImportListItemInfo itemInfo = null;
+
+                if (item.Type == "release")
                 {
-                    var releaseInfo = FetchReleaseDetails(item.ResourceUrl);
-                    items.AddIfNotNull(releaseInfo);
+                    itemInfo = FetchReleaseDetails(item.ResourceUrl);
                 }
-                catch (Exception ex)
+                else if (item.Type == "artist")
                 {
-                    _logger.Error(ex, "Discogs release details API call resulted in an unexpected exception");
+                    itemInfo = FetchArtistDetails(item.ResourceUrl);
                 }
+
+                items.AddIfNotNull(itemInfo);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Discogs API call resulted in an unexpected exception for {0} type item", item.Type ?? "unknown");
             }
         }
 
@@ -66,5 +71,10 @@ public class DiscogsListsParser : IParseImportListResponse
     private ImportListItemInfo FetchReleaseDetails(string resourceUrl)
     {
         return DiscogsParserHelper.FetchReleaseDetails(_httpClient, _settings.Token, resourceUrl);
+    }
+
+    private ImportListItemInfo FetchArtistDetails(string resourceUrl)
+    {
+        return DiscogsParserHelper.FetchArtistDetails(_httpClient, _settings.Token, resourceUrl);
     }
 }

@@ -55,7 +55,65 @@ public class DiscogsListsFixture
     }
 
     [Test]
-    public void should_ignore_non_release_items()
+    public void should_parse_artist_items()
+    {
+        const string resourceUrl = "https://api.discogs.com/artists/3227";
+        GivenArtistDetails(resourceUrl, BuildArtistResponse("Silent Phase"));
+
+        var response = BuildListResponse(@"{
+            ""items"": [
+                {
+                    ""type"": ""artist"",
+                    ""id"": 3227,
+                    ""display_title"": ""Silent Phase"",
+                    ""resource_url"": ""https://api.discogs.com/artists/3227""
+                }
+            ]
+        }");
+
+        var items = _parser.ParseResponse(response);
+
+        items.Should().HaveCount(1);
+        items.First().Artist.Should().Be("Silent Phase");
+        items.First().Album.Should().BeNull();
+    }
+
+    [Test]
+    public void should_parse_mixed_release_and_artist_items()
+    {
+        const string releaseUrl = "https://api.discogs.com/releases/4674";
+        const string artistUrl = "https://api.discogs.com/artists/3227";
+        GivenReleaseDetails(releaseUrl, BuildReleaseResponse("Silent Phase", "The Rewired Mixes"));
+        GivenArtistDetails(artistUrl, BuildArtistResponse("Silent Phase"));
+
+        var response = BuildListResponse(@"{
+            ""items"": [
+                {
+                    ""type"": ""release"",
+                    ""id"": 4674,
+                    ""display_title"": ""Silent Phase - The Rewired Mixes"",
+                    ""resource_url"": ""https://api.discogs.com/releases/4674""
+                },
+                {
+                    ""type"": ""artist"",
+                    ""id"": 3227,
+                    ""display_title"": ""Silent Phase"",
+                    ""resource_url"": ""https://api.discogs.com/artists/3227""
+                }
+            ]
+        }");
+
+        var items = _parser.ParseResponse(response);
+
+        items.Should().HaveCount(2);
+        items.First().Artist.Should().Be("Silent Phase");
+        items.First().Album.Should().Be("The Rewired Mixes");
+        items.Last().Artist.Should().Be("Silent Phase");
+        items.Last().Album.Should().BeNull();
+    }
+
+    [Test]
+    public void should_ignore_non_release_and_non_artist_items()
     {
         var response = BuildListResponse(@"{
             ""items"": [
@@ -97,6 +155,50 @@ public class DiscogsListsFixture
     }
 
     [Test]
+    public void should_skip_artist_when_details_fail()
+    {
+        var response = BuildListResponse(@"{
+            ""items"": [
+                {
+                    ""type"": ""artist"",
+                    ""id"": 3227,
+                    ""display_title"": ""Silent Phase"",
+                    ""resource_url"": ""https://api.discogs.com/artists/3227""
+                }
+            ]
+        }");
+
+        _httpClient.Setup(c => c.Execute(It.IsAny<HttpRequest>()))
+            .Returns(new HttpResponse(new HttpRequest("https://api.discogs.com/artists/3227"), _defaultHeaders, string.Empty, HttpStatusCode.NotFound));
+
+        var items = _parser.ParseResponse(response);
+
+        items.Should().BeEmpty();
+    }
+
+    [Test]
+    public void should_skip_artist_when_name_is_missing()
+    {
+        const string resourceUrl = "https://api.discogs.com/artists/3227";
+        GivenArtistDetails(resourceUrl, @"{ ""id"": 3227 }");
+
+        var response = BuildListResponse(@"{
+            ""items"": [
+                {
+                    ""type"": ""artist"",
+                    ""id"": 3227,
+                    ""display_title"": ""Silent Phase"",
+                    ""resource_url"": ""https://api.discogs.com/artists/3227""
+                }
+            ]
+        }");
+
+        var items = _parser.ParseResponse(response);
+
+        items.Should().BeEmpty();
+    }
+
+    [Test]
     public void should_throw_when_discogs_returns_html()
     {
         var response = BuildListResponse("<html></html>", contentType: "text/html");
@@ -122,6 +224,12 @@ public class DiscogsListsFixture
             .Returns(new HttpResponse(new HttpRequest(resourceUrl), _defaultHeaders, payload, statusCode));
     }
 
+    private void GivenArtistDetails(string resourceUrl, string payload, HttpStatusCode statusCode = HttpStatusCode.OK)
+    {
+        _httpClient.Setup(c => c.Execute(It.Is<HttpRequest>(r => r.Url.FullUri == resourceUrl)))
+            .Returns(new HttpResponse(new HttpRequest(resourceUrl), _defaultHeaders, payload, statusCode));
+    }
+
     private static string BuildReleaseResponse(string artist, string title)
     {
         return $@"{{
@@ -129,6 +237,14 @@ public class DiscogsListsFixture
             ""artists"": [
                 {{ ""name"": ""{artist}"", ""id"": 3 }}
             ]
+        }}";
+    }
+
+    private static string BuildArtistResponse(string name)
+    {
+        return $@"{{
+            ""name"": ""{name}"",
+            ""id"": 3227
         }}";
     }
 }
