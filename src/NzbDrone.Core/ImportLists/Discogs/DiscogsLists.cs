@@ -11,8 +11,7 @@ namespace NzbDrone.Core.ImportLists.Discogs
         public override string Name => "Discogs Lists";
         public override ImportListType ListType => ImportListType.Discogs;
         public override TimeSpan MinRefreshInterval => TimeSpan.FromHours(12);
-        public override TimeSpan RateLimit => TimeSpan.FromSeconds(3); // Conservative rate limiting to avoid 429 errors when fetching many releases
-        public override int PageSize => 0; // Discogs doesn't support pagination for lists
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(3);
 
         public DiscogsLists(IHttpClient httpClient,
             IImportListStatusService importListStatusService,
