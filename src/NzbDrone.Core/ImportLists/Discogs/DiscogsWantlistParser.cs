@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
@@ -10,6 +9,9 @@ namespace NzbDrone.Core.ImportLists.Discogs;
 
 public class DiscogsWantlistParser : IParseImportListResponse
 {
+    private IHttpClient _httpClient;
+    private DiscogsWantlistSettings _settings;
+
     public DiscogsWantlistParser()
     {
     }
@@ -59,24 +61,4 @@ public class DiscogsWantlistParser : IParseImportListResponse
 
         return items;
     }
-}
-
-public class DiscogsWantlistResponse
-{
-    public List<DiscogsWantlistItem> Wants { get; set; }
-}
-
-public class DiscogsWantlistItem
-{
-    [JsonProperty("basic_information")]
-    public DiscogsBasicInformation BasicInformation { get; set; }
-}
-
-public class DiscogsBasicInformation
-{
-    public int Id { get; set; }
-    public string Title { get; set; }
-    [JsonProperty("resource_url")]
-    public string ResourceUrl { get; set; }
-    public List<DiscogsReleaseArtist> Artists { get; set; }
 }

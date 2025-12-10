@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using Newtonsoft.Json;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
@@ -76,32 +75,4 @@ public class DiscogsListsParser : IParseImportListResponse
             return null;
         }
     }
-}
-
-public class DiscogsListResponse
-{
-    public List<DiscogsListItem> Items { get; set; }
-}
-
-public class DiscogsListItem
-{
-    public string Type { get; set; }
-    public int Id { get; set; }
-    [JsonProperty("display_title")]
-    public string DisplayTitle { get; set; }
-    [JsonProperty("resource_url")]
-    public string ResourceUrl { get; set; }
-    public string Uri { get; set; }
-}
-
-public class DiscogsReleaseResponse
-{
-    public string Title { get; set; }
-    public List<DiscogsReleaseArtist> Artists { get; set; }
-}
-
-public class DiscogsReleaseArtist
-{
-    public string Name { get; set; }
-    public int Id { get; set; }
 }
