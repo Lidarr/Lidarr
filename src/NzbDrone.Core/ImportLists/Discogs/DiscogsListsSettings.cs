@@ -15,7 +15,7 @@ namespace NzbDrone.Core.ImportLists.Discogs
 
     public class DiscogsListsSettings : IImportListSettings
     {
-        private static readonly DiscogsListsSettingsValidator Validator = new DiscogsListsSettingsValidator();
+        private static readonly DiscogsListsSettingsValidator Validator = new ();
 
         public DiscogsListsSettings()
         {
