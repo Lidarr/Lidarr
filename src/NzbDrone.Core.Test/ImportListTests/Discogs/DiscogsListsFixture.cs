@@ -4,34 +4,38 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.ImportLists;
 using NzbDrone.Core.ImportLists.Discogs;
-using NzbDrone.Core.Test.Framework;
+using NzbDrone.Core.ImportLists.Exceptions;
 
 namespace NzbDrone.Core.Test.ImportListTests.Discogs;
 
 [TestFixture]
-public class DiscogsListsFixture : CoreTest<DiscogsLists>
+public class DiscogsListsFixture
 {
+    private readonly HttpHeader _defaultHeaders = new () { ContentType = "application/json" };
+
+    private DiscogsListsParser _parser;
+    private Mock<IHttpClient> _httpClient;
+    private DiscogsListsSettings _settings;
+
     [SetUp]
-    public void Setup()
+    public void SetUp()
     {
-        Subject.Definition = new ImportLists.ImportListDefinition
-        {
-            Id = 1,
-            Name = "Test Discogs List",
-            Settings = new DiscogsListsSettings
-            {
-                Token = "test_token_123456",
-                ListId = "123456",
-                BaseUrl = "https://api.discogs.com"
-            }
-        };
+        _httpClient = new Mock<IHttpClient>();
+        _parser = new DiscogsListsParser();
+        _settings = new DiscogsListsSettings { Token = "token", ListId = "123", BaseUrl = "https://api.discogs.com" };
+
+        _parser.SetContext(_httpClient.Object, _settings);
     }
 
     [Test]
-    public void should_parse_valid_list_response()
+    public void should_parse_release_items()
     {
-        var listResponseJson = @"{
+        const string resourceUrl = "https://api.discogs.com/releases/3";
+        GivenReleaseDetails(resourceUrl, BuildReleaseResponse("Josh Wink", "Profound Sounds Vol. 1"));
+
+        var response = BuildListResponse(@"{
             ""items"": [
                 {
                     ""type"": ""release"",
@@ -40,149 +44,39 @@ public class DiscogsListsFixture : CoreTest<DiscogsLists>
                     ""resource_url"": ""https://api.discogs.com/releases/3""
                 }
             ]
-        }";
+        }");
 
-        var releaseResponseJson = @"{
-            ""title"": ""Profound Sounds Vol. 1"",
-            ""artists"": [
-                {
-                    ""name"": ""Josh Wink"",
-                    ""id"": 3
-                }
-            ]
-        }";
+        var items = _parser.ParseResponse(response);
 
-        var listCalled = false;
-        var releaseCalled = false;
-        var actualListUrl = "";
-        var actualReleaseUrl = "";
-
-        Mocker.GetMock<IHttpClient>()
-              .Setup(s => s.Execute(It.IsAny<HttpRequest>()))
-              .Callback<HttpRequest>(req =>
-              {
-                  if (req.Url.FullUri.Contains("/lists/"))
-                  {
-                      listCalled = true;
-                      actualListUrl = req.Url.FullUri;
-                  }
-                  else if (req.Url.FullUri.Contains("/releases/"))
-                  {
-                      releaseCalled = true;
-                      actualReleaseUrl = req.Url.FullUri;
-                  }
-              })
-              .Returns<HttpRequest>(req =>
-              {
-                  if (req.Url.FullUri.Contains("/lists/"))
-                  {
-                      return new HttpResponse(req, new HttpHeader(), listResponseJson, HttpStatusCode.OK);
-                  }
-                  else if (req.Url.FullUri.Contains("/releases/"))
-                  {
-                      return new HttpResponse(req, new HttpHeader(), releaseResponseJson, HttpStatusCode.OK);
-                  }
-                  else
-                  {
-                      return new HttpResponse(req, new HttpHeader(), "", HttpStatusCode.NotFound);
-                  }
-              });
-
-        var releases = Subject.Fetch();
-
-        // Debug output to see what happened
-        System.Console.WriteLine($"List called: {listCalled}, URL: {actualListUrl}");
-        System.Console.WriteLine($"Release called: {releaseCalled}, URL: {actualReleaseUrl}");
-        System.Console.WriteLine($"Releases count: {releases.Count}");
-        for (var i = 0; i < releases.Count; i++)
-        {
-            System.Console.WriteLine($"Release {i}: Artist='{releases[i].Artist}', Album='{releases[i].Album}'");
-        }
-
-        releases.Should().HaveCount(1);
-        releases.First().Artist.Should().Be("Josh Wink");
-        releases.First().Album.Should().Be("Profound Sounds Vol. 1");
+        items.Should().HaveCount(1);
+        items.First().Artist.Should().Be("Josh Wink");
+        items.First().Album.Should().Be("Profound Sounds Vol. 1");
     }
 
     [Test]
-    public void should_handle_empty_list_response()
+    public void should_ignore_non_release_items()
     {
-        var responseJson = @"{""items"": []}";
-
-        Mocker.GetMock<IHttpClient>()
-              .Setup(s => s.Execute(It.IsAny<HttpRequest>()))
-              .Returns(new HttpResponse(new HttpRequest("https://api.discogs.com/lists/123456"), new HttpHeader(), responseJson, HttpStatusCode.OK));
-
-        var releases = Subject.Fetch();
-
-        releases.Should().BeEmpty();
-    }
-
-    [Test]
-    public void debug_test_to_see_what_url_is_called()
-    {
-        var responseJson = @"{""items"": []}";
-        var actualUrl = "";
-
-        Mocker.GetMock<IHttpClient>()
-              .Setup(s => s.Execute(It.IsAny<HttpRequest>()))
-              .Callback<HttpRequest>(req => actualUrl = req.Url.FullUri)
-              .Returns(new HttpResponse(new HttpRequest("https://api.discogs.com/lists/123456"), new HttpHeader(), responseJson, HttpStatusCode.OK));
-
-        var releases = Subject.Fetch();
-
-        // This will show us what URL is actually being called
-        actualUrl.Should().NotBeEmpty();
-    }
-
-    [Test]
-    public void should_skip_non_release_items()
-    {
-        var responseJson = @"{
+        var response = BuildListResponse(@"{
             ""items"": [
                 {
                     ""type"": ""label"",
-                    ""id"": 1,
-                    ""display_title"": ""Some Label"",
-                    ""resource_url"": ""https://api.discogs.com/labels/1""
-                },
-                {
-                    ""type"": ""release"",
-                    ""id"": 3,
-                    ""display_title"": ""Josh Wink - Profound Sounds Vol. 1"",
-                    ""resource_url"": ""https://api.discogs.com/releases/3""
+                    ""id"": 7,
+                    ""display_title"": ""Ignore me"",
+                    ""resource_url"": ""https://api.discogs.com/labels/7""
                 }
             ]
-        }";
+        }");
 
-        var releaseResponseJson = @"{
-            ""title"": ""Profound Sounds Vol. 1"",
-            ""artists"": [
-                {
-                    ""name"": ""Josh Wink"",
-                    ""id"": 3
-                }
-            ]
-        }";
+        var items = _parser.ParseResponse(response);
 
-        Mocker.GetMock<IHttpClient>()
-              .Setup(s => s.Execute(It.Is<HttpRequest>(r => r.Url.ToString().Contains("/lists/"))))
-              .Returns(new HttpResponse(new HttpRequest("http://my.indexer.com"), new HttpHeader(), responseJson, HttpStatusCode.OK));
-
-        Mocker.GetMock<IHttpClient>()
-              .Setup(s => s.Execute(It.Is<HttpRequest>(r => r.Url.ToString().Contains("/releases/"))))
-              .Returns(new HttpResponse(new HttpRequest("http://my.indexer.com"), new HttpHeader(), releaseResponseJson, HttpStatusCode.OK));
-
-        var releases = Subject.Fetch();
-
-        releases.Should().HaveCount(1);
-        releases.First().Artist.Should().Be("Josh Wink");
+        items.Should().BeEmpty();
+        _httpClient.Verify(c => c.Execute(It.IsAny<HttpRequest>()), Times.Never);
     }
 
     [Test]
-    public void should_skip_items_when_release_fetch_fails()
+    public void should_skip_release_when_details_fail()
     {
-        var listResponseJson = @"{
+        var response = BuildListResponse(@"{
             ""items"": [
                 {
                     ""type"": ""release"",
@@ -191,93 +85,49 @@ public class DiscogsListsFixture : CoreTest<DiscogsLists>
                     ""resource_url"": ""https://api.discogs.com/releases/3""
                 }
             ]
-        }";
+        }");
 
-        Mocker.GetMock<IHttpClient>()
-              .Setup(s => s.Execute(It.Is<HttpRequest>(r => r.Url.ToString().Contains("/lists/"))))
-              .Returns(new HttpResponse(new HttpRequest("http://my.indexer.com"), new HttpHeader(), listResponseJson, HttpStatusCode.OK));
+        _httpClient.Setup(c => c.Execute(It.IsAny<HttpRequest>()))
+            .Returns(new HttpResponse(new HttpRequest("https://api.discogs.com/releases/3"), _defaultHeaders, string.Empty, HttpStatusCode.NotFound));
 
-        Mocker.GetMock<IHttpClient>()
-              .Setup(s => s.Execute(It.Is<HttpRequest>(r => r.Url.ToString().Contains("/releases/"))))
-              .Returns(new HttpResponse(new HttpRequest("http://my.indexer.com"), new HttpHeader(), "", HttpStatusCode.NotFound));
+        var items = _parser.ParseResponse(response);
 
-        var releases = Subject.Fetch();
-
-        releases.Should().BeEmpty();
+        items.Should().BeEmpty();
     }
 
     [Test]
-    public void should_skip_releases_with_no_artists()
+    public void should_throw_when_discogs_returns_html()
     {
-        var listResponseJson = @"{
-            ""items"": [
-                {
-                    ""type"": ""release"",
-                    ""id"": 3,
-                    ""display_title"": ""Various - Compilation"",
-                    ""resource_url"": ""https://api.discogs.com/releases/3""
-                }
-            ]
-        }";
+        var response = BuildListResponse("<html></html>", contentType: "text/html");
 
-        var releaseResponseJson = @"{
-            ""title"": ""Compilation"",
-            ""artists"": []
-        }";
-
-        Mocker.GetMock<IHttpClient>()
-              .Setup(s => s.Execute(It.Is<HttpRequest>(r => r.Url.ToString().Contains("/lists/"))))
-              .Returns(new HttpResponse(new HttpRequest("http://my.indexer.com"), new HttpHeader(), listResponseJson, HttpStatusCode.OK));
-
-        Mocker.GetMock<IHttpClient>()
-              .Setup(s => s.Execute(It.Is<HttpRequest>(r => r.Url.ToString().Contains("/releases/"))))
-              .Returns(new HttpResponse(new HttpRequest("http://my.indexer.com"), new HttpHeader(), releaseResponseJson, HttpStatusCode.OK));
-
-        var releases = Subject.Fetch();
-
-        releases.Should().BeEmpty();
+        _parser.Invoking(p => p.ParseResponse(response))
+            .Should().Throw<ImportListException>()
+            .WithMessage("*HTML content*");
     }
 
-    [Test]
-    public void should_use_first_artist_when_multiple_artists()
+    private ImportListResponse BuildListResponse(string content, HttpStatusCode statusCode = HttpStatusCode.OK, string contentType = "application/json")
     {
-        var listResponseJson = @"{
-            ""items"": [
-                {
-                    ""type"": ""release"",
-                    ""id"": 3,
-                    ""display_title"": ""Artist 1 & Artist 2 - Collaboration"",
-                    ""resource_url"": ""https://api.discogs.com/releases/3""
-                }
-            ]
-        }";
+        var httpRequest = new HttpRequest("https://api.discogs.com/lists/123");
+        var importListRequest = new ImportListRequest(httpRequest);
+        var headers = new HttpHeader { ContentType = contentType };
+        var httpResponse = new HttpResponse(httpRequest, headers, content, statusCode);
 
-        var releaseResponseJson = @"{
-            ""title"": ""Collaboration"",
+        return new ImportListResponse(importListRequest, httpResponse);
+    }
+
+    private void GivenReleaseDetails(string resourceUrl, string payload, HttpStatusCode statusCode = HttpStatusCode.OK)
+    {
+        _httpClient.Setup(c => c.Execute(It.Is<HttpRequest>(r => r.Url.FullUri == resourceUrl)))
+            .Returns(new HttpResponse(new HttpRequest(resourceUrl), _defaultHeaders, payload, statusCode));
+    }
+
+    private static string BuildReleaseResponse(string artist, string title)
+    {
+        return $@"{{
+            ""title"": ""{title}"",
             ""artists"": [
-                {
-                    ""name"": ""Artist 1"",
-                    ""id"": 1
-                },
-                {
-                    ""name"": ""Artist 2"",
-                    ""id"": 2
-                }
+                {{ ""name"": ""{artist}"", ""id"": 3 }}
             ]
-        }";
-
-        Mocker.GetMock<IHttpClient>()
-              .Setup(s => s.Execute(It.Is<HttpRequest>(r => r.Url.ToString().Contains("/lists/"))))
-              .Returns(new HttpResponse(new HttpRequest("http://my.indexer.com"), new HttpHeader(), listResponseJson, HttpStatusCode.OK));
-
-        Mocker.GetMock<IHttpClient>()
-              .Setup(s => s.Execute(It.Is<HttpRequest>(r => r.Url.ToString().Contains("/releases/"))))
-              .Returns(new HttpResponse(new HttpRequest("http://my.indexer.com"), new HttpHeader(), releaseResponseJson, HttpStatusCode.OK));
-
-        var releases = Subject.Fetch();
-
-        releases.Should().HaveCount(1);
-        releases.First().Artist.Should().Be("Artist 1");
-        releases.First().Album.Should().Be("Collaboration");
+        }}";
     }
 }

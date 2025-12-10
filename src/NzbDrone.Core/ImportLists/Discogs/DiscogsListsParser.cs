@@ -1,18 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using Newtonsoft.Json;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
-using NzbDrone.Core.ImportLists.Exceptions;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.ImportLists.Discogs;
 
 public class DiscogsListsParser : IParseImportListResponse
 {
-    private ImportListResponse _importListResponse;
     private IHttpClient _httpClient;
     private DiscogsListsSettings _settings;
 
@@ -28,94 +25,52 @@ public class DiscogsListsParser : IParseImportListResponse
 
     public IList<ImportListItemInfo> ParseResponse(ImportListResponse importListResponse)
     {
-        _importListResponse = importListResponse;
+        DiscogsParserHelper.EnsureValidResponse(importListResponse,
+            "Discogs API responded with HTML content. List may be too large or API may be unavailable.");
 
-        var items = new List<ImportListItemInfo>();
-
-        if (!PreProcess(_importListResponse))
-        {
-            return items;
-        }
-
-        var jsonResponse = Json.Deserialize<DiscogsListResponse>(_importListResponse.Content);
+        var jsonResponse = Json.Deserialize<DiscogsListResponse>(importListResponse.Content);
 
         if (jsonResponse?.Items == null)
         {
-            return items;
+            return new List<ImportListItemInfo>();
         }
 
-        foreach (var item in jsonResponse.Items)
+        var items = new List<ImportListItemInfo>();
+
+        foreach (var resourceUrl in jsonResponse.Items.Where(IsReleaseItem).Select(item => item.ResourceUrl))
         {
-            if (item?.Type == "release" && item.ResourceUrl.IsNotNullOrWhiteSpace())
+            var releaseInfo = TryFetchRelease(resourceUrl);
+
+            if (releaseInfo != null)
             {
-                try
-                {
-                    if (_httpClient != null && _settings != null)
-                    {
-                        var releaseInfo = FetchReleaseDetails(item.ResourceUrl);
-                        if (releaseInfo != null)
-                        {
-                            items.Add(releaseInfo);
-                        }
-                    }
-                }
-                catch
-                {
-                    // If we can't fetch release details, skip this item
-                    continue;
-                }
+                items.Add(releaseInfo);
             }
         }
 
         return items;
     }
 
-    // Unfortunately discogs release details are nested in a given /release/N endpoint.
-    // We'll have to fetch each one to get proper details.
-    private ImportListItemInfo FetchReleaseDetails(string resourceUrl)
+    private static bool IsReleaseItem(DiscogsListItem item)
     {
-        var request = new HttpRequestBuilder(resourceUrl)
-            .SetHeader("Authorization", $"Discogs token={_settings.Token}")
-            .Build();
+        return item?.Type == "release" && item.ResourceUrl.IsNotNullOrWhiteSpace();
+    }
 
-        var response = _httpClient.Execute(request);
-
-        if (response.StatusCode != HttpStatusCode.OK)
+    private ImportListItemInfo TryFetchRelease(string resourceUrl)
+    {
+        if (_httpClient == null || _settings == null)
         {
             return null;
         }
 
-        var releaseResponse = Json.Deserialize<DiscogsReleaseResponse>(response.Content);
-
-        if (releaseResponse?.Artists?.Any() == true && releaseResponse.Title.IsNotNullOrWhiteSpace())
+        try
         {
-            return new ImportListItemInfo
-            {
-                Artist = releaseResponse.Artists.First().Name,
-                Album = releaseResponse.Title
-            };
+            return DiscogsParserHelper.FetchReleaseDetails(_httpClient, _settings.Token, resourceUrl);
         }
-
-        return null;
-    }
-
-    protected virtual bool PreProcess(ImportListResponse importListResponse)
-    {
-        if (importListResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+        catch
         {
-            throw new ImportListException(importListResponse,
-                "Discogs API call resulted in an unexpected StatusCode [{0}]",
-                importListResponse.HttpResponse.StatusCode);
+            // If we can't fetch release details, skip this item
+            return null;
         }
-
-        if (importListResponse.HttpResponse.Headers.ContentType != null &&
-            importListResponse.HttpResponse.Headers.ContentType.Contains("text/html"))
-        {
-            throw new ImportListException(importListResponse,
-                "Discogs API responded with HTML content. List may be too large or API may be unavailable.");
-        }
-
-        return true;
     }
 }
 

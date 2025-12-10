@@ -1,21 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using Newtonsoft.Json;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
-using NzbDrone.Core.ImportLists.Exceptions;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.ImportLists.Discogs;
 
 public class DiscogsWantlistParser : IParseImportListResponse
 {
-    private ImportListResponse _importListResponse;
-    private IHttpClient _httpClient;
-    private DiscogsWantlistSettings _settings;
-
     public DiscogsWantlistParser()
     {
     }
@@ -28,94 +22,42 @@ public class DiscogsWantlistParser : IParseImportListResponse
 
     public IList<ImportListItemInfo> ParseResponse(ImportListResponse importListResponse)
     {
-        _importListResponse = importListResponse;
+        DiscogsParserHelper.EnsureValidResponse(importListResponse,
+            "Discogs API responded with HTML content. Wantlist may be too large or API may be unavailable.");
 
-        var items = new List<ImportListItemInfo>();
-
-        if (!PreProcess(_importListResponse))
-        {
-            return items;
-        }
-
-        var jsonResponse = Json.Deserialize<DiscogsWantlistResponse>(_importListResponse.Content);
+        var jsonResponse = Json.Deserialize<DiscogsWantlistResponse>(importListResponse.Content);
 
         if (jsonResponse?.Wants == null)
         {
-            return items;
+            return new List<ImportListItemInfo>();
         }
+
+        var items = new List<ImportListItemInfo>();
 
         foreach (var want in jsonResponse.Wants)
         {
-            if (want?.BasicInformation != null)
+            var basicInfo = want?.BasicInformation;
+
+            if (basicInfo == null)
             {
-                try
-                {
-                    if (_httpClient != null && _settings != null)
-                    {
-                        var releaseInfo = FetchReleaseDetails(want.BasicInformation.ResourceUrl);
-                        if (releaseInfo != null)
-                        {
-                            items.Add(releaseInfo);
-                        }
-                    }
-                }
-                catch
-                {
-                    // If we can't fetch release details, skip this item
-                    continue;
-                }
+                continue;
             }
+
+            // The wantlist API includes artists and title in basic_information, so no need to fetch release details
+            // If you want is artists.First().Name and title, then fetching the release details is redundant according to their API.
+            if (basicInfo.Artists?.Any() != true || basicInfo.Title.IsNullOrWhiteSpace())
+            {
+                continue;
+            }
+
+            items.Add(new ImportListItemInfo
+            {
+                Artist = basicInfo.Artists.First().Name,
+                Album = basicInfo.Title
+            });
         }
 
         return items;
-    }
-
-    // Unfortunately discogs release details are nested in a given /release/N endpoint.
-    // We'll have to fetch each one to get proper details.
-    private ImportListItemInfo FetchReleaseDetails(string resourceUrl)
-    {
-        var request = new HttpRequestBuilder(resourceUrl)
-            .SetHeader("Authorization", $"Discogs token={_settings.Token}")
-            .Build();
-
-        var response = _httpClient.Execute(request);
-
-        if (response.StatusCode != HttpStatusCode.OK)
-        {
-            return null;
-        }
-
-        var releaseResponse = Json.Deserialize<DiscogsReleaseResponse>(response.Content);
-
-        if (releaseResponse?.Artists?.Any() == true && releaseResponse.Title.IsNotNullOrWhiteSpace())
-        {
-            return new ImportListItemInfo
-            {
-                Artist = releaseResponse.Artists.First().Name,
-                Album = releaseResponse.Title
-            };
-        }
-
-        return null;
-    }
-
-    protected virtual bool PreProcess(ImportListResponse importListResponse)
-    {
-        if (importListResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
-        {
-            throw new ImportListException(importListResponse,
-                "Discogs API call resulted in an unexpected StatusCode [{0}]",
-                importListResponse.HttpResponse.StatusCode);
-        }
-
-        if (importListResponse.HttpResponse.Headers.ContentType != null &&
-            importListResponse.HttpResponse.Headers.ContentType.Contains("text/html"))
-        {
-            throw new ImportListException(importListResponse,
-                "Discogs API responded with HTML content. Wantlist may be too large or API may be unavailable.");
-        }
-
-        return true;
     }
 }
 
