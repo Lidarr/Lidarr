@@ -12,8 +12,8 @@ namespace NzbDrone.Core.ImportLists.Discogs
 
         public DiscogsWantlistRequestGenerator()
         {
-            MaxPages = 1;
-            PageSize = 0; // Discogs doesn't support pagination for wantlists currently
+            MaxPages = 10; // Allow fetching up to 10 pages
+            PageSize = 50; // Discogs API supports pagination with page and per_page parameters (max 100 per page)
         }
 
         public virtual ImportListPageableRequestChain GetListItems()
@@ -25,12 +25,17 @@ namespace NzbDrone.Core.ImportLists.Discogs
 
         private IEnumerable<ImportListRequest> GetPagedRequests()
         {
-            var request = new HttpRequestBuilder(Settings.BaseUrl.TrimEnd('/'))
-                .Resource($"/users/{Settings.Username}/wants")
-                .SetHeader("Authorization", $"Discogs token={Settings.Token}")
-                .Build();
+            for (var page = 1; page <= MaxPages; page++)
+            {
+                var request = new HttpRequestBuilder(Settings.BaseUrl.TrimEnd('/'))
+                    .Resource($"/users/{Settings.Username}/wants")
+                    .AddQueryParam("page", page)
+                    .AddQueryParam("per_page", PageSize)
+                    .SetHeader("Authorization", $"Discogs token={Settings.Token}")
+                    .Build();
 
-            yield return new ImportListRequest(request);
+                yield return new ImportListRequest(request);
+            }
         }
     }
 }
