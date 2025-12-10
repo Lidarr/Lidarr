@@ -23,10 +23,8 @@ public class DiscogsWantlistFixture
     public void SetUp()
     {
         _httpClient = new Mock<IHttpClient>();
-        _parser = new DiscogsWantlistParser();
         _settings = new DiscogsWantlistSettings { Token = "token", Username = "user", BaseUrl = "https://api.discogs.com" };
-
-        _parser.SetContext(_httpClient.Object, _settings);
+        _parser = new DiscogsWantlistParser(_settings, _httpClient.Object);
     }
 
     [Test]
@@ -133,5 +131,4 @@ public class DiscogsWantlistFixture
 
         return new ImportListResponse(importListRequest, httpResponse);
     }
-
 }

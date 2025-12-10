@@ -9,32 +9,30 @@ namespace NzbDrone.Core.ImportLists.Discogs;
 
 public class DiscogsWantlistParser : IParseImportListResponse
 {
-    private IHttpClient _httpClient;
-    private DiscogsWantlistSettings _settings;
+    private readonly DiscogsWantlistSettings _settings;
+    private readonly IHttpClient _httpClient;
 
-    public DiscogsWantlistParser()
+    public DiscogsWantlistParser(DiscogsWantlistSettings settings, IHttpClient httpClient)
     {
-    }
-
-    public void SetContext(IHttpClient httpClient, DiscogsWantlistSettings settings)
-    {
-        _httpClient = httpClient;
         _settings = settings;
+        _httpClient = httpClient;
     }
 
     public IList<ImportListItemInfo> ParseResponse(ImportListResponse importListResponse)
     {
-        DiscogsParserHelper.EnsureValidResponse(importListResponse,
-            "Discogs API responded with HTML content. Wantlist may be too large or API may be unavailable.");
+        var items = new List<ImportListItemInfo>();
+
+        if (!PreProcess(importListResponse))
+        {
+            return items;
+        }
 
         var jsonResponse = Json.Deserialize<DiscogsWantlistResponse>(importListResponse.Content);
 
         if (jsonResponse?.Wants == null)
         {
-            return new List<ImportListItemInfo>();
+            return items;
         }
-
-        var items = new List<ImportListItemInfo>();
 
         foreach (var want in jsonResponse.Wants)
         {
@@ -52,7 +50,7 @@ public class DiscogsWantlistParser : IParseImportListResponse
                 continue;
             }
 
-            items.Add(new ImportListItemInfo
+            items.AddIfNotNull(new ImportListItemInfo
             {
                 Artist = basicInfo.Artists.First().Name,
                 Album = basicInfo.Title
@@ -60,5 +58,12 @@ public class DiscogsWantlistParser : IParseImportListResponse
         }
 
         return items;
+    }
+
+    private bool PreProcess(ImportListResponse importListResponse)
+    {
+        DiscogsParserHelper.EnsureValidResponse(importListResponse,
+            "Discogs API responded with HTML content. Wantlist may be too large or API may be unavailable.");
+        return true;
     }
 }

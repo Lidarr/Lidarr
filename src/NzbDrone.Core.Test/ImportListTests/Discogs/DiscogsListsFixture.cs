@@ -2,6 +2,7 @@ using System.Linq;
 using System.Net;
 using FluentAssertions;
 using Moq;
+using NLog;
 using NUnit.Framework;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.ImportLists;
@@ -18,15 +19,15 @@ public class DiscogsListsFixture
     private DiscogsListsParser _parser;
     private Mock<IHttpClient> _httpClient;
     private DiscogsListsSettings _settings;
+    private Logger _logger;
 
     [SetUp]
     public void SetUp()
     {
         _httpClient = new Mock<IHttpClient>();
-        _parser = new DiscogsListsParser();
         _settings = new DiscogsListsSettings { Token = "token", ListId = "123", BaseUrl = "https://api.discogs.com" };
-
-        _parser.SetContext(_httpClient.Object, _settings);
+        _logger = LogManager.GetCurrentClassLogger();
+        _parser = new DiscogsListsParser(_settings, _httpClient.Object, _logger);
     }
 
     [Test]

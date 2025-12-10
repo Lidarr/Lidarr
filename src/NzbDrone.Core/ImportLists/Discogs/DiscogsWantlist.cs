@@ -30,9 +30,7 @@ namespace NzbDrone.Core.ImportLists.Discogs
 
         public override IParseImportListResponse GetParser()
         {
-            var parser = new DiscogsWantlistParser();
-            parser.SetContext(_httpClient, Settings);
-            return parser;
+            return new DiscogsWantlistParser(Settings, _httpClient);
         }
     }
 }
