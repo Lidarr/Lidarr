@@ -24,14 +24,12 @@ namespace NzbDrone.Core.ImportLists.Discogs
 
         public override IImportListRequestGenerator GetRequestGenerator()
         {
-            return new DiscogsListsRequestGenerator { Settings = Settings };
+            return new DiscogsListsRequestGenerator(Settings);
         }
 
         public override IParseImportListResponse GetParser()
         {
-            var parser = new DiscogsListsParser();
-            parser.SetContext(_httpClient, Settings, _logger);
-            return parser;
+            return new DiscogsListsParser(Settings, _httpClient, _logger);
         }
     }
 }
