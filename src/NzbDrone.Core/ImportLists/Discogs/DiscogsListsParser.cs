@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using NLog;
 using Newtonsoft.Json;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -12,15 +14,17 @@ public class DiscogsListsParser : IParseImportListResponse
 {
     private IHttpClient _httpClient;
     private DiscogsListsSettings _settings;
+    private Logger _logger;
 
     public DiscogsListsParser()
     {
     }
 
-    public void SetContext(IHttpClient httpClient, DiscogsListsSettings settings)
+    public void SetContext(IHttpClient httpClient, DiscogsListsSettings settings, Logger logger = null)
     {
         _httpClient = httpClient;
         _settings = settings;
+        _logger = logger ?? LogManager.GetCurrentClassLogger();
     }
 
     public IList<ImportListItemInfo> ParseResponse(ImportListResponse importListResponse)
@@ -66,9 +70,9 @@ public class DiscogsListsParser : IParseImportListResponse
         {
             return DiscogsParserHelper.FetchReleaseDetails(_httpClient, _settings.Token, resourceUrl);
         }
-        catch
+        catch (Exception ex)
         {
-            // If we can't fetch release details, skip this item
+            _logger?.Error(ex, "Failed to fetch release details from Discogs API for resource URL: {0}. Skipping this item.", resourceUrl);
             return null;
         }
     }
