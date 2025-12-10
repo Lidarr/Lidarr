@@ -8,7 +8,8 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.ImportLists.Discogs;
 
-public class DiscogsListsParser(DiscogsListsSettings settings, IHttpClient httpClient, Logger logger) : IParseImportListResponse
+public class DiscogsListsParser(DiscogsListsSettings settings, IHttpClient httpClient, Logger logger)
+    : IParseImportListResponse
 {
     private readonly DiscogsListsSettings _settings = settings;
     private readonly IHttpClient _httpClient = httpClient;
