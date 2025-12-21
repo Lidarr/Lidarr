@@ -44,7 +44,7 @@ namespace NzbDrone.Core.Notifications.Discord
                 Title = GetTitle(artist, albums),
                 Color = (int)DiscordColors.Standard,
                 Fields = new List<DiscordField>(),
-                Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+                Timestamp = DateTime.UtcNow.ToString("O")
             };
 
             if (Settings.GrabFields.Contains((int)DiscordGrabFieldType.Poster))
@@ -149,7 +149,7 @@ namespace NzbDrone.Core.Notifications.Discord
                 Title = GetTitle(artist, new List<Album> { album }),
                 Color = isUpgrade ? (int)DiscordColors.Upgrade : (int)DiscordColors.Success,
                 Fields = new List<DiscordField>(),
-                Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+                Timestamp = DateTime.UtcNow.ToString("O")
             };
 
             if (Settings.ImportFields.Contains((int)DiscordImportFieldType.Poster))
@@ -304,7 +304,7 @@ namespace NzbDrone.Core.Notifications.Discord
                                       },
                                       Title = healthCheck.Source.Name,
                                       Description = healthCheck.Message,
-                                      Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                                      Timestamp = DateTime.UtcNow.ToString("O"),
                                       Color = healthCheck.Type == HealthCheck.HealthCheckResult.Warning ? (int)DiscordColors.Warning : (int)DiscordColors.Danger
                                   }
                               };
@@ -327,7 +327,7 @@ namespace NzbDrone.Core.Notifications.Discord
                     },
                     Title = "Health Issue Resolved: " + previousCheck.Source.Name,
                     Description = $"The following issue is now resolved: {previousCheck.Message}",
-                    Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                    Timestamp = DateTime.UtcNow.ToString("O"),
                     Color = (int)DiscordColors.Success
                 }
             };
@@ -414,7 +414,7 @@ namespace NzbDrone.Core.Notifications.Discord
                                           IconUrl = "https://raw.githubusercontent.com/lidarr/Lidarr/develop/Logo/256.png"
                                       },
                                       Title = APPLICATION_UPDATE_TITLE,
-                                      Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                                      Timestamp = DateTime.UtcNow.ToString("O"),
                                       Color = (int)DiscordColors.Standard,
                                       Fields = new List<DiscordField>()
                                       {
