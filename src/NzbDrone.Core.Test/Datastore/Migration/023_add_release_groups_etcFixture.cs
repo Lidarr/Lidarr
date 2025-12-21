@@ -32,8 +32,8 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 MetadataProfileId = 1
             };
 
-            c.IfDatabase(ProcessorId.PostgreSQL).Insert.IntoTable("Artists").WithOverridingSystemValue().Row(artist);
-            c.IfDatabase(ProcessorId.SQLite).Insert.IntoTable("Artists").Row(artist);
+            c.IfDatabase(ProcessorIdConstants.PostgreSQL).Insert.IntoTable("Artists").WithOverridingSystemValue().Row(artist);
+            c.IfDatabase(ProcessorIdConstants.SQLite).Insert.IntoTable("Artists").Row(artist);
         }
 
         private void GivenAlbum(add_release_groups_etc c, int id, int artistId, string title, string currentRelease)
@@ -54,8 +54,8 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 CurrentRelease = currentRelease
             };
 
-            c.IfDatabase(ProcessorId.PostgreSQL).Insert.IntoTable("Albums").WithOverridingSystemValue().Row(album);
-            c.IfDatabase(ProcessorId.SQLite).Insert.IntoTable("Albums").Row(album);
+            c.IfDatabase(ProcessorIdConstants.PostgreSQL).Insert.IntoTable("Albums").WithOverridingSystemValue().Row(album);
+            c.IfDatabase(ProcessorIdConstants.SQLite).Insert.IntoTable("Albums").Row(album);
         }
 
         private void GivenTracks(add_release_groups_etc c, int artistid, int albumid, int firstId, int count)
