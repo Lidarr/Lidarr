@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Datastore.Migration
             Alter.Table("RootFolders").AddColumn("DefaultMonitorOption").AsInt32().WithDefaultValue(0);
             Alter.Table("RootFolders").AddColumn("DefaultTags").AsString().Nullable();
 
-            IfDatabase(ProcessorId.SQLite).Execute.WithConnection(SetDefaultOptions);
+            IfDatabase(ProcessorIdConstants.SQLite).Execute.WithConnection(SetDefaultOptions);
         }
 
         private void SetDefaultOptions(IDbConnection conn, IDbTransaction tran)

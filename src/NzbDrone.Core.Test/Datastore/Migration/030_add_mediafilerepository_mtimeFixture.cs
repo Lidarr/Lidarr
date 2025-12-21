@@ -34,8 +34,8 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 ArtistMetadataId = id
             };
 
-            c.IfDatabase(ProcessorId.PostgreSQL).Insert.IntoTable("Artists").WithOverridingSystemValue().Row(artist);
-            c.IfDatabase(ProcessorId.SQLite).Insert.IntoTable("Artists").Row(artist);
+            c.IfDatabase(ProcessorIdConstants.PostgreSQL).Insert.IntoTable("Artists").WithOverridingSystemValue().Row(artist);
+            c.IfDatabase(ProcessorIdConstants.SQLite).Insert.IntoTable("Artists").Row(artist);
         }
 
         private void GivenAlbum(add_mediafilerepository_mtime c, int id, int artistMetadataId, string title)
@@ -53,8 +53,8 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 AnyReleaseOk = true
             };
 
-            c.IfDatabase(ProcessorId.PostgreSQL).Insert.IntoTable("Albums").WithOverridingSystemValue().Row(album);
-            c.IfDatabase(ProcessorId.SQLite).Insert.IntoTable("Albums").Row(album);
+            c.IfDatabase(ProcessorIdConstants.PostgreSQL).Insert.IntoTable("Albums").WithOverridingSystemValue().Row(album);
+            c.IfDatabase(ProcessorIdConstants.SQLite).Insert.IntoTable("Albums").Row(album);
         }
 
         private void GivenAlbumRelease(add_mediafilerepository_mtime c, int id, int albumId, bool monitored)

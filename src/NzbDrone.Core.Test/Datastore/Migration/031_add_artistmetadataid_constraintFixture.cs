@@ -26,8 +26,8 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 Images = "images"
             };
 
-            c.IfDatabase(ProcessorId.PostgreSQL).Insert.IntoTable("ArtistMetadata").WithOverridingSystemValue().Row(artistMetadata);
-            c.IfDatabase(ProcessorId.SQLite).Insert.IntoTable("ArtistMetadata").Row(artistMetadata);
+            c.IfDatabase(ProcessorIdConstants.PostgreSQL).Insert.IntoTable("ArtistMetadata").WithOverridingSystemValue().Row(artistMetadata);
+            c.IfDatabase(ProcessorIdConstants.SQLite).Insert.IntoTable("ArtistMetadata").Row(artistMetadata);
         }
 
         private void GivenArtist(add_artistmetadataid_constraint c, int id, int artistMetadataId, string name)
@@ -45,8 +45,8 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 MetadataProfileId = 1,
             };
 
-            c.IfDatabase(ProcessorId.PostgreSQL).Insert.IntoTable("Artists").WithOverridingSystemValue().Row(artist);
-            c.IfDatabase(ProcessorId.SQLite).Insert.IntoTable("Artists").Row(artist);
+            c.IfDatabase(ProcessorIdConstants.PostgreSQL).Insert.IntoTable("Artists").WithOverridingSystemValue().Row(artist);
+            c.IfDatabase(ProcessorIdConstants.SQLite).Insert.IntoTable("Artists").Row(artist);
         }
 
         private void VerifyArtists(IDirectDataMapper db, List<int> ids)
