@@ -21,8 +21,6 @@ namespace NzbDrone.Common.Disk
         private readonly IDiskProvider _diskProvider;
         private readonly Logger _logger;
 
-        private static readonly string[] ReflinkFilesystems = { "btrfs", "xfs", "zfs" };
-
         public DiskTransferService(IDiskProvider diskProvider, Logger logger)
         {
             _diskProvider = diskProvider;
@@ -343,40 +341,15 @@ namespace NzbDrone.Common.Disk
             var targetDriveFormat = targetMount?.DriveFormat ?? string.Empty;
 
             var isCifs = targetDriveFormat == "cifs";
-            var tryReflink = sourceDriveFormat == targetDriveFormat && ReflinkFilesystems.Contains(sourceDriveFormat);
 
             if (mode.HasFlag(TransferMode.Copy))
             {
-                if (tryReflink)
-                {
-                    if (_diskProvider.TryCreateRefLink(sourcePath, targetPath))
-                    {
-                        return TransferMode.Copy;
-                    }
-                }
-
                 TryCopyFileVerified(sourcePath, targetPath, originalSize);
                 return TransferMode.Copy;
             }
 
             if (mode.HasFlag(TransferMode.Move))
             {
-                if (tryReflink)
-                {
-                    if (isSameMount && _diskProvider.TryRenameFile(sourcePath, targetPath))
-                    {
-                        _logger.Trace("Renamed [{0}] to [{1}].", sourcePath, targetPath);
-                        return TransferMode.Move;
-                    }
-
-                    if (_diskProvider.TryCreateRefLink(sourcePath, targetPath))
-                    {
-                        _logger.Trace("Reflink successful, deleting source [{0}].", sourcePath);
-                        _diskProvider.DeleteFile(sourcePath);
-                        return TransferMode.Move;
-                    }
-                }
-
                 if (isCifs && !isSameMount)
                 {
                     _logger.Trace("On cifs mount. Starting verified copy [{0}] to [{1}].", sourcePath, targetPath);
