@@ -12,6 +12,7 @@ namespace NzbDrone.Common.Composition
     public static class PluginLoader
     {
         private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(PluginLoader));
+        private static readonly List<PluginLoadContext> PluginContexts = new ();
 
         public static (List<Assembly>, List<WeakReference>) LoadPlugins(IEnumerable<string> pluginPaths)
         {
@@ -38,6 +39,7 @@ namespace NzbDrone.Common.Composition
         private static (Assembly, WeakReference) LoadPlugin(string path)
         {
             var context = new PluginLoadContext(path);
+            PluginContexts.Add(context);
             var weakRef = new WeakReference(context, trackResurrection: true);
 
             // load from stream to avoid locking on windows
@@ -53,7 +55,9 @@ namespace NzbDrone.Common.Composition
             {
                 if (pluginRef?.Target != null)
                 {
-                    ((PluginLoadContext)pluginRef.Target).Unload();
+                    var context = (PluginLoadContext)pluginRef.Target;
+                    PluginContexts.Remove(context);
+                    context.Unload();
                 }
             }
         }
