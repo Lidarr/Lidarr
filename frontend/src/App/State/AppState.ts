@@ -1,10 +1,12 @@
-import ParseAppState from 'App/State/ParseAppState';
 import AlbumAppState from './AlbumAppState';
 import ArtistAppState, { ArtistIndexAppState } from './ArtistAppState';
 import CalendarAppState from './CalendarAppState';
 import CommandAppState from './CommandAppState';
 import HistoryAppState from './HistoryAppState';
+import ParseAppState from './ParseAppState';
+import PathsAppState from './PathsAppState';
 import QueueAppState from './QueueAppState';
+import RootFolderAppState from './RootFolderAppState';
 import SettingsAppState from './SettingsAppState';
 import SystemAppState from './SystemAppState';
 import TagsAppState from './TagsAppState';
@@ -44,7 +46,10 @@ export interface CustomFilter {
 }
 
 export interface AppSectionState {
+  isConnected: boolean;
+  isReconnecting: boolean;
   version: string;
+  prevVersion?: string;
   dimensions: {
     isSmallScreen: boolean;
     width: number;
@@ -61,7 +66,9 @@ interface AppState {
   commands: CommandAppState;
   history: HistoryAppState;
   parse: ParseAppState;
+  paths: PathsAppState;
   queue: QueueAppState;
+  rootFolders: RootFolderAppState;
   settings: SettingsAppState;
   tags: TagsAppState;
   trackFiles: TrackFilesAppState;

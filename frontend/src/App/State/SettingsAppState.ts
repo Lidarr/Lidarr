@@ -12,14 +12,15 @@ import IndexerFlag from 'typings/IndexerFlag';
 import MetadataProfile from 'typings/MetadataProfile';
 import Notification from 'typings/Notification';
 import QualityProfile from 'typings/QualityProfile';
-import RootFolder from 'typings/RootFolder';
 import General from 'typings/Settings/General';
 import UiSettings from 'typings/Settings/UiSettings';
 
 export interface DownloadClientAppState
   extends AppSectionState<DownloadClient>,
     AppSectionDeleteState,
-    AppSectionSaveState {}
+    AppSectionSaveState {
+  isTestingAll: boolean;
+}
 
 export type GeneralAppState = AppSectionItemState<General>;
 
@@ -31,7 +32,9 @@ export interface ImportListAppState
 export interface IndexerAppState
   extends AppSectionState<Indexer>,
     AppSectionDeleteState,
-    AppSectionSaveState {}
+    AppSectionSaveState {
+  isTestingAll: boolean;
+}
 
 export interface NotificationAppState
   extends AppSectionState<Notification>,
@@ -50,11 +53,6 @@ export interface CustomFormatAppState
     AppSectionDeleteState,
     AppSectionSaveState {}
 
-export interface RootFolderAppState
-  extends AppSectionState<RootFolder>,
-    AppSectionDeleteState,
-    AppSectionSaveState {}
-
 export type IndexerFlagSettingsAppState = AppSectionState<IndexerFlag>;
 export type UiSettingsAppState = AppSectionItemState<UiSettings>;
 
@@ -69,7 +67,6 @@ interface SettingsAppState {
   metadataProfiles: MetadataProfilesAppState;
   notifications: NotificationAppState;
   qualityProfiles: QualityProfilesAppState;
-  rootFolders: RootFolderAppState;
   ui: UiSettingsAppState;
 }
 

@@ -1,37 +1,40 @@
 import { cloneDeep } from 'lodash';
 import { useReducer } from 'react';
-import ModelBase from 'App/ModelBase';
 import areAllSelected from 'Utilities/Table/areAllSelected';
 import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
 
-export type SelectedState = Record<number, boolean>;
+export type SelectedState = Record<number | string, boolean>;
+
+export interface SelectStateModel {
+  id: number | string;
+}
 
 export interface SelectState {
   selectedState: SelectedState;
-  lastToggled: number | null;
+  lastToggled: number | string | null;
   allSelected: boolean;
   allUnselected: boolean;
 }
 
 export type SelectAction =
   | { type: 'reset' }
-  | { type: 'selectAll'; items: ModelBase[] }
-  | { type: 'unselectAll'; items: ModelBase[] }
+  | { type: 'selectAll'; items: SelectStateModel[] }
+  | { type: 'unselectAll'; items: SelectStateModel[] }
   | {
       type: 'toggleSelected';
-      id: number;
-      isSelected: boolean;
+      id: number | string;
+      isSelected: boolean | null;
       shiftKey: boolean;
-      items: ModelBase[];
+      items: SelectStateModel[];
     }
   | {
       type: 'removeItem';
-      id: number;
+      id: number | string;
     }
   | {
       type: 'updateItems';
-      items: ModelBase[];
+      items: SelectStateModel[];
     };
 
 export type Dispatch = (action: SelectAction) => void;
@@ -44,7 +47,10 @@ const initialState = {
   items: [],
 };
 
-function getSelectedState(items: ModelBase[], existingState: SelectedState) {
+function getSelectedState(
+  items: SelectStateModel[],
+  existingState: SelectedState
+) {
   return items.reduce((acc: SelectedState, item) => {
     const id = item.id;
 
