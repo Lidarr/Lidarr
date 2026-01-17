@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Lidarr.Api.V1.Albums;
 using Lidarr.Api.V1.Artist;
+using Lidarr.Api.V1.CustomFormats;
 using Lidarr.Api.V1.Tracks;
 using Lidarr.Http.REST;
 using NzbDrone.Core.DecisionEngine;
@@ -24,6 +25,8 @@ namespace Lidarr.Api.V1.ManualImport
         public string ReleaseGroup { get; set; }
         public int QualityWeight { get; set; }
         public string DownloadId { get; set; }
+        public List<CustomFormatResource> CustomFormats { get; set; }
+        public int CustomFormatScore { get; set; }
         public int IndexerFlags { get; set; }
         public IEnumerable<Rejection> Rejections { get; set; }
         public ParsedTrackInfo AudioTags { get; set; }
@@ -41,6 +44,8 @@ namespace Lidarr.Api.V1.ManualImport
                 return null;
             }
 
+            var customFormatScore = model.Artist?.QualityProfile?.Value?.CalculateCustomFormatScore(model.CustomFormats) ?? 0;
+
             return new ManualImportResource
             {
                 Id = model.Id,
@@ -56,6 +61,8 @@ namespace Lidarr.Api.V1.ManualImport
 
                 // QualityWeight
                 DownloadId = model.DownloadId,
+                CustomFormats = model.CustomFormats.ToResource(false),
+                CustomFormatScore = customFormatScore,
                 IndexerFlags = model.IndexerFlags,
                 Rejections = model.Rejections,
 

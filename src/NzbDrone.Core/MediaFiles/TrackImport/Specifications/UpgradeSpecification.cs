@@ -34,6 +34,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
 
             var downloadPropersAndRepacks = _configService.DownloadPropersAndRepacks;
             var qualityComparer = new QualityModelComparer(localTrack.Artist.QualityProfile);
+            var qualityProfile = localTrack.Artist.QualityProfile.Value;
+
+            // Calculate custom formats for the new track
+            var newCustomFormats = _customFormatCalculationService.ParseCustomFormat(localTrack);
+            var newFormatScore = qualityProfile.CalculateCustomFormatScore(newCustomFormats);
 
             foreach (var track in localTrack.Tracks.Where(e => e.TrackFileId > 0))
             {
@@ -53,11 +58,31 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
                     return Decision.Reject("Not an upgrade for existing track file(s). New Quality is {0}", localTrack.Quality.Quality);
                 }
 
-                if (qualityCompare == 0 && downloadPropersAndRepacks != ProperDownloadTypes.DoNotPrefer &&
-                    localTrack.Quality.Revision.CompareTo(trackFile.Quality.Revision) < 0)
+                // When quality is equal, compare custom format scores
+                if (qualityCompare == 0)
                 {
-                    _logger.Debug("This file isn't a quality upgrade for all tracks. Skipping {0}", localTrack.Path);
-                    return Decision.Reject("Not an upgrade for existing track file(s)");
+                    var existingCustomFormats = _customFormatCalculationService.ParseCustomFormat(trackFile, localTrack.Artist);
+                    var existingFormatScore = qualityProfile.CalculateCustomFormatScore(existingCustomFormats);
+
+                    if (newFormatScore < existingFormatScore)
+                    {
+                        _logger.Debug("This file isn't a custom format upgrade. Existing: {0} [{1}], New: {2} [{3}]. Skipping {4}",
+                                      existingFormatScore,
+                                      string.Join(", ", existingCustomFormats.Select(x => x.Name)),
+                                      newFormatScore,
+                                      string.Join(", ", newCustomFormats.Select(x => x.Name)),
+                                      localTrack.Path);
+                        return Decision.Reject("Not a custom format upgrade for existing track file(s). Existing score: {0}, New score: {1}",
+                                                existingFormatScore,
+                                                newFormatScore);
+                    }
+
+                    if (downloadPropersAndRepacks != ProperDownloadTypes.DoNotPrefer &&
+                        localTrack.Quality.Revision.CompareTo(trackFile.Quality.Revision) < 0)
+                    {
+                        _logger.Debug("This file isn't a quality upgrade for all tracks. Skipping {0}", localTrack.Path);
+                        return Decision.Reject("Not an upgrade for existing track file(s)");
+                    }
                 }
             }
 

@@ -19,6 +19,7 @@ import SelectQualityModal from 'InteractiveImport/Quality/SelectQualityModal';
 import SelectReleaseGroupModal from 'InteractiveImport/ReleaseGroup/SelectReleaseGroupModal';
 import SelectTrackModal from 'InteractiveImport/Track/SelectTrackModal';
 import formatBytes from 'Utilities/Number/formatBytes';
+import formatCustomFormatScore from 'Utilities/Number/formatCustomFormatScore';
 import hasDifferentItems from 'Utilities/Object/hasDifferentItems';
 import translate from 'Utilities/String/translate';
 import InteractiveImportRowCellPlaceholder from './InteractiveImportRowCellPlaceholder';
@@ -185,6 +186,7 @@ class InteractiveImportRow extends Component {
       releaseGroup,
       size,
       customFormats,
+      customFormatScore,
       indexerFlags,
       rejections,
       columns,
@@ -323,23 +325,17 @@ class InteractiveImportRow extends Component {
           {formatBytes(size)}
         </TableRowCell>
 
-        <TableRowCell>
-          {
-            customFormats?.length ?
-              <Popover
-                anchor={
-                  <Icon name={icons.INTERACTIVE} />
-                }
-                title={translate('Formats')}
-                body={
-                  <div className={styles.customFormatTooltip}>
-                    <AlbumFormats formats={customFormats} />
-                  </div>
-                }
-                position={tooltipPositions.LEFT}
-              /> :
-              null
-          }
+        <TableRowCell
+          className={styles.customFormatScore}
+        >
+          <Tooltip
+            anchor={formatCustomFormatScore(
+              customFormatScore,
+              customFormats?.length
+            )}
+            tooltip={<AlbumFormats formats={customFormats} />}
+            position={tooltipPositions.LEFT}
+          />
         </TableRowCell>
 
         {isIndexerFlagsColumnVisible ? (
@@ -462,6 +458,7 @@ InteractiveImportRow.propTypes = {
   quality: PropTypes.object,
   size: PropTypes.number.isRequired,
   customFormats: PropTypes.arrayOf(PropTypes.object),
+  customFormatScore: PropTypes.number.isRequired,
   indexerFlags: PropTypes.number.isRequired,
   rejections: PropTypes.arrayOf(PropTypes.object).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,

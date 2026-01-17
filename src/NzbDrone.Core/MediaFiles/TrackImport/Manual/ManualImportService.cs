@@ -304,6 +304,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     item.Rejections = decision.Rejections;
                     item.Size = decision.Item.Size;
 
+                    if (decision.Item.Artist != null)
+                    {
+                        item.CustomFormats = _formatCalculator.ParseCustomFormat(decision.Item);
+                    }
+
                     result.Add(item);
                 }
 

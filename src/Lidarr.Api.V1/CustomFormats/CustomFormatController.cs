@@ -1,14 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
-using FluentValidation.Results;
 using Lidarr.Http;
 using Lidarr.Http.REST;
 using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Validation;
 
 namespace Lidarr.Api.V1.CustomFormats
 {
@@ -39,6 +37,22 @@ namespace Lidarr.Api.V1.CustomFormats
                 {
                     context.AddFailure("Condition name(s) cannot be empty or consist of only spaces");
                 }
+
+                // Validate each specification's internal rules
+                var model = customFormat.ToModel(_specifications);
+                for (var i = 0; i < model.Specifications.Count; i++)
+                {
+                    var spec = model.Specifications[i];
+                    var specValidationResult = spec.Validate();
+
+                    if (!specValidationResult.IsValid)
+                    {
+                        foreach (var error in specValidationResult.Errors)
+                        {
+                            context.AddFailure($"Specifications[{i}].{error.PropertyName}", error.ErrorMessage);
+                        }
+                    }
+                }
             });
         }
 
@@ -60,8 +74,6 @@ namespace Lidarr.Api.V1.CustomFormats
         {
             var model = customFormatResource.ToModel(_specifications);
 
-            Validate(model);
-
             return Created(_formatService.Insert(model).Id);
         }
 
@@ -70,8 +82,6 @@ namespace Lidarr.Api.V1.CustomFormats
         public ActionResult<CustomFormatResource> Update([FromBody] CustomFormatResource resource)
         {
             var model = resource.ToModel(_specifications);
-
-            Validate(model);
 
             _formatService.Update(model);
 
@@ -128,24 +138,6 @@ namespace Lidarr.Api.V1.CustomFormats
             }
 
             return schema;
-        }
-
-        private void Validate(CustomFormat definition)
-        {
-            foreach (var validationResult in definition.Specifications.Select(spec => spec.Validate()))
-            {
-                VerifyValidationResult(validationResult);
-            }
-        }
-
-        private void VerifyValidationResult(ValidationResult validationResult)
-        {
-            var result = new NzbDroneValidationResult(validationResult.Errors);
-
-            if (!result.IsValid)
-            {
-                throw new ValidationException(result.Errors);
-            }
         }
 
         private IEnumerable<ICustomFormatSpecification> GetPresets()

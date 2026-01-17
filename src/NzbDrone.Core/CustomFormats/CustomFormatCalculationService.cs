@@ -122,6 +122,7 @@ namespace NzbDrone.Core.CustomFormats
                 Size = localTrack.Size,
                 Filename = Path.GetFileName(localTrack.Path),
                 IndexerFlags = localTrack.IndexerFlags,
+                MediaInfo = localTrack.FileTrackInfo?.MediaInfo
             };
 
             return ParseCustomFormat(input);
@@ -189,7 +190,8 @@ namespace NzbDrone.Core.CustomFormats
                 Artist = artist,
                 Size = trackFile.Size,
                 IndexerFlags = trackFile.IndexerFlags,
-                Filename = Path.GetFileName(trackFile.Path)
+                Filename = Path.GetFileName(trackFile.Path),
+                MediaInfo = trackFile.MediaInfo
             };
 
             return ParseCustomFormat(input, allCustomFormats);

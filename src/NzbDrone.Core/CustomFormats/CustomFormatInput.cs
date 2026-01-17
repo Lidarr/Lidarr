@@ -10,6 +10,7 @@ namespace NzbDrone.Core.CustomFormats
         public long Size { get; set; }
         public IndexerFlags IndexerFlags { get; set; }
         public string Filename { get; set; }
+        public MediaInfoModel MediaInfo { get; set; }
 
         // public CustomFormatInput(ParsedEpisodeInfo episodeInfo, Series series)
         // {
