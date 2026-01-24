@@ -18,8 +18,6 @@ namespace NzbDrone.Core.Parser
         RemoteAlbum Map(ParsedAlbumInfo parsedAlbumInfo, SearchCriteriaBase searchCriteria = null);
         RemoteAlbum Map(ParsedAlbumInfo parsedAlbumInfo, int artistId, IEnumerable<int> albumIds);
         List<Album> GetAlbums(ParsedAlbumInfo parsedAlbumInfo, Artist artist, SearchCriteriaBase searchCriteria = null);
-
-        // Music stuff here
         Album GetLocalAlbum(string filename, Artist artist);
     }
 
@@ -29,18 +27,21 @@ namespace NzbDrone.Core.Parser
         private readonly IAlbumService _albumService;
         private readonly ITrackService _trackService;
         private readonly IMediaFileService _mediaFileService;
+        private readonly IAlbumYearMatcher _yearMatcher;
         private readonly Logger _logger;
 
         public ParsingService(ITrackService trackService,
                               IArtistService artistService,
                               IAlbumService albumService,
                               IMediaFileService mediaFileService,
+                              IAlbumYearMatcher yearMatcher,
                               Logger logger)
         {
             _albumService = albumService;
             _artistService = artistService;
             _trackService = trackService;
             _mediaFileService = mediaFileService;
+            _yearMatcher = yearMatcher;
             _logger = logger;
         }
 
@@ -149,21 +150,23 @@ namespace NzbDrone.Core.Parser
                 return _albumService.GetAlbumsByArtist(artist.Id);
             }
 
+            var releaseYear = parsedAlbumInfo.ReleaseYear;
+
             if (searchCriteria != null)
             {
-                albumInfo = searchCriteria.Albums.ExclusiveOrDefault(e => e.Title == albumTitle);
+                albumInfo = FindAlbumInSearchCriteria(searchCriteria.Albums, albumTitle, releaseYear);
             }
 
             if (albumInfo == null)
             {
-                // TODO: Search by Title and Year instead of just Title when matching
-                albumInfo = _albumService.FindByTitle(artist.ArtistMetadataId, parsedAlbumInfo.AlbumTitle);
+                albumInfo = _albumService.FindByTitleAndYear(artist.ArtistMetadataId, parsedAlbumInfo.AlbumTitle, releaseYear);
             }
 
             if (albumInfo == null)
             {
-                _logger.Debug("Trying inexact album match for {0}", parsedAlbumInfo.AlbumTitle);
-                albumInfo = _albumService.FindByTitleInexact(artist.ArtistMetadataId, parsedAlbumInfo.AlbumTitle);
+                var yearInfo = releaseYear.HasValue ? $" ({releaseYear.Value})" : string.Empty;
+                _logger.Debug("Trying inexact album match for {0}{1}", parsedAlbumInfo.AlbumTitle, yearInfo);
+                albumInfo = _albumService.FindByTitleAndYearInexact(artist.ArtistMetadataId, parsedAlbumInfo.AlbumTitle, releaseYear);
             }
 
             if (albumInfo != null)
@@ -176,6 +179,59 @@ namespace NzbDrone.Core.Parser
             }
 
             return result;
+        }
+
+        private Album FindAlbumInSearchCriteria(List<Album> albums, string albumTitle, int? releaseYear)
+        {
+            var matchingAlbums = albums.Where(e => e.Title == albumTitle).ToList();
+
+            if (!matchingAlbums.Any())
+            {
+                return null;
+            }
+
+            if (matchingAlbums.Count == 1)
+            {
+                var album = matchingAlbums.First();
+
+                if (releaseYear.HasValue)
+                {
+                    var matchResult = _yearMatcher.Match(album, releaseYear);
+                    if (!matchResult.IsMatch)
+                    {
+                        _logger.Debug("Album '{0}' matched by title but {1}", album.Title, matchResult.RejectionReason);
+                        return null;
+                    }
+                }
+
+                return album;
+            }
+
+            // Multiple albums with same title - use year to disambiguate
+            if (releaseYear.HasValue)
+            {
+                var bestMatch = matchingAlbums
+                    .Select(a => new
+                    {
+                        Album = a,
+                        YearResult = _yearMatcher.Match(a, releaseYear)
+                    })
+                    .Where(x => x.YearResult.IsMatch)
+                    .OrderByDescending(x => x.YearResult.ScoreAdjustment)
+                    .FirstOrDefault();
+
+                if (bestMatch != null)
+                {
+                    return bestMatch.Album;
+                }
+
+                _logger.Debug("Multiple albums named '{0}' found but none match year {1}", albumTitle, releaseYear);
+                return null;
+            }
+
+            // No year to disambiguate, cannot safely choose from multiple matches
+            _logger.Trace("Multiple albums named '{0}' found without year to disambiguate, unable to determine correct match", albumTitle);
+            return null;
         }
 
         public RemoteAlbum Map(ParsedAlbumInfo parsedAlbumInfo, int artistId, IEnumerable<int> albumIds)

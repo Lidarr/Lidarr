@@ -4,6 +4,7 @@ using System.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Profiles.Delay;
 using NzbDrone.Core.Qualities;
@@ -15,15 +16,20 @@ namespace NzbDrone.Core.DecisionEngine
         private readonly IConfigService _configService;
         private readonly IDelayProfileService _delayProfileService;
         private readonly IQualityDefinitionService _qualityDefinitionService;
+        private readonly IAlbumYearMatcher _yearMatcher;
 
         public delegate int CompareDelegate(DownloadDecision x, DownloadDecision y);
         public delegate int CompareDelegate<TSubject, TValue>(DownloadDecision x, DownloadDecision y);
 
-        public DownloadDecisionComparer(IConfigService configService, IDelayProfileService delayProfileService, IQualityDefinitionService qualityDefinitionService)
+        public DownloadDecisionComparer(IConfigService configService,
+                                        IDelayProfileService delayProfileService,
+                                        IQualityDefinitionService qualityDefinitionService,
+                                        IAlbumYearMatcher yearMatcher)
         {
             _configService = configService;
             _delayProfileService = delayProfileService;
             _qualityDefinitionService = qualityDefinitionService;
+            _yearMatcher = yearMatcher;
         }
 
         public int Compare(DownloadDecision x, DownloadDecision y)
@@ -32,6 +38,7 @@ namespace NzbDrone.Core.DecisionEngine
             {
                 CompareQuality,
                 CompareCustomFormatScore,
+                CompareYearMatch,
                 CompareProtocol,
                 CompareIndexerPriority,
                 ComparePeersIfTorrent,
@@ -82,6 +89,33 @@ namespace NzbDrone.Core.DecisionEngine
         private int CompareCustomFormatScore(DownloadDecision x, DownloadDecision y)
         {
             return CompareBy(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum => remoteAlbum.CustomFormatScore);
+        }
+
+        private int CompareYearMatch(DownloadDecision x, DownloadDecision y)
+        {
+            return CompareBy(x.RemoteAlbum, y.RemoteAlbum, CalculateYearMatchScore);
+        }
+
+        private double CalculateYearMatchScore(RemoteAlbum remoteAlbum)
+        {
+            if (remoteAlbum.Albums == null || !remoteAlbum.Albums.Any())
+            {
+                return 0;
+            }
+
+            var parsedYear = remoteAlbum.ParsedAlbumInfo?.ReleaseYear;
+            if (!parsedYear.HasValue)
+            {
+                return 0;
+            }
+
+            var totalScore = 0.0;
+            foreach (var album in remoteAlbum.Albums)
+            {
+                totalScore += _yearMatcher.CalculateYearScore(album.ReleaseDate, parsedYear);
+            }
+
+            return totalScore / remoteAlbum.Albums.Count;
         }
 
         private int CompareProtocol(DownloadDecision x, DownloadDecision y)
@@ -170,11 +204,16 @@ namespace NzbDrone.Core.DecisionEngine
 
         private int CompareSize(DownloadDecision x, DownloadDecision y)
         {
-            var sizeCompare =  CompareBy(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum =>
+            var sizeCompare = CompareBy(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum =>
             {
                 var preferredSize = _qualityDefinitionService.Get(remoteAlbum.ParsedAlbumInfo.Quality.Quality).PreferredSize;
 
-                var releaseDuration = remoteAlbum.Albums.Select(a => a.AlbumReleases.Value.Where(r => r.Monitored || a.AnyReleaseOk).Select(r => r.Duration).MaxOrDefault()).Sum() / 1000;
+                var releaseDuration = remoteAlbum.Albums
+                    .Select(a => a.AlbumReleases.Value
+                        .Where(r => r.Monitored || a.AnyReleaseOk)
+                        .Select(r => r.Duration)
+                        .MaxOrDefault())
+                    .Sum() / 1000;
 
                 // If no value for preferred it means unlimited so fallback to sort largest is best
                 if (preferredSize.HasValue && releaseDuration > 0)
