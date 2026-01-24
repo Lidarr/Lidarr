@@ -24,7 +24,10 @@ namespace NzbDrone.Core.Music
         Album FindById(string foreignId);
         Album FindByTitle(int artistMetadataId, string title);
         Album FindByTitleInexact(int artistMetadataId, string title);
+        Album FindByTitleAndYear(int artistMetadataId, string title, int? year);
+        Album FindByTitleAndYearInexact(int artistMetadataId, string title, int? year);
         List<Album> GetCandidates(int artistMetadataId, string title);
+        List<Album> GetCandidates(int artistMetadataId, string title, int? year);
         void DeleteAlbum(int albumId, bool deleteFiles, bool addImportListExclusion = false);
         List<Album> GetAllAlbums();
         Album UpdateAlbum(Album album);
@@ -49,16 +52,19 @@ namespace NzbDrone.Core.Music
         private readonly IAlbumRepository _albumRepository;
         private readonly IEventAggregator _eventAggregator;
         private readonly IMediaFileService _mediaFileService;
+        private readonly IAlbumYearMatcher _yearMatcher;
         private readonly Logger _logger;
 
         public AlbumService(IAlbumRepository albumRepository,
                             IEventAggregator eventAggregator,
                             IMediaFileService mediaFileService,
+                            IAlbumYearMatcher yearMatcher,
                             Logger logger)
         {
             _albumRepository = albumRepository;
             _eventAggregator = eventAggregator;
             _mediaFileService = mediaFileService;
+            _yearMatcher = yearMatcher;
             _logger = logger;
         }
 
@@ -97,6 +103,42 @@ namespace NzbDrone.Core.Music
             return _albumRepository.FindByTitle(artistMetadataId, title);
         }
 
+        public Album FindByTitleAndYear(int artistMetadataId, string title, int? year)
+        {
+            var album = _albumRepository.FindByTitle(artistMetadataId, title);
+
+            if (album == null)
+            {
+                return null;
+            }
+
+            var matchResult = _yearMatcher.Match(album, year);
+
+            if (!matchResult.IsMatch)
+            {
+                _logger.Debug("Album '{0}' found but year mismatch: {1}", album.Title, matchResult.RejectionReason);
+                return null;
+            }
+
+            return album;
+        }
+
+        public Album FindByTitleAndYearInexact(int artistMetadataId, string title, int? year)
+        {
+            var albums = GetAlbumsByArtistMetadataId(artistMetadataId);
+
+            foreach (var func in AlbumScoringFunctions(title, title.CleanArtistName()))
+            {
+                var results = FindByStringAndYearInexact(albums, func.Item1, func.Item2, year);
+                if (results.Count == 1)
+                {
+                    return results[0];
+                }
+            }
+
+            return null;
+        }
+
         private List<Tuple<Func<Album, string, double>, string>> AlbumScoringFunctions(string title, string cleanTitle)
         {
             Func<Func<Album, string, double>, string, Tuple<Func<Album, string, double>, string>> tc = Tuple.Create;
@@ -130,14 +172,17 @@ namespace NzbDrone.Core.Music
             return null;
         }
 
-        public List<Album> GetCandidates(int artistMetadataId, string title)
+        public List<Album> GetCandidates(int artistMetadataId, string title) =>
+            GetCandidates(artistMetadataId, title, null);
+
+        public List<Album> GetCandidates(int artistMetadataId, string title, int? year)
         {
             var albums = GetAlbumsByArtistMetadataId(artistMetadataId);
             var output = new List<Album>();
 
             foreach (var func in AlbumScoringFunctions(title, title.CleanArtistName()))
             {
-                output.AddRange(FindByStringInexact(albums, func.Item1, func.Item2));
+                output.AddRange(FindByStringAndYearInexact(albums, func.Item1, func.Item2, year));
             }
 
             return output.DistinctBy(x => x.Id).ToList();
@@ -145,9 +190,6 @@ namespace NzbDrone.Core.Music
 
         private List<Album> FindByStringInexact(List<Album> albums, Func<Album, string, double> scoreFunction, string title)
         {
-            const double fuzzThreshold = 0.7;
-            const double fuzzGap = 0.4;
-
             var sortedAlbums = albums.Select(s => new
             {
                 MatchProb = scoreFunction(s, title),
@@ -157,8 +199,73 @@ namespace NzbDrone.Core.Music
                 .OrderByDescending(s => s.MatchProb)
                 .ToList();
 
-            return sortedAlbums.TakeWhile((x, i) => i == 0 || sortedAlbums[i - 1].MatchProb - x.MatchProb < fuzzGap)
-                .TakeWhile((x, i) => x.MatchProb > fuzzThreshold || (i > 0 && sortedAlbums[i - 1].MatchProb > fuzzThreshold))
+            return sortedAlbums
+                .TakeWhile((x, i) => i == 0 || sortedAlbums[i - 1].MatchProb - x.MatchProb < AlbumYearMatchingOptions.TitleFuzzGap)
+                .TakeWhile((x, i) => x.MatchProb > AlbumYearMatchingOptions.TitleFuzzThreshold ||
+                (i > 0 && sortedAlbums[i - 1].MatchProb > AlbumYearMatchingOptions.TitleFuzzThreshold))
+                .Select(x => x.Album)
+                .ToList();
+        }
+
+        private List<Album> FindByStringAndYearInexact(List<Album> albums, Func<Album, string, double> scoreFunction, string title, int? year)
+        {
+            if (!year.HasValue)
+            {
+                return FindByStringInexact(albums, scoreFunction, title);
+            }
+
+            var titleMinThreshold = AlbumYearMatchingOptions.TitleMinThresholdWithYear;
+
+            var scoredAlbums = albums.Select(album =>
+            {
+                var titleScore = scoreFunction(album, title);
+                var yearScore = _yearMatcher.CalculateYearScore(album.ReleaseDate, year);
+                var combinedScore = titleScore + yearScore;
+
+                return new
+                {
+                    TitleScore = titleScore,
+                    YearScore = yearScore,
+                    MatchProb = combinedScore,
+                    Album = album
+                };
+            })
+                .Where(x => x.TitleScore >= titleMinThreshold)
+                .ToList();
+
+            if (!scoredAlbums.Any())
+            {
+                return new List<Album>();
+            }
+
+            var sortedAlbums = scoredAlbums.OrderByDescending(s => s.MatchProb).ToList();
+            var topResult = sortedAlbums.First();
+
+            if (sortedAlbums.Count > 1)
+            {
+                var secondResult = sortedAlbums[1];
+
+                // Strong year match preference: if top has positive year score and second doesn't
+                if (topResult.YearScore > 0 && secondResult.YearScore <= 0)
+                {
+                    return new List<Album> { topResult.Album };
+                }
+
+                // Better year with comparable title score
+                if (topResult.YearScore > secondResult.YearScore &&
+                    topResult.TitleScore >= secondResult.TitleScore * 0.9)
+                {
+                    return new List<Album> { topResult.Album };
+                }
+            }
+            else if (topResult.TitleScore >= AlbumYearMatchingOptions.TitleFuzzThreshold)
+            {
+                return new List<Album> { topResult.Album };
+            }
+
+            return sortedAlbums
+                .Where(x => x.TitleScore >= AlbumYearMatchingOptions.TitleFuzzThreshold)
+                .TakeWhile((x, i) => i == 0 || sortedAlbums[i - 1].MatchProb - x.MatchProb < AlbumYearMatchingOptions.TitleFuzzGap)
                 .Select(x => x.Album)
                 .ToList();
         }

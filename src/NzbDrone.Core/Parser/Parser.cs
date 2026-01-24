@@ -79,11 +79,11 @@ namespace NzbDrone.Core.Parser
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist - Album (Year) Strict
-            new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?:\(|\[).+?(?<releaseyear>\d{4})",
+            new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*\([^\[\]]*?(?<releaseyear>\d{4})",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist - Album (Year)
-            new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?:\(|\[)(?<releaseyear>\d{4})",
+            new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*\((?<releaseyear>\d{4})",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist - Album - Year [something]
@@ -100,12 +100,12 @@ namespace NzbDrone.Core.Parser
 
             // Artist-Album (Year) Strict
             // Hyphen no space between artist and album
-            new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)\W*(?:\(|\[).+?(?<releaseyear>\d{4})",
+            new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)\W*\([^\[\]]*?(?<releaseyear>\d{4})",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist-Album (Year)
             // Hyphen no space between artist and album
-            new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)\W*(?:\(|\[)(?<releaseyear>\d{4})",
+            new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)\W*\((?<releaseyear>\d{4})",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist-Album [something] or Artist-Album (something)
@@ -125,6 +125,10 @@ namespace NzbDrone.Core.Parser
             // Artist - Year - Album
             // Hyphen with no or more spaces between artist/album/year
             new Regex(@"^(?:(?<artist>.+?)(?:-))(?<releaseyear>\d{4})(?:-)(?<album>[^-]+)",
+                RegexOptions.IgnoreCase | RegexOptions.Compiled),
+
+            // Hyphen with spaces between artist - year - album
+            new Regex(@"^(?:(?<artist>.+?)(?:\s?-\s?))(?<releaseyear>\d{4})(?:\s?-\s?)(?<album>[^-]+)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
         };
 
@@ -723,20 +727,19 @@ namespace NzbDrone.Core.Parser
             albumTitle = RequestInfoRegex.Replace(albumTitle, "").Trim(' ');
             releaseVersion = RequestInfoRegex.Replace(releaseVersion, "").Trim(' ');
 
-            int.TryParse(matchCollection[0].Groups["releaseyear"].Value, out var releaseYear);
+            var (releaseYear, yearConfidence) = ExtractYear(matchCollection[0].Groups["releaseyear"]);
 
-            ParsedAlbumInfo result;
-
-            result = new ParsedAlbumInfo
+            var result = new ParsedAlbumInfo
             {
-                ReleaseTitle = releaseTitle
+                ReleaseTitle = releaseTitle,
+                ArtistName = artistName,
+                AlbumTitle = albumTitle,
+                ArtistTitleInfo = GetArtistTitleInfo(artistName),
+                ReleaseDate = releaseYear?.ToString() ?? string.Empty,
+                ReleaseYear = releaseYear,
+                YearConfidence = yearConfidence,
+                ReleaseVersion = releaseVersion
             };
-
-            result.ArtistName = artistName;
-            result.AlbumTitle = albumTitle;
-            result.ArtistTitleInfo = GetArtistTitleInfo(result.ArtistName);
-            result.ReleaseDate = releaseYear.ToString();
-            result.ReleaseVersion = releaseVersion;
 
             if (matchCollection[0].Groups["discography"].Success)
             {
@@ -760,6 +763,34 @@ namespace NzbDrone.Core.Parser
             Logger.Debug("Album Parsed. {0}", result);
 
             return result;
+        }
+
+        private static (int? year, YearMatchConfidence confidence) ExtractYear(Group yearGroup)
+        {
+            if (!yearGroup.Success)
+            {
+                return (null, YearMatchConfidence.None);
+            }
+
+            if (!int.TryParse(yearGroup.Value, out var year))
+            {
+                return (null, YearMatchConfidence.None);
+            }
+
+            var currentYear = DateTime.UtcNow.Year;
+
+            if (year < 1900 || year > currentYear + 1)
+            {
+                return (null, YearMatchConfidence.Low);
+            }
+
+            // High confidence for recent years in standard patterns
+            if (year >= 1950 && year <= currentYear)
+            {
+                return (year, YearMatchConfidence.High);
+            }
+
+            return (year, YearMatchConfidence.Medium);
         }
 
         private static bool ValidateBeforeParsing(string title)
