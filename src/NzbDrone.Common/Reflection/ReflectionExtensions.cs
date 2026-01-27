@@ -7,6 +7,13 @@ namespace NzbDrone.Common.Reflection
 {
     public static class ReflectionExtensions
     {
+        private static HashSet<Assembly> _currentAssemblies = new HashSet<Assembly>();
+
+        public static void SetCurrentAssemblies(IEnumerable<Assembly> assemblies)
+        {
+            _currentAssemblies = new HashSet<Assembly>(assemblies);
+        }
+
         public static List<PropertyInfo> GetSimpleProperties(this Type type)
         {
             var properties = type.GetProperties();
@@ -93,7 +100,18 @@ namespace NzbDrone.Common.Reflection
             }
 
             var name = assembly.GetName();
-            return name.Name == "Lidarr.Core" || name.Name.Contains("Lidarr.Plugin");
+
+            if (name.Name == "Lidarr.Core")
+            {
+                return true;
+            }
+
+            if (name.Name.Contains("Lidarr.Plugin"))
+            {
+                return _currentAssemblies.Count == 0 || _currentAssemblies.Contains(assembly);
+            }
+
+            return false;
         }
 
         public static bool HasAttribute<TAttribute>(this Type type)

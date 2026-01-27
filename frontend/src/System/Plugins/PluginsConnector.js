@@ -123,12 +123,10 @@ class PluginsConnector extends Component {
             console.log('Plugin match result:', pluginMatch);
           }
           pluginDetailsUrl = url;
-        } else {
-          if (command && command.message) {
-            const pluginMatch = command.message.match(/Plugin \[([^/]+)\/([^\]]+)\] v([0-9.]+) uninstalled/);
-            if (pluginMatch) {
-              pluginVersion = pluginMatch[3];
-            }
+        } else if (command && command.message) {
+          const pluginMatch = command.message.match(/Plugin \[([^/]+)\/([^\]]+)\] v([0-9.]+) uninstalled/);
+          if (pluginMatch) {
+            pluginVersion = pluginMatch[3];
           }
         }
       }
