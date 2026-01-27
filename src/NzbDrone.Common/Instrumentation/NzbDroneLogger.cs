@@ -223,6 +223,13 @@ namespace NzbDrone.Common.Instrumentation
                 _ => NzbDroneLogger.CleansingConsoleLayout
             };
         }
+
+        public static void ResetAllTargets(IStartupContext startupContext, bool updateApp, bool inConsole)
+        {
+            LogManager.Configuration = new LoggingConfiguration();
+            _isConfigured = false;
+            Register(startupContext, updateApp, inConsole);
+        }
     }
 
     public enum ConsoleLogFormat
