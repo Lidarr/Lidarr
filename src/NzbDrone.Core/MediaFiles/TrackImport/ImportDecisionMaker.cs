@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
@@ -100,19 +103,25 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 downloadClientItemInfo = Parser.Parser.ParseAlbumTitle(downloadClientItem.Title);
             }
 
-            var i = 1;
-            foreach (var file in files)
+            var processedTracks = new ConcurrentBag<(int Index, LocalTrack Track)>();
+            var processedDecisions = new ConcurrentBag<(int Index, ImportDecision<LocalTrack> Decision)>();
+            var progress = 0;
+            var maxParallelism = Math.Max(1, Environment.ProcessorCount);
+            var filesWithIndex = files.Select((file, index) => new { file, index }).ToList();
+
+            Parallel.ForEach(filesWithIndex, new ParallelOptions { MaxDegreeOfParallelism = maxParallelism }, item =>
             {
-                _logger.ProgressInfo($"Reading file {i++}/{files.Count}");
+                var current = Interlocked.Increment(ref progress);
+                _logger.ProgressInfo($"Reading file {current}/{files.Count}");
 
                 var localTrack = new LocalTrack
                 {
                     DownloadClientAlbumInfo = downloadClientItemInfo,
                     FolderAlbumInfo = folderInfo,
-                    Path = file.FullName,
-                    Size = file.Length,
-                    Modified = file.LastWriteTimeUtc,
-                    FileTrackInfo = _audioTagService.ReadTags(file.FullName),
+                    Path = item.file.FullName,
+                    Size = item.file.Length,
+                    Modified = item.file.LastWriteTimeUtc,
+                    FileTrackInfo = _audioTagService.ReadTags(item.file.FullName),
                     AdditionalFile = false
                 };
 
@@ -120,19 +129,22 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 {
                     // TODO fix otherfiles?
                     _augmentingService.Augment(localTrack, true);
-                    localTracks.Add(localTrack);
+                    processedTracks.Add((item.index, localTrack));
                 }
                 catch (AugmentingFailedException)
                 {
-                    decisions.Add(new ImportDecision<LocalTrack>(localTrack, new Rejection("Unable to parse file")));
+                    processedDecisions.Add((item.index, new ImportDecision<LocalTrack>(localTrack, new Rejection("Unable to parse file"))));
                 }
                 catch (Exception e)
                 {
                     _logger.Error(e, "Couldn't import file. {0}", localTrack.Path);
 
-                    decisions.Add(new ImportDecision<LocalTrack>(localTrack, new Rejection("Unexpected error processing file")));
+                    processedDecisions.Add((item.index, new ImportDecision<LocalTrack>(localTrack, new Rejection("Unexpected error processing file"))));
                 }
-            }
+            });
+
+            localTracks.AddRange(processedTracks.OrderBy(x => x.Index).Select(x => x.Track));
+            decisions.AddRange(processedDecisions.OrderBy(x => x.Index).Select(x => x.Decision));
 
             _logger.Debug($"Tags parsed for {files.Count} files in {watch.ElapsedMilliseconds}ms");
 
