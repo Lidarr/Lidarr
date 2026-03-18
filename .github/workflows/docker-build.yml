@@ -18,6 +18,10 @@ jobs:
           git remote add upstream https://github.com/Lidarr/Lidarr.git
           git fetch upstream refs/tags/v3.1.0.4875:refs/tags/v3.1.0.4875
           git checkout v3.1.0.4875
+          git submodule update --init --recursive
+
+      - name: Check file exists
+        run: find src/NzbDrone.Core/Music -name "RefreshArtistService.cs"
 
       - name: Apply fix
         run: |
