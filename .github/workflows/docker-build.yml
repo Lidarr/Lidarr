@@ -39,7 +39,9 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore src/NzbDrone.Core/Lidarr.Core.csproj
+        run: |
+          dotnet restore src/NzbDrone.Core/Lidarr.Core.csproj
+          dotnet restore src/NzbDrone.Host/Lidarr.Host.csproj
 
       - name: Build
         run: dotnet build src/NzbDrone.Host/Lidarr.Host.csproj --configuration Release --no-restore -p:RunAnalyzers=false
