@@ -16,13 +16,13 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
 
       - name: Restore dependencies
         run: dotnet restore src/Lidarr.sln
 
       - name: Build NzbDrone.Core
-        run: dotnet build src/NzbDrone.Core/Lidarr.Core.csproj --configuration Release --framework net6.0 --no-restore
+        run: dotnet build src/NzbDrone.Core/Lidarr.Core.csproj --configuration Release --no-restore
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
