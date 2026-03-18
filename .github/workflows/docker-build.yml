@@ -20,15 +20,12 @@ jobs:
           git checkout v3.1.0.4875
           git submodule update --init --recursive
 
-      - name: Check file exists
-        run: find src/NzbDrone.Core/Music -name "RefreshArtistService.cs"
-
       - name: Apply fix
         run: |
-          sed -i 's/_rootFolderService.All().Select(x => x.Path).ToList();/artists.Select(x => x.Path).ToList();/' src/NzbDrone.Core/Music/RefreshArtistService.cs
+          sed -i 's/_rootFolderService.All().Select(x => x.Path).ToList();/artists.Select(x => x.Path).ToList();/' src/NzbDrone.Core/Music/Services/RefreshArtistService.cs
 
       - name: Verify fix applied
-        run: grep -n "artists.Select(x => x.Path).ToList()" src/NzbDrone.Core/Music/RefreshArtistService.cs
+        run: grep -n "artists.Select(x => x.Path).ToList()" src/NzbDrone.Core/Music/Services/RefreshArtistService.cs
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
