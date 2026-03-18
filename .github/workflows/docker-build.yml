@@ -25,7 +25,7 @@ jobs:
         run: dotnet build src/NzbDrone.Core/Lidarr.Core.csproj --configuration Release --no-restore -p:RunAnalyzers=false
 
       - name: Find DLL
-        run: find src/NzbDrone.Core -name "*.dll" | head -20
+        run: find /home/runner/work -name "Lidarr.Core.dll" 2>/dev/null || echo "DLL not found anywhere"
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
