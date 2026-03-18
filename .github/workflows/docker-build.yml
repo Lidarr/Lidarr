@@ -24,8 +24,8 @@ jobs:
       - name: Build NzbDrone.Core
         run: dotnet build src/NzbDrone.Core/Lidarr.Core.csproj --configuration Release --no-restore -p:RunAnalyzers=false
 
-      - name: Find DLL
-        run: find /home/runner/work -name "Lidarr.Core.dll" 2>/dev/null || echo "DLL not found anywhere"
+      - name: Copy DLL to root
+        run: cp _output/net8.0/Lidarr.Core.dll ./Lidarr.Core.dll
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
