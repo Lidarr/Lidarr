@@ -1,15 +1,10 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY . .
-RUN dotnet publish src/Lidarr.sln \
+RUN dotnet build src/NzbDrone.Core/NzbDrone.Core.csproj \
     --configuration Release \
-    --output /app \
-    --runtime linux-x64 \
-    --self-contained false
+    --framework net6.0
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
-WORKDIR /app
-COPY --from=build /app .
-EXPOSE 8686
-VOLUME /config
-ENTRYPOINT ["dotnet", "Lidarr.dll", "-nobrowser", "-data=/config"]
+FROM lscr.io/linuxserver/lidarr:latest
+COPY --from=build /src/src/NzbDrone.Core/bin/Release/net6.0/NzbDrone.Core.dll \
+    /app/NzbDrone.Core.dll
