@@ -11,8 +11,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: v3.1.0.4875
           submodules: recursive
+
+      - name: Fetch upstream tag
+        run: |
+          git remote add upstream https://github.com/Lidarr/Lidarr.git
+          git fetch upstream refs/tags/v3.1.0.4875:refs/tags/v3.1.0.4875
+          git checkout v3.1.0.4875
 
       - name: Apply fix
         run: |
