@@ -21,6 +21,9 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore src/Lidarr.sln
 
+      - name: List NzbDrone.Core folder
+        run: ls src/NzbDrone.Core/
+
       - name: Build NzbDrone.Core
         run: dotnet build src/NzbDrone.Core/NzbDrone.Core.csproj --configuration Release --framework net6.0 --no-restore
 
