@@ -11,7 +11,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: v3.1.0.4875
           submodules: recursive
+
+      - name: Apply fix
+        run: |
+          sed -i 's/_rootFolderService.All().Select(x => x.Path).ToList();/artists.Select(x => x.Path).ToList();/' src/NzbDrone.Core/Music/RefreshArtistService.cs
+
+      - name: Verify fix applied
+        run: grep -n "artists.Select(x => x.Path).ToList()" src/NzbDrone.Core/Music/RefreshArtistService.cs
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
