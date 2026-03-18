@@ -11,6 +11,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore src/NzbDrone.Core/NzbDrone.Core.csproj
+
+      - name: Build NzbDrone.Core
+        run: dotnet build src/NzbDrone.Core/NzbDrone.Core.csproj --configuration Release --framework net6.0 --no-restore
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -22,4 +33,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: mcphelps/lidarr-fix:latest
+          tags: YOURDOCKERHUBUSERNAME/lidarr-fix:latest
