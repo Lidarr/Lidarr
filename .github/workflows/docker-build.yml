@@ -13,12 +13,18 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Save Dockerfile
+        run: cp Dockerfile /tmp/Dockerfile
+
       - name: Fetch upstream tag
         run: |
           git remote add upstream https://github.com/Lidarr/Lidarr.git
           git fetch upstream refs/tags/v3.1.0.4875:refs/tags/v3.1.0.4875
           git checkout v3.1.0.4875
           git submodule update --init --recursive
+
+      - name: Restore Dockerfile
+        run: cp /tmp/Dockerfile ./Dockerfile
 
       - name: Apply fix
         run: |
