@@ -13,16 +13,13 @@ jobs:
         with:
           submodules: recursive
 
-      - name: List src folder
-        run: ls src/
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '6.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore src/NzbDrone.Core/NzbDrone.Core.csproj
+        run: dotnet restore src/Lidarr.sln
 
       - name: Build NzbDrone.Core
         run: dotnet build src/NzbDrone.Core/NzbDrone.Core.csproj --configuration Release --framework net6.0 --no-restore
