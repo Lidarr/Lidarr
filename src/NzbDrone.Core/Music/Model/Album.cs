@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
 using Equ;
 using NzbDrone.Common.Extensions;
@@ -79,7 +78,7 @@ namespace NzbDrone.Core.Music
             Overview = other.Overview.IsNullOrWhiteSpace() ? Overview : other.Overview;
             Disambiguation = other.Disambiguation;
             ReleaseDate = other.ReleaseDate;
-            Images = other.Images.Any() ? other.Images : Images;
+            Images = other.Images;
             Links = other.Links;
             Genres = other.Genres;
             AlbumType = other.AlbumType;

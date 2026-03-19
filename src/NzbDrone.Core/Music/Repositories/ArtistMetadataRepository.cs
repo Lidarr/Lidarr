@@ -46,6 +46,7 @@ namespace NzbDrone.Core.Music
                     }
 
                     meta.UseDbFieldsFrom(existing);
+
                     if (!meta.Equals(existing))
                     {
                         updateMetadataList.Add(meta);

@@ -598,7 +598,6 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
         private static ArtistMetadata MapArtistMetadata(ArtistResource resource)
         {
             var artist = new ArtistMetadata();
-
             artist.Name = resource.ArtistName;
             artist.Aliases = resource.ArtistAliases;
             artist.ForeignArtistId = resource.Id;
@@ -609,8 +608,9 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             artist.Type = resource.Type;
             artist.Status = MapArtistStatus(resource.Status);
             artist.Ratings = MapRatings(resource.Rating);
-            artist.Images = resource.Images?.Select(MapImage).ToList();
-            artist.Links = resource.Links?.Select(MapLink).ToList();
+            artist.Images = resource.Images?.Select(MapImage).ToList() ?? [];
+            artist.Links = resource.Links?.Select(MapLink).ToList() ?? [];
+
             return artist;
         }
 

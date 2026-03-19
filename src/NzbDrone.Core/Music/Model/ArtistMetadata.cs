@@ -35,21 +35,11 @@ namespace NzbDrone.Core.Music
             return string.Format("[{0}][{1}]", ForeignArtistId, Name.NullSafe());
         }
 
-        public override void UseMetadataFrom(ArtistMetadata other)
+        public override void UseDbFieldsFrom(ArtistMetadata other)
         {
-            ForeignArtistId = other.ForeignArtistId;
-            OldForeignArtistIds = other.OldForeignArtistIds;
-            Name = other.Name;
-            Aliases = other.Aliases;
-            Overview = other.Overview.IsNullOrWhiteSpace() ? Overview : other.Overview;
-            Disambiguation = other.Disambiguation;
-            Type = other.Type;
-            Status = other.Status;
-            Images = other.Images.Any() ? other.Images : Images;
-            Links = other.Links;
-            Genres = other.Genres;
-            Ratings = other.Ratings;
-            Members = other.Members;
+            Id = other.Id;
+            Overview = Overview.IsNotNullOrWhiteSpace() ? Overview : other.Overview;
+            Images = Images.Any() ? Images : other.Images;
         }
     }
 }
