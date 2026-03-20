@@ -9,13 +9,13 @@ Setup guides, [FAQ](/lidarr/faq), the more information we have on the [wiki](htt
 
 # Development
 
-Lidarr is written in C# (backend) and JS (frontend). The backend is built on the .NET 8 framework, while the frontend utilizes Reactjs.
+Lidarr is written in C# (backend) and JS (frontend). The backend is built on the .NET 10 framework, while the frontend utilizes Reactjs.
 
 ## Tools required
 
 - Visual Studio 2022 or higher is recommended (<https://www.visualstudio.com/vs/>). The community version is free and works (<https://www.visualstudio.com/downloads/>).
 
-> VS 2022 V17.0 or higher is recommended as it includes the .NET 8 SDK
+> VS 2022 V17.0 or higher is recommended as it includes the .NET 10 SDK
 {.is-info}
 
 - HTML/Javascript editor of choice (VS Code/Sublime Text/Webstorm/Atom/etc)
@@ -60,7 +60,7 @@ The backend solution is most easily built and ran in Visual Studio or Rider, how
 
 #### Visual Studio
 
-> Ensure startup project is set to `Lidarr.Console` and framework to `net8.0`
+> Ensure startup project is set to `Lidarr.Console` and framework to `net10.0`
 {.is-info}
 
 1. First `Build` the solution in Visual Studio, this will ensure all projects are correctly built and dependencies restored
