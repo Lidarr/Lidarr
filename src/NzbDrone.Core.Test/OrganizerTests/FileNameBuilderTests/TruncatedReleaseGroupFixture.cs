@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
 
             _release = Builder<AlbumRelease>
                 .CreateNew()
-                .With(s => s.Media = new List<Medium> { new () { Number = 14 } })
+                .With(s => s.Media = new List<Medium> { new() { Number = 14 } })
                 .Build();
 
             _namingConfig = NamingConfig.Default;

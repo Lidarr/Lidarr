@@ -238,7 +238,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             // convert all the TrackFiles that represent extra files to List<LocalTrack>
             var allLocalTracks = ToLocalTrack(candidateReleases
                                               .SelectMany(x => x.ExistingTracks)
-                                              .DistinctBy(x => x.Path), localAlbumRelease);
+                                              .DistinctBy(x => x.Path),
+                localAlbumRelease);
 
             _logger.Debug($"Retrieved {allLocalTracks.Count} possible tracks in {watch.ElapsedMilliseconds}ms");
 

@@ -13,14 +13,14 @@ namespace NzbDrone.Common.Composition
     {
         private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(PluginLoader));
 
-        public static (List<Assembly>, List<WeakReference>) LoadPlugins(IEnumerable<string> pluginPaths)
+        public static (List<Assembly> Plugins, List<WeakReference> PluginReferences) LoadPlugins(IEnumerable<string> pluginPaths)
         {
             var assemblies = new List<Assembly>();
             var pluginRefs = new List<WeakReference>();
 
             foreach (var pluginPath in pluginPaths)
             {
-                (var plugin, var pluginRef) = LoadPlugin(pluginPath);
+                var (plugin, pluginRef) = LoadPlugin(pluginPath);
                 pluginRefs.Add(pluginRef);
                 assemblies.Add(plugin);
             }
@@ -35,12 +35,12 @@ namespace NzbDrone.Common.Composition
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private static (Assembly, WeakReference) LoadPlugin(string path)
+        private static (Assembly Plugin, WeakReference PluginRefeence) LoadPlugin(string path)
         {
             var context = new PluginLoadContext(path);
             var weakRef = new WeakReference(context, trackResurrection: true);
 
-            // load from stream to avoid locking on windows
+            // load from stream to avoid locking on Windows
             using var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
             var assembly = context.LoadFromStream(fs);
 
@@ -51,10 +51,7 @@ namespace NzbDrone.Common.Composition
         {
             foreach (var pluginRef in pluginRefs)
             {
-                if (pluginRef?.Target != null)
-                {
-                    ((PluginLoadContext)pluginRef.Target).Unload();
-                }
+                ((PluginLoadContext)pluginRef?.Target)?.Unload();
             }
         }
 

@@ -135,7 +135,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             // getting a perfect match early on
             return GetDbCandidatesByRelease(_releaseService.GetReleasesByAlbum(album.Id)
                                           .OrderBy(x => Math.Abs(localAlbumRelease.TrackCount - x.TrackCount))
-                                          .ToList(), includeExisting);
+                                          .ToList(),
+                includeExisting);
         }
 
         private List<CandidateAlbumRelease> GetDbCandidatesByArtist(LocalAlbumRelease localAlbumRelease, Artist artist, bool includeExisting)
@@ -216,7 +217,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 .ThenByDescending(x => x.CommonProportion)
                 .Select(x => x.Release)
                 .Take(10)
-                .ToList(), includeExisting);
+                .ToList(),
+                includeExisting);
         }
 
         public List<CandidateAlbumRelease> GetRemoteCandidates(LocalAlbumRelease localAlbumRelease)

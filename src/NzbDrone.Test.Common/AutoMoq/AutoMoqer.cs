@@ -161,7 +161,8 @@ namespace NzbDrone.Test.Common.AutoMoq
                 var mock = (Mock)r.Resolve(mockType);
                 SetMock(serviceType, mock);
                 return mock.Object;
-            }, Reuse.Singleton);
+            },
+                Reuse.Singleton);
         }
 
         private void LoadPlatformLibrary()

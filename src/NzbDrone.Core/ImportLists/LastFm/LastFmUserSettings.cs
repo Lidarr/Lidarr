@@ -15,7 +15,7 @@ namespace NzbDrone.Core.ImportLists.LastFm
 
     public class LastFmUserSettings : IImportListSettings
     {
-        private static readonly LastFmSettingsValidator Validator = new ();
+        private static readonly LastFmSettingsValidator Validator = new();
 
         public LastFmUserSettings()
         {

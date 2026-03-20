@@ -22,8 +22,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private const string MultiDiscPatternFormat = @"^(?<root>.*%s[\W_]*)\d";
         private static readonly Logger _logger = NzbDroneLogger.GetLogger(typeof(TrackGroupingService));
 
-        private static readonly List<string> MultiDiscMarkers = new () { @"dis[ck]", @"cd" };
-        private static readonly List<string> VariousArtistTitles = new () { "", "various artists", "various", "va", "unknown" };
+        private static readonly List<string> MultiDiscMarkers = new() { @"dis[ck]", @"cd" };
+        private static readonly List<string> VariousArtistTitles = new() { "", "various artists", "various", "va", "unknown" };
 
         public List<LocalAlbumRelease> GroupTracks(List<LocalTrack> localTracks)
         {

@@ -15,7 +15,7 @@ namespace NzbDrone.Core.AutoTagging.Specifications
 
     public class MetadataProfileSpecification : AutoTaggingSpecificationBase
     {
-        private static readonly MetadataProfileSpecificationValidator Validator = new ();
+        private static readonly MetadataProfileSpecificationValidator Validator = new();
 
         public override int Order => 1;
         public override string ImplementationName => "Metadata Profile";
