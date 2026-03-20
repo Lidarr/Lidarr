@@ -7,7 +7,7 @@ namespace NzbDrone.Common
 {
     public class PathEqualityComparer : IEqualityComparer<string>
     {
-        public static readonly PathEqualityComparer Instance = new ();
+        public static readonly PathEqualityComparer Instance = new();
 
         private PathEqualityComparer()
         {

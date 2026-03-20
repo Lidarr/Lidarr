@@ -45,7 +45,8 @@ namespace NzbDrone.Core.Test.MediaFiles.TrackImport.Aggregation.Aggregators
                     "Adele - 19 - 102 - Best for Last.mp3",
                     "Adele - 19 - 103 - Chasing Pavements.mp3",
                     "Adele - 19 - 203 - That's It, I Quit, I'm Moving On.mp3"
-            }, @"C:\incoming".AsOsAgnostic());
+            },
+                @"C:\incoming".AsOsAgnostic());
 
             Subject.Aggregate(release, true);
 

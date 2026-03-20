@@ -143,7 +143,7 @@ namespace NzbDrone.Test.Common
 
         private void Start(string outputLidarrConsoleExe)
         {
-            StringDictionary envVars = new ();
+            StringDictionary envVars = new();
             if (PostgresOptions?.Host != null)
             {
                 envVars.Add("Lidarr__Postgres__Host", PostgresOptions.Host);

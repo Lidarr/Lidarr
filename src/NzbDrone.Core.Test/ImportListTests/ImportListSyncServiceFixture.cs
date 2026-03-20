@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Test.ImportListTests
 
             Mocker.GetMock<IImportListFactory>()
                 .Setup(v => v.All())
-                .Returns(new List<ImportListDefinition> { new () { ShouldMonitor = ImportListMonitorType.SpecificAlbum } });
+                .Returns(new List<ImportListDefinition> { new() { ShouldMonitor = ImportListMonitorType.SpecificAlbum } });
 
             Mocker.GetMock<IImportListFactory>()
                 .Setup(v => v.AutomaticAddEnabled(It.IsAny<bool>()))
@@ -148,7 +148,7 @@ namespace NzbDrone.Core.Test.ImportListTests
         {
             Mocker.GetMock<IImportListFactory>()
                 .Setup(v => v.All())
-                .Returns(new List<ImportListDefinition> { new () { ShouldMonitor = monitor, ShouldMonitorExisting = shouldMonitorExisting, ShouldSearch = shouldSearch } });
+                .Returns(new List<ImportListDefinition> { new() { ShouldMonitor = monitor, ShouldMonitorExisting = shouldMonitorExisting, ShouldSearch = shouldSearch } });
         }
 
         [Test]
