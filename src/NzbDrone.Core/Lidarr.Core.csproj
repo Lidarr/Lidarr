@@ -27,7 +27,7 @@
     <PackageReference Include="TagLibSharp-Lidarr" Version="2.2.0.27" />
     <PackageReference Include="Npgsql" Version="9.0.3" />
     <PackageReference Include="SpotifyAPI.Web" Version="5.1.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="MonoTorrent" Version="3.0.2" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.20" />
   </ItemGroup>
