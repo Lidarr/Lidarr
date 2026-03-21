@@ -6,7 +6,7 @@
     <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="Diacritical.Net" Version="1.0.4" />
     <PackageReference Include="Equ" Version="2.3.0" />
-    <PackageReference Include="MailKit" Version="4.14.0" />
+    <PackageReference Include="MailKit" Version="4.15.1" />
     <PackageReference Include="Polly" Version="8.6.4" />
     <PackageReference Include="System.Text.Json" Version="8.0.6" />
     <PackageReference Include="System.Memory" Version="4.6.3" />
