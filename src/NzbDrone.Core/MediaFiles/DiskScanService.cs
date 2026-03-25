@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common;
 using NzbDrone.Common.Disk;
@@ -84,23 +85,19 @@ namespace NzbDrone.Core.MediaFiles
             }
 
             var mediaFileList = new List<IFileInfo>();
+            var mediaFileListLock = new object();
 
-            var musicFilesStopwatch = Stopwatch.StartNew();
-
+            // Validate folders first (early exit on error like original behaviour)
+            var foldersToScan = new List<string>();
             foreach (var folder in folders)
             {
-                // We could be scanning a root folder or a subset of a root folder.  If it's a subset,
-                // check if the root folder exists before cleaning.
                 var rootFolder = _rootFolderService.GetBestRootFolder(folder);
-
                 if (rootFolder == null)
                 {
                     _logger.Error("Not scanning {0}, it's not a subdirectory of a defined root folder", folder);
                     return;
                 }
-
                 var folderExists = _diskProvider.FolderExists(folder);
-
                 if (!folderExists)
                 {
                     if (!_diskProvider.FolderExists(rootFolder.Path))
@@ -110,7 +107,6 @@ namespace NzbDrone.Core.MediaFiles
                         skippedArtists.ForEach(x => _eventAggregator.PublishEvent(new ArtistScanSkippedEvent(x, ArtistScanSkippedReason.RootFolderDoesNotExist)));
                         return;
                     }
-
                     if (_diskProvider.FolderEmpty(rootFolder.Path))
                     {
                         _logger.Warn("Artists' root folder ({0}) is empty.", rootFolder.Path);
@@ -119,28 +115,35 @@ namespace NzbDrone.Core.MediaFiles
                         return;
                     }
                 }
-
                 if (!folderExists)
                 {
                     _logger.Debug("Specified scan folder ({0}) doesn't exist.", folder);
-
                     CleanMediaFiles(folder, new List<string>());
                     continue;
                 }
+                foldersToScan.Add(folder);
+            }
 
+            var musicFilesStopwatch = Stopwatch.StartNew();
+
+            Parallel.ForEach(foldersToScan, folder =>
+            {
                 _logger.ProgressInfo("Scanning {0}", folder);
 
-                var files = FilterFiles(folder, GetAudioFiles(folder));
+                var files = FilterFiles(folder, GetAudioFiles(folder)).ToList();
 
                 if (!files.Any())
                 {
                     _logger.Warn("Scan folder {0} is empty.", folder);
-                    continue;
+                    return;
                 }
 
                 CleanMediaFiles(folder, files.Select(x => x.FullName).ToList());
-                mediaFileList.AddRange(files);
-            }
+                lock (mediaFileListLock)
+                {
+                    mediaFileList.AddRange(files);
+                }
+            });
 
             var artists = _artistService.GetArtists(artistIds);
 
