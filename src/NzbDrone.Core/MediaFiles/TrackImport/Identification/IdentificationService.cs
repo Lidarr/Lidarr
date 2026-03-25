@@ -305,7 +305,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             _logger.Debug("Matching {0} track files against {1} candidates", localAlbumRelease.TrackCount, candidateReleases.Count);
             _logger.Trace("Processing files:\n{0}", string.Join("\n", localAlbumRelease.LocalTracks.Select(x => x.Path)));
 
-            var maxParallelism = Math.Max(1, Environment.ProcessorCount);
+            var maxParallelism = MediaImportParallelism.MaxDegreeOfParallelism;
             var scoredCandidates = candidateReleases
                 .Select((candidateRelease, index) => new { candidateRelease, index })
                 .AsParallel()

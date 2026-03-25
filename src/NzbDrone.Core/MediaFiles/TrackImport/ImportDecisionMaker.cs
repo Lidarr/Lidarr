@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
+using NzbDrone.Common;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.DecisionEngine;
@@ -106,7 +107,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             var processedTracks = new ConcurrentBag<(int Index, LocalTrack Track)>();
             var processedDecisions = new ConcurrentBag<(int Index, ImportDecision<LocalTrack> Decision)>();
             var progress = 0;
-            var maxParallelism = Math.Max(1, Environment.ProcessorCount);
+            var maxParallelism = MediaImportParallelism.MaxDegreeOfParallelism;
             var filesWithIndex = files.Select((file, index) => new { file, index }).ToList();
 
             Parallel.ForEach(filesWithIndex, new ParallelOptions { MaxDegreeOfParallelism = maxParallelism }, item =>

@@ -126,7 +126,7 @@ namespace NzbDrone.Core.MediaFiles
 
             var musicFilesStopwatch = Stopwatch.StartNew();
 
-            Parallel.ForEach(foldersToScan, folder =>
+            Parallel.ForEach(foldersToScan, new ParallelOptions { MaxDegreeOfParallelism = MediaImportParallelism.MaxDegreeOfParallelism }, folder =>
             {
                 _logger.ProgressInfo("Scanning {0}", folder);
 
