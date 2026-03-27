@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common;
@@ -48,6 +49,7 @@ namespace NzbDrone.Core.MediaFiles
         private readonly IRootFolderService _rootFolderService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
+        private static int _mediaParallelismLogged;
 
         public DiskScanService(IConfigService configService,
                                IDiskProvider diskProvider,
@@ -125,6 +127,17 @@ namespace NzbDrone.Core.MediaFiles
             }
 
             var musicFilesStopwatch = Stopwatch.StartNew();
+
+            if (Interlocked.CompareExchange(ref _mediaParallelismLogged, 1, 0) == 0)
+            {
+                var envRaw = Environment.GetEnvironmentVariable(MediaImportParallelism.EnvironmentVariableName);
+                _logger.Info(
+                    "Media import parallelism: MaxDegreeOfParallelism={0} ({1}={2}). Set 1–64 to cap IO; unset or 0 uses processor count ({3}).",
+                    MediaImportParallelism.MaxDegreeOfParallelism,
+                    MediaImportParallelism.EnvironmentVariableName,
+                    string.IsNullOrEmpty(envRaw) ? "(unset)" : envRaw,
+                    Environment.ProcessorCount);
+            }
 
             Parallel.ForEach(foldersToScan, new ParallelOptions { MaxDegreeOfParallelism = MediaImportParallelism.MaxDegreeOfParallelism }, folder =>
             {

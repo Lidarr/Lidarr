@@ -11,9 +11,9 @@ Parallel import work is **not** limited by Lidarr’s download bandwidth or rate
 | | |
 | --- | --- |
 | **Name** | `LIDARR_MEDIA_IO_PARALLELISM` |
-| **Default** | `2` (used when the variable is unset, empty, or not a valid integer) |
-| **Allowed** | Integers **1**–**64**; values below **1** fall back to the default |
-| **Scope** | Process environment (read once at first use) |
+| **Default** | **Unset / empty / invalid / `0`:** same as **`Environment.ProcessorCount`** (original fork behavior). For **NFS or slow storage**, set **`1`** or **`2`** explicitly. |
+| **Allowed** | **`1`–`64`:** use that cap. **`0`:** treat as unset (processor count). |
+| **Scope** | Process environment (re-read on each scan/import parallel section) |
 
 It applies to:
 
@@ -22,6 +22,8 @@ It applies to:
 - parallel **candidate release scoring** during identification.
 
 **Docker:** fully supported. Set the variable on the container like any other env; the .NET process reads the container environment.
+
+On the first disk scan, Lidarr logs a line like `Media import parallelism: MaxDegreeOfParallelism=…` so you can confirm the value it sees (useful if compose/env typos leave the variable unset).
 
 ### Docker Compose
 
@@ -33,7 +35,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Etc/UTC
-      # Gentle on NFS / network mounts; omit for default (2)
+      # Gentle on NFS / network mounts (omit var for processor-count default)
       - LIDARR_MEDIA_IO_PARALLELISM=1
 ```
 
