@@ -107,10 +107,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             var processedTracks = new ConcurrentBag<(int Index, LocalTrack Track)>();
             var processedDecisions = new ConcurrentBag<(int Index, ImportDecision<LocalTrack> Decision)>();
             var progress = 0;
-            var maxParallelism = MediaImportParallelism.MaxDegreeOfParallelism;
             var filesWithIndex = files.Select((file, index) => new { file, index }).ToList();
 
-            Parallel.ForEach(filesWithIndex, new ParallelOptions { MaxDegreeOfParallelism = maxParallelism }, item =>
+            Parallel.ForEach(filesWithIndex, MediaImportParallelism.GetParallelForEachOptions(), item =>
             {
                 var current = Interlocked.Increment(ref progress);
                 _logger.ProgressInfo($"Reading file {current}/{files.Count}");

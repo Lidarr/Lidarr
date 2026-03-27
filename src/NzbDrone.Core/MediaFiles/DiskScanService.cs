@@ -131,15 +131,18 @@ namespace NzbDrone.Core.MediaFiles
             if (Interlocked.CompareExchange(ref _mediaParallelismLogged, 1, 0) == 0)
             {
                 var envRaw = Environment.GetEnvironmentVariable(MediaImportParallelism.EnvironmentVariableName);
+                var loopDeg = MediaImportParallelism.EffectiveParallelForEachDegreeForLog;
+                var loopDesc = loopDeg < 0 ? "TPL default (-1, uncapped)" : loopDeg.ToString();
                 _logger.Info(
-                    "Media import parallelism: MaxDegreeOfParallelism={0} ({1}={2}). Set 1–64 to cap IO; unset or 0 uses processor count ({3}).",
-                    MediaImportParallelism.MaxDegreeOfParallelism,
+                    "Media import parallelism: Parallel.ForEach MaxDegreeOfParallelism={0} ({1}; PLINQ degree {2}). Set {3}=1–64 to cap; omit or ≤0 restores pre-cap fork (uncapped loops). Host ProcessorCount={4}.",
+                    loopDesc,
+                    string.IsNullOrEmpty(envRaw) ? $"{MediaImportParallelism.EnvironmentVariableName}=(unset)" : $"{MediaImportParallelism.EnvironmentVariableName}={envRaw}",
+                    MediaImportParallelism.PlinqMaxDegreeOfParallelism,
                     MediaImportParallelism.EnvironmentVariableName,
-                    string.IsNullOrEmpty(envRaw) ? "(unset)" : envRaw,
                     Environment.ProcessorCount);
             }
 
-            Parallel.ForEach(foldersToScan, new ParallelOptions { MaxDegreeOfParallelism = MediaImportParallelism.MaxDegreeOfParallelism }, folder =>
+            Parallel.ForEach(foldersToScan, MediaImportParallelism.GetParallelForEachOptions(), folder =>
             {
                 _logger.ProgressInfo("Scanning {0}", folder);
 

@@ -4,26 +4,20 @@ This branch adds a faster, **parallel** disk scan and import path. Upstream Lida
 
 A **Dockerfile.multithread** in this repository builds a self-contained binary and overlays it on `ghcr.io/linuxserver/lidarr:nightly` (see CI or build from repo root per that file’s comments). A wrapper layout that keeps this tree in a `lidarr-src/` subdirectory can use the parent `Dockerfile` instead.
 
-## `LIDARR_MEDIA_IO_PARALLELISM`
+## `LIDARR_MEDIA_IO_PARALLELISM` (optional IO cap)
 
-Parallel import work is **not** limited by Lidarr’s download bandwidth or rate settings (those apply to indexers/clients only). On **slow or remote storage** (especially NFS), too much concurrency can saturate IOPS and make the host feel stuck. This variable caps how many workers run at once for the fork’s parallel paths.
+Parallel import work is **not** limited by Lidarr’s download bandwidth or rate settings (those apply to indexers/clients only). On **slow or remote storage** (especially NFS), the default **uncapped** parallelism can saturate IOPS. Set this variable only when you need to **limit** concurrency.
 
 | | |
 | --- | --- |
 | **Name** | `LIDARR_MEDIA_IO_PARALLELISM` |
-| **Default** | **Unset / empty / invalid / `0`:** same as **`Environment.ProcessorCount`** (original fork behavior). For **NFS or slow storage**, set **`1`** or **`2`** explicitly. |
-| **Allowed** | **`1`–`64`:** use that cap. **`0`:** treat as unset (processor count). |
-| **Scope** | Process environment (re-read on each scan/import parallel section) |
+| **Omit / empty / invalid / ≤0** | **Original fork behavior:** `Parallel.ForEach` uses the **TPL default** (`MaxDegreeOfParallelism = -1`), which can use **more** concurrent workers than `ProcessorCount` on I/O-heavy work (this is why setting `16` on a 16-core box could feel *slower* than before). **PLINQ** still uses **`ProcessorCount`** (TagLib / candidate scoring cannot use `-1`). |
+| **1–64** | Hard cap on **both** `Parallel.ForEach` loops **and** PLINQ degree (same number). Use **`1`–`2`** on NFS if the host stalls. |
+| **Scope** | Environment is read when each parallel section runs |
 
-It applies to:
+**Docker:** set on the container like any other env variable.
 
-- parallel **folder scans** when collecting audio files;
-- parallel **tag / metadata reads** when building import decisions;
-- parallel **candidate release scoring** during identification.
-
-**Docker:** fully supported. Set the variable on the container like any other env; the .NET process reads the container environment.
-
-On the first disk scan, Lidarr logs a line like `Media import parallelism: MaxDegreeOfParallelism=…` so you can confirm the value it sees (useful if compose/env typos leave the variable unset).
+On the first disk scan, Lidarr logs `Media import parallelism:` with **TPL default (-1, uncapped)** or your numeric cap, plus PLINQ degree and host `ProcessorCount`.
 
 ### Docker Compose
 
@@ -35,24 +29,18 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Etc/UTC
-      # Gentle on NFS / network mounts (omit var for processor-count default)
-      - LIDARR_MEDIA_IO_PARALLELISM=1
+      # Omit LIDARR_MEDIA_IO_PARALLELISM on fast local storage (max throughput).
+      # - LIDARR_MEDIA_IO_PARALLELISM=2   # NFS / slow disk — cap concurrent work
 ```
 
-### `docker run`
+### When to set it
 
-```bash
-docker run -e LIDARR_MEDIA_IO_PARALLELISM=4 … your-image
-```
-
-### When to change it
-
-- **NFS, SMB, or sluggish disks:** try `1` or leave default `2`.
-- **Library and app on fast local storage (e.g. same NAS app dataset, local SSD):** try `4`–`8` or higher (up to 64) and watch CPU, I/O, and responsiveness.
+- **Fast local RAID / SSD:** **omit** the variable (matches the first multithread fork).
+- **NFS or network filesystem:** start with **`2`** (or **`1`**) if scans overwhelm the host.
 
 ### Implementation reference
 
-Logic and constant name: `src/NzbDrone.Common/MediaImportParallelism.cs`.
+`src/NzbDrone.Common/MediaImportParallelism.cs`.
 
 ## Relationship to upstream
 
