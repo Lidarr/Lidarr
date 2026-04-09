@@ -159,11 +159,11 @@ namespace NzbDrone.Core.MediaFiles
                     var artist = message.Album.Artist.Value;
                     var albumFolder = message.TrackFilesToDelete.FirstOrDefault()?.Path.GetParentPath();
 
-                    if (_diskProvider.GetFiles(artist.Path, true).Empty())
+                    if (_diskProvider.FolderExists(artist.Path) && _diskProvider.GetFiles(artist.Path, true).Empty())
                     {
                         _diskProvider.DeleteFolder(artist.Path, true);
                     }
-                    else if (albumFolder.IsNotNullOrWhiteSpace() && _diskProvider.GetFiles(albumFolder, true).Empty())
+                    else if (albumFolder.IsNotNullOrWhiteSpace() && _diskProvider.FolderExists(albumFolder) && _diskProvider.GetFiles(albumFolder, true).Empty())
                     {
                         _diskProvider.RemoveEmptySubfolders(albumFolder);
                     }
@@ -186,11 +186,11 @@ namespace NzbDrone.Core.MediaFiles
                 var artist = message.TrackFile.Artist.Value;
                 var albumFolder = message.TrackFile.Path.GetParentPath();
 
-                if (_diskProvider.GetFiles(artist.Path, true).Empty())
+                if (_diskProvider.FolderExists(artist.Path) && _diskProvider.GetFiles(artist.Path, true).Empty())
                 {
                     _diskProvider.DeleteFolder(artist.Path, true);
                 }
-                else if (_diskProvider.GetFiles(albumFolder, true).Empty())
+                else if (_diskProvider.FolderExists(albumFolder) && _diskProvider.GetFiles(albumFolder, true).Empty())
                 {
                     _diskProvider.RemoveEmptySubfolders(albumFolder);
                 }
