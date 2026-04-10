@@ -17,6 +17,7 @@ namespace NzbDrone.Core.MediaFiles
                 { ".m4a", Quality.Unknown },
                 { ".m4b", Quality.Unknown },
                 { ".m4p", Quality.Unknown },
+                { ".mka", Quality.Unknown },
                 { ".ogg", Quality.Unknown },
                 { ".oga", Quality.Unknown },
                 { ".opus", Quality.Unknown },

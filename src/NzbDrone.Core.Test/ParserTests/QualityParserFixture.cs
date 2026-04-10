@@ -291,6 +291,7 @@ namespace NzbDrone.Core.Test.ParserTests
 
         [TestCase("01. Kanye West - Ultralight Beam.mp3")]
         [TestCase("01. Kanye West - Ultralight Beam.ogg")]
+        [TestCase("01. Kanye West - Ultralight Beam.mka")]
 
         // These get detected by name as we are looking for the extensions as identifiers for release names
         // [TestCase("01. Kanye West - Ultralight Beam.m4a")]
