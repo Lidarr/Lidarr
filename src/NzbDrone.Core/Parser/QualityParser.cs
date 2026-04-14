@@ -44,6 +44,7 @@ namespace NzbDrone.Core.Parser
         private static readonly Regex CodecRegex = new (@"\b(?:(?<MP1>MPEG Version \d(.5)? Audio, Layer 1|MP1)|(?<MP2>MPEG Version \d(.5)? Audio, Layer 2|MP2)|(?<MP3VBR>MP3.*VBR|MPEG Version \d(.5)? Audio, Layer 3 vbr)|(?<MP3CBR>MP3|MPEG Version \d(.5)? Audio, Layer 3)|(?<FLAC>(web)?flac|TR24)|(?<WAVPACK>wavpack|wv)|(?<ALAC>alac)|(?<WMA>WMA\d?)|(?<WAV>WAV|PCM)|(?<AAC>M4A|M4P|M4B|AAC|mp4a|MPEG-4 Audio(?!.*alac))|(?<OGG>MKA|OGG|OGA|Vorbis))\b|(?<APE>monkey's audio|[\[|\(].*\bape\b.*[\]|\)])|(?<OPUS>Opus Version \d(.5)? Audio|[\[|\(].*\bopus\b.*[\]|\)])",
          RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+
         private static readonly Regex WebRegex = new (@"\b(?<web>WEB)(?:\b|$|[ .])",
                                                         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
@@ -96,7 +97,7 @@ namespace NzbDrone.Core.Parser
             if (desc.IsNotNullOrWhiteSpace())
             {
                 var descCodec = ParseCodec(desc, "");
-                Logger.Trace($"Got codec {descCodec}");
+                Logger.Trace("Got codec {0}", descCodec);
 
                 result.Quality = FindQuality(descCodec, fileBitrate, fileSampleSize);
 
