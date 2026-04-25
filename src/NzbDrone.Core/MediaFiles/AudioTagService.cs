@@ -146,8 +146,8 @@ namespace NzbDrone.Core.MediaFiles
 
                     // We may have omitted media so index in the list isn't the same as medium number
                     Media = release.Media.SingleOrDefault(x => x.Number == track.MediumNumber)?.Format,
-                    Date = release.ReleaseDate,
-                    Year = (uint)(album.ReleaseDate?.Year ?? 0),
+                    Date = release.ReleaseDate ?? album.ReleaseDate,
+                    Year = (uint)(album.ReleaseDate?.Year ?? release.ReleaseDate?.Year ?? 0),
                     OriginalReleaseDate = album.ReleaseDate,
                     OriginalYear = (uint)(album.ReleaseDate?.Year ?? 0),
                     Publisher = release.Label.FirstOrDefault(),
