@@ -8,6 +8,7 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Profiles.Qualities;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace NzbDrone.Core.Test.Datastore
 {

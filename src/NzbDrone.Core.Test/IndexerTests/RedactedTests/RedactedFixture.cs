@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RedactedTests
                 .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get &&
                                                          v.Url.FullUri.Contains("ajax.php?action=browse") &&
                                                          v.Headers.Get("Authorization") == ((RedactedSettings)Subject.Definition.Settings).ApiKey)))
-                                                         .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader { ContentType = "application/json" }, recentFeed)));
+                                                         .ReturnsAsync((HttpRequest r) => new HttpResponse(r, new HttpHeader { ContentType = "application/json" }, recentFeed));
 
             var releases = await Subject.FetchRecent();
 
