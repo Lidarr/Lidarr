@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NLog;
@@ -42,7 +41,7 @@ namespace NzbDrone.Core.Test.IndexerTests.GazelleTests
 
             Mocker.GetMock<IHttpClient>()
                   .Setup(v => v.ExecuteAsync(It.IsAny<HttpRequest>()))
-                  .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), "{ \"status\": \"success\", \"response\": { \"authkey\": \"key\", \"passkey\": \"key\" }  }")));
+                  .ReturnsAsync((HttpRequest r) => new HttpResponse(r, new HttpHeader(), "{ \"status\": \"success\", \"response\": { \"authkey\": \"key\", \"passkey\": \"key\" }  }"));
 
             Mocker.GetMock<ICached<Dictionary<string, string>>>()
                   .Setup(v => v.Find(It.IsAny<string>()))
