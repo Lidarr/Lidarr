@@ -36,7 +36,7 @@ namespace Lidarr.Api.V1.Artist
                 return true;
             }
 
-            var rootFolder = new DirectoryInfo(rootFolderPath!).Name;
+            var rootFolder = new DirectoryInfo(rootFolderPath).Name;
             var artist = artistResource.ToModel();
             var artistFolder = _fileNameBuilder.GetArtistFolder(artist);
 
