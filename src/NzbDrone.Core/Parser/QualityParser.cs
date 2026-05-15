@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Parser
 
         private static readonly Regex SampleSizeRegex = new (@"\b(?:(?<S24>24[-._ ]?bit|flac24(?:[-._ ]?bit)?|tr24|24-(?:44|48|96|192)|[\[\(].*24bit.*[\]\)]))\b", RegexOptions.Compiled);
 
-        private static readonly Regex CodecRegex = new (@"\b(?:(?<MP1>MPEG Version \d(.5)? Audio, Layer 1|MP1)|(?<MP2>MPEG Version \d(.5)? Audio, Layer 2|MP2)|(?<MP3VBR>MP3.*VBR|MPEG Version \d(.5)? Audio, Layer 3 vbr)|(?<MP3CBR>MP3|MPEG Version \d(.5)? Audio, Layer 3)|(?<FLAC>(web)?flac(?:24(?:[-._ ]?bit)?)?|TR24)|(?<WAVPACK>wavpack|wv)|(?<ALAC>alac)|(?<WMA>WMA\d?)|(?<WAV>WAV|PCM)|(?<AAC>M4A|M4P|M4B|AAC|mp4a|MPEG-4 Audio(?!.*alac))|(?<OGG>OGG|OGA|Vorbis))\b|(?<APE>monkey's audio|[\[|\(].*\bape\b.*[\]|\)])|(?<OPUS>Opus Version \d(.5)? Audio|[\[|\(].*\bopus\b.*[\]|\)])",
+        private static readonly Regex CodecRegex = new (@"\b(?:(?<MP1>MPEG Version \d(.5)? Audio, Layer 1|MP1)|(?<MP2>MPEG Version \d(.5)? Audio, Layer 2|MP2)|(?<MP3VBR>MP3.*VBR|MPEG Version \d(.5)? Audio, Layer 3 vbr)|(?<MP3CBR>MP3|MPEG Version \d(.5)? Audio, Layer 3)|(?<FLAC>(web)?flac(?:24(?:[-._ ]?bit)?)?|TR24)|(?<WAVPACK>wavpack|wv)|(?<ALAC>alac)|(?<WMA>WMA\d?)|(?<AIFF>AIFF|AIF|AIFC)|(?<WAV>WAV|PCM)|(?<AAC>M4A|M4P|M4B|AAC|mp4a|MPEG-4 Audio(?!.*alac))|(?<OGG>OGG|OGA|Vorbis))\b|(?<APE>monkey's audio|[\[|\(].*\bape\b.*[\]|\)])|(?<OPUS>Opus Version \d(.5)? Audio|[\[|\(].*\bopus\b.*[\]|\)])",
                                                                   RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private static readonly Regex WebRegex = new (@"\b(?<web>WEB)(?:\b|$|[ .])",
@@ -143,6 +143,9 @@ namespace NzbDrone.Core.Parser
                     break;
                 case Codec.WAV:
                     result.Quality = Quality.WAV;
+                    break;
+                case Codec.AIFF:
+                    result.Quality = Quality.AIFF;
                     break;
                 case Codec.AAC:
                     if (bitrate == BitRate.B192)
@@ -283,6 +286,11 @@ namespace NzbDrone.Core.Parser
             if (match.Groups["WAV"].Success)
             {
                 return Codec.WAV;
+            }
+
+            if (match.Groups["AIFF"].Success)
+            {
+                return Codec.AIFF;
             }
 
             if (match.Groups["AAC"].Success)
@@ -526,6 +534,8 @@ namespace NzbDrone.Core.Parser
                     return Quality.WMA;
                 case Codec.WAV:
                     return Quality.WAV;
+                case Codec.AIFF:
+                    return Quality.AIFF;
                 case Codec.AAC:
                     if (bitrate == 192)
                     {
@@ -666,6 +676,7 @@ namespace NzbDrone.Core.Parser
         OGG,
         OPUS,
         WAV,
+        AIFF,
         Unknown
     }
 

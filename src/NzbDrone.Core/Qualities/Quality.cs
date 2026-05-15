@@ -108,6 +108,7 @@ namespace NzbDrone.Core.Qualities
         public static Quality APE => new Quality(35, "APE");
         public static Quality WAVPACK => new Quality(36, "WavPack");
         public static Quality ALAC_24 => new Quality(37, "ALAC 24bit");
+        public static Quality AIFF => new Quality(38, "AIFF");
 
         static Quality()
         {
@@ -150,6 +151,7 @@ namespace NzbDrone.Core.Qualities
                 WAVPACK,
                 FLAC_24,
                 ALAC_24,
+                AIFF,
                 WAV
             };
 
@@ -198,6 +200,7 @@ namespace NzbDrone.Core.Qualities
                 new QualityDefinition(Quality.WAVPACK)     { Weight = 22, MinSize = 0, MaxSize = null, PreferredSize = 895, GroupName = "Lossless", GroupWeight = 7 },
                 new QualityDefinition(Quality.FLAC_24)     { Weight = 23, MinSize = 0, MaxSize = null, PreferredSize = 895, GroupName = "Lossless", GroupWeight = 7 },
                 new QualityDefinition(Quality.ALAC_24)     { Weight = 23, MinSize = 0, MaxSize = null, PreferredSize = 895, GroupName = "Lossless", GroupWeight = 7 },
+                new QualityDefinition(Quality.AIFF)         { Weight = 24, MinSize = 0, MaxSize = null, PreferredSize = 895, GroupName = "Lossless", GroupWeight = 7 },
                 new QualityDefinition(Quality.WAV)         { Weight = 24, MinSize = 0, MaxSize = null, PreferredSize = 895, GroupWeight = 8 }
             };
         }
