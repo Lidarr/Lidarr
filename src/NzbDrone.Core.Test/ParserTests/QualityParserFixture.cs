@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Test.ParserTests
             new object[] { Quality.MP3_320 },
             new object[] { Quality.MP3_VBR_V2 },
             new object[] { Quality.WAV },
+            new object[] { Quality.AIFF },
             new object[] { Quality.WMA },
             new object[] { Quality.AAC_192 },
             new object[] { Quality.AAC_256 },
@@ -147,6 +148,17 @@ namespace NzbDrone.Core.Test.ParserTests
         public void should_parse_wav_quality(string title, string desc, int bitrate)
         {
             ParseAndVerifyQuality(title, desc, bitrate, Quality.WAV);
+        }
+
+        [TestCase("Artist - Album [AIFF]", null, 0)]
+        [TestCase("Artist - Album [WEB] [AIFF]", null, 0)]
+        [TestCase("Artist - Album (2017) AIFF", null, 0)]
+        [TestCase("Artist-Album-WEB-AIFF-2022-GROUP", null, 0)]
+        [TestCase("Artist - Album [AIF]", null, 0)]
+        [TestCase("Artist - Album [AIFC]", null, 0)]
+        public void should_parse_aiff_quality(string title, string desc, int bitrate)
+        {
+            ParseAndVerifyQuality(title, desc, bitrate, Quality.AIFF);
         }
 
         [TestCase("Chuck Berry Discography ALAC", null, 0)]
