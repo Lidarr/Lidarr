@@ -950,7 +950,7 @@
     "DeleteSelectedCustomFormatsMessageText": "Esteu segur que voleu suprimir {count} llista(es) d'importació seleccionada(es)?",
     "IncludeCustomFormatWhenRenaming": "Inclou el format personalitzat en canviar el nom",
     "AptUpdater": "Utilitzeu apt per a instal·lar l'actualització",
-    "DockerUpdater": "actualitzeu el contenidor Docker per a rebre l'actualització",
+    "DockerUpdater": "Actualitzeu el contenidor Docker per actualitzar",
     "ExternalUpdater": "{appName} està configurat per a utilitzar un mecanisme d'actualització extern",
     "InstallLatest": "Instal·la l'últim",
     "OnLatestVersion": "La darrera versió de {appName} ja està instal·lada",
@@ -1371,5 +1371,11 @@
     "ImportScriptPath": "Importa la ruta de l'script",
     "ImportScriptPathHelpText": "El camí a l'script que s'ha d'utilitzar per importar",
     "ImportUsingScript": "Importa amb script",
-    "ImportUsingScriptHelpText": "Copia els fitxers per importar usant un script (ex. per transcodificar)"
+    "ImportUsingScriptHelpText": "Copia els fitxers per importar usant un script (ex. per transcodificar)",
+    "FilterTracksByTitleOrNumber": "Filtra els episodis per títol o nombre",
+    "ArtistWasDeletedFromMusicBrainz": "L'artista s'ha eliminat de MusicBrainz",
+    "NoTracksFoundForSelectedAlbum": "No s'han trobat cançons per a l'àlbum seleccionat",
+    "LidarrRequiresRestartToApplyPluginChanges": "Lidarr necessita un reinici per aplicar els canvis d'extensions",
+    "Plugins": "Extensions",
+    "RestartRequired": "Reinici requerit"
 }
