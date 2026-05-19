@@ -665,7 +665,7 @@
     "BeforeUpdate": "Vor dem Update",
     "Close": "Schließen",
     "Connect": "Verbinden",
-    "CustomFilters": "Eigene Filter",
+    "CustomFilters": "Benutzerdefinierte Filter",
     "Date": "Datum",
     "Deleted": "Gelöscht",
     "Details": "Details",
@@ -729,7 +729,7 @@
     "SelectQuality": "Qualität auswählen",
     "ShowAdvanced": "Einfache Ansicht",
     "SizeLimit": "Größenlimit",
-    "SizeOnDisk": "Größe",
+    "SizeOnDisk": "Größe auf dem Laufwerk",
     "Started": "gestartet",
     "System": "System",
     "Test": "Testen",
@@ -1371,5 +1371,11 @@
     "ImportScriptPath": "Import-Skript-Pfad",
     "ImportScriptPathHelpText": "Der Pfad zum Skript, das für den Import verwendet wird",
     "ImportUsingScript": "Mit Skript importieren",
-    "ImportUsingScriptHelpText": "Dateien für den Import mit einem Skript kopieren (z. B. für Transkodierung)"
+    "ImportUsingScriptHelpText": "Dateien für den Import mit einem Skript kopieren (z. B. für Transkodierung)",
+    "FilterTracksByTitleOrNumber": "Folgen nach Titel oder Nummer filtern",
+    "ArtistWasDeletedFromMusicBrainz": "Künstler wurde von MusicBrainz entfernt",
+    "NoTracksFoundForSelectedAlbum": "Keine Titel für das ausgewählte Album gefunden",
+    "LidarrRequiresRestartToApplyPluginChanges": "Lidarr muss neugestartet werden, um die Plugin Änderungen anzuwenden",
+    "Plugins": "Plugins",
+    "RestartRequired": "Neustart benötigt"
 }

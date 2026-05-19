@@ -124,8 +124,8 @@
     "ShownAboveEachColumnWhenWeekIsTheActiveView": "Zobrazuje se nad každým sloupcem, když je aktivní zobrazení týden",
     "ShowPath": "Zobrazit cestu",
     "ShowQualityProfileHelpText": "Zobrazit kvalitní profil pod plakátem",
-    "ShowRelativeDates": "Zobrazit relativní data",
-    "ShowRelativeDatesHelpText": "Zobrazit relativní (dnes / včera / atd.) Nebo absolutní data",
+    "ShowRelativeDates": "Zobrazit aktuální datum",
+    "ShowRelativeDatesHelpText": "Zobrazit relevantní",
     "ShowSearch": "Zobrazit vyhledávání",
     "ShowSearchActionHelpText": "Zobrazit vyhledávací tlačítko při najetí myší",
     "ShowSizeOnDisk": "Zobrazit velikost na disku",
@@ -1359,5 +1359,6 @@
     "ManageCustomFormats": "Spravovat vlastní formáty",
     "ManageImportLists": "Spravovat importní seznamy",
     "ManageIndexers": "Spravovat indexery",
-    "ManageTracks": "Spravovat skladby"
+    "ManageTracks": "Spravovat skladby",
+    "NotificationsSettingsUpdateMapPathsFrom": "Mapovat cestu na"
 }
