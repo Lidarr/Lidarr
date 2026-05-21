@@ -300,14 +300,51 @@ namespace NzbDrone.Core.MediaFiles
 
         public List<IFileInfo> FilterFiles(string basePath, IEnumerable<IFileInfo> files)
         {
-            return files.Where(file => !ExcludedSubFoldersRegex.IsMatch(basePath.GetRelativePath(file.FullName)))
-                        .Where(file => !ExcludedFilesRegex.IsMatch(file.Name))
-                        .ToList();
+            var excludedFolders = GetExcludedFolders();
+
+            return files
+                .Where(file => !ExcludedSubFoldersRegex.IsMatch(basePath.GetRelativePath(file.FullName)))
+                .Where(file =>
+                {
+                    var relativePath = basePath.GetRelativePath(file.FullName);
+
+                    var segments = relativePath.Split(
+                        Path.DirectorySeparatorChar,
+                        Path.AltDirectorySeparatorChar);
+
+                    return !segments.Any(s =>
+                    {
+                        if (string.IsNullOrWhiteSpace(s))
+                        {
+                            return false;
+                        }
+
+                        return excludedFolders.Contains(s.Trim());
+                    });
+                })
+                .Where(file => !ExcludedFilesRegex.IsMatch(file.Name))
+                    .ToList();
         }
 
         public void Execute(RescanFoldersCommand message)
         {
             Scan(message.Folders, message.Filter, message.AddNewArtists, message.ArtistIds);
+        }
+
+        private HashSet<string> GetExcludedFolders()
+        {
+            var value = _configService.ExcludedScanFolders;
+
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            }
+
+            return value
+                .Split(',')
+                .Select(x => x.Trim())
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
         }
     }
 }

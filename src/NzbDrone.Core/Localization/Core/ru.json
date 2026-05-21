@@ -313,6 +313,8 @@
     "ErrorLoadingContents": "Ошибка при загрузке контента",
     "ErrorLoadingPreviews": "Ошибка при загрузке предпросмотра",
     "Exception": "Исключение",
+    "ExcludedScanFolders": "Исключённые папки из сканирования",
+    "ExcludedScanFoldersHelpText": "Имена папок через запятую, которые будут игнорироваться при сканировании библиотеки",
     "Fixed": "Исправлено",
     "Folder": "Каталог",
     "Folders": "Папки",

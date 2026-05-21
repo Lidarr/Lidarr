@@ -126,6 +126,8 @@
     "ErrorLoadingContents": "Erreur lors du chargement du contenu",
     "ErrorLoadingPreviews": "Erreur lors du chargement des aperçus",
     "Exception": "Exception",
+    "ExcludedScanFolders": "Dossiers exclus du scan",
+    "ExcludedScanFoldersHelpText": "Noms de dossiers séparés par des virgules ignorés lors de l'analyse de la bibliothèque",
     "FileDateHelpText": "Changer la date du fichier lors de l'import/re-scan",
     "FileManagement": "Gestion de fichiers",
     "Filename": "Nom de fichier",

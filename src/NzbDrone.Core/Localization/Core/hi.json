@@ -71,6 +71,8 @@
     "ErrorLoadingContents": "सामग्री लोड करने में त्रुटि",
     "ErrorLoadingPreviews": "पूर्वावलोकन लोड करने में त्रुटि",
     "Exception": "अपवाद",
+    "ExcludedScanFolders": "स्कैन से बाहर रखे गए फ़ोल्डर",
+    "ExcludedScanFoldersHelpText": "कॉमा से अलग किए गए फ़ोल्डर नाम जिन्हें लाइब्रेरी स्कैन के दौरान अनदेखा किया जाएगा",
     "FileDateHelpText": "आयात / रेस्क्यू पर फ़ाइल तिथि बदलें",
     "FileManagement": "फाइल प्रबंधन",
     "Filename": "फ़ाइल का नाम",

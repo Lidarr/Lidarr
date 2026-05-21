@@ -1,1 +1,4 @@
-{}
+{
+  "ExcludedScanFolders": "Skaneerimisest välistatud kaustad",
+  "ExcludedScanFoldersHelpText": "Komadega eraldatud kaustanimed, mida ignoreeritakse teegi skaneerimisel"
+}

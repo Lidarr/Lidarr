@@ -38,6 +38,7 @@ namespace NzbDrone.Core.Configuration
         string ScriptImportPath { get; set; }
         bool ImportExtraFiles { get; set; }
         string ExtraFileExtensions { get; set; }
+        string ExcludedScanFolders { get; set; }
         bool WatchLibraryForChanges { get; set; }
         RescanAfterRefreshType RescanAfterRefresh { get; set; }
         AllowFingerprinting AllowFingerprinting { get; set; }

@@ -377,6 +377,8 @@
     "Downloading": "Ladataan",
     "Ended": "Päättynyt",
     "Exception": "Poikkeus",
+    "ExcludedScanFolders": "Skannauksesta poissuljetut kansiot",
+    "ExcludedScanFoldersHelpText": "Pilkuilla erotetut kansionimet, jotka ohitetaan kirjaston skannauksessa",
     "FileNames": "Tiedostonimet",
     "Folder": "Kansio",
     "HasPendingChangesNoChanges": "Ei muutoksia",

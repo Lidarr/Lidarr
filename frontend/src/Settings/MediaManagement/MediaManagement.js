@@ -389,6 +389,24 @@ class MediaManagement extends Component {
                     isAdvanced={true}
                   >
                     <FormLabel>
+                      {translate('ExcludedScanFolders')}
+                    </FormLabel>
+
+                    <FormInputGroup
+                      type={inputTypes.TEXT}
+                      name="excludedScanFolders"
+                      helpText={translate('ExcludedScanFoldersHelpText')}
+                      values={[]}
+                      onChange={onInputChange}
+                      {...settings.excludedScanFolders}
+                    />
+                  </FormGroup>
+
+                  <FormGroup
+                    advancedSettings={advancedSettings}
+                    isAdvanced={true}
+                  >
+                    <FormLabel>
                       {translate('AllowFingerprinting')}
                     </FormLabel>
 
@@ -456,6 +474,7 @@ class MediaManagement extends Component {
                       {...settings.recycleBinCleanupDays}
                     />
                   </FormGroup>
+
                 </FieldSet>
 
                 {

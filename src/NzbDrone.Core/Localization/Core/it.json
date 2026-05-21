@@ -135,6 +135,8 @@
     "ErrorLoadingContents": "Errore nel caricare i contenuti",
     "ErrorLoadingPreviews": "Errore nel caricare le anteprime",
     "Exception": "Eccezione",
+    "ExcludedScanFolders": "Cartelle escluse dalla scansione",
+    "ExcludedScanFoldersHelpText": "Nomi delle cartelle separati da virgole ignorati durante la scansione della libreria",
     "FileDateHelpText": "Modifica la data dei file in importazione/rescan",
     "FileManagement": "Gestione dei File",
     "Filename": "Nome del File",

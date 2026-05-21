@@ -367,5 +367,7 @@
     "LidarrSupportsAnyDownloadClientThatUsesTheNewznabStandardAsWellAsOtherDownloadClientsListedBelow": "{appName} 支援許多常見的 Torrent 和 Usenet 下載用戶端。",
     "LidarrSupportsAnyIndexerThatUsesTheNewznabStandardAsWellAsOtherIndexersListedBelow": "{appName} 支援任何使用 Newznab 標準的索引器，以及下列的其他來源。",
     "LidarrTags": "{appName} 標籤",
-    "UpgradeAllowedHelpText": "若停用，將不會升級品質"
+    "UpgradeAllowedHelpText": "若停用，將不會升級品質",
+    "ExcludedScanFolders": "掃描排除的資料夾",
+    "ExcludedScanFoldersHelpText": "在媒體庫掃描期間將被忽略的以逗號分隔資料夾名稱"
 }

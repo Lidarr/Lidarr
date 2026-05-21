@@ -141,5 +141,7 @@
     "AddConditionImplementation": "tambah persyaratan {implementationName}",
     "AddConnectionImplementation": "tambah koneksi - {implementationName}",
     "AddConnection": "tambah koneksi",
-    "AddConditionError": "tidak dapat menambahkan persyaratan baru, coba lagi.."
+    "AddConditionError": "tidak dapat menambahkan persyaratan baru, coba lagi..",
+    "ExcludedScanFolders": "Folder yang dikecualikan dari pemindaian",
+    "ExcludedScanFoldersHelpText": "Nama folder dipisahkan koma yang akan diabaikan saat pemindaian pustaka"
 }

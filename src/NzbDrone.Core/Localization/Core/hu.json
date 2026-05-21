@@ -52,6 +52,8 @@
     "EnableSslHelpText": " A hatálybalépéshez újra kell indítani rendszergazdaként",
     "ErrorLoadingContents": "Hiba a tartalom betöltésekor",
     "Exception": "Kivétel",
+    "ExcludedScanFolders": "Kizárt mappák a vizsgálatból",
+    "ExcludedScanFoldersHelpText": "Vesszővel elválasztott mappanevek, amelyeket a könyvtár vizsgálata figyelmen kívül hagy",
     "Filename": "Fájlnév",
     "Files": "Fájlok",
     "Fixed": "Kijavítva",

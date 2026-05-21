@@ -297,5 +297,7 @@
     "DownloadClientSettingsRecentPriority": "Priorita klienta",
     "CheckDownloadClientForDetails": "ďalšie podrobnosti nájdete v klientovi na sťahovanie",
     "RequiredPlaceHolder": "Pridať nové obmedzenie",
-    "IgnoredPlaceHolder": "Pridať nové obmedzenie"
+    "IgnoredPlaceHolder": "Pridať nové obmedzenie",
+    "ExcludedScanFolders": "Vylúčené priečinky zo skenovania",
+    "ExcludedScanFoldersHelpText": "Názvy priečinkov oddelené čiarkou, ktoré budú ignorované pri skenovaní knižnice"
 }
