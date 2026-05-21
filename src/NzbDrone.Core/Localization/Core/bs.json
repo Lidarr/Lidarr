@@ -1,1 +1,4 @@
-{}
+{
+    "ExcludedScanFolders": "Isključene fascikle iz skeniranja",
+    "ExcludedScanFoldersHelpText": "Imena fascikli odvojena zarezom koja će biti ignorisana tokom skeniranja biblioteke"
+}

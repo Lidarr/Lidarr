@@ -404,6 +404,8 @@
     "ErrorLoadingContents": "שגיאה בטעינת התוכן",
     "ErrorLoadingPreviews": "שגיאה בטעינת תצוגה מקדימה",
     "Exception": "יוצא מן הכלל",
+    "ExcludedScanFolders": "תיקיות מוחרגות מסריקה",
+    "ExcludedScanFoldersHelpText": "שמות תיקיות מופרדים בפסיקים שיתעלמו מהם במהלך סריקת הספרייה",
     "FileNames": "שמות קבצים",
     "ForMoreInformationOnTheIndividualIndexersClickOnTheInfoButtons": "למידע נוסף על האינדקסים הבודדים, לחץ על כפתורי המידע.",
     "ForMoreInformationOnTheIndividualListsClickOnTheInfoButtons": "למידע נוסף על רשימות הייבוא הבודדות, לחץ על כפתורי המידע.",

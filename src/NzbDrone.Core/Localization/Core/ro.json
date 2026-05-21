@@ -262,6 +262,8 @@
     "ErrorLoadingContents": "Eroare la încărcarea conținutului",
     "ErrorLoadingPreviews": "Eroare la încărcarea previzualizărilor",
     "Exception": "Excepție",
+    "ExcludedScanFolders": "Foldere excluse de la scanare",
+    "ExcludedScanFoldersHelpText": "Nume de foldere separate prin virgulă ignorate în timpul scanării bibliotecii",
     "FileManagement": "Administrarea de fișiere",
     "Filename": "Nume fișier",
     "FileNames": "Numele fișierelor",

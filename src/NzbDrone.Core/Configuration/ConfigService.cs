@@ -242,6 +242,13 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("ExtraFileExtensions", value); }
         }
 
+        public string ExcludedScanFolders
+        {
+            get => GetValue("ExcludedScanFolders", "");
+
+            set => SetValue("ExcludedScanFolders", value);
+        }
+
         public bool WatchLibraryForChanges
         {
             get { return GetValueBoolean("WatchLibraryForChanges", true); }

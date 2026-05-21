@@ -109,6 +109,8 @@
     "ErrorLoadingContents": "콘텐츠로드 오류",
     "ErrorLoadingPreviews": "미리보기를로드하는 중에 오류가 발생했습니다.",
     "Exception": "예외",
+    "ExcludedScanFolders": "스캔 제외 폴더",
+    "ExcludedScanFoldersHelpText": "라이브러리 스캔 중 무시할 쉼표로 구분된 폴더 이름",
     "FileDateHelpText": "가져 오기 / 재검색시 파일 날짜 변경",
     "FileManagement": "파일 관리",
     "Filename": "파일 이름",

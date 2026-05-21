@@ -287,5 +287,7 @@
     "AddNewArtistRootFolderHelpText": "Undermappa \"{folder}\" vil bli automatisk laget",
     "CheckDownloadClientForDetails": "sjekk nedlastningsklienten for mer informasjon",
     "TBA": "Venter",
-    "History": "Historikk"
+    "History": "Historikk",
+    "ExcludedScanFolders": "Utelukkede mapper fra skanning",
+    "ExcludedScanFoldersHelpText": "Kommadelte mappenavn som ignoreres under biblioteksskanning"
 }

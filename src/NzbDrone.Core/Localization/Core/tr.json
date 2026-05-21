@@ -166,6 +166,8 @@
     "ErrorLoadingContents": "İçerik yüklenirken hata oluştu",
     "ErrorLoadingPreviews": "Önizlemeler yüklenirken hata oluştu",
     "Exception": "İstisna",
+    "ExcludedScanFolders": "Taramadan hariç tutulan klasörler",
+    "ExcludedScanFoldersHelpText": "Kitaplık taraması sırasında yok sayılacak virgülle ayrılmış klasör adları",
     "FileDateHelpText": "İçe aktarmada / yeniden taramada dosya tarihini değiştirin",
     "FileManagement": "Dosya Yönetimi",
     "Filename": "Dosya adı",

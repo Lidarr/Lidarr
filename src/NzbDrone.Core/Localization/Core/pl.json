@@ -290,6 +290,8 @@
     "ErrorLoadingContents": "Błąd podczas ładowania treści",
     "ErrorLoadingPreviews": "Błąd podczas ładowania podglądów",
     "Exception": "Wyjątek",
+    "ExcludedScanFolders": "Wykluczone foldery ze skanowania",
+    "ExcludedScanFoldersHelpText": "Nazwy folderów oddzielone przecinkami ignorowane podczas skanowania biblioteki",
     "FileDateHelpText": "Zmień datę pliku przy imporcie / ponownym skanowaniu",
     "FileManagement": "Zarządzanie plikami",
     "Filename": "Nazwa pliku",

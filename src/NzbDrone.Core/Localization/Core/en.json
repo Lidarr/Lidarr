@@ -470,6 +470,8 @@
   "EventType": "Event Type",
   "Events": "Events",
   "Exception": "Exception",
+  "ExcludedScanFolders": "Excluded scan folders",
+  "ExcludedScanFoldersHelpText": "Comma-separated folder names to ignore during library scans",
   "ExistingAlbums": "Existing Albums",
   "ExistingAlbumsData": "Monitor albums that have files or have not released yet",
   "ExistingTag": "Existing tag",

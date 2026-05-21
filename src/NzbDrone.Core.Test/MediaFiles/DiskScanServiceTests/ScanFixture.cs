@@ -10,6 +10,7 @@ using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.TrackImport;
@@ -63,6 +64,10 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
             Mocker.GetMock<IMediaFileService>()
                 .Setup(v => v.FilterUnchangedFiles(It.IsAny<List<IFileInfo>>(), It.IsAny<FilterFilesType>()))
                 .Returns((List<IFileInfo> files, FilterFilesType filter) => files);
+
+            Mocker.GetMock<IConfigService>()
+                .SetupGet(v => v.ExcludedScanFolders)
+                .Returns(string.Empty);
         }
 
         private void GivenRootFolder(params string[] subfolders)
@@ -370,6 +375,126 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
         }
 
         [Test]
+        public void should_not_exclude_any_folders_when_config_is_empty()
+        {
+            Mocker.GetMock<IConfigService>()
+                .SetupGet(v => v.ExcludedScanFolders)
+                .Returns(string.Empty);
+
+            GivenArtistFolder();
+
+            GivenFiles(new List<string>
+            {
+                Path.Combine(_artist.Path, "Album", "song.flac"),
+                Path.Combine(_artist.Path, "Various", "song.flac")
+            });
+
+            Subject.Scan(new List<string> { _artist.Path });
+
+            VerifyFileImported(Path.Combine(_artist.Path, "Album", "song.flac"));
+            VerifyFileImported(Path.Combine(_artist.Path, "Various", "song.flac"));
+        }
+
+        [Test]
+        public void should_exclude_single_configured_folder()
+        {
+            Mocker.GetMock<IConfigService>()
+                .SetupGet(v => v.ExcludedScanFolders)
+                .Returns("various");
+
+            GivenArtistFolder();
+
+            GivenFiles(new List<string>
+            {
+                Path.Combine(_artist.Path, "Album", "song.flac"),
+                Path.Combine(_artist.Path, "various", "song.flac")
+            });
+
+            Subject.Scan(new List<string> { _artist.Path });
+
+            VerifyFileImported(Path.Combine(_artist.Path, "Album", "song.flac"));
+            VerifyFileNotImported(Path.Combine(_artist.Path, "various", "song.flac"));
+        }
+
+        [Test]
+        public void should_exclude_multiple_configured_folders()
+        {
+            Mocker.GetMock<IConfigService>()
+                .SetupGet(v => v.ExcludedScanFolders)
+                .Returns("various,.ignore,temp");
+
+            GivenArtistFolder();
+
+            GivenFiles(new List<string>
+            {
+                Path.Combine(_artist.Path, "Album", "song.flac"),
+                Path.Combine(_artist.Path, "Various", "song.flac"),
+                Path.Combine(_artist.Path, ".ignore", "song.flac"),
+                Path.Combine(_artist.Path, "temp", "song.flac")
+            });
+
+            Subject.Scan(new List<string> { _artist.Path });
+
+            VerifyFileImported(Path.Combine(_artist.Path, "Album", "song.flac"));
+
+            VerifyFileNotImported(Path.Combine(_artist.Path, "Various", "song.flac"));
+            VerifyFileNotImported(Path.Combine(_artist.Path, ".ignore", "song.flac"));
+            VerifyFileNotImported(Path.Combine(_artist.Path, "temp", "song.flac"));
+        }
+
+        [Test]
+        public void should_exclude_folders_case_insensitively()
+        {
+            Mocker.GetMock<IConfigService>()
+                .SetupGet(v => v.ExcludedScanFolders)
+                .Returns("various");
+
+            GivenArtistFolder();
+
+            GivenFiles(new List<string>
+            {
+                Path.Combine(_artist.Path, "Various", "song.flac"),
+                Path.Combine(_artist.Path, "VARIOUS", "song.flac"),
+                Path.Combine(_artist.Path, "vArIoUs", "song.flac"),
+                Path.Combine(_artist.Path, "Album", "song.flac")
+            });
+
+            Subject.Scan(new List<string> { _artist.Path });
+
+            VerifyFileImported(Path.Combine(_artist.Path, "Album", "song.flac"));
+
+            VerifyFileNotImported(Path.Combine(_artist.Path, "Various", "song.flac"));
+            VerifyFileNotImported(Path.Combine(_artist.Path, "VARIOUS", "song.flac"));
+            VerifyFileNotImported(Path.Combine(_artist.Path, "vArIoUs", "song.flac"));
+        }
+
+        [Test]
+        public void should_only_match_exact_directory_segment_not_substring()
+        {
+            Mocker.GetMock<IConfigService>()
+                .SetupGet(v => v.ExcludedScanFolders)
+                .Returns("various");
+
+            GivenArtistFolder();
+
+            GivenFiles(new List<string>
+            {
+                Path.Combine(_artist.Path, "Various", "song.flac"),
+                Path.Combine(_artist.Path, "Various Artists", "song.flac"),
+                Path.Combine(_artist.Path, "SomeVariousFolder", "song.flac"),
+                Path.Combine(_artist.Path, "Album", "song.flac")
+            });
+
+            Subject.Scan(new List<string> { _artist.Path });
+
+            VerifyFileNotImported(Path.Combine(_artist.Path, "Various", "song.flac"));
+
+            VerifyFileImported(Path.Combine(_artist.Path, "Various Artists", "song.flac"));
+            VerifyFileImported(Path.Combine(_artist.Path, "SomeVariousFolder", "song.flac"));
+            VerifyFileImported(Path.Combine(_artist.Path, "Album", "song.flac"));
+        }
+
+        [Test]
         public void should_exclude_osx_metadata_files()
         {
             GivenArtistFolder();
@@ -559,6 +684,30 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
                                           l[0].Quality.Equals(localTrack.Quality) &&
                                           l[0].MediaInfo.AudioFormat == localTrack.FileTrackInfo.MediaInfo.AudioFormat)),
                         Times.Once());
+        }
+
+        private void VerifyFileImported(string path)
+        {
+            Mocker.GetMock<IMakeImportDecision>()
+                .Verify(x => x.GetImportDecisions(
+                    It.Is<List<IFileInfo>>(files =>
+                        files.Any(f => f.FullName.Equals(path, StringComparison.InvariantCultureIgnoreCase))),
+                    It.IsAny<IdentificationOverrides>(),
+                    It.IsAny<ImportDecisionMakerInfo>(),
+                    It.IsAny<ImportDecisionMakerConfig>()),
+                Times.Once);
+        }
+
+        private void VerifyFileNotImported(string path)
+        {
+            Mocker.GetMock<IMakeImportDecision>()
+                .Verify(x => x.GetImportDecisions(
+                    It.Is<List<IFileInfo>>(files =>
+                        files.Any(f => f.FullName.Equals(path, StringComparison.InvariantCultureIgnoreCase))),
+                    It.IsAny<IdentificationOverrides>(),
+                    It.IsAny<ImportDecisionMakerInfo>(),
+                    It.IsAny<ImportDecisionMakerConfig>()),
+                Times.Never);
         }
     }
 }

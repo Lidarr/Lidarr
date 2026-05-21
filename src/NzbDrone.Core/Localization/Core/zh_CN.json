@@ -76,6 +76,8 @@
     "EnableSslHelpText": " 重启生效",
     "ErrorLoadingContents": "加载内容出错",
     "Exception": "例外",
+    "ExcludedScanFolders": "扫描排除的文件夹",
+    "ExcludedScanFoldersHelpText": "在媒体库扫描期间将被忽略的逗号分隔文件夹名称",
     "Filename": "文件名",
     "Files": "文件",
     "History": "历史记录",
