@@ -17,7 +17,5 @@
     "EditConnectionImplementation": "Pievienot Savienojumu - {implementationName}",
     "EditDelayProfile": "Pievienot Aizkaves Profilu",
     "AddReleaseProfile": "Pievienot Aizkaves Profilu",
-    "EditReleaseProfile": "Pievienot Aizkaves Profilu",
-    "ExcludedScanFolders": "No skenēšanas izslēgtās mapes",
-    "ExcludedScanFoldersHelpText": "Ar komatiem atdalīti mapju nosaukumi, kas tiks ignorēti bibliotēkas skenēšanas laikā"
+    "EditReleaseProfile": "Pievienot Aizkaves Profilu"
 }

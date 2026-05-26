@@ -125,8 +125,6 @@
     "DownloadPropersAndRepacksHelpTexts1": "Automatisch Proper oder Repacks zum upgraden eines Filmes zulassen",
     "ErrorLoadingPreviews": "Fehler beim laden der Vorschauen",
     "Exception": "Ausnahme",
-    "ExcludedScanFolders": "Ausgeschlossene Ordner beim Scannen",
-    "ExcludedScanFoldersHelpText": "Kommagetrennte Ordnernamen, die beim Bibliotheksscan ignoriert werden",
     "Filename": "Dateiname",
     "FileNames": "Dateinamen",
     "Files": "Dateien",

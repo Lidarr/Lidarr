@@ -307,7 +307,5 @@
     "AddDelayProfileError": "Neuspješno dodavanje profila odgode, molimo pokušaj ponovno.",
     "Today": "Danas",
     "DownloadClientSettingsRecentPriority": "Prioritet Klijenata",
-    "CheckDownloadClientForDetails": "provjerite klienta za preuzimanje za još detalja",
-    "ExcludedScanFolders": "Isključene mape iz skeniranja",
-    "ExcludedScanFoldersHelpText": "Nazivi mapa odvojeni zarezom koji će se zanemariti tijekom skeniranja biblioteke"
+    "CheckDownloadClientForDetails": "provjerite klienta za preuzimanje za još detalja"
 }

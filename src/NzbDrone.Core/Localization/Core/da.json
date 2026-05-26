@@ -328,8 +328,6 @@
     "ErrorLoadingContents": "Fejl ved indlæsning af indhold",
     "ErrorLoadingPreviews": "Fejl ved indlæsning af forhåndsvisning",
     "Exception": "Undtagelse",
-    "ExcludedScanFolders": "Udeladte mapper fra scanning",
-    "ExcludedScanFoldersHelpText": "Kommaadskilte mappenavne, der ignoreres under biblioteksscanning",
     "Filename": "Filnavn",
     "FileNames": "Filnavne",
     "Files": "Filer",

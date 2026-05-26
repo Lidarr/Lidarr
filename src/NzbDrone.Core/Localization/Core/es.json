@@ -40,8 +40,6 @@
     "EnableSslHelpText": " Requiere reiniciar la aplicación como administrador para que surta efecto",
     "ErrorLoadingPreviews": "Error al cargar las previsualizaciones",
     "Exception": "Excepción",
-    "ExcludedScanFolders": "Carpetas excluidas del escaneo",
-    "ExcludedScanFoldersHelpText": "Nombres de carpetas separados por comas que se ignorarán durante el escaneo de la biblioteca",
     "FileDateHelpText": "Cambiar la fecha del archivo al importar/rescan",
     "FileManagement": "Gestión de archivos",
     "Filename": "Nombre de archivo",

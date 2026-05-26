@@ -241,8 +241,6 @@
     "ErrorLoadingContents": "Erro ao carregar o conteúdo",
     "ErrorLoadingPreviews": "Erro ao carregar as visualizações",
     "Exception": "Exceção",
-    "ExcludedScanFolders": "Pastas excluídas da varredura",
-    "ExcludedScanFoldersHelpText": "Nomes de pastas separados por vírgulas ignorados durante a varredura da biblioteca",
     "ExistingTagsScrubbed": "Tags existentes apagadas",
     "ExpandAlbumByDefaultHelpText": "Álbum",
     "ExpandOtherByDefaultHelpText": "Outros",

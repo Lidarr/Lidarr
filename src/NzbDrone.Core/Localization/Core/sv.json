@@ -180,8 +180,6 @@
     "ErrorLoadingContents": "Fel vid inläsning av innehåll",
     "ErrorLoadingPreviews": "Fel vid inläsning av förhandsgranskningar",
     "Exception": "Undantag",
-    "ExcludedScanFolders": "Uteslutna mappar från skanning",
-    "ExcludedScanFoldersHelpText": "Komma-separerade mappnamn som ignoreras vid biblioteksskanning",
     "ExistingAlbumsData": "Bevaka album som har filer eller inte har släppts än",
     "ExpandAlbumByDefaultHelpText": "Albums",
     "ExpandBroadcastByDefaultHelpText": "Sändning",

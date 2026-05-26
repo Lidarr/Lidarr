@@ -269,8 +269,6 @@
     "ErrorLoadingContents": "خطأ في تحميل المحتويات",
     "ErrorLoadingPreviews": "خطأ في تحميل المعاينات",
     "Exception": "استثناء",
-    "ExcludedScanFolders": "مجلدات الاستبعاد من الفحص",
-    "ExcludedScanFoldersHelpText": "أسماء مجلدات مفصولة بفواصل سيتم تجاهلها أثناء فحص المكتبة",
     "FileDateHelpText": "تغيير تاريخ الملف عند الاستيراد / إعادة الفحص",
     "FileManagement": "إدارة الملفات",
     "Filename": "اسم الملف",

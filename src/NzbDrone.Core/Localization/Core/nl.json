@@ -78,8 +78,6 @@
     "ErrorLoadingContents": "Fout bij laden van inhoud",
     "ErrorLoadingPreviews": "Fout bij laden van voorvertoningen",
     "Exception": "Uitzondering",
-    "ExcludedScanFolders": "Uitgesloten mappen van scan",
-    "ExcludedScanFoldersHelpText": "Komma-gescheiden mapnamen die worden genegeerd tijdens bibliotheekscan",
     "FileDateHelpText": "Pas bestandsdatum aan tijdens het importeren/herscannen",
     "FileManagement": "Bestandsbeheer",
     "Filename": "Bestandsnaam",

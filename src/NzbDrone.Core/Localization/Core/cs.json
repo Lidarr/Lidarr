@@ -363,8 +363,6 @@
     "ErrorLoadingContents": "Chyba při načítání obsahu",
     "ErrorLoadingPreviews": "Chyba při načítání náhledů",
     "Exception": "Výjimka",
-    "ExcludedScanFolders": "Vyloučené složky ze skenování",
-    "ExcludedScanFoldersHelpText": "Názvy složek oddělené čárkou, které budou ignorovány při skenování knihovny",
     "FileDateHelpText": "Změnit datum souboru při importu / opětovném skenování",
     "FileManagement": "Správa souborů",
     "FileNames": "Názvy souborů",
