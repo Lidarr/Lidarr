@@ -495,6 +495,98 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
         }
 
         [Test]
+        public void should_exclude_configured_folders_with_spaces_around_commas()
+        {
+            Mocker.GetMock<IConfigService>()
+                .SetupGet(v => v.ExcludedScanFolders)
+                .Returns("various, temp");
+
+            GivenArtistFolder();
+
+            GivenFiles(new List<string>
+            {
+                Path.Combine(_artist.Path, "Album", "song.flac"),
+                Path.Combine(_artist.Path, "various", "song.flac"),
+                Path.Combine(_artist.Path, "temp", "song.flac")
+            });
+
+            Subject.Scan(new List<string> { _artist.Path });
+
+            VerifyFileImported(Path.Combine(_artist.Path, "Album", "song.flac"));
+            VerifyFileNotImported(Path.Combine(_artist.Path, "various", "song.flac"));
+            VerifyFileNotImported(Path.Combine(_artist.Path, "temp", "song.flac"));
+        }
+
+        [Test]
+        public void should_exclude_configured_folders_with_multiple_spaces()
+        {
+            Mocker.GetMock<IConfigService>()
+                .SetupGet(v => v.ExcludedScanFolders)
+                .Returns("various,     temp");
+
+            GivenArtistFolder();
+
+            GivenFiles(new List<string>
+            {
+                Path.Combine(_artist.Path, "Album", "song.flac"),
+                Path.Combine(_artist.Path, "various", "song.flac"),
+                Path.Combine(_artist.Path, "temp", "song.flac")
+            });
+
+            Subject.Scan(new List<string> { _artist.Path });
+
+            VerifyFileImported(Path.Combine(_artist.Path, "Album", "song.flac"));
+            VerifyFileNotImported(Path.Combine(_artist.Path, "various", "song.flac"));
+            VerifyFileNotImported(Path.Combine(_artist.Path, "temp", "song.flac"));
+        }
+
+        [Test]
+        public void should_exclude_configured_folders_with_leading_and_trailing_spaces()
+        {
+            Mocker.GetMock<IConfigService>()
+                .SetupGet(v => v.ExcludedScanFolders)
+                .Returns("  various , temp  ");
+
+            GivenArtistFolder();
+
+            GivenFiles(new List<string>
+            {
+                Path.Combine(_artist.Path, "Album", "song.flac"),
+                Path.Combine(_artist.Path, "various", "song.flac"),
+                Path.Combine(_artist.Path, "temp", "song.flac")
+            });
+
+            Subject.Scan(new List<string> { _artist.Path });
+
+            VerifyFileImported(Path.Combine(_artist.Path, "Album", "song.flac"));
+            VerifyFileNotImported(Path.Combine(_artist.Path, "various", "song.flac"));
+            VerifyFileNotImported(Path.Combine(_artist.Path, "temp", "song.flac"));
+        }
+
+        [Test]
+        public void should_ignore_empty_entries_in_excluded_folders_config()
+        {
+            Mocker.GetMock<IConfigService>()
+                .SetupGet(v => v.ExcludedScanFolders)
+                .Returns("various,,temp");
+
+            GivenArtistFolder();
+
+            GivenFiles(new List<string>
+            {
+                Path.Combine(_artist.Path, "Album", "song.flac"),
+                Path.Combine(_artist.Path, "various", "song.flac"),
+                Path.Combine(_artist.Path, "temp", "song.flac")
+            });
+
+            Subject.Scan(new List<string> { _artist.Path });
+
+            VerifyFileImported(Path.Combine(_artist.Path, "Album", "song.flac"));
+            VerifyFileNotImported(Path.Combine(_artist.Path, "various", "song.flac"));
+            VerifyFileNotImported(Path.Combine(_artist.Path, "temp", "song.flac"));
+        }
+
+        [Test]
         public void should_exclude_osx_metadata_files()
         {
             GivenArtistFolder();
