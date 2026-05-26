@@ -341,7 +341,7 @@ namespace NzbDrone.Core.MediaFiles
             }
 
             return value
-                .Split(',')
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .Select(x => x.Trim())
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
