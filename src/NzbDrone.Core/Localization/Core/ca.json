@@ -110,8 +110,6 @@
     "EnableSSL": "Activa SSL",
     "ErrorLoadingContents": "S'ha produït un error en carregar el contingut",
     "Exception": "Excepció",
-    "ExcludedScanFolders": "Carpetes excloses de l'escaneig",
-    "ExcludedScanFoldersHelpText": "Noms de carpetes separats per comes que s'ignoraran durant l'escaneig de la biblioteca",
     "Track": "Traça",
     "FileDateHelpText": "Canvia la data del fitxer en importar/reescanejar",
     "FileManagement": "Gestió del fitxers",

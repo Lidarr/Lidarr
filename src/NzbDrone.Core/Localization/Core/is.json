@@ -102,8 +102,6 @@
     "ErrorLoadingContents": "Villa við að hlaða innihald",
     "ErrorLoadingPreviews": "Villa við að hlaða forskoðun",
     "Exception": "Undantekning",
-    "ExcludedScanFolders": "Útilokaðar möppur frá skönnun",
-    "ExcludedScanFoldersHelpText": "Möppunöfn aðgreind með kommum sem verða hunsuð við skönnun safns",
     "FileDateHelpText": "Breyttu dagsetningu skráar við innflutning / endurskoðun",
     "Filename": "Skráarnafn",
     "FileNames": "Skráarnöfn",

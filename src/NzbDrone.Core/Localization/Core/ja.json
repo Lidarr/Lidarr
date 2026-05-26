@@ -51,8 +51,6 @@
     "ErrorLoadingContents": "コンテンツの読み込み中にエラーが発生しました",
     "ErrorLoadingPreviews": "プレビューの読み込みエラー",
     "Exception": "例外",
-    "ExcludedScanFolders": "スキャン対象外フォルダ",
-    "ExcludedScanFoldersHelpText": "ライブラリスキャン時に無視されるカンマ区切りのフォルダ名",
     "ForMoreInformationOnTheIndividualDownloadClientsClickOnTheInfoButtons": "個々のダウンロードクライアントの詳細については、情報ボタンをクリックしてください。",
     "ForMoreInformationOnTheIndividualIndexersClickOnTheInfoButtons": "個々のインデクサーの詳細については、情報ボタンをクリックしてください。",
     "ForMoreInformationOnTheIndividualListsClickOnTheInfoButtons": "個々のインポートリストの詳細については、情報ボタンをクリックしてください。",

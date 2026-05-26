@@ -336,8 +336,6 @@
     "ErrorLoadingContents": "เกิดข้อผิดพลาดในการโหลดเนื้อหา",
     "ErrorLoadingPreviews": "เกิดข้อผิดพลาดในการโหลดตัวอย่าง",
     "Exception": "ข้อยกเว้น",
-    "ExcludedScanFolders": "โฟลเดอร์ที่ยกเว้นจากการสแกน",
-    "ExcludedScanFoldersHelpText": "ชื่อโฟลเดอร์คั่นด้วยจุลภาคที่จะถูกละเว้นระหว่างการสแกนคลังข้อมูล",
     "FileDateHelpText": "เปลี่ยนวันที่ของไฟล์ในการนำเข้า / สแกนใหม่",
     "FileManagement": "การจัดการไฟล์",
     "Filename": "ชื่อไฟล์",

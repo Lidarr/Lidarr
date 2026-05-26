@@ -7,8 +7,6 @@
     "DownloadWarningCheckDownloadClientForMoreDetails": "Alerta de transferência: verifique o cliente de transferências para obter mais detalhes",
     "EnableColorImpairedModeHelpText": "Estilo alterado para permitir que utilizadores com daltonismo possam distinguir melhor os códigos de cores",
     "Exception": "Exceção",
-    "ExcludedScanFolders": "Pastas excluídas da verificação",
-    "ExcludedScanFoldersHelpText": "Nomes de pastas separados por vírgulas ignorados durante a verificação da biblioteca",
     "Host": "Anfitrião",
     "IconForCutoffUnmet": "Ícone para Limite não correspondido",
     "ChangeFileDate": "Modificar data do ficheiro",

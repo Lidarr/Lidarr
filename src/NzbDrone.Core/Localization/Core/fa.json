@@ -11,8 +11,6 @@
     "AddDelayProfileError": "افزودن نمایه تاخیر جدید ناموفق بود، لطفا مجددا تلاش کنید.",
     "AddImportListExclusion": "افزودن لیست واردات مستثنی",
     "Docker": "Docker",
-    "ExcludedScanFolders": "پوشه‌های مستثنی از اسکن",
-    "ExcludedScanFoldersHelpText": "نام پوشه‌ها با کاما جدا شده که در هنگام اسکن کتابخانه نادیده گرفته می‌شوند",
     "NETCore": ".NET",
     "Torrents": "تورنت ها",
     "45MinutesFourtyFive": "۴۵ دقیقه: {0}",

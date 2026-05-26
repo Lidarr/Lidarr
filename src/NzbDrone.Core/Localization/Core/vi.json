@@ -343,8 +343,6 @@
     "ErrorLoadingContents": "Lỗi khi tải nội dung",
     "ErrorLoadingPreviews": "Lỗi khi tải bản xem trước",
     "Exception": "ngoại lệ",
-    "ExcludedScanFolders": "Thư mục bị loại khỏi quét",
-    "ExcludedScanFoldersHelpText": "Tên thư mục phân tách bằng dấu phẩy sẽ bị bỏ qua trong quá trình quét thư viện",
     "FileDateHelpText": "Thay đổi ngày tệp khi nhập / quét lại",
     "FileManagement": "Quản lý tệp",
     "Filename": "Tên tệp",
