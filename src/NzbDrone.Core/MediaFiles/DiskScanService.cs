@@ -319,7 +319,17 @@ namespace NzbDrone.Core.MediaFiles
                             return false;
                         }
 
-                        return excludedFolders.Contains(s.Trim());
+                        var trimmed = s.Trim();
+
+                        if (excludedFolders.Contains(trimmed))
+                        {
+                            _logger.Trace("Excluding file '{0}' due to folder segment match: '{1}'",
+                                file.FullName,
+                                trimmed);
+                            return true;
+                        }
+
+                        return false;
                     });
                 })
                 .Where(file => !ExcludedFilesRegex.IsMatch(file.Name))
@@ -335,16 +345,22 @@ namespace NzbDrone.Core.MediaFiles
         {
             var value = _configService.ExcludedScanFolders;
 
+            _logger.Debug("ExcludedScanFolders raw config value: '{0}'", value);
+
             if (string.IsNullOrWhiteSpace(value))
             {
                 return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             }
 
-            return value
+            var result = value
                 .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .Select(x => x.Trim())
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            _logger.Debug("ExcludedScanFolders parsed list: [{0}]", string.Join(", ", result));
+
+            return result;
         }
     }
 }
