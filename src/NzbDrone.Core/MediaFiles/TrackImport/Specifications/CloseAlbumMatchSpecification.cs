@@ -23,8 +23,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
         {
             double dist;
             string reasons;
-            var albumThreshold = _configService.AlbumMatchThreshold / 100.0;
-            var trackThreshold = _configService.TrackMatchThreshold / 100.0;
+            var albumThreshold = 1 - (_configService.AlbumMatchThreshold / 100.0);
+            var trackThreshold = 1 - (_configService.TrackMatchThreshold / 100.0);
 
             // strict when a new download
             if (item.NewDownload)

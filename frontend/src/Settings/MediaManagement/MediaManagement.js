@@ -240,7 +240,7 @@ class MediaManagement extends Component {
                           unit='%'
                           name="albumMatchThreshold"
                           helpText={translate('AlbumMatchThresholdHelpText')}
-                          min={0}
+                          min={1}
                           max={100}
                           onChange={onInputChange}
                           {...settings.albumMatchThreshold}
@@ -261,7 +261,7 @@ class MediaManagement extends Component {
                           unit='%'
                           name="trackMatchThreshold"
                           helpText={translate('TrackMatchThresholdHelpText')}
-                          min={0}
+                          min={1}
                           max={100}
                           onChange={onInputChange}
                           {...settings.trackMatchThreshold}

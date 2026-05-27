@@ -21,7 +21,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
         {
             var dist = item.Distance.NormalizedDistance();
             var reasons = item.Distance.Reasons;
-            var threshold = _configService.TrackMatchThreshold / 100.0;
+            var threshold = 1 - (_configService.TrackMatchThreshold / 100.0);
 
             if (dist > threshold)
             {
