@@ -44,6 +44,7 @@ namespace NzbDrone.Core.MediaFiles
         private readonly IImportApprovedTracks _importApprovedTracks;
         private readonly IArtistService _artistService;
         private readonly IMediaFileTableCleanupService _mediaFileTableCleanupService;
+        private readonly ITrackFileFilter _trackFileFilter;
         private readonly IRootFolderService _rootFolderService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
@@ -56,6 +57,7 @@ namespace NzbDrone.Core.MediaFiles
                                IArtistService artistService,
                                IRootFolderService rootFolderService,
                                IMediaFileTableCleanupService mediaFileTableCleanupService,
+                               ITrackFileFilter trackFileFilter,
                                IEventAggregator eventAggregator,
                                Logger logger)
         {
@@ -66,6 +68,7 @@ namespace NzbDrone.Core.MediaFiles
             _importApprovedTracks = importApprovedTracks;
             _artistService = artistService;
             _mediaFileTableCleanupService = mediaFileTableCleanupService;
+            _trackFileFilter = trackFileFilter;
             _rootFolderService = rootFolderService;
             _eventAggregator = eventAggregator;
             _logger = logger;
@@ -300,37 +303,18 @@ namespace NzbDrone.Core.MediaFiles
 
         public List<IFileInfo> FilterFiles(string basePath, IEnumerable<IFileInfo> files)
         {
-            var excludedFolders = GetExcludedFolders();
-
             return files
                 .Where(file => !ExcludedSubFoldersRegex.IsMatch(basePath.GetRelativePath(file.FullName)))
                 .Where(file =>
                 {
-                    var relativePath = basePath.GetRelativePath(file.FullName);
+                    var excluded = _trackFileFilter.IsExcluded(basePath, file.FullName);
 
-                    var segments = relativePath.Split(
-                        Path.DirectorySeparatorChar,
-                        Path.AltDirectorySeparatorChar);
-
-                    return !segments.Any(s =>
+                    if (excluded)
                     {
-                        if (string.IsNullOrWhiteSpace(s))
-                        {
-                            return false;
-                        }
+                        _logger.Trace("Excluding file '{0}' due to excluded folder match", file.FullName);
+                    }
 
-                        var trimmed = s.Trim();
-
-                        if (excludedFolders.Contains(trimmed))
-                        {
-                            _logger.Trace("Excluding file '{0}' due to folder segment match: '{1}'",
-                                file.FullName,
-                                trimmed);
-                            return true;
-                        }
-
-                        return false;
-                    });
+                    return !excluded;
                 })
                 .Where(file => !ExcludedFilesRegex.IsMatch(file.Name))
                     .ToList();
@@ -339,28 +323,6 @@ namespace NzbDrone.Core.MediaFiles
         public void Execute(RescanFoldersCommand message)
         {
             Scan(message.Folders, message.Filter, message.AddNewArtists, message.ArtistIds);
-        }
-
-        private HashSet<string> GetExcludedFolders()
-        {
-            var value = _configService.ExcludedScanFolders;
-
-            _logger.Debug("ExcludedScanFolders raw config value: '{0}'", value);
-
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            }
-
-            var result = value
-                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Select(x => x.Trim())
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .ToHashSet(StringComparer.OrdinalIgnoreCase);
-
-            _logger.Debug("ExcludedScanFolders parsed list: [{0}]", string.Join(", ", result));
-
-            return result;
         }
     }
 }
