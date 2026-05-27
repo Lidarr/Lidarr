@@ -200,6 +200,20 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("MinimumFreeSpaceWhenImporting", value); }
         }
 
+        public int AlbumMatchThreshold
+        {
+            get { return GetValueInt("AlbumMatchThreshold", 80); }
+
+            set { SetValue("AlbumMatchThreshold", value); }
+        }
+
+        public int TrackMatchThreshold
+        {
+            get { return GetValueInt("TrackMatchThreshold", 60); }
+
+            set { SetValue("TrackMatchThreshold", value); }
+        }
+
         public bool CopyUsingHardlinks
         {
             get { return GetValueBoolean("CopyUsingHardlinks", true); }
