@@ -193,6 +193,20 @@ class AlbumRow extends Component {
             }
 
             if (name === 'releaseDate') {
+              if ( ! releaseDate ) {
+                return (
+                  <TableRowCell key={name} />
+                );
+              }
+
+              if ( releaseDate === '0001-01-01T00:00:00Z' ) {
+                return (
+                  <TableRowCell key={name}>
+                    {translate('Unknown')}
+                  </TableRowCell>
+                );
+              }
+
               return (
                 <RelativeDateCellConnector
                   key={name}

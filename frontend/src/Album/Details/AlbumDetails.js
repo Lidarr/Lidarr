@@ -423,7 +423,7 @@ class AlbumDetails extends Component {
                         size={17}
                       />
                       <span className={styles.releaseDate}>
-                        {releaseDate ?
+                        {releaseDate && releaseDate !== '0001-01-01T00:00:00Z' ?
                           moment(releaseDate).format(shortDateFormat) :
                           translate('Unknown')
                         }
