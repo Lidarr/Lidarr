@@ -2,6 +2,7 @@ using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Parser;
+using NzbDrone.Core.IndexerSearch;
 
 namespace NzbDrone.Core.Indexers.Nyaa
 {
@@ -11,14 +12,21 @@ namespace NzbDrone.Core.Indexers.Nyaa
 
         public override string Protocol => nameof(TorrentDownloadProtocol);
 
-        public Nyaa(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
+        private readonly IBuildSearchQuery _searchQueryBuilder;
+
+        public Nyaa(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, IBuildSearchQuery searchQueryBuilder, Logger logger)
             : base(httpClient, indexerStatusService, configService, parsingService, logger)
         {
+            _searchQueryBuilder = searchQueryBuilder;
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new NyaaRequestGenerator() { Settings = Settings };
+            return new NyaaRequestGenerator()
+            {
+                Settings = Settings,
+                SearchQueryBuilder = _searchQueryBuilder
+            };
         }
 
         public override IParseIndexerResponse GetParser()

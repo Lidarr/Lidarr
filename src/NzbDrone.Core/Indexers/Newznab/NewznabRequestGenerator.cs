@@ -4,6 +4,7 @@ using System.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerSearch;
 
 namespace NzbDrone.Core.Indexers.Newznab
 {
@@ -13,6 +14,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         public int MaxPages { get; set; }
         public int PageSize { get; set; }
         public NewznabSettings Settings { get; set; }
+        public IBuildSearchQuery SearchQueryBuilder { get; set; }
 
         public NewznabRequestGenerator(INewznabCapabilitiesProvider capabilitiesProvider)
         {
@@ -88,6 +90,21 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
+            var customQuery = SearchQueryBuilder?.BuildAlbumSearchQuery(searchCriteria);
+            if (customQuery != null)
+            {
+                if (SupportsSearch)
+                {
+                    pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search", $"&q={NewsnabifyTitle(customQuery)}"));
+                }
+                else if (SupportsAudioSearch)
+                {
+                    pageableRequests.AddTier();
+                    pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "music", $"&q={NewsnabifyTitle(customQuery)}"));
+                }
+                return pageableRequests;
+            }
+
             if (SupportsAudioSearch)
             {
                 var artistQuery = AudioTextSearchEngine == "raw" ? searchCriteria.ArtistQuery : searchCriteria.CleanArtistQuery;
@@ -131,6 +148,21 @@ namespace NzbDrone.Core.Indexers.Newznab
         public virtual IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
+
+            var customQuery = SearchQueryBuilder?.BuildArtistSearchQuery(searchCriteria);
+            if (customQuery != null)
+            {
+                if (SupportsSearch)
+                {
+                    pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search", $"&q={NewsnabifyTitle(customQuery)}"));
+                }
+                else if (SupportsAudioSearch)
+                {
+                    pageableRequests.AddTier();
+                    pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "music", $"&q={NewsnabifyTitle(customQuery)}"));
+                }
+                return pageableRequests;
+            }
 
             if (SupportsAudioSearch)
             {

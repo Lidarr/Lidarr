@@ -1,7 +1,8 @@
-﻿using NLog;
+using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Parser;
+using NzbDrone.Core.IndexerSearch;
 
 namespace NzbDrone.Core.Indexers.FileList
 {
@@ -12,14 +13,21 @@ namespace NzbDrone.Core.Indexers.FileList
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
 
-        public FileList(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
+        private readonly IBuildSearchQuery _searchQueryBuilder;
+
+        public FileList(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, IBuildSearchQuery searchQueryBuilder, Logger logger)
             : base(httpClient, indexerStatusService, configService, parsingService, logger)
         {
+            _searchQueryBuilder = searchQueryBuilder;
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new FileListRequestGenerator() { Settings = Settings };
+            return new FileListRequestGenerator()
+            {
+                Settings = Settings,
+                SearchQueryBuilder = _searchQueryBuilder
+            };
         }
 
         public override IParseIndexerResponse GetParser()

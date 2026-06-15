@@ -28,6 +28,7 @@ using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Notifications;
 using NzbDrone.Core.Organizer;
+using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Profiles;
 using NzbDrone.Core.Profiles.Delay;
@@ -177,6 +178,7 @@ namespace NzbDrone.Core.Datastore
             Mapper.Entity<MetadataProfile>("MetadataProfiles").RegisterModel();
             Mapper.Entity<Log>("Logs").RegisterModel();
             Mapper.Entity<NamingConfig>("NamingConfig").RegisterModel();
+            Mapper.Entity<SearchFormatConfig>("SearchFormatConfig").RegisterModel();
 
             Mapper.Entity<Blocklist>("Blocklist").RegisterModel();
             Mapper.Entity<MetadataFile>("MetadataFiles").RegisterModel();

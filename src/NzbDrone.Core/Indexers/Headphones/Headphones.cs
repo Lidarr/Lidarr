@@ -9,12 +9,14 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.Parser;
+using NzbDrone.Core.IndexerSearch;
 
 namespace NzbDrone.Core.Indexers.Headphones
 {
     public class Headphones : HttpIndexerBase<HeadphonesSettings>
     {
         private readonly IHeadphonesCapabilitiesProvider _capabilitiesProvider;
+        private readonly IBuildSearchQuery _searchQueryBuilder;
 
         public override string Name => "Headphones VIP";
 
@@ -22,10 +24,11 @@ namespace NzbDrone.Core.Indexers.Headphones
 
         public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings).DefaultPageSize;
 
-        public Headphones(IHeadphonesCapabilitiesProvider capabilitiesProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
+        public Headphones(IHeadphonesCapabilitiesProvider capabilitiesProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, IBuildSearchQuery searchQueryBuilder, Logger logger)
             : base(httpClient, indexerStatusService, configService, parsingService, logger)
         {
             _capabilitiesProvider = capabilitiesProvider;
+            _searchQueryBuilder = searchQueryBuilder;
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
@@ -33,7 +36,8 @@ namespace NzbDrone.Core.Indexers.Headphones
             return new HeadphonesRequestGenerator(_capabilitiesProvider)
             {
                 PageSize = PageSize,
-                Settings = Settings
+                Settings = Settings,
+                SearchQueryBuilder = _searchQueryBuilder
             };
         }
 

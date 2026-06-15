@@ -10,22 +10,25 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Validation;
+using NzbDrone.Core.IndexerSearch;
 
 namespace NzbDrone.Core.Indexers.Torznab
 {
     public class Torznab : HttpIndexerBase<TorznabSettings>
     {
         private readonly INewznabCapabilitiesProvider _capabilitiesProvider;
+        private readonly IBuildSearchQuery _searchQueryBuilder;
 
         public override string Name => "Torznab";
 
         public override string Protocol => nameof(TorrentDownloadProtocol);
         public override int PageSize => GetProviderPageSize();
 
-        public Torznab(INewznabCapabilitiesProvider capabilitiesProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
+        public Torznab(INewznabCapabilitiesProvider capabilitiesProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, IBuildSearchQuery searchQueryBuilder, Logger logger)
             : base(httpClient, indexerStatusService, configService, parsingService, logger)
         {
             _capabilitiesProvider = capabilitiesProvider;
+            _searchQueryBuilder = searchQueryBuilder;
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
@@ -33,7 +36,8 @@ namespace NzbDrone.Core.Indexers.Torznab
             return new NewznabRequestGenerator(_capabilitiesProvider)
             {
                 PageSize = PageSize,
-                Settings = Settings
+                Settings = Settings,
+                SearchQueryBuilder = _searchQueryBuilder
             };
         }
 

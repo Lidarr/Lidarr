@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerSearch;
 
 namespace NzbDrone.Core.Indexers.Redacted
 {
     public class RedactedRequestGenerator : IIndexerRequestGenerator
     {
         private readonly RedactedSettings _settings;
+        public IBuildSearchQuery SearchQueryBuilder { get; set; }
 
         public RedactedRequestGenerator(RedactedSettings settings)
         {
@@ -27,6 +29,13 @@ namespace NzbDrone.Core.Indexers.Redacted
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
+            var customQuery = SearchQueryBuilder?.BuildAlbumSearchQuery(searchCriteria);
+            if (customQuery != null)
+            {
+                pageableRequests.Add(GetRequest($"searchstr={System.Uri.EscapeDataString(customQuery)}"));
+                return pageableRequests;
+            }
+
             if (searchCriteria.CleanArtistQuery == "VA")
             {
                 pageableRequests.Add(GetRequest($"groupname={searchCriteria.CleanAlbumQuery}"));
@@ -42,6 +51,14 @@ namespace NzbDrone.Core.Indexers.Redacted
         public IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
+
+            var customQuery = SearchQueryBuilder?.BuildArtistSearchQuery(searchCriteria);
+            if (customQuery != null)
+            {
+                pageableRequests.Add(GetRequest($"searchstr={System.Uri.EscapeDataString(customQuery)}"));
+                return pageableRequests;
+            }
+
             pageableRequests.Add(GetRequest($"artistname={searchCriteria.CleanArtistQuery}"));
             return pageableRequests;
         }

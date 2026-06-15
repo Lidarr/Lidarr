@@ -8,6 +8,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerSearch;
 
 namespace NzbDrone.Core.Indexers.Gazelle
 {
@@ -18,6 +19,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public ICached<Dictionary<string, string>> AuthCookieCache { get; set; }
         public IHttpClient HttpClient { get; set; }
         public Logger Logger { get; set; }
+        public IBuildSearchQuery SearchQueryBuilder { get; set; }
 
         public virtual IndexerPageableRequestChain GetRecentRequests()
         {
@@ -31,6 +33,13 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
+
+            var customQuery = SearchQueryBuilder?.BuildAlbumSearchQuery(searchCriteria);
+            if (customQuery != null)
+            {
+                pageableRequests.Add(GetRequest(Uri.EscapeDataString(customQuery)));
+                return pageableRequests;
+            }
 
             if (searchCriteria.CleanArtistQuery == "VA")
             {
@@ -47,6 +56,14 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
+
+            var customQuery = SearchQueryBuilder?.BuildArtistSearchQuery(searchCriteria);
+            if (customQuery != null)
+            {
+                pageableRequests.Add(GetRequest(Uri.EscapeDataString(customQuery)));
+                return pageableRequests;
+            }
+
             pageableRequests.Add(GetRequest(string.Format("&artistname={0}", searchCriteria.CleanArtistQuery)));
             return pageableRequests;
         }

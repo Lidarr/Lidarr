@@ -6,6 +6,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.IndexerSearch;
 
 namespace NzbDrone.Core.Indexers.Redacted
 {
@@ -18,18 +19,25 @@ namespace NzbDrone.Core.Indexers.Redacted
         public override int PageSize => 50;
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(3);
 
+        private readonly IBuildSearchQuery _searchQueryBuilder;
+
         public Redacted(IHttpClient httpClient,
                         IIndexerStatusService indexerStatusService,
                         IConfigService configService,
                         IParsingService parsingService,
+                        IBuildSearchQuery searchQueryBuilder,
                         Logger logger)
             : base(httpClient, indexerStatusService, configService, parsingService, logger)
         {
+            _searchQueryBuilder = searchQueryBuilder;
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new RedactedRequestGenerator(Settings);
+            return new RedactedRequestGenerator(Settings)
+            {
+                SearchQueryBuilder = _searchQueryBuilder
+            };
         }
 
         public override IParseIndexerResponse GetParser()
