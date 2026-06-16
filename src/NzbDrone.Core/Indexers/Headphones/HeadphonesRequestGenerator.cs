@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
-using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
 namespace NzbDrone.Core.Indexers.Headphones
@@ -14,7 +13,6 @@ namespace NzbDrone.Core.Indexers.Headphones
         public int MaxPages { get; set; }
         public int PageSize { get; set; }
         public HeadphonesSettings Settings { get; set; }
-        public IBuildSearchQuery SearchQueryBuilder { get; set; }
 
         public HeadphonesRequestGenerator(IHeadphonesCapabilitiesProvider capabilitiesProvider)
         {
@@ -37,14 +35,6 @@ namespace NzbDrone.Core.Indexers.Headphones
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            var customQuery = SearchQueryBuilder?.BuildAlbumSearchQuery(searchCriteria);
-            if (customQuery != null)
-            {
-                pageableRequests.AddTier();
-                pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search", $"&q={NewsnabifyTitle(customQuery)}"));
-                return pageableRequests;
-            }
-
             pageableRequests.AddTier();
 
             pageableRequests.Add(GetPagedRequests(MaxPages,
@@ -58,14 +48,6 @@ namespace NzbDrone.Core.Indexers.Headphones
         public virtual IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-
-            var customQuery = SearchQueryBuilder?.BuildArtistSearchQuery(searchCriteria);
-            if (customQuery != null)
-            {
-                pageableRequests.AddTier();
-                pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search", $"&q={NewsnabifyTitle(customQuery)}"));
-                return pageableRequests;
-            }
 
             pageableRequests.AddTier();
 

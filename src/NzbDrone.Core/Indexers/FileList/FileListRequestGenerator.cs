@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
-using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
 namespace NzbDrone.Core.Indexers.FileList
@@ -11,7 +10,6 @@ namespace NzbDrone.Core.Indexers.FileList
     public class FileListRequestGenerator : IIndexerRequestGenerator
     {
         public FileListSettings Settings { get; set; }
-        public IBuildSearchQuery SearchQueryBuilder { get; set; }
 
         public virtual IndexerPageableRequestChain GetRecentRequests()
         {
@@ -26,13 +24,6 @@ namespace NzbDrone.Core.Indexers.FileList
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            var customQuery = SearchQueryBuilder?.BuildAlbumSearchQuery(searchCriteria);
-            if (customQuery != null)
-            {
-                pageableRequests.Add(GetRequest("search-torrents", Settings.Categories, string.Format("&type=name&query={0}", Uri.EscapeDataString(customQuery))));
-                return pageableRequests;
-            }
-
             var artistQuery = searchCriteria.CleanArtistQuery.Replace("+", " ").Trim();
             var albumQuery = searchCriteria.CleanAlbumQuery.Replace("+", " ").Trim();
 
@@ -44,13 +35,6 @@ namespace NzbDrone.Core.Indexers.FileList
         public IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-
-            var customQuery = SearchQueryBuilder?.BuildArtistSearchQuery(searchCriteria);
-            if (customQuery != null)
-            {
-                pageableRequests.Add(GetRequest("search-torrents", Settings.Categories, string.Format("&type=name&query={0}", Uri.EscapeDataString(customQuery))));
-                return pageableRequests;
-            }
 
             var artistQuery = searchCriteria.CleanArtistQuery.Replace("+", " ").Trim();
 

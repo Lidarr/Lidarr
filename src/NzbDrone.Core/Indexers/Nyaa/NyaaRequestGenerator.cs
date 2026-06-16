@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using NzbDrone.Common.Http;
-using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
 namespace NzbDrone.Core.Indexers.Nyaa
@@ -9,7 +8,6 @@ namespace NzbDrone.Core.Indexers.Nyaa
     public class NyaaRequestGenerator : IIndexerRequestGenerator
     {
         public NyaaSettings Settings { get; set; }
-        public IBuildSearchQuery SearchQueryBuilder { get; set; }
 
         public virtual IndexerPageableRequestChain GetRecentRequests()
         {
@@ -24,13 +22,6 @@ namespace NzbDrone.Core.Indexers.Nyaa
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            var customQuery = SearchQueryBuilder?.BuildAlbumSearchQuery(searchCriteria);
-            if (customQuery != null)
-            {
-                pageableRequests.Add(GetPagedRequests(PrepareQuery(customQuery)));
-                return pageableRequests;
-            }
-
             var artistQuery = searchCriteria.CleanArtistQuery.Replace("+", " ").Trim();
             var albumQuery = searchCriteria.CleanAlbumQuery.Replace("+", " ").Trim();
 
@@ -42,13 +33,6 @@ namespace NzbDrone.Core.Indexers.Nyaa
         public virtual IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-
-            var customQuery = SearchQueryBuilder?.BuildArtistSearchQuery(searchCriteria);
-            if (customQuery != null)
-            {
-                pageableRequests.Add(GetPagedRequests(PrepareQuery(customQuery)));
-                return pageableRequests;
-            }
 
             var artistQuery = searchCriteria.CleanArtistQuery.Replace("+", " ").Trim();
 

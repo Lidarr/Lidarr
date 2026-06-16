@@ -7,7 +7,6 @@ using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
@@ -24,19 +23,16 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(3);
 
         private readonly ICached<Dictionary<string, string>> _authCookieCache;
-        private readonly IBuildSearchQuery _searchQueryBuilder;
 
         public Gazelle(IHttpClient httpClient,
                        ICacheManager cacheManager,
                        IIndexerStatusService indexerStatusService,
                        IConfigService configService,
                        IParsingService parsingService,
-                       IBuildSearchQuery searchQueryBuilder,
                        Logger logger)
             : base(httpClient, indexerStatusService, configService, parsingService, logger)
         {
             _authCookieCache = cacheManager.GetCache<Dictionary<string, string>>(GetType(), "authCookies");
-            _searchQueryBuilder = searchQueryBuilder;
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
@@ -46,8 +42,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                 Settings = Settings,
                 HttpClient = _httpClient,
                 Logger = _logger,
-                AuthCookieCache = _authCookieCache,
-                SearchQueryBuilder = _searchQueryBuilder
+                AuthCookieCache = _authCookieCache
             };
         }
 
