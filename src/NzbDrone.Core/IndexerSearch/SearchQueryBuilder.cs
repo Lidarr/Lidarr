@@ -64,13 +64,19 @@ namespace NzbDrone.Core.IndexerSearch
                 switch (token.ToLowerInvariant())
                 {
                     case "artist name":
-                        return criteria.ArtistQuery ?? string.Empty;
+                        return criteria.Artist?.Name ?? string.Empty;
                     case "artist cleanname":
-                        return criteria.CleanArtistQuery ?? string.Empty;
+                        return !string.IsNullOrWhiteSpace(criteria.Artist?.Name) ? SearchCriteriaBase.GetQueryTitle(criteria.Artist.Name) : string.Empty;
                     case "album title":
                         return albumCriteria?.AlbumTitle ?? string.Empty;
                     case "album cleantitle":
-                        return albumCriteria?.CleanAlbumQuery ?? string.Empty;
+                        if (albumCriteria == null)
+                        {
+                            return string.Empty;
+                        }
+
+                        var rawAlbumQuery = $"{albumCriteria.AlbumTitle}{(string.IsNullOrWhiteSpace(albumCriteria.Disambiguation) ? string.Empty : $"+{albumCriteria.Disambiguation}")}";
+                        return !string.IsNullOrWhiteSpace(rawAlbumQuery) ? SearchCriteriaBase.GetQueryTitle(rawAlbumQuery) : string.Empty;
                     case "album year":
                         return albumCriteria != null && albumCriteria.AlbumYear > 0 ? albumCriteria.AlbumYear.ToString() : string.Empty;
                     case "album disambiguation":

@@ -8,9 +8,9 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Newznab;
+using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Validation;
-using NzbDrone.Core.IndexerSearch;
 
 namespace NzbDrone.Core.Indexers.Torznab
 {

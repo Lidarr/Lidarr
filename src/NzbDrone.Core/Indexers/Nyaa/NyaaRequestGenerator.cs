@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using NzbDrone.Common.Http;
-using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.IndexerSearch;
+using NzbDrone.Core.IndexerSearch.Definitions;
 
 namespace NzbDrone.Core.Indexers.Nyaa
 {

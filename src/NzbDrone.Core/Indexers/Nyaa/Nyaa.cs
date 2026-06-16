@@ -1,8 +1,8 @@
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Parser;
 using NzbDrone.Core.IndexerSearch;
+using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Indexers.Nyaa
 {
