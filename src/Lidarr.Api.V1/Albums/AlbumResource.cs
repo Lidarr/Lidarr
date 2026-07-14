@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using Lidarr.Api.V1.Artist;
 using Lidarr.Http.REST;
+using NLog;
+using NzbDrone.Common.Instrumentation;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.Music;
 using Swashbuckle.AspNetCore.Annotations;
@@ -57,6 +59,7 @@ namespace Lidarr.Api.V1.Albums
 
     public static class AlbumResourceMapper
     {
+        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(AlbumResourceMapper));
         public static AlbumResource ToResource(this Album model)
         {
             if (model == null)
@@ -64,32 +67,40 @@ namespace Lidarr.Api.V1.Albums
                 return null;
             }
 
-            var selectedRelease = model.AlbumReleases?.Value.Where(x => x.Monitored).SingleOrDefault();
-
-            return new AlbumResource
+            try
             {
-                Id = model.Id,
-                ArtistId = model.ArtistId,
-                ForeignAlbumId = model.ForeignAlbumId,
-                ProfileId = model.ProfileId,
-                Monitored = model.Monitored,
-                AnyReleaseOk = model.AnyReleaseOk,
-                ReleaseDate = model.ReleaseDate,
-                Genres = model.Genres,
-                Title = model.Title,
-                Disambiguation = model.Disambiguation,
-                Overview = model.Overview,
-                Images = model.Images,
-                Links = model.Links,
-                Ratings = model.Ratings,
-                Duration = selectedRelease?.Duration ?? 0,
-                AlbumType = model.AlbumType,
-                SecondaryTypes = model.SecondaryTypes.Select(s => s.Name).ToList(),
-                Releases = model.AlbumReleases?.Value.ToResource() ?? new List<AlbumReleaseResource>(),
-                Media = selectedRelease?.Media.ToResource() ?? new List<MediumResource>(),
-                Artist = model.Artist?.Value.ToResource(),
-                LastSearchTime = model.LastSearchTime
-            };
+                var selectedRelease = model.AlbumReleases?.Value.Where(x => x.Monitored).SingleOrDefault();
+
+                return new AlbumResource
+                {
+                    Id = model.Id,
+                    ArtistId = model.ArtistId,
+                    ForeignAlbumId = model.ForeignAlbumId,
+                    ProfileId = model.ProfileId,
+                    Monitored = model.Monitored,
+                    AnyReleaseOk = model.AnyReleaseOk,
+                    ReleaseDate = model.ReleaseDate,
+                    Genres = model.Genres,
+                    Title = model.Title,
+                    Disambiguation = model.Disambiguation,
+                    Overview = model.Overview,
+                    Images = model.Images,
+                    Links = model.Links,
+                    Ratings = model.Ratings,
+                    Duration = selectedRelease?.Duration ?? 0,
+                    AlbumType = model.AlbumType,
+                    SecondaryTypes = model.SecondaryTypes.Select(s => s.Name).ToList(),
+                    Releases = model.AlbumReleases?.Value.ToResource() ?? new List<AlbumReleaseResource>(),
+                    Media = selectedRelease?.Media.ToResource() ?? new List<MediumResource>(),
+                    Artist = model.Artist?.Value.ToResource(),
+                    LastSearchTime = model.LastSearchTime
+                };
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("ToResource() threw an error for album " + model.Id + ": " + ex);
+                return new AlbumResource();
+            }
         }
 
         public static Album ToModel(this AlbumResource resource)
