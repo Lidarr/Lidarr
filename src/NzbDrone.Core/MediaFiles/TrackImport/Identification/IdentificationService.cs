@@ -393,9 +393,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 return;
             }
 
-            if (localTracks.Count != mbTracks.Count)
+            if (_ollamaTrackMatcher.RequireEqualTrackCount && localTracks.Count != mbTracks.Count)
             {
-                _logger.Info("Skipping Ollama track matching because local track count {0} does not match candidate track count {1}", localTracks.Count, mbTracks.Count);
+                _logger.Debug("Skipping Ollama track matching because local track count {0} does not match candidate track count {1}", localTracks.Count, mbTracks.Count);
                 return;
             }
 

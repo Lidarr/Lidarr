@@ -38,7 +38,8 @@ ENV COMPlus_EnableDiagnostics=0 \
     LIDARR_OLLAMA_URL=http://192.168.2.150:11434 \
     LIDARR_OLLAMA_MODEL=qwen3 \
     LIDARR_OLLAMA_MIN_SCORE=0.80 \
-    LIDARR_OLLAMA_TIMEOUT_SECONDS=10
+    LIDARR_OLLAMA_TIMEOUT_SECONDS=10 \
+    LIDARR_OLLAMA_REQUIRE_EQUAL_TRACK_COUNT=true
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl libicu72 tzdata \

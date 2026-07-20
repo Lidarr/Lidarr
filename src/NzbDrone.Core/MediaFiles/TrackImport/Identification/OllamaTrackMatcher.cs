@@ -15,6 +15,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
     public interface IOllamaTrackMatcher
     {
         bool IsEnabled { get; }
+        bool RequireEqualTrackCount { get; }
         double MinimumScore { get; }
         OllamaTrackMatchResult Match(LocalTrack localTrack, Track candidateTrack, double currentScore);
     }
@@ -44,6 +45,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         }
 
         public bool IsEnabled => GetBool("LIDARR_OLLAMA_MATCHING_ENABLED", true);
+        public bool RequireEqualTrackCount => GetBool("LIDARR_OLLAMA_REQUIRE_EQUAL_TRACK_COUNT", true);
         public double MinimumScore => GetDouble("LIDARR_OLLAMA_MIN_SCORE", DefaultMinimumScore);
 
         public OllamaTrackMatchResult Match(LocalTrack localTrack, Track candidateTrack, double currentScore)
