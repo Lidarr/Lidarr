@@ -33,7 +33,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private const string DefaultModel = "qwen3";
         private const double DefaultMinimumScore = 0.80;
         private const int DefaultTimeoutSeconds = 10;
-        private const string DefaultKeepAlive = "-1";
+        private const string DefaultKeepAlive = "-1m";
 
         private readonly IHttpClient _httpClient;
         private readonly Logger _logger;
@@ -94,10 +94,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 var response = _httpClient.Post<OllamaGenerateResponse>(request);
                 if (response.HasHttpError)
                 {
-                    _logger.Info("Ollama track matcher returned HTTP {0} for local '{1}' and candidate '{2}'",
+                    _logger.Info("Ollama track matcher returned HTTP {0} for local '{1}' and candidate '{2}': {3}",
                                  response.StatusCode,
                                  localTrack.FileTrackInfo?.Title ?? localTrack.Path,
-                                 candidateTrack.Title);
+                                 candidateTrack.Title,
+                                 response.Content);
                     return NoMatch("http_error");
                 }
 
