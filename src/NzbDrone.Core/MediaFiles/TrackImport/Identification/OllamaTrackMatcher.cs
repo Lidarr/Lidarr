@@ -113,23 +113,22 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 var result = Json.Deserialize<OllamaMatchResponse>(StripThinking(response.Resource.Response));
                 result.Confidence = Clamp(result.Confidence);
 
-                _logger.Info("Ollama track matcher result: match={0}, confidence={1:P1}, reason='{2}', local '{3}', candidate '{4}'",
+                _logger.Info("Ollama track matcher result: match={0}, confidence={1:P1}, local '{2}', candidate '{3}'",
                              result.IsMatch,
                              result.Confidence,
-                             result.Reason,
                              localTrack.FileTrackInfo?.Title ?? localTrack.Path,
                              candidateTrack.Title);
 
                 if (!result.IsMatch || result.Confidence < MinimumScore)
                 {
-                    return NoMatch(result.Reason);
+                    return NoMatch("ollama_rejected");
                 }
 
                 return new OllamaTrackMatchResult
                 {
                     IsMatch = true,
                     Confidence = result.Confidence,
-                    Reason = result.Reason
+                    Reason = "ollama_match"
                 };
             }
             catch (Exception ex)
@@ -156,7 +155,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             var localDuration = info == null ? 0 : (int)Math.Round(info.Duration.TotalSeconds);
 
             return $@"You help Lidarr decide whether a downloaded audio file is the same track as a MusicBrainz track.
-Return only JSON: {{""isMatch"":true|false,""confidence"":0.0-1.0,""reason"":""short reason""}}.
+Return only JSON: {{""isMatch"":true|false,""confidence"":0.0-1.0}}.
 Be conservative. Extra text like remaster, live, explicit, deluxe, bitrate, source, release group, year, file extension, or bracket tags may appear in the downloaded name and should not prevent a match when the base song title is the same.
 Do not match if the actual song title is different, a different mix/version changes identity, or duration/track number strongly disagree.
 
@@ -248,7 +247,6 @@ MusicBrainz candidate:
         {
             public bool IsMatch { get; set; }
             public double Confidence { get; set; }
-            public string Reason { get; set; }
         }
     }
 }
