@@ -33,6 +33,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private const string DefaultModel = "qwen3";
         private const double DefaultMinimumScore = 0.80;
         private const int DefaultTimeoutSeconds = 10;
+        private const int DefaultNumPredict = 64;
         private const string DefaultKeepAlive = "-1m";
 
         private readonly IHttpClient _httpClient;
@@ -84,10 +85,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                     Prompt = BuildPrompt(localTrack, candidateTrack, currentScore),
                     Stream = false,
                     Format = "json",
+                    Think = GetBool("LIDARR_OLLAMA_THINKING_ENABLED", false),
                     KeepAlive = GetKeepAlive(),
                     Options = new OllamaGenerateOptions
                     {
-                        Temperature = 0.0
+                        Temperature = 0.0,
+                        NumPredict = GetInt("LIDARR_OLLAMA_NUM_PREDICT", DefaultNumPredict)
                     }
                 }.ToJson());
 
@@ -102,15 +105,17 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                     return NoMatch("http_error");
                 }
 
-                if (response.Resource.Response.IsNullOrWhiteSpace())
+                var responseText = response.Resource.Response;
+                if (responseText.IsNullOrWhiteSpace())
                 {
-                    _logger.Info("Ollama track matcher returned an empty response for local '{0}' and candidate '{1}'",
+                    _logger.Info("Ollama track matcher returned an empty response for local '{0}' and candidate '{1}'. Thinking chars: {2}",
                                  localTrack.FileTrackInfo?.Title ?? localTrack.Path,
-                                 candidateTrack.Title);
+                                 candidateTrack.Title,
+                                 response.Resource.Thinking?.Length ?? 0);
                     return NoMatch("empty_response");
                 }
 
-                var result = Json.Deserialize<OllamaMatchResponse>(StripThinking(response.Resource.Response));
+                var result = Json.Deserialize<OllamaMatchResponse>(StripThinking(responseText));
                 result.Confidence = Clamp(result.Confidence);
 
                 _logger.Info("Ollama track matcher result: match={0}, confidence={1:P1}, local '{2}', candidate '{3}'",
@@ -228,6 +233,7 @@ MusicBrainz candidate:
             public string Prompt { get; set; }
             public bool Stream { get; set; }
             public string Format { get; set; }
+            public bool Think { get; set; }
             [JsonProperty("keep_alive")]
             public string KeepAlive { get; set; }
             public OllamaGenerateOptions Options { get; set; }
@@ -236,11 +242,14 @@ MusicBrainz candidate:
         private class OllamaGenerateOptions
         {
             public double Temperature { get; set; }
+            [JsonProperty("num_predict")]
+            public int NumPredict { get; set; }
         }
 
         private class OllamaGenerateResponse
         {
             public string Response { get; set; }
+            public string Thinking { get; set; }
         }
 
         private class OllamaMatchResponse
