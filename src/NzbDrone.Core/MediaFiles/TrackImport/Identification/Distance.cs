@@ -89,6 +89,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             }
         }
 
+        public void Set(string key, double dist)
+        {
+            _penalties[key] = new List<double> { dist };
+        }
+
         public void AddRatio(string key, double value, double target)
         {
             // Adds a distance penalty for value as a ratio of target

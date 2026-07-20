@@ -28,6 +28,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private readonly IAudioTagService _audioTagService;
         private readonly IAugmentingService _augmentingService;
         private readonly ICandidateService _candidateService;
+        private readonly IOllamaTrackMatcher _ollamaTrackMatcher;
         private readonly IConfigService _configService;
         private readonly Logger _logger;
 
@@ -37,6 +38,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                                      IAudioTagService audioTagService,
                                      IAugmentingService augmentingService,
                                      ICandidateService candidateService,
+                                     IOllamaTrackMatcher ollamaTrackMatcher,
                                      IConfigService configService,
                                      Logger logger)
         {
@@ -46,6 +48,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             _audioTagService = audioTagService;
             _augmentingService = augmentingService;
             _candidateService = candidateService;
+            _ollamaTrackMatcher = ollamaTrackMatcher;
             _configService = configService;
             _logger = logger;
         }
@@ -361,6 +364,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 }
             }
 
+            ApplyOllamaTrackMatches(localTracks, mbTracks, distances, costs);
+
             var m = new Munkres(costs);
             m.Run();
 
@@ -378,6 +383,66 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             _logger.Trace($"Missing tracks:\n{string.Join("\n", result.MBExtra)}");
 
             return result;
+        }
+
+        private void ApplyOllamaTrackMatches(List<LocalTrack> localTracks, List<Track> mbTracks, Distance[,] distances, double[,] costs)
+        {
+            if (!_ollamaTrackMatcher.IsEnabled)
+            {
+                _logger.Info("Skipping Ollama track matching because it is disabled");
+                return;
+            }
+
+            if (localTracks.Count != mbTracks.Count)
+            {
+                _logger.Info("Skipping Ollama track matching because local track count {0} does not match candidate track count {1}", localTracks.Count, mbTracks.Count);
+                return;
+            }
+
+            var initialMapping = new Munkres(costs);
+            initialMapping.Run();
+
+            var attemptedMatches = 0;
+            var improvedMatches = 0;
+
+            foreach (var pair in initialMapping.Solution)
+            {
+                var row = pair.Item1;
+                var col = pair.Item2;
+                var currentScore = 1.0 - costs[row, col];
+                if (currentScore >= _ollamaTrackMatcher.MinimumScore)
+                {
+                    continue;
+                }
+
+                attemptedMatches++;
+                _logger.Info("Ollama fallback triggered for track score {0:P1} below threshold {1:P1}: {2} -> {3}",
+                             currentScore,
+                             _ollamaTrackMatcher.MinimumScore,
+                             localTracks[row],
+                             mbTracks[col]);
+
+                var match = _ollamaTrackMatcher.Match(localTracks[row], mbTracks[col], currentScore);
+                if (!match.IsMatch)
+                {
+                    continue;
+                }
+
+                var llmDistance = 1.0 - match.Confidence;
+                distances[row, col].Set("track_title", llmDistance);
+                costs[row, col] = distances[row, col].NormalizedDistance();
+                improvedMatches++;
+                _logger.Info("Ollama improved track match score from {0:P1} to {1:P1}: {2} -> {3}",
+                             currentScore,
+                             1.0 - costs[row, col],
+                             localTracks[row],
+                             mbTracks[col]);
+            }
+
+            if (attemptedMatches > 0)
+            {
+                _logger.Info("Ollama track matching completed for candidate release: attempted {0}, improved {1}", attemptedMatches, improvedMatches);
+            }
         }
     }
 }
