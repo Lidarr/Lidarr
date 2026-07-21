@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common;
@@ -304,49 +307,68 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private void GetBestRelease(LocalAlbumRelease localAlbumRelease, List<CandidateAlbumRelease> candidateReleases, List<LocalTrack> extraTracksOnDisk)
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
+            var releaseConcurrency = GetPositiveInt("LIDARR_IDENTIFICATION_RELEASE_CONCURRENCY", 1);
 
-            _logger.Debug("Matching {0} track files against {1} candidates", localAlbumRelease.TrackCount, candidateReleases.Count);
+            _logger.Debug("Matching {0} track files against {1} candidates with release concurrency {2}",
+                          localAlbumRelease.TrackCount,
+                          candidateReleases.Count,
+                          releaseConcurrency);
             _logger.Trace("Processing files:\n{0}", string.Join("\n", localAlbumRelease.LocalTracks.Select(x => x.Path)));
 
-            var bestDistance = 1.0;
+            var evaluations = new List<CandidateReleaseEvaluation>();
+            var evaluationsLock = new object();
 
-            foreach (var candidateRelease in candidateReleases)
+            Parallel.ForEach(candidateReleases, new ParallelOptions { MaxDegreeOfParallelism = releaseConcurrency }, candidateRelease =>
             {
-                var release = candidateRelease.AlbumRelease;
-                _logger.Debug("Trying Release {0} [{1}, {2} tracks, {3} existing]", release, release.Title, release.TrackCount, candidateRelease.ExistingTracks.Count);
-                var rwatch = System.Diagnostics.Stopwatch.StartNew();
-
-                var extraTrackPaths = candidateRelease.ExistingTracks.Select(x => x.Path).ToList();
-                var extraTracks = extraTracksOnDisk.Where(x => extraTrackPaths.Contains(x.Path)).ToList();
-                var allLocalTracks = localAlbumRelease.LocalTracks.Concat(extraTracks).DistinctBy(x => x.Path).ToList();
-
-                var mapping = MapReleaseTracks(allLocalTracks, release.Tracks.Value);
-                var distance = DistanceCalculator.AlbumReleaseDistance(allLocalTracks, release, mapping);
-                var currDistance = distance.NormalizedDistance();
-
-                rwatch.Stop();
-                _logger.Debug("Release {0} [{1} tracks] has distance {2} vs best distance {3} [{4}ms]",
-                              release,
-                              release.TrackCount,
-                              currDistance,
-                              bestDistance,
-                              rwatch.ElapsedMilliseconds);
-                if (currDistance < bestDistance)
+                var evaluation = EvaluateCandidateRelease(localAlbumRelease, candidateRelease, extraTracksOnDisk);
+                lock (evaluationsLock)
                 {
-                    bestDistance = currDistance;
-                    localAlbumRelease.Distance = distance;
-                    localAlbumRelease.AlbumRelease = release;
-                    localAlbumRelease.ExistingTracks = extraTracks;
-                    localAlbumRelease.TrackMapping = mapping;
-                    if (currDistance == 0.0)
-                    {
-                        break;
-                    }
+                    evaluations.Add(evaluation);
                 }
+            });
+
+            var best = evaluations.OrderBy(x => x.NormalizedDistance).FirstOrDefault();
+            if (best != null)
+            {
+                localAlbumRelease.Distance = best.Distance;
+                localAlbumRelease.AlbumRelease = best.Release;
+                localAlbumRelease.ExistingTracks = best.ExtraTracks;
+                localAlbumRelease.TrackMapping = best.Mapping;
             }
 
             watch.Stop();
             _logger.Debug($"Best release: {localAlbumRelease.AlbumRelease} Distance {localAlbumRelease.Distance.NormalizedDistance()} found in {watch.ElapsedMilliseconds}ms");
+        }
+
+        private CandidateReleaseEvaluation EvaluateCandidateRelease(LocalAlbumRelease localAlbumRelease, CandidateAlbumRelease candidateRelease, List<LocalTrack> extraTracksOnDisk)
+        {
+            var release = candidateRelease.AlbumRelease;
+            _logger.Debug("Trying Release {0} [{1}, {2} tracks, {3} existing]", release, release.Title, release.TrackCount, candidateRelease.ExistingTracks.Count);
+            var rwatch = System.Diagnostics.Stopwatch.StartNew();
+
+            var extraTrackPaths = candidateRelease.ExistingTracks.Select(x => x.Path).ToHashSet(PathEqualityComparer.Instance);
+            var extraTracks = extraTracksOnDisk.Where(x => extraTrackPaths.Contains(x.Path)).ToList();
+            var allLocalTracks = localAlbumRelease.LocalTracks.Concat(extraTracks).DistinctBy(x => x.Path).ToList();
+
+            var mapping = MapReleaseTracks(allLocalTracks, release.Tracks.Value);
+            var distance = DistanceCalculator.AlbumReleaseDistance(allLocalTracks, release, mapping);
+            var currDistance = distance.NormalizedDistance();
+
+            rwatch.Stop();
+            _logger.Debug("Release {0} [{1} tracks] has distance {2} [{3}ms]",
+                          release,
+                          release.TrackCount,
+                          currDistance,
+                          rwatch.ElapsedMilliseconds);
+
+            return new CandidateReleaseEvaluation
+            {
+                Release = release,
+                ExtraTracks = extraTracks,
+                Mapping = mapping,
+                Distance = distance,
+                NormalizedDistance = currDistance
+            };
         }
 
         public TrackMapping MapReleaseTracks(List<LocalTrack> localTracks, List<Track> mbTracks)
@@ -354,7 +376,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             var distances = new Distance[localTracks.Count, mbTracks.Count];
             var costs = new double[localTracks.Count, mbTracks.Count];
 
-            for (var col = 0; col < mbTracks.Count; col++)
+            var trackDistanceConcurrency = GetPositiveInt("LIDARR_IDENTIFICATION_TRACK_DISTANCE_CONCURRENCY", 1);
+            Parallel.For(0, mbTracks.Count, new ParallelOptions { MaxDegreeOfParallelism = trackDistanceConcurrency }, col =>
             {
                 var totalTrackNumber = DistanceCalculator.GetTotalTrackNumber(mbTracks[col], mbTracks);
                 for (var row = 0; row < localTracks.Count; row++)
@@ -362,7 +385,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                     distances[row, col] = DistanceCalculator.TrackDistance(localTracks[row], mbTracks[col], totalTrackNumber, false);
                     costs[row, col] = distances[row, col].NormalizedDistance();
                 }
-            }
+            });
 
             ApplyOllamaTrackMatches(localTracks, mbTracks, distances, costs);
 
@@ -402,50 +425,64 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             var initialMapping = new Munkres(costs);
             initialMapping.Run();
 
+            var lowConfidencePairs = initialMapping.Solution
+                                                   .Select(pair => new
+                                                   {
+                                                       Row = pair.Item1,
+                                                       Col = pair.Item2,
+                                                       CurrentScore = 1.0 - costs[pair.Item1, pair.Item2]
+                                                   })
+                                                   .Where(pair => pair.CurrentScore < _ollamaTrackMatcher.MinimumScore)
+                                                   .ToList();
+
+            if (!lowConfidencePairs.Any())
+            {
+                return;
+            }
+
             var attemptedMatches = 0;
             var improvedMatches = 0;
+            var maxConcurrency = _ollamaTrackMatcher.MaxConcurrency;
 
-            foreach (var pair in initialMapping.Solution)
+            _logger.Info("Ollama track matching starting for candidate release: attempted {0}, max concurrency {1}",
+                         lowConfidencePairs.Count,
+                         maxConcurrency);
+
+            Parallel.ForEach(lowConfidencePairs, new ParallelOptions { MaxDegreeOfParallelism = maxConcurrency }, pair =>
             {
-                var row = pair.Item1;
-                var col = pair.Item2;
-                var currentScore = 1.0 - costs[row, col];
-                if (currentScore >= _ollamaTrackMatcher.MinimumScore)
-                {
-                    continue;
-                }
+                Interlocked.Increment(ref attemptedMatches);
 
-                attemptedMatches++;
                 _logger.Info("Ollama fallback triggered for track score {0:P1} below threshold {1:P1}: {2} -> {3}",
-                             currentScore,
+                             pair.CurrentScore,
                              _ollamaTrackMatcher.MinimumScore,
-                             localTracks[row],
-                             mbTracks[col]);
+                             localTracks[pair.Row],
+                             mbTracks[pair.Col]);
 
-                var match = _ollamaTrackMatcher.Match(localTracks[row], mbTracks[col], currentScore);
+                var match = _ollamaTrackMatcher.Match(localTracks[pair.Row], mbTracks[pair.Col], pair.CurrentScore);
                 if (!match.IsMatch)
                 {
-                    continue;
+                    return;
                 }
 
-                var boostedScore = BlendScore(currentScore, match.Confidence, _ollamaTrackMatcher.ScoreWeight);
-                distances[row, col].Set("track_title", 1.0 - match.Confidence);
-                ApplyScoreTarget(distances[row, col], boostedScore);
-                costs[row, col] = distances[row, col].NormalizedDistance();
-                improvedMatches++;
+                var boostedScore = BlendScore(pair.CurrentScore, match.Confidence, _ollamaTrackMatcher.ScoreWeight);
+                distances[pair.Row, pair.Col].Set("track_title", 1.0 - match.Confidence);
+                ApplyScoreTarget(distances[pair.Row, pair.Col], boostedScore);
+                costs[pair.Row, pair.Col] = distances[pair.Row, pair.Col].NormalizedDistance();
+                Interlocked.Increment(ref improvedMatches);
+
                 _logger.Info("Ollama improved track match score from {0:P1} to {1:P1} using confidence {2:P1} and weight {3:P0}: {4} -> {5}",
-                             currentScore,
-                             1.0 - costs[row, col],
+                             pair.CurrentScore,
+                             1.0 - costs[pair.Row, pair.Col],
                              match.Confidence,
                              _ollamaTrackMatcher.ScoreWeight,
-                             localTracks[row],
-                             mbTracks[col]);
-            }
+                             localTracks[pair.Row],
+                             mbTracks[pair.Col]);
+            });
 
-            if (attemptedMatches > 0)
-            {
-                _logger.Info("Ollama track matching completed for candidate release: attempted {0}, improved {1}", attemptedMatches, improvedMatches);
-            }
+            _logger.Info("Ollama track matching completed for candidate release: attempted {0}, improved {1}, max concurrency {2}",
+                         attemptedMatches,
+                         improvedMatches,
+                         maxConcurrency);
         }
 
         private static double BlendScore(double currentScore, double llmConfidence, double llmWeight)
@@ -465,9 +502,24 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             distance.Set("ollama_match", Clamp(ollamaPenalty));
         }
 
+        private static int GetPositiveInt(string key, int defaultValue)
+        {
+            var value = Environment.GetEnvironmentVariable(key);
+            return value.IsNullOrWhiteSpace() || !int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result) ? defaultValue : Math.Max(1, result);
+        }
+
         private static double Clamp(double value)
         {
             return Math.Max(0.0, Math.Min(1.0, value));
+        }
+
+        private class CandidateReleaseEvaluation
+        {
+            public AlbumRelease Release { get; set; }
+            public List<LocalTrack> ExtraTracks { get; set; }
+            public TrackMapping Mapping { get; set; }
+            public Distance Distance { get; set; }
+            public double NormalizedDistance { get; set; }
         }
     }
 }

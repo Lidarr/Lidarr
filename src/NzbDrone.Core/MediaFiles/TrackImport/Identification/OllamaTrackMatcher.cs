@@ -20,6 +20,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         bool RequireEqualTrackCount { get; }
         double MinimumScore { get; }
         double ScoreWeight { get; }
+        int MaxConcurrency { get; }
         OllamaTrackMatchResult Match(LocalTrack localTrack, Track candidateTrack, double currentScore);
     }
 
@@ -38,6 +39,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private const double DefaultScoreWeight = 1.0;
         private const int DefaultTimeoutSeconds = 10;
         private const int DefaultNumPredict = 128;
+        private const int DefaultMaxConcurrency = 1;
         private const string DefaultKeepAlive = "-1m";
 
         private readonly IHttpClient _httpClient;
@@ -53,6 +55,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         public bool RequireEqualTrackCount => GetBool("LIDARR_OLLAMA_REQUIRE_EQUAL_TRACK_COUNT", true);
         public double MinimumScore => GetDouble("LIDARR_OLLAMA_MIN_SCORE", DefaultMinimumScore);
         public double ScoreWeight => Clamp(GetDouble("LIDARR_OLLAMA_SCORE_WEIGHT", DefaultScoreWeight));
+        public int MaxConcurrency => Math.Max(1, GetInt("LIDARR_OLLAMA_MAX_CONCURRENCY", DefaultMaxConcurrency));
 
         public OllamaTrackMatchResult Match(LocalTrack localTrack, Track candidateTrack, double currentScore)
         {
