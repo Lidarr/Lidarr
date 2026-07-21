@@ -428,13 +428,16 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                     continue;
                 }
 
-                var llmDistance = 1.0 - match.Confidence;
-                distances[row, col].Set("track_title", llmDistance);
+                var boostedScore = BlendScore(currentScore, match.Confidence, _ollamaTrackMatcher.ScoreWeight);
+                distances[row, col].Set("track_title", 1.0 - match.Confidence);
+                ApplyScoreTarget(distances[row, col], boostedScore);
                 costs[row, col] = distances[row, col].NormalizedDistance();
                 improvedMatches++;
-                _logger.Info("Ollama improved track match score from {0:P1} to {1:P1}: {2} -> {3}",
+                _logger.Info("Ollama improved track match score from {0:P1} to {1:P1} using confidence {2:P1} and weight {3:P0}: {4} -> {5}",
                              currentScore,
                              1.0 - costs[row, col],
+                             match.Confidence,
+                             _ollamaTrackMatcher.ScoreWeight,
                              localTracks[row],
                              mbTracks[col]);
             }
@@ -443,6 +446,28 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             {
                 _logger.Info("Ollama track matching completed for candidate release: attempted {0}, improved {1}", attemptedMatches, improvedMatches);
             }
+        }
+
+        private static double BlendScore(double currentScore, double llmConfidence, double llmWeight)
+        {
+            llmWeight = Clamp(llmWeight);
+            return Clamp((currentScore * (1.0 - llmWeight)) + (llmConfidence * llmWeight));
+        }
+
+        private static void ApplyScoreTarget(Distance distance, double targetScore)
+        {
+            var targetDistance = 1.0 - Clamp(targetScore);
+            var currentRawDistance = distance.RawDistance();
+            var currentMaxDistance = distance.MaxDistance();
+            const double ollamaMatchWeight = 10.0;
+
+            var ollamaPenalty = ((targetDistance * (currentMaxDistance + ollamaMatchWeight)) - currentRawDistance) / ollamaMatchWeight;
+            distance.Set("ollama_match", Clamp(ollamaPenalty));
+        }
+
+        private static double Clamp(double value)
+        {
+            return Math.Max(0.0, Math.Min(1.0, value));
         }
     }
 }

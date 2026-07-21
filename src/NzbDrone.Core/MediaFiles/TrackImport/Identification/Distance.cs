@@ -29,6 +29,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             { "track_index", 1.0 },
             { "track_length", 2.0 },
             { "recording_id", 10.0 },
+            { "ollama_match", 10.0 },
         };
 
         private Dictionary<string, List<double>> _penalties;

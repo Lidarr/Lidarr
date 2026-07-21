@@ -17,6 +17,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         bool IsEnabled { get; }
         bool RequireEqualTrackCount { get; }
         double MinimumScore { get; }
+        double ScoreWeight { get; }
         OllamaTrackMatchResult Match(LocalTrack localTrack, Track candidateTrack, double currentScore);
     }
 
@@ -32,6 +33,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private const string DefaultUrl = "http://192.168.2.150:11434";
         private const string DefaultModel = "qwen3";
         private const double DefaultMinimumScore = 0.80;
+        private const double DefaultScoreWeight = 1.0;
         private const int DefaultTimeoutSeconds = 10;
         private const int DefaultNumPredict = 64;
         private const string DefaultKeepAlive = "-1m";
@@ -48,6 +50,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         public bool IsEnabled => GetBool("LIDARR_OLLAMA_MATCHING_ENABLED", true);
         public bool RequireEqualTrackCount => GetBool("LIDARR_OLLAMA_REQUIRE_EQUAL_TRACK_COUNT", true);
         public double MinimumScore => GetDouble("LIDARR_OLLAMA_MIN_SCORE", DefaultMinimumScore);
+        public double ScoreWeight => Clamp(GetDouble("LIDARR_OLLAMA_SCORE_WEIGHT", DefaultScoreWeight));
 
         public OllamaTrackMatchResult Match(LocalTrack localTrack, Track candidateTrack, double currentScore)
         {
