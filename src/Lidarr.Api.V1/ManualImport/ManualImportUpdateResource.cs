@@ -22,6 +22,7 @@ namespace Lidarr.Api.V1.ManualImport
         public bool AdditionalFile { get; set; }
         public bool ReplaceExistingFiles { get; set; }
         public bool DisableReleaseSwitching { get; set; }
+        public string ProgressId { get; set; }
 
         public IEnumerable<Rejection> Rejections { get; set; }
     }

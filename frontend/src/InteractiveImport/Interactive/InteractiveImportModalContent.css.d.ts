@@ -7,6 +7,11 @@ interface CssExports {
   'filterText': string;
   'footer': string;
   'importMode': string;
+  'progressContainer': string;
+  'progressFill': string;
+  'progressFillError': string;
+  'progressHeader': string;
+  'progressTrack': string;
   'leftButtons': string;
   'rightButtons': string;
 }

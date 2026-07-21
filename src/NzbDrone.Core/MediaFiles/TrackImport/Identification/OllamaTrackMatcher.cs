@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -41,6 +42,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private const int DefaultNumPredict = 128;
         private const int DefaultMaxConcurrency = 1;
         private const string DefaultKeepAlive = "-1m";
+        private const string DefaultTrainingExportPath = "/config/ollama-track-matches.jsonl";
+        private static readonly object TrainingExportLock = new object();
 
         private readonly IHttpClient _httpClient;
         private readonly Logger _logger;
@@ -75,12 +78,15 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                     _logger.Info("Ollama track matcher accepted normalized exact title match before LLM call: local '{0}', candidate '{1}'",
                                  localTitle,
                                  candidateTitle);
-                    return new OllamaTrackMatchResult
+                    var exactMatch = new OllamaTrackMatchResult
                     {
                         IsMatch = true,
                         Confidence = 1.0,
                         Reason = "normalized_title_match"
                     };
+
+                    ExportTrainingSample(localTrack, candidateTrack, currentScore, exactMatch, GetModel());
+                    return exactMatch;
                 }
 
                 var model = GetModel();
@@ -152,6 +158,14 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
                 result.Confidence = Clamp(result.Confidence);
 
+                var teacherResult = new OllamaTrackMatchResult
+                {
+                    IsMatch = result.IsMatch,
+                    Confidence = result.Confidence,
+                    Reason = "ollama_teacher"
+                };
+                ExportTrainingSample(localTrack, candidateTrack, currentScore, teacherResult, model);
+
                 _logger.Info("Ollama track matcher result: match={0}, confidence={1:P1}, local '{2}', candidate '{3}'",
                              result.IsMatch,
                              result.Confidence,
@@ -175,6 +189,82 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 _logger.Info(ex, "Ollama track matcher failed");
                 return NoMatch("exception");
             }
+        }
+
+        private void ExportTrainingSample(LocalTrack localTrack, Track candidateTrack, double currentScore, OllamaTrackMatchResult result, string model)
+        {
+            if (!IsEnabled)
+            {
+                return;
+            }
+
+            var exportPath = GetTrainingExportPath();
+            if (exportPath.IsNullOrWhiteSpace())
+            {
+                return;
+            }
+
+            try
+            {
+                var directory = Path.GetDirectoryName(exportPath);
+                if (directory.IsNotNullOrWhiteSpace())
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                var sample = BuildTrainingSample(localTrack, candidateTrack, currentScore, result, model);
+                var line = JsonConvert.SerializeObject(sample, Formatting.None);
+                lock (TrainingExportLock)
+                {
+                    File.AppendAllText(exportPath, line + Environment.NewLine, Encoding.UTF8);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Debug(ex, "Unable to export Ollama track matcher training sample");
+            }
+        }
+
+        private static object BuildTrainingSample(LocalTrack localTrack, Track candidateTrack, double currentScore, OllamaTrackMatchResult result, string model)
+        {
+            var info = localTrack.FileTrackInfo;
+            var localNumbers = info?.TrackNumbers == null ? string.Empty : string.Join(",", info.TrackNumbers);
+            var localDuration = info == null ? 0 : (int)Math.Round(info.Duration.TotalSeconds);
+            var candidateAlbum = candidateTrack.Album?.Title ?? candidateTrack.AlbumRelease?.Value?.Album?.Value?.Title;
+            var candidateRelease = candidateTrack.AlbumRelease?.Value?.Title;
+            var candidateArtist = candidateTrack.Artist?.Value?.Name ?? candidateTrack.ArtistMetadata?.Value?.Name;
+
+            return new
+            {
+                exported_at = DateTime.UtcNow.ToString("O", CultureInfo.InvariantCulture),
+                source = "lidarr_ollama_track_matcher",
+                teacher_model = model,
+                reason = result.Reason,
+                deterministic_score = Math.Round(Clamp(currentScore), 4),
+                is_match = result.IsMatch,
+                confidence = Math.Round(Clamp(result.Confidence), 4),
+                local_title = info?.Title,
+                local_artist = info?.ArtistTitle ?? localTrack.Artist?.Name,
+                local_album = info?.AlbumTitle ?? localTrack.Album?.Title,
+                local_track_numbers = localNumbers,
+                local_disc_number = info?.DiscNumber,
+                local_duration_seconds = localDuration,
+                local_year = info?.Year,
+                local_release_group = info?.ReleaseGroup ?? localTrack.ReleaseGroup,
+                local_path = localTrack.Path,
+                candidate_title = candidateTrack.Title,
+                candidate_artist = candidateArtist,
+                candidate_album = candidateAlbum,
+                candidate_release = candidateRelease,
+                candidate_track_number = candidateTrack.TrackNumber,
+                candidate_absolute_track_number = candidateTrack.AbsoluteTrackNumber,
+                candidate_medium_number = candidateTrack.MediumNumber,
+                candidate_duration_seconds = candidateTrack.Duration / 1000,
+                candidate_foreign_track_id = candidateTrack.ForeignTrackId,
+                candidate_foreign_recording_id = candidateTrack.ForeignRecordingId,
+                candidate_album_release_id = candidateTrack.AlbumReleaseId,
+                prompt_version = 1
+            };
         }
 
         private static OllamaTrackMatchResult NoMatch(string reason)
@@ -397,6 +487,12 @@ MusicBrainz candidate:
         {
             var keepAlive = Environment.GetEnvironmentVariable("LIDARR_OLLAMA_KEEP_ALIVE");
             return keepAlive.IsNotNullOrWhiteSpace() ? keepAlive : DefaultKeepAlive;
+        }
+
+        private static string GetTrainingExportPath()
+        {
+            var exportPath = Environment.GetEnvironmentVariable("LIDARR_OLLAMA_TRAINING_EXPORT_PATH");
+            return exportPath.IsNotNullOrWhiteSpace() ? exportPath : DefaultTrainingExportPath;
         }
 
         private static bool GetBool(string key, bool defaultValue)

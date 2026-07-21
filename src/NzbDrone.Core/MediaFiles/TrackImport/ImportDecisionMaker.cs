@@ -9,6 +9,7 @@ using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.MediaFiles.TrackImport.Aggregation;
 using NzbDrone.Core.MediaFiles.TrackImport.Identification;
+using NzbDrone.Core.MediaFiles.TrackImport.Manual;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Profiles.Qualities;
@@ -51,6 +52,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
         private readonly IAudioTagService _audioTagService;
         private readonly IAugmentingService _augmentingService;
         private readonly IIdentificationService _identificationService;
+        private readonly IManualImportProgressService _manualImportProgressService;
         private readonly IRootFolderService _rootFolderService;
         private readonly IQualityProfileService _qualityProfileService;
         private readonly Logger _logger;
@@ -61,6 +63,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                                    IAudioTagService audioTagService,
                                    IAugmentingService augmentingService,
                                    IIdentificationService identificationService,
+                                   IManualImportProgressService manualImportProgressService,
                                    IRootFolderService rootFolderService,
                                    IQualityProfileService qualityProfileService,
                                    Logger logger)
@@ -71,6 +74,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             _audioTagService = audioTagService;
             _augmentingService = augmentingService;
             _identificationService = identificationService;
+            _manualImportProgressService = manualImportProgressService;
             _rootFolderService = rootFolderService;
             _qualityProfileService = qualityProfileService;
             _logger = logger;
@@ -103,6 +107,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             var i = 1;
             foreach (var file in files)
             {
+                _manualImportProgressService.ReportRange($"Reading audio tags {i}/{files.Count}", i - 1, files.Count, 0.0, 25.0);
                 _logger.ProgressInfo($"Reading file {i++}/{files.Count}");
 
                 var localTrack = new LocalTrack
@@ -134,6 +139,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 }
             }
 
+            _manualImportProgressService.Report("Audio tag scan complete", 25.0);
             _logger.Debug($"Tags parsed for {files.Count} files in {watch.ElapsedMilliseconds}ms");
 
             return Tuple.Create(localTracks, decisions);
@@ -150,7 +156,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
             localTracks.ForEach(x => x.ExistingFile = !config.NewDownload);
 
+            _manualImportProgressService.Report("Identifying best album and track matches", 30.0);
             var releases = _identificationService.Identify(localTracks, idOverrides, config);
+            _manualImportProgressService.Report("Building import decisions", 92.0);
 
             var albums = releases.GroupBy(x => x.AlbumRelease?.Album?.Value.ForeignAlbumId);
 
@@ -194,6 +202,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 }
             }
 
+            _manualImportProgressService.Report("Import decisions ready", 98.0);
             return decisions;
         }
 

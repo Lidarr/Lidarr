@@ -12,6 +12,7 @@ using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.MediaFiles.TrackImport.Aggregation;
+using NzbDrone.Core.MediaFiles.TrackImport.Manual;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -32,6 +33,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private readonly IAugmentingService _augmentingService;
         private readonly ICandidateService _candidateService;
         private readonly IOllamaTrackMatcher _ollamaTrackMatcher;
+        private readonly IManualImportProgressService _manualImportProgressService;
         private readonly IConfigService _configService;
         private readonly Logger _logger;
 
@@ -42,6 +44,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                                      IAugmentingService augmentingService,
                                      ICandidateService candidateService,
                                      IOllamaTrackMatcher ollamaTrackMatcher,
+                                     IManualImportProgressService manualImportProgressService,
                                      IConfigService configService,
                                      Logger logger)
         {
@@ -52,6 +55,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             _augmentingService = augmentingService;
             _candidateService = candidateService;
             _ollamaTrackMatcher = ollamaTrackMatcher;
+            _manualImportProgressService = manualImportProgressService;
             _configService = configService;
             _logger = logger;
         }
@@ -136,8 +140,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             foreach (var localRelease in releases)
             {
                 i++;
+                var releaseStart = 30.0 + (60.0 * (i - 1) / Math.Max(1, releases.Count));
+                var releaseEnd = 30.0 + (60.0 * i / Math.Max(1, releases.Count));
+                _manualImportProgressService.Report($"Identifying album {i}/{releases.Count}", releaseStart);
                 _logger.ProgressInfo($"Identifying album {i}/{releases.Count}");
-                IdentifyRelease(localRelease, idOverrides, config);
+                IdentifyRelease(localRelease, idOverrides, config, releaseStart, releaseEnd);
+                _manualImportProgressService.Report($"Identified album {i}/{releases.Count}", releaseEnd);
             }
 
             watch.Stop();
@@ -197,11 +205,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             return localTracks;
         }
 
-        private void IdentifyRelease(LocalAlbumRelease localAlbumRelease, IdentificationOverrides idOverrides, ImportDecisionMakerConfig config)
+        private void IdentifyRelease(LocalAlbumRelease localAlbumRelease, IdentificationOverrides idOverrides, ImportDecisionMakerConfig config, double progressStart, double progressEnd)
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
             var fingerprinted = false;
 
+            _manualImportProgressService.Report("Finding candidate releases", progressStart + ((progressEnd - progressStart) * 0.05));
             var candidateReleases = _candidateService.GetDbCandidatesFromTags(localAlbumRelease, idOverrides, config.IncludeExisting);
 
             if (candidateReleases.Count == 0 && config.AddNewArtists)
@@ -212,6 +221,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             if (candidateReleases.Count == 0 && FingerprintingAllowed(config.NewDownload))
             {
                 _logger.Debug("No candidates found, fingerprinting");
+                _manualImportProgressService.Report("Fingerprinting local tracks", progressStart + ((progressEnd - progressStart) * 0.15));
                 _fingerprintingService.Lookup(localAlbumRelease.LocalTracks, 0.5);
                 fingerprinted = true;
                 candidateReleases = _candidateService.GetDbCandidatesFromFingerprint(localAlbumRelease, idOverrides, config.IncludeExisting);
@@ -239,6 +249,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
             _logger.Debug($"Got {candidateReleases.Count} candidates for {localAlbumRelease.LocalTracks.Count} tracks in {watch.ElapsedMilliseconds}ms");
 
+            _manualImportProgressService.Report("Loading candidate tracks", progressStart + ((progressEnd - progressStart) * 0.25));
             PopulateTracks(candidateReleases);
 
             // convert all the TrackFiles that represent extra files to List<LocalTrack>
@@ -248,13 +259,14 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
             _logger.Debug($"Retrieved {allLocalTracks.Count} possible tracks in {watch.ElapsedMilliseconds}ms");
 
-            GetBestRelease(localAlbumRelease, candidateReleases, allLocalTracks);
+            GetBestRelease(localAlbumRelease, candidateReleases, allLocalTracks, progressStart + ((progressEnd - progressStart) * 0.35), progressStart + ((progressEnd - progressStart) * 0.75));
 
             // If result isn't great and we haven't fingerprinted, try that
             // Note that this can improve the match even if we try the same candidates
             if (!fingerprinted && FingerprintingAllowed(config.NewDownload) && ShouldFingerprint(localAlbumRelease))
             {
                 _logger.Debug($"Match not good enough, fingerprinting");
+                _manualImportProgressService.Report("Fingerprinting low-confidence match", progressStart + ((progressEnd - progressStart) * 0.78));
                 _fingerprintingService.Lookup(localAlbumRelease.LocalTracks, 0.5);
 
                 // Only include extra possible candidates if neither album nor release are specified
@@ -267,6 +279,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                     var newCandidates = extraCandidates.ExceptBy(x => x.AlbumRelease.Id, candidateReleases, y => y.AlbumRelease.Id, EqualityComparer<int>.Default);
                     candidateReleases.AddRange(newCandidates);
 
+                    _manualImportProgressService.Report("Loading fingerprint candidates", progressStart + ((progressEnd - progressStart) * 0.84));
                     PopulateTracks(candidateReleases);
 
                     allLocalTracks.AddRange(ToLocalTrack(newCandidates
@@ -277,9 +290,10 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 }
 
                 // fingerprint all the local files in candidates we might be matching against
+                _manualImportProgressService.Report("Fingerprinting candidate files", progressStart + ((progressEnd - progressStart) * 0.88));
                 _fingerprintingService.Lookup(allLocalTracks, 0.5);
 
-                GetBestRelease(localAlbumRelease, candidateReleases, allLocalTracks);
+                GetBestRelease(localAlbumRelease, candidateReleases, allLocalTracks, progressStart + ((progressEnd - progressStart) * 0.90), progressEnd);
             }
 
             _logger.Debug($"Best release found in {watch.ElapsedMilliseconds}ms");
@@ -304,7 +318,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             }
         }
 
-        private void GetBestRelease(LocalAlbumRelease localAlbumRelease, List<CandidateAlbumRelease> candidateReleases, List<LocalTrack> extraTracksOnDisk)
+        private void GetBestRelease(LocalAlbumRelease localAlbumRelease, List<CandidateAlbumRelease> candidateReleases, List<LocalTrack> extraTracksOnDisk, double progressStart, double progressEnd)
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
             var releaseConcurrency = GetPositiveInt("LIDARR_IDENTIFICATION_RELEASE_CONCURRENCY", 1);
@@ -317,10 +331,13 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
             var evaluations = new List<CandidateReleaseEvaluation>();
             var evaluationsLock = new object();
+            var completedCandidates = 0;
 
             Parallel.ForEach(candidateReleases, new ParallelOptions { MaxDegreeOfParallelism = releaseConcurrency }, candidateRelease =>
             {
                 var evaluation = EvaluateCandidateRelease(localAlbumRelease, candidateRelease, extraTracksOnDisk);
+                var completed = Interlocked.Increment(ref completedCandidates);
+                _manualImportProgressService.ReportRange($"Matched candidate release {completed}/{candidateReleases.Count}", completed, candidateReleases.Count, progressStart, progressEnd);
                 lock (evaluationsLock)
                 {
                     evaluations.Add(evaluation);

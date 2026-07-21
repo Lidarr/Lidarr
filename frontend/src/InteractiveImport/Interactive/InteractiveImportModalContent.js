@@ -297,6 +297,7 @@ class InteractiveImportModalContent extends Component {
       sortDirection,
       importMode,
       interactiveImportErrorMessage,
+      manualImportProgress,
       onSortPress,
       onModalClose
     } = this.props;
@@ -331,6 +332,8 @@ class InteractiveImportModalContent extends Component {
     const selectedIds = this.getSelectedIds();
     const selectedItem = selectedIds.length ? _.find(items, { id: selectedIds[0] }) : null;
     const errorMessage = getErrorMessage(error, 'Unable to load manual import items');
+    const progressPercent = manualImportProgress ? Math.max(0, Math.min(100, manualImportProgress.percent || 0)) : 0;
+    const showManualImportProgress = !!manualImportProgress && (isFetching || isSaving || !manualImportProgress.isComplete || manualImportProgress.hasError);
 
     const bulkSelectOptions = [
       { key: SELECT, value: translate('Select...'), disabled: true },
@@ -437,6 +440,24 @@ class InteractiveImportModalContent extends Component {
             error &&
               <div>{errorMessage}</div>
           }
+
+          {
+            showManualImportProgress &&
+              <div className={styles.progressContainer}>
+                <div className={styles.progressHeader}>
+                  <span>{manualImportProgress.message || 'Identifying tracks'}</span>
+                  <span>{`${progressPercent.toFixed(1)}%`}</span>
+                </div>
+
+                <div className={styles.progressTrack}>
+                  <div
+                    className={manualImportProgress.hasError ? styles.progressFillError : styles.progressFill}
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                </div>
+              </div>
+          }
+
 
           {
             isPopulated && !!items.length && !isFetching && !isFetching &&
@@ -614,6 +635,7 @@ InteractiveImportModalContent.propTypes = {
   sortKey: PropTypes.string,
   sortDirection: PropTypes.string,
   interactiveImportErrorMessage: PropTypes.string,
+  manualImportProgress: PropTypes.object,
   onSortPress: PropTypes.func.isRequired,
   onFilterExistingFilesChange: PropTypes.func.isRequired,
   onReplaceExistingFilesChange: PropTypes.func.isRequired,

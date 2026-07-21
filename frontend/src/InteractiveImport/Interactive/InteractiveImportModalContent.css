@@ -44,6 +44,40 @@
   color: var(--dangerColor);
 }
 
+.progressContainer {
+  margin: 0 0 12px;
+}
+
+.progressHeader {
+  display: flex;
+  font-size: 13px;
+  font-weight: 600;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.progressTrack {
+  background: var(--inputBackgroundColor);
+  border: 1px solid var(--borderColor);
+  border-radius: 4px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.progressFill,
+.progressFillError {
+  height: 100%;
+  transition: width 200ms ease-out;
+}
+
+.progressFill {
+  background: var(--successColor);
+}
+
+.progressFillError {
+  background: var(--dangerColor);
+}
+
 @media only screen and (max-width: $breakpointSmall) {
   .footer {
     .leftButtons,

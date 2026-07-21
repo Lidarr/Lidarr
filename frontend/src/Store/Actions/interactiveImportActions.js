@@ -19,9 +19,77 @@ export const section = 'interactiveImport';
 const trackFilesSection = `${section}.trackFiles`;
 let abortCurrentFetchRequest = null;
 let abortCurrentRequest = null;
+let abortCurrentProgressRequest = null;
+let progressPollTimer = null;
 let currentIds = [];
 
 const MAXIMUM_RECENT_FOLDERS = 10;
+const PROGRESS_POLL_INTERVAL = 750;
+
+function createProgressId() {
+  return `manual-import-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+function stopProgressPolling() {
+  if (progressPollTimer) {
+    window.clearTimeout(progressPollTimer);
+    progressPollTimer = null;
+  }
+
+  if (abortCurrentProgressRequest) {
+    abortCurrentProgressRequest();
+    abortCurrentProgressRequest = null;
+  }
+}
+
+function pollManualImportProgress(dispatch, progressId) {
+  if (!progressId) {
+    return;
+  }
+
+  const { request, abortRequest } = createAjaxRequest({
+    url: `/manualimport/progress/${progressId}`
+  });
+
+  abortCurrentProgressRequest = abortRequest;
+
+  request.done((progress) => {
+    dispatch(set({
+      section,
+      manualImportProgress: progress
+    }));
+
+    if (!progress.isComplete) {
+      progressPollTimer = window.setTimeout(() => pollManualImportProgress(dispatch, progressId), PROGRESS_POLL_INTERVAL);
+    }
+  });
+
+  request.fail((xhr) => {
+    if (xhr.aborted) {
+      return;
+    }
+
+    progressPollTimer = window.setTimeout(() => pollManualImportProgress(dispatch, progressId), PROGRESS_POLL_INTERVAL);
+  });
+}
+
+function startProgressPolling(dispatch, progressId) {
+  stopProgressPolling();
+
+  dispatch(set({
+    section,
+    manualImportProgress: {
+      id: progressId,
+      percent: 0,
+      message: 'Preparing track identification',
+      isComplete: false,
+      hasError: false
+    }
+  }));
+
+  progressPollTimer = window.setTimeout(() => pollManualImportProgress(dispatch, progressId), PROGRESS_POLL_INTERVAL);
+}
+
 
 //
 // State
@@ -32,6 +100,7 @@ export const defaultState = {
   isSaving: false,
   error: null,
   items: [],
+  manualImportProgress: null,
   pendingChanges: {},
   sortKey: 'path',
   sortDirection: sortDirections.ASCENDING,
@@ -120,16 +189,23 @@ export const actionHandlers = handleThunks({
       return;
     }
 
+    const progressId = createProgressId();
+    startProgressPolling(dispatch, progressId);
+
     dispatch(set({ section, isFetching: true }));
 
     const { request, abortRequest } = createAjaxRequest({
       url: '/manualimport',
-      data: payload
+      data: {
+        ...payload,
+        progressId
+      }
     });
 
     abortCurrentFetchRequest = abortRequest;
 
     request.done((data) => {
+      stopProgressPolling();
       dispatch(batchActions([
         update({ section, data }),
 
@@ -137,7 +213,14 @@ export const actionHandlers = handleThunks({
           section,
           isFetching: false,
           isPopulated: true,
-          error: null
+          error: null,
+          manualImportProgress: {
+            id: progressId,
+            percent: 100,
+            message: 'Manual import scan complete',
+            isComplete: true,
+            hasError: false
+          }
         })
       ]));
     });
@@ -147,11 +230,19 @@ export const actionHandlers = handleThunks({
         return;
       }
 
+      stopProgressPolling();
       dispatch(set({
         section,
         isFetching: false,
         isPopulated: false,
-        error: xhr
+        error: xhr,
+        manualImportProgress: {
+          id: progressId,
+          percent: 0,
+          message: 'Manual import scan failed',
+          isComplete: true,
+          hasError: true
+        }
       }));
     });
   },
@@ -161,7 +252,14 @@ export const actionHandlers = handleThunks({
       abortCurrentRequest();
     }
 
+    const progressId = createProgressId();
+    startProgressPolling(dispatch, progressId);
+
     dispatch(batchActions([
+      set({
+        section,
+        isSaving: true
+      }),
       ...currentIds.map((id) => updateItem({
         section,
         id,
@@ -194,7 +292,8 @@ export const actionHandlers = handleThunks({
         downloadId: item.downloadId,
         additionalFile: item.additionalFile,
         replaceExistingFiles: item.replaceExistingFiles,
-        disableReleaseSwitching: item.disableReleaseSwitching
+        disableReleaseSwitching: item.disableReleaseSwitching,
+        progressId
       };
     });
 
@@ -209,14 +308,26 @@ export const actionHandlers = handleThunks({
     currentIds = payload.ids;
 
     request.done((data) => {
-      dispatch(batchActions(
-        data.map((item) => updateItem({
+      stopProgressPolling();
+      dispatch(batchActions([
+        ...data.map((item) => updateItem({
           section,
           ...item,
           isReprocessing: false,
           updateOnly: true
-        }))
-      ));
+        })),
+        set({
+          section,
+          isSaving: false,
+          manualImportProgress: {
+            id: progressId,
+            percent: 100,
+            message: 'Track identification complete',
+            isComplete: true,
+            hasError: false
+          }
+        })
+      ]));
     });
 
     request.fail((xhr) => {
@@ -224,14 +335,26 @@ export const actionHandlers = handleThunks({
         return;
       }
 
-      dispatch(batchActions(
-        payload.ids.map((id) => updateItem({
+      stopProgressPolling();
+      dispatch(batchActions([
+        ...payload.ids.map((id) => updateItem({
           section,
           id,
           isReprocessing: false,
           updateOnly: true
-        }))
-      ));
+        })),
+        set({
+          section,
+          isSaving: false,
+          manualImportProgress: {
+            id: progressId,
+            percent: 0,
+            message: 'Track identification failed',
+            isComplete: true,
+            hasError: true
+          }
+        })
+      ]));
     });
   },
 
@@ -301,6 +424,8 @@ export const reducers = createHandleActions({
   },
 
   [CLEAR_INTERACTIVE_IMPORT]: function(state) {
+    stopProgressPolling();
+
     const newState = {
       ...defaultState,
       recentFolders: state.recentFolders,
