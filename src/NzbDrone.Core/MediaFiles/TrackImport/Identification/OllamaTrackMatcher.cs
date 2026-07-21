@@ -193,7 +193,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
         private void ExportTrainingSample(LocalTrack localTrack, Track candidateTrack, double currentScore, OllamaTrackMatchResult result, string model)
         {
-            if (!IsEnabled)
+            if (!IsTrainingExportEnabled())
             {
                 return;
             }
@@ -487,6 +487,11 @@ MusicBrainz candidate:
         {
             var keepAlive = Environment.GetEnvironmentVariable("LIDARR_OLLAMA_KEEP_ALIVE");
             return keepAlive.IsNotNullOrWhiteSpace() ? keepAlive : DefaultKeepAlive;
+        }
+
+        private bool IsTrainingExportEnabled()
+        {
+            return IsEnabled && GetBool("LIDARR_OLLAMA_TRAINING_EXPORT_ENABLED", true);
         }
 
         private static string GetTrainingExportPath()
