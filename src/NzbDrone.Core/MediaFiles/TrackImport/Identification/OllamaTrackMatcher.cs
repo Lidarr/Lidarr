@@ -1,8 +1,10 @@
 using System;
 using System.Globalization;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -35,7 +37,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
         private const double DefaultMinimumScore = 0.80;
         private const double DefaultScoreWeight = 1.0;
         private const int DefaultTimeoutSeconds = 10;
-        private const int DefaultNumPredict = 64;
+        private const int DefaultNumPredict = 128;
         private const string DefaultKeepAlive = "-1m";
 
         private readonly IHttpClient _httpClient;
@@ -62,6 +64,22 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
             try
             {
+                var localTitle = localTrack.FileTrackInfo?.Title ?? localTrack.Path;
+                var candidateTitle = candidateTrack.Title;
+
+                if (IsNormalizedExactTitleMatch(localTitle, candidateTitle))
+                {
+                    _logger.Info("Ollama track matcher accepted normalized exact title match before LLM call: local '{0}', candidate '{1}'",
+                                 localTitle,
+                                 candidateTitle);
+                    return new OllamaTrackMatchResult
+                    {
+                        IsMatch = true,
+                        Confidence = 1.0,
+                        Reason = "normalized_title_match"
+                    };
+                }
+
                 var model = GetModel();
                 var url = GetUrl();
 
@@ -69,8 +87,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                              model,
                              url,
                              currentScore,
-                             localTrack.FileTrackInfo?.Title ?? localTrack.Path,
-                             candidateTrack.Title);
+                             localTitle,
+                             candidateTitle);
 
                 var request = new HttpRequestBuilder(url)
                     .Resource("/api/generate")
@@ -87,7 +105,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                     Model = model,
                     Prompt = BuildPrompt(localTrack, candidateTrack, currentScore),
                     Stream = false,
-                    Format = "json",
+                    Format = BuildResponseFormat(),
                     Think = GetBool("LIDARR_OLLAMA_THINKING_ENABLED", false),
                     KeepAlive = GetKeepAlive(),
                     Options = new OllamaGenerateOptions
@@ -102,8 +120,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 {
                     _logger.Info("Ollama track matcher returned HTTP {0} for local '{1}' and candidate '{2}': {3}",
                                  response.StatusCode,
-                                 localTrack.FileTrackInfo?.Title ?? localTrack.Path,
-                                 candidateTrack.Title,
+                                 localTitle,
+                                 candidateTitle,
                                  response.Content);
                     return NoMatch("http_error");
                 }
@@ -112,20 +130,30 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 if (responseText.IsNullOrWhiteSpace())
                 {
                     _logger.Info("Ollama track matcher returned an empty response for local '{0}' and candidate '{1}'. Thinking chars: {2}",
-                                 localTrack.FileTrackInfo?.Title ?? localTrack.Path,
-                                 candidateTrack.Title,
+                                 localTitle,
+                                 candidateTitle,
                                  response.Resource.Thinking?.Length ?? 0);
                     return NoMatch("empty_response");
                 }
 
-                var result = Json.Deserialize<OllamaMatchResponse>(StripThinking(responseText));
+                var normalizedResponse = StripThinking(responseText);
+                if (!TryParseMatchResponse(normalizedResponse, out var result, out var parseError))
+                {
+                    _logger.Info("Ollama track matcher returned an invalid JSON response for local '{0}' and candidate '{1}': {2}. Response: {3}",
+                                 localTitle,
+                                 candidateTitle,
+                                 parseError,
+                                 TruncateForLog(normalizedResponse));
+                    return NoMatch("invalid_json");
+                }
+
                 result.Confidence = Clamp(result.Confidence);
 
                 _logger.Info("Ollama track matcher result: match={0}, confidence={1:P1}, local '{2}', candidate '{3}'",
                              result.IsMatch,
                              result.Confidence,
-                             localTrack.FileTrackInfo?.Title ?? localTrack.Path,
-                             candidateTrack.Title);
+                             localTitle,
+                             candidateTitle);
 
                 if (!result.IsMatch || result.Confidence < MinimumScore)
                 {
@@ -163,7 +191,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             var localDuration = info == null ? 0 : (int)Math.Round(info.Duration.TotalSeconds);
 
             return $@"You help Lidarr decide whether a downloaded audio file is the same track as a MusicBrainz track.
-Return only JSON: {{""isMatch"":true|false,""confidence"":0.0-1.0}}.
+Return only JSON matching the provided schema: {{""isMatch"":true|false,""confidence"":0.0-1.0}}.
+Do not include input fields, explanations, markdown, or extra keys.
 Be conservative. Extra text like remaster, live, explicit, deluxe, bitrate, source, release group, year, file extension, or bracket tags may appear in the downloaded name and should not prevent a match when the base song title is the same.
 Do not match if the actual song title is different, a different mix/version changes identity, or duration/track number strongly disagree.
 
@@ -188,6 +217,166 @@ MusicBrainz candidate:
         private static string StripThinking(string response)
         {
             return Regex.Replace(response, "<think>.*?</think>", string.Empty, RegexOptions.Singleline | RegexOptions.IgnoreCase).Trim();
+        }
+
+        private static bool IsNormalizedExactTitleMatch(string localTitle, string candidateTitle)
+        {
+            var normalizedLocal = NormalizeTitleForExactMatch(localTitle);
+            var normalizedCandidate = NormalizeTitleForExactMatch(candidateTitle);
+
+            return normalizedLocal.IsNotNullOrWhiteSpace() && normalizedLocal == normalizedCandidate;
+        }
+
+        private static string NormalizeTitleForExactMatch(string title)
+        {
+            if (title.IsNullOrWhiteSpace())
+            {
+                return string.Empty;
+            }
+
+            var normalized = title.Normalize(NormalizationForm.FormD);
+            var builder = new StringBuilder(normalized.Length);
+
+            foreach (var character in normalized)
+            {
+                var category = CharUnicodeInfo.GetUnicodeCategory(character);
+                if (category == UnicodeCategory.NonSpacingMark)
+                {
+                    continue;
+                }
+
+                if (char.IsLetterOrDigit(character))
+                {
+                    builder.Append(char.ToLowerInvariant(character));
+                }
+            }
+
+            return builder.ToString();
+        }
+
+        private static JObject BuildResponseFormat()
+        {
+            return JObject.Parse(@"{
+  ""type"": ""object"",
+  ""properties"": {
+    ""isMatch"": { ""type"": ""boolean"" },
+    ""confidence"": { ""type"": ""number"", ""minimum"": 0, ""maximum"": 1 }
+  },
+  ""required"": [""isMatch"", ""confidence""],
+  ""additionalProperties"": false
+}");
+        }
+
+        private static bool TryParseMatchResponse(string response, out OllamaMatchResponse result, out string error)
+        {
+            result = null;
+            error = null;
+
+            var json = ExtractJsonObject(response);
+            if (json.IsNullOrWhiteSpace())
+            {
+                error = "no JSON object found";
+                return false;
+            }
+
+            try
+            {
+                var token = JObject.Parse(json);
+                var isMatchToken = token.GetValue("isMatch", StringComparison.OrdinalIgnoreCase);
+                var confidenceToken = token.GetValue("confidence", StringComparison.OrdinalIgnoreCase);
+
+                if (isMatchToken == null || confidenceToken == null)
+                {
+                    error = "missing isMatch or confidence";
+                    return false;
+                }
+
+                result = new OllamaMatchResponse
+                {
+                    IsMatch = isMatchToken.Value<bool>(),
+                    Confidence = confidenceToken.Value<double>()
+                };
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+                return false;
+            }
+        }
+
+        private static string ExtractJsonObject(string response)
+        {
+            if (response.IsNullOrWhiteSpace())
+            {
+                return null;
+            }
+
+            var start = response.IndexOf('{');
+            if (start < 0)
+            {
+                return null;
+            }
+
+            var depth = 0;
+            var inString = false;
+            var escaped = false;
+
+            for (var i = start; i < response.Length; i++)
+            {
+                var current = response[i];
+
+                if (escaped)
+                {
+                    escaped = false;
+                    continue;
+                }
+
+                if (current == '\\' && inString)
+                {
+                    escaped = true;
+                    continue;
+                }
+
+                if (current == '"')
+                {
+                    inString = !inString;
+                    continue;
+                }
+
+                if (inString)
+                {
+                    continue;
+                }
+
+                if (current == '{')
+                {
+                    depth++;
+                }
+                else if (current == '}')
+                {
+                    depth--;
+                    if (depth == 0)
+                    {
+                        return response.Substring(start, i - start + 1);
+                    }
+                }
+            }
+
+            return response.Substring(start);
+        }
+
+        private static string TruncateForLog(string value)
+        {
+            if (value.IsNullOrWhiteSpace())
+            {
+                return string.Empty;
+            }
+
+            const int maxLength = 500;
+            value = value.Replace(Environment.NewLine, " ").Trim();
+            return value.Length <= maxLength ? value : string.Concat(value.AsSpan(0, maxLength), "...");
         }
 
         private static string GetUrl()
@@ -235,7 +424,7 @@ MusicBrainz candidate:
             public string Model { get; set; }
             public string Prompt { get; set; }
             public bool Stream { get; set; }
-            public string Format { get; set; }
+            public object Format { get; set; }
             public bool Think { get; set; }
             [JsonProperty("keep_alive")]
             public string KeepAlive { get; set; }
