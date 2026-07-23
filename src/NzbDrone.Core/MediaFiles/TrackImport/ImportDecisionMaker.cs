@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
@@ -45,6 +48,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
     public class ImportDecisionMaker : IMakeImportDecision
     {
+        // Tag reading is I/O-bound (often over network shares) with no shared mutable state between
+        // files, so it parallelizes safely. Capped rather than left unbounded so a large scan doesn't
+        // open dozens of concurrent connections against a NAS/network share.
+        private static readonly int TagReadParallelism = Math.Min(Environment.ProcessorCount, 8);
+
         private readonly IEnumerable<IImportDecisionEngineSpecification<LocalTrack>> _trackSpecifications;
         private readonly IEnumerable<IImportDecisionEngineSpecification<LocalAlbumRelease>> _albumSpecifications;
         private readonly IMediaFileService _mediaFileService;
@@ -100,10 +108,14 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 downloadClientItemInfo = Parser.Parser.ParseAlbumTitle(downloadClientItem.Title);
             }
 
-            var i = 1;
-            foreach (var file in files)
+            var localTracksBag = new ConcurrentBag<LocalTrack>();
+            var decisionsBag = new ConcurrentBag<ImportDecision<LocalTrack>>();
+            var progress = 0;
+
+            Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = TagReadParallelism }, file =>
             {
-                _logger.ProgressInfo($"Reading file {i++}/{files.Count}");
+                var i = Interlocked.Increment(ref progress);
+                _logger.ProgressInfo($"Reading file {i}/{files.Count}");
 
                 var localTrack = new LocalTrack
                 {
@@ -120,19 +132,22 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 {
                     // TODO fix otherfiles?
                     _augmentingService.Augment(localTrack, true);
-                    localTracks.Add(localTrack);
+                    localTracksBag.Add(localTrack);
                 }
                 catch (AugmentingFailedException)
                 {
-                    decisions.Add(new ImportDecision<LocalTrack>(localTrack, new Rejection("Unable to parse file")));
+                    decisionsBag.Add(new ImportDecision<LocalTrack>(localTrack, new Rejection("Unable to parse file")));
                 }
                 catch (Exception e)
                 {
                     _logger.Error(e, "Couldn't import file. {0}", localTrack.Path);
 
-                    decisions.Add(new ImportDecision<LocalTrack>(localTrack, new Rejection("Unexpected error processing file")));
+                    decisionsBag.Add(new ImportDecision<LocalTrack>(localTrack, new Rejection("Unexpected error processing file")));
                 }
-            }
+            });
+
+            localTracks.AddRange(localTracksBag);
+            decisions.AddRange(decisionsBag);
 
             _logger.Debug($"Tags parsed for {files.Count} files in {watch.ElapsedMilliseconds}ms");
 
