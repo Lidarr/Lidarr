@@ -220,6 +220,18 @@ namespace NzbDrone.Core.Datastore
             return model;
         }
 
+        private void RunInTransaction(Action<IDbConnection, IDbTransaction> action)
+        {
+            using (var conn = _database.OpenConnection())
+            {
+                using (var tran = conn.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    action(conn, tran);
+                    tran.Commit();
+                }
+            }
+        }
+
         public void InsertMany(IList<TModel> models)
         {
             if (models.Any(x => x.Id != 0))
@@ -227,18 +239,13 @@ namespace NzbDrone.Core.Datastore
                 throw new InvalidOperationException("Can't insert model with existing ID != 0");
             }
 
-            using (var conn = _database.OpenConnection())
+            RunInTransaction((conn, tran) =>
             {
-                using (var tran = conn.BeginTransaction(IsolationLevel.ReadCommitted))
+                foreach (var model in models)
                 {
-                    foreach (var model in models)
-                    {
-                        Insert(conn, tran, model);
-                    }
-
-                    tran.Commit();
+                    Insert(conn, tran, model);
                 }
-            }
+            });
         }
 
         public TModel Update(TModel model)
@@ -265,14 +272,7 @@ namespace NzbDrone.Core.Datastore
                 throw new InvalidOperationException("Can't update model with ID 0");
             }
 
-            using (var conn = _database.OpenConnection())
-            {
-                using (var tran = conn.BeginTransaction(IsolationLevel.ReadCommitted))
-                {
-                    UpdateFields(conn, tran, models, _properties);
-                    tran.Commit();
-                }
-            }
+            RunInTransaction((conn, tran) => UpdateFields(conn, tran, models, _properties));
         }
 
         protected void Delete(Expression<Func<TModel, bool>> where)
@@ -374,14 +374,7 @@ namespace NzbDrone.Core.Datastore
 
             var propertiesToUpdate = properties.Select(x => x.GetMemberName()).ToList();
 
-            using (var conn = _database.OpenConnection())
-            {
-                using (var tran = conn.BeginTransaction(IsolationLevel.ReadCommitted))
-                {
-                    UpdateFields(conn, tran, models, propertiesToUpdate);
-                    tran.Commit();
-                }
-            }
+            RunInTransaction((conn, tran) => UpdateFields(conn, tran, models, propertiesToUpdate));
 
             foreach (var model in models)
             {

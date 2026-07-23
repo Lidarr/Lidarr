@@ -115,7 +115,10 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = TagReadParallelism }, file =>
             {
                 var i = Interlocked.Increment(ref progress);
-                _logger.ProgressInfo($"Reading file {i}/{files.Count}");
+                if (i % 25 == 0 || i == files.Count)
+                {
+                    _logger.ProgressInfo($"Reading file {i}/{files.Count}");
+                }
 
                 var localTrack = new LocalTrack
                 {

@@ -179,16 +179,6 @@ namespace NzbDrone.Core.MediaFiles
             musicFilesStopwatch.Stop();
             _logger.Trace("Finished getting track files for:\n{0} [{1}]", folders.ConcatToString("\n"), musicFilesStopwatch.Elapsed);
 
-            if (!mediaFileList.Any())
-            {
-                foreach (var artist in artists)
-                {
-                    CompletedScanning(artist);
-                }
-
-                return;
-            }
-
             var config = new ImportDecisionMakerConfig
             {
                 Filter = filter,
@@ -201,62 +191,9 @@ namespace NzbDrone.Core.MediaFiles
 
             for (var batchNum = 0; batchNum < batches.Count; batchNum++)
             {
-                var batch = batches[batchNum];
+                _logger.ProgressInfo($"Importing scan batch {batchNum + 1}/{batches.Count} ({batches[batchNum].Length} files)");
 
-                _logger.ProgressInfo($"Importing scan batch {batchNum + 1}/{batches.Count} ({batch.Length} files)");
-
-                var decisions = _importDecisionMaker.GetImportDecisions(batch.ToList(), null, null, config);
-
-                _importApprovedTracks.Import(decisions, false);
-
-                // decisions may have been filtered to just new files.  Anything new and approved will have been inserted.
-                // Now we need to make sure anything new but not approved gets inserted
-                // Note that knownFiles will include anything imported just now
-                var batchPaths = decisions.Select(x => x.Item.Path).ToList();
-                var knownFiles = batchPaths.Any() ? _mediaFileService.GetFileWithPath(batchPaths) ?? new List<TrackFile>() : new List<TrackFile>();
-
-                var newFiles = decisions
-                    .ExceptBy(x => x.Item.Path, knownFiles, x => x.Path, PathEqualityComparer.Instance)
-                    .Select(decision => new TrackFile
-                    {
-                        Path = decision.Item.Path,
-                        Size = decision.Item.Size,
-                        Modified = decision.Item.Modified,
-                        DateAdded = DateTime.UtcNow,
-                        Quality = decision.Item.Quality,
-                        MediaInfo = decision.Item.FileTrackInfo.MediaInfo
-                    })
-                    .ToList();
-                _mediaFileService.AddMany(newFiles);
-
-                _logger.Debug($"Inserted {newFiles.Count} new unmatched trackfiles");
-
-                // finally update info on size/modified for existing files
-                var updatedFiles = knownFiles
-                    .Join(decisions,
-                          x => x.Path,
-                          x => x.Item.Path,
-                          (file, decision) => new
-                          {
-                              File = file,
-                              Item = decision.Item
-                          },
-                          PathEqualityComparer.Instance)
-                    .Where(x => x.File.Size != x.Item.Size ||
-                           Math.Abs((x.File.Modified - x.Item.Modified).TotalSeconds) > 1)
-                    .Select(x =>
-                    {
-                        x.File.Size = x.Item.Size;
-                        x.File.Modified = x.Item.Modified;
-                        x.File.MediaInfo = x.Item.FileTrackInfo.MediaInfo;
-                        x.File.Quality = x.Item.Quality;
-                        return x.File;
-                    })
-                    .ToList();
-
-                _mediaFileService.Update(updatedFiles);
-
-                _logger.Debug($"Updated info for {updatedFiles.Count} known files");
+                ImportBatch(batches[batchNum], config);
             }
 
             foreach (var artist in artists)
@@ -266,6 +203,62 @@ namespace NzbDrone.Core.MediaFiles
 
             importStopwatch.Stop();
             _logger.Debug("Track import complete for:\n{0} [{1}]", folders.ConcatToString("\n"), importStopwatch.Elapsed);
+        }
+
+        private void ImportBatch(IFileInfo[] batch, ImportDecisionMakerConfig config)
+        {
+            var decisions = _importDecisionMaker.GetImportDecisions(batch.ToList(), null, null, config);
+
+            _importApprovedTracks.Import(decisions, false);
+
+            // decisions may have been filtered to just new files.  Anything new and approved will have been inserted.
+            // Now we need to make sure anything new but not approved gets inserted
+            // Note that knownFiles will include anything imported just now
+            var batchPaths = decisions.Select(x => x.Item.Path).ToList();
+            var knownFiles = (batchPaths.Any() ? _mediaFileService.GetFileWithPath(batchPaths) : null) ?? new List<TrackFile>();
+
+            var newFiles = decisions
+                .ExceptBy(x => x.Item.Path, knownFiles, x => x.Path, PathEqualityComparer.Instance)
+                .Select(decision => new TrackFile
+                {
+                    Path = decision.Item.Path,
+                    Size = decision.Item.Size,
+                    Modified = decision.Item.Modified,
+                    DateAdded = DateTime.UtcNow,
+                    Quality = decision.Item.Quality,
+                    MediaInfo = decision.Item.FileTrackInfo.MediaInfo
+                })
+                .ToList();
+            _mediaFileService.AddMany(newFiles);
+
+            _logger.Debug($"Inserted {newFiles.Count} new unmatched trackfiles");
+
+            // finally update info on size/modified for existing files
+            var updatedFiles = knownFiles
+                .Join(decisions,
+                      x => x.Path,
+                      x => x.Item.Path,
+                      (file, decision) => new
+                      {
+                          File = file,
+                          Item = decision.Item
+                      },
+                      PathEqualityComparer.Instance)
+                .Where(x => x.File.Size != x.Item.Size ||
+                       Math.Abs((x.File.Modified - x.Item.Modified).TotalSeconds) > 1)
+                .Select(x =>
+                {
+                    x.File.Size = x.Item.Size;
+                    x.File.Modified = x.Item.Modified;
+                    x.File.MediaInfo = x.Item.FileTrackInfo.MediaInfo;
+                    x.File.Quality = x.Item.Quality;
+                    return x.File;
+                })
+                .ToList();
+
+            _mediaFileService.Update(updatedFiles);
+
+            _logger.Debug($"Updated info for {updatedFiles.Count} known files");
         }
 
         private void CleanMediaFiles(string folder, List<string> mediaFileList)

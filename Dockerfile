@@ -16,8 +16,9 @@ COPY src ./src
 # StyleCop/analyzer findings are treated as build errors across most of the
 # codebase in Release config; disabled here since this is a plain compile,
 # not a lint pass.
-RUN dotnet build src/NzbDrone.Console/Lidarr.Console.csproj -c Release -p:RunAnalyzersDuringBuild=false -p:EnforceCodeStyleInBuild=false \
-    && dotnet build src/NzbDrone.Mono/Lidarr.Mono.csproj -c Release -p:RunAnalyzersDuringBuild=false -p:EnforceCodeStyleInBuild=false
+ENV NO_ANALYZERS="-p:RunAnalyzersDuringBuild=false -p:EnforceCodeStyleInBuild=false"
+RUN dotnet build src/NzbDrone.Console/Lidarr.Console.csproj -c Release $NO_ANALYZERS \
+    && dotnet build src/NzbDrone.Mono/Lidarr.Mono.csproj -c Release $NO_ANALYZERS
 
 # ---- runtime ----
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
