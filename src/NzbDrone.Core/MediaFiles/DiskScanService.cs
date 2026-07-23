@@ -181,6 +181,11 @@ namespace NzbDrone.Core.MediaFiles
 
             if (!mediaFileList.Any())
             {
+                foreach (var artist in artists)
+                {
+                    CompletedScanning(artist);
+                }
+
                 return;
             }
 

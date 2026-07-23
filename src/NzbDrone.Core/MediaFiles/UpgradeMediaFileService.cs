@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Disk;
@@ -54,6 +55,37 @@ namespace NzbDrone.Core.MediaFiles
                 throw new RootFolderNotFoundException($"Root folder '{rootFolder}' was not found.");
             }
 
+            // Transfer the new file first so a failure (disk full, permissions, network share drop) can't
+            // leave the old file deleted with no replacement written. The most common case - an upgrade
+            // that computes the same destination path as the file it's replacing - collides and throws
+            // DestinationAlreadyExistsException; only then do we clear the old file(s) out of the way and
+            // retry, matching the previous delete-first behaviour for that specific case.
+            try
+            {
+                MoveOrCopy(trackFile, localTrack, copyOnly, moveFileResult);
+            }
+            catch (DestinationAlreadyExistsException) when (existingFiles.Any())
+            {
+                RemoveExistingFiles(existingFiles, rootFolder, moveFileResult);
+                MoveOrCopy(trackFile, localTrack, copyOnly, moveFileResult);
+            }
+
+            RemoveExistingFiles(existingFiles.Where(g => moveFileResult.OldFiles.All(f => f.Id != g.Key)), rootFolder, moveFileResult);
+
+            _audioTagService.WriteTags(trackFile, true);
+
+            return moveFileResult;
+        }
+
+        private void MoveOrCopy(TrackFile trackFile, LocalTrack localTrack, bool copyOnly, TrackFileMoveResult moveFileResult)
+        {
+            moveFileResult.TrackFile = copyOnly
+                ? _trackFileMover.CopyTrackFile(trackFile, localTrack)
+                : _trackFileMover.MoveTrackFile(trackFile, localTrack);
+        }
+
+        private void RemoveExistingFiles(IEnumerable<IGrouping<int, TrackFile>> existingFiles, string rootFolder, TrackFileMoveResult moveFileResult)
+        {
             foreach (var existingFile in existingFiles)
             {
                 var file = existingFile.First();
@@ -73,19 +105,6 @@ namespace NzbDrone.Core.MediaFiles
                 moveFileResult.OldFiles.Add(file);
                 _mediaFileService.Delete(file, DeleteMediaFileReason.Upgrade);
             }
-
-            if (copyOnly)
-            {
-                moveFileResult.TrackFile = _trackFileMover.CopyTrackFile(trackFile, localTrack);
-            }
-            else
-            {
-                moveFileResult.TrackFile = _trackFileMover.MoveTrackFile(trackFile, localTrack);
-            }
-
-            _audioTagService.WriteTags(trackFile, true);
-
-            return moveFileResult;
         }
     }
 }
