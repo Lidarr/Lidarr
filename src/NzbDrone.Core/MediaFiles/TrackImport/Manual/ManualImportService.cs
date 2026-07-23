@@ -362,26 +362,33 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
             var albumIds = message.Files.GroupBy(e => e.AlbumId).ToList();
             var fileCount = 0;
 
+            // Artist/album/track are shared by every file in the same album group (and often across
+            // groups too); fetch them once instead of re-querying per file.
+            var artistsById = _artistService.GetArtists(message.Files.Select(f => f.ArtistId).Distinct()).ToDictionary(a => a.Id);
+            var albumsById = _albumService.GetAlbums(message.Files.Select(f => f.AlbumId).Distinct()).ToDictionary(a => a.Id);
+            var tracksById = _trackService.GetTracks(message.Files.SelectMany(f => f.TrackIds).Distinct()).ToDictionary(t => t.Id);
+
             foreach (var importAlbumId in albumIds)
             {
                 var albumImportDecisions = new List<ImportDecision<LocalTrack>>();
+                var album = albumsById[importAlbumId.Key];
 
                 // turn off anyReleaseOk if specified
                 if (importAlbumId.First().DisableReleaseSwitching)
                 {
-                    var album = _albumService.GetAlbum(importAlbumId.First().AlbumId);
                     album.AnyReleaseOk = false;
                     _albumService.UpdateAlbum(album);
                 }
+
+                var releasesById = _releaseService.GetReleasesByAlbum(album.Id).ToDictionary(r => r.Id);
 
                 foreach (var file in importAlbumId)
                 {
                     _logger.ProgressTrace("Processing file {0} of {1}", fileCount + 1, message.Files.Count);
 
-                    var artist = _artistService.GetArtist(file.ArtistId);
-                    var album = _albumService.GetAlbum(file.AlbumId);
-                    var release = _releaseService.GetRelease(file.AlbumReleaseId);
-                    var tracks = _trackService.GetTracks(file.TrackIds);
+                    var artist = artistsById[file.ArtistId];
+                    var release = releasesById[file.AlbumReleaseId];
+                    var tracks = file.TrackIds.Select(id => tracksById[id]).ToList();
                     var fileTrackInfo = _audioTagService.ReadTags(file.Path) ?? new ParsedTrackInfo();
                     var fileInfo = _diskProvider.GetFileInfo(file.Path);
 

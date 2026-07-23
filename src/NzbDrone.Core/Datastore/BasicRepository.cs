@@ -267,7 +267,11 @@ namespace NzbDrone.Core.Datastore
 
             using (var conn = _database.OpenConnection())
             {
-                UpdateFields(conn, null, models, _properties);
+                using (var tran = conn.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    UpdateFields(conn, tran, models, _properties);
+                    tran.Commit();
+                }
             }
         }
 
@@ -372,7 +376,11 @@ namespace NzbDrone.Core.Datastore
 
             using (var conn = _database.OpenConnection())
             {
-                UpdateFields(conn, null, models, propertiesToUpdate);
+                using (var tran = conn.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    UpdateFields(conn, tran, models, propertiesToUpdate);
+                    tran.Commit();
+                }
             }
 
             foreach (var model in models)
