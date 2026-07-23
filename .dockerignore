@@ -1,0 +1,11 @@
+.git
+_output
+_output*
+_tests
+_temp
+node_modules
+Logs
+*.log
+distribution
+docs
+frontend/build/coverage
