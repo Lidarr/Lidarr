@@ -209,8 +209,8 @@ namespace NzbDrone.Core.Test.MediaFiles
         public void should_delete_existing_trackfiles_with_the_same_path()
         {
             Mocker.GetMock<IMediaFileService>()
-                .Setup(s => s.GetFileWithPath(It.IsAny<string>()))
-                .Returns(Builder<TrackFile>.CreateNew().Build());
+                .Setup(s => s.GetFileWithPath(It.IsAny<List<string>>()))
+                .Returns(new List<TrackFile> { Builder<TrackFile>.CreateNew().With(f => f.Path = _approvedDecisions.First().Item.Path).Build() });
 
             var track = _approvedDecisions.First();
             track.Item.ExistingFile = true;

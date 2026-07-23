@@ -61,6 +61,10 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
                 .Returns(new List<TrackFile>());
 
             Mocker.GetMock<IMediaFileService>()
+                .Setup(v => v.GetFileWithPath(It.IsAny<List<string>>()))
+                .Returns(new List<TrackFile>());
+
+            Mocker.GetMock<IMediaFileService>()
                 .Setup(v => v.FilterUnchangedFiles(It.IsAny<List<IFileInfo>>(), It.IsAny<FilterFilesType>()))
                 .Returns((List<IFileInfo> files, FilterFilesType filter) => files);
         }
@@ -122,13 +126,19 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
                 lastWrite = new DateTime(2019, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             }
 
+            var knownFiles = files.Select(x => new TrackFile
+            {
+                Path = x,
+                Modified = lastWrite.Value.UtcDateTime
+            }).ToList();
+
             Mocker.GetMock<IMediaFileService>()
                 .Setup(x => x.GetFilesWithBasePath(_artist.Path))
-                .Returns(files.Select(x => new TrackFile
-                {
-                    Path = x,
-                    Modified = lastWrite.Value.UtcDateTime
-                }).ToList());
+                .Returns(knownFiles);
+
+            Mocker.GetMock<IMediaFileService>()
+                .Setup(x => x.GetFileWithPath(It.IsAny<List<string>>()))
+                .Returns((List<string> paths) => knownFiles.Where(f => paths.Contains(f.Path)).ToList());
         }
 
         [Test]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NLog;
+using NzbDrone.Common;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
@@ -146,6 +147,16 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             var filesToAdd = new List<TrackFile>(qualifiedImports.Count);
             var albumReleasesDict = new Dictionary<int, List<AlbumRelease>>(albumDecisions.Count);
             var trackImportedEvents = new List<TrackImportedEvent>(qualifiedImports.Count);
+            var importedTrackIds = new HashSet<int>();
+
+            var existingFilePaths = qualifiedImports
+                .Where(e => e.Item.ExistingFile)
+                .Select(e => e.Item.Path.CleanFilePath())
+                .Distinct()
+                .ToList();
+
+            var existingFilesByPath = (existingFilePaths.Any() ? _mediaFileService.GetFileWithPath(existingFilePaths) : null)
+                ?.ToDictionary(f => f.Path, PathEqualityComparer.Instance) ?? new Dictionary<string, TrackFile>(PathEqualityComparer.Instance);
 
             foreach (var importDecision in qualifiedImports.OrderBy(e => e.Item.Tracks.Select(track => track.AbsoluteTrackNumber).MinOrDefault())
                                                            .ThenByDescending(e => e.Item.Size))
@@ -156,10 +167,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 try
                 {
                     // check if already imported
-                    if (importResults.SelectMany(r => r.ImportDecision.Item.Tracks)
-                                         .Select(e => e.Id)
-                                         .Intersect(localTrack.Tracks.Select(e => e.Id))
-                                         .Any())
+                    if (localTrack.Tracks.Any(t => importedTrackIds.Contains(t.Id)))
                     {
                         importResults.Add(new ImportResult(importDecision, "Track has already been imported"));
                         continue;
@@ -243,9 +251,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                     else
                     {
                         // Delete existing files from the DB mapped to this path
-                        var previousFile = _mediaFileService.GetFileWithPath(trackFile.Path);
-
-                        if (previousFile != null)
+                        if (existingFilesByPath.TryGetValue(trackFile.Path, out var previousFile))
                         {
                             _mediaFileService.Delete(previousFile, DeleteMediaFileReason.ManualOverride);
                         }
@@ -266,6 +272,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
                     filesToAdd.Add(trackFile);
                     importResults.Add(new ImportResult(importDecision));
+                    localTrack.Tracks.ForEach(t => importedTrackIds.Add(t.Id));
 
                     if (!localTrack.ExistingFile)
                     {
