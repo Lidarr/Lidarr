@@ -818,9 +818,9 @@
     "OverviewOptions": "Opciones de vista general",
     "Posters": "Pósteres",
     "Table": "Tabla",
-    "AddAutoTag": "Añadir Etiqueta Automática",
+    "AddAutoTag": "Añadir etiqueta automática",
     "AddCondition": "Añadir Condición",
-    "AddConditionError": "No se pudo añadir una nueva condición, inténtelo de nuevo.",
+    "AddConditionError": "No se ha podido añadir una nueva condición, prueba otra vez.",
     "AuthenticationRequiredWarning": "Para evitar el acceso remoto sin autenticación, {appName} ahora requiere que la autenticación esté habilitada. Opcionalmente puede desactivar la autenticación desde una dirección local.",
     "Auto": "Auto",
     "AutoTagging": "Etiquetado Automático",
@@ -1371,5 +1371,11 @@
     "ImportScriptPath": "Importar Ruta de Script",
     "ImportScriptPathHelpText": "La ruta al script a usar para importar",
     "ImportUsingScript": "Importar usando un script",
-    "ImportUsingScriptHelpText": "Copia archivos para importar usando un script (p. ej. para transcodificación)"
+    "ImportUsingScriptHelpText": "Copia archivos para importar usando un script (p. ej. para transcodificación)",
+    "ArtistWasDeletedFromMusicBrainz": "El artista fue eliminado de MusicBrainz",
+    "FilterTracksByTitleOrNumber": "Filtrar pistas por título o número",
+    "NoTracksFoundForSelectedAlbum": "No se encontró ninguna pista para el álbum seleccionado",
+    "Plugins": "Complementos",
+    "RestartRequired": "Se requiere un reinicio",
+    "LidarrRequiresRestartToApplyPluginChanges": "Lidarr requiere un reinicio para aplicar los cambios de complementos"
 }
