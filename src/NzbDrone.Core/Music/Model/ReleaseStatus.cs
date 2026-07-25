@@ -69,13 +69,17 @@ namespace NzbDrone.Core.Music
         public static ReleaseStatus Promotion => new ReleaseStatus(1, "Promotion");
         public static ReleaseStatus Bootleg => new ReleaseStatus(2, "Bootleg");
         public static ReleaseStatus Pseudo => new ReleaseStatus(3, "Pseudo-Release");
+        public static ReleaseStatus Withdrawn => new ReleaseStatus(4, "Withdrawn");
+        public static ReleaseStatus Cancelled => new ReleaseStatus(5, "Cancelled");
 
         public static readonly List<ReleaseStatus> All = new List<ReleaseStatus>
         {
             Official,
             Promotion,
             Bootleg,
-            Pseudo
+            Pseudo,
+            Withdrawn,
+            Cancelled
         };
 
         public static ReleaseStatus FindById(int id)
