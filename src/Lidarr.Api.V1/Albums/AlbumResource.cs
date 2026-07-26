@@ -24,23 +24,11 @@ namespace Lidarr.Api.V1.Albums
         public int Duration { get; set; }
         public string AlbumType { get; set; }
         public List<string> SecondaryTypes { get; set; }
-        public int MediumCount
-        {
-            get
-            {
-                if (Media == null)
-                {
-                    return 0;
-                }
-
-                return Media.Where(s => s.MediumNumber > 0).Count();
-            }
-        }
-
         public Ratings Ratings { get; set; }
         public DateTime? ReleaseDate { get; set; }
         public List<AlbumReleaseResource> Releases { get; set; }
         public List<string> Genres { get; set; }
+        public int MediumCount => Media?.Count(s => s.MediumNumber > 0) ?? 0;
         public List<MediumResource> Media { get; set; }
         public ArtistResource Artist { get; set; }
         public List<MediaCover> Images { get; set; }
@@ -65,7 +53,7 @@ namespace Lidarr.Api.V1.Albums
                 return null;
             }
 
-            var selectedRelease = model.AlbumReleases?.Value.Where(x => x.Monitored).SingleOrDefault();
+            var selectedRelease = model.AlbumReleases?.Value.SingleOrDefault(x => x.Monitored);
 
             return new AlbumResource
             {
