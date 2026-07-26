@@ -370,10 +370,10 @@ namespace NzbDrone.Core.Music
                 var album = _albumService.GetAlbum(message.AlbumId.Value);
                 var artist = _artistService.GetArtistByMetadataId(album.ArtistMetadataId);
                 var updated = RefreshAlbumInfo(album, null, false);
+
                 if (updated)
                 {
                     _eventAggregator.PublishEvent(new ArtistUpdatedEvent(artist));
-                    _eventAggregator.PublishEvent(new AlbumUpdatedEvent(album));
                 }
 
                 if (message.IsNewAlbum)

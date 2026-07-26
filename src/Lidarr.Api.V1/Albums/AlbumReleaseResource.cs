@@ -13,20 +13,8 @@ namespace Lidarr.Api.V1.Albums
         public string Status { get; set; }
         public int Duration { get; set; }
         public int TrackCount { get; set; }
+        public int MediumCount => Media?.Count(s => s.MediumNumber > 0) ?? 0;
         public List<MediumResource> Media { get; set; }
-        public int MediumCount
-        {
-            get
-            {
-                if (Media == null)
-                {
-                    return 0;
-                }
-
-                return Media.Where(s => s.MediumNumber > 0).Count();
-            }
-        }
-
         public string Disambiguation { get; set; }
         public List<string> Country { get; set; }
         public List<string> Label { get; set; }
