@@ -836,5 +836,11 @@
     "RetagSelectedArtists": "ลบไฟล์ภาพยนตร์ที่เลือก",
     "ClearBlocklistMessageText": "แน่ใจไหมว่าต้องการนำ {0} ออกจากคิว",
     "DeleteSelectedCustomFormatsMessageText": "แน่ใจไหมว่าต้องการลบการยกเว้นรายการนำเข้านี้",
-    "ManageFormats": "รูปแบบที่กำหนดเองโคลน"
+    "ManageFormats": "รูปแบบที่กำหนดเองโคลน",
+    "ImportFailed": "การนำเข้าล้มเหลว: {0}",
+    "RegularExpressionsCanBeTested": "นิพจน์ทั่วไปสามารถทดสอบได้",
+    "AddToDownloadQueue": "เพิ่มในคิวการดาวน์โหลดแล้ว",
+    "AddedToDownloadQueue": "เพิ่มไปยังคิวที่ดาวน์โหลดแล้ว",
+    "DownloadWarning": "คำเตือนการดาวน์โหลด: {0}",
+    "TheLogLevelDefault": "ระดับการบันทึกมีค่าเริ่มต้นเป็น \"ข้อมูล\" และสามารถเปลี่ยนแปลงได้"
 }

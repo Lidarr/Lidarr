@@ -835,5 +835,12 @@
     "ResetDefinitions": "गुणवत्ता परिभाषाएँ",
     "EditSelectedArtists": "चयनित मूवी फ़ाइलें हटाएं",
     "RetagSelectedArtists": "चयनित मूवी फ़ाइलें हटाएं",
-    "ManageFormats": "क्लोन कस्टम प्रारूप"
+    "ManageFormats": "क्लोन कस्टम प्रारूप",
+    "ImportFailed": "आयात विफल: {0}",
+    "RegularExpressionsCanBeTested": "नियमित अभिव्यक्तियों का परीक्षण किया जा सकता है",
+    "AddToDownloadQueue": "कतार में डाउनलोड करने के लिए जोड़ा गया",
+    "AddedToDownloadQueue": "डाउनलोड कतार में जोड़ा गया",
+    "ExternalUpdater": "बाहरी अपडेट तंत्र का उपयोग करने के लिए रैडिर को कॉन्फ़िगर किया गया है",
+    "DownloadWarning": "डाउनलोड चेतावनी: {0}",
+    "TheLogLevelDefault": "लॉग लेवल 'इंफो' में डिफॉल्ट करता है और इसमें बदला जा सकता है"
 }

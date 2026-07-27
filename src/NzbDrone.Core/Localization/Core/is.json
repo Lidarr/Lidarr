@@ -838,5 +838,11 @@
     "ResetDefinitions": "Gæðaskilgreiningar",
     "EditSelectedArtists": "Eyða völdum kvikmyndaskrám",
     "RetagSelectedArtists": "Eyða völdum kvikmyndaskrám",
-    "ManageFormats": "Klón sérsniðið snið"
+    "ManageFormats": "Klón sérsniðið snið",
+    "ImportFailed": "Innflutningur mistókst: {0}",
+    "RegularExpressionsCanBeTested": "Hægt er að prófa reglulega segð",
+    "AddToDownloadQueue": "Bætt við niðurhalsröð",
+    "AddedToDownloadQueue": "Bætt við niðurhalaða biðröð",
+    "DownloadWarning": "Viðvörun um niðurhal: {0}",
+    "TheLogLevelDefault": "Notkunarstigið er sjálfgefið „Upplýsingar“ og er hægt að breyta því"
 }

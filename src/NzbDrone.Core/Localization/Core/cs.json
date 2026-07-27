@@ -909,7 +909,7 @@
     "BlocklistOnly": "Pouze blacklistovat",
     "ChangeCategoryHint": "Změní stahování do kategorie „Post-Import“ z aplikace Download Client",
     "ChangeCategoryMultipleHint": "Změní stahování do kategorie „Post-Import“ z aplikace Download Client",
-    "CountCustomFormatsSelected": "{count} vybraný vlastní formát(y)",
+    "CountCustomFormatsSelected": "{count} vybraných vlastních formátů",
     "DeleteSelected": "Smazat vybrané",
     "DoNotBlocklist": "Nepřidávat do blacklistu",
     "DoNotBlocklistHint": "Smazat bez přidání do blacklistu",
@@ -1360,5 +1360,6 @@
     "ManageImportLists": "Spravovat importní seznamy",
     "ManageIndexers": "Spravovat indexery",
     "ManageTracks": "Spravovat skladby",
-    "NotificationsSettingsUpdateMapPathsFrom": "Mapovat cestu na"
+    "NotificationsSettingsUpdateMapPathsFrom": "Mapovat cestu na",
+    "ArtistWasDeletedFromMusicBrainz": "Umělec byl smazán z MusicBrainz"
 }

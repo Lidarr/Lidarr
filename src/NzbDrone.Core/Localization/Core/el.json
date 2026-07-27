@@ -1177,5 +1177,9 @@
     "EditSelectedImportLists": "Διαγραφή επιλεγμένου καλλιτέχνη",
     "DeleteArtistFolderCountWithFilesConfirmation": "Είστε βέβαιοι ότι θέλετε να διαγράψετε τα επιλεγμένα αρχεία ταινιών;",
     "DeleteSelectedCustomFormatsMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε τα επιλεγμένα αρχεία ταινιών;",
-    "ManageFormats": "Προσαρμοσμένη μορφή κλώνου"
+    "ManageFormats": "Προσαρμοσμένη μορφή κλώνου",
+    "ImportFailed": "Η εισαγωγή απέτυχε: {0}",
+    "RegularExpressionsCanBeTested": "Μπορούν να δοκιμαστούν κανονικές εκφράσεις",
+    "DownloadWarning": "Λήψη προειδοποίησης: {0}",
+    "TheLogLevelDefault": "Το επίπεδο καταγραφής είναι από προεπιλογή σε «Πληροφορίες» και μπορεί να αλλάξει"
 }
