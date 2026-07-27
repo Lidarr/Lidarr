@@ -182,7 +182,7 @@
     "BindAddress": "Adresa de legare",
     "BindAddressHelpTextWarning": "Necesită repornire pentru a intra în vigoare",
     "Blocklist": "Listă Neagră",
-    "BlocklistRelease": "Lansare pe lista neagră",
+    "BlocklistRelease": "Blocare articol",
     "Branch": "Ramură",
     "BypassProxyForLocalAddresses": "Bypass Proxy pentru adrese locale",
     "Calendar": "Calendar",
@@ -624,7 +624,7 @@
     "DeleteRemotePathMapping": "Editați maparea căilor la distanță",
     "FailedToLoadQueue": "Nu s-a încărcat coada",
     "Required": "Necesar",
-    "BlocklistReleases": "Lansare pe lista neagră",
+    "BlocklistReleases": "Blocare articole",
     "CountIndexersSelected": "{0} Indexatoare selectate",
     "DeleteConditionMessageText": "Sigur doriți să ștergeți eticheta „{0}”?",
     "DeleteSelectedDownloadClients": "Ștergere clienți de descărcare",
@@ -887,5 +887,11 @@
     "IndexerFlags": "Preferă indicatoarele Indexer",
     "ManageFormats": "Formate personalizate",
     "AllExpandedExpandAll": "Extinde tot",
-    "Country": "Țară"
+    "Country": "Țară",
+    "ImportFailed": "Importul nu a reușit: {0}",
+    "RegularExpressionsCanBeTested": "Expresiile regulate pot fi testate",
+    "AddToDownloadQueue": "Adăugat la coada de descărcare",
+    "AddedToDownloadQueue": "Adăugat la coada descărcată",
+    "DownloadWarning": "Avertisment privind descărcarea: {0}",
+    "TheLogLevelDefault": "Nivelul jurnalului este implicit la „Informații” și poate fi modificat în"
 }

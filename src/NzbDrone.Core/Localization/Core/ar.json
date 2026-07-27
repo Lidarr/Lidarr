@@ -841,5 +841,9 @@
     "ResetDefinitions": "تعريفات الجودة",
     "EditSelectedArtists": "حذف ملفات الأفلام المحددة",
     "RetagSelectedArtists": "حذف ملفات الأفلام المحددة",
-    "ManageFormats": "تنسيقات مخصصة"
+    "ManageFormats": "تنسيقات مخصصة",
+    "ImportFailed": "فشل الاستيراد: {0}",
+    "RegularExpressionsCanBeTested": "يمكن اختبار التعبيرات العادية",
+    "DownloadWarning": "تحذير من تنزيل: {0}",
+    "TheLogLevelDefault": "يتم تعيين مستوى السجل افتراضيًا على \"المعلومات\" ويمكن تغييره"
 }

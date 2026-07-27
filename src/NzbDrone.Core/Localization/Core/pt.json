@@ -1096,5 +1096,8 @@
     "Monitoring": "Monitorar",
     "RefreshArtist": "Atualizar listas",
     "IsInUseCantDeleteAMetadataProfileThatIsAttachedToAnArtistOrImportList": "Não é possível eliminar um perfil de qualidade quando associado a um filme, lista ou coleção",
-    "ManageFormats": "Clonar formato personalizado"
+    "ManageFormats": "Clonar formato personalizado",
+    "ImportFailed": "Falha na importação: {0}",
+    "RegularExpressionsCanBeTested": "É possível testar expressões regulares",
+    "TheLogLevelDefault": "O nível de registo é padronizado como \"Informações\" e pode ser alterado em"
 }

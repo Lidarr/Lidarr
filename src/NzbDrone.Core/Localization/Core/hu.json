@@ -875,7 +875,7 @@
     "IndexerStatusCheckAllClientMessage": "Minden indexelő elérhetetlen hiba miatt",
     "IndexerStatusCheckSingleClientMessage": "Indexerek elérhetetlenek a következő hiba miatt: {0}",
     "RemotePathMappingCheckFilesWrongOSPath": "A távoli letöltőkliens {0} fájlokat jelentett a(z) {1} fájlban, de ez nem érvényes {2} elérési út. Ellenőrizze a távoli elérési utak hozzárendelését és a letöltőkliens beállításait.",
-    "AppDataLocationHealthCheckMessage": "A frissítés nem hajtható végre, hogy elkerüljük az alkalmazás adatainak törlését",
+    "AppDataLocationHealthCheckMessage": "A frissítés nem hajtható végre, hogy elkerüljük az alkalmazás adatainak törlését a frissítés során",
     "ColonReplacement": "Kettőspont‑helyettesítés",
     "Disabled": "Tiltva",
     "DownloadClientRootFolderHealthCheckMessage": "A letöltő kliens {downloadClientName} a letöltéseket a gyökérmappába helyezi {rootFolderPath}. Nem szabad letölteni egy gyökérmappába.",

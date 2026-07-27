@@ -872,5 +872,9 @@
     "EditSelectedArtists": "Xóa các tệp phim đã chọn",
     "RetagSelectedArtists": "Xóa các tệp phim đã chọn",
     "ClearBlocklistMessageText": "Bạn có chắc chắn muốn xóa {0} khỏi hàng đợi không?",
-    "ManageFormats": "Định dạng tùy chỉnh sao chép"
+    "ManageFormats": "Định dạng tùy chỉnh sao chép",
+    "ImportFailed": "Nhập không thành công: {0}",
+    "RegularExpressionsCanBeTested": "Biểu thức chính quy có thể được kiểm tra",
+    "DownloadWarning": "Cảnh báo tải xuống: {0}",
+    "TheLogLevelDefault": "Mức nhật ký mặc định là 'Thông tin' và có thể được thay đổi trong"
 }
