@@ -201,6 +201,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                         Tracks = localTrack.Tracks
                     };
 
+                    trackFile.DownloadClientId = downloadClientItem?.DownloadClientInfo?.Id ?? 0;
+
                     if (downloadClientItem?.DownloadId.IsNotNullOrWhiteSpace() == true)
                     {
                         var grabHistory = _historyService.FindByDownloadId(downloadClientItem.DownloadId)
@@ -248,6 +250,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                         if (previousFile != null)
                         {
                             _mediaFileService.Delete(previousFile, DeleteMediaFileReason.ManualOverride);
+
+                            // Keep the recorded download client when re-importing a file that already had one
+                            if (trackFile.DownloadClientId == 0)
+                            {
+                                trackFile.DownloadClientId = previousFile.DownloadClientId;
+                            }
                         }
 
                         try

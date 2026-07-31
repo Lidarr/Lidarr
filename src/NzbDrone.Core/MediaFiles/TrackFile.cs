@@ -20,6 +20,7 @@ namespace NzbDrone.Core.MediaFiles
         public string ReleaseGroup { get; set; }
         public QualityModel Quality { get; set; }
         public IndexerFlags IndexerFlags { get; set; }
+        public int DownloadClientId { get; set; }
         public MediaInfoModel MediaInfo { get; set; }
         public int AlbumId { get; set; }
 

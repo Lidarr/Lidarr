@@ -232,5 +232,41 @@ namespace NzbDrone.Core.Test.MediaFiles
                 .Verify(v => v.UpgradeTrackFile(It.Is<TrackFile>(e => e.SceneName == firstDecision.Item.SceneName), _approvedDecisions.First().Item, false),
                     Times.Once());
         }
+
+        [Test]
+        public void should_set_download_client_id_for_new_downloads()
+        {
+            Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true, new DownloadClientItem { Title = "Alien.Ant.Farm-Truant", CanMoveFiles = true, DownloadClientInfo = _clientInfo });
+
+            Mocker.GetMock<IUpgradeMediaFiles>()
+                .Verify(v => v.UpgradeTrackFile(It.Is<TrackFile>(e => e.DownloadClientId == _clientInfo.Id), _approvedDecisions.First().Item, false),
+                    Times.Once());
+        }
+
+        [Test]
+        public void should_not_set_download_client_id_without_download_client_item()
+        {
+            Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true);
+
+            Mocker.GetMock<IUpgradeMediaFiles>()
+                .Verify(v => v.UpgradeTrackFile(It.Is<TrackFile>(e => e.DownloadClientId == 0), _approvedDecisions.First().Item, false),
+                    Times.Once());
+        }
+
+        [Test]
+        public void should_keep_download_client_id_of_previous_file_when_reimporting_existing_file()
+        {
+            Mocker.GetMock<IMediaFileService>()
+                .Setup(s => s.GetFileWithPath(It.IsAny<string>()))
+                .Returns(Builder<TrackFile>.CreateNew().With(x => x.DownloadClientId = 7).Build());
+
+            var track = _approvedDecisions.First();
+            track.Item.ExistingFile = true;
+
+            Subject.Import(new List<ImportDecision<LocalTrack>> { track }, false);
+
+            Mocker.GetMock<IMediaFileService>()
+                .Verify(v => v.AddMany(It.Is<List<TrackFile>>(l => l.Single().DownloadClientId == 7)), Times.Once());
+        }
     }
 }

@@ -25,6 +25,7 @@ namespace Lidarr.Api.V1.TrackFiles
         public List<CustomFormatResource> CustomFormats { get; set; }
         public int CustomFormatScore { get; set; }
         public int? IndexerFlags { get; set; }
+        public int DownloadClientId { get; set; }
         public MediaInfoResource MediaInfo { get; set; }
 
         public bool QualityCutoffNotMet { get; set; }
@@ -96,7 +97,8 @@ namespace Lidarr.Api.V1.TrackFiles
                 QualityCutoffNotMet = upgradableSpecification.QualityCutoffNotMet(artist.QualityProfile.Value, model.Quality),
                 CustomFormats = customFormats.ToResource(false),
                 CustomFormatScore = customFormatScore,
-                IndexerFlags = (int)model.IndexerFlags
+                IndexerFlags = (int)model.IndexerFlags,
+                DownloadClientId = model.DownloadClientId
             };
         }
     }
