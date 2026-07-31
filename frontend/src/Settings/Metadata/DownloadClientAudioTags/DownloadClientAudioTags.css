@@ -1,0 +1,58 @@
+.horizontalScroll {
+  overflow-x: auto;
+}
+
+.downloadClientsHeader {
+  display: flex;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.headerName {
+  flex: 0 0 200px;
+}
+
+.headerFillcolumn {
+  flex: 1 0 auto;
+}
+
+.headerActions {
+  flex: 0 0 80px;
+}
+
+.downloadClients {
+  user-select: none;
+}
+
+.downloadClient {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 10px;
+  height: 30px;
+  border-bottom: 1px solid var(--borderColor);
+  line-height: 30px;
+}
+
+.name {
+  flex: 0 0 200px;
+}
+
+.fillcolumn {
+  flex: 1 0 0;
+}
+
+.actions {
+  display: flex;
+}
+
+.editButton {
+  width: $dragHandleWidth;
+  text-align: center;
+}
+
+@media only screen and (max-width: $breakpointSmall) {
+  .horizontalScroll {
+    overflow-y: hidden;
+    width: 100%;
+  }
+}

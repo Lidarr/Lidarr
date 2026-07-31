@@ -16,6 +16,7 @@ interface DownloadClient extends ModelBase {
   priority: number;
   removeCompletedDownloads: boolean;
   removeFailedDownloads: boolean;
+  writeAudioTags: boolean;
   name: string;
   fields: Field[];
   implementationName: string;

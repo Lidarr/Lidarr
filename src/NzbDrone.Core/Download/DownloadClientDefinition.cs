@@ -8,5 +8,6 @@ namespace NzbDrone.Core.Download
         public int Priority { get; set; } = 1;
         public bool RemoveCompletedDownloads { get; set; } = true;
         public bool RemoveFailedDownloads { get; set; } = true;
+        public bool WriteAudioTags { get; set; }
     }
 }

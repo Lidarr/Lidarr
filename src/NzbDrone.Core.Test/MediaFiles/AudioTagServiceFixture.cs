@@ -10,6 +10,7 @@ using NUnit.Framework;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Download;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Events;
@@ -439,6 +440,136 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
             file.Path = _copiedFile;
             Subject.WriteTags(file, false, true);
             Subject.WriteTags(file, false, true);
+            Subject.WriteTags(file, false, true);
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Once());
+        }
+
+        private void GivenDownloadClient(bool writeAudioTags)
+        {
+            Mocker.GetMock<IDownloadClientRepository>()
+                .Setup(x => x.Find(1))
+                .Returns(new DownloadClientDefinition { Id = 1, WriteAudioTags = writeAudioTags });
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_not_write_when_disabled(string filename)
+        {
+            Mocker.GetMock<IConfigService>()
+                .Setup(x => x.WriteAudioTags)
+                .Returns(WriteAudioTagsType.No);
+
+            GivenFileCopy(filename);
+
+            var file = GivenPopulatedTrackfile(0);
+            file.Path = _copiedFile;
+
+            Subject.WriteTags(file, true);
+
+            Mocker.GetMock<IDownloadClientRepository>()
+                .Verify(v => v.Find(It.IsAny<int>()), Times.Never());
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Never());
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_not_write_existing_files_when_new_files_only(string filename)
+        {
+            Mocker.GetMock<IConfigService>()
+                .Setup(x => x.WriteAudioTags)
+                .Returns(WriteAudioTagsType.NewFiles);
+
+            GivenFileCopy(filename);
+
+            var file = GivenPopulatedTrackfile(0);
+            file.Path = _copiedFile;
+
+            Subject.WriteTags(file, false);
+
+            Mocker.GetMock<IDownloadClientRepository>()
+                .Verify(v => v.Find(It.IsAny<int>()), Times.Never());
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Never());
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_not_write_if_disabled_for_download_client(string filename)
+        {
+            GivenDownloadClient(writeAudioTags: false);
+            GivenFileCopy(filename);
+
+            var file = GivenPopulatedTrackfile(0);
+            file.Path = _copiedFile;
+            file.DownloadClientId = 1;
+
+            Subject.WriteTags(file, true);
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Never());
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_write_if_enabled_for_download_client(string filename)
+        {
+            GivenDownloadClient(writeAudioTags: true);
+            GivenFileCopy(filename);
+
+            var file = GivenPopulatedTrackfile(0);
+            file.Path = _copiedFile;
+            file.DownloadClientId = 1;
+
+            Subject.WriteTags(file, true);
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Once());
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_not_write_if_download_client_no_longer_exists(string filename)
+        {
+            GivenFileCopy(filename);
+
+            var file = GivenPopulatedTrackfile(0);
+            file.Path = _copiedFile;
+            file.DownloadClientId = 1;
+
+            Subject.WriteTags(file, true);
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Never());
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_not_write_if_download_client_not_recorded(string filename)
+        {
+            GivenFileCopy(filename);
+
+            var file = GivenPopulatedTrackfile(0);
+            file.Path = _copiedFile;
+            file.DownloadClientId = 0;
+
+            Subject.WriteTags(file, true);
+
+            Mocker.GetMock<IDownloadClientRepository>()
+                .Verify(v => v.Find(It.IsAny<int>()), Times.Never());
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Never());
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_ignore_download_client_setting_when_forced(string filename)
+        {
+            GivenDownloadClient(writeAudioTags: false);
+            GivenFileCopy(filename);
+
+            var file = GivenPopulatedTrackfile(0);
+            file.Path = _copiedFile;
+            file.DownloadClientId = 1;
+
             Subject.WriteTags(file, false, true);
 
             Mocker.GetMock<IEventAggregator>()

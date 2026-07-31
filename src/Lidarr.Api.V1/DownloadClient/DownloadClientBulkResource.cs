@@ -9,6 +9,7 @@ namespace Lidarr.Api.V1.DownloadClient
         public int? Priority { get; set; }
         public bool? RemoveCompletedDownloads { get; set; }
         public bool? RemoveFailedDownloads { get; set; }
+        public bool? WriteAudioTags { get; set; }
     }
 
     public class DownloadClientBulkResourceMapper : ProviderBulkResourceMapper<DownloadClientBulkResource, DownloadClientDefinition>
@@ -26,6 +27,7 @@ namespace Lidarr.Api.V1.DownloadClient
                 existing.Priority = resource.Priority ?? existing.Priority;
                 existing.RemoveCompletedDownloads = resource.RemoveCompletedDownloads ?? existing.RemoveCompletedDownloads;
                 existing.RemoveFailedDownloads = resource.RemoveFailedDownloads ?? existing.RemoveFailedDownloads;
+                existing.WriteAudioTags = resource.WriteAudioTags ?? existing.WriteAudioTags;
             });
 
             return existingDefinitions;

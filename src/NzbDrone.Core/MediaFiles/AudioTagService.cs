@@ -5,6 +5,7 @@ using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Download;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.MediaFiles.Commands;
 using NzbDrone.Core.MediaFiles.Events;
@@ -39,6 +40,7 @@ namespace NzbDrone.Core.MediaFiles
         private readonly IDiskProvider _diskProvider;
         private readonly IRootFolderWatchingService _rootFolderWatchingService;
         private readonly IArtistService _artistService;
+        private readonly IDownloadClientRepository _downloadClientRepository;
         private readonly IMapCoversToLocal _mediaCoverService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
@@ -48,6 +50,7 @@ namespace NzbDrone.Core.MediaFiles
                                IDiskProvider diskProvider,
                                IRootFolderWatchingService rootFolderWatchingService,
                                IArtistService artistService,
+                               IDownloadClientRepository downloadClientRepository,
                                IMapCoversToLocal mediaCoverService,
                                IEventAggregator eventAggregator,
                                Logger logger)
@@ -57,6 +60,7 @@ namespace NzbDrone.Core.MediaFiles
             _diskProvider = diskProvider;
             _rootFolderWatchingService = rootFolderWatchingService;
             _artistService = artistService;
+            _downloadClientRepository = downloadClientRepository;
             _mediaCoverService = mediaCoverService;
             _eventAggregator = eventAggregator;
             _logger = logger;
@@ -239,6 +243,15 @@ namespace NzbDrone.Core.MediaFiles
                 if (_configService.WriteAudioTags == WriteAudioTagsType.No ||
                     (_configService.WriteAudioTags == WriteAudioTagsType.NewFiles && !newDownload))
                 {
+                    return;
+                }
+
+                // Fail closed: files without a recorded download client (or whose client is gone) are never auto-tagged
+                var downloadClient = trackfile.DownloadClientId > 0 ? _downloadClientRepository.Find(trackfile.DownloadClientId) : null;
+
+                if (downloadClient is not { WriteAudioTags: true })
+                {
+                    _logger.Debug("No download client with tag writing enabled is linked to {0}. Not writing tags.", trackfile);
                     return;
                 }
             }

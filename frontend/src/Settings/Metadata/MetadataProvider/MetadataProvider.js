@@ -8,6 +8,7 @@ import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import { inputTypes, kinds } from 'Helpers/Props';
+import DownloadClientAudioTags from 'Settings/Metadata/DownloadClientAudioTags/DownloadClientAudioTags';
 import translate from 'Utilities/String/translate';
 
 const writeAudioTagOptions = [
@@ -91,6 +92,11 @@ function MetadataProvider(props) {
                   {...settings.scrubAudioTags}
                 />
               </FormGroup>
+
+              {
+                settings.writeAudioTags.value !== 'no' &&
+                  <DownloadClientAudioTags />
+              }
 
             </FieldSet>
           </Form>
