@@ -37,6 +37,7 @@ import { getArtistStatusDetails } from '../ArtistStatus';
 import ArtistAlternateTitles from './ArtistAlternateTitles';
 import ArtistDetailsLinks from './ArtistDetailsLinks';
 import ArtistDetailsSeasonConnector from './ArtistDetailsSeasonConnector';
+import ArtistDetailsTracksConnector from './ArtistDetailsTracksConnector';
 import ArtistGenres from './ArtistGenres';
 import ArtistTagsConnector from './ArtistTagsConnector';
 import styles from './ArtistDetails.css';
@@ -205,9 +206,11 @@ class ArtistDetails extends Component {
       isFetching,
       isPopulated,
       albumsError,
+      tracksError,
       trackFilesError,
       hasAlbums,
       hasMonitoredAlbums,
+      hasTracks,
       hasTrackFiles,
       previousArtist,
       nextArtist,
@@ -598,7 +601,7 @@ class ArtistDetails extends Component {
 
           <div className={styles.contentContainer}>
             {
-              !isPopulated && !albumsError && !trackFilesError &&
+              !isPopulated && !albumsError && !tracksError && !trackFilesError &&
                 <LoadingIndicator />
             }
 
@@ -611,10 +614,27 @@ class ArtistDetails extends Component {
             }
 
             {
+              !isFetching && tracksError ?
+                <Alert kind={kinds.DANGER}>
+                  {translate('TracksLoadError')}
+                </Alert> :
+                null
+            }
+
+            {
               !isFetching && trackFilesError ?
                 <Alert kind={kinds.DANGER}>
                   {translate('TrackFilesLoadError')}
                 </Alert> :
+                null
+            }
+
+            {
+              isPopulated && hasTracks ?
+                <ArtistDetailsTracksConnector
+                  artistId={id}
+                  artistMonitored={monitored}
+                /> :
                 null
             }
 
@@ -737,9 +757,11 @@ ArtistDetails.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   isPopulated: PropTypes.bool.isRequired,
   albumsError: PropTypes.object,
+  tracksError: PropTypes.object,
   trackFilesError: PropTypes.object,
   hasAlbums: PropTypes.bool.isRequired,
   hasMonitoredAlbums: PropTypes.bool.isRequired,
+  hasTracks: PropTypes.bool.isRequired,
   hasTrackFiles: PropTypes.bool.isRequired,
   previousArtist: PropTypes.object.isRequired,
   nextArtist: PropTypes.object.isRequired,

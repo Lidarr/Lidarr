@@ -151,7 +151,7 @@ class AlbumDetailsMedium extends Component {
               size={sizes.LARGE}
             >
               {
-                <span>{trackFileCount} / {trackCount}</span>
+                <span>{trackFileCount} / {totalTrackCount}</span>
               }
             </Label>
 

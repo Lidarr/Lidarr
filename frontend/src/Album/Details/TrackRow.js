@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import AlbumFormats from 'Album/AlbumFormats';
+import AlbumTitleLink from 'Album/AlbumTitleLink';
 import EpisodeStatusConnector from 'Album/EpisodeStatusConnector';
 import IndexerFlags from 'Album/IndexerFlags';
 import AlbumInteractiveSearchModalConnector from 'Album/Search/AlbumInteractiveSearchModalConnector';
@@ -35,7 +36,7 @@ class TrackRow extends Component {
 
   onMonitorTogglePress = (monitored) => {
     this.props.toggleTracksMonitored({
-      trackIds: [this.props.id],
+      trackIds: this.props.monitorTrackIds || [this.props.id],
       monitored
     });
   };
@@ -63,6 +64,7 @@ class TrackRow extends Component {
       id,
       albumId,
       albumTitle,
+      foreignAlbumId,
       mediumNumber,
       trackFileId,
       absoluteTrackNumber,
@@ -74,6 +76,7 @@ class TrackRow extends Component {
       customFormatScore,
       indexerFlags,
       monitored,
+      appearanceCount,
       isSaving,
       isSearching,
       columns,
@@ -138,6 +141,36 @@ class TrackRow extends Component {
                   className={styles.title}
                 >
                   {title}
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'album') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.album}
+                >
+                  {
+                    foreignAlbumId ?
+                      <AlbumTitleLink
+                        foreignAlbumId={foreignAlbumId}
+                        title={albumTitle}
+                      /> :
+                      albumTitle
+                  }
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'popularity') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.popularity}
+                  title={translate('ReleaseAppearancesCountInterp', [appearanceCount])}
+                >
+                  {appearanceCount}
                 </TableRowCell>
               );
             }
@@ -306,6 +339,9 @@ TrackRow.propTypes = {
   id: PropTypes.number.isRequired,
   albumId: PropTypes.number.isRequired,
   albumTitle: PropTypes.string.isRequired,
+  foreignAlbumId: PropTypes.string,
+  monitorTrackIds: PropTypes.arrayOf(PropTypes.number),
+  appearanceCount: PropTypes.number,
   trackFileId: PropTypes.number,
   mediumNumber: PropTypes.number.isRequired,
   trackNumber: PropTypes.string.isRequired,
@@ -327,6 +363,7 @@ TrackRow.propTypes = {
 };
 
 TrackRow.defaultProps = {
+  appearanceCount: 1,
   customFormats: [],
   indexerFlags: 0
 };

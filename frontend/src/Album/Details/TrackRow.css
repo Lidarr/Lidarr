@@ -4,6 +4,20 @@
   white-space: nowrap;
 }
 
+.album {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 25%;
+  white-space: nowrap;
+}
+
+.popularity {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 90px;
+  text-align: center;
+}
+
 .monitored {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
