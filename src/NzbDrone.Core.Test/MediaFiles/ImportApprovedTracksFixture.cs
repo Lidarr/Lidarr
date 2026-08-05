@@ -78,7 +78,7 @@ namespace NzbDrone.Core.Test.MediaFiles
             }
 
             Mocker.GetMock<IUpgradeMediaFiles>()
-                  .Setup(s => s.UpgradeTrackFile(It.IsAny<TrackFile>(), It.IsAny<LocalTrack>(), It.IsAny<bool>()))
+                  .Setup(s => s.UpgradeTrackFile(It.IsAny<TrackFile>(), It.IsAny<LocalTrack>(), It.IsAny<bool>(), It.IsAny<int>()))
                   .Returns(new TrackFileMoveResult());
 
             _clientInfo = Builder<DownloadClientItemClientInfo>.CreateNew().Build();
@@ -134,7 +134,7 @@ namespace NzbDrone.Core.Test.MediaFiles
             Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true);
 
             Mocker.GetMock<IUpgradeMediaFiles>()
-                  .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, false),
+                  .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, false, It.IsAny<int>()),
                           Times.Once());
         }
 
@@ -155,7 +155,7 @@ namespace NzbDrone.Core.Test.MediaFiles
             Subject.Import(new List<ImportDecision<LocalTrack>> { track }, false);
 
             Mocker.GetMock<IUpgradeMediaFiles>()
-                  .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, false),
+                  .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, false, It.IsAny<int>()),
                           Times.Never());
         }
 
@@ -193,7 +193,7 @@ namespace NzbDrone.Core.Test.MediaFiles
             Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true, new DownloadClientItem { Title = "Alien.Ant.Farm-Truant", CanMoveFiles = false, DownloadClientInfo = _clientInfo });
 
             Mocker.GetMock<IUpgradeMediaFiles>()
-                  .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, true), Times.Once());
+                  .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, true, It.IsAny<int>()), Times.Once());
         }
 
         [Test]
@@ -202,7 +202,7 @@ namespace NzbDrone.Core.Test.MediaFiles
             Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true, new DownloadClientItem { Title = "Alien.Ant.Farm-Truant", CanMoveFiles = false, DownloadClientInfo = _clientInfo }, ImportMode.Move);
 
             Mocker.GetMock<IUpgradeMediaFiles>()
-                  .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, false), Times.Once());
+                  .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, false, It.IsAny<int>()), Times.Once());
         }
 
         [Test]
@@ -229,7 +229,7 @@ namespace NzbDrone.Core.Test.MediaFiles
             Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true);
 
             Mocker.GetMock<IUpgradeMediaFiles>()
-                .Verify(v => v.UpgradeTrackFile(It.Is<TrackFile>(e => e.SceneName == firstDecision.Item.SceneName), _approvedDecisions.First().Item, false),
+                .Verify(v => v.UpgradeTrackFile(It.Is<TrackFile>(e => e.SceneName == firstDecision.Item.SceneName), _approvedDecisions.First().Item, false, It.IsAny<int>()),
                     Times.Once());
         }
     }

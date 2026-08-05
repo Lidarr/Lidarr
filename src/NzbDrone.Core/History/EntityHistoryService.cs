@@ -242,6 +242,7 @@ namespace NzbDrone.Core.History
                 history.Data.Add("DroppedPath", message.TrackInfo.Path);
                 history.Data.Add("ImportedPath", message.ImportedTrack.Path);
                 history.Data.Add("DownloadClient", message.DownloadClientInfo?.Name);
+                history.Data.Add("DownloadClientId", message.DownloadClientInfo?.Id.ToString());
                 history.Data.Add("ReleaseGroup", message.TrackInfo.ReleaseGroup);
                 history.Data.Add("Size", message.TrackInfo.Size.ToString());
                 history.Data.Add("IndexerFlags", message.ImportedTrack.IndexerFlags.ToString());

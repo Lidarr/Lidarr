@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Disk;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Download.History;
+using NzbDrone.Core.History;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.MediaFiles.Commands;
 using NzbDrone.Core.MediaFiles.Events;
@@ -13,6 +16,7 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.Profiles.Tagging;
 using TagLib;
 
 namespace NzbDrone.Core.MediaFiles
@@ -21,6 +25,7 @@ namespace NzbDrone.Core.MediaFiles
     {
         ParsedTrackInfo ReadTags(string file);
         void WriteTags(TrackFile trackfile, bool newDownload, bool force = false);
+        void WriteTags(TrackFile trackfile, bool newDownload, bool force, int downloadClientId);
         void SyncTags(List<Track> tracks);
         void RemoveMusicBrainzTags(IEnumerable<Album> album);
         void RemoveMusicBrainzTags(IEnumerable<AlbumRelease> albumRelease);
@@ -34,7 +39,9 @@ namespace NzbDrone.Core.MediaFiles
         IExecute<RetagArtistCommand>,
         IExecute<RetagFilesCommand>
     {
-        private readonly IConfigService _configService;
+        private readonly ITaggingProfileService _taggingProfileService;
+        private readonly IHistoryService _historyService;
+        private readonly IDownloadHistoryService _downloadHistoryService;
         private readonly IMediaFileService _mediaFileService;
         private readonly IDiskProvider _diskProvider;
         private readonly IRootFolderWatchingService _rootFolderWatchingService;
@@ -43,7 +50,9 @@ namespace NzbDrone.Core.MediaFiles
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
-        public AudioTagService(IConfigService configService,
+        public AudioTagService(ITaggingProfileService taggingProfileService,
+                               IHistoryService historyService,
+                               IDownloadHistoryService downloadHistoryService,
                                IMediaFileService mediaFileService,
                                IDiskProvider diskProvider,
                                IRootFolderWatchingService rootFolderWatchingService,
@@ -52,7 +61,9 @@ namespace NzbDrone.Core.MediaFiles
                                IEventAggregator eventAggregator,
                                Logger logger)
         {
-            _configService = configService;
+            _taggingProfileService = taggingProfileService;
+            _historyService = historyService;
+            _downloadHistoryService = downloadHistoryService;
             _mediaFileService = mediaFileService;
             _diskProvider = diskProvider;
             _rootFolderWatchingService = rootFolderWatchingService;
@@ -73,6 +84,50 @@ namespace NzbDrone.Core.MediaFiles
         }
 
         public AudioTag GetTrackMetadata(TrackFile trackfile)
+        {
+            return GetTrackMetadata(trackfile, GetTaggingProfile(trackfile, 0, false) ?? _taggingProfileService.GetDefaultProfile());
+        }
+
+        private TaggingProfile GetTaggingProfile(TrackFile trackfile, int downloadClientId, bool newDownload)
+        {
+            if (downloadClientId == 0 && !newDownload && trackfile.Id > 0)
+            {
+                downloadClientId = GetHistoryDownloadClientId(trackfile);
+            }
+
+            var tags = trackfile.Artist?.Value?.Tags ?? new HashSet<int>();
+
+            return _taggingProfileService.BestForTags(tags, downloadClientId);
+        }
+
+        private int GetHistoryDownloadClientId(TrackFile trackfile)
+        {
+            var importHistory = _historyService.GetByAlbum(trackfile.AlbumId, EntityHistoryEventType.TrackFileImported)
+                .OrderByDescending(h => h.Date)
+                .ToList();
+
+            var fileHistory = importHistory.FirstOrDefault(h => h.Data.GetValueOrDefault("fileId") == trackfile.Id.ToString()) ??
+                              importHistory.FirstOrDefault(h => h.Data.GetValueOrDefault("importedPath") == trackfile.Path);
+
+            if (fileHistory == null)
+            {
+                return 0;
+            }
+
+            if (int.TryParse(fileHistory.Data.GetValueOrDefault("downloadClientId"), out var downloadClientId))
+            {
+                return downloadClientId;
+            }
+
+            if (fileHistory.DownloadId.IsNotNullOrWhiteSpace())
+            {
+                return _downloadHistoryService.GetLatestGrab(fileHistory.DownloadId)?.DownloadClientId ?? 0;
+            }
+
+            return 0;
+        }
+
+        private AudioTag GetTrackMetadata(TrackFile trackfile, TaggingProfile taggingProfile)
         {
             try
             {
@@ -114,7 +169,7 @@ namespace NzbDrone.Core.MediaFiles
                 string imageFile = null;
                 long imageSize = 0;
 
-                if (_configService.EmbedCoverArt)
+                if (taggingProfile.EmbedCoverArt)
                 {
                     var cover = album.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Cover);
                     if (cover != null)
@@ -234,14 +289,25 @@ namespace NzbDrone.Core.MediaFiles
 
         public void WriteTags(TrackFile trackfile, bool newDownload, bool force = false)
         {
+            WriteTags(trackfile, newDownload, force, 0);
+        }
+
+        public void WriteTags(TrackFile trackfile, bool newDownload, bool force, int downloadClientId)
+        {
+            var taggingProfile = GetTaggingProfile(trackfile, downloadClientId, newDownload);
+
             if (!force)
             {
-                if (_configService.WriteAudioTags == WriteAudioTagsType.No ||
-                    (_configService.WriteAudioTags == WriteAudioTagsType.NewFiles && !newDownload))
+                // no matching profile means tags are never written
+                if (taggingProfile == null ||
+                    taggingProfile.WriteAudioTags == WriteAudioTagsType.No ||
+                    (taggingProfile.WriteAudioTags == WriteAudioTagsType.NewFiles && !newDownload))
                 {
                     return;
                 }
             }
+
+            taggingProfile ??= _taggingProfileService.GetDefaultProfile();
 
             if (trackfile.Tracks.Value.Count > 1)
             {
@@ -251,10 +317,10 @@ namespace NzbDrone.Core.MediaFiles
 
             var path = trackfile.Path;
             var oldTags = ReadAudioTag(path);
-            var newTags = GetTrackMetadata(trackfile);
+            var newTags = GetTrackMetadata(trackfile, taggingProfile);
 
             // We don't overwrite image when new image is null
-            if (newTags.ImageFile == null && !_configService.ScrubAudioTags)
+            if (newTags.ImageFile == null && !taggingProfile.ScrubAudioTags)
             {
                 newTags.ImageSize = oldTags.ImageSize;
             }
@@ -269,7 +335,7 @@ namespace NzbDrone.Core.MediaFiles
 
             _rootFolderWatchingService.ReportFileSystemChangeBeginning(path);
 
-            if (_configService.ScrubAudioTags)
+            if (taggingProfile.ScrubAudioTags)
             {
                 _logger.Debug($"Scrubbing tags for {trackfile}");
                 RemoveAllTags(path);
@@ -281,12 +347,12 @@ namespace NzbDrone.Core.MediaFiles
 
             UpdateTrackfileSizeAndModified(trackfile, path);
 
-            _eventAggregator.PublishEvent(new TrackFileRetaggedEvent(trackfile.Artist.Value, trackfile, diff, _configService.ScrubAudioTags));
+            _eventAggregator.PublishEvent(new TrackFileRetaggedEvent(trackfile.Artist.Value, trackfile, diff, taggingProfile.ScrubAudioTags));
         }
 
         public void SyncTags(List<Track> tracks)
         {
-            if (_configService.WriteAudioTags != WriteAudioTagsType.Sync)
+            if (_taggingProfileService.All().None(x => x.WriteAudioTags == WriteAudioTagsType.Sync))
             {
                 return;
             }
@@ -301,13 +367,20 @@ namespace NzbDrone.Core.MediaFiles
                 // populate tracks (which should also have release/album/artist set) because
                 // not all of the updates will have been committed to the database yet
                 file.Tracks = tracks.Where(x => x.TrackFileId == file.Id).ToList();
-                WriteTags(file, false);
+
+                // only sync files whose resolved profile is set to keep in sync
+                var fileDownloadClientId = GetHistoryDownloadClientId(file);
+
+                if (GetTaggingProfile(file, fileDownloadClientId, false)?.WriteAudioTags == WriteAudioTagsType.Sync)
+                {
+                    WriteTags(file, false, false, fileDownloadClientId);
+                }
             }
         }
 
         public void RemoveMusicBrainzTags(IEnumerable<Album> albums)
         {
-            if (_configService.WriteAudioTags < WriteAudioTagsType.AllFiles)
+            if (_taggingProfileService.All().None(x => x.WriteAudioTags >= WriteAudioTagsType.AllFiles))
             {
                 return;
             }
@@ -324,7 +397,7 @@ namespace NzbDrone.Core.MediaFiles
 
         public void RemoveMusicBrainzTags(IEnumerable<AlbumRelease> releases)
         {
-            if (_configService.WriteAudioTags < WriteAudioTagsType.AllFiles)
+            if (_taggingProfileService.All().None(x => x.WriteAudioTags >= WriteAudioTagsType.AllFiles))
             {
                 return;
             }
@@ -341,7 +414,7 @@ namespace NzbDrone.Core.MediaFiles
 
         public void RemoveMusicBrainzTags(IEnumerable<Track> tracks)
         {
-            if (_configService.WriteAudioTags < WriteAudioTagsType.AllFiles)
+            if (_taggingProfileService.All().None(x => x.WriteAudioTags >= WriteAudioTagsType.AllFiles))
             {
                 return;
             }
@@ -355,7 +428,7 @@ namespace NzbDrone.Core.MediaFiles
 
         public void RemoveMusicBrainzTags(TrackFile trackfile)
         {
-            if (_configService.WriteAudioTags < WriteAudioTagsType.AllFiles)
+            if ((GetTaggingProfile(trackfile, 0, false)?.WriteAudioTags ?? WriteAudioTagsType.No) < WriteAudioTagsType.AllFiles)
             {
                 return;
             }
@@ -402,11 +475,12 @@ namespace NzbDrone.Core.MediaFiles
                     continue;
                 }
 
+                var taggingProfile = GetTaggingProfile(f, 0, false) ?? _taggingProfileService.GetDefaultProfile();
                 var oldTags = ReadAudioTag(f.Path);
-                var newTags = GetTrackMetadata(f);
+                var newTags = GetTrackMetadata(f, taggingProfile);
 
                 // We don't overwrite image when new image is null
-                if (newTags.ImageFile == null && !_configService.ScrubAudioTags)
+                if (newTags.ImageFile == null && !taggingProfile.ScrubAudioTags)
                 {
                     newTags.ImageSize = oldTags.ImageSize;
                 }

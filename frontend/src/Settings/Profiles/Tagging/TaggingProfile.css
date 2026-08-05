@@ -1,0 +1,44 @@
+.taggingProfile {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 10px;
+  height: 30px;
+  border-bottom: 1px solid var(--borderColor);
+  line-height: 30px;
+}
+
+.name {
+  flex: 0 0 200px;
+}
+
+.fillcolumn {
+  flex: 1 0 0;
+}
+
+.actions {
+  display: flex;
+}
+
+.dragHandle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  width: $dragHandleWidth;
+  text-align: center;
+  cursor: grab;
+}
+
+.dragIcon {
+  top: 0;
+}
+
+.isDragging {
+  opacity: 0.25;
+}
+
+.editButton {
+  width: $dragHandleWidth;
+  text-align: center;
+}
