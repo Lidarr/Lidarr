@@ -109,11 +109,21 @@ class ArtistDetailsTracksConnector extends Component {
     this.props.toggleTracksMonitored({ trackIds, monitored });
   };
 
+  onSongsSelectionSave = (trackIds, monitored) => {
+    if (trackIds.length) {
+      this.props.toggleTracksMonitored({
+        trackIds,
+        monitored
+      });
+    }
+  };
+
   render() {
     return (
       <ArtistDetailsTracks
         {...this.props}
         onTracksMonitoredChange={this.onTracksMonitoredChange}
+        onSongsSelectionSave={this.onSongsSelectionSave}
       />
     );
   }
@@ -121,6 +131,7 @@ class ArtistDetailsTracksConnector extends Component {
 
 ArtistDetailsTracksConnector.propTypes = {
   artistId: PropTypes.number.isRequired,
+  artistName: PropTypes.string.isRequired,
   artistMonitored: PropTypes.bool.isRequired,
   toggleTracksMonitored: PropTypes.func.isRequired
 };

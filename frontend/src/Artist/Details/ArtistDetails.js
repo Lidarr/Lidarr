@@ -633,6 +633,7 @@ class ArtistDetails extends Component {
               isPopulated && hasTracks ?
                 <ArtistDetailsTracksConnector
                   artistId={id}
+                  artistName={artistName}
                   artistMonitored={monitored}
                 /> :
                 null

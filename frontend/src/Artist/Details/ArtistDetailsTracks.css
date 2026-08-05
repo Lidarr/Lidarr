@@ -31,6 +31,20 @@
   font-size: $smallFontSize;
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 10px;
+  gap: 8px;
+}
+
+.selectionCount {
+  margin-right: 4px;
+  color: var(--helpTextColor);
+  font-size: $smallFontSize;
+}
+
 .expandButton {
   composes: link from '~Components/Link/Link.css';
 
@@ -72,6 +86,10 @@
   }
 
   .rankingHelp {
+    display: none;
+  }
+
+  .selectionCount {
     display: none;
   }
 

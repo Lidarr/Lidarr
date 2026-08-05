@@ -11,6 +11,7 @@ import IconButton from 'Components/Link/IconButton';
 import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
 import MonitorToggleButton from 'Components/MonitorToggleButton';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
+import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
 import TableRow from 'Components/Table/TableRow';
 import Popover from 'Components/Tooltip/Popover';
 import Tooltip from 'Components/Tooltip/Tooltip';
@@ -79,12 +80,26 @@ class TrackRow extends Component {
       appearanceCount,
       isSaving,
       isSearching,
+      isSelectMode,
+      isSelected,
+      selectionId,
       columns,
-      deleteTrackFile
+      deleteTrackFile,
+      onSelectedChange
     } = this.props;
 
     return (
       <TableRow>
+        {
+          isSelectMode ?
+            <TableSelectCell
+              id={selectionId || id}
+              isSelected={isSelected}
+              onSelectedChange={onSelectedChange}
+            /> :
+            null
+        }
+
         {
           columns.map((column) => {
             const {
@@ -350,6 +365,9 @@ TrackRow.propTypes = {
   duration: PropTypes.number.isRequired,
   isSaving: PropTypes.bool,
   isSearching: PropTypes.bool.isRequired,
+  isSelectMode: PropTypes.bool,
+  isSelected: PropTypes.bool,
+  selectionId: PropTypes.string,
   monitored: PropTypes.bool.isRequired,
   trackFilePath: PropTypes.string,
   trackFileSize: PropTypes.number,
@@ -359,13 +377,16 @@ TrackRow.propTypes = {
   mediaInfo: PropTypes.object,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleTracksMonitored: PropTypes.func.isRequired,
-  executeCommand: PropTypes.func.isRequired
+  executeCommand: PropTypes.func.isRequired,
+  onSelectedChange: PropTypes.func
 };
 
 TrackRow.defaultProps = {
   appearanceCount: 1,
   customFormats: [],
-  indexerFlags: 0
+  indexerFlags: 0,
+  isSelectMode: false,
+  isSelected: false
 };
 
 export default TrackRow;
