@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { executeCommand } from 'Store/Actions/commandActions';
 import { setTracksTableOption, toggleTracksMonitored } from 'Store/Actions/trackActions';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
 import AlbumDetailsMedium from './AlbumDetailsMedium';
@@ -29,8 +28,7 @@ function createMapStateToProps() {
 
 const mapDispatchToProps = {
   setTracksTableOption,
-  toggleTracksMonitored,
-  executeCommand
+  toggleTracksMonitored
 };
 
 class AlbumDetailsMediumConnector extends Component {
@@ -62,12 +60,12 @@ class AlbumDetailsMediumConnector extends Component {
 
 AlbumDetailsMediumConnector.propTypes = {
   albumId: PropTypes.number.isRequired,
+  albumTitle: PropTypes.string.isRequired,
   albumMonitored: PropTypes.bool.isRequired,
   albumReleaseDate: PropTypes.string,
   mediumNumber: PropTypes.number.isRequired,
   setTracksTableOption: PropTypes.func.isRequired,
-  toggleTracksMonitored: PropTypes.func.isRequired,
-  executeCommand: PropTypes.func.isRequired
+  toggleTracksMonitored: PropTypes.func.isRequired
 };
 
 export default connect(createMapStateToProps, mapDispatchToProps)(AlbumDetailsMediumConnector);

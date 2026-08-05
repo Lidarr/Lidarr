@@ -4,6 +4,7 @@ import Icon from 'Components/Icon';
 import Label from 'Components/Label';
 import IconButton from 'Components/Link/IconButton';
 import Link from 'Components/Link/Link';
+import MonitorToggleButton from 'Components/MonitorToggleButton';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import { icons, kinds, sizes } from 'Helpers/Props';
@@ -93,12 +94,8 @@ class AlbumDetailsMedium extends Component {
     this.props.onExpandPress(mediumNumber, !isExpanded);
   };
 
-  onMonitorAllPress = () => {
-    this.props.onTracksMonitoredChange(this.props.items.map((track) => track.id), true);
-  };
-
-  onUnmonitorAllPress = () => {
-    this.props.onTracksMonitoredChange(this.props.items.map((track) => track.id), false);
+  onMediumMonitorTogglePress = (monitored) => {
+    this.props.onTracksMonitoredChange(this.props.items.map((track) => track.id), monitored);
   };
 
   //
@@ -108,6 +105,7 @@ class AlbumDetailsMedium extends Component {
     const {
       mediumNumber,
       mediumFormat,
+      albumTitle,
       albumMonitored,
       albumReleaseDate,
       items,
@@ -122,6 +120,8 @@ class AlbumDetailsMedium extends Component {
       trackFileCount,
       totalTrackCount
     } = getMediumStatistics(items);
+    const allTracksMonitored = items.length > 0 && items.every((track) => track.monitored);
+    const isMediumSaving = items.some((track) => track.isSaving);
 
     return (
       <div
@@ -129,6 +129,14 @@ class AlbumDetailsMedium extends Component {
       >
         <div className={styles.header}>
           <div className={styles.left}>
+            <MonitorToggleButton
+              className={styles.mediumMonitor}
+              monitored={allTracksMonitored}
+              isSaving={isMediumSaving}
+              size={18}
+              onPress={this.onMediumMonitorTogglePress}
+            />
+
             {
               <div>
                 <span className={styles.mediumNumber}>
@@ -147,20 +155,6 @@ class AlbumDetailsMedium extends Component {
               }
             </Label>
 
-            <div className={styles.monitorButtons}>
-              <IconButton
-                name={icons.MONITORED}
-                size={16}
-                title={translate('MonitorAllTracks')}
-                onPress={this.onMonitorAllPress}
-              />
-              <IconButton
-                name={icons.UNMONITORED}
-                size={16}
-                title={translate('UnmonitorAllTracks')}
-                onPress={this.onUnmonitorAllPress}
-              />
-            </div>
           </div>
 
           <Link
@@ -197,6 +191,7 @@ class AlbumDetailsMedium extends Component {
                             return (
                               <TrackRowConnector
                                 key={item.id}
+                                albumTitle={albumTitle}
                                 columns={columns}
                                 {...item}
                               />
@@ -228,6 +223,7 @@ class AlbumDetailsMedium extends Component {
 
 AlbumDetailsMedium.propTypes = {
   albumId: PropTypes.number.isRequired,
+  albumTitle: PropTypes.string.isRequired,
   albumMonitored: PropTypes.bool.isRequired,
   albumReleaseDate: PropTypes.string,
   mediumNumber: PropTypes.number.isRequired,

@@ -17,7 +17,25 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
 
         public Decision IsSatisfiedBy(LocalTrack item, DownloadClientItem downloadClientItem)
         {
-            if (item.ExistingFile || item.Tracks.Any(track => track.Monitored))
+            if (item.ExistingFile)
+            {
+                return Decision.Accept();
+            }
+
+            var targetRecordingIds = downloadClientItem?.TargetRecordingIds;
+
+            if (targetRecordingIds?.Any() == true)
+            {
+                if (item.Tracks.Any(track => targetRecordingIds.Contains(track.ForeignRecordingId)))
+                {
+                    return Decision.Accept();
+                }
+
+                _logger.Debug("Track {0} was not targeted by this download", item);
+                return Decision.Reject("Track was not targeted by this download");
+            }
+
+            if (item.Tracks.Any(track => track.Monitored))
             {
                 return Decision.Accept();
             }

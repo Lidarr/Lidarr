@@ -140,7 +140,7 @@ namespace NzbDrone.Core.Test.MediaFiles
         }
 
         [Test]
-        public void should_only_delete_existing_files_for_selected_tracks()
+        public void should_only_delete_existing_files_for_tracks_targeted_by_download()
         {
             var decision = _approvedDecisions.First();
             var selectedTrack = decision.Item.Tracks.Single();
@@ -152,7 +152,7 @@ namespace NzbDrone.Core.Test.MediaFiles
             {
                 Id = 2,
                 ForeignRecordingId = "unselected",
-                Monitored = false
+                Monitored = true
             };
 
             decision.Item.Release.Tracks = new List<Track> { selectedTrack, unselectedTrack };
@@ -182,7 +182,10 @@ namespace NzbDrone.Core.Test.MediaFiles
                   .Setup(service => service.GetFilesByAlbum(decision.Item.Album.Id))
                   .Returns(new List<TrackFile> { selectedFile, unselectedFile });
 
-            Subject.Import(new List<ImportDecision<LocalTrack>> { decision }, true);
+            Subject.Import(new List<ImportDecision<LocalTrack>> { decision }, true, new DownloadClientItem
+            {
+                TargetRecordingIds = new List<string> { selectedTrack.ForeignRecordingId }
+            });
 
             Mocker.GetMock<IMediaFileService>()
                   .Verify(service => service.Delete(selectedFile, DeleteMediaFileReason.Upgrade), Times.Once());

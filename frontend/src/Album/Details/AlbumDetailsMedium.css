@@ -20,13 +20,11 @@
 .mediumNumber {
   margin-right: 10px;
   margin-left: 5px;
+  white-space: nowrap;
 }
 
-.monitorButtons {
-  display: flex;
-  gap: 8px;
-
-  margin-left: 12px;
+.mediumMonitor {
+  flex: 0 0 auto;
 }
 
 .mediumFormat {
@@ -46,7 +44,7 @@
 .left {
   display: flex;
   align-items: center;
-  flex: 0 1 300px;
+  flex: 0 0 300px;
 }
 
 .left,

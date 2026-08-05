@@ -13,8 +13,8 @@ interface CssExports {
   'left': string;
   'medium': string;
   'mediumFormat': string;
+  'mediumMonitor': string;
   'mediumNumber': string;
-  'monitorButtons': string;
   'noTracks': string;
   'tracks': string;
 }

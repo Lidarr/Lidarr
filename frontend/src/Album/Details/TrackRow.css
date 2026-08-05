@@ -16,6 +16,13 @@
   width: 50px;
 }
 
+.search {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 70px;
+  white-space: nowrap;
+}
+
 .audio {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 

@@ -101,6 +101,12 @@ export const defaultState = {
       isVisible: true
     },
     {
+      name: 'search',
+      columnLabel: () => translate('Search'),
+      isVisible: true,
+      isModifiable: false
+    },
+    {
       name: 'actions',
       columnLabel: () => translate('Actions'),
       isVisible: true,

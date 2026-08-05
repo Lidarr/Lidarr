@@ -6,6 +6,7 @@ interface CssExports {
   'duration': string;
   'indexerFlags': string;
   'monitored': string;
+  'search': string;
   'size': string;
   'status': string;
   'title': string;

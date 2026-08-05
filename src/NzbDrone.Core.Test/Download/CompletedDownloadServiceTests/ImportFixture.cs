@@ -256,6 +256,47 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
         }
 
         [Test]
+        public void should_mark_as_imported_when_targeted_track_was_imported()
+        {
+            GivenArtistMatch();
+
+            var targetTrack = new Track { Id = 1, ForeignRecordingId = "target", Monitored = true };
+            var otherTrack = new Track { Id = 2, ForeignRecordingId = "other", Monitored = true };
+            var release = new AlbumRelease
+            {
+                Monitored = true,
+                TrackCount = 2,
+                Tracks = new List<Track> { targetTrack, otherTrack }
+            };
+
+            _trackedDownload.RemoteAlbum.TargetRecordingIds = new List<string> { targetTrack.ForeignRecordingId };
+            _trackedDownload.RemoteAlbum.Albums = new List<Album>
+            {
+                new Album { Id = 1, AlbumReleases = new List<AlbumRelease> { release } }
+            };
+
+            Mocker.GetMock<IDownloadedTracksImportService>()
+                  .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()))
+                  .Returns(new List<ImportResult>
+                           {
+                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack
+                               {
+                                   Path = @"C:\TestPath\target.flac".AsOsAgnostic(),
+                                   Tracks = new List<Track> { targetTrack }
+                               })),
+                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack
+                               {
+                                   Path = @"C:\TestPath\other.flac".AsOsAgnostic(),
+                                   Tracks = new List<Track> { otherTrack }
+                               }, new Rejection("Track was not targeted by this download")), "Track was not targeted by this download")
+                           });
+
+            Subject.Import(_trackedDownload);
+
+            AssertImported();
+        }
+
+        [Test]
         public void should_not_mark_as_imported_if_some_tracks_were_not_imported()
         {
             _trackedDownload.RemoteAlbum.Albums = new List<Album>

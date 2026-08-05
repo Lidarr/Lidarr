@@ -18,11 +18,13 @@ namespace NzbDrone.Core.Parser.Model
         public List<CustomFormat> CustomFormats { get; set; }
         public int CustomFormatScore { get; set; }
         public ReleaseSourceType ReleaseSource { get; set; }
+        public List<string> TargetRecordingIds { get; set; }
 
         public RemoteAlbum()
         {
             Albums = new List<Album>();
             CustomFormats = new List<CustomFormat>();
+            TargetRecordingIds = new List<string>();
         }
 
         public bool IsRecentAlbum()
@@ -32,6 +34,11 @@ namespace NzbDrone.Core.Parser.Model
 
         public int MonitoredTrackCount()
         {
+            if (TargetRecordingIds?.Any() == true)
+            {
+                return TargetRecordingIds.Distinct().Count();
+            }
+
             return Albums.Sum(album => album.AlbumReleases.Value
                 .Where(release => release.Monitored)
                 .Sum(release => release.Tracks?.Value?.Count(track => track.Monitored) ?? release.TrackCount));

@@ -120,7 +120,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 if (replaceExisting)
                 {
                     var currentRelease = album.AlbumReleases.Value.SingleOrDefault(release => release.Monitored);
-                    var selectiveImport = currentRelease?.Tracks?.Value?.Any(track => !track.Monitored) == true;
+                    var selectiveImport = downloadClientItem?.TargetRecordingIds?.Any() == true ||
+                                          currentRelease?.Tracks?.Value?.Any(track => !track.Monitored) == true;
                     var tracksToReplace = selectiveImport ? decisionList.SelectMany(decision => decision.Item.Tracks) : null;
 
                     RemoveExistingTrackFiles(artist, album, tracksToReplace);

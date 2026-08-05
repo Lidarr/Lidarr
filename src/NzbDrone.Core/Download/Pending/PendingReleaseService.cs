@@ -296,6 +296,7 @@ namespace NzbDrone.Core.Download.Pending
                 {
                     Artist = artist,
                     ReleaseSource = release.AdditionalInfo?.ReleaseSource ?? ReleaseSourceType.Unknown,
+                    TargetRecordingIds = release.AdditionalInfo?.TargetRecordingIds ?? new List<string>(),
                     ParsedAlbumInfo = release.ParsedAlbumInfo,
                     Release = release.Release
                 };
@@ -393,7 +394,8 @@ namespace NzbDrone.Core.Download.Pending
                 Reason = reason,
                 AdditionalInfo = new PendingReleaseAdditionalInfo
                 {
-                    ReleaseSource = decision.RemoteAlbum.ReleaseSource
+                    ReleaseSource = decision.RemoteAlbum.ReleaseSource,
+                    TargetRecordingIds = decision.RemoteAlbum.TargetRecordingIds
                 }
             });
 

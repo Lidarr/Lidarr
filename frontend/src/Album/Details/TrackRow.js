@@ -3,7 +3,11 @@ import React, { Component } from 'react';
 import AlbumFormats from 'Album/AlbumFormats';
 import EpisodeStatusConnector from 'Album/EpisodeStatusConnector';
 import IndexerFlags from 'Album/IndexerFlags';
+import AlbumInteractiveSearchModalConnector from 'Album/Search/AlbumInteractiveSearchModalConnector';
+import * as commandNames from 'Commands/commandNames';
 import Icon from 'Components/Icon';
+import IconButton from 'Components/Link/IconButton';
+import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
 import MonitorToggleButton from 'Components/MonitorToggleButton';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
@@ -21,11 +25,34 @@ import styles from './TrackRow.css';
 
 class TrackRow extends Component {
 
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      isInteractiveSearchModalOpen: false
+    };
+  }
+
   onMonitorTogglePress = (monitored) => {
     this.props.toggleTracksMonitored({
       trackIds: [this.props.id],
       monitored
     });
+  };
+
+  onSearchPress = () => {
+    this.props.executeCommand({
+      name: commandNames.TRACK_SEARCH,
+      trackIds: [this.props.id]
+    });
+  };
+
+  onInteractiveSearchPress = () => {
+    this.setState({ isInteractiveSearchModalOpen: true });
+  };
+
+  onInteractiveSearchModalClose = () => {
+    this.setState({ isInteractiveSearchModalOpen: false });
   };
 
   //
@@ -35,6 +62,7 @@ class TrackRow extends Component {
     const {
       id,
       albumId,
+      albumTitle,
       mediumNumber,
       trackFileId,
       absoluteTrackNumber,
@@ -47,6 +75,7 @@ class TrackRow extends Component {
       indexerFlags,
       monitored,
       isSaving,
+      isSearching,
       columns,
       deleteTrackFile
     } = this.props;
@@ -221,6 +250,36 @@ class TrackRow extends Component {
               );
             }
 
+            if (name === 'search') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.search}
+                >
+                  <SpinnerIconButton
+                    name={icons.SEARCH}
+                    isSpinning={isSearching}
+                    title={translate('AutomaticSearch')}
+                    onPress={this.onSearchPress}
+                  />
+
+                  <IconButton
+                    name={icons.INTERACTIVE}
+                    title={translate('InteractiveSearch')}
+                    onPress={this.onInteractiveSearchPress}
+                  />
+
+                  <AlbumInteractiveSearchModalConnector
+                    isOpen={this.state.isInteractiveSearchModalOpen}
+                    albumId={albumId}
+                    albumTitle={albumTitle}
+                    trackId={id}
+                    onModalClose={this.onInteractiveSearchModalClose}
+                  />
+                </TableRowCell>
+              );
+            }
+
             if (name === 'actions') {
               return (
                 <TrackActionsCell
@@ -246,6 +305,7 @@ TrackRow.propTypes = {
   deleteTrackFile: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired,
   albumId: PropTypes.number.isRequired,
+  albumTitle: PropTypes.string.isRequired,
   trackFileId: PropTypes.number,
   mediumNumber: PropTypes.number.isRequired,
   trackNumber: PropTypes.string.isRequired,
@@ -253,6 +313,7 @@ TrackRow.propTypes = {
   title: PropTypes.string.isRequired,
   duration: PropTypes.number.isRequired,
   isSaving: PropTypes.bool,
+  isSearching: PropTypes.bool.isRequired,
   monitored: PropTypes.bool.isRequired,
   trackFilePath: PropTypes.string,
   trackFileSize: PropTypes.number,
@@ -261,7 +322,8 @@ TrackRow.propTypes = {
   indexerFlags: PropTypes.number.isRequired,
   mediaInfo: PropTypes.object,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleTracksMonitored: PropTypes.func.isRequired
+  toggleTracksMonitored: PropTypes.func.isRequired,
+  executeCommand: PropTypes.func.isRequired
 };
 
 TrackRow.defaultProps = {

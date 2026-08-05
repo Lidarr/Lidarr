@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.DecisionEngine;
@@ -13,12 +14,14 @@ using NzbDrone.Core.Queue;
 
 namespace NzbDrone.Core.IndexerSearch
 {
-    internal class AlbumSearchService : IExecute<AlbumSearchCommand>,
+    public class AlbumSearchService : IExecute<AlbumSearchCommand>,
+                               IExecute<TrackSearchCommand>,
                                IExecute<MissingAlbumSearchCommand>,
                                IExecute<CutoffUnmetAlbumSearchCommand>
     {
         private readonly ISearchForReleases _releaseSearchService;
         private readonly IAlbumService _albumService;
+        private readonly ITrackService _trackService;
         private readonly IAlbumCutoffService _albumCutoffService;
         private readonly IQueueService _queueService;
         private readonly IProcessDownloadDecisions _processDownloadDecisions;
@@ -26,6 +29,7 @@ namespace NzbDrone.Core.IndexerSearch
 
         public AlbumSearchService(ISearchForReleases nzbSearchService,
             IAlbumService albumService,
+            ITrackService trackService,
             IAlbumCutoffService albumCutoffService,
             IQueueService queueService,
             IProcessDownloadDecisions processDownloadDecisions,
@@ -33,6 +37,7 @@ namespace NzbDrone.Core.IndexerSearch
         {
             _releaseSearchService = nzbSearchService;
             _albumService = albumService;
+            _trackService = trackService;
             _albumCutoffService = albumCutoffService;
             _queueService = queueService;
             _processDownloadDecisions = processDownloadDecisions;
@@ -74,6 +79,29 @@ namespace NzbDrone.Core.IndexerSearch
                 var processed = _processDownloadDecisions.ProcessDecisions(decisions).GetAwaiter().GetResult();
 
                 _logger.ProgressInfo("Album search completed. {0} reports downloaded.", processed.Grabbed.Count);
+            }
+        }
+
+        public void Execute(TrackSearchCommand message)
+        {
+            var tracks = _trackService.GetTracks(message.TrackIds);
+
+            foreach (var albumTracks in tracks.GroupBy(track => track.AlbumRelease.Value.AlbumId))
+            {
+                var targetRecordingIds = albumTracks.Select(track => track.ForeignRecordingId)
+                                                     .Where(id => id.IsNotNullOrWhiteSpace())
+                                                     .Distinct()
+                                                     .ToList();
+                var decisions = _releaseSearchService.AlbumSearch(albumTracks.Key, false, message.Trigger == CommandTrigger.Manual, false).GetAwaiter().GetResult();
+
+                foreach (var decision in decisions)
+                {
+                    decision.RemoteAlbum.TargetRecordingIds = targetRecordingIds;
+                }
+
+                var processed = _processDownloadDecisions.ProcessDecisions(decisions).GetAwaiter().GetResult();
+
+                _logger.ProgressInfo("Track search completed. {0} reports downloaded.", processed.Grabbed.Count);
             }
         }
 

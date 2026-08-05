@@ -195,6 +195,19 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                         trackedDownload.RemoteAlbum.Release ??= new ReleaseInfo();
                         trackedDownload.RemoteAlbum.Release.IndexerFlags = flags;
                     }
+
+                    var serializedTargetRecordingIds = grabbedEvent?.Data?.GetValueOrDefault("TargetRecordingIds");
+
+                    if (serializedTargetRecordingIds.IsNotNullOrWhiteSpace())
+                    {
+                        var targetRecordingIds = Json.Deserialize<List<string>>(serializedTargetRecordingIds);
+                        trackedDownload.DownloadItem.TargetRecordingIds = targetRecordingIds;
+
+                        if (trackedDownload.RemoteAlbum != null)
+                        {
+                            trackedDownload.RemoteAlbum.TargetRecordingIds = targetRecordingIds;
+                        }
+                    }
                 }
 
                 if (trackedDownload.RemoteAlbum != null)

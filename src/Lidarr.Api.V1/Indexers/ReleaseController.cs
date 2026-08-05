@@ -25,6 +25,7 @@ namespace Lidarr.Api.V1.Indexers
     public class ReleaseController : ReleaseControllerBase
     {
         private readonly IAlbumService _albumService;
+        private readonly ITrackService _trackService;
         private readonly IArtistService _artistService;
         private readonly IFetchAndParseRss _rssFetcherAndParser;
         private readonly ISearchForReleases _releaseSearchService;
@@ -37,6 +38,7 @@ namespace Lidarr.Api.V1.Indexers
         private readonly ICached<RemoteAlbum> _remoteAlbumCache;
 
         public ReleaseController(IAlbumService albumService,
+                             ITrackService trackService,
                              IArtistService artistService,
                              IFetchAndParseRss rssFetcherAndParser,
                              ISearchForReleases nzbSearchService,
@@ -50,6 +52,7 @@ namespace Lidarr.Api.V1.Indexers
             : base(qualityProfileService)
         {
             _albumService = albumService;
+            _trackService = trackService;
             _artistService = artistService;
             _rssFetcherAndParser = rssFetcherAndParser;
             _releaseSearchService = nzbSearchService;
@@ -81,6 +84,8 @@ namespace Lidarr.Api.V1.Indexers
 
             try
             {
+                remoteAlbum.TargetRecordingIds = release.TargetRecordingIds ?? new List<string>();
+
                 if (remoteAlbum.Artist == null)
                 {
                     if (release.AlbumId.HasValue)
@@ -139,11 +144,11 @@ namespace Lidarr.Api.V1.Indexers
         }
 
         [HttpGet]
-        public async Task<List<ReleaseResource>> GetReleases(int? albumId, int? artistId)
+        public async Task<List<ReleaseResource>> GetReleases(int? albumId, int? artistId, int? trackId)
         {
             if (albumId.HasValue)
             {
-                return await GetAlbumReleases(int.Parse(Request.Query["albumId"]));
+                return await GetAlbumReleases(albumId.Value, trackId);
             }
 
             if (artistId.HasValue)
@@ -154,11 +159,29 @@ namespace Lidarr.Api.V1.Indexers
             return await GetRss();
         }
 
-        private async Task<List<ReleaseResource>> GetAlbumReleases(int albumId)
+        private async Task<List<ReleaseResource>> GetAlbumReleases(int albumId, int? trackId)
         {
             try
             {
                 var decisions = await _releaseSearchService.AlbumSearch(albumId, true, true, true);
+
+                if (trackId.HasValue)
+                {
+                    var track = _trackService.GetTrack(trackId.Value);
+
+                    if (track.AlbumRelease.Value.AlbumId != albumId)
+                    {
+                        throw new BadRequestException("Track does not belong to the requested album");
+                    }
+
+                    var targetRecordingIds = new List<string> { track.ForeignRecordingId };
+
+                    foreach (var decision in decisions)
+                    {
+                        decision.RemoteAlbum.TargetRecordingIds = targetRecordingIds;
+                    }
+                }
+
                 var prioritizedDecisions = _prioritizeDownloadDecision.PrioritizeDecisions(decisions);
 
                 return MapDecisions(prioritizedDecisions);
