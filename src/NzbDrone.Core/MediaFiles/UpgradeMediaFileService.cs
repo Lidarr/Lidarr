@@ -10,6 +10,7 @@ namespace NzbDrone.Core.MediaFiles
     public interface IUpgradeMediaFiles
     {
         TrackFileMoveResult UpgradeTrackFile(TrackFile trackFile, LocalTrack localTrack, bool copyOnly = false);
+        TrackFileMoveResult UpgradeTrackFile(TrackFile trackFile, LocalTrack localTrack, bool copyOnly, int downloadClientId);
     }
 
     public class UpgradeMediaFileService : IUpgradeMediaFiles
@@ -37,6 +38,11 @@ namespace NzbDrone.Core.MediaFiles
         }
 
         public TrackFileMoveResult UpgradeTrackFile(TrackFile trackFile, LocalTrack localTrack, bool copyOnly = false)
+        {
+            return UpgradeTrackFile(trackFile, localTrack, copyOnly, 0);
+        }
+
+        public TrackFileMoveResult UpgradeTrackFile(TrackFile trackFile, LocalTrack localTrack, bool copyOnly, int downloadClientId)
         {
             var moveFileResult = new TrackFileMoveResult();
             var existingFiles = localTrack.Tracks
@@ -83,7 +89,7 @@ namespace NzbDrone.Core.MediaFiles
                 moveFileResult.TrackFile = _trackFileMover.MoveTrackFile(trackFile, localTrack);
             }
 
-            _audioTagService.WriteTags(trackFile, true);
+            _audioTagService.WriteTags(trackFile, true, false, downloadClientId);
 
             return moveFileResult;
         }

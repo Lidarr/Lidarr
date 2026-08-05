@@ -10,10 +10,12 @@ using NUnit.Framework;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.History;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
+using NzbDrone.Core.Profiles.Tagging;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
 using NzbDrone.Test.Common.AutoMoq;
@@ -55,19 +57,36 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         private string _copiedFile;
         private AudioTag _testTags;
         private IDiskProvider _diskProvider;
+        private TaggingProfile _taggingProfile;
 
         [SetUp]
         public void Setup()
         {
             _diskProvider = Mocker.Resolve<IDiskProvider>(FileSystemType.Actual);
 
-            Mocker.GetMock<IConfigService>()
-                .Setup(x => x.WriteAudioTags)
-                .Returns(WriteAudioTagsType.Sync);
+            _taggingProfile = new TaggingProfile
+            {
+                Id = 1,
+                Name = "Default",
+                WriteAudioTags = WriteAudioTagsType.Sync,
+                EmbedCoverArt = true
+            };
 
-            Mocker.GetMock<IConfigService>()
-                .Setup(x => x.EmbedCoverArt)
-                .Returns(true);
+            Mocker.GetMock<ITaggingProfileService>()
+                .Setup(x => x.BestForTags(It.IsAny<HashSet<int>>(), It.IsAny<int>()))
+                .Returns(() => _taggingProfile);
+
+            Mocker.GetMock<ITaggingProfileService>()
+                .Setup(x => x.All())
+                .Returns(() => new List<TaggingProfile> { _taggingProfile });
+
+            Mocker.GetMock<ITaggingProfileService>()
+                .Setup(x => x.GetDefaultProfile())
+                .Returns(() => new TaggingProfile());
+
+            Mocker.GetMock<IHistoryService>()
+                .Setup(x => x.GetByAlbum(It.IsAny<int>(), It.IsAny<EntityHistoryEventType?>()))
+                .Returns(new List<EntityHistory>());
 
             var imageFile = Path.Combine(_testdir, "nin.png");
             var imageSize = _diskProvider.GetFileSize(imageFile);
@@ -406,9 +425,7 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         [TestCase("nin.mp3")]
         public void write_tags_should_update_trackfile_size_and_modified(string filename)
         {
-            Mocker.GetMock<IConfigService>()
-                .Setup(x => x.ScrubAudioTags)
-                .Returns(true);
+            _taggingProfile.ScrubAudioTags = true;
 
             GivenFileCopy(filename);
 
@@ -426,11 +443,45 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         }
 
         [TestCase("nin.mp3")]
+        public void write_tags_should_not_write_when_no_profile_matches(string filename)
+        {
+            Mocker.GetMock<ITaggingProfileService>()
+                .Setup(x => x.BestForTags(It.IsAny<HashSet<int>>(), It.IsAny<int>()))
+                .Returns((TaggingProfile)null);
+
+            GivenFileCopy(filename);
+
+            var file = GivenPopulatedTrackfile(0);
+
+            file.Path = _copiedFile;
+            Subject.WriteTags(file, false);
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Never());
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_write_when_forced_and_no_profile_matches(string filename)
+        {
+            Mocker.GetMock<ITaggingProfileService>()
+                .Setup(x => x.BestForTags(It.IsAny<HashSet<int>>(), It.IsAny<int>()))
+                .Returns((TaggingProfile)null);
+
+            GivenFileCopy(filename);
+
+            var file = GivenPopulatedTrackfile(0);
+
+            file.Path = _copiedFile;
+            Subject.WriteTags(file, false, true);
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Once());
+        }
+
+        [TestCase("nin.mp3")]
         public void write_tags_should_not_update_tags_if_already_updated(string filename)
         {
-            Mocker.GetMock<IConfigService>()
-                .Setup(x => x.ScrubAudioTags)
-                .Returns(true);
+            _taggingProfile.ScrubAudioTags = true;
 
             GivenFileCopy(filename);
 
