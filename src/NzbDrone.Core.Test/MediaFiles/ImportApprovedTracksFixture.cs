@@ -5,6 +5,7 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Download;
@@ -136,6 +137,57 @@ namespace NzbDrone.Core.Test.MediaFiles
             Mocker.GetMock<IUpgradeMediaFiles>()
                   .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, false),
                           Times.Once());
+        }
+
+        [Test]
+        public void should_only_delete_existing_files_for_selected_tracks()
+        {
+            var decision = _approvedDecisions.First();
+            var selectedTrack = decision.Item.Tracks.Single();
+            selectedTrack.Id = 1;
+            selectedTrack.ForeignRecordingId = "selected";
+            selectedTrack.Monitored = true;
+
+            var unselectedTrack = new Track
+            {
+                Id = 2,
+                ForeignRecordingId = "unselected",
+                Monitored = false
+            };
+
+            decision.Item.Release.Tracks = new List<Track> { selectedTrack, unselectedTrack };
+
+            var selectedFile = new TrackFile
+            {
+                Id = 1,
+                Path = Path.Combine(decision.Item.Artist.Path, "old-selected.mp3"),
+                Tracks = new List<Track> { selectedTrack }
+            };
+
+            var unselectedFile = new TrackFile
+            {
+                Id = 2,
+                Path = Path.Combine(decision.Item.Artist.Path, "old-unselected.mp3"),
+                Tracks = new List<Track> { unselectedTrack }
+            };
+
+            Mocker.GetMock<IDiskProvider>()
+                  .Setup(provider => provider.GetParentFolder(decision.Item.Artist.Path))
+                  .Returns(@"C:\Test\Music".AsOsAgnostic());
+            Mocker.GetMock<IDiskProvider>()
+                  .Setup(provider => provider.GetParentFolder(selectedFile.Path))
+                  .Returns(decision.Item.Artist.Path);
+
+            Mocker.GetMock<IMediaFileService>()
+                  .Setup(service => service.GetFilesByAlbum(decision.Item.Album.Id))
+                  .Returns(new List<TrackFile> { selectedFile, unselectedFile });
+
+            Subject.Import(new List<ImportDecision<LocalTrack>> { decision }, true);
+
+            Mocker.GetMock<IMediaFileService>()
+                  .Verify(service => service.Delete(selectedFile, DeleteMediaFileReason.Upgrade), Times.Once());
+            Mocker.GetMock<IMediaFileService>()
+                  .Verify(service => service.Delete(unselectedFile, It.IsAny<DeleteMediaFileReason>()), Times.Never());
         }
 
         [Test]

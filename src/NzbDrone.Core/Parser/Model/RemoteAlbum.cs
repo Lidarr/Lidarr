@@ -30,6 +30,13 @@ namespace NzbDrone.Core.Parser.Model
             return Albums.Any(e => e.ReleaseDate >= DateTime.UtcNow.Date.AddDays(-14));
         }
 
+        public int MonitoredTrackCount()
+        {
+            return Albums.Sum(album => album.AlbumReleases.Value
+                .Where(release => release.Monitored)
+                .Sum(release => release.Tracks?.Value?.Count(track => track.Monitored) ?? release.TrackCount));
+        }
+
         public override string ToString()
         {
             return Release.Title;

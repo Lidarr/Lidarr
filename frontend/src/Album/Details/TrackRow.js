@@ -4,6 +4,7 @@ import AlbumFormats from 'Album/AlbumFormats';
 import EpisodeStatusConnector from 'Album/EpisodeStatusConnector';
 import IndexerFlags from 'Album/IndexerFlags';
 import Icon from 'Components/Icon';
+import MonitorToggleButton from 'Components/MonitorToggleButton';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import Popover from 'Components/Tooltip/Popover';
@@ -19,6 +20,13 @@ import TrackActionsCell from './TrackActionsCell';
 import styles from './TrackRow.css';
 
 class TrackRow extends Component {
+
+  onMonitorTogglePress = (monitored) => {
+    this.props.toggleTracksMonitored({
+      trackIds: [this.props.id],
+      monitored
+    });
+  };
 
   //
   // Render
@@ -37,6 +45,8 @@ class TrackRow extends Component {
       customFormats,
       customFormatScore,
       indexerFlags,
+      monitored,
+      isSaving,
       columns,
       deleteTrackFile
     } = this.props;
@@ -61,6 +71,22 @@ class TrackRow extends Component {
                   className={styles.trackNumber}
                 >
                   {mediumNumber}
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'monitored') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.monitored}
+                >
+                  <MonitorToggleButton
+                    monitored={monitored}
+                    isSaving={isSaving}
+                    size={14}
+                    onPress={this.onMonitorTogglePress}
+                  />
                 </TableRowCell>
               );
             }
@@ -227,13 +253,15 @@ TrackRow.propTypes = {
   title: PropTypes.string.isRequired,
   duration: PropTypes.number.isRequired,
   isSaving: PropTypes.bool,
+  monitored: PropTypes.bool.isRequired,
   trackFilePath: PropTypes.string,
   trackFileSize: PropTypes.number,
   customFormats: PropTypes.arrayOf(PropTypes.object),
   customFormatScore: PropTypes.number.isRequired,
   indexerFlags: PropTypes.number.isRequired,
   mediaInfo: PropTypes.object,
-  columns: PropTypes.arrayOf(PropTypes.object).isRequired
+  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  toggleTracksMonitored: PropTypes.func.isRequired
 };
 
 TrackRow.defaultProps = {

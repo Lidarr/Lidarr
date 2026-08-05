@@ -13,16 +13,18 @@ import TrackRowConnector from './TrackRowConnector';
 import styles from './AlbumDetailsMedium.css';
 
 function getMediumStatistics(tracks) {
-  const trackCount = tracks.length;
+  let trackCount = 0;
   let trackFileCount = 0;
-  let totalTrackCount = 0;
+  const totalTrackCount = tracks.length;
 
   tracks.forEach((track) => {
     if (track.trackFileId) {
       trackFileCount++;
     }
 
-    totalTrackCount++;
+    if (track.monitored || track.trackFileId) {
+      trackCount++;
+    }
   });
 
   return {
@@ -38,6 +40,10 @@ function getTrackCountKind(monitored, releaseDate, trackFileCount, trackCount) {
   }
 
   if (!releaseDate || isAfter(releaseDate)) {
+    return kinds.DISABLED;
+  }
+
+  if (trackCount === 0) {
     return kinds.DISABLED;
   }
 
@@ -87,6 +93,14 @@ class AlbumDetailsMedium extends Component {
     this.props.onExpandPress(mediumNumber, !isExpanded);
   };
 
+  onMonitorAllPress = () => {
+    this.props.onTracksMonitoredChange(this.props.items.map((track) => track.id), true);
+  };
+
+  onUnmonitorAllPress = () => {
+    this.props.onTracksMonitoredChange(this.props.items.map((track) => track.id), false);
+  };
+
   //
   // Render
 
@@ -132,6 +146,21 @@ class AlbumDetailsMedium extends Component {
                 <span>{trackFileCount} / {trackCount}</span>
               }
             </Label>
+
+            <div className={styles.monitorButtons}>
+              <IconButton
+                name={icons.MONITORED}
+                size={16}
+                title={translate('MonitorAllTracks')}
+                onPress={this.onMonitorAllPress}
+              />
+              <IconButton
+                name={icons.UNMONITORED}
+                size={16}
+                title={translate('UnmonitorAllTracks')}
+                onPress={this.onUnmonitorAllPress}
+              />
+            </div>
           </div>
 
           <Link
@@ -209,7 +238,8 @@ AlbumDetailsMedium.propTypes = {
   isExpanded: PropTypes.bool,
   isSmallScreen: PropTypes.bool.isRequired,
   onTableOptionChange: PropTypes.func.isRequired,
-  onExpandPress: PropTypes.func.isRequired
+  onExpandPress: PropTypes.func.isRequired,
+  onTracksMonitoredChange: PropTypes.func.isRequired
 };
 
 export default AlbumDetailsMedium;

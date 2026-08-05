@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import { toggleTracksMonitored } from 'Store/Actions/trackActions';
 import { deleteTrackFile } from 'Store/Actions/trackFileActions';
 import createTrackFileSelector from 'Store/Selectors/createTrackFileSelector';
 import TrackRow from './TrackRow';
@@ -21,7 +22,8 @@ function createMapStateToProps() {
 }
 
 const mapDispatchToProps = {
-  deleteTrackFile
+  deleteTrackFile,
+  toggleTracksMonitored
 };
 
 export default connect(createMapStateToProps, mapDispatchToProps)(TrackRow);

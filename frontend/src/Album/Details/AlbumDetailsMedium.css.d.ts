@@ -14,6 +14,7 @@ interface CssExports {
   'medium': string;
   'mediumFormat': string;
   'mediumNumber': string;
+  'monitorButtons': string;
   'noTracks': string;
   'tracks': string;
 }

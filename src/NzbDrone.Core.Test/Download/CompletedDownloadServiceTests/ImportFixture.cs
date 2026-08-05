@@ -210,6 +210,52 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
         }
 
         [Test]
+        public void should_mark_as_imported_when_all_monitored_tracks_were_imported()
+        {
+            GivenArtistMatch();
+
+            var selectedTrack = new Track { Id = 1, Monitored = true };
+            var unselectedTrack1 = new Track { Id = 2, Monitored = false };
+            var unselectedTrack2 = new Track { Id = 3, Monitored = false };
+            var release = new AlbumRelease
+            {
+                Monitored = true,
+                TrackCount = 3,
+                Tracks = new List<Track> { selectedTrack, unselectedTrack1, unselectedTrack2 }
+            };
+
+            _trackedDownload.RemoteAlbum.Albums = new List<Album>
+            {
+                new Album { Id = 1, AlbumReleases = new List<AlbumRelease> { release } }
+            };
+
+            Mocker.GetMock<IDownloadedTracksImportService>()
+                  .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()))
+                  .Returns(new List<ImportResult>
+                           {
+                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack
+                               {
+                                   Path = @"C:\TestPath\selected.flac".AsOsAgnostic(),
+                                   Tracks = new List<Track> { selectedTrack }
+                               })),
+                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack
+                               {
+                                   Path = @"C:\TestPath\unselected-1.flac".AsOsAgnostic(),
+                                   Tracks = new List<Track> { unselectedTrack1 }
+                               }, new Rejection("Track is not monitored")), "Track is not monitored"),
+                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack
+                               {
+                                   Path = @"C:\TestPath\unselected-2.flac".AsOsAgnostic(),
+                                   Tracks = new List<Track> { unselectedTrack2 }
+                               }, new Rejection("Track is not monitored")), "Track is not monitored")
+                           });
+
+            Subject.Import(_trackedDownload);
+
+            AssertImported();
+        }
+
+        [Test]
         public void should_not_mark_as_imported_if_some_tracks_were_not_imported()
         {
             _trackedDownload.RemoteAlbum.Albums = new List<Album>

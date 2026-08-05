@@ -191,9 +191,10 @@ namespace NzbDrone.Core.Download
         {
             var allTracksImported =
                 (importResults.Any() && importResults.All(c => c.Result == ImportResultType.Imported)) ||
-                importResults.Where(c => c.Result == ImportResultType.Imported)
-                    .SelectMany(c => c.ImportDecision.Item.Tracks)
-                    .Count() >= Math.Max(1, trackedDownload.RemoteAlbum.Albums.Sum(x => x.AlbumReleases.Value.Where(y => y.Monitored).Sum(z => z.TrackCount)));
+                (importResults.Any(c => c.Result == ImportResultType.Imported) &&
+                 importResults.Where(c => c.Result == ImportResultType.Imported)
+                     .SelectMany(c => c.ImportDecision.Item.Tracks)
+                     .Count() >= trackedDownload.RemoteAlbum.MonitoredTrackCount());
 
             if (allTracksImported)
             {
