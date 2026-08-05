@@ -29,6 +29,7 @@ namespace Lidarr.Api.V1.Indexers
         private readonly IArtistService _artistService;
         private readonly IFetchAndParseRss _rssFetcherAndParser;
         private readonly ISearchForReleases _releaseSearchService;
+        private readonly ISearchForTracks _trackSearchService;
         private readonly IMakeDownloadDecision _downloadDecisionMaker;
         private readonly IPrioritizeDownloadDecision _prioritizeDownloadDecision;
         private readonly IParsingService _parsingService;
@@ -42,6 +43,7 @@ namespace Lidarr.Api.V1.Indexers
                              IArtistService artistService,
                              IFetchAndParseRss rssFetcherAndParser,
                              ISearchForReleases nzbSearchService,
+                             ISearchForTracks trackSearchService,
                              IMakeDownloadDecision downloadDecisionMaker,
                              IPrioritizeDownloadDecision prioritizeDownloadDecision,
                              IParsingService parsingService,
@@ -56,6 +58,7 @@ namespace Lidarr.Api.V1.Indexers
             _artistService = artistService;
             _rssFetcherAndParser = rssFetcherAndParser;
             _releaseSearchService = nzbSearchService;
+            _trackSearchService = trackSearchService;
             _downloadDecisionMaker = downloadDecisionMaker;
             _prioritizeDownloadDecision = prioritizeDownloadDecision;
             _parsingService = parsingService;
@@ -163,7 +166,7 @@ namespace Lidarr.Api.V1.Indexers
         {
             try
             {
-                var decisions = await _releaseSearchService.AlbumSearch(albumId, true, true, true);
+                List<DownloadDecision> decisions;
 
                 if (trackId.HasValue)
                 {
@@ -174,12 +177,11 @@ namespace Lidarr.Api.V1.Indexers
                         throw new BadRequestException("Track does not belong to the requested album");
                     }
 
-                    var targetRecordingIds = new List<string> { track.ForeignRecordingId };
-
-                    foreach (var decision in decisions)
-                    {
-                        decision.RemoteAlbum.TargetRecordingIds = targetRecordingIds;
-                    }
+                    decisions = await _trackSearchService.TrackSearch(new List<int> { track.Id }, true, true);
+                }
+                else
+                {
+                    decisions = await _releaseSearchService.AlbumSearch(albumId, true, true, true);
                 }
 
                 var prioritizedDecisions = _prioritizeDownloadDecision.PrioritizeDecisions(decisions);

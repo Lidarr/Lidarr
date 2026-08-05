@@ -14,13 +14,20 @@ using NzbDrone.Core.Queue;
 
 namespace NzbDrone.Core.IndexerSearch
 {
+    public interface ISearchForTracks
+    {
+        Task<List<DownloadDecision>> TrackSearch(List<int> trackIds, bool userInvokedSearch, bool interactiveSearch);
+    }
+
     public class AlbumSearchService : IExecute<AlbumSearchCommand>,
                                IExecute<TrackSearchCommand>,
                                IExecute<MissingAlbumSearchCommand>,
-                               IExecute<CutoffUnmetAlbumSearchCommand>
+                               IExecute<CutoffUnmetAlbumSearchCommand>,
+                               ISearchForTracks
     {
         private readonly ISearchForReleases _releaseSearchService;
         private readonly IAlbumService _albumService;
+        private readonly IReleaseService _releaseService;
         private readonly ITrackService _trackService;
         private readonly IAlbumCutoffService _albumCutoffService;
         private readonly IQueueService _queueService;
@@ -29,6 +36,7 @@ namespace NzbDrone.Core.IndexerSearch
 
         public AlbumSearchService(ISearchForReleases nzbSearchService,
             IAlbumService albumService,
+            IReleaseService releaseService,
             ITrackService trackService,
             IAlbumCutoffService albumCutoffService,
             IQueueService queueService,
@@ -37,6 +45,7 @@ namespace NzbDrone.Core.IndexerSearch
         {
             _releaseSearchService = nzbSearchService;
             _albumService = albumService;
+            _releaseService = releaseService;
             _trackService = trackService;
             _albumCutoffService = albumCutoffService;
             _queueService = queueService;
@@ -84,25 +93,132 @@ namespace NzbDrone.Core.IndexerSearch
 
         public void Execute(TrackSearchCommand message)
         {
-            var tracks = _trackService.GetTracks(message.TrackIds);
+            var decisions = TrackSearch(message.TrackIds, message.Trigger == CommandTrigger.Manual, false).GetAwaiter().GetResult();
+            var processed = _processDownloadDecisions.ProcessDecisions(decisions, true).GetAwaiter().GetResult();
 
-            foreach (var albumTracks in tracks.GroupBy(track => track.AlbumRelease.Value.AlbumId))
+            _logger.ProgressInfo("Track search completed from {0} candidate reports. {1} reports downloaded.", decisions.Count, processed.Grabbed.Count);
+        }
+
+        public async Task<List<DownloadDecision>> TrackSearch(List<int> trackIds, bool userInvokedSearch, bool interactiveSearch)
+        {
+            var tracks = _trackService.GetTracks(trackIds);
+            var targetRecordingIds = tracks.Select(track => track.ForeignRecordingId)
+                                           .Where(id => id.IsNotNullOrWhiteSpace())
+                                           .Distinct()
+                                           .ToList();
+
+            if (!targetRecordingIds.Any())
             {
-                var targetRecordingIds = albumTracks.Select(track => track.ForeignRecordingId)
-                                                     .Where(id => id.IsNotNullOrWhiteSpace())
-                                                     .Distinct()
-                                                     .ToList();
-                var decisions = _releaseSearchService.AlbumSearch(albumTracks.Key, false, message.Trigger == CommandTrigger.Manual, false).GetAwaiter().GetResult();
+                _logger.Warn("Track search could not find MusicBrainz recording IDs for the requested tracks");
+                return new List<DownloadDecision>();
+            }
+
+            var candidateReleases = _releaseService.GetReleasesByRecordingIds(targetRecordingIds) ?? new List<AlbumRelease>();
+            var candidateReleaseIds = candidateReleases.Select(release => release.Id).Distinct().ToList();
+            var candidateTracks = candidateReleaseIds.Any() ?
+                _trackService.GetTracksByReleases(candidateReleaseIds) :
+                new List<Track>();
+            var albumIdByReleaseId = candidateReleases.ToDictionary(release => release.Id, release => release.AlbumId);
+            var targetRecordingIdsByAlbum = new Dictionary<int, HashSet<string>>();
+
+            foreach (var candidateTrack in candidateTracks.Where(track => targetRecordingIds.Contains(track.ForeignRecordingId)))
+            {
+                if (!albumIdByReleaseId.TryGetValue(candidateTrack.AlbumReleaseId, out var albumId))
+                {
+                    continue;
+                }
+
+                if (!targetRecordingIdsByAlbum.TryGetValue(albumId, out var albumTargetRecordingIds))
+                {
+                    albumTargetRecordingIds = new HashSet<string>();
+                    targetRecordingIdsByAlbum[albumId] = albumTargetRecordingIds;
+                }
+
+                albumTargetRecordingIds.Add(candidateTrack.ForeignRecordingId);
+            }
+
+            // Always retain the originally selected album as a fallback if release metadata is incomplete.
+            foreach (var track in tracks)
+            {
+                var albumId = track.AlbumRelease.Value.AlbumId;
+
+                if (!targetRecordingIdsByAlbum.TryGetValue(albumId, out var albumTargetRecordingIds))
+                {
+                    albumTargetRecordingIds = new HashSet<string>();
+                    targetRecordingIdsByAlbum[albumId] = albumTargetRecordingIds;
+                }
+
+                albumTargetRecordingIds.Add(track.ForeignRecordingId);
+            }
+
+            var candidateAlbums = _albumService.GetAlbums(targetRecordingIdsByAlbum.Keys)
+                                               .OrderBy(GetTrackSearchPriority)
+                                               .ThenBy(album => album.ReleaseDate ?? DateTime.MaxValue)
+                                               .ToList();
+            var allDecisions = new List<DownloadDecision>();
+
+            foreach (var album in candidateAlbums)
+            {
+                var albumTargetRecordingIds = targetRecordingIdsByAlbum[album.Id].ToList();
+                var decisions = await _releaseSearchService.AlbumSearch(album.Id, false, userInvokedSearch, interactiveSearch);
 
                 foreach (var decision in decisions)
                 {
-                    decision.RemoteAlbum.TargetRecordingIds = targetRecordingIds;
+                    decision.RemoteAlbum.TargetRecordingIds = albumTargetRecordingIds;
                 }
 
-                var processed = _processDownloadDecisions.ProcessDecisions(decisions).GetAwaiter().GetResult();
-
-                _logger.ProgressInfo("Track search completed. {0} reports downloaded.", processed.Grabbed.Count);
+                allDecisions.AddRange(decisions);
             }
+
+            _logger.ProgressInfo("Track search found {0} candidate albums containing {1} requested recordings.", candidateAlbums.Count, targetRecordingIds.Count);
+
+            return MergeTrackSearchDecisions(allDecisions);
+        }
+
+        private static List<DownloadDecision> MergeTrackSearchDecisions(List<DownloadDecision> decisions)
+        {
+            var merged = decisions.Where(decision => decision.RemoteAlbum.Release == null ||
+                                                     decision.RemoteAlbum.Release.Guid.IsNullOrWhiteSpace())
+                                  .ToList();
+            var decisionsWithGuid = decisions.Where(decision => decision.RemoteAlbum.Release?.Guid.IsNotNullOrWhiteSpace() == true);
+
+            foreach (var group in decisionsWithGuid.GroupBy(decision => decision.RemoteAlbum.Release.Guid))
+            {
+                var selected = group.OrderBy(decision => decision.Rejections.Count())
+                                    .ThenBy(decision => decision.RemoteAlbum.Release.IndexerPriority)
+                                    .First();
+                selected.RemoteAlbum.TargetRecordingIds = group.SelectMany(decision => decision.RemoteAlbum.TargetRecordingIds)
+                                                               .Distinct()
+                                                               .ToList();
+                merged.Add(selected);
+            }
+
+            return merged;
+        }
+
+        private static int GetTrackSearchPriority(Album album)
+        {
+            if (album.SecondaryTypes.Contains(SecondaryAlbumType.Compilation))
+            {
+                return 0;
+            }
+
+            if (string.Equals(album.AlbumType, PrimaryAlbumType.EP.Name, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return 1;
+            }
+
+            if (string.Equals(album.AlbumType, PrimaryAlbumType.Single.Name, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return 2;
+            }
+
+            if (string.Equals(album.AlbumType, PrimaryAlbumType.Album.Name, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return 3;
+            }
+
+            return 4;
         }
 
         public void Execute(MissingAlbumSearchCommand message)
