@@ -46,6 +46,11 @@ function getFanartUrl(images) {
   return _.find(images, { coverType: 'fanart' })?.url;
 }
 
+function translateWithFallback(key, fallback) {
+  const translated = translate(key);
+  return translated === key ? fallback : translated;
+}
+
 function getExpandedState(newState) {
   return {
     allExpanded: newState.allSelected,
@@ -192,6 +197,7 @@ class ArtistDetails extends Component {
       statistics = {},
       qualityProfileId,
       monitored,
+      songMode,
       genres,
       albumTypes,
       status,
@@ -211,6 +217,7 @@ class ArtistDetails extends Component {
       hasAlbums,
       hasMonitoredAlbums,
       hasTracks,
+      hasMonitoredTracks,
       hasTrackFiles,
       previousArtist,
       nextArtist,
@@ -259,6 +266,19 @@ class ArtistDetails extends Component {
     }
 
     const fanartUrl = getFanartUrl(images);
+    const canSearchMonitored = songMode ?
+      hasMonitoredTracks :
+      monitored && hasMonitoredAlbums && hasAlbums;
+    let searchMonitoredTitle = null;
+
+    if (songMode && !hasMonitoredTracks) {
+      searchMonitoredTitle = translateWithFallback(
+        'SongModeNoMonitoredSongs',
+        'No songs are monitored for this artist'
+      );
+    } else if (!songMode && !hasMonitoredAlbums) {
+      searchMonitoredTitle = translate('HasMonitoredAlbumsNoMonitoredAlbumsForThisArtist');
+    }
 
     return (
       <PageContent title={artistName}>
@@ -276,20 +296,24 @@ class ArtistDetails extends Component {
             <PageToolbarButton
               label={translate('SearchMonitored')}
               iconName={icons.SEARCH}
-              isDisabled={!monitored || !hasMonitoredAlbums || !hasAlbums}
+              isDisabled={!canSearchMonitored}
               isSpinning={isSearching}
-              title={hasMonitoredAlbums ? undefined : translate('HasMonitoredAlbumsNoMonitoredAlbumsForThisArtist')}
+              title={searchMonitoredTitle}
               onPress={onSearchPress}
             />
 
-            <PageToolbarButton
-              label={translate('InteractiveSearch')}
-              iconName={icons.INTERACTIVE}
-              isDisabled={!monitored || !hasMonitoredAlbums || !hasAlbums}
-              isSpinning={isSearching}
-              title={hasMonitoredAlbums ? undefined : translate('HasMonitoredAlbumsNoMonitoredAlbumsForThisArtist')}
-              onPress={this.onInteractiveSearchPress}
-            />
+            {
+              songMode ?
+                null :
+                <PageToolbarButton
+                  label={translate('InteractiveSearch')}
+                  iconName={icons.INTERACTIVE}
+                  isDisabled={!monitored || !hasMonitoredAlbums || !hasAlbums}
+                  isSpinning={isSearching}
+                  title={hasMonitoredAlbums ? undefined : translate('HasMonitoredAlbumsNoMonitoredAlbumsForThisArtist')}
+                  onPress={this.onInteractiveSearchPress}
+                />
+            }
 
             <PageToolbarSeparator />
 
@@ -350,11 +374,15 @@ class ArtistDetails extends Component {
           </PageToolbarSection>
 
           <PageToolbarSection alignContent={align.RIGHT}>
-            <PageToolbarButton
-              label={allExpanded ? translate('AllExpandedCollapseAll') : translate('AllExpandedExpandAll')}
-              iconName={expandIcon}
-              onPress={this.onExpandAllPress}
-            />
+            {
+              songMode ?
+                null :
+                <PageToolbarButton
+                  label={allExpanded ? translate('AllExpandedCollapseAll') : translate('AllExpandedExpandAll')}
+                  iconName={expandIcon}
+                  onPress={this.onExpandAllPress}
+                />
+            }
           </PageToolbarSection>
         </PageToolbar>
 
@@ -466,6 +494,24 @@ class ArtistDetails extends Component {
                       {path}
                     </span>
                   </Label>
+
+                  {
+                    songMode ?
+                      <Label
+                        className={styles.detailsLabel}
+                        size={sizes.LARGE}
+                      >
+                        <Icon
+                          name={icons.TRACK_FILE}
+                          size={17}
+                        />
+
+                        <span className={styles.qualityProfileName}>
+                          {translateWithFallback('SongMode', 'Song Mode')}
+                        </span>
+                      </Label> :
+                      null
+                  }
 
                   <Tooltip
                     anchor={
@@ -630,7 +676,7 @@ class ArtistDetails extends Component {
             }
 
             {
-              isPopulated && hasTracks ?
+              songMode && isPopulated && hasTracks ?
                 <ArtistDetailsTracksConnector
                   artistId={id}
                   artistName={artistName}
@@ -640,7 +686,7 @@ class ArtistDetails extends Component {
             }
 
             {
-              isPopulated && !!albumTypes.length &&
+              !songMode && isPopulated && !!albumTypes.length &&
                 <div>
                   {
                     albumTypes.slice(0).map((albumType) => {
@@ -662,13 +708,17 @@ class ArtistDetails extends Component {
 
           </div>
 
-          <div className={styles.metadataMessage}>
-            Missing Albums, Singles, or Other Types? Modify or create a new
-            <Link to='/settings/profiles'> Metadata Profile </Link>
-            or manually
-            <Link to={`/add/search?term=${encodeURIComponent(artistName)}`}> Search </Link>
-            for new items!
-          </div>
+          {
+            songMode ?
+              null :
+              <div className={styles.metadataMessage}>
+                Missing Albums, Singles, or Other Types? Modify or create a new
+                <Link to='/settings/profiles'> Metadata Profile </Link>
+                or manually
+                <Link to={`/add/search?term=${encodeURIComponent(artistName)}`}> Search </Link>
+                for new items!
+              </div>
+          }
 
           <OrganizePreviewModalConnector
             isOpen={isOrganizeModalOpen}
@@ -743,6 +793,7 @@ ArtistDetails.propTypes = {
   statistics: PropTypes.object.isRequired,
   qualityProfileId: PropTypes.number.isRequired,
   monitored: PropTypes.bool.isRequired,
+  songMode: PropTypes.bool.isRequired,
   artistType: PropTypes.string,
   albumTypes: PropTypes.arrayOf(PropTypes.string),
   genres: PropTypes.arrayOf(PropTypes.string),
@@ -763,6 +814,7 @@ ArtistDetails.propTypes = {
   hasAlbums: PropTypes.bool.isRequired,
   hasMonitoredAlbums: PropTypes.bool.isRequired,
   hasTracks: PropTypes.bool.isRequired,
+  hasMonitoredTracks: PropTypes.bool.isRequired,
   hasTrackFiles: PropTypes.bool.isRequired,
   previousArtist: PropTypes.object.isRequired,
   nextArtist: PropTypes.object.isRequired,

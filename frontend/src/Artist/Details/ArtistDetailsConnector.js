@@ -77,7 +77,8 @@ const selectTracks = createSelector(
       isTracksFetching: isFetching,
       isTracksPopulated: isPopulated,
       tracksError: error,
-      hasTracks: !!items.length
+      hasTracks: !!items.length,
+      hasMonitoredTracks: items.some((e) => e.monitored)
     };
   }
 );
@@ -112,7 +113,8 @@ function createMapStateToProps() {
         isTracksFetching,
         isTracksPopulated,
         tracksError,
-        hasTracks
+        hasTracks,
+        hasMonitoredTracks
       } = tracks;
 
       const {
@@ -171,6 +173,7 @@ function createMapStateToProps() {
         hasAlbums,
         hasMonitoredAlbums,
         hasTracks,
+        hasMonitoredTracks,
         hasTrackFiles,
         previousArtist,
         nextArtist

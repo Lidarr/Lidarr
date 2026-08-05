@@ -37,14 +37,17 @@ function createMapStateToProps() {
         pendingChanges
       } = artistState;
 
-      const artistSettings = _.pick(artist, [
-        'monitored',
-        'monitorNewItems',
-        'qualityProfileId',
-        'metadataProfileId',
-        'path',
-        'tags'
-      ]);
+      const artistSettings = {
+        ..._.pick(artist, [
+          'monitored',
+          'monitorNewItems',
+          'qualityProfileId',
+          'metadataProfileId',
+          'path',
+          'tags'
+        ]),
+        songMode: artist.songMode ?? false
+      };
 
       const settings = selectSettings(artistSettings, pendingChanges, saveError);
 
