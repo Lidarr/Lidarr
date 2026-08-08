@@ -110,6 +110,7 @@ namespace NzbDrone.Core.Download.Pending
                     if (matchingReports.Any())
                     {
                         var matchingReport = matchingReports.First();
+                        var updateReport = MergeTargetRecordingIds(matchingReport, matchingReports, decision.RemoteAlbum);
 
                         if (matchingReport.Reason != reason)
                         {
@@ -121,12 +122,17 @@ namespace NzbDrone.Core.Download.Pending
                             {
                                 _logger.Debug("The release {0} is already pending with reason {1}, changing to {2}", decision.RemoteAlbum, matchingReport.Reason, reason);
                                 matchingReport.Reason = reason;
-                                _repository.Update(matchingReport);
+                                updateReport = true;
                             }
                         }
-                        else
+                        else if (!updateReport)
                         {
                             _logger.Debug("The release {0} is already pending with reason {1}, not adding again", decision.RemoteAlbum, reason);
+                        }
+
+                        if (updateReport)
+                        {
+                            _repository.Update(matchingReport);
                         }
 
                         if (matchingReports.Count > 1)
@@ -148,6 +154,33 @@ namespace NzbDrone.Core.Download.Pending
                     Insert(decision, reason);
                 }
             }
+        }
+
+        private bool MergeTargetRecordingIds(PendingRelease target, List<PendingRelease> matchingReports, RemoteAlbum remoteAlbum)
+        {
+            var currentTargetRecordingIds = target.AdditionalInfo?.TargetRecordingIds ?? new List<string>();
+            var mergedTargetRecordingIds = matchingReports
+                                           .SelectMany(report => report.AdditionalInfo?.TargetRecordingIds ?? Enumerable.Empty<string>())
+                                           .Concat(remoteAlbum.TargetRecordingIds ?? Enumerable.Empty<string>())
+                                           .Where(id => id.IsNotNullOrWhiteSpace())
+                                           .Distinct()
+                                           .ToList();
+
+            if (currentTargetRecordingIds.SequenceEqual(mergedTargetRecordingIds))
+            {
+                return false;
+            }
+
+            target.AdditionalInfo ??= new PendingReleaseAdditionalInfo
+            {
+                ReleaseSource = remoteAlbum.ReleaseSource
+            };
+
+            target.AdditionalInfo.TargetRecordingIds = mergedTargetRecordingIds;
+
+            _logger.Debug("The release {0} is already pending, updating target recordings", remoteAlbum);
+
+            return true;
         }
 
         public List<ReleaseInfo> GetPending()
