@@ -45,6 +45,17 @@ namespace NzbDrone.Core.Parser.Model
                 .Sum(release => release.Tracks?.Value?.Count(track => track.Monitored) ?? release.TrackCount));
         }
 
+        public List<string> MonitoredRecordingIds()
+        {
+            return Albums.SelectMany(album => album.AlbumReleases?.Value ?? new List<AlbumRelease>())
+                         .Where(release => release.Monitored)
+                         .SelectMany(release => release.Tracks?.Value ?? new List<Track>())
+                         .Where(track => track.Monitored && !string.IsNullOrWhiteSpace(track.ForeignRecordingId))
+                         .Select(track => track.ForeignRecordingId)
+                         .Distinct()
+                         .ToList();
+        }
+
         public override string ToString()
         {
             return Release.Title;

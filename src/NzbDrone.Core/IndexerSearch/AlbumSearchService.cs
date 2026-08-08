@@ -7,6 +7,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.DecisionEngine;
+using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Music;
@@ -27,29 +28,35 @@ namespace NzbDrone.Core.IndexerSearch
     {
         private readonly ISearchForReleases _releaseSearchService;
         private readonly IAlbumService _albumService;
+        private readonly IArtistService _artistService;
         private readonly IReleaseService _releaseService;
         private readonly ITrackService _trackService;
         private readonly IAlbumCutoffService _albumCutoffService;
         private readonly IQueueService _queueService;
         private readonly IProcessDownloadDecisions _processDownloadDecisions;
+        private readonly IUpgradableSpecification _upgradableSpecification;
         private readonly Logger _logger;
 
         public AlbumSearchService(ISearchForReleases nzbSearchService,
             IAlbumService albumService,
+            IArtistService artistService,
             IReleaseService releaseService,
             ITrackService trackService,
             IAlbumCutoffService albumCutoffService,
             IQueueService queueService,
             IProcessDownloadDecisions processDownloadDecisions,
+            IUpgradableSpecification upgradableSpecification,
             Logger logger)
         {
             _releaseSearchService = nzbSearchService;
             _albumService = albumService;
+            _artistService = artistService;
             _releaseService = releaseService;
             _trackService = trackService;
             _albumCutoffService = albumCutoffService;
             _queueService = queueService;
             _processDownloadDecisions = processDownloadDecisions;
+            _upgradableSpecification = upgradableSpecification;
             _logger = logger;
         }
 
@@ -78,6 +85,70 @@ namespace NzbDrone.Core.IndexerSearch
             }
 
             _logger.ProgressInfo("Completed search for {0} albums. {1} reports downloaded.", albums.Count, downloadedCount);
+        }
+
+        private async Task SearchForSongModeTracks(List<Artist> artists, bool cutoffUnmet, bool userInvokedSearch)
+        {
+            var queue = _queueService.GetQueue();
+            var queuedAlbumIds = queue.Where(item => item.Album != null).Select(item => item.Album.Id).ToHashSet();
+            var queuedRecordingIds = queue.Where(item => item.RemoteAlbum?.TargetRecordingIds != null)
+                                          .SelectMany(item => item.RemoteAlbum.TargetRecordingIds)
+                                          .ToHashSet();
+            var downloadedCount = 0;
+            var searchedTrackCount = 0;
+
+            foreach (var artist in artists.Where(artist => artist.Monitored && artist.SongMode))
+            {
+                var trackGroups = _trackService.GetTracksByArtist(artist.Id)
+                                               .Where(track => track.Monitored && track.ForeignRecordingId.IsNotNullOrWhiteSpace())
+                                               .Where(track => track.AlbumRelease.Value.Album.Value.ReleaseDate <= DateTime.UtcNow)
+                                               .GroupBy(track => track.ForeignRecordingId);
+                var trackIds = new List<int>();
+
+                foreach (var trackGroup in trackGroups)
+                {
+                    if (queuedRecordingIds.Contains(trackGroup.Key) ||
+                        trackGroup.Any(track => queuedAlbumIds.Contains(track.AlbumRelease.Value.AlbumId)))
+                    {
+                        continue;
+                    }
+
+                    var files = trackGroup.Where(track => track.HasFile)
+                                          .Select(track => track.TrackFile.Value)
+                                          .DistinctBy(file => file.Id)
+                                          .ToList();
+                    var shouldSearch = cutoffUnmet ?
+                        files.Any() && files.All(file => _upgradableSpecification.QualityCutoffNotMet(artist.QualityProfile.Value, file.Quality)) :
+                        files.Empty();
+
+                    if (shouldSearch)
+                    {
+                        trackIds.Add(trackGroup.First().Id);
+                    }
+                }
+
+                if (!trackIds.Any())
+                {
+                    continue;
+                }
+
+                searchedTrackCount += trackIds.Count;
+                var decisions = await TrackSearch(trackIds, userInvokedSearch, false);
+                var processed = await _processDownloadDecisions.ProcessDecisions(decisions, true);
+                downloadedCount += processed.Grabbed.Count;
+            }
+
+            _logger.ProgressInfo("Completed Song Mode search for {0} songs. {1} reports downloaded.", searchedTrackCount, downloadedCount);
+        }
+
+        private List<Artist> GetSongModeArtists(int? artistId)
+        {
+            if (artistId.HasValue)
+            {
+                return new List<Artist> { _artistService.GetArtist(artistId.Value) };
+            }
+
+            return _artistService.GetAllArtists().Where(artist => artist.SongMode).ToList();
         }
 
         public void Execute(AlbumSearchCommand message)
@@ -243,7 +314,7 @@ namespace NzbDrone.Core.IndexerSearch
                     SortKey = "Id"
                 };
 
-                pagingSpec.FilterExpressions.Add(v => v.Monitored == true && v.Artist.Value.Monitored == true);
+                pagingSpec.FilterExpressions.Add(v => v.Monitored == true && v.Artist.Value.Monitored == true && v.Artist.Value.SongMode == false);
 
                 albums = _albumService.AlbumsWithoutFiles(pagingSpec).Records.Where(e => e.ArtistId.Equals(artistId)).ToList();
             }
@@ -257,7 +328,7 @@ namespace NzbDrone.Core.IndexerSearch
                     SortKey = "Id"
                 };
 
-                pagingSpec.FilterExpressions.Add(v => v.Monitored == true && v.Artist.Value.Monitored == true);
+                pagingSpec.FilterExpressions.Add(v => v.Monitored == true && v.Artist.Value.Monitored == true && v.Artist.Value.SongMode == false);
 
                 albums = _albumService.AlbumsWithoutFiles(pagingSpec).Records.ToList();
             }
@@ -266,6 +337,7 @@ namespace NzbDrone.Core.IndexerSearch
             var missing = albums.Where(e => !queue.Contains(e.Id)).ToList();
 
             SearchForBulkAlbums(missing, message.Trigger == CommandTrigger.Manual).GetAwaiter().GetResult();
+            SearchForSongModeTracks(GetSongModeArtists(message.ArtistId), false, message.Trigger == CommandTrigger.Manual).GetAwaiter().GetResult();
         }
 
         public void Execute(CutoffUnmetAlbumSearchCommand message)
@@ -278,13 +350,16 @@ namespace NzbDrone.Core.IndexerSearch
                 SortKey = "Id"
             };
 
-            pagingSpec.FilterExpressions.Add(v => v.Monitored == true && v.Artist.Value.Monitored == true);
+            pagingSpec.FilterExpressions.Add(v => v.Monitored == true && v.Artist.Value.Monitored == true && v.Artist.Value.SongMode == false);
 
-            var albums = _albumCutoffService.AlbumsWhereCutoffUnmet(pagingSpec).Records.ToList();
+            var albums = _albumCutoffService.AlbumsWhereCutoffUnmet(pagingSpec).Records
+                                             .Where(album => !message.ArtistId.HasValue || album.ArtistId == message.ArtistId.Value)
+                                             .ToList();
             var queue = _queueService.GetQueue().Where(q => q.Album != null).Select(q => q.Album.Id);
             var cutoffUnmet = albums.Where(e => !queue.Contains(e.Id)).ToList();
 
             SearchForBulkAlbums(cutoffUnmet, message.Trigger == CommandTrigger.Manual).GetAwaiter().GetResult();
+            SearchForSongModeTracks(GetSongModeArtists(message.ArtistId), true, message.Trigger == CommandTrigger.Manual).GetAwaiter().GetResult();
         }
     }
 }

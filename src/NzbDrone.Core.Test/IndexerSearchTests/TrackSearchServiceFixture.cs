@@ -1,16 +1,23 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using NzbDrone.Core.Datastore;
 using NzbDrone.Core.DecisionEngine;
+using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.Messaging.Commands;
+using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.Profiles.Qualities;
+using NzbDrone.Core.Queue;
+using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
 
 namespace NzbDrone.Core.Test.IndexerSearchTests
@@ -18,6 +25,68 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
     [TestFixture]
     public class TrackSearchServiceFixture : CoreTest<AlbumSearchService>
     {
+        private (Artist Artist, Track Track, List<DownloadDecision> Decisions) GivenSongModeTrack(bool hasFile)
+        {
+            var artist = new Artist
+            {
+                Id = 1,
+                Monitored = true,
+                SongMode = true,
+                QualityProfile = new QualityProfile()
+            };
+            var album = new Album
+            {
+                Id = 10,
+                Monitored = false,
+                AlbumType = PrimaryAlbumType.Album.Name,
+                ReleaseDate = DateTime.UtcNow.AddDays(-1),
+                Artist = artist
+            };
+            var release = new AlbumRelease { Id = 11, AlbumId = album.Id, Album = album, Monitored = true };
+            var trackFile = new TrackFile { Id = 30, Quality = new QualityModel() };
+            var track = new Track
+            {
+                Id = 20,
+                Monitored = true,
+                ForeignRecordingId = "recording",
+                AlbumReleaseId = release.Id,
+                AlbumRelease = release,
+                TrackFileId = hasFile ? trackFile.Id : 0,
+                TrackFile = trackFile
+            };
+            var decisions = new List<DownloadDecision> { new DownloadDecision(new RemoteAlbum()) };
+
+            Mocker.GetMock<IArtistService>()
+                  .Setup(service => service.GetArtist(artist.Id))
+                  .Returns(artist);
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracksByArtist(artist.Id))
+                  .Returns(new List<Track> { track });
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracks(It.IsAny<IEnumerable<int>>()))
+                  .Returns(new List<Track> { track });
+            Mocker.GetMock<IReleaseService>()
+                  .Setup(service => service.GetReleasesByRecordingIds(It.IsAny<List<string>>()))
+                  .Returns(new List<AlbumRelease> { release });
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracksByReleases(It.IsAny<List<int>>()))
+                  .Returns(new List<Track> { track });
+            Mocker.GetMock<IAlbumService>()
+                  .Setup(service => service.GetAlbums(It.IsAny<IEnumerable<int>>()))
+                  .Returns(new List<Album> { album });
+            Mocker.GetMock<ISearchForReleases>()
+                  .Setup(service => service.AlbumSearch(album.Id, false, false, false))
+                  .Returns(Task.FromResult(decisions));
+            Mocker.GetMock<IProcessDownloadDecisions>()
+                  .Setup(service => service.ProcessDecisions(decisions, true))
+                  .Returns(Task.FromResult(new ProcessedDecisions(decisions, new List<DownloadDecision>(), new List<DownloadDecision>())));
+            Mocker.GetMock<IQueueService>()
+                  .Setup(service => service.GetQueue())
+                  .Returns(new List<NzbDrone.Core.Queue.Queue>());
+
+            return (artist, track, decisions);
+        }
+
         [Test]
         public void should_target_only_requested_recordings()
         {
@@ -236,6 +305,47 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
             decisions.Should().ContainSingle();
             decisions.Single().RemoteAlbum.TargetRecordingIds.Should().BeEquivalentTo("recording-1", "recording-2");
             decisions.Single().RemoteAlbum.TrackSearchPriority.Should().Be(1);
+        }
+
+        [Test]
+        public void missing_search_should_search_monitored_song_on_unmonitored_album()
+        {
+            var data = GivenSongModeTrack(false);
+            Mocker.GetMock<IAlbumService>()
+                  .Setup(service => service.AlbumsWithoutFiles(It.IsAny<PagingSpec<Album>>()))
+                  .Returns<PagingSpec<Album>>(pagingSpec =>
+                  {
+                      pagingSpec.Records = new List<Album>();
+                      return pagingSpec;
+                  });
+
+            Subject.Execute(new MissingAlbumSearchCommand(data.Artist.Id));
+
+            Mocker.GetMock<ISearchForReleases>()
+                  .Verify(service => service.AlbumSearch(10, false, false, false), Times.Once());
+            data.Decisions.Single().RemoteAlbum.TargetRecordingIds.Should().Equal(data.Track.ForeignRecordingId);
+        }
+
+        [Test]
+        public void cutoff_search_should_search_monitored_song_on_unmonitored_album()
+        {
+            var data = GivenSongModeTrack(true);
+            Mocker.GetMock<IAlbumCutoffService>()
+                  .Setup(service => service.AlbumsWhereCutoffUnmet(It.IsAny<PagingSpec<Album>>()))
+                  .Returns<PagingSpec<Album>>(pagingSpec =>
+                  {
+                      pagingSpec.Records = new List<Album>();
+                      return pagingSpec;
+                  });
+            Mocker.GetMock<IUpgradableSpecification>()
+                  .Setup(service => service.QualityCutoffNotMet(It.IsAny<QualityProfile>(), It.IsAny<QualityModel>(), null))
+                  .Returns(true);
+
+            Subject.Execute(new CutoffUnmetAlbumSearchCommand(data.Artist.Id));
+
+            Mocker.GetMock<ISearchForReleases>()
+                  .Verify(service => service.AlbumSearch(10, false, false, false), Times.Once());
+            data.Decisions.Single().RemoteAlbum.TargetRecordingIds.Should().Equal(data.Track.ForeignRecordingId);
         }
     }
 }

@@ -127,6 +127,11 @@ namespace NzbDrone.Core.DecisionEngine
                         {
                             _aggregationService.Augment(remoteAlbum);
 
+                            if (searchCriteria == null && remoteAlbum.Artist.SongMode)
+                            {
+                                remoteAlbum.TargetRecordingIds = remoteAlbum.MonitoredRecordingIds();
+                            }
+
                             remoteAlbum.CustomFormats = _formatCalculator.ParseCustomFormat(remoteAlbum, remoteAlbum.Release.Size);
                             remoteAlbum.CustomFormatScore = remoteAlbum?.Artist?.QualityProfile?.Value.CalculateCustomFormatScore(remoteAlbum.CustomFormats) ?? 0;
 

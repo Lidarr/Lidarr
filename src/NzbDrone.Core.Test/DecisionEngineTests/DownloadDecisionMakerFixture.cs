@@ -138,6 +138,25 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         }
 
         [Test]
+        public void should_target_monitored_recordings_for_song_mode_rss_release()
+        {
+            GivenSpecifications(_pass1);
+            var monitoredTrack = new Track { ForeignRecordingId = "monitored", Monitored = true };
+            var unmonitoredTrack = new Track { ForeignRecordingId = "unmonitored", Monitored = false };
+            var release = new AlbumRelease
+            {
+                Monitored = true,
+                Tracks = new LazyLoaded<List<Track>>(new List<Track> { monitoredTrack, unmonitoredTrack })
+            };
+            _remoteAlbum.Artist.SongMode = true;
+            _remoteAlbum.Albums.Single().AlbumReleases = new LazyLoaded<List<AlbumRelease>>(new List<AlbumRelease> { release });
+
+            var result = Subject.GetRssDecision(_reports);
+
+            result.Single().RemoteAlbum.TargetRecordingIds.Should().Equal("monitored");
+        }
+
+        [Test]
         public void should_have_same_number_of_rejections_as_specs_that_failed()
         {
             GivenSpecifications(_pass1, _pass2, _pass3, _fail1, _fail2, _fail3);
