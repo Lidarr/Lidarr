@@ -605,5 +605,43 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             qualifiedReports.Skip(2).First().RemoteAlbum.Should().Be(remoteAlbum1);
             qualifiedReports.Last().RemoteAlbum.Should().Be(remoteAlbum3);
         }
+
+        [Test]
+        public void should_prefer_song_mode_album_source_before_generic_release_tiebreakers()
+        {
+            var compilation = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC), indexerPriority: 50);
+            var original = GivenRemoteAlbum(new List<Album> { GivenAlbum(2) }, new QualityModel(Quality.FLAC), indexerPriority: 1);
+            compilation.TrackSearchPriority = 1;
+            original.TrackSearchPriority = 4;
+
+            var decisions = new List<DownloadDecision>
+            {
+                new DownloadDecision(original),
+                new DownloadDecision(compilation)
+            };
+
+            var qualifiedReports = Subject.PrioritizeDecisions(decisions);
+
+            qualifiedReports.First().RemoteAlbum.Should().Be(compilation);
+        }
+
+        [Test]
+        public void should_prefer_quality_over_song_mode_album_source()
+        {
+            var compilation = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_320));
+            var original = GivenRemoteAlbum(new List<Album> { GivenAlbum(2) }, new QualityModel(Quality.FLAC));
+            compilation.TrackSearchPriority = 1;
+            original.TrackSearchPriority = 4;
+
+            var decisions = new List<DownloadDecision>
+            {
+                new DownloadDecision(compilation),
+                new DownloadDecision(original)
+            };
+
+            var qualifiedReports = Subject.PrioritizeDecisions(decisions);
+
+            qualifiedReports.First().RemoteAlbum.Should().Be(original);
+        }
     }
 }

@@ -165,6 +165,9 @@ namespace NzbDrone.Core.IndexerSearch
                 foreach (var decision in decisions)
                 {
                     decision.RemoteAlbum.TargetRecordingIds = albumTargetRecordingIds;
+                    decision.RemoteAlbum.TrackSearchPriority = decision.RemoteAlbum.ParsedAlbumInfo?.Discography == true ?
+                        0 :
+                        GetTrackSearchPriority(album) + 1;
                 }
 
                 allDecisions.AddRange(decisions);
@@ -190,6 +193,9 @@ namespace NzbDrone.Core.IndexerSearch
                 selected.RemoteAlbum.TargetRecordingIds = group.SelectMany(decision => decision.RemoteAlbum.TargetRecordingIds)
                                                                .Distinct()
                                                                .ToList();
+                selected.RemoteAlbum.TrackSearchPriority = group.Where(decision => decision.RemoteAlbum.TrackSearchPriority.HasValue)
+                                                                .Select(decision => decision.RemoteAlbum.TrackSearchPriority)
+                                                                .Min();
                 merged.Add(selected);
             }
 

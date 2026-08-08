@@ -19,6 +19,7 @@ namespace NzbDrone.Core.Parser.Model
         public int CustomFormatScore { get; set; }
         public ReleaseSourceType ReleaseSource { get; set; }
         public List<string> TargetRecordingIds { get; set; }
+        public int? TrackSearchPriority { get; set; }
 
         public RemoteAlbum()
         {

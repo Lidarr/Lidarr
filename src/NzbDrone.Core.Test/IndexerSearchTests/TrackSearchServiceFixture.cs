@@ -131,6 +131,11 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
                 decisions[album.Id].Single().RemoteAlbum.TargetRecordingIds.Should().Equal("recording");
             }
 
+            decisions[compilationAlbum.Id].Single().RemoteAlbum.TrackSearchPriority.Should().Be(1);
+            decisions[epAlbum.Id].Single().RemoteAlbum.TrackSearchPriority.Should().Be(2);
+            decisions[singleAlbum.Id].Single().RemoteAlbum.TrackSearchPriority.Should().Be(3);
+            decisions[originalAlbum.Id].Single().RemoteAlbum.TrackSearchPriority.Should().Be(4);
+
             Mocker.GetMock<IProcessDownloadDecisions>()
                   .Verify(service => service.ProcessDecisions(
                       It.Is<List<DownloadDecision>>(items => items.Count == albums.Count),
@@ -138,10 +143,53 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
         }
 
         [Test]
+        public async Task should_give_discographies_the_highest_track_search_priority()
+        {
+            var album = new Album { Id = 10, AlbumType = PrimaryAlbumType.Album.Name };
+            var release = new AlbumRelease { Id = 11, AlbumId = album.Id, Album = album };
+            var track = new Track
+            {
+                Id = 20,
+                ForeignRecordingId = "recording",
+                AlbumReleaseId = release.Id,
+                AlbumRelease = release
+            };
+            var decision = new DownloadDecision(new RemoteAlbum
+            {
+                ParsedAlbumInfo = new ParsedAlbumInfo { Discography = true }
+            });
+
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracks(It.IsAny<IEnumerable<int>>()))
+                  .Returns(new List<Track> { track });
+            Mocker.GetMock<IReleaseService>()
+                  .Setup(service => service.GetReleasesByRecordingIds(It.IsAny<List<string>>()))
+                  .Returns(new List<AlbumRelease> { release });
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracksByReleases(It.IsAny<List<int>>()))
+                  .Returns(new List<Track> { track });
+            Mocker.GetMock<IAlbumService>()
+                  .Setup(service => service.GetAlbums(It.IsAny<IEnumerable<int>>()))
+                  .Returns(new List<Album> { album });
+            Mocker.GetMock<ISearchForReleases>()
+                  .Setup(service => service.AlbumSearch(album.Id, false, true, false))
+                  .Returns(Task.FromResult(new List<DownloadDecision> { decision }));
+
+            var decisions = await Subject.TrackSearch(new List<int> { track.Id }, true, false);
+
+            decisions.Single().RemoteAlbum.TrackSearchPriority.Should().Be(0);
+        }
+
+        [Test]
         public async Task should_merge_the_same_release_found_for_multiple_requested_recordings()
         {
             var album1 = new Album { Id = 10, AlbumType = PrimaryAlbumType.Album.Name };
-            var album2 = new Album { Id = 20, AlbumType = PrimaryAlbumType.Album.Name };
+            var album2 = new Album
+            {
+                Id = 20,
+                AlbumType = PrimaryAlbumType.Album.Name,
+                SecondaryTypes = new List<SecondaryAlbumType> { SecondaryAlbumType.Compilation }
+            };
             var release1 = new AlbumRelease { Id = 100, AlbumId = album1.Id, Album = album1 };
             var release2 = new AlbumRelease { Id = 200, AlbumId = album2.Id, Album = album2 };
             var track1 = new Track
@@ -187,6 +235,7 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
 
             decisions.Should().ContainSingle();
             decisions.Single().RemoteAlbum.TargetRecordingIds.Should().BeEquivalentTo("recording-1", "recording-2");
+            decisions.Single().RemoteAlbum.TrackSearchPriority.Should().Be(1);
         }
     }
 }
