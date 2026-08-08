@@ -194,6 +194,87 @@ namespace NzbDrone.Core.Test.MediaFiles
         }
 
         [Test]
+        public void should_preserve_shared_file_when_only_some_linked_tracks_are_targeted()
+        {
+            var decision = _approvedDecisions.First();
+            var selectedTrack = decision.Item.Tracks.Single();
+            selectedTrack.Id = 1;
+            selectedTrack.ForeignRecordingId = "selected";
+
+            var unselectedTrack = new Track
+            {
+                Id = 2,
+                ForeignRecordingId = "unselected"
+            };
+
+            decision.Item.Release.Tracks = new List<Track> { selectedTrack, unselectedTrack };
+
+            var sharedFile = new TrackFile
+            {
+                Id = 1,
+                Path = Path.Combine(decision.Item.Artist.Path, "old-shared.flac"),
+                Tracks = new List<Track> { selectedTrack, unselectedTrack }
+            };
+
+            Mocker.GetMock<IMediaFileService>()
+                  .Setup(service => service.GetFilesByAlbum(decision.Item.Album.Id))
+                  .Returns(new List<TrackFile> { sharedFile });
+
+            Subject.Import(new List<ImportDecision<LocalTrack>> { decision }, true, new DownloadClientItem
+            {
+                TargetRecordingIds = new List<string> { selectedTrack.ForeignRecordingId }
+            });
+
+            Mocker.GetMock<IMediaFileService>()
+                  .Verify(service => service.Delete(sharedFile, It.IsAny<DeleteMediaFileReason>()), Times.Never());
+            Mocker.GetMock<IRecycleBinProvider>()
+                  .Verify(service => service.DeleteFile(sharedFile.Path, It.IsAny<string>()), Times.Never());
+        }
+
+        [Test]
+        public void should_delete_shared_file_when_every_linked_track_is_targeted()
+        {
+            var decision = _approvedDecisions.First();
+            var firstTrack = decision.Item.Tracks.Single();
+            firstTrack.Id = 1;
+            firstTrack.ForeignRecordingId = "first";
+
+            var secondTrack = new Track
+            {
+                Id = 2,
+                ForeignRecordingId = "second"
+            };
+
+            decision.Item.Tracks = new List<Track> { firstTrack, secondTrack };
+            decision.Item.Release.Tracks = new List<Track> { firstTrack, secondTrack };
+
+            var sharedFile = new TrackFile
+            {
+                Id = 1,
+                Path = Path.Combine(decision.Item.Artist.Path, "old-shared.flac"),
+                Tracks = new List<Track> { firstTrack, secondTrack }
+            };
+
+            Mocker.GetMock<IDiskProvider>()
+                  .Setup(provider => provider.GetParentFolder(decision.Item.Artist.Path))
+                  .Returns(@"C:\Test\Music".AsOsAgnostic());
+            Mocker.GetMock<IDiskProvider>()
+                  .Setup(provider => provider.GetParentFolder(sharedFile.Path))
+                  .Returns(decision.Item.Artist.Path);
+            Mocker.GetMock<IMediaFileService>()
+                  .Setup(service => service.GetFilesByAlbum(decision.Item.Album.Id))
+                  .Returns(new List<TrackFile> { sharedFile });
+
+            Subject.Import(new List<ImportDecision<LocalTrack>> { decision }, true, new DownloadClientItem
+            {
+                TargetRecordingIds = new List<string> { firstTrack.ForeignRecordingId, secondTrack.ForeignRecordingId }
+            });
+
+            Mocker.GetMock<IMediaFileService>()
+                  .Verify(service => service.Delete(sharedFile, DeleteMediaFileReason.Upgrade), Times.Once());
+        }
+
+        [Test]
         public void should_publish_TrackImportedEvent_for_new_downloads()
         {
             Subject.Import(new List<ImportDecision<LocalTrack>> { _approvedDecisions.First() }, true);

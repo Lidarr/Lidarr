@@ -491,9 +491,10 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                                                   .Where(id => id.IsNotNullOrWhiteSpace())
                                                   .ToHashSet();
 
-                previousFiles = previousFiles.Where(file => file.Tracks.Value.Any(track =>
-                    trackIds.Contains(track.Id) ||
-                    recordingIds.Contains(track.ForeignRecordingId))).ToList();
+                previousFiles = previousFiles.Where(file => file.Tracks.Value.Any() &&
+                    file.Tracks.Value.All(track =>
+                        trackIds.Contains(track.Id) ||
+                        recordingIds.Contains(track.ForeignRecordingId))).ToList();
             }
 
             _logger.Debug($"Deleting {previousFiles.Count} existing files for {album}");
