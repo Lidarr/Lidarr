@@ -138,6 +138,11 @@ namespace NzbDrone.Core.Music
 
         protected override bool ShouldDelete(Album local)
         {
+            if (local.AddOptions.AddType == AlbumAddType.SongSearch && local.Artist.Value.SongMode)
+            {
+                return false;
+            }
+
             // not manually added and has no files
             return local.AddOptions.AddType != AlbumAddType.Manual &&
                 !_mediaFileService.GetFilesByAlbum(local.Id).Any();

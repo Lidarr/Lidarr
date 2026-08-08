@@ -10,6 +10,7 @@ using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Messaging.Commands;
+using NzbDrone.Core.MetadataSource;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Queue;
 
@@ -29,6 +30,8 @@ namespace NzbDrone.Core.IndexerSearch
         private readonly ISearchForReleases _releaseSearchService;
         private readonly IAlbumService _albumService;
         private readonly IArtistService _artistService;
+        private readonly ISearchForNewAlbum _metadataAlbumSearchService;
+        private readonly IRefreshAlbumService _refreshAlbumService;
         private readonly IReleaseService _releaseService;
         private readonly ITrackService _trackService;
         private readonly IAlbumCutoffService _albumCutoffService;
@@ -40,6 +43,8 @@ namespace NzbDrone.Core.IndexerSearch
         public AlbumSearchService(ISearchForReleases nzbSearchService,
             IAlbumService albumService,
             IArtistService artistService,
+            ISearchForNewAlbum metadataAlbumSearchService,
+            IRefreshAlbumService refreshAlbumService,
             IReleaseService releaseService,
             ITrackService trackService,
             IAlbumCutoffService albumCutoffService,
@@ -51,6 +56,8 @@ namespace NzbDrone.Core.IndexerSearch
             _releaseSearchService = nzbSearchService;
             _albumService = albumService;
             _artistService = artistService;
+            _metadataAlbumSearchService = metadataAlbumSearchService;
+            _refreshAlbumService = refreshAlbumService;
             _releaseService = releaseService;
             _trackService = trackService;
             _albumCutoffService = albumCutoffService;
@@ -184,6 +191,8 @@ namespace NzbDrone.Core.IndexerSearch
                 return new List<DownloadDecision>();
             }
 
+            DiscoverSongSearchAlbums(tracks, targetRecordingIds);
+
             var candidateReleases = _releaseService.GetReleasesByRecordingIds(targetRecordingIds) ?? new List<AlbumRelease>();
             var candidateReleaseIds = candidateReleases.Select(release => release.Id).Distinct().ToList();
             var candidateTracks = candidateReleaseIds.Any() ?
@@ -247,6 +256,99 @@ namespace NzbDrone.Core.IndexerSearch
             _logger.ProgressInfo("Track search found {0} candidate albums containing {1} requested recordings.", candidateAlbums.Count, targetRecordingIds.Count);
 
             return MergeTrackSearchDecisions(allDecisions);
+        }
+
+        private void DiscoverSongSearchAlbums(List<Track> tracks, List<string> targetRecordingIds)
+        {
+            var selectedArtists = tracks.Select(track => track.AlbumRelease.Value.Album.Value.Artist.Value)
+                                        .Where(artist => artist != null)
+                                        .DistinctBy(artist => artist.Id)
+                                        .ToList();
+
+            if (!selectedArtists.Any())
+            {
+                return;
+            }
+
+            var monitoredRecordingIds = tracks.Where(track => track.Monitored)
+                                               .Select(track => track.ForeignRecordingId)
+                                               .Where(id => id.IsNotNullOrWhiteSpace())
+                                               .ToHashSet();
+
+            foreach (var artist in selectedArtists)
+            {
+                var artistTracks = _trackService.GetTracksByArtist(artist.Id) ?? new List<Track>();
+                monitoredRecordingIds.UnionWith(artistTracks.Where(track => track.Monitored)
+                                                            .Select(track => track.ForeignRecordingId)
+                                                            .Where(id => id.IsNotNullOrWhiteSpace()));
+            }
+
+            List<Album> metadataAlbums;
+
+            try
+            {
+                metadataAlbums = _metadataAlbumSearchService.SearchForNewAlbumByRecordingIds(targetRecordingIds) ?? new List<Album>();
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Unable to discover additional albums containing the requested recordings");
+                return;
+            }
+
+            foreach (var metadataAlbum in metadataAlbums.Where(album => album.Id == 0))
+            {
+                var metadataArtist = metadataAlbum.Artist?.Value;
+                var artist = selectedArtists.FirstOrDefault(selected =>
+                    (selected.Id > 0 && selected.Id == metadataArtist?.Id) ||
+                    (selected.ForeignArtistId.IsNotNullOrWhiteSpace() && selected.ForeignArtistId == metadataArtist?.ForeignArtistId));
+
+                if (artist == null || _albumService.FindById(metadataAlbum.ForeignAlbumId) != null)
+                {
+                    continue;
+                }
+
+                metadataAlbum.Artist = artist;
+                metadataAlbum.ArtistMetadata = artist.Metadata.Value;
+                metadataAlbum.ArtistMetadataId = artist.ArtistMetadataId;
+                metadataAlbum.ProfileId = artist.QualityProfileId;
+                metadataAlbum.Monitored = false;
+                metadataAlbum.Added = DateTime.UtcNow;
+                metadataAlbum.AddOptions.AddType = AlbumAddType.SongSearch;
+
+                try
+                {
+                    _logger.Debug("Adding album {0} as a Song Mode search candidate", metadataAlbum);
+                    _albumService.AddAlbum(metadataAlbum, false);
+                    _refreshAlbumService.RefreshAlbumInfo(metadataAlbum, null, false);
+
+                    var albumReleaseIds = _releaseService.GetReleasesByAlbum(metadataAlbum.Id)
+                                                         .Select(release => release.Id)
+                                                         .ToList();
+                    var albumTracks = albumReleaseIds.Any() ?
+                        _trackService.GetTracksByReleases(albumReleaseIds) :
+                        new List<Track>();
+                    var unselectedTrackIds = albumTracks.Where(track => !monitoredRecordingIds.Contains(track.ForeignRecordingId))
+                                                        .Select(track => track.Id)
+                                                        .ToList();
+                    var selectedTrackIds = albumTracks.Where(track => monitoredRecordingIds.Contains(track.ForeignRecordingId))
+                                                      .Select(track => track.Id)
+                                                      .ToList();
+
+                    if (unselectedTrackIds.Any())
+                    {
+                        _trackService.SetMonitored(unselectedTrackIds, false);
+                    }
+
+                    if (selectedTrackIds.Any())
+                    {
+                        _trackService.SetMonitored(selectedTrackIds, true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "Unable to add album {0} as a Song Mode search candidate", metadataAlbum);
+                }
+            }
         }
 
         private static List<DownloadDecision> MergeTrackSearchDecisions(List<DownloadDecision> decisions)
