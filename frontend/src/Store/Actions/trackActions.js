@@ -183,6 +183,8 @@ export const actionHandlers = handleThunks({
         }))
       ));
     });
+
+    return promise;
   }
 
 });
