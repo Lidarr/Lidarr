@@ -391,6 +391,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                         Tracks = tracks,
                         FileTrackInfo = fileTrackInfo,
                         Path = file.Path,
+                        ReleaseGroup = file.ReleaseGroup,
                         Size = fileInfo.Length,
                         Modified = fileInfo.LastWriteTimeUtc,
                         Quality = file.Quality,
