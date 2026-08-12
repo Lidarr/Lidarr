@@ -108,6 +108,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 var localTrack = new LocalTrack
                 {
                     DownloadClientAlbumInfo = downloadClientItemInfo,
+                    DownloadItem = downloadClientItem,
                     FolderAlbumInfo = folderInfo,
                     Path = file.FullName,
                     Size = file.Length,

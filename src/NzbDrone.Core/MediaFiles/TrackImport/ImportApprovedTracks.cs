@@ -237,7 +237,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                         trackFile.SceneName = localTrack.SceneName;
                         trackFile.OriginalFilePath = GetOriginalFilePath(downloadClientItem, localTrack);
 
-                        var moveResult = _trackFileUpgrader.UpgradeTrackFile(trackFile, localTrack, copyOnly, downloadClientItem?.DownloadClientInfo?.Id ?? 0);
+                        var moveResult = _trackFileUpgrader.UpgradeTrackFile(trackFile, localTrack, copyOnly);
                         oldFiles = moveResult.OldFiles;
                     }
                     else
@@ -252,7 +252,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
                         try
                         {
-                            _audioTagService.WriteTags(trackFile, false, false, downloadClientItem?.DownloadClientInfo?.Id ?? 0);
+                            _audioTagService.WriteTags(trackFile, localTrack.DownloadItem, false);
                         }
                         catch (InvalidOperationException ex)
                         {

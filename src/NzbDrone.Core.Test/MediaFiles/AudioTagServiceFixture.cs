@@ -7,9 +7,11 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using NzbDrone.Common.Cache;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Download;
 using NzbDrone.Core.History;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Events;
@@ -63,6 +65,8 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         public void Setup()
         {
             _diskProvider = Mocker.Resolve<IDiskProvider>(FileSystemType.Actual);
+
+            Mocker.SetConstant<ICacheManager>(new CacheManager());
 
             _taggingProfile = new TaggingProfile
             {
@@ -476,6 +480,86 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
 
             Mocker.GetMock<IEventAggregator>()
                 .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Once());
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_use_download_client_from_download_item(string filename)
+        {
+            GivenFileCopy(filename);
+
+            var file = GivenPopulatedTrackfile(0);
+            file.Path = _copiedFile;
+
+            var downloadItem = new DownloadClientItem
+            {
+                DownloadClientInfo = new DownloadClientItemClientInfo { Id = 5 }
+            };
+
+            Subject.WriteTags(file, downloadItem, false);
+
+            Mocker.GetMock<ITaggingProfileService>()
+                .Verify(x => x.BestForTags(It.IsAny<HashSet<int>>(), 5), Times.Once());
+
+            Mocker.GetMock<IHistoryService>()
+                .Verify(x => x.GetByAlbum(It.IsAny<int>(), It.IsAny<EntityHistoryEventType?>()), Times.Never());
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_resolve_download_client_from_import_history(string filename)
+        {
+            GivenFileCopy(filename);
+
+            var file = GivenPopulatedTrackfile(0);
+            file.Path = _copiedFile;
+
+            Mocker.GetMock<IHistoryService>()
+                .Setup(x => x.GetByAlbum(file.AlbumId, EntityHistoryEventType.TrackFileImported))
+                .Returns(new List<EntityHistory>
+                {
+                    new EntityHistory
+                    {
+                        Date = DateTime.UtcNow,
+                        Data = new Dictionary<string, string>
+                        {
+                            { "fileId", file.Id.ToString() },
+                            { "downloadClientId", "5" }
+                        }
+                    }
+                });
+
+            Subject.WriteTags(file, false);
+
+            Mocker.GetMock<ITaggingProfileService>()
+                .Verify(x => x.BestForTags(It.IsAny<HashSet<int>>(), 5), Times.Once());
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_not_use_grab_history_when_import_event_has_no_client_id(string filename)
+        {
+            GivenFileCopy(filename);
+
+            var file = GivenPopulatedTrackfile(0);
+            file.Path = _copiedFile;
+
+            Mocker.GetMock<IHistoryService>()
+                .Setup(x => x.GetByAlbum(file.AlbumId, EntityHistoryEventType.TrackFileImported))
+                .Returns(new List<EntityHistory>
+                {
+                    new EntityHistory
+                    {
+                        Date = DateTime.UtcNow,
+                        DownloadId = "abcd",
+                        Data = new Dictionary<string, string>
+                        {
+                            { "fileId", file.Id.ToString() }
+                        }
+                    }
+                });
+
+            Subject.WriteTags(file, false);
+
+            Mocker.GetMock<ITaggingProfileService>()
+                .Verify(x => x.BestForTags(It.IsAny<HashSet<int>>(), 0), Times.Once());
         }
 
         [TestCase("nin.mp3")]

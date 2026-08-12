@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Disk;
 using NzbDrone.Core.Datastore;
+using NzbDrone.Core.Download;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
@@ -179,6 +180,21 @@ namespace NzbDrone.Core.Test.MediaFiles
             GivenMultipleTracksWithMultipleTrackFiles();
 
             Subject.UpgradeTrackFile(_trackFile, _localTrack).OldFiles.Count.Should().Be(2);
+        }
+
+        [Test]
+        public void should_write_tags_with_download_item()
+        {
+            GivenSingleTrackWithSingleTrackFile();
+
+            _localTrack.DownloadItem = new DownloadClientItem
+            {
+                DownloadClientInfo = new DownloadClientItemClientInfo { Id = 5 }
+            };
+
+            Subject.UpgradeTrackFile(_trackFile, _localTrack);
+
+            Mocker.GetMock<IAudioTagService>().Verify(v => v.WriteTags(_trackFile, _localTrack.DownloadItem, true, false), Times.Once());
         }
 
         [Test]
