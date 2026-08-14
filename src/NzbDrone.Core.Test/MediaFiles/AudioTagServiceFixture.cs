@@ -231,8 +231,8 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
             tag.MusicBrainzReleaseArtistId.Should().BeNull();
             tag.MusicBrainzReleaseGroupId.Should().BeNull();
             tag.MusicBrainzTrackId.Should().BeNull();
+            tag.MusicBrainzRecordingId.Should().BeNull();
             tag.MusicBrainzAlbumComment.Should().BeNull();
-            tag.MusicBrainzReleaseTrackId.Should().BeNull();
         }
 
         [Test]
