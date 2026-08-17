@@ -9,7 +9,7 @@ import AutoCompleteInput from './AutoCompleteInput';
 import CaptchaInputConnector from './CaptchaInputConnector';
 import CheckInput from './CheckInput';
 import DeviceInputConnector from './DeviceInputConnector';
-import DownloadClientSelectInputConnector from './DownloadClientSelectInputConnector';
+import DownloadClientSelectInput from './DownloadClientSelectInput';
 import DownloadClientsSelectInput from './DownloadClientsSelectInput';
 import EnhancedSelectInput from './EnhancedSelectInput';
 import EnhancedSelectInputConnector from './EnhancedSelectInputConnector';
@@ -90,7 +90,7 @@ function getComponent(type) {
       return IndexerFlagsSelectInput;
 
     case inputTypes.DOWNLOAD_CLIENT_SELECT:
-      return DownloadClientSelectInputConnector;
+      return DownloadClientSelectInput;
 
     case inputTypes.DOWNLOAD_CLIENTS_SELECT:
       return DownloadClientsSelectInput;
