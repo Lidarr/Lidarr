@@ -3,8 +3,10 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using Microsoft.Win32.SafeHandles;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnsureThat;
@@ -26,6 +28,25 @@ namespace NzbDrone.Windows.Disk
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool CreateHardLink(string lpFileName, string lpExistingFileName, IntPtr lpSecurityAttributes);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool GetFileInformationByHandle(SafeFileHandle hFile, out BY_HANDLE_FILE_INFORMATION lpFileInformation);
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct BY_HANDLE_FILE_INFORMATION
+        {
+            public uint FileAttributes;
+            public FILETIME CreationTime;
+            public FILETIME LastAccessTime;
+            public FILETIME LastWriteTime;
+            public uint VolumeSerialNumber;
+            public uint FileSizeHigh;
+            public uint FileSizeLow;
+            public uint NumberOfLinks;
+            public uint FileIndexHigh;
+            public uint FileIndexLow;
+        }
 
         public DiskProvider()
         : this(new FileSystem())
@@ -192,6 +213,32 @@ namespace NzbDrone.Windows.Disk
             {
                 Logger.Debug(ex, string.Format("Hardlink '{0}' to '{1}' failed.", source, destination));
                 return false;
+            }
+        }
+
+        public override int GetHardLinkCount(string path)
+        {
+            try
+            {
+                if (path.Length > 256 && !path.StartsWith(@"\\?\"))
+                {
+                    path = @"\\?\" + path;
+                }
+
+                using (var handle = File.OpenHandle(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+                {
+                    if (GetFileInformationByHandle(handle, out var fileInfo))
+                    {
+                        return (int)fileInfo.NumberOfLinks;
+                    }
+                }
+
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                Logger.Debug(ex, string.Format("Unable to get hard link count for '{0}'.", path));
+                return 1;
             }
         }
 

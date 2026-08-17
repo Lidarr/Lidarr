@@ -136,5 +136,22 @@ namespace NzbDrone.Core.Test.Profiles.Tagging
             result.First().Id.Should().Be(_clientProfile.Id);
             result.First().Order.Should().Be(1);
         }
+
+        [Test]
+        public void get_seeded_default_profile_should_return_seeded_profile()
+        {
+            Subject.GetSeededDefaultProfile().Should().BeSameAs(_defaultProfile);
+        }
+
+        [Test]
+        public void get_seeded_default_profile_should_fall_back_when_seeded_profile_is_missing()
+        {
+            _profiles.Remove(_defaultProfile);
+
+            var result = Subject.GetSeededDefaultProfile();
+
+            result.Id.Should().Be(0);
+            result.WriteAudioTags.Should().Be(WriteAudioTagsType.No);
+        }
     }
 }

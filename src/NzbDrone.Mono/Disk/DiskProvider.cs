@@ -456,6 +456,19 @@ namespace NzbDrone.Mono.Disk
             }
         }
 
+        public override int GetHardLinkCount(string path)
+        {
+            try
+            {
+                return (int)UnixFileSystemInfo.GetFileSystemEntry(path).LinkCount;
+            }
+            catch (Exception ex)
+            {
+                _logger.Debug(ex, "Unable to get hard link count for '{0}'.", path);
+                return 1;
+            }
+        }
+
         private static int GetUserId(string user)
         {
             if (string.IsNullOrWhiteSpace(user))

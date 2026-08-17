@@ -24,6 +24,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             items.First().ScrubAudioTags.Should().BeFalse();
             items.First().EmbedCoverArt.Should().BeTrue();
             items.First().DownloadClientIds.Should().Be("[]");
+            items.First().SkipHardlinkedFiles.Should().BeFalse();
         }
 
         [Test]
@@ -93,6 +94,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
         public bool ScrubAudioTags { get; set; }
         public bool EmbedCoverArt { get; set; }
         public string DownloadClientIds { get; set; }
+        public bool SkipHardlinkedFiles { get; set; }
     }
 
     public class Config082

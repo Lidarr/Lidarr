@@ -10,6 +10,7 @@ interface TaggingProfile extends ModelBase {
   order: number;
   tags: number[];
   downloadClientIds: number[];
+  skipHardlinkedFiles: boolean;
 }
 
 export default TaggingProfile;
