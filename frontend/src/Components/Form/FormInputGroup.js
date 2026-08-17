@@ -10,7 +10,6 @@ import CaptchaInputConnector from './CaptchaInputConnector';
 import CheckInput from './CheckInput';
 import DeviceInputConnector from './DeviceInputConnector';
 import DownloadClientSelectInput from './DownloadClientSelectInput';
-import DownloadClientsSelectInput from './DownloadClientsSelectInput';
 import EnhancedSelectInput from './EnhancedSelectInput';
 import EnhancedSelectInputConnector from './EnhancedSelectInputConnector';
 import FormInputHelpText from './FormInputHelpText';
@@ -91,9 +90,6 @@ function getComponent(type) {
 
     case inputTypes.DOWNLOAD_CLIENT_SELECT:
       return DownloadClientSelectInput;
-
-    case inputTypes.DOWNLOAD_CLIENTS_SELECT:
-      return DownloadClientsSelectInput;
 
     case inputTypes.ROOT_FOLDER_SELECT:
       return RootFolderSelectInputConnector;

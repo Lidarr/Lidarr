@@ -165,7 +165,7 @@ function EditTaggingProfileModalContent(
               <FormLabel>{translate('DownloadClients')}</FormLabel>
 
               <FormInputGroup
-                type={inputTypes.DOWNLOAD_CLIENTS_SELECT}
+                type={inputTypes.DOWNLOAD_CLIENT_SELECT}
                 name="downloadClientIds"
                 helpText={translate('TaggingProfileDownloadClientsHelpText')}
                 {...profile.downloadClientIds}
