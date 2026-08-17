@@ -17,7 +17,6 @@ export const ALBUM_RELEASE_SELECT = 'albumReleaseSelect';
 export const INDEXER_SELECT = 'indexerSelect';
 export const INDEXER_FLAGS_SELECT = 'indexerFlagsSelect';
 export const DOWNLOAD_CLIENT_SELECT = 'downloadClientSelect';
-export const DOWNLOAD_CLIENTS_SELECT = 'downloadClientsSelect';
 export const ROOT_FOLDER_SELECT = 'rootFolderSelect';
 export const SELECT = 'select';
 export const SERIES_TYPE_SELECT = 'artistTypeSelect';
@@ -49,7 +48,6 @@ export const all = [
   ALBUM_RELEASE_SELECT,
   INDEXER_SELECT,
   DOWNLOAD_CLIENT_SELECT,
-  DOWNLOAD_CLIENTS_SELECT,
   ROOT_FOLDER_SELECT,
   SELECT,
   ARTIST_TAG,

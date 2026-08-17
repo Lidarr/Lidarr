@@ -7,13 +7,15 @@ import sortByProp from 'Utilities/Array/sortByProp';
 import translate from 'Utilities/String/translate';
 import EnhancedSelectInput from './EnhancedSelectInput';
 
-function createDownloadClientsSelector(includeAny: boolean, protocol: string) {
+function createDownloadClientsSelector(includeAny: boolean, protocol?: string) {
   return createSelector(
     (state: AppState) => state.settings.downloadClients,
     (downloadClients) => {
       const { isFetching, isPopulated, error, items } = downloadClients;
 
-      const filteredItems = items.filter((item) => item.protocol === protocol);
+      const filteredItems = protocol
+        ? items.filter((item) => item.protocol === protocol)
+        : [...items];
 
       const values = filteredItems
         .sort(sortByProp('name'))
@@ -45,15 +47,15 @@ function createDownloadClientsSelector(includeAny: boolean, protocol: string) {
 
 interface DownloadClientSelectInputProps {
   name: string;
-  value: number;
+  value: number | number[];
   includeAny?: boolean;
   protocol?: string;
-  onChange(payload: { name: string; value: number }): void;
+  onChange(payload: { name: string; value: number | number[] }): void;
 }
 
 function DownloadClientSelectInput({
   includeAny = false,
-  protocol = 'torrent',
+  protocol,
   ...otherProps
 }: DownloadClientSelectInputProps) {
   const dispatch = useDispatch();
