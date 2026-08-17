@@ -16,7 +16,8 @@ namespace NzbDrone.Core.Datastore.Migration
                   .WithColumn("WriteAudioTags").AsInt32().NotNullable()
                   .WithColumn("ScrubAudioTags").AsBoolean().NotNullable()
                   .WithColumn("EmbedCoverArt").AsBoolean().NotNullable()
-                  .WithColumn("DownloadClientIds").AsString().NotNullable();
+                  .WithColumn("DownloadClientIds").AsString().NotNullable()
+                  .WithColumn("SkipHardlinkedFiles").AsBoolean().NotNullable();
 
             Execute.WithConnection(SeedDefaultProfile);
         }
@@ -64,11 +65,11 @@ namespace NzbDrone.Core.Datastore.Migration
 
             if (conn.GetType().FullName == "Npgsql.NpgsqlConnection")
             {
-                commandText = "INSERT INTO \"TaggingProfiles\" (\"Name\", \"Tags\", \"Order\", \"WriteAudioTags\", \"ScrubAudioTags\", \"EmbedCoverArt\", \"DownloadClientIds\") VALUES ('Default', '[]', 2147483647, $1, $2, $3, '[]')";
+                commandText = "INSERT INTO \"TaggingProfiles\" (\"Name\", \"Tags\", \"Order\", \"WriteAudioTags\", \"ScrubAudioTags\", \"EmbedCoverArt\", \"DownloadClientIds\", \"SkipHardlinkedFiles\") VALUES ('Default', '[]', 2147483647, $1, $2, $3, '[]', $4)";
             }
             else
             {
-                commandText = "INSERT INTO \"TaggingProfiles\" (\"Name\", \"Tags\", \"Order\", \"WriteAudioTags\", \"ScrubAudioTags\", \"EmbedCoverArt\", \"DownloadClientIds\") VALUES ('Default', '[]', 2147483647, ?, ?, ?, '[]')";
+                commandText = "INSERT INTO \"TaggingProfiles\" (\"Name\", \"Tags\", \"Order\", \"WriteAudioTags\", \"ScrubAudioTags\", \"EmbedCoverArt\", \"DownloadClientIds\", \"SkipHardlinkedFiles\") VALUES ('Default', '[]', 2147483647, ?, ?, ?, '[]', ?)";
             }
 
             using (var insertCmd = conn.CreateCommand(tran, commandText))
@@ -76,6 +77,7 @@ namespace NzbDrone.Core.Datastore.Migration
                 insertCmd.AddParameter(writeAudioTags);
                 insertCmd.AddParameter(scrubAudioTags);
                 insertCmd.AddParameter(embedCoverArt);
+                insertCmd.AddParameter(false);
                 insertCmd.ExecuteNonQuery();
             }
 

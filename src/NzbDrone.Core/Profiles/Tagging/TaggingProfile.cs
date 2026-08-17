@@ -13,6 +13,7 @@ namespace NzbDrone.Core.Profiles.Tagging
         public bool ScrubAudioTags { get; set; }
         public bool EmbedCoverArt { get; set; }
         public List<int> DownloadClientIds { get; set; }
+        public bool SkipHardlinkedFiles { get; set; }
 
         public TaggingProfile()
         {

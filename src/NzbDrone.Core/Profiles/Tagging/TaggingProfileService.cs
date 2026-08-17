@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Profiles.Tagging
         List<TaggingProfile> All();
         TaggingProfile Get(int id);
         TaggingProfile GetDefaultProfile();
+        TaggingProfile GetSeededDefaultProfile();
         List<TaggingProfile> AllForTag(int tagId);
         List<TaggingProfile> AllForTags(HashSet<int> tagIds);
         TaggingProfile BestForTags(HashSet<int> tagIds, int downloadClientId);
@@ -85,6 +86,12 @@ namespace NzbDrone.Core.Profiles.Tagging
         public TaggingProfile GetDefaultProfile()
         {
             return new TaggingProfile();
+        }
+
+        // seeded by migration 082 and undeletable; carries the pre-profile global settings
+        public TaggingProfile GetSeededDefaultProfile()
+        {
+            return _bestForTagsCache.Get("seeded-default", () => All().FirstOrDefault(p => p.Id == 1) ?? new TaggingProfile(), TimeSpan.FromSeconds(30));
         }
 
         public List<TaggingProfile> AllForTag(int tagId)

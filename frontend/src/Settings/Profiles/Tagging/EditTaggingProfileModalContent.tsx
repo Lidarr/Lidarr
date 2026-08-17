@@ -173,6 +173,20 @@ function EditTaggingProfileModalContent(
               />
             </FormGroup>
 
+            <FormGroup>
+              <FormLabel>{translate('SkipHardlinkedFiles')}</FormLabel>
+
+              <FormInputGroup
+                type={inputTypes.CHECK}
+                name="skipHardlinkedFiles"
+                helpText={translate(
+                  'TaggingProfileSkipHardlinkedFilesHelpText'
+                )}
+                {...profile.skipHardlinkedFiles}
+                onChange={onInputChange}
+              />
+            </FormGroup>
+
             {id === 1 ? (
               <Alert>{translate('DefaultTaggingProfileMessage')}</Alert>
             ) : (

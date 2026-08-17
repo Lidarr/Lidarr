@@ -86,7 +86,7 @@ namespace NzbDrone.Core.MediaFiles
 
         public AudioTag GetTrackMetadata(TrackFile trackfile)
         {
-            return GetTrackMetadata(trackfile, GetTaggingProfile(trackfile, null, false) ?? _taggingProfileService.GetDefaultProfile());
+            return GetTrackMetadata(trackfile, GetTaggingProfile(trackfile, null, false) ?? _taggingProfileService.GetSeededDefaultProfile());
         }
 
         private TaggingProfile GetTaggingProfile(TrackFile trackfile, DownloadClientItem downloadItem, bool newDownload)
@@ -117,6 +117,17 @@ namespace NzbDrone.Core.MediaFiles
 
             // imports made before the id was recorded resolve to no client
             return int.TryParse(fileHistory?.Data.GetValueOrDefault("downloadClientId"), out var downloadClientId) ? downloadClientId : 0;
+        }
+
+        private bool ShouldSkipHardlinkedFile(TrackFile trackfile, TaggingProfile taggingProfile)
+        {
+            if (!taggingProfile.SkipHardlinkedFiles || _diskProvider.GetHardLinkCount(trackfile.Path) <= 1)
+            {
+                return false;
+            }
+
+            _logger.Debug($"File {trackfile} is hardlinked. Skipping tag changes.");
+            return true;
         }
 
         private AudioTag GetTrackMetadata(TrackFile trackfile, TaggingProfile taggingProfile)
@@ -302,7 +313,7 @@ namespace NzbDrone.Core.MediaFiles
                 }
             }
 
-            taggingProfile ??= _taggingProfileService.GetDefaultProfile();
+            taggingProfile ??= _taggingProfileService.GetSeededDefaultProfile();
 
             if (trackfile.Tracks.Value.Count > 1)
             {
@@ -311,6 +322,12 @@ namespace NzbDrone.Core.MediaFiles
             }
 
             var path = trackfile.Path;
+
+            if (ShouldSkipHardlinkedFile(trackfile, taggingProfile))
+            {
+                return;
+            }
+
             var oldTags = ReadAudioTag(path);
             var newTags = GetTrackMetadata(trackfile, taggingProfile);
 
@@ -423,7 +440,14 @@ namespace NzbDrone.Core.MediaFiles
 
         public void RemoveMusicBrainzTags(TrackFile trackfile)
         {
-            if ((GetTaggingProfile(trackfile, null, false)?.WriteAudioTags ?? WriteAudioTagsType.No) < WriteAudioTagsType.AllFiles)
+            var taggingProfile = GetTaggingProfile(trackfile, null, false);
+
+            if ((taggingProfile?.WriteAudioTags ?? WriteAudioTagsType.No) < WriteAudioTagsType.AllFiles)
+            {
+                return;
+            }
+
+            if (ShouldSkipHardlinkedFile(trackfile, taggingProfile))
             {
                 return;
             }
@@ -470,7 +494,13 @@ namespace NzbDrone.Core.MediaFiles
                     continue;
                 }
 
-                var taggingProfile = GetTaggingProfile(f, null, false) ?? _taggingProfileService.GetDefaultProfile();
+                var taggingProfile = GetTaggingProfile(f, null, false) ?? _taggingProfileService.GetSeededDefaultProfile();
+
+                if (ShouldSkipHardlinkedFile(f, taggingProfile))
+                {
+                    continue;
+                }
+
                 var oldTags = ReadAudioTag(f.Path);
                 var newTags = GetTrackMetadata(f, taggingProfile);
 

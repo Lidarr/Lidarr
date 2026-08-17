@@ -57,6 +57,7 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
 
         private readonly string _testdir = Path.Combine(TestContext.CurrentContext.TestDirectory, "Files", "Media");
         private string _copiedFile;
+        private string _linkedFile;
         private AudioTag _testTags;
         private IDiskProvider _diskProvider;
         private TaggingProfile _taggingProfile;
@@ -85,7 +86,7 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
                 .Returns(() => new List<TaggingProfile> { _taggingProfile });
 
             Mocker.GetMock<ITaggingProfileService>()
-                .Setup(x => x.GetDefaultProfile())
+                .Setup(x => x.GetSeededDefaultProfile())
                 .Returns(() => new TaggingProfile());
 
             Mocker.GetMock<IHistoryService>()
@@ -120,6 +121,11 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
             {
                 File.Delete(_copiedFile);
             }
+
+            if (File.Exists(_linkedFile))
+            {
+                File.Delete(_linkedFile);
+            }
         }
 
         private void GivenFileCopy(string filename)
@@ -129,6 +135,12 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
             _copiedFile = Path.Combine(_testdir, tempname);
 
             File.Copy(original, _copiedFile);
+        }
+
+        private void GivenHardLink()
+        {
+            _linkedFile = $"{_copiedFile}.link";
+            _diskProvider.TryCreateHardLink(_copiedFile, _linkedFile).Should().BeTrue();
         }
 
         private void VerifyDifferent(AudioTag a, AudioTag b, string[] skipProperties)
@@ -470,6 +482,77 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
             Mocker.GetMock<ITaggingProfileService>()
                 .Setup(x => x.BestForTags(It.IsAny<HashSet<int>>(), It.IsAny<int>()))
                 .Returns((TaggingProfile)null);
+
+            GivenFileCopy(filename);
+
+            var file = GivenPopulatedTrackfile(0);
+
+            file.Path = _copiedFile;
+            Subject.WriteTags(file, false, true);
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Once());
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_skip_hardlinked_file_when_forced_and_seeded_default_skips_hardlinks(string filename)
+        {
+            Mocker.GetMock<ITaggingProfileService>()
+                .Setup(x => x.BestForTags(It.IsAny<HashSet<int>>(), It.IsAny<int>()))
+                .Returns((TaggingProfile)null);
+
+            Mocker.GetMock<ITaggingProfileService>()
+                .Setup(x => x.GetSeededDefaultProfile())
+                .Returns(() => new TaggingProfile { SkipHardlinkedFiles = true });
+
+            GivenFileCopy(filename);
+            GivenHardLink();
+
+            var file = GivenPopulatedTrackfile(0);
+
+            file.Path = _copiedFile;
+            Subject.WriteTags(file, false, true);
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Never());
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_skip_hardlinked_file_when_profile_skips_hardlinks(string filename)
+        {
+            _taggingProfile.SkipHardlinkedFiles = true;
+
+            GivenFileCopy(filename);
+            GivenHardLink();
+
+            var file = GivenPopulatedTrackfile(0);
+
+            file.Path = _copiedFile;
+            Subject.WriteTags(file, false, true);
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Never());
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_write_hardlinked_file_when_profile_does_not_skip_hardlinks(string filename)
+        {
+            GivenFileCopy(filename);
+            GivenHardLink();
+
+            var file = GivenPopulatedTrackfile(0);
+
+            file.Path = _copiedFile;
+            Subject.WriteTags(file, false, true);
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Once());
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_write_file_without_hardlinks_when_profile_skips_hardlinks(string filename)
+        {
+            _taggingProfile.SkipHardlinkedFiles = true;
 
             GivenFileCopy(filename);
 
