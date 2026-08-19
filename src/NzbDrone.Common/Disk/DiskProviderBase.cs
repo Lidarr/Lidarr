@@ -303,10 +303,7 @@ namespace NzbDrone.Common.Disk
             return false;
         }
 
-        public virtual int GetHardLinkCount(string path)
-        {
-            return 1;
-        }
+        public abstract int GetHardLinkCount(string path);
 
         public void DeleteFolder(string path, bool recursive)
         {
