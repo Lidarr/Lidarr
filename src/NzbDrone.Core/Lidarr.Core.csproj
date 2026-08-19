@@ -20,6 +20,7 @@
     <PackageReference Include="NLog" Version="5.5.1" />
     <PackageReference Include="NLog.Extensions.Logging" Version="5.5.0" />
     <PackageReference Include="NLog.Targets.Syslog" Version="7.0.0" />
+    <PackageReference Include="Openur.ChromaprintStatic" Version="1.6.2.10" />
     <PackageReference Include="System.IO.Abstractions" Version="17.0.24" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
     <PackageReference Include="TagLibSharp-Lidarr" Version="2.2.0.27" />
