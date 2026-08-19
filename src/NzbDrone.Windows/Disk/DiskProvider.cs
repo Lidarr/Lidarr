@@ -233,11 +233,12 @@ namespace NzbDrone.Windows.Disk
                     }
                 }
 
+                Logger.Warn("Unable to get hard link count for '{0}'.", path);
                 return 1;
             }
             catch (Exception ex)
             {
-                Logger.Debug(ex, string.Format("Unable to get hard link count for '{0}'.", path));
+                Logger.Warn(ex, string.Format("Unable to get hard link count for '{0}'.", path));
                 return 1;
             }
         }

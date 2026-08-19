@@ -493,7 +493,7 @@ namespace NzbDrone.Mono.Disk
             }
             catch (Exception ex)
             {
-                _logger.Debug(ex, "Unable to get hard link count for '{0}'.", path);
+                _logger.Warn(ex, "Unable to get hard link count for '{0}'.", path);
                 return 1;
             }
         }
