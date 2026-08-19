@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             items.First().ScrubAudioTags.Should().BeFalse();
             items.First().EmbedCoverArt.Should().BeTrue();
             items.First().DownloadClientIds.Should().Be("[]");
-            items.First().SkipHardlinkedFiles.Should().BeFalse();
+            items.First().SkipHardlinkedFiles.Should().BeTrue();
         }
 
         [Test]
@@ -57,6 +57,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             items.First().WriteAudioTags.Should().Be(3);
             items.First().ScrubAudioTags.Should().BeTrue();
             items.First().EmbedCoverArt.Should().BeFalse();
+            items.First().SkipHardlinkedFiles.Should().BeFalse();
         }
 
         [Test]

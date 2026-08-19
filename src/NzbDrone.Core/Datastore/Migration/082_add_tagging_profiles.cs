@@ -45,6 +45,9 @@ namespace NzbDrone.Core.Datastore.Migration
                 }
             }
 
+            // protect hardlinked files by default unless tags were already being written
+            var skipHardlinkedFiles = writeAudioTags == 0;
+
             using (var scrubAudioTagsCmd = conn.CreateCommand(tran, "SELECT \"Value\" FROM \"Config\" WHERE \"Key\" = 'scrubaudiotags'"))
             {
                 if ((scrubAudioTagsCmd.ExecuteScalar() as string)?.ToLower() == "true")
@@ -77,7 +80,7 @@ namespace NzbDrone.Core.Datastore.Migration
                 insertCmd.AddParameter(writeAudioTags);
                 insertCmd.AddParameter(scrubAudioTags);
                 insertCmd.AddParameter(embedCoverArt);
-                insertCmd.AddParameter(false);
+                insertCmd.AddParameter(skipHardlinkedFiles);
                 insertCmd.ExecuteNonQuery();
             }
 
