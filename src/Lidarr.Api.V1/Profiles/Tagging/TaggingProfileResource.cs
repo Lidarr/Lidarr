@@ -15,7 +15,7 @@ namespace Lidarr.Api.V1.Profiles.Tagging
         public int Order { get; set; }
         public HashSet<int> Tags { get; set; }
         public List<int> DownloadClientIds { get; set; }
-        public bool SkipHardlinkedFiles { get; set; }
+        public bool SkipHardlinkedFiles { get; set; } = true;
     }
 
     public static class TaggingProfileResourceMapper

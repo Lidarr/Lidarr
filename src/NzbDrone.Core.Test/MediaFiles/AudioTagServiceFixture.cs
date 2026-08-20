@@ -537,6 +537,8 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         [TestCase("nin.mp3")]
         public void write_tags_should_write_hardlinked_file_when_profile_does_not_skip_hardlinks(string filename)
         {
+            _taggingProfile.SkipHardlinkedFiles = false;
+
             GivenFileCopy(filename);
             GivenHardLink();
 

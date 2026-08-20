@@ -86,7 +86,7 @@ namespace NzbDrone.Core.Profiles.Tagging
         // template for new profiles; migration 082 decides the seeded default's value
         public TaggingProfile GetDefaultProfile()
         {
-            return new TaggingProfile { SkipHardlinkedFiles = true };
+            return new TaggingProfile();
         }
 
         // seeded by migration 082 and undeletable; carries the pre-profile global settings
