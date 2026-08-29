@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Lidarr.Http;
 using Lidarr.Http.REST;
+using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Datastore.Events;
@@ -26,9 +27,31 @@ namespace Lidarr.Api.V1.System.Tasks
         public List<TaskResource> GetAll()
         {
             return _taskManager.GetAll()
-                               .Select(ConvertToResource)
+                               .Select(task => ConvertToResource(task, _taskManager.GetDefaultInterval(task.Id)))
                                .OrderBy(t => t.Name)
                                .ToList();
+        }
+
+        [RestPutById]
+        public ActionResult<TaskResource> Update([FromBody] TaskResource resource)
+        {
+            if (resource.Interval < 1)
+            {
+                throw new BadRequestException("Interval must be greater than zero");
+            }
+
+            _taskManager.SetInterval(resource.Id, resource.Interval);
+
+            return Accepted(resource.Id);
+        }
+
+        [HttpPost("reset/{id:int}")]
+        public ActionResult<TaskResource> Reset(int id)
+        {
+            ValidateId(id);
+            _taskManager.ResetInterval(id);
+
+            return Accepted(id);
         }
 
         public override TaskResource GetResourceById(int id)
@@ -41,10 +64,10 @@ namespace Lidarr.Api.V1.System.Tasks
                 return null;
             }
 
-            return ConvertToResource(task);
+            return ConvertToResource(task, _taskManager.GetDefaultInterval(task.Id));
         }
 
-        private static TaskResource ConvertToResource(ScheduledTask scheduledTask)
+        private static TaskResource ConvertToResource(ScheduledTask scheduledTask, int defaultInterval)
         {
             var taskName = scheduledTask.TypeName.Split('.').Last().Replace("Command", "");
 
@@ -54,6 +77,8 @@ namespace Lidarr.Api.V1.System.Tasks
                 Name = taskName.SplitCamelCase(),
                 TaskName = taskName,
                 Interval = scheduledTask.Interval,
+                DefaultInterval = defaultInterval,
+                IsUserConfigured = scheduledTask.IsUserConfigured,
                 LastExecution = scheduledTask.LastExecution,
                 LastStartTime = scheduledTask.LastStartTime,
                 NextExecution = scheduledTask.LastExecution.AddMinutes(scheduledTask.Interval)

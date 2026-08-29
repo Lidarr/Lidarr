@@ -1,4 +1,5 @@
 import { createAction } from 'redux-actions';
+import { batchActions } from 'redux-batched-actions';
 import { filterTypes, sortDirections } from 'Helpers/Props';
 import { setAppValue } from 'Store/Actions/appActions';
 import { createThunk, handleThunks } from 'Store/thunks';
@@ -49,7 +50,10 @@ export const defaultState = {
     isFetching: false,
     isPopulated: false,
     error: null,
-    items: []
+    isSaving: false,
+    saveError: null,
+    items: [],
+    pendingChanges: {}
   },
 
   backups: {
@@ -198,6 +202,10 @@ export const FETCH_DISK_SPACE = 'system/diskSpace/fetchDiskSPace';
 
 export const FETCH_TASK = 'system/tasks/fetchTask';
 export const FETCH_TASKS = 'system/tasks/fetchTasks';
+export const SET_TASK_INTERVAL = 'system/tasks/setTaskInterval';
+export const SET_TASK_PENDING = 'system/tasks/setTaskPending';
+export const SAVE_TASKS = 'system/tasks/saveTasks';
+export const CLEAR_TASK_PENDING = 'system/tasks/clearTaskPending';
 
 export const FETCH_BACKUPS = 'system/backups/fetchBackups';
 export const RESTORE_BACKUP = 'system/backups/restoreBackup';
@@ -234,6 +242,10 @@ export const fetchDiskSpace = createThunk(FETCH_DISK_SPACE);
 
 export const fetchTask = createThunk(FETCH_TASK);
 export const fetchTasks = createThunk(FETCH_TASKS);
+export const setTaskInterval = createAction(SET_TASK_INTERVAL);
+export const setTaskPending = createAction(SET_TASK_PENDING);
+export const saveTasks = createThunk(SAVE_TASKS);
+export const clearTaskPending = createAction(CLEAR_TASK_PENDING);
 
 export const fetchBackups = createThunk(FETCH_BACKUPS);
 export const restoreBackup = createThunk(RESTORE_BACKUP);
@@ -270,6 +282,56 @@ export const actionHandlers = handleThunks({
   [FETCH_DISK_SPACE]: createFetchHandler('system.diskSpace', '/diskspace'),
   [FETCH_TASK]: createFetchHandler('system.tasks', '/system/task'),
   [FETCH_TASKS]: createFetchHandler('system.tasks', '/system/task'),
+
+  [SAVE_TASKS]: function(getState, payload, dispatch) {
+    const tasks = getState().system.tasks;
+    const pendingChanges = tasks.pendingChanges;
+
+    if (!Object.keys(pendingChanges).length) {
+      return;
+    }
+
+    dispatch(set({ section: 'system.tasks', isSaving: true }));
+
+    const promises = Object.keys(pendingChanges)
+      .map((taskId) => {
+        const change = pendingChanges[taskId];
+        let request = null;
+
+        if (change.reset) {
+          request = createAjaxRequest({
+            method: 'POST',
+            url: `/system/task/reset/${taskId}`,
+            dataType: 'json'
+          }).request;
+        } else if (change.interval !== undefined) {
+          request = createAjaxRequest({
+            method: 'PUT',
+            url: `/system/task/${taskId}`,
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify({
+              id: taskId,
+              interval: change.interval
+            })
+          }).request;
+        }
+
+        return request;
+      })
+      .filter((request) => request !== null);
+
+    Promise.all(promises).then(() => {
+      dispatch(batchActions([
+        set({ section: 'system.tasks', isSaving: false, saveError: null }),
+        clearTaskPending()
+      ])).then(() => {
+        dispatch(fetchTasks());
+      });
+    }).catch((xhr) => {
+      dispatch(set({ section: 'system.tasks', isSaving: false, saveError: xhr }));
+    });
+  },
 
   [FETCH_BACKUPS]: createFetchHandler(backupsSection, '/system/backup'),
 
@@ -402,6 +464,28 @@ export const reducers = createHandleActions({
     items: [],
     totalPages: 0,
     totalRecords: 0
-  })
+  }),
+
+  [SET_TASK_INTERVAL]: function(state, { payload }) {
+    const newState = Object.assign({}, state);
+    newState.tasks = Object.assign({}, newState.tasks);
+    newState.tasks.pendingChanges = Object.assign({}, newState.tasks.pendingChanges);
+    newState.tasks.pendingChanges[payload.id] = { interval: payload.interval };
+    return newState;
+  },
+
+  [SET_TASK_PENDING]: function(state, { payload }) {
+    const newState = Object.assign({}, state);
+    newState.tasks = Object.assign({}, newState.tasks);
+    newState.tasks.pendingChanges = Object.assign({}, newState.tasks.pendingChanges);
+    newState.tasks.pendingChanges[payload.id] = payload.change;
+    return newState;
+  },
+
+  [CLEAR_TASK_PENDING]: function(state) {
+    const newState = Object.assign({}, state);
+    newState.tasks = Object.assign({}, newState.tasks, { pendingChanges: {} });
+    return newState;
+  }
 
 }, defaultState, section);

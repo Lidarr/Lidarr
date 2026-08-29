@@ -99,7 +99,6 @@ namespace NzbDrone.Core.Configuration
 
         // Backups
         string BackupFolder { get; }
-        int BackupInterval { get; }
         int BackupRetention { get; }
 
         CertificateValidationType CertificateValidation { get; }

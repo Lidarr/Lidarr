@@ -139,5 +139,18 @@ namespace NzbDrone.Core.Test.Datastore
             Db.All<ScheduledTask>().Single().TypeName.Should().Be("A");
             Db.All<ScheduledTask>().Single().Interval.Should().Be(12);
         }
+
+        [Test]
+        public void should_update_interval_and_configuration_state()
+        {
+            Subject.Insert(_sampleType);
+
+            var repository = Mocker.Resolve<IScheduledTaskRepository>();
+            repository.SetInterval(_sampleType.Id, 120, true);
+
+            var stored = Db.All<ScheduledTask>().Single();
+            stored.Interval.Should().Be(120);
+            stored.IsUserConfigured.Should().BeTrue();
+        }
     }
 }

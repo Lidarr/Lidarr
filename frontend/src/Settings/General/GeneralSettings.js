@@ -15,6 +15,7 @@ import BackupSettings from './BackupSettings';
 import HostSettings from './HostSettings';
 import LoggingSettings from './LoggingSettings';
 import ProxySettings from './ProxySettings';
+import ScheduledTasksSettings from './ScheduledTasksSettings';
 import SecuritySettings from './SecuritySettings';
 import UpdateSettings from './UpdateSettings';
 
@@ -107,6 +108,9 @@ class GeneralSettings extends Component {
       isWindowsService,
       mode,
       packageUpdateMechanism,
+      tasks,
+      setTaskInterval,
+      setTaskPending,
       onInputChange,
       onConfirmResetApiKey,
       ...otherProps
@@ -181,6 +185,16 @@ class GeneralSettings extends Component {
                   settings={settings}
                   onInputChange={onInputChange}
                 />
+
+                <ScheduledTasksSettings
+                  advancedSettings={advancedSettings}
+                  items={tasks.items}
+                  pendingChanges={tasks.pendingChanges}
+                  isPopulated={tasks.isPopulated}
+                  isSaving={tasks.isSaving}
+                  setTaskInterval={setTaskInterval}
+                  setTaskPending={setTaskPending}
+                />
               </Form>
           }
         </PageContentBody>
@@ -217,6 +231,9 @@ GeneralSettings.propTypes = {
   isWindowsService: PropTypes.bool.isRequired,
   mode: PropTypes.string.isRequired,
   packageUpdateMechanism: PropTypes.string.isRequired,
+  tasks: PropTypes.object.isRequired,
+  setTaskInterval: PropTypes.func.isRequired,
+  setTaskPending: PropTypes.func.isRequired,
   onInputChange: PropTypes.func.isRequired,
   onConfirmResetApiKey: PropTypes.func.isRequired,
   onConfirmRestart: PropTypes.func.isRequired

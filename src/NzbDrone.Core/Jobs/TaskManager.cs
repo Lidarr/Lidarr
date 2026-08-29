@@ -5,7 +5,7 @@ using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Core.Backup;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Configuration.Events;
+using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.HealthCheck;
 using NzbDrone.Core.Housekeeping;
@@ -25,9 +25,12 @@ namespace NzbDrone.Core.Jobs
         IList<ScheduledTask> GetPending();
         List<ScheduledTask> GetAll();
         DateTime GetNextExecution(Type type);
+        int GetDefaultInterval(int id);
+        void SetInterval(int id, int interval);
+        void ResetInterval(int id);
     }
 
-    public class TaskManager : ITaskManager, IHandle<ApplicationStartedEvent>, IHandle<CommandExecutedEvent>, IHandleAsync<ConfigSavedEvent>
+    public class TaskManager : ITaskManager, IHandle<ApplicationStartedEvent>, IHandle<CommandExecutedEvent>
     {
         private readonly IScheduledTaskRepository _scheduledTaskRepository;
         private readonly IConfigService _configService;
@@ -61,71 +64,66 @@ namespace NzbDrone.Core.Jobs
             return scheduledTask.LastExecution.AddMinutes(scheduledTask.Interval);
         }
 
+        public int GetDefaultInterval(int id)
+        {
+            var scheduledTask = _cache.Values.SingleOrDefault(c => c.Id == id);
+
+            if (scheduledTask == null)
+            {
+                throw new ModelNotFoundException(typeof(ScheduledTask), id);
+            }
+
+            return GetDefaultTasks().Single(c => c.TypeName == scheduledTask.TypeName).Interval;
+        }
+
+        public void SetInterval(int id, int interval)
+        {
+            if (interval < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(interval));
+            }
+
+            var scheduledTask = _cache.Values.SingleOrDefault(c => c.Id == id);
+
+            if (scheduledTask == null)
+            {
+                throw new ModelNotFoundException(typeof(ScheduledTask), id);
+            }
+
+            _scheduledTaskRepository.SetInterval(id, interval, true);
+            scheduledTask.Interval = interval;
+            scheduledTask.IsUserConfigured = true;
+
+            if (scheduledTask.TypeName == typeof(RssSyncCommand).FullName)
+            {
+                _configService.RssSyncInterval = interval;
+            }
+        }
+
+        public void ResetInterval(int id)
+        {
+            var scheduledTask = _cache.Values.SingleOrDefault(c => c.Id == id);
+
+            if (scheduledTask == null)
+            {
+                throw new ModelNotFoundException(typeof(ScheduledTask), id);
+            }
+
+            var defaultInterval = GetDefaultInterval(id);
+
+            _scheduledTaskRepository.SetInterval(id, defaultInterval, false);
+            scheduledTask.Interval = defaultInterval;
+            scheduledTask.IsUserConfigured = false;
+
+            if (scheduledTask.TypeName == typeof(RssSyncCommand).FullName)
+            {
+                _configService.RssSyncInterval = defaultInterval;
+            }
+        }
+
         public void Handle(ApplicationStartedEvent message)
         {
-            var defaultTasks = new List<ScheduledTask>
-                {
-                    new ScheduledTask
-                    {
-                        Interval = 1,
-                        TypeName = typeof(RefreshMonitoredDownloadsCommand).FullName,
-                        Priority = CommandPriority.High
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = 5,
-                        TypeName = typeof(MessagingCleanupCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = 6 * 60,
-                        TypeName = typeof(ApplicationUpdateCheckCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = 6 * 60,
-                        TypeName = typeof(CheckHealthCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = 24 * 60,
-                        TypeName = typeof(RefreshArtistCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = 24 * 60,
-                        TypeName = typeof(RescanFoldersCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = 24 * 60,
-                        TypeName = typeof(HousekeepingCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = GetBackupInterval(),
-                        TypeName = typeof(BackupCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = 5,
-                        TypeName = typeof(ImportListSyncCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = GetRssSyncInterval(),
-                        TypeName = typeof(RssSyncCommand).FullName
-                    }
-                };
+            var defaultTasks = GetDefaultTasks();
 
             var currentTasks = _scheduledTaskRepository.All().ToList();
 
@@ -144,7 +142,10 @@ namespace NzbDrone.Core.Jobs
             {
                 var currentDefinition = currentTasks.SingleOrDefault(c => c.TypeName == defaultTask.TypeName) ?? defaultTask;
 
-                currentDefinition.Interval = defaultTask.Interval;
+                if (!currentDefinition.IsUserConfigured)
+                {
+                    currentDefinition.Interval = defaultTask.Interval;
+                }
 
                 if (currentDefinition.Id == 0)
                 {
@@ -153,43 +154,31 @@ namespace NzbDrone.Core.Jobs
 
                 currentDefinition.Priority = defaultTask.Priority;
 
+                if (currentDefinition.TypeName == typeof(RssSyncCommand).FullName)
+                {
+                    _configService.RssSyncInterval = currentDefinition.Interval;
+                }
+
                 _cache.Set(currentDefinition.TypeName, currentDefinition);
                 _scheduledTaskRepository.Upsert(currentDefinition);
             }
         }
 
-        private int GetBackupInterval()
+        private List<ScheduledTask> GetDefaultTasks()
         {
-            var intervalMinutes = _configService.BackupInterval;
-
-            if (intervalMinutes < 1)
+            return new List<ScheduledTask>
             {
-                intervalMinutes = 1;
-            }
-
-            if (intervalMinutes > 7)
-            {
-                intervalMinutes = 7;
-            }
-
-            return intervalMinutes * 60 * 24;
-        }
-
-        private int GetRssSyncInterval()
-        {
-            var interval = _configService.RssSyncInterval;
-
-            if (interval > 0 && interval < 10)
-            {
-                return 10;
-            }
-
-            if (interval < 0)
-            {
-                return 0;
-            }
-
-            return interval;
+                new ScheduledTask { Interval = 1, TypeName = typeof(RefreshMonitoredDownloadsCommand).FullName, Priority = CommandPriority.High },
+                new ScheduledTask { Interval = 5, TypeName = typeof(MessagingCleanupCommand).FullName },
+                new ScheduledTask { Interval = 6 * 60, TypeName = typeof(ApplicationUpdateCheckCommand).FullName },
+                new ScheduledTask { Interval = 6 * 60, TypeName = typeof(CheckHealthCommand).FullName },
+                new ScheduledTask { Interval = 24 * 60, TypeName = typeof(RefreshArtistCommand).FullName },
+                new ScheduledTask { Interval = 24 * 60, TypeName = typeof(RescanFoldersCommand).FullName },
+                new ScheduledTask { Interval = 24 * 60, TypeName = typeof(HousekeepingCommand).FullName },
+                new ScheduledTask { Interval = 7 * 24 * 60, TypeName = typeof(BackupCommand).FullName },
+                new ScheduledTask { Interval = 5, TypeName = typeof(ImportListSyncCommand).FullName },
+                new ScheduledTask { Interval = 15, TypeName = typeof(RssSyncCommand).FullName }
+            };
         }
 
         public void Handle(CommandExecutedEvent message)
@@ -210,20 +199,6 @@ namespace NzbDrone.Core.Jobs
                 cached.LastExecution = lastExecution;
                 cached.LastStartTime = startTime;
             }
-        }
-
-        public void HandleAsync(ConfigSavedEvent message)
-        {
-            var rss = _scheduledTaskRepository.GetDefinition(typeof(RssSyncCommand));
-            rss.Interval = GetRssSyncInterval();
-
-            var backup = _scheduledTaskRepository.GetDefinition(typeof(BackupCommand));
-            backup.Interval = GetBackupInterval();
-
-            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { rss, backup });
-
-            _cache.Find(rss.TypeName).Interval = rss.Interval;
-            _cache.Find(backup.TypeName).Interval = backup.Interval;
         }
     }
 }

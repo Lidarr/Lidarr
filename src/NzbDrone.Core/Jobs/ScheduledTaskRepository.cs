@@ -9,6 +9,7 @@ namespace NzbDrone.Core.Jobs
     {
         ScheduledTask GetDefinition(Type type);
         void SetLastExecutionTime(int id, DateTime executionTime, DateTime startTime);
+        void SetInterval(int id, int interval, bool isUserConfigured);
     }
 
     public class ScheduledTaskRepository : BasicRepository<ScheduledTask>, IScheduledTaskRepository
@@ -33,6 +34,18 @@ namespace NzbDrone.Core.Jobs
             };
 
             SetFields(task, scheduledTask => scheduledTask.LastExecution, scheduledTask => scheduledTask.LastStartTime);
+        }
+
+        public void SetInterval(int id, int interval, bool isUserConfigured)
+        {
+            var task = new ScheduledTask
+            {
+                Id = id,
+                Interval = interval,
+                IsUserConfigured = isUserConfigured
+            };
+
+            SetFields(task, scheduledTask => scheduledTask.Interval, scheduledTask => scheduledTask.IsUserConfigured);
         }
     }
 }

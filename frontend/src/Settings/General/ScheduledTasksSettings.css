@@ -1,0 +1,39 @@
+.tasksContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) 120px 110px 32px;
+  column-gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+
+.taskLabel {
+  min-width: 0;
+  font-weight: 500;
+}
+
+.taskInputs,
+.taskUnit {
+  min-width: 0;
+}
+
+.taskAction {
+  display: flex;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 600px) {
+  .task {
+    grid-template-columns: minmax(0, 1fr) 110px 32px;
+  }
+
+  .taskLabel {
+    grid-column: 1 / -1;
+    margin-bottom: 5px;
+  }
+}

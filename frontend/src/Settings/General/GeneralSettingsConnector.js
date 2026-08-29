@@ -6,7 +6,7 @@ import * as commandNames from 'Commands/commandNames';
 import { clearPendingChanges } from 'Store/Actions/baseActions';
 import { executeCommand } from 'Store/Actions/commandActions';
 import { fetchGeneralSettings, saveGeneralSettings, setGeneralSettingsValue } from 'Store/Actions/settingsActions';
-import { restart } from 'Store/Actions/systemActions';
+import { clearTaskPending, fetchTasks, saveTasks, setTaskInterval, setTaskPending } from 'Store/Actions/systemActions';
 import createCommandExecutingSelector from 'Store/Selectors/createCommandExecutingSelector';
 import createSettingsSectionSelector from 'Store/Selectors/createSettingsSectionSelector';
 import createSystemStatusSelector from 'Store/Selectors/createSystemStatusSelector';
@@ -17,18 +17,24 @@ const SECTION = 'general';
 function createMapStateToProps() {
   return createSelector(
     (state) => state.settings.advancedSettings,
+    (state) => state.system.tasks,
     createSettingsSectionSelector(SECTION),
     createCommandExecutingSelector(commandNames.RESET_API_KEY),
     createSystemStatusSelector(),
-    (advancedSettings, sectionSettings, isResettingApiKey, systemStatus) => {
+    (advancedSettings, tasks, sectionSettings, isResettingApiKey, systemStatus) => {
+      const hasTaskPendingChanges = Object.keys(tasks.pendingChanges || {}).length > 0;
+      const hasPendingChanges = hasTaskPendingChanges || sectionSettings.hasPendingChanges;
+
       return {
         advancedSettings,
+        tasks,
         isResettingApiKey,
         isWindows: systemStatus.isWindows,
         isWindowsService: systemStatus.isWindows && systemStatus.mode === 'service',
         mode: systemStatus.mode,
         packageUpdateMechanism: systemStatus.packageUpdateMechanism,
-        ...sectionSettings
+        ...sectionSettings,
+        hasPendingChanges
       };
     }
   );
@@ -38,8 +44,12 @@ const mapDispatchToProps = {
   setGeneralSettingsValue,
   saveGeneralSettings,
   fetchGeneralSettings,
+  fetchTasks,
+  setTaskInterval,
+  setTaskPending,
+  saveTasks,
+  clearTaskPending,
   executeCommand,
-  restart,
   clearPendingChanges
 };
 
@@ -50,6 +60,8 @@ class GeneralSettingsConnector extends Component {
 
   componentDidMount() {
     this.props.fetchGeneralSettings();
+    this.props.clearTaskPending();
+    this.props.fetchTasks();
   }
 
   componentDidUpdate(prevProps) {
@@ -60,6 +72,7 @@ class GeneralSettingsConnector extends Component {
 
   componentWillUnmount() {
     this.props.clearPendingChanges({ section: `settings.${SECTION}` });
+    this.props.clearTaskPending();
   }
 
   //
@@ -70,6 +83,7 @@ class GeneralSettingsConnector extends Component {
   };
 
   onSavePress = () => {
+    this.props.saveTasks();
     this.props.saveGeneralSettings();
   };
 
@@ -102,6 +116,11 @@ GeneralSettingsConnector.propTypes = {
   setGeneralSettingsValue: PropTypes.func.isRequired,
   saveGeneralSettings: PropTypes.func.isRequired,
   fetchGeneralSettings: PropTypes.func.isRequired,
+  fetchTasks: PropTypes.func.isRequired,
+  setTaskInterval: PropTypes.func.isRequired,
+  setTaskPending: PropTypes.func.isRequired,
+  saveTasks: PropTypes.func.isRequired,
+  clearTaskPending: PropTypes.func.isRequired,
   executeCommand: PropTypes.func.isRequired,
   restart: PropTypes.func.isRequired,
   clearPendingChanges: PropTypes.func.isRequired

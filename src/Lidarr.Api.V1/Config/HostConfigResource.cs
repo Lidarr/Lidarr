@@ -45,7 +45,6 @@ namespace Lidarr.Api.V1.Config
         public bool ProxyBypassLocalAddresses { get; set; }
         public CertificateValidationType CertificateValidation { get; set; }
         public string BackupFolder { get; set; }
-        public int BackupInterval { get; set; }
         public int BackupRetention { get; set; }
         public bool TrustCgnatIpAddresses { get; set; }
     }
@@ -92,7 +91,6 @@ namespace Lidarr.Api.V1.Config
                 ProxyBypassLocalAddresses = configService.ProxyBypassLocalAddresses,
                 CertificateValidation = configService.CertificateValidation,
                 BackupFolder = configService.BackupFolder,
-                BackupInterval = configService.BackupInterval,
                 BackupRetention = configService.BackupRetention,
                 ApplicationUrl = configService.ApplicationUrl
             };

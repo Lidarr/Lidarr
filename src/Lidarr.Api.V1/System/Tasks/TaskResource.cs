@@ -8,6 +8,8 @@ namespace Lidarr.Api.V1.System.Tasks
         public string Name { get; set; }
         public string TaskName { get; set; }
         public int Interval { get; set; }
+        public int DefaultInterval { get; set; }
+        public bool IsUserConfigured { get; set; }
         public DateTime LastExecution { get; set; }
         public DateTime LastStartTime { get; set; }
         public DateTime NextExecution { get; set; }

@@ -16,7 +16,6 @@ function BackupSettings(props) {
 
   const {
     backupFolder,
-    backupInterval,
     backupRetention
   } = settings;
 
@@ -40,24 +39,6 @@ function BackupSettings(props) {
           helpText={translate('BackupFolderHelpText')}
           onChange={onInputChange}
           {...backupFolder}
-        />
-      </FormGroup>
-
-      <FormGroup
-        advancedSettings={advancedSettings}
-        isAdvanced={true}
-      >
-        <FormLabel>
-          {translate('Interval')}
-        </FormLabel>
-
-        <FormInputGroup
-          type={inputTypes.NUMBER}
-          name="backupInterval"
-          unit="days"
-          helpText={translate('BackupIntervalHelpText')}
-          onChange={onInputChange}
-          {...backupInterval}
         />
       </FormGroup>
 

@@ -41,7 +41,6 @@ export default interface General {
   proxyBypassLocalAddresses: boolean;
   certificateValidation: string;
   backupFolder: string;
-  backupInterval: number;
   backupRetention: number;
   id: number;
 }
