@@ -300,7 +300,7 @@
     "LidarrTags": "Etichete {appName}",
     "Local": "Local",
     "LocalPath": "Calea locală",
-    "ReleaseDate": "Date de lansare",
+    "ReleaseDate": "Data de lansare",
     "ReleaseGroup": "Grup de apariție",
     "ReleaseRejected": "Eliberare respinsă",
     "ReleaseStatuses": "Statusul apariției",
@@ -722,7 +722,7 @@
     "EditConditionImplementation": "Adăugați conexiune - {implementationName}",
     "BlocklistReleaseHelpText": "Împiedică Radarr să apuce automat această versiune din nou",
     "GeneralSettingsSummary": "Port, SSL, utilizator/parolă, proxy, statistici și actualizări",
-    "ImportLists": "Liste",
+    "ImportLists": "Importare liste",
     "NoLimitForAnyDuration": "Fără limită pentru orice timp de rulare",
     "NoMinimumForAnyDuration": "Niciun minim pentru orice timp de rulare",
     "RenameFiles": "Redenumește Fișierele",
@@ -825,7 +825,7 @@
     "EditImportListImplementation": "Adăugați Indexator - {implementationName}",
     "EditSelectedDownloadClients": "Ștergere clienți de descărcare",
     "EditSelectedIndexers": "Ștergeți indexatorii selectați",
-    "FormatRuntimeMinutes": "minute",
+    "FormatRuntimeMinutes": "{minutes}m",
     "MassSearchCancelWarning": "Acest lucru nu poate fi anulat odată pornit fără a reporni {appName}.",
     "MetadataSettingsArtistSummary": "Creează fișiere de metadata atunci când filmele sunt importate sau reîmprospătate",
     "NotificationStatusAllClientHealthCheckMessage": "Toate listele sunt indisponibile datorită erorilor",
@@ -893,5 +893,6 @@
     "AddToDownloadQueue": "Adăugat la coada de descărcare",
     "AddedToDownloadQueue": "Adăugat la coada descărcată",
     "DownloadWarning": "Avertisment privind descărcarea: {0}",
-    "TheLogLevelDefault": "Nivelul jurnalului este implicit la „Informații” și poate fi modificat în"
+    "TheLogLevelDefault": "Nivelul jurnalului este implicit la „Informații” și poate fi modificat în",
+    "FormatRuntimeHours": "{hours}h"
 }

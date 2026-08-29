@@ -235,7 +235,7 @@
     "45MinutesFourtyFive": "60 phút: {0}",
     "60MinutesSixty": "60 phút: {0}",
     "APIKey": "Mã API",
-    "About": "Trong khoảng",
+    "About": "Về chúng tôi",
     "AddListExclusion": "Thêm loại trừ danh sách",
     "AddingTag": "Thêm thẻ",
     "AgeWhenGrabbed": "Tuổi (khi nắm lấy)",
@@ -876,5 +876,6 @@
     "ImportFailed": "Nhập không thành công: {0}",
     "RegularExpressionsCanBeTested": "Biểu thức chính quy có thể được kiểm tra",
     "DownloadWarning": "Cảnh báo tải xuống: {0}",
-    "TheLogLevelDefault": "Mức nhật ký mặc định là 'Thông tin' và có thể được thay đổi trong"
+    "TheLogLevelDefault": "Mức nhật ký mặc định là 'Thông tin' và có thể được thay đổi trong",
+    "Any": "bất kỳ"
 }
