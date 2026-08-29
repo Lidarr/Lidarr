@@ -882,7 +882,7 @@
     "RemotePathMappingCheckLocalFolderMissing": "远程下载客户端 {0} 的下载目录为 {1} ，但该目录似乎不存在。可能是远程路径映射缺失或错误。",
     "RemotePathMappingCheckRemoteDownloadClient": "远程下载客户端 {0} 的下载目录为 {1} ，但该目录似乎不存在。可能是远程路径映射缺失。",
     "RemotePathMappingCheckWrongOSPath": "远程下载客户端 {0} 的下载目录为 {1} ，但该路径 {2} 无效。请检查您的远程路径映射和下载客户端设置。",
-    "AppDataLocationHealthCheckMessage": "为防止在更新时删除 AppData，更新将无法进行",
+    "AppDataLocationHealthCheckMessage": "为防止在更新时删除应用数据，更新将无法进行",
     "ColonReplacement": "替换冒号",
     "CopyToClipboard": "复制到剪贴板",
     "DeleteCustomFormat": "删除自定义格式",

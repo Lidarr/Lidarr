@@ -57,7 +57,7 @@
     "DeleteImportListMessageText": "Haluatko varmasti poistaa listan \"{name}\"?",
     "DeleteIndexerMessageText": "Haluatko varmasti poistaa hakupalvelun \"{name}\"?",
     "DeleteTagMessageText": "Haluatko varmasti poistaa tunnisteen \"{label}\"?",
-    "TagIsNotUsedAndCanBeDeleted": "Tunniste ei ole käytössä ja voidaan poistaa.",
+    "TagIsNotUsedAndCanBeDeleted": "Tunniste on käyttämätön ja voidaan poistaa.",
     "Security": "Suojaus",
     "LidarrSupportsAnyIndexerThatUsesTheNewznabStandardAsWellAsOtherIndexersListedBelow": "{appName} tukee kaikkien Newznab-yhteensopivien hakupalveluiden ohella myös monia muita alla listattuja palveluita.",
     "Actions": "Toiminnot",
