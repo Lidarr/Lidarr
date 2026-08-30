@@ -340,6 +340,10 @@ namespace NzbDrone.Core.Organizer
             tokenHandlers["{Release Year}"] = album.ReleaseDate.HasValue
                 ? m => album.ReleaseDate.Value.Year.ToString()
                 : m => "Unknown";
+
+            tokenHandlers["{Release Date}"] = album.ReleaseDate.HasValue
+                ? m => album.ReleaseDate.Value.ToString("yyyy-MM-dd")
+                : m => "Unknown";
         }
 
         private void AddMediumTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, Medium medium)
