@@ -392,5 +392,12 @@ namespace NzbDrone.Common.Http
 
             return this;
         }
+
+        public virtual HttpRequestBuilder AllowRedirect(bool allowAutoRedirect = true)
+        {
+            AllowAutoRedirect = allowAutoRedirect;
+
+            return this;
+        }
     }
 }
