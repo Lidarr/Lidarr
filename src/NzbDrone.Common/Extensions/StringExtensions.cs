@@ -30,22 +30,37 @@ namespace NzbDrone.Common.Extensions
 
         public static string FirstCharToLower(this string input)
         {
-            if (string.IsNullOrEmpty(input))
+            var firstChar = GetFirstCharOrHash(input);
+
+            if (string.IsNullOrEmpty(firstChar))
             {
                 return string.Empty;
             }
 
-            return char.ToLowerInvariant(input.First()) + input.Substring(1);
+            return string.Concat(firstChar.ToLowerInvariant(), input.AsSpan(1));
         }
 
-        public static string FirstCharToUpper(this string input)
+        public static string GetFirstCharOrHash(string input)
         {
             if (string.IsNullOrEmpty(input))
             {
                 return string.Empty;
             }
 
-            return char.ToUpperInvariant(input.First()) + input.Substring(1);
+            var firstChar = input[0];
+            return char.IsDigit(firstChar) ? "#" : firstChar.ToString();
+        }
+
+        public static string FirstCharToUpper(this string input)
+        {
+            var firstChar = GetFirstCharOrHash(input);
+
+            if (string.IsNullOrEmpty(firstChar))
+            {
+                return string.Empty;
+            }
+
+            return string.Concat(firstChar.ToUpperInvariant(), input.AsSpan(1));
         }
 
         public static string Inject(this string format, params object[] formattingArgs)
