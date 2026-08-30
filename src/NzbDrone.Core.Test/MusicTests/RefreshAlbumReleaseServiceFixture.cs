@@ -134,5 +134,111 @@ namespace NzbDrone.Core.Test.MusicTests
             Mocker.GetMock<IReleaseService>()
                 .Verify(v => v.UpdateMany(It.Is<List<AlbumRelease>>(s => s.First().ForeignReleaseId == newInfo.ForeignReleaseId)));
         }
+
+        [Test]
+        public void should_not_monitor_new_recordings_in_song_mode()
+        {
+            GivenSongMode(true);
+
+            var newTrack = RefreshWithNewTrack("new-recording");
+
+            Mocker.GetMock<ITrackService>()
+                .Verify(v => v.InsertMany(It.Is<List<Track>>(tracks => tracks.Single() == newTrack && !tracks.Single().Monitored)));
+        }
+
+        [Test]
+        public void should_monitor_new_track_for_an_already_monitored_recording_in_song_mode()
+        {
+            GivenSongMode(true);
+
+            var existingTrack = Builder<Track>
+                .CreateNew()
+                .With(x => x.ForeignRecordingId = "selected-recording")
+                .With(x => x.Monitored = true)
+                .Build();
+
+            Mocker.GetMock<ITrackService>()
+                .Setup(s => s.GetTracksByReleases(It.IsAny<List<int>>()))
+                .Returns(new List<Track> { existingTrack });
+
+            var newTrack = RefreshWithNewTrack("selected-recording");
+
+            Mocker.GetMock<ITrackService>()
+                .Verify(v => v.InsertMany(It.Is<List<Track>>(tracks => tracks.Single() == newTrack && tracks.Single().Monitored)));
+        }
+
+        [Test]
+        public void should_not_monitor_new_track_for_an_unmonitored_recording_in_song_mode()
+        {
+            GivenSongMode(true);
+
+            var existingTrack = Builder<Track>
+                .CreateNew()
+                .With(x => x.ForeignRecordingId = "unselected-recording")
+                .With(x => x.Monitored = false)
+                .Build();
+
+            Mocker.GetMock<ITrackService>()
+                .Setup(s => s.GetTracksByReleases(It.IsAny<List<int>>()))
+                .Returns(new List<Track> { existingTrack });
+
+            var newTrack = RefreshWithNewTrack("unselected-recording");
+
+            Mocker.GetMock<ITrackService>()
+                .Verify(v => v.InsertMany(It.Is<List<Track>>(tracks => tracks.Single() == newTrack && !tracks.Single().Monitored)));
+        }
+
+        [Test]
+        public void should_monitor_new_recordings_when_not_in_song_mode()
+        {
+            GivenSongMode(false);
+
+            var newTrack = RefreshWithNewTrack("new-recording");
+
+            Mocker.GetMock<ITrackService>()
+                .Verify(v => v.InsertMany(It.Is<List<Track>>(tracks => tracks.Single() == newTrack && tracks.Single().Monitored)));
+        }
+
+        private void GivenSongMode(bool songMode)
+        {
+            var album = Builder<Album>
+                .CreateNew()
+                .With(x => x.Id = 100)
+                .With(x => x.Artist = new Artist { SongMode = songMode })
+                .Build();
+
+            _release.AlbumId = album.Id;
+            _release.Album = album;
+
+            Mocker.GetMock<IReleaseService>()
+                .Setup(s => s.GetReleasesByAlbum(album.Id))
+                .Returns(new List<AlbumRelease> { _release });
+
+            Mocker.GetMock<ITrackService>()
+                .Setup(s => s.GetTracksByReleases(It.IsAny<List<int>>()))
+                .Returns(new List<Track>());
+        }
+
+        private Track RefreshWithNewTrack(string recordingId)
+        {
+            var newTrack = Builder<Track>
+                .CreateNew()
+                .With(x => x.ForeignTrackId = $"track-{recordingId}")
+                .With(x => x.ForeignRecordingId = recordingId)
+                .With(x => x.ArtistMetadata = _metadata)
+                .With(x => x.ArtistMetadataId = _metadata.Id)
+                .Build();
+
+            var newInfo = _release.JsonClone();
+            newInfo.Tracks = new List<Track> { newTrack };
+
+            Mocker.GetMock<ITrackService>()
+                .Setup(s => s.GetTracksForRefresh(_release.Id, It.IsAny<List<string>>()))
+                .Returns(new List<Track>());
+
+            Subject.RefreshEntityInfo(_release, new List<AlbumRelease> { newInfo }, false, false, null);
+
+            return newTrack;
+        }
     }
 }

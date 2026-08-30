@@ -120,8 +120,14 @@ namespace NzbDrone.Core.Test.MusicTests
             var different = GivenTrack();
 
             // make item2 different in the property under consideration
-            var differentEntry = prop.GetValue(different);
-            prop.SetValue(item2, differentEntry);
+            if (prop.PropertyType == typeof(bool))
+            {
+                prop.SetValue(item2, !(bool)prop.GetValue(item1));
+            }
+            else
+            {
+                prop.SetValue(item2, prop.GetValue(different));
+            }
 
             item1.Should().NotBeSameAs(item2);
             item1.Should().NotBe(item2);

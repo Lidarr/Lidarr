@@ -12,12 +12,14 @@ namespace NzbDrone.Core.Music
         List<Track> GetTracksByAlbum(int albumId);
         List<Track> GetTracksByRelease(int albumReleaseId);
         List<Track> GetTracksByReleases(List<int> albumReleaseIds);
+        List<Track> GetTracksByAlbumAndRecordingIds(int albumId, List<string> foreignRecordingIds);
         List<Track> GetTracksForRefresh(int albumReleaseId, List<string> foreignTrackIds);
         List<Track> GetTracksByFileId(int fileId);
         List<Track> GetTracksByFileId(IEnumerable<int> ids);
         List<Track> TracksWithFiles(int artistId);
         List<Track> TracksWithoutFiles(int albumId);
         void SetFileId(List<Track> tracks);
+        void SetMonitored(List<Track> tracks);
         void DetachTrackFile(int trackFileId);
     }
 
@@ -64,6 +66,19 @@ namespace NzbDrone.Core.Music
                     }).ToList();
         }
 
+        public List<Track> GetTracksByAlbumAndRecordingIds(int albumId, List<string> foreignRecordingIds)
+        {
+            if (!foreignRecordingIds.Any())
+            {
+                return new List<Track>();
+            }
+
+            return Query(Builder()
+                         .Join<Track, AlbumRelease>((t, r) => t.AlbumReleaseId == r.Id)
+                         .Where<AlbumRelease>(r => r.AlbumId == albumId)
+                         .Where<Track>(t => foreignRecordingIds.Contains(t.ForeignRecordingId)));
+        }
+
         public List<Track> GetTracksForRefresh(int albumReleaseId, List<string> foreignTrackIds)
         {
             return Query(a => a.AlbumReleaseId == albumReleaseId || foreignTrackIds.Contains(a.ForeignTrackId));
@@ -98,6 +113,7 @@ namespace NzbDrone.Core.Music
                          .Join<Track, AlbumRelease>((t, r) => t.AlbumReleaseId == r.Id)
                          .LeftJoin<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
                          .Where<AlbumRelease>(r => r.Monitored == true && r.AlbumId == albumId)
+                         .Where<Track>(t => t.Monitored == true)
                          .Where<TrackFile>(x => x.Id == null));
 #pragma warning restore CS0472
         }
@@ -105,6 +121,11 @@ namespace NzbDrone.Core.Music
         public void SetFileId(List<Track> tracks)
         {
             SetFields(tracks, t => t.TrackFileId);
+        }
+
+        public void SetMonitored(List<Track> tracks)
+        {
+            SetFields(tracks, t => t.Monitored);
         }
 
         public void DetachTrackFile(int trackFileId)

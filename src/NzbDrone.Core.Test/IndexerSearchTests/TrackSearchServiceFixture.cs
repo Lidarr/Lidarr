@@ -1,0 +1,433 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FluentAssertions;
+using Moq;
+using NUnit.Framework;
+using NzbDrone.Core.Datastore;
+using NzbDrone.Core.DecisionEngine;
+using NzbDrone.Core.DecisionEngine.Specifications;
+using NzbDrone.Core.Download;
+using NzbDrone.Core.IndexerSearch;
+using NzbDrone.Core.MediaFiles;
+using NzbDrone.Core.Messaging.Commands;
+using NzbDrone.Core.MetadataSource;
+using NzbDrone.Core.Music;
+using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.Profiles.Qualities;
+using NzbDrone.Core.Qualities;
+using NzbDrone.Core.Queue;
+using NzbDrone.Core.Test.Framework;
+
+namespace NzbDrone.Core.Test.IndexerSearchTests
+{
+    [TestFixture]
+    public class TrackSearchServiceFixture : CoreTest<AlbumSearchService>
+    {
+        private (Artist Artist, Track Track, List<DownloadDecision> Decisions) GivenSongModeTrack(bool hasFile)
+        {
+            var artist = new Artist
+            {
+                Id = 1,
+                Monitored = true,
+                SongMode = true,
+                QualityProfile = new QualityProfile()
+            };
+            var album = new Album
+            {
+                Id = 10,
+                Monitored = false,
+                AlbumType = PrimaryAlbumType.Album.Name,
+                ReleaseDate = DateTime.UtcNow.AddDays(-1),
+                Artist = artist
+            };
+            var release = new AlbumRelease { Id = 11, AlbumId = album.Id, Album = album, Monitored = true };
+            var trackFile = new TrackFile { Id = 30, Quality = new QualityModel() };
+            var track = new Track
+            {
+                Id = 20,
+                Monitored = true,
+                ForeignRecordingId = "recording",
+                AlbumReleaseId = release.Id,
+                AlbumRelease = release,
+                TrackFileId = hasFile ? trackFile.Id : 0,
+                TrackFile = trackFile
+            };
+            var decisions = new List<DownloadDecision> { new DownloadDecision(new RemoteAlbum()) };
+
+            Mocker.GetMock<IArtistService>()
+                  .Setup(service => service.GetArtist(artist.Id))
+                  .Returns(artist);
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracksByArtist(artist.Id))
+                  .Returns(new List<Track> { track });
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracks(It.IsAny<IEnumerable<int>>()))
+                  .Returns(new List<Track> { track });
+            Mocker.GetMock<IReleaseService>()
+                  .Setup(service => service.GetReleasesByRecordingIds(It.IsAny<List<string>>()))
+                  .Returns(new List<AlbumRelease> { release });
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracksByReleases(It.IsAny<List<int>>()))
+                  .Returns(new List<Track> { track });
+            Mocker.GetMock<IAlbumService>()
+                  .Setup(service => service.GetAlbums(It.IsAny<IEnumerable<int>>()))
+                  .Returns(new List<Album> { album });
+            Mocker.GetMock<ISearchForReleases>()
+                  .Setup(service => service.AlbumSearch(album.Id, false, false, false))
+                  .Returns(Task.FromResult(decisions));
+            Mocker.GetMock<IProcessDownloadDecisions>()
+                  .Setup(service => service.ProcessDecisions(decisions, true))
+                  .Returns(Task.FromResult(new ProcessedDecisions(decisions, new List<DownloadDecision>(), new List<DownloadDecision>())));
+            Mocker.GetMock<IQueueService>()
+                  .Setup(service => service.GetQueue())
+                  .Returns(new List<NzbDrone.Core.Queue.Queue>());
+
+            return (artist, track, decisions);
+        }
+
+        [Test]
+        public void should_target_only_requested_recordings()
+        {
+            var album = new Album { Id = 10, AlbumType = PrimaryAlbumType.Album.Name };
+            var release = new AlbumRelease { Id = 11, AlbumId = album.Id, Album = album };
+            var track = new Track
+            {
+                Id = 20,
+                ForeignRecordingId = "recording",
+                AlbumReleaseId = release.Id,
+                AlbumRelease = release
+            };
+            var decision = new DownloadDecision(new RemoteAlbum());
+            var decisions = new List<DownloadDecision> { decision };
+
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracks(It.IsAny<IEnumerable<int>>()))
+                  .Returns(new List<Track> { track });
+            Mocker.GetMock<IReleaseService>()
+                  .Setup(service => service.GetReleasesByRecordingIds(It.IsAny<List<string>>()))
+                  .Returns(new List<AlbumRelease> { release });
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracksByReleases(It.IsAny<List<int>>()))
+                  .Returns(new List<Track> { track });
+            Mocker.GetMock<IAlbumService>()
+                  .Setup(service => service.GetAlbums(It.IsAny<IEnumerable<int>>()))
+                  .Returns(new List<Album> { album });
+            Mocker.GetMock<ISearchForReleases>()
+                  .Setup(service => service.AlbumSearch(album.Id, false, true, false))
+                  .Returns(Task.FromResult(decisions));
+            Mocker.GetMock<IProcessDownloadDecisions>()
+                  .Setup(service => service.ProcessDecisions(decisions, true))
+                  .Returns(Task.FromResult(new ProcessedDecisions(decisions, new List<DownloadDecision>(), new List<DownloadDecision>())));
+
+            Subject.Execute(new TrackSearchCommand
+            {
+                TrackIds = new List<int> { track.Id },
+                Trigger = CommandTrigger.Manual
+            });
+
+            decision.RemoteAlbum.TargetRecordingIds.Should().Equal(track.ForeignRecordingId);
+            Mocker.GetMock<IProcessDownloadDecisions>()
+                  .Verify(service => service.ProcessDecisions(decisions, true), Times.Once());
+        }
+
+        [Test]
+        public void should_search_every_album_type_containing_the_requested_recording()
+        {
+            var originalAlbum = new Album { Id = 10, AlbumType = PrimaryAlbumType.Album.Name };
+            var compilationAlbum = new Album
+            {
+                Id = 20,
+                AlbumType = PrimaryAlbumType.Album.Name,
+                SecondaryTypes = new List<SecondaryAlbumType> { SecondaryAlbumType.Compilation }
+            };
+            var epAlbum = new Album { Id = 30, AlbumType = PrimaryAlbumType.EP.Name };
+            var singleAlbum = new Album { Id = 40, AlbumType = PrimaryAlbumType.Single.Name };
+            var albums = new List<Album> { originalAlbum, compilationAlbum, epAlbum, singleAlbum };
+            var releases = albums.Select((album, index) => new AlbumRelease
+            {
+                Id = 100 + index,
+                AlbumId = album.Id,
+                Album = album
+            }).ToList();
+            var tracks = releases.Select((release, index) => new Track
+            {
+                Id = 200 + index,
+                ForeignRecordingId = "recording",
+                AlbumReleaseId = release.Id,
+                AlbumRelease = release
+            }).ToList();
+            var decisions = albums.ToDictionary(
+                album => album.Id,
+                album => new List<DownloadDecision> { new DownloadDecision(new RemoteAlbum()) });
+
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracks(It.IsAny<IEnumerable<int>>()))
+                  .Returns(new List<Track> { tracks[0] });
+            Mocker.GetMock<IReleaseService>()
+                  .Setup(service => service.GetReleasesByRecordingIds(It.Is<List<string>>(ids => ids.SequenceEqual(new[] { "recording" }))))
+                  .Returns(releases);
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracksByReleases(It.Is<List<int>>(ids => ids.SequenceEqual(releases.Select(release => release.Id)))))
+                  .Returns(tracks);
+            Mocker.GetMock<IAlbumService>()
+                  .Setup(service => service.GetAlbums(It.IsAny<IEnumerable<int>>()))
+                  .Returns(albums);
+
+            foreach (var album in albums)
+            {
+                var albumDecisions = decisions[album.Id];
+                Mocker.GetMock<ISearchForReleases>()
+                      .Setup(service => service.AlbumSearch(album.Id, false, true, false))
+                      .Returns(Task.FromResult(albumDecisions));
+            }
+
+            Mocker.GetMock<IProcessDownloadDecisions>()
+                  .Setup(service => service.ProcessDecisions(It.IsAny<List<DownloadDecision>>(), true))
+                  .Returns(Task.FromResult(new ProcessedDecisions(new List<DownloadDecision>(), new List<DownloadDecision>(), new List<DownloadDecision>())));
+
+            Subject.Execute(new TrackSearchCommand
+            {
+                TrackIds = new List<int> { tracks[0].Id },
+                Trigger = CommandTrigger.Manual
+            });
+
+            foreach (var album in albums)
+            {
+                Mocker.GetMock<ISearchForReleases>()
+                      .Verify(service => service.AlbumSearch(album.Id, false, true, false), Times.Once());
+                decisions[album.Id].Single().RemoteAlbum.TargetRecordingIds.Should().Equal("recording");
+            }
+
+            decisions[compilationAlbum.Id].Single().RemoteAlbum.TrackSearchPriority.Should().Be(1);
+            decisions[epAlbum.Id].Single().RemoteAlbum.TrackSearchPriority.Should().Be(2);
+            decisions[singleAlbum.Id].Single().RemoteAlbum.TrackSearchPriority.Should().Be(3);
+            decisions[originalAlbum.Id].Single().RemoteAlbum.TrackSearchPriority.Should().Be(4);
+
+            Mocker.GetMock<IProcessDownloadDecisions>()
+                  .Verify(service => service.ProcessDecisions(
+                      It.Is<List<DownloadDecision>>(items => items.Count == albums.Count),
+                      true), Times.Once());
+        }
+
+        [Test]
+        public async Task should_give_discographies_the_highest_track_search_priority()
+        {
+            var album = new Album { Id = 10, AlbumType = PrimaryAlbumType.Album.Name };
+            var release = new AlbumRelease { Id = 11, AlbumId = album.Id, Album = album };
+            var track = new Track
+            {
+                Id = 20,
+                ForeignRecordingId = "recording",
+                AlbumReleaseId = release.Id,
+                AlbumRelease = release
+            };
+            var decision = new DownloadDecision(new RemoteAlbum
+            {
+                ParsedAlbumInfo = new ParsedAlbumInfo { Discography = true }
+            });
+
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracks(It.IsAny<IEnumerable<int>>()))
+                  .Returns(new List<Track> { track });
+            Mocker.GetMock<IReleaseService>()
+                  .Setup(service => service.GetReleasesByRecordingIds(It.IsAny<List<string>>()))
+                  .Returns(new List<AlbumRelease> { release });
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracksByReleases(It.IsAny<List<int>>()))
+                  .Returns(new List<Track> { track });
+            Mocker.GetMock<IAlbumService>()
+                  .Setup(service => service.GetAlbums(It.IsAny<IEnumerable<int>>()))
+                  .Returns(new List<Album> { album });
+            Mocker.GetMock<ISearchForReleases>()
+                  .Setup(service => service.AlbumSearch(album.Id, false, true, false))
+                  .Returns(Task.FromResult(new List<DownloadDecision> { decision }));
+
+            var decisions = await Subject.TrackSearch(new List<int> { track.Id }, true, false);
+
+            decisions.Single().RemoteAlbum.TrackSearchPriority.Should().Be(0);
+        }
+
+        [Test]
+        public async Task should_merge_the_same_release_found_for_multiple_requested_recordings()
+        {
+            var album1 = new Album { Id = 10, AlbumType = PrimaryAlbumType.Album.Name };
+            var album2 = new Album
+            {
+                Id = 20,
+                AlbumType = PrimaryAlbumType.Album.Name,
+                SecondaryTypes = new List<SecondaryAlbumType> { SecondaryAlbumType.Compilation }
+            };
+            var release1 = new AlbumRelease { Id = 100, AlbumId = album1.Id, Album = album1 };
+            var release2 = new AlbumRelease { Id = 200, AlbumId = album2.Id, Album = album2 };
+            var track1 = new Track
+            {
+                Id = 1000,
+                ForeignRecordingId = "recording-1",
+                AlbumReleaseId = release1.Id,
+                AlbumRelease = release1
+            };
+            var track2 = new Track
+            {
+                Id = 2000,
+                ForeignRecordingId = "recording-2",
+                AlbumReleaseId = release2.Id,
+                AlbumRelease = release2
+            };
+
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracks(It.IsAny<IEnumerable<int>>()))
+                  .Returns(new List<Track> { track1, track2 });
+            Mocker.GetMock<IReleaseService>()
+                  .Setup(service => service.GetReleasesByRecordingIds(It.IsAny<List<string>>()))
+                  .Returns(new List<AlbumRelease> { release1, release2 });
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracksByReleases(It.IsAny<List<int>>()))
+                  .Returns(new List<Track> { track1, track2 });
+            Mocker.GetMock<IAlbumService>()
+                  .Setup(service => service.GetAlbums(It.IsAny<IEnumerable<int>>()))
+                  .Returns(new List<Album> { album1, album2 });
+
+            foreach (var album in new[] { album1, album2 })
+            {
+                var decision = new DownloadDecision(new RemoteAlbum
+                {
+                    Release = new ReleaseInfo { Guid = "same-release" }
+                });
+                Mocker.GetMock<ISearchForReleases>()
+                      .Setup(service => service.AlbumSearch(album.Id, false, true, false))
+                      .Returns(Task.FromResult(new List<DownloadDecision> { decision }));
+            }
+
+            var decisions = await Subject.TrackSearch(new List<int> { track1.Id, track2.Id }, true, false);
+
+            decisions.Should().ContainSingle();
+            decisions.Single().RemoteAlbum.TargetRecordingIds.Should().BeEquivalentTo("recording-1", "recording-2");
+            decisions.Single().RemoteAlbum.TrackSearchPriority.Should().Be(1);
+        }
+
+        [TestCase("Album", true)]
+        [TestCase("EP", false)]
+        [TestCase("Single", false)]
+        public async Task should_discover_and_search_album_types_missing_from_the_metadata_profile(string albumType, bool compilation)
+        {
+            var artist = new Artist
+            {
+                Id = 1,
+                ArtistMetadataId = 2,
+                QualityProfileId = 3,
+                Metadata = new ArtistMetadata { ForeignArtistId = "artist" }
+            };
+            var originalAlbum = new Album { Id = 10, Artist = artist };
+            var originalRelease = new AlbumRelease { Id = 11, AlbumId = originalAlbum.Id, Album = originalAlbum };
+            var selectedTrack = new Track
+            {
+                Id = 12,
+                ForeignRecordingId = "recording",
+                AlbumReleaseId = originalRelease.Id,
+                AlbumRelease = originalRelease
+            };
+            var metadataAlbum = new Album
+            {
+                ForeignAlbumId = "metadata-album",
+                AlbumType = albumType,
+                Artist = artist,
+                SecondaryTypes = compilation ? new List<SecondaryAlbumType> { SecondaryAlbumType.Compilation } : new List<SecondaryAlbumType>()
+            };
+            var metadataRelease = new AlbumRelease { Id = 21, Album = metadataAlbum };
+            var matchingTrack = new Track { Id = 22, ForeignRecordingId = "recording", AlbumReleaseId = metadataRelease.Id, AlbumRelease = metadataRelease };
+            var otherTrack = new Track { Id = 23, ForeignRecordingId = "other", AlbumReleaseId = metadataRelease.Id, AlbumRelease = metadataRelease };
+            var decisions = new List<DownloadDecision> { new DownloadDecision(new RemoteAlbum()) };
+
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracks(It.IsAny<IEnumerable<int>>()))
+                  .Returns(new List<Track> { selectedTrack });
+            Mocker.GetMock<ISearchForNewAlbum>()
+                  .Setup(service => service.SearchForNewAlbumByRecordingIds(It.Is<List<string>>(ids => ids.SequenceEqual(new[] { "recording" }))))
+                  .Returns(new List<Album> { metadataAlbum });
+            Mocker.GetMock<IAlbumService>()
+                  .Setup(service => service.AddAlbum(metadataAlbum, false))
+                  .Callback<Album, bool>((album, _) =>
+                  {
+                      album.Id = 20;
+                      metadataRelease.AlbumId = album.Id;
+                  })
+                  .Returns(metadataAlbum);
+            Mocker.GetMock<IRefreshAlbumService>()
+                  .Setup(service => service.RefreshAlbumInfo(metadataAlbum, null, false))
+                  .Returns(true);
+            Mocker.GetMock<IReleaseService>()
+                  .Setup(service => service.GetReleasesByAlbum(20))
+                  .Returns(new List<AlbumRelease> { metadataRelease });
+            Mocker.GetMock<IReleaseService>()
+                  .Setup(service => service.GetReleasesByRecordingIds(It.IsAny<List<string>>()))
+                  .Returns(new List<AlbumRelease> { metadataRelease });
+            Mocker.GetMock<ITrackService>()
+                  .Setup(service => service.GetTracksByReleases(It.IsAny<List<int>>()))
+                  .Returns(new List<Track> { matchingTrack, otherTrack });
+            Mocker.GetMock<IAlbumService>()
+                  .Setup(service => service.GetAlbums(It.IsAny<IEnumerable<int>>()))
+                  .Returns(new List<Album> { metadataAlbum });
+            Mocker.GetMock<ISearchForReleases>()
+                  .Setup(service => service.AlbumSearch(20, false, true, false))
+                  .Returns(Task.FromResult(decisions));
+
+            var result = await Subject.TrackSearch(new List<int> { selectedTrack.Id }, true, false);
+
+            Mocker.GetMock<IAlbumService>()
+                  .Verify(service => service.AddAlbum(It.Is<Album>(album =>
+                      album.AddOptions.AddType == AlbumAddType.SongSearch && !album.Monitored), false), Times.Once());
+            Mocker.GetMock<IRefreshAlbumService>()
+                  .Verify(service => service.RefreshAlbumInfo(metadataAlbum, null, false), Times.Once());
+            Mocker.GetMock<ITrackService>()
+                  .Verify(service => service.SetMonitored(It.Is<IEnumerable<int>>(ids => ids.SequenceEqual(new[] { otherTrack.Id })), false), Times.Once());
+            Mocker.GetMock<ITrackService>()
+                  .Verify(service => service.SetMonitored(It.Is<IEnumerable<int>>(ids => ids.SequenceEqual(new[] { matchingTrack.Id })), true), Times.Once());
+            Mocker.GetMock<ISearchForReleases>()
+                  .Verify(service => service.AlbumSearch(metadataAlbum.Id, false, true, false), Times.Once());
+            result.Single().RemoteAlbum.TargetRecordingIds.Should().Equal("recording");
+        }
+
+        [Test]
+        public void missing_search_should_search_monitored_song_on_unmonitored_album()
+        {
+            var data = GivenSongModeTrack(false);
+            Mocker.GetMock<IAlbumService>()
+                  .Setup(service => service.AlbumsWithoutFiles(It.IsAny<PagingSpec<Album>>()))
+                  .Returns<PagingSpec<Album>>(pagingSpec =>
+                  {
+                      pagingSpec.Records = new List<Album>();
+                      return pagingSpec;
+                  });
+
+            Subject.Execute(new MissingAlbumSearchCommand(data.Artist.Id));
+
+            Mocker.GetMock<ISearchForReleases>()
+                  .Verify(service => service.AlbumSearch(10, false, false, false), Times.Once());
+            data.Decisions.Single().RemoteAlbum.TargetRecordingIds.Should().Equal(data.Track.ForeignRecordingId);
+        }
+
+        [Test]
+        public void cutoff_search_should_search_monitored_song_on_unmonitored_album()
+        {
+            var data = GivenSongModeTrack(true);
+            Mocker.GetMock<IAlbumCutoffService>()
+                  .Setup(service => service.AlbumsWhereCutoffUnmet(It.IsAny<PagingSpec<Album>>()))
+                  .Returns<PagingSpec<Album>>(pagingSpec =>
+                  {
+                      pagingSpec.Records = new List<Album>();
+                      return pagingSpec;
+                  });
+            Mocker.GetMock<IUpgradableSpecification>()
+                  .Setup(service => service.QualityCutoffNotMet(It.IsAny<QualityProfile>(), It.IsAny<QualityModel>(), null))
+                  .Returns(true);
+
+            Subject.Execute(new CutoffUnmetAlbumSearchCommand(data.Artist.Id));
+
+            Mocker.GetMock<ISearchForReleases>()
+                  .Verify(service => service.AlbumSearch(10, false, false, false), Times.Once());
+            data.Decisions.Single().RemoteAlbum.TargetRecordingIds.Should().Equal(data.Track.ForeignRecordingId);
+        }
+    }
+}

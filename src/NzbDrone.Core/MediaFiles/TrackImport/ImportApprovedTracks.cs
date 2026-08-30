@@ -119,7 +119,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
                 if (replaceExisting)
                 {
-                    RemoveExistingTrackFiles(artist, album);
+                    var currentRelease = album.AlbumReleases.Value.SingleOrDefault(release => release.Monitored);
+                    var selectiveImport = downloadClientItem?.TargetRecordingIds?.Any() == true ||
+                                          currentRelease?.Tracks?.Value?.Any(track => !track.Monitored) == true;
+                    var tracksToReplace = selectiveImport ? decisionList.SelectMany(decision => decision.Item.Tracks) : null;
+
+                    RemoveExistingTrackFiles(artist, album, tracksToReplace);
                 }
 
                 // set the correct release to be monitored before importing the new files
@@ -474,10 +479,23 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             }
         }
 
-        private void RemoveExistingTrackFiles(Artist artist, Album album)
+        private void RemoveExistingTrackFiles(Artist artist, Album album, IEnumerable<Track> tracksToReplace = null)
         {
             var rootFolder = _diskProvider.GetParentFolder(artist.Path);
             var previousFiles = _mediaFileService.GetFilesByAlbum(album.Id);
+
+            if (tracksToReplace != null)
+            {
+                var trackIds = tracksToReplace.Select(track => track.Id).ToHashSet();
+                var recordingIds = tracksToReplace.Select(track => track.ForeignRecordingId)
+                                                  .Where(id => id.IsNotNullOrWhiteSpace())
+                                                  .ToHashSet();
+
+                previousFiles = previousFiles.Where(file => file.Tracks.Value.Any() &&
+                    file.Tracks.Value.All(track =>
+                        trackIds.Contains(track.Id) ||
+                        recordingIds.Contains(track.ForeignRecordingId))).ToList();
+            }
 
             _logger.Debug($"Deleting {previousFiles.Count} existing files for {album}");
 

@@ -50,5 +50,40 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
                 .Verify(v => v.ArtistSearch(_artist.Id, false, true, false),
                     Times.Exactly(_artist.Albums.Value.Count(s => s.Monitored)));
         }
+
+        [Test]
+        public void should_search_only_monitored_tracks_in_song_mode()
+        {
+            _artist.SongMode = true;
+            _artist.Id = 12;
+
+            var tracks = new List<Track>
+            {
+                new Track { Id = 101, Monitored = true },
+                new Track { Id = 102, Monitored = false },
+                new Track { Id = 103, Monitored = true }
+            };
+            var decisions = new List<DownloadDecision>();
+            var processed = new ProcessedDecisions(new List<DownloadDecision>(), new List<DownloadDecision>(), new List<DownloadDecision>());
+
+            Mocker.GetMock<ITrackService>()
+                .Setup(s => s.GetTracksByArtist(_artist.Id))
+                .Returns(tracks);
+
+            Mocker.GetMock<ISearchForTracks>()
+                .Setup(s => s.TrackSearch(It.Is<List<int>>(ids => ids.SequenceEqual(new[] { 101, 103 })), true, false))
+                .Returns(Task.FromResult(decisions));
+
+            Mocker.GetMock<IProcessDownloadDecisions>()
+                .Setup(s => s.ProcessDecisions(decisions, true))
+                .Returns(Task.FromResult(processed));
+
+            Subject.Execute(new ArtistSearchCommand { ArtistId = _artist.Id, Trigger = CommandTrigger.Manual });
+
+            Mocker.GetMock<ISearchForTracks>()
+                .Verify(s => s.TrackSearch(It.Is<List<int>>(ids => ids.SequenceEqual(new[] { 101, 103 })), true, false), Times.Once());
+            Mocker.GetMock<ISearchForReleases>()
+                .Verify(s => s.ArtistSearch(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never());
+        }
     }
 }

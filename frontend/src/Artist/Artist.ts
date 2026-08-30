@@ -29,6 +29,7 @@ interface Artist extends ModelBase {
   genres: string[];
   images: Image[];
   monitored: boolean;
+  songMode: boolean;
   overview: string;
   path: string;
   lastAlbum?: Album;

@@ -1,10 +1,17 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import AlbumFormats from 'Album/AlbumFormats';
+import AlbumTitleLink from 'Album/AlbumTitleLink';
 import EpisodeStatusConnector from 'Album/EpisodeStatusConnector';
 import IndexerFlags from 'Album/IndexerFlags';
+import AlbumInteractiveSearchModalConnector from 'Album/Search/AlbumInteractiveSearchModalConnector';
+import * as commandNames from 'Commands/commandNames';
 import Icon from 'Components/Icon';
+import IconButton from 'Components/Link/IconButton';
+import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
+import MonitorToggleButton from 'Components/MonitorToggleButton';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
+import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
 import TableRow from 'Components/Table/TableRow';
 import Popover from 'Components/Tooltip/Popover';
 import Tooltip from 'Components/Tooltip/Tooltip';
@@ -20,6 +27,36 @@ import styles from './TrackRow.css';
 
 class TrackRow extends Component {
 
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      isInteractiveSearchModalOpen: false
+    };
+  }
+
+  onMonitorTogglePress = (monitored) => {
+    this.props.toggleTracksMonitored({
+      trackIds: this.props.monitorTrackIds || [this.props.id],
+      monitored
+    });
+  };
+
+  onSearchPress = () => {
+    this.props.executeCommand({
+      name: commandNames.TRACK_SEARCH,
+      trackIds: [this.props.id]
+    });
+  };
+
+  onInteractiveSearchPress = () => {
+    this.setState({ isInteractiveSearchModalOpen: true });
+  };
+
+  onInteractiveSearchModalClose = () => {
+    this.setState({ isInteractiveSearchModalOpen: false });
+  };
+
   //
   // Render
 
@@ -27,6 +64,8 @@ class TrackRow extends Component {
     const {
       id,
       albumId,
+      albumTitle,
+      foreignAlbumId,
       mediumNumber,
       trackFileId,
       absoluteTrackNumber,
@@ -37,12 +76,30 @@ class TrackRow extends Component {
       customFormats,
       customFormatScore,
       indexerFlags,
+      monitored,
+      appearanceCount,
+      isSaving,
+      isSearching,
+      isSelectMode,
+      isSelected,
+      selectionId,
       columns,
-      deleteTrackFile
+      deleteTrackFile,
+      onSelectedChange
     } = this.props;
 
     return (
       <TableRow>
+        {
+          isSelectMode ?
+            <TableSelectCell
+              id={selectionId || id}
+              isSelected={isSelected}
+              onSelectedChange={onSelectedChange}
+            /> :
+            null
+        }
+
         {
           columns.map((column) => {
             const {
@@ -65,6 +122,22 @@ class TrackRow extends Component {
               );
             }
 
+            if (name === 'monitored') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.monitored}
+                >
+                  <MonitorToggleButton
+                    monitored={monitored}
+                    isSaving={isSaving}
+                    size={14}
+                    onPress={this.onMonitorTogglePress}
+                  />
+                </TableRowCell>
+              );
+            }
+
             if (name === 'absoluteTrackNumber') {
               return (
                 <TableRowCell
@@ -83,6 +156,36 @@ class TrackRow extends Component {
                   className={styles.title}
                 >
                   {title}
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'album') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.album}
+                >
+                  {
+                    foreignAlbumId ?
+                      <AlbumTitleLink
+                        foreignAlbumId={foreignAlbumId}
+                        title={albumTitle}
+                      /> :
+                      albumTitle
+                  }
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'popularity') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.popularity}
+                  title={translate('ReleaseAppearancesCountInterp', [appearanceCount])}
+                >
+                  {appearanceCount}
                 </TableRowCell>
               );
             }
@@ -195,6 +298,36 @@ class TrackRow extends Component {
               );
             }
 
+            if (name === 'search') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.search}
+                >
+                  <SpinnerIconButton
+                    name={icons.SEARCH}
+                    isSpinning={isSearching}
+                    title={translate('AutomaticSearch')}
+                    onPress={this.onSearchPress}
+                  />
+
+                  <IconButton
+                    name={icons.INTERACTIVE}
+                    title={translate('InteractiveSearch')}
+                    onPress={this.onInteractiveSearchPress}
+                  />
+
+                  <AlbumInteractiveSearchModalConnector
+                    isOpen={this.state.isInteractiveSearchModalOpen}
+                    albumId={albumId}
+                    albumTitle={albumTitle}
+                    trackId={id}
+                    onModalClose={this.onInteractiveSearchModalClose}
+                  />
+                </TableRowCell>
+              );
+            }
+
             if (name === 'actions') {
               return (
                 <TrackActionsCell
@@ -220,6 +353,10 @@ TrackRow.propTypes = {
   deleteTrackFile: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired,
   albumId: PropTypes.number.isRequired,
+  albumTitle: PropTypes.string.isRequired,
+  foreignAlbumId: PropTypes.string,
+  monitorTrackIds: PropTypes.arrayOf(PropTypes.number),
+  appearanceCount: PropTypes.number,
   trackFileId: PropTypes.number,
   mediumNumber: PropTypes.number.isRequired,
   trackNumber: PropTypes.string.isRequired,
@@ -227,18 +364,29 @@ TrackRow.propTypes = {
   title: PropTypes.string.isRequired,
   duration: PropTypes.number.isRequired,
   isSaving: PropTypes.bool,
+  isSearching: PropTypes.bool.isRequired,
+  isSelectMode: PropTypes.bool,
+  isSelected: PropTypes.bool,
+  selectionId: PropTypes.string,
+  monitored: PropTypes.bool.isRequired,
   trackFilePath: PropTypes.string,
   trackFileSize: PropTypes.number,
   customFormats: PropTypes.arrayOf(PropTypes.object),
   customFormatScore: PropTypes.number.isRequired,
   indexerFlags: PropTypes.number.isRequired,
   mediaInfo: PropTypes.object,
-  columns: PropTypes.arrayOf(PropTypes.object).isRequired
+  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  toggleTracksMonitored: PropTypes.func.isRequired,
+  executeCommand: PropTypes.func.isRequired,
+  onSelectedChange: PropTypes.func
 };
 
 TrackRow.defaultProps = {
+  appearanceCount: 1,
   customFormats: [],
-  indexerFlags: 0
+  indexerFlags: 0,
+  isSelectMode: false,
+  isSelected: false
 };
 
 export default TrackRow;

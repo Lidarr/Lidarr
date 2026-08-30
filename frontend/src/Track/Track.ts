@@ -14,6 +14,7 @@ interface Track extends ModelBase {
   trackFile?: object;
   mediumNumber: number;
   hasFile: boolean;
+  monitored: boolean;
 }
 
 export default Track;

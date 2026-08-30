@@ -34,6 +34,17 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.RssSync
                 return Decision.Reject("Artist is not monitored");
             }
 
+            if (subject.Artist.SongMode)
+            {
+                if (subject.TargetRecordingIds.Any())
+                {
+                    return Decision.Accept();
+                }
+
+                _logger.Debug("No monitored songs were found in this release. Rejecting");
+                return Decision.Reject("Release does not contain any monitored songs");
+            }
+
             var monitoredCount = subject.Albums.Count(album => album.Monitored);
             if (monitoredCount == subject.Albums.Count)
             {

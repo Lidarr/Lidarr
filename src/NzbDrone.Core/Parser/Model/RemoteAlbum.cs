@@ -18,16 +18,42 @@ namespace NzbDrone.Core.Parser.Model
         public List<CustomFormat> CustomFormats { get; set; }
         public int CustomFormatScore { get; set; }
         public ReleaseSourceType ReleaseSource { get; set; }
+        public List<string> TargetRecordingIds { get; set; }
+        public int? TrackSearchPriority { get; set; }
 
         public RemoteAlbum()
         {
             Albums = new List<Album>();
             CustomFormats = new List<CustomFormat>();
+            TargetRecordingIds = new List<string>();
         }
 
         public bool IsRecentAlbum()
         {
             return Albums.Any(e => e.ReleaseDate >= DateTime.UtcNow.Date.AddDays(-14));
+        }
+
+        public int MonitoredTrackCount()
+        {
+            if (TargetRecordingIds?.Any() == true)
+            {
+                return TargetRecordingIds.Distinct().Count();
+            }
+
+            return Albums.Sum(album => album.AlbumReleases.Value
+                .Where(release => release.Monitored)
+                .Sum(release => release.Tracks?.Value?.Count(track => track.Monitored) ?? release.TrackCount));
+        }
+
+        public List<string> MonitoredRecordingIds()
+        {
+            return Albums.SelectMany(album => album.AlbumReleases?.Value ?? new List<AlbumRelease>())
+                         .Where(release => release.Monitored)
+                         .SelectMany(release => release.Tracks?.Value ?? new List<Track>())
+                         .Where(track => track.Monitored && !string.IsNullOrWhiteSpace(track.ForeignRecordingId))
+                         .Select(track => track.ForeignRecordingId)
+                         .Distinct()
+                         .ToList();
         }
 
         public override string ToString()

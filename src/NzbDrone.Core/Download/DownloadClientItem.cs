@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using NzbDrone.Common.Disk;
 using NzbDrone.Core.ThingiProvider;
@@ -24,6 +25,7 @@ namespace NzbDrone.Core.Download
         public bool CanMoveFiles { get; set; }
         public bool CanBeRemoved { get; set; }
         public bool Removed { get; set; }
+        public List<string> TargetRecordingIds { get; set; }
 
         public DownloadClientItem Clone()
         {

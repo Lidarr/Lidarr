@@ -75,7 +75,7 @@ namespace NzbDrone.Core.ArtistStats
                         ""Albums"".""Id"" AS ""AlbumId"",
                         COUNT(""Tracks"".""Id"") AS ""TotalTrackCount"",
                         SUM(CASE WHEN ""Albums"".""ReleaseDate"" <= @currentDate OR ""Tracks"".""TrackFileId"" > 0 THEN 1 ELSE 0 END) AS ""AvailableTrackCount"",
-                        SUM(CASE WHEN (""Albums"".""Monitored"" = {trueIndicator} AND ""Albums"".""ReleaseDate"" <= @currentDate) OR ""Tracks"".""TrackFileId"" > 0 THEN 1 ELSE 0 END) AS ""TrackCount"",
+                        SUM(CASE WHEN (""Albums"".""Monitored"" = {trueIndicator} AND ""Tracks"".""Monitored"" = {trueIndicator} AND ""Albums"".""ReleaseDate"" <= @currentDate) OR ""Tracks"".""TrackFileId"" > 0 THEN 1 ELSE 0 END) AS ""TrackCount"",
                         SUM(CASE WHEN ""Tracks"".""TrackFileId"" > 0 THEN 1 ELSE 0 END) AS TrackFileCount", parameters)
                 .Join<Track, AlbumRelease>((t, r) => t.AlbumReleaseId == r.Id)
                 .Join<AlbumRelease, Album>((r, a) => r.AlbumId == a.Id)
