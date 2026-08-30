@@ -90,22 +90,26 @@ namespace NzbDrone.Core.Music
             return Query(s => s.ForeignAlbumId == foreignAlbumId).SingleOrDefault();
         }
 
-        // x.Id == null is converted to SQL, so warning incorrect
-#pragma warning disable CS0472
         private SqlBuilder AlbumsWithoutFilesBuilder(DateTime currentTime)
         {
+            // First, create a subquery to find albums with missing tracks
+            var missingTracksSubquery = Builder()
+                .Select("\"AlbumReleases\".\"AlbumId\"")
+                .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
+                .LeftJoin<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
+                .Where<TrackFile>(f => f == null)
+                .Where<AlbumRelease>(r => r.Monitored == true)
+                .GroupBy("\"AlbumReleases\".\"AlbumId\"");
+
+            // Main query that joins with the subquery
             return Builder()
-                    .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
-                    .Join<Album, AlbumRelease>((a, r) => a.Id == r.AlbumId)
-                    .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
-                    .LeftJoin<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
-                    .Where<TrackFile>(f => f.Id == null)
-                    .Where<AlbumRelease>(r => r.Monitored == true)
-                    .Where<Album>(a => a.ReleaseDate <= currentTime)
-                    .GroupBy<Album>(x => x.Id)
-                    .GroupBy<Artist>(x => x.SortName);
+                .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
+                .Where<Album>(a => a.Monitored == true && a.ReleaseDate <= currentTime)
+                .Where<Artist>(a => a.Monitored == true)
+                .Where("\"Albums\".\"Id\" IN (SELECT \"AlbumReleases\".\"AlbumId\" FROM \"AlbumReleases\" JOIN \"Tracks\" ON (\"AlbumReleases\".\"Id\" = \"Tracks\".\"AlbumReleaseId\") LEFT JOIN \"TrackFiles\" ON (\"Tracks\".\"TrackFileId\" = \"TrackFiles\".\"Id\") WHERE \"TrackFiles\" IS NULL AND \"AlbumReleases\".\"Monitored\" = true GROUP BY \"AlbumReleases\".\"AlbumId\")")
+                .GroupBy<Album>(x => x.Id)
+                .GroupBy<Artist>(x => x.SortName);
         }
-#pragma warning restore CS0472
 
         public PagingSpec<Album> AlbumsWithoutFiles(PagingSpec<Album> pagingSpec)
         {
