@@ -22,7 +22,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
             PlaylistIds = System.Array.Empty<string>();
         }
 
-        public override string Scope => "playlist-read-private";
+        public override string Scope => "playlist-read-private user-library-read";
 
         [FieldDefinition(1, Label = "Playlists", Type = FieldType.Playlist)]
         public IEnumerable<string> PlaylistIds { get; set; }
