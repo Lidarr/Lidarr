@@ -129,7 +129,7 @@ function ArtistIndexRow(props: ArtistIndexRowProps) {
   }, [setIsDeleteArtistModalOpen]);
 
   const onSelectedChange = useCallback(
-    ({ id, value, shiftKey }: SelectStateInputProps) => {
+    ({ id, value, shiftKey = false }: SelectStateInputProps) => {
       selectDispatch({
         type: 'toggleSelected',
         id,
