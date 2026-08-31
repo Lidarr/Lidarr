@@ -765,7 +765,7 @@ namespace NzbDrone.Core.Parser
             return result;
         }
 
-        private static (int? year, YearMatchConfidence confidence) ExtractYear(Group yearGroup)
+        private static (int? Year, YearMatchConfidence Confidence) ExtractYear(Group yearGroup)
         {
             if (!yearGroup.Success)
             {
