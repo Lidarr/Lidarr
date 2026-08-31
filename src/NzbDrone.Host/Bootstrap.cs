@@ -53,7 +53,7 @@ namespace NzbDrone.Host
                 var appMode = GetApplicationMode(startupContext);
                 var config = GetConfiguration(startupContext);
 
-                if (appMode is not(ApplicationModes.Interactive or ApplicationModes.Service))
+                if (appMode is not (ApplicationModes.Interactive or ApplicationModes.Service))
                 {
                     RunUtilityMode(appMode, startupContext, config);
                     return;
