@@ -34,7 +34,7 @@ const monitorOptions = [
   {
     key: 'latest',
     get value() {
-      return translate('MonitorLastestAlbum');
+      return translate('MonitorLatestAlbum');
     }
   },
   {
