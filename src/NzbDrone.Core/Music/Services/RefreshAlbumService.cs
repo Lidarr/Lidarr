@@ -128,7 +128,19 @@ namespace NzbDrone.Core.Music
                     QualityProfileId = oldArtist.QualityProfileId,
                     RootFolderPath = _rootFolderService.GetBestRootFolderPath(oldArtist.Path),
                     Monitored = oldArtist.Monitored,
-                    Tags = oldArtist.Tags
+                    MonitorNewItems = oldArtist.MonitorNewItems,
+                    Tags = oldArtist.Tags,
+                    AddOptions = new AddArtistOptions
+                    {
+                        SearchForMissingAlbums = false,
+                        Monitored = oldArtist.Monitored,
+                        Monitor = oldArtist.MonitorNewItems switch
+                        {
+                            NewItemMonitorTypes.All => MonitorTypes.All,
+                            NewItemMonitorTypes.New => MonitorTypes.Future,
+                            _ => MonitorTypes.None
+                        },
+                    },
                 };
 
                 _logger.Info("Adding missing parent artist {0}", addArtist);
