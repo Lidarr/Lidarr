@@ -1377,5 +1377,6 @@
     "LidarrRequiresRestartToApplyPluginChanges": "Lidarr requiert un redémarrage pour appliquer le changement de plugin",
     "NoTracksFoundForSelectedAlbum": "Aucune piste trouvé pour l’album sélectionné",
     "Plugins": "Plugins",
-    "FilterTracksByTitleOrNumber": "Filtrer les pistes par titre ou numéro"
+    "FilterTracksByTitleOrNumber": "Filtrer les pistes par titre ou numéro",
+    "AllowedHosts": "Hôtes autorisés"
 }

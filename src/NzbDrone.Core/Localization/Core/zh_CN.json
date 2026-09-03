@@ -1377,5 +1377,7 @@
     "NoTracksFoundForSelectedAlbum": "没有找到选中专辑内曲目",
     "NotificationsEmbySettingsSendNotificationsHelpText": "让 MediaBrowser 向已配置的提供者发送通知",
     "Plugins": "插件",
-    "RestartRequired": "需要重启"
+    "RestartRequired": "需要重启",
+    "TrustedNetworks": "可信网络",
+    "AllowedHosts": "允许的主机"
 }
