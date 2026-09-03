@@ -144,7 +144,7 @@ namespace NzbDrone.Core.Organizer
                 AddTrackTitleTokens(tokenHandlers, tracks, maxTrackTitleLength);
                 component = ReplaceTokens(component, tokenHandlers, namingConfig).Trim();
 
-                component = FileNameCleanupRegex.Replace(component, match => match.Captures[0].Value[0].ToString());
+                component = CleanFolderName(component);
                 component = TrimSeparatorsRegex.Replace(component, string.Empty);
                 component = component.Replace("{ellipsis}", "...");
                 component = ReplaceReservedDeviceNames(component);
