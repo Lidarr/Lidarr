@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using NzbDrone.Core.Download;
 using NzbDrone.Core.MediaFiles.TrackImport.Identification;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Qualities;
@@ -20,7 +19,6 @@ namespace NzbDrone.Core.Parser.Model
         public ParsedTrackInfo FileTrackInfo { get; set; }
         public ParsedAlbumInfo FolderAlbumInfo { get; set; }
         public ParsedAlbumInfo DownloadClientAlbumInfo { get; set; }
-        public DownloadClientItem DownloadItem { get; set; }
         public List<string> AcoustIdResults { get; set; }
         public Artist Artist { get; set; }
         public Album Album { get; set; }

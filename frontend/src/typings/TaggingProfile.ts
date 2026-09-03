@@ -9,7 +9,6 @@ interface TaggingProfile extends ModelBase {
   embedCoverArt: boolean;
   order: number;
   tags: number[];
-  downloadClientIds: number[];
   skipHardlinkedFiles: boolean;
 }
 

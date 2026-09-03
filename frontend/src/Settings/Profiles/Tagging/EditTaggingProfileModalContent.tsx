@@ -24,14 +24,8 @@ import createProviderSettingsSelector from 'Store/Selectors/createProviderSettin
 import { PendingSection } from 'typings/pending';
 import TaggingProfile from 'typings/TaggingProfile';
 import translate from 'Utilities/String/translate';
+import writeAudioTagOptions from './writeAudioTagOptions';
 import styles from './EditTaggingProfileModalContent.css';
-
-const writeAudioTagOptions = [
-  { key: 'sync', value: 'All files; keep in sync with MusicBrainz' },
-  { key: 'allFiles', value: 'All files; initial import only' },
-  { key: 'newFiles', value: 'For new downloads only' },
-  { key: 'no', value: 'Never' },
-];
 
 interface EditTaggingProfileModalContentProps {
   id?: number;
@@ -135,19 +129,17 @@ function EditTaggingProfileModalContent(
               />
             </FormGroup>
 
-            {profile.writeAudioTags.value === 'no' ? null : (
-              <FormGroup>
-                <FormLabel>{translate('EmbedCoverArtInAudioFiles')}</FormLabel>
+            <FormGroup>
+              <FormLabel>{translate('EmbedCoverArtInAudioFiles')}</FormLabel>
 
-                <FormInputGroup
-                  type={inputTypes.CHECK}
-                  name="embedCoverArt"
-                  helpText={translate('EmbedCoverArtHelpText')}
-                  {...profile.embedCoverArt}
-                  onChange={onInputChange}
-                />
-              </FormGroup>
-            )}
+              <FormInputGroup
+                type={inputTypes.CHECK}
+                name="embedCoverArt"
+                helpText={translate('EmbedCoverArtHelpText')}
+                {...profile.embedCoverArt}
+                onChange={onInputChange}
+              />
+            </FormGroup>
 
             <FormGroup>
               <FormLabel>{translate('ScrubExistingTags')}</FormLabel>
@@ -157,18 +149,6 @@ function EditTaggingProfileModalContent(
                 name="scrubAudioTags"
                 helpText={translate('ScrubAudioTagsHelpText')}
                 {...profile.scrubAudioTags}
-                onChange={onInputChange}
-              />
-            </FormGroup>
-
-            <FormGroup>
-              <FormLabel>{translate('DownloadClients')}</FormLabel>
-
-              <FormInputGroup
-                type={inputTypes.DOWNLOAD_CLIENT_SELECT}
-                name="downloadClientIds"
-                helpText={translate('TaggingProfileDownloadClientsHelpText')}
-                {...profile.downloadClientIds}
                 onChange={onInputChange}
               />
             </FormGroup>

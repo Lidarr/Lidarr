@@ -73,40 +73,5 @@ namespace NzbDrone.Core.Test.HistoryTests
             Mocker.GetMock<IHistoryRepository>()
                 .Verify(v => v.Insert(It.Is<EntityHistory>(h => h.SourceTitle == Path.GetFileNameWithoutExtension(localTrack.Path))));
         }
-
-        [Test]
-        public void should_save_download_client_name_and_id_on_import()
-        {
-            var artist = Builder<Artist>.CreateNew().Build();
-            var tracks = Builder<Track>.CreateListOfSize(1).Build().ToList();
-            var trackFile = Builder<TrackFile>.CreateNew()
-                .With(f => f.SceneName = null)
-                .With(f => f.Artist = artist)
-                .Build();
-
-            var localTrack = new LocalTrack
-            {
-                Artist = artist,
-                Album = new Album(),
-                Tracks = tracks,
-                Path = @"C:\Test\Unsorted\Artist.01.Hymn.mp3"
-            };
-
-            var downloadClientItem = new DownloadClientItem
-            {
-                DownloadClientInfo = new DownloadClientItemClientInfo
-                {
-                    Protocol = nameof(UsenetDownloadProtocol),
-                    Id = 5,
-                    Name = "slskd"
-                },
-                DownloadId = "abcd"
-            };
-
-            Subject.Handle(new TrackImportedEvent(localTrack, trackFile, new List<TrackFile>(), true, downloadClientItem));
-
-            Mocker.GetMock<IHistoryRepository>()
-                .Verify(v => v.Insert(It.Is<EntityHistory>(h => h.Data["DownloadClient"] == "slskd" && h.Data["DownloadClientId"] == "5")));
-        }
     }
 }

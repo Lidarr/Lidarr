@@ -1,23 +1,25 @@
 import classNames from 'classnames';
 import React, { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
-import AppState from 'App/State/AppState';
 import { Tag } from 'App/State/TagsAppState';
 import Icon from 'Components/Icon';
-import Label from 'Components/Label';
 import Link from 'Components/Link/Link';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
 import TagList from 'Components/TagList';
 import { icons, kinds } from 'Helpers/Props';
+import { WriteAudioTagsType } from 'typings/TaggingProfile';
 import translate from 'Utilities/String/translate';
 import EditTaggingProfileModal from './EditTaggingProfileModal';
+import writeAudioTagOptions from './writeAudioTagOptions';
 import styles from './TaggingProfile.css';
 
 interface TaggingProfileProps {
   id: number;
   name: string;
   tags: number[];
-  downloadClientIds: number[];
+  writeAudioTags: WriteAudioTagsType;
+  scrubAudioTags: boolean;
+  embedCoverArt: boolean;
+  skipHardlinkedFiles: boolean;
   tagList?: Tag[];
   isDragging: boolean;
   connectDragSource?: (node: React.ReactNode) => React.ReactNode;
@@ -29,16 +31,15 @@ function TaggingProfile(props: TaggingProfileProps) {
     id,
     name,
     tags,
-    downloadClientIds,
+    writeAudioTags,
+    scrubAudioTags,
+    embedCoverArt,
+    skipHardlinkedFiles,
     tagList = [],
     isDragging,
     connectDragSource = (node: React.ReactNode) => node,
     onConfirmDeleteTaggingProfile,
   } = props;
-
-  const downloadClients = useSelector(
-    (state: AppState) => state.settings.downloadClients.items
-  );
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -64,6 +65,10 @@ function TaggingProfile(props: TaggingProfileProps) {
     onConfirmDeleteTaggingProfile?.(id);
   }, [id, onConfirmDeleteTaggingProfile]);
 
+  const writeModeLabel =
+    writeAudioTagOptions.find((option) => option.key === writeAudioTags)
+      ?.value ?? writeAudioTags;
+
   return (
     <div
       className={classNames(
@@ -73,22 +78,20 @@ function TaggingProfile(props: TaggingProfileProps) {
     >
       <div className={styles.name}>{name}</div>
 
-      <div className={styles.fillcolumn}>
-        {downloadClientIds.length ? (
-          downloadClientIds.map((clientId) => {
-            const downloadClient = downloadClients.find(
-              (c) => c.id === clientId
-            );
+      <div className={styles.writeAudioTags} title={writeModeLabel}>
+        {writeModeLabel}
+      </div>
 
-            return downloadClient ? (
-              <Label key={clientId} kind={kinds.INFO}>
-                {downloadClient.name}
-              </Label>
-            ) : null;
-          })
-        ) : (
-          <Label kind={kinds.DEFAULT}>{translate('Any')}</Label>
-        )}
+      <div className={styles.optionColumn}>
+        {embedCoverArt ? translate('Yes') : translate('No')}
+      </div>
+
+      <div className={styles.optionColumn}>
+        {scrubAudioTags ? translate('Yes') : translate('No')}
+      </div>
+
+      <div className={styles.optionColumn}>
+        {skipHardlinkedFiles ? translate('Yes') : translate('No')}
       </div>
 
       <TagList className={styles.fillcolumn} tags={tags} tagList={tagList} />

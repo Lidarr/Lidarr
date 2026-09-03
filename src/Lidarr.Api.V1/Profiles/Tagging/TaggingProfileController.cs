@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-using System.Linq;
 using FluentValidation;
 using Lidarr.Http;
 using Lidarr.Http.REST;
 using Lidarr.Http.REST.Attributes;
 using Lidarr.Http.Validation;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Core.Download;
 using NzbDrone.Core.Profiles.Tagging;
 
 namespace Lidarr.Api.V1.Profiles.Tagging
@@ -15,25 +13,13 @@ namespace Lidarr.Api.V1.Profiles.Tagging
     public class TaggingProfileController : RestController<TaggingProfileResource>
     {
         private readonly ITaggingProfileService _taggingProfileService;
-        private readonly IDownloadClientFactory _downloadClientFactory;
 
-        public TaggingProfileController(ITaggingProfileService taggingProfileService, IDownloadClientFactory downloadClientFactory)
+        public TaggingProfileController(ITaggingProfileService taggingProfileService)
         {
             _taggingProfileService = taggingProfileService;
-            _downloadClientFactory = downloadClientFactory;
 
             SharedValidator.RuleFor(d => d.Name).NotEmpty();
             SharedValidator.RuleFor(d => d.Tags).EmptyCollection<TaggingProfileResource, int>().When(d => d.Id == 1);
-            SharedValidator.RuleFor(d => d).Custom((profile, context) =>
-            {
-                if (profile.DownloadClientIds.Any())
-                {
-                    foreach (var downloadClientId in profile.DownloadClientIds.Where(downloadClientId => !_downloadClientFactory.Exists(downloadClientId)))
-                    {
-                        context.AddFailure(nameof(TaggingProfileResource.DownloadClientIds), $"Download client does not exist: {downloadClientId}");
-                    }
-                }
-            });
         }
 
         [RestPostById]

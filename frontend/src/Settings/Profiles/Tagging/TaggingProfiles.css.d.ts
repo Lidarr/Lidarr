@@ -7,8 +7,10 @@ interface CssExports {
   'fillcolumn': string;
   'horizontalScroll': string;
   'name': string;
+  'optionColumn': string;
   'taggingProfiles': string;
   'taggingProfilesHeader': string;
+  'writeAudioTags': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

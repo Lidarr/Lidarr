@@ -374,9 +374,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     _albumService.UpdateAlbum(album);
                 }
 
-                var downloadId = importAlbumId.Select(x => x.DownloadId).FirstOrDefault(x => x.IsNotNullOrWhiteSpace());
-                var trackedDownload = downloadId.IsNotNullOrWhiteSpace() ? _trackedDownloadService.Find(downloadId) : null;
-
                 foreach (var file in importAlbumId)
                 {
                     _logger.ProgressTrace("Processing file {0} of {1}", fileCount + 1, message.Files.Count);
@@ -393,7 +390,6 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                         ExistingFile = artist.Path.IsParentPath(file.Path),
                         Tracks = tracks,
                         FileTrackInfo = fileTrackInfo,
-                        DownloadItem = trackedDownload?.DownloadItem,
                         Path = file.Path,
                         ReleaseGroup = file.ReleaseGroup,
                         Size = fileInfo.Length,
@@ -416,12 +412,14 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Manual
                     fileCount += 1;
                 }
 
+                var downloadId = importAlbumId.Select(x => x.DownloadId).FirstOrDefault(x => x.IsNotNullOrWhiteSpace());
                 if (downloadId.IsNullOrWhiteSpace())
                 {
                     imported.AddRange(_importApprovedTracks.Import(albumImportDecisions, message.ReplaceExistingFiles, null, message.ImportMode));
                 }
                 else
                 {
+                    var trackedDownload = _trackedDownloadService.Find(downloadId);
                     var importResults = _importApprovedTracks.Import(albumImportDecisions, message.ReplaceExistingFiles, trackedDownload.DownloadItem, message.ImportMode);
 
                     imported.AddRange(importResults);
