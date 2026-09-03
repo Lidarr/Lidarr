@@ -1377,5 +1377,8 @@
     "NoTracksFoundForSelectedAlbum": "No s'han trobat cançons per a l'àlbum seleccionat",
     "LidarrRequiresRestartToApplyPluginChanges": "Lidarr necessita un reinici per aplicar els canvis d'extensions",
     "Plugins": "Extensions",
-    "RestartRequired": "Reinici requerit"
+    "RestartRequired": "Reinici requerit",
+    "AllowedHosts": "Hostes permesos",
+    "AllowedHostsHelpText": "Llista de noms d'hostes i adreces IP separades per comes que {appName} n'acceptarà sol·licituds. Utilitza '*.' com a comodí per subdominis. Deixa-ho buit per permetre tots els hostes.",
+    "AllowedHostsNotConfiguredHealthCheckMessage": "Hostes permesos no configurats, {appName} acceptarà sol·licituds de qualsevol nom d'hoste. Configura els hostes permesos a les configuracions Generals per restringir els hostes que poden contactar {appName}."
 }

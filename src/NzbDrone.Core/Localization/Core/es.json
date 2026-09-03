@@ -1377,5 +1377,12 @@
     "NoTracksFoundForSelectedAlbum": "No se encontró ninguna pista para el álbum seleccionado",
     "Plugins": "Complementos",
     "RestartRequired": "Se requiere un reinicio",
-    "LidarrRequiresRestartToApplyPluginChanges": "Lidarr requiere un reinicio para aplicar los cambios de complementos"
+    "LidarrRequiresRestartToApplyPluginChanges": "Lidarr requiere un reinicio para aplicar los cambios de complementos",
+    "AllowedHosts": "Hosts permitidos",
+    "AllowedHostsHelpText": "Lista separada por comas de nombres de host y direcciones IP para la que {appName} aceptará peticiones. Usa '*.' como un wildcard para subdominios. Dejar vacío para permitir todos los hosts.",
+    "AllowedHostsNotConfiguredHealthCheckMessage": "Hosts permitidos no está configurado, {appName} aceptará peticiones para cualquier nombre de host. Establece Hosts permitidos en Ajustes generales para restringir qué nombres de host pueden ser usados para alcanzar {appName}.",
+    "TrustedNetworks": "Redes de confianza",
+    "TrustedNetworksHelpText": "Lista separada por comas de direcciones IP o redes en notación CIDR en las que están los proxies inversos de confianza. P. ej. 172.17.0.1, 10.0.0.0/8 o fc00::/7. Añadir solo proxies que están configurados adecuadamente para enviar las cabeceras correctas.",
+    "RemovedArtistMultipleRemovedHealthCheckMessage": "Los artistas {artists} fueron eliminados de MusicBrainz",
+    "RemovedArtistSingleRemovedHealthCheckMessage": "El artista {artist} fue eliminado de MusicBrainz"
 }

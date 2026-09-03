@@ -1377,5 +1377,12 @@
     "UpdatingIsDisabledInsideADockerContainerUpdateTheContainerImageInstead": "Обновление отключено внутри контейнера Docker. Обновите образ контейнера.",
     "WatchLibraryForChangesHelpText": "Автоматически пересканировать при изменении файлов в корневой папке",
     "WatchRootFoldersForFileChanges": "Отслеживать изменения файлов в корневых папках",
-    "WriteAudioTagsHelpTextWarning": "Выбор параметра «Все файлы» изменит существующие файлы при их импорте."
+    "WriteAudioTagsHelpTextWarning": "Выбор параметра «Все файлы» изменит существующие файлы при их импорте.",
+    "AllowedHosts": "Разрешенные хосты",
+    "AllowedHostsHelpText": "Список имен хостов и IP-адресов, разделенных запятыми, с которых {appName} будет принимать запросы. Для поддоменов используйте символ подстановки '*.' . Оставьте пустым, чтобы разрешить доступ со всех хостов.",
+    "AllowedHostsNotConfiguredHealthCheckMessage": "Параметр «Разрешенные хосты» не настроен, поэтому {appName} будет принимать запросы для любых имён хостов. Укажите «Разрешенные хосты» в настройках «Общие», чтобы ограничить список имён хостов, с которых можно обращаться к {appName}.",
+    "TrustedNetworks": "Доверенные сети",
+    "TrustedNetworksHelpText": "Разделенный запятыми список IP-адресов или сетей в нотации CIDR, в которых находятся доверенные обратные прокси-серверы. Например: 172.17.0.1, 10.0.0.0/8 или fc00::/7. Добавляйте только те прокси-серверы, которые правильно настроены для отправки корректных заголовков.",
+    "RemovedArtistMultipleRemovedHealthCheckMessage": "Исполнители {artists} были удалены из MusicBrainz",
+    "RemovedArtistSingleRemovedHealthCheckMessage": "Исполнитель {artist} был удалён из MusicBrainz"
 }
