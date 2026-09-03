@@ -118,6 +118,31 @@ namespace NzbDrone.Core.Test.Profiles.Tagging
         }
 
         [Test]
+        public void reorder_should_clear_best_for_tags_cache()
+        {
+            Subject.BestForTags(new HashSet<int>()).Id.Should().Be(_untaggedProfile.Id);
+
+            _profiles.Remove(_untaggedProfile);
+            Subject.Reorder(_taggedProfile.Id, null);
+
+            Subject.BestForTags(new HashSet<int>()).Id.Should().Be(_defaultProfile.Id);
+        }
+
+        [Test]
+        public void update_should_keep_default_profile_order_last()
+        {
+            Subject.Update(new TaggingProfile
+            {
+                Id = 1,
+                Name = "Default",
+                Order = 0
+            });
+
+            Mocker.GetMock<ITaggingProfileRepository>()
+                  .Verify(v => v.Update(It.Is<TaggingProfile>(p => p.Order == int.MaxValue)), Times.Once());
+        }
+
+        [Test]
         public void get_seeded_default_profile_should_return_seeded_profile()
         {
             Subject.GetSeededDefaultProfile().Should().BeSameAs(_defaultProfile);

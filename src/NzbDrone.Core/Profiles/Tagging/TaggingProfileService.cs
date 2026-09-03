@@ -45,6 +45,12 @@ namespace NzbDrone.Core.Profiles.Tagging
 
         public TaggingProfile Update(TaggingProfile profile)
         {
+            // the seeded default (Id 1) must stay the last-resort match
+            if (profile.Id == 1)
+            {
+                profile.Order = int.MaxValue;
+            }
+
             var result = _repo.Update(profile);
             _bestForTagsCache.Clear();
             return result;
@@ -158,6 +164,7 @@ namespace NzbDrone.Core.Profiles.Tagging
             }
 
             _repo.UpdateMany(all);
+            _bestForTagsCache.Clear();
 
             return All();
         }
