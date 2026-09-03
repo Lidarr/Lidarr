@@ -1238,6 +1238,7 @@
   "TagAudioFiles": "Tag Audio Files",
   "TagAudioFilesWithMetadata": "Tag Audio Files with Metadata",
   "TagIsNotUsedAndCanBeDeleted": "Tag is not used and can be deleted",
+  "TaggingProfile": "Tagging Profile",
   "TaggingProfileSkipHardlinkedFilesHelpText": "Don't write tags to files that are hardlinked",
   "TaggingProfileTagsHelpText": "Applies to artists with at least one matching tag. Leave blank to apply to all artists",
   "TaggingProfiles": "Tagging Profiles",
