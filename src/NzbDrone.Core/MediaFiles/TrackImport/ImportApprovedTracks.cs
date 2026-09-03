@@ -252,7 +252,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
                         try
                         {
-                            _audioTagService.WriteTags(trackFile, localTrack.DownloadItem, false);
+                            _audioTagService.WriteTags(trackFile, false);
                         }
                         catch (InvalidOperationException ex)
                         {

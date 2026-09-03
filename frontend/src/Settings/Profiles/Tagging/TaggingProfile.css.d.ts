@@ -8,7 +8,9 @@ interface CssExports {
   'fillcolumn': string;
   'isDragging': string;
   'name': string;
+  'optionColumn': string;
   'taggingProfile': string;
+  'writeAudioTags': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

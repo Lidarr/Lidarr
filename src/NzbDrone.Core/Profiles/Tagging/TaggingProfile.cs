@@ -12,13 +12,11 @@ namespace NzbDrone.Core.Profiles.Tagging
         public WriteAudioTagsType WriteAudioTags { get; set; }
         public bool ScrubAudioTags { get; set; }
         public bool EmbedCoverArt { get; set; }
-        public List<int> DownloadClientIds { get; set; }
         public bool SkipHardlinkedFiles { get; set; } = true;
 
         public TaggingProfile()
         {
             Tags = new HashSet<int>();
-            DownloadClientIds = new List<int>();
             EmbedCoverArt = true;
         }
     }

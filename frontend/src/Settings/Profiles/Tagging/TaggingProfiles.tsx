@@ -11,7 +11,6 @@ import { icons } from 'Helpers/Props';
 import ScrollDirection from 'Helpers/Props/ScrollDirection';
 import {
   deleteTaggingProfile,
-  fetchDownloadClients,
   fetchTaggingProfiles,
   reorderTaggingProfile,
 } from 'Store/Actions/settingsActions';
@@ -32,10 +31,6 @@ function TaggingProfiles() {
 
   const tagList = useSelector(createTagsSelector());
 
-  const { isPopulated: isDownloadClientsPopulated } = useSelector(
-    (state: AppState) => state.settings.downloadClients
-  );
-
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [width, setWidth] = useState(0);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
@@ -44,12 +39,6 @@ function TaggingProfiles() {
   useEffect(() => {
     dispatch(fetchTaggingProfiles());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (!isDownloadClientsPopulated) {
-      dispatch(fetchDownloadClients());
-    }
-  }, [isDownloadClientsPopulated, dispatch]);
 
   const defaultProfile = items.find((item) => item.id === 1);
   const profiles = items
@@ -118,8 +107,17 @@ function TaggingProfiles() {
             <div>
               <div className={styles.taggingProfilesHeader}>
                 <div className={styles.name}>{translate('Name')}</div>
-                <div className={styles.fillcolumn}>
-                  {translate('DownloadClients')}
+                <div className={styles.writeAudioTags}>
+                  {translate('TagAudioFiles')}
+                </div>
+                <div className={styles.optionColumn}>
+                  {translate('EmbedCoverArt')}
+                </div>
+                <div className={styles.optionColumn}>
+                  {translate('ScrubExistingTags')}
+                </div>
+                <div className={styles.optionColumn}>
+                  {translate('SkipHardlinkedFiles')}
                 </div>
                 <div className={styles.fillcolumn}>{translate('Tags')}</div>
                 <div className={styles.actions} />

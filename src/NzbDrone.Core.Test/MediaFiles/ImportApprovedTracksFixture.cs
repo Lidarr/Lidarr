@@ -27,7 +27,6 @@ namespace NzbDrone.Core.Test.MediaFiles
         private List<ImportDecision<LocalTrack>> _rejectedDecisions;
         private List<ImportDecision<LocalTrack>> _approvedDecisions;
 
-        private DownloadClientItem _downloadClientItem;
         private DownloadClientItemClientInfo _clientInfo;
 
         [SetUp]
@@ -82,7 +81,6 @@ namespace NzbDrone.Core.Test.MediaFiles
                   .Returns(new TrackFileMoveResult());
 
             _clientInfo = Builder<DownloadClientItemClientInfo>.CreateNew().Build();
-            _downloadClientItem = Builder<DownloadClientItem>.CreateNew().With(x => x.DownloadClientInfo = _clientInfo).Build();
 
             Mocker.GetMock<IMediaFileService>()
                 .Setup(s => s.GetFilesByAlbum(It.IsAny<int>()))
@@ -203,19 +201,6 @@ namespace NzbDrone.Core.Test.MediaFiles
 
             Mocker.GetMock<IUpgradeMediaFiles>()
                   .Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), _approvedDecisions.First().Item, false), Times.Once());
-        }
-
-        [Test]
-        public void should_write_tags_with_download_item_for_existing_files()
-        {
-            var track = _approvedDecisions.First();
-            track.Item.ExistingFile = true;
-            track.Item.DownloadItem = _downloadClientItem;
-
-            Subject.Import(new List<ImportDecision<LocalTrack>> { track }, false);
-
-            Mocker.GetMock<IAudioTagService>()
-                .Verify(v => v.WriteTags(It.IsAny<TrackFile>(), _downloadClientItem, false, false), Times.Once());
         }
 
         [Test]

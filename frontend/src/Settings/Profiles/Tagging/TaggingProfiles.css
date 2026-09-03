@@ -16,8 +16,17 @@
   flex: 0 0 200px;
 }
 
+.writeAudioTags {
+  flex: 0 0 300px;
+  padding-right: 10px;
+}
+
+.optionColumn {
+  flex: 0 0 150px;
+}
+
 .fillcolumn {
-  flex: 1 0 auto;
+  flex: 1 0 100px;
 }
 
 .actions {
@@ -38,5 +47,21 @@
   .horizontalScroll {
     overflow-y: hidden;
     width: 100%;
+  }
+
+  .name {
+    flex: 1 1 100px;
+  }
+
+  .writeAudioTags {
+    flex: 1 1 100px;
+  }
+
+  .optionColumn {
+    display: none;
+  }
+
+  .fillcolumn {
+    flex: 1 0 80px;
   }
 }

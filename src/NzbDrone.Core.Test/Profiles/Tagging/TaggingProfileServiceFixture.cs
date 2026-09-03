@@ -5,10 +5,8 @@ using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Cache;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Download;
 using NzbDrone.Core.Profiles.Tagging;
 using NzbDrone.Core.Test.Framework;
-using NzbDrone.Core.ThingiProvider.Events;
 
 namespace NzbDrone.Core.Test.Profiles.Tagging
 {
@@ -17,7 +15,7 @@ namespace NzbDrone.Core.Test.Profiles.Tagging
     {
         private TaggingProfile _defaultProfile;
         private TaggingProfile _taggedProfile;
-        private TaggingProfile _clientProfile;
+        private TaggingProfile _untaggedProfile;
         private List<TaggingProfile> _profiles;
 
         [SetUp]
@@ -42,16 +40,15 @@ namespace NzbDrone.Core.Test.Profiles.Tagging
                 Tags = new HashSet<int> { 7 }
             };
 
-            _clientProfile = new TaggingProfile
+            _untaggedProfile = new TaggingProfile
             {
                 Id = 3,
-                Name = "Trusted clients",
+                Name = "Catch all",
                 Order = 2,
-                WriteAudioTags = WriteAudioTagsType.NewFiles,
-                DownloadClientIds = new List<int> { 15, 16 }
+                WriteAudioTags = WriteAudioTagsType.NewFiles
             };
 
-            _profiles = new List<TaggingProfile> { _defaultProfile, _taggedProfile, _clientProfile };
+            _profiles = new List<TaggingProfile> { _defaultProfile, _taggedProfile, _untaggedProfile };
 
             Mocker.GetMock<ITaggingProfileRepository>()
                   .Setup(s => s.All())
@@ -61,39 +58,33 @@ namespace NzbDrone.Core.Test.Profiles.Tagging
         [Test]
         public void best_for_tags_should_return_first_matching_profile_by_order()
         {
-            var result = Subject.BestForTags(new HashSet<int> { 7 }, 15);
+            var result = Subject.BestForTags(new HashSet<int> { 7 });
 
             result.Id.Should().Be(_taggedProfile.Id);
         }
 
         [Test]
-        public void best_for_tags_should_match_client_scoped_profile_for_scoped_client()
+        public void best_for_tags_should_match_untagged_profile_for_no_tags()
         {
-            var result = Subject.BestForTags(new HashSet<int>(), 15);
+            var result = Subject.BestForTags(new HashSet<int>());
 
-            result.Id.Should().Be(_clientProfile.Id);
+            result.Id.Should().Be(_untaggedProfile.Id);
         }
 
         [Test]
-        public void best_for_tags_should_fall_through_to_default_for_unscoped_client()
+        public void best_for_tags_should_match_untagged_profile_for_other_tags()
         {
-            var result = Subject.BestForTags(new HashSet<int>(), 4);
+            var result = Subject.BestForTags(new HashSet<int> { 9 });
 
-            result.Id.Should().Be(_defaultProfile.Id);
+            result.Id.Should().Be(_untaggedProfile.Id);
         }
 
         [Test]
-        public void best_for_tags_should_fall_through_to_default_for_unknown_client()
+        public void best_for_tags_should_fall_through_to_default_when_no_other_profile_matches()
         {
-            var result = Subject.BestForTags(new HashSet<int>(), 0);
+            _profiles.Remove(_untaggedProfile);
 
-            result.Id.Should().Be(_defaultProfile.Id);
-        }
-
-        [Test]
-        public void best_for_tags_should_not_match_tagged_profile_for_other_tags()
-        {
-            var result = Subject.BestForTags(new HashSet<int> { 9 }, 0);
+            var result = Subject.BestForTags(new HashSet<int> { 9 });
 
             result.Id.Should().Be(_defaultProfile.Id);
         }
@@ -101,23 +92,12 @@ namespace NzbDrone.Core.Test.Profiles.Tagging
         [Test]
         public void best_for_tags_should_return_null_when_no_profile_matches()
         {
-            _defaultProfile.DownloadClientIds = new List<int> { 1 };
+            _profiles.Remove(_defaultProfile);
+            _profiles.Remove(_untaggedProfile);
 
-            var result = Subject.BestForTags(new HashSet<int>(), 4);
+            var result = Subject.BestForTags(new HashSet<int> { 9 });
 
             result.Should().BeNull();
-        }
-
-        [Test]
-        public void should_remove_deleted_download_client_from_profiles()
-        {
-            Subject.Handle(new ProviderDeletedEvent<IDownloadClient>(15));
-
-            Mocker.GetMock<ITaggingProfileRepository>()
-                  .Verify(v => v.Update(It.Is<TaggingProfile>(p => p.Id == _clientProfile.Id && !p.DownloadClientIds.Contains(15))), Times.Once());
-
-            Mocker.GetMock<ITaggingProfileRepository>()
-                  .Verify(v => v.Update(It.IsAny<TaggingProfile>()), Times.Once());
         }
 
         [Test]
@@ -131,9 +111,9 @@ namespace NzbDrone.Core.Test.Profiles.Tagging
         [Test]
         public void reorder_should_move_profile_to_first_when_after_id_is_null()
         {
-            var result = Subject.Reorder(_clientProfile.Id, null).OrderBy(d => d.Order).ToList();
+            var result = Subject.Reorder(_untaggedProfile.Id, null).OrderBy(d => d.Order).ToList();
 
-            result.First().Id.Should().Be(_clientProfile.Id);
+            result.First().Id.Should().Be(_untaggedProfile.Id);
             result.First().Order.Should().Be(1);
         }
 

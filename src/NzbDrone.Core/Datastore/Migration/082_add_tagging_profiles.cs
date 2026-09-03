@@ -16,7 +16,6 @@ namespace NzbDrone.Core.Datastore.Migration
                   .WithColumn("WriteAudioTags").AsInt32().NotNullable()
                   .WithColumn("ScrubAudioTags").AsBoolean().NotNullable()
                   .WithColumn("EmbedCoverArt").AsBoolean().NotNullable()
-                  .WithColumn("DownloadClientIds").AsString().NotNullable()
                   .WithColumn("SkipHardlinkedFiles").AsBoolean().NotNullable();
 
             Execute.WithConnection(SeedDefaultProfile);
@@ -45,7 +44,6 @@ namespace NzbDrone.Core.Datastore.Migration
                 }
             }
 
-            // protect hardlinked files by default unless tags were already being written
             var skipHardlinkedFiles = writeAudioTags == 0;
 
             using (var scrubAudioTagsCmd = conn.CreateCommand(tran, "SELECT \"Value\" FROM \"Config\" WHERE \"Key\" = 'scrubaudiotags'"))
@@ -68,11 +66,11 @@ namespace NzbDrone.Core.Datastore.Migration
 
             if (conn.GetType().FullName == "Npgsql.NpgsqlConnection")
             {
-                commandText = "INSERT INTO \"TaggingProfiles\" (\"Name\", \"Tags\", \"Order\", \"WriteAudioTags\", \"ScrubAudioTags\", \"EmbedCoverArt\", \"DownloadClientIds\", \"SkipHardlinkedFiles\") VALUES ('Default', '[]', 2147483647, $1, $2, $3, '[]', $4)";
+                commandText = "INSERT INTO \"TaggingProfiles\" (\"Name\", \"Tags\", \"Order\", \"WriteAudioTags\", \"ScrubAudioTags\", \"EmbedCoverArt\", \"SkipHardlinkedFiles\") VALUES ('Default', '[]', 2147483647, $1, $2, $3, $4)";
             }
             else
             {
-                commandText = "INSERT INTO \"TaggingProfiles\" (\"Name\", \"Tags\", \"Order\", \"WriteAudioTags\", \"ScrubAudioTags\", \"EmbedCoverArt\", \"DownloadClientIds\", \"SkipHardlinkedFiles\") VALUES ('Default', '[]', 2147483647, ?, ?, ?, '[]', ?)";
+                commandText = "INSERT INTO \"TaggingProfiles\" (\"Name\", \"Tags\", \"Order\", \"WriteAudioTags\", \"ScrubAudioTags\", \"EmbedCoverArt\", \"SkipHardlinkedFiles\") VALUES ('Default', '[]', 2147483647, ?, ?, ?, ?)";
             }
 
             using (var insertCmd = conn.CreateCommand(tran, commandText))

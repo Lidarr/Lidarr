@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ThingiProvider.Events;
 
 namespace NzbDrone.Core.Profiles.Tagging
 {
@@ -20,11 +17,11 @@ namespace NzbDrone.Core.Profiles.Tagging
         TaggingProfile GetSeededDefaultProfile();
         List<TaggingProfile> AllForTag(int tagId);
         List<TaggingProfile> AllForTags(HashSet<int> tagIds);
-        TaggingProfile BestForTags(HashSet<int> tagIds, int downloadClientId);
+        TaggingProfile BestForTags(HashSet<int> tagIds);
         List<TaggingProfile> Reorder(int id, int? afterId);
     }
 
-    public class TaggingProfileService : ITaggingProfileService, IHandle<ProviderDeletedEvent<IDownloadClient>>
+    public class TaggingProfileService : ITaggingProfileService
     {
         private readonly ITaggingProfileRepository _repo;
         private readonly ICached<TaggingProfile> _bestForTagsCache;
@@ -83,13 +80,11 @@ namespace NzbDrone.Core.Profiles.Tagging
             return _repo.Get(id);
         }
 
-        // template for new profiles; migration 082 decides the seeded default's value
         public TaggingProfile GetDefaultProfile()
         {
             return new TaggingProfile();
         }
 
-        // seeded by migration 082 and undeletable; carries the pre-profile global settings
         public TaggingProfile GetSeededDefaultProfile()
         {
             return _bestForTagsCache.Get("seeded-default", () => All().FirstOrDefault(p => p.Id == 1) ?? new TaggingProfile(), TimeSpan.FromSeconds(30));
@@ -106,17 +101,16 @@ namespace NzbDrone.Core.Profiles.Tagging
             return All().Where(r => r.Tags.Intersect(tagIds).Any() || r.Tags.Empty()).ToList();
         }
 
-        public TaggingProfile BestForTags(HashSet<int> tagIds, int downloadClientId)
+        public TaggingProfile BestForTags(HashSet<int> tagIds)
         {
-            var key = downloadClientId + "-" + tagIds.Select(v => v.ToString()).Join(",");
-            return _bestForTagsCache.Get(key, () => FetchBestForTags(tagIds, downloadClientId), TimeSpan.FromSeconds(30));
+            var key = "-" + tagIds.Select(v => v.ToString()).Join(",");
+            return _bestForTagsCache.Get(key, () => FetchBestForTags(tagIds), TimeSpan.FromSeconds(30));
         }
 
-        private TaggingProfile FetchBestForTags(HashSet<int> tagIds, int downloadClientId)
+        private TaggingProfile FetchBestForTags(HashSet<int> tagIds)
         {
             return All()
                 .Where(r => r.Tags.Intersect(tagIds).Any() || r.Tags.Empty())
-                .Where(r => r.DownloadClientIds.Contains(downloadClientId) || r.DownloadClientIds.Empty())
                 .OrderBy(d => d.Order).FirstOrDefault();
         }
 
@@ -181,17 +175,6 @@ namespace NzbDrone.Core.Profiles.Tagging
             }
 
             return after.Order;
-        }
-
-        public void Handle(ProviderDeletedEvent<IDownloadClient> message)
-        {
-            var profiles = All().Where(p => p.DownloadClientIds.Contains(message.ProviderId)).ToList();
-
-            foreach (var profile in profiles)
-            {
-                profile.DownloadClientIds.Remove(message.ProviderId);
-                Update(profile);
-            }
         }
     }
 }

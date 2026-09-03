@@ -83,7 +83,7 @@ namespace NzbDrone.Core.MediaFiles
                 moveFileResult.TrackFile = _trackFileMover.MoveTrackFile(trackFile, localTrack);
             }
 
-            _audioTagService.WriteTags(trackFile, localTrack.DownloadItem, true);
+            _audioTagService.WriteTags(trackFile, true);
 
             return moveFileResult;
         }

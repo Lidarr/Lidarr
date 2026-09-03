@@ -14,7 +14,6 @@ namespace Lidarr.Api.V1.Profiles.Tagging
         public bool EmbedCoverArt { get; set; }
         public int Order { get; set; }
         public HashSet<int> Tags { get; set; }
-        public List<int> DownloadClientIds { get; set; }
         public bool SkipHardlinkedFiles { get; set; } = true;
     }
 
@@ -36,7 +35,6 @@ namespace Lidarr.Api.V1.Profiles.Tagging
                 EmbedCoverArt = model.EmbedCoverArt,
                 Order = model.Order,
                 Tags = new HashSet<int>(model.Tags),
-                DownloadClientIds = new List<int>(model.DownloadClientIds),
                 SkipHardlinkedFiles = model.SkipHardlinkedFiles
             };
         }
@@ -57,7 +55,6 @@ namespace Lidarr.Api.V1.Profiles.Tagging
                 EmbedCoverArt = resource.EmbedCoverArt,
                 Order = resource.Order,
                 Tags = new HashSet<int>(resource.Tags),
-                DownloadClientIds = new List<int>(resource.DownloadClientIds),
                 SkipHardlinkedFiles = resource.SkipHardlinkedFiles
             };
         }
