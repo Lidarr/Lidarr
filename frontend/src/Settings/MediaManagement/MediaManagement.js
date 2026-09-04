@@ -232,6 +232,48 @@ class MediaManagement extends Component {
                         size={sizes.MEDIUM}
                       >
                         <FormLabel>
+                          {translate('AlbumMatchThreshold')}
+                        </FormLabel>
+
+                        <FormInputGroup
+                          type={inputTypes.NUMBER}
+                          unit='%'
+                          name="albumMatchThreshold"
+                          helpText={translate('AlbumMatchThresholdHelpText')}
+                          min={1}
+                          max={100}
+                          onChange={onInputChange}
+                          {...settings.albumMatchThreshold}
+                        />
+                      </FormGroup>
+
+                      <FormGroup
+                        advancedSettings={advancedSettings}
+                        isAdvanced={true}
+                        size={sizes.MEDIUM}
+                      >
+                        <FormLabel>
+                          {translate('TrackMatchThreshold')}
+                        </FormLabel>
+
+                        <FormInputGroup
+                          type={inputTypes.NUMBER}
+                          unit='%'
+                          name="trackMatchThreshold"
+                          helpText={translate('TrackMatchThresholdHelpText')}
+                          min={1}
+                          max={100}
+                          onChange={onInputChange}
+                          {...settings.trackMatchThreshold}
+                        />
+                      </FormGroup>
+
+                      <FormGroup
+                        advancedSettings={advancedSettings}
+                        isAdvanced={true}
+                        size={sizes.MEDIUM}
+                      >
+                        <FormLabel>
                           {translate('UseHardlinksInsteadOfCopy')}
                         </FormLabel>
 
