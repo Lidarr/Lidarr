@@ -1,0 +1,19 @@
+# CI / context = repo root (lidarr-src). Local builds from parent folder use ../Dockerfile instead.
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS builder
+WORKDIR /src
+
+COPY . ./
+
+RUN dotnet publish src/NzbDrone.Console/Lidarr.Console.csproj \
+    -c Release \
+    -f net8.0 \
+    -r linux-musl-x64 \
+    --self-contained true \
+    -p:RunAnalyzers=false \
+    -p:EnforceCodeStyleInBuild=false \
+    -p:TreatWarningsAsErrors=false \
+    -o /out
+
+FROM ghcr.io/linuxserver/lidarr:nightly
+
+COPY --from=builder /out/ /app/lidarr/bin/
