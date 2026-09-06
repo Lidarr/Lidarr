@@ -3,6 +3,7 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
 using NzbDrone.Core.ImportLists;
+using NzbDrone.Core.ImportLists.Discogs;
 using NzbDrone.Core.ImportLists.LidarrLists;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Test.Framework;
@@ -19,6 +20,7 @@ namespace NzbDrone.Core.Test.ImportListTests
             _importLists = new List<IImportList>();
 
             _importLists.Add(Mocker.Resolve<LidarrLists>());
+            _importLists.Add(Mocker.Resolve<DiscogsLists>());
 
             Mocker.SetConstant<IEnumerable<IImportList>>(_importLists);
         }
