@@ -27,13 +27,16 @@ namespace NzbDrone.Core.Indexers.Redacted
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            if (searchCriteria.CleanArtistQuery == "VA")
+            foreach (var artistTitle in searchCriteria.CleanArtistTitles)
             {
-                pageableRequests.Add(GetRequest($"groupname={searchCriteria.CleanAlbumQuery}"));
-            }
-            else
-            {
-                pageableRequests.Add(GetRequest($"artistname={searchCriteria.CleanArtistQuery}&groupname={searchCriteria.CleanAlbumQuery}"));
+                if (artistTitle == "VA")
+                {
+                    pageableRequests.Add(GetRequest($"groupname={searchCriteria.CleanAlbumQuery}"));
+                }
+                else
+                {
+                    pageableRequests.Add(GetRequest($"artistname={artistTitle}&groupname={searchCriteria.CleanAlbumQuery}"));
+                }
             }
 
             return pageableRequests;
@@ -42,7 +45,12 @@ namespace NzbDrone.Core.Indexers.Redacted
         public IndexerPageableRequestChain GetSearchRequests(ArtistSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest($"artistname={searchCriteria.CleanArtistQuery}"));
+
+            foreach (var artistTitle in searchCriteria.CleanArtistTitles)
+            {
+                pageableRequests.Add(GetRequest($"artistname={artistTitle}"));
+            }
+
             return pageableRequests;
         }
 
