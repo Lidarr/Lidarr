@@ -27,7 +27,6 @@ namespace NzbDrone.Core.Test.MediaFiles
         private List<ImportDecision<LocalTrack>> _rejectedDecisions;
         private List<ImportDecision<LocalTrack>> _approvedDecisions;
 
-        private DownloadClientItem _downloadClientItem;
         private DownloadClientItemClientInfo _clientInfo;
 
         [SetUp]
@@ -82,7 +81,6 @@ namespace NzbDrone.Core.Test.MediaFiles
                   .Returns(new TrackFileMoveResult());
 
             _clientInfo = Builder<DownloadClientItemClientInfo>.CreateNew().Build();
-            _downloadClientItem = Builder<DownloadClientItem>.CreateNew().With(x => x.DownloadClientInfo = _clientInfo).Build();
 
             Mocker.GetMock<IMediaFileService>()
                 .Setup(s => s.GetFilesByAlbum(It.IsAny<int>()))
