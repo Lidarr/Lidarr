@@ -32,6 +32,8 @@ namespace NzbDrone.Core.Configuration
         FileDateType FileDate { get; set; }
         bool SkipFreeSpaceCheckWhenImporting { get; set; }
         int MinimumFreeSpaceWhenImporting { get; set; }
+        int AlbumMatchThreshold { get; set; }
+        int TrackMatchThreshold { get; set; }
         bool CopyUsingHardlinks { get; set; }
         bool EnableMediaInfo { get; set; }
         bool UseScriptImport { get; set; }
