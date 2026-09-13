@@ -82,22 +82,24 @@ namespace NzbDrone.Core.Download
                 return;
             }
 
-            var artist = _parsingService.GetArtist(trackedDownload.DownloadItem.Title);
+            Artist artist = null;
+
+            if (historyItem != null)
+            {
+                artist = _artistService.GetArtist(historyItem.ArtistId);
+            }
 
             if (artist == null)
             {
-                if (historyItem != null)
-                {
-                    artist = _artistService.GetArtist(historyItem.ArtistId);
-                }
+                artist = _parsingService.GetArtist(trackedDownload.DownloadItem.Title);
+            }
 
-                if (artist == null)
-                {
-                    trackedDownload.Warn("Artist name mismatch, automatic import is not possible. Check the download troubleshooting entry on the wiki for common causes.");
-                    SetStateToImportBlocked(trackedDownload);
+            if (artist == null)
+            {
+                trackedDownload.Warn("Artist name mismatch, automatic import is not possible. Check the download troubleshooting entry on the wiki for common causes.");
+                SetStateToImportBlocked(trackedDownload);
 
-                    return;
-                }
+                return;
             }
 
             trackedDownload.State = TrackedDownloadState.ImportPending;
