@@ -2090,6 +2090,25 @@
         }
       }
     },
+    "/api/v1/delayprofile/schema": {
+      "get": {
+        "tags": [
+          "DelayProfileSchema"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelayProfileResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/diskspace": {
       "get": {
         "tags": [
@@ -5741,6 +5760,44 @@
         }
       }
     },
+    "/api/v1/system/plugins": {
+      "get": {
+        "tags": [
+          "Plugin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PluginResource"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PluginResource"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PluginResource"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/qualitydefinition/{id}": {
       "put": {
         "tags": [
@@ -6342,7 +6399,7 @@
             "name": "protocol",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/DownloadProtocol"
+              "type": "string"
             }
           },
           {
@@ -8385,17 +8442,17 @@
             "type": "integer",
             "format": "int32"
           },
+          "mediumCount": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
           "media": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/MediumResource"
             },
             "nullable": true
-          },
-          "mediumCount": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
           },
           "disambiguation": {
             "type": "string",
@@ -8477,11 +8534,6 @@
             },
             "nullable": true
           },
-          "mediumCount": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
           "ratings": {
             "$ref": "#/components/schemas/Ratings"
           },
@@ -8503,6 +8555,11 @@
               "type": "string"
             },
             "nullable": true
+          },
+          "mediumCount": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
           },
           "media": {
             "type": "array",
@@ -9110,7 +9167,8 @@
             "format": "date-time"
           },
           "protocol": {
-            "$ref": "#/components/schemas/DownloadProtocol"
+            "type": "string",
+            "nullable": true
           },
           "indexer": {
             "type": "string",
@@ -9464,6 +9522,27 @@
         ],
         "type": "string"
       },
+      "DelayProfileProtocolItemResource": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "protocol": {
+            "type": "string",
+            "nullable": true
+          },
+          "allowed": {
+            "type": "boolean"
+          },
+          "delay": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "DelayProfileResource": {
         "type": "object",
         "properties": {
@@ -9471,22 +9550,16 @@
             "type": "integer",
             "format": "int32"
           },
-          "enableUsenet": {
-            "type": "boolean"
+          "name": {
+            "type": "string",
+            "nullable": true
           },
-          "enableTorrent": {
-            "type": "boolean"
-          },
-          "preferredProtocol": {
-            "$ref": "#/components/schemas/DownloadProtocol"
-          },
-          "usenetDelay": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "torrentDelay": {
-            "type": "integer",
-            "format": "int32"
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DelayProfileProtocolItemResource"
+            },
+            "nullable": true
           },
           "bypassIfHighestQuality": {
             "type": "boolean"
@@ -9662,7 +9735,8 @@
             "type": "boolean"
           },
           "protocol": {
-            "$ref": "#/components/schemas/DownloadProtocol"
+            "type": "string",
+            "nullable": true
           },
           "priority": {
             "type": "integer",
@@ -9676,14 +9750,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "DownloadProtocol": {
-        "enum": [
-          "unknown",
-          "usenet",
-          "torrent"
-        ],
-        "type": "string"
       },
       "EntityHistoryEventType": {
         "enum": [
@@ -9949,6 +10015,10 @@
           "authenticationRequired": {
             "$ref": "#/components/schemas/AuthenticationRequiredType"
           },
+          "allowedHosts": {
+            "type": "string",
+            "nullable": true
+          },
           "analyticsEnabled": {
             "type": "boolean"
           },
@@ -9993,6 +10063,10 @@
             "nullable": true
           },
           "urlBase": {
+            "type": "string",
+            "nullable": true
+          },
+          "trustedNetworks": {
             "type": "string",
             "nullable": true
           },
@@ -10388,7 +10462,8 @@
             "type": "boolean"
           },
           "protocol": {
-            "$ref": "#/components/schemas/DownloadProtocol"
+            "type": "string",
+            "nullable": true
           },
           "priority": {
             "type": "integer",
@@ -10721,21 +10796,21 @@
       "MediaCover": {
         "type": "object",
         "properties": {
+          "coverType": {
+            "$ref": "#/components/schemas/MediaCoverTypes"
+          },
           "url": {
             "type": "string",
             "nullable": true
           },
-          "coverType": {
-            "$ref": "#/components/schemas/MediaCoverTypes"
+          "remoteUrl": {
+            "type": "string",
+            "nullable": true
           },
           "extension": {
             "type": "string",
             "nullable": true,
             "readOnly": true
-          },
-          "remoteUrl": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -11351,6 +11426,14 @@
             "type": "string",
             "nullable": true
           },
+          "releaseYear": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "yearConfidence": {
+            "$ref": "#/components/schemas/YearMatchConfidence"
+          },
           "discography": {
             "type": "boolean"
           },
@@ -11481,6 +11564,39 @@
           "status": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PluginResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "owner": {
+            "type": "string",
+            "nullable": true
+          },
+          "githubUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "installedVersion": {
+            "type": "string",
+            "nullable": true
+          },
+          "availableVersion": {
+            "type": "string",
+            "nullable": true
+          },
+          "updateAvailable": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -11851,7 +11967,8 @@
             "nullable": true
           },
           "protocol": {
-            "$ref": "#/components/schemas/DownloadProtocol"
+            "type": "string",
+            "nullable": true
           },
           "downloadClient": {
             "type": "string",
@@ -12167,7 +12284,8 @@
             "nullable": true
           },
           "protocol": {
-            "$ref": "#/components/schemas/DownloadProtocol"
+            "type": "string",
+            "nullable": true
           },
           "indexerFlags": {
             "type": "integer",
@@ -12521,6 +12639,9 @@
             "type": "boolean"
           },
           "isDocker": {
+            "type": "boolean"
+          },
+          "isContainerized": {
             "type": "boolean"
           },
           "mode": {
@@ -13072,6 +13193,15 @@
           "newFiles",
           "allFiles",
           "sync"
+        ],
+        "type": "string"
+      },
+      "YearMatchConfidence": {
+        "enum": [
+          "none",
+          "low",
+          "medium",
+          "high"
         ],
         "type": "string"
       }
