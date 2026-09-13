@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import shortenList from 'Utilities/String/shortenList';
 import titleCase from 'Utilities/String/titleCase';
-import SelectInput from './SelectInput';
+import EnhancedSelectInput from './EnhancedSelectInput';
 
 function createMapStateToProps() {
   return createSelector(
@@ -29,7 +29,8 @@ function createMapStateToProps() {
             `${disambiguation ? ' (' : ''}${titleCase(disambiguation)}${disambiguation ? ')' : ''}` +
             `, ${mediumCount} med, ${trackCount} tracks` +
             `${country && country.length > 0 ? `, ${shortenList(country)}` : ''}` +
-            `${format ? `, [${format}]` : ''}`
+            `${format ? `, [${format}]` : ''}`,
+          hint: `MBID: ${foreignReleaseId.toString().slice(0, 8)}...`
         };
       });
 
@@ -64,7 +65,7 @@ class AlbumReleaseSelectInputConnector extends Component {
   render() {
 
     return (
-      <SelectInput
+      <EnhancedSelectInput
         {...this.props}
         onChange={this.onChange}
       />
