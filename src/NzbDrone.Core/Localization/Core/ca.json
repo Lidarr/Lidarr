@@ -1184,7 +1184,7 @@
     "MonitorAlbumExistingOnlyWarning": "Aquest és un ajust ajustat de la configuració monitoritzada per a cada àlbum.  Utilitzeu l'opció Artist/Edit per controlar què passa amb els àlbums nous",
     "MonitorAllAlbums": "Tots els àlbums",
     "MonitorArtist": "Monitora l’artista",
-    "MonitorLastestAlbum": "Últim àlbum",
+    "MonitorLatestAlbum": "Últim àlbum",
     "MonitorNewItems": "Monitora els àlbums nous",
     "MonitorNewItemsHelpText": "Quins àlbums nous s'han de controlar",
     "MonitoredHelpText": "Baixa els àlbums monitoritzats d'aquest artista",
