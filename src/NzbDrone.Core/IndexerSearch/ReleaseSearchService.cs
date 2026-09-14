@@ -106,6 +106,15 @@ namespace NzbDrone.Core.IndexerSearch
             spec.UserInvokedSearch = userInvokedSearch;
             spec.InteractiveSearch = interactiveSearch;
 
+            var artistTitles = new List<string> { artist.Name };
+
+            if (artist.Metadata?.Value?.Aliases != null)
+            {
+                artistTitles.AddRange(artist.Metadata.Value.Aliases.Where(a => !string.IsNullOrWhiteSpace(a)));
+            }
+
+            spec.ArtistTitles = artistTitles.Distinct(StringComparer.InvariantCultureIgnoreCase).ToList();
+
             return spec;
         }
 
@@ -116,6 +125,15 @@ namespace NzbDrone.Core.IndexerSearch
             spec.Artist = artist;
             spec.UserInvokedSearch = userInvokedSearch;
             spec.InteractiveSearch = interactiveSearch;
+
+            var artistTitles = new List<string> { artist.Name };
+
+            if (artist.Metadata?.Value?.Aliases != null)
+            {
+                artistTitles.AddRange(artist.Metadata.Value.Aliases.Where(a => !string.IsNullOrWhiteSpace(a)));
+            }
+
+            spec.ArtistTitles = artistTitles.Distinct(StringComparer.InvariantCultureIgnoreCase).ToList();
 
             return spec;
         }
