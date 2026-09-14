@@ -15,6 +15,7 @@ import QualityProfile from 'typings/QualityProfile';
 import RootFolder from 'typings/RootFolder';
 import General from 'typings/Settings/General';
 import UiSettings from 'typings/Settings/UiSettings';
+import TaggingProfile from 'typings/TaggingProfile';
 
 export interface DownloadClientAppState
   extends AppSectionState<DownloadClient>,
@@ -57,6 +58,12 @@ export interface RootFolderAppState
     AppSectionDeleteState,
     AppSectionSaveState {}
 
+export interface TaggingProfilesAppState
+  extends AppSectionState<TaggingProfile>,
+    AppSectionSchemaState<TaggingProfile>,
+    AppSectionDeleteState,
+    AppSectionSaveState {}
+
 export type IndexerFlagSettingsAppState = AppSectionState<IndexerFlag>;
 export type UiSettingsAppState = AppSectionItemState<UiSettings>;
 
@@ -72,6 +79,7 @@ interface SettingsAppState {
   notifications: NotificationAppState;
   qualityProfiles: QualityProfilesAppState;
   rootFolders: RootFolderAppState;
+  taggingProfiles: TaggingProfilesAppState;
   ui: UiSettingsAppState;
 }
 

@@ -1,0 +1,17 @@
+.taggingProfileDragSource {
+  padding: 4px 0;
+}
+
+.taggingProfilePlaceholder {
+  width: 100%;
+  height: 30px;
+  border-bottom: 1px dotted #aaa;
+}
+
+.taggingProfilePlaceholderBefore {
+  margin-bottom: 8px;
+}
+
+.taggingProfilePlaceholderAfter {
+  margin-top: 8px;
+}

@@ -11,6 +11,7 @@ using NzbDrone.Core.Music;
 using NzbDrone.Core.Notifications;
 using NzbDrone.Core.Profiles.Delay;
 using NzbDrone.Core.Profiles.Releases;
+using NzbDrone.Core.Profiles.Tagging;
 using NzbDrone.Core.RootFolders;
 
 namespace NzbDrone.Core.Tags
@@ -40,6 +41,7 @@ namespace NzbDrone.Core.Tags
         private readonly IIndexerFactory _indexerService;
         private readonly IAutoTaggingService _autoTaggingService;
         private readonly IDownloadClientFactory _downloadClientFactory;
+        private readonly ITaggingProfileService _taggingProfileService;
 
         public TagService(ITagRepository repo,
                           IEventAggregator eventAggregator,
@@ -51,7 +53,8 @@ namespace NzbDrone.Core.Tags
                           IRootFolderService rootFolderService,
                           IIndexerFactory indexerService,
                           IAutoTaggingService autoTaggingService,
-                          IDownloadClientFactory downloadClientFactory)
+                          IDownloadClientFactory downloadClientFactory,
+                          ITaggingProfileService taggingProfileService)
         {
             _repo = repo;
             _eventAggregator = eventAggregator;
@@ -64,6 +67,7 @@ namespace NzbDrone.Core.Tags
             _indexerService = indexerService;
             _autoTaggingService = autoTaggingService;
             _downloadClientFactory = downloadClientFactory;
+            _taggingProfileService = taggingProfileService;
         }
 
         public Tag GetTag(int tagId)
@@ -95,6 +99,7 @@ namespace NzbDrone.Core.Tags
             var indexers = _indexerService.AllForTag(tagId);
             var autoTags = _autoTaggingService.AllForTag(tagId);
             var downloadClients = _downloadClientFactory.AllForTag(tagId);
+            var taggingProfiles = _taggingProfileService.AllForTag(tagId);
 
             return new TagDetails
             {
@@ -108,7 +113,8 @@ namespace NzbDrone.Core.Tags
                 RootFolderIds = rootFolders.Select(c => c.Id).ToList(),
                 IndexerIds = indexers.Select(c => c.Id).ToList(),
                 AutoTagIds = autoTags.Select(c => c.Id).ToList(),
-                DownloadClientIds = downloadClients.Select(c => c.Id).ToList()
+                DownloadClientIds = downloadClients.Select(c => c.Id).ToList(),
+                TaggingProfileIds = taggingProfiles.Select(c => c.Id).ToList()
             };
         }
 
@@ -124,6 +130,7 @@ namespace NzbDrone.Core.Tags
             var indexers = _indexerService.All();
             var autoTags = _autoTaggingService.All();
             var downloadClients = _downloadClientFactory.All();
+            var taggingProfiles = _taggingProfileService.All();
 
             var details = new List<TagDetails>();
 
@@ -142,6 +149,7 @@ namespace NzbDrone.Core.Tags
                     IndexerIds = indexers.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList(),
                     AutoTagIds = GetAutoTagIds(tag, autoTags),
                     DownloadClientIds = downloadClients.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList(),
+                    TaggingProfileIds = taggingProfiles.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList(),
                 });
             }
 
