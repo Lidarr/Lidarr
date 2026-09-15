@@ -1062,5 +1062,11 @@
     "QualitiesHelpText": "Loendis kõrgemal asuvad kvaliteedid on eelistatumad, isegi kui need pole märgitud. Samas grupis olevad kvaliteedid on võrdsed. Soovitud on ainult märgitud kvaliteedid",
     "ReleaseDate": "Ilmumiskuupäev",
     "RemoveDownloadsAlert": "Eemaldamise seaded liigutati ülaltoodud tabelis allalaadimisklientide seadete alla.",
-    "ResetTitles": "Lähtesta nimed"
+    "ResetTitles": "Lähtesta nimed",
+    "DateAdded": "Lisamise kuupäev",
+    "IsTagUsedCannotBeDeletedWhileInUse": "Ei saa kustutada, kuni see on kasutusel",
+    "SkipFreeSpaceCheck": "Jäta kettaruumi kontroll vahele",
+    "SslCertPathHelpText": "PFX-faili asukoht",
+    "SuggestTranslationChange": "Soovita tõlke muudatust",
+    "SkipFreeSpaceCheckHelpText": "Kasuta siis, kui {appName} ei saa tuvastada juurkausta vaba ruumi"
 }
