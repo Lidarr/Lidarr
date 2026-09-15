@@ -1378,5 +1378,8 @@
     "NoTracksFoundForSelectedAlbum": "Aucune piste trouvé pour l’album sélectionné",
     "Plugins": "Plugins",
     "FilterTracksByTitleOrNumber": "Filtrer les pistes par titre ou numéro",
-    "AllowedHosts": "Hôtes autorisés"
+    "AllowedHosts": "Hôtes autorisés",
+    "AllowedHostsNotConfiguredHealthCheckMessage": "Les hôtes autorisés ne sont pas configurés. {appName} acceptera les requêtes provenant de n’importe quel nom d’hôte ou adresse IP. Définir les hôtes autorisés dans les paramètres généraux pour restreindre les noms d’hôte pouvant être utilisés pour accéder à {appName}.",
+    "TrustedNetworks": "Réseaux de confiance",
+    "TrustedNetworksHelpText": "Liste d’adresses IP ou de réseaux au format CIDR, séparés par des virgules, sur lesquels se trouvent les proxys inverses approuvés. Par exemple : 172.17.0.1, 10.0.0.0/8 ou fc00::/7. Ajouter uniquement les proxys correctement configurés pour envoyer les en-têtes appropriés."
 }
