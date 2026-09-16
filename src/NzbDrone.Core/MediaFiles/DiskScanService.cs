@@ -5,6 +5,8 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common;
 using NzbDrone.Common.Disk;
@@ -47,6 +49,7 @@ namespace NzbDrone.Core.MediaFiles
         private readonly IRootFolderService _rootFolderService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
+        private static int _mediaParallelismLogged;
 
         public DiskScanService(IConfigService configService,
                                IDiskProvider diskProvider,
@@ -84,23 +87,19 @@ namespace NzbDrone.Core.MediaFiles
             }
 
             var mediaFileList = new List<IFileInfo>();
+            var mediaFileListLock = new object();
 
-            var musicFilesStopwatch = Stopwatch.StartNew();
-
+            // Validate folders first (early exit on error like original behaviour)
+            var foldersToScan = new List<string>();
             foreach (var folder in folders)
             {
-                // We could be scanning a root folder or a subset of a root folder.  If it's a subset,
-                // check if the root folder exists before cleaning.
                 var rootFolder = _rootFolderService.GetBestRootFolder(folder);
-
                 if (rootFolder == null)
                 {
                     _logger.Error("Not scanning {0}, it's not a subdirectory of a defined root folder", folder);
                     return;
                 }
-
                 var folderExists = _diskProvider.FolderExists(folder);
-
                 if (!folderExists)
                 {
                     if (!_diskProvider.FolderExists(rootFolder.Path))
@@ -110,7 +109,6 @@ namespace NzbDrone.Core.MediaFiles
                         skippedArtists.ForEach(x => _eventAggregator.PublishEvent(new ArtistScanSkippedEvent(x, ArtistScanSkippedReason.RootFolderDoesNotExist)));
                         return;
                     }
-
                     if (_diskProvider.FolderEmpty(rootFolder.Path))
                     {
                         _logger.Warn("Artists' root folder ({0}) is empty.", rootFolder.Path);
@@ -119,28 +117,49 @@ namespace NzbDrone.Core.MediaFiles
                         return;
                     }
                 }
-
                 if (!folderExists)
                 {
                     _logger.Debug("Specified scan folder ({0}) doesn't exist.", folder);
-
                     CleanMediaFiles(folder, new List<string>());
                     continue;
                 }
+                foldersToScan.Add(folder);
+            }
 
+            var musicFilesStopwatch = Stopwatch.StartNew();
+
+            if (Interlocked.CompareExchange(ref _mediaParallelismLogged, 1, 0) == 0)
+            {
+                var envRaw = Environment.GetEnvironmentVariable(MediaImportParallelism.EnvironmentVariableName);
+                var loopDeg = MediaImportParallelism.EffectiveParallelForEachDegreeForLog;
+                var loopDesc = loopDeg < 0 ? "TPL default (-1, uncapped)" : loopDeg.ToString();
+                _logger.Info(
+                    "Media import parallelism: Parallel.ForEach MaxDegreeOfParallelism={0} ({1}; PLINQ degree {2}). Set {3}=1–64 to cap; omit or ≤0 restores pre-cap fork (uncapped loops). Host ProcessorCount={4}.",
+                    loopDesc,
+                    string.IsNullOrEmpty(envRaw) ? $"{MediaImportParallelism.EnvironmentVariableName}=(unset)" : $"{MediaImportParallelism.EnvironmentVariableName}={envRaw}",
+                    MediaImportParallelism.PlinqMaxDegreeOfParallelism,
+                    MediaImportParallelism.EnvironmentVariableName,
+                    Environment.ProcessorCount);
+            }
+
+            Parallel.ForEach(foldersToScan, MediaImportParallelism.GetParallelForEachOptions(), folder =>
+            {
                 _logger.ProgressInfo("Scanning {0}", folder);
 
-                var files = FilterFiles(folder, GetAudioFiles(folder));
+                var files = FilterFiles(folder, GetAudioFiles(folder)).ToList();
 
                 if (!files.Any())
                 {
                     _logger.Warn("Scan folder {0} is empty.", folder);
-                    continue;
+                    return;
                 }
 
                 CleanMediaFiles(folder, files.Select(x => x.FullName).ToList());
-                mediaFileList.AddRange(files);
-            }
+                lock (mediaFileListLock)
+                {
+                    mediaFileList.AddRange(files);
+                }
+            });
 
             var artists = _artistService.GetArtists(artistIds);
 

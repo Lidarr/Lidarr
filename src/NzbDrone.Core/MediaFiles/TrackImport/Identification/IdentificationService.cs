@@ -306,15 +306,17 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             _logger.Debug("Matching {0} track files against {1} candidates", localAlbumRelease.TrackCount, candidateReleases.Count);
             _logger.Trace("Processing files:\n{0}", string.Join("\n", localAlbumRelease.LocalTracks.Select(x => x.Path)));
 
-            var bestDistance = 1.0;
-
-            foreach (var candidateRelease in candidateReleases)
+            var scoredCandidates = candidateReleases
+                .Select((candidateRelease, index) => new { candidateRelease, index })
+                .AsParallel()
+                .WithDegreeOfParallelism(MediaImportParallelism.PlinqMaxDegreeOfParallelism)
+                .Select(item =>
             {
-                var release = candidateRelease.AlbumRelease;
-                _logger.Debug("Trying Release {0} [{1}, {2} tracks, {3} existing]", release, release.Title, release.TrackCount, candidateRelease.ExistingTracks.Count);
+                var release = item.candidateRelease.AlbumRelease;
+                _logger.Debug("Trying Release {0} [{1}, {2} tracks, {3} existing]", release, release.Title, release.TrackCount, item.candidateRelease.ExistingTracks.Count);
                 var rwatch = System.Diagnostics.Stopwatch.StartNew();
 
-                var extraTrackPaths = candidateRelease.ExistingTracks.Select(x => x.Path).ToList();
+                var extraTrackPaths = new HashSet<string>(item.candidateRelease.ExistingTracks.Select(x => x.Path), PathEqualityComparer.Instance);
                 var extraTracks = extraTracksOnDisk.Where(x => extraTrackPaths.Contains(x.Path)).ToList();
                 var allLocalTracks = localAlbumRelease.LocalTracks.Concat(extraTracks).DistinctBy(x => x.Path).ToList();
 
@@ -323,25 +325,33 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 var currDistance = distance.NormalizedDistance();
 
                 rwatch.Stop();
-                _logger.Debug("Release {0} [{1} tracks] has distance {2} vs best distance {3} [{4}ms]",
+                _logger.Debug("Release {0} [{1} tracks] has distance {2} [{3}ms]",
                               release,
                               release.TrackCount,
                               currDistance,
-                              bestDistance,
                               rwatch.ElapsedMilliseconds);
-                if (currDistance < bestDistance)
+
+                return new
                 {
-                    bestDistance = currDistance;
-                    localAlbumRelease.Distance = distance;
-                    localAlbumRelease.AlbumRelease = release;
-                    localAlbumRelease.ExistingTracks = extraTracks;
-                    localAlbumRelease.TrackMapping = mapping;
-                    if (currDistance == 0.0)
-                    {
-                        break;
-                    }
-                }
-            }
+                    item.index,
+                    release,
+                    distance,
+                    currDistance,
+                    extraTracks,
+                    mapping
+                };
+            })
+            .ToList();
+
+            var best = scoredCandidates
+                .OrderBy(x => x.currDistance)
+                .ThenBy(x => x.index)
+                .First();
+
+            localAlbumRelease.Distance = best.distance;
+            localAlbumRelease.AlbumRelease = best.release;
+            localAlbumRelease.ExistingTracks = best.extraTracks;
+            localAlbumRelease.TrackMapping = best.mapping;
 
             watch.Stop();
             _logger.Debug($"Best release: {localAlbumRelease.AlbumRelease} Distance {localAlbumRelease.Distance.NormalizedDistance()} found in {watch.ElapsedMilliseconds}ms");
