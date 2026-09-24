@@ -25,7 +25,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
         private readonly IMetadataProfileService _metadataProfileService;
         private readonly ICached<HashSet<string>> _cache;
 
-        private static readonly List<string> NonAudioMedia = new List<string> { "DVD", "DVD-Video", "Blu-ray", "HD-DVD", "VCD", "SVCD", "UMD", "VHS" };
+        private static readonly List<string> NonAudioMedia = new List<string> { "DVD", "DVD-Video", "HD-DVD", "VCD", "SVCD", "UMD", "VHS" };
         private static readonly List<string> SkippedTracks = new List<string> { "[data track]" };
 
         public SkyHookProxy(IHttpClient httpClient,
