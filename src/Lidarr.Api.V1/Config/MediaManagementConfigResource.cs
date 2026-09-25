@@ -24,6 +24,8 @@ namespace Lidarr.Api.V1.Config
 
         public bool SkipFreeSpaceCheckWhenImporting { get; set; }
         public int MinimumFreeSpaceWhenImporting { get; set; }
+        public int AlbumMatchThreshold { get; set; }
+        public int TrackMatchThreshold { get; set; }
         public bool CopyUsingHardlinks { get; set; }
         public bool EnableMediaInfo { get; set; }
         public bool UseScriptImport { get; set; }
@@ -55,6 +57,8 @@ namespace Lidarr.Api.V1.Config
 
                 SkipFreeSpaceCheckWhenImporting = model.SkipFreeSpaceCheckWhenImporting,
                 MinimumFreeSpaceWhenImporting = model.MinimumFreeSpaceWhenImporting,
+                AlbumMatchThreshold = model.AlbumMatchThreshold,
+                TrackMatchThreshold = model.TrackMatchThreshold,
                 CopyUsingHardlinks = model.CopyUsingHardlinks,
                 EnableMediaInfo = model.EnableMediaInfo,
                 UseScriptImport = model.UseScriptImport,
