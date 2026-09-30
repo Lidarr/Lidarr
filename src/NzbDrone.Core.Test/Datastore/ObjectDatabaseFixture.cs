@@ -145,7 +145,7 @@ namespace NzbDrone.Core.Test.Datastore
         {
             Subject.Insert(_sampleType);
 
-            var repository = Mocker.Resolve<IScheduledTaskRepository>();
+            var repository = Mocker.Resolve<ScheduledTaskRepository>();
             repository.SetInterval(_sampleType.Id, 120, true);
 
             var stored = Db.All<ScheduledTask>().Single();
