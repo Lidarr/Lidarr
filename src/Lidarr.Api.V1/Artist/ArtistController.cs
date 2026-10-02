@@ -148,7 +148,8 @@ namespace Lidarr.Api.V1.Artist
             MapCoversToLocal(artistsResources.ToArray());
             LinkNextPreviousAlbums(artistsResources.ToArray());
             LinkArtistStatistics(artistsResources, artistStats.ToDictionary(x => x.ArtistId));
-            artistsResources.ForEach(LinkRootFolderPath);
+            var rootFolders = new Lazy<List<RootFolder>>(() => _rootFolderService.All());
+            artistsResources.ForEach(r => r.RootFolderPath = _rootFolderService.GetBestRootFolderPath(r.Path, rootFolders));
 
             // PopulateAlternateTitles(seriesResources);
             return artistsResources;
@@ -213,10 +214,15 @@ namespace Lidarr.Api.V1.Artist
             var nextAlbums = _albumService.GetNextAlbumsByArtistMetadataId(artistMetadataIds);
             var lastAlbums = _albumService.GetLastAlbumsByArtistMetadataId(artistMetadataIds);
 
+            _albumService.LoadArtistsAndReleases(nextAlbums.Concat(lastAlbums).ToList());
+
+            var nextByArtist = nextAlbums.GroupBy(x => x.ArtistMetadataId).ToDictionary(g => g.Key, g => g.First());
+            var lastByArtist = lastAlbums.GroupBy(x => x.ArtistMetadataId).ToDictionary(g => g.Key, g => g.First());
+
             foreach (var artistResource in artists)
             {
-                artistResource.NextAlbum = nextAlbums.FirstOrDefault(x => x.ArtistMetadataId == artistResource.ArtistMetadataId).ToResource();
-                artistResource.LastAlbum = lastAlbums.FirstOrDefault(x => x.ArtistMetadataId == artistResource.ArtistMetadataId).ToResource();
+                artistResource.NextAlbum = nextByArtist.GetValueOrDefault(artistResource.ArtistMetadataId).ToResource();
+                artistResource.LastAlbum = lastByArtist.GetValueOrDefault(artistResource.ArtistMetadataId).ToResource();
             }
         }
 

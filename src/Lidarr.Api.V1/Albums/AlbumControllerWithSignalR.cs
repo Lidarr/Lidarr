@@ -56,6 +56,8 @@ namespace Lidarr.Api.V1.Albums
 
         protected List<AlbumResource> MapToResource(List<Album> albums, bool includeArtist)
         {
+            _albumService.LoadArtistsAndReleases(albums);
+
             var result = albums.ToResource();
 
             if (includeArtist)
@@ -72,7 +74,10 @@ namespace Lidarr.Api.V1.Albums
                 }
             }
 
-            var artistStats = _artistStatisticsService.ArtistStatistics();
+            var artistIds = result.Select(x => x.ArtistId).Distinct().ToList();
+            var artistStats = artistIds.Count == 1
+                ? new List<ArtistStatistics> { _artistStatisticsService.ArtistStatistics(artistIds[0]) }
+                : _artistStatisticsService.ArtistStatistics();
             LinkArtistStatistics(result, artistStats);
             MapCoversToLocal(result.ToArray());
 
@@ -86,10 +91,15 @@ namespace Lidarr.Api.V1.Albums
 
         private void LinkArtistStatistics(List<AlbumResource> resources, List<ArtistStatistics> artistStatistics)
         {
+            var albumStats = artistStatistics
+                .Where(s => s?.AlbumStatistics != null)
+                .SelectMany(s => s.AlbumStatistics)
+                .GroupBy(s => (s.ArtistId, s.AlbumId))
+                .ToDictionary(g => g.Key, g => g.First());
+
             foreach (var album in resources)
             {
-                var stats = artistStatistics.SingleOrDefault(ss => ss.ArtistId == album.ArtistId);
-                LinkArtistStatistics(album, stats);
+                album.Statistics = albumStats.GetValueOrDefault((album.ArtistId, album.Id)).ToResource();
             }
         }
 
