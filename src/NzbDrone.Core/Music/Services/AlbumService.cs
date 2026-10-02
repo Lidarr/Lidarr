@@ -44,6 +44,7 @@ namespace NzbDrone.Core.Music
         Album FindAlbumByRelease(string albumReleaseId);
         Album FindAlbumByTrackId(int trackId);
         List<Album> GetArtistAlbumsWithFiles(Artist artist);
+        void LoadArtistsAndReleases(List<Album> albums);
     }
 
     public class AlbumService : IAlbumService,
@@ -426,6 +427,11 @@ namespace NzbDrone.Core.Music
             }).ToList();
 
             DeleteMany(albums);
+        }
+
+        public void LoadArtistsAndReleases(List<Album> albums)
+        {
+            _albumRepository.LoadArtistsAndReleases(albums);
         }
     }
 }

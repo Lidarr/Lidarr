@@ -27,6 +27,7 @@ namespace NzbDrone.Core.Music
         Album FindAlbumByRelease(string albumReleaseId);
         Album FindAlbumByTrack(int trackId);
         List<Album> GetArtistAlbumsWithFiles(Artist artist);
+        void LoadArtistsAndReleases(List<Album> albums);
     }
 
     public class AlbumRepository : BasicRepository<Album>, IAlbumRepository
@@ -225,6 +226,40 @@ namespace NzbDrone.Core.Music
             return Query(Builder().Join<Album, AlbumRelease>((a, r) => a.Id == r.AlbumId)
                          .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
                          .Where<Track>(x => x.Id == trackId)).FirstOrDefault();
+        }
+
+        public void LoadArtistsAndReleases(List<Album> albums)
+        {
+            var withoutArtist = albums.Where(a => a.ArtistMetadataId > 0 && (a.Artist == null || !a.Artist.IsLoaded)).ToList();
+
+            if (withoutArtist.Any())
+            {
+                var metadataIds = withoutArtist.Select(a => a.ArtistMetadataId).Distinct().ToList();
+                var artists = ArtistRepository.Query(_database,
+                        new SqlBuilder(_database.DatabaseType)
+                            .Join<Artist, ArtistMetadata>((a, m) => a.ArtistMetadataId == m.Id)
+                            .Where<Artist>(a => metadataIds.Contains(a.ArtistMetadataId)))
+                    .ToDictionary(a => a.ArtistMetadataId);
+
+                foreach (var album in withoutArtist)
+                {
+                    album.Artist = artists.GetValueOrDefault(album.ArtistMetadataId);
+                }
+            }
+
+            var withoutReleases = albums.Where(a => a.Id > 0 && (a.AlbumReleases == null || !a.AlbumReleases.IsLoaded)).ToList();
+
+            if (withoutReleases.Any())
+            {
+                var albumIds = withoutReleases.Select(a => a.Id).Distinct().ToList();
+                var releases = _database.Query<AlbumRelease>(new SqlBuilder(_database.DatabaseType).Where<AlbumRelease>(r => albumIds.Contains(r.AlbumId)))
+                    .ToLookup(r => r.AlbumId);
+
+                foreach (var album in withoutReleases)
+                {
+                    album.AlbumReleases = releases[album.Id].ToList();
+                }
+            }
         }
 
         public List<Album> GetArtistAlbumsWithFiles(Artist artist)
