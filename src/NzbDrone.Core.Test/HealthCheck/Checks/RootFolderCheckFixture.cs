@@ -44,7 +44,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
                 .Returns(importList);
 
             Mocker.GetMock<IRootFolderService>()
-                  .Setup(s => s.GetBestRootFolderPath(It.IsAny<string>()))
+                  .Setup(s => s.GetBestRootFolderPath(It.IsAny<string>(), It.IsAny<List<RootFolder>>()))
                   .Returns(rootFolderPath);
 
             Mocker.GetMock<IDiskProvider>()
