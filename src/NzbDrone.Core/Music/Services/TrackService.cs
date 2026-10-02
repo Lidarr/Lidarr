@@ -25,6 +25,7 @@ namespace NzbDrone.Core.Music
         void UpdateMany(List<Track> tracks);
         void DeleteMany(List<Track> tracks);
         void SetFileIds(List<Track> tracks);
+        void LoadReleasesAndArtists(List<Track> tracks);
     }
 
     public class TrackService : ITrackService,
@@ -44,6 +45,11 @@ namespace NzbDrone.Core.Music
         public Track GetTrack(int id)
         {
             return _trackRepository.Get(id);
+        }
+
+        public void LoadReleasesAndArtists(List<Track> tracks)
+        {
+            _trackRepository.LoadReleasesAndArtists(tracks);
         }
 
         public List<Track> GetTracks(IEnumerable<int> ids)
