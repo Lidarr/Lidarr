@@ -66,6 +66,21 @@ namespace Lidarr.Http.Extensions
             };
         }
 
+        public static PagingResource<TResource> ApplyToPage<TResource, TModel>(this PagingSpec<TModel> pagingSpec, Func<PagingSpec<TModel>, PagingSpec<TModel>> function, Func<List<TModel>, List<TResource>> mapper)
+        {
+            pagingSpec = function(pagingSpec);
+
+            return new PagingResource<TResource>
+            {
+                Page = pagingSpec.Page,
+                PageSize = pagingSpec.PageSize,
+                SortDirection = pagingSpec.SortDirection,
+                SortKey = pagingSpec.SortKey,
+                TotalRecords = pagingSpec.TotalRecords,
+                Records = mapper(pagingSpec.Records)
+            };
+        }
+
         public static string GetRemoteIP(this HttpContext context)
         {
             return context?.Request?.GetRemoteIP() ?? "Unknown";
