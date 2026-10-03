@@ -124,11 +124,23 @@ namespace NzbDrone.Core.History
         public PagingSpec<EntityHistory> GetPaged(PagingSpec<EntityHistory> pagingSpec, int[] qualities)
         {
             pagingSpec.Records = GetPagedRecords(PagedBuilder(qualities), pagingSpec, PagedQuery);
-
-            var countTemplate = $"SELECT COUNT(*) FROM (SELECT /**select**/ FROM \"{TableMapping.Mapper.TableNameMapping(typeof(EntityHistory))}\" /**join**/ /**innerjoin**/ /**leftjoin**/ /**where**/ /**groupby**/ /**having**/) AS \"Inner\"";
-            pagingSpec.TotalRecords = GetPagedRecordCount(PagedBuilder(qualities).Select(typeof(EntityHistory)), pagingSpec, countTemplate);
+            pagingSpec.TotalRecords = GetPagedRecordCount(CountBuilder(qualities).SelectCount(), pagingSpec);
 
             return pagingSpec;
+        }
+
+        private SqlBuilder CountBuilder(int[] qualities)
+        {
+            var builder = Builder()
+                .Join<EntityHistory, Artist>((h, a) => h.ArtistId == a.Id)
+                .Join<EntityHistory, Album>((h, a) => h.AlbumId == a.Id);
+
+            if (qualities is { Length: > 0 })
+            {
+                builder.Where($"({BuildQualityWhereClause(qualities)})");
+            }
+
+            return builder;
         }
 
         private SqlBuilder PagedBuilder(int[] qualities)

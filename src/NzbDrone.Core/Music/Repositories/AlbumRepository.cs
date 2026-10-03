@@ -91,29 +91,20 @@ namespace NzbDrone.Core.Music
             return Query(s => s.ForeignAlbumId == foreignAlbumId).SingleOrDefault();
         }
 
-        // x.Id == null is converted to SQL, so warning incorrect
-#pragma warning disable CS0472
         private SqlBuilder AlbumsWithoutFilesBuilder(DateTime currentTime)
         {
             return Builder()
                     .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
-                    .Join<Album, AlbumRelease>((a, r) => a.Id == r.AlbumId)
-                    .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
-                    .LeftJoin<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
-                    .Where<TrackFile>(f => f.Id == null)
-                    .Where<AlbumRelease>(r => r.Monitored == true)
                     .Where<Album>(a => a.ReleaseDate <= currentTime)
-                    .GroupBy<Album>(x => x.Id)
-                    .GroupBy<Artist>(x => x.SortName);
+                    .Where(@"EXISTS (SELECT 1 FROM ""AlbumReleases"" JOIN ""Tracks"" ON ""AlbumReleases"".""Id"" = ""Tracks"".""AlbumReleaseId"" WHERE ""AlbumReleases"".""AlbumId"" = ""Albums"".""Id"" AND ""AlbumReleases"".""Monitored"" = @releaseMonitored AND (""Tracks"".""TrackFileId"" = 0 OR NOT EXISTS (SELECT 1 FROM ""TrackFiles"" WHERE ""TrackFiles"".""Id"" = ""Tracks"".""TrackFileId"")))", new { releaseMonitored = true });
         }
-#pragma warning restore CS0472
 
         public PagingSpec<Album> AlbumsWithoutFiles(PagingSpec<Album> pagingSpec)
         {
             var currentTime = DateTime.UtcNow;
 
             pagingSpec.Records = GetPagedRecords(AlbumsWithoutFilesBuilder(currentTime), pagingSpec, PagedQuery);
-            pagingSpec.TotalRecords = GetPagedRecordCount(AlbumsWithoutFilesBuilder(currentTime).SelectCountDistinct<Album>(x => x.Id), pagingSpec);
+            pagingSpec.TotalRecords = GetPagedRecordCount(AlbumsWithoutFilesBuilder(currentTime).SelectCount(), pagingSpec);
 
             return pagingSpec;
         }
@@ -122,13 +113,7 @@ namespace NzbDrone.Core.Music
         {
             return Builder()
                     .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
-                    .Join<Album, AlbumRelease>((a, r) => a.Id == r.AlbumId)
-                    .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
-                    .LeftJoin<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
-                    .Where<AlbumRelease>(r => r.Monitored == true)
-                    .Where(BuildQualityCutoffWhereClause(qualitiesBelowCutoff))
-                    .GroupBy<Album>(x => x.Id)
-                    .GroupBy<Artist>(x => x.SortName);
+                    .Where($@"EXISTS (SELECT 1 FROM ""AlbumReleases"" JOIN ""Tracks"" ON ""AlbumReleases"".""Id"" = ""Tracks"".""AlbumReleaseId"" JOIN ""TrackFiles"" ON ""Tracks"".""TrackFileId"" = ""TrackFiles"".""Id"" WHERE ""AlbumReleases"".""AlbumId"" = ""Albums"".""Id"" AND ""AlbumReleases"".""Monitored"" = @releaseMonitored AND {BuildQualityCutoffWhereClause(qualitiesBelowCutoff)})", new { releaseMonitored = true });
         }
 
         private string BuildQualityCutoffWhereClause(List<QualitiesBelowCutoff> qualitiesBelowCutoff)
@@ -149,9 +134,7 @@ namespace NzbDrone.Core.Music
         public PagingSpec<Album> AlbumsWhereCutoffUnmet(PagingSpec<Album> pagingSpec, List<QualitiesBelowCutoff> qualitiesBelowCutoff)
         {
             pagingSpec.Records = GetPagedRecords(AlbumsWhereCutoffUnmetBuilder(qualitiesBelowCutoff), pagingSpec, PagedQuery);
-
-            var countTemplate = $"SELECT COUNT(*) FROM (SELECT /**select**/ FROM \"{TableMapping.Mapper.TableNameMapping(typeof(Album))}\" /**join**/ /**innerjoin**/ /**leftjoin**/ /**where**/ /**groupby**/ /**having**/) AS \"Inner\"";
-            pagingSpec.TotalRecords = GetPagedRecordCount(AlbumsWhereCutoffUnmetBuilder(qualitiesBelowCutoff).Select(typeof(Album)), pagingSpec, countTemplate);
+            pagingSpec.TotalRecords = GetPagedRecordCount(AlbumsWhereCutoffUnmetBuilder(qualitiesBelowCutoff).SelectCount(), pagingSpec);
 
             return pagingSpec;
         }
