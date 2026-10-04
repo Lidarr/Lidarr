@@ -1,6 +1,5 @@
 using Lidarr.Api.V1.Albums;
 using Lidarr.Http;
-using Lidarr.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.ArtistStats;
 using NzbDrone.Core.Datastore;
@@ -39,7 +38,7 @@ namespace Lidarr.Api.V1.Wanted
                 pagingSpec.FilterExpressions.Add(v => v.Monitored == false || v.Artist.Value.Monitored == false);
             }
 
-            return pagingSpec.ApplyToPage(_albumService.AlbumsWithoutFiles, v => MapToResource(v, includeArtist));
+            return MapToPagingResource(_albumService.AlbumsWithoutFiles(pagingSpec), includeArtist);
         }
     }
 }

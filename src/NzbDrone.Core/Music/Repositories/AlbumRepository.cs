@@ -96,7 +96,7 @@ namespace NzbDrone.Core.Music
             return Builder()
                     .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
                     .Where<Album>(a => a.ReleaseDate <= currentTime)
-                    .Where(@"EXISTS (SELECT 1 FROM ""AlbumReleases"" JOIN ""Tracks"" ON ""AlbumReleases"".""Id"" = ""Tracks"".""AlbumReleaseId"" WHERE ""AlbumReleases"".""AlbumId"" = ""Albums"".""Id"" AND ""AlbumReleases"".""Monitored"" = @releaseMonitored AND (""Tracks"".""TrackFileId"" = 0 OR NOT EXISTS (SELECT 1 FROM ""TrackFiles"" WHERE ""TrackFiles"".""Id"" = ""Tracks"".""TrackFileId"")))", new { releaseMonitored = true });
+                    .Where(@"EXISTS (SELECT 1 FROM ""AlbumReleases"" JOIN ""Tracks"" ON ""AlbumReleases"".""Id"" = ""Tracks"".""AlbumReleaseId"" WHERE ""AlbumReleases"".""AlbumId"" = ""Albums"".""Id"" AND ""Artists"".""ArtistMetadataId"" = ""Albums"".""ArtistMetadataId"" AND ""AlbumReleases"".""Monitored"" = @releaseMonitored AND (""Tracks"".""TrackFileId"" = 0 OR NOT EXISTS (SELECT 1 FROM ""TrackFiles"" WHERE ""TrackFiles"".""Id"" = ""Tracks"".""TrackFileId"")))", new { releaseMonitored = true });
         }
 
         public PagingSpec<Album> AlbumsWithoutFiles(PagingSpec<Album> pagingSpec)
@@ -113,7 +113,7 @@ namespace NzbDrone.Core.Music
         {
             return Builder()
                     .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
-                    .Where($@"EXISTS (SELECT 1 FROM ""AlbumReleases"" JOIN ""Tracks"" ON ""AlbumReleases"".""Id"" = ""Tracks"".""AlbumReleaseId"" JOIN ""TrackFiles"" ON ""Tracks"".""TrackFileId"" = ""TrackFiles"".""Id"" WHERE ""AlbumReleases"".""AlbumId"" = ""Albums"".""Id"" AND ""AlbumReleases"".""Monitored"" = @releaseMonitored AND {BuildQualityCutoffWhereClause(qualitiesBelowCutoff)})", new { releaseMonitored = true });
+                    .Where($@"EXISTS (SELECT 1 FROM ""AlbumReleases"" JOIN ""Tracks"" ON ""AlbumReleases"".""Id"" = ""Tracks"".""AlbumReleaseId"" JOIN ""TrackFiles"" ON ""Tracks"".""TrackFileId"" = ""TrackFiles"".""Id"" WHERE ""AlbumReleases"".""AlbumId"" = ""Albums"".""Id"" AND ""Artists"".""ArtistMetadataId"" = ""Albums"".""ArtistMetadataId"" AND ""AlbumReleases"".""Monitored"" = @releaseMonitored AND {BuildQualityCutoffWhereClause(qualitiesBelowCutoff)})", new { releaseMonitored = true });
         }
 
         private string BuildQualityCutoffWhereClause(List<QualitiesBelowCutoff> qualitiesBelowCutoff)
