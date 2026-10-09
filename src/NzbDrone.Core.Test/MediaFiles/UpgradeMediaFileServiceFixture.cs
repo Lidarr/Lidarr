@@ -61,6 +61,21 @@ namespace NzbDrone.Core.Test.MediaFiles
                                                      .ToList();
         }
 
+        private void GivenSingleTrackFileAt(string path)
+        {
+            _localTrack.Tracks = Builder<Track>.CreateListOfSize(1)
+                                                     .All()
+                                                     .With(e => e.TrackFileId = 1)
+                                                     .With(e => e.TrackFile = new LazyLoaded<TrackFile>(
+                                                                                new TrackFile
+                                                                                {
+                                                                                    Id = 1,
+                                                                                    Path = path,
+                                                                                }))
+                                                     .Build()
+                                                     .ToList();
+        }
+
         private void GivenMultipleTracksWithSingleTrackFile()
         {
             _localTrack.Tracks = Builder<Track>.CreateListOfSize(2)
@@ -125,6 +140,28 @@ namespace NzbDrone.Core.Test.MediaFiles
             Subject.UpgradeTrackFile(_trackFile, _localTrack);
 
             Mocker.GetMock<IRecycleBinProvider>().Verify(v => v.DeleteFile(It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(2));
+        }
+
+        [Test]
+        public void should_recycle_track_file_into_its_folder_relative_to_the_root_folder()
+        {
+            var trackFilePath = Path.Combine(_rootPath, "Album", "01 - Track.mp3");
+            GivenSingleTrackFileAt(trackFilePath);
+
+            Subject.UpgradeTrackFile(_trackFile, _localTrack);
+
+            Mocker.GetMock<IRecycleBinProvider>().Verify(v => v.DeleteFile(trackFilePath, Path.Combine("Artist", "Album")), Times.Once());
+        }
+
+        [Test]
+        public void should_recycle_track_file_in_the_root_folder_without_a_subfolder()
+        {
+            var trackFilePath = Path.Combine(Path.GetDirectoryName(_rootPath), "Artist - Track.mp3");
+            GivenSingleTrackFileAt(trackFilePath);
+
+            Subject.UpgradeTrackFile(_trackFile, _localTrack);
+
+            Mocker.GetMock<IRecycleBinProvider>().Verify(v => v.DeleteFile(trackFilePath, string.Empty), Times.Once());
         }
 
         [Test]
