@@ -303,6 +303,8 @@ namespace NzbDrone.Common.Disk
             return false;
         }
 
+        public abstract int GetHardLinkCount(string path);
+
         public void DeleteFolder(string path, bool recursive)
         {
             Ensure.That(path, () => path).IsValidPath(PathValidationType.CurrentOs);

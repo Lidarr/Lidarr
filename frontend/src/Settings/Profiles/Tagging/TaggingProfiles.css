@@ -1,0 +1,67 @@
+.horizontalScroll {
+  overflow-x: auto;
+}
+
+.taggingProfiles {
+  user-select: none;
+}
+
+.taggingProfilesHeader {
+  display: flex;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.name {
+  flex: 0 0 200px;
+}
+
+.writeAudioTags {
+  flex: 0 0 300px;
+  padding-right: 10px;
+}
+
+.optionColumn {
+  flex: 0 0 150px;
+}
+
+.fillcolumn {
+  flex: 1 0 100px;
+}
+
+.actions {
+  flex: 0 0 80px;
+}
+
+.addTaggingProfile {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.addButton {
+  width: $dragHandleWidth;
+  text-align: center;
+}
+
+@media only screen and (max-width: $breakpointSmall) {
+  .horizontalScroll {
+    overflow-y: hidden;
+    width: 100%;
+  }
+
+  .name {
+    flex: 1 1 100px;
+  }
+
+  .writeAudioTags {
+    flex: 1 1 100px;
+  }
+
+  .optionColumn {
+    display: none;
+  }
+
+  .fillcolumn {
+    flex: 1 0 80px;
+  }
+}

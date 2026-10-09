@@ -77,9 +77,6 @@ namespace NzbDrone.Core.Configuration
 
         // Metadata
         string MetadataSource { get; set; }
-        WriteAudioTagsType WriteAudioTags { get; set; }
-        bool ScrubAudioTags { get; set; }
-        bool EmbedCoverArt { get; set; }
 
         // Forms Auth
         string RijndaelPassphrase { get; }

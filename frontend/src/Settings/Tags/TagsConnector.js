@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { fetchDelayProfiles, fetchDownloadClients, fetchImportLists, fetchIndexers, fetchNotifications, fetchReleaseProfiles } from 'Store/Actions/settingsActions';
+import { fetchDelayProfiles, fetchDownloadClients, fetchImportLists, fetchIndexers, fetchNotifications, fetchReleaseProfiles, fetchTaggingProfiles } from 'Store/Actions/settingsActions';
 import { fetchTagDetails, fetchTags } from 'Store/Actions/tagActions';
 import createSortedSectionSelector from 'Store/Selectors/createSortedSectionSelector';
 import sortByProp from 'Utilities/Array/sortByProp';
@@ -34,7 +34,8 @@ const mapDispatchToProps = {
   dispatchFetchNotifications: fetchNotifications,
   dispatchFetchReleaseProfiles: fetchReleaseProfiles,
   dispatchFetchIndexers: fetchIndexers,
-  dispatchFetchDownloadClients: fetchDownloadClients
+  dispatchFetchDownloadClients: fetchDownloadClients,
+  dispatchFetchTaggingProfiles: fetchTaggingProfiles
 };
 
 class MetadatasConnector extends Component {
@@ -51,7 +52,8 @@ class MetadatasConnector extends Component {
       dispatchFetchNotifications,
       dispatchFetchReleaseProfiles,
       dispatchFetchIndexers,
-      dispatchFetchDownloadClients
+      dispatchFetchDownloadClients,
+      dispatchFetchTaggingProfiles
     } = this.props;
 
     dispatchFetchTags();
@@ -62,6 +64,7 @@ class MetadatasConnector extends Component {
     dispatchFetchReleaseProfiles();
     dispatchFetchIndexers();
     dispatchFetchDownloadClients();
+    dispatchFetchTaggingProfiles();
   }
 
   //
@@ -84,7 +87,8 @@ MetadatasConnector.propTypes = {
   dispatchFetchNotifications: PropTypes.func.isRequired,
   dispatchFetchReleaseProfiles: PropTypes.func.isRequired,
   dispatchFetchIndexers: PropTypes.func.isRequired,
-  dispatchFetchDownloadClients: PropTypes.func.isRequired
+  dispatchFetchDownloadClients: PropTypes.func.isRequired,
+  dispatchFetchTaggingProfiles: PropTypes.func.isRequired
 };
 
 export default connect(createMapStateToProps, mapDispatchToProps)(MetadatasConnector);
