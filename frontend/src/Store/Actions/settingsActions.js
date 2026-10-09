@@ -27,6 +27,8 @@ import qualityProfiles from './Settings/qualityProfiles';
 import releaseProfiles from './Settings/releaseProfiles';
 import remotePathMappings from './Settings/remotePathMappings';
 import rootFolders from './Settings/rootFolders';
+import searchFormat from './Settings/searchFormat';
+import searchFormatExamples from './Settings/searchFormatExamples';
 import ui from './Settings/ui';
 
 export * from './Settings/autoTaggingSpecifications';
@@ -49,6 +51,8 @@ export * from './Settings/metadata';
 export * from './Settings/metadataProvider';
 export * from './Settings/naming';
 export * from './Settings/namingExamples';
+export * from './Settings/searchFormat';
+export * from './Settings/searchFormatExamples';
 export * from './Settings/notifications';
 export * from './Settings/qualityDefinitions';
 export * from './Settings/qualityProfiles';
@@ -87,6 +91,8 @@ export const defaultState = {
   metadataProvider: metadataProvider.defaultState,
   naming: naming.defaultState,
   namingExamples: namingExamples.defaultState,
+  searchFormat: searchFormat.defaultState,
+  searchFormatExamples: searchFormatExamples.defaultState,
   notifications: notifications.defaultState,
   qualityDefinitions: qualityDefinitions.defaultState,
   qualityProfiles: qualityProfiles.defaultState,
@@ -134,6 +140,8 @@ export const actionHandlers = handleThunks({
   ...metadataProvider.actionHandlers,
   ...naming.actionHandlers,
   ...namingExamples.actionHandlers,
+  ...searchFormat.actionHandlers,
+  ...searchFormatExamples.actionHandlers,
   ...notifications.actionHandlers,
   ...qualityDefinitions.actionHandlers,
   ...qualityProfiles.actionHandlers,
@@ -172,6 +180,8 @@ export const reducers = createHandleActions({
   ...metadataProvider.reducers,
   ...naming.reducers,
   ...namingExamples.reducers,
+  ...searchFormat.reducers,
+  ...searchFormatExamples.reducers,
   ...notifications.reducers,
   ...qualityDefinitions.reducers,
   ...qualityProfiles.reducers,

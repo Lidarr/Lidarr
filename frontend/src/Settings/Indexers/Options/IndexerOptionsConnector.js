@@ -1,9 +1,10 @@
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { clearPendingChanges } from 'Store/Actions/baseActions';
-import { fetchIndexerOptions, saveIndexerOptions, setIndexerOptionsValue } from 'Store/Actions/settingsActions';
+import { fetchIndexerOptions, saveIndexerOptions, saveSearchFormatSettings, setIndexerOptionsValue } from 'Store/Actions/settingsActions';
 import createSettingsSectionSelector from 'Store/Selectors/createSettingsSectionSelector';
 import IndexerOptions from './IndexerOptions';
 
@@ -12,11 +13,16 @@ const SECTION = 'indexerOptions';
 function createMapStateToProps() {
   return createSelector(
     (state) => state.settings.advancedSettings,
+    (state) => state.settings.searchFormat,
     createSettingsSectionSelector(SECTION),
-    (advancedSettings, sectionSettings) => {
+    (advancedSettings, searchFormatSettings, sectionSettings) => {
+      const combinedHasPendingChanges = sectionSettings.hasPendingChanges || !_.isEmpty(searchFormatSettings.pendingChanges);
+      const combinedIsSaving = sectionSettings.isSaving || searchFormatSettings.isSaving;
       return {
         advancedSettings,
-        ...sectionSettings
+        ...sectionSettings,
+        hasPendingChanges: combinedHasPendingChanges,
+        isSaving: combinedIsSaving
       };
     }
   );
@@ -26,6 +32,7 @@ const mapDispatchToProps = {
   dispatchFetchIndexerOptions: fetchIndexerOptions,
   dispatchSetIndexerOptionsValue: setIndexerOptionsValue,
   dispatchSaveIndexerOptions: saveIndexerOptions,
+  dispatchSaveSearchFormatSettings: saveSearchFormatSettings,
   dispatchClearPendingChanges: clearPendingChanges
 };
 
@@ -37,12 +44,11 @@ class IndexerOptionsConnector extends Component {
   componentDidMount() {
     const {
       dispatchFetchIndexerOptions,
-      dispatchSaveIndexerOptions,
       onChildMounted
     } = this.props;
 
     dispatchFetchIndexerOptions();
-    onChildMounted(dispatchSaveIndexerOptions);
+    onChildMounted(this.onSave);
   }
 
   componentDidUpdate(prevProps) {
@@ -70,6 +76,11 @@ class IndexerOptionsConnector extends Component {
   //
   // Listeners
 
+  onSave = () => {
+    this.props.dispatchSaveIndexerOptions();
+    this.props.dispatchSaveSearchFormatSettings();
+  };
+
   onInputChange = ({ name, value }) => {
     this.props.dispatchSetIndexerOptionsValue({ name, value });
   };
@@ -93,6 +104,7 @@ IndexerOptionsConnector.propTypes = {
   dispatchFetchIndexerOptions: PropTypes.func.isRequired,
   dispatchSetIndexerOptionsValue: PropTypes.func.isRequired,
   dispatchSaveIndexerOptions: PropTypes.func.isRequired,
+  dispatchSaveSearchFormatSettings: PropTypes.func.isRequired,
   dispatchClearPendingChanges: PropTypes.func.isRequired,
   onChildMounted: PropTypes.func.isRequired,
   onChildStateChange: PropTypes.func.isRequired
