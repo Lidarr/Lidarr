@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using FizzWare.NBuilder;
@@ -45,7 +44,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
                 .Returns(importList);
 
             Mocker.GetMock<IRootFolderService>()
-                  .Setup(s => s.GetBestRootFolderPath(It.IsAny<string>(), It.IsAny<Lazy<List<RootFolder>>>()))
+                  .Setup(s => s.GetBestRootFolderPath(It.IsAny<string>(), It.IsAny<List<RootFolder>>()))
                   .Returns(rootFolderPath);
 
             Mocker.GetMock<IDiskProvider>()

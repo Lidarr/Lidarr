@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
@@ -34,7 +32,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
         public override HealthCheck Check()
         {
-            var allRootFolders = new Lazy<List<RootFolder>>(() => _rootFolderService.All());
+            var allRootFolders = _rootFolderService.All();
             var rootFolders = _artistService.AllArtistPaths()
                 .Select(s => _rootFolderService.GetBestRootFolderPath(s.Value, allRootFolders))
                 .Distinct();

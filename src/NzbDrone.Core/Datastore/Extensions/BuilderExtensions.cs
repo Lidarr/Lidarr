@@ -54,7 +54,7 @@ namespace NzbDrone.Core.Datastore
             return builder.Where(wb.ToString(), wb.Parameters);
         }
 
-        public static SqlBuilder WhereExists<TModel>(this SqlBuilder builder, Func<SqlBuilder, SqlBuilder> subQuery)
+        public static SqlBuilder WhereExists<TModel>(this SqlBuilder builder, Action<SqlBuilder> subQuery)
         {
             return builder.WhereExists(TableMapping.Mapper.TableNameMapping(typeof(TModel)), subQuery);
         }

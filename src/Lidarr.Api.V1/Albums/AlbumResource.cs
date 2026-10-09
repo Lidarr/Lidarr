@@ -46,7 +46,7 @@ namespace Lidarr.Api.V1.Albums
 
     public static class AlbumResourceMapper
     {
-        public static AlbumResource ToResource(this Album model)
+        public static AlbumResource ToResource(this Album model, bool includeArtist = true, int? artistId = null)
         {
             if (model == null)
             {
@@ -58,7 +58,7 @@ namespace Lidarr.Api.V1.Albums
             return new AlbumResource
             {
                 Id = model.Id,
-                ArtistId = model.ArtistId,
+                ArtistId = artistId ?? model.ArtistId,
                 ForeignAlbumId = model.ForeignAlbumId,
                 ProfileId = model.ProfileId,
                 Monitored = model.Monitored,
@@ -76,7 +76,7 @@ namespace Lidarr.Api.V1.Albums
                 SecondaryTypes = model.SecondaryTypes.Select(s => s.Name).ToList(),
                 Releases = model.AlbumReleases?.Value.ToResource() ?? new List<AlbumReleaseResource>(),
                 Media = selectedRelease?.Media.ToResource() ?? new List<MediumResource>(),
-                Artist = model.Artist?.Value.ToResource(),
+                Artist = includeArtist ? model.Artist?.Value.ToResource() : null,
                 LastSearchTime = model.LastSearchTime
             };
         }
@@ -120,7 +120,7 @@ namespace Lidarr.Api.V1.Albums
 
         public static List<AlbumResource> ToResource(this IEnumerable<Album> models)
         {
-            return models?.Select(ToResource).ToList();
+            return models?.Select(model => model.ToResource()).ToList();
         }
 
         public static List<Album> ToModel(this IEnumerable<AlbumResource> resources)
