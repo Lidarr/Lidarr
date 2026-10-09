@@ -40,6 +40,7 @@ namespace NzbDrone.Core.Configuration
         string ExtraFileExtensions { get; set; }
         bool WatchLibraryForChanges { get; set; }
         RescanAfterRefreshType RescanAfterRefresh { get; set; }
+        string ExcludedScanFolders { get; set; }
         AllowFingerprinting AllowFingerprinting { get; set; }
 
         // Permissions (Media Management)
