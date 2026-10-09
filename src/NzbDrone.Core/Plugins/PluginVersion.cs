@@ -116,7 +116,9 @@ namespace NzbDrone.Core.Plugins
                 suffix = suffix[..plusIndex];
             }
 
-            return string.IsNullOrWhiteSpace(suffix) ? null : suffix.Trim();
+            suffix = suffix.Trim();
+
+            return suffix.Length == 0 || IsDefaultTree(suffix) ? null : suffix;
         }
     }
 }
