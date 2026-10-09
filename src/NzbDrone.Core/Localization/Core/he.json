@@ -1102,5 +1102,6 @@
     "AppUpdatedVersion": "{appName} עודכן לגרסה `{version}`, כדי לקבל את השינויים האחרונים תצטרך לטעון מחדש את {appName}",
     "BypassIfAboveCustomFormatScore": "עקוף אם מעל לניקוד פורמט מותאם אישית",
     "BypassIfAboveCustomFormatScoreHelpText": "הפעל עקיפה כאשר לגרסת ההפצה יש ניקוד גבוה יותר מניקוד המינימום המוגדר לפורמט מותאם אישית",
-    "BypassIfHighestQualityHelpText": "עקוף השהייה כאשר גרסת ההפצה היא באיכות הגבוהה ביותר המופעלת בפרופיל האיכות עם הפרוטוקול המועדף"
+    "BypassIfHighestQualityHelpText": "עקוף השהייה כאשר גרסת ההפצה היא באיכות הגבוהה ביותר המופעלת בפרופיל האיכות עם הפרוטוקול המועדף",
+    "AllowedHosts": "מארחים מורשים"
 }
