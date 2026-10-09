@@ -771,7 +771,7 @@
     "FormatTimeSpanDays": "{days}d {time}",
     "MonitorFirstAlbum": "Prvý album",
     "MonitorFutureAlbums": "Budúce albumy",
-    "MonitorLastestAlbum": "Posledný album",
+    "MonitorLatestAlbum": "Posledný album",
     "MonitorMissingAlbums": "Chýbajúce albumy",
     "DownloadClientDelugeSettingsDirectory": "Stiahnutie adresára",
     "NotificationsKodiSettingAlwaysUpdate": "Vždy aktualizovať",

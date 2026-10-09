@@ -1203,7 +1203,7 @@
     "NoMediumInformation": "Информация о носителе отсутствует.",
     "OnDownloadFailure": "При неудачном скачивании",
     "ShowNextAlbumHelpText": "Показывать следующий альбом под постером",
-    "MonitorLastestAlbum": "Свежий альбом",
+    "MonitorLatestAlbum": "Свежий альбом",
     "MonitorNewItems": "Мониторинг новых альбомов",
     "SetAppTags": "Теги {appName}-а",
     "ShowAlbumCount": "Количество альбомов",

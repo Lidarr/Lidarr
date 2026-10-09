@@ -1182,7 +1182,7 @@
     "FormatRuntimeHours": "{hours}h",
     "FormatRuntimeMinutes": "{minutes}m",
     "FormatShortTimeSpanHours": "{hours} hora(s)",
-    "MonitorLastestAlbum": "El último álbum",
+    "MonitorLatestAlbum": "El último álbum",
     "MonitorMissingAlbums": "Álbumes faltantes",
     "MonitorFutureAlbums": "Álbumes futuros",
     "MonitorNoAlbums": "Ninguno",
