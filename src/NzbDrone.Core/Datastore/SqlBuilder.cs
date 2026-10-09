@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -57,6 +58,19 @@ namespace NzbDrone.Core.Datastore
 
         public SqlBuilder Having(string sql, dynamic parameters = null) =>
             AddClause("having", sql, parameters, "\nAND ", "HAVING ", "\n", false);
+
+        public SqlBuilder WhereExists(string table, Action<SqlBuilder> subQuery)
+        {
+            var builder = new SqlBuilder(_databaseType) { Sequence = Sequence };
+            subQuery(builder);
+
+            var template = builder.AddTemplate($"SELECT 1 FROM \"{table}\" /**join**/ /**innerjoin**/ /**leftjoin**/ /**where**/");
+            var sql = template.RawSql;
+
+            Sequence = builder.Sequence;
+
+            return Where($"EXISTS ({sql})", template.Parameters);
+        }
 
         protected SqlBuilder AddClause(string name, string sql, object parameters, string joiner, string prefix = "", string postfix = "", bool isInclusive = false)
         {

@@ -27,6 +27,8 @@ namespace NzbDrone.Core.Music
         Album FindAlbumByRelease(string albumReleaseId);
         Album FindAlbumByTrack(int trackId);
         List<Album> GetArtistAlbumsWithFiles(Artist artist);
+        void LoadArtistsAndReleases(List<Album> albums);
+        void LoadReleases(List<Album> albums);
     }
 
     public class AlbumRepository : BasicRepository<Album>, IAlbumRepository
@@ -90,20 +92,19 @@ namespace NzbDrone.Core.Music
             return Query(s => s.ForeignAlbumId == foreignAlbumId).SingleOrDefault();
         }
 
-        // x.Id == null is converted to SQL, so warning incorrect
 #pragma warning disable CS0472
         private SqlBuilder AlbumsWithoutFilesBuilder(DateTime currentTime)
         {
             return Builder()
                     .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
-                    .Join<Album, AlbumRelease>((a, r) => a.Id == r.AlbumId)
-                    .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
-                    .LeftJoin<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
-                    .Where<TrackFile>(f => f.Id == null)
-                    .Where<AlbumRelease>(r => r.Monitored == true)
                     .Where<Album>(a => a.ReleaseDate <= currentTime)
-                    .GroupBy<Album>(x => x.Id)
-                    .GroupBy<Artist>(x => x.SortName);
+                    .WhereExists<AlbumRelease>(s => s
+                        .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
+                        .LeftJoin<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
+                        .Where<AlbumRelease, Album>((r, a) => r.AlbumId == a.Id)
+                        .Where<Artist, Album>((ar, a) => ar.ArtistMetadataId == a.ArtistMetadataId)
+                        .Where<AlbumRelease>(r => r.Monitored == true)
+                        .Where<Track, TrackFile>((t, f) => t.TrackFileId == 0 || f.Id == null));
         }
 #pragma warning restore CS0472
 
@@ -112,7 +113,7 @@ namespace NzbDrone.Core.Music
             var currentTime = DateTime.UtcNow;
 
             pagingSpec.Records = GetPagedRecords(AlbumsWithoutFilesBuilder(currentTime), pagingSpec, PagedQuery);
-            pagingSpec.TotalRecords = GetPagedRecordCount(AlbumsWithoutFilesBuilder(currentTime).SelectCountDistinct<Album>(x => x.Id), pagingSpec);
+            pagingSpec.TotalRecords = GetPagedRecordCount(AlbumsWithoutFilesBuilder(currentTime).SelectCount(), pagingSpec);
 
             return pagingSpec;
         }
@@ -121,13 +122,13 @@ namespace NzbDrone.Core.Music
         {
             return Builder()
                     .Join<Album, Artist>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
-                    .Join<Album, AlbumRelease>((a, r) => a.Id == r.AlbumId)
-                    .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
-                    .LeftJoin<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
-                    .Where<AlbumRelease>(r => r.Monitored == true)
-                    .Where(BuildQualityCutoffWhereClause(qualitiesBelowCutoff))
-                    .GroupBy<Album>(x => x.Id)
-                    .GroupBy<Artist>(x => x.SortName);
+                    .WhereExists<AlbumRelease>(s => s
+                        .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
+                        .Join<Track, TrackFile>((t, f) => t.TrackFileId == f.Id)
+                        .Where<AlbumRelease, Album>((r, a) => r.AlbumId == a.Id)
+                        .Where<Artist, Album>((ar, a) => ar.ArtistMetadataId == a.ArtistMetadataId)
+                        .Where<AlbumRelease>(r => r.Monitored == true)
+                        .Where(BuildQualityCutoffWhereClause(qualitiesBelowCutoff)));
         }
 
         private string BuildQualityCutoffWhereClause(List<QualitiesBelowCutoff> qualitiesBelowCutoff)
@@ -148,9 +149,7 @@ namespace NzbDrone.Core.Music
         public PagingSpec<Album> AlbumsWhereCutoffUnmet(PagingSpec<Album> pagingSpec, List<QualitiesBelowCutoff> qualitiesBelowCutoff)
         {
             pagingSpec.Records = GetPagedRecords(AlbumsWhereCutoffUnmetBuilder(qualitiesBelowCutoff), pagingSpec, PagedQuery);
-
-            var countTemplate = $"SELECT COUNT(*) FROM (SELECT /**select**/ FROM \"{TableMapping.Mapper.TableNameMapping(typeof(Album))}\" /**join**/ /**innerjoin**/ /**leftjoin**/ /**where**/ /**groupby**/ /**having**/) AS \"Inner\"";
-            pagingSpec.TotalRecords = GetPagedRecordCount(AlbumsWhereCutoffUnmetBuilder(qualitiesBelowCutoff).Select(typeof(Album)), pagingSpec, countTemplate);
+            pagingSpec.TotalRecords = GetPagedRecordCount(AlbumsWhereCutoffUnmetBuilder(qualitiesBelowCutoff).SelectCount(), pagingSpec);
 
             return pagingSpec;
         }
@@ -225,6 +224,45 @@ namespace NzbDrone.Core.Music
             return Query(Builder().Join<Album, AlbumRelease>((a, r) => a.Id == r.AlbumId)
                          .Join<AlbumRelease, Track>((r, t) => r.Id == t.AlbumReleaseId)
                          .Where<Track>(x => x.Id == trackId)).FirstOrDefault();
+        }
+
+        public void LoadArtistsAndReleases(List<Album> albums)
+        {
+            var withoutArtist = albums.Where(a => a.ArtistMetadataId > 0 && (a.Artist == null || !a.Artist.IsLoaded)).ToList();
+
+            if (withoutArtist.Any())
+            {
+                var metadataIds = withoutArtist.Select(a => a.ArtistMetadataId).Distinct().ToList();
+                var artists = ArtistRepository.Query(_database,
+                        new SqlBuilder(_database.DatabaseType)
+                            .Join<Artist, ArtistMetadata>((a, m) => a.ArtistMetadataId == m.Id)
+                            .Where<Artist>(a => metadataIds.Contains(a.ArtistMetadataId)))
+                    .ToDictionary(a => a.ArtistMetadataId);
+
+                foreach (var album in withoutArtist)
+                {
+                    album.Artist = artists.GetValueOrDefault(album.ArtistMetadataId);
+                }
+            }
+
+            LoadReleases(albums);
+        }
+
+        public void LoadReleases(List<Album> albums)
+        {
+            var withoutReleases = albums.Where(a => a.Id > 0 && (a.AlbumReleases == null || !a.AlbumReleases.IsLoaded)).ToList();
+
+            if (withoutReleases.Any())
+            {
+                var albumIds = withoutReleases.Select(a => a.Id).Distinct().ToList();
+                var releases = _database.Query<AlbumRelease>(new SqlBuilder(_database.DatabaseType).Where<AlbumRelease>(r => albumIds.Contains(r.AlbumId)))
+                    .ToLookup(r => r.AlbumId);
+
+                foreach (var album in withoutReleases)
+                {
+                    album.AlbumReleases = releases[album.Id].ToList();
+                }
+            }
         }
 
         public List<Album> GetArtistAlbumsWithFiles(Artist artist)

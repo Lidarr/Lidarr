@@ -66,6 +66,8 @@ namespace Lidarr.Api.V1.Tracks
 
         protected List<TrackResource> MapToResource(List<Track> tracks, bool includeArtist, bool includeTrackFile)
         {
+            _trackService.LoadReleasesAndArtists(tracks);
+
             var result = tracks.ToResource();
 
             if (includeArtist || includeTrackFile)
