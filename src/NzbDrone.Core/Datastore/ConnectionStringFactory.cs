@@ -84,7 +84,6 @@ namespace NzbDrone.Core.Datastore
                 Username = _configFileProvider.PostgresUser,
                 Password = _configFileProvider.PostgresPassword,
                 Port = _configFileProvider.PostgresPort,
-                Options = "-c jit=off",
                 Enlist = false
             };
 

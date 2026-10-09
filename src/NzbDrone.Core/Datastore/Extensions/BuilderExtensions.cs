@@ -47,6 +47,18 @@ namespace NzbDrone.Core.Datastore
             return builder.Where(wb.ToString(), wb.Parameters);
         }
 
+        public static SqlBuilder Where<TLeft, TRight>(this SqlBuilder builder, Expression<Func<TLeft, TRight, bool>> filter)
+        {
+            var wb = GetWhereBuilder(builder.DatabaseType, filter, false, builder.Sequence);
+
+            return builder.Where(wb.ToString(), wb.Parameters);
+        }
+
+        public static SqlBuilder WhereExists<TModel>(this SqlBuilder builder, Func<SqlBuilder, SqlBuilder> subQuery)
+        {
+            return builder.WhereExists(TableMapping.Mapper.TableNameMapping(typeof(TModel)), subQuery);
+        }
+
         public static SqlBuilder WherePostgres<TModel>(this SqlBuilder builder, Expression<Func<TModel, bool>> filter)
         {
             var wb = new WhereBuilderPostgres(filter, true, builder.Sequence);

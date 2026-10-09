@@ -19,6 +19,8 @@ namespace NzbDrone.Core.Datastore.Migration
             Create.Index().OnTable("History").OnColumn("EventType").Ascending()
                                              .OnColumn("Date").Ascending();
 
+            Delete.Index().OnTable("AlbumReleases").OnColumn("Monitored");
+
             Create.Index().OnTable("Blocklist").OnColumn("ArtistId");
             Create.Index().OnTable("PendingReleases").OnColumn("ArtistId");
 
