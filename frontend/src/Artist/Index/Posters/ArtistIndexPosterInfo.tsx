@@ -1,5 +1,5 @@
 import React from 'react';
-import Album from 'Album/Album';
+import { ArtistAlbum } from 'Artist/Artist';
 import TagListConnector from 'Components/TagListConnector';
 import MetadataProfile from 'typings/MetadataProfile';
 import QualityProfile from 'typings/QualityProfile';
@@ -15,8 +15,8 @@ interface ArtistIndexPosterInfoProps {
   qualityProfile?: QualityProfile;
   metadataProfile?: MetadataProfile;
   showNextAlbum: boolean;
-  nextAlbum?: Album;
-  lastAlbum?: Album;
+  nextAlbum?: ArtistAlbum;
+  lastAlbum?: ArtistAlbum;
   added?: string;
   albumCount: number;
   path: string;

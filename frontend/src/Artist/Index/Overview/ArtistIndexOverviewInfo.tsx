@@ -1,7 +1,7 @@
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import Album from 'Album/Album';
+import { ArtistAlbum } from 'Artist/Artist';
 import { icons } from 'Helpers/Props';
 import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
 import dimensions from 'Styles/Variables/dimensions';
@@ -36,9 +36,9 @@ interface ArtistIndexOverviewInfoProps {
   showPath: boolean;
   showSizeOnDisk: boolean;
   monitored: boolean;
-  nextAlbum?: Album;
+  nextAlbum?: ArtistAlbum;
   qualityProfile?: QualityProfile;
-  lastAlbum?: Album;
+  lastAlbum?: ArtistAlbum;
   added?: string;
   albumCount: number;
   path: string;

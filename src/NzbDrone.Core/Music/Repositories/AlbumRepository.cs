@@ -28,6 +28,7 @@ namespace NzbDrone.Core.Music
         Album FindAlbumByTrack(int trackId);
         List<Album> GetArtistAlbumsWithFiles(Artist artist);
         void LoadArtistsAndReleases(List<Album> albums);
+        void LoadReleases(List<Album> albums);
     }
 
     public class AlbumRepository : BasicRepository<Album>, IAlbumRepository
@@ -244,6 +245,11 @@ namespace NzbDrone.Core.Music
                 }
             }
 
+            LoadReleases(albums);
+        }
+
+        public void LoadReleases(List<Album> albums)
+        {
             var withoutReleases = albums.Where(a => a.Id > 0 && (a.AlbumReleases == null || !a.AlbumReleases.IsLoaded)).ToList();
 
             if (withoutReleases.Any())

@@ -59,9 +59,11 @@ namespace NzbDrone.Core.Datastore
         public SqlBuilder Having(string sql, dynamic parameters = null) =>
             AddClause("having", sql, parameters, "\nAND ", "HAVING ", "\n", false);
 
-        public SqlBuilder WhereExists(string table, Func<SqlBuilder, SqlBuilder> subQuery)
+        public SqlBuilder WhereExists(string table, Action<SqlBuilder> subQuery)
         {
-            var builder = subQuery(new SqlBuilder(_databaseType) { Sequence = Sequence });
+            var builder = new SqlBuilder(_databaseType) { Sequence = Sequence };
+            subQuery(builder);
+
             var template = builder.AddTemplate($"SELECT 1 FROM \"{table}\" /**join**/ /**innerjoin**/ /**leftjoin**/ /**where**/");
             var sql = template.RawSql;
 

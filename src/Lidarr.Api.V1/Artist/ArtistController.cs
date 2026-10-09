@@ -148,8 +148,7 @@ namespace Lidarr.Api.V1.Artist
             MapCoversToLocal(artistsResources.ToArray());
             LinkNextPreviousAlbums(artistsResources.ToArray());
             LinkArtistStatistics(artistsResources, artistStats.ToDictionary(x => x.ArtistId));
-            var rootFolders = new Lazy<List<RootFolder>>(() => _rootFolderService.All());
-            artistsResources.ForEach(r => r.RootFolderPath = _rootFolderService.GetBestRootFolderPath(r.Path, rootFolders));
+            LinkRootFolderPath(artistsResources.ToArray());
 
             // PopulateAlternateTitles(seriesResources);
             return artistsResources;
@@ -214,15 +213,15 @@ namespace Lidarr.Api.V1.Artist
             var nextAlbums = _albumService.GetNextAlbumsByArtistMetadataId(artistMetadataIds);
             var lastAlbums = _albumService.GetLastAlbumsByArtistMetadataId(artistMetadataIds);
 
-            _albumService.LoadArtistsAndReleases(nextAlbums.Concat(lastAlbums).ToList());
+            _albumService.LoadReleases(nextAlbums.Concat(lastAlbums).ToList());
 
             var nextByArtist = nextAlbums.GroupBy(x => x.ArtistMetadataId).ToDictionary(g => g.Key, g => g.First());
             var lastByArtist = lastAlbums.GroupBy(x => x.ArtistMetadataId).ToDictionary(g => g.Key, g => g.First());
 
             foreach (var artistResource in artists)
             {
-                artistResource.NextAlbum = nextByArtist.GetValueOrDefault(artistResource.ArtistMetadataId).ToResource();
-                artistResource.LastAlbum = lastByArtist.GetValueOrDefault(artistResource.ArtistMetadataId).ToResource();
+                artistResource.NextAlbum = nextByArtist.GetValueOrDefault(artistResource.ArtistMetadataId).ToResource(includeArtist: false, artistId: artistResource.Id);
+                artistResource.LastAlbum = lastByArtist.GetValueOrDefault(artistResource.ArtistMetadataId).ToResource(includeArtist: false, artistId: artistResource.Id);
             }
         }
 
@@ -263,9 +262,14 @@ namespace Lidarr.Api.V1.Artist
 
         // resource.AlternateTitles = mappings.Select(v => new AlternateTitleResource { Title = v.Title, SeasonNumber = v.SeasonNumber, SceneSeasonNumber = v.SceneSeasonNumber }).ToList();
         // }
-        private void LinkRootFolderPath(ArtistResource resource)
+        private void LinkRootFolderPath(params ArtistResource[] resources)
         {
-            resource.RootFolderPath = _rootFolderService.GetBestRootFolderPath(resource.Path);
+            var rootFolders = _rootFolderService.All();
+
+            foreach (var resource in resources)
+            {
+                resource.RootFolderPath = _rootFolderService.GetBestRootFolderPath(resource.Path, rootFolders);
+            }
         }
 
         [NonAction]
