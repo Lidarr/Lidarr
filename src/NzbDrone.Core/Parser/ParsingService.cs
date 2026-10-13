@@ -54,15 +54,7 @@ namespace NzbDrone.Core.Parser
                 title = parsedAlbumInfo.ArtistName;
             }
 
-            var artistInfo = _artistService.FindByName(title);
-
-            if (artistInfo == null)
-            {
-                _logger.Debug("Trying inexact artist match for {0}", title);
-                artistInfo = _artistService.FindByNameInexact(title);
-            }
-
-            return artistInfo;
+            return FindArtist(title, parsedAlbumInfo?.AlbumTitle, parsedAlbumInfo?.ReleaseYear);
         }
 
         public Artist GetArtistFromTag(string file)
@@ -86,15 +78,7 @@ namespace NzbDrone.Core.Parser
                 return null;
             }
 
-            artist = _artistService.FindByName(parsedTrackInfo.ArtistTitle);
-
-            if (artist == null)
-            {
-                _logger.Debug("Trying inexact artist match for {0}", parsedTrackInfo.ArtistTitle);
-                artist = _artistService.FindByNameInexact(parsedTrackInfo.ArtistTitle);
-            }
-
-            return artist;
+            return FindArtist(parsedTrackInfo.ArtistTitle, parsedTrackInfo.AlbumTitle, parsedTrackInfo.Year > 0 ? (int?)parsedTrackInfo.Year : null);
         }
 
         public RemoteAlbum Map(ParsedAlbumInfo parsedAlbumInfo, SearchCriteriaBase searchCriteria = null)
@@ -244,6 +228,36 @@ namespace NzbDrone.Core.Parser
             };
         }
 
+        private Artist FindArtist(string artistName, string albumTitle, int? releaseYear)
+        {
+            try
+            {
+                var artist = _artistService.FindByName(artistName);
+
+                if (artist == null)
+                {
+                    _logger.Debug("Trying inexact artist match for {0}", artistName);
+                    artist = _artistService.FindByNameInexact(artistName);
+                }
+
+                return artist;
+            }
+            catch (MultipleArtistsFoundException e) when (albumTitle.IsNotNullOrWhiteSpace())
+            {
+                // Multiple artists with same clean name - use album to disambiguate
+                var matchingArtists = e.Artists
+                    .Where(a => _albumService.FindByTitleAndYear(a.ArtistMetadataId, albumTitle, releaseYear) != null)
+                    .ToList();
+
+                if (matchingArtists.Count != 1)
+                {
+                    throw;
+                }
+
+                return matchingArtists[0];
+            }
+        }
+
         private Artist GetArtist(ParsedAlbumInfo parsedAlbumInfo, SearchCriteriaBase searchCriteria)
         {
             Artist artist = null;
@@ -256,13 +270,7 @@ namespace NzbDrone.Core.Parser
                 }
             }
 
-            artist = _artistService.FindByName(parsedAlbumInfo.ArtistName);
-
-            if (artist == null)
-            {
-                _logger.Debug("Trying inexact artist match for {0}", parsedAlbumInfo.ArtistName);
-                artist = _artistService.FindByNameInexact(parsedAlbumInfo.ArtistName);
-            }
+            artist = FindArtist(parsedAlbumInfo.ArtistName, parsedAlbumInfo.AlbumTitle, parsedAlbumInfo.ReleaseYear);
 
             if (artist == null)
             {
