@@ -11,6 +11,7 @@ using NzbDrone.Core.History;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.MediaFiles.TrackImport;
+using NzbDrone.Core.MediaFiles.TrackImport.Specifications;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser;
@@ -33,6 +34,7 @@ namespace NzbDrone.Core.Download
         private readonly IProvideImportItemService _provideImportItemService;
         private readonly IParsingService _parsingService;
         private readonly ITrackedDownloadAlreadyImported _trackedDownloadAlreadyImported;
+        private readonly IFailedDownloadService _failedDownloadService;
         private readonly Logger _logger;
 
         public CompletedDownloadService(IEventAggregator eventAggregator,
@@ -42,8 +44,10 @@ namespace NzbDrone.Core.Download
                                         IArtistService artistService,
                                         IParsingService parsingService,
                                         ITrackedDownloadAlreadyImported trackedDownloadAlreadyImported,
+                                        IFailedDownloadService failedDownloadService,
                                         Logger logger)
         {
+            _failedDownloadService = failedDownloadService;
             _eventAggregator = eventAggregator;
             _historyService = historyService;
             _provideImportItemService = provideImportItemService;
@@ -139,6 +143,16 @@ namespace NzbDrone.Core.Download
                 return;
             }
 
+            if (ShouldFailForUnwantedRelease(importResults))
+            {
+                _logger.Info("Download {0} was identified as a release excluded by the album's track/media count filter, marking as failed so it is blocklisted and searched again", trackedDownload.DownloadItem.Title);
+
+                trackedDownload.State = TrackedDownloadState.DownloadFailed;
+                _failedDownloadService.MarkAsFailed(trackedDownload, "Release excluded by the album's track/media count filter");
+
+                return;
+            }
+
             if (importResults.Count == 1)
             {
                 var firstResult = importResults.First();
@@ -185,6 +199,20 @@ namespace NzbDrone.Core.Download
                 trackedDownload.Warn(statusMessages.ToArray());
                 SetStateToImportBlocked(trackedDownload);
             }
+        }
+
+        // True when nothing was imported and at least one file was rejected by the album release
+        // filter for an album that asked for such downloads to be blocklisted and re-searched.
+        private static bool ShouldFailForUnwantedRelease(List<ImportResult> importResults)
+        {
+            if (importResults.Any(x => x.Result == ImportResultType.Imported))
+            {
+                return false;
+            }
+
+            return importResults.Any(x => x.Result == ImportResultType.Rejected &&
+                                          x.Errors.Contains(ReleaseWantedSpecification.FilterRejectionReason) &&
+                                          x.ImportDecision.Item?.Album?.AutoBlocklistUnwantedRelease == true);
         }
 
         public bool VerifyImport(TrackedDownload trackedDownload, List<ImportResult> importResults)
