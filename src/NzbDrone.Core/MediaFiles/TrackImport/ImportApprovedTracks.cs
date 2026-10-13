@@ -94,6 +94,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             var albumDecisions = decisions.Where(e => e.Item.Album != null && e.Approved)
                 .GroupBy(e => e.Item.Album.ForeignAlbumId).ToList();
 
+            var failedAlbumIds = new HashSet<string>();
             var iDecision = 1;
             foreach (var albumDecision in albumDecisions)
             {
@@ -117,15 +118,29 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                     continue;
                 }
 
-                if (replaceExisting)
-                {
-                    RemoveExistingTrackFiles(artist, album);
-                }
+                // select the existing files before changing the monitored release, the lookup only covers the monitored release
+                var previousFiles = replaceExisting ? _mediaFileService.GetFilesByAlbum(album.Id) : null;
 
                 // set the correct release to be monitored before importing the new files
                 var newRelease = albumDecision.First().Item.Release;
                 _logger.Debug("Updating release to {0} [{1} tracks]", newRelease, newRelease.TrackCount);
-                album.AlbumReleases = _releaseService.SetMonitored(newRelease);
+
+                try
+                {
+                    album.AlbumReleases = _releaseService.SetMonitored(newRelease);
+                }
+                catch (ArgumentException ex)
+                {
+                    // the release is not one of the album's releases, skip this album and carry on with the next one
+                    _logger.Warn(ex, "Unable to set release {0} monitored for album {1}, skipping import of this album", newRelease, album);
+                    failedAlbumIds.Add(albumDecision.Key);
+                    continue;
+                }
+
+                if (replaceExisting)
+                {
+                    RemoveExistingTrackFiles(artist, album, previousFiles);
+                }
 
                 // Publish album edited event.
                 // Deliberately don't put in the old album since we don't want to trigger an ArtistScan.
@@ -133,7 +148,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             }
 
             var qualifiedImports = decisions
-                .Where(decision => decision.Approved)
+                .Where(decision => decision.Approved && !failedAlbumIds.Contains(decision.Item.Album?.ForeignAlbumId))
                 .GroupBy(decision => decision.Item.Artist.Id)
                 .SelectMany(group => group
                     .OrderByDescending(decision => decision.Item.Quality, new QualityModelComparer(group.First().Item.Artist.QualityProfile))
@@ -348,6 +363,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 }
             }
 
+            // Report decisions for albums skipped because their release could not be set monitored
+            foreach (var failedDecision in albumDecisions.Where(g => failedAlbumIds.Contains(g.Key)).SelectMany(g => g))
+            {
+                importResults.Add(new ImportResult(failedDecision, "Failed to import track, release is not one of the album's releases."));
+            }
+
             // Adding all the rejected decisions
             importResults.AddRange(decisions.Where(c => !c.Approved)
                                             .Select(d => new ImportResult(d, d.Rejections.Select(r => r.Reason).ToArray())));
@@ -474,10 +495,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
             }
         }
 
-        private void RemoveExistingTrackFiles(Artist artist, Album album)
+        private void RemoveExistingTrackFiles(Artist artist, Album album, List<TrackFile> previousFiles)
         {
             var rootFolder = _diskProvider.GetParentFolder(artist.Path);
-            var previousFiles = _mediaFileService.GetFilesByAlbum(album.Id);
 
             _logger.Debug($"Deleting {previousFiles.Count} existing files for {album}");
 

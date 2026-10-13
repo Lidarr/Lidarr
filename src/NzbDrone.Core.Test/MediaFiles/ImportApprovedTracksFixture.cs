@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -5,6 +6,7 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Download;
@@ -101,6 +103,154 @@ namespace NzbDrone.Core.Test.MediaFiles
         public void should_import_each_approved()
         {
             Subject.Import(_approvedDecisions, false).Should().HaveCount(5);
+        }
+
+        [Test]
+        public void should_skip_album_and_import_others_when_release_is_not_in_album()
+        {
+            var artist = _approvedDecisions.First().Item.Artist;
+
+            var badAlbum = Builder<Album>.CreateNew()
+                .With(e => e.Id = 100)
+                .With(e => e.ForeignAlbumId = "bad-album")
+                .With(e => e.Artist = artist)
+                .Build();
+
+            var badRelease = Builder<AlbumRelease>.CreateNew()
+                .With(e => e.Id = 100)
+                .With(e => e.AlbumId = badAlbum.Id)
+                .Build();
+
+            badAlbum.AlbumReleases = new List<AlbumRelease>();
+
+            var badDecision = new ImportDecision<LocalTrack>(
+                new LocalTrack
+                {
+                    Artist = artist,
+                    Album = badAlbum,
+                    Release = badRelease,
+                    Tracks = new List<Track> { Builder<Track>.CreateNew().With(e => e.Id = 100).Build() },
+                    Path = Path.Combine(artist.Path, "Alien Ant Farm - 02 - Bad.mp3"),
+                    Quality = new QualityModel(Quality.MP3_256),
+                    FileTrackInfo = new ParsedTrackInfo()
+                });
+
+            Mocker.GetMock<IReleaseService>()
+                  .Setup(s => s.SetMonitored(badRelease))
+                  .Throws(new ArgumentException("Expected an expression that evaluates to true."));
+
+            var all = new List<ImportDecision<LocalTrack>> { badDecision };
+            all.AddRange(_approvedDecisions);
+
+            var results = Subject.Import(all, false);
+
+            results.Should().HaveCount(all.Count);
+            results.Where(i => i.Result == ImportResultType.Imported).Should().HaveCount(_approvedDecisions.Count);
+            results.Should().ContainSingle(i => i.ImportDecision == badDecision && i.Result == ImportResultType.Skipped);
+            Mocker.GetMock<IUpgradeMediaFiles>().Verify(v => v.UpgradeTrackFile(It.IsAny<TrackFile>(), badDecision.Item, It.IsAny<bool>()), Times.Never());
+            ExceptionVerification.ExpectedWarns(1);
+        }
+
+        [Test]
+        public void should_not_remove_existing_files_of_skipped_album_when_replacing()
+        {
+            var artist = _approvedDecisions.First().Item.Artist;
+
+            var badAlbum = Builder<Album>.CreateNew()
+                .With(e => e.Id = 100)
+                .With(e => e.ForeignAlbumId = "bad-album")
+                .With(e => e.Artist = artist)
+                .Build();
+
+            var badRelease = Builder<AlbumRelease>.CreateNew()
+                .With(e => e.Id = 100)
+                .With(e => e.AlbumId = badAlbum.Id)
+                .Build();
+
+            badAlbum.AlbumReleases = new List<AlbumRelease>();
+
+            var badDecision = new ImportDecision<LocalTrack>(
+                new LocalTrack
+                {
+                    Artist = artist,
+                    Album = badAlbum,
+                    Release = badRelease,
+                    Tracks = new List<Track> { Builder<Track>.CreateNew().With(e => e.Id = 100).Build() },
+                    Path = Path.Combine(artist.Path, "Alien Ant Farm - 02 - Bad.mp3"),
+                    Quality = new QualityModel(Quality.MP3_256),
+                    FileTrackInfo = new ParsedTrackInfo()
+                });
+
+            var existingFile = Builder<TrackFile>.CreateNew()
+                .With(e => e.Id = 100)
+                .With(e => e.AlbumId = badAlbum.Id)
+                .With(e => e.Path = Path.Combine(artist.Path, "Existing - 01 - Old.mp3"))
+                .Build();
+
+            Mocker.GetMock<IDiskProvider>()
+                  .Setup(s => s.GetParentFolder(It.IsAny<string>()))
+                  .Returns<string>(p => Path.GetDirectoryName(p));
+
+            Mocker.GetMock<IDiskProvider>()
+                  .Setup(s => s.FileExists(existingFile.Path))
+                  .Returns(true);
+
+            Mocker.GetMock<IMediaFileService>()
+                  .Setup(s => s.GetFilesByAlbum(badAlbum.Id))
+                  .Returns(new List<TrackFile> { existingFile });
+
+            Mocker.GetMock<IReleaseService>()
+                  .Setup(s => s.SetMonitored(badRelease))
+                  .Throws(new ArgumentException("Expected an expression that evaluates to true."));
+
+            var all = new List<ImportDecision<LocalTrack>> { badDecision };
+            all.AddRange(_approvedDecisions);
+
+            var results = Subject.Import(all, true, null, ImportMode.Move);
+
+            results.Where(i => i.Result == ImportResultType.Imported).Should().HaveCount(_approvedDecisions.Count);
+            results.Should().ContainSingle(i => i.ImportDecision == badDecision && i.Result == ImportResultType.Skipped);
+            Mocker.GetMock<IRecycleBinProvider>().Verify(v => v.DeleteFile(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+            Mocker.GetMock<IMediaFileService>().Verify(v => v.Delete(It.IsAny<TrackFile>(), It.IsAny<DeleteMediaFileReason>()), Times.Never());
+            ExceptionVerification.ExpectedWarns(1);
+        }
+
+        [Test]
+        public void should_remove_previous_release_files_when_replacing_with_another_release()
+        {
+            var artist = _approvedDecisions.First().Item.Artist;
+            var album = _approvedDecisions.First().Item.Album;
+            var monitoredChanged = false;
+
+            var existingFile = Builder<TrackFile>.CreateNew()
+                .With(e => e.Id = 100)
+                .With(e => e.AlbumId = album.Id)
+                .With(e => e.Path = Path.Combine(artist.Path, "Existing - 01 - Old.mp3"))
+                .Build();
+
+            Mocker.GetMock<IDiskProvider>()
+                  .Setup(s => s.GetParentFolder(It.IsAny<string>()))
+                  .Returns<string>(p => Path.GetDirectoryName(p));
+
+            Mocker.GetMock<IDiskProvider>()
+                  .Setup(s => s.FileExists(existingFile.Path))
+                  .Returns(true);
+
+            // models the repository filter: only files of the monitored release are returned,
+            // the old release's files are not returned once the new release is monitored
+            Mocker.GetMock<IMediaFileService>()
+                  .Setup(s => s.GetFilesByAlbum(album.Id))
+                  .Returns(() => monitoredChanged ? new List<TrackFile>() : new List<TrackFile> { existingFile });
+
+            Mocker.GetMock<IReleaseService>()
+                  .Setup(s => s.SetMonitored(It.IsAny<AlbumRelease>()))
+                  .Callback<AlbumRelease>(_ => monitoredChanged = true)
+                  .Returns(new List<AlbumRelease>());
+
+            Subject.Import(_approvedDecisions, true, null, ImportMode.Move);
+
+            Mocker.GetMock<IRecycleBinProvider>().Verify(v => v.DeleteFile(existingFile.Path, It.IsAny<string>()), Times.Once());
+            Mocker.GetMock<IMediaFileService>().Verify(v => v.Delete(existingFile, DeleteMediaFileReason.Upgrade), Times.Once());
         }
 
         [Test]
