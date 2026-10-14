@@ -10,6 +10,7 @@ import translate from 'Utilities/String/translate';
 import IndexersConnector from './Indexers/IndexersConnector';
 import ManageIndexersModal from './Indexers/Manage/ManageIndexersModal';
 import IndexerOptionsConnector from './Options/IndexerOptionsConnector';
+import SearchFormatConnector from './SearchFormat/SearchFormatConnector';
 
 class IndexerSettings extends Component {
 
@@ -95,6 +96,8 @@ class IndexerSettings extends Component {
         />
 
         <PageContentBody>
+          <SearchFormatConnector />
+
           <IndexersConnector />
 
           <IndexerOptionsConnector
