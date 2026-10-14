@@ -10,4 +10,10 @@
     <ProjectReference Include="..\Lidarr.Api.V1\Lidarr.Api.V1.csproj" />
     <ProjectReference Include="..\NzbDrone.Test.Common\Lidarr.Test.Common.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\NzbDrone.Core.Test\Files\Media\nin.mp3">
+      <Link>Files\Media\nin.mp3</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
