@@ -256,6 +256,13 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("RescanAfterRefresh", value); }
         }
 
+        public string ExcludedScanFolders
+        {
+            get => GetValue("ExcludedScanFolders", "");
+
+            set => SetValue("ExcludedScanFolders", value);
+        }
+
         public AllowFingerprinting AllowFingerprinting
         {
             get { return GetValueEnum("AllowFingerprinting", AllowFingerprinting.NewFiles); }
