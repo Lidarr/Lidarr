@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'Components/Link/Link';
 import { inputTypes, kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
+import AlbumReleaseCountSelectInput from './AlbumReleaseCountSelectInput';
 import AlbumReleaseSelectInputConnector from './AlbumReleaseSelectInputConnector';
 import ArtistTagInput from './ArtistTagInput';
 import AutoCompleteInput from './AutoCompleteInput';
@@ -81,6 +82,9 @@ function getComponent(type) {
 
     case inputTypes.ALBUM_RELEASE_SELECT:
       return AlbumReleaseSelectInputConnector;
+
+    case inputTypes.ALBUM_RELEASE_COUNT_SELECT:
+      return AlbumReleaseCountSelectInput;
 
     case inputTypes.INDEXER_SELECT:
       return IndexerSelectInputConnector;

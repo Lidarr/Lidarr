@@ -64,7 +64,7 @@ namespace NzbDrone.Core.Music
                 var releases = album.AlbumReleases.Value;
                 if (releases != null && releases.Any())
                 {
-                    foreach (var release in releases.Where(r => r.Monitored || album.AnyReleaseOk))
+                    foreach (var release in releases.Where(album.IsReleaseWanted))
                     {
                         var releaseResult = Match(release.ReleaseDate, parsedYear);
                         if (releaseResult.IsMatch &&

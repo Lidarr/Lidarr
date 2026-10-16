@@ -13,6 +13,7 @@ namespace NzbDrone.Core.Download
     {
         void MarkAsFailed(int historyId, bool skipRedownload = false);
         void MarkAsFailed(TrackedDownload trackedDownload, bool skipRedownload = false);
+        void MarkAsFailed(TrackedDownload trackedDownload, string message, bool skipRedownload = false);
         void Check(TrackedDownload trackedDownload);
         void ProcessFailed(TrackedDownload trackedDownload);
     }
@@ -59,11 +60,16 @@ namespace NzbDrone.Core.Download
 
         public void MarkAsFailed(TrackedDownload trackedDownload, bool skipRedownload = false)
         {
+            MarkAsFailed(trackedDownload, "Manually marked as failed", skipRedownload);
+        }
+
+        public void MarkAsFailed(TrackedDownload trackedDownload, string message, bool skipRedownload = false)
+        {
             var history = GetGrabbedHistory(trackedDownload.DownloadItem.DownloadId);
 
             if (history.Any())
             {
-                PublishDownloadFailedEvent(history.First(), GetAlbumIds(history), "Manually marked as failed", trackedDownload, skipRedownload: skipRedownload);
+                PublishDownloadFailedEvent(history.First(), GetAlbumIds(history), message, trackedDownload, skipRedownload: skipRedownload);
             }
         }
 
