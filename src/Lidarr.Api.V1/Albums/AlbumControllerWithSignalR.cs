@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Lidarr.Api.V1.Artist;
+using Lidarr.Http;
 using Lidarr.Http.REST;
 using NzbDrone.Core.ArtistStats;
+using NzbDrone.Core.Datastore;
 using NzbDrone.Core.DecisionEngine.Specifications;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.Music;
@@ -54,8 +56,10 @@ namespace Lidarr.Api.V1.Albums
             return resource;
         }
 
-        protected List<AlbumResource> MapToResource(List<Album> albums, bool includeArtist)
+        protected List<AlbumResource> MapToResource(List<Album> albums, bool includeArtist, bool perArtistStatistics = false)
         {
+            _albumService.LoadArtistsAndReleases(albums);
+
             var result = albums.ToResource();
 
             if (includeArtist)
@@ -72,11 +76,27 @@ namespace Lidarr.Api.V1.Albums
                 }
             }
 
-            var artistStats = _artistStatisticsService.ArtistStatistics();
+            var artistIds = result.Select(x => x.ArtistId).Distinct().ToList();
+            var artistStats = perArtistStatistics || artistIds.Count == 1
+                ? artistIds.Select(_artistStatisticsService.ArtistStatistics).ToList()
+                : _artistStatisticsService.ArtistStatistics();
             LinkArtistStatistics(result, artistStats);
             MapCoversToLocal(result.ToArray());
 
             return result;
+        }
+
+        protected PagingResource<AlbumResource> MapToPagingResource(PagingSpec<Album> pagingSpec, bool includeArtist)
+        {
+            return new PagingResource<AlbumResource>
+            {
+                Page = pagingSpec.Page,
+                PageSize = pagingSpec.PageSize,
+                SortDirection = pagingSpec.SortDirection,
+                SortKey = pagingSpec.SortKey,
+                TotalRecords = pagingSpec.TotalRecords,
+                Records = MapToResource(pagingSpec.Records, includeArtist, true)
+            };
         }
 
         private void FetchAndLinkAlbumStatistics(AlbumResource resource)
@@ -86,10 +106,15 @@ namespace Lidarr.Api.V1.Albums
 
         private void LinkArtistStatistics(List<AlbumResource> resources, List<ArtistStatistics> artistStatistics)
         {
+            var albumStats = artistStatistics
+                .Where(s => s?.AlbumStatistics != null)
+                .SelectMany(s => s.AlbumStatistics)
+                .GroupBy(s => (s.ArtistId, s.AlbumId))
+                .ToDictionary(g => g.Key, g => g.First());
+
             foreach (var album in resources)
             {
-                var stats = artistStatistics.SingleOrDefault(ss => ss.ArtistId == album.ArtistId);
-                LinkArtistStatistics(album, stats);
+                album.Statistics = albumStats.GetValueOrDefault((album.ArtistId, album.Id)).ToResource();
             }
         }
 

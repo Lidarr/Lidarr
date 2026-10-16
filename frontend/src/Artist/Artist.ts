@@ -21,6 +21,8 @@ export interface Ratings {
   value: number;
 }
 
+export type ArtistAlbum = Omit<Album, 'artist'>;
+
 interface Artist extends ModelBase {
   added: string;
   foreignArtistId: string;
@@ -31,8 +33,8 @@ interface Artist extends ModelBase {
   monitored: boolean;
   overview: string;
   path: string;
-  lastAlbum?: Album;
-  nextAlbum?: Album;
+  lastAlbum?: ArtistAlbum;
+  nextAlbum?: ArtistAlbum;
   qualityProfileId: number;
   metadataProfileId: number;
   monitorNewItems: string;
