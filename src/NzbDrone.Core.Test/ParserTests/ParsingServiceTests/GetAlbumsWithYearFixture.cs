@@ -283,5 +283,209 @@ namespace NzbDrone.Core.Test.ParserTests.ParsingServiceTests
             result.Should().HaveCount(1);
             result[0].Id.Should().Be(3);
         }
+
+        [Test]
+        public void should_find_album_by_title_with_year_when_parser_split_year_from_title()
+        {
+            var album = new Album
+            {
+                Id = 3,
+                Title = "Woodstock 1969",
+                CleanTitle = "woodstock1969",
+                ReleaseDate = new DateTime(2009, 8, 15)
+            };
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Woodstock",
+                AlbumTitleWithYear = "Woodstock 1969",
+                ReleaseYear = 1969,
+                ReleaseDate = "1969"
+            };
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.FindByTitleAndYear(_artist.ArtistMetadataId, "Woodstock 1969", 1969))
+                .Returns(album);
+
+            var result = Subject.GetAlbums(parsed, _artist, null);
+
+            result.Should().HaveCount(1);
+            result[0].Id.Should().Be(3);
+            Mocker.GetMock<IAlbumService>()
+                .Verify(s => s.FindByTitleAndYearInexact(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int?>()), Times.Never());
+        }
+
+        [Test]
+        public void should_find_search_criteria_album_by_title_with_year_when_parser_split_year_from_title()
+        {
+            var album = new Album
+            {
+                Id = 3,
+                Title = "Woodstock 1969",
+                CleanTitle = "woodstock1969",
+                ReleaseDate = new DateTime(2009, 8, 15)
+            };
+
+            var criteria = new AlbumSearchCriteria
+            {
+                Artist = _artist,
+                Albums = new List<Album> { album }
+            };
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Woodstock",
+                AlbumTitleWithYear = "Woodstock 1969",
+                ReleaseYear = 1969,
+                ReleaseDate = "1969"
+            };
+
+            var result = Subject.GetAlbums(parsed, _artist, criteria);
+
+            result.Should().HaveCount(1);
+            result[0].Id.Should().Be(3);
+            Mocker.GetMock<IAlbumService>()
+                .Verify(s => s.FindByTitleAndYear(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int?>()), Times.Never());
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void should_prefer_album_titled_with_year_over_album_released_that_year(bool searchForLive)
+        {
+            var live = new Album
+            {
+                Id = 3,
+                Title = "Live",
+                CleanTitle = "live",
+                ReleaseDate = new DateTime(1975, 5, 1)
+            };
+
+            var liveWithYear = new Album
+            {
+                Id = 4,
+                Title = "Live 1975",
+                CleanTitle = "live1975",
+                ReleaseDate = new DateTime(2022, 4, 8)
+            };
+
+            var criteria = searchForLive
+                ? new AlbumSearchCriteria { Artist = _artist, Albums = new List<Album> { live } }
+                : null;
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Live",
+                AlbumTitleWithYear = "Live 1975",
+                ReleaseYear = 1975,
+                ReleaseDate = "1975"
+            };
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.FindByTitleAndYear(_artist.ArtistMetadataId, "Live", 1975))
+                .Returns(live);
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.FindByTitleAndYear(_artist.ArtistMetadataId, "Live 1975", 1975))
+                .Returns(liveWithYear);
+
+            var result = Subject.GetAlbums(parsed, _artist, criteria);
+
+            result.Should().HaveCount(1);
+            result[0].Id.Should().Be(4);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void should_match_album_released_that_year_when_no_album_is_titled_with_year(bool searchForLive)
+        {
+            var live = new Album
+            {
+                Id = 3,
+                Title = "Live",
+                CleanTitle = "live",
+                ReleaseDate = new DateTime(1975, 5, 1)
+            };
+
+            var criteria = searchForLive
+                ? new AlbumSearchCriteria { Artist = _artist, Albums = new List<Album> { live } }
+                : null;
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Live",
+                AlbumTitleWithYear = "Live 1975",
+                ReleaseYear = 1975,
+                ReleaseDate = "1975"
+            };
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.FindByTitleAndYear(_artist.ArtistMetadataId, "Live", 1975))
+                .Returns(live);
+
+            var result = Subject.GetAlbums(parsed, _artist, criteria);
+
+            result.Should().HaveCount(1);
+            result[0].Id.Should().Be(3);
+        }
+
+        [Test]
+        public void should_not_look_up_title_with_year_when_parser_did_not_find_one()
+        {
+            var live = new Album
+            {
+                Id = 3,
+                Title = "Live",
+                CleanTitle = "live",
+                ReleaseDate = new DateTime(1975, 5, 1)
+            };
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Live",
+                ReleaseYear = 1975,
+                ReleaseDate = "1975"
+            };
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.FindByTitleAndYear(_artist.ArtistMetadataId, "Live", 1975))
+                .Returns(live);
+
+            var result = Subject.GetAlbums(parsed, _artist, null);
+
+            result.Should().HaveCount(1);
+            result[0].Id.Should().Be(3);
+            Mocker.GetMock<IAlbumService>()
+                .Verify(s => s.FindByTitleAndYear(It.IsAny<int>(), It.IsNotIn("Live"), It.IsAny<int?>()), Times.Never());
+        }
+
+        [Test]
+        public void should_fall_back_to_title_with_year_when_album_title_alone_is_not_found()
+        {
+            var album = new Album
+            {
+                Id = 3,
+                Title = "Live (1975)",
+                CleanTitle = "live1975",
+                ReleaseDate = new DateTime(2022, 4, 8)
+            };
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Live",
+                ReleaseYear = 1975,
+                ReleaseDate = "1975"
+            };
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.FindByTitleAndYear(_artist.ArtistMetadataId, "Live 1975", 1975))
+                .Returns(album);
+
+            var result = Subject.GetAlbums(parsed, _artist, null);
+
+            result.Should().HaveCount(1);
+            result[0].Id.Should().Be(3);
+            Mocker.GetMock<IAlbumService>()
+                .Verify(s => s.FindByTitleAndYearInexact(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int?>()), Times.Never());
+        }
     }
 }

@@ -151,8 +151,22 @@ namespace NzbDrone.Core.Parser
             }
 
             var releaseYear = parsedAlbumInfo.ReleaseYear;
+            var albumTitleWithYear = releaseYear.HasValue ? parsedAlbumInfo.AlbumTitleWithYear : null;
 
-            if (searchCriteria != null)
+            if (albumTitleWithYear != null)
+            {
+                if (searchCriteria != null)
+                {
+                    albumInfo = FindAlbumInSearchCriteria(searchCriteria.Albums, albumTitleWithYear, releaseYear);
+                }
+
+                if (albumInfo == null)
+                {
+                    albumInfo = _albumService.FindByTitleAndYear(artist.ArtistMetadataId, albumTitleWithYear, releaseYear);
+                }
+            }
+
+            if (searchCriteria != null && albumInfo == null)
             {
                 albumInfo = FindAlbumInSearchCriteria(searchCriteria.Albums, albumTitle, releaseYear);
             }
@@ -160,6 +174,11 @@ namespace NzbDrone.Core.Parser
             if (albumInfo == null)
             {
                 albumInfo = _albumService.FindByTitleAndYear(artist.ArtistMetadataId, parsedAlbumInfo.AlbumTitle, releaseYear);
+            }
+
+            if (albumInfo == null && releaseYear.HasValue && albumTitleWithYear == null)
+            {
+                albumInfo = _albumService.FindByTitleAndYear(artist.ArtistMetadataId, $"{albumTitle} {releaseYear.Value}", releaseYear);
             }
 
             if (albumInfo == null)

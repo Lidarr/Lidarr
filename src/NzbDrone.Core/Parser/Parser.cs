@@ -221,6 +221,8 @@ namespace NzbDrone.Core.Parser
 
         private static readonly Regex RequestInfoRegex = new Regex(@"\[.+?\]", RegexOptions.Compiled);
 
+        private static readonly Regex AlbumYearSeparatorRegex = new Regex(@"^(?!.*\s-\s)[^\p{L}\p{N}()\[\]{}]*$", RegexOptions.Compiled);
+
         private static readonly string[] Numbers = new[] { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
 
         private static readonly Regex[] CommonTagRegex = new Regex[]
@@ -734,6 +736,7 @@ namespace NzbDrone.Core.Parser
                 ReleaseTitle = releaseTitle,
                 ArtistName = artistName,
                 AlbumTitle = albumTitle,
+                AlbumTitleWithYear = releaseYear.HasValue ? GetAlbumTitleWithYear(matchCollection[0], albumTitle) : null,
                 ArtistTitleInfo = GetArtistTitleInfo(artistName),
                 ReleaseDate = releaseYear?.ToString() ?? string.Empty,
                 ReleaseYear = releaseYear,
@@ -763,6 +766,27 @@ namespace NzbDrone.Core.Parser
             Logger.Debug("Album Parsed. {0}", result);
 
             return result;
+        }
+
+        private static string GetAlbumTitleWithYear(Match match, string albumTitle)
+        {
+            var albumGroup = match.Groups["album"];
+            var yearGroup = match.Groups["releaseyear"];
+            var albumEnd = albumGroup.Index + albumGroup.Length;
+
+            if (!albumGroup.Success || albumTitle.IsNullOrWhiteSpace() || yearGroup.Index < albumEnd)
+            {
+                return null;
+            }
+
+            var separator = match.Value.Substring(albumEnd - match.Index, yearGroup.Index - albumEnd).Replace('.', ' ').Replace('_', ' ');
+
+            if (!AlbumYearSeparatorRegex.IsMatch(separator))
+            {
+                return null;
+            }
+
+            return albumTitle + separator + yearGroup.Value;
         }
 
         private static (int? Year, YearMatchConfidence Confidence) ExtractYear(Group yearGroup)

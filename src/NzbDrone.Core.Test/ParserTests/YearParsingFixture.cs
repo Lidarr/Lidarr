@@ -134,5 +134,34 @@ namespace NzbDrone.Core.Test.ParserTests
                 }
             }
         }
+
+        [TestCase("Artist - Woodstock 1969 FLAC", "Woodstock", 1969, "Woodstock 1969")]
+        [TestCase("Artist - Live-1975 FLAC", "Live", 1975, "Live-1975")]
+        [TestCase("Artist - Live1975 FLAC", "Live", 1975, "Live1975")]
+        [TestCase("Artist - Live * 1975 FLAC", "Live", 1975, "Live 1975")]
+        [TestCase("Artist - Live: 1975 FLAC", "Live", 1975, "Live: 1975")]
+        [TestCase("Artist - Live, 1975 FLAC", "Live", 1975, "Live, 1975")]
+        public void should_keep_album_title_with_year_when_year_directly_follows_album(string title, string album, int year, string albumWithYear)
+        {
+            var result = Parser.Parser.ParseAlbumTitle(title);
+
+            result.Should().NotBeNull();
+            result.AlbumTitle.Should().Be(album);
+            result.ReleaseYear.Should().Be(year);
+            result.AlbumTitleWithYear.Should().Be(albumWithYear);
+        }
+
+        [TestCase("Artist - Live (1975) FLAC")]
+        [TestCase("Artist - Live - 1975 [FLAC]")]
+        [TestCase("Artist - Live (1975) [Recorded Live 1975] FLAC")]
+        [TestCase("Live 1975 - Live (1975) FLAC")]
+        [TestCase("Artist - Live [FLAC]")]
+        public void should_not_keep_album_title_with_year_when_year_is_separate(string title)
+        {
+            var result = Parser.Parser.ParseAlbumTitle(title);
+
+            result.Should().NotBeNull();
+            result.AlbumTitleWithYear.Should().BeNull();
+        }
     }
 }
