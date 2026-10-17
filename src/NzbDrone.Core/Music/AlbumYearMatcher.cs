@@ -42,7 +42,7 @@ namespace NzbDrone.Core.Music
                 return AlbumYearMatchResult.Match(yearDiff, penalty, YearMatchConfidence.Low);
             }
 
-            return AlbumYearMatchResult.Reject(yearDiff, $"Release year {parsedYear.Value} does not match album year {albumYear} {yearDiff}");
+            return AlbumYearMatchResult.Reject(yearDiff, $"Release year {parsedYear.Value} does not match album year {albumYear} ({yearDiff} years apart)");
         }
 
         public AlbumYearMatchResult Match(Album album, int? parsedYear)

@@ -79,7 +79,7 @@ namespace NzbDrone.Core.Test.MusicTests
 
             result.IsMatch.Should().BeFalse();
             result.YearDifference.Should().Be(10);
-            result.RejectionReason.Should().Contain("does not match");
+            result.RejectionReason.Should().Be("Release year 2010 does not match album year 2020 (10 years apart)");
         }
 
         [Test]

@@ -142,5 +142,15 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().Be(expectedAccepted);
         }
+
+        [Test]
+        public void should_label_year_difference_in_rejection_reason()
+        {
+            _album.Title = "Test Album";
+            _album.ReleaseDate = new DateTime(1993, 6, 15);
+            _remoteAlbum.ParsedAlbumInfo.ReleaseYear = 2024;
+
+            Subject.IsSatisfiedBy(_remoteAlbum, null).Reason.Should().Be("Release year 2024 does not match album year 1993 (31 years apart)");
+        }
     }
 }
