@@ -233,5 +233,43 @@ namespace NzbDrone.Core.Test.MusicTests.AlbumRepositoryTests
             album.Should().NotBeNull();
             album.Id.Should().Be(3);
         }
+
+        [Test]
+        public void should_return_album_when_parsed_year_is_part_of_album_title()
+        {
+            var woodstock = new Album
+            {
+                Id = 7,
+                Title = "Woodstock 1969",
+                CleanTitle = "woodstock1969",
+                ReleaseDate = new DateTime(2009, 8, 15)
+            };
+
+            Mocker.GetMock<IAlbumRepository>()
+                .Setup(s => s.FindByTitle(It.IsAny<int>(), "Woodstock 1969"))
+                .Returns(woodstock);
+
+            var album = Subject.FindByTitleAndYear(0, "Woodstock 1969", 1969);
+
+            album.Should().NotBeNull();
+            album.Id.Should().Be(7);
+        }
+
+        [Test]
+        public void should_find_album_by_inexact_title_when_parsed_year_is_part_of_album_title()
+        {
+            _albums.Add(new Album
+            {
+                Id = 7,
+                Title = "Woodstock 1969",
+                CleanTitle = "woodstock1969",
+                ReleaseDate = new DateTime(2009, 8, 15)
+            });
+
+            var album = Subject.FindByTitleAndYearInexact(0, "Woodstock 1969", 1969);
+
+            album.Should().NotBeNull();
+            album.Id.Should().Be(7);
+        }
     }
 }

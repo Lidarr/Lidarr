@@ -221,7 +221,7 @@ namespace NzbDrone.Core.Music
             var scoredAlbums = albums.Select(album =>
             {
                 var titleScore = scoreFunction(album, title);
-                var yearScore = _yearMatcher.CalculateYearScore(album.ReleaseDate, year);
+                var yearScore = _yearMatcher.CalculateAlbumYearScore(album, year);
                 var combinedScore = titleScore + yearScore;
 
                 return new

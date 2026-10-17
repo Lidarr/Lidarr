@@ -199,5 +199,58 @@ namespace NzbDrone.Core.Test.MusicTests
 
             result.IsMatch.Should().BeTrue();
         }
+
+        [TestCase("Woodstock 1969", 2009, 1969)]
+        [TestCase("1989", 2014, 1989)]
+        [TestCase("Live 1975", 2022, 1975)]
+        [TestCase("1988 Rewind Edition", 2023, 1988)]
+        public void should_match_when_parsed_year_is_part_of_album_title(string title, int albumYear, int parsedYear)
+        {
+            var album = new Album { Title = title, ReleaseDate = new DateTime(albumYear, 6, 15) };
+
+            var result = Subject.Match(album, parsedYear);
+
+            result.IsMatch.Should().BeTrue();
+            result.ScoreAdjustment.Should().Be(AlbumYearMatchingOptions.ExactYearBonus);
+        }
+
+        [TestCase("Album 19690")]
+        [TestCase("SR119694")]
+        [TestCase("Now That's What I Call Music! 2023")]
+        public void should_not_match_when_year_is_not_standalone_in_album_title(string title)
+        {
+            var album = new Album { Title = title, ReleaseDate = new DateTime(2023, 6, 15) };
+
+            var result = Subject.Match(album, 1969);
+
+            result.IsMatch.Should().BeFalse();
+        }
+
+        [Test]
+        public void should_not_fail_when_album_title_is_null()
+        {
+            var album = new Album { Title = null, ReleaseDate = new DateTime(2020, 6, 15) };
+
+            var result = Subject.Match(album, 2010);
+
+            result.IsMatch.Should().BeFalse();
+        }
+
+        [Test]
+        public void calculate_album_year_score_should_return_bonus_when_year_is_part_of_album_title()
+        {
+            var album = new Album { Title = "Woodstock 1969", ReleaseDate = new DateTime(2009, 6, 15) };
+
+            Subject.CalculateAlbumYearScore(album, 1969).Should().Be(AlbumYearMatchingOptions.ExactYearBonus);
+        }
+
+        [Test]
+        public void calculate_album_year_score_should_use_release_date_when_year_is_not_in_album_title()
+        {
+            var album = new Album { Title = "Woodstock", ReleaseDate = new DateTime(2009, 6, 15) };
+
+            Subject.CalculateAlbumYearScore(album, 2009).Should().Be(AlbumYearMatchingOptions.ExactYearBonus);
+            Subject.CalculateAlbumYearScore(album, 1969).Should().BeLessThan(0);
+        }
     }
 }

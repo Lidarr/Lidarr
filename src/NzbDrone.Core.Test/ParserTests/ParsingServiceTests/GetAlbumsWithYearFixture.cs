@@ -253,5 +253,35 @@ namespace NzbDrone.Core.Test.ParserTests.ParsingServiceTests
 
             result.Should().HaveCount(1);
         }
+
+        [Test]
+        public void should_accept_search_criteria_match_when_year_is_part_of_album_title()
+        {
+            var album = new Album
+            {
+                Id = 3,
+                Title = "Live 1975",
+                CleanTitle = "live1975",
+                ReleaseDate = new DateTime(2022, 4, 8)
+            };
+
+            var criteria = new AlbumSearchCriteria
+            {
+                Artist = _artist,
+                Albums = new List<Album> { album }
+            };
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Live 1975",
+                ReleaseYear = 1975,
+                ReleaseDate = "1975"
+            };
+
+            var result = Subject.GetAlbums(parsed, _artist, criteria);
+
+            result.Should().HaveCount(1);
+            result[0].Id.Should().Be(3);
+        }
     }
 }

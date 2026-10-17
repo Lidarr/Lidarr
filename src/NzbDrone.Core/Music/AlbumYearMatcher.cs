@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace NzbDrone.Core.Music
 {
@@ -52,6 +53,11 @@ namespace NzbDrone.Core.Music
                 return AlbumYearMatchResult.NoYearProvided();
             }
 
+            if (TitleContainsYear(album.Title, parsedYear.Value))
+            {
+                return AlbumYearMatchResult.Match(0, AlbumYearMatchingOptions.ExactYearBonus, YearMatchConfidence.High);
+            }
+
             var primaryResult = Match(album.ReleaseDate, parsedYear);
             if (primaryResult.IsMatch && primaryResult.YearDifference <= AlbumYearMatchingOptions.ExactMatchYearTolerance)
             {
@@ -92,6 +98,21 @@ namespace NzbDrone.Core.Music
         {
             var result = Match(albumReleaseDate, expectedYear);
             return result.ScoreAdjustment;
+        }
+
+        public double CalculateAlbumYearScore(Album album, int? expectedYear)
+        {
+            if (expectedYear.HasValue && TitleContainsYear(album.Title, expectedYear.Value))
+            {
+                return AlbumYearMatchingOptions.ExactYearBonus;
+            }
+
+            return CalculateYearScore(album.ReleaseDate, expectedYear);
+        }
+
+        public static bool TitleContainsYear(string title, int year)
+        {
+            return !string.IsNullOrEmpty(title) && Regex.IsMatch(title, $@"(?<!\d){year}(?!\d)");
         }
     }
 }

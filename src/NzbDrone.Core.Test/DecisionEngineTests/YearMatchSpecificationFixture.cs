@@ -143,6 +143,29 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().Be(expectedAccepted);
         }
 
+        [TestCase("Woodstock 1969", 2009, 1969)]
+        [TestCase("1989", 2014, 1989)]
+        [TestCase("Live 1975", 2022, 1975)]
+        public void should_accept_when_parsed_year_is_part_of_album_title(string albumTitle, int albumYear, int parsedYear)
+        {
+            _album.Title = albumTitle;
+            _album.ReleaseDate = new DateTime(albumYear, 6, 15);
+            _remoteAlbum.ParsedAlbumInfo.ReleaseYear = parsedYear;
+            _remoteAlbum.Release.Title = $"Artist - {albumTitle} FLAC";
+
+            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
+        }
+
+        [Test]
+        public void should_reject_other_year_of_numbered_series()
+        {
+            _album.Title = "Now That's What I Call Music! 2023";
+            _album.ReleaseDate = new DateTime(2023, 11, 17);
+            _remoteAlbum.ParsedAlbumInfo.ReleaseYear = 2010;
+
+            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
+        }
+
         [Test]
         public void should_label_year_difference_in_rejection_reason()
         {

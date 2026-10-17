@@ -49,5 +49,6 @@ namespace NzbDrone.Core.Music
         AlbumYearMatchResult Match(DateTime? albumReleaseDate, int? parsedYear);
         AlbumYearMatchResult Match(Album album, int? parsedYear);
         double CalculateYearScore(DateTime? albumReleaseDate, int? expectedYear);
+        double CalculateAlbumYearScore(Album album, int? expectedYear);
     }
 }
