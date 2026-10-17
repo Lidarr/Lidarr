@@ -9,11 +9,13 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
     public class YearMatchSpecification : IDecisionEngineSpecification
     {
         private readonly IAlbumYearMatcher _yearMatcher;
+        private readonly IAlbumService _albumService;
         private readonly Logger _logger;
 
-        public YearMatchSpecification(IAlbumYearMatcher yearMatcher, Logger logger)
+        public YearMatchSpecification(IAlbumYearMatcher yearMatcher, IAlbumService albumService, Logger logger)
         {
             _yearMatcher = yearMatcher;
+            _albumService = albumService;
             _logger = logger;
         }
 
@@ -28,6 +30,8 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             {
                 return Decision.Accept();
             }
+
+            _albumService.LoadReleases(subject.Albums);
 
             foreach (var album in subject.Albums)
             {

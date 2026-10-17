@@ -114,6 +114,11 @@ namespace NzbDrone.Core.Music
                 return null;
             }
 
+            if (year.HasValue)
+            {
+                _albumRepository.LoadReleases(new List<Album> { album });
+            }
+
             var matchResult = _yearMatcher.Match(album, year);
 
             if (!matchResult.IsMatch)
@@ -128,6 +133,11 @@ namespace NzbDrone.Core.Music
         public Album FindByTitleAndYearInexact(int artistMetadataId, string title, int? year)
         {
             var albums = GetAlbumsByArtistMetadataId(artistMetadataId);
+
+            if (year.HasValue)
+            {
+                _albumRepository.LoadReleases(albums);
+            }
 
             foreach (var func in AlbumScoringFunctions(title, title.CleanArtistName()))
             {
@@ -180,6 +190,12 @@ namespace NzbDrone.Core.Music
         public List<Album> GetCandidates(int artistMetadataId, string title, int? year)
         {
             var albums = GetAlbumsByArtistMetadataId(artistMetadataId);
+
+            if (year.HasValue)
+            {
+                _albumRepository.LoadReleases(albums);
+            }
+
             var output = new List<Album>();
 
             foreach (var func in AlbumScoringFunctions(title, title.CleanArtistName()))
@@ -228,6 +244,7 @@ namespace NzbDrone.Core.Music
                 {
                     TitleScore = titleScore,
                     YearScore = yearScore,
+                    OriginalYearScore = _yearMatcher.CalculateYearScore(album.ReleaseDate, year),
                     MatchProb = combinedScore,
                     Album = album
                 };
@@ -240,7 +257,7 @@ namespace NzbDrone.Core.Music
                 return new List<Album>();
             }
 
-            var sortedAlbums = scoredAlbums.OrderByDescending(s => s.MatchProb).ToList();
+            var sortedAlbums = scoredAlbums.OrderByDescending(s => s.MatchProb).ThenByDescending(s => s.OriginalYearScore).ToList();
             var topResult = sortedAlbums.First();
 
             if (sortedAlbums.Count > 1)
@@ -256,6 +273,13 @@ namespace NzbDrone.Core.Music
                 // Better year with comparable title score
                 if (topResult.YearScore > secondResult.YearScore &&
                     topResult.TitleScore >= secondResult.TitleScore * 0.9)
+                {
+                    return new List<Album> { topResult.Album };
+                }
+
+                if (topResult.YearScore == secondResult.YearScore &&
+                    topResult.TitleScore >= secondResult.TitleScore &&
+                    topResult.OriginalYearScore > secondResult.OriginalYearScore)
                 {
                     return new List<Album> { topResult.Album };
                 }

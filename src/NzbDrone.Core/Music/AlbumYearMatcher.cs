@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -58,36 +59,34 @@ namespace NzbDrone.Core.Music
                 return AlbumYearMatchResult.Match(0, AlbumYearMatchingOptions.ExactYearBonus, YearMatchConfidence.High);
             }
 
-            var primaryResult = Match(album.ReleaseDate, parsedYear);
-            if (primaryResult.IsMatch && primaryResult.YearDifference <= AlbumYearMatchingOptions.ExactMatchYearTolerance)
+            var knownDates = new List<DateTime>();
+
+            if (album.ReleaseDate.HasValue)
             {
-                return primaryResult;
+                knownDates.Add(album.ReleaseDate.Value);
             }
 
             // Check album releases for remasters/editions with different years
-            if (album.AlbumReleases != null && album.AlbumReleases.IsLoaded)
+            if (album.AlbumReleases != null && album.AlbumReleases.IsLoaded && album.AlbumReleases.Value != null)
             {
-                var releases = album.AlbumReleases.Value;
-                if (releases != null && releases.Any())
-                {
-                    foreach (var release in releases.Where(r => r.Monitored || album.AnyReleaseOk))
-                    {
-                        var releaseResult = Match(release.ReleaseDate, parsedYear);
-                        if (releaseResult.IsMatch &&
-                            releaseResult.YearDifference <= AlbumYearMatchingOptions.ExactMatchYearTolerance)
-                        {
-                            return releaseResult;
-                        }
-                    }
-                }
+                knownDates.AddRange(album.AlbumReleases.Value.Where(r => r.ReleaseDate.HasValue).Select(r => r.ReleaseDate.Value));
             }
+
+            var primaryResult = knownDates.Any()
+                ? knownDates.Select(d => Match(d, parsedYear))
+                    .OrderByDescending(r => r.IsMatch)
+                    .ThenByDescending(r => r.ScoreAdjustment)
+                    .ThenBy(r => r.YearDifference)
+                    .First()
+                : Match((DateTime?)null, parsedYear);
 
             // Be more lenient for compilations and live albums
             if (album.SecondaryTypes != null && album.SecondaryTypes.Any(t => t.Name == "Compilation" || t.Name == "Live"))
             {
-                if (primaryResult.YearDifference <= AlbumYearMatchingOptions.HardRejectYearDiff)
+                if (primaryResult.YearDifference > AlbumYearMatchingOptions.ExactMatchYearTolerance &&
+                    primaryResult.YearDifference <= AlbumYearMatchingOptions.HardRejectYearDiff)
                 {
-                    return AlbumYearMatchResult.Match(primaryResult.YearDifference ?? 0, -AlbumYearMatchingOptions.YearPenaltyPerYear, YearMatchConfidence.Low);
+                    return AlbumYearMatchResult.Match(primaryResult.YearDifference ?? 0, primaryResult.ScoreAdjustment, YearMatchConfidence.Low);
                 }
             }
 
@@ -102,12 +101,7 @@ namespace NzbDrone.Core.Music
 
         public double CalculateAlbumYearScore(Album album, int? expectedYear)
         {
-            if (expectedYear.HasValue && TitleContainsYear(album.Title, expectedYear.Value))
-            {
-                return AlbumYearMatchingOptions.ExactYearBonus;
-            }
-
-            return CalculateYearScore(album.ReleaseDate, expectedYear);
+            return Match(album, expectedYear).ScoreAdjustment;
         }
 
         public static bool TitleContainsYear(string title, int year)

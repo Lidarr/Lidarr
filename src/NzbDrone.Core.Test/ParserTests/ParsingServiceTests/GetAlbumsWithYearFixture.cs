@@ -44,6 +44,10 @@ namespace NzbDrone.Core.Test.ParserTests.ParsingServiceTests
             };
 
             Mocker.SetConstant<IAlbumYearMatcher>(new AlbumYearMatcher());
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.GetAlbumsByArtistMetadataId(It.IsAny<int>()))
+                .Returns(new List<Album>());
         }
 
         [Test]
@@ -486,6 +490,376 @@ namespace NzbDrone.Core.Test.ParserTests.ParsingServiceTests
             result[0].Id.Should().Be(3);
             Mocker.GetMock<IAlbumService>()
                 .Verify(s => s.FindByTitleAndYearInexact(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int?>()), Times.Never());
+        }
+
+        [Test]
+        public void should_load_releases_and_accept_search_criteria_album_when_year_matches_edition()
+        {
+            var criteria = new AlbumSearchCriteria
+            {
+                Artist = _artist,
+                Albums = new List<Album> { _albums[0] }
+            };
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Greatest Hits",
+                ReleaseYear = 2024,
+                ReleaseDate = "2024"
+            };
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.LoadReleases(It.IsAny<List<Album>>()))
+                .Callback<List<Album>>(albums => albums.ForEach(a => a.AlbumReleases = new List<AlbumRelease> { new AlbumRelease { ReleaseDate = new DateTime(2024, 2, 1) } }));
+
+            var result = Subject.GetAlbums(parsed, _artist, criteria);
+
+            result.Should().HaveCount(1);
+            result[0].Id.Should().Be(1);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void should_prefer_original_year_over_edition_year_when_same_title_albums_tie(bool reverseOrder)
+        {
+            var withEdition = new Album
+            {
+                Id = 1,
+                Title = "Greatest Hits",
+                CleanTitle = "greatesthits",
+                ReleaseDate = new DateTime(2010, 6, 15),
+                AlbumReleases = new List<AlbumRelease> { new AlbumRelease { ReleaseDate = new DateTime(2020, 1, 1) } }
+            };
+
+            var original = new Album
+            {
+                Id = 2,
+                Title = "Greatest Hits",
+                CleanTitle = "greatesthits",
+                ReleaseDate = new DateTime(2020, 3, 20),
+                AlbumReleases = new List<AlbumRelease>()
+            };
+
+            var albums = reverseOrder ? new List<Album> { original, withEdition } : new List<Album> { withEdition, original };
+
+            var criteria = new AlbumSearchCriteria
+            {
+                Artist = _artist,
+                Albums = albums
+            };
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Greatest Hits",
+                ReleaseYear = 2020,
+                ReleaseDate = "2020"
+            };
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.FindByTitleAndYear(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int?>()))
+                .Returns((Album)null);
+
+            var result = Subject.GetAlbums(parsed, _artist, criteria);
+
+            result.Should().HaveCount(1);
+            result[0].Id.Should().Be(2);
+        }
+
+        [Test]
+        public void should_not_pick_same_title_album_when_years_tie_exactly()
+        {
+            var criteria = new AlbumSearchCriteria
+            {
+                Artist = _artist,
+                Albums = new List<Album>
+                {
+                    new Album { Id = 1, Title = "Greatest Hits", CleanTitle = "greatesthits", ReleaseDate = new DateTime(2019, 6, 15), AlbumReleases = new List<AlbumRelease>() },
+                    new Album { Id = 2, Title = "Greatest Hits", CleanTitle = "greatesthits", ReleaseDate = new DateTime(2021, 6, 15), AlbumReleases = new List<AlbumRelease>() }
+                }
+            };
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Greatest Hits",
+                ReleaseYear = 2020,
+                ReleaseDate = "2020"
+            };
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.FindByTitleAndYear(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int?>()))
+                .Returns((Album)null);
+
+            var result = Subject.GetAlbums(parsed, _artist, criteria);
+
+            result.Should().BeEmpty();
+        }
+
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        public void should_not_map_to_searched_album_matching_only_by_edition_when_other_album_was_released_that_year(bool otherAlbumExists, bool expectSearchedAlbum)
+        {
+            var searched = new Album
+            {
+                Id = 1,
+                ArtistMetadataId = 1,
+                Title = "Greatest Hits",
+                CleanTitle = "greatesthits",
+                ReleaseDate = new DateTime(2010, 6, 15),
+                AlbumReleases = new List<AlbumRelease> { new AlbumRelease { ReleaseDate = new DateTime(2020, 1, 1), Monitored = true } }
+            };
+
+            var other = new Album
+            {
+                Id = 2,
+                ArtistMetadataId = 1,
+                Title = "Greatest Hits",
+                CleanTitle = "greatesthits",
+                ReleaseDate = new DateTime(2020, 3, 20)
+            };
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.GetAlbumsByArtistMetadataId(1))
+                .Returns(otherAlbumExists ? new List<Album> { searched, other } : new List<Album> { searched });
+
+            var criteria = new AlbumSearchCriteria
+            {
+                Artist = _artist,
+                Albums = new List<Album> { searched }
+            };
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Greatest Hits",
+                ReleaseYear = 2020,
+                ReleaseDate = "2020"
+            };
+
+            var result = Subject.GetAlbums(parsed, _artist, criteria);
+
+            if (expectSearchedAlbum)
+            {
+                result.Should().HaveCount(1);
+                result[0].Id.Should().Be(1);
+            }
+            else
+            {
+                result.Should().NotContain(a => a.Id == 1);
+            }
+        }
+
+        [Test]
+        public void should_keep_searched_album_when_other_album_matches_year_worse_than_edition()
+        {
+            var searched = new Album
+            {
+                Id = 1,
+                ArtistMetadataId = 1,
+                Title = "Greatest Hits",
+                CleanTitle = "greatesthits",
+                ReleaseDate = new DateTime(2010, 6, 15),
+                AlbumReleases = new List<AlbumRelease> { new AlbumRelease { ReleaseDate = new DateTime(2024, 1, 1) } }
+            };
+
+            var other = new Album
+            {
+                Id = 2,
+                ArtistMetadataId = 1,
+                Title = "Greatest Hits",
+                CleanTitle = "greatesthits",
+                ReleaseDate = new DateTime(2020, 3, 20)
+            };
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.GetAlbumsByArtistMetadataId(1))
+                .Returns(new List<Album> { searched, other });
+
+            var criteria = new AlbumSearchCriteria
+            {
+                Artist = _artist,
+                Albums = new List<Album> { searched }
+            };
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Greatest Hits",
+                ReleaseYear = 2024,
+                ReleaseDate = "2024"
+            };
+
+            var result = Subject.GetAlbums(parsed, _artist, criteria);
+
+            result.Should().HaveCount(1);
+            result[0].Id.Should().Be(1);
+        }
+
+        [Test]
+        public void should_not_look_up_other_albums_when_searched_album_matches_by_original_year()
+        {
+            var criteria = new AlbumSearchCriteria
+            {
+                Artist = _artist,
+                Albums = new List<Album> { _albums[0] }
+            };
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Greatest Hits",
+                ReleaseYear = 2010,
+                ReleaseDate = "2010"
+            };
+
+            Subject.GetAlbums(parsed, _artist, criteria);
+
+            Mocker.GetMock<IAlbumService>()
+                .Verify(s => s.GetAlbumsByArtistMetadataId(It.IsAny<int>()), Times.Never());
+        }
+
+        [Test]
+        public void should_not_map_to_best_searched_album_matching_only_by_edition_when_other_album_was_released_that_year()
+        {
+            var monitoredWithEdition = new Album
+            {
+                Id = 1,
+                ArtistMetadataId = 1,
+                Title = "Greatest Hits",
+                CleanTitle = "greatesthits",
+                ReleaseDate = new DateTime(1990, 6, 15),
+                AlbumReleases = new List<AlbumRelease> { new AlbumRelease { ReleaseDate = new DateTime(2020, 1, 1), Monitored = true } }
+            };
+
+            var monitoredOld = new Album
+            {
+                Id = 2,
+                ArtistMetadataId = 1,
+                Title = "Greatest Hits",
+                CleanTitle = "greatesthits",
+                ReleaseDate = new DateTime(1980, 6, 15),
+                AlbumReleases = new List<AlbumRelease>()
+            };
+
+            var unmonitored = new Album
+            {
+                Id = 3,
+                ArtistMetadataId = 1,
+                Title = "Greatest Hits",
+                CleanTitle = "greatesthits",
+                ReleaseDate = new DateTime(2020, 3, 20)
+            };
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.GetAlbumsByArtistMetadataId(1))
+                .Returns(new List<Album> { monitoredWithEdition, monitoredOld, unmonitored });
+
+            var criteria = new AlbumSearchCriteria
+            {
+                Artist = _artist,
+                Albums = new List<Album> { monitoredWithEdition, monitoredOld }
+            };
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Greatest Hits",
+                ReleaseYear = 2020,
+                ReleaseDate = "2020"
+            };
+
+            var result = Subject.GetAlbums(parsed, _artist, criteria);
+
+            result.Should().NotContain(a => a.Id == 1 || a.Id == 2);
+        }
+
+        [Test]
+        public void should_not_map_to_searched_album_when_other_album_has_closer_edition_year()
+        {
+            var searched = new Album
+            {
+                Id = 1,
+                ArtistMetadataId = 1,
+                Title = "Greatest Hits",
+                CleanTitle = "greatesthits",
+                ReleaseDate = new DateTime(1973, 6, 15),
+                AlbumReleases = new List<AlbumRelease> { new AlbumRelease { ReleaseDate = new DateTime(2018, 1, 1), Monitored = true } }
+            };
+
+            var other = new Album
+            {
+                Id = 2,
+                ArtistMetadataId = 1,
+                Title = "Greatest Hits",
+                CleanTitle = "greatesthits",
+                ReleaseDate = new DateTime(1990, 3, 20),
+                AlbumReleases = new List<AlbumRelease> { new AlbumRelease { ReleaseDate = new DateTime(2020, 1, 1), Monitored = true } }
+            };
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.GetAlbumsByArtistMetadataId(1))
+                .Returns(new List<Album> { searched, other });
+
+            var criteria = new AlbumSearchCriteria
+            {
+                Artist = _artist,
+                Albums = new List<Album> { searched }
+            };
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Greatest Hits",
+                ReleaseYear = 2020,
+                ReleaseDate = "2020"
+            };
+
+            var result = Subject.GetAlbums(parsed, _artist, criteria);
+
+            result.Should().NotContain(a => a.Id == 1);
+            Mocker.GetMock<IAlbumService>()
+                .Verify(s => s.LoadReleases(It.Is<List<Album>>(l => l.Count == 1 && l[0].Id == 2)), Times.Once());
+        }
+
+        [Test]
+        public void should_keep_searched_album_matching_by_year_in_title_when_other_album_has_same_title()
+        {
+            var searched = new Album
+            {
+                Id = 1,
+                ArtistMetadataId = 1,
+                Title = "Live 1975",
+                CleanTitle = "live1975",
+                ReleaseDate = new DateTime(2022, 4, 8),
+                AlbumReleases = new List<AlbumRelease>()
+            };
+
+            var other = new Album
+            {
+                Id = 2,
+                ArtistMetadataId = 1,
+                Title = "Live 1975",
+                CleanTitle = "live1975",
+                ReleaseDate = new DateTime(2010, 4, 8),
+                AlbumReleases = new List<AlbumRelease>()
+            };
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.GetAlbumsByArtistMetadataId(1))
+                .Returns(new List<Album> { searched, other });
+
+            var criteria = new AlbumSearchCriteria
+            {
+                Artist = _artist,
+                Albums = new List<Album> { searched }
+            };
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Live",
+                AlbumTitleWithYear = "Live 1975",
+                ReleaseYear = 1975,
+                ReleaseDate = "1975"
+            };
+
+            var result = Subject.GetAlbums(parsed, _artist, criteria);
+
+            result.Should().HaveCount(1);
+            result[0].Id.Should().Be(1);
         }
     }
 }
