@@ -94,7 +94,7 @@
     "BackupRetentionHelpText": "Automatische Backups, die älter als die Aufbewahrungsfrist sind, werden automatisch bereinigt",
     "BindAddressHelpText": "Gültige IP-Adresse, localhost oder \"*“ für alle Schnittstellen",
     "Blocklist": "Sperrliste",
-    "Backups": "Backups",
+    "Backups": "Datensicherungen",
     "BindAddress": "Adresse binden",
     "DelayingDownloadUntil": "Download wird verzögert bis {date} um {time}",
     "QualityDefinitions": "Qualitätsdefinitionen",
@@ -1379,8 +1379,10 @@
     "Plugins": "Plugins",
     "RestartRequired": "Neustart benötigt",
     "AllowedHosts": "Erlaubte Hosts",
-    "AllowedHostsHelpText": "Kommagetrennte Liste von Hostnamen und IP Adressen, von denen {appName} Anfragen akzeptiert. Verwende \"*\" als Wildcard für Subdomänen. Leer lassen, um alle Hosts zu erlauben.",
-    "AllowedHostsNotConfiguredHealthCheckMessage": "Erlaubte Hosts sind nicht konfiguriert, {appName} wird Anfragen von jedem beliebigen Host akzeptieren. Setze Erlaubte Hosts unter allgemeine Einstellungen, um festzulegen, welche Hostnamen verwendet werden können, um {appName} zu erreichen.",
+    "AllowedHostsHelpText": "Kommagetrennte Liste von Hostnamen und IP-Adressen, unter denen {appName} erreichbar sein soll, einschließlich des Hostnamens des Systems oder des Docker-Container-Namens. Leer lassen, um alle Hosts zuzulassen. Zum Beispiel: lidarr, lidarr.example.com, 192.168.0.100",
+    "AllowedHostsNotConfiguredHealthCheckMessage": "Erlaubte Hosts sind nicht konfiguriert, {appName} akzeptiert daher Anfragen für jeden Hostnamen und jede IP-Adresse. Legen Sie unter „Allgemein” in den Einstellungen die zulässigen Hosts fest, um einzuschränken, über welche Hostnamen {appName} erreichbar ist.",
     "TrustedNetworks": "Vertrauenswürdige Netzwerke",
-    "TrustedNetworksHelpText": "Kommagetrenne Liste von IP Adressen oder Netzwerken in CIDR Notation, auf denen vertrauenswürdige Reverse Proxys laufen, z.B. 172.17.0.1, 10.0.0.0/8 oder fc00::/7. Fügen Sie nur Proxys hinzu, die so konfiguriert sind, dass sie die korrekten Header senden."
+    "TrustedNetworksHelpText": "Kommagetrenne Liste von IP Adressen oder Netzwerken in CIDR Notation, auf denen vertrauenswürdige Reverse Proxys laufen, z.B. 172.17.0.1, 10.0.0.0/8 oder fc00::/7. Fügen Sie nur Proxys hinzu, die so konfiguriert sind, dass sie die korrekten Header senden.",
+    "RemovedArtistSingleRemovedHealthCheckMessage": "Künstler {artist} wurde von MusicBrainz entfernt",
+    "RemovedArtistMultipleRemovedHealthCheckMessage": "Künstler {artists} wurden von MusicBrainz entfernt"
 }
