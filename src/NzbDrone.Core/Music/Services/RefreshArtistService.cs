@@ -305,6 +305,13 @@ namespace NzbDrone.Core.Music
                 // badly organized / partly matched libraries
                 folders = artists.Select(x => x.Path).ToList();
             }
+            else if (trigger == CommandTrigger.Manual && artists.Any())
+            {
+                // Manual refresh of specific artist(s): only scan those artists' folders,
+                // never the entire library (avoids 60k+ file scan when refreshing e.g. Various Artists).
+                folders = artists.Select(x => x.Path).ToList();
+                _logger.Trace("Manual refresh: rescanning only {0} artist folder(s)", folders.Count);
+            }
             else if (rescanAfterRefresh == RescanAfterRefreshType.Never)
             {
                 _logger.Trace("Skipping rescan. Reason: never rescan after refresh");
