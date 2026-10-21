@@ -10,6 +10,7 @@ using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.TrackImport;
@@ -559,6 +560,84 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
                                           l[0].Quality.Equals(localTrack.Quality) &&
                                           l[0].MediaInfo.AudioFormat == localTrack.FileTrackInfo.MediaInfo.AudioFormat)),
                         Times.Once());
+        }
+
+        [Test]
+        public void should_create_missing_artist_folder_with_correct_permissions()
+        {
+            GivenRootFolder();
+
+            // Setup root folder to exist and NOT be empty
+            GivenRootFolder(_otherArtistFolder);
+
+            Mocker.GetMock<IConfigService>()
+                .Setup(s => s.CreateEmptyArtistFolders)
+                .Returns(true);
+            Mocker.GetMock<IConfigService>()
+                .Setup(s => s.DeleteEmptyFolders)
+                .Returns(false);
+            Mocker.GetMock<IConfigService>()
+                .Setup(s => s.SetPermissionsLinux)
+                .Returns(true);
+            Mocker.GetMock<IConfigService>()
+                .Setup(s => s.ChmodFolder)
+                .Returns("755");
+            Mocker.GetMock<IConfigService>()
+                .Setup(s => s.ChownGroup)
+                .Returns("users");
+            Mocker.GetMock<IArtistService>()
+                .Setup(s => s.GetArtists(It.IsAny<List<int>>()))
+                .Returns(new List<Artist> { _artist });
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(s => s.FolderExists(_artist.Path))
+                .Returns(false);
+
+            Subject.Scan(new List<string> { _artist.Path }, FilterFilesType.Known, false, new List<int> { _artist.Id });
+
+            Mocker.GetMock<IDiskProvider>()
+                .Verify(v => v.CreateFolder(_artist.Path), Times.Once());
+
+            Mocker.GetMock<IDiskProvider>()
+                .Verify(v => v.SetPermissions(_artist.Path, "755", "users"), Times.Once());
+        }
+
+        [Test]
+        public void should_not_change_folder_permissions_when_setpermissionslinux_false()
+        {
+            GivenRootFolder();
+
+            // Setup root folder to exist and NOT be empty
+            GivenRootFolder(_otherArtistFolder);
+
+            Mocker.GetMock<IConfigService>()
+                .Setup(s => s.CreateEmptyArtistFolders)
+                .Returns(true);
+            Mocker.GetMock<IConfigService>()
+                .Setup(s => s.DeleteEmptyFolders)
+                .Returns(false);
+            Mocker.GetMock<IConfigService>()
+                .Setup(s => s.SetPermissionsLinux)
+                .Returns(false);
+            Mocker.GetMock<IConfigService>()
+                .Setup(s => s.ChmodFolder)
+                .Returns("755");
+            Mocker.GetMock<IConfigService>()
+                .Setup(s => s.ChownGroup)
+                .Returns("users");
+            Mocker.GetMock<IArtistService>()
+                .Setup(s => s.GetArtists(It.IsAny<List<int>>()))
+                .Returns(new List<Artist> { _artist });
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(s => s.FolderExists(_artist.Path))
+                .Returns(false);
+
+            Subject.Scan(new List<string> { _artist.Path }, FilterFilesType.Known, false, new List<int> { _artist.Id });
+
+            Mocker.GetMock<IDiskProvider>()
+                .Verify(v => v.CreateFolder(_artist.Path), Times.Once());
+
+            Mocker.GetMock<IDiskProvider>()
+                .Verify(v => v.SetPermissions(_artist.Path, It.IsAny<string>(), It.IsAny<string>()), Times.Never());
         }
     }
 }

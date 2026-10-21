@@ -161,6 +161,7 @@ namespace NzbDrone.Core.MediaFiles
                             {
                                 _logger.Debug("Creating missing artist folder: {0}", artist.Path);
                                 _diskProvider.CreateFolder(artist.Path);
+                                SetPermissions(artist.Path);
                             }
                         }
                         else
@@ -289,6 +290,24 @@ namespace NzbDrone.Core.MediaFiles
             _logger.Debug("{0} non-music files were found in {1}", mediaFileList.Count, path);
 
             return mediaFileList.ToArray();
+        }
+
+        private void SetPermissions(string path)
+        {
+            if (!_configService.SetPermissionsLinux)
+            {
+                return;
+            }
+
+            try
+            {
+                _diskProvider.SetPermissions(path, _configService.ChmodFolder, _configService.ChownGroup);
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Unable to apply permissions to: " + path);
+                _logger.Debug(ex, ex.Message);
+            }
         }
 
         public List<string> FilterPaths(string basePath, IEnumerable<string> paths)
