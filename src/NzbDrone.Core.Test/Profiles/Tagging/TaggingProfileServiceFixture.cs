@@ -103,8 +103,13 @@ namespace NzbDrone.Core.Test.Profiles.Tagging
         [Test]
         public void delete_should_renumber_orders_and_skip_default()
         {
+            Mocker.GetMock<ITaggingProfileRepository>()
+                  .Setup(s => s.Delete(It.IsAny<int>()))
+                  .Callback<int>(id => _profiles.RemoveAll(p => p.Id == id));
+
             Subject.Delete(_taggedProfile.Id);
 
+            _untaggedProfile.Order.Should().Be(1);
             _defaultProfile.Order.Should().Be(int.MaxValue);
         }
 
