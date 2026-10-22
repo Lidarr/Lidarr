@@ -21,6 +21,10 @@ namespace NzbDrone.Core.Test.ParserTests.ParsingServiceTests
         {
             _artist = new Artist { Id = 1, ArtistMetadataId = 10, Name = "Some Artist" };
             _otherArtist = new Artist { Id = 2, ArtistMetadataId = 20, Name = "Some-Artist" };
+
+            Mocker.GetMock<IAlbumService>()
+                  .Setup(s => s.GetAlbumsByTitleAndYear(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int?>()))
+                  .Returns(new List<Album>());
         }
 
         private void GivenArtistsWithSameCleanName()
@@ -33,8 +37,8 @@ namespace NzbDrone.Core.Test.ParserTests.ParsingServiceTests
         private void GivenAlbumForArtist(Artist artist)
         {
             Mocker.GetMock<IAlbumService>()
-                  .Setup(s => s.FindByTitleAndYear(artist.ArtistMetadataId, It.IsAny<string>(), It.IsAny<int?>()))
-                  .Returns(new Album { ArtistMetadataId = artist.ArtistMetadataId });
+                  .Setup(s => s.GetAlbumsByTitleAndYear(artist.ArtistMetadataId, It.IsAny<string>(), It.IsAny<int?>()))
+                  .Returns(new List<Album> { new Album { ArtistMetadataId = artist.ArtistMetadataId } });
         }
 
         [Test]
@@ -106,7 +110,7 @@ namespace NzbDrone.Core.Test.ParserTests.ParsingServiceTests
             Subject.GetArtist(AmbiguousTitle);
 
             Mocker.GetMock<IAlbumService>()
-                  .Verify(s => s.FindByTitleAndYear(_artist.ArtistMetadataId, parsedAlbumInfo.AlbumTitle, 2019), Times.Once());
+                  .Verify(s => s.GetAlbumsByTitleAndYear(_artist.ArtistMetadataId, parsedAlbumInfo.AlbumTitle, 2019), Times.Once());
         }
 
         [Test]

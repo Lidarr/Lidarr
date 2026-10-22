@@ -246,7 +246,7 @@ namespace NzbDrone.Core.Parser
             {
                 // Multiple artists with same clean name - use album to disambiguate
                 var matchingArtists = e.Artists
-                    .Where(a => _albumService.FindByTitleAndYear(a.ArtistMetadataId, albumTitle, releaseYear) != null)
+                    .Where(a => _albumService.GetAlbumsByTitleAndYear(a.ArtistMetadataId, albumTitle, releaseYear).Any())
                     .ToList();
 
                 if (matchingArtists.Count != 1)
