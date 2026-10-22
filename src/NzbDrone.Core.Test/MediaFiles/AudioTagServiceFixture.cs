@@ -543,6 +543,61 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
         }
 
         [TestCase("nin.mp3")]
+        [Platform(Exclude = "Win")]
+        public void write_tags_should_skip_hardlinked_file_reached_through_symlink(string filename)
+        {
+            _taggingProfile.SkipHardlinkedFiles = true;
+
+            GivenFileCopy(filename);
+            GivenHardLink();
+
+            var symlink = $"{_copiedFile}.symlink{Path.GetExtension(filename)}";
+            File.CreateSymbolicLink(symlink, _copiedFile);
+
+            try
+            {
+                var before = File.ReadAllBytes(_linkedFile);
+
+                var file = GivenPopulatedTrackfile(0);
+
+                file.Path = symlink;
+                Subject.WriteTags(file, false, true);
+
+                File.ReadAllBytes(_linkedFile).Should().Equal(before);
+                Mocker.GetMock<IEventAggregator>()
+                    .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Never());
+            }
+            finally
+            {
+                File.Delete(symlink);
+            }
+        }
+
+        [TestCase("nin.mp3")]
+        public void write_tags_should_skip_file_when_hard_link_count_cannot_be_read(string filename)
+        {
+            _taggingProfile.SkipHardlinkedFiles = true;
+
+            var diskProvider = new Mock<IDiskProvider>();
+            diskProvider.Setup(s => s.GetHardLinkCount(It.IsAny<string>())).Throws(new IOException("stat failed"));
+            Mocker.SetConstant(diskProvider.Object);
+
+            GivenFileCopy(filename);
+
+            var before = File.ReadAllBytes(_copiedFile);
+
+            var file = GivenPopulatedTrackfile(0);
+
+            file.Path = _copiedFile;
+            Subject.WriteTags(file, false, true);
+
+            File.ReadAllBytes(_copiedFile).Should().Equal(before);
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Never());
+            ExceptionVerification.ExpectedWarns(1);
+        }
+
+        [TestCase("nin.mp3")]
         public void write_tags_should_write_file_without_hardlinks_when_profile_skips_hardlinks(string filename)
         {
             _taggingProfile.SkipHardlinkedFiles = true;
