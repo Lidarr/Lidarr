@@ -19,6 +19,7 @@ namespace Lidarr.Api.V1.Profiles.Tagging
             _taggingProfileService = taggingProfileService;
 
             SharedValidator.RuleFor(d => d.Name).NotEmpty();
+            SharedValidator.RuleFor(d => d.Tags).NotNull();
             SharedValidator.RuleFor(d => d.Tags).EmptyCollection<TaggingProfileResource, int>().When(d => d.Id == 1);
         }
 
