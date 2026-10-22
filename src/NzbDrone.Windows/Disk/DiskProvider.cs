@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
@@ -218,28 +219,19 @@ namespace NzbDrone.Windows.Disk
 
         public override int GetHardLinkCount(string path)
         {
-            try
+            if (path.Length > 256 && !path.StartsWith(@"\\?\"))
             {
-                if (path.Length > 256 && !path.StartsWith(@"\\?\"))
-                {
-                    path = @"\\?\" + path;
-                }
-
-                using (var handle = File.OpenHandle(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-                {
-                    if (GetFileInformationByHandle(handle, out var fileInfo))
-                    {
-                        return (int)fileInfo.NumberOfLinks;
-                    }
-                }
-
-                Logger.Warn("Unable to get hard link count for '{0}'.", path);
-                return 1;
+                path = @"\\?\" + path;
             }
-            catch (Exception ex)
+
+            using (var handle = File.OpenHandle(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
             {
-                Logger.Warn(ex, string.Format("Unable to get hard link count for '{0}'.", path));
-                return 1;
+                if (!GetFileInformationByHandle(handle, out var fileInfo))
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error(), $"Unable to get hard link count for '{path}'");
+                }
+
+                return (int)fileInfo.NumberOfLinks;
             }
         }
 

@@ -487,15 +487,14 @@ namespace NzbDrone.Mono.Disk
 
         public override int GetHardLinkCount(string path)
         {
-            try
+            if (Syscall.stat(path, out var stat) < 0)
             {
-                return (int)UnixFileSystemInfo.GetFileSystemEntry(path).LinkCount;
+                var error = Stdlib.GetLastError();
+
+                throw new IOException($"Error getting hard link count for '{path}': {error}");
             }
-            catch (Exception ex)
-            {
-                _logger.Warn(ex, "Unable to get hard link count for '{0}'.", path);
-                return 1;
-            }
+
+            return (int)stat.st_nlink;
         }
 
         private uint GetUserId(string user)

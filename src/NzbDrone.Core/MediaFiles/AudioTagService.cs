@@ -88,12 +88,26 @@ namespace NzbDrone.Core.MediaFiles
 
         private bool ShouldSkipHardlinkedFile(TrackFile trackfile, TaggingProfile taggingProfile)
         {
-            if (!taggingProfile.SkipHardlinkedFiles || _diskProvider.GetHardLinkCount(trackfile.Path) <= 1)
+            if (!taggingProfile.SkipHardlinkedFiles)
             {
                 return false;
             }
 
-            _logger.Debug($"File {trackfile} is hardlinked. Skipping tag changes.");
+            try
+            {
+                if (_diskProvider.GetHardLinkCount(trackfile.Path) <= 1)
+                {
+                    return false;
+                }
+
+                _logger.Debug($"File {trackfile} is hardlinked. Skipping tag changes.");
+            }
+            catch (Exception ex)
+            {
+                // An unreadable count could be a seed, so the file is left alone
+                _logger.Warn(ex, "Unable to get hard link count for {0}. Skipping tag changes.", trackfile);
+            }
+
             return true;
         }
 
