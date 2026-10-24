@@ -1197,5 +1197,8 @@
     "AllAlbumsData": "Bütün albümleri takip et",
     "AllArtistAlbums": "Sanatçının Bütün Albümleri",
     "MonitorAllAlbums": "Bütün Albümler",
-    "Country": "Ülke"
+    "Country": "Ülke",
+    "AllowedHosts": "İzin Verilen Sunucular",
+    "TrustedNetworks": "Güvenilen Ağlar",
+    "TrustedNetworksHelpText": "Güvenilen ters vekillerin (reverse proxy) üzerinde bulunduğu, CIDR gösterimindeki IP adreslerinin veya ağların virgülle ayrılmış listesi. Örneğin: 172.17.0.1, 10.0.0.0/8 veya fc00::/7. Yalnızca doğru üstbilgileri (header) gönderecek şekilde düzgün yapılandırılmış vekilleri ekleyin."
 }
