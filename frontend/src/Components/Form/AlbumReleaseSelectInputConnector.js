@@ -1,8 +1,8 @@
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import sortByProp from 'Utilities/Array/sortByProp';
 import shortenList from 'Utilities/String/shortenList';
 import titleCase from 'Utilities/String/titleCase';
 import SelectInput from './SelectInput';
@@ -11,31 +11,30 @@ function createMapStateToProps() {
   return createSelector(
     (state, { albumReleases }) => albumReleases,
     (albumReleases) => {
-      const values = _.map(albumReleases.value, (albumRelease) => {
+      const sortedValues = albumReleases.value
+        .map((albumRelease) => {
+          const {
+            foreignReleaseId,
+            title,
+            disambiguation,
+            mediumCount,
+            trackCount,
+            country,
+            format
+          } = albumRelease;
 
-        const {
-          foreignReleaseId,
-          title,
-          disambiguation,
-          mediumCount,
-          trackCount,
-          country,
-          format
-        } = albumRelease;
-
-        return {
-          key: foreignReleaseId,
-          value: `${title}` +
+          return {
+            key: foreignReleaseId,
+            value: `${title}` +
             `${disambiguation ? ' (' : ''}${titleCase(disambiguation)}${disambiguation ? ')' : ''}` +
             `, ${mediumCount} med, ${trackCount} tracks` +
             `${country && country.length > 0 ? `, ${shortenList(country)}` : ''}` +
             `${format ? `, [${format}]` : ''}`
-        };
-      });
+          };
+        })
+        .sort(sortByProp('value'));
 
-      const sortedValues = _.orderBy(values, ['value']);
-
-      const value = _.find(albumReleases.value, { monitored: true }).foreignReleaseId;
+      const value = albumReleases.value.find((release) => release.monitored)?.foreignReleaseId;
 
       return {
         values: sortedValues,
@@ -55,14 +54,13 @@ class AlbumReleaseSelectInputConnector extends Component {
       albumReleases
     } = this.props;
 
-    const updatedReleases = _.map(albumReleases.value, (e) => ({ ...e, monitored: false }));
-    _.find(updatedReleases, { foreignReleaseId: value }).monitored = true;
+    const updatedReleases = albumReleases.value.map((e) => ({ ...e, monitored: false }));
+    updatedReleases.find((e) => e.foreignReleaseId === value).monitored = true;
 
     this.props.onChange({ name, value: updatedReleases });
   };
 
   render() {
-
     return (
       <SelectInput
         {...this.props}
