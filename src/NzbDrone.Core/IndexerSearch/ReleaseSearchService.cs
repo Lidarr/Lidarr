@@ -25,18 +25,21 @@ namespace NzbDrone.Core.IndexerSearch
         private readonly IAlbumService _albumService;
         private readonly IArtistService _artistService;
         private readonly IMakeDownloadDecision _makeDownloadDecision;
+        private readonly IBuildSearchQuery _searchQueryBuilder;
         private readonly Logger _logger;
 
         public ReleaseSearchService(IIndexerFactory indexerFactory,
                                 IAlbumService albumService,
                                 IArtistService artistService,
                                 IMakeDownloadDecision makeDownloadDecision,
+                                IBuildSearchQuery searchQueryBuilder,
                                 Logger logger)
         {
             _indexerFactory = indexerFactory;
             _albumService = albumService;
             _artistService = artistService;
             _makeDownloadDecision = makeDownloadDecision;
+            _searchQueryBuilder = searchQueryBuilder;
             _logger = logger;
         }
 
@@ -65,6 +68,8 @@ namespace NzbDrone.Core.IndexerSearch
 
             searchSpec.Albums = albums;
 
+            ApplyCustomFormats(searchSpec);
+
             var decisions = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
             downloadDecisions.AddRange(decisions);
 
@@ -90,10 +95,39 @@ namespace NzbDrone.Core.IndexerSearch
                 searchSpec.Disambiguation = album.Disambiguation;
             }
 
+            ApplyCustomFormats(searchSpec);
+
             var decisions = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
             downloadDecisions.AddRange(decisions);
 
             return DeDupeDecisions(downloadDecisions);
+        }
+
+        private void ApplyCustomFormats(SearchCriteriaBase searchSpec)
+        {
+            if (_searchQueryBuilder.UseCustomFormat)
+            {
+                if (searchSpec is AlbumSearchCriteria albumSpec)
+                {
+                    var customQuery = _searchQueryBuilder.BuildAlbumSearchQuery(albumSpec);
+                    if (customQuery.IsNotNullOrWhiteSpace())
+                    {
+                        albumSpec.ArtistQuery = customQuery;
+                        albumSpec.CleanArtistQuery = customQuery;
+                        albumSpec.AlbumQuery = string.Empty;
+                        albumSpec.CleanAlbumQuery = string.Empty;
+                    }
+                }
+                else if (searchSpec is ArtistSearchCriteria artistSpec)
+                {
+                    var customQuery = _searchQueryBuilder.BuildArtistSearchQuery(artistSpec);
+                    if (customQuery.IsNotNullOrWhiteSpace())
+                    {
+                        artistSpec.ArtistQuery = customQuery;
+                        artistSpec.CleanArtistQuery = customQuery;
+                    }
+                }
+            }
         }
 
         private TSpec Get<TSpec>(Artist artist, List<Album> albums, bool userInvokedSearch, bool interactiveSearch)
