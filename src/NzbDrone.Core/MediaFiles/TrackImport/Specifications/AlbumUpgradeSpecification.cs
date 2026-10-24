@@ -10,10 +10,12 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
     public class AlbumUpgradeSpecification : IImportDecisionEngineSpecification<LocalAlbumRelease>
     {
         private readonly Logger _logger;
+        private readonly ITrackFileQualityService _trackFileQualityService;
 
-        public AlbumUpgradeSpecification(Logger logger)
+        public AlbumUpgradeSpecification(Logger logger, ITrackFileQualityService trackFileQualityService)
         {
             _logger = logger;
+            _trackFileQualityService = trackFileQualityService;
         }
 
         public Decision IsSatisfiedBy(LocalAlbumRelease item, DownloadClientItem downloadClientItem)
@@ -32,7 +34,9 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
                 _logger.Debug("Min quality of new files: {0}", newMinQuality);
 
                 // get minimum quality of existing release
-                var existingQualities = currentRelease.Tracks.Value.Where(x => x.TrackFileId != 0).Select(x => x.TrackFile.Value.Quality);
+                var existingFiles = currentRelease.Tracks.Value.Where(x => x.TrackFileId != 0).Select(x => x.TrackFile.Value).ToList();
+                existingFiles.ForEach(_trackFileQualityService.EnsureCurrent);
+                var existingQualities = existingFiles.Select(x => x.Quality);
                 if (existingQualities.Any())
                 {
                     var existingMinQuality = existingQualities.OrderBy(x => x, qualityComparer).First();

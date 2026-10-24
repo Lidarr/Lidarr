@@ -14,6 +14,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
     public class UpgradeDiskSpecification : IDecisionEngineSpecification
     {
         private readonly IMediaFileService _mediaFileService;
+        private readonly ITrackFileQualityService _trackFileQualityService;
         private readonly ITrackService _trackService;
         private readonly UpgradableSpecification _upgradableSpecification;
         private readonly ICustomFormatCalculationService _formatService;
@@ -22,6 +23,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
         public UpgradeDiskSpecification(UpgradableSpecification qualityUpgradableSpecification,
                                         IMediaFileService mediaFileService,
+                                        ITrackFileQualityService trackFileQualityService,
                                         ITrackService trackService,
                                         ICacheManager cacheManager,
                                         ICustomFormatCalculationService formatService,
@@ -32,6 +34,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             _trackService = trackService;
             _formatService = formatService;
             _logger = logger;
+            _trackFileQualityService = trackFileQualityService;
             _missingFilesCache = cacheManager.GetCache<bool>(GetType());
         }
 
@@ -49,6 +52,7 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
                 if (!tracksMissing && trackFiles.Any())
                 {
+                    trackFiles.ForEach(_trackFileQualityService.EnsureCurrent);
                     var currentQualities = trackFiles.Select(c => c.Quality).Distinct().ToList();
 
                     var customFormats = _formatService.ParseCustomFormat(trackFiles[0]);

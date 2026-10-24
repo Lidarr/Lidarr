@@ -12,16 +12,19 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
     public class UpgradeSpecification : IImportDecisionEngineSpecification<LocalTrack>
     {
         private readonly IConfigService _configService;
+        private readonly ITrackFileQualityService _trackFileQualityService;
         private readonly ICustomFormatCalculationService _customFormatCalculationService;
         private readonly Logger _logger;
 
         public UpgradeSpecification(IConfigService configService,
                                     ICustomFormatCalculationService customFormatCalculationService,
+                                    ITrackFileQualityService trackFileQualityService,
                                     Logger logger)
         {
             _configService = configService;
             _customFormatCalculationService = customFormatCalculationService;
             _logger = logger;
+            _trackFileQualityService = trackFileQualityService;
         }
 
         public Decision IsSatisfiedBy(LocalTrack localTrack, DownloadClientItem downloadClientItem)
@@ -44,6 +47,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Specifications
                     _logger.Trace("Unable to get track file details from the DB. TrackId: {0} TrackFileId: {1}", track.Id, track.TrackFileId);
                     continue;
                 }
+
+                _trackFileQualityService.EnsureCurrent(trackFile);
 
                 var qualityCompare = qualityComparer.Compare(localTrack.Quality.Quality, trackFile.Quality.Quality);
 
