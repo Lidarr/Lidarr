@@ -1,0 +1,77 @@
+.taggingProfile {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 10px;
+  height: 30px;
+  border-bottom: 1px solid var(--borderColor);
+  line-height: 30px;
+}
+
+.name {
+  flex: 0 0 200px;
+}
+
+.writeAudioTags {
+  flex: 0 0 300px;
+  overflow: hidden;
+  padding-right: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.optionColumn {
+  flex: 0 0 150px;
+}
+
+.fillcolumn {
+  flex: 1 0 100px;
+}
+
+.actions {
+  display: flex;
+}
+
+.dragHandle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  width: $dragHandleWidth;
+  text-align: center;
+  cursor: grab;
+}
+
+.dragIcon {
+  top: 0;
+}
+
+.isDragging {
+  opacity: 0.25;
+}
+
+.editButton {
+  width: $dragHandleWidth;
+  text-align: center;
+}
+
+@media only screen and (max-width: $breakpointSmall) {
+  .name {
+    flex: 1 1 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .writeAudioTags {
+    flex: 1 1 100px;
+  }
+
+  .optionColumn {
+    display: none;
+  }
+
+  .fillcolumn {
+    flex: 1 0 80px;
+  }
+}
