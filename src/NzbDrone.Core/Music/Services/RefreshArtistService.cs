@@ -294,7 +294,7 @@ namespace NzbDrone.Core.Music
             var rescanAfterRefresh = _configService.RescanAfterRefresh;
             var shouldRescan = true;
             var filter = FilterFilesType.Matched;
-            var folders = _rootFolderService.All().Select(x => x.Path).ToList();
+            var folders = artists.Select(x => x.Path).ToList();
 
             if (isNew)
             {
