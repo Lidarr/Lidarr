@@ -776,7 +776,7 @@
   "MonitorExistingAlbums": "Existing Albums",
   "MonitorFirstAlbum": "First Album",
   "MonitorFutureAlbums": "Future Albums",
-  "MonitorLastestAlbum": "Lastest Album",
+  "MonitorLatestAlbum": "Latest Album",
   "MonitorMissingAlbums": "Missing Albums",
   "MonitorNewAlbums": "New Albums",
   "MonitorNewAlbumsData": "Monitor albums added to database in future with a release date after the latest album",
