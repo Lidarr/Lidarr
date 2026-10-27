@@ -163,6 +163,41 @@ namespace NzbDrone.Core.Test.MusicTests
         }
 
         [Test]
+        public void should_match_year_of_a_wanted_release_when_album_year_differs()
+        {
+            var album = new Album
+            {
+                Title = "Album",
+                ReleaseDate = new DateTime(1993, 9, 14),
+                AnyReleaseOk = true,
+                AlbumReleases = new LazyLoaded<List<AlbumRelease>>(new List<AlbumRelease>
+                {
+                    new AlbumRelease { Monitored = false, TrackCount = 22, ReleaseDate = new DateTime(2007, 1, 1), Media = new List<Medium> { new Medium { Number = 1 } } }
+                })
+            };
+
+            Subject.Match(album, 2007).YearDifference.Should().Be(0);
+        }
+
+        [Test]
+        public void should_ignore_year_of_a_release_excluded_by_the_album_filter()
+        {
+            var album = new Album
+            {
+                Title = "Album",
+                ReleaseDate = new DateTime(1993, 9, 14),
+                AnyReleaseOk = true,
+                PreferredTrackCounts = new List<int> { 11 },
+                AlbumReleases = new LazyLoaded<List<AlbumRelease>>(new List<AlbumRelease>
+                {
+                    new AlbumRelease { Monitored = false, TrackCount = 22, ReleaseDate = new DateTime(2007, 1, 1), Media = new List<Medium> { new Medium { Number = 1 } } }
+                })
+            };
+
+            Subject.Match(album, 2007).YearDifference.Should().NotBe(0);
+        }
+
+        [Test]
         public void should_be_lenient_for_compilation_albums()
         {
             var album = new Album

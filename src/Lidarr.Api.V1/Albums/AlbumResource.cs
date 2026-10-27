@@ -20,6 +20,9 @@ namespace Lidarr.Api.V1.Albums
         public string ForeignAlbumId { get; set; }
         public bool Monitored { get; set; }
         public bool AnyReleaseOk { get; set; }
+        public List<int> PreferredTrackCounts { get; set; }
+        public List<int> PreferredMediumCounts { get; set; }
+        public bool AutoBlocklistUnwantedRelease { get; set; }
         public int ProfileId { get; set; }
         public int Duration { get; set; }
         public string AlbumType { get; set; }
@@ -63,6 +66,9 @@ namespace Lidarr.Api.V1.Albums
                 ProfileId = model.ProfileId,
                 Monitored = model.Monitored,
                 AnyReleaseOk = model.AnyReleaseOk,
+                PreferredTrackCounts = model.PreferredTrackCounts ?? new List<int>(),
+                PreferredMediumCounts = model.PreferredMediumCounts ?? new List<int>(),
+                AutoBlocklistUnwantedRelease = model.AutoBlocklistUnwantedRelease,
                 ReleaseDate = model.ReleaseDate,
                 Genres = model.Genres,
                 Title = model.Title,
@@ -101,6 +107,9 @@ namespace Lidarr.Api.V1.Albums
                 AlbumType = resource.AlbumType,
                 Monitored = resource.Monitored,
                 AnyReleaseOk = resource.AnyReleaseOk,
+                PreferredTrackCounts = resource.PreferredTrackCounts?.Distinct().OrderBy(x => x).ToList() ?? new List<int>(),
+                PreferredMediumCounts = resource.PreferredMediumCounts?.Distinct().OrderBy(x => x).ToList() ?? new List<int>(),
+                AutoBlocklistUnwantedRelease = resource.AutoBlocklistUnwantedRelease,
                 AlbumReleases = resource.Releases?.ToModel() ?? new List<AlbumRelease>(),
                 AddOptions = resource.AddOptions ?? new AddAlbumOptions(),
                 Artist = artist,
