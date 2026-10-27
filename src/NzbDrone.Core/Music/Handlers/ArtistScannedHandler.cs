@@ -13,21 +13,21 @@ namespace NzbDrone.Core.Music
         private readonly IAlbumMonitoredService _albumMonitoredService;
         private readonly IArtistService _artistService;
         private readonly IManageCommandQueue _commandQueueManager;
-        private readonly IAlbumAddedService _albumAddedService;
+        private readonly IAlbumRefreshedService _albumRefreshedService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
         public ArtistScannedHandler(IAlbumMonitoredService albumMonitoredService,
                                     IArtistService artistService,
                                     IManageCommandQueue commandQueueManager,
-                                    IAlbumAddedService albumAddedService,
+                                    IAlbumRefreshedService albumRefreshedService,
                                     IEventAggregator eventAggregator,
                                     Logger logger)
         {
             _albumMonitoredService = albumMonitoredService;
             _artistService = artistService;
             _commandQueueManager = commandQueueManager;
-            _albumAddedService = albumAddedService;
+            _albumRefreshedService = albumRefreshedService;
             _eventAggregator = eventAggregator;
             _logger = logger;
         }
@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Music
 
             if (addOptions == null)
             {
-                _albumAddedService.SearchForRecentlyAdded(artist.Id);
+                _albumRefreshedService.Search(artist);
                 return;
             }
 
