@@ -85,6 +85,11 @@ namespace Lidarr.Api.V1.Albums
                 .IsValidPath()
                 .SetValidator(rootFolderExistsValidator)
                 .When(s => s.Artist != null && s.Artist.Path.IsNullOrWhiteSpace());
+
+            PutValidator.RuleFor(s => s.Releases)
+                .Must(releases => releases.Count(r => r.Monitored) <= 1)
+                .WithMessage("Only one release can be monitored")
+                .When(s => s.Releases != null);
         }
 
         [HttpGet]
@@ -157,7 +162,6 @@ namespace Lidarr.Api.V1.Albums
             var model = albumResource.ToModel(album);
 
             _albumService.UpdateAlbum(model);
-            _releaseService.UpdateMany(model.AlbumReleases.Value);
 
             BroadcastResourceChange(ModelAction.Updated, model.Id);
 
