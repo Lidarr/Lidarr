@@ -861,5 +861,32 @@ namespace NzbDrone.Core.Test.ParserTests.ParsingServiceTests
             result.Should().HaveCount(1);
             result[0].Id.Should().Be(1);
         }
+
+        [Test]
+        public void should_still_use_unreliable_year_to_pick_same_title_album()
+        {
+            var criteria = new AlbumSearchCriteria
+            {
+                Artist = _artist,
+                Albums = new List<Album> { _albums[0] }
+            };
+
+            var parsed = new ParsedAlbumInfo
+            {
+                AlbumTitle = "Greatest Hits",
+                ReleaseYear = 2020,
+                YearConfidence = YearMatchConfidence.Medium,
+                ReleaseDate = "2020"
+            };
+
+            Mocker.GetMock<IAlbumService>()
+                .Setup(s => s.FindByTitleAndYear(_artist.ArtistMetadataId, "Greatest Hits", 2020))
+                .Returns(_albums[1]);
+
+            var result = Subject.GetAlbums(parsed, _artist, criteria);
+
+            result.Should().HaveCount(1);
+            result[0].Id.Should().Be(2);
+        }
     }
 }

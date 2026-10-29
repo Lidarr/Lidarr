@@ -65,29 +65,32 @@ namespace NzbDrone.Core.Parser
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // ruTracker - (Genre) [Source]? Artist - Album - Year
-            new Regex(@"^(?:\(.+?\))(?:\W*(?:\[(?<source>.+?)\]))?\W*(?<artist>.+?)(?: - )(?<album>.+?)(?: - )(?<releaseyear>\d{4})",
+            new Regex(@"^(?:\(.+?\))(?:\W*(?:\[(?<source>.+?)\]))?\W*(?<artist>.+?)(?: - )(?<album>.+?)(?: - )(?<releaseyear>(?<!\d)\d{4})(?!\d|kbps|khz)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist-Album-Version-Source-Year
             // ex. Imagine Dragons-Smoke And Mirrors-Deluxe Edition-2CD-FLAC-2015-JLM
-            new Regex(@"^(?<artist>.+?)[-](?<album>.+?)[-](?:[\(|\[]?)(?<version>.+?(?:Edition)?)(?:[\)|\]]?)[-](?<source>\d?CD|WEB).+?(?<releaseyear>\d{4})",
+            new Regex(@"^(?<artist>.+?)[-](?<album>.+?)[-](?:[\(|\[]?)(?<version>.+?(?:Edition)?)(?:[\)|\]]?)[-](?<source>\d?CD|WEB).+?(?<releaseyear>(?<![\p{L}\d])\d{4})(?!\d|kbps|khz)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist-Album-Source-Year
             // ex. Dani_Sbert-Togheter-WEB-2017-FURY
-            new Regex(@"^(?<artist>.+?)[-](?<album>.+?)[-](?<source>\d?CD|WEB).+?(?<releaseyear>\d{4})",
+            new Regex(@"^(?<artist>.+?)[-](?<album>.+?)[-](?<source>\d?CD|WEB).+?(?<releaseyear>(?<![\p{L}\d])\d{4})(?!\d|kbps|khz)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist - Album (Year) Strict
-            new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*\([^\[\]]*?(?<releaseyear>\d{4})",
+            new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*\([^\[\]]*?(?<releaseyear>(?<![\p{L}\d])\d{4})(?!\d|kbps|khz)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist - Album (Year)
-            new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*\((?<releaseyear>\d{4})",
+            new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*\((?<releaseyear>(?<!\d)\d{4})(?!\d|kbps|khz)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist - Album - Year [something]
-            new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?: - )(?<releaseyear>\d{4})\W*(?:\(|\[)",
+            new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?: - )(?<releaseyear>(?<!\d)\d{4})(?!\d|kbps|khz)\W*(?:\(|\[)",
+                RegexOptions.IgnoreCase | RegexOptions.Compiled),
+
+            new Regex(@"^(?:(?<artist>[^\[\]()]+?)(?: - )+)(?<album>[^\[\]()]+?)(?:[^\w\[\]()]*[\(\[][^\[\]()]*[\)\]])*?[^\w\[\]()]*\[(?<releaseyear>(?<!\d)\d{4})(?!\d|kbps|khz)(?:[-._]\d{1,2}[-._]\d{1,2})?(?:\]|$)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist - Album [something] or Artist - Album (something)
@@ -95,17 +98,20 @@ namespace NzbDrone.Core.Parser
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist - Album Year
-            new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?<releaseyear>\d{4})",
+            new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?<releaseyear>(?<!\d)\d{4})(?!\d|kbps|khz)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist-Album (Year) Strict
             // Hyphen no space between artist and album
-            new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)\W*\([^\[\]]*?(?<releaseyear>\d{4})",
+            new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)\W*\([^\[\]]*?(?<releaseyear>(?<![\p{L}\d])\d{4})(?!\d|kbps|khz)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist-Album (Year)
             // Hyphen no space between artist and album
-            new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)\W*\((?<releaseyear>\d{4})",
+            new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)\W*\((?<releaseyear>(?<!\d)\d{4})(?!\d|kbps|khz)",
+                RegexOptions.IgnoreCase | RegexOptions.Compiled),
+
+            new Regex(@"^(?:(?<artist>[^\[\]()]+?)(?:-)+)(?<album>[^\[\]()]+?)(?:[^\w\[\]()]*[\(\[][^\[\]()]*[\)\]])*?[^\w\[\]()]*\[(?<releaseyear>(?<!\d)\d{4})(?!\d|kbps|khz)(?:[-._]\d{1,2}[-._]\d{1,2})?(?:\]|$)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist-Album [something] or Artist-Album (something)
@@ -114,21 +120,21 @@ namespace NzbDrone.Core.Parser
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist-Album-something-Year
-            new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)(?:-.+?)(?<releaseyear>\d{4})",
+            new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)(?:-.+?)(?<releaseyear>(?<![\p{L}\d])\d{4})(?!\d|kbps|khz)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist-Album Year
             // Hyphen no space between artist and album
-            new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?:(?<album>.+?)(?:-)+)(?<releaseyear>\d{4})",
+            new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?:(?<album>.+?)(?:-)+)(?<releaseyear>(?<!\d)\d{4})(?!\d|kbps|khz)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Artist - Year - Album
             // Hyphen with no or more spaces between artist/album/year
-            new Regex(@"^(?:(?<artist>.+?)(?:-))(?<releaseyear>\d{4})(?:-)(?<album>[^-]+)",
+            new Regex(@"^(?:(?<artist>.+?)(?:-))(?<releaseyear>(?<!\d)\d{4})(?!\d|kbps|khz)(?:-)(?<album>[^-]+)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
             // Hyphen with spaces between artist - year - album
-            new Regex(@"^(?:(?<artist>.+?)(?:\s?-\s?))(?<releaseyear>\d{4})(?:\s?-\s?)(?<album>[^-]+)",
+            new Regex(@"^(?:(?<artist>.+?)(?:\s?-\s?))(?<releaseyear>(?<!\d)\d{4})(?!\d|kbps|khz)(?:\s?-\s?)(?<album>[^-]+)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
         };
 
@@ -220,6 +226,10 @@ namespace NzbDrone.Core.Parser
         private static readonly Regex DuplicateSpacesRegex = new Regex(@"\s{2,}", RegexOptions.Compiled);
 
         private static readonly Regex RequestInfoRegex = new Regex(@"\[.+?\]", RegexOptions.Compiled);
+
+        private static readonly Regex YearDateSuffixRegex = new Regex(@"^[-./]\d{1,2}[-./]\d{1,2}(?!\d)", RegexOptions.Compiled);
+
+        private static readonly Regex BracketsAndWhitespaceRegex = new Regex(@"[\s()\[\]]", RegexOptions.Compiled);
 
         private static readonly Regex AlbumYearSeparatorRegex = new Regex(@"^(?!.*\s-\s)[^\p{L}\p{N}()\[\]{}]*$", RegexOptions.Compiled);
 
@@ -441,10 +451,13 @@ namespace NzbDrone.Core.Parser
 
                 simpleTitle = CleanTorrentSuffixRegex.Replace(simpleTitle);
 
+                var titleForYearConfidence = simpleTitle;
+
                 var airDateMatch = AirDateRegex.Match(simpleTitle);
                 if (airDateMatch.Success)
                 {
                     simpleTitle = airDateMatch.Groups[1].Value + airDateMatch.Groups["airyear"].Value + "." + airDateMatch.Groups["airmonth"].Value + "." + airDateMatch.Groups["airday"].Value;
+                    titleForYearConfidence = string.Concat(simpleTitle, titleForYearConfidence.AsSpan(airDateMatch.Index + airDateMatch.Length));
                 }
 
                 var sixDigitAirDateMatch = SixDigitAirDateRegex.Match(simpleTitle);
@@ -459,6 +472,7 @@ namespace NzbDrone.Core.Parser
                         var fixedDate = string.Format("20{0}.{1}.{2}", airYear, airMonth, airDay);
 
                         simpleTitle = simpleTitle.Replace(sixDigitAirDateMatch.Groups["airdate"].Value, fixedDate);
+                        titleForYearConfidence = simpleTitle;
                     }
                 }
 
@@ -471,7 +485,7 @@ namespace NzbDrone.Core.Parser
                         Logger.Trace(regex);
                         try
                         {
-                            var result = ParseAlbumMatchCollection(match, releaseTitle);
+                            var result = ParseAlbumMatchCollection(match, releaseTitle, titleForYearConfidence);
 
                             if (result != null)
                             {
@@ -720,7 +734,7 @@ namespace NzbDrone.Core.Parser
             return parseResult.ArtistName;
         }
 
-        private static ParsedAlbumInfo ParseAlbumMatchCollection(MatchCollection matchCollection, string releaseTitle)
+        private static ParsedAlbumInfo ParseAlbumMatchCollection(MatchCollection matchCollection, string releaseTitle, string parsedTitle = null)
         {
             var artistName = matchCollection[0].Groups["artist"].Value.Replace('.', ' ').Replace('_', ' ');
             var albumTitle = matchCollection[0].Groups["album"].Value.Replace('.', ' ').Replace('_', ' ');
@@ -729,7 +743,7 @@ namespace NzbDrone.Core.Parser
             albumTitle = RequestInfoRegex.Replace(albumTitle, "").Trim(' ');
             releaseVersion = RequestInfoRegex.Replace(releaseVersion, "").Trim(' ');
 
-            var (releaseYear, yearConfidence) = ExtractYear(matchCollection[0].Groups["releaseyear"]);
+            var (releaseYear, yearConfidence) = ExtractYear(matchCollection[0].Groups["releaseyear"], parsedTitle);
 
             var result = new ParsedAlbumInfo
             {
@@ -789,7 +803,7 @@ namespace NzbDrone.Core.Parser
             return albumTitle + separator + yearGroup.Value;
         }
 
-        private static (int? Year, YearMatchConfidence Confidence) ExtractYear(Group yearGroup)
+        private static (int? Year, YearMatchConfidence Confidence) ExtractYear(Group yearGroup, string parsedTitle)
         {
             if (!yearGroup.Success)
             {
@@ -811,10 +825,65 @@ namespace NzbDrone.Core.Parser
             // High confidence for recent years in standard patterns
             if (year >= 1950 && year <= currentYear)
             {
-                return (year, YearMatchConfidence.High);
+                return (year, IsYearInDescriptiveBrackets(parsedTitle, yearGroup) ? YearMatchConfidence.Medium : YearMatchConfidence.High);
             }
 
             return (year, YearMatchConfidence.Medium);
+        }
+
+        private static bool IsYearInDescriptiveBrackets(string parsedTitle, Group yearGroup)
+        {
+            if (parsedTitle.IsNullOrWhiteSpace())
+            {
+                return false;
+            }
+
+            var openBrackets = new Stack<int>();
+
+            for (var i = 0; i < yearGroup.Index; i++)
+            {
+                if (parsedTitle[i] == '(' || parsedTitle[i] == '[')
+                {
+                    openBrackets.Push(i);
+                }
+                else if ((parsedTitle[i] == ')' || parsedTitle[i] == ']') && openBrackets.Count > 0)
+                {
+                    openBrackets.Pop();
+                }
+            }
+
+            if (openBrackets.Count == 0)
+            {
+                return false;
+            }
+
+            var outerOpenIndex = openBrackets.Last();
+            var yearEnd = yearGroup.Index + yearGroup.Length;
+            var depth = openBrackets.Count;
+            var outerCloseIndex = parsedTitle.Length;
+
+            for (var i = yearEnd; i < parsedTitle.Length; i++)
+            {
+                if (parsedTitle[i] == '(' || parsedTitle[i] == '[')
+                {
+                    depth++;
+                }
+                else if (parsedTitle[i] == ')' || parsedTitle[i] == ']')
+                {
+                    depth--;
+
+                    if (depth == 0)
+                    {
+                        outerCloseIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            var textBeforeYear = parsedTitle.Substring(outerOpenIndex + 1, yearGroup.Index - outerOpenIndex - 1);
+            var textAfterYear = YearDateSuffixRegex.Replace(parsedTitle.Substring(yearEnd, outerCloseIndex - yearEnd), string.Empty);
+
+            return BracketsAndWhitespaceRegex.Replace(textBeforeYear + textAfterYear, string.Empty).Length > 0;
         }
 
         private static bool ValidateBeforeParsing(string title)

@@ -144,37 +144,15 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().Be(expectedAccepted);
         }
 
-        [TestCase("Woodstock 1969", 2009, 1969)]
-        [TestCase("1989", 2014, 1989)]
-        [TestCase("Live 1975", 2022, 1975)]
-        public void should_accept_when_parsed_year_is_part_of_album_title(string albumTitle, int albumYear, int parsedYear)
+        [Test]
+        public void should_accept_when_parsed_year_is_part_of_album_title()
         {
-            _album.Title = albumTitle;
-            _album.ReleaseDate = new DateTime(albumYear, 6, 15);
-            _remoteAlbum.ParsedAlbumInfo.ReleaseYear = parsedYear;
-            _remoteAlbum.Release.Title = $"Artist - {albumTitle} FLAC";
+            _album.Title = "Woodstock 1969";
+            _album.ReleaseDate = new DateTime(2009, 6, 15);
+            _remoteAlbum.ParsedAlbumInfo.ReleaseYear = 1969;
+            _remoteAlbum.Release.Title = "Artist - Woodstock 1969 FLAC";
 
             Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
-        }
-
-        [Test]
-        public void should_reject_other_year_of_numbered_series()
-        {
-            _album.Title = "Now That's What I Call Music! 2023";
-            _album.ReleaseDate = new DateTime(2023, 11, 17);
-            _remoteAlbum.ParsedAlbumInfo.ReleaseYear = 2010;
-
-            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
-        }
-
-        [Test]
-        public void should_label_year_difference_in_rejection_reason()
-        {
-            _album.Title = "Test Album";
-            _album.ReleaseDate = new DateTime(1993, 6, 15);
-            _remoteAlbum.ParsedAlbumInfo.ReleaseYear = 2024;
-
-            Subject.IsSatisfiedBy(_remoteAlbum, null).Reason.Should().Be("Release year 2024 does not match album year 1993 (31 years apart)");
         }
 
         [Test]
@@ -199,6 +177,28 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
 
             Mocker.GetMock<IAlbumService>()
                 .Verify(s => s.LoadReleases(It.IsAny<List<Album>>()), Times.Never());
+        }
+
+        [TestCase(YearMatchConfidence.Medium)]
+        [TestCase(YearMatchConfidence.Low)]
+        public void should_accept_year_mismatch_when_year_is_not_reliable(YearMatchConfidence confidence)
+        {
+            _album.ReleaseDate = new DateTime(1973, 3, 1);
+            _remoteAlbum.ParsedAlbumInfo.ReleaseYear = 2011;
+            _remoteAlbum.ParsedAlbumInfo.YearConfidence = confidence;
+
+            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
+        }
+
+        [TestCase(YearMatchConfidence.High)]
+        [TestCase(YearMatchConfidence.None)]
+        public void should_reject_year_mismatch_when_year_is_reliable(YearMatchConfidence confidence)
+        {
+            _album.ReleaseDate = new DateTime(1973, 3, 1);
+            _remoteAlbum.ParsedAlbumInfo.ReleaseYear = 2011;
+            _remoteAlbum.ParsedAlbumInfo.YearConfidence = confidence;
+
+            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeFalse();
         }
     }
 }

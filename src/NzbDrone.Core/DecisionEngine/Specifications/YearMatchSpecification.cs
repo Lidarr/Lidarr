@@ -37,6 +37,12 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             {
                 var result = _yearMatcher.Match(album, parsedYear);
 
+                if (!result.IsMatch && !AlbumYearMatchingOptions.CanRejectOnYear(subject.ParsedAlbumInfo.YearConfidence))
+                {
+                    _logger.Trace("Release {0}: {1}, but the year is not reliable enough to reject", subject.Release.Title, result.RejectionReason);
+                    continue;
+                }
+
                 if (!result.IsMatch)
                 {
                     _logger.Debug("Rejecting release {0}: {1}", subject.Release.Title, result.RejectionReason);
