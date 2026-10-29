@@ -39,7 +39,8 @@ namespace NzbDrone.Core.ImportLists.Custom
                 {
                     artists.Add(new ImportListItemInfo
                     {
-                        ArtistMusicBrainzId = item.MusicBrainzId
+                        ArtistMusicBrainzId = item.ArtistId ?? item.MusicBrainzId,
+                        AlbumMusicBrainzId = item.AlbumId
                     });
                 }
 
