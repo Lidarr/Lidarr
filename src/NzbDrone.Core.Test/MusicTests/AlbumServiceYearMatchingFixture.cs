@@ -342,5 +342,18 @@ namespace NzbDrone.Core.Test.MusicTests.AlbumRepositoryTests
             album.Should().NotBeNull();
             album.Id.Should().Be(2);
         }
+
+        [Test]
+        public void should_not_let_matching_year_pick_much_weaker_title_in_inexact_match()
+        {
+            _albums.Clear();
+            _albums.Add(new Album { Id = 10, Title = "abcdefzzzz", CleanTitle = "abcdefzzzz", ReleaseDate = new DateTime(2020, 1, 1) });
+            _albums.Add(new Album { Id = 11, Title = "abcdefghzz", CleanTitle = "abcdefghzz", ReleaseDate = new DateTime(2018, 1, 1) });
+
+            var album = Subject.FindByTitleAndYearInexact(0, "abcdefghij", 2020);
+
+            album.Should().NotBeNull();
+            album.Id.Should().Be(11);
+        }
     }
 }

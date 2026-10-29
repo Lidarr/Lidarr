@@ -244,7 +244,7 @@ namespace NzbDrone.Core.Music
                 {
                     TitleScore = titleScore,
                     YearScore = yearScore,
-                    OriginalYearScore = _yearMatcher.CalculateYearScore(album.ReleaseDate, year),
+                    OriginalYearScore = _yearMatcher.CalculateOriginalYearScore(album, year),
                     MatchProb = combinedScore,
                     Album = album
                 };
@@ -260,7 +260,11 @@ namespace NzbDrone.Core.Music
             var sortedAlbums = scoredAlbums.OrderByDescending(s => s.MatchProb).ThenByDescending(s => s.OriginalYearScore).ToList();
             var topResult = sortedAlbums.First();
 
-            if (sortedAlbums.Count > 1)
+            var cleanTitle = title.CleanArtistName();
+            var topTitleIsReliable = topResult.TitleScore >= AlbumYearMatchingOptions.TitleFuzzThreshold ||
+                                     (cleanTitle.IsNotNullOrWhiteSpace() && topResult.Album.CleanTitle != null && topResult.Album.CleanTitle.Contains(cleanTitle));
+
+            if (sortedAlbums.Count > 1 && topTitleIsReliable)
             {
                 var secondResult = sortedAlbums[1];
 
