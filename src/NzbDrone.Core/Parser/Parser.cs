@@ -90,6 +90,7 @@ namespace NzbDrone.Core.Parser
             new Regex(@"^(?:(?<artist>.+?)(?: - )+)(?<album>.+?)\W*(?: - )(?<releaseyear>(?<!\d)\d{4})(?!\d|kbps|khz)\W*(?:\(|\[)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
+            // Artist - Album [Year] or Artist - Album (something) [Year]
             new Regex(@"^(?:(?<artist>[^\[\]()]+?)(?: - )+)(?<album>[^\[\]()]+?)(?:[^\w\[\]()]*[\(\[][^\[\]()]*[\)\]])*?[^\w\[\]()]*\[(?<releaseyear>(?<!\d)\d{4})(?!\d|kbps|khz)(?:[-._]\d{1,2}[-._]\d{1,2})?(?:\]|$)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
@@ -111,6 +112,7 @@ namespace NzbDrone.Core.Parser
             new Regex(@"^(?:(?<artist>.+?)(?:-)+)(?<album>.+?)\W*\((?<releaseyear>(?<!\d)\d{4})(?!\d|kbps|khz)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
+            // Artist-Album [Year] or Artist-Album (something) [Year]
             new Regex(@"^(?:(?<artist>[^\[\]()]+?)(?:-)+)(?<album>[^\[\]()]+?)(?:[^\w\[\]()]*[\(\[][^\[\]()]*[\)\]])*?[^\w\[\]()]*\[(?<releaseyear>(?<!\d)\d{4})(?!\d|kbps|khz)(?:[-._]\d{1,2}[-._]\d{1,2})?(?:\]|$)",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled),
 
@@ -230,6 +232,8 @@ namespace NzbDrone.Core.Parser
         private static readonly Regex YearDateSuffixRegex = new Regex(@"^[-./]\d{1,2}[-./]\d{1,2}(?!\d)", RegexOptions.Compiled);
 
         private static readonly Regex BracketsAndWhitespaceRegex = new Regex(@"[\s()\[\]]", RegexOptions.Compiled);
+
+        private static readonly Regex AlbumQualifierRegex = new Regex(@"\G\s*(?<qualifier>\([^()\[\]]+\))", RegexOptions.Compiled);
 
         private static readonly Regex AlbumYearSeparatorRegex = new Regex(@"^(?!.*\s-\s)[^\p{L}\p{N}()\[\]{}]*$", RegexOptions.Compiled);
 
@@ -386,7 +390,7 @@ namespace NzbDrone.Core.Parser
                 {
                     try
                     {
-                        var result = ParseAlbumMatchCollection(match, releaseTitle);
+                        var result = ParseAlbumMatchCollection(match, releaseTitle, simpleTitle);
 
                         if (result != null)
                         {
@@ -734,7 +738,7 @@ namespace NzbDrone.Core.Parser
             return parseResult.ArtistName;
         }
 
-        private static ParsedAlbumInfo ParseAlbumMatchCollection(MatchCollection matchCollection, string releaseTitle, string parsedTitle = null)
+        private static ParsedAlbumInfo ParseAlbumMatchCollection(MatchCollection matchCollection, string releaseTitle, string parsedTitle)
         {
             var artistName = matchCollection[0].Groups["artist"].Value.Replace('.', ' ').Replace('_', ' ');
             var albumTitle = matchCollection[0].Groups["album"].Value.Replace('.', ' ').Replace('_', ' ');
@@ -751,6 +755,7 @@ namespace NzbDrone.Core.Parser
                 ArtistName = artistName,
                 AlbumTitle = albumTitle,
                 AlbumTitleWithYear = releaseYear.HasValue ? GetAlbumTitleWithYear(matchCollection[0], albumTitle) : null,
+                AlbumTitleWithQualifier = GetAlbumTitleWithQualifier(matchCollection[0], albumTitle, parsedTitle),
                 ArtistTitleInfo = GetArtistTitleInfo(artistName),
                 ReleaseDate = releaseYear?.ToString() ?? string.Empty,
                 ReleaseYear = releaseYear,
@@ -780,6 +785,25 @@ namespace NzbDrone.Core.Parser
             Logger.Debug("Album Parsed. {0}", result);
 
             return result;
+        }
+
+        private static string GetAlbumTitleWithQualifier(Match match, string albumTitle, string parsedTitle)
+        {
+            var albumGroup = match.Groups["album"];
+
+            if (!albumGroup.Success || albumTitle.IsNullOrWhiteSpace() || parsedTitle.IsNullOrWhiteSpace() || albumGroup.Index + albumGroup.Length > parsedTitle.Length)
+            {
+                return null;
+            }
+
+            var qualifierMatch = AlbumQualifierRegex.Match(parsedTitle, albumGroup.Index + albumGroup.Length);
+
+            if (!qualifierMatch.Success || !qualifierMatch.Groups["qualifier"].Value.Any(char.IsLetter))
+            {
+                return null;
+            }
+
+            return $"{albumTitle} {qualifierMatch.Groups["qualifier"].Value}";
         }
 
         private static string GetAlbumTitleWithYear(Match match, string albumTitle)

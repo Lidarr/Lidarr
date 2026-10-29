@@ -152,12 +152,18 @@ namespace NzbDrone.Core.Parser
 
             var releaseYear = parsedAlbumInfo.ReleaseYear;
             var albumTitleWithYear = releaseYear.HasValue ? parsedAlbumInfo.AlbumTitleWithYear : null;
+            var artistAlbums = new Lazy<List<Album>>(() => _albumService.GetAlbumsByArtistMetadataId(artist.ArtistMetadataId));
 
-            if (albumTitleWithYear != null)
+            if (parsedAlbumInfo.AlbumTitleWithQualifier != null)
+            {
+                albumInfo = _albumService.FindByTitleAndYear(artist.ArtistMetadataId, parsedAlbumInfo.AlbumTitleWithQualifier, releaseYear);
+            }
+
+            if (albumInfo == null && albumTitleWithYear != null)
             {
                 if (searchCriteria != null)
                 {
-                    albumInfo = FindAlbumInSearchCriteria(searchCriteria.Albums, albumTitleWithYear, releaseYear);
+                    albumInfo = FindAlbumInSearchCriteria(searchCriteria.Albums, albumTitleWithYear, releaseYear, artistAlbums);
                 }
 
                 if (albumInfo == null)
@@ -168,7 +174,7 @@ namespace NzbDrone.Core.Parser
 
             if (searchCriteria != null && albumInfo == null)
             {
-                albumInfo = FindAlbumInSearchCriteria(searchCriteria.Albums, albumTitle, releaseYear);
+                albumInfo = FindAlbumInSearchCriteria(searchCriteria.Albums, albumTitle, releaseYear, artistAlbums);
             }
 
             if (albumInfo == null)
@@ -206,9 +212,14 @@ namespace NzbDrone.Core.Parser
                    !_yearMatcher.Match(album.ReleaseDate, releaseYear).IsMatch;
         }
 
-        private bool HasOtherAlbumReleasedInYear(Album album, int releaseYear, double editionScore)
+        private bool HasOtherAlbumReleasedInYear(Album album, int releaseYear, double editionScore, Lazy<List<Album>> artistAlbums)
         {
-            var otherAlbums = _albumService.GetAlbumsByArtistMetadataId(album.ArtistMetadataId)
+            if (album.CleanTitle.IsNullOrWhiteSpace())
+            {
+                return false;
+            }
+
+            var otherAlbums = artistAlbums.Value
                 .Where(a => a.Id != album.Id && a.CleanTitle == album.CleanTitle)
                 .ToList();
 
@@ -224,7 +235,7 @@ namespace NzbDrone.Core.Parser
                 .Any(r => r.IsMatch && r.ScoreAdjustment >= editionScore);
         }
 
-        private Album FindAlbumInSearchCriteria(List<Album> albums, string albumTitle, int? releaseYear)
+        private Album FindAlbumInSearchCriteria(List<Album> albums, string albumTitle, int? releaseYear, Lazy<List<Album>> artistAlbums)
         {
             var matchingAlbums = albums.Where(e => e.Title == albumTitle).ToList();
 
@@ -252,7 +263,7 @@ namespace NzbDrone.Core.Parser
                     }
 
                     if (IsEditionOnlyMatch(album, releaseYear.Value) &&
-                        HasOtherAlbumReleasedInYear(album, releaseYear.Value, matchResult.ScoreAdjustment))
+                        HasOtherAlbumReleasedInYear(album, releaseYear.Value, matchResult.ScoreAdjustment, artistAlbums))
                     {
                         _logger.Debug("Album '{0}' only matches year {1} by an edition, but another album with the same title was released that year", album.Title, releaseYear);
                         return null;
@@ -270,7 +281,7 @@ namespace NzbDrone.Core.Parser
                     {
                         Album = a,
                         YearResult = _yearMatcher.Match(a, releaseYear),
-                        OriginalYearScore = _yearMatcher.CalculateYearScore(a.ReleaseDate, releaseYear)
+                        OriginalYearScore = _yearMatcher.CalculateOriginalYearScore(a, releaseYear)
                     })
                     .Where(x => x.YearResult.IsMatch)
                     .OrderByDescending(x => x.YearResult.ScoreAdjustment)
@@ -290,7 +301,7 @@ namespace NzbDrone.Core.Parser
                     var bestMatch = rankedMatches[0];
 
                     if (IsEditionOnlyMatch(bestMatch.Album, releaseYear.Value) &&
-                        HasOtherAlbumReleasedInYear(bestMatch.Album, releaseYear.Value, bestMatch.YearResult.ScoreAdjustment))
+                        HasOtherAlbumReleasedInYear(bestMatch.Album, releaseYear.Value, bestMatch.YearResult.ScoreAdjustment, artistAlbums))
                     {
                         _logger.Debug("Album '{0}' only matches year {1} by an edition, but another album with the same title was released that year", bestMatch.Album.Title, releaseYear);
                         return null;
