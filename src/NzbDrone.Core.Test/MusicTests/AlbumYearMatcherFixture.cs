@@ -356,11 +356,13 @@ namespace NzbDrone.Core.Test.MusicTests
         }
 
         [Test]
-        public void calculate_album_year_score_should_use_edition_years()
+        public void calculate_original_year_score_should_ignore_edition_years()
         {
             var album = AlbumWithEditions(new DateTime(1973, 3, 1), new DateTime(2011, 9, 26));
 
             Subject.CalculateAlbumYearScore(album, 2011).Should().Be(AlbumYearMatchingOptions.ExactYearBonus);
+            Subject.CalculateOriginalYearScore(album, 2011).Should().BeLessThan(0);
+            Subject.CalculateOriginalYearScore(album, 1973).Should().Be(AlbumYearMatchingOptions.ExactYearBonus);
         }
 
         [Test]
@@ -383,6 +385,39 @@ namespace NzbDrone.Core.Test.MusicTests
             };
 
             Subject.CalculateAlbumYearScore(compilation2013, 2015).Should().BeGreaterThan(Subject.CalculateAlbumYearScore(compilation2010, 2015));
+        }
+
+        [TestCase("Live")]
+        [TestCase("Compilation")]
+        public void should_not_reject_live_or_compilation_album_with_distant_year(string secondaryType)
+        {
+            var album = new Album
+            {
+                Title = "Live at Wembley",
+                ReleaseDate = new DateTime(2020, 1, 1),
+                SecondaryTypes = new List<SecondaryAlbumType> { new SecondaryAlbumType { Name = secondaryType } },
+                AlbumReleases = new LazyLoaded<List<AlbumRelease>>(new List<AlbumRelease>())
+            };
+
+            var result = Subject.Match(album, 1990);
+
+            result.IsMatch.Should().BeTrue();
+            result.Confidence.Should().Be(YearMatchConfidence.Low);
+            result.ScoreAdjustment.Should().BeLessThan(0);
+        }
+
+        [Test]
+        public void should_still_reject_studio_album_with_distant_year()
+        {
+            var album = new Album
+            {
+                Title = "Studio Album",
+                ReleaseDate = new DateTime(2020, 1, 1),
+                SecondaryTypes = new List<SecondaryAlbumType>(),
+                AlbumReleases = new LazyLoaded<List<AlbumRelease>>(new List<AlbumRelease>())
+            };
+
+            Subject.Match(album, 1990).IsMatch.Should().BeFalse();
         }
     }
 }

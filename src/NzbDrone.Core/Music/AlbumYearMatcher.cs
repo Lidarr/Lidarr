@@ -83,8 +83,7 @@ namespace NzbDrone.Core.Music
             // Be more lenient for compilations and live albums
             if (album.SecondaryTypes != null && album.SecondaryTypes.Any(t => t.Name == "Compilation" || t.Name == "Live"))
             {
-                if (primaryResult.YearDifference > AlbumYearMatchingOptions.ExactMatchYearTolerance &&
-                    primaryResult.YearDifference <= AlbumYearMatchingOptions.HardRejectYearDiff)
+                if (primaryResult.YearDifference > AlbumYearMatchingOptions.ExactMatchYearTolerance)
                 {
                     return AlbumYearMatchResult.Match(primaryResult.YearDifference ?? 0, primaryResult.ScoreAdjustment, YearMatchConfidence.Low);
                 }
@@ -102,6 +101,11 @@ namespace NzbDrone.Core.Music
         public double CalculateAlbumYearScore(Album album, int? expectedYear)
         {
             return Match(album, expectedYear).ScoreAdjustment;
+        }
+
+        public double CalculateOriginalYearScore(Album album, int? expectedYear)
+        {
+            return CalculateYearScore(album.ReleaseDate, expectedYear);
         }
 
         public static bool TitleContainsYear(string title, int year)
