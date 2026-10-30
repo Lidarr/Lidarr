@@ -111,7 +111,8 @@ const trackTokens = [
 ];
 
 const releaseDateTokens = [
-  { token: '{Release Year}', example: '2016' }
+  { token: '{Release Year}', example: '2016' },
+  { token: '{Release Date}', example: '2016-01-31' }
 ];
 
 const trackTitleTokens = [
