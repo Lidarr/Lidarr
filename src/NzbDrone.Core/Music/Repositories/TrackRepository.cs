@@ -19,6 +19,7 @@ namespace NzbDrone.Core.Music
         List<Track> TracksWithoutFiles(int albumId);
         void SetFileId(List<Track> tracks);
         void DetachTrackFile(int trackFileId);
+        void LoadReleasesAndArtists(List<Track> tracks);
     }
 
     public class TrackRepository : BasicRepository<Track>, ITrackRepository
@@ -113,6 +114,59 @@ namespace NzbDrone.Core.Music
             var tracks = GetTracksByFileId(trackFileId);
             tracks.ForEach(x => x.TrackFileId = 0);
             SetFileId(tracks);
+        }
+
+        public void LoadReleasesAndArtists(List<Track> tracks)
+        {
+            var withoutRelease = tracks.Where(t => t.AlbumReleaseId > 0 && (t.AlbumRelease == null || !t.AlbumRelease.IsLoaded)).ToList();
+
+            if (withoutRelease.Any())
+            {
+                var releaseIds = withoutRelease.Select(t => t.AlbumReleaseId).Distinct().ToList();
+                var releases = _database.Query<AlbumRelease>(new SqlBuilder(_database.DatabaseType).Where<AlbumRelease>(r => releaseIds.Contains(r.Id)))
+                    .ToDictionary(r => r.Id);
+
+                var albumIds = releases.Values.Where(r => r.AlbumId > 0).Select(r => r.AlbumId).Distinct().ToList();
+                var albums = albumIds.Any()
+                    ? _database.Query<Album>(new SqlBuilder(_database.DatabaseType).Where<Album>(a => albumIds.Contains(a.Id))).ToDictionary(a => a.Id)
+                    : new Dictionary<int, Album>();
+
+                foreach (var release in releases.Values.Where(r => r.AlbumId > 0))
+                {
+                    release.Album = albums.GetValueOrDefault(release.AlbumId);
+                }
+
+                foreach (var track in withoutRelease)
+                {
+                    track.AlbumRelease = releases.GetValueOrDefault(track.AlbumReleaseId);
+                }
+            }
+
+            var withoutArtist = tracks.Where(t => t.Id > 0 && (t.Artist == null || !t.Artist.IsLoaded)).ToList();
+
+            if (withoutArtist.Any())
+            {
+                var releaseIds = withoutArtist.Select(t => t.AlbumReleaseId).Distinct().ToList();
+                var artistByRelease = new Dictionary<int, Artist>();
+
+                _database.QueryJoined<Artist, ArtistMetadata, AlbumRelease>(
+                    new SqlBuilder(_database.DatabaseType)
+                        .Join<Artist, ArtistMetadata>((a, m) => a.ArtistMetadataId == m.Id)
+                        .Join<Artist, Album>((l, r) => l.ArtistMetadataId == r.ArtistMetadataId)
+                        .Join<Album, AlbumRelease>((l, r) => l.Id == r.AlbumId)
+                        .Where<AlbumRelease>(r => releaseIds.Contains(r.Id)),
+                    (artist, metadata, release) =>
+                    {
+                        artist.Metadata = metadata;
+                        artistByRelease[release.Id] = artist;
+                        return artist;
+                    }).ToList();
+
+                foreach (var track in withoutArtist)
+                {
+                    track.Artist = artistByRelease.GetValueOrDefault(track.AlbumReleaseId);
+                }
+            }
         }
     }
 }
