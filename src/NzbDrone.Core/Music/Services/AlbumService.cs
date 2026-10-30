@@ -25,6 +25,7 @@ namespace NzbDrone.Core.Music
         Album FindByTitle(int artistMetadataId, string title);
         Album FindByTitleInexact(int artistMetadataId, string title);
         Album FindByTitleAndYear(int artistMetadataId, string title, int? year);
+        List<Album> GetAlbumsByTitleAndYear(int artistMetadataId, string title, int? year);
         Album FindByTitleAndYearInexact(int artistMetadataId, string title, int? year);
         List<Album> GetCandidates(int artistMetadataId, string title);
         List<Album> GetCandidates(int artistMetadataId, string title, int? year);
@@ -121,6 +122,12 @@ namespace NzbDrone.Core.Music
             }
 
             return album;
+        }
+
+        // Unlike FindByTitleAndYear, returns every match rather than null when there are several
+        public List<Album> GetAlbumsByTitleAndYear(int artistMetadataId, string title, int? year)
+        {
+            return _albumRepository.GetAlbumsByTitle(artistMetadataId, title).Where(album => _yearMatcher.Match(album, year).IsMatch).ToList();
         }
 
         public Album FindByTitleAndYearInexact(int artistMetadataId, string title, int? year)
