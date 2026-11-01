@@ -61,7 +61,8 @@ class Tag extends Component {
       indexerIds,
       downloadClientIds,
       autoTagIds,
-      artistIds
+      artistIds,
+      taggingProfileIds
     } = this.props;
 
     const {
@@ -77,7 +78,8 @@ class Tag extends Component {
       indexerIds.length ||
       downloadClientIds.length ||
       autoTagIds.length ||
-      artistIds.length
+      artistIds.length ||
+      taggingProfileIds.length
     );
 
     return (
@@ -139,6 +141,12 @@ class Tag extends Component {
                 label={translate('AutoTagging')}
                 count={autoTagIds.length}
               />
+
+              <TagInUse
+                label={translate('TaggingProfile')}
+                labelPlural={translate('TaggingProfiles')}
+                count={taggingProfileIds.length}
+              />
             </div> :
             null
         }
@@ -161,6 +169,7 @@ class Tag extends Component {
           indexerIds={indexerIds}
           downloadClientIds={downloadClientIds}
           autoTagIds={autoTagIds}
+          taggingProfileIds={taggingProfileIds}
           isOpen={isDetailsModalOpen}
           onModalClose={this.onDetailsModalClose}
           onDeleteTagPress={this.onDeleteTagPress}
@@ -191,6 +200,7 @@ Tag.propTypes = {
   downloadClientIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   autoTagIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   artistIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+  taggingProfileIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   onConfirmDeleteTag: PropTypes.func.isRequired
 };
 
@@ -202,7 +212,8 @@ Tag.defaultProps = {
   indexerIds: [],
   downloadClientIds: [],
   autoTagIds: [],
-  artistIds: []
+  artistIds: [],
+  taggingProfileIds: []
 };
 
 export default Tag;
