@@ -10,6 +10,7 @@ using NzbDrone.Core.Download.TrackedDownloads;
 using NzbDrone.Core.History;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.TrackImport;
+using NzbDrone.Core.MediaFiles.TrackImport.Specifications;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser;
@@ -139,6 +140,87 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
 
             Mocker.GetMock<IEventAggregator>()
                 .Verify(v => v.PublishEvent<DownloadCompletedEvent>(It.IsAny<DownloadCompletedEvent>()), Times.Never());
+
+            AssertNotImported();
+        }
+
+        private List<ImportResult> GivenFilterRejectedImport(bool autoBlocklist)
+        {
+            var album = CreateAlbum(1, 1);
+            album.AutoBlocklistUnwantedRelease = autoBlocklist;
+
+            var results = new List<ImportResult>
+            {
+                new ImportResult(
+                    new ImportDecision<LocalTrack>(
+                        new LocalTrack { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic(), Album = album },
+                        new Rejection(ReleaseWantedSpecification.FilterRejectionReason)),
+                    ReleaseWantedSpecification.FilterRejectionReason),
+
+                new ImportResult(
+                    new ImportDecision<LocalTrack>(
+                        new LocalTrack { Path = @"C:\TestPath\Droned.S01E02.mkv".AsOsAgnostic(), Album = album },
+                        new Rejection(ReleaseWantedSpecification.FilterRejectionReason)),
+                    ReleaseWantedSpecification.FilterRejectionReason)
+            };
+
+            Mocker.GetMock<IDownloadedTracksImportService>()
+                .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()))
+                .Returns(results);
+
+            return results;
+        }
+
+        [Test]
+        public void should_mark_as_failed_when_release_filter_rejects_and_album_asks_for_blocklist()
+        {
+            GivenFilterRejectedImport(autoBlocklist: true);
+
+            Subject.Import(_trackedDownload);
+
+            Mocker.GetMock<IFailedDownloadService>()
+                .Verify(v => v.MarkAsFailed(_trackedDownload, It.IsAny<string>(), false), Times.Once());
+
+            _trackedDownload.State.Should().Be(TrackedDownloadState.DownloadFailed);
+
+            Mocker.GetMock<IEventAggregator>()
+                .Verify(v => v.PublishEvent<DownloadCompletedEvent>(It.IsAny<DownloadCompletedEvent>()), Times.Never());
+        }
+
+        [Test]
+        public void should_not_mark_as_failed_when_release_filter_rejects_but_album_does_not_ask_for_blocklist()
+        {
+            GivenFilterRejectedImport(autoBlocklist: false);
+
+            Subject.Import(_trackedDownload);
+
+            Mocker.GetMock<IFailedDownloadService>()
+                .Verify(v => v.MarkAsFailed(It.IsAny<TrackedDownload>(), It.IsAny<string>(), It.IsAny<bool>()), Times.Never());
+
+            AssertNotImported();
+        }
+
+        [Test]
+        public void should_not_mark_as_failed_when_rejection_is_not_from_release_filter()
+        {
+            var album = CreateAlbum(1, 1);
+            album.AutoBlocklistUnwantedRelease = true;
+
+            Mocker.GetMock<IDownloadedTracksImportService>()
+                .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()))
+                .Returns(new List<ImportResult>
+                {
+                    new ImportResult(
+                        new ImportDecision<LocalTrack>(
+                            new LocalTrack { Path = @"C:\TestPath\Droned.S01E01.mkv".AsOsAgnostic(), Album = album },
+                            new Rejection("Rejected!")),
+                        "Test Failure")
+                });
+
+            Subject.Import(_trackedDownload);
+
+            Mocker.GetMock<IFailedDownloadService>()
+                .Verify(v => v.MarkAsFailed(It.IsAny<TrackedDownload>(), It.IsAny<string>(), It.IsAny<bool>()), Times.Never());
 
             AssertNotImported();
         }

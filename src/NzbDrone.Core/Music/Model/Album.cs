@@ -21,6 +21,8 @@ namespace NzbDrone.Core.Music
             Ratings = new Ratings();
             Artist = new Artist();
             AddOptions = new AddAlbumOptions();
+            PreferredTrackCounts = new List<int>();
+            PreferredMediumCounts = new List<int>();
         }
 
         // These correspond to columns in the Albums table
@@ -45,6 +47,18 @@ namespace NzbDrone.Core.Music
         public int ProfileId { get; set; }
         public bool Monitored { get; set; }
         public bool AnyReleaseOk { get; set; }
+
+        // Release filter: when non-empty, only releases whose track count / audio medium count
+        // is in the list are considered wanted. Empty means any value is acceptable.
+        [MemberwiseEqualityIgnore]
+        public List<int> PreferredTrackCounts { get; set; }
+        [MemberwiseEqualityIgnore]
+        public List<int> PreferredMediumCounts { get; set; }
+
+        // When a completed download is identified as a release excluded by the filter,
+        // mark it failed (blocklist, remove from client, search again) instead of leaving it in the queue.
+        [MemberwiseEqualityIgnore]
+        public bool AutoBlocklistUnwantedRelease { get; set; }
         public DateTime? LastInfoSync { get; set; }
         public DateTime Added { get; set; }
         [MemberwiseEqualityIgnore]
@@ -95,6 +109,9 @@ namespace NzbDrone.Core.Music
             ProfileId = other.ProfileId;
             Monitored = other.Monitored;
             AnyReleaseOk = other.AnyReleaseOk;
+            PreferredTrackCounts = other.PreferredTrackCounts;
+            PreferredMediumCounts = other.PreferredMediumCounts;
+            AutoBlocklistUnwantedRelease = other.AutoBlocklistUnwantedRelease;
             LastInfoSync = other.LastInfoSync;
             LastSearchTime = other.LastSearchTime;
             Added = other.Added;
@@ -108,6 +125,9 @@ namespace NzbDrone.Core.Music
             AddOptions = other.AddOptions;
             Monitored = other.Monitored;
             AnyReleaseOk = other.AnyReleaseOk;
+            PreferredTrackCounts = other.PreferredTrackCounts ?? new List<int>();
+            PreferredMediumCounts = other.PreferredMediumCounts ?? new List<int>();
+            AutoBlocklistUnwantedRelease = other.AutoBlocklistUnwantedRelease;
         }
     }
 }

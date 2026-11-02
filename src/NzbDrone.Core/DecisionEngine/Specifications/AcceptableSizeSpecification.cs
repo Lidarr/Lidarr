@@ -2,6 +2,7 @@ using System.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Qualities;
 
@@ -35,8 +36,8 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
 
             var qualityDefinition = _qualityDefinitionService.Get(quality);
 
-            var minReleaseDuration = subject.Albums.Select(a => a.AlbumReleases.Value.Where(r => r.Monitored || a.AnyReleaseOk).Select(r => r.Duration).MinOrDefault()).Sum() / 1000;
-            var maxReleaseDuration = subject.Albums.Select(a => a.AlbumReleases.Value.Where(r => r.Monitored || a.AnyReleaseOk).Select(r => r.Duration).MaxOrDefault()).Sum() / 1000;
+            var minReleaseDuration = subject.Albums.Select(a => a.GetWantedReleases().Select(r => r.Duration).MinOrDefault()).Sum() / 1000;
+            var maxReleaseDuration = subject.Albums.Select(a => a.GetWantedReleases().Select(r => r.Duration).MaxOrDefault()).Sum() / 1000;
 
             if (qualityDefinition.MinSize.HasValue)
             {
