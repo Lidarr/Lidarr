@@ -230,14 +230,14 @@ namespace NzbDrone.Core.Configuration
 
         public bool ImportExtraFiles
         {
-            get { return GetValueBoolean("ImportExtraFiles", false); }
+            get { return GetValueBoolean("ImportExtraFiles", true); }
 
             set { SetValue("ImportExtraFiles", value); }
         }
 
         public string ExtraFileExtensions
         {
-            get { return GetValue("ExtraFileExtensions", "srt"); }
+            get { return GetValue("ExtraFileExtensions", "log, cue, nfo, jpg, jpeg, png"); }
 
             set { SetValue("ExtraFileExtensions", value); }
         }
