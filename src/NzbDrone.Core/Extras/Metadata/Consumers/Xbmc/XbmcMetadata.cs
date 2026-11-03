@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -155,7 +156,7 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
 
                 albumElement.Add(new XElement("title", album.Title));
 
-                if (album.Ratings != null && album.Ratings.Votes > 0)
+                if (album.Ratings is { Votes: > 0 })
                 {
                     albumElement.Add(new XElement("rating", album.Ratings.Value));
                 }
@@ -163,8 +164,13 @@ namespace NzbDrone.Core.Extras.Metadata.Consumers.Xbmc
                 albumElement.Add(new XElement("musicbrainzreleasegroupid", album.ForeignAlbumId));
                 albumElement.Add(new XElement("musicbrainzalbumid", albumRelease.ForeignReleaseId));
                 albumElement.Add(new XElement("artistdesc", artist.Metadata.Value.Overview));
-                albumElement.Add(new XElement("releasedate", album.ReleaseDate.Value.ToShortDateString()));
-                albumElement.Add(new XElement("label", albumRelease.Label));
+
+                if (album.ReleaseDate.HasValue)
+                {
+                    albumElement.Add(new XElement("releasedate", album.ReleaseDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)));
+                }
+
+                albumElement.Add(new XElement("label", string.Join(" / ", albumRelease.Label.Distinct(StringComparer.InvariantCultureIgnoreCase))));
 
                 var doc = new XDocument(albumElement);
                 doc.Save(xw);
