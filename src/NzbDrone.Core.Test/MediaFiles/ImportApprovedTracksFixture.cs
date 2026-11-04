@@ -5,6 +5,7 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.Download;
@@ -218,6 +219,34 @@ namespace NzbDrone.Core.Test.MediaFiles
 
             Mocker.GetMock<IMediaFileService>()
                 .Verify(v => v.Delete(It.IsAny<TrackFile>(), DeleteMediaFileReason.ManualOverride), Times.Once());
+        }
+
+        [Test]
+        public void should_recycle_existing_track_files_in_the_root_folder_when_replacing_existing()
+        {
+            var decision = _approvedDecisions.First();
+            var rootFolder = Path.GetDirectoryName(decision.Item.Artist.Path);
+            var existingFile = new TrackFile { Id = 1, Path = Path.Combine(rootFolder, "Alien Ant Farm - Pilot.mp3") };
+
+            Mocker.GetMock<IMediaFileService>()
+                .Setup(s => s.GetFilesByAlbum(It.IsAny<int>()))
+                .Returns(new List<TrackFile> { existingFile });
+
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(s => s.GetParentFolder(It.IsAny<string>()))
+                .Returns<string>(c => Path.GetDirectoryName(c));
+
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(s => s.FileExists(existingFile.Path))
+                .Returns(true);
+
+            Subject.Import(new List<ImportDecision<LocalTrack>> { decision }, true);
+
+            Mocker.GetMock<IRecycleBinProvider>()
+                .Verify(v => v.DeleteFile(existingFile.Path, string.Empty), Times.Once());
+
+            Mocker.GetMock<IMediaFileService>()
+                .Verify(v => v.Delete(existingFile, DeleteMediaFileReason.Upgrade), Times.Once());
         }
 
         [Test]
