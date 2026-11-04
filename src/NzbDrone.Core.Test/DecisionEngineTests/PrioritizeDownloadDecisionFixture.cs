@@ -647,5 +647,26 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             var qualifiedReports = Subject.PrioritizeDecisions(decisions);
             qualifiedReports.First().RemoteAlbum.ParsedAlbumInfo.Quality.Quality.Should().Be(Quality.FLAC);
         }
+
+        [Test]
+        public void should_prefer_release_matching_edition_year_over_close_original_year()
+        {
+            var album = GivenAlbum(1);
+            album.ReleaseDate = new DateTime(1973, 3, 1);
+            album.AlbumReleases = new List<AlbumRelease> { new AlbumRelease { ReleaseDate = new DateTime(2011, 9, 26) } };
+
+            var remoteAlbum1 = GivenRemoteAlbum(new List<Album> { album }, new QualityModel(Quality.FLAC));
+            var remoteAlbum2 = GivenRemoteAlbum(new List<Album> { album }, new QualityModel(Quality.FLAC));
+
+            remoteAlbum1.ParsedAlbumInfo.ReleaseYear = 1975;
+            remoteAlbum2.ParsedAlbumInfo.ReleaseYear = 2011;
+
+            var decisions = new List<DownloadDecision>();
+            decisions.Add(new DownloadDecision(remoteAlbum1));
+            decisions.Add(new DownloadDecision(remoteAlbum2));
+
+            var qualifiedReports = Subject.PrioritizeDecisions(decisions);
+            qualifiedReports.First().RemoteAlbum.ParsedAlbumInfo.ReleaseYear.Should().Be(2011);
+        }
     }
 }

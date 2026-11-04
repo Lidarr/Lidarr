@@ -24,4 +24,6 @@ interface Album extends ModelBase {
   isSaving?: boolean;
 }
 
+export type ArtistAlbum = Omit<Album, 'artist'>;
+
 export default Album;

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Lidarr.Api.V1.Albums;
 using Lidarr.Http;
 using Lidarr.Http.Extensions;
@@ -49,7 +50,7 @@ namespace Lidarr.Api.V1.Wanted
                 pagingSpec.FilterExpressions.Add(v => v.Monitored == false || v.Artist.Value.Monitored == false);
             }
 
-            return pagingSpec.ApplyToPage(_albumCutoffService.AlbumsWhereCutoffUnmet, v => MapToResource(v, includeArtist));
+            return pagingSpec.ApplyToPage(_albumCutoffService.AlbumsWhereCutoffUnmet, (List<Album> albums) => MapToResource(albums, includeArtist, perArtistStatistics: true));
         }
     }
 }

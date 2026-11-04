@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using NzbDrone.Core.Datastore;
@@ -79,7 +80,7 @@ namespace NzbDrone.Core.Test.MusicTests
 
             result.IsMatch.Should().BeFalse();
             result.YearDifference.Should().Be(10);
-            result.RejectionReason.Should().Contain("does not match");
+            result.RejectionReason.Should().Be("Release year 2010 does not match album year 2020 (10 years apart)");
         }
 
         [Test]
@@ -198,6 +199,225 @@ namespace NzbDrone.Core.Test.MusicTests
             var result = Subject.Match(album, 2015);
 
             result.IsMatch.Should().BeTrue();
+        }
+
+        [TestCase("Woodstock 1969", 2009, 1969)]
+        [TestCase("1989", 2014, 1989)]
+        [TestCase("Live 1975", 2022, 1975)]
+        [TestCase("1988 Rewind Edition", 2023, 1988)]
+        public void should_match_when_parsed_year_is_part_of_album_title(string title, int albumYear, int parsedYear)
+        {
+            var album = new Album { Title = title, ReleaseDate = new DateTime(albumYear, 6, 15) };
+
+            var result = Subject.Match(album, parsedYear);
+
+            result.IsMatch.Should().BeTrue();
+            result.ScoreAdjustment.Should().Be(AlbumYearMatchingOptions.ExactYearBonus);
+        }
+
+        [TestCase("Album 19690")]
+        [TestCase("SR119694")]
+        [TestCase("Now That's What I Call Music! 2023")]
+        public void should_not_match_when_year_is_not_standalone_in_album_title(string title)
+        {
+            var album = new Album { Title = title, ReleaseDate = new DateTime(2023, 6, 15) };
+
+            var result = Subject.Match(album, 1969);
+
+            result.IsMatch.Should().BeFalse();
+        }
+
+        [Test]
+        public void should_not_fail_when_album_title_is_null()
+        {
+            var album = new Album { Title = null, ReleaseDate = new DateTime(2020, 6, 15) };
+
+            var result = Subject.Match(album, 2010);
+
+            result.IsMatch.Should().BeFalse();
+        }
+
+        [Test]
+        public void calculate_album_year_score_should_return_bonus_when_year_is_part_of_album_title()
+        {
+            var album = new Album { Title = "Woodstock 1969", ReleaseDate = new DateTime(2009, 6, 15) };
+
+            Subject.CalculateAlbumYearScore(album, 1969).Should().Be(AlbumYearMatchingOptions.ExactYearBonus);
+        }
+
+        [Test]
+        public void calculate_album_year_score_should_use_release_date_when_year_is_not_in_album_title()
+        {
+            var album = new Album { Title = "Woodstock", ReleaseDate = new DateTime(2009, 6, 15) };
+
+            Subject.CalculateAlbumYearScore(album, 2009).Should().Be(AlbumYearMatchingOptions.ExactYearBonus);
+            Subject.CalculateAlbumYearScore(album, 1969).Should().BeLessThan(0);
+        }
+
+        private static Album AlbumWithEditions(DateTime? originalDate, params DateTime?[] editionDates)
+        {
+            return new Album
+            {
+                Title = "Test",
+                ReleaseDate = originalDate,
+                AlbumReleases = new LazyLoaded<List<AlbumRelease>>(editionDates.Select(d => new AlbumRelease { ReleaseDate = d, Monitored = true }).ToList())
+            };
+        }
+
+        [Test]
+        public void should_match_unmonitored_edition_year()
+        {
+            var album = AlbumWithEditions(new DateTime(1973, 3, 1), new DateTime(2011, 9, 26));
+            album.AlbumReleases.Value.ForEach(r => r.Monitored = false);
+
+            var result = Subject.Match(album, 2011);
+
+            result.IsMatch.Should().BeTrue();
+            result.ScoreAdjustment.Should().Be(AlbumYearMatchingOptions.ExactYearBonus);
+        }
+
+        [Test]
+        public void should_use_same_tolerance_for_edition_years_as_for_original_year()
+        {
+            var album = AlbumWithEditions(new DateTime(1990, 1, 1), new DateTime(2020, 1, 1));
+
+            var result = Subject.Match(album, 2022);
+
+            result.IsMatch.Should().BeTrue();
+            result.YearDifference.Should().Be(2);
+        }
+
+        [Test]
+        public void should_pick_best_edition_year_regardless_of_order()
+        {
+            var album = AlbumWithEditions(new DateTime(1990, 1, 1), new DateTime(2019, 1, 1), new DateTime(2020, 1, 1));
+
+            var result = Subject.Match(album, 2020);
+
+            result.YearDifference.Should().Be(0);
+            result.ScoreAdjustment.Should().Be(AlbumYearMatchingOptions.ExactYearBonus);
+        }
+
+        [Test]
+        public void should_not_let_undated_edition_bypass_year_check()
+        {
+            var album = AlbumWithEditions(new DateTime(1990, 1, 1), (DateTime?)null);
+
+            var result = Subject.Match(album, 2020);
+
+            result.IsMatch.Should().BeFalse();
+        }
+
+        [Test]
+        public void should_match_dated_edition_when_original_date_is_unknown()
+        {
+            var album = AlbumWithEditions(null, new DateTime(2020, 1, 1));
+
+            var result = Subject.Match(album, 2020);
+
+            result.ScoreAdjustment.Should().Be(AlbumYearMatchingOptions.ExactYearBonus);
+        }
+
+        [Test]
+        public void should_reject_when_original_date_is_unknown_and_editions_are_far_off()
+        {
+            var album = AlbumWithEditions(null, new DateTime(2000, 1, 1));
+
+            var result = Subject.Match(album, 2020);
+
+            result.IsMatch.Should().BeFalse();
+        }
+
+        [Test]
+        public void should_report_closest_year_in_rejection_reason()
+        {
+            var album = AlbumWithEditions(new DateTime(1973, 3, 1), new DateTime(2003, 1, 1));
+
+            var result = Subject.Match(album, 2011);
+
+            result.RejectionReason.Should().Be("Release year 2011 does not match album year 2003 (8 years apart)");
+        }
+
+        [Test]
+        public void should_keep_exact_bonus_for_live_album_with_exact_year()
+        {
+            var album = new Album
+            {
+                Title = "Live at Wembley",
+                ReleaseDate = new DateTime(2020, 1, 1),
+                SecondaryTypes = new List<SecondaryAlbumType> { new SecondaryAlbumType { Name = "Live" } },
+                AlbumReleases = new LazyLoaded<List<AlbumRelease>>(new List<AlbumRelease>())
+            };
+
+            var result = Subject.Match(album, 2020);
+
+            result.ScoreAdjustment.Should().Be(AlbumYearMatchingOptions.ExactYearBonus);
+            result.Confidence.Should().Be(YearMatchConfidence.High);
+        }
+
+        [Test]
+        public void calculate_original_year_score_should_ignore_edition_years()
+        {
+            var album = AlbumWithEditions(new DateTime(1973, 3, 1), new DateTime(2011, 9, 26));
+
+            Subject.CalculateAlbumYearScore(album, 2011).Should().Be(AlbumYearMatchingOptions.ExactYearBonus);
+            Subject.CalculateOriginalYearScore(album, 2011).Should().BeLessThan(0);
+            Subject.CalculateOriginalYearScore(album, 1973).Should().Be(AlbumYearMatchingOptions.ExactYearBonus);
+        }
+
+        [Test]
+        public void should_keep_year_distance_score_for_compilations()
+        {
+            var compilation2010 = new Album
+            {
+                Title = "Greatest Hits",
+                ReleaseDate = new DateTime(2010, 1, 1),
+                SecondaryTypes = new List<SecondaryAlbumType> { new SecondaryAlbumType { Name = "Compilation" } },
+                AlbumReleases = new LazyLoaded<List<AlbumRelease>>(new List<AlbumRelease>())
+            };
+
+            var compilation2013 = new Album
+            {
+                Title = "Greatest Hits",
+                ReleaseDate = new DateTime(2013, 1, 1),
+                SecondaryTypes = new List<SecondaryAlbumType> { new SecondaryAlbumType { Name = "Compilation" } },
+                AlbumReleases = new LazyLoaded<List<AlbumRelease>>(new List<AlbumRelease>())
+            };
+
+            Subject.CalculateAlbumYearScore(compilation2013, 2015).Should().BeGreaterThan(Subject.CalculateAlbumYearScore(compilation2010, 2015));
+        }
+
+        [TestCase("Live")]
+        [TestCase("Compilation")]
+        public void should_not_reject_live_or_compilation_album_with_distant_year(string secondaryType)
+        {
+            var album = new Album
+            {
+                Title = "Live at Wembley",
+                ReleaseDate = new DateTime(2020, 1, 1),
+                SecondaryTypes = new List<SecondaryAlbumType> { new SecondaryAlbumType { Name = secondaryType } },
+                AlbumReleases = new LazyLoaded<List<AlbumRelease>>(new List<AlbumRelease>())
+            };
+
+            var result = Subject.Match(album, 1990);
+
+            result.IsMatch.Should().BeTrue();
+            result.Confidence.Should().Be(YearMatchConfidence.Low);
+            result.ScoreAdjustment.Should().BeLessThan(0);
+        }
+
+        [Test]
+        public void should_still_reject_studio_album_with_distant_year()
+        {
+            var album = new Album
+            {
+                Title = "Studio Album",
+                ReleaseDate = new DateTime(2020, 1, 1),
+                SecondaryTypes = new List<SecondaryAlbumType>(),
+                AlbumReleases = new LazyLoaded<List<AlbumRelease>>(new List<AlbumRelease>())
+            };
+
+            Subject.Match(album, 1990).IsMatch.Should().BeFalse();
         }
     }
 }
