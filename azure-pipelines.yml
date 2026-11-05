@@ -116,12 +116,12 @@ stages:
             sed -i.ORI 's/osx-x64/osx-x64;freebsd-x64/' "$BUNDLEDVERSIONS"
           fi
         displayName: Enable Extra Platform Support
-      - bash: dotnet nuget add source --configfile src/NuGet.config --name gh-openur https://nuget.pkg.github.com/openur/index.json --username "$OPENUR_USERNAME" --password "$OPENUR_TOKEN" --store-password-in-clear-text
-        env:
-          OPENUR_USERNAME: $(openurusername)
-          OPENUR_TOKEN: $(openurtoken)
-        displayName: Add Openur Feed
-      - bash: ./build.sh --backend --enable-extra-platforms
+#      - bash: dotnet nuget add source --configfile src/NuGet.config --name gh-openur https://nuget.pkg.github.com/openur/index.json --username "$OPENUR_USERNAME" --password "$OPENUR_TOKEN" --store-password-in-clear-text
+#        env:
+#          OPENUR_USERNAME: $(openurusername)
+#          OPENUR_TOKEN: $(openurtoken)
+#        displayName: Add Openur Feed
+      - bash: ./build.sh --backend
         displayName: Build Lidarr Backend
       - bash: |
           find ${OUTPUTFOLDER} -type f ! -path "*/publish/*" -exec rm -rf {} \;
@@ -146,10 +146,10 @@ stages:
         artifact: linux-musl-x64-tests
         displayName: Publish linux-musl-x64 Test Package
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
-      - publish: '$(testsFolder)/net10.0/freebsd-x64/publish'
-        artifact: freebsd-x64-tests
-        displayName: Publish freebsd-x64 Test Package
-        condition: and(succeeded(), eq(variables['osName'], 'Windows'))
+#      - publish: '$(testsFolder)/net10.0/freebsd-x64/publish'
+#        artifact: freebsd-x64-tests
+#        displayName: Publish freebsd-x64 Test Package
+#        condition: and(succeeded(), eq(variables['osName'], 'Windows'))
       - publish: '$(testsFolder)/net10.0/osx-x64/publish'
         artifact: osx-x64-tests
         displayName: Publish osx-x64 Test Package
@@ -255,7 +255,7 @@ stages:
           artifactName: WindowsFrontend
           targetPath: _output
         displayName: Fetch Frontend
-      - bash: ./build.sh --packages --enable-extra-platforms
+      - bash: ./build.sh --packages
         displayName: Create Packages
       - bash: |
           find . -name "fpcalc" -exec chmod a+x {} \;
@@ -354,14 +354,14 @@ stages:
           tarCompression: 'gz'
           includeRootFolder: false
           rootFolderOrFile: $(artifactsFolder)/linux-musl-arm64/net10.0
-      - task: ArchiveFiles@2
-        displayName: Create freebsd-x64 tar
-        inputs:
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Lidarr.$(buildName).freebsd-core-x64.tar.gz'
-          archiveType: 'tar'
-          tarCompression: 'gz'
-          includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/freebsd-x64/net10.0
+#      - task: ArchiveFiles@2
+#        displayName: Create freebsd-x64 tar
+#        inputs:
+#          archiveFile: '$(Build.ArtifactStagingDirectory)/Lidarr.$(buildName).freebsd-core-x64.tar.gz'
+#          archiveType: 'tar'
+#          tarCompression: 'gz'
+#          includeRootFolder: false
+#          rootFolderOrFile: $(artifactsFolder)/freebsd-x64/net10.0
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: 'Packages'
         displayName: Publish Packages
@@ -436,11 +436,11 @@ stages:
             testName: 'linux-x64'
             poolName: 'Azure Pipelines'
             imageName: ${{ variables.linuxImage }}
-          FreebsdCore:
-            osName: 'Linux'
-            testName: 'freebsd-x64'
-            poolName: 'FreeBSD'
-            imageName:
+#          FreebsdCore:
+#            osName: 'Linux'
+#            testName: 'freebsd-x64'
+#            poolName: 'FreeBSD'
+#            imageName:
 
       pool:
         name: $(poolName)
@@ -855,51 +855,51 @@ stages:
             failTaskOnFailedTests: true
           displayName: Publish Test Results
 
-    - job: Integration_FreeBSD
-      displayName: Integration Native FreeBSD
-      dependsOn: Prepare
-      condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
-      workspace:
-        clean: all
-      variables:
-        pattern: 'Lidarr.*.freebsd-core-x64.tar.gz'
-      pool:
-        name: 'FreeBSD'
-
-      steps:
-      - checkout: none
-      - task: DownloadPipelineArtifact@2
-        displayName: Download Test Artifact
-        inputs:
-          buildType: 'current'
-          artifactName: 'freebsd-x64-tests'
-          targetPath: $(testsFolder)
-      - task: DownloadPipelineArtifact@2
-        displayName: Download Build Artifact
-        inputs:
-          buildType: 'current'
-          artifactName: Packages
-          itemPattern: '**/$(pattern)'
-          targetPath: $(Build.ArtifactStagingDirectory)
-      - bash: |
-          mkdir -p ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin
-          tar xf ${BUILD_ARTIFACTSTAGINGDIRECTORY}/$(pattern) -C ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin
-        displayName: Extract Package
-      - bash: |
-          mkdir -p ./bin/
-          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
-        displayName: Move Package Contents
-      - bash: |
-          chmod a+x ${TESTSFOLDER}/test.sh
-          ${TESTSFOLDER}/test.sh Linux Integration Test
-        displayName: Run Integration Tests
-      - task: PublishTestResults@2
-        inputs:
-          testResultsFormat: 'NUnit'
-          testResultsFiles: '**/TestResult.xml'
-          testRunTitle: 'FreeBSD Integration Tests'
-          failTaskOnFailedTests: true
-        displayName: Publish Test Results
+#    - job: Integration_FreeBSD
+#      displayName: Integration Native FreeBSD
+#      dependsOn: Prepare
+#      condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
+#      workspace:
+#        clean: all
+#      variables:
+#        pattern: 'Lidarr.*.freebsd-core-x64.tar.gz'
+#      pool:
+#        name: 'FreeBSD'
+#
+#      steps:
+#      - checkout: none
+#      - task: DownloadPipelineArtifact@2
+#        displayName: Download Test Artifact
+#        inputs:
+#          buildType: 'current'
+#          artifactName: 'freebsd-x64-tests'
+#          targetPath: $(testsFolder)
+#      - task: DownloadPipelineArtifact@2
+#        displayName: Download Build Artifact
+#        inputs:
+#          buildType: 'current'
+#          artifactName: Packages
+#          itemPattern: '**/$(pattern)'
+#          targetPath: $(Build.ArtifactStagingDirectory)
+#      - bash: |
+#          mkdir -p ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin
+#          tar xf ${BUILD_ARTIFACTSTAGINGDIRECTORY}/$(pattern) -C ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin
+#        displayName: Extract Package
+#      - bash: |
+#          mkdir -p ./bin/
+#          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Lidarr/. ./bin/
+#        displayName: Move Package Contents
+#      - bash: |
+#          chmod a+x ${TESTSFOLDER}/test.sh
+#          ${TESTSFOLDER}/test.sh Linux Integration Test
+#        displayName: Run Integration Tests
+#      - task: PublishTestResults@2
+#        inputs:
+#          testResultsFormat: 'NUnit'
+#          testResultsFiles: '**/TestResult.xml'
+#          testRunTitle: 'FreeBSD Integration Tests'
+#          failTaskOnFailedTests: true
+#        displayName: Publish Test Results
 
     - job: Integration_Docker
       displayName: Integration Docker
