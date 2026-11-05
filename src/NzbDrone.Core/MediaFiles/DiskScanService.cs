@@ -44,6 +44,7 @@ namespace NzbDrone.Core.MediaFiles
         private readonly IImportApprovedTracks _importApprovedTracks;
         private readonly IArtistService _artistService;
         private readonly IMediaFileTableCleanupService _mediaFileTableCleanupService;
+        private readonly ITrackFileFilter _trackFileFilter;
         private readonly IRootFolderService _rootFolderService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
@@ -56,6 +57,7 @@ namespace NzbDrone.Core.MediaFiles
                                IArtistService artistService,
                                IRootFolderService rootFolderService,
                                IMediaFileTableCleanupService mediaFileTableCleanupService,
+                               ITrackFileFilter trackFileFilter,
                                IEventAggregator eventAggregator,
                                Logger logger)
         {
@@ -66,6 +68,7 @@ namespace NzbDrone.Core.MediaFiles
             _importApprovedTracks = importApprovedTracks;
             _artistService = artistService;
             _mediaFileTableCleanupService = mediaFileTableCleanupService;
+            _trackFileFilter = trackFileFilter;
             _rootFolderService = rootFolderService;
             _eventAggregator = eventAggregator;
             _logger = logger;
@@ -300,9 +303,21 @@ namespace NzbDrone.Core.MediaFiles
 
         public List<IFileInfo> FilterFiles(string basePath, IEnumerable<IFileInfo> files)
         {
-            return files.Where(file => !ExcludedSubFoldersRegex.IsMatch(basePath.GetRelativePath(file.FullName)))
-                        .Where(file => !ExcludedFilesRegex.IsMatch(file.Name))
-                        .ToList();
+            return files
+                .Where(file => !ExcludedSubFoldersRegex.IsMatch(basePath.GetRelativePath(file.FullName)))
+                .Where(file =>
+                {
+                    var excluded = _trackFileFilter.IsExcluded(basePath, file.FullName);
+
+                    if (excluded)
+                    {
+                        _logger.Trace("Excluding file '{0}' due to excluded folder match", file.FullName);
+                    }
+
+                    return !excluded;
+                })
+                .Where(file => !ExcludedFilesRegex.IsMatch(file.Name))
+                    .ToList();
         }
 
         public void Execute(RescanFoldersCommand message)
