@@ -24,6 +24,7 @@ function TagDetailsModalContent(props) {
     indexers,
     downloadClients,
     autoTags,
+    taggingProfiles,
     onModalClose,
     onDeleteTagPress
   } = props;
@@ -208,6 +209,22 @@ function TagDetailsModalContent(props) {
             </FieldSet> :
             null
         }
+
+        {
+          taggingProfiles.length ?
+            <FieldSet legend={translate('TaggingProfiles')}>
+              {
+                taggingProfiles.map((item) => {
+                  return (
+                    <div key={item.id}>
+                      {item.name}
+                    </div>
+                  );
+                })
+              }
+            </FieldSet> :
+            null
+        }
       </ModalBody>
 
       <ModalFooter>
@@ -244,6 +261,7 @@ TagDetailsModalContent.propTypes = {
   indexers: PropTypes.arrayOf(PropTypes.object).isRequired,
   downloadClients: PropTypes.arrayOf(PropTypes.object).isRequired,
   autoTags: PropTypes.arrayOf(PropTypes.object).isRequired,
+  taggingProfiles: PropTypes.arrayOf(PropTypes.object).isRequired,
   onModalClose: PropTypes.func.isRequired,
   onDeleteTagPress: PropTypes.func.isRequired
 };

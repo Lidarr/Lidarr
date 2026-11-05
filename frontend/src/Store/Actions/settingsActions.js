@@ -18,7 +18,6 @@ import languages from './Settings/languages';
 import mediaManagement from './Settings/mediaManagement';
 import metadata from './Settings/metadata';
 import metadataProfiles from './Settings/metadataProfiles';
-import metadataProvider from './Settings/metadataProvider';
 import naming from './Settings/naming';
 import namingExamples from './Settings/namingExamples';
 import notifications from './Settings/notifications';
@@ -27,6 +26,7 @@ import qualityProfiles from './Settings/qualityProfiles';
 import releaseProfiles from './Settings/releaseProfiles';
 import remotePathMappings from './Settings/remotePathMappings';
 import rootFolders from './Settings/rootFolders';
+import taggingProfiles from './Settings/taggingProfiles';
 import ui from './Settings/ui';
 
 export * from './Settings/autoTaggingSpecifications';
@@ -46,7 +46,6 @@ export * from './Settings/languages';
 export * from './Settings/metadataProfiles';
 export * from './Settings/mediaManagement';
 export * from './Settings/metadata';
-export * from './Settings/metadataProvider';
 export * from './Settings/naming';
 export * from './Settings/namingExamples';
 export * from './Settings/notifications';
@@ -55,6 +54,7 @@ export * from './Settings/qualityProfiles';
 export * from './Settings/releaseProfiles';
 export * from './Settings/remotePathMappings';
 export * from './Settings/rootFolders';
+export * from './Settings/taggingProfiles';
 export * from './Settings/ui';
 
 //
@@ -84,7 +84,6 @@ export const defaultState = {
   metadataProfiles: metadataProfiles.defaultState,
   mediaManagement: mediaManagement.defaultState,
   metadata: metadata.defaultState,
-  metadataProvider: metadataProvider.defaultState,
   naming: naming.defaultState,
   namingExamples: namingExamples.defaultState,
   notifications: notifications.defaultState,
@@ -93,6 +92,7 @@ export const defaultState = {
   releaseProfiles: releaseProfiles.defaultState,
   remotePathMappings: remotePathMappings.defaultState,
   rootFolders: rootFolders.defaultState,
+  taggingProfiles: taggingProfiles.defaultState,
   ui: ui.defaultState
 };
 
@@ -131,7 +131,6 @@ export const actionHandlers = handleThunks({
   ...metadataProfiles.actionHandlers,
   ...mediaManagement.actionHandlers,
   ...metadata.actionHandlers,
-  ...metadataProvider.actionHandlers,
   ...naming.actionHandlers,
   ...namingExamples.actionHandlers,
   ...notifications.actionHandlers,
@@ -140,6 +139,7 @@ export const actionHandlers = handleThunks({
   ...releaseProfiles.actionHandlers,
   ...remotePathMappings.actionHandlers,
   ...rootFolders.actionHandlers,
+  ...taggingProfiles.actionHandlers,
   ...ui.actionHandlers
 });
 
@@ -169,7 +169,6 @@ export const reducers = createHandleActions({
   ...metadataProfiles.reducers,
   ...mediaManagement.reducers,
   ...metadata.reducers,
-  ...metadataProvider.reducers,
   ...naming.reducers,
   ...namingExamples.reducers,
   ...notifications.reducers,
@@ -178,6 +177,7 @@ export const reducers = createHandleActions({
   ...releaseProfiles.reducers,
   ...remotePathMappings.reducers,
   ...rootFolders.reducers,
+  ...taggingProfiles.reducers,
   ...ui.reducers
 
 }, defaultState, section);

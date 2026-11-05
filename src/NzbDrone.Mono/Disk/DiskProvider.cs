@@ -485,6 +485,18 @@ namespace NzbDrone.Mono.Disk
             return _createRefLink.TryCreateRefLink(source, destination);
         }
 
+        public override int GetHardLinkCount(string path)
+        {
+            if (Syscall.stat(path, out var stat) < 0)
+            {
+                var error = Stdlib.GetLastError();
+
+                throw new IOException($"Error getting hard link count for '{path}': {error}");
+            }
+
+            return (int)stat.st_nlink;
+        }
+
         private uint GetUserId(string user)
         {
             if (user.IsNullOrWhiteSpace())
