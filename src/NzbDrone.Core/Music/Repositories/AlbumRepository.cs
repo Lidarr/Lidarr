@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Music
         List<Album> GetAlbumsByArtistMetadataId(int artistMetadataId);
         List<Album> GetAlbumsForRefresh(int artistMetadataId, List<string> foreignIds);
         Album FindByTitle(int artistMetadataId, string title);
+        List<Album> GetAlbumsByTitle(int artistMetadataId, string title);
         Album FindById(string foreignAlbumId);
         PagingSpec<Album> AlbumsWithoutFiles(PagingSpec<Album> pagingSpec);
         PagingSpec<Album> AlbumsWhereCutoffUnmet(PagingSpec<Album> pagingSpec, List<QualitiesBelowCutoff> qualitiesBelowCutoff);
@@ -203,6 +204,11 @@ namespace NzbDrone.Core.Music
 
         public Album FindByTitle(int artistMetadataId, string title)
         {
+            return GetAlbumsByTitle(artistMetadataId, title).ExclusiveOrDefault();
+        }
+
+        public List<Album> GetAlbumsByTitle(int artistMetadataId, string title)
+        {
             var cleanTitle = Parser.Parser.CleanArtistName(title);
 
             if (string.IsNullOrEmpty(cleanTitle))
@@ -210,8 +216,7 @@ namespace NzbDrone.Core.Music
                 cleanTitle = title;
             }
 
-            return Query(s => (s.CleanTitle == cleanTitle || s.Title == title) && s.ArtistMetadataId == artistMetadataId)
-                .ExclusiveOrDefault();
+            return Query(s => (s.CleanTitle == cleanTitle || s.Title == title) && s.ArtistMetadataId == artistMetadataId);
         }
 
         public Album FindAlbumByRelease(string albumReleaseId)
