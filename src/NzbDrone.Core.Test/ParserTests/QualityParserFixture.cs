@@ -256,6 +256,9 @@ namespace NzbDrone.Core.Test.ParserTests
 
         [TestCase("", "Vorbis Version 0 Audio", 160)]
         [TestCase("", "Opus Version 1 Audio", 161)]
+        [TestCase("", "Opus Version 1 Audio", 129)]
+        [TestCase("", "Opus Version 1 Audio", 96)]
+        [TestCase("", "Opus Version 1 Audio", 64)]
         public void should_parse_vorbis_q5_quality(string title, string desc, int bitrate)
         {
             ParseAndVerifyQuality(title, desc, bitrate, Quality.VORBIS_Q5);
