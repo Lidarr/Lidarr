@@ -1265,7 +1265,7 @@
     "FormatTimeSpanDays": "{days} j {time}",
     "KeyboardShortcuts": "Raccourcis clavier",
     "MonitorAllAlbums": "Tous les albums",
-    "MonitorLastestAlbum": "Dernier album",
+    "MonitorLatestAlbum": "Dernier album",
     "MonitorMissingAlbums": "Albums manquants",
     "MonitorNoAlbums": "Aucun",
     "MonitorNoNewAlbums": "Aucun nouvel album",
