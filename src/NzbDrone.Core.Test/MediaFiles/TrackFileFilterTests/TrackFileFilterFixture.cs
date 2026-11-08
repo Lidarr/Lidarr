@@ -27,8 +27,8 @@ namespace NzbDrone.Core.Test.MediaFiles
         {
             GivenExcludedFolders(string.Empty);
 
-            Assert.IsFalse(IsExcluded("/music/album/song.flac"));
-            Assert.IsFalse(IsExcluded("/music/various/song.flac"));
+            Assert.That(IsExcluded("/music/album/song.flac"), Is.False);
+            Assert.That(IsExcluded("/music/various/song.flac"), Is.False);
         }
 
         [Test]
@@ -36,8 +36,8 @@ namespace NzbDrone.Core.Test.MediaFiles
         {
             GivenExcludedFolders("various");
 
-            Assert.IsFalse(IsExcluded("/music/album/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/various/song.flac"));
+            Assert.That(IsExcluded("/music/album/song.flac"), Is.False);
+            Assert.That(IsExcluded("/music/various/song.flac"), Is.True);
         }
 
         [Test]
@@ -45,10 +45,10 @@ namespace NzbDrone.Core.Test.MediaFiles
         {
             GivenExcludedFolders("various,.ignore,temp");
 
-            Assert.IsFalse(IsExcluded("/music/album/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/Various/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/.ignore/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/temp/song.flac"));
+            Assert.That(IsExcluded("/music/album/song.flac"), Is.False);
+            Assert.That(IsExcluded("/music/Various/song.flac"), Is.True);
+            Assert.That(IsExcluded("/music/.ignore/song.flac"), Is.True);
+            Assert.That(IsExcluded("/music/temp/song.flac"), Is.True);
         }
 
         [Test]
@@ -56,11 +56,11 @@ namespace NzbDrone.Core.Test.MediaFiles
         {
             GivenExcludedFolders("various");
 
-            Assert.IsFalse(IsExcluded("/music/Album/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/various/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/Various/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/VARIOUS/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/vArIoUs/song.flac"));
+            Assert.That(IsExcluded("/music/Album/song.flac"), Is.False);
+            Assert.That(IsExcluded("/music/various/song.flac"), Is.True);
+            Assert.That(IsExcluded("/music/Various/song.flac"), Is.True);
+            Assert.That(IsExcluded("/music/VARIOUS/song.flac"), Is.True);
+            Assert.That(IsExcluded("/music/vArIoUs/song.flac"), Is.True);
         }
 
         [Test]
@@ -68,10 +68,10 @@ namespace NzbDrone.Core.Test.MediaFiles
         {
             GivenExcludedFolders("various");
 
-            Assert.IsTrue(IsExcluded("/music/Various/song.flac"));
-            Assert.IsFalse(IsExcluded("/music/Various Artists/song.flac"));
-            Assert.IsFalse(IsExcluded("/music/SomeVariousFolder/song.flac"));
-            Assert.IsFalse(IsExcluded("/music/Album/song.flac"));
+            Assert.That(IsExcluded("/music/Various/song.flac"), Is.True);
+            Assert.That(IsExcluded("/music/Various Artists/song.flac"), Is.False);
+            Assert.That(IsExcluded("/music/SomeVariousFolder/song.flac"), Is.False);
+            Assert.That(IsExcluded("/music/Album/song.flac"), Is.False);
         }
 
         [Test]
@@ -79,9 +79,9 @@ namespace NzbDrone.Core.Test.MediaFiles
         {
             GivenExcludedFolders("various, temp");
 
-            Assert.IsFalse(IsExcluded("/music/Album/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/various/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/temp/song.flac"));
+            Assert.That(IsExcluded("/music/Album/song.flac"), Is.False);
+            Assert.That(IsExcluded("/music/various/song.flac"), Is.True);
+            Assert.That(IsExcluded("/music/temp/song.flac"), Is.True);
         }
 
         [Test]
@@ -89,9 +89,9 @@ namespace NzbDrone.Core.Test.MediaFiles
         {
             GivenExcludedFolders("various,     temp");
 
-            Assert.IsFalse(IsExcluded("/music/Album/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/various/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/temp/song.flac"));
+            Assert.That(IsExcluded("/music/Album/song.flac"), Is.False);
+            Assert.That(IsExcluded("/music/various/song.flac"), Is.True);
+            Assert.That(IsExcluded("/music/temp/song.flac"), Is.True);
         }
 
         [Test]
@@ -99,9 +99,9 @@ namespace NzbDrone.Core.Test.MediaFiles
         {
             GivenExcludedFolders("  various , temp  ");
 
-            Assert.IsFalse(IsExcluded("/music/Album/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/various/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/temp/song.flac"));
+            Assert.That(IsExcluded("/music/Album/song.flac"), Is.False);
+            Assert.That(IsExcluded("/music/various/song.flac"), Is.True);
+            Assert.That(IsExcluded("/music/temp/song.flac"), Is.True);
         }
 
         [Test]
@@ -109,9 +109,9 @@ namespace NzbDrone.Core.Test.MediaFiles
         {
             GivenExcludedFolders("various,,temp");
 
-            Assert.IsFalse(IsExcluded("/music/Album/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/various/song.flac"));
-            Assert.IsTrue(IsExcluded("/music/temp/song.flac"));
+            Assert.That(IsExcluded("/music/Album/song.flac"), Is.False);
+            Assert.That(IsExcluded("/music/various/song.flac"), Is.True);
+            Assert.That(IsExcluded("/music/temp/song.flac"), Is.True);
         }
     }
 }
