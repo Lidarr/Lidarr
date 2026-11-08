@@ -112,7 +112,7 @@ namespace NzbDrone.Core.DecisionEngine
             var totalScore = 0.0;
             foreach (var album in remoteAlbum.Albums)
             {
-                totalScore += _yearMatcher.CalculateYearScore(album.ReleaseDate, parsedYear);
+                totalScore += _yearMatcher.CalculateAlbumYearScore(album, parsedYear);
             }
 
             return totalScore / remoteAlbum.Albums.Count;
