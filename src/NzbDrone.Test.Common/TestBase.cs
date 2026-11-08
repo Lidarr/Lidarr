@@ -103,7 +103,7 @@ namespace NzbDrone.Test.Common
         [SetUp]
         public void TestBaseSetup()
         {
-            GetType().IsPublic.Should().BeTrue("All Test fixtures should be public to work in mono.");
+            GetType().Should().Match(t => t.IsPublic || t.IsNestedPublic, "All Test fixtures should be public to work in mono.");
 
             LogManager.ReconfigExistingLoggers();
 
