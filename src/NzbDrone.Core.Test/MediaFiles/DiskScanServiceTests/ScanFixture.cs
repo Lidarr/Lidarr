@@ -10,7 +10,6 @@ using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Configuration;
 using NzbDrone.Core.DecisionEngine;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.TrackImport;
@@ -397,6 +396,38 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
                 .Returns(true);
 
             Subject.Scan(new List<string> { _artist.Path });
+
+            VerifyFileImported(includedFile);
+            VerifyFileNotImported(excludedFile);
+        }
+
+        [Test]
+        public void should_include_excluded_files_when_cleaning_media_files()
+        {
+            GivenArtistFolder();
+
+            var includedFile = Path.Combine(_artist.Path, "Album", "song.flac");
+            var excludedFile = Path.Combine(_artist.Path, "Extras", "bonus.flac");
+
+            GivenFiles(new List<string>
+            {
+                includedFile,
+                excludedFile
+            });
+
+            Mocker.GetMock<ITrackFileFilter>()
+                .Setup(x => x.IsExcluded(_artist.Path, excludedFile))
+                .Returns(true);
+
+            Subject.Scan(new List<string> { _artist.Path });
+
+            Mocker.GetMock<IMediaFileTableCleanupService>()
+                .Verify(x => x.Clean(
+                    _artist.Path,
+                    It.Is<List<string>>(files =>
+                        files.Contains(includedFile) &&
+                        files.Contains(excludedFile))),
+                    Times.Once());
 
             VerifyFileImported(includedFile);
             VerifyFileNotImported(excludedFile);

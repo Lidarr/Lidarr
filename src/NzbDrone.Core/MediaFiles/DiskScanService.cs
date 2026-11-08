@@ -133,15 +133,16 @@ namespace NzbDrone.Core.MediaFiles
 
                 _logger.ProgressInfo("Scanning {0}", folder);
 
-                var files = FilterFiles(folder, GetAudioFiles(folder));
+                var audioFiles = GetAudioFiles(folder);
+                var files = FilterFiles(folder, audioFiles);
 
-                if (!files.Any())
+                if (!audioFiles.Any())
                 {
                     _logger.Warn("Scan folder {0} is empty.", folder);
                     continue;
                 }
 
-                CleanMediaFiles(folder, files.Select(x => x.FullName).ToList());
+                CleanMediaFiles(folder, audioFiles.Select(x => x.FullName).ToList());
                 mediaFileList.AddRange(files);
             }
 
