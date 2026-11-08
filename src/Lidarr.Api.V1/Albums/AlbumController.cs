@@ -154,7 +154,11 @@ namespace Lidarr.Api.V1.Albums
         {
             var album = _albumService.GetAlbum(albumResource.Id);
 
+            var previouslyMonitoredId = album.AlbumReleases.Value.SingleOrDefault(x => x.Monitored)?.Id;
+
             var model = albumResource.ToModel(album);
+
+            _releaseService.ApplyReleaseFilter(model, previouslyMonitoredId);
 
             _albumService.UpdateAlbum(model);
             _releaseService.UpdateMany(model.AlbumReleases.Value);

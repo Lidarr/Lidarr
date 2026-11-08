@@ -209,8 +209,7 @@ namespace NzbDrone.Core.DecisionEngine
                 var preferredSize = _qualityDefinitionService.Get(remoteAlbum.ParsedAlbumInfo.Quality.Quality).PreferredSize;
 
                 var releaseDuration = remoteAlbum.Albums
-                    .Select(a => a.AlbumReleases.Value
-                        .Where(r => r.Monitored || a.AnyReleaseOk)
+                    .Select(a => a.GetWantedReleases()
                         .Select(r => r.Duration)
                         .MaxOrDefault())
                     .Sum() / 1000;

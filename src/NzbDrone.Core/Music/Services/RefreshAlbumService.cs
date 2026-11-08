@@ -215,7 +215,7 @@ namespace NzbDrone.Core.Music
 
             // Update album ID and unmonitor all releases from the old album
             allReleases.ForEach(x => x.AlbumId = target.Id);
-            MonitorSingleRelease(allReleases);
+            MonitorSingleRelease(target, allReleases);
             _releaseService.UpdateMany(allReleases);
 
             // Update album ids for trackfiles
@@ -300,17 +300,9 @@ namespace NzbDrone.Core.Music
             _releaseService.InsertMany(children);
         }
 
-        private void MonitorSingleRelease(List<AlbumRelease> releases)
+        private void MonitorSingleRelease(Album album, List<AlbumRelease> releases)
         {
-            var monitored = releases.Where(x => x.Monitored).ToList();
-            if (!monitored.Any())
-            {
-                monitored = releases;
-            }
-
-            var toMonitor = monitored.OrderByDescending(x => _mediaFileService.GetFilesByRelease(x.Id).Count)
-                .ThenByDescending(x => x.TrackCount)
-                .First();
+            var toMonitor = album.ChooseMonitoredRelease(releases, x => _mediaFileService.GetFilesByRelease(x.Id).Count);
 
             releases.ForEach(x => x.Monitored = false);
             toMonitor.Monitored = true;
@@ -322,7 +314,7 @@ namespace NzbDrone.Core.Music
 
             // make sure only one of the releases ends up monitored
             localChildren.Old.ForEach(x => x.Monitored = false);
-            MonitorSingleRelease(localChildren.Future);
+            MonitorSingleRelease(localChildren.Future.FirstOrDefault()?.Album?.Value, localChildren.Future);
 
             refreshList.ForEach(x => _logger.Trace($"release: {x} monitored: {x.Monitored}"));
 

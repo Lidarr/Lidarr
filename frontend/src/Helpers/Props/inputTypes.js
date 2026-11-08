@@ -14,6 +14,7 @@ export const PATH = 'path';
 export const QUALITY_PROFILE_SELECT = 'qualityProfileSelect';
 export const METADATA_PROFILE_SELECT = 'metadataProfileSelect';
 export const ALBUM_RELEASE_SELECT = 'albumReleaseSelect';
+export const ALBUM_RELEASE_COUNT_SELECT = 'albumReleaseCountSelect';
 export const INDEXER_SELECT = 'indexerSelect';
 export const INDEXER_FLAGS_SELECT = 'indexerFlagsSelect';
 export const DOWNLOAD_CLIENT_SELECT = 'downloadClientSelect';
@@ -46,6 +47,7 @@ export const all = [
   QUALITY_PROFILE_SELECT,
   METADATA_PROFILE_SELECT,
   ALBUM_RELEASE_SELECT,
+  ALBUM_RELEASE_COUNT_SELECT,
   INDEXER_SELECT,
   DOWNLOAD_CLIENT_SELECT,
   ROOT_FOLDER_SELECT,
