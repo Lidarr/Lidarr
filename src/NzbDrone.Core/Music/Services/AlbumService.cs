@@ -50,18 +50,21 @@ namespace NzbDrone.Core.Music
                                 IHandle<ArtistsDeletedEvent>
     {
         private readonly IAlbumRepository _albumRepository;
+        private readonly IReleaseService _releaseService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IMediaFileService _mediaFileService;
         private readonly IAlbumYearMatcher _yearMatcher;
         private readonly Logger _logger;
 
         public AlbumService(IAlbumRepository albumRepository,
+                            IReleaseService releaseService,
                             IEventAggregator eventAggregator,
                             IMediaFileService mediaFileService,
                             IAlbumYearMatcher yearMatcher,
                             Logger logger)
         {
             _albumRepository = albumRepository;
+            _releaseService = releaseService;
             _eventAggregator = eventAggregator;
             _mediaFileService = mediaFileService;
             _yearMatcher = yearMatcher;
@@ -374,17 +377,56 @@ namespace NzbDrone.Core.Music
         public Album UpdateAlbum(Album album)
         {
             var storedAlbum = GetAlbum(album.Id);
-            var updatedAlbum = _albumRepository.Update(album);
+            AlbumRelease releaseToMonitor = null;
 
-            // If updatedAlbum has populated the Releases, populate in the storedAlbum too
-            if (updatedAlbum.AlbumReleases.IsLoaded)
+            // Loaded releases only carry which release the user monitors. Keep the stored releases,
+            // which hold the details the edit doesn't carry, such as release dates and old release ids.
+            if (album.AlbumReleases.IsLoaded)
             {
                 storedAlbum.AlbumReleases.LazyLoad();
+
+                var releases = _releaseService.GetReleasesByAlbum(album.Id);
+                releaseToMonitor = GetReleaseToMonitor(album.AlbumReleases.Value, releases);
+
+                if (releaseToMonitor != null)
+                {
+                    releases.ForEach(r => r.Monitored = r.Id == releaseToMonitor.Id);
+                }
+
+                album.AlbumReleases = releases;
             }
+
+            var updatedAlbum = _albumRepository.Update(album);
 
             _eventAggregator.PublishEvent(new AlbumEditedEvent(updatedAlbum, storedAlbum));
 
+            // Save the monitored release after AlbumEdited, AlbumEditedService reads the previous monitored release from the database
+            if (releaseToMonitor != null)
+            {
+                _releaseService.SetMonitored(releaseToMonitor);
+            }
+
             return updatedAlbum;
+        }
+
+        private static AlbumRelease GetReleaseToMonitor(List<AlbumRelease> editedReleases, List<AlbumRelease> storedReleases)
+        {
+            var monitored = editedReleases.Where(r => r.Monitored).ToList();
+
+            if (monitored.Count != 1)
+            {
+                return null;
+            }
+
+            var release = storedReleases.SingleOrDefault(r => r.Id == monitored[0].Id);
+            var storedMonitored = storedReleases.Where(r => r.Monitored).Select(r => r.Id).ToList();
+
+            if (release == null || storedMonitored.SequenceEqual(new[] { release.Id }))
+            {
+                return null;
+            }
+
+            return release;
         }
 
         public void SetAlbumMonitored(int albumId, bool monitored)
