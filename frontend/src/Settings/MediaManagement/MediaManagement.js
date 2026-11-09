@@ -393,7 +393,7 @@ class MediaManagement extends Component {
                     </FormLabel>
 
                     <FormInputGroup
-                      type={inputTypes.TEXT}
+                      type={inputTypes.TEXT_AREA}
                       name="excludedScanFolders"
                       helpText={translate('ExcludedScanFoldersHelpText')}
                       onChange={onInputChange}

@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Test.MediaFiles
         [Test]
         public void should_exclude_multiple_configured_folders()
         {
-            GivenExcludedFolders("various,.ignore,temp");
+            GivenExcludedFolders("various\n.ignore\ntemp");
 
             Assert.That(IsExcluded("/music/album/song.flac"), Is.False);
             Assert.That(IsExcluded("/music/Various/song.flac"), Is.True);
@@ -85,29 +85,9 @@ namespace NzbDrone.Core.Test.MediaFiles
         }
 
         [Test]
-        public void should_exclude_configured_folders_with_spaces_around_commas()
+        public void should_exclude_configured_folders_with_leading_and_trailing_spaces_on_lines()
         {
-            GivenExcludedFolders("various, temp");
-
-            Assert.That(IsExcluded("/music/Album/song.flac"), Is.False);
-            Assert.That(IsExcluded("/music/various/song.flac"), Is.True);
-            Assert.That(IsExcluded("/music/temp/song.flac"), Is.True);
-        }
-
-        [Test]
-        public void should_exclude_configured_folders_with_multiple_spaces()
-        {
-            GivenExcludedFolders("various,     temp");
-
-            Assert.That(IsExcluded("/music/Album/song.flac"), Is.False);
-            Assert.That(IsExcluded("/music/various/song.flac"), Is.True);
-            Assert.That(IsExcluded("/music/temp/song.flac"), Is.True);
-        }
-
-        [Test]
-        public void should_exclude_configured_folders_with_leading_and_trailing_spaces()
-        {
-            GivenExcludedFolders("  various , temp  ");
+            GivenExcludedFolders("  various  \n  temp  ");
 
             Assert.That(IsExcluded("/music/Album/song.flac"), Is.False);
             Assert.That(IsExcluded("/music/various/song.flac"), Is.True);
@@ -117,11 +97,25 @@ namespace NzbDrone.Core.Test.MediaFiles
         [Test]
         public void should_ignore_empty_entries_in_excluded_folders_config()
         {
-            GivenExcludedFolders("various,,temp");
+            GivenExcludedFolders("various\n\ntemp");
 
             Assert.That(IsExcluded("/music/Album/song.flac"), Is.False);
             Assert.That(IsExcluded("/music/various/song.flac"), Is.True);
             Assert.That(IsExcluded("/music/temp/song.flac"), Is.True);
+        }
+
+        [Test]
+        public void should_exclude_folder_names_containing_commas()
+        {
+            GivenExcludedFolders("90s Dance Hits, Volume 4");
+
+            Assert.That(
+                IsExcluded("/music/90s Dance Hits, Volume 4/song.flac"),
+                Is.True);
+
+            Assert.That(
+                IsExcluded("/music/90s Dance Hits/song.flac"),
+                Is.False);
         }
     }
 }
