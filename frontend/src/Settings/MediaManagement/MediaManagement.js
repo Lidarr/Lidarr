@@ -473,7 +473,6 @@ class MediaManagement extends Component {
                       {...settings.recycleBinCleanupDays}
                     />
                   </FormGroup>
-
                 </FieldSet>
 
                 {
