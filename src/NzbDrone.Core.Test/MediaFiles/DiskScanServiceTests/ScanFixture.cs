@@ -65,8 +65,8 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
                 .Returns((List<IFileInfo> files, FilterFilesType filter) => files);
 
             Mocker.GetMock<ITrackFileFilter>()
-                .Setup(x => x.IsExcluded(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(false);
+                .Setup(x => x.GetExclusionPredicate(It.IsAny<string>()))
+                .Returns((string basePath) => fullPath => false);
         }
 
         private void GivenRootFolder(params string[] subfolders)
@@ -388,12 +388,8 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
             });
 
             Mocker.GetMock<ITrackFileFilter>()
-                .Setup(x => x.IsExcluded(_artist.Path, includedFile))
-                .Returns(false);
-
-            Mocker.GetMock<ITrackFileFilter>()
-                .Setup(x => x.IsExcluded(_artist.Path, excludedFile))
-                .Returns(true);
+                .Setup(x => x.GetExclusionPredicate(_artist.Path))
+                .Returns((string basePath) => fullPath => fullPath == excludedFile);
 
             Subject.Scan(new List<string> { _artist.Path });
 
@@ -416,8 +412,8 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
             });
 
             Mocker.GetMock<ITrackFileFilter>()
-                .Setup(x => x.IsExcluded(_artist.Path, excludedFile))
-                .Returns(true);
+                .Setup(x => x.GetExclusionPredicate(_artist.Path))
+                .Returns((string basePath) => fullPath => fullPath == excludedFile);
 
             Subject.Scan(new List<string> { _artist.Path });
 
@@ -434,7 +430,7 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
         }
 
         [Test]
-        public void should_call_track_file_filter_for_each_file()
+        public void should_create_track_file_filter_predicate_once_per_scan_folder()
         {
             GivenArtistFolder();
 
@@ -449,7 +445,7 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
             Subject.Scan(new List<string> { _artist.Path });
 
             Mocker.GetMock<ITrackFileFilter>()
-                .Verify(x => x.IsExcluded(_artist.Path, It.IsAny<string>()), Times.Exactly(2));
+                .Verify(x => x.GetExclusionPredicate(_artist.Path), Times.Once());
         }
 
         [Test]

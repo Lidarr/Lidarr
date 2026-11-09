@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Test.MediaFiles
 
         private bool IsExcluded(string fullPath)
         {
-            return Subject.IsExcluded(BasePath, fullPath);
+            return Subject.GetExclusionPredicate(BasePath)(fullPath);
         }
 
         [Test]

@@ -1,7 +1,9 @@
+using System;
+
 namespace NzbDrone.Core.MediaFiles
 {
     public interface ITrackFileFilter
     {
-        bool IsExcluded(string basePath, string fullPath);
+        Func<string, bool> GetExclusionPredicate(string basePath);
     }
 }

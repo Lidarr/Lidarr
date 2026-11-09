@@ -134,7 +134,10 @@ namespace NzbDrone.Core.MediaFiles
                 _logger.ProgressInfo("Scanning {0}", folder);
 
                 var audioFiles = GetAudioFiles(folder);
-                var files = FilterFiles(folder, audioFiles);
+                var isExcluded = _trackFileFilter.GetExclusionPredicate(folder);
+                var files = FilterFiles(folder, audioFiles)
+                    .Where(file => !isExcluded(file.FullName))
+                    .ToList();
 
                 if (!audioFiles.Any())
                 {
@@ -306,19 +309,8 @@ namespace NzbDrone.Core.MediaFiles
         {
             return files
                 .Where(file => !ExcludedSubFoldersRegex.IsMatch(basePath.GetRelativePath(file.FullName)))
-                .Where(file =>
-                {
-                    var excluded = _trackFileFilter.IsExcluded(basePath, file.FullName);
-
-                    if (excluded)
-                    {
-                        _logger.Trace("Excluding file '{0}' due to excluded folder match", file.FullName);
-                    }
-
-                    return !excluded;
-                })
                 .Where(file => !ExcludedFilesRegex.IsMatch(file.Name))
-                    .ToList();
+                .ToList();
         }
 
         public void Execute(RescanFoldersCommand message)

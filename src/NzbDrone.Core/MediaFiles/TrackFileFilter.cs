@@ -19,34 +19,37 @@ namespace NzbDrone.Core.MediaFiles
             _logger = logger;
         }
 
-        public bool IsExcluded(string basePath, string fullPath)
+        public Func<string, bool> GetExclusionPredicate(string basePath)
         {
             var excludedFolders = GetExcludedFolders();
 
-            if (excludedFolders.Count == 0)
+            return fullPath =>
             {
-                return false;
-            }
-
-            var relativePath = basePath.GetRelativePath(fullPath);
-
-            var segments = relativePath.Split(
-                new[]
+                if (excludedFolders.Count == 0)
                 {
-                    Path.DirectorySeparatorChar,
-                    Path.AltDirectorySeparatorChar
-                },
-                StringSplitOptions.RemoveEmptyEntries);
+                    return false;
+                }
 
-            return segments.Any(segment =>
-                excludedFolders.Contains(segment.Trim()));
+                var relativePath = basePath.GetRelativePath(fullPath);
+
+                var segments = relativePath.Split(
+                    new[]
+                    {
+                        Path.DirectorySeparatorChar,
+                        Path.AltDirectorySeparatorChar
+                    },
+                    StringSplitOptions.RemoveEmptyEntries);
+
+                return segments.Any(segment =>
+                    excludedFolders.Contains(segment.Trim()));
+            };
         }
 
         private HashSet<string> GetExcludedFolders()
         {
             var value = _configService.ExcludedScanFolders;
 
-            _logger.Debug("ExcludedScanFolders raw config value: '{0}'", value);
+            _logger.Trace("ExcludedScanFolders raw config value: '{0}'", value);
 
             if (string.IsNullOrWhiteSpace(value))
             {
@@ -58,7 +61,7 @@ namespace NzbDrone.Core.MediaFiles
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-            _logger.Debug("ExcludedScanFolders parsed list: [{0}]", string.Join(", ", result));
+            _logger.Trace("ExcludedScanFolders parsed list: [{0}]", string.Join(", ", result));
 
             return result;
         }
