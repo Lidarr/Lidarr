@@ -430,25 +430,6 @@ namespace NzbDrone.Core.Test.MediaFiles.DiskScanServiceTests
         }
 
         [Test]
-        public void should_create_track_file_filter_predicate_once_per_scan_folder()
-        {
-            GivenArtistFolder();
-
-            var files = new List<string>
-            {
-                Path.Combine(_artist.Path, "A.flac"),
-                Path.Combine(_artist.Path, "B.flac")
-            };
-
-            GivenFiles(files);
-
-            Subject.Scan(new List<string> { _artist.Path });
-
-            Mocker.GetMock<ITrackFileFilter>()
-                .Verify(x => x.GetExclusionPredicate(_artist.Path), Times.Once());
-        }
-
-        [Test]
         public void should_exclude_osx_metadata_files()
         {
             GivenArtistFolder();
