@@ -396,7 +396,6 @@ class MediaManagement extends Component {
                       type={inputTypes.TEXT}
                       name="excludedScanFolders"
                       helpText={translate('ExcludedScanFoldersHelpText')}
-                      values={[]}
                       onChange={onInputChange}
                       {...settings.excludedScanFolders}
                     />
