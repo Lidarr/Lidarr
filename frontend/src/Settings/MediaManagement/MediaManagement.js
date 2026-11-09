@@ -389,6 +389,23 @@ class MediaManagement extends Component {
                     isAdvanced={true}
                   >
                     <FormLabel>
+                      {translate('ExcludedScanFolders')}
+                    </FormLabel>
+
+                    <FormInputGroup
+                      type={inputTypes.TEXT_AREA}
+                      name="excludedScanFolders"
+                      helpText={translate('ExcludedScanFoldersHelpText')}
+                      onChange={onInputChange}
+                      {...settings.excludedScanFolders}
+                    />
+                  </FormGroup>
+
+                  <FormGroup
+                    advancedSettings={advancedSettings}
+                    isAdvanced={true}
+                  >
+                    <FormLabel>
                       {translate('AllowFingerprinting')}
                     </FormLabel>
 
