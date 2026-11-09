@@ -31,8 +31,14 @@ namespace NzbDrone.Core.MediaFiles
                 }
 
                 var relativePath = basePath.GetRelativePath(fullPath);
+                var directoryPath = Path.GetDirectoryName(relativePath);
 
-                var segments = relativePath.Split(
+                if (string.IsNullOrEmpty(directoryPath))
+                {
+                    return false;
+                }
+
+                var segments = directoryPath.Split(
                     new[]
                     {
                         Path.DirectorySeparatorChar,

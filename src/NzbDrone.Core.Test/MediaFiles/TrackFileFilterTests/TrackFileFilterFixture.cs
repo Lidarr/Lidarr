@@ -75,6 +75,16 @@ namespace NzbDrone.Core.Test.MediaFiles
         }
 
         [Test]
+        public void should_not_exclude_file_when_file_name_matches_excluded_folder()
+        {
+            GivenExcludedFolders("temp");
+
+            Assert.That(IsExcluded("/music/album/temp"), Is.False);
+            Assert.That(IsExcluded("/music/album/temp.flac"), Is.False);
+            Assert.That(IsExcluded("/music/temp/song.flac"), Is.True);
+        }
+
+        [Test]
         public void should_exclude_configured_folders_with_spaces_around_commas()
         {
             GivenExcludedFolders("various, temp");
