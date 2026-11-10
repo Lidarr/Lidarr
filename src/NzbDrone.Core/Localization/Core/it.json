@@ -1342,7 +1342,7 @@
     "ExpandBroadcastByDefaultHelpText": "Trasmissione",
     "OnImportFailure": "In caso di errore di importazione",
     "MonitorFutureAlbums": "Album Futuri",
-    "MonitorLastestAlbum": "Album più recente",
+    "MonitorLatestAlbum": "Album più recente",
     "MatchedToAlbums": "Abbinato agli Album",
     "MatchedToArtist": "Abbinato all'Artista",
     "DownloadClientSettingsPostImportCategoryHelpText": "Categoria che {appName} imposterà dopo aver importato il download. {appName} non rimuoverà i torrent in quella categoria anche se il seeding è terminato. Lascia vuoto per mantenere la stessa categoria.",
