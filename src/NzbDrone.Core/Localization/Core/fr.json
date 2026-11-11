@@ -490,7 +490,7 @@
     "OnUpgrade": "Lors de la mise à niveau",
     "ExpandAlbumByDefaultHelpText": "Albums",
     "Continuing": "En production",
-    "ContinuingAllTracksDownloaded": "En production (Toutes pistes téléchargées)",
+    "ContinuingAllTracksDownloaded": "En diffusion (Toutes les pistes ont été téléchargées)",
     "DefaultLidarrTags": "Tags {appName} par défaut",
     "DefaultMetadataProfileIdHelpText": "Profil de métadonnées par défaut pour les auteurs détectés dans ce dossier",
     "DefaultQualityProfileIdHelpText": "Profil de qualité par défaut pour les auteurs détectés dans ce dossier",
@@ -1087,7 +1087,7 @@
     "External": "Externe",
     "ImportList": "Liste d'importation",
     "MonitorArtists": "Artiste moniteur",
-    "Overview": "Aperçu",
+    "Overview": "Aperçu général",
     "RemoveTagsAutomatically": "Supprimer les étiquettes automatiquement",
     "RemoveTagsAutomaticallyHelpText": "Supprimer les étiquettes automatiquement si les conditions ne sont pas remplies",
     "AuthenticationRequiredWarning": "Pour empêcher l'accès à distance sans authentification, {appName} exige désormais que l'authentification soit activée. Vous pouvez éventuellement désactiver l'authentification pour les adresses locales.",
@@ -1378,5 +1378,11 @@
     "NoTracksFoundForSelectedAlbum": "Aucune piste trouvé pour l’album sélectionné",
     "Plugins": "Plugins",
     "FilterTracksByTitleOrNumber": "Filtrer les pistes par titre ou numéro",
-    "AllowedHosts": "Hôtes autorisés"
+    "AllowedHosts": "Hôtes autorisés",
+    "AllowedHostsNotConfiguredHealthCheckMessage": "Les hôtes autorisés ne sont pas configurés. {appName} acceptera les requêtes provenant de n’importe quel nom d’hôte ou adresse IP. Définir les hôtes autorisés dans les paramètres généraux pour restreindre les noms d’hôte pouvant être utilisés pour accéder à {appName}.",
+    "TrustedNetworks": "Réseaux de confiance",
+    "TrustedNetworksHelpText": "Liste d’adresses IP ou de réseaux au format CIDR, séparés par des virgules, sur lesquels se trouvent les proxys inverses approuvés. Par exemple : 172.17.0.1, 10.0.0.0/8 ou fc00::/7. Ajouter uniquement les proxys correctement configurés pour envoyer les en-têtes appropriés.",
+    "AllowedHostsHelpText": "Liste, séparée par des virgules, des noms d'hôtes et adresses IP sous lesquels {appName} doit être accessible, y compris le nom d'hôte du système ou le nom du conteneur Docker. Laissez vide pour autoriser tous les hôtes. Exemple : lidarr, lidarr.example.com, 192.168.0.100",
+    "RemovedArtistMultipleRemovedHealthCheckMessage": "Les artistes {artists} ont été supprimés de MusicBrainz",
+    "RemovedArtistSingleRemovedHealthCheckMessage": "L'artiste {artist} a été supprimé de MusicBrainz"
 }

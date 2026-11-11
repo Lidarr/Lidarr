@@ -11,19 +11,19 @@ using NzbDrone.Core.Music.Events;
 
 namespace NzbDrone.Core.Music
 {
-    public interface IAlbumAddedService
+    public interface IAlbumRefreshedService
     {
-        void SearchForRecentlyAdded(int artistId);
+        void Search(Artist artist);
     }
 
-    public class AlbumAddedService : IHandle<AlbumInfoRefreshedEvent>, IAlbumAddedService
+    public class AlbumRefreshedService : IHandle<AlbumInfoRefreshedEvent>, IAlbumRefreshedService
     {
         private readonly IManageCommandQueue _commandQueueManager;
         private readonly IAlbumService _albumService;
         private readonly Logger _logger;
-        private readonly ICached<List<int>> _addedAlbumsCache;
+        private readonly ICached<List<int>> _searchCache;
 
-        public AlbumAddedService(ICacheManager cacheManager,
+        public AlbumRefreshedService(ICacheManager cacheManager,
                                    IManageCommandQueue commandQueueManager,
                                    IAlbumService albumService,
                                    Logger logger)
@@ -31,36 +31,36 @@ namespace NzbDrone.Core.Music
             _commandQueueManager = commandQueueManager;
             _albumService = albumService;
             _logger = logger;
-            _addedAlbumsCache = cacheManager.GetCache<List<int>>(GetType());
+            _searchCache = cacheManager.GetCache<List<int>>(GetType());
         }
 
-        public void SearchForRecentlyAdded(int artistId)
+        public void Search(Artist artist)
         {
-            var allAlbums = _albumService.GetAlbumsByArtist(artistId);
+            var allAlbums = _albumService.GetAlbumsByArtist(artist.Id);
             var toSearch = allAlbums.Where(x => x.AddOptions.SearchForNewAlbum).ToList();
 
             if (toSearch.Any())
             {
-                _logger.Trace("Found {0} albums flagged for search on add", toSearch.Count);
+                _logger.Debug("Found {0} albums by artist {1} flagged for search on add", toSearch.Count, artist);
                 toSearch.ForEach(x => x.AddOptions.SearchForNewAlbum = false);
 
                 _albumService.SetAddOptions(toSearch);
             }
 
-            var recentlyAddedIds = _addedAlbumsCache.Find(artistId.ToString());
+            var recentlyAddedIds = _searchCache.Find(artist.Id.ToString());
             if (recentlyAddedIds != null)
             {
-                _logger.Trace("Found and monitored {0} albums by artist [{1}] during metadata refresh.", recentlyAddedIds.Count, artistId);
+                _logger.Debug("Found and monitored {0} albums by artist {1} during metadata refresh.", recentlyAddedIds.Count, artist);
                 toSearch.AddRange(allAlbums.Where(x => recentlyAddedIds.Contains(x.Id)));
             }
 
             if (toSearch.Any())
             {
-                _logger.Debug("Searching for {0} monitored albums for artist [{1}] added during metadata refresh.", toSearch.Count, artistId);
+                _logger.Info("Searching for {0} monitored albums for artist {1} added during metadata refresh.", toSearch.Count, artist);
                 _commandQueueManager.Push(new AlbumSearchCommand(toSearch.Select(e => e.Id).ToList()));
             }
 
-            _addedAlbumsCache.Remove(artistId.ToString());
+            _searchCache.Remove(artist.Id.ToString());
         }
 
         public void Handle(AlbumInfoRefreshedEvent message)
@@ -85,7 +85,12 @@ namespace NzbDrone.Core.Music
                     return;
                 }
 
-                var previouslyReleased = message.Added.Where(a => a.ReleaseDate.HasValue && a.ReleaseDate.Value.Before(DateTime.UtcNow.AddDays(1)) && a.Monitored).ToList();
+                var previouslyReleased = message.Added.Where(a =>
+                        a.ReleaseDate.HasValue &&
+                        a.ReleaseDate.Value.Between(DateTime.UtcNow.AddDays(-180), DateTime.UtcNow.AddDays(1)) &&
+                        a.Monitored)
+                    .Select(a => a.Id)
+                    .ToList();
 
                 if (previouslyReleased.Empty())
                 {
@@ -93,7 +98,7 @@ namespace NzbDrone.Core.Music
                     return;
                 }
 
-                _addedAlbumsCache.Set(message.Artist.Id.ToString(), previouslyReleased.Select(e => e.Id).ToList());
+                _searchCache.Set(message.Artist.Id.ToString(), previouslyReleased);
             }
         }
     }
