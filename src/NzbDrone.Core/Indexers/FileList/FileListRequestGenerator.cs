@@ -23,11 +23,13 @@ namespace NzbDrone.Core.Indexers.FileList
         public IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-
-            var artistQuery = searchCriteria.CleanArtistQuery.Replace("+", " ").Trim();
             var albumQuery = searchCriteria.CleanAlbumQuery.Replace("+", " ").Trim();
 
-            pageableRequests.Add(GetRequest("search-torrents", Settings.Categories, string.Format("&type=name&query={0}+{1}", Uri.EscapeDataString(artistQuery), Uri.EscapeDataString(albumQuery))));
+            foreach (var artistTitle in searchCriteria.CleanArtistTitles)
+            {
+                var artistQuery = artistTitle.Replace("+", " ").Trim();
+                pageableRequests.Add(GetRequest("search-torrents", Settings.Categories, string.Format("&type=name&query={0}+{1}", Uri.EscapeDataString(artistQuery), Uri.EscapeDataString(albumQuery))));
+            }
 
             return pageableRequests;
         }
@@ -36,9 +38,11 @@ namespace NzbDrone.Core.Indexers.FileList
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            var artistQuery = searchCriteria.CleanArtistQuery.Replace("+", " ").Trim();
-
-            pageableRequests.Add(GetRequest("search-torrents", Settings.Categories, string.Format("&type=name&query={0}", Uri.EscapeDataString(artistQuery))));
+            foreach (var artistTitle in searchCriteria.CleanArtistTitles)
+            {
+                var artistQuery = artistTitle.Replace("+", " ").Trim();
+                pageableRequests.Add(GetRequest("search-torrents", Settings.Categories, string.Format("&type=name&query={0}", Uri.EscapeDataString(artistQuery))));
+            }
 
             return pageableRequests;
         }

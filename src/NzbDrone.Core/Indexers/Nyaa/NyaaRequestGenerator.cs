@@ -21,11 +21,13 @@ namespace NzbDrone.Core.Indexers.Nyaa
         public virtual IndexerPageableRequestChain GetSearchRequests(AlbumSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-
-            var artistQuery = searchCriteria.CleanArtistQuery.Replace("+", " ").Trim();
             var albumQuery = searchCriteria.CleanAlbumQuery.Replace("+", " ").Trim();
 
-            pageableRequests.Add(GetPagedRequests(PrepareQuery($"{artistQuery} {albumQuery}")));
+            foreach (var artistTitle in searchCriteria.CleanArtistTitles)
+            {
+                var artistQuery = artistTitle.Replace("+", " ").Trim();
+                pageableRequests.Add(GetPagedRequests(PrepareQuery($"{artistQuery} {albumQuery}")));
+            }
 
             return pageableRequests;
         }
@@ -34,9 +36,11 @@ namespace NzbDrone.Core.Indexers.Nyaa
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            var artistQuery = searchCriteria.CleanArtistQuery.Replace("+", " ").Trim();
-
-            pageableRequests.Add(GetPagedRequests(PrepareQuery(artistQuery)));
+            foreach (var artistTitle in searchCriteria.CleanArtistTitles)
+            {
+                var artistQuery = artistTitle.Replace("+", " ").Trim();
+                pageableRequests.Add(GetPagedRequests(PrepareQuery(artistQuery)));
+            }
 
             return pageableRequests;
         }
