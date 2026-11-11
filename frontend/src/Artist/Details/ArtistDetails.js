@@ -38,6 +38,8 @@ import ArtistAlternateTitles from './ArtistAlternateTitles';
 import ArtistDetailsLinks from './ArtistDetailsLinks';
 import ArtistDetailsSeasonConnector from './ArtistDetailsSeasonConnector';
 import ArtistGenres from './ArtistGenres';
+import { getArtistLibraryViewLink } from './artistLibraryView';
+import ArtistLibraryViews from './ArtistLibraryViews';
 import ArtistTagsConnector from './ArtistTagsConnector';
 import styles from './ArtistDetails.css';
 
@@ -191,6 +193,8 @@ class ArtistDetails extends Component {
       statistics = {},
       qualityProfileId,
       monitored,
+      songMode,
+      view,
       genres,
       albumTypes,
       status,
@@ -205,9 +209,11 @@ class ArtistDetails extends Component {
       isFetching,
       isPopulated,
       albumsError,
+      tracksError,
       trackFilesError,
       hasAlbums,
       hasMonitoredAlbums,
+      hasTracks,
       hasTrackFiles,
       previousArtist,
       nextArtist,
@@ -256,6 +262,8 @@ class ArtistDetails extends Component {
     }
 
     const fanartUrl = getFanartUrl(images);
+    const canSearchMonitored = monitored && hasMonitoredAlbums && hasAlbums;
+    const searchMonitoredTitle = hasMonitoredAlbums ? undefined : translate('HasMonitoredAlbumsNoMonitoredAlbumsForThisArtist');
 
     return (
       <PageContent title={artistName}>
@@ -270,23 +278,30 @@ class ArtistDetails extends Component {
               onPress={onRefreshPress}
             />
 
-            <PageToolbarButton
-              label={translate('SearchMonitored')}
-              iconName={icons.SEARCH}
-              isDisabled={!monitored || !hasMonitoredAlbums || !hasAlbums}
-              isSpinning={isSearching}
-              title={hasMonitoredAlbums ? undefined : translate('HasMonitoredAlbumsNoMonitoredAlbumsForThisArtist')}
-              onPress={onSearchPress}
-            />
+            {
+              view === 'albums' &&
+                <PageToolbarButton
+                  label={translate('SearchMonitored')}
+                  iconName={icons.SEARCH}
+                  isDisabled={!canSearchMonitored}
+                  isSpinning={isSearching}
+                  title={searchMonitoredTitle}
+                  onPress={onSearchPress}
+                />
+            }
 
-            <PageToolbarButton
-              label={translate('InteractiveSearch')}
-              iconName={icons.INTERACTIVE}
-              isDisabled={!monitored || !hasMonitoredAlbums || !hasAlbums}
-              isSpinning={isSearching}
-              title={hasMonitoredAlbums ? undefined : translate('HasMonitoredAlbumsNoMonitoredAlbumsForThisArtist')}
-              onPress={this.onInteractiveSearchPress}
-            />
+            {
+              view === 'songs' ?
+                null :
+                <PageToolbarButton
+                  label={translate('InteractiveSearch')}
+                  iconName={icons.INTERACTIVE}
+                  isDisabled={!monitored || !hasMonitoredAlbums || !hasAlbums}
+                  isSpinning={isSearching}
+                  title={hasMonitoredAlbums ? undefined : translate('HasMonitoredAlbumsNoMonitoredAlbumsForThisArtist')}
+                  onPress={this.onInteractiveSearchPress}
+                />
+            }
 
             <PageToolbarSeparator />
 
@@ -348,10 +363,19 @@ class ArtistDetails extends Component {
 
           <PageToolbarSection alignContent={align.RIGHT}>
             <PageToolbarButton
-              label={allExpanded ? translate('AllExpandedCollapseAll') : translate('AllExpandedExpandAll')}
-              iconName={expandIcon}
-              onPress={this.onExpandAllPress}
+              label={translate('Songs')}
+              iconName={icons.TRACK_FILE}
+              to={getArtistLibraryViewLink(foreignArtistId, 'songs')}
             />
+            {
+              view === 'songs' ?
+                null :
+                <PageToolbarButton
+                  label={allExpanded ? translate('AllExpandedCollapseAll') : translate('AllExpandedExpandAll')}
+                  iconName={expandIcon}
+                  onPress={this.onExpandAllPress}
+                />
+            }
           </PageToolbarSection>
         </PageToolbar>
 
@@ -417,7 +441,7 @@ class ArtistDetails extends Component {
                       name={icons.ARROW_LEFT}
                       size={30}
                       title={translate('GoToInterp', [previousArtist.artistName])}
-                      to={`/artist/${previousArtist.foreignArtistId}`}
+                      to={getArtistLibraryViewLink(previousArtist.foreignArtistId, view)}
                     />
 
                     <IconButton
@@ -433,7 +457,7 @@ class ArtistDetails extends Component {
                       name={icons.ARROW_RIGHT}
                       size={30}
                       title={translate('GoToInterp', [nextArtist.artistName])}
-                      to={`/artist/${nextArtist.foreignArtistId}`}
+                      to={getArtistLibraryViewLink(nextArtist.foreignArtistId, view)}
                     />
                   </div>
                 </div>
@@ -463,6 +487,24 @@ class ArtistDetails extends Component {
                       {path}
                     </span>
                   </Label>
+
+                  {
+                    songMode ?
+                      <Label
+                        className={styles.detailsLabel}
+                        size={sizes.LARGE}
+                      >
+                        <Icon
+                          name={icons.TRACK_FILE}
+                          size={17}
+                        />
+
+                        <span className={styles.qualityProfileName}>
+                          {translate('SongMonitoring')}
+                        </span>
+                      </Label> :
+                      null
+                  }
 
                   <Tooltip
                     anchor={
@@ -598,7 +640,7 @@ class ArtistDetails extends Component {
 
           <div className={styles.contentContainer}>
             {
-              !isPopulated && !albumsError && !trackFilesError &&
+              !isPopulated && !albumsError && !tracksError && !trackFilesError &&
                 <LoadingIndicator />
             }
 
@@ -611,6 +653,14 @@ class ArtistDetails extends Component {
             }
 
             {
+              !isFetching && tracksError ?
+                <Alert kind={kinds.DANGER}>
+                  {translate('TracksLoadError')}
+                </Alert> :
+                null
+            }
+
+            {
               !isFetching && trackFilesError ?
                 <Alert kind={kinds.DANGER}>
                   {translate('TrackFilesLoadError')}
@@ -618,8 +668,20 @@ class ArtistDetails extends Component {
                 null
             }
 
-            {
-              isPopulated && !!albumTypes.length &&
+            <ArtistLibraryViews
+              key={id}
+              artistId={id}
+              foreignArtistId={foreignArtistId}
+              artistName={artistName}
+              artistMonitored={monitored}
+              artistSongMode={songMode}
+              view={view}
+              isPopulated={isPopulated}
+              hasTracks={hasTracks}
+              isRefreshing={isRefreshing}
+              onRefreshPress={onRefreshPress}
+            >
+              {isPopulated && !!albumTypes.length &&
                 <div>
                   {
                     albumTypes.slice(0).map((albumType) => {
@@ -637,17 +699,22 @@ class ArtistDetails extends Component {
                     })
                   }
                 </div>
-            }
+              }
+            </ArtistLibraryViews>
 
           </div>
 
-          <div className={styles.metadataMessage}>
-            Missing Albums, Singles, or Other Types? Modify or create a new
-            <Link to='/settings/profiles'> Metadata Profile </Link>
-            or manually
-            <Link to={`/add/search?term=${encodeURIComponent(artistName)}`}> Search </Link>
-            for new items!
-          </div>
+          {
+            view === 'songs' ?
+              null :
+              <div className={styles.metadataMessage}>
+                Missing Albums, Singles, or Other Types? Modify or create a new
+                <Link to='/settings/profiles'> Metadata Profile </Link>
+                or manually
+                <Link to={`/add/search?term=${encodeURIComponent(artistName)}`}> Search </Link>
+                for new items!
+              </div>
+          }
 
           <OrganizePreviewModalConnector
             isOpen={isOrganizeModalOpen}
@@ -722,6 +789,8 @@ ArtistDetails.propTypes = {
   statistics: PropTypes.object.isRequired,
   qualityProfileId: PropTypes.number.isRequired,
   monitored: PropTypes.bool.isRequired,
+  songMode: PropTypes.bool.isRequired,
+  view: PropTypes.oneOf(['albums', 'songs']).isRequired,
   artistType: PropTypes.string,
   albumTypes: PropTypes.arrayOf(PropTypes.string),
   genres: PropTypes.arrayOf(PropTypes.string),
@@ -737,9 +806,12 @@ ArtistDetails.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   isPopulated: PropTypes.bool.isRequired,
   albumsError: PropTypes.object,
+  tracksError: PropTypes.object,
   trackFilesError: PropTypes.object,
   hasAlbums: PropTypes.bool.isRequired,
   hasMonitoredAlbums: PropTypes.bool.isRequired,
+  hasTracks: PropTypes.bool.isRequired,
+  hasMonitoredTracks: PropTypes.bool.isRequired,
   hasTrackFiles: PropTypes.bool.isRequired,
   previousArtist: PropTypes.object.isRequired,
   nextArtist: PropTypes.object.isRequired,

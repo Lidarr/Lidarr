@@ -106,6 +106,35 @@ namespace NzbDrone.Core.Music
             remote.UseDbFieldsFrom(local);
         }
 
+        protected override void ProcessChildren(AlbumRelease entity, SortedChildren children)
+        {
+            if (!children.Added.Any() || entity.Album?.Value?.Artist?.Value?.SongMode != true)
+            {
+                return;
+            }
+
+            var releaseIds = _releaseService.GetReleasesByAlbum(entity.AlbumId)
+                                            .Select(release => release.Id)
+                                            .ToList();
+
+            var monitoredRecordingIds = _trackService.GetTracksByReleases(releaseIds)
+                                                       .Where(track => track.Monitored)
+                                                       .SelectMany(GetRecordingIds)
+                                                       .ToHashSet();
+
+            foreach (var track in children.Added)
+            {
+                track.Monitored = GetRecordingIds(track).Any(monitoredRecordingIds.Contains);
+            }
+        }
+
+        private static IEnumerable<string> GetRecordingIds(Track track)
+        {
+            return new[] { track.ForeignRecordingId }
+                .Concat(track.OldForeignRecordingIds ?? new List<string>())
+                .Where(id => !string.IsNullOrWhiteSpace(id));
+        }
+
         protected override void AddChildren(List<Track> children)
         {
             _trackService.InsertMany(children);

@@ -91,6 +91,7 @@ class QueueRow extends Component {
       errorMessage,
       artist,
       album,
+      targetTracks,
       quality,
       customFormats,
       customFormatScore,
@@ -185,6 +186,12 @@ class QueueRow extends Component {
                         disambiguation={album.disambiguation}
                       /> :
                       '-'
+                  }
+                  {
+                    targetTracks.length > 0 &&
+                      <div className={styles.wantedSongs}>
+                        {translate('WantedSongs')}: {targetTracks.map((track) => track.title || translate('SongTitleUnavailable')).join(', ')}
+                      </div>
                   }
                 </TableRowCell>
               );
@@ -427,6 +434,10 @@ QueueRow.propTypes = {
   errorMessage: PropTypes.string,
   artist: PropTypes.object,
   album: PropTypes.object,
+  targetTracks: PropTypes.arrayOf(PropTypes.shape({
+    foreignRecordingId: PropTypes.string.isRequired,
+    title: PropTypes.string
+  })),
   quality: PropTypes.object.isRequired,
   customFormats: PropTypes.arrayOf(PropTypes.object),
   customFormatScore: PropTypes.number.isRequired,
@@ -456,6 +467,7 @@ QueueRow.propTypes = {
 };
 
 QueueRow.defaultProps = {
+  targetTracks: [],
   customFormats: [],
   isGrabbing: false,
   isRemoving: false

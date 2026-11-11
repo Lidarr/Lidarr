@@ -61,5 +61,25 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             page.Url.Query.Should().Contain("artist=Alien%20Ant%20Farm");
             page.Url.Query.Should().Contain("album=TruANT");
         }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void should_search_for_a_song_without_an_album_filter(bool supportsTrack)
+        {
+            _capabilities.SupportedAudioSearchParameters = supportsTrack ?
+                new[] { "q", "artist", "track" } : new[] { "q", "artist", "album" };
+            var criteria = new TrackSearchCriteria
+            {
+                Artist = _singleAlbumSearchCriteria.Artist,
+                AlbumTitle = "These Days"
+            };
+
+            var requests = Subject.GetSearchRequests(criteria);
+            var page = requests.GetAllTiers().First().First();
+
+            page.Url.Query.Should().Contain("t=music");
+            page.Url.Query.Should().NotContain("&album=");
+            page.Url.Query.Should().Contain(supportsTrack ? "track=These%20Days" : "q=Alien%20Ant%20Farm%20These%20Days");
+        }
     }
 }

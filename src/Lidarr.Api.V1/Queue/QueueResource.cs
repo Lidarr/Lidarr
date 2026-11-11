@@ -7,6 +7,7 @@ using Lidarr.Api.V1.CustomFormats;
 using Lidarr.Http.REST;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Download.TrackedDownloads;
+using NzbDrone.Core.Music;
 using NzbDrone.Core.Qualities;
 
 namespace Lidarr.Api.V1.Queue
@@ -40,6 +41,13 @@ namespace Lidarr.Api.V1.Queue
         public int TrackFileCount { get; set; }
         public int TrackHasFileCount { get; set; }
         public bool DownloadForced { get; set; }
+        public List<QueueTargetTrackResource> TargetTracks { get; set; }
+    }
+
+    public class QueueTargetTrackResource
+    {
+        public string ForeignRecordingId { get; set; }
+        public string Title { get; set; }
     }
 
     public static class QueueResourceMapper
@@ -85,8 +93,49 @@ namespace Lidarr.Api.V1.Queue
                 OutputPath = model.OutputPath,
                 TrackFileCount = albumRelease?.Tracks?.Value?.Count ?? 0,
                 TrackHasFileCount = albumRelease?.Tracks?.Value?.Count(x => x.HasFile) ?? 0,
-                DownloadForced = model.DownloadForced
+                DownloadForced = model.DownloadForced,
+                TargetTracks = GetTargetTracks(model)
             };
+        }
+
+        private static List<QueueTargetTrackResource> GetTargetTracks(NzbDrone.Core.Queue.Queue model)
+        {
+            // Use the targets saved with the grab, not today's monitoring selections.
+            var recordingIds = model.RemoteAlbum?.TargetRecordingIds?.Where(id => id.IsNotNullOrWhiteSpace()).Distinct().ToList() ?? new List<string>();
+            if (recordingIds.Count == 0)
+            {
+                return new List<QueueTargetTrackResource>();
+            }
+
+            var titles = new Dictionary<string, string>();
+            var albums = new[] { model.Album }
+                .Concat(model.RemoteAlbum?.Albums ?? new List<Album>())
+                .Where(album => album != null)
+                .Distinct();
+
+            foreach (var release in albums.SelectMany(album => album.AlbumReleases?.Value ?? new List<AlbumRelease>())
+                         .OrderByDescending(release => release.Monitored))
+            {
+                foreach (var track in release.Tracks?.Value ?? new List<Track>())
+                {
+                    if (recordingIds.Contains(track.ForeignRecordingId) && track.Title.IsNotNullOrWhiteSpace())
+                    {
+                        titles.TryAdd(track.ForeignRecordingId, track.Title);
+                    }
+                }
+
+                if (titles.Count == recordingIds.Count)
+                {
+                    break;
+                }
+            }
+
+            // Retain unresolved targets so the UI never silently hides wanted songs.
+            return recordingIds.Select(id => new QueueTargetTrackResource
+            {
+                ForeignRecordingId = id,
+                Title = titles.GetValueOrDefault(id)
+            }).ToList();
         }
 
         public static List<QueueResource> ToResource(this IEnumerable<NzbDrone.Core.Queue.Queue> models, bool includeArtist, bool includeAlbum)

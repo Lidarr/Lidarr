@@ -25,9 +25,11 @@ namespace Lidarr.Api.V1.Indexers
     public class ReleaseController : ReleaseControllerBase
     {
         private readonly IAlbumService _albumService;
+        private readonly ITrackService _trackService;
         private readonly IArtistService _artistService;
         private readonly IFetchAndParseRss _rssFetcherAndParser;
         private readonly ISearchForReleases _releaseSearchService;
+        private readonly ISearchForTracks _trackSearchService;
         private readonly IMakeDownloadDecision _downloadDecisionMaker;
         private readonly IPrioritizeDownloadDecision _prioritizeDownloadDecision;
         private readonly IParsingService _parsingService;
@@ -37,9 +39,11 @@ namespace Lidarr.Api.V1.Indexers
         private readonly ICached<RemoteAlbum> _remoteAlbumCache;
 
         public ReleaseController(IAlbumService albumService,
+                             ITrackService trackService,
                              IArtistService artistService,
                              IFetchAndParseRss rssFetcherAndParser,
                              ISearchForReleases nzbSearchService,
+                             ISearchForTracks trackSearchService,
                              IMakeDownloadDecision downloadDecisionMaker,
                              IPrioritizeDownloadDecision prioritizeDownloadDecision,
                              IParsingService parsingService,
@@ -50,9 +54,11 @@ namespace Lidarr.Api.V1.Indexers
             : base(qualityProfileService)
         {
             _albumService = albumService;
+            _trackService = trackService;
             _artistService = artistService;
             _rssFetcherAndParser = rssFetcherAndParser;
             _releaseSearchService = nzbSearchService;
+            _trackSearchService = trackSearchService;
             _downloadDecisionMaker = downloadDecisionMaker;
             _prioritizeDownloadDecision = prioritizeDownloadDecision;
             _parsingService = parsingService;
@@ -81,6 +87,8 @@ namespace Lidarr.Api.V1.Indexers
 
             try
             {
+                remoteAlbum.TargetRecordingIds = release.TargetRecordingIds ?? new List<string>();
+
                 if (remoteAlbum.Artist == null)
                 {
                     if (release.AlbumId.HasValue)
@@ -139,11 +147,11 @@ namespace Lidarr.Api.V1.Indexers
         }
 
         [HttpGet]
-        public async Task<List<ReleaseResource>> GetReleases(int? albumId, int? artistId)
+        public async Task<List<ReleaseResource>> GetReleases(int? albumId, int? artistId, int? trackId)
         {
             if (albumId.HasValue)
             {
-                return await GetAlbumReleases(int.Parse(Request.Query["albumId"]));
+                return await GetAlbumReleases(albumId.Value, trackId);
             }
 
             if (artistId.HasValue)
@@ -154,11 +162,28 @@ namespace Lidarr.Api.V1.Indexers
             return await GetRss();
         }
 
-        private async Task<List<ReleaseResource>> GetAlbumReleases(int albumId)
+        private async Task<List<ReleaseResource>> GetAlbumReleases(int albumId, int? trackId)
         {
             try
             {
-                var decisions = await _releaseSearchService.AlbumSearch(albumId, true, true, true);
+                List<DownloadDecision> decisions;
+
+                if (trackId.HasValue)
+                {
+                    var track = _trackService.GetTrack(trackId.Value);
+
+                    if (track.AlbumRelease.Value.AlbumId != albumId)
+                    {
+                        throw new BadRequestException("Track does not belong to the requested album");
+                    }
+
+                    decisions = await _trackSearchService.TrackSearch(new List<int> { track.Id }, true, true);
+                }
+                else
+                {
+                    decisions = await _releaseSearchService.AlbumSearch(albumId, true, true, true);
+                }
+
                 var prioritizedDecisions = _prioritizeDownloadDecision.PrioritizeDecisions(decisions);
 
                 return MapDecisions(prioritizedDecisions);

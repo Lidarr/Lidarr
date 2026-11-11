@@ -4,6 +4,74 @@
   white-space: nowrap;
 }
 
+.selectableRow {
+  composes: row from '~Components/Table/TableRow.css';
+
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primaryColor);
+    outline-offset: -2px;
+  }
+}
+
+.selectedRow {
+  background-color: var(--tableRowHoverBackgroundColor);
+  box-shadow: inset 3px 0 0 var(--primaryColor);
+}
+
+.downloadedRow {
+  background-image: linear-gradient(rgba(39, 194, 76, 0.1), rgba(39, 194, 76, 0.1));
+}
+
+.songStatus {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 180px;
+  white-space: nowrap;
+}
+
+.songStatusContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.downloadedStatus,
+.missingStatus {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 7px;
+  border: 1px solid var(--borderColor);
+  border-radius: 3px;
+  font-size: $smallFontSize;
+  gap: 5px;
+}
+
+.downloadedStatus {
+  border-color: var(--successColor);
+  background-color: var(--successColor);
+  color: var(--white);
+}
+
+.missingStatus {
+  color: inherit;
+}
+
+.album {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 25%;
+  white-space: nowrap;
+}
+
+.popularity {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 90px;
+  text-align: center;
+}
+
 .monitored {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
@@ -14,6 +82,13 @@
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
   width: 50px;
+}
+
+.search {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 70px;
+  white-space: nowrap;
 }
 
 .audio {

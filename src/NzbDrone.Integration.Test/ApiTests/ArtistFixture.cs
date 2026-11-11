@@ -144,6 +144,20 @@ namespace NzbDrone.Integration.Test.ApiTests
 
         [Test]
         [Order(3)]
+        public void update_artist_song_mode()
+        {
+            var artist = EnsureArtist("f59c5520-5f46-4d2c-b2c4-822eabf53419", "Linkin Park", false);
+
+            artist.SongMode = true;
+
+            var result = Artist.Put(artist);
+
+            result.SongMode.Should().BeTrue();
+            Artist.Get(artist.Id).SongMode.Should().BeTrue();
+        }
+
+        [Test]
+        [Order(3)]
         public void update_artist_tags()
         {
             var artist = EnsureArtist("8ac6cc32-8ddf-43b1-9ac4-4b04f9053176", "Alien Ant Farm");

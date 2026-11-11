@@ -86,6 +86,65 @@ namespace NzbDrone.Core.Test.Download.DownloadApprovedReportsTests
         }
 
         [Test]
+        public async Task should_only_download_a_target_recording_once_across_different_albums()
+        {
+            var remoteAlbum1 = GetRemoteAlbum(new List<Album> { GetAlbum(1) }, new QualityModel(Quality.MP3_192));
+            var remoteAlbum2 = GetRemoteAlbum(new List<Album> { GetAlbum(2) }, new QualityModel(Quality.MP3_192));
+            remoteAlbum1.TargetRecordingIds = new List<string> { "recording" };
+            remoteAlbum2.TargetRecordingIds = new List<string> { "recording" };
+
+            var decisions = new List<DownloadDecision>
+            {
+                new DownloadDecision(remoteAlbum1),
+                new DownloadDecision(remoteAlbum2)
+            };
+
+            await Subject.ProcessDecisions(decisions, true);
+
+            Mocker.GetMock<IDownloadService>().Verify(v => v.DownloadReport(It.IsAny<RemoteAlbum>(), null), Times.Once());
+        }
+
+        [Test]
+        public async Task should_trim_already_grabbed_recordings_from_a_later_candidate()
+        {
+            var remoteAlbum1 = GetRemoteAlbum(new List<Album> { GetAlbum(1) }, new QualityModel(Quality.MP3_192));
+            var remoteAlbum2 = GetRemoteAlbum(new List<Album> { GetAlbum(2) }, new QualityModel(Quality.MP3_192));
+            remoteAlbum1.TargetRecordingIds = new List<string> { "recording-1" };
+            remoteAlbum2.TargetRecordingIds = new List<string> { "recording-1", "recording-2" };
+
+            var decisions = new List<DownloadDecision>
+            {
+                new DownloadDecision(remoteAlbum1),
+                new DownloadDecision(remoteAlbum2)
+            };
+
+            await Subject.ProcessDecisions(decisions, true);
+
+            Mocker.GetMock<IDownloadService>().Verify(v => v.DownloadReport(It.IsAny<RemoteAlbum>(), null), Times.Exactly(2));
+            remoteAlbum2.TargetRecordingIds.Should().Equal("recording-2");
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task should_download_two_different_songs_from_the_same_album(bool secondIsAlbumFallback)
+        {
+            var albums = new List<Album> { GetAlbum(1) };
+            var first = GetRemoteAlbum(albums, new QualityModel(Quality.MP3_320));
+            var second = GetRemoteAlbum(albums, new QualityModel(Quality.MP3_320));
+            first.TargetRecordingIds = new List<string> { "first" };
+            second.TargetRecordingIds = secondIsAlbumFallback ? new List<string> { "first", "second" } : new List<string> { "second" };
+
+            var result = await Subject.ProcessDecisions(new List<DownloadDecision>
+            {
+                new DownloadDecision(first), new DownloadDecision(second)
+            },
+                true);
+
+            result.Grabbed.Should().HaveCount(2);
+            second.TargetRecordingIds.Should().Equal("second");
+        }
+
+        [Test]
         public  async Task should_not_download_if_any_album_was_already_downloaded()
         {
             var remoteAlbum1 = GetRemoteAlbum(

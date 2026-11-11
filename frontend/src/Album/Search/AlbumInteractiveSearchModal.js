@@ -9,6 +9,7 @@ function AlbumInteractiveSearchModal(props) {
     isOpen,
     albumId,
     albumTitle,
+    trackId,
     onModalClose
   } = props;
 
@@ -22,6 +23,7 @@ function AlbumInteractiveSearchModal(props) {
       <AlbumInteractiveSearchModalContent
         albumId={albumId}
         albumTitle={albumTitle}
+        trackId={trackId}
         onModalClose={onModalClose}
       />
     </Modal>
@@ -32,6 +34,7 @@ AlbumInteractiveSearchModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   albumId: PropTypes.number.isRequired,
   albumTitle: PropTypes.string.isRequired,
+  trackId: PropTypes.number,
   onModalClose: PropTypes.func.isRequired
 };
 

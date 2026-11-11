@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using FluentAssertions;
@@ -31,6 +32,19 @@ namespace NzbDrone.Integration.Test.ApiTests
             var tracks = Tracks.GetTracksInArtist(_artist.Id);
 
             Tracks.Get(tracks.First().Id).Should().NotBeNull();
+        }
+
+        [Test]
+        [Order(2)]
+        public void should_persist_track_monitoring_changes()
+        {
+            var track = Tracks.GetTracksInArtist(_artist.Id).First();
+            var monitored = !track.Monitored;
+
+            var updated = Tracks.SetMonitored(new List<int> { track.Id }, monitored);
+
+            updated.Should().Contain(item => item.Id == track.Id && item.Monitored == monitored);
+            Tracks.Get(track.Id).Monitored.Should().Be(monitored);
         }
 
         [TearDown]

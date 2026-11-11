@@ -129,6 +129,29 @@ namespace NzbDrone.Core.Test.Download.Pending.PendingReleaseServiceTests
         }
 
         [Test]
+        public void should_merge_target_recording_ids_if_the_same_release_is_already_pending()
+        {
+            GivenHeldRelease(_release.Title, _release.Indexer, _release.PublishDate);
+
+            _heldReleases.Single().AdditionalInfo = new PendingReleaseAdditionalInfo
+            {
+                ReleaseSource = ReleaseSourceType.Rss,
+                TargetRecordingIds = new List<string> { "recording-1" }
+            };
+
+            _remoteAlbum.TargetRecordingIds = new List<string> { "recording-2" };
+
+            Subject.Add(_temporarilyRejected, PendingReleaseReason.Delay);
+
+            Mocker.GetMock<IPendingReleaseRepository>()
+                .Verify(v => v.Update(It.Is<PendingRelease>(pending =>
+                    pending.AdditionalInfo.ReleaseSource == ReleaseSourceType.Rss &&
+                    pending.AdditionalInfo.TargetRecordingIds.SequenceEqual(new[] { "recording-1", "recording-2" }))));
+
+            VerifyNoInsert();
+        }
+
+        [Test]
         public void should_not_add_if_it_is_the_same_release_from_the_same_indexer_twice()
         {
             GivenHeldRelease(_release.Title, _release.Indexer, _release.PublishDate, PendingReleaseReason.DownloadClientUnavailable);

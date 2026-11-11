@@ -104,6 +104,11 @@ namespace NzbDrone.Core.DecisionEngine
 
                         remoteAlbum.Release = report;
 
+                        if (searchCriteria?.TargetRecordingIds?.Any() == true)
+                        {
+                            remoteAlbum.TargetRecordingIds = searchCriteria.TargetRecordingIds;
+                        }
+
                         if (remoteAlbum.Artist == null)
                         {
                             decision = new DownloadDecision(remoteAlbum, new Rejection("Unknown Artist"));
@@ -126,6 +131,11 @@ namespace NzbDrone.Core.DecisionEngine
                         else
                         {
                             _aggregationService.Augment(remoteAlbum);
+
+                            if (searchCriteria == null && remoteAlbum.Artist.SongMode)
+                            {
+                                remoteAlbum.TargetRecordingIds = remoteAlbum.MonitoredRecordingIds();
+                            }
 
                             remoteAlbum.CustomFormats = _formatCalculator.ParseCustomFormat(remoteAlbum, remoteAlbum.Release.Size);
                             remoteAlbum.CustomFormatScore = remoteAlbum?.Artist?.QualityProfile?.Value.CalculateCustomFormatScore(remoteAlbum.CustomFormats) ?? 0;

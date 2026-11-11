@@ -19,6 +19,11 @@ import { icons, inputTypes, kinds, sizes, tooltipPositions } from 'Helpers/Props
 import translate from 'Utilities/String/translate';
 import styles from './EditArtistModalContent.css';
 
+function translateWithFallback(key, fallback) {
+  const translated = translate(key);
+  return translated === key ? fallback : translated;
+}
+
 class EditArtistModalContent extends Component {
 
   //
@@ -78,12 +83,15 @@ class EditArtistModalContent extends Component {
 
     const {
       monitored,
+      songMode,
       monitorNewItems,
       qualityProfileId,
       metadataProfileId,
       path,
       tags
     } = item;
+    const songModeSetting = songMode || { value: false };
+    const isSongMode = songModeSetting.value;
 
     return (
       <ModalContent onModalClose={onModalClose}>
@@ -101,7 +109,14 @@ class EditArtistModalContent extends Component {
               <FormInputGroup
                 type={inputTypes.CHECK}
                 name="monitored"
-                helpText={translate('MonitoredHelpText')}
+                helpText={
+                  isSongMode ?
+                    translateWithFallback(
+                      'SongModeMonitoredHelpText',
+                      'Enable automatic monitoring for the songs selected in Song Mode'
+                    ) :
+                    translate('MonitoredHelpText')
+                }
                 {...monitored}
                 onChange={onInputChange}
               />
@@ -109,29 +124,50 @@ class EditArtistModalContent extends Component {
 
             <FormGroup size={sizes.MEDIUM}>
               <FormLabel>
-                {translate('MonitorNewItems')}
-
-                <Popover
-                  anchor={
-                    <Icon
-                      className={styles.labelIcon}
-                      name={icons.INFO}
-                    />
-                  }
-                  title={translate('MonitorNewItems')}
-                  body={<ArtistMonitorNewItemsOptionsPopoverContent />}
-                  position={tooltipPositions.RIGHT}
-                />
+                {translateWithFallback('SongMode', 'Song Mode')}
               </FormLabel>
 
               <FormInputGroup
-                type={inputTypes.MONITOR_NEW_ITEMS_SELECT}
-                name="monitorNewItems"
-                helpText={translate('MonitorNewItemsHelpText')}
-                {...monitorNewItems}
+                type={inputTypes.CHECK}
+                name="songMode"
+                helpText={translateWithFallback(
+                  'SongModeHelpText',
+                  'After saving, show this artist’s song catalog instead of album sections. Use Select Songs, then Edit and Save to choose monitored songs. Enabling Song Mode does not change your current selections.'
+                )}
+                {...songModeSetting}
                 onChange={onInputChange}
               />
             </FormGroup>
+
+            {
+              isSongMode ?
+                null :
+                <FormGroup size={sizes.MEDIUM}>
+                  <FormLabel>
+                    {translate('MonitorNewItems')}
+
+                    <Popover
+                      anchor={
+                        <Icon
+                          className={styles.labelIcon}
+                          name={icons.INFO}
+                        />
+                      }
+                      title={translate('MonitorNewItems')}
+                      body={<ArtistMonitorNewItemsOptionsPopoverContent />}
+                      position={tooltipPositions.RIGHT}
+                    />
+                  </FormLabel>
+
+                  <FormInputGroup
+                    type={inputTypes.MONITOR_NEW_ITEMS_SELECT}
+                    name="monitorNewItems"
+                    helpText={translate('MonitorNewItemsHelpText')}
+                    {...monitorNewItems}
+                    onChange={onInputChange}
+                  />
+                </FormGroup>
+            }
 
             <FormGroup size={sizes.MEDIUM}>
               <FormLabel>

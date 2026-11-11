@@ -36,6 +36,7 @@ namespace NzbDrone.Core.DecisionEngine
         {
             var comparers = new List<CompareDelegate>
             {
+                CompareTrackSearchPriority,
                 CompareQuality,
                 CompareCustomFormatScore,
                 CompareYearMatch,
@@ -89,6 +90,19 @@ namespace NzbDrone.Core.DecisionEngine
         private int CompareCustomFormatScore(DownloadDecision x, DownloadDecision y)
         {
             return CompareBy(x.RemoteAlbum, y.RemoteAlbum, remoteAlbum => remoteAlbum.CustomFormatScore);
+        }
+
+        private int CompareTrackSearchPriority(DownloadDecision x, DownloadDecision y)
+        {
+            if (!x.RemoteAlbum.TrackSearchPriority.HasValue ||
+                !y.RemoteAlbum.TrackSearchPriority.HasValue)
+            {
+                return 0;
+            }
+
+            return CompareByReverse(x.RemoteAlbum,
+                y.RemoteAlbum,
+                remoteAlbum => remoteAlbum.TrackSearchPriority.Value);
         }
 
         private int CompareYearMatch(DownloadDecision x, DownloadDecision y)

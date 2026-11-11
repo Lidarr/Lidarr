@@ -50,6 +50,7 @@ namespace Lidarr.Api.V1.Artist
 
         // Editing Only
         public bool Monitored { get; set; }
+        public bool SongMode { get; set; }
         public NewItemMonitorTypes MonitorNewItems { get; set; }
 
         public string RootFolderPath { get; set; }
@@ -97,6 +98,7 @@ namespace Lidarr.Api.V1.Artist
                 Links = model.Metadata.Value.Links,
 
                 Monitored = model.Monitored,
+                SongMode = model.SongMode,
                 MonitorNewItems = model.MonitorNewItems,
 
                 CleanName = model.CleanName,
@@ -143,6 +145,7 @@ namespace Lidarr.Api.V1.Artist
                 MetadataProfileId = resource.MetadataProfileId,
 
                 Monitored = resource.Monitored,
+                SongMode = resource.SongMode,
                 MonitorNewItems = resource.MonitorNewItems,
 
                 CleanName = resource.CleanName,

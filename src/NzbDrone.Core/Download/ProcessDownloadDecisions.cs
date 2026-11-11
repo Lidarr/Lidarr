@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Download
     public interface IProcessDownloadDecisions
     {
         Task<ProcessedDecisions> ProcessDecisions(List<DownloadDecision> decisions);
+        Task<ProcessedDecisions> ProcessDecisions(List<DownloadDecision> decisions, bool oneReleasePerTargetRecording);
         Task<ProcessedDecisionResult> ProcessDecision(DownloadDecision decision, int? downloadClientId);
     }
 
@@ -37,9 +38,15 @@ namespace NzbDrone.Core.Download
 
         public async Task<ProcessedDecisions> ProcessDecisions(List<DownloadDecision> decisions)
         {
+            return await ProcessDecisions(decisions, false);
+        }
+
+        public async Task<ProcessedDecisions> ProcessDecisions(List<DownloadDecision> decisions, bool oneReleasePerTargetRecording)
+        {
             var qualifiedReports = GetQualifiedReports(decisions);
             var prioritizedDecisions = _prioritizeDownloadDecision.PrioritizeDecisions(qualifiedReports);
             var grabbed = new List<DownloadDecision>();
+            var grabbedTargetRecordingIds = new HashSet<string>();
             var pending = new List<DownloadDecision>();
             var rejected = decisions.Where(d => d.Rejected).ToList();
 
@@ -50,6 +57,21 @@ namespace NzbDrone.Core.Download
 
             foreach (var report in prioritizedDecisions)
             {
+                if (oneReleasePerTargetRecording && report.RemoteAlbum.TargetRecordingIds.Any())
+                {
+                    var remainingTargetRecordingIds = report.RemoteAlbum.TargetRecordingIds
+                                                                  .Except(grabbedTargetRecordingIds)
+                                                                  .Distinct()
+                                                                  .ToList();
+
+                    if (!remainingTargetRecordingIds.Any())
+                    {
+                        continue;
+                    }
+
+                    report.RemoteAlbum.TargetRecordingIds = remainingTargetRecordingIds;
+                }
+
                 var downloadProtocol = report.RemoteAlbum.Release.DownloadProtocol;
 
                 // Skip if already grabbed
@@ -78,6 +100,7 @@ namespace NzbDrone.Core.Download
                     case ProcessedDecisionResult.Grabbed:
                         {
                             grabbed.Add(report);
+                            grabbedTargetRecordingIds.UnionWith(report.RemoteAlbum.TargetRecordingIds);
                             break;
                         }
 
@@ -168,11 +191,10 @@ namespace NzbDrone.Core.Download
         {
             var albumIds = report.RemoteAlbum.Albums.Select(e => e.Id).ToList();
 
-            return decisions.SelectMany(r => r.RemoteAlbum.Albums)
-                            .Select(e => e.Id)
-                            .ToList()
-                            .Intersect(albumIds)
-                            .Any();
+            return decisions.Any(decision =>
+                decision.RemoteAlbum.TargetRecordingIds.Any() && report.RemoteAlbum.TargetRecordingIds.Any() ?
+                    decision.RemoteAlbum.TargetRecordingIds.Intersect(report.RemoteAlbum.TargetRecordingIds).Any() :
+                    decision.RemoteAlbum.Albums.Any(album => albumIds.Contains(album.Id)));
         }
 
         private void PreparePending(List<Tuple<DownloadDecision, PendingReleaseReason>> queue, List<DownloadDecision> grabbed, List<DownloadDecision> pending, DownloadDecision report, PendingReleaseReason reason)

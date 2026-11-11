@@ -178,6 +178,21 @@ namespace NzbDrone.Core.Test.MusicTests
         }
 
         [Test]
+        public void should_retain_song_search_album_missing_from_profile_while_song_mode_is_enabled()
+        {
+            var album = _albums.First();
+            album.AddOptions.AddType = AlbumAddType.SongSearch;
+            album.Artist = new Artist { SongMode = true };
+
+            Subject.RefreshAlbumInfo(album, null, false);
+
+            Mocker.GetMock<IAlbumService>()
+                  .Verify(service => service.DeleteAlbum(album.Id, true, false), Times.Never());
+
+            ExceptionVerification.ExpectedErrors(1);
+        }
+
+        [Test]
         public void should_not_add_duplicate_releases()
         {
             var newAlbum = Builder<Album>.CreateNew()

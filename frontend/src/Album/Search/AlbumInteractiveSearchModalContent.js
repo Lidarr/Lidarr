@@ -13,6 +13,7 @@ function AlbumInteractiveSearchModalContent(props) {
   const {
     albumId,
     albumTitle,
+    trackId,
     onModalClose
   } = props;
 
@@ -29,7 +30,8 @@ function AlbumInteractiveSearchModalContent(props) {
         <InteractiveSearchConnector
           type="album"
           searchPayload={{
-            albumId
+            albumId,
+            trackId
           }}
         />
       </ModalBody>
@@ -46,6 +48,7 @@ function AlbumInteractiveSearchModalContent(props) {
 AlbumInteractiveSearchModalContent.propTypes = {
   albumId: PropTypes.number.isRequired,
   albumTitle: PropTypes.string.isRequired,
+  trackId: PropTypes.number,
   onModalClose: PropTypes.func.isRequired
 };
 

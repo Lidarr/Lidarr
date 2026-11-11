@@ -191,9 +191,19 @@ namespace NzbDrone.Core.Download
         {
             var allTracksImported =
                 (importResults.Any() && importResults.All(c => c.Result == ImportResultType.Imported)) ||
-                importResults.Where(c => c.Result == ImportResultType.Imported)
-                    .SelectMany(c => c.ImportDecision.Item.Tracks)
-                    .Count() >= Math.Max(1, trackedDownload.RemoteAlbum.Albums.Sum(x => x.AlbumReleases.Value.Where(y => y.Monitored).Sum(z => z.TrackCount)));
+                (importResults.Any(c => c.Result == ImportResultType.Imported) &&
+                 importResults.Where(c => c.Result == ImportResultType.Imported)
+                     .SelectMany(c => c.ImportDecision.Item.Tracks)
+                     .Count() >= trackedDownload.RemoteAlbum.MonitoredTrackCount(trackedDownload.DownloadItem.IsFullAlbumRequest));
+
+            if (trackedDownload.RemoteAlbum.TargetRecordingIds?.Any() == true)
+            {
+                var importedRecordingIds = importResults.Where(result => result.Result == ImportResultType.Imported)
+                    .SelectMany(result => result.ImportDecision.Item.Tracks)
+                    .Select(track => track.ForeignRecordingId)
+                    .ToHashSet();
+                allTracksImported = trackedDownload.RemoteAlbum.TargetRecordingIds.All(importedRecordingIds.Contains);
+            }
 
             if (allTracksImported)
             {
@@ -257,6 +267,13 @@ namespace NzbDrone.Core.Download
         private void SetImportItem(TrackedDownload trackedDownload)
         {
             trackedDownload.ImportItem = _provideImportItemService.ProvideImportItem(trackedDownload.DownloadItem, trackedDownload.ImportItem);
+            trackedDownload.ImportItem.IsFullAlbumRequest = trackedDownload.DownloadItem.IsFullAlbumRequest;
+
+            // Some clients create a new import item instead of returning the tracked download item.
+            if (trackedDownload.RemoteAlbum?.TargetRecordingIds?.Any() == true)
+            {
+                trackedDownload.ImportItem.TargetRecordingIds = trackedDownload.RemoteAlbum.TargetRecordingIds;
+            }
         }
 
         private bool ValidatePath(TrackedDownload trackedDownload)

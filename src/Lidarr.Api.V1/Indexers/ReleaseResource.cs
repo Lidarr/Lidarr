@@ -50,6 +50,7 @@ namespace Lidarr.Api.V1.Indexers
         public int? Leechers { get; set; }
         public string Protocol { get; set; }
         public int IndexerFlags { get; set; }
+        public List<string> TargetRecordingIds { get; set; }
 
         // Sent when queuing an unknown release
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
@@ -118,6 +119,7 @@ namespace Lidarr.Api.V1.Indexers
                 Leechers = (torrentInfo.Peers.HasValue && torrentInfo.Seeders.HasValue) ? (torrentInfo.Peers.Value - torrentInfo.Seeders.Value) : (int?)null,
                 Protocol = releaseInfo.DownloadProtocol,
                 IndexerFlags = (int)indexerFlags,
+                TargetRecordingIds = remoteAlbum.TargetRecordingIds,
             };
         }
 

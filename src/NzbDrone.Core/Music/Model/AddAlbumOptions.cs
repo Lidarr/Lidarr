@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Music
     public enum AlbumAddType
     {
         Automatic,
-        Manual
+        Manual,
+        SongSearch
     }
 }

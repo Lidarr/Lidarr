@@ -38,6 +38,12 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             var minReleaseDuration = subject.Albums.Select(a => a.AlbumReleases.Value.Where(r => r.Monitored || a.AnyReleaseOk).Select(r => r.Duration).MinOrDefault()).Sum() / 1000;
             var maxReleaseDuration = subject.Albums.Select(a => a.AlbumReleases.Value.Where(r => r.Monitored || a.AnyReleaseOk).Select(r => r.Duration).MaxOrDefault()).Sum() / 1000;
 
+            if (searchCriteria is TrackSearchCriteria && subject.TrackSearchPriority == 0)
+            {
+                minReleaseDuration = searchCriteria.Tracks.Sum(track => track.Duration) / 1000;
+                maxReleaseDuration = minReleaseDuration;
+            }
+
             if (qualityDefinition.MinSize.HasValue)
             {
                 if (maxReleaseDuration == 0)

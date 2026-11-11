@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
@@ -108,6 +109,48 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
                 .Returns(BuildRemoteAlbum().Artist);
         }
 
+        [Test]
+        public void should_preserve_a_whole_album_request_for_a_separate_import_item()
+        {
+            var importItem = new DownloadClientItem { OutputPath = _trackedDownload.DownloadItem.OutputPath };
+            _trackedDownload.DownloadItem.IsFullAlbumRequest = true;
+            Mocker.GetMock<IProvideImportItemService>()
+                .Setup(service => service.ProvideImportItem(It.IsAny<DownloadClientItem>(), It.IsAny<DownloadClientItem>()))
+                .Returns(importItem);
+            Mocker.GetMock<IDownloadedTracksImportService>()
+                .Setup(service => service.ProcessPath(It.IsAny<string>(), ImportMode.Auto, It.IsAny<Artist>(), importItem))
+                .Returns(new List<ImportResult>());
+
+            Subject.Import(_trackedDownload);
+
+            importItem.IsFullAlbumRequest.Should().BeTrue();
+        }
+
+        [Test]
+        public void should_not_count_only_monitored_songs_for_an_incomplete_whole_album_import()
+        {
+            _trackedDownload.DownloadItem.IsFullAlbumRequest = true;
+            var first = new Track { ForeignRecordingId = "first", Monitored = false };
+            var second = new Track { ForeignRecordingId = "second", Monitored = false };
+            _trackedDownload.RemoteAlbum.Albums = new List<Album>
+            {
+                new Album
+                {
+                    AlbumReleases = new List<AlbumRelease>
+                    {
+                        new AlbumRelease { Monitored = true, TrackCount = 2, Tracks = new List<Track> { first, second } }
+                    }
+                }
+            };
+            var results = new List<ImportResult>
+            {
+                new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack { Tracks = new List<Track> { first } })),
+                new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack { Tracks = new List<Track> { second } }, new Rejection("Unidentified")), "Unidentified")
+            };
+
+            Subject.VerifyImport(_trackedDownload, results).Should().BeFalse();
+        }
+
         private void GivenArtistMatch()
         {
             Mocker.GetMock<IParsingService>()
@@ -211,6 +254,99 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
             Mocker.GetMock<IHistoryService>()
                   .Setup(s => s.FindByDownloadId(It.IsAny<string>()))
                   .Returns(new List<EntityHistory>());
+
+            Subject.Import(_trackedDownload);
+
+            AssertImported();
+        }
+
+        [Test]
+        public void should_mark_as_imported_when_all_monitored_tracks_were_imported()
+        {
+            GivenArtistMatch();
+
+            var selectedTrack = new Track { Id = 1, Monitored = true };
+            var unselectedTrack1 = new Track { Id = 2, Monitored = false };
+            var unselectedTrack2 = new Track { Id = 3, Monitored = false };
+            var release = new AlbumRelease
+            {
+                Monitored = true,
+                TrackCount = 3,
+                Tracks = new List<Track> { selectedTrack, unselectedTrack1, unselectedTrack2 }
+            };
+
+            _trackedDownload.RemoteAlbum.Albums = new List<Album>
+            {
+                new Album { Id = 1, AlbumReleases = new List<AlbumRelease> { release } }
+            };
+
+            Mocker.GetMock<IDownloadedTracksImportService>()
+                  .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()))
+                  .Returns(new List<ImportResult>
+                           {
+                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack
+                               {
+                                   Path = @"C:\TestPath\selected.flac".AsOsAgnostic(),
+                                   Tracks = new List<Track> { selectedTrack }
+                               })),
+                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack
+                               {
+                                   Path = @"C:\TestPath\unselected-1.flac".AsOsAgnostic(),
+                                   Tracks = new List<Track> { unselectedTrack1 }
+                               },
+                                   new Rejection("Track is not monitored")),
+                                   "Track is not monitored"),
+                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack
+                               {
+                                   Path = @"C:\TestPath\unselected-2.flac".AsOsAgnostic(),
+                                   Tracks = new List<Track> { unselectedTrack2 }
+                               },
+                                   new Rejection("Track is not monitored")),
+                                   "Track is not monitored")
+                           });
+
+            Subject.Import(_trackedDownload);
+
+            AssertImported();
+        }
+
+        [Test]
+        public void should_mark_as_imported_when_targeted_track_was_imported()
+        {
+            GivenArtistMatch();
+
+            var targetTrack = new Track { Id = 1, ForeignRecordingId = "target", Monitored = true };
+            var otherTrack = new Track { Id = 2, ForeignRecordingId = "other", Monitored = true };
+            var release = new AlbumRelease
+            {
+                Monitored = true,
+                TrackCount = 2,
+                Tracks = new List<Track> { targetTrack, otherTrack }
+            };
+
+            _trackedDownload.RemoteAlbum.TargetRecordingIds = new List<string> { targetTrack.ForeignRecordingId };
+            _trackedDownload.RemoteAlbum.Albums = new List<Album>
+            {
+                new Album { Id = 1, AlbumReleases = new List<AlbumRelease> { release } }
+            };
+
+            Mocker.GetMock<IDownloadedTracksImportService>()
+                  .Setup(v => v.ProcessPath(It.IsAny<string>(), It.IsAny<ImportMode>(), It.IsAny<Artist>(), It.IsAny<DownloadClientItem>()))
+                  .Returns(new List<ImportResult>
+                           {
+                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack
+                               {
+                                   Path = @"C:\TestPath\target.flac".AsOsAgnostic(),
+                                   Tracks = new List<Track> { targetTrack }
+                               })),
+                               new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack
+                               {
+                                   Path = @"C:\TestPath\other.flac".AsOsAgnostic(),
+                                   Tracks = new List<Track> { otherTrack }
+                               },
+                                   new Rejection("Track was not targeted by this download")),
+                                   "Track was not targeted by this download")
+                           });
 
             Subject.Import(_trackedDownload);
 
@@ -411,6 +547,37 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
                   .Verify(v => v.PublishEvent(It.IsAny<DownloadCompletedEvent>()), Times.Never());
 
             _trackedDownload.State.Should().Be(TrackedDownloadState.ImportFailed);
+        }
+
+        [TestCase("target", "target", false)]
+        [TestCase("other", "unrelated", false)]
+        [TestCase("target", "second", true)]
+        public void should_require_each_requested_recording_instead_of_counting_imported_tracks(string first, string second, bool complete)
+        {
+            _trackedDownload.RemoteAlbum.TargetRecordingIds = new List<string> { "target", "second" };
+            var results = new[] { first, second }.Select(recording => new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack
+            {
+                Tracks = new List<Track> { new Track { ForeignRecordingId = recording } }
+            }))).ToList();
+
+            Subject.VerifyImport(_trackedDownload, results).Should().Be(complete);
+        }
+
+        [Test]
+        public void should_preserve_requested_recordings_when_client_returns_a_separate_import_item()
+        {
+            var importItem = new DownloadClientItem { OutputPath = _trackedDownload.DownloadItem.OutputPath };
+            _trackedDownload.RemoteAlbum.TargetRecordingIds = new List<string> { "target", "second" };
+            Mocker.GetMock<IProvideImportItemService>()
+                .Setup(service => service.ProvideImportItem(It.IsAny<DownloadClientItem>(), It.IsAny<DownloadClientItem>()))
+                .Returns(importItem);
+            Mocker.GetMock<IDownloadedTracksImportService>()
+                .Setup(service => service.ProcessPath(It.IsAny<string>(), ImportMode.Auto, It.IsAny<Artist>(), importItem))
+                .Returns(new List<ImportResult>());
+
+            Subject.Import(_trackedDownload);
+
+            importItem.TargetRecordingIds.Should().Equal("target", "second");
         }
 
         private void AssertImported()

@@ -110,6 +110,21 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         }
 
         [Test]
+        public void should_allow_a_different_song_from_an_album_already_in_the_queue()
+        {
+            var queued = new RemoteAlbum
+            {
+                Artist = _artist,
+                Albums = new List<Album> { _album },
+                TargetRecordingIds = new List<string> { "first" }
+            };
+            _remoteAlbum.TargetRecordingIds = new List<string> { "second" };
+            GivenQueue(new[] { queued });
+
+            Subject.IsSatisfiedBy(_remoteAlbum, null).Accepted.Should().BeTrue();
+        }
+
+        [Test]
         public void should_return_true_when_artist_doesnt_match()
         {
             var remoteAlbum = Builder<RemoteAlbum>.CreateNew()

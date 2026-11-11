@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.DecisionEngine.Specifications;
+using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Qualities;
@@ -102,6 +103,21 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
                     AlbumBuilder(), AlbumBuilder(), AlbumBuilder(), AlbumBuilder(), AlbumBuilder(),
                     AlbumBuilder(), AlbumBuilder(), AlbumBuilder(), AlbumBuilder(), AlbumBuilder(2)
                 });
+        }
+
+        [Test]
+        public void should_validate_song_download_size_against_the_song_duration()
+        {
+            _parseResultSingle.Albums[0].AlbumReleases.Value[0].Duration = FORTY_FIVE_MINUTE_LP_MILLIS;
+            _parseResultSingle.Release.Size = 4.Megabytes();
+            _parseResultSingle.TrackSearchPriority = 0;
+            var criteria = new TrackSearchCriteria
+            {
+                Tracks = new List<Track> { new Track { Duration = 180000 } }
+            };
+
+            Subject.IsSatisfiedBy(_parseResultSingle, criteria).Accepted.Should().BeTrue();
+            Subject.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeFalse();
         }
 
         [TestCase(TWENTY_MINUTE_EP_MILLIS, 20, false)]

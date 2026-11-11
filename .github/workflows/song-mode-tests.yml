@@ -1,0 +1,70 @@
+name: Song Mode tests
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Check migration versions
+        shell: bash
+        run: |
+          duplicates="$(sed -nE 's/.*\[Migration\(([0-9]+)\).*/\1/p' src/NzbDrone.Core/Datastore/Migration/*.cs | awk '{print $0 + 0}' | sort -n | uniq -d)"
+          if [ -n "$duplicates" ]; then
+            echo "::error::Conflicting database migration versions: $duplicates"
+            exit 1
+          fi
+      - name: Test song searches and imports
+        run: >-
+          dotnet test src/NzbDrone.Core.Test/Lidarr.Core.Test.csproj
+          --configuration Debug
+          -p:SolutionDir="${{ github.workspace }}/src/"
+          -p:RuntimeIdentifiers=linux-x64
+          --filter 'FullyQualifiedName~IndexerSearchTests|FullyQualifiedName~NewznabRequestGeneratorFixture|FullyQualifiedName~ParsingServiceTests|FullyQualifiedName~AcceptableSizeSpecificationFixture|FullyQualifiedName~PrioritizeDownloadDecisionFixture|FullyQualifiedName~QueueSpecificationFixture|FullyQualifiedName~CompletedDownloadServiceTests|FullyQualifiedName~TrackedDownloadAlreadyImportedFixture|FullyQualifiedName~DownloadApprovedFixture|FullyQualifiedName~DownloadedTracksImportServiceFixture|FullyQualifiedName~ImportApprovedTracksFixture|FullyQualifiedName~MonitoredTrackSpecificationFixture|FullyQualifiedName~HistoryTests'
+      - name: Test external song popularity matching
+        run: >-
+          dotnet test src/NzbDrone.Core.Test/Lidarr.Core.Test.csproj
+          --configuration Debug --no-restore
+          -p:SolutionDir="${{ github.workspace }}/src/"
+          -p:RuntimeIdentifiers=linux-x64
+          --filter 'FullyQualifiedName~SongPopularityServiceFixture'
+      - name: Test Song Mode defaults and external transfer imports
+        run: >-
+          dotnet test src/NzbDrone.Core.Test/Lidarr.Core.Test.csproj
+          --configuration Debug --no-restore
+          -p:SolutionDir="${{ github.workspace }}/src/"
+          -p:RuntimeIdentifiers=linux-x64
+          --filter 'FullyQualifiedName~SongModeSelectionFixture|FullyQualifiedName~TrackRepositorySongModeFixture|FullyQualifiedName~DownloadedAlbumsCommandServiceFixture|FullyQualifiedName~AlbumAndSongDownloadFixture'
+      - name: Build the application and API
+        run: >-
+          dotnet build src/NzbDrone.Console/Lidarr.Console.csproj
+          --configuration Debug
+          -p:SolutionDir="${{ github.workspace }}/src/"
+          -p:RuntimeIdentifiers=linux-x64
+      - name: Test selected-song queue resources
+        run: >-
+          dotnet test src/NzbDrone.Api.Test/Lidarr.Api.Test.csproj
+          --configuration Debug
+          -p:SolutionDir="${{ github.workspace }}/src/"
+          -p:RuntimeIdentifiers=linux-x64
+          --filter 'FullyQualifiedName~QueueResourceFixture'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+      - name: Install frontend dependencies
+        run: corepack yarn install --frozen-lockfile
+      - name: Test song checklist and queue UI
+        run: node --test frontend/test/songMode.test.cjs

@@ -46,6 +46,12 @@ namespace NzbDrone.Core.DecisionEngine.Specifications
             foreach (var queueItem in matchingAlbum)
             {
                 var remoteAlbum = queueItem.RemoteAlbum;
+                if (subject.TargetRecordingIds.Any() && remoteAlbum.TargetRecordingIds.Any() &&
+                    !subject.TargetRecordingIds.Intersect(remoteAlbum.TargetRecordingIds).Any())
+                {
+                    continue;
+                }
+
                 var qualityProfile = subject.Artist.QualityProfile.Value;
 
                 // To avoid a race make sure it's not FailedPending (failed awaiting removal/search).

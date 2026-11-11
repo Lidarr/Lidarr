@@ -25,6 +25,7 @@ namespace NzbDrone.Core.Music
         void UpdateMany(List<Track> tracks);
         void DeleteMany(List<Track> tracks);
         void SetFileIds(List<Track> tracks);
+        List<Track> SetMonitored(IEnumerable<int> trackIds, bool monitored);
     }
 
     public class TrackService : ITrackService,
@@ -32,12 +33,15 @@ namespace NzbDrone.Core.Music
                                 IHandle<TrackFileDeletedEvent>
     {
         private readonly ITrackRepository _trackRepository;
+        private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
         public TrackService(ITrackRepository trackRepository,
+                            IEventAggregator eventAggregator,
                             Logger logger)
         {
             _trackRepository = trackRepository;
+            _eventAggregator = eventAggregator;
             _logger = logger;
         }
 
@@ -120,6 +124,38 @@ namespace NzbDrone.Core.Music
         public void SetFileIds(List<Track> tracks)
         {
             _trackRepository.SetFileId(tracks);
+        }
+
+        public List<Track> SetMonitored(IEnumerable<int> trackIds, bool monitored)
+        {
+            var requestedTracks = GetTracks(trackIds).ToList();
+            var tracksToUpdate = requestedTracks.ToDictionary(t => t.Id);
+
+            foreach (var albumGroup in requestedTracks.GroupBy(t => t.AlbumRelease.Value.AlbumId))
+            {
+                var recordingIds = albumGroup.Select(t => t.ForeignRecordingId)
+                                             .Where(id => !string.IsNullOrWhiteSpace(id))
+                                             .Distinct()
+                                             .ToList();
+
+                foreach (var sibling in _trackRepository.GetTracksByAlbumAndRecordingIds(albumGroup.Key, recordingIds))
+                {
+                    tracksToUpdate[sibling.Id] = sibling;
+                }
+            }
+
+            var updatedTracks = tracksToUpdate.Values.ToList();
+            updatedTracks.ForEach(t => t.Monitored = monitored);
+            _trackRepository.SetMonitored(updatedTracks);
+
+            foreach (var album in requestedTracks.Select(t => t.AlbumRelease.Value.Album.Value).DistinctBy(a => a.Id))
+            {
+                _eventAggregator.PublishEvent(new AlbumEditedEvent(album, album));
+            }
+
+            _logger.Debug("Monitored flag for {0} tracks was set to {1}", updatedTracks.Count, monitored);
+
+            return updatedTracks;
         }
 
         public void Handle(ReleaseDeletedEvent message)

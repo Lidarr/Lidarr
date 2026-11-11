@@ -168,6 +168,11 @@ namespace NzbDrone.Core.History
                 history.Data.Add("ReleaseSource", message.Album.ReleaseSource.ToString());
                 history.Data.Add("IndexerFlags", message.Album.Release.IndexerFlags.ToString());
 
+                if (message.Album.TargetRecordingIds?.Any() == true)
+                {
+                    history.Data.Add("targetRecordingIds", message.Album.TargetRecordingIds.ToJson());
+                }
+
                 if (!message.Album.ParsedAlbumInfo.ReleaseHash.IsNullOrWhiteSpace())
                 {
                     history.Data.Add("ReleaseHash", message.Album.ParsedAlbumInfo.ReleaseHash);
@@ -239,6 +244,7 @@ namespace NzbDrone.Core.History
                 };
 
                 history.Data.Add("FileId", message.ImportedTrack.Id.ToString());
+                history.Data.Add("recordingId", track.ForeignRecordingId);
                 history.Data.Add("DroppedPath", message.TrackInfo.Path);
                 history.Data.Add("ImportedPath", message.ImportedTrack.Path);
                 history.Data.Add("DownloadClient", message.DownloadClientInfo?.Name);

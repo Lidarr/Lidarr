@@ -9,6 +9,7 @@ import { clearAlbums, fetchAlbums } from 'Store/Actions/albumActions';
 import { toggleArtistMonitored } from 'Store/Actions/artistActions';
 import { executeCommand } from 'Store/Actions/commandActions';
 import { clearQueueDetails, fetchQueueDetails } from 'Store/Actions/queueActions';
+import { clearTracks, fetchTracks } from 'Store/Actions/trackActions';
 import { clearTrackFiles, fetchTrackFiles } from 'Store/Actions/trackFileActions';
 import createAllArtistSelector from 'Store/Selectors/createAllArtistSelector';
 import createCommandsSelector from 'Store/Selectors/createCommandsSelector';
@@ -36,6 +37,7 @@ const selectAlbums = createSelector(
       albumsError: error,
       hasAlbums,
       hasMonitoredAlbums,
+      monitoredAlbumIds: items.filter((album) => album.monitored).map((album) => album.id),
       albumTypes
     };
   }
@@ -62,14 +64,35 @@ const selectTrackFiles = createSelector(
   }
 );
 
+const selectTracks = createSelector(
+  (state) => state.tracks,
+  (tracks) => {
+    const {
+      items,
+      isFetching,
+      isPopulated,
+      error
+    } = tracks;
+
+    return {
+      isTracksFetching: isFetching,
+      isTracksPopulated: isPopulated,
+      tracksError: error,
+      hasTracks: !!items.length,
+      hasMonitoredTracks: items.some((e) => e.monitored)
+    };
+  }
+);
+
 function createMapStateToProps() {
   return createSelector(
     (state, { foreignArtistId }) => foreignArtistId,
     selectAlbums,
+    selectTracks,
     selectTrackFiles,
     createAllArtistSelector(),
     createCommandsSelector(),
-    (foreignArtistId, albums, trackFiles, allArtists, commands) => {
+    (foreignArtistId, albums, tracks, trackFiles, allArtists, commands) => {
       const sortedArtist = _.orderBy(allArtists, 'sortName');
       const artistIndex = _.findIndex(sortedArtist, { foreignArtistId });
       const artist = sortedArtist[artistIndex];
@@ -84,8 +107,17 @@ function createMapStateToProps() {
         albumsError,
         hasAlbums,
         hasMonitoredAlbums,
+        monitoredAlbumIds,
         albumTypes
       } = albums;
+
+      const {
+        isTracksFetching,
+        isTracksPopulated,
+        tracksError,
+        hasTracks,
+        hasMonitoredTracks
+      } = tracks;
 
       const {
         isTrackFilesFetching,
@@ -105,7 +137,8 @@ function createMapStateToProps() {
         !artistRefreshingCommand.body.artistId
       );
       const isRefreshing = isArtistRefreshing || allArtistRefreshing;
-      const isSearching = isCommandExecuting(findCommand(commands, { name: commandNames.ARTIST_SEARCH, artistId: artist.id }));
+      const isSearching = isCommandExecuting(findCommand(commands, { name: commandNames.ARTIST_SEARCH, artistId: artist.id })) ||
+        commands.some((command) => command.name === commandNames.ALBUM_SEARCH && isCommandExecuting(command) && (command.body.albumIds || []).some((id) => monitoredAlbumIds.includes(id)));
       const isRenamingFiles = isCommandExecuting(findCommand(commands, { name: commandNames.RENAME_FILES, artistId: artist.id }));
       const isRenamingArtistCommand = findCommand(commands, { name: commandNames.RENAME_ARTIST });
       const isRenamingArtist = (
@@ -113,8 +146,8 @@ function createMapStateToProps() {
         isRenamingArtistCommand.body.artistIds.indexOf(artist.id) > -1
       );
 
-      const isFetching = isAlbumsFetching || isTrackFilesFetching;
-      const isPopulated = isAlbumsPopulated && isTrackFilesPopulated;
+      const isFetching = isAlbumsFetching || isTracksFetching || isTrackFilesFetching;
+      const isPopulated = isAlbumsPopulated && isTracksPopulated && isTrackFilesPopulated;
 
       const alternateTitles = _.reduce(artist.alternateTitles, (acc, alternateTitle) => {
         if ((alternateTitle.seasonNumber === -1 || alternateTitle.seasonNumber === undefined) &&
@@ -138,9 +171,13 @@ function createMapStateToProps() {
         isFetching,
         isPopulated,
         albumsError,
+        tracksError,
         trackFilesError,
         hasAlbums,
         hasMonitoredAlbums,
+        monitoredAlbumIds,
+        hasTracks,
+        hasMonitoredTracks,
         hasTrackFiles,
         previousArtist,
         nextArtist
@@ -152,6 +189,8 @@ function createMapStateToProps() {
 const mapDispatchToProps = {
   fetchAlbums,
   clearAlbums,
+  fetchTracks,
+  clearTracks,
   fetchTrackFiles,
   clearTrackFiles,
   toggleArtistMonitored,
@@ -209,12 +248,14 @@ class ArtistDetailsConnector extends Component {
     const artistId = this.props.id;
 
     this.props.fetchAlbums({ artistId });
+    this.props.fetchTracks({ artistId });
     this.props.fetchTrackFiles({ artistId });
     this.props.fetchQueueDetails({ artistId });
   };
 
   unpopulate = () => {
     this.props.clearAlbums();
+    this.props.clearTracks();
     this.props.clearTrackFiles();
     this.props.clearQueueDetails();
   };
@@ -238,8 +279,8 @@ class ArtistDetailsConnector extends Component {
 
   onSearchPress = () => {
     this.props.executeCommand({
-      name: commandNames.ARTIST_SEARCH,
-      artistId: this.props.id
+      name: commandNames.ALBUM_SEARCH,
+      albumIds: this.props.monitoredAlbumIds
     });
   };
 
@@ -268,12 +309,16 @@ ArtistDetailsConnector.propTypes = {
   isRenamingArtist: PropTypes.bool.isRequired,
   fetchAlbums: PropTypes.func.isRequired,
   clearAlbums: PropTypes.func.isRequired,
+  fetchTracks: PropTypes.func.isRequired,
+  clearTracks: PropTypes.func.isRequired,
   fetchTrackFiles: PropTypes.func.isRequired,
   clearTrackFiles: PropTypes.func.isRequired,
   toggleArtistMonitored: PropTypes.func.isRequired,
+  songMode: PropTypes.bool.isRequired,
   fetchQueueDetails: PropTypes.func.isRequired,
   clearQueueDetails: PropTypes.func.isRequired,
-  executeCommand: PropTypes.func.isRequired
+  executeCommand: PropTypes.func.isRequired,
+  monitoredAlbumIds: PropTypes.arrayOf(PropTypes.number).isRequired
 };
 
 export default connect(createMapStateToProps, mapDispatchToProps)(ArtistDetailsConnector);
