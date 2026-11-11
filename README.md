@@ -1,24 +1,4 @@
-# Lidarr Primetime
-
-This fork extends [upstream Lidarr](https://github.com/Lidarr/Lidarr) with individual-song downloads. Choose one song or several tracks from an album; they do not need to have been released as singles.
-
-## Changes compared with upstream Lidarr
-
-* **Individual-song searches:** search for the artist and song title first, then fall back to releases containing the same recording, including albums, EPs, compilations, and discographies. Accepted song downloads take priority over larger releases.
-* **Selective imports:** keep only the requested MusicBrainz recordings when an album is downloaded as a fallback. Completion requires every requested recording. Whole-album requests retain their normal import behavior.
-* **Separate Albums and Songs views:** browse either view from an artist page, with a direct Songs link and selection preserved when switching tabs. Opening a view does not change monitoring.
-* **Simpler song selection:** click rows or checkboxes, Shift-click a range, use keyboard selection, filter by song or album, and download the checked songs in one action. One-time downloads do not change artist or album monitoring; existing Song Mode artists also have a separate save-monitoring action.
-* **Clear library availability:** downloaded songs have a green row and an explicit Downloaded badge, with downloaded/missing counts and status filters. Availability follows the recording across album appearances, and downloaded songs remain selectable for upgrades.
-* **External popularity data:** show and sort by a song's position in the artist's Deezer top tracks, with source links and checks to distinguish similarly named artists and alternate recordings. This is a popularity ranking, not a community rating or a song-quality score.
-* **Wanted songs in the queue:** selective downloads show the requested song titles alongside the album, using the intent saved with that download rather than the current checklist.
-* **More reliable transfer and import tracking:** preserve requested recording IDs through persisted history, restarts, external completed-download scans, and selective import. Handle camel-cased history fields and distinguish full-album downloads from song requests.
-* **Song APIs and regression coverage:** expose track-search capabilities, recording-aware search and import behavior, and focused backend, API, and frontend tests for the song workflow.
-
-Song availability still depends on the configured indexers and release metadata. This fork does not split a single audio file that contains multiple recordings. See [Song Mode and fork maintenance](FORK.md) for usage, API details, and import behavior.
-
-**Upstream synchronization is disabled.** The sync workflow has no scheduled trigger, and its GitHub Action is disabled. The fork can still be updated with a reviewed manual upstream merge.
-
-## Upstream Lidarr
+# Lidarr
 
 [![Build Status](https://dev.azure.com/Lidarr/Lidarr/_apis/build/status/lidarr.Lidarr?branchName=develop)](https://dev.azure.com/Lidarr/Lidarr/_build/latest?definitionId=1&branchName=develop)
 [![Translation status](https://translate.servarr.com/widget/servarr/lidarr/svg-badge.svg)](https://translate.servarr.com/engage/servarr/?utm_source=widget)

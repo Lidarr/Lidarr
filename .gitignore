@@ -168,30 +168,3 @@ dotnet-tools.json
 
 # Ignore Jetbrains IntelliJ Workspace Directories
 .idea/
-
-# Personal deployment material and credentials must stay outside the public fork.
-/distribution/primetime/
-/.deployment/
-/deployment-private/
-/private-deployment/
-/proton-pass/
-pass-agent-*/
-.ssh/
-.env
-.env.*
-!.env.example
-!.env.sample
-*.ppk
-*.pem
-*.pfx
-*.p12
-*.dpapi
-*.kdbx
-id_rsa
-id_ecdsa
-id_ed25519
-id_dsa
-authorized_keys
-personal-access-token.*
-lidarr-primetime-*.tar.gz
-song-ui-*.tar.gz

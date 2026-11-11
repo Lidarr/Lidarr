@@ -206,6 +206,7 @@ namespace NzbDrone.Core.Test.MetadataSource.SkyHook
             artist.Name.Should().NotBeNullOrWhiteSpace();
             artist.CleanName.Should().Be(Parser.Parser.CleanArtistName(artist.Name));
             artist.SortName.Should().Be(Parser.Parser.NormalizeTitle(artist.Name));
+            artist.Metadata.Value.Overview.Should().NotBeNullOrWhiteSpace();
             artist.Metadata.Value.Images.Should().NotBeEmpty();
             artist.ForeignArtistId.Should().NotBeNullOrWhiteSpace();
         }
