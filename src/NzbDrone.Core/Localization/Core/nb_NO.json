@@ -387,5 +387,10 @@
     "UpdateAppDirectlyLoadError": "Kunne ikke oppdatere {appName} direkte,",
     "UpdateAll": "Oppdater alle",
     "UnmonitoredOnly": "Bare uten monitorering",
-    "Unmonitored": "Uten monitorering"
+    "Unmonitored": "Uten monitorering",
+    "CalendarWeekColumnHeaderHelpText": "Vises over hver kolonne når 'uke' er den aktive visningen",
+    "IsCutoffUpgradeUntilThisQualityIsMetOrExceeded": "Oppgrader til denne kvaliteten er oppnådd eller overskredet",
+    "IsShowingMonitoredUnmonitorSelected": "Fjern monitorering på valgte",
+    "ShownAboveEachColumnWhenWeekIsTheActiveView": "Vises over hver kolonne når 'uke' er den aktive visningen",
+    "ImportListStatusCheckAllClientMessage": "Alle lister er utilgjengelige grunnet svikt"
 }
