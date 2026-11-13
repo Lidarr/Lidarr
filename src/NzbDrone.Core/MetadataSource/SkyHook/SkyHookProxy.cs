@@ -600,6 +600,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             var artist = new ArtistMetadata();
 
             artist.Name = resource.ArtistName;
+            artist.SortName = resource.SortName;
             artist.Aliases = resource.ArtistAliases;
             artist.ForeignArtistId = resource.Id;
             artist.OldForeignArtistIds = resource.OldIds;

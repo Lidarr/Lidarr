@@ -43,13 +43,16 @@ function createMapStateToProps() {
         'qualityProfileId',
         'metadataProfileId',
         'path',
-        'tags'
+        'tags',
+        'preferredName'
       ]);
 
       const settings = selectSettings(artistSettings, pendingChanges, saveError);
 
       return {
         artistName: artist.artistName,
+        aliases: artist.aliases || [],
+        metadataSortName: artist.metadataSortName,
         isSaving,
         saveError,
         isPathChanging,
@@ -82,6 +85,29 @@ class EditArtistModalContentConnector extends Component {
   // Listeners
 
   onInputChange = ({ name, value }) => {
+    if (name === 'preferredName') {
+      const nextName = value || null;
+      const {
+        item,
+        artistName
+      } = this.props;
+      const currentName = item.preferredName.value || artistName;
+      const currentPath = item.path.value || '';
+      const separator = currentPath.includes('\\') ? '\\' : '/';
+      const parts = currentPath.split(separator);
+
+      if (parts.length && parts[parts.length - 1] === currentName) {
+        parts[parts.length - 1] = nextName || artistName;
+        this.props.dispatchSetArtistValue({
+          name: 'path',
+          value: parts.join(separator)
+        });
+      }
+
+      this.props.dispatchSetArtistValue({ name, value: nextName });
+      return;
+    }
+
     this.props.dispatchSetArtistValue({ name, value });
   };
 
