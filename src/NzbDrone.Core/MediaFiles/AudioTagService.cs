@@ -136,8 +136,8 @@ namespace NzbDrone.Core.MediaFiles
                 return new AudioTag
                 {
                     Title = track.Title,
-                    Performers = new[] { artist.Name },
-                    AlbumArtists = new[] { albumartist.Name },
+                    Performers = new[] { PerformerName(artist) },
+                    AlbumArtists = new[] { ArtistNames.ForLibraryArtist(albumartist) },
                     Track = (uint)track.AbsoluteTrackNumber,
                     TrackCount = (uint)release.Tracks.Value.Count(x => x.MediumNumber == track.MediumNumber),
                     Album = album.Title,
@@ -171,6 +171,20 @@ namespace NzbDrone.Core.MediaFiles
                 _logger.Error(ex, "Failed to get track metadata for {0}", trackfile.Path);
                 throw;
             }
+        }
+
+        private string PerformerName(ArtistMetadata metadata)
+        {
+            if (!string.IsNullOrWhiteSpace(metadata?.ForeignArtistId))
+            {
+                var libraryArtist = _artistService.FindById(metadata.ForeignArtistId);
+                if (libraryArtist != null)
+                {
+                    return ArtistNames.ForMetadata(metadata, libraryArtist);
+                }
+            }
+
+            return metadata?.Name;
         }
 
         private void UpdateTrackfileSizeAndModified(TrackFile trackfile, string path)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
+using FluentValidation.Results;
 using Lidarr.Api.V1.Albums;
 using Lidarr.Http;
 using Lidarr.Http.REST;
@@ -170,6 +171,16 @@ namespace Lidarr.Api.V1.Artist
         public ActionResult<ArtistResource> UpdateArtist([FromBody] ArtistResource artistResource, bool moveFiles = false)
         {
             var artist = _artistService.GetArtist(artistResource.Id);
+
+            if (!ArtistNames.IsAllowed(artist, artistResource.PreferredName))
+            {
+                throw new ValidationException(new List<ValidationFailure>
+                {
+                    new("PreferredName", "Must be the metadata name, an alias, or the sort name")
+                });
+            }
+
+            artistResource.PreferredName = ArtistNames.NormalizePreferredName(artist, artistResource.PreferredName);
 
             var sourcePath = artist.Path;
             var destinationPath = artistResource.Path;

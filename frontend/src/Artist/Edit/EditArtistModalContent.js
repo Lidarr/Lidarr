@@ -19,6 +19,45 @@ import { icons, inputTypes, kinds, sizes, tooltipPositions } from 'Helpers/Props
 import translate from 'Utilities/String/translate';
 import styles from './EditArtistModalContent.css';
 
+function buildNameOptions(artistName, aliases, metadataSortName, currentPreferredName) {
+  const options = [
+    {
+      key: '',
+      value: artistName || ''
+    }
+  ];
+  const seen = new Set([(artistName || '').toLowerCase()]);
+
+  (aliases || []).forEach((alias) => {
+    if (!alias || seen.has(alias.toLowerCase())) {
+      return;
+    }
+
+    seen.add(alias.toLowerCase());
+    options.push({
+      key: alias,
+      value: alias
+    });
+  });
+
+  if (metadataSortName && !seen.has(metadataSortName.toLowerCase())) {
+    seen.add(metadataSortName.toLowerCase());
+    options.push({
+      key: metadataSortName,
+      value: metadataSortName
+    });
+  }
+
+  if (currentPreferredName && !seen.has(String(currentPreferredName).toLowerCase())) {
+    options.push({
+      key: currentPreferredName,
+      value: currentPreferredName
+    });
+  }
+
+  return options;
+}
+
 class EditArtistModalContent extends Component {
 
   //
@@ -66,6 +105,8 @@ class EditArtistModalContent extends Component {
   render() {
     const {
       artistName,
+      aliases,
+      metadataSortName,
       item,
       isSaving,
       showMetadataProfile,
@@ -82,8 +123,14 @@ class EditArtistModalContent extends Component {
       qualityProfileId,
       metadataProfileId,
       path,
-      tags
+      tags,
+      preferredName
     } = item;
+
+    const preferredNameSetting = preferredName || {
+      value: null
+    };
+    const nameOptions = buildNameOptions(artistName, aliases, metadataSortName, preferredNameSetting.value);
 
     return (
       <ModalContent onModalClose={onModalClose}>
@@ -180,6 +227,22 @@ class EditArtistModalContent extends Component {
 
             <FormGroup size={sizes.MEDIUM}>
               <FormLabel>
+                {translate('PreferredArtistName')}
+              </FormLabel>
+
+              <FormInputGroup
+                type={inputTypes.SELECT}
+                name="preferredName"
+                values={nameOptions}
+                helpText={translate('PreferredArtistNameHelpText')}
+                {...preferredNameSetting}
+                value={preferredNameSetting.value || ''}
+                onChange={onInputChange}
+              />
+            </FormGroup>
+
+            <FormGroup size={sizes.MEDIUM}>
+              <FormLabel>
                 {translate('Path')}
               </FormLabel>
 
@@ -245,6 +308,8 @@ class EditArtistModalContent extends Component {
 EditArtistModalContent.propTypes = {
   artistId: PropTypes.number.isRequired,
   artistName: PropTypes.string.isRequired,
+  aliases: PropTypes.arrayOf(PropTypes.string),
+  metadataSortName: PropTypes.string,
   item: PropTypes.object.isRequired,
   isSaving: PropTypes.bool.isRequired,
   showMetadataProfile: PropTypes.bool.isRequired,
