@@ -139,6 +139,15 @@ class EditArtistModalContentConnector extends Component {
 
 EditArtistModalContentConnector.propTypes = {
   artistId: PropTypes.number,
+  artistName: PropTypes.string,
+  item: PropTypes.shape({
+    preferredName: PropTypes.shape({
+      value: PropTypes.string
+    }),
+    path: PropTypes.shape({
+      value: PropTypes.string
+    })
+  }).isRequired,
   isSaving: PropTypes.bool.isRequired,
   saveError: PropTypes.object,
   dispatchSetArtistValue: PropTypes.func.isRequired,

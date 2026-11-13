@@ -1,6 +1,8 @@
 using System.IO;
+using FizzWare.NBuilder;
 using NUnit.Framework;
 using NzbDrone.Core.Datastore.Migration.Framework;
+using NzbDrone.Core.Music;
 using NzbDrone.Test.Common.Datastore;
 
 namespace NzbDrone.Core.Test
@@ -12,6 +14,8 @@ namespace NzbDrone.Core.Test
         [OneTimeTearDown]
         public void ClearCachedDatabase()
         {
+            BuilderSetup.DisablePropertyNamingFor<Artist, string>(a => a.PreferredName);
+
             var mainCache = SqliteDatabase.GetCachedDb(MigrationType.Main);
             if (File.Exists(mainCache))
             {
