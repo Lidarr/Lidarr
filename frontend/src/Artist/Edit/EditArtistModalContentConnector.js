@@ -47,6 +47,10 @@ function createMapStateToProps() {
         'preferredName'
       ]);
 
+      if (!Object.prototype.hasOwnProperty.call(artistSettings, 'preferredName')) {
+        artistSettings.preferredName = null;
+      }
+
       const settings = selectSettings(artistSettings, pendingChanges, saveError);
 
       return {

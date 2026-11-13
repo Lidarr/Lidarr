@@ -127,7 +127,10 @@ class EditArtistModalContent extends Component {
       preferredName
     } = item;
 
-    const nameOptions = buildNameOptions(artistName, aliases, metadataSortName, preferredName.value);
+    const preferredNameSetting = preferredName || {
+      value: null
+    };
+    const nameOptions = buildNameOptions(artistName, aliases, metadataSortName, preferredNameSetting.value);
 
     return (
       <ModalContent onModalClose={onModalClose}>
@@ -232,8 +235,8 @@ class EditArtistModalContent extends Component {
                 name="preferredName"
                 values={nameOptions}
                 helpText={translate('PreferredArtistNameHelpText')}
-                {...preferredName}
-                value={preferredName.value || ''}
+                {...preferredNameSetting}
+                value={preferredNameSetting.value || ''}
                 onChange={onInputChange}
               />
             </FormGroup>

@@ -57,6 +57,7 @@ namespace Lidarr.Api.V1.Artist
         public List<string> Genres { get; set; }
         public string CleanName { get; set; }
         public string SortName { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         public string PreferredName { get; set; }
         public string MetadataSortName { get; set; }
         public List<string> Aliases { get; set; }
