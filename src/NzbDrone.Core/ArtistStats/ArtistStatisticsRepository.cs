@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using Dapper;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.MediaFiles;
@@ -12,6 +13,7 @@ namespace NzbDrone.Core.ArtistStats
     {
         List<AlbumStatistics> ArtistStatistics();
         List<AlbumStatistics> ArtistStatistics(int artistId);
+        List<AlbumStatistics> ArtistStatistics(IEnumerable<int> artistIds);
     }
 
     public class ArtistStatisticsRepository : IArtistStatisticsRepository
@@ -39,6 +41,21 @@ namespace NzbDrone.Core.ArtistStats
 
             return MapResults(Query(TracksBuilder(time).Where<Artist>(x => x.Id == artistId), _selectTracksTemplate),
                 Query(TrackFilesBuilder().Where<Artist>(x => x.Id == artistId), _selectTrackFilesTemplate));
+        }
+
+        public List<AlbumStatistics> ArtistStatistics(IEnumerable<int> artistIds)
+        {
+            var ids = artistIds.Distinct().ToArray();
+
+            if (ids.Length == 0)
+            {
+                return new List<AlbumStatistics>();
+            }
+
+            var time = DateTime.UtcNow;
+
+            return MapResults(Query(TracksBuilder(time).Where<Artist>(x => ids.Contains(x.Id)), _selectTracksTemplate),
+                Query(TrackFilesBuilder().Where<Artist>(x => ids.Contains(x.Id)), _selectTrackFilesTemplate));
         }
 
         private List<AlbumStatistics> MapResults(List<AlbumStatistics> tracksResult, List<AlbumStatistics> filesResult)
