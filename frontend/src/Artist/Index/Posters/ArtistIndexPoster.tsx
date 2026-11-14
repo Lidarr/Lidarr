@@ -170,7 +170,7 @@ function ArtistIndexPoster(props: ArtistIndexPosterProps) {
             style={elementStyle}
             images={images}
             size={250}
-            lazy={false}
+            lazy={true}
             overflow={true}
             onError={onPosterLoadError}
             onLoad={onPosterLoad}
