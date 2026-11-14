@@ -163,8 +163,21 @@ namespace Lidarr.Api.V1.Artist
             var pagingSpec = pagingResource.MapToPagingSpec<ArtistResource, NzbDrone.Core.Music.Artist>("sortName", SortDirection.Ascending);
             var result = _artistService.Paged(pagingSpec);
 
+            var artists = result.Records;
+            var resources = artists.ToResource();
+
+            MapCoversToLocal(resources.ToArray());
+            LinkNextPreviousAlbums(resources.ToArray());
+
+            var artistIds = artists.Select(x => x.Id).ToHashSet();
+            var artistStats = _artistStatisticsService.ArtistStatistics()
+                .Where(x => artistIds.Contains(x.ArtistId))
+                .ToDictionary(x => x.ArtistId);
+            LinkArtistStatistics(resources, artistStats);
+            resources.ForEach(LinkRootFolderPath);
+
             pagingResource.TotalRecords = result.TotalRecords;
-            pagingResource.Records = result.Records.Select(GetArtistResource).ToList();
+            pagingResource.Records = resources;
 
             return pagingResource;
         }
