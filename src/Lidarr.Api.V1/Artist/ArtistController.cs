@@ -170,8 +170,7 @@ namespace Lidarr.Api.V1.Artist
             LinkNextPreviousAlbums(resources.ToArray());
 
             var artistIds = artists.Select(x => x.Id).ToHashSet();
-            var artistStats = _artistStatisticsService.ArtistStatistics()
-                .Where(x => artistIds.Contains(x.ArtistId))
+            var artistStats = _artistStatisticsService.ArtistStatistics(artistIds)
                 .ToDictionary(x => x.ArtistId);
             LinkArtistStatistics(resources, artistStats);
             resources.ForEach(LinkRootFolderPath);
