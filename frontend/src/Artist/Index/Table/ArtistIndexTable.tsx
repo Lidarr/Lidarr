@@ -77,6 +77,10 @@ const Row: React.FC<ListChildComponentProps<RowItemData>> = ({
   );
 };
 
+function getArtistRowKey(index: number, data: RowItemData) {
+  return data.items[index]?.id ?? index;
+}
+
 function getWindowScrollTopPosition() {
   return document.documentElement.scrollTop || document.body.scrollTop || 0;
 }
@@ -103,6 +107,16 @@ function ArtistIndexTable(props: ArtistIndexTableProps) {
   const rowHeight = useMemo(() => {
     return showBanners ? 70 : 38;
   }, [showBanners]);
+
+  const itemData = useMemo<RowItemData>(
+    () => ({
+      items,
+      sortKey,
+      columns,
+      isSelectMode,
+    }),
+    [items, sortKey, columns, isSelectMode]
+  );
 
   useEffect(() => {
     const current = scrollerRef?.current as HTMLElement;
@@ -198,12 +212,8 @@ function ArtistIndexTable(props: ArtistIndexTableProps) {
           height={size.height}
           itemCount={items.length}
           itemSize={rowHeight}
-          itemData={{
-            items,
-            sortKey,
-            columns,
-            isSelectMode,
-          }}
+          itemData={itemData}
+          itemKey={getArtistRowKey}
         >
           {Row}
         </List>
