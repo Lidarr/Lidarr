@@ -210,13 +210,24 @@ namespace Lidarr.Api.V1.Artist
         {
             var artistMetadataIds = artists.Select(x => x.ArtistMetadataId).Distinct().ToList();
 
-            var nextAlbums = _albumService.GetNextAlbumsByArtistMetadataId(artistMetadataIds);
-            var lastAlbums = _albumService.GetLastAlbumsByArtistMetadataId(artistMetadataIds);
+            var nextAlbums = _albumService.GetNextAlbumsByArtistMetadataId(artistMetadataIds)
+                .GroupBy(album => album.ArtistMetadataId)
+                .ToDictionary(group => group.Key, group => group.First());
+            var lastAlbums = _albumService.GetLastAlbumsByArtistMetadataId(artistMetadataIds)
+                .GroupBy(album => album.ArtistMetadataId)
+                .ToDictionary(group => group.Key, group => group.First());
 
             foreach (var artistResource in artists)
             {
-                artistResource.NextAlbum = nextAlbums.FirstOrDefault(x => x.ArtistMetadataId == artistResource.ArtistMetadataId).ToResource();
-                artistResource.LastAlbum = lastAlbums.FirstOrDefault(x => x.ArtistMetadataId == artistResource.ArtistMetadataId).ToResource();
+                if (nextAlbums.TryGetValue(artistResource.ArtistMetadataId, out var nextAlbum))
+                {
+                    artistResource.NextAlbum = nextAlbum.ToResource();
+                }
+
+                if (lastAlbums.TryGetValue(artistResource.ArtistMetadataId, out var lastAlbum))
+                {
+                    artistResource.LastAlbum = lastAlbum.ToResource();
+                }
             }
         }
 

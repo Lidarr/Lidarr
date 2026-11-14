@@ -28,19 +28,27 @@ namespace NzbDrone.Core.ArtistStats
     {
         private readonly IArtistStatisticsRepository _artistStatisticsRepository;
         private readonly ICached<List<AlbumStatistics>> _cache;
+        private readonly ICached<List<ArtistStatistics>> _artistCache;
 
         public ArtistStatisticsService(IArtistStatisticsRepository artistStatisticsRepository,
                                        ICacheManager cacheManager)
         {
             _artistStatisticsRepository = artistStatisticsRepository;
             _cache = cacheManager.GetCache<List<AlbumStatistics>>(GetType());
+            _artistCache = cacheManager.GetCache<List<ArtistStatistics>>(GetType());
         }
 
         public List<ArtistStatistics> ArtistStatistics()
         {
-            var albumStatistics = _cache.Get("AllArtists", () => _artistStatisticsRepository.ArtistStatistics());
+            return _artistCache.Get("AllArtists", () =>
+            {
+                var albumStatistics = _cache.Get("AllArtists", () => _artistStatisticsRepository.ArtistStatistics());
 
-            return albumStatistics.GroupBy(s => s.ArtistId).Select(s => MapArtistStatistics(s.ToList())).ToList();
+                return albumStatistics
+                    .GroupBy(statistics => statistics.ArtistId)
+                    .Select(group => MapArtistStatistics(group.ToList()))
+                    .ToList();
+            });
         }
 
         public ArtistStatistics ArtistStatistics(int artistId)
@@ -75,6 +83,7 @@ namespace NzbDrone.Core.ArtistStats
         public void Handle(ArtistAddedEvent message)
         {
             _cache.Remove("AllArtists");
+            _artistCache.Remove("AllArtists");
             _cache.Remove(message.Artist.Id.ToString());
         }
 
@@ -82,6 +91,7 @@ namespace NzbDrone.Core.ArtistStats
         public void Handle(ArtistEditedEvent message)
         {
             _cache.Remove("AllArtists");
+            _artistCache.Remove("AllArtists");
             _cache.Remove(message.Artist.Id.ToString());
         }
 
@@ -89,6 +99,7 @@ namespace NzbDrone.Core.ArtistStats
         public void Handle(ArtistUpdatedEvent message)
         {
             _cache.Remove("AllArtists");
+            _artistCache.Remove("AllArtists");
             _cache.Remove(message.Artist.Id.ToString());
         }
 
@@ -96,6 +107,7 @@ namespace NzbDrone.Core.ArtistStats
         public void Handle(ArtistsDeletedEvent message)
         {
             _cache.Remove("AllArtists");
+            _artistCache.Remove("AllArtists");
 
             foreach (var artist in message.Artists)
             {
@@ -107,6 +119,7 @@ namespace NzbDrone.Core.ArtistStats
         public void Handle(AlbumAddedEvent message)
         {
             _cache.Remove("AllArtists");
+            _artistCache.Remove("AllArtists");
             _cache.Remove(message.Album.ArtistId.ToString());
         }
 
@@ -114,6 +127,7 @@ namespace NzbDrone.Core.ArtistStats
         public void Handle(AlbumDeletedEvent message)
         {
             _cache.Remove("AllArtists");
+            _artistCache.Remove("AllArtists");
             _cache.Remove(message.Album.ArtistId.ToString());
         }
 
@@ -121,6 +135,7 @@ namespace NzbDrone.Core.ArtistStats
         public void Handle(AlbumImportedEvent message)
         {
             _cache.Remove("AllArtists");
+            _artistCache.Remove("AllArtists");
             _cache.Remove(message.Artist.Id.ToString());
         }
 
@@ -128,6 +143,7 @@ namespace NzbDrone.Core.ArtistStats
         public void Handle(AlbumEditedEvent message)
         {
             _cache.Remove("AllArtists");
+            _artistCache.Remove("AllArtists");
             _cache.Remove(message.Album.ArtistId.ToString());
         }
 
@@ -135,6 +151,7 @@ namespace NzbDrone.Core.ArtistStats
         public void Handle(AlbumUpdatedEvent message)
         {
             _cache.Remove("AllArtists");
+            _artistCache.Remove("AllArtists");
             _cache.Remove(message.Album.ArtistId.ToString());
         }
 
@@ -142,6 +159,7 @@ namespace NzbDrone.Core.ArtistStats
         public void Handle(TrackFileDeletedEvent message)
         {
             _cache.Remove("AllArtists");
+            _artistCache.Remove("AllArtists");
             _cache.Remove(message.TrackFile.Artist.Value.Id.ToString());
         }
     }
