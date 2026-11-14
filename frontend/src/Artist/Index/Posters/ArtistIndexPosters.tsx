@@ -94,6 +94,16 @@ const Cell: React.FC<GridChildComponentProps<CellItemData>> = ({
   );
 };
 
+function getArtistPosterKey(
+  rowIndex: number,
+  columnIndex: number,
+  data: CellItemData
+) {
+  const index = rowIndex * data.layout.columnCount + columnIndex;
+
+  return data.items[index]?.id ?? index;
+}
+
 function getWindowScrollTopPosition() {
   return document.documentElement.scrollTop || document.body.scrollTop || 0;
 }
@@ -134,6 +144,29 @@ export default function ArtistIndexPosters(props: ArtistIndexPostersProps) {
     : columnPadding;
   const posterWidth = columnWidth - padding * 2;
   const posterHeight = Math.ceil(posterWidth);
+
+  const itemData = useMemo<CellItemData>(
+    () => ({
+      layout: {
+        columnCount,
+        padding,
+        posterWidth,
+        posterHeight,
+      },
+      items,
+      sortKey,
+      isSelectMode,
+    }),
+    [
+      columnCount,
+      padding,
+      posterWidth,
+      posterHeight,
+      items,
+      sortKey,
+      isSelectMode,
+    ]
+  );
 
   const rowHeight = useMemo(() => {
     const {
@@ -294,17 +327,8 @@ export default function ArtistIndexPosters(props: ArtistIndexPostersProps) {
         columnWidth={columnWidth}
         rowCount={Math.ceil(items.length / columnCount)}
         rowHeight={rowHeight}
-        itemData={{
-          layout: {
-            columnCount,
-            padding,
-            posterWidth,
-            posterHeight,
-          },
-          items,
-          sortKey,
-          isSelectMode,
-        }}
+        itemData={itemData}
+        itemKey={getArtistPosterKey}
       >
         {Cell}
       </Grid>
