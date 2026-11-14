@@ -9,6 +9,7 @@ using Lidarr.Http.REST.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.ArtistStats;
+using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.MediaCover;
 using NzbDrone.Core.MediaFiles;
@@ -152,6 +153,20 @@ namespace Lidarr.Api.V1.Artist
 
             // PopulateAlternateTitles(seriesResources);
             return artistsResources;
+        }
+
+        [HttpGet("paged")]
+        [Produces("application/json")]
+        public PagingResource<ArtistResource> GetPagedArtists([FromQuery] PagingRequestResource paging)
+        {
+            var pagingResource = new PagingResource<ArtistResource>(paging);
+            var pagingSpec = pagingResource.MapToPagingSpec<ArtistResource, NzbDrone.Core.Music.Artist>("sortName", SortDirection.Ascending);
+            var result = _artistService.Paged(pagingSpec);
+
+            pagingResource.TotalRecords = result.TotalRecords;
+            pagingResource.Records = result.Records.Select(GetArtistResource).ToList();
+
+            return pagingResource;
         }
 
         [RestPostById]
