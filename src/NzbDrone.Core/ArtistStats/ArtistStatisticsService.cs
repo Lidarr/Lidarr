@@ -12,6 +12,7 @@ namespace NzbDrone.Core.ArtistStats
     {
         List<ArtistStatistics> ArtistStatistics();
         ArtistStatistics ArtistStatistics(int artistId);
+        List<ArtistStatistics> ArtistStatistics(IEnumerable<int> artistIds);
     }
 
     public class ArtistStatisticsService : IArtistStatisticsService,
@@ -61,6 +62,14 @@ namespace NzbDrone.Core.ArtistStats
             }
 
             return MapArtistStatistics(stats);
+        }
+
+        public List<ArtistStatistics> ArtistStatistics(IEnumerable<int> artistIds)
+        {
+            return _artistStatisticsRepository.ArtistStatistics(artistIds)
+                .GroupBy(statistics => statistics.ArtistId)
+                .Select(group => MapArtistStatistics(group.ToList()))
+                .ToList();
         }
 
         private ArtistStatistics MapArtistStatistics(List<AlbumStatistics> albumStatistics)
