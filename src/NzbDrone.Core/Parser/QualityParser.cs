@@ -53,7 +53,7 @@ namespace NzbDrone.Core.Parser
                 return new QualityModel { Quality = Quality.Unknown };
             }
 
-            var normalizedName = name.Replace('_', ' ').Trim().ToLower();
+            var normalizedName = name.Replace('_', ' ').Trim().ToLowerInvariant();
             var result = ParseQualityModifiers(name, normalizedName);
 
             if (desc.IsNotNullOrWhiteSpace())

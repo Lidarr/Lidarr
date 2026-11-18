@@ -1,3 +1,4 @@
+using System.Globalization;
 using FluentAssertions;
 using NUnit.Framework;
 using NzbDrone.Core.Parser;
@@ -330,6 +331,24 @@ namespace NzbDrone.Core.Test.ParserTests
             var result = QualityParser.ParseQuality(title, null, 0);
             result.Revision.Version.Should().Be(version);
             result.Revision.IsRepack.Should().Be(isRepack);
+        }
+
+        [TestCase("Green Day - Father Of All [FLAC 24-BIT LOSSLESS]")]
+        [TestCase("Green.Day-Father.Of.All.FLAC.M4A.24.BIT.Lossless")]
+        public void should_parse_flac_24bit_quality_with_turkish_culture(string title)
+        {
+            var currentCulture = CultureInfo.CurrentCulture;
+
+            try
+            {
+                CultureInfo.CurrentCulture = new CultureInfo("tr-TR");
+
+                ParseAndVerifyQuality(title, null, 0, Quality.FLAC_24, 24);
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = currentCulture;
+            }
         }
 
         private void ParseAndVerifyQuality(string name, string desc, int bitrate, Quality quality, int sampleSize = 0)
