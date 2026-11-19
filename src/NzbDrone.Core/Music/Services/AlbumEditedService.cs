@@ -20,6 +20,16 @@ namespace NzbDrone.Core.Music
             _trackService = trackService;
         }
 
+        private static bool ReleaseFilterChanged(Album oldAlbum, Album newAlbum)
+        {
+            var oldTracks = new HashSet<int>(oldAlbum.PreferredTrackCounts ?? new List<int>());
+            var newTracks = new HashSet<int>(newAlbum.PreferredTrackCounts ?? new List<int>());
+            var oldMedia = new HashSet<int>(oldAlbum.PreferredMediumCounts ?? new List<int>());
+            var newMedia = new HashSet<int>(newAlbum.PreferredMediumCounts ?? new List<int>());
+
+            return !oldTracks.SetEquals(newTracks) || !oldMedia.SetEquals(newMedia);
+        }
+
         public void Handle(AlbumEditedEvent message)
         {
             if (message.Album.AlbumReleases.IsLoaded && message.OldAlbum.AlbumReleases.IsLoaded)
@@ -27,7 +37,8 @@ namespace NzbDrone.Core.Music
                 var new_monitored = new HashSet<int>(message.Album.AlbumReleases.Value.Where(x => x.Monitored).Select(x => x.Id));
                 var old_monitored = new HashSet<int>(message.OldAlbum.AlbumReleases.Value.Where(x => x.Monitored).Select(x => x.Id));
                 if (!new_monitored.SetEquals(old_monitored) ||
-                    (!message.OldAlbum.AnyReleaseOk && message.Album.AnyReleaseOk))
+                    (!message.OldAlbum.AnyReleaseOk && message.Album.AnyReleaseOk) ||
+                    ReleaseFilterChanged(message.OldAlbum, message.Album))
                 {
                     // Unlink any old track files
                     var tracks = _trackService.GetTracksByAlbum(message.Album.Id);

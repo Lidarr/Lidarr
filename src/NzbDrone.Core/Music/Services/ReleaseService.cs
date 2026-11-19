@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Music.Events;
 
@@ -17,6 +19,7 @@ namespace NzbDrone.Core.Music
         List<AlbumRelease> GetReleasesByAlbum(int releaseGroupId);
         List<AlbumRelease> GetReleasesByRecordingIds(List<string> recordingIds);
         List<AlbumRelease> SetMonitored(AlbumRelease release);
+        void ApplyReleaseFilter(Album album, int? previouslyMonitoredId);
     }
 
     public class ReleaseService : IReleaseService,
@@ -84,6 +87,35 @@ namespace NzbDrone.Core.Music
         public List<AlbumRelease> SetMonitored(AlbumRelease release)
         {
             return _releaseRepository.SetMonitored(release);
+        }
+
+        // Keep the monitored release consistent with the album's track/media count filter.
+        // An explicit release choice by the user (monitored release differs from the previously
+        // monitored one) always wins. Throws a client error when the filter can match nothing.
+        public void ApplyReleaseFilter(Album album, int? previouslyMonitoredId)
+        {
+            var releases = album.AlbumReleases?.Value;
+
+            if (releases == null || !releases.Any())
+            {
+                return;
+            }
+
+            if (album.HasReleaseFilter() && !releases.Any(album.IsAllowedRelease))
+            {
+                throw new NzbDroneClientException(HttpStatusCode.BadRequest, "No release of this album matches the selected track count and media count");
+            }
+
+            var monitored = releases.SingleOrDefault(x => x.Monitored);
+            var userPickedRelease = monitored != null && monitored.Id != previouslyMonitoredId;
+
+            if (userPickedRelease || album.IsAllowedRelease(monitored))
+            {
+                return;
+            }
+
+            var toMonitor = album.ChooseMonitoredRelease(releases);
+            releases.ForEach(x => x.Monitored = x.Id == toMonitor.Id);
         }
 
         public void Handle(AlbumDeletedEvent message)

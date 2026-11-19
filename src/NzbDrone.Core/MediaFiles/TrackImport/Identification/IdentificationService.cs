@@ -299,6 +299,22 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             }
         }
 
+        private static bool IsAllowedByAlbumFilter(AlbumRelease release)
+        {
+            var album = release?.Album?.IsLoaded == true ? release.Album.Value : null;
+
+            return album == null || album.IsAllowedRelease(release);
+        }
+
+        // Releases allowed by their album's release filter first (stable), so that on an equal
+        // distance the release the user asked for wins.
+        public static List<CandidateAlbumRelease> OrderByAlbumFilter(IEnumerable<CandidateAlbumRelease> candidateReleases)
+        {
+            return candidateReleases
+                .OrderBy(x => IsAllowedByAlbumFilter(x.AlbumRelease) ? 0 : 1)
+                .ToList();
+        }
+
         private void GetBestRelease(LocalAlbumRelease localAlbumRelease, List<CandidateAlbumRelease> candidateReleases, List<LocalTrack> extraTracksOnDisk)
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -308,7 +324,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
             var bestDistance = 1.0;
 
-            foreach (var candidateRelease in candidateReleases)
+            foreach (var candidateRelease in OrderByAlbumFilter(candidateReleases))
             {
                 var release = candidateRelease.AlbumRelease;
                 _logger.Debug("Trying Release {0} [{1}, {2} tracks, {3} existing]", release, release.Title, release.TrackCount, candidateRelease.ExistingTracks.Count);

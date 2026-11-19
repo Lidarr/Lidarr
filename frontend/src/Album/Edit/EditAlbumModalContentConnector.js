@@ -12,9 +12,10 @@ import EditAlbumModalContent from './EditAlbumModalContent';
 function createMapStateToProps() {
   return createSelector(
     (state) => state.albums,
+    (state) => state.settings.advancedSettings,
     createAlbumSelector(),
     createArtistSelector(),
-    (albumState, album, artist) => {
+    (albumState, advancedSettings, album, artist) => {
       const {
         isSaving,
         saveError,
@@ -24,6 +25,9 @@ function createMapStateToProps() {
       const albumSettings = _.pick(album, [
         'monitored',
         'anyReleaseOk',
+        'preferredTrackCounts',
+        'preferredMediumCounts',
+        'autoBlocklistUnwantedRelease',
         'releases'
       ]);
 
@@ -34,6 +38,7 @@ function createMapStateToProps() {
         artistName: artist.artistName,
         albumType: album.albumType,
         statistics: album.statistics,
+        advancedSettings,
         isSaving,
         saveError,
         item: settings.settings,
