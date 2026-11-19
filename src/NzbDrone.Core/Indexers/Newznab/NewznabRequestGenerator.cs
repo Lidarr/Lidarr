@@ -88,6 +88,40 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
+            if (searchCriteria is TrackSearchCriteria)
+            {
+                var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+                var artistQuery = AudioTextSearchEngine == "raw" ? searchCriteria.ArtistQuery : searchCriteria.CleanArtistQuery;
+                var trackQuery = AudioTextSearchEngine == "raw" ? searchCriteria.AlbumQuery : searchCriteria.CleanAlbumQuery;
+
+                if (capabilities.SupportedAudioSearchParameters?.Contains("artist") == true &&
+                    capabilities.SupportedAudioSearchParameters.Contains("track"))
+                {
+                    pageableRequests.Add(GetPagedRequests(MaxPages,
+                        Settings.Categories,
+                        "music",
+                        $"&artist={NewsnabifyTitle(artistQuery)}&track={NewsnabifyTitle(trackQuery)}"));
+                }
+                else if (capabilities.SupportedAudioSearchParameters?.Contains("q") == true)
+                {
+                    pageableRequests.Add(GetPagedRequests(MaxPages,
+                        Settings.Categories,
+                        "music",
+                        $"&q={NewsnabifyTitle($"{artistQuery}+{trackQuery}")}"));
+                }
+
+                if (SupportsSearch)
+                {
+                    pageableRequests.AddTier();
+                    var query = TextSearchEngine == "raw" ?
+                        $"{searchCriteria.ArtistQuery}+{searchCriteria.AlbumQuery}" :
+                        $"{searchCriteria.CleanArtistQuery}+{searchCriteria.CleanAlbumQuery}";
+                    pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search", $"&q={NewsnabifyTitle(query)}"));
+                }
+
+                return pageableRequests;
+            }
+
             if (SupportsAudioSearch)
             {
                 var artistQuery = AudioTextSearchEngine == "raw" ? searchCriteria.ArtistQuery : searchCriteria.CleanArtistQuery;

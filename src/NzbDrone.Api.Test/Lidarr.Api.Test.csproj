@@ -9,5 +9,6 @@
     <ProjectReference Include="..\NzbDrone.Core\Lidarr.Core.csproj" />
     <ProjectReference Include="..\NzbDrone.Test.Common\Lidarr.Test.Common.csproj" />
     <ProjectReference Include="..\Lidarr.Http\Lidarr.Http.csproj" />
+    <ProjectReference Include="..\Lidarr.Api.V1\Lidarr.Api.V1.csproj" />
   </ItemGroup>
 </Project>

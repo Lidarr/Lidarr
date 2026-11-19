@@ -53,6 +53,13 @@ namespace NzbDrone.Core.MediaFiles
                 {
                     _logger.Debug("External directory scan request for known download {0}. [{1}]", message.DownloadClientId, message.Path);
 
+                    // External transfer tools import through this command rather
+                    // than CompletedDownloadService.SetImportItem.
+                    if (trackedDownload.RemoteAlbum.TargetRecordingIds?.Any() == true)
+                    {
+                        trackedDownload.DownloadItem.TargetRecordingIds = trackedDownload.RemoteAlbum.TargetRecordingIds;
+                    }
+
                     var importResults = _downloadedTracksImportService.ProcessPath(message.Path, message.ImportMode, trackedDownload.RemoteAlbum.Artist, trackedDownload.DownloadItem);
 
                     _completedDownloadService.VerifyImport(trackedDownload, importResults);

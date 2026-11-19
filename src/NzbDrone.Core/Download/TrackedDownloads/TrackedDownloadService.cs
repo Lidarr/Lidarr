@@ -105,6 +105,8 @@ namespace NzbDrone.Core.Download.TrackedDownloads
             {
                 LogItemChange(existingItem, existingItem.DownloadItem, downloadItem);
 
+                downloadItem.TargetRecordingIds = existingItem.DownloadItem.TargetRecordingIds;
+                downloadItem.IsFullAlbumRequest = existingItem.DownloadItem.IsFullAlbumRequest;
                 existingItem.DownloadItem = downloadItem;
                 existingItem.IsTrackable = true;
 
@@ -195,6 +197,23 @@ namespace NzbDrone.Core.Download.TrackedDownloads
                         trackedDownload.RemoteAlbum.Release ??= new ReleaseInfo();
                         trackedDownload.RemoteAlbum.Release.IndexerFlags = flags;
                     }
+
+                    var serializedTargetRecordingIds = grabbedEvent?.Data?.GetValueOrDefault("targetRecordingIds") ??
+                        grabbedEvent?.Data?.GetValueOrDefault("TargetRecordingIds");
+
+                    if (serializedTargetRecordingIds.IsNotNullOrWhiteSpace())
+                    {
+                        var targetRecordingIds = Json.Deserialize<List<string>>(serializedTargetRecordingIds);
+                        trackedDownload.DownloadItem.TargetRecordingIds = targetRecordingIds;
+
+                        if (trackedDownload.RemoteAlbum != null)
+                        {
+                            trackedDownload.RemoteAlbum.TargetRecordingIds = targetRecordingIds;
+                        }
+                    }
+
+                    trackedDownload.DownloadItem.IsFullAlbumRequest = grabbedEvent != null &&
+                        trackedDownload.DownloadItem.TargetRecordingIds?.Any() != true;
                 }
 
                 if (trackedDownload.RemoteAlbum != null)

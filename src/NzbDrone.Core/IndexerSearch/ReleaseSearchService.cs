@@ -15,7 +15,9 @@ namespace NzbDrone.Core.IndexerSearch
 {
     public interface ISearchForReleases
     {
+        Task<List<DownloadDecision>> TrackSearch(Track track, bool userInvokedSearch, bool interactiveSearch);
         Task<List<DownloadDecision>> AlbumSearch(int albumId, bool missingOnly, bool userInvokedSearch, bool interactiveSearch);
+        Task<List<DownloadDecision>> AlbumSearch(int albumId, bool userInvokedSearch, bool interactiveSearch, List<string> targetRecordingIds);
         Task<List<DownloadDecision>> ArtistSearch(int artistId, bool missingOnly, bool userInvokedSearch, bool interactiveSearch);
     }
 
@@ -47,6 +49,24 @@ namespace NzbDrone.Core.IndexerSearch
             return await AlbumSearch(album, missingOnly, userInvokedSearch, interactiveSearch);
         }
 
+        public async Task<List<DownloadDecision>> TrackSearch(Track track, bool userInvokedSearch, bool interactiveSearch)
+        {
+            var album = track.AlbumRelease.Value.Album.Value;
+            var artist = _artistService.GetArtist(album.ArtistId);
+            var searchSpec = Get<TrackSearchCriteria>(artist, new List<Album> { album }, userInvokedSearch, interactiveSearch);
+            searchSpec.AlbumTitle = track.Title;
+            searchSpec.Tracks = new List<Track> { track };
+            searchSpec.TargetRecordingIds = new List<string> { track.ForeignRecordingId };
+
+            var decisions = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
+            return DeDupeDecisions(decisions);
+        }
+
+        public async Task<List<DownloadDecision>> AlbumSearch(int albumId, bool userInvokedSearch, bool interactiveSearch, List<string> targetRecordingIds)
+        {
+            return await AlbumSearch(_albumService.GetAlbum(albumId), false, userInvokedSearch, interactiveSearch, targetRecordingIds);
+        }
+
         public async Task<List<DownloadDecision>> ArtistSearch(int artistId, bool missingOnly, bool userInvokedSearch, bool interactiveSearch)
         {
             var artist = _artistService.GetArtist(artistId);
@@ -71,13 +91,14 @@ namespace NzbDrone.Core.IndexerSearch
             return DeDupeDecisions(downloadDecisions);
         }
 
-        public async Task<List<DownloadDecision>> AlbumSearch(Album album, bool missingOnly, bool userInvokedSearch, bool interactiveSearch)
+        public async Task<List<DownloadDecision>> AlbumSearch(Album album, bool missingOnly, bool userInvokedSearch, bool interactiveSearch, List<string> targetRecordingIds = null)
         {
             var downloadDecisions = new List<DownloadDecision>();
 
             var artist = _artistService.GetArtist(album.ArtistId);
 
             var searchSpec = Get<AlbumSearchCriteria>(artist, new List<Album> { album }, userInvokedSearch, interactiveSearch);
+            searchSpec.TargetRecordingIds = targetRecordingIds ?? new List<string>();
 
             searchSpec.AlbumTitle = album.Title;
             if (album.ReleaseDate.HasValue)

@@ -1,0 +1,84 @@
+.songs {
+  margin-bottom: 20px;
+  border: 1px solid var(--borderColor);
+  border-radius: 4px;
+  background-color: var(--cardBackgroundColor);
+}
+
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+  font-size: 24px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 15px 10px;
+  gap: 8px;
+}
+
+.missingCount {
+  color: var(--helpTextColor);
+  font-size: $smallFontSize;
+}
+
+.title {
+  margin-right: 10px;
+  margin-left: 5px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  padding: 10px;
+  gap: 8px;
+}
+
+.selectionCount {
+  margin-right: 4px;
+  color: var(--helpTextColor);
+  font-size: $smallFontSize;
+}
+
+.tracks {
+  padding-top: 15px;
+  border-top: 1px solid var(--borderColor);
+}
+
+.help {
+  padding: 10px 15px;
+  color: var(--helpTextColor);
+}
+
+.filter {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 15px 15px;
+  max-width: 800px;
+  gap: 15px;
+
+}
+
+.searchFilter {
+  flex: 1 1 300px;
+}
+
+@media only screen and (max-width: $breakpointSmall) {
+  .songs {
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+  }
+
+  .actions {
+    flex: 1 1 100%;
+  }
+}

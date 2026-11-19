@@ -135,5 +135,23 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
 
             _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultMulti, null).Accepted.Should().BeFalse();
         }
+
+        [Test]
+        public void should_accept_song_mode_release_with_monitored_recording()
+        {
+            _fakeArtist.SongMode = true;
+            WithFirstAlbumUnmonitored();
+            _parseResultSingle.TargetRecordingIds = new List<string> { "recording" };
+
+            _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeTrue();
+        }
+
+        [Test]
+        public void should_reject_song_mode_release_without_monitored_recording()
+        {
+            _fakeArtist.SongMode = true;
+
+            _monitoredAlbumSpecification.IsSatisfiedBy(_parseResultSingle, null).Accepted.Should().BeFalse();
+        }
     }
 }

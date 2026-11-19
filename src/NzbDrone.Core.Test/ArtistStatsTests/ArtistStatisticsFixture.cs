@@ -103,6 +103,21 @@ namespace NzbDrone.Core.Test.ArtistStatsTests
         }
 
         [Test]
+        public void should_not_include_unmonitored_selected_album_track_without_file_in_track_count()
+        {
+            _album.Monitored = true;
+            Db.Update(_album);
+            _track.Monitored = false;
+            GivenTrack();
+
+            var stats = Subject.ArtistStatistics();
+
+            stats.Should().HaveCount(1);
+            stats.First().TrackCount.Should().Be(0);
+            stats.First().TotalTrackCount.Should().Be(1);
+        }
+
+        [Test]
         public void should_have_size_on_disk_of_zero_when_no_track_file()
         {
             GivenTrack();

@@ -609,6 +609,44 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         }
 
         [Test]
+        public void should_prefer_song_mode_album_source_before_generic_release_tiebreakers()
+        {
+            var compilation = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.FLAC), indexerPriority: 50);
+            var original = GivenRemoteAlbum(new List<Album> { GivenAlbum(2) }, new QualityModel(Quality.FLAC), indexerPriority: 1);
+            compilation.TrackSearchPriority = 1;
+            original.TrackSearchPriority = 4;
+
+            var decisions = new List<DownloadDecision>
+            {
+                new DownloadDecision(original),
+                new DownloadDecision(compilation)
+            };
+
+            var qualifiedReports = Subject.PrioritizeDecisions(decisions);
+
+            qualifiedReports.First().RemoteAlbum.Should().Be(compilation);
+        }
+
+        [Test]
+        public void should_prefer_an_acceptable_song_download_over_a_higher_quality_album_fallback()
+        {
+            var song = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_320));
+            var original = GivenRemoteAlbum(new List<Album> { GivenAlbum(2) }, new QualityModel(Quality.FLAC));
+            song.TrackSearchPriority = 0;
+            original.TrackSearchPriority = 3;
+
+            var decisions = new List<DownloadDecision>
+            {
+                new DownloadDecision(song),
+                new DownloadDecision(original)
+            };
+
+            var qualifiedReports = Subject.PrioritizeDecisions(decisions);
+
+            qualifiedReports.First().RemoteAlbum.Should().Be(song);
+        }
+
+        [Test]
         public void should_prefer_release_with_matching_year()
         {
             var album2020 = GivenAlbum(1);

@@ -11,6 +11,7 @@ import PageContentBody from 'Components/Page/PageContentBody';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import translate from 'Utilities/String/translate';
 import ArtistDetailsConnector from './ArtistDetailsConnector';
+import { getArtistLibraryView } from './artistLibraryView';
 import styles from './ArtistDetails.css';
 
 function createMapStateToProps() {
@@ -101,6 +102,7 @@ class ArtistDetailsPageConnector extends Component {
     return (
       <ArtistDetailsConnector
         foreignArtistId={foreignArtistId}
+        view={getArtistLibraryView(this.props.location.search)}
       />
     );
   }
@@ -112,6 +114,7 @@ ArtistDetailsPageConnector.propTypes = {
   isPopulated: PropTypes.bool.isRequired,
   error: PropTypes.object,
   match: PropTypes.shape({ params: PropTypes.shape({ foreignArtistId: PropTypes.string.isRequired }).isRequired }).isRequired,
+  location: PropTypes.shape({ search: PropTypes.string.isRequired }).isRequired,
   push: PropTypes.func.isRequired
 };
 

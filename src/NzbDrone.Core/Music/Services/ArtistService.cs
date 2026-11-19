@@ -36,18 +36,21 @@ namespace NzbDrone.Core.Music
     public class ArtistService : IArtistService
     {
         private readonly IArtistRepository _artistRepository;
+        private readonly ITrackRepository _trackRepository;
         private readonly IEventAggregator _eventAggregator;
         private readonly IBuildArtistPaths _artistPathBuilder;
         private readonly Logger _logger;
         private readonly ICached<List<Artist>> _cache;
 
         public ArtistService(IArtistRepository artistRepository,
+                             ITrackRepository trackRepository,
                              IEventAggregator eventAggregator,
                              IBuildArtistPaths artistPathBuilder,
                              ICacheManager cacheManager,
                              Logger logger)
         {
             _artistRepository = artistRepository;
+            _trackRepository = trackRepository;
             _eventAggregator = eventAggregator;
             _artistPathBuilder = artistPathBuilder;
             _cache = cacheManager.GetCache<List<Artist>>(GetType());
@@ -229,6 +232,14 @@ namespace NzbDrone.Core.Music
 
             // Never update AddOptions when updating an artist, keep it the same as the existing stored artist.
             artist.AddOptions = storedArtist.AddOptions;
+
+            if (artist.SongMode && !storedArtist.SongMode && _trackRepository.GetTracks(artist.Id).All(track => track.Monitored))
+            {
+                // Album mode starts with every track monitored. Do not turn
+                // that inherited default into a request for every song.
+                // Keep an existing partial song selection when re-entering.
+                _trackRepository.UnmonitorArtist(artist.ArtistMetadataId);
+            }
 
             var updatedArtist = _artistRepository.Update(artist);
             if (publishUpdatedEvent)

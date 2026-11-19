@@ -1,0 +1,44 @@
+.cell {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 145px;
+  white-space: nowrap;
+}
+
+.source {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.bar {
+  width: 3px;
+  border-radius: 1px;
+  background-color: var(--borderColor);
+}
+
+.activeBar {
+  composes: bar;
+
+  background-color: var(--primaryColor);
+}
+
+.position {
+  display: block;
+}
+
+.provider,
+.unknown {
+  color: var(--helpTextColor);
+  font-size: $smallFontSize;
+}
+
+.provider {
+  display: block;
+}
