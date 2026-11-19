@@ -328,7 +328,7 @@ namespace NzbDrone.Core.Parser
             }
             catch (Exception e)
             {
-                if (!title.ToLower().Contains("password") && !title.ToLower().Contains("yenc"))
+                if (!title.ToLowerInvariant().Contains("password") && !title.ToLowerInvariant().Contains("yenc"))
                 {
                     Logger.Error(e, "An error has occurred while trying to parse {0}", title);
                 }
@@ -408,7 +408,7 @@ namespace NzbDrone.Core.Parser
             }
             catch (Exception e)
             {
-                if (!title.ToLower().Contains("password") && !title.ToLower().Contains("yenc"))
+                if (!title.ToLowerInvariant().Contains("password") && !title.ToLowerInvariant().Contains("yenc"))
                 {
                     Logger.Error(e, "An error has occurred while trying to parse {0}", title);
                 }
@@ -505,7 +505,7 @@ namespace NzbDrone.Core.Parser
             }
             catch (Exception e)
             {
-                if (!title.ToLower().Contains("password") && !title.ToLower().Contains("yenc"))
+                if (!title.ToLowerInvariant().Contains("password") && !title.ToLowerInvariant().Contains("yenc"))
                 {
                     Logger.Error(e, "An error has occurred while trying to parse {0}", title);
                 }
@@ -534,7 +534,7 @@ namespace NzbDrone.Core.Parser
             title = PunctuationRegex.Replace(title, " ");
             title = DuplicateSpacesRegex.Replace(title, " ");
 
-            return title.Trim().ToLower();
+            return title.Trim().ToLowerInvariant();
         }
 
         public static string NormalizeTitle(string title)
@@ -544,7 +544,7 @@ namespace NzbDrone.Core.Parser
             title = CommonWordRegex.Replace(title, string.Empty);
             title = DuplicateSpacesRegex.Replace(title, " ");
 
-            return title.Trim().ToLower();
+            return title.Trim().ToLowerInvariant();
         }
 
         public static string ParseReleaseGroup(string title)
@@ -598,7 +598,7 @@ namespace NzbDrone.Core.Parser
         {
             title = FileExtensionRegex.Replace(title, m =>
             {
-                var extension = m.Value.ToLower();
+                var extension = m.Value.ToLowerInvariant();
                 if (MediaFiles.MediaFileExtensions.Extensions.Contains(extension) || new[] { ".par2", ".nzb" }.Contains(extension))
                 {
                     return string.Empty;
@@ -661,12 +661,12 @@ namespace NzbDrone.Core.Parser
                     nextPart = parts[n + 1];
                 }
 
-                if (part.Length == 1 && part.ToLower() != "a" && !int.TryParse(part, out n))
+                if (part.Length == 1 && part.ToLowerInvariant() != "a" && !int.TryParse(part, out n))
                 {
                     artistName += part + ".";
                     previousAcronym = true;
                 }
-                else if (part.ToLower() == "a" && (previousAcronym == true || nextPart.Length == 1))
+                else if (part.ToLowerInvariant() == "a" && (previousAcronym == true || nextPart.Length == 1))
                 {
                     artistName += part + ".";
                     previousAcronym = true;
@@ -795,7 +795,7 @@ namespace NzbDrone.Core.Parser
 
         private static bool ValidateBeforeParsing(string title)
         {
-            if (title.ToLower().Contains("password") && title.ToLower().Contains("yenc"))
+            if (title.ToLowerInvariant().Contains("password") && title.ToLowerInvariant().Contains("yenc"))
             {
                 Logger.Debug("");
                 return false;
@@ -855,7 +855,7 @@ namespace NzbDrone.Core.Parser
                 return number;
             }
 
-            number = Array.IndexOf(Numbers, value.ToLower());
+            number = Array.IndexOf(Numbers, value.ToLowerInvariant());
 
             if (number != -1)
             {
