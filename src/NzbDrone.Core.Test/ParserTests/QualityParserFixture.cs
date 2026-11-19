@@ -333,8 +333,8 @@ namespace NzbDrone.Core.Test.ParserTests
             result.Revision.IsRepack.Should().Be(isRepack);
         }
 
-        [TestCase("Green Day - Father Of All [FLAC 24-BIT LOSSLESS]")]
-        [TestCase("Green.Day-Father.Of.All.FLAC.M4A.24.BIT.Lossless")]
+        [TestCase("Artist Title - Album Title [FLAC 24-BIT LOSSLESS]")]
+        [TestCase("Artist.Title-Album.Title.FLAC.M4A.24.BIT.Lossless")]
         public void should_parse_flac_24bit_quality_with_turkish_culture(string title)
         {
             var currentCulture = CultureInfo.CurrentCulture;
