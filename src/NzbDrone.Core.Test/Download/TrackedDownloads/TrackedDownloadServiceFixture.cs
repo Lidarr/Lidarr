@@ -57,7 +57,7 @@ namespace NzbDrone.Core.Test.Download.TrackedDownloads
             var client = new DownloadClientDefinition()
             {
                 Id = 1,
-                Protocol = DownloadProtocol.Torrent
+                Protocol = nameof(TorrentDownloadProtocol)
             };
 
             var item = new DownloadClientItem()
@@ -104,7 +104,7 @@ namespace NzbDrone.Core.Test.Download.TrackedDownloads
             var client = new DownloadClientDefinition()
             {
                 Id = 1,
-                Protocol = DownloadProtocol.Torrent
+                Protocol = nameof(TorrentDownloadProtocol)
             };
 
             var item = new DownloadClientItem()
@@ -160,7 +160,7 @@ namespace NzbDrone.Core.Test.Download.TrackedDownloads
             var client = new DownloadClientDefinition()
             {
                 Id = 1,
-                Protocol = DownloadProtocol.Torrent
+                Protocol = nameof(TorrentDownloadProtocol)
             };
 
             var item = new DownloadClientItem()
@@ -213,7 +213,7 @@ namespace NzbDrone.Core.Test.Download.TrackedDownloads
             var client = new DownloadClientDefinition()
             {
                 Id = 1,
-                Protocol = DownloadProtocol.Torrent
+                Protocol = nameof(TorrentDownloadProtocol)
             };
 
             var item = new DownloadClientItem()
@@ -266,7 +266,7 @@ namespace NzbDrone.Core.Test.Download.TrackedDownloads
             var client = new DownloadClientDefinition()
             {
                 Id = 1,
-                Protocol = DownloadProtocol.Torrent
+                Protocol = nameof(TorrentDownloadProtocol)
             };
 
             var item = new DownloadClientItem()

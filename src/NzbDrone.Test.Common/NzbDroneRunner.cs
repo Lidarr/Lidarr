@@ -58,7 +58,7 @@ namespace NzbDrone.Test.Common
             _startupLog = new List<string>();
             if (BuildInfo.IsDebug)
             {
-                Start(Path.Combine(TestContext.CurrentContext.TestDirectory, "..", "..", "_output", "net8.0", lidarrConsoleExe));
+                Start(Path.Combine(TestContext.CurrentContext.TestDirectory, "..", "..", "_output", "net10.0", lidarrConsoleExe));
             }
             else
             {
@@ -71,10 +71,7 @@ namespace NzbDrone.Test.Common
 
                 if (_nzbDroneProcess.HasExited)
                 {
-                    TestContext.Progress.WriteLine("Lidarr has exited unexpectedly");
-                    Thread.Sleep(2000);
-                    var output = _startupLog.Join(Environment.NewLine);
-                    Assert.Fail("Process has exited: ExitCode={0} Output={1}", _nzbDroneProcess.ExitCode, output);
+                    Assert.Fail("Process has exited");
                 }
 
                 var request = new RestRequest("system/status");
@@ -143,7 +140,7 @@ namespace NzbDrone.Test.Common
 
         private void Start(string outputLidarrConsoleExe)
         {
-            StringDictionary envVars = new ();
+            StringDictionary envVars = new();
             if (PostgresOptions?.Host != null)
             {
                 envVars.Add("Lidarr__Postgres__Host", PostgresOptions.Host);
@@ -192,6 +189,7 @@ namespace NzbDrone.Test.Common
                              new XElement(nameof(ConfigFileProvider.AnalyticsEnabled), false),
                              new XElement(nameof(ConfigFileProvider.AuthenticationMethod), enableAuth ? "Forms" : "None"),
                              new XElement(nameof(ConfigFileProvider.AuthenticationRequired), "DisabledForLocalAddresses"),
+                             new XElement(nameof(ConfigFileProvider.AllowedHosts), "localhost"),
                              new XElement(nameof(ConfigFileProvider.Port), Port)));
 
             var data = xDoc.ToString();

@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using FluentMigrator;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Datastore.Migration.Framework;
+using NzbDrone.Core.Indexers;
 
 namespace NzbDrone.Core.Datastore.Migration
 {
@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Datastore.Migration
                   .WithColumn("DownloadId").AsString().NotNullable()
                   .WithColumn("SourceTitle").AsString().NotNullable()
                   .WithColumn("Date").AsDateTime().NotNullable()
-                  .WithColumn("Protocol").AsInt32().Nullable()
+                  .WithColumn("Protocol").AsString().Nullable()
                   .WithColumn("IndexerId").AsInt32().Nullable()
                   .WithColumn("DownloadClientId").AsInt32().Nullable()
                   .WithColumn("Release").AsString().Nullable()
@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Datastore.Migration
             Create.Index().OnTable("DownloadHistory").OnColumn("ArtistId");
             Create.Index().OnTable("DownloadHistory").OnColumn("DownloadId");
 
-            IfDatabase("sqlite").Execute.WithConnection(InitialImportedDownloadHistory);
+            IfDatabase(ProcessorIdConstants.SQLite).Execute.WithConnection(InitialImportedDownloadHistory);
         }
 
         private static readonly Dictionary<int, int> EventTypeMap = new Dictionary<int, int>()
@@ -69,7 +69,27 @@ namespace NzbDrone.Core.Datastore.Migration
                         var data = Json.Deserialize<Dictionary<string, string>>(rawData);
 
                         var downloadHistoryEventType = EventTypeMap[eventType];
-                        var protocol = data.ContainsKey("protocol") ? Convert.ToInt32(data["protocol"]) : (int?)null;
+
+                        string protocol = null;
+                        if (data.ContainsKey("protocol"))
+                        {
+                            if (int.TryParse(data["protocol"], out var protocolNum))
+                            {
+                                if (protocolNum == 1)
+                                {
+                                    protocol = nameof(UsenetDownloadProtocol);
+                                }
+                                else if (protocolNum == 2)
+                                {
+                                    protocol = nameof(TorrentDownloadProtocol);
+                                }
+                            }
+                            else
+                            {
+                                protocol = data["protocol"];
+                            }
+                        }
+
                         var downloadHistoryData = new Dictionary<string, string>();
 
                         if (data.ContainsKey("indexer"))

@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
+using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Generators;
 using FluentMigrator.Runner.Initialization;
@@ -8,6 +9,8 @@ using FluentMigrator.Runner.Processors;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using NLog.Extensions.Logging;
+using Npgsql;
+using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Core.Datastore.Migration.Framework
 {
@@ -29,16 +32,21 @@ namespace NzbDrone.Core.Datastore.Migration.Framework
         {
             var sw = Stopwatch.StartNew();
 
-            _logger.Info("*** Migrating {0} ***", connectionString);
+            _logger.Info("*** Migrating {0} ***", GetLoggableConnectionString(connectionString, databaseType));
 
-            var db = databaseType == DatabaseType.SQLite ? "sqlite" : "postgres";
+            var db = databaseType switch
+            {
+                DatabaseType.SQLite => ProcessorIdConstants.SQLite,
+                DatabaseType.PostgreSQL => ProcessorIdConstants.PostgreSQL,
+                _ => throw new NotImplementedException($"Unknown database type: {databaseType}")
+            };
 
             var serviceProvider = new ServiceCollection()
                 .AddLogging(b => b.AddNLog())
                 .AddFluentMigratorCore()
                 .Configure<RunnerOptions>(cfg => cfg.IncludeUntaggedMaintenances = true)
                 .ConfigureRunner(builder => builder
-                    .AddPostgres()
+                    .AddPostgres15_0()
                     .AddNzbDroneSQLite()
                     .WithGlobalConnectionString(connectionString)
                     .ScanIn(Assembly.GetExecutingAssembly()).For.All())
@@ -79,6 +87,23 @@ namespace NzbDrone.Core.Datastore.Migration.Framework
             sw.Stop();
 
             _logger.Debug("Took: {0}", sw.Elapsed);
+        }
+
+        private static string GetLoggableConnectionString(string connectionString, DatabaseType databaseType)
+        {
+            if (databaseType != DatabaseType.PostgreSQL)
+            {
+                return connectionString;
+            }
+
+            var builder = new NpgsqlConnectionStringBuilder(connectionString);
+
+            if (builder.Password.IsNotNullOrWhiteSpace())
+            {
+                builder.Password = "(removed)";
+            }
+
+            return builder.ConnectionString;
         }
     }
 }

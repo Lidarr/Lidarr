@@ -27,16 +27,17 @@ namespace NzbDrone.Core.MediaCover
 
     public class MediaCover : MemberwiseEquatable<MediaCover>, IEmbeddedDocument
     {
-        private string _url;
-        public string Url
+        private string _remoteUrl;
+
+        public MediaCoverTypes CoverType { get; set; }
+        public string Url { get; set; }
+        public string RemoteUrl
         {
-            get
-            {
-                return _url;
-            }
+            get => _remoteUrl;
             set
             {
-                _url = value;
+                _remoteUrl = value;
+
                 if (Extension.IsNullOrWhiteSpace())
                 {
                     Extension = Path.GetExtension(value);
@@ -44,18 +45,16 @@ namespace NzbDrone.Core.MediaCover
             }
         }
 
-        public MediaCoverTypes CoverType { get; set; }
         public string Extension { get; private set; }
-        public string RemoteUrl { get; set; }
 
         public MediaCover()
         {
         }
 
-        public MediaCover(MediaCoverTypes coverType, string url)
+        public MediaCover(MediaCoverTypes coverType, string remoteUrl)
         {
             CoverType = coverType;
-            Url = url;
+            RemoteUrl = remoteUrl;
         }
     }
 }

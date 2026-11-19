@@ -15,8 +15,8 @@ namespace NzbDrone.Common.Instrumentation
         private const string FileLogLayout = @"${date:format=yyyy-MM-dd HH\:mm\:ss.f}|${level}|${logger}|${message}${onexception:inner=${newline}${newline}[v${assembly-version}] ${exception:format=ToString}${newline}${exception:format=Data}${newline}}";
         private const string ConsoleFormat = "[${level}] ${logger}: ${message} ${onexception:inner=${newline}${newline}[v${assembly-version}] ${exception:format=ToString}${newline}${exception:format=Data}${newline}}";
 
-        private static readonly CleansingConsoleLogLayout CleansingConsoleLayout  = new (ConsoleFormat);
-        private static readonly CleansingClefLogLayout ClefLogLayout = new ();
+        private static readonly CleansingConsoleLogLayout CleansingConsoleLayout  = new(ConsoleFormat);
+        private static readonly CleansingClefLogLayout ClefLogLayout = new();
 
         private static bool _isConfigured;
 
@@ -199,6 +199,8 @@ namespace NzbDrone.Common.Instrumentation
             {
                 c.ForLogger("System.*").WriteToNil(LogLevel.Warn);
                 c.ForLogger("Microsoft.*").WriteToNil(LogLevel.Warn);
+                c.ForLogger("Microsoft.AspNetCore.HostFiltering*").WriteToNil(LogLevel.Info);
+                c.ForLogger("Microsoft.AspNetCore.HttpOverrides*").WriteToNil(LogLevel.Debug);
                 c.ForLogger("Microsoft.Hosting.Lifetime*").WriteToNil(LogLevel.Info);
                 c.ForLogger("Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware").WriteToNil(LogLevel.Fatal);
                 c.ForLogger("Lidarr.Http.Authentication.ApiKeyAuthenticationHandler").WriteToNil(LogLevel.Info);
@@ -222,6 +224,13 @@ namespace NzbDrone.Common.Instrumentation
                 ConsoleLogFormat.Clef => NzbDroneLogger.ClefLogLayout,
                 _ => NzbDroneLogger.CleansingConsoleLayout
             };
+        }
+
+        public static void ResetAllTargets(IStartupContext startupContext, bool updateApp, bool inConsole)
+        {
+            LogManager.Configuration = new LoggingConfiguration();
+            _isConfigured = false;
+            Register(startupContext, updateApp, inConsole);
         }
     }
 

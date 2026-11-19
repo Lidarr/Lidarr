@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Notifications.Xbmc
 
     public class XbmcSettings : IProviderConfig
     {
-        private static readonly XbmcSettingsValidator Validator = new ();
+        private static readonly XbmcSettingsValidator Validator = new();
 
         public XbmcSettings()
         {

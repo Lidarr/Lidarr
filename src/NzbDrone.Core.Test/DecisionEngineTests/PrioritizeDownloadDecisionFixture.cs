@@ -24,11 +24,13 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [SetUp]
         public void Setup()
         {
-            GivenPreferredDownloadProtocol(DownloadProtocol.Usenet);
+            GivenPreferredDownloadProtocol(nameof(UsenetDownloadProtocol));
 
             Mocker.GetMock<IQualityDefinitionService>()
                 .Setup(s => s.Get(It.IsAny<Quality>()))
                 .Returns(new QualityDefinition { PreferredSize = null });
+
+            Mocker.SetConstant<IAlbumYearMatcher>(new AlbumYearMatcher());
         }
 
         private void GivenPreferredSize(double? size)
@@ -52,7 +54,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
                             .Build();
         }
 
-        private RemoteAlbum GivenRemoteAlbum(List<Album> albums, QualityModel quality, int age = 0, long size = 0, DownloadProtocol downloadProtocol = DownloadProtocol.Usenet, int indexerPriority = 25)
+        private RemoteAlbum GivenRemoteAlbum(List<Album> albums, QualityModel quality, int age = 0, long size = 0, string downloadProtocol = "UsenetDownloadProtocol", int indexerPriority = 25)
         {
             var remoteAlbum = new RemoteAlbum();
             remoteAlbum.ParsedAlbumInfo = new ParsedAlbumInfo();
@@ -78,14 +80,14 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             return remoteAlbum;
         }
 
-        private void GivenPreferredDownloadProtocol(DownloadProtocol downloadProtocol)
+        private void GivenPreferredDownloadProtocol(string downloadProtocol)
         {
+            var profile = new DelayProfile();
+            profile.Items = profile.Items.OrderByDescending(x => x.Protocol == downloadProtocol).ToList();
+
             Mocker.GetMock<IDelayProfileService>()
                   .Setup(s => s.BestForTags(It.IsAny<HashSet<int>>()))
-                  .Returns(new DelayProfile
-                  {
-                      PreferredProtocol = downloadProtocol
-                  });
+                  .Returns(profile);
         }
 
         [Test]
@@ -218,33 +220,33 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
         [Test]
         public void should_put_usenet_above_torrent_when_usenet_is_preferred()
         {
-            GivenPreferredDownloadProtocol(DownloadProtocol.Usenet);
+            GivenPreferredDownloadProtocol(nameof(UsenetDownloadProtocol));
 
-            var remoteAlbum1 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_256), downloadProtocol: DownloadProtocol.Torrent);
-            var remoteAlbum2 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_256), downloadProtocol: DownloadProtocol.Usenet);
+            var remoteAlbum1 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_256), downloadProtocol: nameof(TorrentDownloadProtocol));
+            var remoteAlbum2 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_256), downloadProtocol: nameof(UsenetDownloadProtocol));
 
             var decisions = new List<DownloadDecision>();
             decisions.Add(new DownloadDecision(remoteAlbum1));
             decisions.Add(new DownloadDecision(remoteAlbum2));
 
             var qualifiedReports = Subject.PrioritizeDecisions(decisions);
-            qualifiedReports.First().RemoteAlbum.Release.DownloadProtocol.Should().Be(DownloadProtocol.Usenet);
+            qualifiedReports.First().RemoteAlbum.Release.DownloadProtocol.Should().Be(nameof(UsenetDownloadProtocol));
         }
 
         [Test]
         public void should_put_torrent_above_usenet_when_torrent_is_preferred()
         {
-            GivenPreferredDownloadProtocol(DownloadProtocol.Torrent);
+            GivenPreferredDownloadProtocol(nameof(TorrentDownloadProtocol));
 
-            var remoteAlbum1 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_256), downloadProtocol: DownloadProtocol.Torrent);
-            var remoteAlbum2 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_256), downloadProtocol: DownloadProtocol.Usenet);
+            var remoteAlbum1 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_256), downloadProtocol: nameof(TorrentDownloadProtocol));
+            var remoteAlbum2 = GivenRemoteAlbum(new List<Album> { GivenAlbum(1) }, new QualityModel(Quality.MP3_256), downloadProtocol: nameof(UsenetDownloadProtocol));
 
             var decisions = new List<DownloadDecision>();
             decisions.Add(new DownloadDecision(remoteAlbum1));
             decisions.Add(new DownloadDecision(remoteAlbum2));
 
             var qualifiedReports = Subject.PrioritizeDecisions(decisions);
-            qualifiedReports.First().RemoteAlbum.Release.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
+            qualifiedReports.First().RemoteAlbum.Release.DownloadProtocol.Should().Be(nameof(TorrentDownloadProtocol));
         }
 
         [Test]
@@ -302,7 +304,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             var torrentInfo1 = new TorrentInfo();
             torrentInfo1.PublishDate = DateTime.Now;
             torrentInfo1.Size = 0;
-            torrentInfo1.DownloadProtocol = DownloadProtocol.Torrent;
+            torrentInfo1.DownloadProtocol = nameof(TorrentDownloadProtocol);
             torrentInfo1.Seeders = 10;
 
             var torrentInfo2 = torrentInfo1.JsonClone();
@@ -328,7 +330,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             var torrentInfo1 = new TorrentInfo();
             torrentInfo1.PublishDate = DateTime.Now;
             torrentInfo1.Size = 0;
-            torrentInfo1.DownloadProtocol = DownloadProtocol.Torrent;
+            torrentInfo1.DownloadProtocol = nameof(TorrentDownloadProtocol);
             torrentInfo1.Seeders = 10;
             torrentInfo1.Peers = 10;
 
@@ -355,7 +357,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             var torrentInfo1 = new TorrentInfo();
             torrentInfo1.PublishDate = DateTime.Now;
             torrentInfo1.Size = 0;
-            torrentInfo1.DownloadProtocol = DownloadProtocol.Torrent;
+            torrentInfo1.DownloadProtocol = nameof(TorrentDownloadProtocol);
             torrentInfo1.Seeders = 0;
             torrentInfo1.Peers = 10;
 
@@ -382,7 +384,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
 
             var torrentInfo1 = new TorrentInfo();
             torrentInfo1.PublishDate = DateTime.Now;
-            torrentInfo1.DownloadProtocol = DownloadProtocol.Torrent;
+            torrentInfo1.DownloadProtocol = nameof(TorrentDownloadProtocol);
             torrentInfo1.Seeders = 1000;
             torrentInfo1.Peers = 10;
             torrentInfo1.Size = 200.Megabytes();
@@ -431,7 +433,7 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
 
             var torrentInfo1 = new TorrentInfo();
             torrentInfo1.PublishDate = DateTime.Now;
-            torrentInfo1.DownloadProtocol = DownloadProtocol.Torrent;
+            torrentInfo1.DownloadProtocol = nameof(TorrentDownloadProtocol);
             torrentInfo1.Seeders = 100;
             torrentInfo1.Peers = 10;
             torrentInfo1.Size = 200.Megabytes();
@@ -604,6 +606,46 @@ namespace NzbDrone.Core.Test.DecisionEngineTests
             qualifiedReports.Skip(1).First().RemoteAlbum.Should().Be(remoteAlbum2);
             qualifiedReports.Skip(2).First().RemoteAlbum.Should().Be(remoteAlbum1);
             qualifiedReports.Last().RemoteAlbum.Should().Be(remoteAlbum3);
+        }
+
+        [Test]
+        public void should_prefer_release_with_matching_year()
+        {
+            var album2020 = GivenAlbum(1);
+            album2020.ReleaseDate = new System.DateTime(2020, 6, 15);
+
+            var remoteAlbum1 = GivenRemoteAlbum(new List<Album> { album2020 }, new QualityModel(Quality.FLAC));
+            var remoteAlbum2 = GivenRemoteAlbum(new List<Album> { album2020 }, new QualityModel(Quality.FLAC));
+
+            remoteAlbum1.ParsedAlbumInfo.ReleaseYear = 2015;
+            remoteAlbum2.ParsedAlbumInfo.ReleaseYear = 2020;
+
+            var decisions = new List<DownloadDecision>();
+            decisions.Add(new DownloadDecision(remoteAlbum1));
+            decisions.Add(new DownloadDecision(remoteAlbum2));
+
+            var qualifiedReports = Subject.PrioritizeDecisions(decisions);
+            qualifiedReports.First().RemoteAlbum.ParsedAlbumInfo.ReleaseYear.Should().Be(2020);
+        }
+
+        [Test]
+        public void should_prefer_quality_over_year_match()
+        {
+            var album2020 = GivenAlbum(1);
+            album2020.ReleaseDate = new System.DateTime(2020, 6, 15);
+
+            var remoteAlbum1 = GivenRemoteAlbum(new List<Album> { album2020 }, new QualityModel(Quality.FLAC));
+            var remoteAlbum2 = GivenRemoteAlbum(new List<Album> { album2020 }, new QualityModel(Quality.MP3_256));
+
+            remoteAlbum1.ParsedAlbumInfo.ReleaseYear = 2015;
+            remoteAlbum2.ParsedAlbumInfo.ReleaseYear = 2020;
+
+            var decisions = new List<DownloadDecision>();
+            decisions.Add(new DownloadDecision(remoteAlbum1));
+            decisions.Add(new DownloadDecision(remoteAlbum2));
+
+            var qualifiedReports = Subject.PrioritizeDecisions(decisions);
+            qualifiedReports.First().RemoteAlbum.ParsedAlbumInfo.Quality.Quality.Should().Be(Quality.FLAC);
         }
     }
 }

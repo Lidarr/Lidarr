@@ -22,7 +22,6 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             {
                 c.Insert.IntoTable("Profiles").Row(new
                 {
-                    Id = 0,
                     Name = "Lossless",
                     Cutoff = 1,
                     Items = $"[{GenerateQualityJson(1, true)}, {GenerateQualityJson((int)Quality.MP3_320, false)}, {GenerateQualityJson((int)Quality.FLAC, true)}]"
@@ -34,8 +33,8 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             var items = profiles.First().Items;
             items.Should().HaveCount(7);
             items.Select(v => v.Quality).Should().Contain(13);
-            items.Select(v => v.Items.Count).Should().BeEquivalentTo(9, 5, 6, 3, 0, 5, 5);
-            items.Select(v => v.Allowed).Should().BeEquivalentTo(false, true, false, true, false, false, false);
+            items.Select(v => v.Items.Count).Should().Equal(9, 5, 6, 3, 0, 5, 5);
+            items.Select(v => v.Allowed).Should().Equal(false, true, false, true, false, false, false);
         }
 
         [Test]
@@ -45,7 +44,6 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             {
                 c.Insert.IntoTable("Profiles").Row(new
                 {
-                    Id = 0,
                     Name = "Lossless",
                     Cutoff = 1,
                     Items = $"[{GenerateQualityJson(1, true)}, {GenerateQualityJson((int)Quality.MP3_320, false)}, {GenerateQualityJson((int)Quality.FLAC, true)}]"
@@ -57,8 +55,8 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             var items = profiles.First().Items;
             items.Should().HaveCount(7);
             items.Select(v => v.Name).Should().Contain("Trash Quality Lossy");
-            items.Select(v => v.Items.Count).Should().BeEquivalentTo(9, 5, 6, 3, 0, 5, 5);
-            items.Select(v => v.Allowed).Should().BeEquivalentTo(false, true, false, true, false, false, false);
+            items.Select(v => v.Items.Count).Should().Equal(9, 5, 6, 3, 0, 5, 5);
+            items.Select(v => v.Allowed).Should().Equal(false, true, false, true, false, false, false);
         }
     }
 }

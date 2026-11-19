@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using FluentValidation;
 using FluentValidation.Validators;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Configuration;
 
 namespace NzbDrone.Core.Validation
 {
@@ -30,6 +32,19 @@ namespace NzbDrone.Core.Validation
             ruleBuilder.SetValidator(new NotEmptyValidator(null));
 
             return ruleBuilder.Must(x => HostRegex.IsMatch(x) || x.IsValidIpAddress()).WithMessage("must be valid Host without http://");
+        }
+
+        public static IRuleBuilderOptions<T, string> ValidHosts<T>(this IRuleBuilder<T, string> ruleBuilder)
+        {
+            return ruleBuilder.Must(x =>
+                              {
+                                  var hosts = AllowedHostsParser.Parse(x);
+
+                                  return hosts.Any() && hosts.All(AllowedHostsParser.IsValidHost);
+                              })
+                              .WithMessage("Must be a comma separated list of host names or IP addresses only, without a protocol or port")
+                              .Must(x => !AllowedHostsParser.Parse(x).Any(AllowedHostsParser.IsBindAddress))
+                              .WithMessage("0.0.0.0 and [::] are not host names, leave empty to allow all hosts");
         }
 
         public static IRuleBuilderOptions<T, string> ValidRootUrl<T>(this IRuleBuilder<T, string> ruleBuilder)

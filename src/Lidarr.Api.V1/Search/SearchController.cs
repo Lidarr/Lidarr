@@ -16,11 +16,13 @@ namespace Lidarr.Api.V1.Search
     {
         private readonly ISearchForNewEntity _searchProxy;
         private readonly IBuildFileNames _fileNameBuilder;
+        private readonly IMapCoversToLocal _coverMapper;
 
-        public SearchController(ISearchForNewEntity searchProxy, IBuildFileNames fileNameBuilder)
+        public SearchController(ISearchForNewEntity searchProxy, IBuildFileNames fileNameBuilder, IMapCoversToLocal coverMapper)
         {
             _searchProxy = searchProxy;
             _fileNameBuilder = fileNameBuilder;
+            _coverMapper = coverMapper;
         }
 
         [HttpGet]
@@ -44,11 +46,13 @@ namespace Lidarr.Api.V1.Search
                     resource.Artist = artist.ToResource();
                     resource.ForeignId = artist.ForeignArtistId;
 
+                    _coverMapper.ConvertToLocalUrls(resource.Artist.Id, MediaCoverEntity.Artist, resource.Artist.Images);
+
                     var poster = artist.Metadata.Value.Images.FirstOrDefault(c => c.CoverType == MediaCoverTypes.Poster);
 
                     if (poster != null)
                     {
-                        resource.Artist.RemotePoster = poster.Url;
+                        resource.Artist.RemotePoster = poster.RemoteUrl;
                     }
 
                     resource.Artist.Folder = _fileNameBuilder.GetArtistFolder(artist);
@@ -58,11 +62,13 @@ namespace Lidarr.Api.V1.Search
                     resource.Album = album.ToResource();
                     resource.ForeignId = album.ForeignAlbumId;
 
+                    _coverMapper.ConvertToLocalUrls(resource.Album.Id, MediaCoverEntity.Album, resource.Album.Images);
+
                     var cover = album.Images.FirstOrDefault(c => c.CoverType == MediaCoverTypes.Cover);
 
                     if (cover != null)
                     {
-                        resource.Album.RemoteCover = cover.Url;
+                        resource.Album.RemoteCover = cover.RemoteUrl;
                     }
 
                     resource.Album.Artist.Folder = _fileNameBuilder.GetArtistFolder(album.Artist);

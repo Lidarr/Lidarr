@@ -4,11 +4,11 @@ using NUnit.Framework;
 namespace NzbDrone.Integration.Test.ApiTests
 {
     [TestFixture]
-    [Ignore("Waiting for metadata to be back again", Until = "2025-12-31 00:00:00Z")]
     public class ArtistLookupFixture : IntegrationTest
     {
         [TestCase("Kiss", "Kiss")]
         [TestCase("Linkin Park", "Linkin Park")]
+        [Ignore("Waiting for metadata to be back again", Until = "2026-02-28 00:00:00Z")]
         public void lookup_new_artist_by_name(string term, string name)
         {
             var artist = Artist.Lookup(term);

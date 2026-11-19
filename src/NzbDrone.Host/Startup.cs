@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using DryIoc;
 using Lidarr.Api.V1.System;
 using Lidarr.Http;
@@ -14,12 +13,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using NLog.Extensions.Logging;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Instrumentation;
@@ -33,7 +31,6 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Host.AccessControl;
 using NzbDrone.Http.Authentication;
 using NzbDrone.SignalR;
-using IPNetwork = Microsoft.AspNetCore.HttpOverrides.IPNetwork;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace NzbDrone.Host
@@ -54,20 +51,15 @@ namespace NzbDrone.Host
                 b.ClearProviders();
                 b.SetMinimumLevel(LogLevel.Trace);
                 b.AddFilter("Microsoft.AspNetCore", LogLevel.Warning);
+                b.AddFilter("Microsoft.AspNetCore.HostFiltering", LogLevel.Information);
+                b.AddFilter("Microsoft.AspNetCore.HttpOverrides", LogLevel.Debug);
                 b.AddFilter("Lidarr.Http.Authentication.ApiKeyAuthenticationHandler", LogLevel.Information);
                 b.AddFilter("Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager", LogLevel.Error);
                 b.AddNLog();
             });
 
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost;
-                options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("10.0.0.0"), 8));
-                options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("172.16.0.0"), 12));
-                options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("192.168.0.0"), 16));
-                options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("fc00::"), 7));
-                options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("fe80::"), 10));
-            });
+            services.AddOptions<ForwardedHeadersOptions>()
+                    .Configure<IConfigFileProvider>(ForwardedHeadersConfigurator.Configure);
 
             services.AddRouting(options => options.LowercaseUrls = true);
 
@@ -122,18 +114,13 @@ namespace NzbDrone.Host
                     Scheme = "apiKey",
                     Description = "Apikey passed as header",
                     In = ParameterLocation.Header,
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "X-Api-Key"
-                    },
                 };
 
                 c.AddSecurityDefinition("X-Api-Key", apiKeyHeader);
 
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
                 {
-                    { apiKeyHeader, Array.Empty<string>() }
+                    [new OpenApiSecuritySchemeReference(apiKeyHeader.Name, document)] = new List<string>(),
                 });
 
                 var apikeyQuery = new OpenApiSecurityScheme
@@ -143,11 +130,6 @@ namespace NzbDrone.Host
                     Scheme = "apiKey",
                     Description = "Apikey passed as query parameter",
                     In = ParameterLocation.Query,
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "apikey"
-                    },
                 };
 
                 c.AddServer(new OpenApiServer
@@ -162,9 +144,9 @@ namespace NzbDrone.Host
 
                 c.AddSecurityDefinition("apikey", apikeyQuery);
 
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
                 {
-                    { apikeyQuery, Array.Empty<string>() }
+                    [new OpenApiSecuritySchemeReference(apikeyQuery.Name, document)] = new List<string>(),
                 });
 
                 c.DescribeAllParametersInCamelCase();
@@ -266,6 +248,7 @@ namespace NzbDrone.Host
             }
 
             app.UseForwardedHeaders();
+            app.UseHostFiltering();
             app.UseMiddleware<LoggingMiddleware>();
             app.UsePathBase(new PathString(configFileProvider.UrlBase));
             app.UseExceptionHandler(new ExceptionHandlerOptions

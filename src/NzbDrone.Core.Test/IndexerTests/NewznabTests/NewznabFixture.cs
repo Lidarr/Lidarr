@@ -47,7 +47,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get)))
-                .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), recentFeed)));
+                .ReturnsAsync((HttpRequest r) => new HttpResponse(r, new HttpHeader(), recentFeed));
 
             var releases = await Subject.FetchRecent();
 
@@ -56,7 +56,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             var releaseInfo = releases.First();
 
             releaseInfo.Title.Should().Be("Brainstorm-Scary Creatures-CD-FLAC-2016-NBFLAC");
-            releaseInfo.DownloadProtocol.Should().Be(DownloadProtocol.Usenet);
+            releaseInfo.DownloadProtocol.Should().Be(nameof(UsenetDownloadProtocol));
             releaseInfo.DownloadUrl.Should().Be("http://api.nzbgeek.info/api?t=get&id=38884827e1e56b9336278a449e0a38ec&apikey=xxx");
             releaseInfo.InfoUrl.Should().Be("https://nzbgeek.info/geekseek.php?guid=38884827e1e56b9336278a449e0a38ec");
             releaseInfo.CommentUrl.Should().Be("https://nzbgeek.info/geekseek.php?guid=38884827e1e56b9336278a449e0a38ec");
@@ -82,6 +82,15 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             _caps.DefaultPageSize = 25;
 
             Subject.PageSize.Should().Be(100);
+        }
+
+        [Test]
+        public void should_use_pagesize_over_100_if_reported_in_caps()
+        {
+            _caps.MaxPageSize = 250;
+            _caps.DefaultPageSize = 200;
+
+            Subject.PageSize.Should().Be(200);
         }
 
         [Test]
@@ -115,7 +124,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get)))
-                .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), recentFeed)));
+                .ReturnsAsync((HttpRequest r) => new HttpResponse(r, new HttpHeader(), recentFeed));
 
             var releases = await Subject.FetchRecent();
 

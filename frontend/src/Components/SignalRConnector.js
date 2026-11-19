@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { setAppValue, setVersion } from 'Store/Actions/appActions';
+import { clearMessages, setAppValue, setVersion } from 'Store/Actions/appActions';
 import { fetchArtist } from 'Store/Actions/artistActions';
 import { removeItem, update, updateItem } from 'Store/Actions/baseActions';
 import { fetchCommands, finishCommand, updateCommand } from 'Store/Actions/commandActions';
@@ -40,6 +40,7 @@ const mapDispatchToProps = {
   dispatchFetchCommands: fetchCommands,
   dispatchUpdateCommand: updateCommand,
   dispatchFinishCommand: finishCommand,
+  dispatchClearMessages: clearMessages,
   dispatchSetAppValue: setAppValue,
   dispatchSetVersion: setVersion,
   dispatchUpdate: update,
@@ -388,6 +389,7 @@ class SignalRConnector extends Component {
     const {
       dispatchFetchCommands,
       dispatchFetchArtist,
+      dispatchClearMessages,
       dispatchSetAppValue
     } = this.props;
 
@@ -401,7 +403,9 @@ class SignalRConnector extends Component {
     // Repopulate the page (if a repopulator is set) to ensure things
     // are in sync after reconnecting.
     dispatchFetchArtist();
+    dispatchClearMessages();
     dispatchFetchCommands();
+
     repopulatePage();
   };
 
@@ -430,6 +434,7 @@ SignalRConnector.propTypes = {
   dispatchFetchCommands: PropTypes.func.isRequired,
   dispatchUpdateCommand: PropTypes.func.isRequired,
   dispatchFinishCommand: PropTypes.func.isRequired,
+  dispatchClearMessages: PropTypes.func.isRequired,
   dispatchSetAppValue: PropTypes.func.isRequired,
   dispatchSetVersion: PropTypes.func.isRequired,
   dispatchUpdate: PropTypes.func.isRequired,

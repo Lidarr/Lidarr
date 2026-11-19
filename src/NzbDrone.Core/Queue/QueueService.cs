@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Queue
     public class QueueService : IQueueService, IHandle<TrackedDownloadRefreshedEvent>
     {
         private readonly IEventAggregator _eventAggregator;
-        private static List<Queue> _queue = new ();
+        private static List<Queue> _queue = new();
         private readonly IHistoryService _historyService;
 
         public QueueService(IEventAggregator eventAggregator,

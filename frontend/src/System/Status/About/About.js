@@ -20,7 +20,7 @@ class About extends Component {
       packageVersion,
       packageAuthor,
       isNetCore,
-      isDocker,
+      isContainerized,
       runtimeVersion,
       databaseVersion,
       databaseType,
@@ -58,7 +58,7 @@ class About extends Component {
           }
 
           {
-            isDocker &&
+            isContainerized &&
               <DescriptionListItem
                 title={translate('Docker')}
                 data={'Yes'}
@@ -113,7 +113,7 @@ About.propTypes = {
   packageAuthor: PropTypes.string,
   isNetCore: PropTypes.bool.isRequired,
   runtimeVersion: PropTypes.string.isRequired,
-  isDocker: PropTypes.bool.isRequired,
+  isContainerized: PropTypes.bool.isRequired,
   databaseType: PropTypes.string.isRequired,
   databaseVersion: PropTypes.string.isRequired,
   migrationVersion: PropTypes.number.isRequired,

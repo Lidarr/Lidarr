@@ -45,7 +45,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NyaaTests
             var torrentInfo = releases.First() as TorrentInfo;
 
             torrentInfo.Title.Should().Be("[TSRaws] Futsuu no Joshikousei ga [Locodol] Yattemita. #07 (TBS).ts");
-            torrentInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
+            torrentInfo.DownloadProtocol.Should().Be(nameof(TorrentDownloadProtocol));
             torrentInfo.DownloadUrl.Should().Be("https://www.nyaa.se/?page=download&tid=587750");
             torrentInfo.InfoUrl.Should().Be("https://www.nyaa.se/?page=view&tid=587750");
             torrentInfo.CommentUrl.Should().BeNullOrEmpty();
@@ -65,7 +65,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NyaaTests
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get)))
-                .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), recentFeed)));
+                .ReturnsAsync((HttpRequest r) => new HttpResponse(r, new HttpHeader(), recentFeed));
 
             var releases = await Subject.FetchRecent();
 
@@ -75,7 +75,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NyaaTests
             var torrentInfo = releases.First() as TorrentInfo;
 
             torrentInfo.Title.Should().Be("[Foxy-Subs] Mahouka Koukou no Yuutousei - 08 [720p] [3194D881].mkv");
-            torrentInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
+            torrentInfo.DownloadProtocol.Should().Be(nameof(TorrentDownloadProtocol));
             torrentInfo.DownloadUrl.Should().Be("https://nyaa.si/download/1424896.torrent");
             torrentInfo.InfoUrl.Should().Be("https://nyaa.si/view/1424896");
             torrentInfo.CommentUrl.Should().BeNullOrEmpty();

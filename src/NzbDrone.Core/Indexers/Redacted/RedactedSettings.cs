@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Indexers.Redacted
 
     public class RedactedSettings : ITorrentIndexerSettings
     {
-        private static readonly RedactedSettingsValidator Validator = new ();
+        private static readonly RedactedSettingsValidator Validator = new();
 
         public RedactedSettings()
         {
@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Indexers.Redacted
         public int MinimumSeeders { get; set; }
 
         [FieldDefinition(6)]
-        public SeedCriteriaSettings SeedCriteria { get; set; } = new ();
+        public SeedCriteriaSettings SeedCriteria { get; set; } = new();
 
         [FieldDefinition(7, Type = FieldType.Checkbox, Label = "IndexerSettingsRejectBlocklistedTorrentHashes", HelpText = "IndexerSettingsRejectBlocklistedTorrentHashesHelpText", Advanced = true)]
         public bool RejectBlocklistedTorrentHashesWhileGrabbing { get; set; }

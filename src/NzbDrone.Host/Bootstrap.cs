@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.WindowsServices;
 using NLog;
+using NzbDrone.Common.Composition;
 using NzbDrone.Common.Composition.Extensions;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
@@ -22,6 +26,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Common.Options;
+using NzbDrone.Common.Reflection;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Datastore.Extensions;
 using PostgresOptions = NzbDrone.Core.Datastore.PostgresOptions;
@@ -31,15 +36,6 @@ namespace NzbDrone.Host
     public static class Bootstrap
     {
         private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(Bootstrap));
-
-        public static readonly List<string> ASSEMBLIES = new List<string>
-        {
-            "Lidarr.Host",
-            "Lidarr.Core",
-            "Lidarr.SignalR",
-            "Lidarr.Api.V1",
-            "Lidarr.Http"
-        };
 
         public static void Start(string[] args, Action<IHostBuilder> trayCallback = null)
         {
@@ -57,66 +53,15 @@ namespace NzbDrone.Host
                 var appMode = GetApplicationMode(startupContext);
                 var config = GetConfiguration(startupContext);
 
-                switch (appMode)
+                if (appMode is not (ApplicationModes.Interactive or ApplicationModes.Service))
                 {
-                    case ApplicationModes.Service:
-                    {
-                        Logger.Debug("Service selected");
-
-                        CreateConsoleHostBuilder(args, startupContext).UseWindowsService().Build().Run();
-                        break;
-                    }
-
-                    case ApplicationModes.Interactive:
-                    {
-                        Logger.Debug(trayCallback != null ? "Tray selected" : "Console selected");
-                        var builder = CreateConsoleHostBuilder(args, startupContext);
-
-                        if (trayCallback != null)
-                        {
-                            trayCallback(builder);
-                        }
-
-                        builder.Build().Run();
-                        break;
-                    }
-
-                    // Utility mode
-                    default:
-                    {
-                        new HostBuilder()
-                            .UseServiceProviderFactory(new DryIocServiceProviderFactory(new Container(rules => rules.WithNzbDroneRules())))
-                            .ConfigureContainer<IContainer>(c =>
-                            {
-                                c.AutoAddServices(Bootstrap.ASSEMBLIES)
-                                    .AddNzbDroneLogger()
-                                    .AddDatabase()
-                                    .AddStartupContext(startupContext)
-                                    .Resolve<UtilityModeRouter>()
-                                    .Route(appMode);
-
-                                if (config.GetValue(nameof(ConfigFileProvider.LogDbEnabled), true))
-                                {
-                                    c.AddLogDatabase();
-                                }
-                                else
-                                {
-                                    c.AddDummyLogDatabase();
-                                }
-                            })
-                            .ConfigureServices(services =>
-                            {
-                                services.Configure<PostgresOptions>(config.GetSection("Lidarr:Postgres"));
-                                services.Configure<AppOptions>(config.GetSection("Lidarr:App"));
-                                services.Configure<AuthOptions>(config.GetSection("Lidarr:Auth"));
-                                services.Configure<ServerOptions>(config.GetSection("Lidarr:Server"));
-                                services.Configure<LogOptions>(config.GetSection("Lidarr:Log"));
-                                services.Configure<UpdateOptions>(config.GetSection("Lidarr:Update"));
-                            }).Build();
-
-                        break;
-                    }
+                    RunUtilityMode(appMode, startupContext, config);
+                    return;
                 }
+
+                RunHostUntilShutdown(args, startupContext, appMode, trayCallback);
+
+                Logger.Info("Lidarr has shut down completely");
             }
             catch (InvalidConfigFileException ex)
             {
@@ -138,7 +83,106 @@ namespace NzbDrone.Host
             SQLiteConnection.ClearAllPools();
         }
 
-        public static IHostBuilder CreateConsoleHostBuilder(string[] args, StartupContext context)
+        private static void RunUtilityMode(ApplicationModes appMode, StartupContext startupContext, IConfiguration config)
+        {
+            Logger.Debug("Utility mode: {0}", appMode);
+
+            var assemblies = AssemblyLoader.LoadBaseAssemblies();
+
+            new HostBuilder()
+                .UseServiceProviderFactory(new DryIocServiceProviderFactory(new Container(rules => rules.WithNzbDroneRules())))
+                .ConfigureContainer<IContainer>(c =>
+                {
+                    c.AutoAddServices(assemblies)
+                        .AddNzbDroneLogger()
+                        .AddDatabase()
+                        .AddStartupContext(startupContext)
+                        .Resolve<UtilityModeRouter>()
+                        .Route(appMode);
+
+                    if (config.GetValue(nameof(ConfigFileProvider.LogDbEnabled), true))
+                    {
+                        c.AddLogDatabase();
+                    }
+                    else
+                    {
+                        c.AddDummyLogDatabase();
+                    }
+                })
+                .ConfigureServices(services =>
+                {
+                    services.Configure<PostgresOptions>(config.GetSection("Lidarr:Postgres"));
+                    services.Configure<AppOptions>(config.GetSection("Lidarr:App"));
+                    services.Configure<AuthOptions>(config.GetSection("Lidarr:Auth"));
+                    services.Configure<ServerOptions>(config.GetSection("Lidarr:Server"));
+                    services.Configure<LogOptions>(config.GetSection("Lidarr:Log"));
+                    services.Configure<UpdateOptions>(config.GetSection("Lidarr:Update"));
+                })
+                .Build();
+        }
+
+        private static void RunHostUntilShutdown(string[] args, StartupContext startupContext, ApplicationModes appMode, Action<IHostBuilder> trayCallback)
+        {
+            Logger.Debug("Starting in {0} mode", trayCallback != null ? "Tray" : appMode.ToString());
+
+            bool shouldRestart;
+            do
+            {
+                var success = RunHost(args, startupContext, trayCallback, true, out var pluginRefs, out shouldRestart);
+
+                if (!success)
+                {
+                    var unloadSuccess = PluginLoader.UnloadPlugins(pluginRefs);
+
+                    if (unloadSuccess)
+                    {
+                        RunHost(args, startupContext, trayCallback, false, out _, out shouldRestart);
+                    }
+                }
+
+                if (shouldRestart)
+                {
+                    Logger.Info("Application restart requested, reinitializing host");
+                    PluginLoader.UnloadPlugins(pluginRefs);
+                    NzbDroneLogger.ResetAllTargets(startupContext, false, true);
+                    Thread.Sleep(1000);
+                }
+            }
+            while (shouldRestart);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static bool RunHost(string[] args, StartupContext startupContext, Action<IHostBuilder> trayCallback, bool usePlugins, out List<WeakReference> pluginRefs, out bool shouldRestart)
+        {
+            shouldRestart = false;
+
+            var builder = CreateConsoleHostBuilder(args, startupContext, usePlugins, out pluginRefs);
+            trayCallback?.Invoke(builder);
+
+            if (OsInfo.IsWindows && WindowsServiceHelpers.IsWindowsService())
+            {
+                builder.UseWindowsService();
+            }
+
+            try
+            {
+                using var host = builder.Build();
+                shouldRestart = RunWithRestartCheck(host);
+            }
+            catch (Exception e)
+            {
+                if (usePlugins)
+                {
+                    Logger.Warn(e, "Error starting with plugins enabled");
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
+        public static IHostBuilder CreateConsoleHostBuilder(string[] args, StartupContext context, bool usePlugins, out List<WeakReference> pluginRef)
         {
             var config = GetConfiguration(context);
 
@@ -157,12 +201,30 @@ namespace NzbDrone.Host
                 urls.Add(BuildUrl("https", bindAddress, sslPort));
             }
 
+            var assemblies = AssemblyLoader.LoadBaseAssemblies();
+            pluginRef = null;
+
+            if (usePlugins)
+            {
+                var pluginPaths = new AppFolderInfo(context).GetPluginAssemblies().ToList();
+                (var plugins, pluginRef) = PluginLoader.LoadPlugins(pluginPaths);
+
+                var loadedPlugins = plugins.Where(x => x != null).ToList();
+                assemblies.AddRange(loadedPlugins);
+                ReflectionExtensions.SetCurrentAssemblies(loadedPlugins);
+            }
+            else
+            {
+                ReflectionExtensions.SetCurrentAssemblies(Enumerable.Empty<Assembly>());
+            }
+
             return new HostBuilder()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseServiceProviderFactory(new DryIocServiceProviderFactory(new Container(rules => rules.WithNzbDroneRules())))
                 .ConfigureContainer<IContainer>(c =>
                 {
-                    c.AutoAddServices(Bootstrap.ASSEMBLIES)
+                    c.AutoAddServices(assemblies)
+                        .SetPluginStatus(usePlugins)
                         .AddNzbDroneLogger()
                         .AddDatabase()
                         .AddStartupContext(context);
@@ -208,7 +270,7 @@ namespace NzbDrone.Host
                 });
         }
 
-        public static ApplicationModes GetApplicationMode(IStartupContext startupContext)
+        private static ApplicationModes GetApplicationMode(IStartupContext startupContext)
         {
             if (startupContext.Help)
             {
@@ -258,7 +320,7 @@ namespace NzbDrone.Host
             {
                 return new ConfigurationBuilder()
                     .AddXmlFile(configPath, optional: true, reloadOnChange: false)
-                    .AddInMemoryCollection(new List<KeyValuePair<string, string>> { new ("dataProtectionFolder", appFolder.GetDataProtectionPath()) })
+                    .AddInMemoryCollection(new List<KeyValuePair<string, string>> { new("dataProtectionFolder", appFolder.GetDataProtectionPath()) })
                     .AddEnvironmentVariables()
                     .Build();
             }
@@ -281,7 +343,7 @@ namespace NzbDrone.Host
 
             try
             {
-                certificate = new X509Certificate2(cert, password, X509KeyStorageFlags.DefaultKeySet);
+                certificate = X509CertificateLoader.LoadPkcs12FromFile(cert, password, X509KeyStorageFlags.DefaultKeySet);
             }
             catch (CryptographicException ex)
             {
@@ -295,6 +357,21 @@ namespace NzbDrone.Host
             }
 
             return certificate;
+        }
+
+        private static bool RunWithRestartCheck(IHost host)
+        {
+            var shouldRestart = false;
+
+            var lifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
+            lifetime.ApplicationStopped.Register(() =>
+            {
+                var runtimeInfo = host.Services.GetRequiredService<IRuntimeInfo>();
+                shouldRestart = runtimeInfo.RestartPending;
+            });
+
+            host.Run();
+            return shouldRestart;
         }
     }
 }

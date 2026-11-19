@@ -565,7 +565,7 @@ namespace NzbDrone.Common.Test.DiskTests
 
             var count = Subject.MirrorFolder(source.FullName, destination.FullName);
 
-            count.Should().Equals(0);
+            count.Should().Be(0);
             destination.GetFileSystemInfos().Should().BeEmpty();
         }
 
@@ -585,7 +585,7 @@ namespace NzbDrone.Common.Test.DiskTests
 
             var count = Subject.MirrorFolder(source.FullName, destination.FullName);
 
-            count.Should().Equals(0);
+            count.Should().Be(0);
             destination.GetFileSystemInfos().Should().HaveCount(1);
         }
 
@@ -602,7 +602,7 @@ namespace NzbDrone.Common.Test.DiskTests
 
             var count = Subject.MirrorFolder(source.FullName, destination.FullName);
 
-            count.Should().Equals(3);
+            count.Should().Be(3);
             VerifyCopyFolder(original.FullName, destination.FullName);
         }
 
@@ -619,7 +619,7 @@ namespace NzbDrone.Common.Test.DiskTests
 
             var count = Subject.MirrorFolder(source.FullName, destination.FullName);
 
-            count.Should().Equals(3);
+            count.Should().Be(3);
 
             File.Exists(Path.Combine(destination.FullName, _nfsFile)).Should().BeFalse();
         }
@@ -639,7 +639,7 @@ namespace NzbDrone.Common.Test.DiskTests
 
             var count = Subject.MirrorFolder(source.FullName, destination.FullName);
 
-            count.Should().Equals(0);
+            count.Should().Be(0);
             VerifyCopyFolder(original.FullName, destination.FullName);
         }
 
@@ -656,7 +656,7 @@ namespace NzbDrone.Common.Test.DiskTests
 
             var count = Subject.MirrorFolder(source.FullName + Path.DirectorySeparatorChar, destination.FullName);
 
-            count.Should().Equals(3);
+            count.Should().Be(3);
             VerifyCopyFolder(original.FullName, destination.FullName);
         }
 
@@ -930,7 +930,7 @@ namespace NzbDrone.Common.Test.DiskTests
             var sourceFiles = Directory.GetFileSystemEntries(source, "*", SearchOption.AllDirectories).Select(v => v.Substring(source.Length + 1)).ToArray();
             var destFiles = Directory.GetFileSystemEntries(destination, "*", SearchOption.AllDirectories).Select(v => v.Substring(destination.Length + 1)).ToArray();
 
-            CollectionAssert.AreEquivalent(sourceFiles, destFiles);
+            Assert.That(sourceFiles, Is.EquivalentTo(destFiles));
         }
 
         private void VerifyMoveFolder(string source, string from, string destination)
@@ -940,7 +940,7 @@ namespace NzbDrone.Common.Test.DiskTests
             var sourceFiles = Directory.GetFileSystemEntries(source, "*", SearchOption.AllDirectories).Select(v => v.Substring(source.Length + 1)).ToArray();
             var destFiles = Directory.GetFileSystemEntries(destination, "*", SearchOption.AllDirectories).Select(v => v.Substring(destination.Length + 1)).ToArray();
 
-            CollectionAssert.AreEquivalent(sourceFiles, destFiles);
+            Assert.That(sourceFiles, Is.EquivalentTo(destFiles));
         }
 
         private void VerifyDeletedFile(string filePath)

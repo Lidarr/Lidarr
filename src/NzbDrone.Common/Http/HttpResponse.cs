@@ -9,7 +9,7 @@ namespace NzbDrone.Common.Http
 {
     public class HttpResponse
     {
-        private static readonly Regex RegexSetCookie = new ("^(.*?)=(.*?)(?:;|$)", RegexOptions.Compiled);
+        private static readonly Regex RegexSetCookie = new("^(.*?)=(.*?)(?:;|$)", RegexOptions.Compiled);
 
         public HttpResponse(HttpRequest request, HttpHeader headers, byte[] binaryData, HttpStatusCode statusCode = HttpStatusCode.OK, Version version = null)
         {
@@ -101,12 +101,14 @@ namespace NzbDrone.Common.Http
     public class HttpResponse<T> : HttpResponse
         where T : new()
     {
+        private readonly Lazy<T> _resource;
+
         public HttpResponse(HttpResponse response)
             : base(response.Request, response.Headers, response.ResponseData, response.StatusCode, response.Version)
         {
-            Resource = Json.Deserialize<T>(response.Content);
+            _resource = new Lazy<T>(() => Json.Deserialize<T>(response.Content));
         }
 
-        public T Resource { get; private set; }
+        public T Resource => _resource.Value;
     }
 }

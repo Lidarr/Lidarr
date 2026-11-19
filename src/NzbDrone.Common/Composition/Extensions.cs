@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using DryIoc;
 using NzbDrone.Common.EnvironmentInfo;
 
@@ -20,10 +21,8 @@ namespace NzbDrone.Common.Composition.Extensions
             return container;
         }
 
-        public static IContainer AutoAddServices(this IContainer container, List<string> assemblyNames)
+        public static IContainer AutoAddServices(this IContainer container, List<Assembly> assemblies)
         {
-            var assemblies = AssemblyLoader.Load(assemblyNames);
-
             container.RegisterMany(assemblies,
                 serviceTypeCondition: type => type.IsInterface && !string.IsNullOrWhiteSpace(type.FullName) && !type.FullName.StartsWith("System"),
                 reuse: Reuse.Singleton);
@@ -34,6 +33,18 @@ namespace NzbDrone.Common.Composition.Extensions
 
             var knownTypes = new KnownTypes(assemblies.SelectMany(x => x.GetExportedTypes()).ToList());
             container.RegisterInstance(knownTypes);
+
+            return container;
+        }
+
+        public static IContainer SetPluginStatus(this IContainer container, bool enabled)
+        {
+            var pluginStatus = new PluginStatus
+            {
+                Enabled = enabled
+            };
+
+            container.RegisterInstance(pluginStatus);
 
             return container;
         }

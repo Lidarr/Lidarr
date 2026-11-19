@@ -180,7 +180,7 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
 
             var tags = Subject.ReadTags(path);
 
-            tags.Duration.Should().BeCloseTo(new TimeSpan(0, 0, 1, 25, 130), 100);
+            tags.Duration.Should().BeCloseTo(new TimeSpan(0, 0, 1, 25, 130), TimeSpan.FromMilliseconds(100));
         }
 
         [Test]
@@ -231,8 +231,8 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
             tag.MusicBrainzReleaseArtistId.Should().BeNull();
             tag.MusicBrainzReleaseGroupId.Should().BeNull();
             tag.MusicBrainzTrackId.Should().BeNull();
+            tag.MusicBrainzRecordingId.Should().BeNull();
             tag.MusicBrainzAlbumComment.Should().BeNull();
-            tag.MusicBrainzReleaseTrackId.Should().BeNull();
         }
 
         [Test]
@@ -443,6 +443,27 @@ namespace NzbDrone.Core.Test.MediaFiles.AudioTagServiceFixture
 
             Mocker.GetMock<IEventAggregator>()
                 .Verify(v => v.PublishEvent(It.IsAny<TrackFileRetaggedEvent>()), Times.Once());
+        }
+
+        [Test]
+        public void should_write_id3v2_genres_as_ordered_text_on_the_first_write()
+        {
+            GivenFileCopy("nin.mp3");
+
+            TagLib.Id3v2.Tag.UseNumericGenres = true;
+
+            _testTags.Genres = new[] { "Rock", "Alternative Rock", "Blues" };
+            _testTags.Write(_copiedFile);
+
+            using (var file = TagLib.File.Create(_copiedFile))
+            {
+                var id3 = (TagLib.Id3v2.Tag)file.GetTag(TagLib.TagTypes.Id3v2);
+                var frame = TagLib.Id3v2.TextInformationFrame.Get(id3, "TCON", false);
+
+                frame.Text.Should().Equal("Rock", "Alternative Rock", "Blues");
+            }
+
+            Subject.ReadAudioTag(_copiedFile).Genres.Should().Equal("Rock", "Alternative Rock", "Blues");
         }
     }
 }

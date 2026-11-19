@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get)))
-                .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), recentFeed)));
+                .ReturnsAsync((HttpRequest r) => new HttpResponse(r, new HttpHeader(), recentFeed));
 
             var releases = await Subject.FetchRecent();
 
@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
             var releaseInfo = releases.First() as TorrentInfo;
 
             releaseInfo.Title.Should().Be("Better Call Saul S01E05 Alpine Shepherd 1080p NF WEBRip DD5.1 x264");
-            releaseInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
+            releaseInfo.DownloadProtocol.Should().Be(nameof(TorrentDownloadProtocol));
             releaseInfo.DownloadUrl.Should().Be("https://hdaccess.net/download.php?torrent=11515&passkey=123456");
             releaseInfo.InfoUrl.Should().Be("https://hdaccess.net/details.php?id=11515&hit=1");
             releaseInfo.CommentUrl.Should().Be("https://hdaccess.net/details.php?id=11515&hit=1#comments");
@@ -80,7 +80,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get)))
-                .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), recentFeed)));
+                .ReturnsAsync((HttpRequest r) => new HttpResponse(r, new HttpHeader(), recentFeed));
 
             var releases = await Subject.FetchRecent();
 
@@ -90,7 +90,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
             var releaseInfo = releases.First() as TorrentInfo;
 
             releaseInfo.Title.Should().Be("Series Title S05E02 HDTV x264-Xclusive [eztv]");
-            releaseInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
+            releaseInfo.DownloadProtocol.Should().Be(nameof(TorrentDownloadProtocol));
             releaseInfo.MagnetUrl.Should().Be("magnet:?xt=urn:btih:9fb267cff5ae5603f07a347676ec3bf3e35f75e1&dn=Game+of+Thrones+S05E02+HDTV+x264-Xclusive+%5Beztv%5D&tr=udp:%2F%2Fopen.demonii.com:1337&tr=udp:%2F%2Ftracker.coppersurfer.tk:6969&tr=udp:%2F%2Ftracker.leechers-paradise.org:6969&tr=udp:%2F%2Fexodus.desync.com:6969");
             releaseInfo.DownloadUrl.Should().Be("magnet:?xt=urn:btih:9fb267cff5ae5603f07a347676ec3bf3e35f75e1&dn=Game+of+Thrones+S05E02+HDTV+x264-Xclusive+%5Beztv%5D&tr=udp:%2F%2Fopen.demonii.com:1337&tr=udp:%2F%2Ftracker.coppersurfer.tk:6969&tr=udp:%2F%2Ftracker.leechers-paradise.org:6969&tr=udp:%2F%2Fexodus.desync.com:6969");
             releaseInfo.InfoUrl.Should().Be("https://thepiratebay.se/torrent/11811366/Series_Title_S05E02_HDTV_x264-Xclusive_%5Beztv%5D");
@@ -121,6 +121,15 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
             Subject.PageSize.Should().Be(100);
         }
 
+        [Test]
+        public void should_use_pagesize_over_100_if_reported_in_caps()
+        {
+            _caps.MaxPageSize = 250;
+            _caps.DefaultPageSize = 200;
+
+            Subject.PageSize.Should().Be(200);
+        }
+
         [TestCase("http://localhost:9117/", "/api")]
         public void url_and_api_not_jackett_all(string baseUrl, string apiPath)
         {
@@ -142,7 +151,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get)))
-                .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), recentFeed)));
+                .ReturnsAsync((HttpRequest r) => new HttpResponse(r, new HttpHeader(), recentFeed));
 
             var result = new NzbDroneValidationResult(Subject.Test());
             result.IsValid.Should().BeTrue();
@@ -157,7 +166,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
 
             Mocker.GetMock<IHttpClient>()
                   .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get)))
-                  .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), recentFeed)));
+                  .ReturnsAsync((HttpRequest r) => new HttpResponse(r, new HttpHeader(), recentFeed));
 
             (Subject.Definition.Settings as TorznabSettings).ApiPath = apiPath;
 

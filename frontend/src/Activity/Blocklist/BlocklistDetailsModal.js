@@ -46,7 +46,7 @@ class BlocklistDetailsModal extends Component {
 
               <DescriptionListItem
                 title={translate('Protocol')}
-                data={protocol}
+                data={protocol.replace('DownloadProtocol', '')}
               />
 
               {

@@ -313,7 +313,20 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
 
                 if (version >= new Version("2.6.1") && item.Status == DownloadItemStatus.Completed)
                 {
-                    if (torrent.ContentPath != torrent.SavePath)
+                    // root_path arrived in qBittorrent 5.0 (API 2.11.2). It is the torrent's top folder,
+                    // or empty when the torrent has no root folder. "Don't create subfolder" strips that
+                    // folder, so root_path stays empty. Prefer it when set: a single-file torrent that
+                    // qBittorrent wrapped in a subfolder has content_path pointing at the file (often a
+                    // .rar) and root_path pointing at the folder an external unpacker extracts into.
+                    var useRootPath = version >= new Version(2, 11, 2) &&
+                                      torrent.RootPath.IsNotNullOrWhiteSpace() &&
+                                      torrent.RootPath != torrent.SavePath;
+
+                    if (useRootPath)
+                    {
+                        item.OutputPath = _remotePathMappingService.RemapRemoteToLocal(Settings.Host, new OsPath(torrent.RootPath));
+                    }
+                    else if (torrent.ContentPath != torrent.SavePath)
                     {
                         item.OutputPath = _remotePathMappingService.RemapRemoteToLocal(Settings.Host, new OsPath(torrent.ContentPath));
                     }
@@ -474,8 +487,9 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             }
             catch (DownloadClientAuthenticationException ex)
             {
-                _logger.Error(ex, "Unable to authenticate");
-                return new NzbDroneValidationFailure("Username", "Authentication failure")
+                _logger.Error(ex, ex.Message);
+
+                return new NzbDroneValidationFailure(Settings.ApiKey.IsNotNullOrWhiteSpace() ? "ApiKey" : "Username", "Authentication failure")
                 {
                     DetailedDescription = "Please verify your username and password."
                 };

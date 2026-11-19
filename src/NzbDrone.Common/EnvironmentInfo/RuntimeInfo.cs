@@ -12,16 +12,18 @@ namespace NzbDrone.Common.EnvironmentInfo
     public class RuntimeInfo : IRuntimeInfo
     {
         private readonly Logger _logger;
+        private readonly IOsInfo _osInfo;
         private readonly DateTime _startTime = DateTime.UtcNow;
 
-        public RuntimeInfo(Logger logger, IHostLifetime hostLifetime = null)
+        public RuntimeInfo(Logger logger, IOsInfo osInfo, IHostLifetime hostLifetime = null)
         {
             _logger = logger;
+            _osInfo = osInfo;
 
             IsWindowsService = hostLifetime is WindowsServiceLifetime;
             IsStarting = true;
 
-            // net8.0 will return Lidarr.dll for entry assembly, we need the actual
+            // net10.0 will return Lidarr.dll for entry assembly, we need the actual
             // executable name (Lidarr on linux).  On mono this will return the location of
             // the mono executable itself, which is not what we want.
             var entry = Process.GetCurrentProcess().MainModule;
@@ -82,6 +84,30 @@ namespace NzbDrone.Common.EnvironmentInfo
         }
 
         public bool IsWindowsService { get; private set; }
+
+        public bool IsContainerized => _osInfo.IsContainerized;
+
+        public bool IsSystemdService
+        {
+            get
+            {
+                if (!OsInfo.IsLinux)
+                {
+                    return false;
+                }
+
+                try
+                {
+                    var invocationId = Environment.GetEnvironmentVariable("INVOCATION_ID");
+                    return !string.IsNullOrEmpty(invocationId);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "Error checking if system is running under systemd");
+                    return false;
+                }
+            }
+        }
 
         public bool IsStarting { get; set; }
         public bool IsExiting { get; set; }

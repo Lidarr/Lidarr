@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RedactedTests
                 .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get &&
                                                          v.Url.FullUri.Contains("ajax.php?action=browse") &&
                                                          v.Headers.Get("Authorization") == ((RedactedSettings)Subject.Definition.Settings).ApiKey)))
-                                                         .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader { ContentType = "application/json" }, recentFeed)));
+                                                         .ReturnsAsync((HttpRequest r) => new HttpResponse(r, new HttpHeader { ContentType = "application/json" }, recentFeed));
 
             var releases = await Subject.FetchRecent();
 
@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RedactedTests
             var releaseInfo = releases.First();
 
             releaseInfo.Title.Should().Be("Shania Twain - Shania Twain (1993) [Album] [FLAC 24bit Lossless / WEB]");
-            releaseInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
+            releaseInfo.DownloadProtocol.Should().Be(nameof(TorrentDownloadProtocol));
             releaseInfo.DownloadUrl.Should().Be("https://redacted.sh/ajax.php?action=download&id=1541452");
             releaseInfo.InfoUrl.Should().Be("https://redacted.sh/torrents.php?id=106951&torrentid=1541452");
             releaseInfo.CommentUrl.Should().Be(null);

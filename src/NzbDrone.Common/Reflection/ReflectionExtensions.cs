@@ -7,7 +7,12 @@ namespace NzbDrone.Common.Reflection
 {
     public static class ReflectionExtensions
     {
-        public static readonly Assembly CoreAssembly = Assembly.Load("Lidarr.Core");
+        private static HashSet<Assembly> _currentAssemblies = new HashSet<Assembly>();
+
+        public static void SetCurrentAssemblies(IEnumerable<Assembly> assemblies)
+        {
+            _currentAssemblies = new HashSet<Assembly>(assemblies);
+        }
 
         public static List<PropertyInfo> GetSimpleProperties(this Type type)
         {
@@ -15,9 +20,9 @@ namespace NzbDrone.Common.Reflection
             return properties.Where(c => c.PropertyType.IsSimpleType()).ToList();
         }
 
-        public static List<Type> ImplementationsOf<T>(this Assembly assembly)
+        public static List<Type> ImplementationsOf<T>()
         {
-            return assembly.GetExportedTypes().Where(c => typeof(T).IsAssignableFrom(c)).ToList();
+            return GetAllTypes().Where(c => typeof(T).IsAssignableFrom(c)).ToList();
         }
 
         public static bool IsSimpleType(this Type type)
@@ -70,6 +75,43 @@ namespace NzbDrone.Common.Reflection
         public static Type FindTypeByName(this Assembly assembly, string name)
         {
             return assembly.GetExportedTypes().SingleOrDefault(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public static Type FindTypeByName(string name)
+        {
+            return GetAllTypes()
+                .SingleOrDefault(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        private static IEnumerable<Type> GetAllTypes()
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            return assemblies
+                .Where(x => ShouldUseAssembly(x))
+                .SelectMany(x => x.GetExportedTypes());
+        }
+
+        private static bool ShouldUseAssembly(Assembly assembly)
+        {
+            if (assembly.IsDynamic)
+            {
+                return false;
+            }
+
+            var name = assembly.GetName();
+
+            if (name.Name == "Lidarr.Core")
+            {
+                return true;
+            }
+
+            if (name.Name.Contains("Lidarr.Plugin"))
+            {
+                return _currentAssemblies.Count == 0 || _currentAssemblies.Contains(assembly);
+            }
+
+            return false;
         }
 
         public static bool HasAttribute<TAttribute>(this Type type)

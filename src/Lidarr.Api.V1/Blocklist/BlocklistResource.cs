@@ -4,7 +4,6 @@ using Lidarr.Api.V1.Artist;
 using Lidarr.Api.V1.CustomFormats;
 using Lidarr.Http.REST;
 using NzbDrone.Core.CustomFormats;
-using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Qualities;
 
 namespace Lidarr.Api.V1.Blocklist
@@ -17,7 +16,7 @@ namespace Lidarr.Api.V1.Blocklist
         public QualityModel Quality { get; set; }
         public List<CustomFormatResource> CustomFormats { get; set; }
         public DateTime Date { get; set; }
-        public DownloadProtocol Protocol { get; set; }
+        public string Protocol { get; set; }
         public string Indexer { get; set; }
         public string Message { get; set; }
 

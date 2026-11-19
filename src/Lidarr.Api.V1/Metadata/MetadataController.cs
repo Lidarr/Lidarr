@@ -9,8 +9,8 @@ namespace Lidarr.Api.V1.Metadata
     [V1ApiController]
     public class MetadataController : ProviderControllerBase<MetadataResource, MetadataBulkResource, IMetadata, MetadataDefinition>
     {
-        public static readonly MetadataResourceMapper ResourceMapper = new ();
-        public static readonly MetadataBulkResourceMapper BulkResourceMapper = new ();
+        public static readonly MetadataResourceMapper ResourceMapper = new();
+        public static readonly MetadataBulkResourceMapper BulkResourceMapper = new();
 
         public MetadataController(IBroadcastSignalRMessage signalRBroadcaster, IMetadataFactory metadataFactory)
             : base(signalRBroadcaster, metadataFactory, "metadata", ResourceMapper, BulkResourceMapper)

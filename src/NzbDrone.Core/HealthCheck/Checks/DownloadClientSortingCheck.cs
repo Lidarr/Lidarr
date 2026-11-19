@@ -43,7 +43,11 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
                     if (status.SortingMode.IsNotNullOrWhiteSpace())
                     {
-                        return new HealthCheck(GetType(), HealthCheckResult.Warning, string.Format(_localizationService.GetLocalizedString("DownloadClientSortingCheckMessage"), clientName, status.SortingMode), "#download-folder-and-library-folder-not-different-folders");
+                        return new HealthCheck(GetType(),
+                            HealthCheckResult.Warning,
+                            HealthCheckReason.DownloadClientSorting,
+                            string.Format(_localizationService.GetLocalizedString("DownloadClientSortingCheckMessage"), clientName, status.SortingMode),
+                            "#download-folder-and-library-folder-not-different-folders");
                     }
                 }
                 catch (DownloadClientException ex)

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lidarr.Http\Lidarr.Http.csproj" />
@@ -9,11 +9,10 @@
     <ProjectReference Include="..\NzbDrone.SignalR\Lidarr.SignalR.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.6" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.3.1" />
     <PackageReference Include="FluentValidation" Version="9.5.4" />
     <PackageReference Include="Ical.Net" Version="4.3.1" />
-    <PackageReference Include="NLog" Version="5.4.0" />
+    <PackageReference Include="NLog" Version="5.5.1" />
     <PackageReference Include="System.IO.Abstractions" Version="17.0.24" />
   </ItemGroup>
 </Project>

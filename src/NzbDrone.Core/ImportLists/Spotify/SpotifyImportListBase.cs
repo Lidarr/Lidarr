@@ -152,6 +152,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
             var httpRequest = _requestBuilder.GetRequestBuilder().Create()
                 .SetSegment("route", "spotify/lookup")
                 .Build();
+            httpRequest.RateLimit = TimeSpan.FromMilliseconds(100);
             httpRequest.SetContent(spotifyIds.ToJson());
             httpRequest.Headers.ContentType = "application/json";
 
@@ -217,6 +218,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
             var httpRequest = _requestBuilder.GetRequestBuilder().Create()
                 .SetSegment("route", $"spotify/artist/{item.ArtistSpotifyId}")
                 .Build();
+            httpRequest.RateLimit = TimeSpan.FromMilliseconds(100);
             httpRequest.AllowAutoRedirect = true;
             httpRequest.SuppressHttpError = true;
 
@@ -259,6 +261,7 @@ namespace NzbDrone.Core.ImportLists.Spotify
             var httpRequest = _requestBuilder.GetRequestBuilder().Create()
                 .SetSegment("route", $"spotify/album/{item.AlbumSpotifyId}")
                 .Build();
+            httpRequest.RateLimit = TimeSpan.FromMilliseconds(100);
             httpRequest.AllowAutoRedirect = true;
             httpRequest.SuppressHttpError = true;
 

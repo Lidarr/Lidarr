@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using NzbDrone.Core.Music;
 using NzbDrone.Core.Qualities;
 
 namespace NzbDrone.Core.Parser.Model
@@ -13,6 +14,8 @@ namespace NzbDrone.Core.Parser.Model
         public ArtistTitleInfo ArtistTitleInfo { get; set; }
         public QualityModel Quality { get; set; }
         public string ReleaseDate { get; set; }
+        public int? ReleaseYear { get; set; }
+        public YearMatchConfidence YearConfidence { get; set; }
         public bool Discography { get; set; }
         public int DiscographyStart { get; set; }
         public int DiscographyEnd { get; set; }
@@ -29,10 +32,10 @@ namespace NzbDrone.Core.Parser.Model
 
             if (AlbumTitle != null)
             {
-                albumString = string.Format("{0}", AlbumTitle);
+                albumString = ReleaseYear.HasValue ? $"{AlbumTitle} ({ReleaseYear.Value})" : AlbumTitle;
             }
 
-            return string.Format("{0} - {1} {2}", ArtistName, albumString, Quality);
+            return $"{ArtistName} - {albumString} {Quality}";
         }
     }
 }

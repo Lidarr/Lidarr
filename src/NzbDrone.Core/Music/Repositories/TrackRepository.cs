@@ -57,7 +57,8 @@ namespace NzbDrone.Core.Music
             // this will populate the artist metadata also
             return _database.QueryJoined<Track, ArtistMetadata>(Builder()
                                .Join<Track, ArtistMetadata>((l, r) => l.ArtistMetadataId == r.Id)
-                               .Where<Track>(x => albumReleaseIds.Contains(x.AlbumReleaseId)), (track, metadata) =>
+                               .Where<Track>(x => albumReleaseIds.Contains(x.AlbumReleaseId)),
+                (track, metadata) =>
                     {
                         track.ArtistMetadata = metadata;
                         return track;

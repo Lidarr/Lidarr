@@ -230,7 +230,7 @@ namespace NzbDrone.Core.Notifications.Webhook
                 },
                 Albums = new List<WebhookAlbum>
                 {
-                    new ()
+                    new()
                     {
                         Id = 123,
                         Title = "Test title"

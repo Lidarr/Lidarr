@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Test.HistoryTests
             {
                 DownloadClientInfo = new DownloadClientItemClientInfo
                 {
-                    Protocol = DownloadProtocol.Usenet,
+                    Protocol = nameof(UsenetDownloadProtocol),
                     Id = 1,
                     Name = "sab"
                 },

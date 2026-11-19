@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Music;
 using NzbDrone.Core.Profiles.Delay;
 using NzbDrone.Core.Qualities;
 
@@ -16,12 +17,14 @@ namespace NzbDrone.Core.DecisionEngine
         private readonly IConfigService _configService;
         private readonly IDelayProfileService _delayProfileService;
         private readonly IQualityDefinitionService _qualityDefinitionService;
+        private readonly IAlbumYearMatcher _albumYearMatcher;
 
-        public DownloadDecisionPriorizationService(IConfigService configService, IDelayProfileService delayProfileService, IQualityDefinitionService qualityDefinitionService)
+        public DownloadDecisionPriorizationService(IConfigService configService, IDelayProfileService delayProfileService, IQualityDefinitionService qualityDefinitionService, IAlbumYearMatcher albumYearMatcher)
         {
             _configService = configService;
             _delayProfileService = delayProfileService;
             _qualityDefinitionService = qualityDefinitionService;
+            _albumYearMatcher = albumYearMatcher;
         }
 
         public List<DownloadDecision> PrioritizeDecisions(List<DownloadDecision> decisions)
@@ -29,7 +32,7 @@ namespace NzbDrone.Core.DecisionEngine
             return decisions.Where(c => c.RemoteAlbum.DownloadAllowed)
                             .GroupBy(c => c.RemoteAlbum.Artist.Id, (artistId, downloadDecisions) =>
                                 {
-                                    return downloadDecisions.OrderByDescending(decision => decision, new DownloadDecisionComparer(_configService, _delayProfileService, _qualityDefinitionService));
+                                    return downloadDecisions.OrderByDescending(decision => decision, new DownloadDecisionComparer(_configService, _delayProfileService, _qualityDefinitionService, _albumYearMatcher));
                                 })
                             .SelectMany(c => c)
                             .Union(decisions.Where(c => !c.RemoteAlbum.DownloadAllowed))

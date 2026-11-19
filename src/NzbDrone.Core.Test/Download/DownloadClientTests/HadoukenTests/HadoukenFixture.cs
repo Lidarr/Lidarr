@@ -11,6 +11,7 @@ using NzbDrone.Core.Download.Clients.Hadouken;
 using NzbDrone.Core.Download.Clients.Hadouken.Models;
 using NzbDrone.Core.MediaFiles.TorrentInfo;
 using NzbDrone.Test.Common;
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace NzbDrone.Core.Test.Download.DownloadClientTests.HadoukenTests
 {
@@ -105,7 +106,7 @@ namespace NzbDrone.Core.Test.Download.DownloadClientTests.HadoukenTests
         {
             Mocker.GetMock<IHttpClient>()
                   .Setup(s => s.GetAsync(It.IsAny<HttpRequest>()))
-                  .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), new byte[1000])));
+                  .ReturnsAsync((HttpRequest r) => new HttpResponse(r, new HttpHeader(), new byte[1000]));
 
             Mocker.GetMock<IHadoukenProxy>()
                 .Setup(s => s.AddTorrentUri(It.IsAny<HadoukenSettings>(), It.IsAny<string>()))

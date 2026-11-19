@@ -128,7 +128,19 @@ namespace NzbDrone.Core.Music
                     QualityProfileId = oldArtist.QualityProfileId,
                     RootFolderPath = _rootFolderService.GetBestRootFolderPath(oldArtist.Path),
                     Monitored = oldArtist.Monitored,
-                    Tags = oldArtist.Tags
+                    MonitorNewItems = oldArtist.MonitorNewItems,
+                    Tags = oldArtist.Tags,
+                    AddOptions = new AddArtistOptions
+                    {
+                        SearchForMissingAlbums = false,
+                        Monitored = oldArtist.Monitored,
+                        Monitor = oldArtist.MonitorNewItems switch
+                        {
+                            NewItemMonitorTypes.All => MonitorTypes.All,
+                            NewItemMonitorTypes.New => MonitorTypes.Future,
+                            _ => MonitorTypes.None
+                        },
+                    },
                 };
 
                 _logger.Info("Adding missing parent artist {0}", addArtist);
@@ -337,8 +349,8 @@ namespace NzbDrone.Core.Music
             foreach (var album in albums)
             {
                 if (forceAlbumRefresh ||
-                    (updatedMusicbrainzAlbums == null && _checkIfAlbumShouldBeRefreshed.ShouldRefresh(album)) ||
-                    (updatedMusicbrainzAlbums != null && updatedMusicbrainzAlbums.Contains(album.ForeignAlbumId)))
+                    (updatedMusicbrainzAlbums is not { Count: not 0 } && _checkIfAlbumShouldBeRefreshed.ShouldRefresh(album)) ||
+                    (updatedMusicbrainzAlbums is { Count: > 0 } && updatedMusicbrainzAlbums.Contains(album.ForeignAlbumId)))
                 {
                     try
                     {
@@ -370,10 +382,10 @@ namespace NzbDrone.Core.Music
                 var album = _albumService.GetAlbum(message.AlbumId.Value);
                 var artist = _artistService.GetArtistByMetadataId(album.ArtistMetadataId);
                 var updated = RefreshAlbumInfo(album, null, false);
+
                 if (updated)
                 {
                     _eventAggregator.PublishEvent(new ArtistUpdatedEvent(artist));
-                    _eventAggregator.PublishEvent(new AlbumUpdatedEvent(album));
                 }
 
                 if (message.IsNewAlbum)

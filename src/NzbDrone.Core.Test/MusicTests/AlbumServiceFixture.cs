@@ -31,6 +31,8 @@ namespace NzbDrone.Core.Test.MusicTests.AlbumRepositoryTests
             Mocker.GetMock<IAlbumRepository>()
                 .Setup(s => s.GetAlbumsByArtistMetadataId(It.IsAny<int>()))
                 .Returns(_albums);
+
+            Mocker.SetConstant<IAlbumYearMatcher>(new AlbumYearMatcher());
         }
 
         private void GivenSimilarAlbum()

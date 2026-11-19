@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Datastore.Migration
         private readonly IDbTransaction _transaction;
 
         private List<QualityProfile72> _profiles;
-        private HashSet<QualityProfile72> _changedProfiles = new ();
+        private HashSet<QualityProfile72> _changedProfiles = new();
 
         public QualityProfileUpdater72(IDbConnection conn, IDbTransaction tran)
         {

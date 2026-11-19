@@ -91,7 +91,7 @@ namespace NzbDrone.Core.Test.IndexerTests.IPTorrentsTests
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get)))
-                .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), recentFeed)));
+                .ReturnsAsync((HttpRequest r) => new HttpResponse(r, new HttpHeader(), recentFeed));
 
             var releases = await Subject.FetchRecent();
 
@@ -101,7 +101,7 @@ namespace NzbDrone.Core.Test.IndexerTests.IPTorrentsTests
             var torrentInfo = releases.First() as TorrentInfo;
 
             torrentInfo.Title.Should().Be("24 S03E12 720p WEBRip h264-DRAWER");
-            torrentInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
+            torrentInfo.DownloadProtocol.Should().Be(nameof(TorrentDownloadProtocol));
             torrentInfo.DownloadUrl.Should().Be("http://iptorrents.com/download.php/1234/24.S03E12.720p.WEBRip.h264-DRAWER.torrent?torrent_pass=abcd");
             torrentInfo.InfoUrl.Should().BeNullOrEmpty();
             torrentInfo.CommentUrl.Should().BeNullOrEmpty();

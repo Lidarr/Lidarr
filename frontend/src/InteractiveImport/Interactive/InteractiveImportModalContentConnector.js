@@ -134,6 +134,7 @@ class InteractiveImportModalContentConnector extends Component {
           album,
           albumReleaseId,
           tracks,
+          releaseGroup,
           quality,
           indexerFlags,
           disableReleaseSwitching
@@ -165,6 +166,7 @@ class InteractiveImportModalContentConnector extends Component {
           albumId: album.id,
           albumReleaseId,
           trackIds: _.map(tracks, 'id'),
+          releaseGroup,
           quality,
           indexerFlags,
           downloadId: this.props.downloadId,

@@ -1,0 +1,15 @@
+.delayProfile {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 10px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.name {
+  flex: 0 0 200px;
+}
+
+.tags {
+  flex: 1 0 auto;
+}

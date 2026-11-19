@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -35,10 +36,24 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
             if (deletedArtists.Count == 1)
             {
-                return new HealthCheck(GetType(), HealthCheckResult.Error, $"Artist {artistText} was removed from MusicBrainz");
+                return new HealthCheck(GetType(),
+                    HealthCheckResult.Error,
+                    HealthCheckReason.RemovedArtistSingle,
+                    _localizationService.GetLocalizedString("RemovedArtistSingleRemovedHealthCheckMessage", new Dictionary<string, object>
+                    {
+                        { "artist", artistText }
+                    }),
+                    "#artist-removed-from-musicbrainz");
             }
 
-            return new HealthCheck(GetType(), HealthCheckResult.Error, $"Artists {artistText} were removed from MusicBrainz");
+            return new HealthCheck(GetType(),
+                HealthCheckResult.Error,
+                HealthCheckReason.RemovedArtistMultiple,
+                _localizationService.GetLocalizedString("RemovedArtistMultipleRemovedHealthCheckMessage", new Dictionary<string, object>
+                {
+                    { "artists", artistText }
+                }),
+                "#artist-removed-from-musicbrainz");
         }
 
         public bool ShouldCheckOnEvent(ArtistsDeletedEvent deletedEvent)

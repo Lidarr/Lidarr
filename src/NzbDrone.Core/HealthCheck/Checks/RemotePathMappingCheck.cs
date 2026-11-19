@@ -69,30 +69,54 @@ namespace NzbDrone.Core.HealthCheck.Checks
                         {
                             if (!status.IsLocalhost)
                             {
-                                return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckWrongOSPath"), client.Definition.Name, folder.FullPath, _osInfo.Name), "#bad-remote-path-mapping");
+                                return new HealthCheck(GetType(),
+                                    HealthCheckResult.Error,
+                                    HealthCheckReason.RemotePathMappingWrongOSPath,
+                                    string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckWrongOSPath"), client.Definition.Name, folder.FullPath, _osInfo.Name),
+                                    "#bad-remote-path-mapping");
                             }
 
                             if (_osInfo.IsDocker)
                             {
-                                return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckBadDockerPath"), client.Definition.Name, folder.FullPath, _osInfo.Name), "#docker-bad-remote-path-mapping");
+                                return new HealthCheck(GetType(),
+                                    HealthCheckResult.Error,
+                                    HealthCheckReason.RemotePathMappingBadDockerPath,
+                                    string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckBadDockerPath"), client.Definition.Name, folder.FullPath, _osInfo.Name),
+                                    "#docker-bad-remote-path-mapping");
                             }
 
-                            return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckLocalWrongOSPath"), client.Definition.Name, folder.FullPath, _osInfo.Name), "#bad-download-client-settings");
+                            return new HealthCheck(GetType(),
+                                HealthCheckResult.Error,
+                                HealthCheckReason.RemotePathMappingLocalWrongOSPath,
+                                string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckLocalWrongOSPath"), client.Definition.Name, folder.FullPath, _osInfo.Name),
+                                "#bad-download-client-settings");
                         }
 
                         if (!_diskProvider.FolderExists(folder.FullPath))
                         {
                             if (_osInfo.IsDocker)
                             {
-                                return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckDockerFolderMissing"), client.Definition.Name, folder.FullPath), "#docker-bad-remote-path-mapping");
+                                return new HealthCheck(GetType(),
+                                    HealthCheckResult.Error,
+                                    HealthCheckReason.RemotePathMappingDockerFolderMissing,
+                                    string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckDockerFolderMissing"), client.Definition.Name, folder.FullPath),
+                                    "#docker-bad-remote-path-mapping");
                             }
 
                             if (!status.IsLocalhost)
                             {
-                                return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckLocalFolderMissing"), client.Definition.Name, folder.FullPath), "#bad-remote-path-mapping");
+                                return new HealthCheck(GetType(),
+                                    HealthCheckResult.Error,
+                                    HealthCheckReason.RemotePathMappingLocalFolderMissing,
+                                    string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckLocalFolderMissing"), client.Definition.Name, folder.FullPath),
+                                    "#bad-remote-path-mapping");
                             }
 
-                            return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckGenericPermissions"), client.Definition.Name, folder.FullPath), "#permissions-error");
+                            return new HealthCheck(GetType(),
+                                HealthCheckResult.Error,
+                                HealthCheckReason.RemotePathMappingGenericPermissions,
+                                string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckGenericPermissions"), client.Definition.Name, folder.FullPath),
+                                "#permissions-error");
                         }
                     }
                 }
@@ -130,12 +154,20 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
                     if (_diskProvider.FileExists(trackPath))
                     {
-                        return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckDownloadPermissions"), trackPath), "#permissions-error");
+                        return new HealthCheck(GetType(),
+                            HealthCheckResult.Error,
+                            HealthCheckReason.RemotePathMappingDownloadPermissionsEpisode,
+                            string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckDownloadPermissions"), trackPath),
+                            "#permissions-error");
                     }
 
                     // If the file doesn't exist but TrackInfo is not null then the message is coming from
                     // ImportApprovedTracks and the file must have been removed part way through processing
-                    return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckFileRemoved"), trackPath), "#remote-path-file-removed");
+                    return new HealthCheck(GetType(),
+                        HealthCheckResult.Error,
+                        HealthCheckReason.RemotePathMappingFileRemoved,
+                        string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckFileRemoved"), trackPath),
+                        "#remote-path-file-removed");
                 }
 
                 // If the previous case did not match then the failure occured in DownloadedTracksImportService,
@@ -157,42 +189,74 @@ namespace NzbDrone.Core.HealthCheck.Checks
                     // that the user realises something is wrong.
                     if (dlpath.IsNullOrWhiteSpace())
                     {
-                        return new HealthCheck(GetType(), HealthCheckResult.Error, _localizationService.GetLocalizedString("RemotePathMappingCheckImportFailed"), "#remote-path-import-failed");
+                        return new HealthCheck(GetType(),
+                            HealthCheckResult.Error,
+                            HealthCheckReason.RemotePathMappingImportEpisodeFailed,
+                            _localizationService.GetLocalizedString("RemotePathMappingCheckImportFailed"),
+                            "#remote-path-import-failed");
                     }
 
                     if (!dlpath.IsPathValid(PathValidationType.CurrentOs))
                     {
                         if (!status.IsLocalhost)
                         {
-                            return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckFilesWrongOSPath"), client.Definition.Name, dlpath, _osInfo.Name), "#bad-remote-path-mapping");
+                            return new HealthCheck(GetType(),
+                                HealthCheckResult.Error,
+                                HealthCheckReason.RemotePathMappingFilesWrongOSPath,
+                                string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckFilesWrongOSPath"), client.Definition.Name, dlpath, _osInfo.Name),
+                                "#bad-remote-path-mapping");
                         }
 
                         if (_osInfo.IsDocker)
                         {
-                            return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckFilesBadDockerPath"), client.Definition.Name, dlpath, _osInfo.Name), "#docker-bad-remote-path-mapping");
+                            return new HealthCheck(GetType(),
+                                HealthCheckResult.Error,
+                                HealthCheckReason.RemotePathMappingFilesBadDockerPath,
+                                string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckFilesBadDockerPath"), client.Definition.Name, dlpath, _osInfo.Name),
+                                "#docker-bad-remote-path-mapping");
                         }
 
-                        return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckFilesLocalWrongOSPath"), client.Definition.Name, dlpath, _osInfo.Name), "#bad-download-client-settings");
+                        return new HealthCheck(GetType(),
+                            HealthCheckResult.Error,
+                            HealthCheckReason.RemotePathMappingFilesLocalWrongOSPath,
+                            string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckFilesLocalWrongOSPath"), client.Definition.Name, dlpath, _osInfo.Name),
+                            "#bad-download-client-settings");
                     }
 
                     if (_diskProvider.FolderExists(dlpath))
                     {
-                        return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckFolderPermissions"), dlpath), "#permissions-error");
+                        return new HealthCheck(GetType(),
+                            HealthCheckResult.Error,
+                            HealthCheckReason.RemotePathMappingFolderPermissions,
+                            string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckFolderPermissions"), dlpath),
+                            "#permissions-error");
                     }
 
                     // if it's a remote client/docker, likely missing path mappings
                     if (_osInfo.IsDocker)
                     {
-                        return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckFolderPermissions"), client.Definition.Name, dlpath), "#docker-bad-remote-path-mapping");
+                        return new HealthCheck(GetType(),
+                            HealthCheckResult.Error,
+                            HealthCheckReason.RemotePathMappingFolderPermissions,
+                            string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckFolderPermissions"), client.Definition.Name, dlpath),
+                            "#docker-bad-remote-path-mapping");
                     }
 
                     if (!status.IsLocalhost)
                     {
-                        return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckRemoteDownloadClient"), client.Definition.Name, dlpath), "#bad-remote-path-mapping");
+                        return new HealthCheck(GetType(),
+                            HealthCheckResult.Error,
+                            HealthCheckReason.RemotePathMappingRemoteDownloadClient,
+                            string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckRemoteDownloadClient"), client.Definition.Name, dlpath),
+                            "#bad-remote-path-mapping");
                     }
 
                     // path mappings shouldn't be needed locally so probably a permissions issue
-                    return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckFilesGenericPermissions"), client.Definition.Name, dlpath), "#permissions-error");
+                    return new HealthCheck(GetType(),
+                        HealthCheckResult.Error,
+                        HealthCheckReason.RemotePathMappingFilesGenericPermissions,
+                        string.Format(_localizationService.GetLocalizedString("RemotePathMappingCheckFilesGenericPermissions"), client.Definition.Name, dlpath),
+                        "#permissions-error");
                 }
                 catch (DownloadClientException ex)
                 {
