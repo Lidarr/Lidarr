@@ -20,6 +20,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook.Resource
         public List<ImageResource> Images { get; set; }
         public List<LinkResource> Links { get; set; }
         public string ArtistName { get; set; }
+        public string SortName { get; set; }
         public List<string> ArtistAliases { get; set; }
         public List<AlbumResource> Albums { get; set; }
         public string Status { get; set; }

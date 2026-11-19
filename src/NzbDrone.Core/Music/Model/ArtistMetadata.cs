@@ -19,6 +19,7 @@ namespace NzbDrone.Core.Music
         public string ForeignArtistId { get; set; }
         public List<string> OldForeignArtistIds { get; set; }
         public string Name { get; set; }
+        public string SortName { get; set; }
         public List<string> Aliases { get; set; }
         public string Overview { get; set; }
         public string Disambiguation { get; set; }
@@ -40,6 +41,7 @@ namespace NzbDrone.Core.Music
             ForeignArtistId = other.ForeignArtistId;
             OldForeignArtistIds = other.OldForeignArtistIds;
             Name = other.Name;
+            SortName = other.SortName.IsNullOrWhiteSpace() ? SortName : other.SortName;
             Aliases = other.Aliases;
             Overview = other.Overview.IsNullOrWhiteSpace() ? Overview : other.Overview;
             Disambiguation = other.Disambiguation;

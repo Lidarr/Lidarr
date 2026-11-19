@@ -372,5 +372,26 @@ namespace NzbDrone.Core.Test.MusicTests
 
             ExceptionVerification.ExpectedWarns(1);
         }
+
+        [Test]
+        public void should_keep_preferred_name_when_artist_metadata_is_refreshed()
+        {
+            _artist.PreferredName = "Lexie Liu";
+
+            var newArtistInfo = _artist.JsonClone();
+            newArtistInfo.Metadata = _artist.Metadata.Value.JsonClone();
+            newArtistInfo.Metadata.Value.Name = "刘柏辛";
+            newArtistInfo.PreferredName = null;
+            newArtistInfo.Albums = _remoteAlbums;
+
+            GivenNewArtistInfo(newArtistInfo);
+            GivenAlbumsForRefresh(new List<Album>());
+            AllowArtistUpdate();
+
+            Subject.Execute(new RefreshArtistCommand(new List<int> { _artist.Id }));
+
+            Mocker.GetMock<IArtistService>()
+                .Verify(x => x.UpdateArtist(It.Is<Artist>(a => a.PreferredName == "Lexie Liu" && a.Id == _artist.Id), false));
+        }
     }
 }

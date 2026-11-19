@@ -46,6 +46,11 @@ namespace NzbDrone.Core.Music
                     }
 
                     meta.UseDbFieldsFrom(existing);
+                    if (string.IsNullOrWhiteSpace(meta.SortName))
+                    {
+                        meta.SortName = existing.SortName;
+                    }
+
                     if (!meta.Equals(existing))
                     {
                         updateMetadataList.Add(meta);

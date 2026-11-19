@@ -930,6 +930,8 @@
   "PreferTorrent": "Prefer Torrent",
   "PreferUsenet": "Prefer Usenet",
   "Preferred": "Preferred",
+  "PreferredArtistName": "Name",
+  "PreferredArtistNameHelpText": "Name used for the artist folder and for artist and album artist tags. The metadata name stays the artist record.",
   "PreferredProtocol": "Preferred Protocol",
   "PreferredSize": "Preferred Size",
   "Presets": "Presets",
