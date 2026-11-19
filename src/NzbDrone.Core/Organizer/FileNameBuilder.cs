@@ -310,10 +310,13 @@ namespace NzbDrone.Core.Organizer
         {
             tokenHandlers["{Artist Name}"] = m => Truncate(artist.Name, m.CustomFormat);
             tokenHandlers["{Artist CleanName}"] = m => Truncate(CleanTitle(artist.Name), m.CustomFormat);
+            tokenHandlers["{Artist SortName}"] = m => Truncate(artist.SortName, m.CustomFormat);
+            tokenHandlers["{Artist CleanSortName}"] = m => Truncate(CleanTitle(artist.SortName), m.CustomFormat);
             tokenHandlers["{Artist NameThe}"] = m => Truncate(TitleThe(artist.Name), m.CustomFormat);
             tokenHandlers["{Artist CleanNameThe}"] = m => Truncate(CleanTitleThe(artist.Name), m.CustomFormat);
             tokenHandlers["{Artist Genre}"] = m => artist.Metadata.Value.Genres?.FirstOrDefault() ?? string.Empty;
             tokenHandlers["{Artist NameFirstCharacter}"] = m => TitleFirstCharacter(TitleThe(artist.Name));
+            tokenHandlers["{Artist SortNameFirstCharacter}"] = m => TitleFirstCharacter(artist.SortName);
             tokenHandlers["{Artist MbId}"] = m => artist.ForeignArtistId ?? string.Empty;
 
             if (artist.Metadata.Value.Disambiguation != null)
