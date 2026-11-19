@@ -483,7 +483,11 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
 
             foreach (var previousFile in previousFiles)
             {
-                var subfolder = rootFolder.GetRelativePath(_diskProvider.GetParentFolder(previousFile.Path));
+                var parentFolder = _diskProvider.GetParentFolder(previousFile.Path);
+
+                // Track files can sit directly in the root folder, which is not a child of itself
+                var subfolder = parentFolder.PathEquals(rootFolder) ? string.Empty : rootFolder.GetRelativePath(parentFolder);
+
                 if (_diskProvider.FileExists(previousFile.Path))
                 {
                     _logger.Debug("Removing existing track file: {0}", previousFile);
