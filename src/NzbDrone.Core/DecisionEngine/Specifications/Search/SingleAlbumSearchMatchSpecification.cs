@@ -1,5 +1,6 @@
 using System.Linq;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 
@@ -30,13 +31,16 @@ namespace NzbDrone.Core.DecisionEngine.Specifications.Search
                 return Decision.Accept();
             }
 
-            if (Parser.Parser.CleanArtistName(singleAlbumSpec.AlbumTitle) != Parser.Parser.CleanArtistName(remoteAlbum.ParsedAlbumInfo.AlbumTitle))
+            var searchedTitle = singleAlbumSpec.AlbumTitle.IsNullOrWhiteSpace() ? null : Parser.Parser.CleanArtistName(singleAlbumSpec.AlbumTitle);
+            var parsedTitles = new[] { remoteAlbum.ParsedAlbumInfo.AlbumTitle, remoteAlbum.ParsedAlbumInfo.AlbumTitleWithYear, remoteAlbum.ParsedAlbumInfo.AlbumTitleWithQualifier };
+
+            if (!parsedTitles.Any(t => t.IsNotNullOrWhiteSpace() && Parser.Parser.CleanArtistName(t) == searchedTitle))
             {
                 _logger.Debug("Album does not match searched album title, skipping.");
                 return Decision.Reject("Wrong album");
             }
 
-            if (!remoteAlbum.ParsedAlbumInfo.AlbumTitle.Any())
+            if (remoteAlbum.ParsedAlbumInfo.AlbumTitle.IsNullOrWhiteSpace())
             {
                 _logger.Debug("Full discography result during single album search, skipping.");
                 return Decision.Reject("Full artist pack");

@@ -14,5 +14,8 @@ namespace NzbDrone.Core.Music
         public const double TitleMinThresholdNoYear = 0.70;
         public const double TitleFuzzThreshold = 0.70;
         public const double TitleFuzzGap = 0.40;
+
+        public static bool CanRejectOnYear(YearMatchConfidence confidence) =>
+            confidence == YearMatchConfidence.High || confidence == YearMatchConfidence.None;
     }
 }

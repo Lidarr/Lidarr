@@ -233,5 +233,127 @@ namespace NzbDrone.Core.Test.MusicTests.AlbumRepositoryTests
             album.Should().NotBeNull();
             album.Id.Should().Be(3);
         }
+
+        [Test]
+        public void should_return_album_when_parsed_year_is_part_of_album_title()
+        {
+            var woodstock = new Album
+            {
+                Id = 7,
+                Title = "Woodstock 1969",
+                CleanTitle = "woodstock1969",
+                ReleaseDate = new DateTime(2009, 8, 15)
+            };
+
+            Mocker.GetMock<IAlbumRepository>()
+                .Setup(s => s.FindByTitle(It.IsAny<int>(), "Woodstock 1969"))
+                .Returns(woodstock);
+
+            var album = Subject.FindByTitleAndYear(0, "Woodstock 1969", 1969);
+
+            album.Should().NotBeNull();
+            album.Id.Should().Be(7);
+        }
+
+        [Test]
+        public void should_find_album_by_inexact_title_when_parsed_year_is_part_of_album_title()
+        {
+            _albums.Add(new Album
+            {
+                Id = 7,
+                Title = "Woodstock 1969",
+                CleanTitle = "woodstock1969",
+                ReleaseDate = new DateTime(2009, 8, 15)
+            });
+
+            var album = Subject.FindByTitleAndYearInexact(0, "Woodstock 1969", 1969);
+
+            album.Should().NotBeNull();
+            album.Id.Should().Be(7);
+        }
+
+        [Test]
+        public void should_load_releases_and_return_album_when_year_matches_edition()
+        {
+            Mocker.GetMock<IAlbumRepository>()
+                .Setup(s => s.LoadReleases(It.IsAny<List<Album>>()))
+                .Callback<List<Album>>(albums => albums.ForEach(a => a.AlbumReleases = new List<AlbumRelease> { new AlbumRelease { ReleaseDate = new DateTime(2022, 12, 1) } }));
+
+            var album = Subject.FindByTitleAndYear(0, "Peppermint Winter", 2022);
+
+            album.Should().NotBeNull();
+            album.Id.Should().Be(4);
+        }
+
+        [Test]
+        public void should_not_load_releases_when_year_is_null()
+        {
+            Subject.FindByTitleAndYear(0, "Peppermint Winter", null);
+
+            Mocker.GetMock<IAlbumRepository>()
+                .Verify(s => s.LoadReleases(It.IsAny<List<Album>>()), Times.Never());
+        }
+
+        [Test]
+        public void should_load_releases_and_prefer_album_with_matching_edition_year_in_inexact_match()
+        {
+            Mocker.GetMock<IAlbumRepository>()
+                .Setup(s => s.LoadReleases(It.IsAny<List<Album>>()))
+                .Callback<List<Album>>(albums => albums.ForEach(a => a.AlbumReleases = a.Id == 1
+                    ? new List<AlbumRelease> { new AlbumRelease { ReleaseDate = new DateTime(2024, 5, 1) } }
+                    : new List<AlbumRelease>()));
+
+            var album = Subject.FindByTitleAndYearInexact(0, "Greatest Hits", 2024);
+
+            album.Should().NotBeNull();
+            album.Id.Should().Be(1);
+        }
+
+        [Test]
+        public void should_not_load_releases_for_inexact_match_without_year()
+        {
+            Subject.FindByTitleAndYearInexact(0, "Greatest Hits", null);
+            Subject.GetCandidates(0, "Greatest Hits", null);
+
+            Mocker.GetMock<IAlbumRepository>()
+                .Verify(s => s.LoadReleases(It.IsAny<List<Album>>()), Times.Never());
+        }
+
+        [Test]
+        public void should_load_releases_for_candidates_with_year()
+        {
+            Subject.GetCandidates(0, "Greatest Hits", 2024);
+
+            Mocker.GetMock<IAlbumRepository>()
+                .Verify(s => s.LoadReleases(It.IsAny<List<Album>>()), Times.Once());
+        }
+
+        [Test]
+        public void should_prefer_original_year_over_edition_year_when_same_title_albums_tie_in_inexact_match()
+        {
+            Mocker.GetMock<IAlbumRepository>()
+                .Setup(s => s.LoadReleases(It.IsAny<List<Album>>()))
+                .Callback<List<Album>>(albums => albums.ForEach(a => a.AlbumReleases = a.Id == 1
+                    ? new List<AlbumRelease> { new AlbumRelease { ReleaseDate = new DateTime(2020, 5, 1) } }
+                    : new List<AlbumRelease>()));
+
+            var album = Subject.FindByTitleAndYearInexact(0, "Greatest Hits", 2020);
+
+            album.Should().NotBeNull();
+            album.Id.Should().Be(2);
+        }
+
+        [Test]
+        public void should_not_let_matching_year_pick_much_weaker_title_in_inexact_match()
+        {
+            _albums.Clear();
+            _albums.Add(new Album { Id = 10, Title = "abcdefzzzz", CleanTitle = "abcdefzzzz", ReleaseDate = new DateTime(2020, 1, 1) });
+            _albums.Add(new Album { Id = 11, Title = "abcdefghzz", CleanTitle = "abcdefghzz", ReleaseDate = new DateTime(2018, 1, 1) });
+
+            var album = Subject.FindByTitleAndYearInexact(0, "abcdefghij", 2020);
+
+            album.Should().NotBeNull();
+            album.Id.Should().Be(11);
+        }
     }
 }
