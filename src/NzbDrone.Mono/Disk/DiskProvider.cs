@@ -456,6 +456,18 @@ namespace NzbDrone.Mono.Disk
             }
         }
 
+        public override int GetHardLinkCount(string path)
+        {
+            if (Syscall.stat(path, out var stat) < 0)
+            {
+                var error = Stdlib.GetLastError();
+
+                throw new IOException($"Error getting hard link count for '{path}': {error}");
+            }
+
+            return (int)stat.st_nlink;
+        }
+
         private static int GetUserId(string user)
         {
             if (string.IsNullOrWhiteSpace(user))
