@@ -90,39 +90,45 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             if (SupportsAudioSearch)
             {
-                var artistQuery = AudioTextSearchEngine == "raw" ? searchCriteria.ArtistQuery : searchCriteria.CleanArtistQuery;
+                var artistTitles = AudioTextSearchEngine == "raw" ? new List<string> { searchCriteria.ArtistQuery } : searchCriteria.CleanArtistTitles;
                 var albumQuery = AudioTextSearchEngine == "raw" ? searchCriteria.AlbumQuery : searchCriteria.CleanAlbumQuery;
 
-                var searchQuery = $"&artist={NewsnabifyTitle(artistQuery)}&album={NewsnabifyTitle(albumQuery)}";
-
-                if (artistQuery == albumQuery && searchCriteria.AlbumYear > 0)
+                foreach (var artistTitle in artistTitles)
                 {
-                    searchQuery = $"&artist={NewsnabifyTitle(artistQuery)}&album={NewsnabifyTitle(albumQuery)}&year={searchCriteria.AlbumYear}";
-                }
+                    var searchQuery = $"&artist={NewsnabifyTitle(artistTitle)}&album={NewsnabifyTitle(albumQuery)}";
 
-                AddAudioPageableRequests(pageableRequests,
-                    searchCriteria,
-                    searchQuery);
+                    if (artistTitle == albumQuery && searchCriteria.AlbumYear > 0)
+                    {
+                        searchQuery = $"&artist={NewsnabifyTitle(artistTitle)}&album={NewsnabifyTitle(albumQuery)}&year={searchCriteria.AlbumYear}";
+                    }
+
+                    AddAudioPageableRequests(pageableRequests,
+                        searchCriteria,
+                        searchQuery);
+                }
             }
 
             if (SupportsSearch)
             {
                 pageableRequests.AddTier();
 
-                var artistQuery = TextSearchEngine == "raw" ? searchCriteria.ArtistQuery : searchCriteria.CleanArtistQuery;
+                var artistTitles = TextSearchEngine == "raw" ? new List<string> { searchCriteria.ArtistQuery } : searchCriteria.CleanArtistTitles;
                 var albumQuery = TextSearchEngine == "raw" ? searchCriteria.AlbumQuery : searchCriteria.CleanAlbumQuery;
 
-                var searchQuery = $"{artistQuery}+{albumQuery}";
-
-                if (artistQuery == albumQuery)
+                foreach (var artistTitle in artistTitles)
                 {
-                    searchQuery = $"{artistQuery}+{albumQuery}+{searchCriteria.AlbumYear}";
-                }
+                    var searchQuery = $"{artistTitle}+{albumQuery}";
 
-                pageableRequests.Add(GetPagedRequests(MaxPages,
-                    Settings.Categories,
-                    "search",
-                    $"&q={NewsnabifyTitle(searchQuery)}"));
+                    if (artistTitle == albumQuery)
+                    {
+                        searchQuery = $"{artistTitle}+{albumQuery}+{searchCriteria.AlbumYear}";
+                    }
+
+                    pageableRequests.Add(GetPagedRequests(MaxPages,
+                        Settings.Categories,
+                        "search",
+                        $"&q={NewsnabifyTitle(searchQuery)}"));
+                }
             }
 
             return pageableRequests;
@@ -134,22 +140,28 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             if (SupportsAudioSearch)
             {
-                var queryTitle = AudioTextSearchEngine == "raw" ? searchCriteria.ArtistQuery : searchCriteria.CleanArtistQuery;
+                var queryTitles = AudioTextSearchEngine == "raw" ? new List<string> { searchCriteria.ArtistQuery } : searchCriteria.CleanArtistTitles;
 
-                AddAudioPageableRequests(pageableRequests,
-                    searchCriteria,
-                    $"&artist={NewsnabifyTitle(queryTitle)}");
+                foreach (var queryTitle in queryTitles)
+                {
+                    AddAudioPageableRequests(pageableRequests,
+                        searchCriteria,
+                        $"&artist={NewsnabifyTitle(queryTitle)}");
+                }
             }
 
             if (SupportsSearch)
             {
                 pageableRequests.AddTier();
-                var queryTitle = TextSearchEngine == "raw" ? searchCriteria.ArtistQuery : searchCriteria.CleanArtistQuery;
+                var queryTitles = TextSearchEngine == "raw" ? new List<string> { searchCriteria.ArtistQuery } : searchCriteria.CleanArtistTitles;
 
-                pageableRequests.Add(GetPagedRequests(MaxPages,
+                foreach (var queryTitle in queryTitles)
+                {
+                    pageableRequests.Add(GetPagedRequests(MaxPages,
                         Settings.Categories,
                         "search",
                         $"&q={NewsnabifyTitle(queryTitle)}"));
+                }
             }
 
             return pageableRequests;
@@ -159,7 +171,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             chain.AddTier();
 
-            chain.Add(GetPagedRequests(MaxPages, Settings.Categories, "music", $"&q={parameters}"));
+            chain.Add(GetPagedRequests(MaxPages, Settings.Categories, "music", parameters));
         }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(int maxPages, IEnumerable<int> categories, string searchType, string parameters)
