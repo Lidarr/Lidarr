@@ -16,6 +16,7 @@ namespace Lidarr.Api.V1.Config
         public FileDateType FileDate { get; set; }
         public bool WatchLibraryForChanges { get; set; }
         public RescanAfterRefreshType RescanAfterRefresh { get; set; }
+        public string ExcludedScanFolders { get; set; }
         public AllowFingerprinting AllowFingerprinting { get; set; }
 
         public bool SetPermissionsLinux { get; set; }
@@ -47,6 +48,7 @@ namespace Lidarr.Api.V1.Config
                 FileDate = model.FileDate,
                 WatchLibraryForChanges = model.WatchLibraryForChanges,
                 RescanAfterRefresh = model.RescanAfterRefresh,
+                ExcludedScanFolders = model.ExcludedScanFolders,
                 AllowFingerprinting = model.AllowFingerprinting,
 
                 SetPermissionsLinux = model.SetPermissionsLinux,

@@ -14,16 +14,19 @@ namespace NzbDrone.Core.Extras
     {
         private readonly IDiskProvider _diskProvider;
         private readonly IDiskScanService _diskScanService;
+        private readonly ITrackFileFilter _trackFileFilter;
         private readonly List<IImportExistingExtraFiles> _existingExtraFileImporters;
         private readonly Logger _logger;
 
         public ExistingExtraFileService(IDiskProvider diskProvider,
                                         IDiskScanService diskScanService,
+                                        ITrackFileFilter trackFileFilter,
                                         IEnumerable<IImportExistingExtraFiles> existingExtraFileImporters,
                                         Logger logger)
         {
             _diskProvider = diskProvider;
             _diskScanService = diskScanService;
+            _trackFileFilter = trackFileFilter;
             _existingExtraFileImporters = existingExtraFileImporters.OrderBy(e => e.Order).ToList();
             _logger = logger;
         }
@@ -41,7 +44,10 @@ namespace NzbDrone.Core.Extras
             _logger.Debug("Looking for existing extra files in {0}", artist.Path);
 
             var filesOnDisk = _diskScanService.GetNonAudioFiles(artist.Path);
-            var possibleExtraFiles = _diskScanService.FilterPaths(artist.Path, filesOnDisk);
+            var isExcluded = _trackFileFilter.GetExclusionPredicate(artist.Path);
+            var possibleExtraFiles = _diskScanService.FilterPaths(artist.Path, filesOnDisk)
+                .Where(file => !isExcluded(file))
+                .ToList();
 
             var filteredFiles = possibleExtraFiles;
             var importedFiles = new List<string>();
