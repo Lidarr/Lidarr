@@ -35,12 +35,14 @@ namespace NzbDrone.Core.Notifications
     {
         private readonly INotificationFactory _notificationFactory;
         private readonly INotificationStatusService _notificationStatusService;
+        private readonly IArtistService _artistService;
         private readonly Logger _logger;
 
-        public NotificationService(INotificationFactory notificationFactory, INotificationStatusService notificationStatusService, Logger logger)
+        public NotificationService(INotificationFactory notificationFactory, INotificationStatusService notificationStatusService, IArtistService artistService, Logger logger)
         {
             _notificationFactory = notificationFactory;
             _notificationStatusService = notificationStatusService;
+            _artistService = artistService;
             _logger = logger;
         }
 
@@ -352,11 +354,13 @@ namespace NzbDrone.Core.Notifications
                 Message = message.Message
             };
 
+            var artist = message.TrackedDownload?.RemoteAlbum?.Artist ?? _artistService.GetArtist(message.ArtistId);
+
             foreach (var notification in _notificationFactory.OnDownloadFailureEnabled())
             {
                 try
                 {
-                    if (ShouldHandleArtist(notification.Definition, message.TrackedDownload.RemoteAlbum.Artist))
+                    if (ShouldHandleArtist(notification.Definition, artist))
                     {
                         notification.OnDownloadFailure(downloadFailedMessage);
                         _notificationStatusService.RecordSuccess(notification.Definition.Id);
