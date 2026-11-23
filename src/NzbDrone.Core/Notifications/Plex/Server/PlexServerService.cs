@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentValidation.Results;
@@ -119,6 +120,17 @@ namespace NzbDrone.Core.Notifications.Plex.Server
 
                         return;
                     }
+
+                    if (location.Path.IsParentPath(mappedPath.FullPath))
+                    {
+                        var subfolderPath = location.Path.GetRelativePath(mappedPath.FullPath);
+                        var newArtistRelativePath = Path.Combine(subfolderPath, artistRelativePath);
+                        _logger.Debug("Updating matching section with parent location match, {0}", location.Path);
+                        _logger.Debug("Prepending artist relative path with subfolder : {0} => {1}", artistRelativePath, newArtistRelativePath);
+                        UpdateSectionPath(newArtistRelativePath, section, location, settings);
+
+                        return;
+                    }
                 }
             }
 
@@ -128,7 +140,8 @@ namespace NzbDrone.Core.Notifications.Plex.Server
             {
                 foreach (var location in section.Locations)
                 {
-                    UpdateSectionPath(artistRelativePath, section, location, settings);
+                    // Do not include artistRelativePath so we trigger a full library scan since we aren't sure where the files actually are!
+                    UpdateSectionPath("", section, location, settings);
                 }
             }
         }
