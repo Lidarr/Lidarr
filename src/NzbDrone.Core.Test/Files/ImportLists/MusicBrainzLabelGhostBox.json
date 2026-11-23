@@ -1,0 +1,2061 @@
+{
+  "release-offset": 0,
+  "release-count": 126,
+  "releases": [
+    {
+      "disambiguation": "",
+      "cover-art-archive": {
+        "artwork": true,
+        "back": false,
+        "count": 1,
+        "front": true,
+        "darkened": false
+      },
+      "artist-credit": [
+        {
+          "name": "The Focus Group",
+          "joinphrase": "",
+          "artist": {
+            "name": "The Focus Group",
+            "type": "Group",
+            "id": "9e4b5152-1d7c-4800-827e-2daa339a5b54",
+            "country": "GB",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "sort-name": "Focus Group, The",
+            "disambiguation": "UK experimental/sound collage by Julian House"
+          }
+        }
+      ],
+      "release-group": {
+        "artist-credit": [
+          {
+            "joinphrase": "",
+            "name": "The Focus Group",
+            "artist": {
+              "disambiguation": "UK experimental/sound collage by Julian House",
+              "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+              "sort-name": "Focus Group, The",
+              "id": "9e4b5152-1d7c-4800-827e-2daa339a5b54",
+              "country": "GB",
+              "name": "The Focus Group",
+              "type": "Group"
+            }
+          }
+        ],
+        "secondary-types": [],
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "disambiguation": "",
+        "primary-type": "Album",
+        "first-release-date": "2004",
+        "id": "e3459bc7-942d-3aac-b107-861df02afebe",
+        "title": "Sketches and Spells",
+        "secondary-type-ids": []
+      },
+      "id": "111e15eb-c700-4bd8-adc8-5b53313e5a92",
+      "title": "Sketches and Spells",
+      "barcode": null,
+      "packaging-id": null,
+      "asin": null,
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "quality": "normal",
+      "text-representation": {
+        "language": "eng",
+        "script": "Latn"
+      },
+      "release-events": [
+        {
+          "area": {
+            "disambiguation": "",
+            "type-id": null,
+            "sort-name": "United Kingdom",
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "name": "United Kingdom",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "type": null
+          },
+          "date": "2004"
+        }
+      ],
+      "country": "GB",
+      "status": "Official",
+      "date": "2004",
+      "packaging": null
+    },
+    {
+      "title": "Ghost Box Free 3 Track EP (July 2008)",
+      "id": "15c07f34-d87a-4a68-a0f5-0d1994023270",
+      "release-group": {
+        "primary-type": "EP",
+        "id": "8123f805-e71e-41e6-b681-b446d662e5e7",
+        "first-release-date": "2008-07-02",
+        "title": "Ghost Box Free 3 Track EP (July 2008)",
+        "secondary-type-ids": [],
+        "artist-credit": [
+          {
+            "artist": {
+              "type": "Person",
+              "name": "The Advisory Circle",
+              "id": "f3038c99-e176-46be-807c-7047f23fa3e4",
+              "country": "GB",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "sort-name": "Advisory Circle, The",
+              "disambiguation": ""
+            },
+            "name": "The Advisory Circle",
+            "joinphrase": " / "
+          },
+          {
+            "artist": {
+              "country": "GB",
+              "id": "9e4b5152-1d7c-4800-827e-2daa339a5b54",
+              "type": "Group",
+              "name": "The Focus Group",
+              "disambiguation": "UK experimental/sound collage by Julian House",
+              "sort-name": "Focus Group, The",
+              "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+            },
+            "joinphrase": "",
+            "name": "The Focus Group"
+          }
+        ],
+        "secondary-types": [],
+        "disambiguation": "",
+        "primary-type-id": "6d0c5bf6-7a33-3420-a519-44fc63eedebf"
+      },
+      "asin": null,
+      "barcode": null,
+      "packaging-id": null,
+      "cover-art-archive": {
+        "artwork": true,
+        "back": false,
+        "darkened": false,
+        "count": 1,
+        "front": false
+      },
+      "artist-credit": [
+        {
+          "joinphrase": " / ",
+          "name": "The Advisory Circle",
+          "artist": {
+            "name": "The Advisory Circle",
+            "type": "Person",
+            "id": "f3038c99-e176-46be-807c-7047f23fa3e4",
+            "country": "GB",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "sort-name": "Advisory Circle, The",
+            "disambiguation": ""
+          }
+        },
+        {
+          "artist": {
+            "name": "The Focus Group",
+            "type": "Group",
+            "id": "9e4b5152-1d7c-4800-827e-2daa339a5b54",
+            "country": "GB",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "sort-name": "Focus Group, The",
+            "disambiguation": "UK experimental/sound collage by Julian House"
+          },
+          "name": "The Focus Group",
+          "joinphrase": ""
+        }
+      ],
+      "disambiguation": "",
+      "packaging": null,
+      "date": "2008-07-02",
+      "country": "GB",
+      "status": null,
+      "quality": "normal",
+      "status-id": null,
+      "release-events": [
+        {
+          "area": {
+            "disambiguation": "",
+            "type-id": null,
+            "sort-name": "United Kingdom",
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "name": "United Kingdom",
+            "type": null
+          },
+          "date": "2008-07-02"
+        }
+      ],
+      "text-representation": {
+        "script": null,
+        "language": null
+      }
+    },
+    {
+      "country": "GB",
+      "status": "Official",
+      "packaging": null,
+      "date": "2006",
+      "release-events": [
+        {
+          "date": "2006",
+          "area": {
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "name": "United Kingdom",
+            "type": null,
+            "disambiguation": "",
+            "sort-name": "United Kingdom",
+            "type-id": null
+          }
+        }
+      ],
+      "text-representation": {
+        "language": "eng",
+        "script": "Latn"
+      },
+      "quality": "normal",
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "asin": null,
+      "packaging-id": null,
+      "barcode": null,
+      "title": "The Owl's Map",
+      "id": "1b24daa8-cd99-412e-a602-70619673f71b",
+      "release-group": {
+        "artist-credit": [
+          {
+            "artist": {
+              "disambiguation": "",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "sort-name": "Belbury Poly",
+              "id": "bed5e193-573f-4378-98a6-020a8fac350c",
+              "country": "GB",
+              "name": "Belbury Poly",
+              "type": "Person"
+            },
+            "name": "Belbury Poly",
+            "joinphrase": ""
+          }
+        ],
+        "secondary-types": [],
+        "disambiguation": "",
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "primary-type": "Album",
+        "id": "0ebc139d-c170-3eb3-b4cf-6a4ad04d1e5b",
+        "first-release-date": "2006-09-10",
+        "title": "The Owl's Map",
+        "secondary-type-ids": []
+      },
+      "disambiguation": "",
+      "artist-credit": [
+        {
+          "artist": {
+            "country": "GB",
+            "id": "bed5e193-573f-4378-98a6-020a8fac350c",
+            "name": "Belbury Poly",
+            "type": "Person",
+            "disambiguation": "",
+            "sort-name": "Belbury Poly",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "joinphrase": "",
+          "name": "Belbury Poly"
+        }
+      ],
+      "cover-art-archive": {
+        "darkened": false,
+        "count": 1,
+        "front": true,
+        "back": false,
+        "artwork": true
+      }
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
+            "id": "9e4b5152-1d7c-4800-827e-2daa339a5b54",
+            "country": "GB",
+            "name": "The Focus Group",
+            "type": "Group",
+            "disambiguation": "UK experimental/sound collage by Julian House",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "sort-name": "Focus Group, The"
+          },
+          "joinphrase": "",
+          "name": "The Focus Group"
+        }
+      ],
+      "cover-art-archive": {
+        "artwork": false,
+        "back": false,
+        "count": 0,
+        "front": false,
+        "darkened": false
+      },
+      "disambiguation": "",
+      "barcode": null,
+      "packaging-id": null,
+      "asin": null,
+      "release-group": {
+        "primary-type": "Single",
+        "secondary-type-ids": [],
+        "id": "df5442e6-cbba-45af-83a7-c65e455a7a24",
+        "title": "We Are Coming Back To Dance With You",
+        "first-release-date": "2008",
+        "artist-credit": [
+          {
+            "artist": {
+              "country": "GB",
+              "id": "9e4b5152-1d7c-4800-827e-2daa339a5b54",
+              "name": "The Focus Group",
+              "type": "Group",
+              "disambiguation": "UK experimental/sound collage by Julian House",
+              "sort-name": "Focus Group, The",
+              "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+            },
+            "joinphrase": "",
+            "name": "The Focus Group"
+          }
+        ],
+        "primary-type-id": "d6038452-8ee0-3f68-affc-2de9a1ede0b9",
+        "disambiguation": "",
+        "secondary-types": []
+      },
+      "id": "2eaf12f8-5965-420f-998a-7a65da3e49e9",
+      "title": "We Are Coming Back To Dance With You",
+      "text-representation": {
+        "script": null,
+        "language": null
+      },
+      "release-events": [
+        {
+          "area": {
+            "disambiguation": "",
+            "sort-name": "United Kingdom",
+            "type-id": null,
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "name": "United Kingdom",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "type": null
+          },
+          "date": "2008"
+        }
+      ],
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "quality": "normal",
+      "date": "2008",
+      "packaging": null,
+      "country": "GB",
+      "status": "Official"
+    },
+    {
+      "disambiguation": "",
+      "artist-credit": [
+        {
+          "artist": {
+            "id": "bacb7383-e97b-4a06-a3c5-100fe27a5354",
+            "country": "GB",
+            "type": "Person",
+            "name": "Roj Stevens",
+            "disambiguation": "",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "sort-name": "Stevens, Roj"
+          },
+          "name": "Roj",
+          "joinphrase": ""
+        }
+      ],
+      "cover-art-archive": {
+        "darkened": false,
+        "count": 1,
+        "front": true,
+        "back": false,
+        "artwork": true
+      },
+      "asin": null,
+      "packaging-id": null,
+      "barcode": null,
+      "title": "You Are Here / The Salt Path",
+      "id": "521da16b-c779-4e65-ac41-d1d072fdceb8",
+      "release-group": {
+        "artist-credit": [
+          {
+            "artist": {
+              "type": "Person",
+              "name": "Roj Stevens",
+              "id": "bacb7383-e97b-4a06-a3c5-100fe27a5354",
+              "country": "GB",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "sort-name": "Stevens, Roj",
+              "disambiguation": ""
+            },
+            "joinphrase": "",
+            "name": "Roj"
+          }
+        ],
+        "primary-type-id": "d6038452-8ee0-3f68-affc-2de9a1ede0b9",
+        "disambiguation": "",
+        "secondary-types": [],
+        "primary-type": "Single",
+        "secondary-type-ids": [],
+        "id": "db7b2de9-d346-4ea7-972e-216847cd1869",
+        "first-release-date": "2009-12-14",
+        "title": "You Are Here / The Salt Path"
+      },
+      "release-events": [
+        {
+          "area": {
+            "name": "United Kingdom",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "type": null,
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "type-id": null,
+            "sort-name": "United Kingdom",
+            "disambiguation": ""
+          },
+          "date": "2009-12-14"
+        }
+      ],
+      "text-representation": {
+        "language": "eng",
+        "script": "Latn"
+      },
+      "quality": "normal",
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "country": "GB",
+      "status": "Official",
+      "packaging": null,
+      "date": "2009-12-14"
+    },
+    {
+      "country": "GB",
+      "status": "Official",
+      "date": "2008-03-10",
+      "packaging": "None",
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "quality": "normal",
+      "text-representation": {
+        "script": "Latn",
+        "language": "eng"
+      },
+      "release-events": [
+        {
+          "area": {
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "type": null,
+            "name": "United Kingdom",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "disambiguation": "",
+            "type-id": null,
+            "sort-name": "United Kingdom"
+          },
+          "date": "2008-03-10"
+        }
+      ],
+      "title": "Other Channels",
+      "id": "56d2d177-4513-4bcc-ae97-c177adb6a255",
+      "release-group": {
+        "artist-credit": [
+          {
+            "artist": {
+              "sort-name": "Advisory Circle, The",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "disambiguation": "",
+              "type": "Person",
+              "name": "The Advisory Circle",
+              "country": "GB",
+              "id": "f3038c99-e176-46be-807c-7047f23fa3e4"
+            },
+            "joinphrase": "",
+            "name": "The Advisory Circle"
+          }
+        ],
+        "secondary-types": [],
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "disambiguation": "",
+        "primary-type": "Album",
+        "id": "5b37a222-e988-3ab6-aeb2-c73d69d4b866",
+        "first-release-date": "2008-03-10",
+        "title": "Other Channels",
+        "secondary-type-ids": []
+      },
+      "barcode": "",
+      "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+      "asin": null,
+      "disambiguation": "",
+      "cover-art-archive": {
+        "artwork": true,
+        "back": false,
+        "front": true,
+        "count": 1,
+        "darkened": false
+      },
+      "artist-credit": [
+        {
+          "name": "The Advisory Circle",
+          "joinphrase": "",
+          "artist": {
+            "sort-name": "Advisory Circle, The",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "disambiguation": "",
+            "type": "Person",
+            "name": "The Advisory Circle",
+            "country": "GB",
+            "id": "f3038c99-e176-46be-807c-7047f23fa3e4"
+          }
+        }
+      ]
+    },
+    {
+      "date": "2008-12-08",
+      "packaging": "None",
+      "status": "Official",
+      "country": "XW",
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "quality": "normal",
+      "text-representation": {
+        "script": "Latn",
+        "language": "eng"
+      },
+      "release-events": [
+        {
+          "area": {
+            "sort-name": "[Worldwide]",
+            "type-id": null,
+            "disambiguation": "",
+            "name": "[Worldwide]",
+            "iso-3166-1-codes": [
+              "XW"
+            ],
+            "type": null,
+            "id": "525d4e18-3d00-31b9-a58b-a146a916de8f"
+          },
+          "date": "2008-12-08"
+        }
+      ],
+      "title": "Ritual and Education",
+      "id": "5bb6ed7c-4fe7-4639-b82e-44d7c06ebe49",
+      "release-group": {
+        "secondary-type-ids": [
+          "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1"
+        ],
+        "id": "22c827d3-df49-38dc-b726-9a4714f24331",
+        "title": "Ritual and Education",
+        "first-release-date": "2008-12-08",
+        "primary-type": "Album",
+        "disambiguation": "",
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "secondary-types": [
+          "Compilation"
+        ],
+        "artist-credit": [
+          {
+            "joinphrase": "",
+            "name": "Various Artists",
+            "artist": {
+              "sort-name": "Various Artists",
+              "type-id": "ac897045-5043-3294-969b-187360e45d86",
+              "disambiguation": "add compilations to this artist",
+              "name": "Various Artists",
+              "type": "Other",
+              "country": null,
+              "id": "89ad4ac3-39f7-470e-963a-56509c546377"
+            }
+          }
+        ]
+      },
+      "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+      "barcode": "",
+      "asin": null,
+      "cover-art-archive": {
+        "back": false,
+        "artwork": true,
+        "darkened": false,
+        "front": true,
+        "count": 1
+      },
+      "artist-credit": [
+        {
+          "joinphrase": "",
+          "name": "Various Artists",
+          "artist": {
+            "type-id": "ac897045-5043-3294-969b-187360e45d86",
+            "sort-name": "Various Artists",
+            "disambiguation": "add compilations to this artist",
+            "type": "Other",
+            "name": "Various Artists",
+            "id": "89ad4ac3-39f7-470e-963a-56509c546377",
+            "country": null
+          }
+        }
+      ],
+      "disambiguation": ""
+    },
+    {
+      "packaging-id": null,
+      "barcode": null,
+      "asin": null,
+      "title": "Other Channels",
+      "id": "5e153d1f-e62c-4c91-a1ad-7b647c87aba8",
+      "release-group": {
+        "artist-credit": [
+          {
+            "artist": {
+              "disambiguation": "",
+              "sort-name": "Advisory Circle, The",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "country": "GB",
+              "id": "f3038c99-e176-46be-807c-7047f23fa3e4",
+              "name": "The Advisory Circle",
+              "type": "Person"
+            },
+            "name": "The Advisory Circle",
+            "joinphrase": ""
+          }
+        ],
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "disambiguation": "",
+        "secondary-types": [],
+        "primary-type": "Album",
+        "secondary-type-ids": [],
+        "first-release-date": "2008-03-10",
+        "id": "5b37a222-e988-3ab6-aeb2-c73d69d4b866",
+        "title": "Other Channels"
+      },
+      "artist-credit": [
+        {
+          "name": "The Advisory Circle",
+          "joinphrase": "",
+          "artist": {
+            "name": "The Advisory Circle",
+            "type": "Person",
+            "country": "GB",
+            "id": "f3038c99-e176-46be-807c-7047f23fa3e4",
+            "sort-name": "Advisory Circle, The",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "disambiguation": ""
+          }
+        }
+      ],
+      "cover-art-archive": {
+        "count": 1,
+        "front": true,
+        "darkened": false,
+        "artwork": true,
+        "back": false
+      },
+      "disambiguation": "",
+      "date": "2008-03-10",
+      "packaging": null,
+      "status": "Official",
+      "country": "GB",
+      "text-representation": {
+        "script": "Latn",
+        "language": "eng"
+      },
+      "release-events": [
+        {
+          "area": {
+            "sort-name": "United Kingdom",
+            "type-id": null,
+            "disambiguation": "",
+            "type": null,
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "name": "United Kingdom",
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed"
+          },
+          "date": "2008-03-10"
+        }
+      ],
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "quality": "normal"
+    },
+    {
+      "packaging": null,
+      "date": "2009-01-30",
+      "status": "Official",
+      "country": "GB",
+      "quality": "normal",
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "release-events": [
+        {
+          "date": "2009-01-30",
+          "area": {
+            "type-id": null,
+            "sort-name": "United Kingdom",
+            "disambiguation": "",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "name": "United Kingdom",
+            "type": null,
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed"
+          }
+        }
+      ],
+      "text-representation": {
+        "script": "Latn",
+        "language": "eng"
+      },
+      "title": "From an Ancient Star",
+      "id": "6274ea4b-7ca2-4618-958e-85f351dfd622",
+      "release-group": {
+        "primary-type": "Album",
+        "secondary-type-ids": [],
+        "id": "59f8233c-f561-3d6d-b2af-6c2c2915e861",
+        "first-release-date": "2009-01-30",
+        "title": "From an Ancient Star",
+        "artist-credit": [
+          {
+            "artist": {
+              "country": "GB",
+              "id": "bed5e193-573f-4378-98a6-020a8fac350c",
+              "name": "Belbury Poly",
+              "type": "Person",
+              "disambiguation": "",
+              "sort-name": "Belbury Poly",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+            },
+            "name": "Belbury Poly",
+            "joinphrase": ""
+          }
+        ],
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "disambiguation": "",
+        "secondary-types": []
+      },
+      "asin": null,
+      "packaging-id": null,
+      "barcode": null,
+      "cover-art-archive": {
+        "back": true,
+        "artwork": true,
+        "darkened": false,
+        "front": true,
+        "count": 4
+      },
+      "artist-credit": [
+        {
+          "name": "Belbury Poly",
+          "joinphrase": "",
+          "artist": {
+            "type": "Person",
+            "name": "Belbury Poly",
+            "country": "GB",
+            "id": "bed5e193-573f-4378-98a6-020a8fac350c",
+            "sort-name": "Belbury Poly",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "disambiguation": ""
+          }
+        }
+      ],
+      "disambiguation": ""
+    },
+    {
+      "status": "Official",
+      "country": "XW",
+      "date": "2008-03-10",
+      "packaging": "None",
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "quality": "normal",
+      "text-representation": {
+        "script": "Latn",
+        "language": "eng"
+      },
+      "release-events": [
+        {
+          "date": "2008-03-10",
+          "area": {
+            "sort-name": "[Worldwide]",
+            "type-id": null,
+            "disambiguation": "",
+            "type": null,
+            "iso-3166-1-codes": [
+              "XW"
+            ],
+            "name": "[Worldwide]",
+            "id": "525d4e18-3d00-31b9-a58b-a146a916de8f"
+          }
+        }
+      ],
+      "release-group": {
+        "secondary-types": [],
+        "disambiguation": "",
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "artist-credit": [
+          {
+            "artist": {
+              "disambiguation": "",
+              "sort-name": "Advisory Circle, The",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "country": "GB",
+              "id": "f3038c99-e176-46be-807c-7047f23fa3e4",
+              "name": "The Advisory Circle",
+              "type": "Person"
+            },
+            "name": "The Advisory Circle",
+            "joinphrase": ""
+          }
+        ],
+        "title": "Other Channels",
+        "id": "5b37a222-e988-3ab6-aeb2-c73d69d4b866",
+        "first-release-date": "2008-03-10",
+        "secondary-type-ids": [],
+        "primary-type": "Album"
+      },
+      "id": "6c480451-0bf5-425e-83e7-5c36b1a41418",
+      "title": "Other Channels",
+      "barcode": "5060158994083",
+      "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+      "asin": null,
+      "disambiguation": "",
+      "cover-art-archive": {
+        "count": 1,
+        "front": true,
+        "darkened": false,
+        "back": false,
+        "artwork": true
+      },
+      "artist-credit": [
+        {
+          "joinphrase": "",
+          "name": "The Advisory Circle",
+          "artist": {
+            "country": "GB",
+            "id": "f3038c99-e176-46be-807c-7047f23fa3e4",
+            "name": "The Advisory Circle",
+            "type": "Person",
+            "disambiguation": "",
+            "sort-name": "Advisory Circle, The",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          }
+        }
+      ]
+    },
+    {
+      "cover-art-archive": {
+        "artwork": true,
+        "back": false,
+        "darkened": false,
+        "count": 1,
+        "front": true
+      },
+      "artist-credit": [
+        {
+          "artist": {
+            "disambiguation": "",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "sort-name": "Mount Vernon Arts Lab",
+            "id": "1c721e13-c445-4968-a6a1-edd9b2fc1d35",
+            "country": "GB",
+            "name": "Mount Vernon Arts Lab",
+            "type": "Person"
+          },
+          "name": "Mount Vernon Arts Lab",
+          "joinphrase": ""
+        }
+      ],
+      "disambiguation": "",
+      "id": "6d0cec6a-42d5-4665-8305-442bb405c0c3",
+      "release-group": {
+        "secondary-types": [],
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "disambiguation": "",
+        "artist-credit": [
+          {
+            "artist": {
+              "disambiguation": "",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "sort-name": "Mount Vernon Arts Lab",
+              "id": "1c721e13-c445-4968-a6a1-edd9b2fc1d35",
+              "country": "GB",
+              "type": "Person",
+              "name": "Mount Vernon Arts Lab"
+            },
+            "joinphrase": "",
+            "name": "Mount Vernon Arts Lab"
+          }
+        ],
+        "id": "2c1ca71c-2016-3d33-8f1b-ce1dd7d658fa",
+        "first-release-date": "2001",
+        "title": "The Seance at Hobs Lane",
+        "secondary-type-ids": [],
+        "primary-type": "Album"
+      },
+      "title": "The Séance at Hobs Lane",
+      "asin": null,
+      "packaging-id": null,
+      "barcode": null,
+      "quality": "normal",
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "release-events": [
+        {
+          "date": "2007",
+          "area": {
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "type": null,
+            "name": "United Kingdom",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "disambiguation": "",
+            "type-id": null,
+            "sort-name": "United Kingdom"
+          }
+        }
+      ],
+      "text-representation": {
+        "script": "Latn",
+        "language": "eng"
+      },
+      "packaging": null,
+      "date": "2007",
+      "status": "Official",
+      "country": "GB"
+    },
+    {
+      "country": "GB",
+      "status": "Official",
+      "date": "2010-05",
+      "packaging": null,
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "quality": "normal",
+      "text-representation": {
+        "script": "Latn",
+        "language": "eng"
+      },
+      "release-events": [
+        {
+          "date": "2010-05",
+          "area": {
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "name": "United Kingdom",
+            "type": null,
+            "disambiguation": "",
+            "type-id": null,
+            "sort-name": "United Kingdom"
+          }
+        }
+      ],
+      "id": "73e5af2a-94ad-351b-aa09-4abb9b511841",
+      "title": "Mind How You Go (Revised Edition)",
+      "release-group": {
+        "artist-credit": [
+          {
+            "name": "The Advisory Circle",
+            "joinphrase": "",
+            "artist": {
+              "type": "Person",
+              "name": "The Advisory Circle",
+              "id": "f3038c99-e176-46be-807c-7047f23fa3e4",
+              "country": "GB",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "sort-name": "Advisory Circle, The",
+              "disambiguation": ""
+            }
+          }
+        ],
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "disambiguation": "",
+        "secondary-types": [],
+        "primary-type": "Album",
+        "secondary-type-ids": [],
+        "id": "976a7ee5-ad62-46a9-94bd-e73558365994",
+        "title": "Mind How You Go (Revised Edition)",
+        "first-release-date": "2010-03"
+      },
+      "barcode": null,
+      "packaging-id": null,
+      "asin": null,
+      "disambiguation": "",
+      "cover-art-archive": {
+        "back": false,
+        "artwork": true,
+        "darkened": false,
+        "front": true,
+        "count": 1
+      },
+      "artist-credit": [
+        {
+          "artist": {
+            "sort-name": "Advisory Circle, The",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "disambiguation": "",
+            "type": "Person",
+            "name": "The Advisory Circle",
+            "country": "GB",
+            "id": "f3038c99-e176-46be-807c-7047f23fa3e4"
+          },
+          "name": "The Advisory Circle",
+          "joinphrase": ""
+        }
+      ]
+    },
+    {
+      "release-events": [
+        {
+          "date": "2005-04-14",
+          "area": {
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "name": "United Kingdom",
+            "type": null,
+            "disambiguation": "",
+            "sort-name": "United Kingdom",
+            "type-id": null
+          }
+        }
+      ],
+      "text-representation": {
+        "script": "Latn",
+        "language": "eng"
+      },
+      "quality": "normal",
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "packaging": "Jewel Case",
+      "date": "2005-04-14",
+      "status": "Official",
+      "country": "GB",
+      "artist-credit": [
+        {
+          "joinphrase": "",
+          "name": "The Focus Group",
+          "artist": {
+            "disambiguation": "UK experimental/sound collage by Julian House",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "sort-name": "Focus Group, The",
+            "id": "9e4b5152-1d7c-4800-827e-2daa339a5b54",
+            "country": "GB",
+            "name": "The Focus Group",
+            "type": "Group"
+          }
+        }
+      ],
+      "cover-art-archive": {
+        "darkened": false,
+        "front": true,
+        "count": 1,
+        "back": false,
+        "artwork": true
+      },
+      "disambiguation": "",
+      "asin": null,
+      "packaging-id": "ec27701a-4a22-37f4-bfac-6616e0f9750a",
+      "barcode": "",
+      "id": "98a3a900-962c-466e-a6a2-4bb2ce9655a5",
+      "release-group": {
+        "primary-type": "Album",
+        "id": "22951b1f-62be-3851-b7d5-67e749a5ebbd",
+        "first-release-date": "2005-04-14",
+        "title": "Hey Let Loose Your Love",
+        "secondary-type-ids": [],
+        "artist-credit": [
+          {
+            "name": "The Focus Group",
+            "joinphrase": "",
+            "artist": {
+              "country": "GB",
+              "id": "9e4b5152-1d7c-4800-827e-2daa339a5b54",
+              "name": "The Focus Group",
+              "type": "Group",
+              "disambiguation": "UK experimental/sound collage by Julian House",
+              "sort-name": "Focus Group, The",
+              "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+            }
+          }
+        ],
+        "secondary-types": [],
+        "disambiguation": "",
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc"
+      },
+      "title": "Hey Let Loose Your Love"
+    },
+    {
+      "title": "The Hidden Door",
+      "id": "a9405ad6-ef6c-445f-bab3-6f9bdf0003db",
+      "release-group": {
+        "primary-type-id": "d6038452-8ee0-3f68-affc-2de9a1ede0b9",
+        "disambiguation": "",
+        "secondary-types": [],
+        "artist-credit": [
+          {
+            "artist": {
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "sort-name": "Belbury Poly",
+              "disambiguation": "",
+              "type": "Person",
+              "name": "Belbury Poly",
+              "id": "bed5e193-573f-4378-98a6-020a8fac350c",
+              "country": "GB"
+            },
+            "joinphrase": "",
+            "name": "Belbury Poly"
+          }
+        ],
+        "secondary-type-ids": [],
+        "title": "The Hidden Door",
+        "id": "95232735-0b6a-45e1-8b0c-589e44a7168a",
+        "first-release-date": "2008",
+        "primary-type": "Single"
+      },
+      "asin": null,
+      "packaging-id": null,
+      "barcode": null,
+      "disambiguation": "",
+      "cover-art-archive": {
+        "front": false,
+        "count": 0,
+        "darkened": false,
+        "back": false,
+        "artwork": false
+      },
+      "artist-credit": [
+        {
+          "joinphrase": "",
+          "name": "Belbury Poly",
+          "artist": {
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "sort-name": "Belbury Poly",
+            "disambiguation": "",
+            "name": "Belbury Poly",
+            "type": "Person",
+            "id": "bed5e193-573f-4378-98a6-020a8fac350c",
+            "country": "GB"
+          }
+        }
+      ],
+      "country": "GB",
+      "status": "Official",
+      "packaging": null,
+      "date": "2008",
+      "quality": "normal",
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "release-events": [
+        {
+          "date": "2008",
+          "area": {
+            "disambiguation": "",
+            "type-id": null,
+            "sort-name": "United Kingdom",
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "name": "United Kingdom",
+            "type": null
+          }
+        }
+      ],
+      "text-representation": {
+        "script": null,
+        "language": null
+      }
+    },
+    {
+      "disambiguation": "",
+      "artist-credit": [
+        {
+          "joinphrase": "",
+          "name": "Roj Stevens",
+          "artist": {
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "sort-name": "Stevens, Roj",
+            "disambiguation": "",
+            "name": "Roj Stevens",
+            "type": "Person",
+            "id": "bacb7383-e97b-4a06-a3c5-100fe27a5354",
+            "country": "GB"
+          }
+        }
+      ],
+      "cover-art-archive": {
+        "darkened": false,
+        "front": true,
+        "count": 3,
+        "artwork": true,
+        "back": false
+      },
+      "packaging-id": null,
+      "barcode": null,
+      "asin": null,
+      "id": "ab1981df-58e4-4f20-bd79-c7887ac3cd0f",
+      "title": "The Transactional Dharma of Roj",
+      "release-group": {
+        "primary-type": "Album",
+        "id": "8459f6fa-eadc-4147-8bb9-48defa062a0c",
+        "title": "The Transactional Dharma of Roj",
+        "first-release-date": "2009-09-28",
+        "secondary-type-ids": [],
+        "artist-credit": [
+          {
+            "name": "Roj Stevens",
+            "joinphrase": "",
+            "artist": {
+              "name": "Roj Stevens",
+              "type": "Person",
+              "country": "GB",
+              "id": "bacb7383-e97b-4a06-a3c5-100fe27a5354",
+              "sort-name": "Stevens, Roj",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "disambiguation": ""
+            }
+          }
+        ],
+        "secondary-types": [],
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "disambiguation": ""
+      },
+      "text-representation": {
+        "script": "Latn",
+        "language": "eng"
+      },
+      "release-events": [
+        {
+          "date": "2009-09-28",
+          "area": {
+            "name": "United Kingdom",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "type": null,
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "sort-name": "United Kingdom",
+            "type-id": null,
+            "disambiguation": ""
+          }
+        }
+      ],
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "quality": "normal",
+      "country": "GB",
+      "status": "Official",
+      "date": "2009-09-28",
+      "packaging": null
+    },
+    {
+      "status": "Official",
+      "country": "GB",
+      "packaging": null,
+      "date": "2005-04-04",
+      "release-events": [
+        {
+          "date": "2005-04-04",
+          "area": {
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "name": "United Kingdom",
+            "type": null,
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "type-id": null,
+            "sort-name": "United Kingdom",
+            "disambiguation": ""
+          }
+        }
+      ],
+      "text-representation": {
+        "language": "eng",
+        "script": "Latn"
+      },
+      "quality": "normal",
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "asin": null,
+      "barcode": null,
+      "packaging-id": null,
+      "title": "Ouroborindra",
+      "id": "b2fd7b62-2ee4-4507-84e9-6e61bd0cabaf",
+      "release-group": {
+        "artist-credit": [
+          {
+            "artist": {
+              "sort-name": "Zann, Eric",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "disambiguation": "",
+              "type": "Person",
+              "name": "Eric Zann",
+              "country": null,
+              "id": "78cff10f-4f6c-4591-b4e5-2b5ed1af0057"
+            },
+            "joinphrase": "",
+            "name": "Eric Zann"
+          }
+        ],
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "disambiguation": "",
+        "secondary-types": [],
+        "primary-type": "Album",
+        "secondary-type-ids": [],
+        "id": "5e4fc020-8b9b-3c73-8e45-5184b5fa5ab6",
+        "first-release-date": "2005-04-04",
+        "title": "Ouroborindra"
+      },
+      "disambiguation": "",
+      "artist-credit": [
+        {
+          "joinphrase": "",
+          "name": "Eric Zann",
+          "artist": {
+            "disambiguation": "",
+            "sort-name": "Zann, Eric",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "country": null,
+            "id": "78cff10f-4f6c-4591-b4e5-2b5ed1af0057",
+            "type": "Person",
+            "name": "Eric Zann"
+          }
+        }
+      ],
+      "cover-art-archive": {
+        "artwork": true,
+        "back": false,
+        "count": 1,
+        "front": true,
+        "darkened": false
+      }
+    },
+    {
+      "barcode": null,
+      "packaging-id": null,
+      "asin": null,
+      "id": "b7488568-267b-4d4a-b1b2-3e9f1c674492",
+      "title": "The Willows",
+      "release-group": {
+        "primary-type": "Album",
+        "secondary-type-ids": [],
+        "id": "393b0244-0669-3fed-a9de-28e48edf54bf",
+        "title": "The Willows",
+        "first-release-date": "2004",
+        "artist-credit": [
+          {
+            "artist": {
+              "disambiguation": "",
+              "sort-name": "Belbury Poly",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "country": "GB",
+              "id": "bed5e193-573f-4378-98a6-020a8fac350c",
+              "type": "Person",
+              "name": "Belbury Poly"
+            },
+            "name": "Belbury Poly",
+            "joinphrase": ""
+          }
+        ],
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "disambiguation": "",
+        "secondary-types": []
+      },
+      "artist-credit": [
+        {
+          "artist": {
+            "disambiguation": "",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "sort-name": "Belbury Poly",
+            "id": "bed5e193-573f-4378-98a6-020a8fac350c",
+            "country": "GB",
+            "type": "Person",
+            "name": "Belbury Poly"
+          },
+          "joinphrase": "",
+          "name": "Belbury Poly"
+        }
+      ],
+      "cover-art-archive": {
+        "darkened": false,
+        "count": 1,
+        "front": true,
+        "back": false,
+        "artwork": true
+      },
+      "disambiguation": "",
+      "date": "2004",
+      "packaging": null,
+      "status": "Official",
+      "country": "GB",
+      "text-representation": {
+        "script": "Latn",
+        "language": "eng"
+      },
+      "release-events": [
+        {
+          "date": "2004",
+          "area": {
+            "type-id": null,
+            "sort-name": "United Kingdom",
+            "disambiguation": "",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "name": "United Kingdom",
+            "type": null,
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed"
+          }
+        }
+      ],
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "quality": "normal"
+    },
+    {
+      "packaging": null,
+      "date": "2007-03-25",
+      "status": "Official",
+      "country": "GB",
+      "release-events": [
+        {
+          "date": "2007-03-25",
+          "area": {
+            "sort-name": "United Kingdom",
+            "type-id": null,
+            "disambiguation": "",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "name": "United Kingdom",
+            "type": null,
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed"
+          }
+        }
+      ],
+      "text-representation": {
+        "language": "eng",
+        "script": "Latn"
+      },
+      "quality": "normal",
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "asin": null,
+      "barcode": null,
+      "packaging-id": null,
+      "id": "bece727e-4701-4c77-aed4-8fe242693b60",
+      "title": "We Are All Pan's People",
+      "release-group": {
+        "artist-credit": [
+          {
+            "artist": {
+              "disambiguation": "UK experimental/sound collage by Julian House",
+              "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+              "sort-name": "Focus Group, The",
+              "id": "9e4b5152-1d7c-4800-827e-2daa339a5b54",
+              "country": "GB",
+              "type": "Group",
+              "name": "The Focus Group"
+            },
+            "name": "The Focus Group",
+            "joinphrase": ""
+          }
+        ],
+        "secondary-types": [],
+        "disambiguation": "",
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "primary-type": "Album",
+        "id": "a07ec491-f10c-3a30-94fe-610651920897",
+        "first-release-date": "2007-03-25",
+        "title": "We are all Pan's People",
+        "secondary-type-ids": []
+      },
+      "artist-credit": [
+        {
+          "joinphrase": "",
+          "name": "The Focus Group",
+          "artist": {
+            "name": "The Focus Group",
+            "type": "Group",
+            "country": "GB",
+            "id": "9e4b5152-1d7c-4800-827e-2daa339a5b54",
+            "sort-name": "Focus Group, The",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "disambiguation": "UK experimental/sound collage by Julian House"
+          }
+        }
+      ],
+      "cover-art-archive": {
+        "artwork": true,
+        "back": false,
+        "darkened": false,
+        "count": 1,
+        "front": true
+      },
+      "disambiguation": ""
+    },
+    {
+      "cover-art-archive": {
+        "darkened": false,
+        "count": 1,
+        "front": true,
+        "back": false,
+        "artwork": true
+      },
+      "artist-credit": [
+        {
+          "artist": {
+            "type": "Person",
+            "name": "Roj Stevens",
+            "country": "GB",
+            "id": "bacb7383-e97b-4a06-a3c5-100fe27a5354",
+            "sort-name": "Stevens, Roj",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "disambiguation": ""
+          },
+          "joinphrase": "",
+          "name": "Roj Stevens"
+        }
+      ],
+      "disambiguation": "",
+      "release-group": {
+        "primary-type": "Album",
+        "id": "8459f6fa-eadc-4147-8bb9-48defa062a0c",
+        "first-release-date": "2009-09-28",
+        "title": "The Transactional Dharma of Roj",
+        "secondary-type-ids": [],
+        "artist-credit": [
+          {
+            "joinphrase": "",
+            "name": "Roj Stevens",
+            "artist": {
+              "name": "Roj Stevens",
+              "type": "Person",
+              "country": "GB",
+              "id": "bacb7383-e97b-4a06-a3c5-100fe27a5354",
+              "sort-name": "Stevens, Roj",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "disambiguation": ""
+            }
+          }
+        ],
+        "secondary-types": [],
+        "disambiguation": "",
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc"
+      },
+      "id": "bf3a55c7-2bd3-47e3-acdc-3cfb6973459a",
+      "title": "The Transactional Dharma of Roj",
+      "barcode": "5060195235286",
+      "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+      "asin": null,
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "quality": "normal",
+      "text-representation": {
+        "script": "Latn",
+        "language": "eng"
+      },
+      "release-events": [
+        {
+          "date": "2009-09-28",
+          "area": {
+            "type-id": null,
+            "sort-name": "[Worldwide]",
+            "disambiguation": "",
+            "type": null,
+            "name": "[Worldwide]",
+            "iso-3166-1-codes": [
+              "XW"
+            ],
+            "id": "525d4e18-3d00-31b9-a58b-a146a916de8f"
+          }
+        }
+      ],
+      "date": "2009-09-28",
+      "packaging": "None",
+      "status": "Official",
+      "country": "XW"
+    },
+    {
+      "cover-art-archive": {
+        "darkened": false,
+        "front": true,
+        "count": 1,
+        "artwork": true,
+        "back": false
+      },
+      "artist-credit": [
+        {
+          "artist": {
+            "disambiguation": "",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "sort-name": "Advisory Circle, The",
+            "id": "f3038c99-e176-46be-807c-7047f23fa3e4",
+            "country": "GB",
+            "name": "The Advisory Circle",
+            "type": "Person"
+          },
+          "joinphrase": "",
+          "name": "The Advisory Circle"
+        }
+      ],
+      "disambiguation": "",
+      "release-group": {
+        "first-release-date": "2008",
+        "id": "53dd53c6-8a2b-4317-9e16-877ff352fcef",
+        "title": "Energy in the Home",
+        "secondary-type-ids": [],
+        "primary-type": "Single",
+        "secondary-types": [],
+        "primary-type-id": "d6038452-8ee0-3f68-affc-2de9a1ede0b9",
+        "disambiguation": "",
+        "artist-credit": [
+          {
+            "artist": {
+              "sort-name": "Advisory Circle, The",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "disambiguation": "",
+              "type": "Person",
+              "name": "The Advisory Circle",
+              "country": "GB",
+              "id": "f3038c99-e176-46be-807c-7047f23fa3e4"
+            },
+            "joinphrase": "",
+            "name": "The Advisory Circle"
+          }
+        ]
+      },
+      "id": "c1cdb878-60b6-44e9-b832-a666624dec51",
+      "title": "Energy In The Home",
+      "packaging-id": null,
+      "barcode": null,
+      "asin": null,
+      "status-id": null,
+      "quality": "normal",
+      "text-representation": {
+        "language": null,
+        "script": null
+      },
+      "release-events": [
+        {
+          "date": "2008",
+          "area": {
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "type": null,
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "name": "United Kingdom",
+            "disambiguation": "",
+            "type-id": null,
+            "sort-name": "United Kingdom"
+          }
+        }
+      ],
+      "date": "2008",
+      "packaging": null,
+      "status": null,
+      "country": "GB"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
+            "type": "Person",
+            "name": "Belbury Poly",
+            "country": "GB",
+            "id": "bed5e193-573f-4378-98a6-020a8fac350c",
+            "sort-name": "Belbury Poly",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "disambiguation": ""
+          },
+          "joinphrase": "",
+          "name": "Belbury Poly"
+        }
+      ],
+      "cover-art-archive": {
+        "count": 3,
+        "front": true,
+        "darkened": false,
+        "artwork": true,
+        "back": true
+      },
+      "disambiguation": "",
+      "packaging-id": null,
+      "barcode": null,
+      "asin": null,
+      "release-group": {
+        "primary-type": "Album",
+        "secondary-type-ids": [],
+        "id": "0ebc139d-c170-3eb3-b4cf-6a4ad04d1e5b",
+        "title": "The Owl's Map",
+        "first-release-date": "2006-09-10",
+        "artist-credit": [
+          {
+            "name": "Belbury Poly",
+            "joinphrase": "",
+            "artist": {
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "sort-name": "Belbury Poly",
+              "disambiguation": "",
+              "type": "Person",
+              "name": "Belbury Poly",
+              "id": "bed5e193-573f-4378-98a6-020a8fac350c",
+              "country": "GB"
+            }
+          }
+        ],
+        "disambiguation": "",
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "secondary-types": []
+      },
+      "id": "caa6458c-f559-4cf2-9c4a-06dabdf94168",
+      "title": "The Owl's Map",
+      "text-representation": {
+        "language": "eng",
+        "script": "Latn"
+      },
+      "release-events": [
+        {
+          "area": {
+            "disambiguation": "",
+            "sort-name": "United Kingdom",
+            "type-id": null,
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "name": "United Kingdom",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "type": null
+          },
+          "date": "2006-09-10"
+        }
+      ],
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "quality": "normal",
+      "date": "2006-09-10",
+      "packaging": null,
+      "status": "Official",
+      "country": "GB"
+    },
+    {
+      "packaging": "None",
+      "date": "2009-09-28",
+      "country": "XW",
+      "status": "Official",
+      "quality": "normal",
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "release-events": [
+        {
+          "area": {
+            "sort-name": "[Worldwide]",
+            "type-id": null,
+            "disambiguation": "",
+            "type": null,
+            "name": "[Worldwide]",
+            "iso-3166-1-codes": [
+              "XW"
+            ],
+            "id": "525d4e18-3d00-31b9-a58b-a146a916de8f"
+          },
+          "date": "2009-09-28"
+        }
+      ],
+      "text-representation": {
+        "language": "eng",
+        "script": "Latn"
+      },
+      "id": "d38c448b-f67e-445d-82f1-b34bec2d2b63",
+      "release-group": {
+        "id": "a67b24e8-4610-439e-8145-1401b0647804",
+        "title": "The Transactional Dharma of Roj",
+        "first-release-date": "2009-09-28",
+        "secondary-type-ids": [],
+        "primary-type": "Album",
+        "secondary-types": [],
+        "disambiguation": "",
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "artist-credit": [
+          {
+            "name": "Roj",
+            "joinphrase": "",
+            "artist": {
+              "sort-name": "Roj",
+              "type-id": null,
+              "disambiguation": "",
+              "name": "Roj",
+              "type": null,
+              "country": null,
+              "id": "1bcc1a64-1b43-46a4-a33e-03b6a0a630dd"
+            }
+          }
+        ]
+      },
+      "title": "The Transactional Dharma of Roj",
+      "asin": null,
+      "barcode": "5060195235286",
+      "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+      "cover-art-archive": {
+        "front": true,
+        "count": 1,
+        "darkened": false,
+        "back": false,
+        "artwork": true
+      },
+      "artist-credit": [
+        {
+          "artist": {
+            "id": "1bcc1a64-1b43-46a4-a33e-03b6a0a630dd",
+            "country": null,
+            "type": null,
+            "name": "Roj",
+            "disambiguation": "",
+            "type-id": null,
+            "sort-name": "Roj"
+          },
+          "joinphrase": "",
+          "name": "Roj"
+        }
+      ],
+      "disambiguation": ""
+    },
+    {
+      "country": "GB",
+      "status": "Official",
+      "date": "2005",
+      "packaging": null,
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "quality": "normal",
+      "text-representation": {
+        "language": "eng",
+        "script": "Latn"
+      },
+      "release-events": [
+        {
+          "date": "2005",
+          "area": {
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "name": "United Kingdom",
+            "type": null,
+            "disambiguation": "",
+            "sort-name": "United Kingdom",
+            "type-id": null
+          }
+        }
+      ],
+      "id": "d477916c-c3cf-49e7-b266-9bd2466ed89c",
+      "title": "Mind How You Go",
+      "release-group": {
+        "artist-credit": [
+          {
+            "artist": {
+              "country": "GB",
+              "id": "f3038c99-e176-46be-807c-7047f23fa3e4",
+              "type": "Person",
+              "name": "The Advisory Circle",
+              "disambiguation": "",
+              "sort-name": "Advisory Circle, The",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+            },
+            "joinphrase": "",
+            "name": "The Advisory Circle"
+          }
+        ],
+        "disambiguation": "",
+        "primary-type-id": "6d0c5bf6-7a33-3420-a519-44fc63eedebf",
+        "secondary-types": [],
+        "primary-type": "EP",
+        "secondary-type-ids": [],
+        "id": "159a4c5a-d1db-3ce6-afac-6915d4691e27",
+        "first-release-date": "2005",
+        "title": "Mind How You Go"
+      },
+      "barcode": null,
+      "packaging-id": null,
+      "asin": null,
+      "disambiguation": "",
+      "cover-art-archive": {
+        "back": false,
+        "artwork": true,
+        "darkened": false,
+        "count": 1,
+        "front": true
+      },
+      "artist-credit": [
+        {
+          "artist": {
+            "id": "f3038c99-e176-46be-807c-7047f23fa3e4",
+            "country": "GB",
+            "name": "The Advisory Circle",
+            "type": "Person",
+            "disambiguation": "",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "sort-name": "Advisory Circle, The"
+          },
+          "name": "The Advisory Circle",
+          "joinphrase": ""
+        }
+      ]
+    },
+    {
+      "id": "db5be575-fefa-40e9-ba62-7a23dc4fd55c",
+      "release-group": {
+        "id": "976a7ee5-ad62-46a9-94bd-e73558365994",
+        "first-release-date": "2010-03",
+        "title": "Mind How You Go (Revised Edition)",
+        "secondary-type-ids": [],
+        "primary-type": "Album",
+        "secondary-types": [],
+        "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+        "disambiguation": "",
+        "artist-credit": [
+          {
+            "joinphrase": "",
+            "name": "The Advisory Circle",
+            "artist": {
+              "sort-name": "Advisory Circle, The",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "disambiguation": "",
+              "name": "The Advisory Circle",
+              "type": "Person",
+              "country": "GB",
+              "id": "f3038c99-e176-46be-807c-7047f23fa3e4"
+            }
+          }
+        ]
+      },
+      "title": "Mind How You Go (Revised Edition)",
+      "barcode": null,
+      "packaging-id": null,
+      "asin": null,
+      "disambiguation": "",
+      "cover-art-archive": {
+        "back": false,
+        "artwork": true,
+        "count": 1,
+        "front": true,
+        "darkened": false
+      },
+      "artist-credit": [
+        {
+          "artist": {
+            "id": "f3038c99-e176-46be-807c-7047f23fa3e4",
+            "country": "GB",
+            "name": "The Advisory Circle",
+            "type": "Person",
+            "disambiguation": "",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "sort-name": "Advisory Circle, The"
+          },
+          "joinphrase": "",
+          "name": "The Advisory Circle"
+        }
+      ],
+      "country": "GB",
+      "status": "Official",
+      "date": "2010-03",
+      "packaging": null,
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "quality": "normal",
+      "text-representation": {
+        "language": "eng",
+        "script": "Latn"
+      },
+      "release-events": [
+        {
+          "date": "2010-03",
+          "area": {
+            "disambiguation": "",
+            "sort-name": "United Kingdom",
+            "type-id": null,
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "type": null,
+            "name": "United Kingdom",
+            "iso-3166-1-codes": [
+              "GB"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "packaging-id": null,
+      "barcode": null,
+      "asin": null,
+      "id": "e8716835-408b-42a0-827b-e6cc7f923e57",
+      "release-group": {
+        "artist-credit": [
+          {
+            "joinphrase": "",
+            "name": "Belbury Poly",
+            "artist": {
+              "name": "Belbury Poly",
+              "type": "Person",
+              "id": "bed5e193-573f-4378-98a6-020a8fac350c",
+              "country": "GB",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "sort-name": "Belbury Poly",
+              "disambiguation": ""
+            }
+          }
+        ],
+        "secondary-types": [],
+        "disambiguation": "",
+        "primary-type-id": "6d0c5bf6-7a33-3420-a519-44fc63eedebf",
+        "primary-type": "EP",
+        "title": "Farmer's Angle",
+        "id": "30d31708-b8fc-368b-a56a-7a845d5190fb",
+        "first-release-date": "2004",
+        "secondary-type-ids": []
+      },
+      "title": "Farmer's Angle",
+      "artist-credit": [
+        {
+          "joinphrase": "",
+          "name": "Belbury Poly",
+          "artist": {
+            "id": "bed5e193-573f-4378-98a6-020a8fac350c",
+            "country": "GB",
+            "type": "Person",
+            "name": "Belbury Poly",
+            "disambiguation": "",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "sort-name": "Belbury Poly"
+          }
+        }
+      ],
+      "cover-art-archive": {
+        "artwork": true,
+        "back": false,
+        "count": 1,
+        "front": true,
+        "darkened": false
+      },
+      "disambiguation": "",
+      "date": "2004",
+      "packaging": null,
+      "status": "Official",
+      "country": "GB",
+      "text-representation": {
+        "language": "eng",
+        "script": "Latn"
+      },
+      "release-events": [
+        {
+          "area": {
+            "disambiguation": "",
+            "sort-name": "United Kingdom",
+            "type-id": null,
+            "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+            "name": "United Kingdom",
+            "iso-3166-1-codes": [
+              "GB"
+            ],
+            "type": null
+          },
+          "date": "2004"
+        }
+      ],
+      "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+      "quality": "normal"
+    }
+  ]
+}
