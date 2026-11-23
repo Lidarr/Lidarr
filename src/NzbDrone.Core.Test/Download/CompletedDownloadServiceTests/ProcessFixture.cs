@@ -172,6 +172,28 @@ namespace NzbDrone.Core.Test.Download.CompletedDownloadServiceTests
             AssertNotReadyToImport();
         }
 
+        [Test]
+        public void should_use_artist_from_history_when_download_title_is_ambiguous()
+        {
+            var historyArtist = new Artist { Id = 42 };
+
+            Mocker.GetMock<IHistoryService>()
+                  .Setup(s => s.MostRecentForDownloadId(_trackedDownload.DownloadItem.DownloadId))
+                  .Returns(new EntityHistory { ArtistId = historyArtist.Id });
+
+            Mocker.GetMock<IArtistService>()
+                  .Setup(s => s.GetArtist(historyArtist.Id))
+                  .Returns(historyArtist);
+
+            Mocker.GetMock<IParsingService>()
+                  .Setup(s => s.GetArtist(_trackedDownload.DownloadItem.Title))
+                  .Throws(new MultipleArtistsFoundException(new List<Artist>(), "Expected one artist, but found multiple"));
+
+            Subject.Check(_trackedDownload);
+
+            AssertReadyToImport();
+        }
+
         private void AssertNotReadyToImport()
         {
             _trackedDownload.State.Should().NotBe(TrackedDownloadState.ImportPending);
