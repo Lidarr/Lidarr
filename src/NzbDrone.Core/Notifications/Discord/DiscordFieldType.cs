@@ -28,6 +28,8 @@ namespace NzbDrone.Core.Notifications.Discord
         Links,
         Release,
         Poster,
-        Fanart
+        Fanart,
+        CustomFormats,
+        CustomFormatScore
     }
 }
