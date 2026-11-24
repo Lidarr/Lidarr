@@ -24,6 +24,7 @@ import QualityConnector from 'Settings/Quality/QualityConnector';
 import Settings from 'Settings/Settings';
 import TagSettings from 'Settings/Tags/TagSettings';
 import UISettingsConnector from 'Settings/UI/UISettingsConnector';
+import Statistics from 'Statistics/Statistics';
 import BackupsConnector from 'System/Backup/BackupsConnector';
 import LogsTableConnector from 'System/Events/LogsTableConnector';
 import Logs from 'System/Logs/Logs';
@@ -104,6 +105,11 @@ function AppRoutes(props) {
       <Route
         path="/unmapped"
         component={UnmappedFilesTableConnector}
+      />
+
+      <Route
+        path="/statistics"
+        component={Statistics}
       />
 
       <Route

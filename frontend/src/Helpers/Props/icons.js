@@ -35,6 +35,7 @@ import {
   faCalculator as fasCalculator,
   faCalendarAlt as fasCalendarAlt,
   faCaretDown as fasCaretDown,
+  faChartColumn as fasChartColumn,
   faCheck as fasCheck,
   faCheckCircle as fasCheckCircle,
   faChevronCircleDown as fasChevronCircleDown,
@@ -219,6 +220,7 @@ export const SPINNER = fasSpinner;
 export const SQUARE = farSquare;
 export const SQUARE_MINUS = fasSquareMinus;
 export const STAR_FULL = fasStar;
+export const STATISTICS = fasChartColumn;
 export const SUBTRACT = fasMinus;
 export const SYSTEM = fasLaptop;
 export const TABLE = fasTable;

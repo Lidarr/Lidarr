@@ -43,6 +43,12 @@ const links = [
   },
 
   {
+    iconName: icons.STATISTICS,
+    title: () => translate('Statistics'),
+    to: '/statistics'
+  },
+
+  {
     iconName: icons.ACTIVITY,
     title: () => translate('Activity'),
     to: '/activity/queue',

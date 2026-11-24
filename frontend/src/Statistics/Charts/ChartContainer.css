@@ -1,0 +1,21 @@
+.container {
+  composes: card from '~Components/Card.css';
+
+  flex: 1 1 360px;
+  margin: 0;
+  padding: 15px;
+  min-width: 0;
+}
+
+.title {
+  margin-bottom: 10px;
+  color: var(--textColor);
+  font-weight: 300;
+  font-size: 18px;
+}
+
+.chart {
+  position: relative;
+  min-height: 300px;
+  height: 300px;
+}
