@@ -25,8 +25,8 @@ namespace NzbDrone.Core.MediaFiles
                 { ".wv", Quality.WAVPACK },
                 { ".flac", Quality.FLAC },
                 { ".ape", Quality.APE },
-                { ".aif", Quality.Unknown },
-                { ".aiff", Quality.Unknown },
+                { ".aif", Quality.AIFF },
+                { ".aiff", Quality.AIFF },
                 { ".aifc", Quality.Unknown }
             };
         }

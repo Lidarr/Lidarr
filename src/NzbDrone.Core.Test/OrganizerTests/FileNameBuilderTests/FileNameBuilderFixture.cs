@@ -462,6 +462,17 @@ namespace NzbDrone.Core.Test.OrganizerTests.FileNameBuilderTests
                    .Should().Be("FLAC");
         }
 
+        [TestCase("AIFF Audio")]
+        [TestCase("PCM Audio")]
+        public void should_replace_media_info_audio_codec_for_pcm_formats(string audioFormat)
+        {
+            _namingConfig.StandardTrackFormat = "{MediaInfo AudioCodec}";
+            _trackFile.MediaInfo.AudioFormat = audioFormat;
+
+            Subject.BuildTrackFileName(new List<Track> { _track1 }, _artist, _album, _trackFile)
+                   .Should().Be("PCM");
+        }
+
         [Test]
         public void should_replace_media_info_audio_bitrate()
         {

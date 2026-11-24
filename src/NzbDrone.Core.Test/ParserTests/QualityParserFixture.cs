@@ -1,5 +1,6 @@
 using FluentAssertions;
 using NUnit.Framework;
+using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Test.Framework;
@@ -17,6 +18,7 @@ namespace NzbDrone.Core.Test.ParserTests
             new object[] { Quality.MP3_320 },
             new object[] { Quality.MP3_VBR_V2 },
             new object[] { Quality.WAV },
+            new object[] { Quality.AIFF },
             new object[] { Quality.WMA },
             new object[] { Quality.AAC_192 },
             new object[] { Quality.AAC_256 },
@@ -147,6 +149,60 @@ namespace NzbDrone.Core.Test.ParserTests
         public void should_parse_wav_quality(string title, string desc, int bitrate)
         {
             ParseAndVerifyQuality(title, desc, bitrate, Quality.WAV);
+        }
+
+        [TestCase("Artist - Album [AIFF]", null, 0)]
+        [TestCase("Artist - Album [WEB] [AIFF]", null, 0)]
+        [TestCase("Artist - Album (2017) AIFF", null, 0)]
+        [TestCase("Artist-Album-WEB-AIFF-2022-GROUP", null, 0)]
+        [TestCase("Artist - Album [AIF]", null, 0)]
+        [TestCase("Artist - Album (2017) [WEB AIF]", null, 0)]
+        [TestCase("", "AIFF Audio", 1411)]
+        public void should_parse_aiff_quality(string title, string desc, int bitrate)
+        {
+            ParseAndVerifyQuality(title, desc, bitrate, Quality.AIFF);
+        }
+
+        [TestCase("Aif - Album [MP3 320]", null, 0)]
+        [TestCase("Artist - Aif [MP3 320]", null, 0)]
+        [TestCase("Artist - Aif (2019) MP3 320", null, 0)]
+        [TestCase("Artist - Album [MP3 320] (Aif Remix)", null, 0)]
+        public void should_not_parse_aif_in_artist_or_album_name_as_aiff(string title, string desc, int bitrate)
+        {
+            ParseAndVerifyQuality(title, desc, bitrate, Quality.MP3_320);
+        }
+
+        [TestCase("Artist - Album [FLAC] (Aif Remix)", null, 0)]
+        public void should_not_parse_aif_in_later_brackets_over_earlier_codec(string title, string desc, int bitrate)
+        {
+            ParseAndVerifyQuality(title, desc, bitrate, Quality.FLAC);
+        }
+
+        [TestCase("Artist - Album [AIFC]", null, 0)]
+        [TestCase("01. Artist - Track.aifc", null, 0)]
+        public void should_not_parse_aifc_as_aiff(string title, string desc, int bitrate)
+        {
+            ParseAndVerifyQuality(title, desc, bitrate, Quality.Unknown);
+        }
+
+        [TestCase("01. Artist - Track.aiff")]
+        [TestCase("01. Artist - Track.aif")]
+        public void should_parse_aiff_quality_from_track_file_name(string fileName)
+        {
+            QualityParser.ParseQuality(fileName, null, 0).Quality.Should().Be(Quality.AIFF);
+        }
+
+        [TestCase(".aiff")]
+        [TestCase(".aif")]
+        public void should_map_aiff_extensions_to_aiff_quality(string extension)
+        {
+            MediaFileExtensions.GetQualityForExtension(extension).Should().Be(Quality.AIFF);
+        }
+
+        [Test]
+        public void should_not_map_aifc_extension_to_aiff_quality()
+        {
+            MediaFileExtensions.GetQualityForExtension(".aifc").Should().Be(Quality.Unknown);
         }
 
         [TestCase("Chuck Berry Discography ALAC", null, 0)]
