@@ -9,6 +9,22 @@ export interface Statistics {
   totalTrackCount: number;
 }
 
+export interface AlbumRelease {
+  id: number;
+  albumId: number;
+  foreignReleaseId: string;
+  title: string;
+  status: string;
+  duration: number;
+  trackCount: number;
+  mediumCount: number;
+  disambiguation?: string;
+  country: string[];
+  label: string[];
+  format: string;
+  monitored: boolean;
+}
+
 interface Album extends ModelBase {
   artistId: number;
   artist: Artist;
@@ -18,6 +34,11 @@ interface Album extends ModelBase {
   disambiguation?: string;
   albumType: string;
   monitored: boolean;
+  anyReleaseOk: boolean;
+  preferredTrackCounts: number[];
+  preferredMediumCounts: number[];
+  autoBlocklistUnwantedRelease: boolean;
+  releases: AlbumRelease[];
   releaseDate: string;
   statistics: Statistics;
   lastSearchTime?: string;
