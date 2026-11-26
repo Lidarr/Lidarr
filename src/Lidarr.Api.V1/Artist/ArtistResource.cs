@@ -57,6 +57,10 @@ namespace Lidarr.Api.V1.Artist
         public List<string> Genres { get; set; }
         public string CleanName { get; set; }
         public string SortName { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+        public string PreferredName { get; set; }
+        public string MetadataSortName { get; set; }
+        public List<string> Aliases { get; set; }
         public HashSet<int> Tags { get; set; }
         public DateTime Added { get; set; }
         public AddArtistOptions AddOptions { get; set; }
@@ -101,6 +105,9 @@ namespace Lidarr.Api.V1.Artist
 
                 CleanName = model.CleanName,
                 ForeignArtistId = model.Metadata.Value.ForeignArtistId,
+                PreferredName = model.PreferredName,
+                MetadataSortName = model.Metadata.Value.SortName,
+                Aliases = model.Metadata.Value.Aliases,
 
                 // Root folder path is now calculated from the artist path
                 // RootFolderPath = model.RootFolderPath,
@@ -147,6 +154,7 @@ namespace Lidarr.Api.V1.Artist
 
                 CleanName = resource.CleanName,
                 RootFolderPath = resource.RootFolderPath,
+                PreferredName = resource.PreferredName,
 
                 Tags = resource.Tags,
                 Added = resource.Added,

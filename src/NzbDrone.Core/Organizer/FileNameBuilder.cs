@@ -30,6 +30,7 @@ namespace NzbDrone.Core.Organizer
         private readonly INamingConfigService _namingConfigService;
         private readonly IQualityDefinitionService _qualityDefinitionService;
         private readonly ICustomFormatCalculationService _formatCalculator;
+        private readonly IArtistRepository _artistRepository;
         private readonly ICached<TrackFormat[]> _trackFormatCache;
         private readonly ICached<AbsoluteTrackFormat[]> _absoluteTrackFormatCache;
         private readonly Logger _logger;
@@ -76,11 +77,13 @@ namespace NzbDrone.Core.Organizer
                                IQualityDefinitionService qualityDefinitionService,
                                ICacheManager cacheManager,
                                ICustomFormatCalculationService formatCalculator,
+                               IArtistRepository artistRepository,
                                Logger logger)
         {
             _namingConfigService = namingConfigService;
             _qualityDefinitionService = qualityDefinitionService;
             _formatCalculator = formatCalculator;
+            _artistRepository = artistRepository;
             _trackFormatCache = cacheManager.GetCache<TrackFormat[]>(GetType(), "trackFormat");
             _absoluteTrackFormatCache = cacheManager.GetCache<AbsoluteTrackFormat[]>(GetType(), "absoluteTrackFormat");
             _logger = logger;
@@ -308,12 +311,14 @@ namespace NzbDrone.Core.Organizer
 
         private void AddArtistTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, Artist artist)
         {
-            tokenHandlers["{Artist Name}"] = m => Truncate(artist.Name, m.CustomFormat);
-            tokenHandlers["{Artist CleanName}"] = m => Truncate(CleanTitle(artist.Name), m.CustomFormat);
-            tokenHandlers["{Artist NameThe}"] = m => Truncate(TitleThe(artist.Name), m.CustomFormat);
-            tokenHandlers["{Artist CleanNameThe}"] = m => Truncate(CleanTitleThe(artist.Name), m.CustomFormat);
+            var artistName = ArtistNames.ForLibraryArtist(artist);
+
+            tokenHandlers["{Artist Name}"] = m => Truncate(artistName, m.CustomFormat);
+            tokenHandlers["{Artist CleanName}"] = m => Truncate(CleanTitle(artistName), m.CustomFormat);
+            tokenHandlers["{Artist NameThe}"] = m => Truncate(TitleThe(artistName), m.CustomFormat);
+            tokenHandlers["{Artist CleanNameThe}"] = m => Truncate(CleanTitleThe(artistName), m.CustomFormat);
             tokenHandlers["{Artist Genre}"] = m => artist.Metadata.Value.Genres?.FirstOrDefault() ?? string.Empty;
-            tokenHandlers["{Artist NameFirstCharacter}"] = m => TitleFirstCharacter(TitleThe(artist.Name));
+            tokenHandlers["{Artist NameFirstCharacter}"] = m => TitleFirstCharacter(TitleThe(artistName));
             tokenHandlers["{Artist MbId}"] = m => artist.ForeignArtistId ?? string.Empty;
 
             if (artist.Metadata.Value.Disambiguation != null)
@@ -356,12 +361,40 @@ namespace NzbDrone.Core.Organizer
             var firstArtist = tracks.Select(t => t.ArtistMetadata?.Value).FirstOrDefault() ?? artist.Metadata;
             if (firstArtist != null)
             {
-                tokenHandlers["{Track ArtistName}"] = m => Truncate(firstArtist.Name, m.CustomFormat);
-                tokenHandlers["{Track ArtistCleanName}"] = m => Truncate(CleanTitle(firstArtist.Name), m.CustomFormat);
-                tokenHandlers["{Track ArtistNameThe}"] = m => Truncate(TitleThe(firstArtist.Name), m.CustomFormat);
-                tokenHandlers["{Track ArtistCleanNameThe}"] = m => Truncate(CleanTitleThe(firstArtist.Name), m.CustomFormat);
+                var trackArtistName = TrackArtistName(firstArtist, artist);
+
+                tokenHandlers["{Track ArtistName}"] = m => Truncate(trackArtistName, m.CustomFormat);
+                tokenHandlers["{Track ArtistCleanName}"] = m => Truncate(CleanTitle(trackArtistName), m.CustomFormat);
+                tokenHandlers["{Track ArtistNameThe}"] = m => Truncate(TitleThe(trackArtistName), m.CustomFormat);
+                tokenHandlers["{Track ArtistCleanNameThe}"] = m => Truncate(CleanTitleThe(trackArtistName), m.CustomFormat);
                 tokenHandlers["{Track ArtistMbId}"] = m => firstArtist.ForeignArtistId ?? string.Empty;
             }
+        }
+
+        private string TrackArtistName(ArtistMetadata metadata, Artist albumArtist)
+        {
+            if (metadata == null)
+            {
+                return ArtistNames.ForLibraryArtist(albumArtist);
+            }
+
+            if (albumArtist != null &&
+                albumArtist.ForeignArtistId.IsNotNullOrWhiteSpace() &&
+                string.Equals(albumArtist.ForeignArtistId, metadata.ForeignArtistId, StringComparison.OrdinalIgnoreCase))
+            {
+                return ArtistNames.ForLibraryArtist(albumArtist);
+            }
+
+            if (metadata.ForeignArtistId.IsNotNullOrWhiteSpace())
+            {
+                var libraryArtist = _artistRepository.FindById(metadata.ForeignArtistId);
+                if (libraryArtist != null)
+                {
+                    return ArtistNames.ForMetadata(metadata, libraryArtist);
+                }
+            }
+
+            return metadata.Name;
         }
 
         private void AddTrackTitlePlaceholderTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers)
