@@ -42,6 +42,7 @@ namespace NzbDrone.Core.MediaFiles
             { Codec.MP2, "MP2" },
             { Codec.AAC, "AAC" },
             { Codec.AACVBR, "AAC" },
+            { Codec.AIFF, "PCM" },
             { Codec.ALAC, "ALAC" },
             { Codec.APE, "APE" },
             { Codec.FLAC, "FLAC" },

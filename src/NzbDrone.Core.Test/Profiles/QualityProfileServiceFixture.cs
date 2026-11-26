@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FizzWare.NBuilder;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Core.CustomFormats;
@@ -8,6 +9,7 @@ using NzbDrone.Core.ImportLists;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Profiles.Qualities;
+using NzbDrone.Core.Qualities;
 using NzbDrone.Core.RootFolders;
 using NzbDrone.Core.Test.Framework;
 
@@ -28,6 +30,38 @@ namespace NzbDrone.Core.Test.Profiles
 
             Mocker.GetMock<IQualityProfileRepository>()
                 .Verify(v => v.Insert(It.IsAny<QualityProfile>()), Times.Exactly(3));
+        }
+
+        [Test]
+        public void default_profile_should_have_aiff_on_its_own_between_lossless_group_and_wav()
+        {
+            Mocker.GetMock<ICustomFormatService>()
+                .Setup(s => s.All())
+                .Returns(new List<CustomFormat>());
+
+            var profile = Subject.GetDefaultProfile("Lossless", Quality.FLAC, Quality.FLAC, Quality.ALAC, Quality.FLAC_24, Quality.ALAC_24);
+
+            var lossless = profile.Items.Single(i => i.Name == "Lossless");
+            var losslessIndex = profile.Items.IndexOf(lossless);
+
+            lossless.Items.Select(i => i.Quality).Should().NotContain(Quality.AIFF);
+            profile.Items.Should().HaveCount(losslessIndex + 3);
+            profile.Items[losslessIndex + 1].Quality.Should().Be(Quality.AIFF);
+            profile.Items[losslessIndex + 1].Allowed.Should().BeFalse();
+            profile.Items[losslessIndex + 2].Quality.Should().Be(Quality.WAV);
+        }
+
+        [Test]
+        public void default_profile_should_allow_aiff_when_requested()
+        {
+            Mocker.GetMock<ICustomFormatService>()
+                .Setup(s => s.All())
+                .Returns(new List<CustomFormat>());
+
+            var profile = Subject.GetDefaultProfile("Uncompressed", Quality.AIFF, Quality.AIFF, Quality.WAV);
+
+            profile.Items.Single(i => i.Quality == Quality.AIFF).Allowed.Should().BeTrue();
+            profile.Cutoff.Should().Be(Quality.AIFF.Id);
         }
 
         [Test]
