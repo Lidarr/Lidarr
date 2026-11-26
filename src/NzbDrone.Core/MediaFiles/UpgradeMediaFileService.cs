@@ -58,7 +58,10 @@ namespace NzbDrone.Core.MediaFiles
             {
                 var file = existingFile.First();
                 var trackFilePath = file.Path;
-                var subfolder = rootFolder.GetRelativePath(_diskProvider.GetParentFolder(trackFilePath));
+                var parentFolder = _diskProvider.GetParentFolder(trackFilePath);
+
+                // Track files can sit directly in the root folder, which is not a child of itself
+                var subfolder = parentFolder.PathEquals(rootFolder) ? string.Empty : rootFolder.GetRelativePath(parentFolder);
 
                 if (_diskProvider.FileExists(trackFilePath))
                 {
