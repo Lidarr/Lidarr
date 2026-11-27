@@ -34,6 +34,7 @@ using NzbDrone.Core.Profiles.Delay;
 using NzbDrone.Core.Profiles.Metadata;
 using NzbDrone.Core.Profiles.Qualities;
 using NzbDrone.Core.Profiles.Releases;
+using NzbDrone.Core.Profiles.Tagging;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.RemotePathMappings;
 using NzbDrone.Core.RootFolders;
@@ -191,6 +192,7 @@ namespace NzbDrone.Core.Datastore
             Mapper.Entity<ReleaseProfile>("ReleaseProfiles").RegisterModel();
 
             Mapper.Entity<DelayProfile>("DelayProfiles").RegisterModel();
+            Mapper.Entity<TaggingProfile>("TaggingProfiles").RegisterModel();
             Mapper.Entity<User>("Users").RegisterModel();
             Mapper.Entity<CommandModel>("Commands").RegisterModel()
                   .Ignore(c => c.Message);
