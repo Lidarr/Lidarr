@@ -43,10 +43,11 @@ namespace NzbDrone.Core.ArtistStats
 
         private List<AlbumStatistics> MapResults(List<AlbumStatistics> tracksResult, List<AlbumStatistics> filesResult)
         {
+            var files = filesResult.ToDictionary(f => (f.ArtistId, f.AlbumId));
+
             tracksResult.ForEach(e =>
             {
-                var file = filesResult.SingleOrDefault(f => f.ArtistId == e.ArtistId & f.AlbumId == e.AlbumId);
-
+                var file = files.GetValueOrDefault((e.ArtistId, e.AlbumId));
                 e.SizeOnDisk = file?.SizeOnDisk ?? 0;
             });
 
