@@ -258,6 +258,20 @@ namespace NzbDrone.Core.Test.ParserTests
             parseResult.AlbumTitle.Should().Be("Michael Buble");
         }
 
+        [TestCase("DMA\u2019s", "The Glow", "DMA's - The Glow (2020) [FLAC] [DarkAngie]", "DMA's", "The Glow")]
+        [TestCase("DMA's", "The Glow", "DMA\u2019s - The Glow (2020) [FLAC] [DarkAngie]", "DMA's", "The Glow")]
+        [TestCase("Taylor Swift", "Fearless (Taylor\u2019s Version)", "Taylor Swift - Fearless (Taylor's Version) (2021) FLAC [PMEDIA]", "Taylor Swift", "Fearless (Taylor's Version)")]
+        [TestCase("Taylor Swift", "Speak Now (Taylor's Version)", "Taylor Swift - Speak Now (Taylor\u2019s Version) (2023) FLAC", "Taylor Swift", "Speak Now (Taylor's Version)")]
+        [TestCase("Wonder And Flow", "Singles 2017\u20132024", "Wonder And Flow - Singles 2017-2024 FLAC", "Wonder And Flow", "Singles 2017-2024")]
+        public void should_match_search_criteria_with_different_quotes_and_dashes(string artist, string album, string releaseTitle, string expectedArtist, string expectedAlbum)
+        {
+            GivenSearchCriteria(artist, album);
+            var parseResult = Parser.Parser.ParseAlbumTitleWithSearchCriteria(releaseTitle, _artist, _albums);
+            parseResult.Should().NotBeNull();
+            parseResult.ArtistName.Should().Be(expectedArtist);
+            parseResult.AlbumTitle.Should().Be(expectedAlbum);
+        }
+
         [Test]
         public void should_find_result_if_multiple_albums_in_searchcriteria()
         {
