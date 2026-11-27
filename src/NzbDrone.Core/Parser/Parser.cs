@@ -237,6 +237,9 @@ namespace NzbDrone.Core.Parser
 
         private static readonly Regex AfterDashRegex = new Regex(@"[-:].*", RegexOptions.Compiled);
 
+        private static readonly Regex StandardizeSingleQuotesRegex = new Regex(@"[\u0060\u00B4\u2018\u2019]", RegexOptions.Compiled);
+        private static readonly Regex StandardizeDashesRegex = new Regex(@"\p{Pd}", RegexOptions.Compiled);
+
         public static ParsedTrackInfo ParseMusicPath(string path)
         {
             var fileInfo = new FileInfo(path);
@@ -347,7 +350,7 @@ namespace NzbDrone.Core.Parser
                     return null;
                 }
 
-                var artistName = artist.Name == "Various Artists" ? "VA" : artist.Name.RemoveAccent();
+                var artistName = artist.Name == "Various Artists" ? "VA" : StandardizePunctuation(artist.Name.RemoveAccent());
 
                 Logger.Debug("Parsing string '{0}' using search criteria artist: '{1}' album: '{2}'",
                              title,
@@ -363,8 +366,10 @@ namespace NzbDrone.Core.Parser
 
                 simpleTitle = CleanTorrentSuffixRegex.Replace(simpleTitle);
 
+                simpleTitle = StandardizePunctuation(simpleTitle);
+
                 var escapedArtist = Regex.Escape(artistName.RemoveAccent()).Replace(@"\ ", @"[\W_]");
-                var escapedAlbums = string.Join("|", album.Select(s => Regex.Escape(s.Title.RemoveAccent())).ToList()).Replace(@"\ ", @"[\W_]");
+                var escapedAlbums = string.Join("|", album.Select(s => Regex.Escape(StandardizePunctuation(s.Title.RemoveAccent()))).ToList()).Replace(@"\ ", @"[\W_]");
 
                 var releaseRegex = new Regex(@"^(\W*|\b)(?<artist>" + escapedArtist + @")(\W*|\b).*(\W*|\b)(?<album>" + escapedAlbums + @")(\W*|\b)", RegexOptions.IgnoreCase);
 
@@ -513,6 +518,11 @@ namespace NzbDrone.Core.Parser
 
             Logger.Debug("Unable to parse {0}", title);
             return null;
+        }
+
+        private static string StandardizePunctuation(string text)
+        {
+            return StandardizeDashesRegex.Replace(StandardizeSingleQuotesRegex.Replace(text, "'"), "-");
         }
 
         public static string CleanArtistName(this string name)
