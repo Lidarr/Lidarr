@@ -45,7 +45,7 @@ namespace NzbDrone.Core.Parser
         {
             var isoArray = isoCode.Split('-');
 
-            var langCode = isoArray[0].ToLower();
+            var langCode = isoArray[0].ToLowerInvariant();
 
             if (langCode.Length == 2)
             {
@@ -54,8 +54,8 @@ namespace NzbDrone.Core.Parser
 
                 if (isoArray.Length > 1)
                 {
-                    isoLanguages = isoLanguages.Any(l => l.CountryCode == isoArray[1].ToLower()) ?
-                        isoLanguages.Where(l => l.CountryCode == isoArray[1].ToLower()).ToList() : isoLanguages.Where(l => string.IsNullOrEmpty(l.CountryCode)).ToList();
+                    isoLanguages = isoLanguages.Any(l => l.CountryCode == isoArray[1].ToLowerInvariant()) ?
+                        isoLanguages.Where(l => l.CountryCode == isoArray[1].ToLowerInvariant()).ToList() : isoLanguages.Where(l => string.IsNullOrEmpty(l.CountryCode)).ToList();
                 }
 
                 return isoLanguages.FirstOrDefault();
