@@ -576,7 +576,7 @@ namespace NzbDrone.Core.Parser
 
                     return Quality.Unknown;
                 case Codec.OPUS:
-                    if (bitrate < 130)
+                    if (bitrate <= 0)
                     {
                         return Quality.Unknown;
                     }
