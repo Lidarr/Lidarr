@@ -586,6 +586,7 @@ class AlbumDetails extends Component {
                         <AlbumDetailsMediumConnector
                           key={medium.mediumNumber}
                           albumId={id}
+                          albumTitle={title}
                           albumMonitored={monitored}
                           albumReleaseDate={releaseDate}
                           {...medium}

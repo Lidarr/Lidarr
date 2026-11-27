@@ -4,6 +4,15 @@
   width: 150px;
 }
 
+.wantedSongs {
+  margin-top: 4px;
+  color: var(--helpTextColor);
+  white-space: normal;
+  overflow-wrap: anywhere;
+
+  font-size: $smallFontSize;
+}
+
 .protocol {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 

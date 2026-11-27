@@ -16,5 +16,17 @@ namespace NzbDrone.Integration.Test.Client
             var request = BuildRequest("?artistId=" + artistId.ToString());
             return Get<List<TrackResource>>(request);
         }
+
+        public List<TrackResource> SetMonitored(List<int> trackIds, bool monitored)
+        {
+            var request = BuildRequest("monitor");
+            request.AddJsonBody(new TracksMonitoredResource
+            {
+                TrackIds = trackIds,
+                Monitored = monitored
+            });
+
+            return Put<List<TrackResource>>(request);
+        }
     }
 }

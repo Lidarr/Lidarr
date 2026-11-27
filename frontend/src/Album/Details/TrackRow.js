@@ -1,10 +1,18 @@
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import AlbumFormats from 'Album/AlbumFormats';
+import AlbumTitleLink from 'Album/AlbumTitleLink';
 import EpisodeStatusConnector from 'Album/EpisodeStatusConnector';
 import IndexerFlags from 'Album/IndexerFlags';
+import AlbumInteractiveSearchModalConnector from 'Album/Search/AlbumInteractiveSearchModalConnector';
+import * as commandNames from 'Commands/commandNames';
 import Icon from 'Components/Icon';
+import IconButton from 'Components/Link/IconButton';
+import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
+import MonitorToggleButton from 'Components/MonitorToggleButton';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
+import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
 import TableRow from 'Components/Table/TableRow';
 import Popover from 'Components/Tooltip/Popover';
 import Tooltip from 'Components/Tooltip/Tooltip';
@@ -15,10 +23,69 @@ import formatTimeSpan from 'Utilities/Date/formatTimeSpan';
 import formatBytes from 'Utilities/Number/formatBytes';
 import formatCustomFormatScore from 'Utilities/Number/formatCustomFormatScore';
 import translate from 'Utilities/String/translate';
+import { hasSongFile } from './songAvailability';
+import SongPopularityCell from './SongPopularityCell';
 import TrackActionsCell from './TrackActionsCell';
+import { canSelectTrackRow } from './trackRowSelection';
 import styles from './TrackRow.css';
 
 class TrackRow extends Component {
+
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      isInteractiveSearchModalOpen: false
+    };
+  }
+
+  onMonitorTogglePress = (monitored) => {
+    this.props.toggleTracksMonitored({
+      trackIds: this.props.monitorTrackIds || [this.props.id],
+      monitored
+    });
+  };
+
+  onSearchPress = () => {
+    this.props.executeCommand({
+      name: commandNames.TRACK_SEARCH,
+      trackIds: [this.props.id]
+    });
+  };
+
+  onInteractiveSearchPress = () => {
+    this.setState({ isInteractiveSearchModalOpen: true });
+  };
+
+  onInteractiveSearchModalClose = () => {
+    this.setState({ isInteractiveSearchModalOpen: false });
+  };
+
+  onRowClick = (event) => {
+    if (!this.props.isRowSelectable || !this.props.isSelectMode || this.props.isSelectionDisabled || !canSelectTrackRow(event)) {
+      return;
+    }
+    if (typeof window !== 'undefined' && window.getSelection?.()?.toString()) {
+      return;
+    }
+    this.toggleRow(event.shiftKey);
+  };
+
+  onRowKeyDown = (event) => {
+    if (!this.props.isRowSelectable || !this.props.isSelectMode || this.props.isSelectionDisabled || event.target !== event.currentTarget || ![' ', 'Enter'].includes(event.key)) {
+      return;
+    }
+    event.preventDefault();
+    this.toggleRow(event.shiftKey);
+  };
+
+  toggleRow = (shiftKey) => {
+    this.props.onSelectedChange({
+      id: this.props.selectionId || this.props.id,
+      value: !this.props.isSelected,
+      shiftKey: !!shiftKey
+    });
+  };
 
   //
   // Render
@@ -27,6 +94,8 @@ class TrackRow extends Component {
     const {
       id,
       albumId,
+      albumTitle,
+      foreignAlbumId,
       mediumNumber,
       trackFileId,
       absoluteTrackNumber,
@@ -37,12 +106,41 @@ class TrackRow extends Component {
       customFormats,
       customFormatScore,
       indexerFlags,
+      monitored,
+      appearanceCount,
+      popularity,
+      isSaving,
+      isSearching,
+      isSelectMode,
+      isRowSelectable,
+      isSelectionDisabled,
+      isSelected,
+      selectionId,
       columns,
-      deleteTrackFile
+      deleteTrackFile,
+      onSelectedChange
     } = this.props;
+    const isDownloaded = hasSongFile(this.props);
 
     return (
-      <TableRow>
+      <TableRow
+        className={isSelectMode && isRowSelectable ? classNames(styles.selectableRow, isDownloaded && styles.downloadedRow, isSelected && styles.selectedRow) : undefined}
+        onClick={isSelectMode && isRowSelectable ? this.onRowClick : undefined}
+        onKeyDown={isSelectMode && isRowSelectable ? this.onRowKeyDown : undefined}
+        tabIndex={isSelectMode && isRowSelectable && !isSelectionDisabled ? 0 : undefined}
+        aria-selected={isSelectMode && isRowSelectable ? isSelected : undefined}
+      >
+        {
+          isSelectMode ?
+            <TableSelectCell
+              id={selectionId || id}
+              isSelected={isSelected}
+              onSelectedChange={onSelectedChange}
+              isDisabled={isSelectionDisabled}
+            /> :
+            null
+        }
+
         {
           columns.map((column) => {
             const {
@@ -65,6 +163,22 @@ class TrackRow extends Component {
               );
             }
 
+            if (name === 'monitored') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.monitored}
+                >
+                  <MonitorToggleButton
+                    monitored={monitored}
+                    isSaving={isSaving}
+                    size={14}
+                    onPress={this.onMonitorTogglePress}
+                  />
+                </TableRowCell>
+              );
+            }
+
             if (name === 'absoluteTrackNumber') {
               return (
                 <TableRowCell
@@ -83,6 +197,39 @@ class TrackRow extends Component {
                   className={styles.title}
                 >
                   {title}
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'album') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.album}
+                >
+                  {
+                    foreignAlbumId ?
+                      <AlbumTitleLink
+                        foreignAlbumId={foreignAlbumId}
+                        title={albumTitle}
+                      /> :
+                      albumTitle
+                  }
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'popularity') {
+              if (isRowSelectable) {
+                return <SongPopularityCell key={name} popularity={popularity} />;
+              }
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.popularity}
+                  title={translate('ReleaseAppearancesCountInterp', [appearanceCount])}
+                >
+                  {appearanceCount}
                 </TableRowCell>
               );
             }
@@ -182,14 +329,55 @@ class TrackRow extends Component {
             }
 
             if (name === 'status') {
+              const status = <EpisodeStatusConnector albumId={albumId} trackFileId={trackFileId} />;
               return (
                 <TableRowCell
                   key={name}
-                  className={styles.status}
+                  className={isRowSelectable ? styles.songStatus : styles.status}
                 >
-                  <EpisodeStatusConnector
+                  {
+                    isRowSelectable ?
+                      <div className={styles.songStatusContent}>
+                        <span
+                          className={isDownloaded ? styles.downloadedStatus : styles.missingStatus}
+                          title={translate(isDownloaded ? 'SongDownloadedHelp' : 'SongMissingHelp')}
+                        >
+                          {isDownloaded && <Icon name={icons.CHECK} size={10} />}
+                          {translate(isDownloaded ? 'Downloaded' : 'Missing')}
+                        </span>
+                        {status}
+                      </div> :
+                      status
+                  }
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'search') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.search}
+                >
+                  <SpinnerIconButton
+                    name={icons.SEARCH}
+                    isSpinning={isSearching}
+                    title={translate('AutomaticSearch')}
+                    onPress={this.onSearchPress}
+                  />
+
+                  <IconButton
+                    name={icons.INTERACTIVE}
+                    title={translate('InteractiveSearch')}
+                    onPress={this.onInteractiveSearchPress}
+                  />
+
+                  <AlbumInteractiveSearchModalConnector
+                    isOpen={this.state.isInteractiveSearchModalOpen}
                     albumId={albumId}
-                    trackFileId={trackFileId}
+                    albumTitle={albumTitle}
+                    trackId={id}
+                    onModalClose={this.onInteractiveSearchModalClose}
                   />
                 </TableRowCell>
               );
@@ -220,25 +408,46 @@ TrackRow.propTypes = {
   deleteTrackFile: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired,
   albumId: PropTypes.number.isRequired,
+  albumTitle: PropTypes.string.isRequired,
+  foreignAlbumId: PropTypes.string,
+  monitorTrackIds: PropTypes.arrayOf(PropTypes.number),
+  appearanceCount: PropTypes.number,
+  popularity: PropTypes.object,
   trackFileId: PropTypes.number,
+  hasFile: PropTypes.bool,
   mediumNumber: PropTypes.number.isRequired,
   trackNumber: PropTypes.string.isRequired,
   absoluteTrackNumber: PropTypes.number,
   title: PropTypes.string.isRequired,
   duration: PropTypes.number.isRequired,
   isSaving: PropTypes.bool,
+  isSearching: PropTypes.bool.isRequired,
+  isSelectMode: PropTypes.bool,
+  isRowSelectable: PropTypes.bool,
+  isSelectionDisabled: PropTypes.bool,
+  isSelected: PropTypes.bool,
+  selectionId: PropTypes.string,
+  monitored: PropTypes.bool.isRequired,
   trackFilePath: PropTypes.string,
   trackFileSize: PropTypes.number,
   customFormats: PropTypes.arrayOf(PropTypes.object),
   customFormatScore: PropTypes.number.isRequired,
   indexerFlags: PropTypes.number.isRequired,
   mediaInfo: PropTypes.object,
-  columns: PropTypes.arrayOf(PropTypes.object).isRequired
+  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  toggleTracksMonitored: PropTypes.func.isRequired,
+  executeCommand: PropTypes.func.isRequired,
+  onSelectedChange: PropTypes.func
 };
 
 TrackRow.defaultProps = {
+  appearanceCount: 1,
   customFormats: [],
-  indexerFlags: 0
+  indexerFlags: 0,
+  isSelectMode: false,
+  isRowSelectable: false,
+  isSelectionDisabled: false,
+  isSelected: false
 };
 
 export default TrackRow;

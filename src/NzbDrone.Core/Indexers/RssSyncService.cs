@@ -49,7 +49,7 @@ namespace NzbDrone.Core.Indexers
 
             var reports = rssReleases.Concat(pendingReleases).ToList();
             var decisions = _downloadDecisionMaker.GetRssDecision(reports);
-            var processed = await _processDownloadDecisions.ProcessDecisions(decisions);
+            var processed = await _processDownloadDecisions.ProcessDecisions(decisions, true);
 
             var message = string.Format("RSS Sync Completed. Reports found: {0}, Reports grabbed: {1}", reports.Count, processed.Grabbed.Count);
 

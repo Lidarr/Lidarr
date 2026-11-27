@@ -227,6 +227,12 @@ namespace NzbDrone.Core.MediaFiles
                 importMode = (downloadClientItem == null || downloadClientItem.CanMoveFiles) ? ImportMode.Move : ImportMode.Copy;
             }
 
+            if (importMode == ImportMode.Move && downloadClientItem?.CanMoveFiles == true &&
+                downloadClientItem.TargetRecordingIds?.Any() == true)
+            {
+                DiscardUntargetedFiles(audioFiles, importResults, downloadClientItem.TargetRecordingIds);
+            }
+
             if (importMode == ImportMode.Move &&
                 importResults.Any(i => i.Result == ImportResultType.Imported) &&
                 ShouldDeleteFolder(directoryInfo, artist))
@@ -248,6 +254,41 @@ namespace NzbDrone.Core.MediaFiles
             }
 
             return importResults;
+        }
+
+        private void DiscardUntargetedFiles(List<IFileInfo> audioFiles, List<ImportResult> importResults, List<string> targetRecordingIds)
+        {
+            var importedRecordingIds = importResults.Where(result => result.Result == ImportResultType.Imported)
+                .SelectMany(result => result.ImportDecision.Item.Tracks)
+                .Select(track => track.ForeignRecordingId)
+                .ToHashSet();
+
+            if (!targetRecordingIds.All(importedRecordingIds.Contains))
+            {
+                return;
+            }
+
+            foreach (var result in importResults.Where(result => result.Result == ImportResultType.Rejected))
+            {
+                var track = result.ImportDecision.Item;
+                if (track == null || track.ExistingFile || !track.Tracks.Any() ||
+                    !result.ImportDecision.Rejections.Any(rejection => rejection.Reason == "Track was not targeted by this download") ||
+                    !track.Tracks.All(item => item.ForeignRecordingId.IsNotNullOrWhiteSpace() && !targetRecordingIds.Contains(item.ForeignRecordingId)) ||
+                    !audioFiles.Any(file => file.FullName.PathEquals(track.Path)))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    _logger.Debug("Discarding untargeted download file {0}", track.Path);
+                    _diskProvider.DeleteFile(track.Path);
+                }
+                catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+                {
+                    _logger.Warn(ex, "Unable to discard untargeted download file {0}", track.Path);
+                }
+            }
         }
 
         private List<ImportResult> ProcessFile(IFileInfo fileInfo, ImportMode importMode, DownloadClientItem downloadClientItem)
@@ -280,6 +321,15 @@ namespace NzbDrone.Core.MediaFiles
             }
 
             var extension = Path.GetExtension(fileInfo.Name);
+
+            if (FileExtensions.ArchiveExtensions.Contains(extension.ToLowerInvariant()))
+            {
+                const string message = "Download is still packed in an archive. Extract it in the download staging folder, then retry importing the extracted folder.";
+                return new List<ImportResult>
+                {
+                    new ImportResult(new ImportDecision<LocalTrack>(new LocalTrack { Path = fileInfo.FullName }, new Rejection(message)), message)
+                };
+            }
 
             if (extension.IsNullOrWhiteSpace() || !MediaFileExtensions.Extensions.Contains(extension))
             {

@@ -1,0 +1,30 @@
+.views {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--borderColor);
+  gap: 24px;
+}
+
+.view {
+  padding: 12px 4px;
+  border-bottom: 3px solid transparent;
+  color: var(--helpTextColor);
+  font-size: 20px;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--primaryColor);
+  }
+}
+
+.activeView {
+  border-bottom-color: var(--primaryColor);
+  color: var(--primaryColor);
+  font-weight: 600;
+}
+
+.empty {
+  padding: 30px;
+  color: var(--helpTextColor);
+  text-align: center;
+}

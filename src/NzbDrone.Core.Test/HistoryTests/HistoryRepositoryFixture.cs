@@ -26,6 +26,21 @@ namespace NzbDrone.Core.Test.HistoryTests
         }
 
         [Test]
+        public void should_roundtrip_song_request_metadata_using_persisted_camel_case_keys()
+        {
+            var history = Builder<EntityHistory>.CreateNew()
+                .With(item => item.Quality = new QualityModel())
+                .BuildNew();
+            history.Data.Add("TargetRecordingIds", "[\"wanted\"]");
+            history.Data.Add("RecordingId", "wanted");
+
+            Subject.Insert(history);
+
+            StoredModel.Data.Should().ContainKey("targetRecordingIds").WhoseValue.Should().Be("[\"wanted\"]");
+            StoredModel.Data.Should().ContainKey("recordingId").WhoseValue.Should().Be("wanted");
+        }
+
+        [Test]
         public void should_get_download_history()
         {
             var historyBluray = Builder<EntityHistory>.CreateNew()

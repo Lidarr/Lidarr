@@ -114,11 +114,23 @@ namespace NzbDrone.Core.Parser
             remoteAlbum.Artist = artist;
             remoteAlbum.Albums = GetAlbums(parsedAlbumInfo, artist, searchCriteria);
 
+            if (searchCriteria is TrackSearchCriteria trackSearch && trackSearch.Matches(parsedAlbumInfo, artist))
+            {
+                remoteAlbum.Albums = searchCriteria.Albums;
+                remoteAlbum.TargetRecordingIds = searchCriteria.Tracks.Select(track => track.ForeignRecordingId).Distinct().ToList();
+                remoteAlbum.TrackSearchPriority = 0;
+            }
+
             return remoteAlbum;
         }
 
         public List<Album> GetAlbums(ParsedAlbumInfo parsedAlbumInfo, Artist artist, SearchCriteriaBase searchCriteria = null)
         {
+            if (searchCriteria is TrackSearchCriteria trackSearch && trackSearch.Matches(parsedAlbumInfo, artist))
+            {
+                return searchCriteria.Albums;
+            }
+
             var albumTitle = parsedAlbumInfo.AlbumTitle;
             var result = new List<Album>();
 

@@ -110,6 +110,24 @@ namespace NzbDrone.Core.Test.MediaFiles
         }
 
         [Test]
+        public void should_preserve_wanted_recordings_for_an_external_copy_import()
+        {
+            GivenExistingFolder(_downloadFolder);
+            GivenValidQueueItem();
+            _trackedDownload.RemoteAlbum.TargetRecordingIds = new List<string> { "wanted-recording" };
+            _trackedDownload.DownloadItem.TargetRecordingIds = null;
+
+            Subject.Execute(new DownloadedAlbumsScanCommand { Path = _downloadFolder, DownloadClientId = "sab1", ImportMode = ImportMode.Copy });
+
+            Mocker.GetMock<IDownloadedTracksImportService>().Verify(service => service.ProcessPath(
+                _downloadFolder,
+                ImportMode.Copy,
+                _trackedDownload.RemoteAlbum.Artist,
+                It.Is<DownloadClientItem>(item => item.TargetRecordingIds.Contains("wanted-recording"))),
+                Times.Once());
+        }
+
+        [Test]
         public void should_process_folder_without_downloadclientitem_if_not_available()
         {
             GivenExistingFolder(_downloadFolder);
