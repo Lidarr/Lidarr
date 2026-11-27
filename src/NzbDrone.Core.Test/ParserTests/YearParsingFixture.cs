@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using NzbDrone.Core.Music;
@@ -102,13 +106,7 @@ namespace NzbDrone.Core.Test.ParserTests
         {
             var result = Parser.Parser.ParseAlbumTitle(title);
 
-            if (result != null)
-            {
-                if (result.ReleaseYear.HasValue && (result.ReleaseYear < 1900 || result.ReleaseYear > 2100))
-                {
-                    result.YearConfidence.Should().Be(YearMatchConfidence.Low);
-                }
-            }
+            (result == null || result.ReleaseYear == expectedYear).Should().BeTrue();
         }
 
         [TestCase("Coldplay - Music of the Spheres (2021) [MP3 256kbps] [ df1975 ] [WEB]", 2021)]
@@ -133,6 +131,226 @@ namespace NzbDrone.Core.Test.ParserTests
                     result.ReleaseYear.Should().BeNull();
                 }
             }
+        }
+
+        [TestCase("Artist - Woodstock 1969 FLAC", "Woodstock", 1969, "Woodstock 1969")]
+        [TestCase("Artist - Live-1975 FLAC", "Live", 1975, "Live-1975")]
+        [TestCase("Artist - Live1975 FLAC", "Live", 1975, "Live1975")]
+        [TestCase("Artist - Live * 1975 FLAC", "Live", 1975, "Live 1975")]
+        [TestCase("Artist - Live: 1975 FLAC", "Live", 1975, "Live: 1975")]
+        [TestCase("Artist - Live, 1975 FLAC", "Live", 1975, "Live, 1975")]
+        [TestCase("Artist - Live! 1975 FLAC", "Live", 1975, "Live! 1975")]
+        [TestCase("Artist - Woodstock: 1969 FLAC", "Woodstock", 1969, "Woodstock: 1969")]
+        public void should_keep_album_title_with_year_when_year_directly_follows_album(string title, string album, int year, string albumWithYear)
+        {
+            var result = Parser.Parser.ParseAlbumTitle(title);
+
+            result.Should().NotBeNull();
+            result.AlbumTitle.Should().Be(album);
+            result.ReleaseYear.Should().Be(year);
+            result.AlbumTitleWithYear.Should().Be(albumWithYear);
+        }
+
+        [TestCase("Artist - Live (1975) FLAC")]
+        [TestCase("Artist - Live - 1975 [FLAC]")]
+        [TestCase("Artist - Live (1975) [Recorded Live 1975] FLAC")]
+        [TestCase("Live 1975 - Live (1975) FLAC")]
+        [TestCase("Artist - Live [FLAC]")]
+        public void should_not_keep_album_title_with_year_when_year_is_separate(string title)
+        {
+            var result = Parser.Parser.ParseAlbumTitle(title);
+
+            result.Should().NotBeNull();
+            result.AlbumTitleWithYear.Should().BeNull();
+        }
+
+        [TestCase("Artist - Album (Label CAT1999) (2020) FLAC", 2020)]
+        [TestCase("Artist-Album-WEB-1920kbps-2020-GROUP", 2020)]
+        [TestCase("Artist - Album (2016) [FLAC 1411kbps]", 2016)]
+        public void should_not_take_catalog_numbers_or_bitrates_as_year(string title, int expectedYear)
+        {
+            var result = Parser.Parser.ParseAlbumTitle(title);
+
+            result.Should().NotBeNull();
+            result.ReleaseYear.Should().Be(expectedYear);
+        }
+
+        [TestCase("Artist - Album (2011 Remaster) [FLAC]", 2011)]
+        [TestCase("Artist - Album (Remastered 2011) FLAC", 2011)]
+        [TestCase("Artist - Album (Japan Edition SICP-1985) FLAC", 1985)]
+        [TestCase("Pink Floyd - The Dark Side of the Moon (Remastered 2011-09-26) FLAC", 2011)]
+        [TestCase("Pink Floyd - The Dark Side of the Moon (Japan (Deluxe) Remastered 2011) FLAC", 2011)]
+        [TestCase("Pink Floyd - The Dark Side of the Moon (2011 (Deluxe)) FLAC", 2011)]
+        [TestCase("Pink Floyd - The Dark Side of the Moon (Remastered (2011)) FLAC", 2011)]
+        [TestCase("Pink Floyd - The Dark Side of the Moon (2011-09-26 Remastered) FLAC", 2011)]
+        [TestCase("Pink Floyd - The Dark Side of the Moon (Remastered 09-26-2011) FLAC", 2011)]
+        [TestCase("Pink Floyd - The Dark Side of the Moon (Remastered 2011_09_26) FLAC", 2011)]
+        [TestCase("Pink Floyd - The Dark Side of the Moon (2011 Remaster FLAC", 2011)]
+        [TestCase("Pink Floyd - The Dark Side of the Moon ((2011) Remastered) FLAC", 2011)]
+        public void should_have_medium_confidence_for_year_inside_descriptive_brackets(string title, int expectedYear)
+        {
+            var result = Parser.Parser.ParseAlbumTitle(title);
+
+            result.Should().NotBeNull();
+            result.ReleaseYear.Should().Be(expectedYear);
+            result.YearConfidence.Should().Be(YearMatchConfidence.Medium);
+        }
+
+        [TestCase("Artist - Album (Deluxe) (2020) FLAC")]
+        [TestCase("Artist - Album ( 2020 ) FLAC")]
+        [TestCase("Artist - Album [Deluxe] (2020) FLAC")]
+        [TestCase("Artist - Album (2020-06-15) FLAC")]
+        [TestCase("Artist - Album (2020_06_15) FLAC")]
+        [TestCase("Artist - Album (06-15-2020) FLAC")]
+        [TestCase("Artist.-.Album.(2020).FLAC")]
+        [TestCase("Artist_-_Album_(2020)_FLAC")]
+        public void should_have_high_confidence_for_standalone_year(string title)
+        {
+            var result = Parser.Parser.ParseAlbumTitle(title);
+
+            result.Should().NotBeNull();
+            result.ReleaseYear.Should().Be(2020);
+            result.YearConfidence.Should().Be(YearMatchConfidence.High);
+        }
+
+        [TestCase(1949, YearMatchConfidence.Medium)]
+        [TestCase(1950, YearMatchConfidence.High)]
+        public void should_lower_confidence_for_years_before_1950(int year, YearMatchConfidence expectedConfidence)
+        {
+            var result = Parser.Parser.ParseAlbumTitle($"Artist - Album ({year}) FLAC");
+
+            result.Should().NotBeNull();
+            result.ReleaseYear.Should().Be(year);
+            result.YearConfidence.Should().Be(expectedConfidence);
+        }
+
+        [Test]
+        public void should_ignore_year_more_than_one_year_in_future()
+        {
+            var result = Parser.Parser.ParseAlbumTitle($"Artist - Album ({DateTime.UtcNow.Year + 2}) FLAC");
+
+            result.Should().NotBeNull();
+            result.ReleaseYear.Should().BeNull();
+        }
+
+        [Test]
+        public void should_have_medium_confidence_for_next_year()
+        {
+            var nextYear = DateTime.UtcNow.Year + 1;
+
+            var result = Parser.Parser.ParseAlbumTitle($"Artist - Album ({nextYear}) FLAC");
+
+            result.Should().NotBeNull();
+            result.ReleaseYear.Should().Be(nextYear);
+            result.YearConfidence.Should().Be(YearMatchConfidence.Medium);
+        }
+
+        [TestCase("Artist - Album 2020123 FLAC")]
+        [TestCase("Artist - Album (2020123) FLAC")]
+        [TestCase("Artist-Album-2020123-GROUP")]
+        [TestCase("Artist - Album 1232020 FLAC")]
+        [TestCase("Artist - Album (1232020) FLAC")]
+        [TestCase("Artist-Album-1232020-GROUP")]
+        public void should_not_take_year_from_end_of_longer_number(string title)
+        {
+            var result = Parser.Parser.ParseAlbumTitle(title);
+
+            (result == null || (result.ReleaseYear != 2020 && !result.AlbumTitle.EndsWith("123"))).Should().BeTrue();
+        }
+
+        [TestCase("Artist - Album [2020] FLAC", "Album")]
+        [TestCase("Artist-Album [2020] FLAC", "Album")]
+        [TestCase("Artist - Album (Deluxe) [2020] FLAC", "Album")]
+        [TestCase("Artist - Album [FLAC] [2020]", "Album")]
+        [TestCase("Artist - Album [2020.06.15] FLAC", "Album")]
+        [TestCase("Artist-Album [2020.06.15]", "Album")]
+        [TestCase("Artist - Album [2020]", "Album")]
+        [TestCase("Artist - Album [2020] [FLAC 24bit 96khz]", "Album")]
+        [TestCase("Artist - Album [2020] [1411 kbps]", "Album")]
+        [TestCase("Artist - Album (Deluxe Edition) [2020]", "Album")]
+        public void should_parse_year_in_square_brackets(string title, string expectedAlbum)
+        {
+            var result = Parser.Parser.ParseAlbumTitle(title);
+
+            result.Should().NotBeNull();
+            result.AlbumTitle.Should().Be(expectedAlbum);
+            result.ReleaseYear.Should().Be(2020);
+            result.YearConfidence.Should().Be(YearMatchConfidence.High);
+        }
+
+        [TestCase("Artist - Album [2011 Remaster] FLAC")]
+        [TestCase("Artist - Album [Remastered 2011] FLAC")]
+        [TestCase("Artist - Album [Live 1986] FLAC")]
+        [TestCase("Artist - Album [FLAC] 1985 MB")]
+        public void should_not_take_high_confidence_year_from_descriptive_square_brackets_or_sizes(string title)
+        {
+            var result = Parser.Parser.ParseAlbumTitle(title);
+
+            result.Should().NotBeNull();
+            (result.ReleaseYear == null || result.YearConfidence != YearMatchConfidence.High).Should().BeTrue();
+        }
+
+        [TestCase("Artist - Album - 1973 [FLAC] [2020 Remaster]")]
+        [TestCase("Artist - Album - 1973 [FLAC] [2020]")]
+        public void should_keep_dash_separated_year_before_later_square_brackets(string title)
+        {
+            var result = Parser.Parser.ParseAlbumTitle(title);
+
+            result.Should().NotBeNull();
+            result.AlbumTitle.Should().Be("Album");
+            result.ReleaseYear.Should().Be(1973);
+        }
+
+        [TestCase("Artist - Album [FLAC] WEB [2020]")]
+        [TestCase("Artist - Album [FLAC] - WEB [2020]")]
+        public void should_not_add_metadata_to_album_title_when_parsing_square_bracket_year(string title)
+        {
+            var result = Parser.Parser.ParseAlbumTitle(title);
+
+            result.Should().NotBeNull();
+            result.ArtistName.Should().Be("Artist");
+            result.AlbumTitle.Should().Be("Album");
+            result.ReleaseYear.Should().BeNull();
+        }
+
+        [TestCase("Taylor Swift - 1989 (Taylor's Version) (2023) [FLAC]", "1989", "1989 (Taylor's Version)")]
+        [TestCase("Artist - Album (Live at Wembley) FLAC", "Album", "Album (Live at Wembley)")]
+        [TestCase("Artist - Album (Super Deluxe Edition) (2020) FLAC", "Album", "Album (Super Deluxe Edition)")]
+        [TestCase("Artist - Album (Remastered Deluxe Box Set) (2020) FLAC", "Album", "Album (Remastered Deluxe Box Set)")]
+        [TestCase("Artist - Album (Deluxe Edition) [2020]", "Album", "Album (Deluxe Edition)")]
+        public void should_keep_album_title_with_qualifier(string title, string expectedAlbum, string expectedQualified)
+        {
+            var result = Parser.Parser.ParseAlbumTitle(title);
+
+            result.Should().NotBeNull();
+            result.AlbumTitle.Should().Be(expectedAlbum);
+            result.AlbumTitleWithQualifier.Should().Be(expectedQualified);
+        }
+
+        [TestCase("Artist - Album (2020) FLAC")]
+        [TestCase("Artist - Album [Deluxe] (2020) FLAC")]
+        [TestCase("Artist - Album [FLAC]")]
+        public void should_not_keep_album_title_with_qualifier_without_word_bracket_after_album(string title)
+        {
+            var result = Parser.Parser.ParseAlbumTitle(title);
+
+            result.Should().NotBeNull();
+            result.AlbumTitleWithQualifier.Should().BeNull();
+        }
+
+        private static IEnumerable<string> PathologicalTitles()
+        {
+            yield return "Artist - Album " + string.Concat(Enumerable.Repeat("[]", 40)) + " FLAC";
+            yield return "Artist - Album (" + new string('a', 100000);
+        }
+
+        [TestCaseSource(nameof(PathologicalTitles))]
+        public void should_parse_pathological_titles_quickly(string title)
+        {
+            var parseTask = Task.Run(() => Parser.Parser.ParseAlbumTitle(title));
+
+            parseTask.Wait(TimeSpan.FromSeconds(5)).Should().BeTrue();
+            (parseTask.Result == null || parseTask.Result.ReleaseYear == null).Should().BeTrue();
         }
     }
 }

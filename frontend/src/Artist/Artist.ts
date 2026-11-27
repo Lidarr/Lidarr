@@ -1,4 +1,4 @@
-import Album from 'Album/Album';
+import { ArtistAlbum } from 'Album/Album';
 import ModelBase from 'App/ModelBase';
 
 export interface Image {
@@ -31,8 +31,8 @@ interface Artist extends ModelBase {
   monitored: boolean;
   overview: string;
   path: string;
-  lastAlbum?: Album;
-  nextAlbum?: Album;
+  lastAlbum?: ArtistAlbum;
+  nextAlbum?: ArtistAlbum;
   qualityProfileId: number;
   metadataProfileId: number;
   monitorNewItems: string;

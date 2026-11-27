@@ -44,6 +44,8 @@ namespace NzbDrone.Core.Music
         Album FindAlbumByRelease(string albumReleaseId);
         Album FindAlbumByTrackId(int trackId);
         List<Album> GetArtistAlbumsWithFiles(Artist artist);
+        void LoadArtistsAndReleases(List<Album> albums);
+        void LoadReleases(List<Album> albums);
     }
 
     public class AlbumService : IAlbumService,
@@ -112,6 +114,11 @@ namespace NzbDrone.Core.Music
                 return null;
             }
 
+            if (year.HasValue)
+            {
+                _albumRepository.LoadReleases(new List<Album> { album });
+            }
+
             var matchResult = _yearMatcher.Match(album, year);
 
             if (!matchResult.IsMatch)
@@ -126,6 +133,11 @@ namespace NzbDrone.Core.Music
         public Album FindByTitleAndYearInexact(int artistMetadataId, string title, int? year)
         {
             var albums = GetAlbumsByArtistMetadataId(artistMetadataId);
+
+            if (year.HasValue)
+            {
+                _albumRepository.LoadReleases(albums);
+            }
 
             foreach (var func in AlbumScoringFunctions(title, title.CleanArtistName()))
             {
@@ -178,6 +190,12 @@ namespace NzbDrone.Core.Music
         public List<Album> GetCandidates(int artistMetadataId, string title, int? year)
         {
             var albums = GetAlbumsByArtistMetadataId(artistMetadataId);
+
+            if (year.HasValue)
+            {
+                _albumRepository.LoadReleases(albums);
+            }
+
             var output = new List<Album>();
 
             foreach (var func in AlbumScoringFunctions(title, title.CleanArtistName()))
@@ -219,13 +237,14 @@ namespace NzbDrone.Core.Music
             var scoredAlbums = albums.Select(album =>
             {
                 var titleScore = scoreFunction(album, title);
-                var yearScore = _yearMatcher.CalculateYearScore(album.ReleaseDate, year);
+                var yearScore = _yearMatcher.CalculateAlbumYearScore(album, year);
                 var combinedScore = titleScore + yearScore;
 
                 return new
                 {
                     TitleScore = titleScore,
                     YearScore = yearScore,
+                    OriginalYearScore = _yearMatcher.CalculateOriginalYearScore(album, year),
                     MatchProb = combinedScore,
                     Album = album
                 };
@@ -238,10 +257,14 @@ namespace NzbDrone.Core.Music
                 return new List<Album>();
             }
 
-            var sortedAlbums = scoredAlbums.OrderByDescending(s => s.MatchProb).ToList();
+            var sortedAlbums = scoredAlbums.OrderByDescending(s => s.MatchProb).ThenByDescending(s => s.OriginalYearScore).ToList();
             var topResult = sortedAlbums.First();
 
-            if (sortedAlbums.Count > 1)
+            var cleanTitle = title.CleanArtistName();
+            var topTitleIsReliable = topResult.TitleScore >= AlbumYearMatchingOptions.TitleFuzzThreshold ||
+                                     (cleanTitle.IsNotNullOrWhiteSpace() && topResult.Album.CleanTitle != null && topResult.Album.CleanTitle.Contains(cleanTitle));
+
+            if (sortedAlbums.Count > 1 && topTitleIsReliable)
             {
                 var secondResult = sortedAlbums[1];
 
@@ -254,6 +277,13 @@ namespace NzbDrone.Core.Music
                 // Better year with comparable title score
                 if (topResult.YearScore > secondResult.YearScore &&
                     topResult.TitleScore >= secondResult.TitleScore * 0.9)
+                {
+                    return new List<Album> { topResult.Album };
+                }
+
+                if (topResult.YearScore == secondResult.YearScore &&
+                    topResult.TitleScore >= secondResult.TitleScore &&
+                    topResult.OriginalYearScore > secondResult.OriginalYearScore)
                 {
                     return new List<Album> { topResult.Album };
                 }
@@ -426,6 +456,16 @@ namespace NzbDrone.Core.Music
             }).ToList();
 
             DeleteMany(albums);
+        }
+
+        public void LoadArtistsAndReleases(List<Album> albums)
+        {
+            _albumRepository.LoadArtistsAndReleases(albums);
+        }
+
+        public void LoadReleases(List<Album> albums)
+        {
+            _albumRepository.LoadReleases(albums);
         }
     }
 }
