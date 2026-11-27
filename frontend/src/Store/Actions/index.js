@@ -22,6 +22,7 @@ import * as releases from './releaseActions';
 import * as retagPreview from './retagPreviewActions';
 import * as search from './searchActions';
 import * as settings from './settingsActions';
+import * as statistics from './statisticsActions';
 import * as system from './systemActions';
 import * as tags from './tagActions';
 import * as tracks from './trackActions';
@@ -54,6 +55,7 @@ export default [
   releases,
   search,
   settings,
+  statistics,
   system,
   tags,
   tracks,
